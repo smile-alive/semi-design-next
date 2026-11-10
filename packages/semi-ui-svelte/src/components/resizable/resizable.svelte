@@ -4,12 +4,12 @@
     import { ResizableFoundation, type ResizableAdapter, type ResizableBaseProps, type ResizableBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
     import { directions, type Direction } from '@fibrae/semi-foundation/components/resizable/types';
     import { getStringSize, isKeyboardEdge } from '@fibrae/semi-foundation/components/resizable/utils';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
     import '@fibrae/semi-foundation/components/resizable/resizable.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { ResizableProps } from './interface.js';
     import { joinStyle } from './style.js';
@@ -167,7 +167,7 @@
     };
 </script>
 
-<div bind:this={root} {...rest} {@attach observeResize} class={[`${prefix}-resizable`, rest.class]} role={groupRole(rest)} style={rootStyle}>
+<div bind:this={root} {...rest} {@attach observeResize} class={[`${prefix}-resizable`, rest.class]} role={namedRole(rest)} style={rootStyle}>
     {#if states().isResizing}
         <div class={`${prefix}-background`} style={joinStyle(states().backgroundStyle as Record<string, string | undefined>)}></div>
     {/if}

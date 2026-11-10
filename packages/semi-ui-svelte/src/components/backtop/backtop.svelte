@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Attachment } from 'svelte/attachments';
-    import { cssClasses } from '@fibrae/semi-foundation/components/backtop/constants';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/backtop/constants';
     import BackTopFoundation, { type BackTopAdapter, type BackTopBaseProps } from '@fibrae/semi-foundation/components/backtop/foundation';
     import '@fibrae/semi-foundation/components/backtop/backtop.scss';
     import { IconBackTop } from '@fibrae/semi-icons-svelte';
@@ -20,12 +20,11 @@
     let {
         badge = defaults('badge'),
         colorful = defaults('colorful'),
-        duration = defaults('duration', 450),
+        duration = defaults('duration', numbers.DEFAULT_DURATION),
         shape = defaults('shape'),
         size = defaults('size'),
-        // the window is read when the function is called, which the server never does
-        target = defaults('target', () => window),
-        visibilityHeight = defaults('visibilityHeight', 400),
+        target = defaults('target'),
+        visibilityHeight = defaults('visibilityHeight', numbers.DEFAULT_VISIBILITY_HEIGHT),
         badgeCount,
         children,
         icon,

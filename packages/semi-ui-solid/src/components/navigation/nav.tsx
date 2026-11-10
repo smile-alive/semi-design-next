@@ -156,12 +156,15 @@ export default function Nav(rawProps: NavProps) {
         })
     );
 
-    const isCollapsed = createMemo(() => NavigationFoundation.getIsCollapsed(foundationProps, state()));
-    const openKeysIsControlled = createMemo(() => NavigationFoundation.isOpenKeysControlled(foundationProps, isCollapsed()));
-    const openKeys = createMemo(() => NavigationFoundation.getOpenKeys(foundationProps, state(), isCollapsed()));
     const formattedItems = createMemo(() => NavigationFoundation.formatItems(itemsSource()));
     const itemKeysMap = createMemo(() => NavigationFoundation.getFormattedItems({ items: itemsSource() }, tree()).itemKeysMap);
-    const selectedKeys = createMemo(() => NavigationFoundation.getSelectedKeys(foundationProps, state(), itemKeysMap()));
+    const derived = createMemo(() => NavigationFoundation.deriveView(foundationProps, state(), itemKeysMap()));
+
+    // one memo per field, so a reader of one field (NavView) is not notified by changes of the others
+    const isCollapsed = createMemo(() => derived().isCollapsed);
+    const openKeysIsControlled = createMemo(() => derived().openKeysIsControlled);
+    const openKeys = createMemo(() => derived().openKeys);
+    const selectedKeys = createMemo(() => derived().selectedKeys);
 
     // texts remount on collapse, so they fade in only while the width animates
     const [settledCollapsed, setSettledCollapsed] = createSignal(untrack(isCollapsed));
@@ -251,7 +254,8 @@ export default function Nav(rawProps: NavProps) {
                     </SubNav>
                 );
             }
-            return <NavItem {...(pickConfigProps(item, ITEM_CONFIG_KEYS) as NavItemProps)} level={level} icon={local.renderItemIcon?.(data)} text={local.renderItemText ? local.renderItemText(data) : item.text} toggleIcon={local.renderItemToggleIcon?.(data)} />;
+            // itemConfig is no NavItem prop: the token carries it to ItemView, which reports it in onSelect
+            return <NavItem {...({ ...pickConfigProps(item, ITEM_CONFIG_KEYS), itemConfig: item } as NavItemProps)} level={level} icon={local.renderItemIcon?.(data)} text={local.renderItemText ? local.renderItemText(data) : item.text} toggleIcon={local.renderItemToggleIcon?.(data)} />;
         });
     };
 

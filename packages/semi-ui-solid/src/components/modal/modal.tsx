@@ -241,7 +241,7 @@ export default function Modal(rawProps: ModalProps) {
                 // resolved with the popup: JSX created during hydration has no node in the server HTML to claim
                 const footer = children(() => local.footer);
                 return (
-                    <PopupPortal getPopupContainer={local.getPopupContainer} zIndex={local.zIndex} inBody={inBody()}>
+                    <PopupPortal getPopupContainer={local.getPopupContainer} zIndex={local.zIndex}>
                         <ModalContent
                             {...rest}
                             ref={mergeRefs(local.ref)}

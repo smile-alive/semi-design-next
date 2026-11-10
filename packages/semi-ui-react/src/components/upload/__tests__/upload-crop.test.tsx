@@ -26,7 +26,7 @@ function renderUpload(props: Partial<UploadProps> = {}) {
     );
 }
 
-const getInput = () => document.querySelector(`.${BASE_CLASS_PREFIX}-upload-hidden-input`);
+const getInput = () => document.querySelector<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-upload-hidden-input`);
 
 function selectFiles(files) {
     fireEvent.change(getInput(), { target: { files } });
@@ -143,11 +143,11 @@ describe('Upload 裁剪', () => {
         const onAcceptInvalid = vi.fn<UploadCallback<'onAcceptInvalid'>>();
         const onFileChange = vi.fn<UploadCallback<'onFileChange'>>();
         renderUpload({ crop: true, accept: '.png', onAcceptInvalid, onFileChange });
-        const before = getInput();
+        const valueSetter = vi.spyOn(getInput(), 'value', 'set');
         selectFiles([createFile(100, 'photo.jpg', 'image/jpeg')]);
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
         expect(onAcceptInvalid.mock.calls[0][0].map((f) => f.name)).toEqual(['photo.jpg']);
-        expect(getInput()).not.toBe(before);
+        expect(valueSetter).toHaveBeenCalledWith('');
         await Promise.resolve();
         expect(screen.queryByText(cropTitle)).toBeNull();
         expect(onFileChange).not.toHaveBeenCalled();
@@ -199,10 +199,11 @@ describe('Upload 裁剪', () => {
             onAcceptInvalid,
         });
         await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-upload-file-card-replace`));
-        const input = document.querySelector(`.${BASE_CLASS_PREFIX}-upload-hidden-input-replace`);
+        const input = document.querySelector<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-upload-hidden-input-replace`);
+        const valueSetter = vi.spyOn(input, 'value', 'set');
         fireEvent.change(input, { target: { files: [createFile(100, 'photo.jpg', 'image/jpeg')] } });
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
-        expect(document.querySelector(`.${BASE_CLASS_PREFIX}-upload-hidden-input-replace`)).not.toBe(input);
+        expect(valueSetter).toHaveBeenCalledWith('');
         await Promise.resolve();
         expect(screen.queryByText(cropTitle)).toBeNull();
     });
@@ -266,20 +267,17 @@ describe('Upload 裁剪', () => {
         expect(onFileChange.mock.calls[0][0].map((f) => f.name)).toEqual(['a.png', 'b.png']);
     });
 
-    it('取消裁剪时清空队列并重置文件输入框', async () => {
-        // input keys come from Math.random, which vitest/setup.ts cycles through four values; keep them distinct here
-        let seed = 0;
-        vi.spyOn(Math, 'random').mockImplementation(() => (seed += 0.01));
+    it('取消裁剪时清空队列并清空文件输入框的值', async () => {
         const onFileChange = vi.fn<UploadCallback<'onFileChange'>>();
         renderUpload({ crop: true, onFileChange });
         selectFiles([createFile(100, 'avatar.png', 'image/png')]);
         expect(await screen.findByText(cropTitle)).toBeInTheDocument();
-        const inputBefore = getInput();
+        const valueSetter = vi.spyOn(getInput(), 'value', 'set');
 
         await userEvent.click(screen.getByRole('button', { name: '取消' }));
         await expectCropperClosed();
         expect(revokeObjectURL).toHaveBeenCalledWith('blob:avatar.png');
-        expect(getInput()).not.toBe(inputBefore);
+        expect(valueSetter).toHaveBeenCalledWith('');
         expect(onFileChange).not.toHaveBeenCalled();
     });
 

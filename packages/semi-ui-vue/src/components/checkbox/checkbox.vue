@@ -3,7 +3,6 @@
     import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
     import { checkboxClasses } from '@fibrae/semi-foundation/components/checkbox/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
     import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
     import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
@@ -58,14 +57,7 @@
                 emit('change', event as CheckboxEvent);
             },
             notifyGroupChange: (event) => group?.onChange(event),
-            // A click on the text lands on the wrapper, not the input. Script focus matches :focus-visible when nothing
-            // was focused before, so the focus a click moves in must say it is not keyboard focus.
-            focusCheckboxEntity: () => {
-                const input = inputRef.value;
-                if (input && input !== input.ownerDocument.activeElement) {
-                    focusWithoutRing(input, { preventScroll: props.preventScroll });
-                }
-            },
+            getInput: () => inputRef.value,
         }),
         {
             props: { checked: () => props.modelValue, name: () => attrs.name as string | undefined },

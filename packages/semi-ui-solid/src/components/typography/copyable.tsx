@@ -1,4 +1,4 @@
-import { type JSX, Show, children, createEffect, mergeProps, on } from 'solid-js';
+import { type JSX, Show, children, createEffect, on } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import { IconCopy, IconTick } from '@fibrae/semi-icons-solid';
@@ -10,9 +10,10 @@ import type { CopyableConfig } from './interface';
 const prefixCls = cssClasses.PREFIX;
 
 export interface CopyableProps {
-    content?: string;
+    content: string;
     copyTip?: CopyableConfig['copyTip'];
-    duration?: number;
+    /** Seconds the copied state lasts */
+    duration: number;
     /** Receives the wrapping span, also around the node of `render` */
     ref?: (element: HTMLSpanElement) => void;
     successTip?: CopyableConfig['successTip'];
@@ -28,14 +29,7 @@ interface CopyableInnerProps extends CopyableProps {
     onCopiedChange?: () => void;
 }
 
-const defaultProps = {
-    content: '',
-    duration: 3,
-} satisfies Partial<CopyableProps>;
-
-export function Copyable(rawProps: CopyableInnerProps) {
-    const props = mergeProps(defaultProps, rawProps);
-
+export function Copyable(props: CopyableInnerProps) {
     const locale = useLocale('Typography');
 
     const [copied, copyText] = useCopied(() => props.duration * 1000);

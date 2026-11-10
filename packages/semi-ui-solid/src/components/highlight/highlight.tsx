@@ -2,7 +2,7 @@ import { createMemo, type JSX, Index, Show } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
-import { findAll, type HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
+import { findAll, type SearchWords as CoreSearchWords } from '@fibrae/semi-foundation/components/highlight/foundation';
 import '@fibrae/semi-foundation/components/highlight/highlight.scss';
 import useDefaultProps from '../../base/use-default-props';
 
@@ -38,22 +38,21 @@ const defaultProps = {
 export default function Highlight(rawProps: HighlightProps) {
     const props = useDefaultProps('Highlight', rawProps, defaultProps);
 
-    const chunks = createMemo(() => {
-        const searchWords = props.searchWords ?? [];
-        return findAll({
+    const chunks = createMemo(() =>
+        findAll({
             sourceString: props.sourceString,
-            // the foundation names a word's class `className`
-            searchWords: typeof searchWords === 'string' ? searchWords : searchWords.map((word) => (word && typeof word === 'object' ? { text: word.text, className: word.class, style: word.style as HighlightStyle } : word)),
+            // the foundation types a word's style as plain values
+            searchWords: (props.searchWords ?? []) as string | CoreSearchWords,
             caseSensitive: props.caseSensitive,
             autoEscape: props.autoEscape,
-        }).map((chunk) => ({ ...chunk, text: props.sourceString.slice(chunk.start, chunk.end) }));
-    });
+        })
+    );
 
     return (
         <Index each={chunks()}>
             {(chunk) => (
                 <Show when={chunk().highlight} fallback={chunk().text}>
-                    <Dynamic component={props.component || 'mark'} class={clsx(`${prefixCls}-tag`, props.highlightClassName, chunk().className)} style={{ ...props.highlightStyle, ...chunk().style }}>
+                    <Dynamic component={props.component || 'mark'} class={clsx(`${prefixCls}-tag`, props.highlightClassName, chunk().class)} style={{ ...props.highlightStyle, ...chunk().style }}>
                         {chunk().text}
                     </Dynamic>
                 </Show>

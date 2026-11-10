@@ -33,6 +33,17 @@ describe('TreeSelect 触发器的选中值', () => {
         expect(TreeSelectFoundation.hasValue({ multiple: true, checkRelation: 'unRelated' }, { ...empty, checkedKeys: state.checkedKeys })).toBe(false);
         expect(TreeSelectFoundation.hasValue({ multiple: true, checkRelation: 'unRelated' }, { ...empty, realCheckedKeys: state.realCheckedKeys })).toBe(true);
     });
+
+    it('isClearable 在有值，或触发器搜索位置有搜索文字时为 true，禁用或不显示清除按钮时为 false', () => {
+        const empty = { inputValue: '', selectedKeys: [], checkedKeys: new Set<string>(), realCheckedKeys: new Set<string>() };
+        const props = { showClear: true, multiple: false };
+        expect(TreeSelectFoundation.isClearable(props, empty)).toBe(false);
+        expect(TreeSelectFoundation.isClearable(props, { ...empty, selectedKeys: ['a'] })).toBe(true);
+        expect(TreeSelectFoundation.isClearable(props, { ...empty, inputValue: 'x' })).toBe(false);
+        expect(TreeSelectFoundation.isClearable({ ...props, searchPosition: 'trigger' }, { ...empty, inputValue: 'x' })).toBe(true);
+        expect(TreeSelectFoundation.isClearable({ ...props, disabled: true }, { ...empty, selectedKeys: ['a'] })).toBe(false);
+        expect(TreeSelectFoundation.isClearable({ ...props, showClear: false }, { ...empty, selectedKeys: ['a'] })).toBe(false);
+    });
 });
 
 describe('TreeSelect 标签', () => {

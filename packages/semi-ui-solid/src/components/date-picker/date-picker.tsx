@@ -148,8 +148,6 @@ const defaultProps = {
     defaultOpen: false,
     hideDisabledOptions: false,
     weekStartsOn: numbers.WEEK_START_ON,
-    disabledDate: () => false,
-    disabledTime: () => ({}),
     inputReadOnly: false,
     autoSwitchDate: true,
     syncSwitchMonth: false,
@@ -751,7 +749,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 class={clsx(local.class, local.prefixCls)}
                 style={local.style}
                 aria-labelledby={isRange() ? local['aria-labelledby'] : undefined}
-                role={(isRange() ? (rest.role ?? 'group') : namedRole(rest.role, rest['aria-label'], undefined)) as JSX.HTMLAttributes<HTMLDivElement>['role']}
+                role={isRange() ? (rest.role ?? 'group') : namedRole({ role: rest.role, 'aria-label': rest['aria-label'] })}
                 onMouseDown={handleMouseDown}
             >
                 <Popover

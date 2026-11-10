@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import { cssClasses, type DialogueIconKind, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { InputFile } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { IconCode, IconExcel, IconFile, IconPdf, IconSendMsgStroked, IconVideo, IconWord } from '@fibrae/semi-icons-vue';
@@ -14,7 +14,7 @@
 
     const { PREFIX_CONTENT } = cssClasses;
     const { ROLE } = strings;
-    const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile };
+    const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile } satisfies Record<DialogueIconKind | 'default', unknown>;
     const realType = computed(() => getFileType(props.file.filename, props.file.fileInstance?.type));
     const kind = computed(() => getDialogueFileKind(realType.value) ?? 'default');
     const icon = computed(() => (kind.value === 'image' ? undefined : ICONS[kind.value]));

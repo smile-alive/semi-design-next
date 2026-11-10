@@ -1,8 +1,7 @@
-import { type Accessor, type JSX, type ResolvedChildren, For, Show, children, createComputed, createEffect, createMemo, createSignal, on, splitProps, untrack } from 'solid-js';
+import { type Accessor, type JSX, type ResolvedChildren, For, Show, children, createComputed, createEffect, createMemo, createSignal, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/overflow-list/constants';
-import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
 import type { ElementProps } from '../../base/element-props';
@@ -70,23 +69,6 @@ const defaultProps = {
     overflowRenderDirection: 'both',
 } satisfies Partial<OverflowListProps>;
 
-type ListView = OverflowListView & VisibleLayout;
-
-const withLayout = (view: OverflowListView, fromStart: boolean, measuring: boolean): ListView => ({ ...view, ...OverflowListFoundation.getVisibleLayout(view, fromStart, fromStart && measuring) });
-
-const resetView = (props: OverflowListBaseProps, view: OverflowListView, containerWidth: number) => withLayout(OverflowListFoundation.resetView(props, view, containerWidth), props.collapseFrom === 'start', props.renderMode !== 'scroll');
-
-const emptyView: OverflowListView = {
-    items: [],
-    style: undefined,
-    visible: [],
-    overflow: [],
-    pivot: -1,
-    maxCount: 0,
-    overflowStatus: 'calculating',
-    scrollOverflow: [[], []],
-};
-
 const shallowEqual = (a: readonly unknown[], b: readonly unknown[]) => a.length === b.length && a.every((value, index) => value === b[index]);
 
 const toDeclarations = (style: Record<string, string | undefined>) =>
@@ -140,7 +122,7 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
     const [root, setRoot] = createSignal<HTMLDivElement>();
 
     // initial value only: a later change of items, style, keys or collapseFrom is reset by the computation below
-    const [view, setView] = createSignal(resetView(props as OverflowListBaseProps, emptyView, 0));
+    const [view, setView] = createSignal(OverflowListFoundation.createView(props as OverflowListBaseProps));
     const [scrollNodes, setScrollNodes] = createSignal(new Map<string, Element>(), { equals: false });
 
     const { foundation, state } = useFoundation<Foundation, Adapter, OverflowListBaseProps, OverflowListBaseState>(
@@ -149,11 +131,7 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
         () => OverflowListFoundation.getInitialState(),
         () => ({
             notifyVisibleStateChange: (visibleState) => props.onVisibleStateChange?.(visibleState),
-            updateView: (viewState) =>
-                setView((prev) => {
-                    const next = { ...prev, ...viewState };
-                    return viewState.visible ? withLayout(next, props.collapseFrom === 'start', false) : next;
-                }),
+            updateView: (update) => setView(update),
             notifyIntersect: (res) => props.onIntersect?.(res),
             notifyOverflow: (overflow) => props.onOverflow?.(overflow),
         })
@@ -169,14 +147,9 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
 
     // the foundation falls back to the `key` field when itemKey is unset, but types the option as required
     const itemKey = createMemo(() => props.itemKey as ItemKeyOption);
-    const keys = createMemo(() => OverflowListFoundation.getItemKeys(items(), itemKey()), undefined, { equals: isEqual });
 
     // Keyed by item key so a measured box keeps its element, and with it its observer, while the list settles
-    const entries = createMemo(() => {
-        const { visible, first, step } = view();
-        return new Map(visible.map((item, i) => [OverflowListFoundation.getItemKey(itemKey(), item, first + step * i), { item, index: first + step * i }] as const));
-    });
-
+    const entries = createMemo(() => new Map(OverflowListFoundation.getVisibleItems(view(), itemKey()).map(({ key, item, index }) => [key, { item, index }] as const)));
     const visibleKeys = createMemo(() => [...entries().keys()], [], { equals: shallowEqual });
 
     const scrollSides = createMemo((): [JSX.Element, JSX.Element] => {
@@ -198,26 +171,17 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
         if (isScroll()) {
             return own;
         }
-        const internal = { 'max-width': '100%', visibility: view().overflowStatus === 'calculating' && view().pivot < 0 ? 'hidden' : 'visible' };
+        const internal = { 'max-width': '100%', visibility: OverflowListFoundation.isHidden(view()) ? 'hidden' : 'visible' };
         return typeof own === 'string' ? [own, toDeclarations(internal)].join('; ') : ({ ...own, ...internal } as JSX.CSSProperties);
     };
 
     // A row outlives its key for one update, so it keeps the last entry; the equality check stops a rebuilt entry object from re-running the renderer
     const entryOf = (key: Key) => createMemo<Entry>((previous) => entries().get(key) ?? previous, undefined as unknown as Entry, { equals: (a, b) => a.item === b.item && a.index === b.index });
 
-    const markCalculating = () => setView((prev) => ({ ...prev, overflowStatus: 'calculating' }));
+    // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
+    const handleItemResize = (entry: ResizeObserverEntry, key: Key) => foundation.handleItemResize(key, entry.contentRect.width, view().maxCount);
 
-    const handleItemResize = (entry: ResizeObserverEntry, key: Key) => {
-        // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
-        if (foundation.recordItemSize(key, entry.contentRect.width, view().maxCount)) {
-            markCalculating();
-        }
-    };
-
-    const handleOverflowResize = (entry: ResizeObserverEntry) => {
-        foundation.setState({ overflowWidth: entry.contentRect.width });
-        markCalculating();
-    };
+    const handleOverflowResize = (entry: ResizeObserverEntry) => foundation.handleOverflowResize(entry.contentRect.width);
 
     const registerScrollNode = (key: string, node: Element) => {
         setScrollNodes((nodes) => nodes.set(key, node));
@@ -226,32 +190,24 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
 
     // Runs before the DOM updates, so the reset lands in the same update as the props
     createComputed(() => {
-        const current = untrack(view);
-        if (!isEqual(current.items, props.items) || !isEqual(current.style, props.style) || !isEqual(current.keys, keys()) || current.fromStart !== (props.collapseFrom === 'start')) {
-            setView(
-                resetView(
-                    props as OverflowListBaseProps,
-                    current,
-                    untrack(() => state().containerWidth)
-                )
-            );
-        }
+        setView(
+            OverflowListFoundation.syncView(
+                props as OverflowListBaseProps,
+                untrack(view),
+                untrack(() => state().containerWidth)
+            )
+        );
     });
 
-    createEffect(on(keys, foundation.handleKeysChange, { defer: true }));
-
+    // a change of the item keys always resets the view, so tracking the view is enough
     createEffect(() => {
-        if (!isScroll() && view().overflowStatus === 'calculating') {
-            untrack(foundation.handleCollapseOverflow);
-        }
+        const current = view();
+        untrack(() => foundation.handleCommit(current));
     });
 
     useResizeObserver(
         () => (isScroll() ? undefined : root()),
-        (resized) => {
-            foundation.setState({ containerWidth: resized[0]?.contentRect.width });
-            markCalculating();
-        }
+        ([entry]) => foundation.handleContainerResize(entry.contentRect.width)
     );
 
     // no root: the foundation and Tabs rely on viewport visibility to tell a list scrolled out of the page from one
@@ -259,7 +215,7 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
     useIntersectionObserver(scrollTargets, foundation.handleIntersect, () => ({ threshold: threshold() }));
 
     return (
-        <div {...rest} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} ref={mergeRefs(local.ref, (node: HTMLDivElement) => setRoot(node))} class={clsx(prefixCls, local.class)} style={rootStyle()}>
+        <div {...rest} role={namedRole(rest)} ref={mergeRefs(local.ref, (node: HTMLDivElement) => setRoot(node))} class={clsx(prefixCls, local.class)} style={rootStyle()}>
             <Show when={!isScroll()}>
                 <Show when={local.collapseFrom === 'start'}>
                     <OverflowBox content={collapseOverflow} onResize={handleOverflowResize} />

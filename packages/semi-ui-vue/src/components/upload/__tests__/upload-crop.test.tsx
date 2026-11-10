@@ -113,11 +113,11 @@ describe('Upload 裁剪', () => {
         const onAcceptInvalid = fn();
         const onFileChange = fn();
         renderCrop({ crop: true, accept: '.png', onAcceptInvalid, onFileChange });
-        const before = getInput();
+        const valueSetter = vi.spyOn(getInput(), 'value', 'set');
         await selectFiles([createFile(100, 'photo.jpg', 'image/jpeg')]);
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
         expect(onAcceptInvalid.mock.calls[0][0].map((f: File) => f.name)).toEqual(['photo.jpg']);
-        expect(getInput()).not.toBe(before);
+        expect(valueSetter).toHaveBeenCalledWith('');
         await Promise.resolve();
         expect(screen.queryByText(cropTitle)).toBeNull();
         expect(onFileChange).not.toHaveBeenCalled();
@@ -159,7 +159,7 @@ describe('Upload 裁剪', () => {
         expect(onExceed).toHaveBeenCalledTimes(1);
     });
 
-    it('替换时 accept 拒绝的图片不打开裁剪器，并重置替换选择框', async () => {
+    it('替换时 accept 拒绝的图片不打开裁剪器，并清空替换选择框的值', async () => {
         const onAcceptInvalid = fn();
         renderCrop({
             crop: true,
@@ -170,9 +170,10 @@ describe('Upload 裁剪', () => {
         });
         await userEvent.click(query(`button.${prefix}-file-card-replace`));
         const input = getReplaceInput();
+        const valueSetter = vi.spyOn(input, 'value', 'set');
         await selectFiles([createFile(100, 'photo.jpg', 'image/jpeg')], input);
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
-        expect(getReplaceInput()).not.toBe(input);
+        expect(valueSetter).toHaveBeenCalledWith('');
         await Promise.resolve();
         expect(screen.queryByText(cropTitle)).toBeNull();
     });
@@ -230,16 +231,16 @@ describe('Upload 裁剪', () => {
         expect(onFileChange.mock.calls[0][0].map((f: File) => f.name)).toEqual(['a.png', 'b.png']);
     });
 
-    it('取消裁剪时清空队列并重置文件输入框', async () => {
+    it('取消裁剪时清空队列并清空文件输入框的值', async () => {
         const onFileChange = fn();
         renderCrop({ crop: true, onFileChange });
         await selectFiles([createFile(100, 'avatar.png', 'image/png')]);
         expect(await screen.findByText(cropTitle)).toBeInTheDocument();
-        const inputBefore = getInput();
+        const valueSetter = vi.spyOn(getInput(), 'value', 'set');
         await userEvent.click(screen.getByRole('button', { name: '取消' }));
         await expectCropperClosed();
         expect(revokeObjectURL).toHaveBeenCalledWith('blob:avatar.png');
-        expect(getInput()).not.toBe(inputBefore);
+        expect(valueSetter).toHaveBeenCalledWith('');
         expect(onFileChange).not.toHaveBeenCalled();
     });
 

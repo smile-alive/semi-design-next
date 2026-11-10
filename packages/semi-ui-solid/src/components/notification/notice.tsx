@@ -1,10 +1,10 @@
 import { children, createUniqueId, Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
+import { isAlertType } from '@fibrae/semi-foundation/base/list-store';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/notification/constants';
 import NotificationFoundation, { type NoticeAdapter, type NoticeProps as FoundationNoticeProps, type NoticeState } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/element-props';
 import useDefaultProps from '../../base/use-default-props';

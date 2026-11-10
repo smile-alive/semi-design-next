@@ -60,3 +60,25 @@ describe('PinCodeFoundation.handleCellChange', () => {
         expect(notifyValueChange).not.toHaveBeenCalled();
     });
 });
+
+describe('PinCodeFoundation 焦点进出', () => {
+    it('只在焦点跨出或跨入整个组时通知，格间移动不通知', () => {
+        const notifyFocus = vi.fn<PinCodeAdapter['notifyFocus']>();
+        const notifyBlur = vi.fn<PinCodeAdapter['notifyBlur']>();
+        const foundation = new PinCodeFoundation({ notifyFocus, notifyBlur } as unknown as PinCodeAdapter);
+        const group = document.createElement('div');
+        const first = group.appendChild(document.createElement('input'));
+        const second = group.appendChild(document.createElement('input'));
+        const outside = document.createElement('button');
+
+        foundation.handleBlur({ currentTarget: group, relatedTarget: second });
+        foundation.handleFocus({ currentTarget: group, relatedTarget: first });
+        expect(notifyBlur).not.toHaveBeenCalled();
+        expect(notifyFocus).not.toHaveBeenCalled();
+
+        foundation.handleBlur({ currentTarget: group, relatedTarget: outside });
+        foundation.handleFocus({ currentTarget: group, relatedTarget: null });
+        expect(notifyBlur).toHaveBeenCalledTimes(1);
+        expect(notifyFocus).toHaveBeenCalledTimes(1);
+    });
+});

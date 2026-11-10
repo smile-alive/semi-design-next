@@ -1,7 +1,6 @@
 import React, { useId, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
 import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
 import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
@@ -95,12 +94,8 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
                     tooltipFocusRef.current.current = button;
                 }
             },
-            focusPrevFocusElement: () => {
-                // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(popoverRef.current?.getPopup(), false)) {
-                    popoverRef.current?.focusTrigger();
-                }
-            },
+            getPopup: () => popoverRef.current?.getPopup(),
+            focusTrigger: () => popoverRef.current?.focusTrigger(),
         })
     );
 

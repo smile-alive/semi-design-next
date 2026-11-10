@@ -25,6 +25,9 @@
     // An entry may carry app data (e.g. `path`); only the declared keys, li attributes, data-* and aria-* reach the item
     const pick = (item: NavItemType, keys: ReadonlySet<string>) => Object.fromEntries(Object.entries(item).filter(([key]) => keys.has(key) || LI_KEYS.has(key) || /^(data|aria)-/.test(key)));
 
+    // itemConfig is no NavItem prop: it passes through the item's rest to the shell, which reports it in onSelect
+    const configProps = (item: NavItemType) => ({ ...pick(item, ITEM_KEYS), level, itemConfig: item });
+
     const isSub = (item: NavItemType) => Array.isArray(item.items) && item.items.length > 0;
 
     // 0 and '' are valid keys; the prefix keeps an entry without one from colliding with a real key
@@ -50,6 +53,6 @@
             <NavItems {expandIcon} {icon} items={item.items!} level={level + 1} {subDropdownProps} {text} {toggleIcon} />
         </SubNav>
     {:else}
-        <NavItem {...pick(item, ITEM_KEYS)} icon={icon ? entryIcon : undefined} label={text ? entryText : undefined} toggleIcon={toggleIcon ? entryToggleIcon : undefined} />
+        <NavItem {...configProps(item)} icon={icon ? entryIcon : undefined} label={text ? entryText : undefined} toggleIcon={toggleIcon ? entryToggleIcon : undefined} />
     {/if}
 {/each}

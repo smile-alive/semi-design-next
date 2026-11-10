@@ -4,10 +4,11 @@
     import { SvelteMap, SvelteSet } from 'svelte/reactivity';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
-    import { COLOR_SCHEME_SELECTOR, POPUP_ID_ATTRIBUTE, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
+    import { COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
     import TooltipFoundation, { type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '@fibrae/semi-foundation/components/tooltip/foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
+    import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
     import PopupLayerProvider from '../../base/popup-layer-provider.svelte';

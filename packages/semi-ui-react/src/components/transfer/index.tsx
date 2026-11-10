@@ -5,6 +5,7 @@ import { omit } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/transfer/constants';
 import TransferFoundation, { type TransferAdapter, type BasicDataItem, type OnSortEndProps } from '@fibrae/semi-foundation/components/transfer/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/transfer/transfer.scss';
 import { IconClose, IconSearch, IconHandle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
@@ -15,7 +16,6 @@ import useIsServerRender from '../../hooks/use-is-server-render';
 import type { RenderItemProps } from '../../internal/sortable';
 import type { SortableHandle } from '../../internal/sortable/types';
 import VirtualList, { type VirtualListRowProps } from '../../internal/virtual-list';
-import { namedRole } from '../../utils/named-role';
 import Button from '../button';
 import { Checkbox } from '../checkbox/index';
 import Input, { type InputProps } from '../input/index';
@@ -312,26 +312,21 @@ export default function Transfer(rawProps: TransferProps) {
         })
     );
 
-    const data: Array<ResolvedDataItem> = TransferFoundation.getData(dataSource, type);
-    const selectedItems = TransferFoundation.getSelectedItems(value, data, state.selectedValues);
+    const view = TransferFoundation.deriveView<ResolvedDataItem>(props, state);
+    const { data, selectedItems, values } = view;
     const { inputValue } = state;
-    const inSearchMode = inputValue !== '';
-    const searchResult = inSearchMode ? TransferFoundation.getSearchResult(data, inputValue, filter, type) : null;
     const isTree = type === strings.TYPE_TREE_TO_LIST;
-    const { values } = TransferFoundation.getValuesAndItemsFromMap(selectedItems, type, showPath);
 
     const transferCls = clsx(prefixCls, className, {
         [`${prefixCls}-disabled`]: disabled,
         [`${prefixCls}-custom-panel`]: renderSelectedPanel && renderSourcePanel,
     });
 
-    // the Tree unmounts while loading or empty, and a keyword typed meanwhile only reached the search box
     const attachTree = useCallback(
         (handle: TreeHandle | null) => {
             treeRef.current = handle;
-            const keyword = foundation.getState('inputValue');
-            if (handle && keyword) {
-                handle.search(keyword);
+            if (handle) {
+                foundation.handleTreeMount();
             }
         },
         [foundation]
@@ -389,10 +384,10 @@ export default function Transfer(rawProps: TransferProps) {
         );
     };
 
-    const renderLeftList = (visibleItems: Array<ResolvedDataItem>) => {
+    const renderLeftList = () => {
         let content: Array<React.ReactNode>;
         if (type === strings.TYPE_GROUP_LIST) {
-            content = TransferFoundation.getGroups(visibleItems, data).map(({ index: groupIndex, title, items }) => {
+            content = view.groups.map(({ index: groupIndex, title, items }) => {
                 const titleId = `${idPrefix}-group-${groupIndex}`;
                 return (
                     <div key={groupIndex} role="listitem">
@@ -406,7 +401,7 @@ export default function Transfer(rawProps: TransferProps) {
                 );
             });
         } else {
-            content = visibleItems.map(renderLeftItem);
+            content = view.visibleData.map(renderLeftItem);
         }
         return (
             <div
@@ -441,13 +436,8 @@ export default function Transfer(rawProps: TransferProps) {
     );
 
     const renderLeft = () => {
-        const showNumber = inSearchMode ? searchResult.size : data.length;
-        const filterData = TransferFoundation.getFilterData(data, searchResult);
-        const leafOnlyNum = TransferFoundation.getLeafCount(filterData, type);
-        const enabledFilterData = TransferFoundation.getEnabledItems(filterData, type);
-        const leftContainsNotInSelected = enabledFilterData.some((item) => !selectedItems.has(item.key));
-        const onAllClick = () => foundation.handleAll(leftContainsNotInSelected);
-        const noMatch = inSearchMode && searchResult.size === 0;
+        const { showNumber, filterData, leafOnlyNum, allChecked, noMatch, pageSize, totalPage, currentPage } = view;
+        const onAllClick = () => foundation.handleAll(!allChecked);
 
         if (renderSourcePanel) {
             return renderSourcePanel({
@@ -456,7 +446,7 @@ export default function Transfer(rawProps: TransferProps) {
                 filterData,
                 sourceData: data,
                 propsDataSource: dataSource,
-                allChecked: !leftContainsNotInSelected,
+                allChecked,
                 showNumber,
                 inputValue,
                 selectedItems,
@@ -470,19 +460,14 @@ export default function Transfer(rawProps: TransferProps) {
 
         const headerCom = renderHeader({
             totalContent: formatLocale(locale.total, { total: showNumber }),
-            allContent: leftContainsNotInSelected ? locale.selectAll : locale.clearSelectAll,
+            allContent: allChecked ? locale.clearSelectAll : locale.selectAll,
             onAllClick,
             type: 'left',
-            showButton: !isTree && enabledFilterData.length > 0,
+            showButton: view.showAllButton,
             num: showNumber,
-            allChecked: !leftContainsNotInSelected,
+            allChecked,
             leafOnlyNum,
         });
-
-        const pageSize = TransferFoundation.getPageSize(pagination);
-        const totalPage = TransferFoundation.getTotalPage(pagination, filterData.length);
-        const currentPage = TransferFoundation.getCurrentPage(pagination, state.leftCurrentPage, filterData.length);
-        const visibleData = TransferFoundation.getVisibleData(filterData, pagination, currentPage);
 
         let content: React.ReactNode = null;
         if (loading) {
@@ -502,7 +487,7 @@ export default function Transfer(rawProps: TransferProps) {
             content = (
                 <>
                     {headerCom}
-                    {renderLeftList(visibleData)}
+                    {renderLeftList()}
                     {pagination && totalPage > 1 && (
                         <div className={`${prefixCls}-left-pagination`}>
                             <Pagination currentPage={currentPage} pageSize={pageSize} total={filterData.length} onPageChange={foundation.handlePageChange} />
@@ -547,7 +532,7 @@ export default function Transfer(rawProps: TransferProps) {
             isTree && showPath === true
                 ? TransferFoundation.getPath(item).map((pathItem, i) => (
                       <Fragment key={pathItem.key}>
-                          {i > 0 && ' > '}
+                          {i > 0 && strings.PATH_SEPARATOR}
                           {pathItem.label}
                       </Fragment>
                   ))
@@ -609,10 +594,7 @@ export default function Transfer(rawProps: TransferProps) {
     };
 
     const renderRight = () => {
-        const selectedData = [...selectedItems.values()].map((item) => ({
-            ...item,
-            fullPath: TransferFoundation.getFullPath(item, type, showPath),
-        }));
+        const { selectedData } = view;
         if (renderSelectedPanel) {
             return renderSelectedPanel({
                 length: selectedData.length,
@@ -627,7 +609,7 @@ export default function Transfer(rawProps: TransferProps) {
             allContent: locale.clear,
             onAllClick: foundation.handleClear,
             type: 'right',
-            showButton: selectedData.some((item) => !item.disabled),
+            showButton: view.showClearButton,
             num: selectedData.length,
         });
 

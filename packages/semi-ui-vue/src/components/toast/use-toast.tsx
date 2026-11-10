@@ -2,9 +2,10 @@
 
 import type { Component } from 'vue';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
+import { createHookApi } from '@fibrae/semi-foundation/base/hook-api';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
-import type { ToastInstance, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
+import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { createHolder } from '../../base/holder';
 import { useSemiGlobal } from '../../base/semi-default';
@@ -18,7 +19,7 @@ import ToastList from './toast-list.vue';
 export default function useToast(): [ToastHookApi, Component] {
     const semi = useSemiGlobal();
 
-    const store = new ToastListStore();
+    const store = createToastListStore();
 
     const Holder = createHolder('ToastHolder', () => (
         <div class={cssClasses.WRAPPER} {...{ [KEEP_INTERACTIVE_ATTRIBUTE]: '' }}>
@@ -26,17 +27,5 @@ export default function useToast(): [ToastHookApi, Component] {
         </div>
     ));
 
-    const add = (config: ToastHookOptions, type: ToastType) => store.open({ ...config, type } as ToastInstance, omitInstanceIds(semi.config.overrideDefaultProps?.Toast) as Partial<ToastInstance>);
-
-    return [
-        {
-            success: (config) => add(config, 'success'),
-            info: (config) => add(config, 'info'),
-            error: (config) => add(config, 'error'),
-            warning: (config) => add(config, 'warning'),
-            open: (config) => add(config, 'default'),
-            close: (id) => store.remove(id),
-        },
-        Holder,
-    ];
+    return [createHookApi<ToastHookOptions>(store, { readGlobalDefaults: () => omitInstanceIds(semi.config.overrideDefaultProps?.Toast) as Partial<ToastInstance> }), Holder];
 }

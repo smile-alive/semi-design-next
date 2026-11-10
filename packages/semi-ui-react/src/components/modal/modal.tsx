@@ -179,7 +179,6 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
     // evaluated once per render: the getter is the caller's function and ModalContent reuses the result
     // the caller's getter may read document; on the server and while hydrating the Portal renders nothing anyway
     const renderedInBody = !isServerRender && coversPage(getPopupContainer ?? context.getPopupContainer);
-    const wrapperStyle: CSSProperties = renderedInBody ? { zIndex } : { zIndex, position: 'static' };
 
     const updateState = () => setDisplayNone(!visible);
 
@@ -241,7 +240,7 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
                 <CSSAnimation startClassName={visible ? `${cssClasses.DIALOG}-mask-animate-show` : `${cssClasses.DIALOG}-mask-animate-hide`} animationState={visible ? 'enter' : 'leave'} motion={motion} onAnimationEnd={updateState}>
                     {({ animationClassName: maskAnimationClassName, animationEventsNeedBind: maskAnimationEventsNeedBind }) =>
                         shouldRender ? (
-                            <Portal style={wrapperStyle} getPopupContainer={getPopupContainer}>
+                            <Portal style={{ zIndex }} getPopupContainer={getPopupContainer}>
                                 <ModalContent
                                     {...rest}
                                     ref={rootRef}

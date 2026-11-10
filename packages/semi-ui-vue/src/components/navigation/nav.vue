@@ -99,20 +99,15 @@
         { props: { children: () => (mounted.value && childTree.value.length ? childTree.value : undefined) } }
     );
 
-    const isCollapsed = computed(() => NavigationFoundation.getIsCollapsed(foundationProps, state.value));
-    const openKeysIsControlled = computed(() => NavigationFoundation.isOpenKeysControlled(foundationProps, isCollapsed.value));
-    const openKeys = computed(() => NavigationFoundation.getOpenKeys(foundationProps, state.value, isCollapsed.value));
     const formatted = computed(() => NavigationFoundation.getFormattedItems({ items: props.items }, childTree.value));
-    const selectedKeys = computed(() => NavigationFoundation.getSelectedKeys(foundationProps, state.value, formatted.value.itemKeysMap));
+    const derived = computed(() => NavigationFoundation.deriveView(foundationProps, state.value, formatted.value.itemKeysMap));
+    const isCollapsed = computed(() => derived.value.isCollapsed);
 
     provideNavContext({
         view: computed(() => ({
-            isCollapsed: isCollapsed.value,
+            ...derived.value,
             mode: props.mode,
             isInSubNav: false,
-            openKeys: openKeys.value,
-            openKeysIsControlled: openKeysIsControlled.value,
-            selectedKeys: selectedKeys.value,
             selectedKeysIsControlled: props.selectedKeys !== undefined,
             limitIndent: props.limitIndent,
             toggleIconPosition: props.toggleIconPosition,
@@ -160,10 +155,6 @@
         return result;
     };
 
-    watch(isCollapsed, () => {
-        collapseAnimating.value = true;
-    });
-
     watch(
         collapseAnimating,
         (animating) => {
@@ -173,6 +164,10 @@
     );
 
     onMounted(() => {
+        // Not in setup: isCollapsed reads through the item tree, which calls the slot; the render has already cached it
+        watch(isCollapsed, () => {
+            collapseAnimating.value = true;
+        });
         mounted.value = true;
     });
 </script>

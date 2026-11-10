@@ -1,14 +1,13 @@
 <script lang="ts">
     import { tick } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
-    import { omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import teleport from '../../utils/teleport.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { setJsonViewerContext } from './context.js';
@@ -38,16 +37,8 @@
 
     const prefix = cssClasses.PREFIX;
 
-    // merged per key: a whole-object default would be replaced by any caller `options`; the locale-derived ariaLabel is
-    // part of the options, so a locale switch re-creates the editor
-    const mergedOptions = $derived<JsonViewerOptions>({
-        ariaLabel: locale().locale.content,
-        readOnly: false,
-        autoWrap: true,
-        // an explicit undefined would replace a default
-        ...omitBy(options ?? {}, (option) => option === undefined),
-    });
-
+    // ariaLabel is part of the options, so a locale switch re-creates the editor
+    const mergedOptions = $derived(JsonViewerFoundation.mergeOptions(options as CoreOptions | undefined, locale().locale.content));
     const sizeStyle = $derived(`width: ${toCssLength(width)}; height: ${toCssLength(height)}`);
 
     // $bindable needs destructuring, so the foundation reads the props through getters
@@ -56,7 +47,7 @@
             return value ?? '';
         },
         get options() {
-            return mergedOptions as CoreOptions;
+            return mergedOptions;
         },
     };
 
@@ -140,11 +131,11 @@
         };
 
     export function getValue() {
-        return foundation.jsonViewer?.getModel().getValue() ?? '';
+        return foundation.getValue();
     }
 
     export function format() {
-        foundation.jsonViewer?.format();
+        foundation.format();
     }
 
     export function search(searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) {
@@ -176,7 +167,7 @@
     }
 </script>
 
-<div {...rest} role={groupRole(rest)} style={[sizeStyle, 'position: relative', rest.style].filter(Boolean).join('; ')}>
+<div {...rest} role={namedRole(rest)} style={[sizeStyle, 'position: relative', rest.style].filter(Boolean).join('; ')}>
     <div bind:this={editor} class={[prefix, `${prefix}-background`]} style={sizeStyle}></div>
     {#if showSearch}
         {#if searchButton}

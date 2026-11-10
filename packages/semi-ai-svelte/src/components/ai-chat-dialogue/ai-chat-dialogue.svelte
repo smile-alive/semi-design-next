@@ -10,6 +10,7 @@
     import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import DialogueFoundation, { type DialogueAdapter, type DialogueBaseProps, type DialogueState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
@@ -17,7 +18,6 @@
     import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
-    import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
     import { setAIChatDialogueContext } from './context.js';
     import type { AIChatDialogueProps } from './interface.js';
     import DialogueHint from './widgets/dialogue-hint.svelte';
@@ -90,14 +90,10 @@
             getContainerRef: () => list as HTMLDivElement,
             notifySelect: (ids) => onSelect?.(ids),
             notifyChatsChange: (next) => {
-                // the followed copy stands for the list the parent already holds, so it is reported as that list
-                if (next === followedChats) {
-                    onChatsChange?.(currentChats);
-                    return;
-                }
                 chats = next;
                 onChatsChange?.(next);
             },
+            notifyChatsPropChange: () => onChatsChange?.(currentChats),
             notifyLikeMessage: (message) => onMessageGoodFeedback?.(message),
             notifyDislikeMessage: (message) => onMessageBadFeedback?.(message),
             notifyEditMessage: (message) => onMessageEdit?.(message),
@@ -201,7 +197,7 @@
     }
 </script>
 
-<div {...rest} class={[prefix, rest.class]} role={groupRole(rest)}>
+<div {...rest} class={[prefix, rest.class]} role={namedRole(rest)}>
     <div aria-busy={streaming} aria-label={locale().locale.messages} bind:this={list} class="{prefix}-list" role="log" tabindex="-1" onscroll={foundation.containerScroll}>
         {#each currentChats as chat, index (chat.id)}
             <Dialogue isLastChat={index === currentChats.length - 1} isSelected={states().selectedIds.has(chat.id)} message={chat} role={roleConfig[chat.role]} />

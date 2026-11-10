@@ -1,4 +1,4 @@
-import { children, createEffect, createMemo, createSignal, Match, on, onCleanup, Show, splitProps, Switch, untrack, type JSX } from 'solid-js';
+import { children, createEffect, createMemo, createSignal, Match, mergeProps, on, onCleanup, Show, splitProps, Switch, untrack, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/avatar/constants';
 import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/components/avatar/foundation';
@@ -55,19 +55,6 @@ function AvatarView(rawProps: AvatarProps) {
     const [focusWrapper, setFocusWrapper] = createSignal<HTMLSpanElement>();
     let contentElement: HTMLSpanElement | undefined;
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, AvatarProps, AvatarState>(
-        AvatarFoundation,
-        props,
-        () => AvatarFoundation.getInitialState(),
-        (base) => ({
-            notifyEnter: (event) => callHandler(base.getProps().onMouseEnter, event),
-            notifyError: (event) => base.getProps().onError?.(event),
-            notifyLeave: (event) => callHandler(base.getProps().onMouseLeave, event),
-            getAvatarElement: () => root() ?? null,
-            getTextElement: () => contentElement ?? null,
-        })
-    );
-
     const inLayer = group.inGroup && group.layer === currentLayer;
     const resolved = children(() => local.children);
 
@@ -75,8 +62,6 @@ function AvatarView(rawProps: AvatarProps) {
     // again; one read per change keeps it
     const topSlot = createMemo(() => local.topSlot);
     const bottomSlot = createMemo(() => local.bottomSlot);
-
-    const clickable = () => local.onClick !== undefined;
 
     // Position in the group's list; undefined until the group has resolved its children, -1 when a text child ahead of
     // this avatar pushed its node past maxCount, into renderMore
@@ -88,12 +73,33 @@ function AvatarView(rawProps: AvatarProps) {
 
     const item = () => (inLayer && index() !== -1 ? group.item : undefined);
 
-    const isListItem = () => inLayer && (group.item === undefined || index() !== -1);
-
     const size = () => {
         const entry = item();
         return (entry ? entry.size() : (rawProps.size ?? group.moreItem?.().size)) ?? props.size;
     };
+
+    const foundationProps = mergeProps(props, {
+        get size() {
+            return size();
+        },
+    }) as AvatarProps;
+
+    const { foundation, state } = useFoundation<Foundation, Adapter, AvatarProps, AvatarState>(
+        AvatarFoundation,
+        foundationProps,
+        () => AvatarFoundation.getInitialState(),
+        (base) => ({
+            notifyEnter: (event) => callHandler(base.getProps().onMouseEnter, event),
+            notifyError: (event) => base.getProps().onError?.(event),
+            notifyLeave: (event) => callHandler(base.getProps().onMouseLeave, event),
+            getAvatarElement: () => root() ?? null,
+            getTextElement: () => contentElement ?? null,
+        })
+    );
+
+    const clickable = () => local.onClick !== undefined;
+
+    const isListItem = () => inLayer && (group.item === undefined || index() !== -1);
 
     const shape = () => {
         const entry = item();
@@ -244,9 +250,6 @@ function AvatarView(rawProps: AvatarProps) {
             createEffect(() => untrack(foundation.changeScale));
         }
     });
-
-    // size is resolved from the group context, so it is not a prop of the foundation
-    useWatch(size, foundation.changeScale);
 
     // Element children move into the focus wrapper only after the avatar has reconciled its own children: inserting
     // them in the wrapper's JSX lets that reconcile remove them again, since they are still in its old list

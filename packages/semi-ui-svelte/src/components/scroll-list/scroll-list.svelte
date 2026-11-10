@@ -1,8 +1,8 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
     import useDefaultProps from '../../base/use-default-props.js';
-    import { groupRole } from '../../utils/group-role.js';
     import type { ScrollListProps } from './interface.js';
 
     const defaults = useDefaultProps('ScrollList');
@@ -16,7 +16,7 @@
     const cssHeight = $derived(typeof bodyHeight === 'number' ? (bodyHeight ? `${bodyHeight}px` : undefined) : bodyHeight || undefined);
 </script>
 
-<div {...rest} class={[prefix, rest.class]} role={groupRole(rest)}>
+<div {...rest} class={[prefix, rest.class]} role={namedRole(rest)}>
     {#if header}
         <div class={`${prefix}-header`}>
             <div class={`${prefix}-header-title`} x-semi-prop="header">

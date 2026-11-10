@@ -509,8 +509,7 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
     // select-only combobox exposing the selected path as its value. A triggerRender replaces the input
     const inputIsCombobox = () => triggerSearch() && !local.triggerRender && (Boolean(local.multiple) || Boolean(view.showInput));
 
-    // multiple mode keeps no selectedKeys beyond the one getInitialState writes; its value also holds controlled paths without tags
-    const clearable = () => Boolean(local.showClear && (view.inputValue || (local.multiple ? CascaderFoundation.hasMultipleValue(foundationProps, view) : view.selectedKeys.size)) && !local.disabled);
+    const clearable = () => CascaderFoundation.isClearable(foundationProps, view);
 
     const tagSize = () => (local.size === 'default' ? 'large' : local.size);
 

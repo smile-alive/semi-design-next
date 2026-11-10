@@ -1,15 +1,13 @@
 import { nextTick, type ComputedRef, type ShallowRef } from 'vue';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { crossesFocusBoundary } from '@fibrae/semi-foundation/utils/a11y';
 import type { ModelModifiers } from './interface';
 import { keepsTypedValue } from './model-modifiers';
 
 interface TextEntry {
     handleCompositionEnd(event: CompositionEvent): boolean;
-    handleFocus(event: FocusEvent): void;
     handleBlur(event: FocusEvent): void;
 }
-
-const staysInside = (event: FocusEvent) => event.currentTarget instanceof Node && event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget);
 
 interface Options {
     element: Readonly<ShallowRef<HTMLInputElement | HTMLTextAreaElement | null>>;
@@ -70,20 +68,14 @@ export default function useTextEntry({ element, draft, props, shown, foundation,
         void restoreShownValue();
     };
 
-    const handleFocusIn = (event: FocusEvent) => {
-        if (!staysInside(event)) {
-            foundation.handleFocus(event);
-        }
-    };
-
     const handleFocusOut = (event: FocusEvent) => {
-        if (!staysInside(event)) {
-            foundation.handleBlur(event);
+        foundation.handleBlur(event);
+        if (crossesFocusBoundary(event)) {
             // an edit typed back to its original text fires no change, so its draft is dropped here
             draft.value = undefined;
             void restoreShownValue();
         }
     };
 
-    return { elementText, runInput, handleCompositionEnd, commitDraft, handleFocusIn, handleFocusOut };
+    return { elementText, runInput, handleCompositionEnd, commitDraft, handleFocusOut };
 }

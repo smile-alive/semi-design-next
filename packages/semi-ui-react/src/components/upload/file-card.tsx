@@ -2,6 +2,7 @@ import { isValidElement, useState, type ReactNode, type MouseEvent, type CSSProp
 import clsx from 'clsx';
 import { pickBy } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
 import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';
@@ -92,7 +93,7 @@ function renderValidateMessage({ status, validateMessage }: FileCardProps): Reac
     return isValidElement(validateMessage) ? validateMessage : null;
 }
 
-function renderPicValidateMsg({ status, validateMessage }: FileCardProps): ReactNode {
+function renderPicValidateMsg({ status, validateMessage }: FileCardProps, failed: boolean): ReactNode {
     let icon: ReactNode = null;
     if (validateMessage && status === strings.FILE_STATUS_VALIDATING) {
         icon = (
@@ -100,7 +101,7 @@ function renderPicValidateMsg({ status, validateMessage }: FileCardProps): React
                 <Spin size="small" />
             </span>
         );
-    } else if (validateMessage && (status === strings.FILE_STATUS_VALID_FAIL || status === strings.FILE_STATUS_UPLOAD_FAIL)) {
+    } else if (validateMessage && failed) {
         icon = (
             <div className={`${prefixCls}-picture-file-card-icon-error`}>
                 <ErrorSvg />
@@ -135,10 +136,7 @@ function stopThen(callback: () => void) {
 function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPreview: boolean, onImageError: () => void): ReactNode {
     const { url, percent, status, disabled, style, onPreviewClick, showPicInfo, renderPicInfo, renderPicClose, renderPicPreviewIcon, renderThumbnail, name, index, picHeight, picWidth } = props;
     const onRemove = stopThen(props.onRemove);
-    const showProgress = status === strings.FILE_STATUS_UPLOADING && percent !== 100;
-    const showRetry = !disabled && status === strings.FILE_STATUS_UPLOAD_FAIL && props.showRetry;
-    const showReplace = !disabled && status === strings.FILE_STATUS_SUCCESS && props.showReplace;
-    const showPreview = status === strings.FILE_STATUS_SUCCESS && !showReplace;
+    const { showRetry, showReplace, showPicProgress: showProgress, showPreview, failed } = UploadFoundation.getFileCardFlags(props, props);
     const customThumbnail = typeof renderThumbnail === 'function';
     const filePicCardCls = clsx({
         [`${prefixCls}-picture-file-card`]: true,
@@ -195,16 +193,17 @@ function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPrevi
             {showPreview && preview}
             {showPicInfo && picInfo}
             {!disabled && close}
-            {renderPicValidateMsg(props)}
+            {renderPicValidateMsg(props, failed)}
         </div>
     );
 }
 
 function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPreview: boolean, onImageError: () => void): ReactNode {
-    const { name, size, percent, url, disabled, preview, previewFile, status, style, onPreviewClick, renderFileOperation, showTooltip } = props;
+    const { name, size, percent, url, disabled, preview, previewFile, style, onPreviewClick, renderFileOperation, showTooltip } = props;
+    const { showRetry, showReplace, showListProgress: showProgress, failed } = UploadFoundation.getFileCardFlags(props, props);
     const fileCardCls = clsx({
         [`${prefixCls}-file-card`]: true,
-        [`${prefixCls}-file-card-fail`]: status === strings.FILE_STATUS_VALID_FAIL || status === strings.FILE_STATUS_UPLOAD_FAIL,
+        [`${prefixCls}-file-card-fail`]: failed,
         [`${prefixCls}-file-card-show-pointer`]: typeof onPreviewClick !== 'undefined',
     });
     const previewCls = clsx({
@@ -212,9 +211,6 @@ function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPrev
         [`${prefixCls}-file-card-preview-placeholder`]: !preview || previewFile || fallbackPreview,
     });
     const infoCls = `${prefixCls}-file-card-info`;
-    const showProgress = !(percent === 100 || typeof percent === 'undefined') && status === strings.FILE_STATUS_UPLOADING;
-    const showRetry = !disabled && status === strings.FILE_STATUS_UPLOAD_FAIL && props.showRetry;
-    const showReplace = !disabled && status === strings.FILE_STATUS_SUCCESS && props.showReplace;
     let previewContent: ReactNode = preview && !fallbackPreview ? <img alt="" src={url} onError={onImageError} /> : <IconFile size="large" />;
     if (previewFile) {
         previewContent = previewFile(props);

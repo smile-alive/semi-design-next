@@ -4,11 +4,11 @@
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
-    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
+    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState, getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
     import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
     import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/select/select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
@@ -125,20 +125,9 @@
             notifyListScroll: (event) => emit('listScroll', event),
             focusTrigger: () => trigger.value?.focus({ preventScroll: props.preventScroll }),
             getOptionList: () => optionContainer.value,
-            updateScrollTop: (index) => {
-                if (index !== undefined && virtualList.value) {
-                    // only the rows in view are rendered, so the target may not be in the DOM yet
-                    virtualList.value.scrollToItem(index);
-                    return;
-                }
-                const custom = slots.optionItem ? '-custom' : '';
-                // document.getElementById misses a list rendered inside a ShadowRoot
-                const destNode = optionContainer.value?.querySelector<HTMLElement>(index === undefined ? `.${prefix}-option${custom}-selected` : `#${CSS.escape(optionId(index))}`);
-                const listbox = destNode?.closest<HTMLElement>('[role="listbox"]');
-                if (destNode && listbox) {
-                    centerInScroller(destNode, listbox);
-                }
-            },
+            getListId: () => selectId(),
+            getTriggerInput: () => triggerInput.value?.input,
+            scrollVirtualTo: (index, align) => virtualList.value?.scrollToItem(index, align),
         }),
         {
             props: {
@@ -181,19 +170,19 @@
 
     const selectId = () => props.id || generatedId;
 
-    const optionId = (index: number) => `${selectId()}-option-${index}`;
-
     const visibleOptions = computed(() => SelectFoundation.getVisibleOptions(state.value.options as OptionRecord[]));
     const selectedItems = computed((): OptionData[] => [...state.value.selections.values()]);
+    const tagFold = computed(() => SelectFoundation.getTagFold(props, state.value, selectedItems.value.length));
+    const clearable = computed(() => SelectFoundation.isClearable({ showClear: props.showClear, disabled: looks.disabled }, state.value));
+    const optionRuns = computed(() => getOptionRuns(visibleOptions.value));
+
+    const optionId = (index: number) => getOptionId(selectId(), index);
 
     const activeDescendant = computed(() => {
         const { isOpen, focusIndex } = state.value;
         const index = SelectFoundation.getActiveOptionIndex({ isOpen, loading: props.loading, focusIndex, visibleCount: visibleOptions.value.length });
         return index === undefined ? undefined : optionId(index);
     });
-
-    const clearable = computed(() => SelectFoundation.isClearable({ showClear: props.showClear, disabled: looks.disabled }, state.value));
-    const optionRuns = computed(() => getOptionRuns(visibleOptions.value));
 
     const inputId = () => (props.inputProps?.id as string | undefined) ?? `${selectId()}-input`;
 
@@ -257,34 +246,10 @@
 
     const handleInputChange = (value: string, event?: Event) => foundation.handleInputChange(value, event);
 
-    const handleClear = (event?: MouseEvent) => {
-        event?.stopImmediatePropagation();
-        foundation.handleClearClick(event);
-    };
-
     // The search input is inside the trigger, so its keys bubble here. The Select handles a key before the listeners
     const handleKeyDown = (event: KeyboardEvent) => {
         foundation.handleKeyDown(event);
         emit('keydown', event);
-    };
-
-    const isTriggerInput = (target: EventTarget | null) => Boolean(target) && target === triggerInput.value?.input;
-
-    const handleFocusIn = (event: FocusEvent) => {
-        if (isTriggerInput(event.target)) {
-            foundation.handleInputFocus(event);
-        } else {
-            foundation.handleTriggerFocus(event);
-        }
-    };
-
-    const handleFocusOut = (event: FocusEvent) => {
-        if (isTriggerInput(event.target)) {
-            foundation.handleInputBlur();
-        }
-        if (!(event.currentTarget as Node).contains(event.relatedTarget as Node | null)) {
-            foundation.handleTriggerBlur(event);
-        }
     };
 
     // A press would move the focus to the popup container, where the keys never reach the combobox; it stays on the
@@ -292,19 +257,6 @@
     const keepFocusOnPress = (event: MouseEvent) => {
         if (!isTextEditor(event.target)) {
             event.preventDefault();
-        }
-    };
-
-    const scrollToSelection = () => {
-        if (props.virtualize && state.value.focusIndex !== -1) {
-            virtualList.value?.scrollToItem(state.value.focusIndex, 'center');
-        } else if (props.virtualize) {
-            const first = state.value.options.find((option) => option.selected && option.index >= 0);
-            if (first) {
-                virtualList.value?.scrollToItem(first.index, 'center');
-            }
-        } else {
-            foundation.updateScrollTop();
         }
     };
 
@@ -443,23 +395,12 @@
     // the same size mapping as TreeSelect, Cascader and TagInput: a default-size trigger holds large tags
     const tagSize = () => (looks.size === 'small' ? 'small' : 'large');
 
-    const collapsedTags = () => {
-        const count = props.maxTagCount ?? 0;
-        return selectedItems.value.length > count ? selectedItems.value.slice(0, count) : selectedItems.value;
-    };
+    const collapsedTags = () => selectedItems.value.slice(0, tagFold.value.limit);
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
-    const handleOverflow = (items: OptionData[]) => foundation.updateOverflowItemCount(state.value.selections.size, Math.max(items.length - 1, 0));
+    const handleOverflow = (items: OptionData[]) => foundation.updateOverflowItemCount(Math.max(items.length - 1, 0));
 
-    const groupTags = () => {
-        const count = props.maxTagCount ?? 0;
-        const full = props.showRestTagsPopover && state.value.isFullTags;
-        return full ? selectedItems.value : selectedItems.value.slice(0, count);
-    };
-
-    const groupMaxTagCount = () => (selectedItems.value.length > (props.maxTagCount ?? 0) ? props.maxTagCount : undefined);
-
-    const groupRestCount = () => (props.showRestTagsPopover && state.value.isFullTags ? undefined : selectedItems.value.length - (props.maxTagCount ?? 0));
+    const groupTags = () => selectedItems.value.slice(0, tagFold.value.shownCount);
 
     const restPopoverBindings = () => ({
         autoAdjustOverflow: true,
@@ -477,7 +418,7 @@
         componentProps: { ...omit(props, ['optionRecords']), ...looks },
         onSearch: (value) => handleInputChange(value),
         // bound to a click inside the trigger: stopped so the trigger does not reopen the list
-        onClear: (event) => handleClear(event),
+        onClear: (event) => foundation.handleClearClick(event),
         onRemove: (option) => foundation.removeTag(option as BasicOptionProps),
     });
 
@@ -529,9 +470,9 @@
         trigger="custom"
         :visible="state.isOpen"
         @afterClose="foundation.handlePopoverClose"
-        @open="scrollToSelection"
+        @open="foundation.scrollToSelection"
     >
-        <div :id="selectId()" ref="trigger" v-bind="rootAttrs()" :class="rootClass(kinds())" :tabindex="looks.disabled || inputIsCombobox() ? -1 : 0" @click="foundation.handleClick" @focusin="handleFocusIn" @focusout="handleFocusOut" @keydown="handleKeyDown">
+        <div :id="selectId()" ref="trigger" v-bind="rootAttrs()" :class="rootClass(kinds())" :tabindex="looks.disabled || inputIsCombobox() ? -1 : 0" @click="foundation.handleClick" @focusin="foundation.handleFocusIn" @focusout="foundation.handleFocusOut" @keydown="handleKeyDown">
             <slot v-if="$slots.trigger" name="trigger" v-bind="triggerSlotProps()" />
             <template v-for="(k, i) in $slots.trigger ? [] : [kinds()]" v-else :key="i">
                 <div
@@ -562,7 +503,7 @@
                         ]"
                     >
                         <template v-if="selectedItems.length">
-                            <template v-if="!props.maxTagCount || (props.expandRestTagsOnClick && state.isOpen)">
+                            <template v-if="tagFold.expanded">
                                 <template v-for="(item, index) in selectedItems" :key="item.value">
                                     <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
                                     <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
@@ -623,9 +564,9 @@
                             </div>
                             <TagGroup
                                 v-else
-                                :maxTagCount="groupMaxTagCount()"
+                                :maxTagCount="tagFold.limit"
                                 :popoverProps="props.showRestTagsPopover ? props.restTagsPopoverProps : undefined"
-                                :restCount="groupRestCount()"
+                                :restCount="tagFold.restCount"
                                 :showPopover="props.showRestTagsPopover"
                                 :size="tagSize()"
                                 :tagList="groupTags().map((item) => ({ tagKey: item.value }))"
@@ -650,7 +591,7 @@
                         <template v-for="option in [singleItem()]" :key="String(option?.value)">
                             <span :id="selectionTextId" :class="singleTextClass(hasSingleContent(option))" x-semi-prop="placeholder">
                                 <template v-if="hasSingleContent(option)">
-                                    <slot v-if="$slots.selectedItem" :disabled="looks.disabled" :index="0" name="selectedItem" :onClose="() => handleClear()" :option="option" />
+                                    <slot v-if="$slots.selectedItem" :disabled="looks.disabled" :index="0" name="selectedItem" :onClose="() => foundation.handleClearClick()" :option="option" />
                                     <component :is="option._slot" v-else-if="option._slot" />
                                     <template v-else>{{ option.label }}</template>
                                 </template>
@@ -675,7 +616,7 @@
                 </div>
             </template>
             <!-- .stop keeps the button's own Enter and Space from the owner's keydown listeners, which listen to the combobox -->
-            <button v-if="!$slots.trigger && clearable" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clear`" type="button" @click="handleClear" @keydown.enter.space.stop>
+            <button v-if="!$slots.trigger && clearable" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clear`" type="button" @click="foundation.handleClearClick" @keydown.enter.space.stop>
                 <slot name="clearIcon">
                     <IconClear />
                 </slot>

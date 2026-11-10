@@ -61,15 +61,13 @@
 
     const onInput = (e: Event) => emit('change', Number((e.target as HTMLInputElement).value));
 
-    // the popup is anchored to the slider's center, so only a translate moves it to the pointer; the vertical offset
-    // counts up from the bottom
     const tooltipProps = () => {
         if (!props.showTooltip) return {};
         const info = state.value.movingInfo;
         return {
             autoAdjustOverflow: true,
             position: props.vertical ? 'right' : 'top',
-            style: { translate: info ? (props.vertical ? `0 ${-info.offset}px` : `${info.offset}px 0`) : undefined },
+            style: { translate: info ? SeekFoundation.getPreviewTranslate(info.offset, props.vertical) : undefined },
         };
     };
 </script>
@@ -89,9 +87,9 @@
             tabindex="-1"
             @lostpointercapture="foundation.handleLostPointerCapture"
             @mousedown.prevent
-            @mouseenter="foundation.handlePointerPosition($event, { seek: false })"
+            @mouseenter="foundation.handlePointerEnter"
             @pointerdown="onPointerDown"
-            @pointermove="foundation.handlePointerPosition($event, { seek: true })"
+            @pointermove="foundation.handlePointerMove"
         >
             <input
                 ref="input"

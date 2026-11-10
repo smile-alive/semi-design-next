@@ -1,10 +1,10 @@
-import React, { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
+import React, { useId, useImperativeHandle, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { strings, numbers, cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import MonthsGridFoundation, { type PanelState, type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import { IconClock, IconCalendar } from '@fibrae/semi-icons-react';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';
 import Combobox, { type ComboboxHandle, type ComboboxProps } from '../time-picker/combobox';
 import type { DatePickerProps } from './date-picker';
@@ -23,6 +23,8 @@ export interface MonthsGridProps extends MonthsGridFoundationProps, BaseProps {
     renderFullDate?: DatePickerProps['renderFullDate'];
     timePickerOpts?: DatePickerTimePickerOpts;
     yearAndMonthOpts?: YearAndMonthOpts;
+    renderQuickControls?: React.ReactNode;
+    renderDateInput?: React.ReactNode;
     ref?: React.Ref<MonthsGridHandle>;
 }
 
@@ -32,10 +34,6 @@ export interface MonthsGridHandle {
 }
 
 export type MonthsGridState = MonthsGridFoundationState;
-
-function noDisabledDate() {
-    return false;
-}
 
 const { isYearOrTime } = MonthsGridFoundation;
 
@@ -47,7 +45,6 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         type: rawProps.type ?? 'date',
         multiple: rawProps.multiple ?? false,
         weekStartsOn: rawProps.weekStartsOn ?? numbers.WEEK_START_ON,
-        disabledDate: rawProps.disabledDate ?? noDisabledDate,
     };
 
     const { type, insetInput } = props;
@@ -58,10 +55,6 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const [nodes] = useState<PanelNodes>(() => ({ panel: { left: null, right: null }, wrap: { left: null, right: null }, switch: { left: null, right: null } }));
     const titleId = useId();
 
-    // the button that switches between the month and the year picker unmounts or hides under the focus, so the view
-    // it switched to takes the focus once rendered
-    const pendingFocus = useRef<{ panelType: PanelType; target: 'year' | 'title' } | null>(null);
-
     // hooks called inside an object literal are memoized as values by the React Compiler and skipped on re-render
     const leftTimePickerRef = useRef<ComboboxHandle>(null);
     const rightTimePickerRef = useRef<ComboboxHandle>(null);
@@ -70,22 +63,6 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
 
     const timePickerRefs = { left: leftTimePickerRef, right: rightTimePickerRef };
     const yamRefs = { left: leftYamRef, right: rightYamRef };
-    const isRange = isRangeType(type);
-    const dateFormat = MonthsGridFoundation.getValidDateFormat(props);
-
-    const attach = (part: PanelPart, panelType: PanelType) => (node: HTMLDivElement | null) => {
-        nodes[part][panelType] = node;
-    };
-
-    useLayoutEffect(() => {
-        const pending = pendingFocus.current;
-        if (pending) {
-            pendingFocus.current = null;
-            const panel = nodes.panel[pending.panelType];
-            const node = pending.target === 'year' ? panel?.querySelector<HTMLElement>('[role="listbox"]') : (panel?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${pending.panelType}-title`);
-            node?.focus();
-        }
-    });
 
     const [foundation, state] = useFoundation<MonthsGridFoundation, MonthsGridAdapter, MonthsGridProps, MonthsGridState>(
         MonthsGridFoundation,
@@ -95,6 +72,11 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
             notifySelectedChange: (value, options) => base.getProps().onChange?.(value, options),
             notifyPanelChange: (date, dateString) => base.getProps().onPanelChange?.(date, dateString),
             getPanelNode: (part, panelType) => nodes[part][panelType],
+            focusPanelTarget: (panelType, target) => {
+                const panel = nodes.panel[panelType];
+                const node = target === 'yearList' ? panel?.querySelector<HTMLElement>('[role="listbox"]') : (panel?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`);
+                node?.focus();
+            },
             reselectScrollLists: () => {
                 for (const handle of [timePickerRefs.left, timePickerRefs.right, yamRefs.left, yamRefs.right]) {
                     handle.current?.reselect();
@@ -103,7 +85,13 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         })
     );
 
+    const isRange = isRangeType(type);
+    const dateFormat = MonthsGridFoundation.getValidDateFormat(props);
     const { selected, rangeStart, rangeEnd, hoverDay, offsetRangeStart, offsetRangeEnd, monthLeft, monthRight } = state;
+
+    const attach = (part: PanelPart, panelType: PanelType) => (node: HTMLDivElement | null) => {
+        nodes[part][panelType] = node;
+    };
 
     const renderMonth = (month: Date, panelType: PanelType, detail: PanelState) => {
         const monthText = MonthsGridFoundation.formatMonthText(locale, month);
@@ -118,10 +106,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
                     panelType={panelType}
                     shouldBimonthSwitch={isRange && syncSwitchMonth}
                     titleId={`${titleId}-${panelType}-title`}
-                    onMonthClick={() => {
-                        pendingFocus.current = { panelType, target: 'year' };
-                        foundation.showYearPicker(panelType);
-                    }}
+                    onMonthClick={() => foundation.showYearPicker(panelType)}
                     onNextMonth={() => foundation.nextMonth(panelType)}
                     onNextYear={() => foundation.nextYear(panelType)}
                     onPrevMonth={() => foundation.prevMonth(panelType)}
@@ -181,10 +166,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
                 locale={locale}
                 startYear={startYear}
                 yearAndMonthOpts={yearAndMonthOpts}
-                onBackToMain={() => {
-                    pendingFocus.current = { panelType, target: 'title' };
-                    foundation.showDatePanel(panelType);
-                }}
+                onBackToMain={() => foundation.backToDatePanel(panelType)}
                 onSelect={(item) => foundation.toYearMonth(panelType, new Date(item.currentYear.left, item.currentMonth.left - 1))}
             />
         );
@@ -250,10 +232,6 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     };
 
     const content = isRange ? [renderPanel(PANEL_TYPE_LEFT), renderPanel(PANEL_TYPE_RIGHT)] : renderPanel(PANEL_TYPE_LEFT);
-
-    useLayoutEffect(() => {
-        foundation.applyPanelSize();
-    });
 
     useImperativeHandle(ref, () => ({ switchPanels: foundation.switchPanels }), [foundation]);
 

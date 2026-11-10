@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import { cssClasses, type DialogueIconKind, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { InputFile } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { IconCode, IconExcel, IconFile, IconPdf, IconSendMsgStroked, IconVideo, IconWord } from '@fibrae/semi-icons-svelte';
@@ -12,7 +12,7 @@
     const locale = useLocale('AIChatDialogue');
 
     const { PREFIX_CONTENT } = cssClasses;
-    const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile };
+    const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile } satisfies Record<DialogueIconKind | 'default', unknown>;
     const realType = $derived(getFileType(file.filename, file.fileInstance?.type));
     const kind = $derived(getDialogueFileKind(realType) ?? 'default');
     const Icon = $derived(kind === 'image' ? undefined : ICONS[kind]);

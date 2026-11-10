@@ -18,9 +18,9 @@ export default function useModal(): ModalHookApi {
     });
 
     const create = (config: ConfirmProps) => {
-        const { ref, dispose } = openConfirm(config, { context, onClosed: () => open.delete(dispose) });
+        const { instance, dispose } = openConfirm(config, { context, onRemove: () => open.delete(dispose) });
         open.add(dispose);
-        return ref;
+        return instance.handle;
     };
 
     const typed = (type: ConfirmProps['type']) => (config: ModalConfirmProps) => create(withType(type, config));

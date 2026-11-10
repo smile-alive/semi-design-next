@@ -3,6 +3,7 @@
     import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
@@ -10,7 +11,6 @@
     import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useFocusHandover, useLocale } from '@fibrae/semi-ui-vue/composables';
-    import { groupRole } from '@fibrae/semi-ui-vue/utils/group-role';
     import { handOnSlots } from '@fibrae/semi-ui-vue/utils/hand-on';
     import { provideAIChatDialogueContext } from './context';
     import type { AIChatDialogueEmits, AIChatDialogueHandle, AIChatDialogueProps, AIChatDialogueSlots } from './interface';
@@ -58,11 +58,14 @@
         () => ({
             getContainerRef: () => list.value as HTMLDivElement,
             notifySelect: (ids: string[]) => emit('select', ids),
-            // a followed copy stands for the list the parent already holds, so it is reported as that list
             notifyChatsChange: (next: Message[]) => {
-                const list = next === followedChats.value ? chats.value : next;
-                emit('update:chats', list);
-                emit('chatsChange', list);
+                emit('update:chats', next);
+                emit('chatsChange', next);
+            },
+            // an in-place edit of a reactive list keeps its identity, so the parent hears of it through `update:chats` too
+            notifyChatsPropChange: () => {
+                emit('update:chats', chats.value);
+                emit('chatsChange', chats.value);
             },
             notifyLikeMessage: (message: Message) => emit('messageGoodFeedback', message),
             notifyDislikeMessage: (message: Message) => emit('messageBadFeedback', message),
@@ -121,7 +124,7 @@
 </script>
 
 <template>
-    <div :class="prefix" :role="groupRole(attrs)">
+    <div :class="prefix" :role="namedRole(attrs)">
         <div ref="list" :aria-busy="streaming" :aria-label="locale.locale.messages" :class="`${prefix}-list`" role="log" tabindex="-1" @scroll="foundation.containerScroll">
             <component :is="dialogueNode(chat, index)" v-for="(chat, index) in chats" :key="chat.id" />
             <DialogueHint v-if="hints.length > 0" :class="props.hintCls" :hints="hints" :selecting="props.selecting" :style="props.hintStyle" @hintClick="foundation.onHintClick">

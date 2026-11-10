@@ -106,8 +106,8 @@
         (foundationProps) => TreeFoundation.getInitialState(foundationProps),
         (base) => ({
             notifyExpand: (expandedKeys, info) => {
-                emit('update:expandedKeys', [...expandedKeys]);
-                emit('expand', [...expandedKeys], info as TreeExpandedOtherProps);
+                emit('update:expandedKeys', expandedKeys);
+                emit('expand', expandedKeys, info as TreeExpandedOtherProps);
             },
             notifySelect: (selectKey, selected, node) => emit('select', selectKey, selected, node as TreeNodeData),
             notifyChange: (value) => {

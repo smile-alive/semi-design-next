@@ -56,6 +56,9 @@ describe('CheckboxFoundation', () => {
     describe('handleChange', () => {
         const source = () => ({ stopPropagation: vi.fn<() => void>(), preventDefault: vi.fn<() => void>() });
 
+        const input = document.createElement('input');
+        document.body.append(input);
+
         const setup = (props: BaseCheckboxProps & { name?: string }, context: CheckboxContextView | null = null, checked = false) => {
             const adapter = {
                 getProps: () => props,
@@ -65,7 +68,7 @@ describe('CheckboxFoundation', () => {
                 getContexts: () => context,
                 isControlledComponent: () => false,
                 setState: vi.fn<(state: object) => void>(),
-                focusCheckboxEntity: vi.fn<() => void>(),
+                getInput: () => input,
                 notifyChange: vi.fn<(e: BasicCheckboxEvent) => void>(),
                 notifyGroupChange: vi.fn<(e: BasicCheckboxEvent) => void>(),
             };
@@ -91,7 +94,7 @@ describe('CheckboxFoundation', () => {
         it('组被禁用时只聚焦，不通知', () => {
             const { adapter, foundation } = setup({ value: 'a' }, { checkboxGroup: { ...group, disabled: true } });
             foundation.handleChange(source());
-            expect(adapter.focusCheckboxEntity).toHaveBeenCalledTimes(1);
+            expect(document.activeElement).toBe(input);
             expect(adapter.notifyChange).not.toHaveBeenCalled();
         });
 

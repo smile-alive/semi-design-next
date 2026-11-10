@@ -14,6 +14,16 @@ function createFoundation(getStarDOM: RatingAdapter['getStarDOM']) {
     return { foundation: new RatingFoundation(adapter), adapter };
 }
 
+describe('RatingFoundation.getUnit', () => {
+    const locale = { star: 'star', stars: 'stars' };
+
+    it('自定义单位原样使用，否则 1 用单数、其余用复数', () => {
+        expect(RatingFoundation.getUnit(1, '颗', locale)).toBe('颗');
+        expect(RatingFoundation.getUnit(1, undefined, locale)).toBe('star');
+        expect(RatingFoundation.getUnit(2.5, undefined, locale)).toBe('stars');
+    });
+});
+
 describe('RatingFoundation.isRadioValue', () => {
     it('整星值始终有对应 radio，半星值只在 allowHalf 下有', () => {
         expect(RatingFoundation.isRadioValue(3, 5, false)).toBe(true);

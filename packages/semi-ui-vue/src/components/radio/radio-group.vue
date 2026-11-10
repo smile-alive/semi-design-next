@@ -51,6 +51,7 @@
                 emit('update:modelValue', event.target.value as RadioValue | undefined);
                 emit('change', event as RadioChangeEvent);
             },
+            notifyBlur: (event) => emit('blur', event),
         }),
         { props: { value: () => props.modelValue } }
     );
@@ -63,7 +64,7 @@
 
     provideRadioGroupContext({
         view: computed<RadioGroupContextView>(() => ({
-            value: props.modelValue === undefined ? state.value.value : props.modelValue,
+            value: RadioGroupFoundation.deriveValue({ value: props.modelValue }, state.value),
             disabled: Boolean(props.disabled),
             name: props.name || generatedName,
             prefixCls: props.prefixCls,
@@ -82,13 +83,6 @@
     });
 
     const rootAttrs = (a: Record<string, unknown>) => Object.fromEntries(Object.entries(a).filter(([key]) => !DROPPED_ATTRS.has(key)));
-
-    // Moving between the radios is not leaving the group: a form's blur validation waits until focus is outside.
-    const handleFocusout = (event: FocusEvent) => {
-        if (!(event.currentTarget as Element).contains(event.relatedTarget as Node | null)) {
-            emit('blur', event);
-        }
-    };
 </script>
 
 <template>
@@ -105,7 +99,7 @@
             },
         ]"
         role="radiogroup"
-        @focusout="handleFocusout"
+        @focusout="foundation.handleBlur"
     >
         <template v-if="props.options">
             <Radio v-for="(option, index) in items" :key="index" :addonClassName="option.addonClass" :addonId="option.addonId" :addonStyle="option.addonStyle" :class="option.class" :disabled="option.disabled || props.disabled" :extraId="option.extraId" :style="option.style" :value="option.value">

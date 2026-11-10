@@ -4,6 +4,11 @@ export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-backtop`,
 };
 
+export const numbers = {
+    DEFAULT_VISIBILITY_HEIGHT: 400, // scroll distance past which the button shows, unit: px
+    DEFAULT_DURATION: 450, // of the scroll back to the top, unit: ms
+};
+
 export const strings = {
     // interactive content a native button may not contain
     INTERACTIVE_SELECTOR: [

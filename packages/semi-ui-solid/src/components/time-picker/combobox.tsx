@@ -46,10 +46,7 @@ export default function Combobox(props: ComboboxProps) {
     // picked, not spread: reading the slot props would create their nodes
     const options = createMemo(() => ComboboxFoundation.getOptions(pick(props, ['timeStampValue', 'format', 'use12Hours', 'defaultIsAM', 'hideDisabledOptions', 'hourStep', 'minuteStep', 'secondStep', 'disabledHours', 'disabledMinutes', 'disabledSeconds'])));
 
-    const ampmOptions = (): AMPMOptionItem[] => [
-        { value: 'AM', text: locale().locale.AM },
-        { value: 'PM', text: locale().locale.PM },
-    ];
+    const ampmOptions = (): AMPMOptionItem[] => options().ampm.list.map(({ value }) => ({ value, text: locale().locale[value] }));
 
     // the type allows only these keys; picking them keeps a JS caller from replacing the columns' own list and callbacks
     const itemProps = () => pick(props.scrollItemProps ?? {}, ['cycled', 'mode', 'motion', 'transform']);
@@ -84,7 +81,7 @@ export default function Combobox(props: ComboboxProps) {
 
     return (
         <ScrollList footer={props.panelFooter} header={props.panelHeader} x-semi-footer-alias="panelFooter" x-semi-header-alias="panelHeader">
-            <Show when={props.use12Hours}>{column('ampm', () => ({ name: locale().locale.ampmList, list: ampmOptions(), selectedIndex: options().isAM ? 0 : 1 }))}</Show>
+            <Show when={props.use12Hours}>{column('ampm', () => ({ name: locale().locale.ampmList, list: ampmOptions(), selectedIndex: options().ampm.selectedIndex }))}</Show>
             <Show when={options().showHour}>{column('hour', () => ({ name: locale().locale.hourList, ...options().hour }), withUnit('hour'))}</Show>
             <Show when={options().showMinute}>{column('minute', () => ({ name: locale().locale.minuteList, ...options().minute }), withUnit('minute'))}</Show>
             <Show when={options().showSecond}>{column('second', () => ({ name: locale().locale.secondList, ...options().second }), withUnit('second'))}</Show>

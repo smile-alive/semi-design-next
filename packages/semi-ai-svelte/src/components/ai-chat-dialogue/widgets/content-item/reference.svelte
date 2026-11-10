@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import { cssClasses, type DialogueIconKind, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { IconCode, IconExcel, IconPdf, IconSendMsgStroked, IconVideo, IconWord } from '@fibrae/semi-icons-svelte';
@@ -11,7 +11,7 @@
     const referencePrefixCls = cssClasses.PREFIX_REFERENCE;
 
     // A thumbnail replaces the icon for images, so the image kind has none
-    const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo };
+    const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo } satisfies Record<DialogueIconKind, unknown>;
 
     const items = $derived(
         references.map((reference) => {

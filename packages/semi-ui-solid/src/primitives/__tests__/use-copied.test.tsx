@@ -2,17 +2,18 @@ import { render } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import useCopied from '../use-copied';
 
-const { copyText } = vi.hoisted(() => ({ copyText: vi.fn<(text: string) => Promise<boolean>>() }));
-vi.mock('@fibrae/semi-foundation/utils/clipboard', () => ({ copyText }));
+const writeText = vi.fn<(text: string) => Promise<void>>();
 
 describe('useCopied', () => {
     beforeEach(() => {
         vi.useFakeTimers();
-        copyText.mockResolvedValue(true);
+        vi.stubGlobal('navigator', { clipboard: { writeText } });
+        writeText.mockResolvedValue();
     });
     afterEach(() => {
         vi.useRealTimers();
-        copyText.mockReset();
+        vi.unstubAllGlobals();
+        writeText.mockReset();
     });
 
     const setup = (duration = 1000) => {
@@ -39,7 +40,7 @@ describe('useCopied', () => {
     });
 
     it('复制失败时不置为 copied', async () => {
-        copyText.mockResolvedValue(false);
+        writeText.mockRejectedValue(new Error('denied'));
         const { handle } = setup();
         await expect(handle()[1]('a')).resolves.toBe(false);
         expect(handle()[0]()).toBe(false);

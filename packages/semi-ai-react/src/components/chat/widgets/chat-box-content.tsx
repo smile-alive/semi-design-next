@@ -1,17 +1,14 @@
 import { type ReactNode, useMemo } from 'react';
-import clsx from 'clsx';
-import { omitBy } from 'es-toolkit';
 import { cssClasses, strings, type ChatMode } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
-import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import MarkdownRender from '@fibrae/semi-ui-react/markdown-render/index';
 import type { ChatBoxProps, Message, Metadata, RenderContentProps, MarkdownRenderProps } from '../interface';
 import { FileAttachment, ImageAttachment } from './attachment';
 import Code from './code';
 
 const { PREFIX_CHAT_BOX } = cssClasses;
-const { MESSAGE_STATUS, ROLE } = strings;
+const { MESSAGE_STATUS } = strings;
 
 interface ChatBoxContentProps {
     mode?: ChatMode;
@@ -26,25 +23,8 @@ interface ChatBoxContentProps {
 
 export default function ChatBoxContent({ message = {}, customRenderFunc, role: roleInfo, customMarkDownComponents, mode, markdownRenderProps, escapeHtml }: ChatBoxContentProps) {
     const { content, role, status } = message;
-    const shouldEscapeHtml = escapeHtml && role === ROLE.USER;
-    const { bubble, user, error } = ChatFoundation.getContentFlags(role, status, mode);
-
-    const wrapCls = clsx(`${PREFIX_CHAT_BOX}-content`, {
-        [`${PREFIX_CHAT_BOX}-content-${mode}`]: bubble,
-        [`${PREFIX_CHAT_BOX}-content-user`]: user,
-        [`${PREFIX_CHAT_BOX}-content-error`]: error,
-    });
-
-    const markdownComponents = useMemo(
-        () => ({
-            code: Code,
-            SemiFile: FileAttachment,
-            img: ImageAttachment,
-            // an explicit undefined entry would replace the built-in component with a non-component
-            ...omitBy(customMarkDownComponents ?? {}, (component) => component === undefined),
-        }),
-        [customMarkDownComponents]
-    );
+    const wrapCls = ChatFoundation.getContentClass(role, status, mode);
+    const markdownComponents = useMemo(() => ChatFoundation.mergeMarkdownComponents({ code: Code, SemiFile: FileAttachment, img: ImageAttachment }, customMarkDownComponents), [customMarkDownComponents]);
 
     const node = useMemo<ReactNode>(() => {
         if (status === MESSAGE_STATUS.LOADING) {
@@ -56,13 +36,11 @@ export default function ChatBoxContent({ message = {}, customRenderFunc, role: r
         } else {
             let realContent;
             if (typeof content === 'string') {
-                const rawText = shouldEscapeHtml ? escapeHtmlInMarkdown(content) : content;
-                realContent = <MarkdownRender format="md" {...markdownRenderProps} components={markdownComponents} raw={rawText} />;
+                realContent = <MarkdownRender format="md" {...markdownRenderProps} components={markdownComponents} raw={ChatFoundation.getMarkdownRaw(content, role, escapeHtml)} />;
             } else if (Array.isArray(content)) {
                 realContent = content.map((item, index) => {
                     if (item.type === 'text') {
-                        const rawText = shouldEscapeHtml ? escapeHtmlInMarkdown(item.text) : item.text;
-                        return <MarkdownRender key={index} format="md" {...markdownRenderProps} components={markdownComponents} raw={rawText} />;
+                        return <MarkdownRender key={index} format="md" {...markdownRenderProps} components={markdownComponents} raw={ChatFoundation.getMarkdownRaw(item.text, role, escapeHtml)} />;
                     } else if (item.type === 'image_url') {
                         return <ImageAttachment key={index} src={item.image_url.url} />;
                     } else if (item.type === 'file_url') {
@@ -74,7 +52,7 @@ export default function ChatBoxContent({ message = {}, customRenderFunc, role: r
             }
             return realContent;
         }
-    }, [status, content, shouldEscapeHtml, markdownComponents, markdownRenderProps]);
+    }, [status, content, role, escapeHtml, markdownComponents, markdownRenderProps]);
 
     if (customRenderFunc && typeof customRenderFunc === 'function') {
         return customRenderFunc({

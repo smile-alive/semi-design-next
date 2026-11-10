@@ -27,6 +27,12 @@ const dateCalcFns = {
 
 type Type = ArrayElement<typeof strings.TYPE_SET>;
 
+/**
+ * Props that change which panels render, whether they share a minHeight, or the measured month width (density sizes
+ * the cells, locale the navigation) and switch height (format, locale and dateFnsLocale write its texts)
+ */
+const PANEL_SIZE_PROPS = ['type', 'insetInput', 'density', 'locale', 'format', 'dateFnsLocale'] as const;
+
 interface MonthsGridElementProps {
     renderDate?: RenderDateType;
     renderFullDate?: RenderFullDateType;
@@ -36,6 +42,7 @@ export type PanelType = 'left' | 'right';
 export type PanelView = 'date' | 'time';
 /** `panel` is a month panel, `wrap` its year-month or time list, `switch` the date/time switch above it */
 export type PanelPart = 'panel' | 'wrap' | 'switch';
+export type PanelFocusTarget = 'yearList' | 'title';
 export type YearMonthChangeType = 'prevMonth' | 'nextMonth' | 'prevYear' | 'nextYear';
 
 export interface MonthsGridFoundationProps extends MonthsGridElementProps, Pick<YearAndMonthFoundationProps, 'startYear' | 'endYear'> {
@@ -56,7 +63,6 @@ export interface MonthsGridFoundationProps extends MonthsGridElementProps, Pick<
     timePickerOpts?: any;
     /** DatePicker shows a picked date only once its owner passes it back, see `DatePickerFoundation.isSelectionControlled` */
     selectionControlled?: boolean;
-    rangeStart?: string;
     rangeInputFocus?: boolean | string;
     locale?: any;
     format?: string;
@@ -79,8 +85,6 @@ export interface MonthsGridFoundationProps extends MonthsGridElementProps, Pick<
     focusRecords?: FocusRecords;
     insetInput: DateInputFoundationProps['insetInput'];
     presetPosition?: PresetPosition;
-    renderQuickControls?: any;
-    renderDateInput?: any;
 }
 
 export interface PanelState {
@@ -108,6 +112,8 @@ export interface MonthsGridAdapter extends DefaultAdapter<MonthsGridFoundationPr
     notifyPanelChange: MonthsGridFoundationProps['onPanelChange'];
     /** a part of a month panel, null while it is not rendered */
     getPanelNode: (part: PanelPart, panelType: PanelType) => HTMLElement | null | undefined;
+    /** Focuses the year list or the month title of a panel */
+    focusPanelTarget: (panelType: PanelType, target: PanelFocusTarget) => void;
     reselectScrollLists: () => void;
 }
 
@@ -115,7 +121,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     /** the measured height of both panels while they show a scroll list; 0 means measure it when applying */
     #panelHeight = 0;
 
-    static override readonly propKeys = ['selectedValue', 'defaultPickerValue'];
+    static override readonly propKeys = ['selectedValue', 'defaultPickerValue', ...PANEL_SIZE_PROPS];
     // a parent rendering `new Date(...)` each time must not pull the panel back
     static override readonly propEquals = { defaultPickerValue: isEqual };
 
@@ -350,17 +356,38 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         return Math.max(height(strings.PANEL_TYPE_LEFT), height(strings.PANEL_TYPE_RIGHT));
     }
 
-    #setPanelView(panelType: PanelType, view: Pick<PanelState, 'isTimePickerOpen' | 'isYearPickerOpen'>) {
+    #applyPanelSize() {
+        const sizes = MonthsGridFoundation.getPanelSizeStyle(this.getStates(), this.getProp('insetInput'), {
+            monthWidth: (panelType) => this.adapter.getPanelNode('wrap', panelType)?.getBoundingClientRect().width ?? null,
+            scrollListHeight: () => this.#panelHeight || this.#scrollListHeight(),
+        });
+        for (const panelType of [strings.PANEL_TYPE_LEFT, strings.PANEL_TYPE_RIGHT] as const) {
+            const panel = this.adapter.getPanelNode('panel', panelType);
+            if (panel) {
+                panel.style.minWidth = sizes[panelType].minWidth;
+                panel.style.minHeight = sizes[panelType].minHeight;
+            }
+        }
+    }
+
+    /**
+     * Sizes, re-centres and focuses once the commit shows the new view. `focusTarget` is for a switch whose button
+     * unmounts or hides under the focus; the date/time switch buttons and an inset input keep theirs.
+     */
+    #setPanelView(panelType: PanelType, view: Pick<PanelState, 'isTimePickerOpen' | 'isYearPickerOpen'>, focusTarget?: PanelFocusTarget) {
         const before = this.#countScrollLists();
         this.#updatePanelDetail(panelType, view, () => {
             const after = this.#countScrollLists();
             if (before === 1 && after === 2) {
                 // the second list takes the height of the month the first one stood beside
                 this.#panelHeight = this.#scrollListHeight();
-                this.applyPanelSize();
+            }
+            this.#applyPanelSize();
+            if ((before === 1 && after === 2) || (before === 2 && after === 1)) {
                 this.adapter.reselectScrollLists();
-            } else if (before === 2 && after === 1) {
-                this.adapter.reselectScrollLists();
+            }
+            if (focusTarget) {
+                this.adapter.focusPanelTarget(panelType, focusTarget);
             }
         });
     }
@@ -419,7 +446,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             if (dateType === 'dateTime') {
                 fullDate = this.#mergeDateAndTime(fullDate, monthLeft.pickerDate);
             }
-            if (disabledDate(fullDate, { rangeStart, rangeEnd })) {
+            if (disabledDate?.(fullDate, { rangeStart, rangeEnd })) {
                 return;
             }
             this.adapter.notifySelectedChange([fullDate], options);
@@ -590,7 +617,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             monthLeft: { pickerDate: nowDate, showDate: nowDate, isTimePickerOpen: false, isYearPickerOpen: false },
             monthRight: { pickerDate: nextDate, showDate: nextDate, isTimePickerOpen: false, isYearPickerOpen: false },
             hoverDay: '',
-            rangeStart: props.rangeStart ?? '',
+            rangeStart: '',
             rangeEnd: '',
             offsetRangeStart: '',
             offsetRangeEnd: '',
@@ -709,6 +736,9 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         if (!isEqual(defaultPickerValue, prev.defaultPickerValue)) {
             this.#applyDefaultPickerValue();
         }
+        if (PANEL_SIZE_PROPS.some((key) => this.getProp(key) !== prev[key])) {
+            this.#applyPanelSize();
+        }
     }
 
     toYearMonth = (panelType: PanelType, target: Date) => {
@@ -775,21 +805,6 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         }
     };
 
-    /** The host calls it after every render */
-    applyPanelSize = () => {
-        const sizes = MonthsGridFoundation.getPanelSizeStyle(this.getStates(), this.getProp('insetInput'), {
-            monthWidth: (panelType) => this.adapter.getPanelNode('wrap', panelType)?.getBoundingClientRect().width ?? null,
-            scrollListHeight: () => this.#panelHeight || this.#scrollListHeight(),
-        });
-        for (const panelType of [strings.PANEL_TYPE_LEFT, strings.PANEL_TYPE_RIGHT] as const) {
-            const panel = this.adapter.getPanelNode('panel', panelType);
-            if (panel) {
-                panel.style.minWidth = sizes[panelType].minWidth;
-                panel.style.minHeight = sizes[panelType].minHeight;
-            }
-        }
-    };
-
     // a scroll list beside a month keeps its own height; the panels share a minHeight only while both show lists
     handleWeeksRowNumChange = () => {
         if (this.#countScrollLists() === 1) {
@@ -799,8 +814,14 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         }
     };
 
+    /** From the month title, which hides or unmounts: the year list takes the focus */
     showYearPicker = (panelType: PanelType) => {
-        this.#setPanelView(panelType, { isTimePickerOpen: false, isYearPickerOpen: true });
+        this.#setPanelView(panelType, { isTimePickerOpen: false, isYearPickerOpen: true }, 'yearList');
+    };
+
+    /** From the year list's back button, which unmounts: the month title takes the focus */
+    backToDatePanel = (panelType: PanelType) => {
+        this.#setPanelView(panelType, { isTimePickerOpen: false, isYearPickerOpen: false }, 'title');
     };
 
     showTimePicker = (panelType: PanelType) => {

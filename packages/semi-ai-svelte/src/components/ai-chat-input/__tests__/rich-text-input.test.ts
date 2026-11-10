@@ -79,7 +79,7 @@ describe('RichTextInput 编辑器宿主（attachment）', () => {
         expect(pm()).toHaveAccessibleName(en_US.AIChatInput.input);
     });
 
-    it('焦点、键盘事件由外层元素转给回调', async () => {
+    it('焦点事件由外层元素转给回调，按键交给 handleKeyDown', async () => {
         const { pm, store } = setup();
         store.log.length = 0;
         await fireEvent.focusIn(pm());

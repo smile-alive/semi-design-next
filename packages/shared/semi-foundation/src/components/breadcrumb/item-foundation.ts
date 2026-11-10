@@ -19,7 +19,8 @@ export interface Route {
 
 /** E is the host's click event, which the foundation only passes through */
 export interface BreadcrumbItemAdapter<P extends object = object, E = unknown> extends DefaultAdapter<P, object> {
-    notifyClick: (item: BreadcrumbItemInfo, e: E) => void;
+    /** Absent where the item has no click prop of its own (Svelte items are driven by `routes`) */
+    notifyClick?: (item: BreadcrumbItemInfo, e: E) => void;
     notifyParent: (item: BreadcrumbItemInfo, e: E) => void;
 }
 
@@ -48,7 +49,7 @@ export default class BreadcrumbItemFoundation<P extends object = object, E = unk
     }
 
     handleClick = (item: BreadcrumbItemInfo, e: E) => {
-        this.adapter.notifyClick(item, e);
+        this.adapter.notifyClick?.(item, e);
         this.adapter.notifyParent(item, e);
     };
 

@@ -2,39 +2,87 @@
     import { onMount } from 'svelte';
     import { format } from 'date-fns';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
-    import MonthFoundation, { type MonthDayInfo } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
+    import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
+    import useFoundation from '../../base/use-foundation.svelte.js';
     import watch from '../../hooks/watch.svelte.js';
     import useToday from '../calendar/use-today.svelte.js';
     import { useConfig } from '../config-provider/index.js';
     import type { MonthProps } from './internal.js';
 
-    let { month, weekStartsOn, locale, multiple, selected, rangeStart, rangeEnd, offsetRangeStart, offsetRangeEnd, disabledDate, hoverDay, rangeInputFocus, focusRecords, labelledby, date, fullDate, onDayClick, onDayHover, onMonthSwitch, onWeeksRowNumChange }: MonthProps = $props();
+    const props: MonthProps = $props();
 
     const config = useConfig();
 
     const gridId = $props.id();
-    let keyboardDate = $state('');
 
     // empty until mounted, so the server render and the hydration pass mark no day as today
     const today = useToday();
 
+    // the props the foundation reads; getters keep them live
+    const view = {
+        get month() {
+            return props.month;
+        },
+        get weekStartsOn() {
+            return props.weekStartsOn;
+        },
+        get selected() {
+            return props.selected;
+        },
+        get rangeStart() {
+            return props.rangeStart;
+        },
+        get rangeEnd() {
+            return props.rangeEnd;
+        },
+        get offsetRangeStart() {
+            return props.offsetRangeStart;
+        },
+        get offsetRangeEnd() {
+            return props.offsetRangeEnd;
+        },
+        get disabledDate() {
+            return props.disabledDate;
+        },
+        get hoverDay() {
+            return props.hoverDay;
+        },
+        get rangeInputFocus() {
+            return props.rangeInputFocus;
+        },
+        get focusRecords() {
+            return props.focusRecords;
+        },
+    } as MonthFoundationProps;
+
+    const { foundation, states } = useFoundation<MonthFoundation, MonthAdapter, MonthFoundationProps, MonthFoundationState>(
+        MonthFoundation,
+        view,
+        () => MonthFoundation.getInitialState(),
+        () => ({
+            notifyDayClick: (day) => props.onDayClick(day),
+            notifyMonthSwitch: (switchType) => props.onMonthSwitch(switchType),
+        }),
+        { context: () => config }
+    );
+
     const prefix = cssClasses.PREFIX;
     const todayText = $derived(today() === null ? '' : format(today() as number, strings.FORMAT_FULL_DATE));
-    const weeks = $derived(MonthFoundation.getMonthTable(month, weekStartsOn).weeks);
-    const activeDate = $derived(MonthFoundation.getDefaultActiveDate(format(month, strings.FORMAT_YEAR_MONTH), [keyboardDate, ...selected, rangeStart, rangeEnd, todayText]));
-    const weekdays = $derived(MonthFoundation.getWeekdays(weekStartsOn).map((key) => locale.weeks[key as keyof MonthProps['locale']['weeks']]));
+    const weeks = $derived(MonthFoundation.getMonthTable(props.month, props.weekStartsOn).weeks);
+    const activeDate = $derived(MonthFoundation.getActiveDate(props, states(), todayText));
+    const weekdays = $derived(MonthFoundation.getWeekdays(props.weekStartsOn).map((key) => props.locale.weeks[key as keyof MonthProps['locale']['weeks']]));
 
     const statuses = $derived.by(() => {
         const options = {
-            selected,
-            rangeStart,
-            rangeEnd,
-            offsetRangeStart,
-            offsetRangeEnd,
-            disabledDate,
-            hoverDay,
-            rangeInputFocus,
-            focusRecords,
+            selected: props.selected,
+            rangeStart: props.rangeStart,
+            rangeEnd: props.rangeEnd,
+            offsetRangeStart: props.offsetRangeStart,
+            offsetRangeEnd: props.offsetRangeEnd,
+            disabledDate: props.disabledDate,
+            hoverDay: props.hoverDay,
+            rangeInputFocus: props.rangeInputFocus,
+            focusRecords: props.focusRecords,
             // today is overlaid in statusOf: marking it after mount must not call disabledDate for every cell again
             todayText: '',
         };
@@ -56,7 +104,7 @@
     };
 
     const dayClass = (day: MonthDayInfo) => {
-        if (fullDate) {
+        if (props.fullDate) {
             return [cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: day.fullDate === activeDate }];
         }
         return [cssClasses.DAY, MonthFoundation.getDayClasses(statusOf(day), day.fullDate === activeDate)];
@@ -67,41 +115,17 @@
         return Boolean(status.isSelected || status.isSelectedStart || status.isSelectedEnd);
     };
 
-    const selectDay = (day?: MonthDayInfo) => {
-        if (day && !statusOf(day).isDisabled) {
-            keyboardDate = day.fullDate;
-            onDayClick(day);
-        }
-    };
-
-    // APG grid: focus stays on the grid; the keys move the active day, Enter or Space selects it
-    const handleKeyDown = (event: KeyboardEvent) => {
-        const action = MonthFoundation.getKeyAction(event, { activeDate, month, weekStartsOn, rtl: config.direction === 'rtl' });
-        if (!action) {
-            return;
-        }
-        event.preventDefault();
-        if (action.type === 'select') {
-            selectDay(weeks.flat().find((day) => day.fullDate === activeDate));
-            return;
-        }
-        keyboardDate = action.date;
-        if (action.monthSwitch) {
-            onMonthSwitch(action.monthSwitch);
-        }
-    };
-
     watch(
         () => weeks.length,
-        (count) => onWeeksRowNumChange(count)
+        () => props.onWeeksRowNumChange()
     );
 
     // MonthsGrid reads the DOM, so notify after it is mounted
-    onMount(() => onWeeksRowNumChange(weeks.length));
+    onMount(() => props.onWeeksRowNumChange());
 </script>
 
 <!-- cells are not focusable (aria-activedescendant) -->
-<div aria-activedescendant={dayId(activeDate)} aria-labelledby={labelledby} aria-multiselectable={multiple} class={cssClasses.MONTH} role="grid" tabindex="0" onkeydown={handleKeyDown}>
+<div aria-activedescendant={dayId(activeDate)} aria-labelledby={props.labelledby} aria-multiselectable={props.multiple} class={cssClasses.MONTH} role="grid" tabindex="0" onkeydown={(event) => foundation.handleKeyDown(event, todayText)}>
     <div class={cssClasses.WEEKDAY} role="row">
         {#each weekdays as text, index (index)}
             <div class={`${prefix}-weekday-item`} role="columnheader">{text}</div>
@@ -114,13 +138,24 @@
                     {#if !day.fullDate}
                         <div class={cssClasses.DAY} role="gridcell"><span></span></div>
                     {:else}
-                        <div aria-disabled={statusOf(day).isDisabled} aria-label={day.fullDate} aria-selected={isSelected(day)} class={dayClass(day)} id={dayId(day.fullDate)} role="gridcell" title={day.fullDate} onclick={() => selectDay(day)} onmouseenter={() => onDayHover(day)} onmouseleave={() => onDayHover()}>
-                            {#if fullDate}
-                                {@render fullDate({ dayNumber: Number(day.dayNumber), dayStatus: statusOf(day), fullDate: day.fullDate })}
+                        <div
+                            aria-disabled={statusOf(day).isDisabled}
+                            aria-label={day.fullDate}
+                            aria-selected={isSelected(day)}
+                            class={dayClass(day)}
+                            id={dayId(day.fullDate)}
+                            role="gridcell"
+                            title={day.fullDate}
+                            onclick={() => foundation.selectDay(day)}
+                            onmouseenter={() => props.onDayHover(day)}
+                            onmouseleave={() => props.onDayHover()}
+                        >
+                            {#if props.fullDate}
+                                {@render props.fullDate({ dayNumber: Number(day.dayNumber), dayStatus: statusOf(day), fullDate: day.fullDate })}
                             {:else}
                                 <div class={`${cssClasses.DAY}-main`}>
-                                    {#if date}
-                                        {@render date({ dayNumber: Number(day.dayNumber), fullDate: day.fullDate })}
+                                    {#if props.date}
+                                        {@render props.date({ dayNumber: Number(day.dayNumber), fullDate: day.fullDate })}
                                     {:else}
                                         <span>{day.dayNumber}</span>
                                     {/if}

@@ -1,6 +1,7 @@
 import ToastApi from '@fibrae/semi-foundation/components/toast/toast-api-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import renderDetached, { assertClient } from '../../base/detached-render';
+import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
+import renderDetached from '../../base/detached-render';
 import { readGlobalDefaults } from '../../utils/semi-global';
 import type { ToastProps } from './toast';
 import ToastList from './toast-list';
@@ -11,7 +12,7 @@ export type ToastOptions = Omit<ToastProps, 'type' | 'close'>;
 function createBaseToast(initialConfig?: ConfigProps) {
     const api = new ToastApi<Omit<ToastProps, 'close'>>(
         {
-            assertClient,
+            assertClient: () => assertClient('Toast', 'Toast.useToast'),
             readGlobalDefaults: () => readGlobalDefaults('Toast'),
             // detached: static toasts read the global defaults and the default locale, never a caller's context
             mount: (wrapper, store) => renderDetached(() => <ToastList store={store} />, wrapper),

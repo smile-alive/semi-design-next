@@ -856,6 +856,12 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return checkedKeys.size > 0 || CascaderFoundation.#missingValuePaths(props, keyEntities).length > 0;
     }
 
+    /** Whether the clear button shows: for search text, or for a value; multiple mode keeps no selectedKeys beyond the one getInitialState writes */
+    static isClearable(props: BasicCascaderProps, state: Pick<BasicCascaderInnerData, 'inputValue' | 'selectedKeys' | 'checkedKeys' | 'keyEntities'>) {
+        const hasValue = props.multiple ? CascaderFoundation.hasMultipleValue(props, state) : state.selectedKeys.size > 0;
+        return Boolean(props.showClear) && !props.disabled && (Boolean(state.inputValue) || hasValue);
+    }
+
     static calcCheckedState(keys: string[], keyEntities: BasicEntities, { checkRelation, autoMergeValue, leafOnly }: BasicCascaderProps): BasicCheckedState {
         if (checkRelation !== strings.RELATED) {
             return { checkedKeys: new Set(keys), halfCheckedKeys: new Set(), resolvedCheckedKeys: new Set() };

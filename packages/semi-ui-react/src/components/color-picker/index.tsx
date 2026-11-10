@@ -2,11 +2,11 @@ import type React from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
 import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
-import { namedRole } from '../../utils/named-role';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover';
 import AlphaSlider from './alpha-slider';
@@ -56,22 +56,13 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
         (base) => ({ notifyChange: (value) => base.getProps().onChange?.(value) })
     );
 
-    // foundation.getCurrentColor's rule, applied to this render's props
-    const currentColor = value !== undefined ? (value ?? defaultValue) : state.currentColor;
+    const currentColor = ColorPickerFoundation.deriveColor(props, state);
     const width = widthProp ?? 280;
 
     const picker = (
         <div role={namedRole(rest)} {...rest} ref={ref} className={clsx(cssClasses.PREFIX, className)} style={style}>
             {topSlot}
-            <ColorChooseArea
-                height={height ?? 280}
-                hsva={currentColor.hsva}
-                width={width}
-                handleSize={20}
-                onChange={({ s, v }) => {
-                    foundation.handleChange({ s, v, a: currentColor.hsva.a, h: currentColor.hsva.h }, 'hsva');
-                }}
-            />
+            <ColorChooseArea height={height ?? 280} hsva={currentColor.hsva} width={width} handleSize={20} onChange={foundation.handleAreaChange} />
             <ColorSlider className="colorSliderWrapper" height={10} hue={currentColor.hsva.h} width={width} handleSize={18} onChange={foundation.handleHueChange} />
             {alpha && <AlphaSlider className="alphaSliderWrapper" height={10} hsva={currentColor.hsva} width={width} handleSize={18} onChange={foundation.handleAlphaChange} />}
             <DataPart alpha={alpha} currentColor={currentColor} defaultFormat={defaultFormat} eyeDropper={eyeDropper} width={width} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} />

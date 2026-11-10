@@ -169,7 +169,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             imgHeight = containerHeight;
         }
         this.#imgData.scale = scale;
-        // a replacement image keeps the current zoom, which syncRotateAndZoom would not re-apply
+        // a replacement image keeps the current zoom, which #syncRotateAndZoom would not re-apply
         const { zoom } = this.getStates();
         const newImgDataState: ImageDataState = {
             width: imgWidth * zoom,
@@ -190,10 +190,128 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
                       height: containerWidth / calcAspect,
                       centerPoint: { x: containerWidth / 2, y: containerHeight / 2 },
                   };
-        this.setState({
+        this.#setLayout({
             imgData: newImgDataState,
             cropperBox: newCropperBoxState,
             loaded: true,
+        });
+    }
+
+    /** Every write of the image or box layout goes through here, so the preview always mirrors it */
+    #setLayout<K extends keyof CropperState>(states: Pick<CropperState, K>, callback?: () => void) {
+        this.setState(states, callback);
+        this.#updatePreview();
+    }
+
+    #updatePreview() {
+        if (!this.#previewImg) {
+            return;
+        }
+        const { cropperBox, imgData, rotate } = this.getStates();
+        const { width, height } = imgData;
+        const { viewX: translateX, viewY: translateY } = getCropperGeometry(imgData, cropperBox);
+        let zoom = 1;
+        const { width: containerWidth, height: containerHeight } = this.#previewContainerInitSize;
+        let previewWidth = containerWidth;
+        let previewHeight = containerHeight;
+        if (previewWidth < previewHeight) {
+            zoom = containerWidth / cropperBox.width;
+            let tempHeight = zoom * cropperBox.height;
+            if (tempHeight > containerHeight) {
+                zoom = containerHeight / cropperBox.height;
+                previewWidth = zoom * cropperBox.width;
+            } else {
+                previewHeight = tempHeight;
+            }
+        } else {
+            zoom = containerHeight / cropperBox.height;
+            let tempWidth = zoom * cropperBox.width;
+            if (tempWidth > containerWidth) {
+                zoom = containerWidth / cropperBox.width;
+                previewHeight = zoom * cropperBox.height;
+            } else {
+                previewWidth = tempWidth;
+            }
+        }
+        this.#previewImg.style.width = `${width * zoom}px`;
+        this.#previewImg.style.height = `${height * zoom}px`;
+        this.#previewImg.style.transform = `translate(${translateX * zoom}px, ${translateY * zoom}px) rotate(${rotate}deg)`;
+        this.#previewImg.style.transformOrigin = 'center';
+        this.#previewContainer.style.width = `${previewWidth}px`;
+        this.#previewContainer.style.height = `${previewHeight}px`;
+    }
+
+    /**
+     * Brings the state to the `rotate` and `zoom` props once the image has loaded; turns and scales around the cropper
+     * box center.
+     */
+    #syncRotateAndZoom({ rotate: newRotate, zoom: newZoom }: { rotate?: number; zoom?: number } = this.getProps()) {
+        const { rotate, zoom, imgData, cropperBox, loaded } = this.getStates();
+        // Object.is: a NaN prop would never match and re-render forever
+        const rotateChanged = newRotate !== undefined && !Object.is(newRotate, rotate);
+        const zoomChanged = newZoom !== undefined && !Object.is(newZoom, zoom);
+        if (!loaded || (!rotateChanged && !zoomChanged)) {
+            return;
+        }
+        // centerPoint y grows downward: flip it for the rotation formula
+        const center = { x: cropperBox.centerPoint.x, y: -cropperBox.centerPoint.y };
+        let imgCenter = { x: imgData.centerPoint.x, y: -imgData.centerPoint.y };
+        let { width, height } = imgData;
+        if (rotateChanged) {
+            const angle = ((newRotate - rotate) * Math.PI) / 180;
+            imgCenter = {
+                x: (imgCenter.x - center.x) * Math.cos(angle) + (imgCenter.y - center.y) * Math.sin(angle) + center.x,
+                y: -(imgCenter.x - center.x) * Math.sin(angle) + (imgCenter.y - center.y) * Math.cos(angle) + center.y,
+            };
+        }
+        if (zoomChanged) {
+            width = (width / zoom) * newZoom;
+            height = (height / zoom) * newZoom;
+            imgCenter = {
+                x: ((imgCenter.x - center.x) / zoom) * newZoom + center.x,
+                y: ((imgCenter.y - center.y) / zoom) * newZoom + center.y,
+            };
+        }
+        this.#setLayout({
+            rotate: rotateChanged ? newRotate : rotate,
+            zoom: zoomChanged ? newZoom : zoom,
+            imgData: { width, height, centerPoint: { x: imgCenter.x, y: -imgCenter.y } },
+        });
+    }
+
+    /**
+     * Refits the crop box to a changed `aspectRatio`: height stays, width follows, and a box too big for the
+     * container shrinks. It stays centered, moved only as far as the container edges require.
+     */
+    #applyAspectRatio() {
+        // the drag ranges were computed for the old ratio
+        this.handleCornerLostPointerCapture();
+        this.handleCropperBoxLostPointerCapture();
+        const { aspectRatio } = this.getProps();
+        const { cropperBox, loaded } = this.getStates();
+        const { width: containerWidth, height: containerHeight } = this.#containerData;
+        if (!loaded || !aspectRatio || !containerWidth || !containerHeight) {
+            return;
+        }
+        let height = Math.max(cropperBox.height, MIN_BOX_SIZE, MIN_BOX_SIZE / aspectRatio);
+        let width = height * aspectRatio;
+        if (width > containerWidth) {
+            width = containerWidth;
+            height = width / aspectRatio;
+        }
+        if (height > containerHeight) {
+            height = containerHeight;
+            width = height * aspectRatio;
+        }
+        this.#setLayout({
+            cropperBox: {
+                width,
+                height,
+                centerPoint: {
+                    x: clamp(cropperBox.centerPoint.x, width / 2, containerWidth - width / 2),
+                    y: clamp(cropperBox.centerPoint.y, height / 2, containerHeight - height / 2),
+                },
+            },
         });
     }
 
@@ -452,7 +570,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             default:
                 break;
         }
-        this.setState({
+        this.#setLayout({
             cropperBox: newCropperBoxPos,
         });
         // after the state write: the new range is measured from the box just reached
@@ -509,14 +627,14 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             newCropperBoxPos.centerPoint.y = fixed + (this.#resizeVector.paramY * newCropperBoxPos.height) / 2;
         }
 
-        this.setState({
+        this.#setLayout({
             cropperBox: newCropperBoxPos,
         });
     };
 
     #moveBoxBy(offsetX: number, offsetY: number, range: { xMin: number; xMax: number; yMin: number; yMax: number }) {
         const { cropperBox } = this.getStates();
-        this.setState({
+        this.#setLayout({
             cropperBox: {
                 width: cropperBox.width,
                 height: cropperBox.height,
@@ -631,7 +749,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             x: clientX,
             y: clientY,
         };
-        this.setState({
+        this.#setLayout({
             imgData: newImgData,
         });
     };
@@ -646,7 +764,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         // destroy removed the preview and no image load will rebuild it
         if (this.getStates().loaded) {
             this.#renderPreview();
-            this.updatePreview();
+            this.#updatePreview();
         }
     }
 
@@ -654,13 +772,11 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
     override handlePropsChange(prev: Partial<CropperFoundationProps>) {
         const { aspectRatio, zoom, rotate } = this.getProps();
         if (prev.aspectRatio !== aspectRatio) {
-            this.applyAspectRatio();
+            this.#applyAspectRatio();
         }
         const resetZoom = zoom === undefined && prev.zoom !== undefined;
         const resetRotate = rotate === undefined && prev.rotate !== undefined;
-        if (resetZoom || resetRotate) {
-            this.syncRotateAndZoom({ zoom: resetZoom ? 1 : undefined, rotate: resetRotate ? 0 : undefined });
-        }
+        this.#syncRotateAndZoom({ zoom: resetZoom ? 1 : zoom, rotate: resetRotate ? 0 : rotate });
     }
 
     override destroy() {
@@ -692,45 +808,9 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         const newCropperBox = this.#getCropperBoxWhenResize(ratio, newContainerData);
 
         this.#containerData = newContainerData;
-        this.setState({
+        this.#setLayout({
             imgData: newImgData,
             cropperBox: newCropperBox,
-        });
-    };
-
-    /**
-     * Refits the crop box to a changed `aspectRatio`: height stays, width follows, and a box too big for the
-     * container shrinks. It stays centered, moved only as far as the container edges require.
-     */
-    applyAspectRatio = () => {
-        // the drag ranges were computed for the old ratio
-        this.handleCornerLostPointerCapture();
-        this.handleCropperBoxLostPointerCapture();
-        const { aspectRatio } = this.getProps();
-        const { cropperBox, loaded } = this.getStates();
-        const { width: containerWidth, height: containerHeight } = this.#containerData;
-        if (!loaded || !aspectRatio || !containerWidth || !containerHeight) {
-            return;
-        }
-        let height = Math.max(cropperBox.height, MIN_BOX_SIZE, MIN_BOX_SIZE / aspectRatio);
-        let width = height * aspectRatio;
-        if (width > containerWidth) {
-            width = containerWidth;
-            height = width / aspectRatio;
-        }
-        if (height > containerHeight) {
-            height = containerHeight;
-            width = height * aspectRatio;
-        }
-        this.setState({
-            cropperBox: {
-                width,
-                height,
-                centerPoint: {
-                    x: clamp(cropperBox.centerPoint.x, width / 2, containerWidth - width / 2),
-                    y: clamp(cropperBox.centerPoint.y, height / 2, containerHeight - height / 2),
-                },
-            },
         });
     };
 
@@ -742,46 +822,10 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.#containerData = this.#readContainerSize();
         this.#imgData.originalWidth = naturalWidth;
         this.#imgData.originalHeight = naturalHeight;
-        this.#layoutImage();
+        // the preview img is built first so the layout writes below size it
         this.#renderPreview();
-    };
-
-    /**
-     * Brings the state to the `rotate` and `zoom` props once the image has loaded; a controlled zoom also undoes
-     * wheel zooming the parent does not accept. Turns and scales around the cropper box center.
-     */
-    syncRotateAndZoom = ({ rotate: newRotate, zoom: newZoom }: { rotate?: number; zoom?: number } = this.getProps()) => {
-        const { rotate, zoom, imgData, cropperBox, loaded } = this.getStates();
-        // Object.is: a NaN prop would never match and re-render forever
-        const rotateChanged = newRotate !== undefined && !Object.is(newRotate, rotate);
-        const zoomChanged = newZoom !== undefined && !Object.is(newZoom, zoom);
-        if (!loaded || (!rotateChanged && !zoomChanged)) {
-            return;
-        }
-        // centerPoint y grows downward: flip it for the rotation formula
-        const center = { x: cropperBox.centerPoint.x, y: -cropperBox.centerPoint.y };
-        let imgCenter = { x: imgData.centerPoint.x, y: -imgData.centerPoint.y };
-        let { width, height } = imgData;
-        if (rotateChanged) {
-            const angle = ((newRotate - rotate) * Math.PI) / 180;
-            imgCenter = {
-                x: (imgCenter.x - center.x) * Math.cos(angle) + (imgCenter.y - center.y) * Math.sin(angle) + center.x,
-                y: -(imgCenter.x - center.x) * Math.sin(angle) + (imgCenter.y - center.y) * Math.cos(angle) + center.y,
-            };
-        }
-        if (zoomChanged) {
-            width = (width / zoom) * newZoom;
-            height = (height / zoom) * newZoom;
-            imgCenter = {
-                x: ((imgCenter.x - center.x) / zoom) * newZoom + center.x,
-                y: ((imgCenter.y - center.y) / zoom) * newZoom + center.y,
-            };
-        }
-        this.setState({
-            rotate: rotateChanged ? newRotate : rotate,
-            zoom: zoomChanged ? newZoom : zoom,
-            imgData: { width, height, centerPoint: { x: imgCenter.x, y: -imgCenter.y } },
-        });
+        this.#layoutImage();
+        this.#syncRotateAndZoom();
     };
 
     handleWheel = (e: Pick<WheelEvent, 'clientX' | 'clientY' | 'deltaY' | 'preventDefault'>) => {
@@ -824,50 +868,16 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             height: newHeight,
             centerPoint: newCenterPoint,
         };
-        this.setState({
-            imgData: newImgDataState,
-            zoom: _zoom,
-        });
+        // after the commit a controlled parent has answered: a zoom it did not accept is undone
+        this.#setLayout(
+            {
+                imgData: newImgDataState,
+                zoom: _zoom,
+            },
+            () => this.#syncRotateAndZoom()
+        );
 
         this.adapter.notifyZoomChange(_zoom);
-    };
-
-    updatePreview = () => {
-        if (!this.#previewImg) {
-            return;
-        }
-        const { cropperBox, imgData, rotate } = this.getStates();
-        const { width, height } = imgData;
-        const { viewX: translateX, viewY: translateY } = getCropperGeometry(imgData, cropperBox);
-        let zoom = 1;
-        const { width: containerWidth, height: containerHeight } = this.#previewContainerInitSize;
-        let previewWidth = containerWidth;
-        let previewHeight = containerHeight;
-        if (previewWidth < previewHeight) {
-            zoom = containerWidth / cropperBox.width;
-            let tempHeight = zoom * cropperBox.height;
-            if (tempHeight > containerHeight) {
-                zoom = containerHeight / cropperBox.height;
-                previewWidth = zoom * cropperBox.width;
-            } else {
-                previewHeight = tempHeight;
-            }
-        } else {
-            zoom = containerHeight / cropperBox.height;
-            let tempWidth = zoom * cropperBox.width;
-            if (tempWidth > containerWidth) {
-                zoom = containerWidth / cropperBox.width;
-                previewHeight = zoom * cropperBox.height;
-            } else {
-                previewWidth = tempWidth;
-            }
-        }
-        this.#previewImg.style.width = `${width * zoom}px`;
-        this.#previewImg.style.height = `${height * zoom}px`;
-        this.#previewImg.style.transform = `translate(${translateX * zoom}px, ${translateY * zoom}px) rotate(${rotate}deg)`;
-        this.#previewImg.style.transformOrigin = 'center';
-        this.#previewContainer.style.width = `${previewWidth}px`;
-        this.#previewContainer.style.height = `${previewHeight}px`;
     };
 
     // each drag surface captures the pointer so moves and release arrive outside it too

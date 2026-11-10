@@ -238,7 +238,7 @@
 {/snippet}
 
 {#snippet itemElement()}
-    <ItemShell {...attrs.root} class={[attrs.root.class as ClassValue, { [`${prefix}-sub-wrap`]: !(outer.isInSubNav && isPopup) }]} {content} {disabled} given={{}} isCollapsed={outer.isCollapsed} isInSubNav={outer.isInSubNav} isSubNav {itemKey} {level} {text} />
+    <ItemShell {...attrs.root} class={[attrs.root.class as ClassValue, { [`${prefix}-sub-wrap`]: !(outer.isInSubNav && isPopup) }]} {content} {disabled} isCollapsed={outer.isCollapsed} isInSubNav={outer.isInSubNav} isSubNav {itemKey} {level} {text} />
 {/snippet}
 
 <WrapperOutlet isInSubNav={outer.isInSubNav} isSubNav {itemElement} itemProps={given} />

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-    import { computed, h, normalizeStyle, onMounted, onUpdated, shallowRef, Text, useTemplateRef, watch, type CSSProperties, type HTMLAttributes, type StyleValue, type VNode } from 'vue';
+    import { computed, h, normalizeStyle, onUpdated, Text, useTemplateRef, type CSSProperties, type HTMLAttributes, type StyleValue, type VNode } from 'vue';
     import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/components/tabs/constants';
     import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
+    import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
-    import useRaf from '../../composables/use-raf';
+    import useFoundation from '../../base/use-foundation';
     import useResizeObserver from '../../composables/use-resize-observer';
     import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
     import Dropdown, { DropdownItem, DropdownMenu } from '../dropdown';
@@ -51,16 +52,16 @@
     const locale = useLocale('Tabs');
     const ctx = useTabsContext();
 
-    const bar = useTemplateRef('bar');
-    let isFirstShowInViewport = true;
-    const shouldCollapse = shallowRef(false);
+    // explicit: the adapter reads this ref while the template reads foundation state, which makes inference circular
+    const bar = useTemplateRef<HTMLDivElement>('bar');
 
-    // Bar width at which the tabs overflowed. The collapsed layout can fit every tab at that width, but the uncollapsed one
-    // cannot, so leaving the collapse at or below this width would flip-flop between the two.
-    let collapsedWidth = 0;
+    const { foundation, state } = useFoundation<TabBarFoundation<typeof props>, TabBarAdapter<typeof props>, typeof props, TabBarState>(TabBarFoundation, props, TabBarFoundation.getInitialState, () => ({
+        getBarElement: () => bar.value,
+        notifyVisibleTabsChange: (visibleState) => emit('visibleTabsChange', visibleState),
+    }));
 
     const prefix = cssClasses.TABS_BAR;
-    const collapsed = computed(() => (props.collapsible === 'auto' ? shouldCollapse.value : props.collapsible));
+    const collapsed = computed(() => TabBarFoundation.isCollapsed(props.collapsible, state.value.shouldCollapse));
 
     const overflowItems = computed((): OverflowItem[] =>
         props.list.map(({ tabSlot: _tab, iconSlot: _icon, ...item }) => ({
@@ -69,18 +70,6 @@
             ...item,
         }))
     );
-
-    // Only turns collapse on; once collapsed, the OverflowList visible-state event decides when to leave it.
-    const checkOverflow = () => {
-        const barEl = bar.value;
-        if (props.collapsible !== 'auto' || shouldCollapse.value || !barEl) return;
-        if (TabsFoundation.isTabsOverflowing(barEl, props.tabPosition)) {
-            collapsedWidth = barEl.clientWidth;
-            shouldCollapse.value = true;
-        }
-    };
-
-    const scrollActiveTabItemIntoView = (logicalPosition?: ScrollLogicalPosition, behavior?: ScrollBehavior) => TabsFoundation.scrollTabIntoView(bar.value, getBarItemKey(`${props.activeKey}`), logicalPosition, behavior);
 
     const entryOf = (itemKey: string) => props.list.find((entry) => entry.itemKey === itemKey);
 
@@ -105,37 +94,16 @@
 
     const onTabClick = (itemKey: string, event: MouseEvent) => ctx?.tabClick(itemKey, event);
 
-    // Pops the item so repeated clicks before the next render reach the following hidden tab
-    const handleArrowClick = (items: OverflowItem[], position: 'start' | 'end') => {
-        const lastItem = position === 'start' ? items.pop() : items.shift();
-        if (lastItem) {
-            TabsFoundation.scrollTabIntoView(bar.value, getBarItemKey(lastItem.itemKey));
-        }
-    };
-
     const arrowProps = (items: OverflowItem[], position: 'start' | 'end') => ({
         items: items.map((item) => ({ ...entryOf(item.itemKey), ...item })),
         position,
         showRestInDropdown: props.showRestInDropdown,
         dropdownProps: props.dropdownProps?.[position],
-        onArrowClick: () => handleArrowClick(items, position),
+        onArrowClick: () => foundation.handleArrowClick(items, position),
         onTabClick,
     });
 
     const arrowNode = (items: OverflowItem[], position: 'start' | 'end') => h(TabBarArrow, arrowProps(items, position));
-
-    const onVisibleStateChange = (visibleMap: Map<string, boolean>) => {
-        const { visibleState, isShowInViewport, hasHidden } = TabsFoundation.readVisibleState(visibleMap);
-        // first show only: https://github.com/DouyinFE/semi-design/issues/2917
-        if (isFirstShowInViewport && isShowInViewport) {
-            scrollActiveTabItemIntoView('nearest', 'auto');
-            isFirstShowInViewport = false;
-        }
-        if (props.collapsible === 'auto' && isShowInViewport) {
-            shouldCollapse.value = hasHidden || (bar.value !== null && bar.value.clientWidth <= collapsedWidth);
-        }
-        emit('visibleTabsChange', visibleState);
-    };
 
     const layout = (): Layout => {
         const { more, list } = props;
@@ -147,29 +115,9 @@
     // the collapsed bar shows every tab; otherwise the tabs moved into the more menu are not in the tablist
     const tabbableKey = computed(() => TabsFoundation.getTabbableKey(collapsed.value ? props.list : layout().shown, props.activeKey));
 
-    // the remembered width no longer applies once tabs are added, removed or retitled
-    watch(
-        () => props.list.map((entry) => `${entry.itemKey}:${entry.tab}`).join('\n'),
-        () => {
-            collapsedWidth = 0;
-        }
-    );
+    useResizeObserver(() => (props.collapsible === 'auto' ? bar.value : null), foundation.checkOverflow);
 
-    useResizeObserver(() => (props.collapsible === 'auto' ? bar.value : null), checkOverflow);
-
-    const scheduleFrame = useRaf();
-
-    watch(
-        () => props.activeKey,
-        () => {
-            if (collapsed.value) scrollActiveTabItemIntoView();
-        },
-        { flush: 'post' }
-    );
-
-    // fallback for when ResizeObserver does not report after mount
-    onMounted(() => scheduleFrame(checkOverflow));
-    onUpdated(checkOverflow);
+    onUpdated(foundation.checkOverflow);
 
     if (ctx) {
         provideTabsContext({ ...ctx, view: computed(() => ({ ...ctx.view.value, tabbableKey: tabbableKey.value })) });
@@ -199,7 +147,7 @@
             },
         ]"
     >
-        <OverflowList v-if="collapsed" :class="`${prefix}-overflow-list`" itemKey="key" :items="overflowItems" :overflowRenderDirection="props.arrowPosition" renderMode="scroll" :wrapperProps="tablistAttrs()" :wrapperStyle="props.visibleTabsStyle" @visibleStateChange="onVisibleStateChange">
+        <OverflowList v-if="collapsed" :class="`${prefix}-overflow-list`" itemKey="key" :items="overflowItems" :overflowRenderDirection="props.arrowPosition" renderMode="scroll" :wrapperProps="tablistAttrs()" :wrapperStyle="props.visibleTabsStyle" @visibleStateChange="foundation.handleVisibleStateChange">
             <template #item="{ item }">
                 <template v-for="(entry, e) in [entryOf(item.itemKey)]" :key="e">
                     <TabItem v-bind="tabItemProps(item)">
@@ -216,7 +164,7 @@
                 </template>
             </template>
             <template #overflow="{ items, position }">
-                <slot v-if="$slots.arrow" :defaultNode="arrowNode(items, position)" :items="items" name="arrow" :onClick="() => handleArrowClick(items, position)" :position="position" />
+                <slot v-if="$slots.arrow" :defaultNode="arrowNode(items, position)" :items="items" name="arrow" :onClick="() => foundation.handleArrowClick(items, position)" :position="position" />
                 <TabBarArrow v-else v-bind="arrowProps(items, position)" />
             </template>
         </OverflowList>

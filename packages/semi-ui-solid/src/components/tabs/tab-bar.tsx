@@ -1,11 +1,12 @@
-import { children, createEffect, createMemo, createSignal, For, type JSX, on, onMount, Show, splitProps } from 'solid-js';
+import { children, createMemo, createSignal, For, type JSX, Show, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses, getBarItemKey, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';
 import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
+import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
 import { IconChevronDown, IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
-import useRaf from '../../primitives/use-raf';
+import useFoundation from '../../base/use-foundation';
 import useResizeObserver from '../../primitives/use-resize-observer';
 import hasContent from '../../utils/has-content';
 import { serverHtml } from '../../utils/is-markup';
@@ -53,14 +54,11 @@ export default function TabBar(props: TabBarProps) {
     const locale = useLocale('Tabs');
 
     const [bar, setBar] = createSignal<HTMLDivElement>();
-    const [shouldCollapse, setShouldCollapse] = createSignal(false);
-    let isFirstShowInViewport = true;
 
-    // Bar width at which the tabs overflowed. The collapsed layout can fit every tab at that width, but the uncollapsed
-    // one cannot, so leaving the collapse below this width would flip-flop between the two.
-    let collapsedWidth = 0;
-
-    const scheduleFrame = useRaf();
+    const { foundation, state } = useFoundation<TabBarFoundation<TabBarProps>, TabBarAdapter<TabBarProps>, TabBarProps, TabBarState>(TabBarFoundation, props, TabBarFoundation.getInitialState, () => ({
+        getBarElement: bar,
+        notifyVisibleTabsChange: (visibleState) => local.onVisibleTabsChange?.(visibleState),
+    }));
 
     const extra = children(() => local.tabBarExtraContent);
 
@@ -117,7 +115,7 @@ export default function TabBar(props: TabBarProps) {
 
     const overflowSide = (side: { itemKey: string }[]) => side.flatMap(({ itemKey }) => overflowItems().get(itemKey) ?? []);
 
-    const collapsed = () => (local.collapsible === 'auto' ? shouldCollapse() : Boolean(local.collapsible));
+    const collapsed = () => TabBarFoundation.isCollapsed(local.collapsible, state().shouldCollapse);
 
     const moreOptions = () => (typeof local.more === 'object' ? local.more : undefined);
 
@@ -140,21 +138,6 @@ export default function TabBar(props: TabBarProps) {
         }
         return (node instanceof HTMLElement && node.style.getPropertyValue('float')) || 'inline-end';
     };
-
-    // Not collapsed yet. Once collapsed, the OverflowList visible-state callback decides whether to leave the collapse,
-    // so this only ever turns it on.
-    const checkOverflow = () => {
-        const barEl = bar();
-        if (local.collapsible !== 'auto' || shouldCollapse() || !barEl) {
-            return;
-        }
-        if (TabsFoundation.isTabsOverflowing(barEl, local.tabPosition)) {
-            collapsedWidth = barEl.clientWidth;
-            setShouldCollapse(true);
-        }
-    };
-
-    const scrollActiveTabItemIntoView = (logicalPosition?: ScrollLogicalPosition, behavior?: ScrollBehavior) => TabsFoundation.scrollTabIntoView(bar(), getBarItemKey(local.activeKey ?? ''), logicalPosition, behavior);
 
     const tabContent = (key: string) => {
         const pane = createMemo(() => byKey().get(key));
@@ -211,14 +194,6 @@ export default function TabBar(props: TabBarProps) {
         );
     };
 
-    // takes the item off `items`, so repeated clicks before the next render step on to the following hidden tab
-    const handleArrowClick = (items: OverflowItem[], pos: Side) => {
-        const lastItem = pos === 'start' ? items.pop() : items.shift();
-        if (lastItem) {
-            TabsFoundation.scrollTabIntoView(bar(), getBarItemKey(lastItem.itemKey));
-        }
-    };
-
     const renderCollapse = (items: OverflowItem[], pos: Side) => {
         const arrowClass = clsx(`${cssClasses.TABS_BAR}-arrow-${pos}`, `${cssClasses.TABS_BAR}-arrow`);
         const arrowButton = (disabled?: boolean) => <Button aria-label={pos === 'start' ? locale().locale.prevTabs : locale().locale.nextTabs} disabled={disabled} theme="borderless" icon={pos === 'start' ? <IconChevronLeft /> : <IconChevronRight />} />;
@@ -231,7 +206,7 @@ export default function TabBar(props: TabBarProps) {
             );
         }
         // the Button is the Tab stop; Dropdown would add 0 here
-        const own = { class: arrowClass, role: 'presentation', tabIndex: -1, onClick: () => handleArrowClick(items, pos) } as const;
+        const own = { class: arrowClass, role: 'presentation', tabIndex: -1, onClick: () => foundation.handleArrowClick(items, pos) } as const;
         if (!showRestInDropdown()) {
             return <div {...own}>{arrowButton()}</div>;
         }
@@ -288,57 +263,15 @@ export default function TabBar(props: TabBarProps) {
         if (!render) {
             return renderCollapse(items, pos);
         }
-        const onArrowClick = () => handleArrowClick(items, pos);
+        const onArrowClick = () => foundation.handleArrowClick(items, pos);
         const defaultNode = () => renderCollapse(items, pos);
         return render(items, pos, onArrowClick, defaultNode);
     };
 
-    const handleVisibleStateChange = (visibleMap: Map<string, boolean>) => {
-        const { visibleState, isShowInViewport, hasHidden } = TabsFoundation.readVisibleState(visibleMap);
-        // only when the tabs component appears in the viewport for the first time triggered scrollActiveTabItemIntoView
-        // refer to issue 2917 https://github.com/DouyinFE/semi-design/issues/2917
-        if (isFirstShowInViewport && isShowInViewport) {
-            scrollActiveTabItemIntoView('nearest', 'auto');
-            isFirstShowInViewport = false;
-        }
-        // all false: the bar is off-screen, which must not change the collapse state
-        if (local.collapsible === 'auto' && isShowInViewport) {
-            const barEl = bar();
-            setShouldCollapse(hasHidden || (barEl !== undefined && barEl.clientWidth <= collapsedWidth));
-        }
-        local.onVisibleTabsChange?.(visibleState);
-    };
-
-    createEffect(
-        on(
-            createMemo(() => local.activeKey),
-            () => {
-                if (collapsed()) {
-                    scrollActiveTabItemIntoView();
-                }
-            },
-            { defer: true }
-        )
-    );
-
-    createEffect(
-        on(
-            keys,
-            () => {
-                collapsedWidth = 0;
-                checkOverflow();
-            },
-            { defer: true }
-        )
-    );
-
     useResizeObserver(
         createMemo(() => (local.collapsible === 'auto' ? bar() : undefined)),
-        () => checkOverflow()
+        foundation.checkOverflow
     );
-
-    // ResizeObserver reports after mount as well; this frame is the fallback when it does not fire
-    onMount(() => scheduleFrame(checkOverflow));
 
     return (
         <div
@@ -410,7 +343,7 @@ export default function TabBar(props: TabBarProps) {
                         visibleItemRenderer={(item) => renderTabItem(item.itemKey)}
                         wrapperProps={tablistProps}
                         renderMode="scroll"
-                        onVisibleStateChange={handleVisibleStateChange}
+                        onVisibleStateChange={foundation.handleVisibleStateChange}
                     />
                 </Show>
             </TabsContext.Provider>

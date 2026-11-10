@@ -70,42 +70,36 @@
 
     // The copies only fill the wheel, so they are hidden from assistive technology and carry no id: the listbox has one
     // option per item.
-    const options = $derived.by(() => {
-        const items = (keyPrefix: string) =>
-            list.map((item, index) => {
-                const selected = current === index;
-                return {
-                    key: `${keyPrefix}${index}`,
-                    id: keyPrefix ? undefined : optionId(index),
-                    copy: Boolean(keyPrefix),
-                    index,
-                    selected,
-                    disabled: item.disabled,
-                    clickable: !isWheel && !item.disabled,
-                    class: {
-                        [`${prefix}-item-sel`]: selected && !isWheel,
-                        [`${prefix}-item-disabled`]: Boolean(item.disabled),
-                    },
-                    text: ItemFoundation.getItemText(item, selected, transform),
-                };
-            });
-        if (!isWheel) {
-            return items('');
-        }
-        const copies = (count: number, name: string) => Array.from({ length: count }, (_, i) => items(`${name}_${i}_`));
-        return [...copies(states().prependCount, 'pre').toReversed().flat(), ...items(''), ...copies(states().appendCount, 'app').flat()];
-    });
+    const options = $derived(
+        ItemFoundation.getRows({ list, mode }, states()).map(({ key, index, copy }) => {
+            const item = list[index];
+            const selected = current === index;
+            return {
+                key,
+                id: copy ? undefined : optionId(index),
+                copy,
+                index,
+                selected,
+                disabled: item.disabled,
+                clickable: !isWheel && !item.disabled,
+                class: {
+                    [`${prefix}-item-sel`]: selected && !isWheel,
+                    [`${prefix}-item-disabled`]: Boolean(item.disabled),
+                },
+                text: ItemFoundation.getItemText(item, selected, transform),
+            };
+        })
+    );
 
     const optionId = (index: number) => {
         return `${uid}-option-${index}`;
     };
 
-    // Wheel clicks are stopped here, where an ancestor's click listener does not see them; a native listener, because
-    // Svelte's delegated handlers run after the event has bubbled to the root
+    // A native listener, because Svelte's delegated handlers run after the event has bubbled to the root, and the
+    // foundation stops a wheel click before an ancestor's listener sees it
     const handleListClick: Attachment<HTMLUListElement> = (node) =>
         on(node, 'click', (event) => {
             if (isWheel) {
-                event.stopImmediatePropagation();
                 foundation.handleWheelClick(event);
             }
         });

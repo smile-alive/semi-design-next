@@ -61,6 +61,8 @@
                 emit('change', value);
             },
             notifyComplete: (value) => emit('complete', value),
+            notifyFocus: (event) => emit('focus', event),
+            notifyBlur: (event) => emit('blur', event),
             changeSpecificInputFocusState: (index, focusState) => {
                 if (focusState === 'focus') {
                     inputs[index]?.focus();
@@ -80,17 +82,6 @@
     };
 
     const handleCellChange = (index: number, value: string, event: InputChangeEvent) => foundation.handleCellChange(index, value, (event as InputEvent | CompositionEvent).data);
-
-    // moving between the digits is not entering or leaving the code: Form's blur validation waits until focus is outside
-    const isOutside = (event: FocusEvent) => !(event.currentTarget as Node).contains(event.relatedTarget as Node | null);
-
-    const handleFocusIn = (event: FocusEvent) => {
-        if (isOutside(event)) emit('focus', event);
-    };
-
-    const handleFocusOut = (event: FocusEvent) => {
-        if (isOutside(event)) emit('blur', event);
-    };
 
     const isCellKey = (key: string) => cellKeys.has(key);
 
@@ -119,7 +110,7 @@
 </script>
 
 <template>
-    <div :class="`${cssClasses.PREFIX}-wrapper`" role="group" v-bind="rootAttrs()" @focusin="handleFocusIn" @focusout="handleFocusOut">
+    <div :class="`${cssClasses.PREFIX}-wrapper`" role="group" v-bind="rootAttrs()" @focusin="foundation.handleFocus" @focusout="foundation.handleBlur">
         <Input
             v-for="(_, index) in props.count"
             :key="index"

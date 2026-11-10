@@ -48,10 +48,8 @@
         })
     );
 
-    // the popup is anchored to the slider's center, so only a translate moves it to the pointer; the vertical offset
-    // counts up from the bottom
     const movingInfo = $derived(states().movingInfo);
-    const tooltipStyle = $derived(movingInfo ? `translate: ${vertical ? `0 ${-movingInfo.offset}px` : `${movingInfo.offset}px 0`}` : undefined);
+    const tooltipStyle = $derived(movingInfo ? `translate: ${SeekFoundation.getPreviewTranslate(movingInfo.offset, vertical)}` : undefined);
 
     const onInput = (event: Event & { currentTarget: HTMLInputElement }) => onChange?.(Number(event.currentTarget.value));
 </script>
@@ -75,9 +73,9 @@
         tabindex="-1"
         onlostpointercapture={foundation.handleLostPointerCapture}
         onmousedown={(event) => event.preventDefault()}
-        onmouseenter={(event) => foundation.handlePointerPosition(event, { seek: false })}
+        onmouseenter={foundation.handlePointerEnter}
         onpointerdown={foundation.handlePointerDown}
-        onpointermove={(event) => foundation.handlePointerPosition(event, { seek: true })}
+        onpointermove={foundation.handlePointerMove}
     >
         <input aria-label={label} aria-orientation={vertical ? 'vertical' : undefined} aria-valuetext={getValueText(value)} bind:this={input} class={`${prefix}-slider-input`} {max} min="0" step="1" type="range" {value} onfocus={foundation.handleFocus} oninput={onInput} onkeydown={foundation.clearPreview} />
         <div

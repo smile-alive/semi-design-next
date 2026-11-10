@@ -14,11 +14,9 @@ const runtime = {
 
 async function evaluate(props: Record<string, unknown>, raw: string, adapterRuntime: object = runtime) {
     const setState = vi.fn<MarkdownRenderAdapter['setState']>();
-    const notifyCompileError = vi.fn<MarkdownRenderAdapter['notifyCompileError']>();
     const foundation = new MarkdownRenderFoundation({
         getProp: (key: string) => ({ ...props, raw })[key],
         getRuntime: () => adapterRuntime,
-        notifyCompileError,
         setState,
     } as unknown as MarkdownRenderAdapter);
     await foundation.updateContent();
@@ -84,18 +82,18 @@ describe('MarkdownRenderFoundation.evaluate', () => {
         expect(stubs.eval).not.toHaveBeenCalled();
     });
 
-    it('编译失败时报告错误并保留 state', async () => {
-        const notifyCompileError = vi.fn<MarkdownRenderAdapter['notifyCompileError']>();
+    it('编译失败时在开发期记录错误并保留 state', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
         const setState = vi.fn<MarkdownRenderAdapter['setState']>();
         const foundation = new MarkdownRenderFoundation({
             getProp: (key: string) => ({ format: 'mdx', raw: 'text' })[key],
             getRuntime: () => runtime,
-            notifyCompileError,
             setState,
         } as unknown as MarkdownRenderAdapter);
         await foundation.updateContent();
-        expect(notifyCompileError).toHaveBeenCalledWith(expect.objectContaining({ cause: expect.any(EvalError) }));
+        expect(consoleError).toHaveBeenCalledWith(expect.objectContaining({ cause: expect.any(EvalError) }));
         expect(setState).not.toHaveBeenCalled();
+        consoleError.mockRestore();
     });
 });
 

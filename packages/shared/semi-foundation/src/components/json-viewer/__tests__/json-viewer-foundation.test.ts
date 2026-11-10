@@ -3,6 +3,21 @@ import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps,
 import { JsonViewer } from '@fibrae/semi-json-viewer-core';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 
+// the foundation keeps its editor private, so the tests take it from the constructor
+const created = vi.hoisted(() => [] as unknown[]);
+vi.mock('@fibrae/semi-json-viewer-core', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@fibrae/semi-json-viewer-core')>();
+    return {
+        ...actual,
+        JsonViewer: class extends actual.JsonViewer {
+            constructor(...args: ConstructorParameters<typeof actual.JsonViewer>) {
+                super(...args);
+                created.push(this);
+            }
+        },
+    };
+});
+
 const value = '{"a": "k1", "b": "k2"}';
 
 // jsdom has no Worker, blob URLs or idle callbacks: the fake worker only answers foldRange (the editor accepts edits
@@ -48,13 +63,12 @@ async function mount(props: Partial<JsonViewerBaseProps> = {}) {
     } as unknown as JsonViewerAdapter;
     const foundation = new JsonViewerFoundation(adapter);
     foundation.init();
-    const viewer = foundation.jsonViewer;
-    if (!viewer) throw new Error('the editor was not created');
+    const viewer = created.at(-1) as JsonViewer;
     await new Promise((resolve) => setTimeout(resolve));
     return { foundation, adapter, viewer, editor, getValue: () => viewer.getModel().getValue() };
 }
 
-const insertAtStart = (viewer: NonNullable<JsonViewerFoundation['jsonViewer']>, text: string) =>
+const insertAtStart = (viewer: JsonViewer, text: string) =>
     viewer.getModel().applyOperation({
         type: 'insert',
         range: { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 1 },
@@ -65,6 +79,16 @@ const insertAtStart = (viewer: NonNullable<JsonViewerFoundation['jsonViewer']>, 
     });
 
 describe('JsonViewerFoundation', () => {
+    it('编辑器不存在时 getValue 返回空串，format 不抛错', () => {
+        const foundation = new JsonViewerFoundation({} as unknown as JsonViewerAdapter);
+        expect(foundation.getValue()).toBe('');
+        expect(() => foundation.format()).not.toThrow();
+    });
+
+    it('mergeOptions 逐项填默认值，显式 undefined 不覆盖默认值', () => {
+        expect(JsonViewerFoundation.mergeOptions({ readOnly: true, autoWrap: undefined }, 'label')).toEqual({ ariaLabel: 'label', readOnly: true, autoWrap: true });
+    });
+
     it('没有匹配项时 replace 不抛错，内容不变', async () => {
         const { foundation, getValue } = await mount();
         foundation.search('no-such-text');

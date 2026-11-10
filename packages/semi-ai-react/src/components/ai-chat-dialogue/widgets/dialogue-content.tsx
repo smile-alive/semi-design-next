@@ -1,14 +1,12 @@
 import React, { type ReactNode, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
-import { omitBy } from 'es-toolkit';
-import { cssClasses, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import { cssClasses, type DialogueIconKind, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import { messageToChatInput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 import DialogueFoundation, { type FunctionToolCall, type InputFile, type ContentItem, type InputMessage, type InputText, type InputImage, type OutputText, type Reasoning, type CustomToolCall, type OutputMessage, type Refusal } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { findContentItemRenderer, getAttachmentLayout, getVisibleAnnotations, isAwaitingOutput, isImageList } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
 import { getMessageText } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-text';
 import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import { IconAlertCircle, IconCode, IconExcel, IconFile, IconPdf, IconSendMsgStroked, IconVideo, IconWord, IconWrench } from '@fibrae/semi-icons-react';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import Image from '@fibrae/semi-ui-react/image/index';
@@ -32,7 +30,7 @@ interface FileAttachmentProps extends InputFile {
 const { PREFIX_CONTENT } = cssClasses;
 const { STATUS, ROLE, MESSAGE_ITEM_TYPE, TEXT_TYPES } = strings;
 
-const FILE_ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile };
+const FILE_ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile } satisfies Record<DialogueIconKind | 'default', unknown>;
 
 const ImageAttachment = React.memo(function ImageAttachment({ src, isList, msg, onImageClick, isLastImage }: { src: string; isList: boolean; msg: InputImage; onImageClick?: (msg: InputImage) => void; isLastImage?: boolean }) {
     const { locale } = useLocale('AIChatDialogue');
@@ -131,26 +129,8 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
     const { locale } = useLocale('AIChatDialogue');
 
     const { content, role, status, references } = message;
-    const shouldEscapeHtml = escapeHtml && role === ROLE.USER;
-
-    const markdownComponents = useMemo(
-        () => ({
-            code: Code,
-            // an explicit undefined entry would replace the built-in component with a non-component
-            ...omitBy(markdownRenderProps?.components ?? {}, (component) => component === undefined),
-        }),
-        [markdownRenderProps]
-    );
-
-    const { bubble, user, error } = DialogueFoundation.getContentFlags(role, status, mode);
-
-    const wrapCls = clsx(PREFIX_CONTENT, {
-        [`${PREFIX_CONTENT}-${mode}`]: bubble,
-        [`${PREFIX_CONTENT}-no-bubble`]: !bubble,
-        [`${PREFIX_CONTENT}-user`]: user,
-        [`${PREFIX_CONTENT}-error`]: error,
-    });
-
+    const markdownComponents = useMemo(() => DialogueFoundation.mergeMarkdownComponents({ code: Code }, markdownRenderProps?.components), [markdownRenderProps]);
+    const wrapCls = DialogueFoundation.getContentClass(role, status, mode);
     const awaitingOutput = isAwaitingOutput(message);
 
     const loadingNode = useMemo(() => {
@@ -185,10 +165,9 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
     const renderMarkdown = useCallback(
         (text: string, key: React.Key) => {
             if (text !== '') {
-                const rawText = shouldEscapeHtml ? escapeHtmlInMarkdown(text) : text;
                 return (
                     <div key={key} className={wrapCls}>
-                        <MarkdownRender format="md" {...markdownRenderProps} components={markdownComponents} raw={rawText} />
+                        <MarkdownRender format="md" {...markdownRenderProps} components={markdownComponents} raw={DialogueFoundation.getMarkdownRaw(text, role, escapeHtml)} />
                         {role === ROLE.USER && showReference && (
                             <button type="button" className={`${PREFIX_CONTENT}-icon-reference`} aria-label={locale.reference} onClick={() => onReferenceClick?.({ type: 'text', content: text })}>
                                 <IconSendMsgStroked />
@@ -199,7 +178,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
             }
             return null;
         },
-        [wrapCls, markdownComponents, markdownRenderProps, role, onReferenceClick, showReference, shouldEscapeHtml, locale]
+        [wrapCls, markdownComponents, markdownRenderProps, role, onReferenceClick, showReference, escapeHtml, locale]
     );
 
     const renderMessage = useCallback(
@@ -281,10 +260,9 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
                 if (defaultRenderer) {
                     realContent = <div className={`${PREFIX_CONTENT}-custom-renderer`}>{defaultRenderer(textContent, message)}</div>;
                 } else {
-                    const rawText = shouldEscapeHtml ? escapeHtmlInMarkdown(textContent) : textContent;
                     realContent = (
                         <div className={wrapCls}>
-                            <MarkdownRender format="md" {...markdownRenderProps} components={markdownComponents} raw={rawText} />
+                            <MarkdownRender format="md" {...markdownRenderProps} components={markdownComponents} raw={DialogueFoundation.getMarkdownRaw(textContent, role, escapeHtml)} />
                             {role === ROLE.USER && showReference && (
                                 <button type="button" className={`${PREFIX_CONTENT}-icon-reference`} aria-label={locale.reference} onClick={() => onReferenceClick?.({ type: 'text', content: textContent })}>
                                     <IconSendMsgStroked />
@@ -317,7 +295,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
                 </div>
             );
         }
-    }, [status, content, editing, message, role, messageEditRender, markdownRenderProps, wrapCls, markdownComponents, builtinRenderers, customRenderer, renderDialogueContentItem, showReference, onReferenceClick, shouldEscapeHtml, locale]);
+    }, [status, content, editing, message, role, messageEditRender, markdownRenderProps, wrapCls, markdownComponents, builtinRenderers, customRenderer, renderDialogueContentItem, showReference, onReferenceClick, escapeHtml, locale]);
 
     const defaultContent = (
         <>

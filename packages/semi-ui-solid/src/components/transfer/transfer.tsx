@@ -32,7 +32,6 @@ const Sortable = lazy(() => import('../../internal/sortable').then((module) => (
 type BlurEvent = Parameters<NonNullable<TransferProps['onBlur']>>[0];
 type Foundation = TransferFoundation<TransferProps, BlurEvent>;
 type Adapter = TransferAdapter<TransferProps, BlurEvent>;
-type ItemKey = string | number;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -115,40 +114,30 @@ export default function Transfer(rawProps: TransferProps) {
 
     // memoized so a search keeps the item objects, and with them the rows <For> keys by
     const data = createMemo(() => TransferFoundation.getData(local.dataSource, local.type) as ResolvedDataItem[]);
-    const selectedItems = createMemo(() => TransferFoundation.getSelectedItems(local.value, data(), state().selectedValues) as Map<ItemKey, ResolvedDataItem>);
-    const selectedList = createMemo(() => [...selectedItems().values()]);
-    const selectedData = createMemo(() => selectedList().map((item) => ({ ...item, fullPath: TransferFoundation.getFullPath(item, local.type, local.showPath) })));
-    const values = createMemo(() => TransferFoundation.getValuesAndItemsFromMap(selectedItems(), local.type, local.showPath).values);
+    const view = createMemo(() => TransferFoundation.deriveView<ResolvedDataItem>(props, state(), data()));
     const isTree = createMemo(() => local.type === strings.TYPE_TREE_TO_LIST);
-    const searchResult = createMemo(() => (state().inputValue === '' ? null : TransferFoundation.getSearchResult(data(), state().inputValue, local.filter ?? true, local.type)));
-    const filterData = createMemo(() => TransferFoundation.getFilterData(data(), searchResult()));
-    const enabledFilterData = createMemo(() => TransferFoundation.getEnabledItems(filterData(), local.type));
-    const leftContainsNotInSelected = createMemo(() => enabledFilterData().some((item) => !selectedItems().has(item.key)));
     const emptyContent = createMemo(() => local.emptyContent ?? {});
-    const pageSize = createMemo(() => TransferFoundation.getPageSize(local.pagination));
-    const totalPage = createMemo(() => TransferFoundation.getTotalPage(local.pagination, filterData().length));
-    const currentPage = createMemo(() => TransferFoundation.getCurrentPage(local.pagination, state().leftCurrentPage, filterData().length));
-    const visibleData = createMemo(() => TransferFoundation.getVisibleData(filterData(), local.pagination, currentPage()));
-    const groups = createMemo(() => TransferFoundation.getGroups(visibleData(), data()));
 
     // the group indexes are stable across search and paging, so a group row keeps its DOM
-    const groupIndexes = createMemo(() => groups().map((group) => group.index));
+    const groupIndexes = createMemo(() => view().groups.map((group) => group.index));
     const treeRest = createMemo(() => omit((local.treeProps ?? {}) as TreeProps, TRANSFER_OWNED_TREE_PROPS));
-    const noMatch = createMemo(() => searchResult()?.size === 0);
-    const showNumber = createMemo(() => searchResult()?.size ?? data().length);
+
+    const selectedItems = () => view().selectedItems;
+
+    const selectedList = createMemo(() => [...selectedItems().values()]);
 
     const sourcePanelProps: SourcePanelProps = {
         get value() {
-            return values();
+            return view().values;
         },
         get loading() {
             return local.loading;
         },
         get noMatch() {
-            return noMatch();
+            return view().noMatch;
         },
         get filterData() {
-            return filterData();
+            return view().filterData;
         },
         get sourceData() {
             return data();
@@ -157,10 +146,10 @@ export default function Transfer(rawProps: TransferProps) {
             return local.dataSource;
         },
         get allChecked() {
-            return !leftContainsNotInSelected();
+            return view().allChecked;
         },
         get showNumber() {
-            return showNumber();
+            return view().showNumber;
         },
         get inputValue() {
             return state().inputValue;
@@ -169,24 +158,24 @@ export default function Transfer(rawProps: TransferProps) {
             return selectedItems();
         },
         onSelect: foundation.handleSelect,
-        onAllClick: () => foundation.handleAll(leftContainsNotInSelected()),
+        onAllClick: () => foundation.handleAll(!view().allChecked),
         onSearch: (input) => foundation.handleInputChange(input, true),
         onSelectOrRemove: foundation.handleSelectOrRemove,
     };
 
     const sourceHeaderProps: SourceHeaderProps = {
         get num() {
-            return showNumber();
+            return view().showNumber;
         },
         get showButton() {
-            return !isTree() && enabledFilterData().length > 0;
+            return view().showAllButton;
         },
         get allChecked() {
-            return !leftContainsNotInSelected();
+            return view().allChecked;
         },
         onAllClick: sourcePanelProps.onAllClick,
         get leafOnlyNum() {
-            return TransferFoundation.getLeafCount(filterData(), local.type);
+            return view().leafOnlyNum;
         },
     };
 
@@ -195,7 +184,7 @@ export default function Transfer(rawProps: TransferProps) {
             return selectedList().length;
         },
         get selectedData() {
-            return selectedData();
+            return view().selectedData;
         },
         onClear: foundation.handleClear,
         onRemove: sourcePanelProps.onSelectOrRemove,
@@ -207,7 +196,7 @@ export default function Transfer(rawProps: TransferProps) {
             return selectedList().length;
         },
         get showButton() {
-            return selectedList().some((item) => !item.disabled);
+            return view().showClearButton;
         },
         onClear: selectedPanelProps.onClear,
     };
@@ -251,7 +240,7 @@ export default function Transfer(rawProps: TransferProps) {
         <Show
             keyed
             when={local.renderSourceHeader}
-            fallback={<Header side="left" total={formatLocale(locale().locale.total, { total: showNumber() })} action={leftContainsNotInSelected() ? locale().locale.selectAll : locale().locale.clearSelectAll} showButton={sourceHeaderProps.showButton} onClick={sourceHeaderProps.onAllClick} />}
+            fallback={<Header side="left" total={formatLocale(locale().locale.total, { total: view().showNumber })} action={view().allChecked ? locale().locale.clearSelectAll : locale().locale.selectAll} showButton={sourceHeaderProps.showButton} onClick={sourceHeaderProps.onAllClick} />}
         >
             {(render) => render(sourceHeaderProps)}
         </Show>
@@ -311,10 +300,10 @@ export default function Transfer(rawProps: TransferProps) {
             // disabled checkboxes leave nothing focusable, so the list takes the Tab stop to stay scrollable
             tabIndex={local.disabled ? 0 : undefined}
         >
-            <Show when={local.type === strings.TYPE_GROUP_LIST} fallback={<For each={visibleData()}>{(item, index) => <SourceItem item={item} index={index()} />}</For>}>
+            <Show when={local.type === strings.TYPE_GROUP_LIST} fallback={<For each={view().visibleData}>{(item, index) => <SourceItem item={item} index={index()} />}</For>}>
                 <For each={groupIndexes()}>
                     {(groupIndex) => {
-                        const group = () => groups().find((candidate) => candidate.index === groupIndex);
+                        const group = () => view().groups.find((candidate) => candidate.index === groupIndex);
                         const titleId = `${idPrefix}-group-${groupIndex}`;
                         return (
                             <div role="listitem">
@@ -322,7 +311,7 @@ export default function Transfer(rawProps: TransferProps) {
                                     {group()?.title}
                                 </div>
                                 <div aria-labelledby={titleId} role="list">
-                                    <For each={group()?.items.map(({ item }) => item)}>{(item) => <SourceItem item={item} index={visibleData().indexOf(item)} />}</For>
+                                    <For each={group()?.items.map(({ item }) => item)}>{(item) => <SourceItem item={item} index={view().visibleData.indexOf(item)} />}</For>
                                 </div>
                             </div>
                         );
@@ -338,7 +327,7 @@ export default function Transfer(rawProps: TransferProps) {
             aria-label={locale().locale.optionList}
             disabled={local.disabled}
             multiple
-            value={values()}
+            value={view().values}
             defaultExpandAll
             disableStrictly
             filterTreeNode
@@ -357,7 +346,7 @@ export default function Transfer(rawProps: TransferProps) {
             <Match when={local.loading}>
                 <Spin />
             </Match>
-            <Match when={noMatch()}>
+            <Match when={view().noMatch}>
                 <Empty side="left" content={emptyContent().search} fallback={locale().locale.emptySearch} />
             </Match>
             <Match when={data().length === 0}>
@@ -370,9 +359,9 @@ export default function Transfer(rawProps: TransferProps) {
             <Match when={local.type === strings.TYPE_LIST || local.type === strings.TYPE_GROUP_LIST}>
                 <SourceHeader />
                 <SourceList />
-                <Show when={local.pagination && totalPage() > 1}>
+                <Show when={local.pagination && view().totalPage > 1}>
                     <div class={`${prefixCls}-left-pagination`}>
-                        <Pagination currentPage={currentPage()} pageSize={pageSize()} total={filterData().length} onPageChange={foundation.handlePageChange} />
+                        <Pagination currentPage={view().currentPage} pageSize={view().pageSize} total={view().filterData.length} onPageChange={foundation.handlePageChange} />
                     </div>
                 </Show>
             </Match>
@@ -534,9 +523,8 @@ export default function Transfer(rawProps: TransferProps) {
 
     createEffect(
         on(treeHandle, (handle) => {
-            const keyword = foundation.getState('inputValue');
-            if (handle && keyword) {
-                handle.search(keyword);
+            if (handle) {
+                foundation.handleTreeMount();
             }
         })
     );
@@ -545,7 +533,7 @@ export default function Transfer(rawProps: TransferProps) {
         <div
             {...rest}
             ref={mergeRefs<HTMLDivElement>(setRoot, local.ref as Ref<HTMLDivElement> | undefined)}
-            role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']}
+            role={namedRole(rest)}
             class={clsx(prefixCls, local.class, {
                 [`${prefixCls}-disabled`]: local.disabled,
                 [`${prefixCls}-custom-panel`]: local.renderSelectedPanel && local.renderSourcePanel,

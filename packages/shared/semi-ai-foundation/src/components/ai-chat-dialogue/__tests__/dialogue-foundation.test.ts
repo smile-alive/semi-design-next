@@ -71,14 +71,16 @@ describe('DialogueFoundation 上报 chats 变化', () => {
             getContainerRef: () => null,
             notifyLikeMessage: vi.fn<DialogueAdapter['notifyLikeMessage']>(),
             notifyChatsChange: vi.fn<DialogueAdapter['notifyChatsChange']>(),
+            notifyChatsPropChange: vi.fn<DialogueAdapter['notifyChatsPropChange']>(),
         };
         return { adapter, props, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
     };
 
-    it('父组件换入的列表照常上报', () => {
+    it('父组件换入的列表通过 notifyChatsPropChange 上报', () => {
         const { adapter, props, foundation } = create([{ id: '1' }]);
         changeProps(foundation, props, { chats: [{ id: '1' }, { id: '2' }] });
-        expect(adapter.notifyChatsChange).toHaveBeenCalledExactlyOnceWith(props.chats);
+        expect(adapter.notifyChatsPropChange).toHaveBeenCalledOnce();
+        expect(adapter.notifyChatsChange).not.toHaveBeenCalled();
     });
 
     it('组件自己写入的列表回到 chats 时不再上报，按值比较以覆盖宿主交来的副本', () => {
@@ -86,11 +88,11 @@ describe('DialogueFoundation 上报 chats 变化', () => {
         foundation.likeMessage({ id: '1' } as Message);
         const written = adapter.notifyChatsChange.mock.calls[0][0];
         changeProps(foundation, props, { chats: [...written] });
-        expect(adapter.notifyChatsChange).toHaveBeenCalledOnce();
+        expect(adapter.notifyChatsPropChange).not.toHaveBeenCalled();
         // the parent rewrote the list in the setter: a different list is reported
         foundation.likeMessage({ id: '1' } as Message);
         changeProps(foundation, props, { chats: [{ id: '1', like: true }] });
-        expect(adapter.notifyChatsChange).toHaveBeenCalledTimes(3);
+        expect(adapter.notifyChatsPropChange).toHaveBeenCalledOnce();
     });
 });
 
@@ -106,7 +108,7 @@ describe('DialogueFoundation 滚动', () => {
             setState: vi.fn<(state: { backBottomVisible: boolean }) => void>((state) => {
                 backBottomVisible = state.backBottomVisible;
             }),
-            notifyChatsChange: vi.fn<() => void>(),
+            notifyChatsPropChange: vi.fn<() => void>(),
         };
         return { adapter, element, props, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
     };

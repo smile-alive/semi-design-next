@@ -116,22 +116,6 @@ export default function Form<Values extends Record<string, any> = any, Output = 
         return typeof child === 'function' && child.length > 0 ? untrack(() => child(renderProps)) : (child as JSX.Element);
     };
 
-    const handleSubmit = (e: SubmitEvent) => {
-        e.preventDefault();
-        if (local.stopPropagation?.submit) {
-            e.stopPropagation();
-        }
-        foundation.submit(e);
-    };
-
-    const handleReset = (e: Event) => {
-        e.preventDefault();
-        if (local.stopPropagation?.reset) {
-            e.stopPropagation();
-        }
-        foundation.reset();
-    };
-
     const formView = () => (
         <form
             novalidate
@@ -146,8 +130,8 @@ export default function Form<Values extends Record<string, any> = any, Output = 
                 [`${prefix}-horizontal`]: local.layout === 'horizontal',
             })}
             x-form-id={formId()}
-            onReset={handleReset}
-            onSubmit={handleSubmit}
+            onReset={foundation.handleResetEvent}
+            onSubmit={foundation.handleSubmitEvent}
         >
             <Switch fallback={childContent()}>
                 <Match when={local.component} keyed>

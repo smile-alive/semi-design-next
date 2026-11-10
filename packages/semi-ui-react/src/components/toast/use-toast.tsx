@@ -1,7 +1,7 @@
 import { type ReactElement, useState } from 'react';
+import { createHookApi, type HookApi } from '@fibrae/semi-foundation/base/hook-api';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
-import type { ToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
+import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { readGlobalDefaults } from '../../utils/semi-global';
 import type { ToastOptions } from './index';
@@ -10,19 +10,10 @@ import ToastList from './toast-list';
 /** The id is generated, and a hook's toasts render where its holder is, so the layer options do not apply */
 type ToastHookOptions = Omit<ToastOptions, 'id' | 'zIndex' | 'getPopupContainer'>;
 
-export interface ToastHookApi {
-    success: (config: ToastHookOptions) => string;
-    info: (config: ToastHookOptions) => string;
-    error: (config: ToastHookOptions) => string;
-    warning: (config: ToastHookOptions) => string;
-    open: (config: ToastHookOptions) => string;
-    close: (id: string) => void;
-}
+export type ToastHookApi = HookApi<ToastHookOptions>;
 
 function createToastHook(): [ToastHookApi, ReactElement] {
-    const store = new ToastListStore();
-
-    const addToast = (config: ToastHookOptions, type: ToastProps['type']) => store.open({ ...config, type }, readGlobalDefaults('Toast'));
+    const store = createToastListStore();
 
     const contextHolder = (
         <div className={cssClasses.WRAPPER} {...{ [KEEP_INTERACTIVE_ATTRIBUTE]: '' }}>
@@ -30,17 +21,7 @@ function createToastHook(): [ToastHookApi, ReactElement] {
         </div>
     );
 
-    return [
-        {
-            success: (config) => addToast(config, 'success'),
-            info: (config) => addToast(config, 'info'),
-            error: (config) => addToast(config, 'error'),
-            warning: (config) => addToast(config, 'warning'),
-            open: (config) => addToast(config, 'default'),
-            close: (id) => store.remove(id),
-        },
-        contextHolder,
-    ];
+    return [createHookApi<ToastHookOptions>(store, { readGlobalDefaults: () => readGlobalDefaults('Toast') }), contextHolder];
 }
 
 export default function useToast(): [ToastHookApi, ReactElement] {

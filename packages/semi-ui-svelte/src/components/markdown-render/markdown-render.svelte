@@ -2,7 +2,6 @@
     import { omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
     import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/components/markdown-render/foundation';
-    import { isDev } from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/markdown-render/markdown-render.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
@@ -39,14 +38,7 @@
         MarkdownRenderFoundation,
         foundationProps,
         (view) => MarkdownRenderFoundation.getInitialState(view, runtime),
-        () => ({
-            getRuntime: () => runtime,
-            notifyCompileError: (error) => {
-                if (isDev()) {
-                    console.error(error);
-                }
-            },
-        })
+        () => ({ getRuntime: () => runtime })
     );
 
     const role = $derived(rest.role ?? (rest['aria-label'] || rest['aria-labelledby'] ? 'group' : undefined));

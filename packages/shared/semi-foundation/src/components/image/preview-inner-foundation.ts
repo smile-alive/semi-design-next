@@ -3,7 +3,7 @@ import FocusTrapHandle from '../../base/focus-handle';
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
 import ModalResources from '../../base/modal-resources';
 import { handlePrevent } from '../../utils/a11y';
-import { resolvePopupContainer } from '../../utils/dom';
+import { coversPage, resolvePopupContainer } from '../../utils/dom';
 import { ESC_KEY } from '../../utils/key-code';
 import { clampZoom, getPreloadSrcList, downloadImage } from './utils';
 
@@ -12,14 +12,12 @@ export type SwitchDirection = 'prev' | 'next';
 export type RotateDirection = 'left' | 'right';
 /** What the preview reads around it; the group keys are provided only inside an image group */
 export interface PreviewInnerContext extends DirectionContext {
-    isGroup?: boolean;
     setCurrentIndex?: (index: number) => void;
     setDownloadName?: (src: string) => string;
     popupContainer?: () => HTMLElement;
 }
 
 export interface PreviewInnerAdapter<P extends PreviewInnerBaseProps = PreviewInnerBaseProps> extends DefaultAdapter<P, PreviewInnerState, PreviewInnerContext> {
-    getIsInGroup: () => boolean;
     notifyChange: (index: number, direction: SwitchDirection) => void;
     notifyZoom: (zoom: number, increase: boolean) => void;
     notifyClose: () => void;
@@ -31,7 +29,6 @@ export interface PreviewInnerAdapter<P extends PreviewInnerBaseProps = PreviewIn
     /** The `role="dialog"` element: it goes on the overlay stack and takes focus */
     getWrap: () => HTMLElement | null | undefined;
     isValidTarget: (e: any) => boolean;
-    setRatio: (ratio: RatioType) => void;
 }
 
 function isEditable(target: any) {
@@ -69,6 +66,9 @@ export interface PreviewInnerState {
     /** keyed by src */
     imgLoadStatus: Record<string, boolean>;
     preloadAfterVisibleChange: boolean;
+    /** chosen for the image at `ratioIndex`; read through `getRatio` */
+    ratio: RatioType;
+    ratioIndex: number;
 }
 
 export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = PreviewInnerBaseProps> extends BaseFoundation<PreviewInnerAdapter<P>, P, PreviewInnerState> {
@@ -80,7 +80,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     // destroyed while shown (Activity, KeepAlive): init takes them again
     #resume = false;
 
-    static override readonly propKeys = ['src'];
+    static override readonly propKeys = ['src', 'currentIndex'];
 
     // a group builds a new list every render, which must not restart the delay
     static override readonly propEquals = { src: isEqual };
@@ -133,6 +133,16 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         window.removeEventListener('keydown', this.handleKeyDown);
         this.#resources.release();
         this.#clearTimer();
+    }
+
+    // a focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
+    // moved elsewhere is left alone.
+    #keepFocus() {
+        const wrap = this.adapter.getWrap();
+        const active = FocusTrapHandle.getActiveElement();
+        if (wrap && (!active || active === document.body)) {
+            wrap.focus({ preventScroll: true });
+        }
     }
 
     #clearTimer() {
@@ -189,14 +199,22 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     }
 
     static getInitialState(props: PreviewInnerBaseProps): PreviewInnerState {
+        const currentIndex = props.defaultCurrentIndex ?? 0;
         return {
             imgLoadStatus: {},
             zoom: 0.1,
-            currentIndex: props.defaultCurrentIndex ?? 0,
+            currentIndex,
             rotation: 0,
             viewerVisible: true,
             preloadAfterVisibleChange: true,
+            ratio: 'adaptation',
+            ratioIndex: props.currentIndex ?? currentIndex,
         };
+    }
+
+    /** A new image starts adapted: in the render that shows it, before the reset reaches the state */
+    static getRatio(props: Record<string, any>, state: Pick<PreviewInnerState, 'currentIndex' | 'ratio' | 'ratioIndex'>): RatioType {
+        return state.ratioIndex === PreviewInnerFoundation.getCurrentIndex(props, state) ? state.ratio : 'adaptation';
     }
 
     static getSrcList(src: string | string[]) {
@@ -226,8 +244,10 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         if (wrap && !wrap.contains(FocusTrapHandle.getActiveElement(wrap))) {
             FocusTrapHandle.findAutofocus(wrap)?.focus({ preventScroll: true });
         }
-        // only a preview in body covers the page: it is modal, locks scroll and keeps Tab inside
-        const modal = resolvePopupContainer(this.getContext('popupContainer')) === document.body;
+        // only a preview whose container covers the page is modal, locks scroll and keeps Tab inside
+        // resolved first, so a getter returning null fails loud here as in the portal
+        const container = resolvePopupContainer(this.getContext('popupContainer'));
+        const modal = coversPage(() => container);
         this.#resources.hold({ modal, layer: wrap, onEscape: this.#handleEscape, focus: wrap, preventScroll: true });
         this.updateTimer();
     };
@@ -242,8 +262,8 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
             viewerVisible: true,
             rotation: 0,
             preloadAfterVisibleChange: true,
+            ratio: 'adaptation',
         });
-        this.adapter.setRatio('adaptation');
     };
 
     /** Remembers the element to return focus to; hosts call it before the preview renders, or its own focus would be recorded */
@@ -251,8 +271,14 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         this.#resources.record();
     };
 
-    override handlePropsChange() {
-        this.updateTimer();
+    override handlePropsChange(prev: Partial<P>) {
+        if (prev.currentIndex !== this.getProp('currentIndex')) {
+            this.setState({ ratio: 'adaptation' });
+            this.#keepFocus();
+        }
+        if (!isEqual(prev.src, this.getProp('src'))) {
+            this.updateTimer();
+        }
     }
 
     // A hidden preview (Activity, KeepAlive) holds nothing of the page and stays open; init takes it all again
@@ -358,20 +384,25 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         const step = direction === 'prev' ? -1 : 1;
         const srcLength = this.#getImgSrc().length;
         const newIndex = (this.#getCurrentIndex() + step + srcLength) % srcLength;
-        if (this.isControlledComponent('currentIndex')) {
-            if (this.adapter.getIsInGroup()) {
-                this.adapter.getContext('setCurrentIndex')?.(newIndex);
-            }
+        const controlled = this.isControlledComponent('currentIndex');
+        if (controlled) {
+            // provided only inside a group
+            this.getContext('setCurrentIndex')?.(newIndex);
         } else {
             this.setState({
                 currentIndex: newIndex,
+                ratio: 'adaptation',
             });
         }
         this.adapter.notifyChange(newIndex, direction);
-        this.setState({
+        const committed = this.commitState({
             direction,
             rotation: 0,
         });
+        // a controlled index keeps the focus in handlePropsChange
+        if (!controlled) {
+            void committed.then(() => this.#keepFocus());
+        }
     };
 
     handleDownload = () => {
@@ -393,7 +424,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     };
 
     handleAdjustRatio = (type: RatioType) => {
-        this.adapter.setRatio(type);
+        this.setState({ ratio: type, ratioIndex: this.#getCurrentIndex() });
         this.adapter.notifyRatioChange(type);
     };
 

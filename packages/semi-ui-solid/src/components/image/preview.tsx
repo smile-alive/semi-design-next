@@ -1,4 +1,4 @@
-import { type JSX, createMemo, splitProps, untrack } from 'solid-js';
+import { createMemo, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import PreviewFoundation, { type PreviewAdapter, getGroupPreviewList, loadLazyImages } from '@fibrae/semi-foundation/components/image/preview-foundation';
@@ -113,7 +113,7 @@ export default function ImagePreview(rawProps: PreviewProps) {
     return (
         <PreviewContext.Provider value={context}>
             {/* the Provider's children memo tracks the ref read; a spread props signal would rebuild the group and the open preview */}
-            <div {...rest} ref={untrack(() => mergeRefs(local.ref, (node: HTMLDivElement) => (group = node)))} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} class={clsx(`${prefixCls}-preview-group`, local.class)} style={local.style}>
+            <div {...rest} ref={untrack(() => mergeRefs(local.ref, (node: HTMLDivElement) => (group = node)))} role={namedRole(rest)} class={clsx(`${prefixCls}-preview-group`, local.class)} style={local.style}>
                 {local.children}
             </div>
             <PreviewInner {...inner} class={local.previewCls} style={local.previewStyle} currentIndex={currentIndex()} src={list().srcList} visible={visible()} onVisibleChange={foundation.handleVisibleChange} />

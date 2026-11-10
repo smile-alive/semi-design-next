@@ -1,7 +1,7 @@
 import { type Ref, For, Show, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
-import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
+import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, type ScrollItemRow, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
 import type { ElementProps } from '../../base/element-props';
 import useDefaultProps from '../../base/use-default-props';
@@ -41,9 +41,6 @@ const defaultProps = {
     mode: wheelMode,
 } satisfies Partial<ScrollItemProps<Item>>;
 
-// An option is identified by `<copy name>_<n>_<index>` or, for the real list, by `<index>`
-const parseKey = (key: string) => ({ copy: key.includes('_'), index: Number(key.slice(key.lastIndexOf('_') + 1)) });
-
 export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemProps<T>) {
     const props = useDefaultProps('ScrollItem', rawProps, defaultProps) as ScrollItemProps<T> & Required<Pick<ScrollItemProps<T>, keyof typeof defaultProps>>;
     const [local, rest] = splitProps(props, ['mode', 'cycled', 'list', 'selectedIndex', 'onSelect', 'transform', 'class', 'motion', 'type', 'ref', 'aria-label', 'aria-labelledby', 'aria-describedby']);
@@ -53,6 +50,10 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
     const listId = createUniqueId();
     let outer!: HTMLDivElement;
     let selector!: HTMLDivElement;
+
+    // <For> keeps a node while its row object is the same one, so rows are reused by key: the foundation caches the
+    // selected node and scrolls to it after the copies render around it.
+    let rowsByKey = new Map<string, ScrollItemRow>();
 
     const isWheel = () => local.mode === wheelMode;
 
@@ -68,16 +69,13 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
         })
     );
 
-    // Options are keyed by string so each node survives the copies being added around it: the foundation caches
-    // the selected node and scrolls to it after the copies render.
-    const keys = createMemo(() => {
-        const indexes = local.list.map((_, index) => index);
-        const items = (name: string) => indexes.map((index) => `${name}${index}`);
-        if (!isWheel()) {
-            return items('');
-        }
-        const copies = (count: number, name: string) => Array.from({ length: count }, (_, i) => items(`${name}_${i}_`));
-        return [...copies(state().prependCount, 'pre').toReversed().flat(), ...items(''), ...copies(state().appendCount, 'app').flat()];
+    const rows = createMemo(() => {
+        const next = ItemFoundation.getRows({ list: local.list, mode: local.mode }, state()).map((row) => {
+            const kept = rowsByKey.get(row.key);
+            return kept?.index === row.index && kept.copy === row.copy ? kept : row;
+        });
+        rowsByKey = new Map(next.map((row) => [row.key, row]));
+        return next;
     });
 
     const handle: ScrollItemHandle = { scrollToIndex: (_index, duration) => foundation.scrollToSelected(duration) };
@@ -85,8 +83,7 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
     // Only the real list carries ids: cycled copies would make the active descendant ambiguous
     const optionId = (index: number) => `${listId}-option-${index}`;
 
-    const renderOption = (key: string) => {
-        const { copy, index } = parseKey(key);
+    const renderOption = ({ copy, index }: ScrollItemRow) => {
         const item = () => local.list[index];
         const selected = () => local.selectedIndex === index;
         const text = () => ItemFoundation.getItemText(item(), selected(), local.transform);
@@ -126,13 +123,12 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
             tabIndex={0}
             onClick={(event) => {
                 if (isWheel()) {
-                    event.stopImmediatePropagation();
                     foundation.handleWheelClick(event);
                 }
             }}
             onKeyDown={foundation.handleKeyDown}
         >
-            <For each={keys()}>{(key) => renderOption(key)}</For>
+            <For each={rows()}>{renderOption}</For>
         </ul>
     );
 

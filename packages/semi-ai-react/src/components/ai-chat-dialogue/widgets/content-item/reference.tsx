@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { cssClasses, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import { cssClasses, type DialogueIconKind, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
 import { IconCode, IconWord, IconExcel, IconPdf, IconSendMsgStroked, IconVideo } from '@fibrae/semi-icons-react';
@@ -13,7 +13,7 @@ const prefixCls = cssClasses.PREFIX_REFERENCES;
 const referencePrefixCls = cssClasses.PREFIX_REFERENCE;
 
 // A thumbnail replaces the icon for images, so the image kind has none
-const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo };
+const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo } satisfies Record<DialogueIconKind, unknown>;
 
 export function ReferenceWidget({ references }: ReferenceWidgetProps) {
     const renderReferenceIcon = (name: string) => {

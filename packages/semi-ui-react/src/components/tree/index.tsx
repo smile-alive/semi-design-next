@@ -171,7 +171,7 @@ function Tree(rawProps: TreeProps) {
         props,
         () => TreeFoundation.getInitialState(props),
         (base) => ({
-            notifyExpand: (expandedKeys, { expanded, node }) => base.getProps().onExpand?.([...expandedKeys], { expanded, node }),
+            notifyExpand: (expandedKeys, { expanded, node }) => base.getProps().onExpand?.(expandedKeys, { expanded, node }),
             notifySelect: (selectKey, bool, node) => base.getProps().onSelect?.(selectKey, bool, node),
             notifyChange: (value) => base.getProps().onChange?.(value),
             notifySearch: (input, filteredExpandedKeys) => base.getProps().onSearch?.(input, filteredExpandedKeys),

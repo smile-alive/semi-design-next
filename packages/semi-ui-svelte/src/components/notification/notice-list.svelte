@@ -1,26 +1,27 @@
 <script lang="ts">
     import { omit } from 'es-toolkit';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import { cssClasses, getStackThreshold } from '@fibrae/semi-foundation/components/notification/constants';
+    import { getStackDepths, hasLostFocus, isStackExpanded } from '@fibrae/semi-foundation/base/list-store';
+    import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
     import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
-    import type NotificationListStore from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import watch from '../../hooks/watch.svelte.js';
-    import { type ListedNotice, setNoticeListContext } from './context.js';
+    import { type ListedNotice, type RegisterNotice, setNoticeListContext } from './context.js';
+    import type { NotificationListProps } from './interface.js';
     import Notice from './notice.svelte';
 
-    interface NoticeListProps {
+    interface NoticeListProps extends NotificationListProps {
         placement: NoticePosition;
         items: ListedNotice[];
         removedItems: readonly NoticeInstance[];
         updatedItems: readonly NoticeInstance[];
-        store: NotificationListStore;
-        announce: (key: string, read: () => string) => void;
+        /** The store's stack threshold */
+        stack: number;
+        register: RegisterNotice;
     }
 
     // One list per position: pointer and focus state goes when the position empties, so an unmounted list cannot leave
     // notices paused. A leaving notice stays in `items` until its leave ends, so the list outlives it.
-    let { announce, items, placement, removedItems, store, updatedItems }: NoticeListProps = $props();
+    let { items, placement, register, removedItems, stack, store, updatedItems }: NoticeListProps = $props();
 
     let listEl = $state<HTMLDivElement>();
     let pointerInside = $state(false);
@@ -28,9 +29,8 @@
 
     const paused = $derived(pointerInside || focusInside);
     const removedIds = $derived(new Set(removedItems.map((item) => item.id)));
-    const shownCount = $derived(items.filter((item) => !removedIds.has(item.id)).length);
-    const threshold = $derived(getStackThreshold(items[0].stack));
-    const expanded = $derived(paused || shownCount <= threshold);
+    const shownIds = $derived(new Set(items.flatMap((item) => (removedIds.has(item.id) ? [] : [item.id]))));
+    const expanded = $derived(isStackExpanded(stack, paused, shownIds.size));
 
     const listStyle = $derived.by(() => {
         const newest = items[0];
@@ -42,17 +42,16 @@
         };
     });
 
-    // A leaving notice keeps its place until its leave ends. Only shown notices count towards a depth, so the ones
-    // behind a leaving notice do not sink and spring back when it goes.
+    // A leaving notice keeps its place until its leave ends.
     const rows = $derived.by(() => {
-        let shownBefore = 0;
+        const depths = getStackDepths(
+            items.map((item) => item.id),
+            shownIds
+        );
         return items.map((item, index) => {
-            const leaving = removedIds.has(item.id);
-            const depth = shownBefore;
-            if (!leaving) shownBefore++;
             // List-level and unused options would otherwise land on the notice element as attributes like zindex="1010".
             const props = omit(item, ['top', 'bottom', 'left', 'right', 'zIndex', 'getPopupContainer', 'stack', 'position']);
-            return { id: item.id, props, leaving, depth, layer: items.length - index };
+            return { id: item.id, props, leaving: removedIds.has(item.id), depth: depths.get(item.id) ?? 0, layer: items.length - index };
         });
     });
 
@@ -66,7 +65,7 @@
         get removedItems() {
             return removedItems;
         },
-        announce: (key, read) => announce(key, read),
+        register: (id, element) => register(id, element),
     });
 
     const handleFocusOut = (event: FocusEvent) => {
@@ -77,7 +76,7 @@
     watch(
         () => items,
         () => {
-            if (focusInside && listEl && !listEl.contains(FocusTrapHandle.getActiveElement(listEl))) focusInside = false;
+            if (hasLostFocus(focusInside, listEl)) focusInside = false;
         }
     );
 </script>
@@ -96,6 +95,6 @@
     onmouseleave={() => (pointerInside = false)}
 >
     {#each rows as row (row.id)}
-        <Notice {...row.props} close={(id) => store.remove(id)} depth={row.depth} layer={row.layer} leaving={row.leaving} onLeaveEnd={() => store.finishLeave(row.id)} {placement} stack={threshold > 0} stackExpanded={expanded} />
+        <Notice {...row.props} close={(id) => store.remove(id)} depth={row.depth} layer={row.layer} leaving={row.leaving} onLeaveEnd={() => store.finishLeave(row.id)} {placement} stack={stack > 0} stackExpanded={expanded} />
     {/each}
 </div>

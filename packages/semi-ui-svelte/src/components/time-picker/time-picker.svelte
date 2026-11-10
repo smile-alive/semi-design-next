@@ -2,7 +2,6 @@
     import { onMount } from 'svelte';
     import type { Locale } from 'date-fns';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import ComboboxFoundation from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimePickerFoundation, { type TimePickerAdapter, type TimePickerBaseProps } from '@fibrae/semi-foundation/components/time-picker/foundation';
     import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
@@ -159,6 +158,12 @@
             notifyBlur: (event) => onBlur?.(event),
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panelElement),
             setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(root, { preventScroll }),
+            blurFocusedElement: () => {
+                const active = FocusTrapHandle.getActiveElement(root);
+                if (active && (root?.contains(active) || panelElement?.contains(active))) {
+                    active.blur();
+                }
+            },
         })
     );
 
@@ -173,21 +178,7 @@
 
     // class and style size the root; every other attribute names and identifies the input
     const attrs = $derived(trigger ? { root: rest as Record<string, unknown>, control: {} } : splitControlAttrs(rest, (key) => key !== 'class' && key !== 'style'));
-
-    const panelClass = $derived.by(() => {
-        const { showHour, showMinute, showSecond } = ComboboxFoundation.getColumns(validFormat);
-        const columnCount = [showHour, showMinute, showSecond, use12Hours].filter(Boolean).length;
-        return [
-            `${prefixCls}-panel`,
-            `${prefixCls}-panel-${size}`,
-            popupClassName,
-            {
-                [`${prefixCls}-panel-narrow`]: (!showHour || !showMinute || !showSecond) && !use12Hours,
-                [cssClasses.RANGE_PICKER]: isRange,
-            },
-            `${prefixCls}-panel-column-${columnCount}`,
-        ];
-    });
+    const panelClass = $derived([...TimePickerFoundation.getPanelClassNames({ prefixCls, format, use12Hours, type }), `${prefixCls}-panel-${size}`, popupClassName]);
 
     const triggerProps: TimePickerTriggerRenderProps = $derived({
         value: states().value,
@@ -263,13 +254,13 @@
         }
     });
 
-    /** Focuses the input, which opens the panel; `preventScroll` applies. Does nothing with a custom trigger */
+    /** Focuses the input, which opens the panel; with a custom trigger, its first focusable element or the wrapper. `preventScroll` applies */
     export function focus() {
-        root?.querySelector('input')?.focus({ preventScroll });
+        foundation.focus();
     }
 
     export function blur() {
-        root?.querySelector('input')?.blur();
+        foundation.blur();
     }
 </script>
 

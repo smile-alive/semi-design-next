@@ -2,7 +2,7 @@ import { debounce } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import ModalResources from '../../base/modal-resources';
 import PopupLifecycle from '../../base/popup-lifecycle';
-import { resolvePopupContainer } from '../../utils/dom';
+import { coversPage, resolvePopupContainer } from '../../utils/dom';
 import isPromise from '../../utils/is-promise';
 import { isModal } from './modal-content-foundation';
 
@@ -203,7 +203,9 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
         this.#lifecycle.show();
         // ModalContent holds the layer and focus; the page keeps scrolling behind a non-modal dialog
         const { mask, maskFixed, getPopupContainer } = this.getProps();
-        const inBody = resolvePopupContainer(getPopupContainer ?? this.getContext('getPopupContainer')) === document.body;
+        // resolved first, so a getter returning null fails loud here as in the portal
+        const container = resolvePopupContainer(getPopupContainer ?? this.getContext('getPopupContainer'));
+        const inBody = coversPage(() => container);
         this.#resources.hold({ modal: isModal({ mask, maskFixed, inBody }) });
     };
 

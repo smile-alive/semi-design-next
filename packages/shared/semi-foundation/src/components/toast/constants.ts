@@ -29,8 +29,6 @@ export function setPosition(wrapper: HTMLElement, opts: Partial<Record<(typeof p
 
 export const numbers = {
     duration: 3, // default close time, unit: s
-    stackThreshold: 3, // `stack: true` lays out up to this many toasts flat and stacks from the next one
-    stackVisibleCount: 3, // a collapsed stack shows this many layers; the ones behind them are hidden
     stackLayerDepth: 10, // how far back a toast sits per newer toast in front of it, unit: px
 };
 

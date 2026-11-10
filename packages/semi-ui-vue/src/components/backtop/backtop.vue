@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, onMounted, onUpdated, useAttrs, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/components/backtop/constants';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/backtop/constants';
     import BackTopFoundation, { type BackTopAdapter } from '@fibrae/semi-foundation/components/backtop/foundation';
     import '@fibrae/semi-foundation/components/backtop/backtop.scss';
     import { IconBackTop } from '@fibrae/semi-icons-vue';
@@ -8,7 +8,6 @@
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
     import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import { getWindow } from '../../composables/use-event-listener';
     import { hasSlotContent } from '../../utils/slot-nodes';
     import FloatButton from '../float-button';
     import useLocale from '../locale/use-locale';
@@ -23,12 +22,12 @@
         badge: semiGlobalDefault('BackTop', 'badge'),
         // FloatButton owns the defaults of these; a fallback here would hide its own global defaults.
         colorful: semiGlobalDefault('BackTop', 'colorful'),
-        duration: () => semiDefault('BackTop', 'duration', 450),
+        duration: () => semiDefault('BackTop', 'duration', numbers.DEFAULT_DURATION),
         shape: semiGlobalDefault('BackTop', 'shape'),
         size: semiGlobalDefault('BackTop', 'size'),
         // Function-typed props cannot take a factory default; the global default is read in `target`.
         target: undefined,
-        visibilityHeight: () => semiDefault('BackTop', 'visibilityHeight', 400),
+        visibilityHeight: () => semiDefault('BackTop', 'visibilityHeight', numbers.DEFAULT_VISIBILITY_HEIGHT),
     });
 
     // Declared so the foundation throttles the click and emits it with the start of the scroll, which attrs on the button would not.
@@ -42,7 +41,7 @@
     const button = useTemplateRef('button');
 
     const prefix = cssClasses.PREFIX;
-    const target = computed(() => props.target ?? readSemiDefault(semi, 'BackTop', 'target', getWindow));
+    const target = computed(() => props.target ?? readSemiDefault(semi, 'BackTop', 'target'));
 
     const { foundation, state } = useFoundation<Foundation, Adapter, BackTopProps, BackTopState>(
         BackTopFoundation,

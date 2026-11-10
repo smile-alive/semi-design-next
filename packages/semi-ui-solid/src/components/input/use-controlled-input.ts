@@ -1,4 +1,5 @@
 import type { Accessor } from 'solid-js';
+import { crossesFocusBoundary } from '@fibrae/semi-foundation/utils/a11y';
 
 interface TextEntry {
     handleChange(value: string, e: unknown): void;
@@ -50,7 +51,7 @@ export default function useControlledInput({ element, text, foundation, state, a
 
     // the handover after a removed clear button comes in with no relatedTarget, so the focus state tells it apart
     const handleFocusIn = (e: FocusHandlerEvent) => {
-        if (!state().isFocus && !(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
+        if (!state().isFocus) {
             foundation.handleFocus(e);
         }
     };
@@ -61,9 +62,9 @@ export default function useControlledInput({ element, text, foundation, state, a
         if (e.target === clearButton() && !allowClear()) {
             return;
         }
-        if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
-            foundation.handleBlur(e);
-            afterBlur?.();
+        foundation.handleBlur(e);
+        if (afterBlur && crossesFocusBoundary(e)) {
+            afterBlur();
         }
     };
 

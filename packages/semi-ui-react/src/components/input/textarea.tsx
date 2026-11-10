@@ -2,6 +2,7 @@ import type React from 'react';
 import { useCallback, useEffect, useImperativeHandle, useId, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import clsx from 'clsx';
 import { throttle } from 'es-toolkit';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
 import TextAreaFoundation, { type TextAreaAdapter, type TextAreaBaseState } from '@fibrae/semi-foundation/components/input/textarea-foundation';
@@ -9,7 +10,6 @@ import { syncLineNumberHeights } from '@fibrae/semi-foundation/components/input/
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/input/textarea.scss';
 import { IconClear } from '@fibrae/semi-icons-react';
-import type { ValidateStatus } from '../../base/base-component';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useResizeObserver from '../../hooks/use-resize-observer';
@@ -192,7 +192,6 @@ export default function TextArea(rawProps: TextAreaProps) {
             notifyCompositionEnd: (e) => base.getProps().onCompositionEnd?.(e),
             notifyCompositionUpdate: (e) => base.getProps().onCompositionUpdate?.(e),
             focusInput: () => textareaRef.current?.focus(),
-            isEventTarget: (e) => e && e.target === e.currentTarget,
             getTextarea: () => textareaRef.current,
         })
     );
@@ -200,7 +199,6 @@ export default function TextArea(rawProps: TextAreaProps) {
     const [throttledResize] = useState(() => throttle(foundation.handleResize, 10));
 
     const value = TextAreaFoundation.deriveValue(props, state);
-    const autosizing = Boolean(autosize);
 
     // a removed node fires no blur: without this the focus would fall to the body while the TextArea stays focused
     const setClearButton = useCallback(
@@ -248,7 +246,7 @@ export default function TextArea(rawProps: TextAreaProps) {
     // the line number panel remounts the textarea
     useLayoutEffect(() => {
         foundation.fitAutosize();
-    }, [foundation, value, autosizing, showLineNumber]);
+    }, [foundation, value, showLineNumber]);
 
     useImperativeHandle(ref, () => createHandle(textareaRef, rootRef), []);
 
@@ -301,20 +299,7 @@ export default function TextArea(rawProps: TextAreaProps) {
         [`${prefixCls}-textarea-showClear`]: showClear,
     });
 
-    // the stylesheet turns the row counts into the min/max block size (see textarea.scss)
-    const mergedTextareaStyle: CSSProperties = { ...textareaStyle };
-
-    if (autosize) {
-        const bounds = typeof autosize === 'object' ? autosize : {};
-        Object.assign(mergedTextareaStyle, {
-            resize: 'none',
-            [`--${prefixCls}-textarea-min-rows`]: bounds.minRows ?? props.rows,
-            [`--${prefixCls}-textarea-max-rows`]: bounds.maxRows,
-        });
-    } else if (hasResizeProp) {
-        mergedTextareaStyle.resize = resize;
-    }
-
+    const mergedTextareaStyle: CSSProperties = { ...textareaStyle, ...TextAreaFoundation.getSizeStyle({ autosize, resize, rows: props.rows }) };
     const current = showCounter || maxCount ? TextAreaFoundation.getValueCount(value, getValueLength) : 0;
     const exceeds = Boolean(maxCount) && current > maxCount;
 
@@ -328,8 +313,7 @@ export default function TextArea(rawProps: TextAreaProps) {
             aria-invalid={validateStatus === 'error' || exceeds ? 'true' : rest['aria-invalid']}
             autoFocus={autoFocus || (rest as { autofocus?: boolean }).autofocus}
             disabled={disabled}
-            // the native maxLength counts UTF-16 units, so getValueLength enforces the limit instead
-            maxLength={typeof getValueLength === 'function' ? undefined : maxLength}
+            maxLength={TextAreaFoundation.getNativeMaxLength({ maxLength, getValueLength })}
             minLength={TextAreaFoundation.getNativeMinLength(props, value)}
             placeholder={placeholder || undefined}
             // the native attribute locks typing only; `readonly` also blocks clearing
@@ -370,22 +354,7 @@ export default function TextArea(rawProps: TextAreaProps) {
     }
 
     return (
-        <div
-            ref={rootRef}
-            className={wrapperCls}
-            style={style}
-            onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    foundation.handleBlur(e);
-                }
-            }}
-            onClick={foundation.handleClick}
-            onFocus={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    foundation.handleFocus(e);
-                }
-            }}
-        >
+        <div ref={rootRef} className={wrapperCls} style={style} onBlur={foundation.handleBlur} onClick={foundation.handleClick} onFocus={foundation.handleFocus}>
             {lineNumbers}
             {showLineNumber ? <div className={`${prefixCls}-textarea-content`}>{textareaNode}</div> : textareaNode}
             {TextAreaFoundation.isAllowClear(props, value) && (
@@ -394,13 +363,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                     type="button"
                     className={`${prefixCls}-clearbtn`}
                     aria-label={locale.clear}
-                    onClick={(e) => {
-                        foundation.handleClear(e);
-                        // only keyboard activation (detail 0) moves focus: the focused button is about to be removed
-                        if (e.detail === 0) {
-                            textareaRef.current?.focus();
-                        }
-                    }}
+                    onClick={foundation.handleClearClick}
                     // keeps focus in the textarea, so clearing fires no blur
                     onMouseDown={(e) => e.preventDefault()}
                 >

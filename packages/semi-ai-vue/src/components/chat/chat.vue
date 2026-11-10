@@ -4,6 +4,7 @@
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
@@ -13,7 +14,6 @@
     import { useLocale, useResizeObserver } from '@fibrae/semi-ui-vue/composables';
     import Divider from '@fibrae/semi-ui-vue/divider/index';
     import Toast from '@fibrae/semi-ui-vue/toast/index';
-    import { groupRole } from '@fibrae/semi-ui-vue/utils/group-role';
     import { handOnSlots } from '@fibrae/semi-ui-vue/utils/hand-on';
     import { provideChatContext } from './context';
     import type { ChatEmits, ChatHandle, ChatMessage, ChatProps, ChatSlots } from './interface';
@@ -103,24 +103,6 @@
     // dynamic slot outlet inside the message v-for compiles to.
     const chatBoxNode = (item: ChatMessage, index: number) => h(ChatBox, { continueSend: index > 0 && item.role === chats.value[index - 1].role, isLast: index === chats.value.length - 1, message: item }, handOnSlots(slots));
 
-    const onDragOver = (e: DragEvent) => {
-        if (upload.value.dragUpload) {
-            foundation.handleDragOver(e);
-        }
-    };
-
-    const onDragStart = () => {
-        if (upload.value.dragUpload) {
-            foundation.handleDragStart();
-        }
-    };
-
-    const onDragEnd = () => {
-        if (upload.value.dragUpload) {
-            foundation.handleDragEnd();
-        }
-    };
-
     useResizeObserver(container, foundation.handleScrollContainerResize);
 
     // The stop and back-to-bottom buttons go away on their own; focus moves to the input instead of falling to the body
@@ -163,7 +145,7 @@
 </script>
 
 <template>
-    <div :class="PREFIX" :role="groupRole($attrs)" @dragend="onDragEnd" @dragover="onDragOver" @dragstart="onDragStart">
+    <div :class="PREFIX" :role="namedRole($attrs)" @dragend="foundation.handleDragEnd" @dragover="foundation.handleDragOver" @dragstart="foundation.handleDragStart">
         <div v-if="upload.dragUpload && state.uploadAreaVisible" ref="dropArea" :class="`${PREFIX}-dropArea`" @dragleave="foundation.handleContainerDragLeave" @dragover="foundation.handleContainerDragOver" @drop="foundation.handleContainerDrop">
             <span :class="`${PREFIX}-dropArea-text`">{{ i18n.locale.dropAreaText }}</span>
         </div>

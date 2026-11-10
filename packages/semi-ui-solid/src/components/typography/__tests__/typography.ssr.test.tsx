@@ -15,7 +15,7 @@ function counter(text: string) {
 
 it('Copyable 提供 render 时不调用 icon', async () => {
     const icon = counter('icon text');
-    const { html, errors } = await renderServer({ render: () => <Copyable content="x" icon={() => <icon.Counted />} render={() => 'custom copy'} /> });
+    const { html, errors } = await renderServer({ render: () => <Copyable content="x" duration={3} icon={() => <icon.Counted />} render={() => 'custom copy'} /> });
     expect(errors).toEqual([]);
     expect(html).toContain('custom copy');
     expect(html).not.toContain('icon text');
@@ -25,7 +25,7 @@ it('Copyable 提供 render 时不调用 icon', async () => {
 it('Copyable 默认视图只调用一次 icon，不调用 successTip', async () => {
     const icon = counter('icon text');
     const success = counter('success text');
-    const { html } = await renderServer({ render: () => <Copyable content="x" icon={() => <icon.Counted />} successTip={() => <success.Counted />} /> });
+    const { html } = await renderServer({ render: () => <Copyable content="x" duration={3} icon={() => <icon.Counted />} successTip={() => <success.Counted />} /> });
     expect(html).toContain('icon text');
     expect(icon.state.created).toBe(1);
     expect(success.state.created).toBe(0);
@@ -44,7 +44,7 @@ it('服务端 Numeral 只格式化字符串 children，元素原样输出', asyn
 });
 
 it('服务端 copyable 以字符串 copyTip 命名按钮，图标的 aria-label 不参与命名', async () => {
-    const { html } = await renderServer({ render: () => <Copyable content="x" copyTip="Copy code" icon={() => <i aria-label="Gear" />} /> });
+    const { html } = await renderServer({ render: () => <Copyable content="x" duration={3} copyTip="Copy code" icon={() => <i aria-label="Gear" />} /> });
     expect(html).toContain('aria-label="Copy code"');
     expect(html).not.toMatch(/<button[^>]*aria-label="Gear"/);
 });

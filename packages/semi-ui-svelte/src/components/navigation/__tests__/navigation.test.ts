@@ -129,13 +129,14 @@ describe('Svelte Navigation 行为', () => {
     it('以数据报告 select 与 click，select 仅对新选中的项触发', async () => {
         const onSelect = vi.fn<(data: OnSelectedData) => void>();
         const onClick = vi.fn<(data: NavClickData) => void>();
-        renderNav({ items: [{ itemKey: 'home', text: '首页', linkOptions: undefined }, '关于'], onClick, onSelect });
+        const home = { itemKey: 'home', text: '首页', path: '/home', linkOptions: undefined };
+        renderNav({ items: [home, '关于'], onClick, onSelect });
         await click(screen.getByRole('button', { name: '首页' }));
         expect(onSelect).toHaveBeenCalledTimes(1);
         const data = onSelect.mock.calls[0][0];
         expect(data.itemKey).toBe('home');
         expect(data.selectedKeys).toEqual(['home']);
-        expect(data.selectedItems).toEqual([{ itemKey: 'home', text: '首页' }]);
+        expect(data.selectedItems).toEqual([{ itemKey: 'home', text: '首页', path: '/home', level: 0 }]);
         expect(data.domEvent).toBeInstanceOf(MouseEvent);
         expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ itemKey: 'home', text: '首页' }));
         expect(isSelected('首页')).toBe(true);
@@ -478,7 +479,7 @@ describe('Svelte Navigation 的内容 snippet 与属性落点', () => {
 
     it('wrapper 收到的 props 只含传入的字段', () => {
         renderNav({ items: [{ itemKey: 'a', text: '甲', disabled: true }] }, { wrap: true });
-        expect(JSON.parse(screen.getByTestId('wrapped').dataset.props as string)).toEqual({ itemKey: 'a', text: '甲', disabled: true });
+        expect(JSON.parse(screen.getByTestId('wrapped').dataset.props as string)).toEqual({ itemKey: 'a', text: '甲', disabled: true, level: 0 });
     });
 
     it('未知属性透传到根元素，项配置里的 class、style、data-*、aria-* 落在 li，其他字段不落到 DOM', () => {

@@ -8,11 +8,10 @@ import { IconWifi } from '@fibrae/semi-icons-vue';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
 import Toast, { ToastFactory } from '../index';
-import type { ToastHandle, ToastHookApi, ToastHookOptions, ToastProps } from '../interface';
+import type { ToastHookApi, ToastHookOptions, ToastProps } from '../interface';
 import ToastItem from '../toast.vue';
 import HolderInProvider from './fixtures/holder-in-provider.vue';
 import HookHost from './fixtures/hook-host.vue';
-import ItemRef from './fixtures/item-ref.vue';
 import { reachableKey } from './fixtures/reachable';
 
 const prefix = 'semi-toast';
@@ -494,17 +493,6 @@ describe('Toast', () => {
         expect(view.container.querySelector(`.${prefix}`)).not.toHaveAttribute('dir');
         const own = render(ToastItem, { props: { content: 'own' }, attrs: { dir: 'rtl' } });
         expect(own.container.querySelector(`.${prefix}`)).toHaveAttribute('dir', 'rtl');
-    });
-    it('单个 Toast 的 ref 暴露 restartCloseTimer', async () => {
-        vi.useFakeTimers();
-        let handle!: ToastHandle;
-        const view = render(ItemRef, { props: { onHandle: (h: ToastHandle) => (handle = h) } });
-        await advance(800);
-        handle.restartCloseTimer();
-        await advance(999);
-        expect(view.emitted().remove).toBeUndefined();
-        await advance(1);
-        expect(view.emitted().remove).toEqual([['r']]);
     });
     it('悬停期间按同 id 更新不会重启计时，移出后满 duration 才关闭且 onClose 只触发一次', async () => {
         vi.useFakeTimers();

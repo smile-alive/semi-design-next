@@ -17,9 +17,6 @@ export type Shadows = 'hover' | 'always';
 
 type Style = JSX.CSSProperties | string;
 
-// namedRole yields a plain string, which the typed role attribute does not accept
-type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
-
 export interface CardProps extends ElementProps<'div', 'title'> {
     actions?: JSX.Element[];
     bodyStyle?: Style;
@@ -70,7 +67,7 @@ function Card(rawProps: CardProps) {
     return (
         <div
             {...rest}
-            role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as Role}
+            role={namedRole(rest)}
             class={clsx(prefixCls, local.class, {
                 [`${prefixCls}-bordered`]: local.bordered,
                 [`${prefixCls}-shadows`]: local.shadows,

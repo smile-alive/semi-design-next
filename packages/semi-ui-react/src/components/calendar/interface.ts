@@ -1,7 +1,8 @@
 import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import type { DailyEventLayout, EventObject, weekStartsOnEnum } from '@fibrae/semi-foundation/components/calendar/foundation';
-import type { ArrayElement, ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ElementProps } from '../../base/base';
+import type { BaseProps } from '../../base/base-props';
 
 export interface CalendarProps extends ElementProps<'div', 'onClick' | 'children'> {
     displayValue?: Date;
@@ -35,6 +36,7 @@ export interface DayColProps extends Pick<CalendarProps, DayCalendarPropsKeys>, 
     events: DailyEventLayout[];
     scrollHeight: number;
     isWeekend: boolean;
+    today: number | null;
     handleClick: (e: React.MouseEvent, val: [Date, number, number, number]) => void;
 }
 

@@ -24,16 +24,16 @@
     const chunks = computed(() =>
         findAll({
             sourceString: props.sourceString,
-            searchWords: typeof props.searchWords === 'string' ? props.searchWords : props.searchWords.map((word) => (word && typeof word === 'object' ? { text: word.text, className: word.class, style: word.style } : word)),
+            searchWords: props.searchWords,
             caseSensitive: props.caseSensitive,
             autoEscape: props.autoEscape,
-        }).map((chunk) => ({ ...chunk, text: props.sourceString.slice(chunk.start, chunk.end) }))
+        })
     );
 </script>
 
 <template>
     <template v-for="(chunk, index) in chunks" :key="index">
-        <component :is="props.component || 'mark'" v-if="chunk.highlight" :class="[`${prefixCls}-tag`, props.highlightClassName, chunk.className]" :style="{ ...props.highlightStyle, ...chunk.style }">
+        <component :is="props.component || 'mark'" v-if="chunk.highlight" :class="[`${prefixCls}-tag`, props.highlightClassName, chunk.class]" :style="{ ...props.highlightStyle, ...chunk.style }">
             {{ chunk.text }}
         </component>
         <template v-else>{{ chunk.text }}</template>

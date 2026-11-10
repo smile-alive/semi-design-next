@@ -1,7 +1,7 @@
 import { type JSX, type Ref, For, Show, createEffect, createMemo, createRenderEffect, createRoot, createSignal, getOwner, mergeProps, on, splitProps } from 'solid-js';
 import { insert } from 'solid-js/web';
 import clsx from 'clsx';
-import { isEqual, omitBy } from 'es-toolkit';
+import { isEqual } from 'es-toolkit';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
 import JsonViewerFoundation, { type CustomRenderRule, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions, type SearchOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
@@ -99,9 +99,6 @@ const defaultProps = {
     showSearch: true,
 } satisfies Partial<JsonViewerProps>;
 
-// namedRole yields a plain string, which the typed role attribute does not accept
-type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
-
 export default function JsonViewer(rawProps: JsonViewerProps) {
     const props = useDefaultProps('JsonViewer', rawProps, defaultProps);
     const [local, rest] = splitProps(props, ['class', 'height', 'limitSearchButtonBounds', 'onChange', 'options', 'ref', 'renderSearchButton', 'showSearch', 'style', 'value', 'width']);
@@ -121,23 +118,12 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
     // custom render roots inherit the context of the viewer, not of the editor's layout call
     const owner = getOwner();
 
-    // defaults merge per key: a whole-object default would be replaced by the caller's `options`. The locale-derived
     // ariaLabel is part of options, so a locale switch re-creates the editor
-    const mergedOptions = createMemo(
-        (): JsonViewerOptions => ({
-            ariaLabel: locale().locale.content,
-            readOnly: false,
-            autoWrap: true,
-            // an explicit undefined would replace a default
-            ...omitBy(local.options ?? {}, (option) => option === undefined),
-        }),
-        undefined,
-        { equals: isEqual }
-    );
+    const mergedOptions = createMemo(() => JsonViewerFoundation.mergeOptions(local.options as CoreOptions | undefined, locale().locale.content), undefined, { equals: isEqual });
 
     const foundationProps = mergeProps(props, {
         get options() {
-            return mergedOptions() as CoreOptions;
+            return mergedOptions();
         },
     }) as FoundationProps;
 
@@ -203,8 +189,8 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
     };
 
     const handle: JsonViewerHandle = {
-        getValue: () => foundation.jsonViewer?.getModel().getValue() ?? '',
-        format: () => foundation.jsonViewer?.format(),
+        getValue: foundation.getValue,
+        format: foundation.format,
         search: foundation.search,
         getSearchResults: foundation.getSearchResults,
         prevSearch: foundation.prevSearch,
@@ -376,7 +362,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
 
     return (
         // the methods read the editor only when called, so they ride on the root before the editor exists
-        <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as Role} class={local.class} style={rootStyle()}>
+        <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest)} class={local.class} style={rootStyle()}>
             <div ref={(node) => (editor = node)} class={clsx(prefixCls, `${prefixCls}-background`)} style={sizeStyle()} />
             <Show when={local.showSearch}>
                 <Show keyed when={local.renderSearchButton} fallback={defaultSearchButton()}>

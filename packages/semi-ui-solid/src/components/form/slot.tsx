@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { normalizeFieldError } from '@fibrae/semi-foundation/components/form/errors';
 import type { FieldErrorInput } from '@fibrae/semi-foundation/components/form/interface';
+import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
 import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/form/form.scss';
 import type { ElementProps } from '../../base/element-props';
@@ -45,7 +46,7 @@ export default function Slot(props: SlotProps) {
     // a rendered label names the slot, so the slot becomes a group its content belongs to
     const labelId = () => {
         const config = labelConfig();
-        return !local.noLabel && hasContent((config.text ?? config.children) as ResolvedChildren) ? config.id || `${generatedId}-label` : undefined;
+        return !local.noLabel && hasContent((config.text ?? config.children) as ResolvedChildren) ? config.id || getFieldIds(generatedId).label : undefined;
     };
 
     const ariaLabelledby = () => joinIds(rest['aria-labelledby'], labelId());
@@ -56,7 +57,7 @@ export default function Slot(props: SlotProps) {
     };
 
     return (
-        <div {...rest} role={namedRole(rest.role, rest['aria-label'], ariaLabelledby()) as JSX.HTMLAttributes<HTMLDivElement>['role']} class={clsx(`${prefix}-field`, `${prefix}-slot`, local.class)} aria-labelledby={ariaLabelledby()} x-label-pos={labelPosition()}>
+        <div {...rest} role={namedRole({ ...rest, 'aria-labelledby': ariaLabelledby() })} class={clsx(`${prefix}-field`, `${prefix}-slot`, local.class)} aria-labelledby={ariaLabelledby()} x-label-pos={labelPosition()}>
             <FieldGrid
                 label={
                     <Show when={!local.noLabel}>

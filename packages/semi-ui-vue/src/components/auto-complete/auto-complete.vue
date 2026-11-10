@@ -4,8 +4,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
     import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type StateOptionItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
+    import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
-    import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
     import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
@@ -91,13 +92,7 @@
         props as AutoCompleteBaseProps,
         (view) => AutoCompleteFoundation.getInitialState(view),
         () => ({
-            updateScrollTop: (index) => {
-                const list = listbox.value;
-                const destNode = list?.children[index] as HTMLElement | undefined;
-                if (list && destNode) {
-                    centerInScroller(destNode, list);
-                }
-            },
+            getListbox: () => listbox.value,
             notifySearch: (inputValue) => emit('search', inputValue),
             notifyChange: (value) => {
                 emit('update:modelValue', value);
@@ -135,7 +130,7 @@
         return props.modelValue;
     };
 
-    const optionId = (index: number) => `${listId}-option-${index}`;
+    const optionId = (index: number) => getOptionId(listId, index);
 
     // the spinner replaces the options while loading, and a stale focusIndex can point past a shorter list
     const activeDescendant = computed(() => {

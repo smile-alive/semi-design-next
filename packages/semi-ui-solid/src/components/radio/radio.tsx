@@ -20,7 +20,7 @@ import { type RadioMode, useRadioGroupContext } from './context';
 export type RadioDisplayMode = 'vertical' | '';
 export type RadioType = typeof strings.TYPE_DEFAULT | typeof strings.TYPE_BUTTON | typeof strings.TYPE_CARD | typeof strings.TYPE_PURECARD;
 
-export interface RadioProps extends ElementProps<'label', 'onChange' | 'onFocus' | 'onBlur'> {
+export interface RadioProps extends ElementProps<'label', 'onChange' | 'onFocus' | 'onBlur' | 'onfocus' | 'onblur'> {
     checked?: boolean;
     defaultChecked?: boolean;
     value?: string | number | boolean;
@@ -43,6 +43,10 @@ export interface RadioProps extends ElementProps<'label', 'onChange' | 'onFocus'
     onFocus?: JSX.EventHandlerUnion<HTMLInputElement, FocusEvent>;
     /** Attached to the native input: focus does not bubble, so the root would never receive it */
     onBlur?: JSX.EventHandlerUnion<HTMLInputElement, FocusEvent>;
+    /** Attached to the native input, like `onFocus` */
+    onfocus?: JSX.EventHandlerUnion<HTMLInputElement, FocusEvent>;
+    /** Attached to the native input, like `onBlur` */
+    onblur?: JSX.EventHandlerUnion<HTMLInputElement, FocusEvent>;
 }
 
 export type RadioState = RadioBaseState;

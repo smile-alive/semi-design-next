@@ -57,12 +57,13 @@
                 value = event.target.value as RadioValue | undefined;
                 onChange?.(event as Parameters<NonNullable<typeof onChange>>[0]);
             },
+            notifyBlur: (event) => onBlur?.(event),
         })
     );
 
     // A radiogroup supports none of these; Tooltip injects them for a dialog trigger and tabindex adds a stray Tab stop.
     const DROPPED_ATTRS = ['aria-expanded', 'aria-haspopup', 'aria-controls', 'tabindex'];
-    const current = $derived(value === undefined ? (states().value as RadioValue | undefined) : value);
+    const current = $derived(RadioGroupFoundation.deriveValue({ value }, states()) as RadioValue | undefined);
     const isButtonRadio = $derived(type === strings.TYPE_BUTTON);
     const isPureCardRadio = $derived(type === strings.TYPE_PURECARD);
     const isCardRadio = $derived(type === strings.TYPE_CARD || isPureCardRadio);
@@ -106,12 +107,9 @@
         sync: () => syncs.forEach((sync) => sync()),
     });
 
-    // Moving between the radios is not leaving the group: a form's blur validation waits until focus is outside.
     const handleFocusout = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         rest.onfocusout?.(event);
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            onBlur?.(event);
-        }
+        foundation.handleBlur(event);
     };
 </script>
 

@@ -1,15 +1,14 @@
 import { createRawSnippet, flushSync, type Snippet, tick } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import NotificationListStore, { type ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+import { type ConfigProps, createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Notification } from '../index';
-import type { NoticeHandle, NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
+import type { NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
 import NoticeItem from '../notice.svelte';
 import HookHost from './hook-host.svelte';
-import ItemRef from './item-ref.svelte';
 import ProviderHost from './provider-host.svelte';
 import Snippets from './snippets.svelte';
 
@@ -733,19 +732,6 @@ describe('Notification', () => {
         expect(item.parentElement).not.toHaveAttribute('data-foo');
     });
 
-    it('单个通知的实例暴露 restartCloseTimer', async () => {
-        vi.useFakeTimers();
-        let handle!: NoticeHandle;
-        const onRemove = vi.fn<(id: string) => void>();
-        render(ItemRef, { props: { onHandle: (h: NoticeHandle) => (handle = h), onRemove } });
-        await advance(800);
-        handle.restartCloseTimer();
-        await advance(999);
-        expect(onRemove).not.toHaveBeenCalled();
-        await advance(1);
-        expect(onRemove).toHaveBeenCalledExactlyOnceWith('r');
-    });
-
     it('单项到点只通知一次 close 与 onClose', async () => {
         vi.useFakeTimers();
         const close = vi.fn<(id: string) => void>();
@@ -933,7 +919,7 @@ describe('Notification', () => {
     });
 
     it('内置默认值没有 motion，config 不接受 direction', () => {
-        expect(new NotificationListStore().defaults).not.toHaveProperty('motion');
+        expect(createNotificationListStore().defaults).not.toHaveProperty('motion');
         expectTypeOf<ConfigProps>().not.toHaveProperty('direction');
     });
 

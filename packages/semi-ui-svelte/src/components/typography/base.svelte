@@ -5,7 +5,8 @@
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
-    import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/components/typography/ellipsis';
+    import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
+    import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
     import useLocale from '../locale/use-locale.svelte.js';
     import Popover from '../popover/popover.svelte';
@@ -80,7 +81,7 @@
     const tooltip = $derived.by(() => {
         if (!opt.showTooltip || opt.expandable || opt.expandText !== undefined) return false;
         const config = typeof opt.showTooltip === 'object' ? opt.showTooltip : {};
-        return { popover: config.type === 'popover', opts: config.opts ?? {} };
+        return { popover: isPopoverTooltip(config), opts: config.opts ?? {} };
     });
 
     const conditionOn = $derived(tooltip !== false && tooltip.opts.condition !== false);
@@ -98,8 +99,8 @@
 
     const copyConfig = $derived.by(() => {
         if (!copyable) return false;
-        const config = typeof copyable === 'object' ? copyable : {};
-        return { content: config.content ?? fullText, duration: config.duration ?? 3, class: config.class, style: config.style, onCopy: config.onCopy };
+        const { content, duration, class: className, style, onCopy } = getCopyConfig(copyable, fullText);
+        return { content, duration, class: className, style, onCopy };
     });
 
     const decorations = $derived.by(() => {
@@ -138,18 +139,14 @@
 
     // An unmeasured ellipsis counts as truncated, so the expand button is rendered and the measurement takes its width into account
     const truncated = $derived(view.isTruncated ?? hasEllipsis);
-    const overflowed = $derived(!view.expanded && (cssEllipsis ? view.isOverflowed : truncated));
+    const overflowed = $derived(isOverflowed({ ...view, isTruncated: truncated }, cssEllipsis));
 
     // The children stay in the DOM, hidden, while the truncated text shows: they are where the full text comes from
     const showFull = $derived(view.expanded || !truncated || view.ellipsisContent === undefined);
-
-    const actionText = $derived.by(() => {
-        if (!truncated) return undefined;
-        return view.expanded ? opt.collapseText : opt.expandText;
-    });
+    const expandAction = $derived(getExpandButton({ isTruncated: truncated, expanded: view.expanded }, opt));
 
     // an expanded text that cannot collapse lost its button, so the text takes its focus
-    const focusTarget = $derived(view.expanded && actionText === undefined);
+    const focusTarget = $derived(view.expanded && expandAction === undefined);
     const ellipsisStyle = $derived(!view.expanded && cssEllipsis && rows > 1 ? `-webkit-line-clamp: ${rows}` : undefined);
     const rootStyle = $derived([weightStyle, rest.style, ellipsisStyle].filter(Boolean).join(';') || undefined);
 
@@ -175,7 +172,7 @@
     // order until the tip can show, and inside items of composite widgets.
     const triggerTabindex = $derived.by(() => {
         const own = rest.tabindex;
-        return own !== undefined || (overflowed && conditionOn && !insideWidgetItem) ? (own ?? 0) : undefined;
+        return isTooltipTriggerFocusable({ tabIndex: own, overflowed, condition: conditionOn, insideWidgetItem }) ? (own ?? 0) : undefined;
     });
 
     setTypographyContext({
@@ -366,9 +363,15 @@
         style={rootStyle}
         tabindex={trigger ? triggerTabindex : (rest.tabindex ?? (focusTarget ? -1 : undefined))}
     >
-        {@render decorate(0, describedByLink ? trigger?.['aria-describedby'] : undefined)}{#if actionText !== undefined}<button aria-expanded={(view.expanded ? opt.collapsible : opt.expandable) ? view.expanded : undefined} bind:this={expandButton} class={`${prefix}-ellipsis-expand`} type="button" onclick={toggle}
-                >{actionText}</button
-            >{/if}{#if copyConfig}<Copyable bind:this={copyElement} {...copyConfig} {copyAction} {copyIcon} {copySuccessTip} {copyTip} onCopiedChange={() => hasEllipsis && runtime.schedule()} />{/if}
+        {@render decorate(0, describedByLink ? trigger?.['aria-describedby'] : undefined)}{#if expandAction}<button aria-expanded={expandAction.expanded} bind:this={expandButton} class={`${prefix}-ellipsis-expand`} type="button" onclick={toggle}>{expandAction.text}</button>{/if}{#if copyConfig}<Copyable
+                bind:this={copyElement}
+                {...copyConfig}
+                {copyAction}
+                {copyIcon}
+                {copySuccessTip}
+                {copyTip}
+                onCopiedChange={() => hasEllipsis && runtime.schedule()}
+            />{/if}
     </svelte:element>
 {/snippet}
 

@@ -68,11 +68,10 @@ export default function PinCode(rawProps: PinCodeProps) {
         insetLabel,
         insetLabelId,
         name,
-        onBlur,
+        onFocus,
         ...rest
     } = props as PinCodeProps &
         React.AriaAttributes & {
-            onBlur?: React.FocusEventHandler<HTMLDivElement>;
             tabIndex?: number;
             id?: string;
             insetLabel?: unknown;
@@ -91,6 +90,8 @@ export default function PinCode(rawProps: PinCodeProps) {
         (base) => ({
             notifyValueChange: (values) => base.getProps().onChange?.(values.join('')),
             notifyComplete: (value) => base.getProps().onComplete?.(value),
+            notifyFocus: (e) => base.getProps().onFocus?.(e),
+            notifyBlur: (e) => base.getProps().onBlur?.(e),
             changeSpecificInputFocusState: (index, focusState) => {
                 if (focusState === 'focus') {
                     inputs[index]?.focus();
@@ -114,20 +115,7 @@ export default function PinCode(rawProps: PinCodeProps) {
     );
 
     return (
-        <div
-            role="group"
-            {...rest}
-            className={clsx(`${cssClasses.PREFIX}-wrapper`, className)}
-            style={style}
-            aria-label={ariaLabel}
-            aria-labelledby={ariaLabelledby}
-            // Form's blur validation waits until focus leaves the whole code
-            onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    onBlur?.(e);
-                }
-            }}
-        >
+        <div role="group" {...rest} className={clsx(`${cssClasses.PREFIX}-wrapper`, className)} style={style} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} onBlur={foundation.handleBlur} onFocus={foundation.handleFocus}>
             {Array.from({ length: count }, (_, index) => (
                 <Input
                     key={`input-${index}`}

@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vite-plus/test';
-import PaginationFoundation from '../foundation';
+import { describe, expect, it, vi } from 'vite-plus/test';
+import PaginationFoundation, { type PaginationAdapter, type PaginationBaseProps } from '../foundation';
 
 const { getInitialState, getDisabled, getPageList, getPageSizeOpts } = PaginationFoundation;
 
@@ -15,6 +15,59 @@ describe('PaginationFoundation.getInitialState', () => {
             pageSize: 20,
         });
         expect(getInitialState({ defaultCurrentPage: 1, pageSizeOpts: [] }).pageSize).toBe(10);
+    });
+});
+
+describe('PaginationFoundation.getView', () => {
+    it('单页且 hideOnSinglePage 时整体隐藏，页数按 total 与 pageSize 计算', () => {
+        expect(PaginationFoundation.getView({ total: 5, hideOnSinglePage: true }, 10)).toMatchObject({ totalPageNum: 1, hidden: true, quickJumpDisabled: true });
+        expect(PaginationFoundation.getView({ total: 25, hideOnSinglePage: true }, 10)).toMatchObject({ totalPageNum: 3, hidden: false, quickJumpDisabled: false });
+        expect(PaginationFoundation.getView({ total: 25, disabled: true }, 10).quickJumpDisabled).toBe(true);
+    });
+
+    it('page size 切换器让单页保持可见，small 尺寸没有切换器', () => {
+        expect(PaginationFoundation.getView({ total: 5, hideOnSinglePage: true, showSizeChanger: true }, 10)).toMatchObject({ sizeChangerShown: true, hidden: false });
+        expect(PaginationFoundation.getView({ total: 5, hideOnSinglePage: true, showSizeChanger: true, size: 'small' }, 10)).toMatchObject({ sizeChangerShown: false, hidden: true });
+    });
+
+    it('switchPosition 取 popoverPosition，缺省时按方向', () => {
+        expect(PaginationFoundation.getView({ total: 5, popoverPosition: 'topLeft' }, 10).switchPosition).toBe('topLeft');
+        expect(PaginationFoundation.getView({ total: 5 }, 10, 'rtl').switchPosition).toBe('bottomRight');
+        expect(PaginationFoundation.getView({ total: 5 }, 10).switchPosition).toBe('bottomLeft');
+    });
+});
+
+describe('PaginationFoundation showSizeChanger 与 hideOnSinglePage 冲突提示', () => {
+    function createFoundation(initial: PaginationBaseProps) {
+        let props = initial;
+        const adapter = { getProp: (key: keyof PaginationBaseProps) => props[key], getProps: () => props } as unknown as PaginationAdapter;
+        return {
+            foundation: new PaginationFoundation(adapter),
+            update: (next: PaginationBaseProps) => {
+                const prev = props;
+                props = next;
+                return prev;
+            },
+        };
+    }
+
+    it('挂载时与属性变为冲突时各提示一次，已冲突的更新与 small 尺寸不再提示', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const { foundation, update } = createFoundation({ total: 5, showSizeChanger: true, hideOnSinglePage: true });
+        foundation.connect();
+        foundation.init();
+        expect(warn).toHaveBeenCalledTimes(1);
+        expect(warn.mock.calls[0][0]).toContain('showSizeChanger and hideOnSinglePage');
+
+        foundation.handlePropsChange(update({ total: 5, showSizeChanger: true, hideOnSinglePage: true, disabled: true }));
+        expect(warn).toHaveBeenCalledTimes(1);
+
+        foundation.handlePropsChange(update({ total: 5, showSizeChanger: true, hideOnSinglePage: true, size: 'small' }));
+        expect(warn).toHaveBeenCalledTimes(1);
+
+        foundation.handlePropsChange(update({ total: 5, showSizeChanger: true, hideOnSinglePage: true }));
+        expect(warn).toHaveBeenCalledTimes(2);
+        warn.mockRestore();
     });
 });
 

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { untrack } from 'svelte';
+    import { type Component, untrack } from 'svelte';
     import type { ChainedCommands, Editor } from '@tiptap/core';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-    import { type Level, type TextRange, clearSelectionHighlight, confirmLink, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
+    import { type FileMenuButton, type FileMenuButtonKey, type Level, type TextRange, clearSelectionHighlight, confirmLink, getFileMenuItems, readFileMenuState, readLinkEditorOpenState, unsetLink } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import {
         IconAlignCenter,
@@ -56,11 +56,37 @@
     const prefix = cssClasses.FILE;
     const headingIcons = [IconH1, IconH2, IconH3, IconH4, IconH5, IconH6];
 
+    const icons: Record<FileMenuButtonKey, Component<any>> = {
+        undo: IconUndo,
+        redo: IconRedo,
+        paragraph: IconText,
+        bulletList: IconList,
+        orderedList: IconOrderedList,
+        blockquote: IconQuote,
+        codeBlock: IconTerminal,
+        horizontalRule: IconMinus,
+        alignLeft: IconAlignLeft,
+        alignCenter: IconAlignCenter,
+        alignRight: IconAlignRight,
+        alignJustify: IconAlignJustify,
+        bold: IconBold,
+        italic: IconItalic,
+        strike: IconStrikeThrough,
+        code: IconCode,
+        image: IconImage,
+    };
+
+    const items = $derived(getFileMenuItems(canUpload));
+
     const update = () => {
         menu = readFileMenuState(editor);
     };
 
     const run = (command: (chain: ChainedCommands) => ChainedCommands) => command(editor.chain().focus()).run();
+
+    const active = (item: FileMenuButton) => (item.activeKey ? menu[item.activeKey] : undefined);
+
+    const disabled = (item: FileMenuButton) => item.enabledKey !== undefined && !menu[item.enabledKey];
 
     const closeLink = () => {
         linkVisible = false;
@@ -75,9 +101,8 @@
         closeLink();
     };
 
-    const unsetLink = () => {
-        clearSelectionHighlight(editor);
-        run((chain) => chain.unsetLink());
+    const handleUnsetLink = () => {
+        unsetLink(editor);
         Toast.success(text.linkRemoveSuccess);
         closeLink();
     };
@@ -102,100 +127,55 @@
 </script>
 
 <div class={`${prefix}-menu-bar`}>
-    <MenuButton aria-label={text.undo} disabled={!menu.canUndo} onclick={() => run((chain) => chain.undo())}>
-        {#snippet icon()}<IconUndo />{/snippet}
-    </MenuButton>
-    <MenuButton aria-label={text.redo} disabled={!menu.canRedo} onclick={() => run((chain) => chain.redo())}>
-        {#snippet icon()}<IconRedo />{/snippet}
-    </MenuButton>
-    <Divider layout="vertical" />
-    <Dropdown>
-        {#snippet child({ props })}
-            <MenuButton {...props} active={menu.isHeading} aria-label={text.heading}>
-                {#snippet icon()}<IconHn />{/snippet}
+    {#each items as item, index (index)}
+        {#if item.type === 'divider'}
+            <Divider layout="vertical" />
+        {:else if item.type === 'heading'}
+            <Dropdown>
+                {#snippet child({ props })}
+                    <MenuButton {...props} active={menu.isHeading} aria-label={text.heading}>
+                        {#snippet icon()}<IconHn />{/snippet}
+                    </MenuButton>
+                {/snippet}
+                {#snippet content()}
+                    <DropdownMenu>
+                        {#each headingIcons as HeadingIcon, level (level)}
+                            <DropdownItem
+                                active={menu.headingLevel === level + 1}
+                                aria-label={formatLocale(text.headingLevel, { level: level + 1 })}
+                                class={[`${prefix}-menu-bar-dropdown-item`, { [`${prefix}-menu-bar-dropdown-item-active`]: menu.headingLevel === level + 1 }]}
+                                onclick={() => run((chain) => chain.toggleHeading({ level: (level + 1) as Level }))}
+                            >
+                                <HeadingIcon />
+                            </DropdownItem>
+                        {/each}
+                    </DropdownMenu>
+                {/snippet}
+            </Dropdown>
+        {:else if item.type === 'link'}
+            <Dropdown bind:visible={linkVisible} onVisibleChange={onLinkVisibleChange} trigger="click">
+                {#snippet child({ props })}
+                    <MenuButton {...props} active={menu.isLink} aria-label={text.link}>
+                        {#snippet icon()}<IconLink />{/snippet}
+                    </MenuButton>
+                {/snippet}
+                {#snippet content()}
+                    <div class={`${prefix}-menu-bar-link-dropdown`}>
+                        <Input bind:value={linkInputValue} class={`${prefix}-menu-bar-link-input`} onEnterPress={handleConfirmLink} placeholder={text.enterLinkAddress} showClear={false} size="small" />
+                        <Button aria-label={text.confirmLink} disabled={!linkInputValue.trim()} size="small" theme="borderless" type="tertiary" onclick={handleConfirmLink}>
+                            {#snippet icon()}<IconCheckCircleStroked />{/snippet}
+                        </Button>
+                        <Button aria-label={text.removeLink} disabled={!menu.isLink} size="small" theme="borderless" onclick={handleUnsetLink}>
+                            {#snippet icon()}<IconDeleteStroked />{/snippet}
+                        </Button>
+                    </div>
+                {/snippet}
+            </Dropdown>
+        {:else}
+            {@const Icon = icons[item.key]}
+            <MenuButton active={active(item)} aria-label={text[item.key]} aria-pressed={active(item)} disabled={disabled(item)} onclick={() => run(item.command)}>
+                {#snippet icon()}<Icon />{/snippet}
             </MenuButton>
-        {/snippet}
-        {#snippet content()}
-            <DropdownMenu>
-                {#each headingIcons as HeadingIcon, index (index)}
-                    <DropdownItem
-                        active={menu.headingLevel === index + 1}
-                        aria-label={formatLocale(text.headingLevel, { level: index + 1 })}
-                        class={[`${prefix}-menu-bar-dropdown-item`, { [`${prefix}-menu-bar-dropdown-item-active`]: menu.headingLevel === index + 1 }]}
-                        onclick={() => run((chain) => chain.toggleHeading({ level: (index + 1) as Level }))}
-                    >
-                        <HeadingIcon />
-                    </DropdownItem>
-                {/each}
-            </DropdownMenu>
-        {/snippet}
-    </Dropdown>
-    <MenuButton active={menu.isParagraph} aria-label={text.paragraph} aria-pressed={menu.isParagraph} onclick={() => run((chain) => chain.setParagraph())}>
-        {#snippet icon()}<IconText />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isBulletList} aria-label={text.bulletList} aria-pressed={menu.isBulletList} onclick={() => run((chain) => chain.toggleBulletList())}>
-        {#snippet icon()}<IconList />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isOrderedList} aria-label={text.orderedList} aria-pressed={menu.isOrderedList} onclick={() => run((chain) => chain.toggleOrderedList())}>
-        {#snippet icon()}<IconOrderedList />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isBlockquote} aria-label={text.blockquote} aria-pressed={menu.isBlockquote} onclick={() => run((chain) => chain.toggleBlockquote())}>
-        {#snippet icon()}<IconQuote />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isCodeBlock} aria-label={text.codeBlock} aria-pressed={menu.isCodeBlock} onclick={() => run((chain) => chain.toggleCodeBlock())}>
-        {#snippet icon()}<IconTerminal />{/snippet}
-    </MenuButton>
-    <MenuButton aria-label={text.horizontalRule} onclick={() => run((chain) => chain.setHorizontalRule())}>
-        {#snippet icon()}<IconMinus />{/snippet}
-    </MenuButton>
-    <Divider layout="vertical" />
-    <MenuButton active={menu.isAlignLeft} aria-label={text.alignLeft} aria-pressed={menu.isAlignLeft} onclick={() => run((chain) => chain.setTextAlign('left'))}>
-        {#snippet icon()}<IconAlignLeft />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isAlignCenter} aria-label={text.alignCenter} aria-pressed={menu.isAlignCenter} onclick={() => run((chain) => chain.setTextAlign('center'))}>
-        {#snippet icon()}<IconAlignCenter />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isAlignRight} aria-label={text.alignRight} aria-pressed={menu.isAlignRight} onclick={() => run((chain) => chain.setTextAlign('right'))}>
-        {#snippet icon()}<IconAlignRight />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isAlignJustify} aria-label={text.alignJustify} aria-pressed={menu.isAlignJustify} onclick={() => run((chain) => chain.setTextAlign('justify'))}>
-        {#snippet icon()}<IconAlignJustify />{/snippet}
-    </MenuButton>
-    <Divider layout="vertical" />
-    <MenuButton active={menu.isBold} aria-label={text.bold} aria-pressed={menu.isBold} onclick={() => run((chain) => chain.toggleBold())}>
-        {#snippet icon()}<IconBold />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isItalic} aria-label={text.italic} aria-pressed={menu.isItalic} disabled={!menu.canItalic} onclick={() => run((chain) => chain.toggleItalic())}>
-        {#snippet icon()}<IconItalic />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isStrike} aria-label={text.strike} aria-pressed={menu.isStrike} disabled={!menu.canStrike} onclick={() => run((chain) => chain.toggleStrike())}>
-        {#snippet icon()}<IconStrikeThrough />{/snippet}
-    </MenuButton>
-    <MenuButton active={menu.isCode} aria-label={text.code} aria-pressed={menu.isCode} disabled={!menu.canCode} onclick={() => run((chain) => chain.toggleCode())}>
-        {#snippet icon()}<IconCode />{/snippet}
-    </MenuButton>
-    <Dropdown bind:visible={linkVisible} onVisibleChange={onLinkVisibleChange} trigger="click">
-        {#snippet child({ props })}
-            <MenuButton {...props} active={menu.isLink} aria-label={text.link}>
-                {#snippet icon()}<IconLink />{/snippet}
-            </MenuButton>
-        {/snippet}
-        {#snippet content()}
-            <div class={`${prefix}-menu-bar-link-dropdown`}>
-                <Input bind:value={linkInputValue} class={`${prefix}-menu-bar-link-input`} onEnterPress={handleConfirmLink} placeholder={text.enterLinkAddress} showClear={false} size="small" />
-                <Button aria-label={text.confirmLink} disabled={!linkInputValue.trim()} size="small" theme="borderless" type="tertiary" onclick={handleConfirmLink}>
-                    {#snippet icon()}<IconCheckCircleStroked />{/snippet}
-                </Button>
-                <Button aria-label={text.removeLink} disabled={!menu.isLink} size="small" theme="borderless" onclick={unsetLink}>
-                    {#snippet icon()}<IconDeleteStroked />{/snippet}
-                </Button>
-            </div>
-        {/snippet}
-    </Dropdown>
-    {#if canUpload}
-        <Divider layout="vertical" />
-        <MenuButton aria-label={text.image} disabled={!menu.canInsertImage} onclick={() => run((chain) => chain.insertContent({ type: 'imageUpload' }))}>
-            {#snippet icon()}<IconImage />{/snippet}
-        </MenuButton>
-    {/if}
+        {/if}
+    {/each}
 </div>

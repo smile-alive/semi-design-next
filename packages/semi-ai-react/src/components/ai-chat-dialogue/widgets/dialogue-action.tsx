@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { type ReactNode, useRef } from 'react';
 import clsx from 'clsx';
-import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
+import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionKey, type DialogueActionState, getDialogueActionFlags, getDialogueActionKeys } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconThumbUpStroked, IconDeleteStroked, IconShareStroked, IconCopyStroked, IconLikeThumb, IconRedoStroked, IconEditStroked, IconMoreStroked } from '@fibrae/semi-icons-react';
@@ -64,13 +64,14 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
         { locale }
     );
 
-    const markPressInside = useClickOutside([triggerRef], foundation.hideMoreDropdown, visible);
+    const markPressInside = useClickOutside([triggerRef], foundation.closeMenu, visible);
 
     const { like, dislike } = message;
-    const { completed, finished, showFeedback, showReset, showEdit } = getDialogueActionFlags({ role: message.role, status: message.status, isLastChat, showReset: showResetProp });
+    const flags = getDialogueActionFlags({ role: message.role, status: message.status, isLastChat, showReset: showResetProp });
+    const { finished, showReset } = flags;
 
     const wrapCls = clsx(PREFIX_ACTION, {
-        [`${PREFIX_ACTION}-show`]: (showReset && finished) || showAction,
+        [`${PREFIX_ACTION}-show`]: DialogueActionFoundation.isActionBarShown({ showReset, finished, showAction }),
         [`${PREFIX_ACTION}-hidden`]: !finished,
     });
 
@@ -105,7 +106,7 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
             // the deleted message took the more button along; the list takes the focus the modal gives up
             afterClose: () => trigger && handoverFocus(trigger, list),
         });
-        foundation.hideMoreDropdown();
+        foundation.closeMenu();
     };
 
     const moreNode = (
@@ -124,48 +125,24 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
             stopPropagation
             trigger="custom"
             visible={visible}
-            onEscKeyDown={foundation.hideMoreDropdown}
+            onEscKeyDown={foundation.closeMenu}
         >
-            <Button ref={triggerRef} type="tertiary" aria-label={locale.more} theme="borderless" icon={<IconMoreStroked />} onClick={foundation.showMoreDropdown} />
+            <Button ref={triggerRef} type="tertiary" aria-label={locale.more} theme="borderless" icon={<IconMoreStroked />} onClick={foundation.openMenu} />
         </Dropdown>
     );
 
+    const nodes: Record<DialogueActionKey, ReactNode> = { copyNode, likeNode, dislikeNode, resetNode, shareNode, editNode, moreNode };
+
     if (customRenderFunc && typeof customRenderFunc === 'function') {
-        const actionNodeObj: DefaultActionNodeObj = {};
-        if (completed) {
-            actionNodeObj.copyNode = copyNode;
-        }
-        if (showFeedback) {
-            actionNodeObj.likeNode = likeNode;
-            actionNodeObj.dislikeNode = dislikeNode;
-        }
-        if (showReset) {
-            actionNodeObj.resetNode = resetNode;
-        }
-        if (completed) {
-            actionNodeObj.shareNode = shareNode;
-        }
-        if (showEdit) {
-            actionNodeObj.editNode = editNode;
-        }
-        actionNodeObj.moreNode = moreNode;
+        const keys = getDialogueActionKeys(flags, true);
+        const actionNodeObj: DefaultActionNodeObj = Object.fromEntries(keys.map((key) => [key, nodes[key]]));
         return customRenderFunc({
             message,
-            defaultActions: Object.values(actionNodeObj),
+            defaultActions: keys.map((key) => nodes[key]),
             className: wrapCls,
             defaultActionsObj: actionNodeObj,
         });
     }
 
-    return (
-        <div className={wrapCls}>
-            {completed && copyNode}
-            {showReset && resetNode}
-            {completed && shareNode}
-            {showEdit && editNode}
-            {showFeedback && likeNode}
-            {showFeedback && dislikeNode}
-            {moreNode}
-        </div>
-    );
+    return <div className={wrapCls}>{getDialogueActionKeys(flags, false).map((key) => nodes[key])}</div>;
 }

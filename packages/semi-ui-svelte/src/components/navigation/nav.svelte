@@ -92,11 +92,9 @@
         })
     );
 
-    const collapsed = $derived(NavigationFoundation.getIsCollapsed(foundationProps, states()));
-    const openKeysIsControlled = $derived(NavigationFoundation.isOpenKeysControlled(foundationProps, collapsed));
-    const shownOpenKeys = $derived(NavigationFoundation.getOpenKeys(foundationProps, states(), collapsed));
     const formatted = $derived(NavigationFoundation.getFormattedItems({ items }));
-    const shownSelectedKeys = $derived(NavigationFoundation.getSelectedKeys(foundationProps, states(), formatted.itemKeysMap));
+    const navView = $derived(NavigationFoundation.deriveView(foundationProps, states(), formatted.itemKeysMap));
+    const collapsed = $derived(navView.isCollapsed);
     const collapseAnimating = $derived(collapsed !== settledCollapsed);
 
     setNavContext({
@@ -109,13 +107,13 @@
         isInSubNav: false,
         level: 0,
         get openKeys() {
-            return shownOpenKeys;
+            return navView.openKeys;
         },
         get openKeysIsControlled() {
-            return openKeysIsControlled;
+            return navView.openKeysIsControlled;
         },
         get selectedKeys() {
-            return shownSelectedKeys;
+            return navView.selectedKeys;
         },
         get selectedKeysIsControlled() {
             return selectedKeys !== undefined;

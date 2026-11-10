@@ -62,9 +62,9 @@ describe('Upload 裁剪', () => {
         await waitFor(() => expect(requests).toHaveLength(1));
     });
 
-    it('取消：关闭裁剪框、释放对象 URL、不上传，并重置选择框', async () => {
+    it('取消：关闭裁剪框、释放对象 URL、不上传，并清空选择框的值', async () => {
         renderUpload({ crop: true, cropModalProps });
-        const before = getInput();
+        const valueSetter = vi.spyOn(getInput(), 'value', 'set');
         await selectFiles([createFile(10, 'a.png')]);
         await waitFor(() => expect(dialog()).toBeInTheDocument());
         await click(screen.getByRole('button', { name: '取消' }));
@@ -72,7 +72,7 @@ describe('Upload 裁剪', () => {
         expect(revokeObjectURL).toHaveBeenCalledWith('blob:crop-a.png');
         expect(requests).toHaveLength(0);
         expect(getCardNames()).toEqual([]);
-        expect(getInput()).not.toBe(before);
+        expect(valueSetter).toHaveBeenCalledWith('');
     });
 
     it('确认：用裁剪结果上传，保留文件名与类型', async () => {

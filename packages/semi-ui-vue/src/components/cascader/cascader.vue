@@ -248,9 +248,7 @@
     const isEmpty = computed(() => !renderData.value.length);
     const realKeys = computed(() => CascaderFoundation.getTriggerKeys(foundationProps.value, view.value));
     const keyboardKey = computed(() => (view.value.isOpen ? CascaderFoundation.getKeyboardKey(view.value) : null));
-
-    // multiple mode keeps no selectedKeys beyond the one getInitialState writes; its value also holds controlled paths without tags
-    const clearable = computed(() => props.showClear && Boolean(view.value.inputValue || (multiple.value ? CascaderFoundation.hasMultipleValue(foundationProps.value, view.value) : view.value.selectedKeys.size)) && !looks.disabled);
+    const clearable = computed(() => CascaderFoundation.isClearable(foundationProps.value, view.value));
 
     // ARIA 1.2: the search input is the combobox while mounted, otherwise the trigger is a select-only combobox
     const inputIsCombobox = () => triggerSearch.value && !slots.trigger && (multiple.value || view.value.showInput);

@@ -134,16 +134,8 @@
 
     // tabindex, which Tooltip adds to its child, belongs to the input, the Tab stop
     const controlKeys = ['aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required', 'tabindex'];
-
-    provideInputGroupContext(undefined);
-
-    const enabledDate = () => false;
-
-    const disabledDate = computed(() => props.disabledDate ?? readSemiDefault(semi, 'DatePicker', 'disabledDate') ?? enabledDate);
-
-    const noDisabledTime = () => ({});
-
-    const disabledTime = computed(() => props.disabledTime ?? readSemiDefault(semi, 'DatePicker', 'disabledTime') ?? noDisabledTime);
+    const disabledDate = computed(() => props.disabledDate ?? readSemiDefault(semi, 'DatePicker', 'disabledDate'));
+    const disabledTime = computed(() => props.disabledTime ?? readSemiDefault(semi, 'DatePicker', 'disabledTime'));
 
     // Vue's StyleValue (dropdownStyle) is wider than the foundation's Record<string, any>, so the props type does not match.
     const { foundation, state } = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerFoundationProps, DatePickerFoundationState>(
@@ -224,6 +216,8 @@
         type: type.value,
         value: state.value.value,
     }));
+
+    provideInputGroupContext(undefined);
 
     const measureCustomTrigger = () => {
         if (slots.trigger && combobox.value) {

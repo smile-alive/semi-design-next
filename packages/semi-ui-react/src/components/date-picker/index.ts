@@ -1,7 +1,8 @@
 export { default } from './date-picker';
-export type { BaseValueType, DayStatusType, DisabledDateOptions, DisabledDateType, DisabledTimeType, InputSize, Position, PresetType, PresetsType, TriggerRenderProps, ValidateStatus, ValueType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+export type { BaseValueType, DayStatusType, DisabledDateOptions, DisabledDateType, DisabledTimeType, InputSize, Position, PresetType, PresetsType, ValueType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+export type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 export type { DateInputProps } from './date-input';
-export type { DatePickerProps, DatePickerHandle } from './date-picker';
+export type { DatePickerProps, DatePickerHandle, TriggerRenderProps } from './date-picker';
 export type { MonthProps } from './month';
 export type { MonthsGridProps } from './months-grid';
 export type { QuickControlProps } from './quick-control';

@@ -5,9 +5,8 @@
         defineProps<{
             modelValue?: string;
             defaultValue?: string;
-            keepLastControlled?: boolean;
         }>(),
-        { defaultValue: 'initial', keepLastControlled: false }
+        { defaultValue: 'initial' }
     );
     const emit = defineEmits<{ 'update:modelValue': [value: string]; change: [value: string] }>();
     const [value, set] = useControllable(
@@ -16,8 +15,7 @@
         (next) => {
             emit('update:modelValue', next);
             emit('change', next);
-        },
-        { keepLastControlled: props.keepLastControlled }
+        }
     );
 </script>
 

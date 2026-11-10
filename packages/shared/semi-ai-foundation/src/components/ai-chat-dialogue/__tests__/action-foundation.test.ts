@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
-import DialogueActionFoundation, { type DialogueActionAdapter, getDialogueActionFlags } from '../action-foundation';
+import DialogueActionFoundation, { type DialogueActionAdapter, getDialogueActionFlags, getDialogueActionKeys } from '../action-foundation';
 
 vi.mock('@fibrae/semi-foundation/utils/clipboard', () => ({ copyText: vi.fn<(text: string) => Promise<boolean>>() }));
 
@@ -50,5 +50,18 @@ describe('getDialogueActionFlags', () => {
     it('showReset 与 isLastChat 缺省时返回 false 而不是 undefined', () => {
         expect(getDialogueActionFlags({ role: 'assistant' }).showReset).toBe(false);
         expect(getDialogueActionFlags({ role: 'assistant', isLastChat: true }).showReset).toBe(false);
+    });
+});
+
+describe('getDialogueActionKeys', () => {
+    const flags = getDialogueActionFlags({ role: 'assistant', isLastChat: true, showReset: true });
+
+    it('自定义操作栏与内置操作栏按各自的顺序给出按钮', () => {
+        expect(getDialogueActionKeys(flags, true)).toEqual(['copyNode', 'likeNode', 'dislikeNode', 'resetNode', 'shareNode', 'moreNode']);
+        expect(getDialogueActionKeys(flags, false)).toEqual(['copyNode', 'resetNode', 'shareNode', 'likeNode', 'dislikeNode', 'moreNode']);
+    });
+
+    it('未结束的用户消息只有编辑与更多', () => {
+        expect(getDialogueActionKeys(getDialogueActionFlags({ role: 'user', status: 'in_progress' }), false)).toEqual(['editNode', 'moreNode']);
     });
 });

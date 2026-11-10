@@ -3,6 +3,8 @@ import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 export interface AvatarBaseProps {
     gap?: number;
     src?: string;
+    /** The size after the host resolved it from AvatarGroup and the global defaults */
+    size?: string;
 }
 
 export interface AvatarState {
@@ -24,7 +26,7 @@ export interface AvatarAdapter<P = AvatarBaseProps, E = unknown, ErrorEvent = un
 }
 
 export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProps, E = unknown, ErrorEvent = unknown> extends BaseFoundation<AvatarAdapter<P, E, ErrorEvent>, P, AvatarState> {
-    static override readonly propKeys = ['src', 'gap'];
+    static override readonly propKeys = ['src', 'gap', 'size'];
 
     static getInitialState(): AvatarState {
         return { isImgExist: true, hovered: false, scale: 1 };
@@ -38,7 +40,7 @@ export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProp
         if (prev.src !== this.getProp('src')) {
             this.setState({ isImgExist: true });
         }
-        if (prev.gap !== this.getProp('gap')) {
+        if (prev.gap !== this.getProp('gap') || prev.size !== this.getProp('size')) {
             this.changeScale();
         }
     }

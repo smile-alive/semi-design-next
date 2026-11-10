@@ -25,15 +25,24 @@ describe('ChatFoundation.getUploadProps', () => {
     });
 });
 
-describe('ChatFoundation.getContentFlags', () => {
+describe('ChatFoundation.getContentClass', () => {
     it.each([
-        ['assistant', 'complete', 'bubble', { bubble: true, user: false, error: false }],
-        ['user', 'error', 'bubble', { bubble: true, user: true, error: true }],
-        ['user', 'complete', 'userBubble', { bubble: true, user: true, error: false }],
-        ['assistant', 'error', 'userBubble', { bubble: false, user: false, error: false }],
-        ['user', 'error', 'noBubble', { bubble: false, user: false, error: false }],
-    ])('%s 角色、%s 状态、%s 模式', (role, status, mode, flags) => {
-        expect(ChatFoundation.getContentFlags(role, status, mode)).toEqual(flags);
+        ['assistant', 'complete', 'bubble', 'semi-chat-chatBox-content semi-chat-chatBox-content-bubble'],
+        ['user', 'error', 'bubble', 'semi-chat-chatBox-content semi-chat-chatBox-content-bubble semi-chat-chatBox-content-user semi-chat-chatBox-content-error'],
+        ['user', 'complete', 'userBubble', 'semi-chat-chatBox-content semi-chat-chatBox-content-userBubble semi-chat-chatBox-content-user'],
+        ['assistant', 'error', 'userBubble', 'semi-chat-chatBox-content'],
+        ['user', 'error', 'noBubble', 'semi-chat-chatBox-content'],
+    ])('%s 角色、%s 状态、%s 模式', (role, status, mode, className) => {
+        expect(ChatFoundation.getContentClass(role, status, mode)).toBe(className);
+    });
+});
+
+describe('ChatFoundation.getMarkdownRaw', () => {
+    it('只在 escapeHtml 开启时转义用户消息', () => {
+        expect(ChatFoundation.getMarkdownRaw('<b>x</b>', 'user', true)).not.toBe('<b>x</b>');
+        expect(ChatFoundation.getMarkdownRaw('<b>x</b>', 'user', false)).toBe('<b>x</b>');
+        expect(ChatFoundation.getMarkdownRaw('<b>x</b>', 'assistant', true)).toBe('<b>x</b>');
+        expect(ChatFoundation.getMarkdownRaw(undefined, 'user', true)).toBe('');
     });
 });
 
@@ -44,17 +53,34 @@ describe('ChatFoundation 上传禁用', () => {
 });
 
 describe('ChatFoundation 拖拽', () => {
-    const create = () => {
-        const adapter = { setState: vi.fn<(state: object) => void>(), manualUpload: vi.fn<() => void>() };
+    const create = (props: Record<string, unknown> = {}) => {
+        const adapter = { getProp: (key: string) => props[key], setState: vi.fn<(state: object) => void>(), manualUpload: vi.fn<() => void>() };
         return { adapter, foundation: new ChatFoundation(adapter as unknown as ChatAdapter) };
     };
+    const files = { dataTransfer: { types: ['Files'] } as unknown as DataTransfer };
 
     it('只在拖入文件时显示放置区', () => {
         const { adapter, foundation } = create();
         foundation.handleDragOver({ dataTransfer: { types: ['text/plain'] } as unknown as DataTransfer });
         expect(adapter.setState).not.toHaveBeenCalled();
-        foundation.handleDragOver({ dataTransfer: { types: ['Files'] } as unknown as DataTransfer });
+        foundation.handleDragOver(files);
         expect(adapter.setState).toHaveBeenCalledWith({ uploadAreaVisible: true }, undefined);
+    });
+
+    it.each([{ enableUpload: false }, { enableUpload: { dragUpload: false } }, { uploadProps: { disabled: true } }])('%o 时拖入文件不显示放置区', (props) => {
+        const { adapter, foundation } = create(props);
+        foundation.handleDragOver(files);
+        expect(adapter.setState).not.toHaveBeenCalled();
+    });
+
+    it('从聊天区内部开始的拖拽不显示放置区，结束后恢复', () => {
+        const { adapter, foundation } = create();
+        foundation.handleDragStart();
+        foundation.handleDragOver(files);
+        expect(adapter.setState).not.toHaveBeenCalled();
+        foundation.handleDragEnd();
+        foundation.handleDragOver(files);
+        expect(adapter.setState).toHaveBeenCalledOnce();
     });
 
     it('放下的内容不含文件时不触发上传', () => {

@@ -49,7 +49,8 @@
                 <slot v-bind="slotProps(item)" name="expandIcon" />
             </template>
         </SubNav>
-        <NavItem v-else v-bind="pick(item, ITEM_KEYS)" :level="props.level">
+        <!-- itemConfig is no NavItem prop: it passes through its attrs to the shell, which reports it in onSelect -->
+        <NavItem v-else v-bind="{ ...pick(item, ITEM_KEYS), itemConfig: item }" :level="props.level">
             <template v-if="$slots.icon" #icon>
                 <slot v-bind="slotProps(item)" name="icon" />
             </template>

@@ -1,10 +1,9 @@
 import { createEffect, createMemo, createSignal, For, type JSX, on, onCleanup, onMount, Show, untrack } from 'solid-js';
 import clsx from 'clsx';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-import { cssClasses, getStackItemTransform, getStackThreshold, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+import { FreshItems, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+import { cssClasses, getStackItemTransform } from '@fibrae/semi-foundation/components/notification/constants';
 import { groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
-import { pickFreshAnnouncements, readNoticeText } from '@fibrae/semi-foundation/utils/announcer';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/components/notification/notification.scss';
 import useCSSAnimation from '../../internal/css-animation';
@@ -38,7 +37,7 @@ export default function NotificationList(props: NotificationListProps) {
     const [focusedPosition, setFocusedPosition] = createSignal<Position | null>(null);
     const elements = new Map<string, HTMLElement>();
     const lists = new Map<Position, HTMLDivElement>();
-    let shownIds = new Set<string | undefined>();
+    const fresh = new FreshItems();
 
     const [announcement, announcer] = useAnnouncer();
 
@@ -46,7 +45,7 @@ export default function NotificationList(props: NotificationListProps) {
 
     const [state, setState] = createSignal(store.getSnapshot());
 
-    const notices = createMemo(() => state().notices as NoticeProps[]);
+    const notices = createMemo(() => state().items as (NoticeProps & { id: string })[]);
     const shown = createMemo(() => new Set(notices().map((notice) => notice.id)));
     const byId = createMemo(() => new Map([...notices(), ...(state().removedItems as NoticeProps[])].map((notice) => [notice.id as string, notice])));
 
@@ -58,16 +57,13 @@ export default function NotificationList(props: NotificationListProps) {
 
     const releaseFocus = () => setFocusedPosition(null);
 
-    const renderNotice = (id: string, position: Position, expanded: () => boolean, stack: () => number) => {
+    const renderNotice = (id: string, position: Position, expanded: () => boolean, depths: () => Map<string, number>) => {
         const notice = () => byId().get(id) as NoticeProps;
         const leaving = () => !shown().has(id);
         const ids = () => idsInPosition()[position];
         const index = () => ids().indexOf(id);
-        // leaving notices are not counted, or the ones behind would sink and spring back on unmount
-        const depth = () =>
-            ids()
-                .slice(0, index())
-                .filter((newer) => shown().has(newer)).length;
+        const depth = () => depths().get(id) ?? 0;
+        const stack = () => state().stack;
         const collapsed = () => !expanded() && depth() > 0;
         const animation = useCSSAnimation({
             startClassName: () => `${prefixCls}-animation-${leaving() ? 'hide' : 'show'}_${position}`,
@@ -79,7 +75,7 @@ export default function NotificationList(props: NotificationListProps) {
             },
         });
         onCleanup(() => elements.delete(id));
-        // The item is there without stack too: the list decides stacking from its newest notice, so a notice can switch
+        // The item is there without stack too: the latest open decides the list's stacking, so a notice can switch
         // modes while shown, and a changed element structure would remount it, restarting its countdown and entrance and
         // losing its state and focus.
         return (
@@ -88,7 +84,7 @@ export default function NotificationList(props: NotificationListProps) {
                     stack()
                         ? clsx(`${prefixCls}-stack-item`, {
                               [`${prefixCls}-stack-item-expanded`]: expanded(),
-                              [`${prefixCls}-stack-item-hidden`]: !expanded() && depth() >= numbers.stackVisibleCount,
+                              [`${prefixCls}-stack-item-hidden`]: isStackHidden(expanded(), depth()),
                           })
                         : undefined
                 }
@@ -109,9 +105,8 @@ export default function NotificationList(props: NotificationListProps) {
     const renderList = (position: Position) => {
         const ids = () => idsInPosition()[position];
         const paused = () => hoveredPosition() === position || focusedPosition() === position;
-        // the newest notice decides, so Notification.config({ stack }) applies from the next notice
-        const stack = () => getStackThreshold(byId().get(ids()[0])?.stack);
-        const expanded = () => paused() || ids().filter((id) => shown().has(id)).length <= stack();
+        const expanded = () => isStackExpanded(state().stack, paused(), ids().filter((id) => shown().has(id)).length);
+        const depths = createMemo(() => getStackDepths(ids(), shown()));
         // a list unmounting under the pointer never gets mouseleave or focusout
         onCleanup(() => {
             lists.delete(position);
@@ -134,7 +129,7 @@ export default function NotificationList(props: NotificationListProps) {
                     onMouseEnter={() => setHoveredPosition(position)}
                     onMouseLeave={() => setHoveredPosition(null)}
                 >
-                    <For each={ids()}>{(id) => renderNotice(id, position, expanded, stack)}</For>
+                    <For each={ids()}>{(id) => renderNotice(id, position, expanded, depths)}</For>
                 </div>
             </NotificationListContext.Provider>
         );
@@ -148,11 +143,8 @@ export default function NotificationList(props: NotificationListProps) {
     // Notices new to the store or updated in place; alerts announce themselves
     createEffect(
         on(notices, (items) => {
-            const { updatedItems } = state();
-            const fresh = pickFreshAnnouncements(items, shownIds, updatedItems);
-            shownIds = new Set(items.map((notice) => notice.id));
-            for (const { id } of fresh) {
-                announcer.announce(id as string, () => readNoticeText(elements.get(id as string), prefixCls));
+            for (const { id } of fresh.pick(items, state().updatedItems)) {
+                announcer.announce(id, () => readNoticeText(elements.get(id), prefixCls));
             }
         })
     );
@@ -163,8 +155,7 @@ export default function NotificationList(props: NotificationListProps) {
             idsInPosition,
             () => {
                 const position = focusedPosition();
-                const list = position ? lists.get(position) : undefined;
-                if (position && !list?.contains(FocusTrapHandle.getActiveElement(list))) {
+                if (position && hasLostFocus(true, lists.get(position))) {
                     releaseFocus();
                 }
             },

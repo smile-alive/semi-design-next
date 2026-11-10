@@ -3,12 +3,11 @@
     import { omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
     import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/components/markdown-render/foundation';
-    import { isDev } from '@fibrae/semi-foundation/utils/warning';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/markdown-render/markdown-render.scss';
     import type { ElementProps } from '../../base/element-props';
     import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
-    import { groupRole } from '../../utils/group-role';
     import * as defaultComponents from './components';
     import type { MarkdownRenderProps } from './interface';
     import runtime from './runtime';
@@ -28,14 +27,7 @@
         MarkdownRenderFoundation,
         props,
         () => MarkdownRenderFoundation.getInitialState(props, runtime),
-        () => ({
-            getRuntime: () => runtime,
-            notifyCompileError: (error) => {
-                if (isDev()) {
-                    console.error(error);
-                }
-            },
-        })
+        () => ({ getRuntime: () => runtime })
     );
 
     // an explicit undefined would replace a default
@@ -43,7 +35,7 @@
 </script>
 
 <template>
-    <div :class="cssClasses.PREFIX" :role="groupRole($attrs)">
+    <div :class="cssClasses.PREFIX" :role="namedRole($attrs)">
         <!-- each compile yields a new function, which as a component type would remount the subtree; known limit:
              `components.wrapper` still remounts the content on each compile -->
         <component :is="state.renderContent({ components })" v-if="state.renderContent" />

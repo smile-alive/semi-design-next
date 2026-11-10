@@ -1,7 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
     import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
-    import { isDev } from '@fibrae/semi-foundation/utils/warning';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
     import type { LottieProps } from './interface.js';
@@ -29,11 +28,6 @@
             getContainer: () => wrapper ?? null,
             notifyAnimationInstance: (animation) => getAnimationInstance?.(animation),
             notifyLottie: (lottie) => getLottie?.(lottie),
-            notifyLoadError: (error) => {
-                if (isDev()) {
-                    console.error(error);
-                }
-            },
         })
     );
 

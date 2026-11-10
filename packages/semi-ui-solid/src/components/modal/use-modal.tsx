@@ -1,4 +1,5 @@
-import { type JSX, For, createSignal } from 'solid-js';
+import { type Accessor, type JSX, For, createSignal, onMount } from 'solid-js';
+import ConfirmInstance from '@fibrae/semi-foundation/components/modal/confirm-instance';
 import { type ModalHookRef, withType } from './confirm';
 import ConfirmModal, { type ConfirmProps } from './confirm-modal';
 import type { ModalProps } from './modal';
@@ -12,8 +13,8 @@ export interface ModalHookApi {
 }
 
 interface HookItem {
-    config: () => ConfirmProps;
-    afterClose: () => void;
+    props: Accessor<ConfirmProps>;
+    instance: ConfirmInstance<ConfirmProps>;
 }
 
 /**
@@ -25,26 +26,25 @@ export default function useModal(): [ModalHookApi, JSX.Element] {
     const [items, setItems] = createSignal<HookItem[]>([]);
 
     const open = (type: ConfirmProps['type']) => (initial: ModalProps) => {
-        const [config, setConfig] = createSignal(withType(type, initial));
-        let closed = false;
-        const item: HookItem = {
-            config,
-            afterClose: () => {
-                closed = true;
-                config().afterClose?.();
-                setItems((current) => current.filter((other) => other !== item));
-            },
-        };
+        const instance = new ConfirmInstance(withType(type, initial), {
+            render: (next) => setProps(next),
+            remove: () => setItems((current) => current.filter((other) => other !== item)),
+        });
+        const [props, setProps] = createSignal(instance.props);
+        const item: HookItem = { props, instance };
         setItems((current) => [...current, item]);
-        const update = (next: ModalProps) => {
-            if (!closed) {
-                setConfig((current) => ({ ...current, ...next }));
-            }
-        };
-        return { destroy: () => update({ visible: false }), update };
+        return instance.handle;
     };
 
-    const contextHolder = <For each={items()}>{(item) => <ConfirmModal {...item.config()} afterClose={item.afterClose} />}</For>;
+    const contextHolder = (
+        <For each={items()}>
+            {(item) => {
+                // a Modal hidden in the batch that creates it never reports afterClose, so the dialog exists only from onMount
+                onMount(item.instance.handleMount);
+                return <ConfirmModal {...item.props()} />;
+            }}
+        </For>
+    );
 
     return [
         {

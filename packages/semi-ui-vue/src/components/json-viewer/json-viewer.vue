@@ -1,14 +1,13 @@
 <script setup lang="ts">
     import { computed, h, shallowRef, useTemplateRef } from 'vue';
-    import { omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
-    import { groupRole } from '../../utils/group-role';
     import useLocale from '../locale/use-locale';
     import { provideJsonViewerContext } from './context';
     import type { JsonViewerCustomRenderSlotProps, JsonViewerEmits, JsonViewerHandle, JsonViewerProps, JsonViewerSearchButtonSlotProps, JsonViewerSlots } from './interface';
@@ -44,15 +43,7 @@
     let nextEntryId = 0;
 
     const prefix = cssClasses.PREFIX;
-
-    // merged per key: a whole-object default would be replaced by any caller `options`
-    const mergedOptions = computed(() => ({
-        ariaLabel: locale.value.locale.content,
-        readOnly: false,
-        autoWrap: true,
-        // an explicit undefined would replace a default
-        ...omitBy(props.options ?? {}, (option) => option === undefined),
-    }));
+    const mergedOptions = computed(() => JsonViewerFoundation.mergeOptions(props.options as CoreOptions | undefined, locale.value.locale.content));
 
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, JsonViewerBaseState>(
         JsonViewerFoundation,
@@ -78,7 +69,7 @@
                 customRenderEntries.value = Array.from(map, ([el, value]) => ({ ...value, id: nextEntryId++, el }));
             },
         }),
-        { props: { value: () => props.modelValue ?? '', options: () => mergedOptions.value as CoreOptions } }
+        { props: { value: () => props.modelValue ?? '', options: () => mergedOptions.value } }
     );
 
     provideJsonViewerContext({
@@ -112,8 +103,8 @@
     });
 
     defineExpose<JsonViewerHandle>({
-        getValue: () => foundation.jsonViewer?.getModel().getValue() ?? '',
-        format: () => foundation.jsonViewer?.format(),
+        getValue: foundation.getValue,
+        format: foundation.format,
         search: foundation.search,
         getSearchResults: foundation.getSearchResults,
         prevSearch: foundation.prevSearch,
@@ -125,7 +116,7 @@
 </script>
 
 <template>
-    <div :role="groupRole($attrs)" :style="[sizeStyle(), { position: 'relative' }]">
+    <div :role="namedRole($attrs)" :style="[sizeStyle(), { position: 'relative' }]">
         <div ref="editor" :class="[prefix, `${prefix}-background`]" :style="sizeStyle()" />
         <template v-if="props.showSearch">
             <slot v-if="$slots.searchButton" name="searchButton" v-bind="searchButtonProps()" />

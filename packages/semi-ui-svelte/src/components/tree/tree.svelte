@@ -200,10 +200,9 @@
         (view) => TreeFoundation.getInitialState(view),
         (base) => ({
             notifyExpand: (keys, info) => {
-                const next = [...keys];
-                echo('expandedKeys', next);
-                expandedKeys = next;
-                onExpand?.([...keys], info as TreeExpandedOtherProps);
+                echo('expandedKeys', keys);
+                expandedKeys = keys;
+                onExpand?.(keys, info as TreeExpandedOtherProps);
             },
             notifySelect: (selectKey, selected, node) => onSelect?.(selectKey, selected, node as TreeNodeData),
             notifyChange: (next) => {

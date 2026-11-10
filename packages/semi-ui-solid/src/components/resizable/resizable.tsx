@@ -183,7 +183,7 @@ export default function Resizable(rawProps: ResizableProps) {
     });
 
     return (
-        <div role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} {...rest} ref={mergeRefs(local.ref, (node: HTMLDivElement) => (resizable = node))} class={clsx(local.class, `${prefixCls}-resizable`)} style={resizeStyle()}>
+        <div role={namedRole(rest)} {...rest} ref={mergeRefs(local.ref, (node: HTMLDivElement) => (resizable = node))} class={clsx(local.class, `${prefixCls}-resizable`)} style={resizeStyle()}>
             <Show when={state().isResizing}>
                 <div class={`${prefixCls}-background`} style={state().backgroundStyle} />
             </Show>

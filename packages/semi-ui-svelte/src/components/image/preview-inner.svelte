@@ -1,16 +1,14 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
     import Portal from '../../internal/portal.svelte';
     import { getConfigContext } from '../config-provider/context.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { previewDefaults } from './defaults.js';
-    import type { PreviewOptions, PreviewSnippets, RatioType } from './interface.js';
+    import type { PreviewOptions, PreviewSnippets } from './interface.js';
     import PreviewFooter from './preview-footer.svelte';
     import PreviewHeader from './preview-header.svelte';
     import PreviewImage from './preview-image.svelte';
@@ -90,10 +88,6 @@
     let leftButton = $state.raw<HTMLButtonElement | null>(null);
     let rightButton = $state.raw<HTMLButtonElement | null>(null);
 
-    // The index a ratio was set at: an index change brings the ratio back to fit in the same render as the new src, so
-    // the image leaving is not re-fitted
-    let ratioState = $state.raw<{ index: number; ratio: RatioType }>({ index: -1, ratio: 'adaptation' });
-
     const { foundation, states } = useFoundation<Foundation, Adapter, PreviewInnerBaseProps, PreviewInnerState>(
         PreviewInnerFoundation,
         {
@@ -138,8 +132,7 @@
             },
         },
         (view) => PreviewInnerFoundation.getInitialState(view),
-        (base) => ({
-            getIsInGroup: () => Boolean(setCurrentIndex),
+        () => ({
             notifyChange: (index, direction) => {
                 onChange?.(index);
                 if (direction === 'prev') {
@@ -157,12 +150,9 @@
             notifyDownloadError: (source) => onDownloadError?.(source),
             getWrap: () => wrapEl,
             isValidTarget: ({ target }: Event) => !(target instanceof Node && [header?.getRoot(), footer?.getRoot(), leftButton, rightButton].some((element) => element?.contains(target))),
-            setRatio: (ratio) => {
-                ratioState = { index: PreviewInnerFoundation.getCurrentIndex(base.getProps(), base.getStates()), ratio };
-            },
         }),
         {
-            context: () => ({ isGroup: Boolean(setCurrentIndex), setCurrentIndex, direction: config.direction, popupContainer: getPopupContainer ?? config.getPopupContainer }),
+            context: () => ({ setCurrentIndex, direction: config.direction, popupContainer: getPopupContainer ?? config.getPopupContainer }),
         }
     );
 
@@ -170,7 +160,7 @@
     const srcList = $derived(PreviewInnerFoundation.getSrcList(src as string | string[]));
     const total = $derived(srcList.length);
     const currentIndex = $derived(PreviewInnerFoundation.getCurrentIndex({ currentIndex: controlledIndex }, states()));
-    const ratio = $derived(ratioState.index === currentIndex ? ratioState.ratio : 'adaptation');
+    const ratio = $derived(PreviewInnerFoundation.getRatio({ currentIndex: controlledIndex }, states()));
     const showPrev = $derived(PreviewInnerFoundation.canSwitch('prev', currentIndex, total, infinite));
     const showNext = $derived(PreviewInnerFoundation.canSwitch('next', currentIndex, total, infinite));
     const title = $derived(titles?.[currentIndex] ?? previewTitle);
@@ -197,18 +187,6 @@
         untrack(() => foundation.beforeShow());
         return foundation.afterHide;
     });
-
-    // A focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
-    // moved elsewhere is left alone.
-    watch(
-        () => currentIndex,
-        () => {
-            const active = FocusTrapHandle.getActiveElement();
-            if (wrapEl && (!active || active === document.body)) {
-                wrapEl.focus({ preventScroll: true });
-            }
-        }
-    );
 </script>
 
 {#if visible}

@@ -2,9 +2,10 @@ import type React from 'react';
 import { Children, cloneElement, createElement, isValidElement, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
-import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/components/typography/ellipsis';
+import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
+import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useMergedRef from '../../hooks/use-merged-ref';
 import ReactResizeObserver, { ObserverProperty } from '../../internal/resize-observer';
 import { isSemiIcon } from '../../utils';
@@ -90,7 +91,7 @@ function getTooltipConfig({ showTooltip, expandable, expandText }: Pick<Ellipsis
     if (typeof showTooltip !== 'object') {
         return { type: 'tooltip' };
     }
-    if (showTooltip.type?.toLowerCase() === 'popover') {
+    if (isPopoverTooltip(showTooltip)) {
         return {
             ...showTooltip,
             opts: {
@@ -103,16 +104,10 @@ function getTooltipConfig({ showTooltip, expandable, expandText }: Pick<Ellipsis
     return { ...showTooltip, type: showTooltip.type ?? 'tooltip' };
 }
 
-function getCopyConfig(copyable: CopyableConfig | boolean, children: React.ReactNode) {
-    const willCopyContent = (copyable as CopyableConfig)?.content ?? children;
-    const parts = Children.toArray(willCopyContent);
+function getCopyText(copyable: CopyableConfig | boolean, children: React.ReactNode) {
+    const parts = Children.toArray((copyable as CopyableConfig)?.content ?? children);
     warning(parts.some(isValidElement), 'Content to be copied in Typography is a object, it will case a [object Object] mistake when copy to clipboard.');
-    return {
-        duration: 3,
-        ...(typeof copyable === 'object' ? copyable : null),
-        // after the spread, so an explicit `content: undefined` cannot override the fallback
-        content: parts.join(''),
-    };
+    return parts.join('');
 }
 
 interface Decorations {
@@ -217,8 +212,8 @@ export default function Base({
     const cssEllipsis = hasEllipsis && canUseCSSEllipsis(opt, copyable);
     const hasTooltip = Boolean(opt.showTooltip);
     const hasCopyable = Boolean(copyable);
-    const noExpandText = !expandable && expandText === undefined;
     const noCollapseText = !collapsible && collapseText === undefined;
+    const expandButton = getExpandButton(view, opt);
 
     const update = (patch: Partial<EllipsisView>) => setView((prev) => ((Object.keys(patch) as Array<keyof EllipsisView>).every((key) => Object.is(prev[key], patch[key])) ? prev : { ...prev, ...patch }));
 
@@ -283,22 +278,12 @@ export default function Base({
         }
     }, [runtime, hasEllipsis, view.children, view.isTruncated, view.expanded, rows, pos, suffix, expandText, hasTooltip, hasCopyable, strong]);
 
-    if (view.isTruncated) {
-        let text: string | undefined;
-        if (!view.expanded && !noExpandText) {
-            text = expandText;
-        } else if (view.expanded && !noCollapseText) {
-            text = collapseText;
-        }
-        if (text !== undefined) {
-            // only a button that toggles is a disclosure
-            const toggles = view.expanded ? collapsible : expandable;
-            expandNode = (
-                <button key="expand" ref={expandRef} type="button" className={`${prefixCls}-ellipsis-expand`} aria-expanded={toggles ? view.expanded : undefined} onClick={toggleOverflow}>
-                    {text}
-                </button>
-            );
-        }
+    if (expandButton) {
+        expandNode = (
+            <button key="expand" ref={expandRef} type="button" className={`${prefixCls}-ellipsis-expand`} aria-expanded={expandButton.expanded} onClick={toggleOverflow}>
+                {expandButton.text}
+            </button>
+        );
     }
 
     let iconNode: React.ReactNode = null;
@@ -377,7 +362,7 @@ export default function Base({
             <>
                 {textNode}
                 {expandNode}
-                {copyable && <Copyable {...getCopyConfig(copyable, children)} ref={copyRef} onCopiedChange={() => hasEllipsis && runtime.schedule()} />}
+                {copyable && <Copyable {...getCopyConfig(copyable, getCopyText(copyable, children))} ref={copyRef} onCopiedChange={() => hasEllipsis && runtime.schedule()} />}
             </>
         ),
     };
@@ -387,14 +372,14 @@ export default function Base({
     let node: React.ReactNode = content;
 
     const tooltip = getTooltipConfig(opt);
-    const overflowed = !view.expanded && (cssEllipsis ? view.isOverflowed : view.isTruncated);
+    const overflowed = isOverflowed(view, cssEllipsis);
 
     if (tooltip) {
-        const { type: tooltipType, opts, renderTooltip } = tooltip;
-        const focusable = tabIndex !== undefined || (overflowed && !insideWidgetItem && opts?.condition !== false);
+        const { opts, renderTooltip } = tooltip;
+        const focusable = isTooltipTriggerFocusable({ tabIndex, overflowed, condition: opts?.condition, insideWidgetItem });
         if (typeof renderTooltip === 'function') {
             node = overflowed ? renderTooltip(children, content) : content;
-        } else if (tooltipType.toLowerCase() === 'popover') {
+        } else if (isPopoverTooltip(tooltip)) {
             node = overflowed ? (
                 <Popover content={children} position="top" {...opts}>
                     <TooltipTrigger {...contentProps} focusable={focusable} />

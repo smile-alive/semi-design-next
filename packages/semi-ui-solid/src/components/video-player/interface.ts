@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/components/video-player/constants';
+import type { VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
 import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 import type { ElementProps } from '../../base/element-props';
 import type { MediaEventKeys } from '../../utils/media-event-keys';
@@ -12,8 +12,6 @@ export interface VideoPlayerOption<T> {
 export type VideoPlayerMarker = Marker;
 
 export type VideoPlayerTheme = 'dark' | 'light';
-
-export type VideoControl = Exclude<(typeof strings)[keyof typeof strings], typeof strings.DARK>;
 
 /** Undeclared attributes land on the root div; `ref` is the native video element */
 export interface VideoPlayerProps extends ElementProps<'div', MediaEventKeys | 'children' | 'ref' | 'style'> {
@@ -54,24 +52,6 @@ export interface VideoPlayerProps extends ElementProps<'div', MediaEventKeys | '
     /** Read once, when the player mounts */
     volume?: number;
     width?: number | string;
-}
-
-export interface VideoPlayerState {
-    bufferedValue: number;
-    currentQuality: string;
-    currentRoute: string;
-    currentTime: number;
-    isError: boolean;
-    isFullScreen: boolean;
-    isMirror: boolean;
-    isPlaying: boolean;
-    muted: boolean;
-    notificationContent: string;
-    playbackRate: number;
-    showNotification: boolean;
-    showControls: boolean;
-    totalTime: number;
-    volume: number;
 }
 
 export interface VideoProgressProps {

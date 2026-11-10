@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import FieldStore from '../field-store';
-import { cloneFormValue, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveKeepState, type FieldAriaState, type FieldRegistrationView } from '../utils';
+import { cloneFormValue, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveFieldView, resolveKeepState, type FieldAriaState, type FieldRegistrationView } from '../utils';
 
 describe('resolveFieldInitValue', () => {
     it.each([
@@ -103,7 +103,6 @@ describe('getFieldAriaProps', () => {
         hasHelpText: false,
         hasExtraText: false,
         error: undefined,
-        errorHasContent: false,
     };
 
     it('默认布局引用 label，没有错误时不带 aria-invalid、aria-errormessage', () => {
@@ -134,18 +133,58 @@ describe('getFieldAriaProps', () => {
     });
 
     it('校验失败或 validateStatus 为 error 时带 aria-invalid；有内容的错误由自身 ErrorMessage 渲染时带 aria-errormessage', () => {
-        const failed = { ...base, status: 'error', shownStatus: 'error', error: ['err'], errorHasContent: true };
+        const failed = { ...base, status: 'error', shownStatus: 'error', error: ['err'] };
         expect(getFieldAriaProps(failed)).toMatchObject({ 'aria-invalid': true, 'aria-errormessage': 'f-errormessage' });
         expect(getFieldAriaProps({ ...failed, shownStatus: 'warning' })).toMatchObject({ 'aria-invalid': true, 'aria-errormessage': 'f-errormessage' });
         expect(getFieldAriaProps({ ...base, shownStatus: 'error' })).toMatchObject({ 'aria-invalid': true });
         expect(getFieldAriaProps({ ...failed, noErrorMessage: true })).not.toHaveProperty('aria-errormessage');
-        expect(getFieldAriaProps({ ...failed, errorHasContent: false })).not.toHaveProperty('aria-errormessage');
+        expect(getFieldAriaProps({ ...failed, error: [''] })).not.toHaveProperty('aria-errormessage');
     });
 
     it('InputGroup 内有内容的错误保留组传入的 aria-errormessage，否则清除', () => {
         const inGroup = { ...base, inGroup: true };
         expect(getFieldAriaProps(inGroup)).toHaveProperty('aria-errormessage', undefined);
-        expect(getFieldAriaProps({ ...inGroup, status: 'error', errorHasContent: true })).not.toHaveProperty('aria-errormessage');
+        expect(getFieldAriaProps({ ...inGroup, status: 'error', error: ['err'] })).not.toHaveProperty('aria-errormessage');
+    });
+});
+
+describe('resolveFieldView', () => {
+    const base = { id: 'f', field: 'name', labelPosition: 'top', formHasCols: false, insetSupported: true, hasPrefix: false, hasTrigger: false };
+
+    it('id 规则：label 配置对象的 id 优先，其余由控件 id 派生', () => {
+        expect(resolveFieldView(base).ids).toEqual({ label: 'f-label', helpText: 'f-helpText', extraText: 'f-extraText', errorMessage: 'f-errormessage' });
+        expect(resolveFieldView({ ...base, label: { id: 'mine' } }).ids.label).toBe('mine');
+    });
+
+    it('label 配置对象的 text 为空串时显示空串，缺省时回落到字段名，非配置的 label 为空时也回落', () => {
+        expect(resolveFieldView({ ...base, label: { text: '' } }).labelText).toBe('');
+        expect(resolveFieldView({ ...base, label: {} }).labelText).toBe('name');
+        expect(resolveFieldView({ ...base, label: '' }).labelText).toBe('name');
+        expect(resolveFieldView({ ...base, label: 'Name' })).toMatchObject({ labelText: 'Name', labelConfig: undefined });
+    });
+
+    it('数组与宿主判定的节点不是配置对象', () => {
+        const node = { node: true };
+        expect(resolveFieldView({ ...base, label: node, isNode: (value) => value === node }).labelConfig).toBeUndefined();
+        expect(resolveFieldView({ ...base, label: [] }).labelConfig).toBeUndefined();
+    });
+
+    it('inset 标签在控件不支持、有 prefix 或自定义触发器时回落为 top，不支持时才告警', () => {
+        const inset = { ...base, labelPosition: 'inset' };
+        expect(resolveFieldView(inset)).toMatchObject({ labelPosition: 'inset', insetShown: true, warnInsetFallback: false });
+        expect(resolveFieldView({ ...inset, hasPrefix: true })).toMatchObject({ labelPosition: 'top', insetShown: false, warnInsetFallback: false });
+        expect(resolveFieldView({ ...inset, hasTrigger: true }).labelPosition).toBe('top');
+        expect(resolveFieldView({ ...inset, insetSupported: false })).toMatchObject({ labelPosition: 'top', warnInsetFallback: true });
+        expect(resolveFieldView({ ...inset, insetSupported: false, noLabel: true }).warnInsetFallback).toBe(false);
+    });
+
+    it('显示状态取 validateStatus，缺省时取校验状态；字段自己设两个 col 而 Form 没设时才包 Row', () => {
+        expect(resolveFieldView({ ...base, validateStatus: 'warning', status: 'error' }).shownStatus).toBe('warning');
+        expect(resolveFieldView({ ...base, status: 'error' }).shownStatus).toBe('error');
+        const cols = { labelCol: {}, wrapperCol: {} };
+        expect(resolveFieldView({ ...base, ...cols })).toMatchObject({ withCol: true, wrapInRow: true });
+        expect(resolveFieldView({ ...base, ...cols, formHasCols: true })).toMatchObject({ withCol: true, wrapInRow: false });
+        expect(resolveFieldView({ ...base, labelCol: {} })).toMatchObject({ withCol: false, wrapInRow: false });
     });
 });
 

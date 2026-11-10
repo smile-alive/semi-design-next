@@ -78,36 +78,29 @@
 
     // The copies only fill the wheel, so they are hidden from assistive technology: the listbox has one option per item
     // and one selected option.
-    const options = computed(() => {
-        const items = (keyPrefix: string) =>
-            list.value.map((item, index) => {
-                const selected = selectedIndex.value === index;
-                return {
-                    key: `${keyPrefix}${index}`,
-                    id: keyPrefix ? undefined : optionId(index),
-                    copy: Boolean(keyPrefix),
-                    index,
-                    selected,
-                    disabled: item.disabled,
-                    clickable: !isWheel.value && !item.disabled,
-                    class: {
-                        [`${prefix}-item-sel`]: selected && !isWheel.value,
-                        [`${prefix}-item-disabled`]: Boolean(item.disabled),
-                    },
-                    text: ItemFoundation.getItemText(item, selected, transform.value),
-                };
-            });
-        if (!isWheel.value) {
-            return items('');
-        }
-        const copies = (count: number, name: string) => Array.from({ length: count }, (_, i) => items(`${name}_${i}_`));
-        return [...copies(state.value.prependCount, 'pre').toReversed().flat(), ...items(''), ...copies(state.value.appendCount, 'app').flat()];
-    });
+    const options = computed(() =>
+        ItemFoundation.getRows({ list: list.value, mode: props.mode }, state.value).map(({ key, index, copy }) => {
+            const item = list.value[index];
+            const selected = selectedIndex.value === index;
+            return {
+                key,
+                id: copy ? undefined : optionId(index),
+                copy,
+                index,
+                selected,
+                disabled: item.disabled,
+                clickable: !isWheel.value && !item.disabled,
+                class: {
+                    [`${prefix}-item-sel`]: selected && !isWheel.value,
+                    [`${prefix}-item-disabled`]: Boolean(item.disabled),
+                },
+                text: ItemFoundation.getItemText(item, selected, transform.value),
+            };
+        })
+    );
 
-    // The click is handled on the ul, where it also stops: an ancestor's click listener does not see a wheel click.
     const onListClick = (event: MouseEvent) => {
         if (isWheel.value) {
-            event.stopImmediatePropagation();
             foundation.handleWheelClick(event);
         }
     };

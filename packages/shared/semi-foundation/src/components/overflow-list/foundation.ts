@@ -28,21 +28,28 @@ export interface OverflowListView {
     overflowStatus: 'calculating' | 'overflowed' | 'normal';
     // cache that keeps the arrow/menu state stable while items change or before the IntersectionObserver reports
     scrollOverflow: ScrollOverflow;
+    /** `items` index of the first visible item */
+    first: number;
+    /** Direction of the remaining visible items in `items` */
+    step: 1 | -1;
+    /** The collapseFrom the visible items were laid out for */
+    fromStart: boolean;
+}
+
+/** A visible item with its `items` index and key */
+export interface OverflowListEntry {
+    item: Record<string, any>;
+    index: number;
+    key: ItemKey;
 }
 
 export interface OverflowListAdapter<P extends OverflowListBaseProps = OverflowListBaseProps> extends DefaultAdapter<P, OverflowListBaseState> {
-    updateView: (view: Partial<OverflowListView>) => void;
+    /** Replaces the host's view with `update(latest view)` */
+    updateView: (update: (view: OverflowListView) => OverflowListView) => void;
     /** Runs after the commit that shows `visibleState` */
     notifyVisibleStateChange: (visibleState: Map<string, boolean>) => void;
     notifyIntersect: (res: Record<string, IntersectionObserverEntry>) => void;
     notifyOverflow: (overflow: Array<Record<string, any>>) => void;
-}
-
-/** `items` index of the first visible item, the direction of the rest and the collapseFrom it was laid out for */
-export interface VisibleLayout {
-    first: number;
-    step: 1 | -1;
-    fromStart: boolean;
 }
 
 export interface OverflowListBaseProps {
@@ -60,6 +67,20 @@ export interface OverflowListBaseState {
     visibleState: Map<string, boolean>;
 }
 
+const emptyView: OverflowListView = {
+    items: [],
+    style: undefined,
+    visible: [],
+    overflow: [],
+    pivot: -1,
+    maxCount: 0,
+    overflowStatus: 'calculating',
+    scrollOverflow: [[], []],
+    first: 0,
+    step: 1,
+    fromStart: false,
+};
+
 /** The items hidden before and after the visible run; null when no item is visible, which is no reliable result */
 function computeScrollOverflow(items: Array<Record<string, any>>, itemKey: ItemKeyOption, visibleState: Map<string, boolean>): ScrollOverflow | null {
     const visibleStateArr = items.map((item, idx) => Boolean(visibleState.get(String(OverflowListFoundation.getItemKey(itemKey, item, idx)))));
@@ -70,10 +91,36 @@ function computeScrollOverflow(items: Array<Record<string, any>>, itemKey: ItemK
     return [items.slice(0, visibleStart), items.slice(visibleStateArr.lastIndexOf(true) + 1)];
 }
 
+/**
+ * Records where the visible items sit in `items`, the inverse of how resetView and handleCollapseOverflow order them: a
+ * start-collapsed list is reversed while measuring and a suffix once settled. Recording the layout with the view
+ * lets a later collapseFrom change be noticed and reset; searching items by object would collapse a twice-listed
+ * object to one position.
+ */
+function withLayout(view: OverflowListView, fromStart: boolean, reversed: boolean): OverflowListView {
+    if (reversed) {
+        return { ...view, first: view.items.length - 1, step: -1, fromStart };
+    }
+    return { ...view, first: fromStart ? view.items.length - view.visible.length : 0, step: 1, fromStart };
+}
+
 export default class OverflowListFoundation<P extends OverflowListBaseProps = OverflowListBaseProps> extends BaseFoundation<OverflowListAdapter<P>, P, OverflowListBaseState> {
     #previousY = undefined;
     #notifiedOverflow: Array<Record<string, any>> = [];
     #itemSizes = new Map<ItemKey, number>();
+    #committedKeys: ItemKey[] | null = null;
+
+    #updateView(partial: Partial<OverflowListView>) {
+        this.adapter.updateView((view) => {
+            const next = { ...view, ...partial };
+            return partial.visible ? withLayout(next, this.getProp('collapseFrom') === Boundary.START, false) : next;
+        });
+    }
+
+    // always a new view: the re-render it causes is what runs handleCommit and measures again
+    #markCalculating() {
+        this.adapter.updateView((view) => ({ ...view, overflowStatus: 'calculating' }));
+    }
 
     #syncScrollOverflowCache(nextVisibleState: Map<string, boolean>) {
         if (!this.isScrollMode()) {
@@ -82,7 +129,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         const { items, itemKey } = this.getProps();
         const scrollOverflow = computeScrollOverflow(items, itemKey, nextVisibleState);
         if (scrollOverflow) {
-            this.adapter.updateView({ scrollOverflow });
+            this.#updateView({ scrollOverflow });
         }
     }
 
@@ -92,6 +139,13 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
             this.#notifiedOverflow = overflow;
             this.adapter.notifyOverflow(overflow);
         }
+    }
+
+    #handleKeysChange(keys: ItemKey[]) {
+        // items that keep their key are not reported again, so only the widths of removed keys go
+        const keySet = new Set(keys);
+        this.#itemSizes.forEach((_, key) => keySet.has(key) || this.#itemSizes.delete(key));
+        this.setState({ visibleState: new Map() });
     }
 
     protected isScrollMode() {
@@ -139,21 +193,25 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         return computeScrollOverflow(items, itemKey, visibleState) ?? scrollOverflow;
     }
 
+    static createView(props: OverflowListBaseProps): OverflowListView {
+        return OverflowListFoundation.resetView(props, emptyView, 0);
+    }
+
     /**
-     * Where the visible items sit in `items`, the inverse of how resetView and handleCollapseOverflow order them: a
-     * start-collapsed list is reversed while measuring and a suffix once settled. Recording the layout with the view
-     * lets a later collapseFrom change be noticed and reset; searching items by object would collapse a twice-listed
-     * object to one position.
+     * Called during render, or right before the DOM update: returns `view` itself, or a reset view when items, style,
+     * item keys or collapseFrom changed. A host stores a returned new view in the same commit as the props.
      */
-    static getVisibleLayout({ items, visible }: Pick<OverflowListView, 'items' | 'visible'>, fromStart: boolean, reversed: boolean): VisibleLayout {
-        if (reversed) {
-            return { first: items.length - 1, step: -1, fromStart };
+    static syncView(props: OverflowListBaseProps, view: OverflowListView, containerWidth: number): OverflowListView {
+        const keys = OverflowListFoundation.getItemKeys(props.items, props.itemKey);
+        if (isEqual(view.items, props.items) && isEqual(view.style, props.style) && isEqual(view.keys, keys) && view.fromStart === (props.collapseFrom === Boundary.START)) {
+            return view;
         }
-        return { first: fromStart ? items.length - visible.length : 0, step: 1, fromStart };
+        return OverflowListFoundation.resetView(props, view, containerWidth);
     }
 
     static resetView({ items, style, renderMode, collapseFrom, itemKey }: OverflowListBaseProps, view: OverflowListView, containerWidth: number): OverflowListView {
         const keys = OverflowListFoundation.getItemKeys(items, itemKey);
+        const fromStart = collapseFrom === Boundary.START;
         const next: OverflowListView = { ...view, items, style, keys, overflowStatus: 'calculating' };
         if (renderMode === RenderMode.SCROLL) {
             // align the cache to the new items by key so removed items never show in the overflow
@@ -162,28 +220,58 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
                 const align = (list: Array<Record<string, any>>) => list.map((item, idx) => nextItems.get(OverflowListFoundation.getItemKey(itemKey, item, idx))).filter(Boolean);
                 next.scrollOverflow = [align(view.scrollOverflow[0]), align(view.scrollOverflow[1])];
             }
-            return { ...next, visible: items, overflow: [], maxCount: 0 };
+            return withLayout({ ...next, visible: items, overflow: [], maxCount: 0 }, fromStart, false);
         }
         let maxCount = items.length;
         if (Math.floor(containerWidth / numbers.MINIMUM_HTML_ELEMENT_WIDTH) !== 0) {
             maxCount = Math.min(maxCount, Math.floor(containerWidth / numbers.MINIMUM_HTML_ELEMENT_WIDTH));
         }
-        const ordered = collapseFrom === Boundary.START ? items.toReversed() : items;
-        return { ...next, visible: ordered.slice(0, maxCount), overflow: ordered.slice(maxCount), maxCount };
+        const ordered = fromStart ? items.toReversed() : items;
+        return withLayout({ ...next, visible: ordered.slice(0, maxCount), overflow: ordered.slice(maxCount), maxCount }, fromStart, fromStart);
     }
 
-    /** Returns whether the list must be measured again: an item changed width, or every visible item has reported */
-    recordItemSize = (key: ItemKey, width: number, maxCount: number) => {
+    static getVisibleItems(view: OverflowListView, itemKey: ItemKeyOption): OverflowListEntry[] {
+        return view.visible.map((item, i) => {
+            const index = view.first + view.step * i;
+            return { item, index, key: OverflowListFoundation.getItemKey(itemKey, item, index) };
+        });
+    }
+
+    /** Collapse mode hides the list until its first measurement settles */
+    static isHidden(view: OverflowListView) {
+        return view.overflowStatus === 'calculating' && view.pivot < 0;
+    }
+
+    /** `maxCount` is the rendered view's: once every visible item has reported, the list is measured */
+    handleItemResize = (key: ItemKey, width: number, maxCount: number) => {
         const previous = this.#itemSizes.get(key);
         this.#itemSizes.set(key, width);
-        return Boolean(previous && previous !== width) || this.#itemSizes.size === maxCount;
+        if ((previous && previous !== width) || this.#itemSizes.size === maxCount) {
+            this.#markCalculating();
+        }
     };
 
-    handleKeysChange = (keys: ItemKey[]) => {
-        // items that keep their key are not reported again, so only the widths of removed keys go
-        const keySet = new Set(keys);
-        this.#itemSizes.forEach((_, key) => keySet.has(key) || this.#itemSizes.delete(key));
-        this.setState({ visibleState: new Map() });
+    handleContainerResize = (width: number) => {
+        this.setState({ containerWidth: width });
+        this.#markCalculating();
+    };
+
+    handleOverflowResize = (width: number) => {
+        this.setState({ overflowWidth: width });
+        this.#markCalculating();
+    };
+
+    /** Runs after every commit with the committed view; React runs it in the layout phase, before the hidden list is painted */
+    handleCommit = ({ overflowStatus }: OverflowListView) => {
+        const { items, itemKey } = this.getProps();
+        const keys = OverflowListFoundation.getItemKeys(items, itemKey);
+        if (this.#committedKeys && !isEqual(this.#committedKeys, keys)) {
+            this.#handleKeysChange(keys);
+        }
+        this.#committedKeys = keys;
+        if (!this.isScrollMode() && overflowStatus === 'calculating') {
+            this.handleCollapseOverflow();
+        }
     };
 
     handleIntersect = (entries: Array<IntersectionObserverEntry>) => {
@@ -219,7 +307,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         let overflowed = false;
         // nothing is measured, so the loop below cannot settle the list and it would stay hidden
         if (items.length === 0) {
-            this.adapter.updateView({ overflowStatus: 'normal', pivot: -1, visible: items, overflow: [] });
+            this.#updateView({ overflowStatus: 'normal', pivot: -1, visible: items, overflow: [] });
             this.#notifyOverflow([]);
             return;
         }
@@ -239,7 +327,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
                 break;
             }
             if (isLast) {
-                this.adapter.updateView({
+                this.#updateView({
                     overflowStatus: 'normal',
                     pivot: items.length - 1,
                     visible: items,
@@ -255,7 +343,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
             const isCollapseFromStart = collapseFrom === Boundary.START;
             const visible = isCollapseFromStart ? this.getReversedItems().slice(0, pivot).toReversed() : items.slice(0, pivot);
             const overflow = isCollapseFromStart ? this.getReversedItems().slice(pivot).toReversed() : items.slice(pivot);
-            this.adapter.updateView({
+            this.#updateView({
                 overflowStatus: 'overflowed',
                 pivot: pivot,
                 visible,

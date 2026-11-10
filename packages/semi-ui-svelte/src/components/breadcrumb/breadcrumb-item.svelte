@@ -31,7 +31,6 @@
         },
         () => ({}),
         () => ({
-            notifyClick: () => undefined,
             // the foundation types the info loosely; this item always reports its route
             notifyParent: (item, event) => context.onClick(item as BreadcrumbRoute, event),
         })

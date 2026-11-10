@@ -25,7 +25,7 @@ export interface ToastProps extends ConfigProps {
     icon?: any;
     direction?: Directions;
     close?: (id: string) => void;
-    // true stacks once more than numbers.stackThreshold toasts are shown; a number sets that threshold
+    // true stacks once more than three toasts are shown; a number sets that threshold
     stack?: boolean | number;
 }
 

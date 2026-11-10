@@ -2,16 +2,14 @@
 // JSX because withField is a component factory: the wrapped component is a runtime argument, which a template cannot name.
 import { type Component, type IntrinsicElementAttributes, type PropType, type Slot, camelize, capitalize, createTextVNode, createVNode, defineComponent, mergeProps, shallowRef, toHandlerKey, watch } from 'vue';
 import { cssClasses, type FieldPropKey } from '@fibrae/semi-foundation/components/form/constants';
-import { errorMessages } from '@fibrae/semi-foundation/components/form/errors';
-import { getFieldAriaProps } from '@fibrae/semi-foundation/components/form/utils';
+import { getFieldAriaProps, resolveFieldView } from '@fibrae/semi-foundation/components/form/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { handOn } from '../../utils/hand-on';
 import { hasSlotContent } from '../../utils/slot-nodes';
 import type { ValidateStatus } from '../input/interface';
 import FieldLayout from './field-layout.vue';
-import type { CommonFieldProps, FieldComponent, FieldHandle, WithFieldOptions } from './interface';
+import type { CommonFieldProps, FieldComponent, FieldHandle, FieldLabel, WithFieldOptions } from './interface';
 import useField from './use-field';
-import { isLabelConfig } from './utils';
 
 const prefix = cssClasses.PREFIX;
 const shellSlots = new Set(['fieldLabel', 'labelExtra', 'helpText', 'extraText', 'error']);
@@ -128,9 +126,30 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                 return () => null;
             }
 
+            const a11yId = () => props.id || state.generatedId;
+
+            const fieldView = (hasPrefix: boolean, hasTrigger: boolean) => {
+                const merged = state.merged.value;
+                return resolveFieldView<FieldLabel>({
+                    id: a11yId(),
+                    field: props.field,
+                    label: props.label,
+                    noLabel: props.noLabel,
+                    validateStatus: props.validateStatus,
+                    status: state.snapshot.value.status,
+                    labelPosition: merged.labelPosition,
+                    labelCol: merged.labelCol,
+                    wrapperCol: merged.wrapperCol,
+                    formHasCols: merged.formHasCols,
+                    insetSupported: supportsInset,
+                    hasPrefix,
+                    hasTrigger,
+                });
+            };
+
             watch(
-                () => state.merged.value.labelPosition === 'inset' && !props.noLabel,
-                (inset) => warning(inset && !supportsInset, `[Semi Form]: ${name} has no inset label, so Field "${props.field}" is laid out with labelPosition 'top'`),
+                () => fieldView(false, false).warnInsetFallback,
+                (warn) => warning(warn, `[Semi Form]: ${name} has no inset label, so Field "${props.field}" is laid out with labelPosition 'top'`),
                 { immediate: true }
             );
 
@@ -138,20 +157,9 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                 const { value, error, status } = state.snapshot.value;
                 const merged = state.merged.value;
                 const field = props.field ?? '';
-                const a11yId = props.id || state.generatedId;
-                const labelId = `${a11yId}-label`;
-                const helpTextId = `${a11yId}-helpText`;
-                const extraTextId = `${a11yId}-extraText`;
-                const errorMessageId = `${a11yId}-errormessage`;
+                const { ids, labelConfig, labelText, labelPosition, insetShown, shownStatus, wrapInRow } = fieldView(hasSlotContent(slots.prefix), Boolean(slots.trigger));
                 // the foundation never sets 'validating', the one status a control does not accept
-                const blockStatus = (props.validateStatus || status) as ValidateStatus | undefined;
-                const labelConfig = isLabelConfig(props.label) ? props.label : undefined;
-                const labelText = (isLabelConfig(props.label) ? props.label.text : props.label) || field;
-                const insetPosition = merged.labelPosition === 'inset';
-                // a prefix or a custom trigger takes the inset label's place, so the label goes on top
-                const insetFallback = insetPosition && (!supportsInset || hasSlotContent(slots.prefix) || Boolean(slots.trigger));
-                const insetShown = insetPosition && !insetFallback && !props.noLabel;
-                const labelPosition = insetFallback ? 'top' : merged.labelPosition;
+                const blockStatus = shownStatus as ValidateStatus | undefined;
                 const ownLayout = !state.inGroup && !props.pure;
                 const shellLabel = ownLayout && !props.noLabel && labelPosition !== 'inset';
                 const rulesRequired = state.rulesRequired.value;
@@ -162,7 +170,7 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                     onBlur: state.handleBlur,
                     ...getFieldAriaProps({
                         own: attrs,
-                        ids: { label: labelId, helpText: helpTextId, extraText: extraTextId, errorMessage: errorMessageId },
+                        ids,
                         rulesRequired,
                         label: labelConfig,
                         labelPosition,
@@ -173,7 +181,6 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                         hasHelpText: hasSlotContent(slots.helpText),
                         hasExtraText: hasSlotContent(slots.extraText),
                         error,
-                        errorHasContent: errorMessages(error).length > 0,
                         status,
                         shownStatus: blockStatus,
                     }),
@@ -181,7 +188,7 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                 };
                 if (props.name) injected.name = props.name;
                 if (supportsStatus) injected.validateStatus = blockStatus;
-                if (insetShown) injected.insetLabelId = labelId;
+                if (insetShown) injected.insetLabelId = ids.label;
 
                 const pureClass = props.pure && [`${prefix}-field-pure`, { [`${prefix}-field-${props.name}`]: props.name }, props.fieldClassName];
                 const controlSlots = {
@@ -190,7 +197,7 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                         insetLabel: () => slots.fieldLabel?.() ?? [createTextVNode(String(labelText))],
                     }),
                 };
-                const renderControl = () => createVNode(type, mergeProps({ id: a11yId }, controlAttrs(), { disabled: attrs.disabled ?? merged.disabled }, pureClass ? { class: pureClass } : {}, injected), controlSlots);
+                const renderControl = () => createVNode(type, mergeProps({ id: a11yId() }, controlAttrs(), { disabled: attrs.disabled ?? merged.disabled }, pureClass ? { class: pureClass } : {}, injected), controlSlots);
                 if (!ownLayout) {
                     return renderControl();
                 }
@@ -202,8 +209,8 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                           align: merged.labelAlign,
                           width: merged.labelWidth,
                           ...labelConfig,
-                          id: labelId,
-                          name: a11yId,
+                          id: ids.label,
+                          name: a11yId(),
                           text: labelText,
                       }
                     : undefined;
@@ -211,20 +218,20 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                 return (
                     <FieldLayout
                         error={error}
-                        errorMessageId={errorMessageId}
-                        extraTextId={extraTextId}
+                        errorMessageId={ids.errorMessage}
+                        extraTextId={ids.extraText}
                         extraTextPosition={merged.extraTextPosition}
                         field={field}
                         fieldClassName={props.fieldClassName}
                         fieldStyle={props.fieldStyle}
-                        helpTextId={helpTextId}
+                        helpTextId={ids.helpText}
                         label={label}
                         labelAlign={merged.labelAlign}
                         labelCol={merged.labelCol}
                         labelPosition={labelPosition}
                         name={props.name}
                         noErrorMessage={props.noErrorMessage}
-                        row={Boolean(merged.labelCol && merged.wrapperCol) && !merged.formHasCols}
+                        row={wrapInRow}
                         showValidateIcon={merged.showValidateIcon}
                         validateStatus={blockStatus}
                         wrapperCol={merged.wrapperCol}

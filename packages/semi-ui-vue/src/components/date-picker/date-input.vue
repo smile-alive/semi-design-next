@@ -54,9 +54,7 @@
         props as unknown as Readonly<Partial<DateInputFoundationProps>>,
         () => ({}),
         () => ({
-            notifyChange: (value, event) => emit('change', value, event),
             notifyEnter: (value) => emit('enterPress', value),
-            notifyClear: (event) => emit('clear', event),
             notifyRangeInputClear: (event) => emit('rangeClear', event),
             notifyRangeInputFocus: (event, rangeType) => emit('focus', event, rangeType),
             notifyTabPress: (event) => emit('rangeEndTabPress', event),
@@ -108,11 +106,9 @@
 
     const rangeValue = (start: string, end: string) => `${start}${props.rangeSeparator}${end}`;
 
-    const changeSingle = (value: string, event: Event) => foundation.handleChange(value, event);
+    const changeRangeStart = (value: string, event: Event) => emit('change', rangeValue(value, rangeParts.value.end), event);
 
-    const changeRangeStart = (value: string, event: Event) => foundation.handleChange(rangeValue(value, rangeParts.value.end), event);
-
-    const changeRangeEnd = (value: string, event: Event) => foundation.handleChange(rangeValue(rangeParts.value.start, value), event);
+    const changeRangeEnd = (value: string, event: Event) => emit('change', rangeValue(rangeParts.value.start, value), event);
 
     // The field's label names the group around the two inputs, not each input
     const rangeAttrs = (attrs: Record<string, unknown>) => Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'aria-label' && key !== 'aria-labelledby'));
@@ -120,12 +116,6 @@
     const hasLabel = () => Boolean(slotKind(slots.prefix) || slotKind(slots.insetLabel));
 
     const focusRange = (event: FocusEvent | MouseEvent, rangeType: RangeInput) => foundation.handleRangeInputFocus(event, rangeType);
-
-    const focusStartOnClick = (event: MouseEvent) => {
-        if (!props.disabled && !props.rangeInputFocus) {
-            focusRange(event, 'rangeStart');
-        }
-    };
 
     const changeInset = (options: InsetInputChangeFoundationProps) => foundation.handleInsetInputChange(options);
 
@@ -154,13 +144,13 @@
     </div>
     <template v-else-if="isRange">
         <!-- The pointer target of the label only moves the focus to the start input. The id is what a Form inset label's aria-labelledby points at. -->
-        <div v-if="hasLabel()" :id="$slots.prefix ? undefined : props.insetLabelId" :class="`${prefix}-range-input-prefix`" x-semi-prop="prefix,insetLabel" @click="focusStartOnClick">
+        <div v-if="hasLabel()" :id="$slots.prefix ? undefined : props.insetLabelId" :class="`${prefix}-range-input-prefix`" x-semi-prop="prefix,insetLabel" @click="foundation.handleRangeInputAffixClick">
             <slot v-if="$slots.prefix" name="prefix" />
             <slot v-else name="insetLabel" />
         </div>
         <div
             :class="[inputClass, `${prefix}-range-input-wrapper-start`, `${prefix}-range-input-wrapper`, { [`${prefix}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeStart' && !props.disabled, [`${prefix}-range-input-wrapper-start-with-prefix`]: hasLabel(), [`${prefix}-borderless`]: props.borderless }]"
-            @click="!props.disabled && focusRange($event, 'rangeStart')"
+            @click="focusRange($event, 'rangeStart')"
         >
             <Input
                 v-bind="rangeAttrs($attrs)"
@@ -179,10 +169,10 @@
                 @focus="focusRange($event, 'rangeStart')"
             />
         </div>
-        <span :class="[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: Boolean(rangeParts.start || rangeParts.end) && !props.disabled }]" @click="!props.disabled && focusRange($event, 'rangeStart')">
+        <span :class="[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: Boolean(rangeParts.start || rangeParts.end) && !props.disabled }]" @click="focusRange($event, 'rangeStart')">
             <slot name="rangeSeparator">{{ props.rangeSeparator }}</slot>
         </span>
-        <div :class="[inputClass, `${prefix}-range-input-wrapper-end`, `${prefix}-range-input-wrapper`, { [`${prefix}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeEnd' && !props.disabled, [`${prefix}-borderless`]: props.borderless }]" @click="!props.disabled && focusRange($event, 'rangeEnd')">
+        <div :class="[inputClass, `${prefix}-range-input-wrapper-end`, `${prefix}-range-input-wrapper`, { [`${prefix}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeEnd' && !props.disabled, [`${prefix}-borderless`]: props.borderless }]" @click="focusRange($event, 'rangeEnd')">
             <Input
                 v-bind="rangeAttrs($attrs)"
                 ref="rangeEndInput"
@@ -205,7 +195,7 @@
                 <IconClear />
             </slot>
         </button>
-        <div :class="`${prefix}-range-input-suffix`" @click="focusStartOnClick">
+        <div :class="`${prefix}-range-input-suffix`" @click="foundation.handleRangeInputAffixClick">
             <IconCalendarClock v-if="props.type.includes('Time')" />
             <IconCalendar v-else />
         </div>
@@ -228,8 +218,8 @@
         :size="props.size"
         :style="props.inputStyle"
         :validateStatus="props.validateStatus"
-        @change="changeSingle"
-        @clear="foundation.handleInputClear"
+        @change="(value, event) => emit('change', value, event)"
+        @clear="emit('clear', $event)"
         @enterPress="foundation.handleInputComplete"
         @focus="emit('focus', $event)"
     >

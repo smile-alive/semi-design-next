@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { untrack } from 'svelte';
+    import { onMount, untrack } from 'svelte';
+    import { isAlertType } from '@fibrae/semi-foundation/base/list-store';
     import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/components/toast/constants';
     import ToastFoundation, { type ToastAdapter, type ToastState, type ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
-    import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../../base/use-default-props.js';
@@ -90,10 +90,6 @@
     const dirAttr = $derived(dir ? { dir } : {});
     const toastStyle = $derived([rest.style, `transform: ${getStackLayerTransform(positionInList)}`].filter(Boolean).join('; '));
 
-    const announce = () => {
-        if (!isAlert && id !== undefined) list?.announce(id, () => (toastEl?.textContent ?? '').replace(/\s+/g, ' ').trim());
-    };
-
     const handleAnimationEnd = (event: AnimationEvent) => {
         if (event.target !== event.currentTarget) return;
         if (!leaving) {
@@ -104,11 +100,13 @@
         }
     };
 
-    useNoticeClose(foundation, list, announce);
+    useNoticeClose(foundation, list);
 
     $effect.pre(() => {
         if (leaving) entered = false;
     });
+
+    onMount(() => (list && id !== undefined && toastEl ? list.register(id, toastEl) : undefined));
 
     // The phase class is on the element once this runs. A theme or user CSS that cancels the animation fires no
     // animationend, so a run without an animation ends here, or a leaving toast would never be removed.
@@ -122,18 +120,6 @@
             entered = true;
         }
     });
-
-    export function restartCloseTimer() {
-        foundation.restartCloseTimer();
-    }
-
-    export function pauseCloseTimer() {
-        foundation.pauseCloseTimer();
-    }
-
-    export function resumeCloseTimer() {
-        foundation.resumeCloseTimer();
-    }
 </script>
 
 <div bind:this={outer} class={[stack && `${prefix}-zero-height-wrapper`, stack && stackExpanded && `${prefix}-zero-height-wrapper-expanded`, !motion && `${prefix}-no-motion`, phase && `${prefix}-animation-${phase}`]} onanimationend={handleAnimationEnd}>

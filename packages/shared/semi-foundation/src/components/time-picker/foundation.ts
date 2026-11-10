@@ -3,7 +3,8 @@ import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { utcToZonedTime, zonedTimeToUtc } from '../../utils/date-fns-extra';
 import isValidTimeZone from '../../utils/is-valid-time-zone';
-import { strings, type PanelType } from './constants';
+import ComboboxFoundation from './combox-foundation';
+import { cssClasses, strings, type PanelType } from './constants';
 import { formatToString, parseToDate, hourIsDisabled, minuteIsDisabled, secondIsDisabled, transformToArray, isTimeFormatLike } from './utils';
 
 export type Position = 'top' | 'topLeft' | 'topRight' | 'left' | 'leftTop' | 'leftBottom' | 'right' | 'rightTop' | 'rightBottom' | 'bottom' | 'bottomLeft' | 'bottomRight' | 'leftTopOver' | 'rightTopOver';
@@ -18,7 +19,9 @@ export interface TimePickerAdapter<P extends TimePickerBaseProps = TimePickerBas
     /** focus is in the panel and came from the keyboard (`:focus-visible`), not from a click */
     isKeyboardFocusInPanel: () => boolean;
     /** focuses the input, or the focus target of a custom trigger */
-    setTriggerFocus: () => void;
+    setTriggerFocus: (options?: FocusOptions) => void;
+    /** blurs the focused element of the trigger or the panel */
+    blurFocusedElement: () => void;
 }
 
 export interface TimePickerBaseProps {
@@ -223,6 +226,22 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         };
     }
 
+    /** The class names of the panel: it is narrow while a time column is missing, and its width follows the column count */
+    static getPanelClassNames(props: { prefixCls: string; format?: string; use12Hours?: boolean; type?: string }) {
+        const { prefixCls, use12Hours, type } = props;
+        const { showHour, showMinute, showSecond } = ComboboxFoundation.getColumns(TimePickerFoundation.getValidFormat(props));
+        const columnCount = [showHour, showMinute, showSecond, use12Hours].filter(Boolean).length;
+        const classNames = [`${prefixCls}-panel`];
+        if (!(showHour && showMinute && showSecond) && !use12Hours) {
+            classNames.push(`${prefixCls}-panel-narrow`);
+        }
+        if (type === strings.TYPE_TIME_RANGE_PICKER) {
+            classNames.push(cssClasses.RANGE_PICKER);
+        }
+        classNames.push(`${prefixCls}-panel-column-${columnCount}`);
+        return classNames;
+    }
+
     static getPosition(props: Record<string, any>, direction?: string): Position {
         const type = props.type || strings.DEFAULT_TYPE;
         const rtlDirection = direction === 'rtl' ? 'bottomRight' : '';
@@ -289,6 +308,14 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
                 this.#notifyChange(value, inputValue);
             }
         }
+    };
+
+    focus = (options?: FocusOptions) => {
+        this.adapter.setTriggerFocus(options);
+    };
+
+    blur = () => {
+        this.adapter.blurFocusedElement();
     };
 
     handleFocus = (e: E) => {

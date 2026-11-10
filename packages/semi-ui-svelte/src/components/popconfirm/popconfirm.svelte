@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount, untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
     import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseProps, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
     import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
@@ -128,10 +127,8 @@
             },
             getFooter: () => footer,
             setInitialFocus: (button) => tooltipFocus?.(button),
-            focusPrevFocusElement: () => {
-                // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(popover?.getPopup(), false)) popover?.focusTrigger();
-            },
+            getPopup: () => popover?.getPopup(),
+            focusTrigger: () => popover?.focusTrigger(),
         })
     );
 

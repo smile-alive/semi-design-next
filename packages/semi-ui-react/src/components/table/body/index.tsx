@@ -5,7 +5,7 @@ import { numbers } from '@fibrae/semi-foundation/components/table/constants';
 import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
 import { type BodyRow, type FlattenData, type GroupFlattenData, arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, genExpandedRowKey, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize } from '@fibrae/semi-foundation/components/table/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import type { BaseProps } from '../../../base/base-component';
+import type { BaseProps } from '../../../base/base-props';
 import { createContext } from '../../../base/create-context';
 import useMergedRef from '../../../hooks/use-merged-ref';
 import useResizeObserver from '../../../hooks/use-resize-observer';

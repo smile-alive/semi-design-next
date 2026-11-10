@@ -81,20 +81,21 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
         </ul>
     );
 
-    const renderItems = (keyPrefix: string) =>
-        list.map((item, index) => {
+    const renderItems = () =>
+        ItemFoundation.getRows({ list, mode }, state).map(({ key, index, copy }) => {
+            const item = list[index];
             const selected = selectedIndex === index;
             const text = ItemFoundation.getItemText(item, selected, transform);
             return (
                 <li
-                    key={`${keyPrefix}${index}`}
-                    id={keyPrefix ? undefined : optionId(index)}
+                    key={key}
+                    id={copy ? undefined : optionId(index)}
                     className={clsx({
                         [`${prefix}-item-sel`]: selected && !isWheel,
                         [`${prefix}-item-disabled`]: Boolean(item.disabled),
                     })}
                     aria-disabled={item.disabled}
-                    aria-hidden={keyPrefix ? true : undefined}
+                    aria-hidden={copy ? true : undefined}
                     aria-selected={selected}
                     role="option"
                     onClick={isWheel || item.disabled ? undefined : () => foundation.selectIndex(index)}
@@ -109,12 +110,10 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
     if (!isWheel) {
         return (
             <div {...rest} ref={wrapperRef} className={clsx(`${prefix}-item`, className)} style={style}>
-                {renderListbox(renderItems(''))}
+                {renderListbox(renderItems())}
             </div>
         );
     }
-
-    const copies = (count: number, name: string) => Array.from({ length: count }, (_, i) => renderItems(`${name}_${i}_`));
 
     return (
         <div {...rest} className={clsx(`${prefix}-item-wheel`, className)} style={style}>
@@ -122,17 +121,7 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
             <div ref={selectorRef} className={`${prefix}-selector`} />
             <div className={`${prefix}-shade ${prefix}-shade-post`} />
             <div ref={wrapperRef} className={clsx(`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !cycled })} onScroll={foundation.handleScroll}>
-                {renderListbox(
-                    <>
-                        {copies(state.prependCount, 'pre').toReversed().flat()}
-                        {renderItems('')}
-                        {copies(state.appendCount, 'app').flat()}
-                    </>,
-                    (e) => {
-                        e.nativeEvent.stopImmediatePropagation();
-                        foundation.handleWheelClick(e.nativeEvent);
-                    }
-                )}
+                {renderListbox(renderItems(), (e) => foundation.handleWheelClick(e.nativeEvent))}
             </div>
         </div>
     );

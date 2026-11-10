@@ -1,4 +1,3 @@
-import { numbers } from '@fibrae/semi-foundation/components/table/constants';
 import TableFoundation, { type ColumnFlags as BaseColumnFlags } from '@fibrae/semi-foundation/components/table/foundation';
 import { assignColumnKeys, getDefaultComponents, getExpandColumn, getSelectionColumn, placeInnerColumns } from '@fibrae/semi-foundation/components/table/utils';
 import type { MergedTableComponents } from './context.js';
@@ -28,12 +27,6 @@ export function selectionColumn(rowSelection: TableProps['rowSelection'], prefix
 }
 
 export const copyColumns = (list: ColumnProps[]): ColumnProps[] => list.map((column) => (Array.isArray(column.children) && column.children.length ? { ...column, children: copyColumns(column.children) } : { ...column }));
-
-/** The placeholders are the table's own columns, so the drag class lands next to their class rather than replacing it */
-export function addWidthPlaceholders(columns: ColumnProps[], expand: ColumnProps | null, selection: ColumnProps | null) {
-    const withWidth = (column: ColumnProps | null, width: number) => column && { ...column, width: column.width ?? width };
-    return placeInnerColumns(columns, [withWidth(expand, numbers.DEFAULT_WIDTH_COLUMN_EXPAND), withWidth(selection, numbers.DEFAULT_WIDTH_COLUMN_SELECTION)]);
-}
 
 export function buildColumns(columns: ColumnProps[], innerColumns: (ColumnProps | null)[]) {
     return assignColumnKeys(placeInnerColumns(copyColumns(columns), innerColumns)) as ColumnProps[];

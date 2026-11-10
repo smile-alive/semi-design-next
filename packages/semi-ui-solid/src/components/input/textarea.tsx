@@ -189,7 +189,6 @@ export default function TextArea(rawProps: TextAreaProps) {
             notifyCompositionEnd: (e) => callHandler(props.onCompositionEnd, e),
             notifyCompositionUpdate: (e) => callHandler(props.onCompositionUpdate, e),
             focusInput: focusTextarea,
-            isEventTarget: (e) => e.target === e.currentTarget,
             getTextarea: () => textarea() ?? null,
         })
     );
@@ -228,18 +227,7 @@ export default function TextArea(rawProps: TextAreaProps) {
 
     const observesSize = () => Boolean(local.autosize) || (local.resize !== undefined && local.resize !== 'none');
 
-    const textareaStyle = (): JSX.CSSProperties | undefined => {
-        if (local.autosize) {
-            const bounds = typeof local.autosize === 'object' ? local.autosize : {};
-            return {
-                ...local.textareaStyle,
-                resize: 'none',
-                [`--${prefixCls}-textarea-min-rows`]: String(bounds.minRows ?? props.rows),
-                [`--${prefixCls}-textarea-max-rows`]: bounds.maxRows === undefined ? undefined : String(bounds.maxRows),
-            };
-        }
-        return local.resize === undefined ? local.textareaStyle : { ...local.textareaStyle, resize: local.resize };
-    };
+    const textareaStyle = (): JSX.CSSProperties => ({ ...local.textareaStyle, ...TextAreaFoundation.getSizeStyle({ autosize: local.autosize, resize: local.resize, rows: props.rows }) });
 
     const lineNumberStyle = (): JSX.CSSProperties => {
         const { height } = lineLayout();
@@ -254,14 +242,6 @@ export default function TextArea(rawProps: TextAreaProps) {
 
     // blurring mid-composition may truncate the value to maxLength, which a controlled parent can reject
     const handleFocusOut = (e: FocusEvent & { currentTarget: HTMLDivElement }) => controlled.handleFocusOut(e, controlled.syncValue);
-
-    const handleClearClick = (e: MouseEvent) => {
-        foundation.handleClear(e);
-        // only keyboard activation (detail 0) moves focus: the focused button is about to be removed
-        if (e.detail === 0) {
-            focusTextarea();
-        }
-    };
 
     const handleScroll = (e: Event & { currentTarget: HTMLTextAreaElement }) => {
         if (!local.showLineNumber) {
@@ -305,8 +285,7 @@ export default function TextArea(rawProps: TextAreaProps) {
             aria-describedby={joinIds(rest['aria-describedby'], hasCounter() && counterId)}
             aria-invalid={props.validateStatus === 'error' || exceeds() ? 'true' : rest['aria-invalid']}
             disabled={local.disabled}
-            // the native maxLength counts UTF-16 units, so getValueLength enforces the limit instead
-            maxLength={typeof local.getValueLength === 'function' ? undefined : local.maxLength}
+            maxLength={TextAreaFoundation.getNativeMaxLength(local)}
             minLength={TextAreaFoundation.getNativeMinLength(local, value())}
             placeholder={local.placeholder || undefined}
             // The content carries the text into the server HTML. What the browser shows is the property, written in
@@ -334,7 +313,7 @@ export default function TextArea(rawProps: TextAreaProps) {
     });
 
     // also tracks the node, which the line number panel remounts
-    createEffect(on([value, textarea, () => local.autosize], foundation.fitAutosize));
+    createEffect(on([value, textarea], foundation.fitAutosize));
 
     onMount(() => {
         if (local.disabled) {
@@ -390,7 +369,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                     class={`${prefixCls}-clearbtn`}
                     aria-label={locale().locale.clear}
                     // a native listener, so the foundation's stopPropagation keeps the click from outer listeners too
-                    on:click={handleClearClick}
+                    on:click={foundation.handleClearClick}
                     // keeps focus in the textarea, so clearing fires no blur
                     onMouseDown={(e) => e.preventDefault()}
                 >

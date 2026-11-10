@@ -4,7 +4,6 @@ import { omitBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
 import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import { isDev } from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/components/markdown-render/markdown-render.scss';
 import type { ElementProps } from '../../base/element-props';
 import useDefaultProps from '../../base/use-default-props';
@@ -44,14 +43,7 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
         MarkdownRenderFoundation,
         props,
         (p) => MarkdownRenderFoundation.getInitialState(p, runtime),
-        () => ({
-            getRuntime: () => runtime,
-            notifyCompileError: (error) => {
-                if (isDev()) {
-                    console.error(error);
-                }
-            },
-        })
+        () => ({ getRuntime: () => runtime })
     );
 
     // an explicit undefined would replace a default, and the runtime takes it for an element type
@@ -78,7 +70,7 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
     }, []);
 
     return (
-        <div {...rest} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} class={clsx(cssClasses.PREFIX, local.class)}>
+        <div {...rest} role={namedRole(rest)} class={clsx(cssClasses.PREFIX, local.class)}>
             {/* called here, not returned: the insert would call a returned element again on every change of the list */}
             <For each={blocks()}>{(block) => renderMarkdownNode(block.node)}</For>
         </div>

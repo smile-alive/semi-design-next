@@ -29,20 +29,20 @@ describe('findAll', () => {
         expect(highlighted(chunks, source)).toEqual(['a1', 'b2']);
     });
 
-    it('相邻的对象搜索词各自保留 className 与 style，重叠的才合并', () => {
+    it('相邻的对象搜索词各自保留 class 与 style，重叠的才合并', () => {
         const words: ComplexSearchWord[] = [
-            { text: 'ab', className: 'red', style: { color: 'red' } },
-            { text: 'cd', className: 'blue', style: { color: 'blue' } },
+            { text: 'ab', class: 'red', style: { color: 'red' } },
+            { text: 'cd', class: 'blue', style: { color: 'blue' } },
         ];
         const adjacent = findAll({ sourceString: 'abcd', searchWords: words }).filter((chunk) => chunk.highlight);
         expect(adjacent).toEqual([
-            { start: 0, end: 2, highlight: true, className: 'red', style: { color: 'red' } },
-            { start: 2, end: 4, highlight: true, className: 'blue', style: { color: 'blue' } },
+            { start: 0, end: 2, highlight: true, class: 'red', style: { color: 'red' }, text: 'ab' },
+            { start: 2, end: 4, highlight: true, class: 'blue', style: { color: 'blue' }, text: 'cd' },
         ]);
 
         const overlapping = findAll({
             sourceString: 'abcd',
-            searchWords: [{ text: 'abc', className: 'red' }, 'bcd'],
+            searchWords: [{ text: 'abc', class: 'red' }, 'bcd'],
         }).filter((chunk) => chunk.highlight);
         expect(overlapping).toHaveLength(1);
         expect([overlapping[0].start, overlapping[0].end]).toEqual([0, 4]);
@@ -53,8 +53,12 @@ describe('findAll', () => {
         expect(highlighted(findAll({ sourceString: source, searchWords: 'Design' }), source)).toEqual(['Design']);
     });
 
-    it('类型与运行时一致：样式值可为数字，非高亮块没有 className 与 style', () => {
+    it('每个块带自己的文本，高亮与非高亮块首尾相接', () => {
+        expect(findAll({ sourceString: 'a-b', searchWords: ['-'] }).map((chunk) => chunk.text)).toEqual(['a', '-', 'b']);
+    });
+
+    it('类型与运行时一致：样式值可为数字，非高亮块没有 class 与 style', () => {
         expectTypeOf<{ text: string; style: { fontWeight: number } }>().toExtend<ComplexSearchWord>();
-        expectTypeOf<{ start: number; end: number; highlight: boolean }>().toExtend<Chunk>();
+        expectTypeOf<{ start: number; end: number; highlight: boolean; text: string }>().toExtend<Chunk>();
     });
 });

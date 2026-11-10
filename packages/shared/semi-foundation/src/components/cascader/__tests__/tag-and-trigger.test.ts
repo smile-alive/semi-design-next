@@ -34,4 +34,16 @@ describe('Cascader 触发器的选中值与标签', () => {
         expect(CascaderFoundation.isTagClosable(a, props({ disableStrictly: true }), state)).toBe(false);
         expect(CascaderFoundation.isTagClosable('missing', props(), state)).toBe(false);
     });
+
+    it('isClearable 在有搜索文字或值时为 true，禁用或不显示清除按钮时为 false', () => {
+        const empty = { inputValue: '', selectedKeys: new Set<string>(), checkedKeys: new Set<string>(), keyEntities };
+        const selected = { ...empty, selectedKeys: new Set([keyOf('a')]) };
+        expect(CascaderFoundation.isClearable(props({ showClear: true }), empty)).toBe(false);
+        expect(CascaderFoundation.isClearable(props({ showClear: true }), selected)).toBe(true);
+        expect(CascaderFoundation.isClearable(props({ showClear: true }), { ...empty, inputValue: 'x' })).toBe(true);
+        expect(CascaderFoundation.isClearable(props({ showClear: true, multiple: true }), { ...empty, checkedKeys: new Set([keyOf('a1')]) })).toBe(true);
+        expect(CascaderFoundation.isClearable(props({ showClear: true, multiple: true }), selected)).toBe(false);
+        expect(CascaderFoundation.isClearable(props({ showClear: true, disabled: true }), selected)).toBe(false);
+        expect(CascaderFoundation.isClearable(props({ showClear: false }), selected)).toBe(false);
+    });
 });

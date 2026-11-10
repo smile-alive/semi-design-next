@@ -1,6 +1,7 @@
 export { BASE_CLASS_PREFIX } from './env';
 
 export const VALIDATE_STATUS = ['default', 'error', 'warning', 'success'] as const;
+export type ValidateStatus = (typeof VALIDATE_STATUS)[number];
 
 // Every instance needs its own value, and ARIA references (aria-controls, aria-labelledby) point at these ids, so a
 // global default would make instances share an id. Components never read them from the global config.

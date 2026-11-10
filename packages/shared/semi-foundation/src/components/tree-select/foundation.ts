@@ -1,18 +1,16 @@
 import { get } from 'es-toolkit/compat';
-import type { VALIDATE_STATUS } from '../../base/constants';
+import type { ValidateStatus } from '../../base/constants';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { isInnerControlActivation, isTextEditor } from '../../utils/a11y';
 import isEnterPress from '../../utils/is-enter-press';
 import { ESC_KEY } from '../../utils/key-code';
-import type { ArrayElement, Size } from '../../utils/type';
+import type { Size } from '../../utils/type';
 import type { BasicTreeInnerData, BasicTreeProps, BasicTreeNodeData, BasicTreeNodeProps, BasicExpandedOtherProps, TreeMotionType } from '../tree/foundation';
 import { calcRelatedCheckedKeys, deriveTreeState, getClearedSelection, getMultipleChange, getMultipleSelectResult, getNodeData, getSearchState, loadTreeNode } from '../tree/shared';
 import { flattenTreeData, findAncestorKeys, normalizeKeyList, getMotionKeys, getValueOrKey } from '../tree/tree-util';
 import { strings } from './constants';
 
 export type { Size };
-
-export type ValidateStatus = ArrayElement<typeof VALIDATE_STATUS>;
 
 export type BasicRenderSelectedItemInMultiple = (
     treeNode: BasicTreeNodeData,
@@ -160,7 +158,7 @@ export interface TreeSelectAdapter<P extends BasicTreeSelectProps = BasicTreeSel
     notifyClear: (e: any) => void;
     notifyChange: BasicOnChangeWithBasic;
     notifyChangeWithObject: BasicOnChangeWithObject;
-    notifyExpand: (expandedKeys: Set<string>, expandedOtherProps: BasicExpandedOtherProps) => void;
+    notifyExpand: (expandedKeys: string[], expandedOtherProps: BasicExpandedOtherProps) => void;
     notifyFocus: (e: E | FocusEvent) => void;
     notifyBlur: (e: E | MouseEvent | FocusEvent) => void;
     notifyLoad: (newLoadedKeys: Set<string>, data: BasicTreeNodeData) => void;
@@ -390,7 +388,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             this.setState(newState);
         }
 
-        this.adapter.notifyExpand(filteredExpandedKeys, {
+        this.adapter.notifyExpand([...filteredExpandedKeys], {
             expanded: !expanded,
             node: data,
         });
@@ -477,6 +475,12 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             return selectedKeys.length > 0;
         }
         return props.checkRelation === 'unRelated' ? realCheckedKeys.size > 0 : checkedKeys.size > 0;
+    }
+
+    /** Whether the clear button shows: it also shows for the trigger's search text alone */
+    static isClearable(props: Pick<BasicTreeSelectProps, 'showClear' | 'disabled' | 'multiple' | 'checkRelation' | 'searchPosition'>, state: Pick<BasicTreeSelectInnerData, 'inputValue' | 'selectedKeys' | 'checkedKeys' | 'realCheckedKeys'>) {
+        const searchText = props.searchPosition === strings.SEARCH_POSITION_TRIGGER && Boolean(state.inputValue);
+        return Boolean(props.showClear) && !props.disabled && (TreeSelectFoundation.hasValue(props, state) || searchText);
     }
 
     /** The label a node shows as the selection or as a tag: the field keyMaps.label, else treeNodeLabelProp, names */
@@ -592,16 +596,19 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     /**
      * Enter toggles the popup like a click; Down and Up open a closed one (APG combobox). Outside a text field (the
      * select-only combobox) Space toggles it like Enter, and Home and End open a closed one: the view moves to the
-     * first or the last row, which lives in the view.
+     * first or the last row, which lives in the view. Returns whether Home or End opened it, so the host moves the
+     * view there.
      */
     handleSelectionKeyDown = (e: E & Pick<KeyboardEvent, 'key' | 'preventDefault' | 'detail' | 'target' | 'currentTarget'>) => {
         const editing = isTextEditor(e.target);
-        const opensOnKey = !this.getState('isOpen') && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || (!editing && (e.key === 'Home' || e.key === 'End')));
-        if (opensOnKey || isEnterPress(e) || (e.key === ' ' && !editing)) {
+        const isClosed = !this.getState('isOpen');
+        const opensOnEdgeKey = isClosed && !editing && (e.key === 'Home' || e.key === 'End');
+        if (opensOnEdgeKey || (isClosed && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) || isEnterPress(e) || (e.key === ' ' && !editing)) {
             // Enter would also submit the form, Space scroll the page
             e.preventDefault();
             this.handleClick(e);
         }
+        return opensOnEdgeKey && this.getState('isOpen');
     };
 
     // a custom trigger may clear without an event
@@ -708,7 +715,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             this.setState(newState);
         }
 
-        this.adapter.notifyExpand(expandedKeys, {
+        this.adapter.notifyExpand([...expandedKeys], {
             expanded: !expanded,
             node: data,
         });

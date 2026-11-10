@@ -4,8 +4,9 @@ import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
 import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type AutoCompleteBaseState, type DataItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
+import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
 import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
-import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
+import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
@@ -227,12 +228,7 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
         props as AutoCompleteBaseProps,
         (view) => AutoCompleteFoundation.getInitialState(view) as AutoCompleteState,
         () => ({
-            updateScrollTop: (index) => {
-                const destNode = listbox?.children[index] as HTMLElement | undefined;
-                if (listbox && destNode) {
-                    centerInScroller(destNode, listbox);
-                }
-            },
+            getListbox: () => listbox,
             notifySearch: (inputValue) => local.onSearch?.(inputValue),
             notifyChange: (value) => local.onChange?.(value),
             notifySelect: (option) => local.onSelect?.(option as string | number | BaseDataItem),
@@ -333,7 +329,7 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
 
     const shownValue = () => (local.value !== undefined ? local.value : state().inputValue);
 
-    const optionId = (index: number) => `${listboxId}-option-${index}`;
+    const optionId = (index: number) => getOptionId(listboxId, index);
 
     const inputId = () => local.id ?? `${listboxId}-input`;
 

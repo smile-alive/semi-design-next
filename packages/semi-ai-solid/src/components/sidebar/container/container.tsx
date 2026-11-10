@@ -1,4 +1,4 @@
-import { type JSX, Show, children, createComputed, createEffect, createMemo, createSignal, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
+import { Show, children, createComputed, createEffect, createMemo, createSignal, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
@@ -65,13 +65,7 @@ export default function Container(rawProps: ContainerSolidProps) {
     // content() is created inside the Show fallback memo or Resizable's children effect, which would track the ref read;
     // a spread props signal would then remount the whole content
     const content = () => (
-        <div
-            role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']}
-            {...rest}
-            ref={untrack(() => mergeRefs(local.ref, local.containerRef, setRoot, animation.ref))}
-            class={clsx(`${prefixCls}-container`, local.class, animation.className())}
-            style={local.style}
-        >
+        <div role={namedRole(rest)} {...rest} ref={untrack(() => mergeRefs(local.ref, local.containerRef, setRoot, animation.ref))} class={clsx(`${prefixCls}-container`, local.class, animation.className())} style={local.style}>
             <Show
                 when={hasContent(customHeader())}
                 fallback={

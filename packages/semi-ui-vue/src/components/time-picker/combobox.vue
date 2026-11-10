@@ -36,11 +36,7 @@
     const second = useTemplateRef('second');
 
     const options = computed(() => ComboboxFoundation.getOptions(props));
-
-    const ampmOptions = computed(() => [
-        { value: 'AM', text: locale.value.locale.AM },
-        { value: 'PM', text: locale.value.locale.PM },
-    ]);
+    const ampmOptions = computed(() => options.value.ampm.list.map(({ value }) => ({ value, text: locale.value.locale[value] })));
 
     const columnClass = (type: ColumnType) => (props.prefixCls ? `${props.prefixCls}-list-${type}` : undefined);
 
@@ -68,7 +64,7 @@
         <template #footer>
             <slot name="panelFooter" />
         </template>
-        <ScrollItem v-if="props.use12Hours" ref="ampm" :aria-label="locale.locale.ampmList" :class="columnClass('ampm')" :list="ampmOptions" mode="normal" :selectedIndex="options.isAM ? 0 : 1" type="ampm" v-bind="props.scrollItemProps" @select="pick('ampm', $event)" />
+        <ScrollItem v-if="props.use12Hours" ref="ampm" :aria-label="locale.locale.ampmList" :class="columnClass('ampm')" :list="ampmOptions" mode="normal" :selectedIndex="options.ampm.selectedIndex" type="ampm" v-bind="props.scrollItemProps" @select="pick('ampm', $event)" />
         <ScrollItem v-if="options.showHour" ref="hour" :aria-label="locale.locale.hourList" :class="columnClass('hour')" :list="options.hour.list" mode="normal" :selectedIndex="options.hour.selectedIndex" :transform="withUnit('hour')" type="hour" v-bind="props.scrollItemProps" @select="pick('hour', $event)" />
         <ScrollItem
             v-if="options.showMinute"

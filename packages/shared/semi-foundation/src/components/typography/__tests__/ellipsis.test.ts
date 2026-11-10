@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '../ellipsis';
+import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '../ellipsis';
 
 const CHAR_WIDTH = 10;
 const LINE_HEIGHT = 20;
@@ -43,6 +43,57 @@ describe('getEllipsisOpt', () => {
     it('可展开、可收起时文案默认取传入的文案，自带文案优先', () => {
         expect(getEllipsisOpt({ expandable: true, collapsible: true }, '展开', '收起')).toMatchObject({ expandText: '展开', collapseText: '收起' });
         expect(getEllipsisOpt({ expandable: true, expandText: 'EX' }, '展开', '收起')).toMatchObject({ expandText: 'EX', collapseText: undefined });
+    });
+});
+
+describe('isOverflowed', () => {
+    const view = { expanded: false, isOverflowed: true, isTruncated: false };
+
+    it('CSS 截断看测量结果，JS 截断看文本是否被截', () => {
+        expect(isOverflowed(view, true)).toBe(true);
+        expect(isOverflowed(view, false)).toBe(false);
+    });
+
+    it('展开后不算溢出', () => {
+        expect(isOverflowed({ ...view, expanded: true }, true)).toBe(false);
+    });
+});
+
+describe('isTooltipTriggerFocusable', () => {
+    const base = { tabIndex: undefined, overflowed: true, insideWidgetItem: false };
+
+    it('自带 tabIndex 时可聚焦；否则要有可显示的提示且自身不在控件项里', () => {
+        expect(isTooltipTriggerFocusable({ ...base, tabIndex: -1, overflowed: false })).toBe(true);
+        expect(isTooltipTriggerFocusable(base)).toBe(true);
+        expect(isTooltipTriggerFocusable({ ...base, overflowed: false })).toBe(false);
+        expect(isTooltipTriggerFocusable({ ...base, insideWidgetItem: true })).toBe(false);
+        expect(isTooltipTriggerFocusable({ ...base, condition: false })).toBe(false);
+    });
+});
+
+describe('isPopoverTooltip', () => {
+    it('type 不区分大小写', () => {
+        expect(isPopoverTooltip({ type: 'popover' })).toBe(true);
+        expect(isPopoverTooltip({ type: 'Popover' })).toBe(true);
+        expect(isPopoverTooltip({ type: 'tooltip' })).toBe(false);
+        expect(isPopoverTooltip({})).toBe(false);
+        expect(isPopoverTooltip(true)).toBe(false);
+        expect(isPopoverTooltip(undefined)).toBe(false);
+    });
+});
+
+describe('getExpandButton', () => {
+    const opt = { expandable: true, collapsible: false, expandText: '展开', collapseText: '收起' };
+
+    it('未截断或没有文案时没有按钮', () => {
+        expect(getExpandButton({ isTruncated: false, expanded: false }, opt)).toBeUndefined();
+        expect(getExpandButton({ isTruncated: true, expanded: false }, { ...opt, expandText: undefined })).toBeUndefined();
+    });
+
+    it('按展开状态取文案，只有会切换状态的按钮带 aria-expanded', () => {
+        expect(getExpandButton({ isTruncated: true, expanded: false }, opt)).toEqual({ text: '展开', expanded: false });
+        expect(getExpandButton({ isTruncated: true, expanded: true }, opt)).toEqual({ text: '收起', expanded: undefined });
+        expect(getExpandButton({ isTruncated: true, expanded: true }, { ...opt, collapsible: true })).toEqual({ text: '收起', expanded: true });
     });
 });
 

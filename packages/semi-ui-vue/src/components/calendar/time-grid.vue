@@ -98,16 +98,16 @@
                         <slot name="timeDisplay" v-bind="slotProps" />
                     </template>
                 </TimeCol>
-                <!-- a new day, a new showCurrTime or a day that becomes today gets a new column, which decides again whether to show the line -->
                 <DayCol
                     v-for="day in rangeData.week"
-                    :key="`${day.date.toString()}|${props.showCurrTime}|${day.isToday}`"
+                    :key="day.date.toString()"
                     :displayValue="day.date"
                     :events="dayEvents(day)"
                     :isWeekend="props.markWeekend && day.isWeekend"
                     :minEventHeight="props.minEventHeight"
                     :scrollHeight="scrollHeight"
                     :showCurrTime="props.showCurrTime"
+                    :today="props.today"
                     @slotClick="(event, value) => emit('click', event, value)"
                 >
                     <template v-if="$slots.event" #event="slotProps">

@@ -1,11 +1,12 @@
 import type React from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useDefaultProps from '../../base/use-default-props';
-import { namedRole } from '../../utils/named-role';
+import { hasContent } from '../../utils';
 import ScrollItem from './scroll-item';
 
 export type { ScrollItemProps, ScrollItemHandle } from './scroll-item';
@@ -18,9 +19,6 @@ export interface ScrollListProps extends BaseProps, ElementProps<'div'> {
     /** Attached to the root element */
     ref?: React.Ref<HTMLDivElement>;
 }
-
-// 0 and '' are renderable content
-const hasContent = (node: React.ReactNode) => node != null && node !== false;
 
 function ScrollList(rawProps: ScrollListProps) {
     const props = useDefaultProps('ScrollList', rawProps, {});

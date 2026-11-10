@@ -1,7 +1,8 @@
+import type ListStore from '../../base/list-store';
 import StaticListWrapper from '../../base/static-list-wrapper';
-import { cssClasses, setPosition } from './constants';
+import { builtInOpts, cssClasses, positions, setPosition, strings } from './constants';
 import type { ConfigProps, ToastInstance, ToastType } from './toast-foundation';
-import ToastListStore from './toast-list-foundation';
+import { createToastListStore } from './toast-list-foundation';
 
 /** What the framework supplies to the static `Toast` */
 export interface ToastApiHost {
@@ -9,19 +10,22 @@ export interface ToastApiHost {
     assertClient: () => void;
     readGlobalDefaults: () => Partial<ToastInstance>;
     /** Renders the toast list of `store` into `wrapper` and returns what unmounts it */
-    mount: (wrapper: HTMLDivElement, store: ToastListStore) => () => void;
+    mount: (wrapper: HTMLDivElement, store: ListStore<ToastInstance>) => () => void;
 }
 
 /** The static `Toast` (and `ToastFactory.create()`): one list in one wrapper, created by the first toast. `O` is the framework's toast options. */
 export default class ToastApi<O extends object> {
     readonly #host: ToastApiHost;
-    readonly #store: ToastListStore;
+    readonly #store = createToastListStore();
     readonly #wrapper = new StaticListWrapper(cssClasses.WRAPPER, 'toast-wrapper');
+    // ToastFactory.create(config): resetConfig returns to this, not to the built-in options
+    readonly #initialConfig: ConfigProps | undefined;
 
     constructor(host: ToastApiHost, initialConfig?: ConfigProps) {
         this.#host = host;
-        // resetConfig returns to the config the factory was created with, which the caller may keep changing
-        this.#store = new ToastListStore(initialConfig && { ...initialConfig });
+        // the caller may keep changing the config object it passed
+        this.#initialConfig = initialConfig && { ...initialConfig };
+        this.resetConfig();
     }
 
     #show(opts: Omit<O, 'type'> | string, type: ToastType) {
@@ -60,10 +64,30 @@ export default class ToastApi<O extends object> {
     success = (opts: Omit<O, 'type'> | string) => this.#show(opts, 'success');
 
     config = (opts: ConfigProps) => {
-        this.#store.config(opts);
+        const defaults = this.#store.defaults;
+        for (const pos of positions) {
+            if (pos in opts) {
+                defaults[pos] = opts[pos];
+            }
+        }
+        if (typeof opts.theme === 'string' && strings.themes.includes(opts.theme)) {
+            defaults.theme = opts.theme;
+        }
+        if (typeof opts.zIndex === 'number') {
+            defaults.zIndex = opts.zIndex;
+        }
+        if (typeof opts.duration === 'number') {
+            defaults.duration = opts.duration;
+        }
+        if (typeof opts.getPopupContainer === 'function') {
+            defaults.getPopupContainer = opts.getPopupContainer;
+        }
     };
 
     resetConfig = () => {
-        this.#store.resetConfig();
+        this.#store.defaults = { ...builtInOpts };
+        if (this.#initialConfig) {
+            this.config(this.#initialConfig);
+        }
     };
 }

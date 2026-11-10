@@ -16,6 +16,24 @@ describe('ItemFoundation.getItemText', () => {
     });
 });
 
+describe('ItemFoundation.getRows', () => {
+    const list = [{ value: 'a' }, { value: 'b' }];
+
+    it('normal 模式只有列表本身', () => {
+        expect(ItemFoundation.getRows({ list, mode: 'normal' }, { prependCount: 2, appendCount: 2 })).toEqual([
+            { key: '0', index: 0, copy: false },
+            { key: '1', index: 1, copy: false },
+        ]);
+    });
+
+    it('wheel 模式把前置副本倒序排在列表前，后置副本排在列表后，列表自身的 key 不受副本数影响', () => {
+        const rows = ItemFoundation.getRows({ list, mode: 'wheel' }, { prependCount: 2, appendCount: 1 });
+        expect(rows.map((row) => row.key)).toEqual(['pre_1_0', 'pre_1_1', 'pre_0_0', 'pre_0_1', '0', '1', 'app_0_0', 'app_0_1']);
+        expect(rows.filter((row) => !row.copy).map((row) => row.index)).toEqual([0, 1]);
+        expect(rows.find((row) => row.key === 'app_0_1')).toEqual({ key: 'app_0_1', index: 1, copy: true });
+    });
+});
+
 // jsdom has no layout: items are 36px rows and the scroll element is 180px tall
 function createColumn(initialProps: ScrollItemBaseProps) {
     let props = initialProps;
@@ -105,6 +123,22 @@ describe('ItemFoundation', () => {
 
         column.setProps({ selectedIndex: 0 });
         expect(column.wrapper.scrollTop).toBe(24 * 36 - 72);
+        column.foundation.destroy();
+        column.wrapper.remove();
+    });
+
+    it('handleWheelClick 先拦截事件，再按点击的行选中', () => {
+        const column = createColumn({
+            list: Array.from({ length: 5 }, (_, value) => ({ value })),
+            selectedIndex: 0,
+            cycled: false,
+            mode: 'wheel',
+            motion: false,
+        });
+        column.foundation.init();
+        const stopImmediatePropagation = vi.fn<() => void>();
+        column.foundation.handleWheelClick({ target: column.list.children[3], stopImmediatePropagation });
+        expect(stopImmediatePropagation).toHaveBeenCalledTimes(1);
         column.foundation.destroy();
         column.wrapper.remove();
     });

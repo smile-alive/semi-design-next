@@ -1,58 +1,14 @@
 import { Show, batch, children, createEffect, createMemo, createSignal, splitProps, untrack } from 'solid-js';
-import { numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
-import { assignColumnKeys } from '@fibrae/semi-foundation/components/table/utils';
-import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
+import { applyColumnResize, findColumn, getColumnResizeChange, getExpandColumn, getResizableColumns, getSelectionColumn } from '@fibrae/semi-foundation/components/table/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import type { ColumnProps, OnHeaderCellReturnObject, RowSelectionProps, TableComponents, TableProps } from './interface';
 import ResizableHeaderCell, { type ResizeHandler } from './resizable-header-cell';
 import NormalTable from './table';
-import { cloneDeep } from './utils';
 
 const childrenColumnName = 'children';
 
 type ColumnKey = string | number;
 type ColumnOverrides = Record<ColumnKey, Partial<ColumnProps>>;
-
-function getResizableColumns({ columns, expandedRowRender, hideExpandedColumn, rowSelection, expandCellFixed }: Pick<TableProps, 'columns' | 'expandedRowRender' | 'hideExpandedColumn' | 'rowSelection' | 'expandCellFixed'>) {
-    const resizableColumns = assignColumnKeys(cloneDeep(columns ?? []), childrenColumnName) as ColumnProps[];
-    // Table merges its own column into the placeholder in place, so the placeholder sits where Table puts the column
-    const place = (column: ColumnProps, fixed: unknown) => (fixed === 'right' ? resizableColumns.push(column) : resizableColumns.unshift(column));
-    const selection = typeof rowSelection === 'object' ? (rowSelection as RowSelectionProps<any>) : undefined;
-
-    if (typeof expandedRowRender === 'function' && !hideExpandedColumn && !resizableColumns.some((item) => item.key === strings.DEFAULT_KEY_COLUMN_EXPAND)) {
-        place({ key: strings.DEFAULT_KEY_COLUMN_EXPAND, width: numbers.DEFAULT_WIDTH_COLUMN_EXPAND }, expandCellFixed);
-    }
-
-    if (rowSelection && !selection?.hidden && !resizableColumns.some((item) => item.key === strings.DEFAULT_KEY_COLUMN_SELECTION)) {
-        place(
-            {
-                width: selection?.width ?? numbers.DEFAULT_WIDTH_COLUMN_SELECTION,
-                key: strings.DEFAULT_KEY_COLUMN_SELECTION,
-                // This placeholder overrides the selection column's own handler when the columns are merged
-                onHeaderCell: selection?.onHeaderCell,
-            },
-            selection?.fixed
-        );
-    }
-
-    return resizableColumns;
-}
-
-function applyOverrides(cols: ColumnProps[], drag: { overrides: ColumnOverrides; resizing: ColumnKey[]; handlerClass: string; byKey: Record<ColumnKey, ColumnProps> }) {
-    return cols.map((column) => {
-        const key = column.key as ColumnKey;
-        const next: ColumnProps = { ...column, ...drag.overrides[key] };
-        if (drag.resizing.includes(key)) {
-            next.class = addClass(next.class, drag.handlerClass);
-        }
-        const colChildren = column[childrenColumnName];
-        if (Array.isArray(colChildren) && colChildren.length) {
-            next[childrenColumnName] = applyOverrides(colChildren, drag);
-        }
-        drag.byKey[key] = next;
-        return next;
-    });
-}
 
 export default function ResizableTable(props: TableProps) {
     const [local, rest] = splitProps(props, ['components', 'columns', 'resizable', 'children']);
@@ -67,17 +23,8 @@ export default function ResizableTable(props: TableProps) {
     const [resizing, setResizing] = createSignal<ColumnKey[]>([]);
 
     const components = createMemo((): TableComponents => ({ ...local.components, header: { ...local.components?.header, cell: local.components?.header?.cell ?? ResizableHeaderCell } }));
-
-    const options = () => (typeof local.resizable === 'object' ? local.resizable : {});
-
-    const handlerClassName = () => options().handlerClassName ?? 'resizing';
-
-    const resizableColumns = createMemo(() => {
-        const byKey: Record<ColumnKey, ColumnProps> = {};
-        const base = getResizableColumns({ columns: local.columns, expandedRowRender: props.expandedRowRender, hideExpandedColumn: props.hideExpandedColumn, rowSelection: props.rowSelection, expandCellFixed: props.expandCellFixed });
-        const columns = applyOverrides(base, { overrides: overrides(), resizing: resizing(), handlerClass: handlerClassName(), byKey });
-        return { columns, byKey };
-    });
+    const baseColumns = createMemo(() => getResizableColumns<ColumnProps>(local.columns, typeof props.expandedRowRender === 'function' ? getExpandColumn(props.hideExpandedColumn, props.expandCellFixed) : null, getSelectionColumn(props.rowSelection as RowSelectionProps<any> | boolean | undefined)));
+    const resizableColumns = createMemo(() => applyColumnResize(baseColumns(), { resizable: local.resizable, classKey: 'class', getOverride: (key) => overrides()[key], isResizing: (key) => resizing().includes(key) }));
 
     const hasColumnsProp = () => Array.isArray(local.columns) && local.columns.length > 0;
 
@@ -87,38 +34,17 @@ export default function ResizableTable(props: TableProps) {
     // Only the columns prop is resizable, as documented: JSX columns render as a plain table
     const jsxColumnsOnly = () => !hasColumnsProp() && resolvedChildren() != null;
 
-    const getColumn = (key: ColumnKey) => untrack(resizableColumns).byKey[key];
-
-    const record = (key: ColumnKey, change: Partial<ColumnProps> | void) => setOverrides((prev) => ({ ...prev, [key]: { ...prev[key], ...change } }));
-
-    const setColumnResizing = (key: ColumnKey, on: boolean) => setResizing((prev) => [...prev.filter((item) => item !== key), ...(on ? [key] : [])]);
-
-    const handleResize =
-        (key: ColumnKey): ResizeHandler =>
-        (_e, data) => {
-            const change = { width: data?.size.width };
-            record(key, { ...change, ...options().onResize?.({ ...getColumn(key), ...change }) });
-        };
-
-    const handleResizeStart =
-        (key: ColumnKey): ResizeHandler =>
-        () =>
+    const handlePhase =
+        (key: ColumnKey, phase: 'start' | 'move' | 'stop'): ResizeHandler =>
+        (_e, data) =>
             batch(() => {
-                setColumnResizing(key, true);
-                const column = getColumn(key);
-                record(key, options().onResizeStart?.({ ...column, class: addClass(column.class, handlerClassName()) }));
-            });
-
-    const handleResizeStop =
-        (key: ColumnKey): ResizeHandler =>
-        () =>
-            batch(() => {
-                setColumnResizing(key, false);
-                const column = getColumn(key);
-                const className = removeClass(column.class, handlerClassName());
-                // A class returned at the start carries the handler class, which must not outlive the drag
-                const kept = untrack(overrides)[key]?.class != null ? { class: className } : {};
-                record(key, { ...kept, ...options().onResizeStop?.({ ...column, class: className }) });
+                if (phase !== 'move') {
+                    setResizing((prev) => [...prev.filter((item) => item !== key), ...(phase === 'start' ? [key] : [])]);
+                }
+                const recorded = untrack(overrides)[key];
+                const column: ColumnProps = { ...findColumn(untrack(baseColumns), { key }), ...recorded };
+                const change = getColumnResizeChange({ phase, column, recorded, resizable: untrack(() => local.resizable), classKey: 'class', width: data?.size.width });
+                setOverrides((prev) => ({ ...prev, [key]: { ...prev[key], ...change } }));
             });
 
     // The caller's onHeaderCell runs when the header renders the column, so its result follows the dragged width
@@ -132,9 +58,9 @@ export default function ResizableTable(props: TableProps) {
                     ({
                         ...ownHeaderCell?.(column, columnIndex, rowIndex),
                         width: column?.width,
-                        onResize: handleResize(key),
-                        onResizeStart: handleResizeStart(key),
-                        onResizeStop: handleResizeStop(key),
+                        onResize: handlePhase(key, 'move'),
+                        onResizeStart: handlePhase(key, 'start'),
+                        onResizeStop: handlePhase(key, 'stop'),
                         // the cell's onResize* are Resizable's handlers, which share the name of the DOM resize event but not its signature
                     }) as unknown as OnHeaderCellReturnObject,
             };
@@ -145,7 +71,7 @@ export default function ResizableTable(props: TableProps) {
             return nextColumn;
         });
 
-    const finalColumns = createMemo(() => assignResizableRender(resizableColumns().columns));
+    const finalColumns = createMemo(() => assignResizableRender(resizableColumns()));
 
     createEffect(() => warning(jsxColumnsOnly(), '[Semi Table] resizable only works with the columns prop; JSX columns render without resize handles'));
 

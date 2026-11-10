@@ -1,5 +1,6 @@
 import React, { Fragment, useDeferredValue, useId, useImperativeHandle, useRef, type ReactNode, type CSSProperties, type MouseEvent } from 'react';
 import clsx from 'clsx';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
 import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter } from '@fibrae/semi-foundation/components/cascader/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
@@ -7,7 +8,6 @@ import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } fr
 import '@fibrae/semi-foundation/components/cascader/cascader.scss';
 import { IconClear, IconChevronDown } from '@fibrae/semi-icons-react';
 import type { Bivariant, ByMultiple, ElementProps } from '../../base/base';
-import type { ValidateStatus } from '../../base/base-component';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../hooks/use-click-outside';
@@ -380,9 +380,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     } as const;
 
     const triggerAriaProps = inputIsCombobox ? {} : { ...comboboxProps, 'aria-disabled': disabled };
-
-    // multiple mode keeps no selectedKeys beyond the one getInitialState writes; its value also holds controlled paths without tags
-    const clearable = showClear && (inputValue || (multiple ? CascaderFoundation.hasMultipleValue(props, view) : selectedKeys.size)) && !disabled;
+    const clearable = CascaderFoundation.isClearable(props, view);
 
     const handleInputChange = (input: string) => foundation.handleInputChange(input);
 

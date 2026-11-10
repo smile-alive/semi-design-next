@@ -113,14 +113,11 @@
     const attrs = $derived(splitControlAttrs(rest, isNotClassOrStyle));
     const lineNumberPanelStyle = $derived([lineNumberStyle, lineLayout.height ? `height: ${lineLayout.height}px; max-height: ${lineLayout.height}px` : undefined].filter(Boolean).join(';') || undefined);
 
-    const sizeStyle = $derived.by(() => {
-        if (autosize) {
-            const bounds = typeof autosize === 'object' ? autosize : {};
-            const vars = [`--${prefixCls}-textarea-min-rows: ${bounds.minRows ?? rows}`, bounds.maxRows === undefined ? undefined : `--${prefixCls}-textarea-max-rows: ${bounds.maxRows}`];
-            return ['resize: none', ...vars].filter(Boolean).join(';');
-        }
-        return resize === undefined ? undefined : `resize: ${resize}`;
-    });
+    const sizeStyle = $derived(
+        Object.entries(TextAreaFoundation.getSizeStyle({ autosize, resize, rows }))
+            .map(([key, value]) => `${key}: ${value}`)
+            .join(';') || undefined
+    );
 
     const focusTextarea = () => {
         textarea?.focus();
@@ -146,7 +143,6 @@
             notifyCompositionEnd: (event) => onCompositionEnd?.(event),
             notifyCompositionUpdate: (event) => onCompositionUpdate?.(event),
             focusInput: focusTextarea,
-            isEventTarget: (event) => event.target === event.currentTarget,
             getTextarea: () => textarea ?? null,
         })
     );
@@ -189,26 +185,6 @@
         }
     };
 
-    const handleFocusIn = (event: FocusEvent & { currentTarget: HTMLElement }) => {
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            foundation.handleFocus(event);
-        }
-    };
-
-    const handleFocusOut = (event: FocusEvent & { currentTarget: HTMLElement }) => {
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            foundation.handleBlur(event);
-        }
-    };
-
-    // keyboard activation (detail 0) returns focus to the textarea as the button unmounts
-    const handleClearClick = (event: MouseEvent) => {
-        foundation.handleClear(event);
-        if (event.detail === 0) {
-            focusTextarea();
-        }
-    };
-
     const handleScroll = (event: Event & { currentTarget: HTMLTextAreaElement }) => {
         const { scrollTop } = event.currentTarget;
         (attrs.control.onscroll as ((event: Event) => void) | undefined)?.(event);
@@ -225,7 +201,7 @@
     const keepFocus = (event: MouseEvent) => event.preventDefault();
 
     // the line number panel remounts the textarea
-    watch(() => [shown, Boolean(autosize), showLineNumber], foundation.fitAutosize);
+    watch(() => [shown, showLineNumber], foundation.fitAutosize);
 
     // A removed node fires no blur, so a focused clear button would drop focus to the body; this pre-flush effect runs
     // before the DOM patch removes it.
@@ -319,7 +295,7 @@
         ]}
         {cols}
         {disabled}
-        maxlength={getValueLength ? undefined : maxlength}
+        maxlength={TextAreaFoundation.getNativeMaxLength({ maxLength: maxlength, getValueLength })}
         minlength={TextAreaFoundation.getNativeMinLength({ minLength: minlength, getValueLength }, shown)}
         placeholder={placeholder || undefined}
         {readonly}
@@ -353,8 +329,8 @@
         },
     ]}
     onclick={foundation.handleClick}
-    onfocusin={handleFocusIn}
-    onfocusout={handleFocusOut}
+    onfocusin={foundation.handleFocus}
+    onfocusout={foundation.handleBlur}
 >
     {#if showLineNumber}
         <!-- the numbers only mirror the text rows, so assistive technology skips them -->
@@ -370,7 +346,7 @@
         {@render field()}
     {/if}
     {#if allowClear}
-        <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${prefixCls}-clearbtn`} type="button" onclick={handleClearClick} onmousedown={keepFocus}>
+        <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${prefixCls}-clearbtn`} type="button" onclick={foundation.handleClearClick} onmousedown={keepFocus}>
             <IconClear />
         </button>
     {/if}

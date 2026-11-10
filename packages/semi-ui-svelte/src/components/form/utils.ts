@@ -1,6 +1,5 @@
 import { untrack } from 'svelte';
 import { FIELD_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
-import { errorMessages } from '@fibrae/semi-foundation/components/form/errors';
 import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
 import type { CommonFieldProps, FieldLabel } from './interface.js';
 
@@ -13,10 +12,6 @@ export function omitFieldProps(props: Record<string, unknown>) {
 /** Deep clone that keeps functions, DOM nodes and errors as they are; the server has no DOM nodes to keep */
 export function cloneDeep<T>(value: T) {
     return cloneFormValue(value, (item) => typeof Node !== 'undefined' && item instanceof Node);
-}
-
-export function hasErrorContent(error: unknown) {
-    return errorMessages(error).length > 0;
 }
 
 export function isLabelConfig<L extends FieldLabel>(label?: string | number | L): label is L {

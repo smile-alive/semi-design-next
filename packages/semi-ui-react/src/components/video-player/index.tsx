@@ -1,11 +1,12 @@
 import type React from 'react';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/components/video-player/constants';
-import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/components/video-player/foundation';
+import { cssClasses, DEFAULT_CONTROLS_LIST, DEFAULT_PLAYBACK_RATE, numbers, strings, type VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
+import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerState } from '@fibrae/semi-foundation/components/video-player/foundation';
 import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/video-player/video-player.scss';
 import { IconPlay, IconPause, IconVolume1, IconVolume2, IconRestart, IconFlipHorizontal, IconMinimize, IconMaximize, IconMute, IconPlayCircle, IconMiniPlayer } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
@@ -13,7 +14,6 @@ import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useMergedRef from '../../hooks/use-merged-ref';
 import type { MediaEventKeys } from '../../utils/media-event-keys';
-import { namedRole } from '../../utils/named-role';
 import AudioSlider from '../audio-player/audio-slider';
 import Button from '../button';
 import Dropdown from '../dropdown';
@@ -37,7 +37,7 @@ export type VideoPlayerMarker = Marker;
 
 export type VideoPlayerTheme = 'dark' | 'light';
 
-export type VideoControl = Exclude<(typeof strings)[keyof typeof strings], typeof strings.DARK>;
+export type { VideoControl, VideoPlayerState };
 
 export interface VideoPlayerProps extends ElementProps<'div', MediaEventKeys> {
     autoPlay?: boolean;
@@ -75,29 +75,11 @@ export interface VideoPlayerProps extends ElementProps<'div', MediaEventKeys> {
     width?: number | string;
 }
 
-export interface VideoPlayerState {
-    bufferedValue: number;
-    currentQuality: string;
-    currentRoute: string;
-    currentTime: number;
-    isError: boolean;
-    isFullScreen: boolean;
-    isMirror: boolean;
-    isPlaying: boolean;
-    muted: boolean;
-    notificationContent: string;
-    playbackRate: number;
-    showNotification: boolean;
-    showControls: boolean;
-    totalTime: number;
-    volume: number;
-}
-
 const defaultProps = {
     autoPlay: false,
     clickToPlay: true,
     defaultPlaybackRate: numbers.DEFAULT_PLAYBACK_RATE,
-    controlsList: [strings.PLAY, strings.NEXT, strings.TIME, strings.VOLUME, strings.PLAYBACK_RATE, strings.QUALITY, strings.ROUTE, strings.MIRROR, strings.FULLSCREEN, strings.PICTURE_IN_PICTURE],
+    controlsList: DEFAULT_CONTROLS_LIST,
     loop: false,
     muted: false,
     playbackRateList: DEFAULT_PLAYBACK_RATE,

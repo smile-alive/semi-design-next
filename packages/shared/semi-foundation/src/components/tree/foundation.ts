@@ -267,7 +267,7 @@ export type TreeDragEvent = Pick<DragEvent, 'dataTransfer' | 'clientY'>;
 
 /** E is the host's node mouse event (right or double click), which the foundation only passes through */
 export interface TreeAdapter<E = unknown> extends DefaultAdapter<BasicTreeProps, BasicTreeInnerData> {
-    notifyExpand: (expandedKeys: Set<string>, { expanded, node }: BasicExpandedOtherProps) => void;
+    notifyExpand: (expandedKeys: string[], { expanded, node }: BasicExpandedOtherProps) => void;
     notifySelect: (selectKey: string, bool: boolean, node: BasicTreeNodeData) => void;
     notifyChange: (value: BasicValue) => void;
     notifySearch: (input: string, filteredExpandedKeys: string[]) => void;
@@ -560,7 +560,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         }
 
         const { expandedKeys, data, expanded } = this.#setExpandedStatus(treeNode);
-        this.adapter.notifyExpand(expandedKeys, {
+        this.adapter.notifyExpand([...expandedKeys], {
             expanded,
             node: data,
         });

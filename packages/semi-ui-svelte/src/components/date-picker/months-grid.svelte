@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { tick, untrack } from 'svelte';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
@@ -30,6 +29,11 @@
             notifySelectedChange: (value, options) => props.onChange(value, options),
             notifyPanelChange: (date, dateString) => props.onPanelChange(date, dateString),
             getPanelNode: (part, panelType) => nodes[part][panelType],
+            focusPanelTarget: (panelType, target) => {
+                const panel = nodes.panel[panelType];
+                const node = target === 'yearList' ? panel?.querySelector<HTMLElement>('[role="listbox"]') : (panel?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`);
+                node?.focus();
+            },
             reselectScrollLists: () => {
                 for (const handle of [timePickers.left, timePickers.right, yearAndMonths.left, yearAndMonths.right]) {
                     handle?.reselect();
@@ -50,20 +54,6 @@
         return panelType === PANEL_TYPE_RIGHT ? states().monthRight : states().monthLeft;
     };
 
-    // The button that switches between the month and the year picker unmounts or hides under the focus, so the view it
-    // switched to takes the focus once rendered
-    const showYearPicker = async (panelType: PanelType) => {
-        foundation.showYearPicker(panelType);
-        await tick();
-        nodes.panel[panelType]?.querySelector<HTMLElement>('[role="listbox"]')?.focus();
-    };
-
-    const backToDatePanel = async (panelType: PanelType) => {
-        foundation.showDatePanel(panelType);
-        await tick();
-        (nodes.panel[panelType]?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`)?.focus();
-    };
-
     const timeOptions = (panelType: PanelType): Partial<ComboboxProps> => ({ ...props.timePickerOpts, hideDisabledOptions: props.hideDisabledOptions, ...MonthsGridFoundation.calcDisabledTime(props, states(), panelType) });
 
     const switchTexts = (panelType: PanelType) => {
@@ -81,14 +71,6 @@
         const detail = detailOf(panelType);
         return [`${prefix}-month-grid-${panelType}`, { [`${prefix}-yam-showing`]: !isRange && (detail.isTimePickerOpen || detail.isYearPickerOpen) }];
     };
-
-    $effect(() => {
-        void states().monthLeft;
-        void states().monthRight;
-        void props.insetInput;
-        void props.type;
-        untrack(foundation.applyPanelSize);
-    });
 
     export function switchPanels(view: PanelView) {
         foundation.switchPanels(view);
@@ -122,7 +104,7 @@
                                 density={props.density}
                                 endYear={props.endYear}
                                 locale={props.locale}
-                                onBackToMain={() => backToDatePanel(panelType)}
+                                onBackToMain={() => foundation.backToDatePanel(panelType)}
                                 onSelect={(selected) => foundation.toYearMonth(panelType, new Date(selected.currentYear.left, selected.currentMonth.left - 1))}
                                 startYear={props.startYear}
                                 yearAndMonthOpts={props.yearAndMonthOpts}
@@ -142,7 +124,7 @@
                                 density={props.density}
                                 locale={props.locale}
                                 monthText={MonthsGridFoundation.formatMonthText(props.locale, detail.pickerDate)}
-                                onMonthClick={() => showYearPicker(panelType)}
+                                onMonthClick={() => foundation.showYearPicker(panelType)}
                                 onNextMonth={() => foundation.nextMonth(panelType)}
                                 onNextYear={() => foundation.nextYear(panelType)}
                                 onPrevMonth={() => foundation.prevMonth(panelType)}

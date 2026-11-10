@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import clsx from 'clsx';
-import { format, isSameDay, startOfDay } from 'date-fns';
+import { format, startOfDay } from 'date-fns';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
 import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
@@ -70,19 +70,7 @@ export default function DayCalendar({ ref, className, style, displayValue, range
             <div className={`${prefixCls}-scroll-wrapper`} role="rowgroup">
                 <div ref={scrollRef} className={`${prefixCls}-scroll`} role="row">
                     <TimeCol className={`${prefixCls}-sticky-left`} renderTimeDisplay={renderTimeDisplay} />
-                    <DayCol
-                        // showCurrTime and whether the day is today in the key: a column decides once per mount
-                        // whether to run the current time line
-                        key={`${dayStart.toDateString()}-${String(showCurrTime)}-${String(today !== null && isSameDay(dayStart, today))}`}
-                        displayValue={dayStart}
-                        events={parsedEvents.day}
-                        isWeekend={isWeekend}
-                        minEventHeight={minEventHeight}
-                        scrollHeight={scrollHeight}
-                        showCurrTime={showCurrTime}
-                        dateGridRender={dateGridRender}
-                        handleClick={handleClick}
-                    />
+                    <DayCol displayValue={dayStart} events={parsedEvents.day} isWeekend={isWeekend} minEventHeight={minEventHeight} scrollHeight={scrollHeight} showCurrTime={showCurrTime} today={today} dateGridRender={dateGridRender} handleClick={handleClick} />
                 </div>
             </div>
         </div>

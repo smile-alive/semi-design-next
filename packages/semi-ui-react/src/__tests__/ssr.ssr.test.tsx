@@ -52,7 +52,7 @@ describe('服务端渲染', () => {
         ['Notification.info', () => semi.Notification.info({ content: 'hi' }), 'Notification.useNotification()'],
         ['Modal.info', () => semi.Modal.info({ content: 'hi' }), 'Modal.useModal()'],
     ])('命令式 API 在服务端抛说明性错误：%s', (_, call, hook) => {
-        expect(call).toThrow(`can only be called in the browser: call it from an event handler or an effect, or render the holder returned by ${hook} instead.`);
+        expect(call).toThrow(`so it can only be called in the browser: call it from an event handler or an effect after mount, or use ${hook} inside a component.`);
     });
 
     it('Typography 子组件的命名导出与点语法是同一组件', () => {

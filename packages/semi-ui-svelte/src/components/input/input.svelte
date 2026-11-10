@@ -113,10 +113,18 @@
     const trackAddonAfter = trackSlotKind((kind) => (addonAfterKind = kind));
     const shownSize = $derived(size ?? group?.size ?? defaults('size', 'default'));
     const attrs = $derived(splitControlAttrs(rest, isNotClassOrStyle));
-    const insetLabelShown = $derived(Boolean(insetLabel) && !prefix);
-    const labelId = $derived(insetLabelId ?? (insetLabelShown ? `${uid}-inset-label` : undefined));
-    const labelledby = $derived((attrs.control['aria-labelledby'] ?? (insetLabelShown && !attrs.control['aria-label'] ? labelId : undefined)) as string | undefined);
-    const invalid = $derived((validateStatus === 'error' ? 'true' : attrs.control['aria-invalid']) as boolean | 'true' | 'false' | 'grammar' | 'spelling' | undefined);
+
+    const labelA11y = $derived(
+        InputFoundation.getLabelA11y({
+            shown: Boolean(insetLabel) && !prefix,
+            insetLabelId,
+            generatedId: uid,
+            validateStatus,
+            ariaInvalid: attrs.control['aria-invalid'] as boolean | 'true' | 'false' | 'grammar' | 'spelling' | undefined,
+            ariaLabel: attrs.control['aria-label'] as string | undefined,
+            ariaLabelledby: attrs.control['aria-labelledby'] as string | undefined,
+        })
+    );
 
     const focusInput = () => {
         input?.focus({ preventScroll });
@@ -143,7 +151,6 @@
             notifyCompositionStart: (event) => onCompositionStart?.(event),
             notifyCompositionEnd: (event) => onCompositionEnd?.(event),
             notifyCompositionUpdate: (event) => onCompositionUpdate?.(event),
-            isEventTarget: (event) => event.target === event.currentTarget,
         })
     );
 
@@ -176,34 +183,6 @@
         // false: Firefox reports the committed text in the input event after this one, which restores instead
         if (foundation.handleCompositionEnd(event)) {
             void restoreShownText();
-        }
-    };
-
-    const handleFocusIn = (event: FocusEvent & { currentTarget: HTMLElement }) => {
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            foundation.handleFocus(event);
-        }
-    };
-
-    const handleFocusOut = (event: FocusEvent & { currentTarget: HTMLElement }) => {
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            foundation.handleBlur(event);
-        }
-    };
-
-    // the primary button clears on mousedown (issue 1203) without moving focus; the others only keep focus where it is
-    const handleClearMouseDown = (event: MouseEvent) => {
-        event.preventDefault();
-        if (event.button === 0) {
-            foundation.handleClear(event);
-        }
-    };
-
-    // keyboard activation (detail 0): focus returns to the input as the button unmounts
-    const handleClearClick = (event: MouseEvent) => {
-        if (event.detail === 0) {
-            foundation.handleClear(event);
-            focusInput();
         }
     };
 
@@ -279,8 +258,8 @@
         },
     ]}
     onclick={foundation.handleClick}
-    onfocusin={handleFocusIn}
-    onfocusout={handleFocusOut}
+    onfocusin={foundation.handleFocus}
+    onfocusout={foundation.handleBlur}
 >
     {#if addonBefore}
         <div
@@ -308,7 +287,7 @@
                     [`${prefixCls}-prefix-icon`]: prefixKind === 'icon',
                 },
             ]}
-            id={labelId}
+            id={labelA11y.labelId}
             x-semi-prop="prefix,insetLabel"
             onclick={foundation.handleClickPrefixOrSuffix}
             onmousedown={keepFocus}
@@ -323,8 +302,8 @@
     <input
         bind:this={input}
         {...attrs.control}
-        aria-invalid={invalid}
-        aria-labelledby={labelledby}
+        aria-invalid={labelA11y.ariaInvalid}
+        aria-labelledby={labelA11y.ariaLabelledby}
         class={[
             prefixCls,
             {
@@ -335,7 +314,7 @@
             },
         ]}
         disabled={isDisabled}
-        maxlength={getValueLength ? undefined : maxlength}
+        maxlength={InputFoundation.getNativeMaxLength({ maxLength: maxlength, getValueLength })}
         minlength={InputFoundation.getNativeMinLength({ minLength: minlength, getValueLength }, shown)}
         placeholder={placeholder?.toString()}
         readonly={readonly || readOnly}
@@ -350,7 +329,7 @@
         onkeyup={foundation.handleKeyUp}
     />
     {#if allowClear}
-        <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${prefixCls}-clearbtn`} type="button" onclick={handleClearClick} onkeydown={stopActivationKeys} onmousedown={handleClearMouseDown}>
+        <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${prefixCls}-clearbtn`} type="button" onclick={foundation.handleClearClick} onkeydown={stopActivationKeys} onmousedown={foundation.handleClearMouseDown}>
             {#if clearIcon}
                 {@render clearIcon()}
             {:else}

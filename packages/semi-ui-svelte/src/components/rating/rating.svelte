@@ -109,11 +109,7 @@
     const onRadio = $derived(RatingFoundation.isRadioValue(shown, count, allowHalf));
     const customUnit = $derived(typeof character === 'string' ? character : undefined);
     const rootAttrs = $derived(Object.fromEntries(Object.entries(rest).filter(([key]) => !DROPPED_ATTRS.has(key))));
-
-    const groupLabel = $derived.by(() => {
-        const { label, star, stars: plural } = locale().locale;
-        return rest['aria-label'] || formatLocale(label, { value: shown, count, unit: customUnit ?? (shown === 1 ? star : plural) });
-    });
+    const groupLabel = $derived(rest['aria-label'] || formatLocale(locale().locale.label, { value: shown, count, unit: RatingFoundation.getUnit(shown, customUnit, locale().locale) }));
 
     const tipVisible = (index: number) => RatingFoundation.isTipVisible(index, states().hoverValue, states().focusVisibleStar, tooltips?.[index]);
 

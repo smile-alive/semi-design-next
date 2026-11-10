@@ -1,5 +1,6 @@
 export { default } from './date-picker';
-export type { BaseValueType, DayStatusType, DisabledDateOptions, DisabledDateType, DisabledTimeType, InputSize, PresetType, PresetsType, ValidateStatus, ValueType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+export type { BaseValueType, DayStatusType, DisabledDateOptions, DisabledDateType, DisabledTimeType, InputSize, PresetType, PresetsType, ValueType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+export type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 export type { InsetInputProps } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 export type { Position } from '../tooltip';
 export type { DateInputProps } from './date-input';

@@ -1,5 +1,6 @@
 import { type JSX, type Ref, Show, children, createRenderEffect, createUniqueId, mergeProps, splitProps } from 'solid-js';
 import clsx from 'clsx';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
 import InputFoundation, { type InputAdapter } from '@fibrae/semi-foundation/components/input/foundation';
 import { stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
@@ -35,7 +36,7 @@ const prefixCls = cssClasses.PREFIX;
 export type InputSize = Size;
 export type InputMode = 'password';
 // Form passes 'success' as validateStatus, though Input styles nothing for it
-export type ValidateStatus = 'default' | 'error' | 'warning' | 'success';
+export type { ValidateStatus };
 
 export type InputElementEvent<E extends Event> = E & { currentTarget: HTMLInputElement; target: Element };
 
@@ -207,7 +208,6 @@ export default function Input(rawProps: InputProps) {
             notifyCompositionStart: (e) => callHandler(props.onCompositionStart, e),
             notifyCompositionEnd: (e) => callHandler(props.onCompositionEnd, e),
             notifyCompositionUpdate: (e) => callHandler(props.onCompositionUpdate, e),
-            isEventTarget: (e) => e.target === e.currentTarget,
         })
     );
 
@@ -239,7 +239,16 @@ export default function Input(rawProps: InputProps) {
 
     const insetLabelShown = () => Boolean(insetLabelKind()) && !prefixKind();
 
-    const labelId = () => local.insetLabelId ?? (insetLabelShown() ? `${generatedId}-inset-label` : undefined);
+    const labelA11y = () =>
+        InputFoundation.getLabelA11y({
+            shown: insetLabelShown(),
+            insetLabelId: local.insetLabelId,
+            generatedId,
+            validateStatus: local.validateStatus,
+            ariaInvalid: rest['aria-invalid'],
+            ariaLabel: rest['aria-label'],
+            ariaLabelledby: rest['aria-labelledby'],
+        });
 
     const wrapperStyle = (): JSX.CSSProperties | string | undefined => {
         if (local.onlyBorder === undefined) {
@@ -251,22 +260,6 @@ export default function Input(rawProps: InputProps) {
     const handleInput = (e: InputElementEvent<InputEvent>) => {
         foundation.handleInput(e);
         controlled.handleInput(e);
-    };
-
-    // the primary button clears on mousedown (issue 1203) without moving focus; the others only keep focus in place
-    const handleClearMouseDown = (e: MouseEvent) => {
-        e.preventDefault();
-        if (e.button === 0) {
-            foundation.handleClear(e);
-        }
-    };
-
-    // Enter and Space fire a click with detail 0; focus returns to the input as the button unmounts
-    const handleClearClick = (e: MouseEvent) => {
-        if (e.detail === 0) {
-            foundation.handleClear(e);
-            focusInput();
-        }
     };
 
     const preventMouseDown = (e: MouseEvent) => e.preventDefault();
@@ -332,7 +325,7 @@ export default function Input(rawProps: InputProps) {
             </Show>
             <Show when={labelKind()}>
                 <div
-                    id={labelId()}
+                    id={labelA11y().labelId}
                     class={clsx(`${prefixCls}-prefix`, {
                         [`${prefixCls}-inset-label`]: Boolean(insetLabelKind()),
                         [`${prefixCls}-prefix-text`]: labelKind() === 'text',
@@ -356,11 +349,10 @@ export default function Input(rawProps: InputProps) {
                     [`${prefixCls}-sibling-modebtn`]: local.mode === 'password',
                 })}
                 style={local.inputStyle}
-                aria-invalid={local.validateStatus === 'error' ? 'true' : rest['aria-invalid']}
-                aria-labelledby={rest['aria-labelledby'] ?? (insetLabelShown() && !rest['aria-label'] ? labelId() : undefined)}
+                aria-invalid={labelA11y().ariaInvalid}
+                aria-labelledby={labelA11y().ariaLabelledby}
                 disabled={local.disabled}
-                // the native maxLength counts UTF-16 units, so getValueLength enforces the limit instead
-                maxLength={typeof local.getValueLength === 'function' ? undefined : local.maxLength}
+                maxLength={InputFoundation.getNativeMaxLength(local)}
                 minLength={InputFoundation.getNativeMinLength(local, value())}
                 placeholder={local.placeholder == null ? undefined : String(local.placeholder)}
                 // The attribute carries the text into the server HTML. What the browser shows is the property, written
@@ -377,7 +369,7 @@ export default function Input(rawProps: InputProps) {
                 onKeyUp={foundation.handleKeyUp}
             />
             <Show when={allowClear()}>
-                <button ref={setClearButton} type="button" class={`${prefixCls}-clearbtn`} aria-label={locale().locale.clear} onClick={handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={handleClearMouseDown}>
+                <button ref={setClearButton} type="button" class={`${prefixCls}-clearbtn`} aria-label={locale().locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={foundation.handleClearMouseDown}>
                     <Show when={clearIcon()} fallback={<IconClear />}>
                         {clearIcon()}
                     </Show>

@@ -3,10 +3,10 @@ import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
 import type { ResizeCallback, ResizeStartCallback } from '@fibrae/semi-foundation/components/resizable/types';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useMergedRef from '../../hooks/use-merged-ref';
-import { namedRole } from '../../utils/named-role';
 import { useResizeContext } from './context';
 
 const prefixCls = cssClasses.PREFIX;

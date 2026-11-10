@@ -28,15 +28,9 @@ export interface HotKeysProps extends ElementProps<'div', 'content' | 'children'
 
 export interface HotKeysState {}
 
-// module level: a stable identity is not a target change on every render
-function getDefaultTarget() {
-    return document.body;
-}
-
 const defaultProps = {
     preventDefault: false,
     content: null,
-    getListenerTarget: getDefaultTarget,
     className: '',
     style: null,
 } satisfies Partial<HotKeysProps>;

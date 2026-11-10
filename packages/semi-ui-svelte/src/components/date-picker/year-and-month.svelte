@@ -14,7 +14,6 @@
 
     const columns: Record<string, ScrollItemHandle | undefined> = $state({});
 
-    // The foundation reads disabledDate through this view, so a missing one enables every year and month
     const view: YearAndMonthFoundationProps = {
         get currentYear() {
             return props.currentYear;
@@ -26,7 +25,7 @@
             return props.type ?? 'month';
         },
         get disabledDate() {
-            return props.disabledDate ?? enabled;
+            return props.disabledDate;
         },
         get startYear() {
             return props.startYear;
@@ -45,7 +44,6 @@
         () => ({}),
         () => ({
             notifySelect: (yearAndMonth) => props.onSelect(yearAndMonth),
-            notifyBackToMain: () => props.onBackToMain?.(),
         })
     );
 
@@ -69,10 +67,6 @@
             };
         })
     );
-
-    const enabled = () => {
-        return false;
-    };
 
     const yearText = (value: number | string) => {
         return formatLocale(props.locale.yearText, { year: value });
@@ -146,7 +140,7 @@
 
 {#if !props.noBackBtn}
     <div class={`${prefix}-yearmonth-header`}>
-        <IconButton noHorizontalPadding={false} size={buttonSize} onclick={foundation.backToMain}>
+        <IconButton noHorizontalPadding={false} size={buttonSize} onclick={() => props.onBackToMain?.()}>
             {#snippet icon()}<IconChevronLeft size={iconSize} />{/snippet}
             <span>{props.locale.selectDate}</span>
         </IconButton>

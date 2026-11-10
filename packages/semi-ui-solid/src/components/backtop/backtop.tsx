@@ -1,6 +1,6 @@
 import { children, createEffect, type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/backtop/constants';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/backtop/constants';
 import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/components/backtop/foundation';
 import '@fibrae/semi-foundation/components/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-solid';
@@ -15,10 +15,6 @@ import type { FloatButtonOmittedKeys } from '../float-button/interface';
 import useLocale from '../locale/use-locale';
 
 const prefixCls = cssClasses.PREFIX;
-
-function getDefaultTarget() {
-    return window;
-}
 
 export interface BackTopProps extends ElementProps<'button', FloatButtonOmittedKeys>, Pick<FloatButtonProps, 'icon' | 'shape' | 'size' | 'colorful' | 'badge' | 'onClick' | 'ref'> {
     /** Static content of the button, shown in place of `icon`; must not contain interactive elements */
@@ -37,9 +33,8 @@ type Foundation = BackTopFoundation<BackTopProps, ClickEvent>;
 type Adapter = BackTopAdapter<BackTopProps, ClickEvent>;
 
 const defaultProps = {
-    visibilityHeight: 400,
-    target: getDefaultTarget,
-    duration: 450,
+    visibilityHeight: numbers.DEFAULT_VISIBILITY_HEIGHT,
+    duration: numbers.DEFAULT_DURATION,
 } satisfies Partial<BackTopProps>;
 
 export default function BackTop(rawProps: BackTopProps) {

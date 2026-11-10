@@ -3,6 +3,7 @@
     import { SvelteSet } from 'svelte/reactivity';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
+    import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -27,12 +28,11 @@
     let extraKind = $state<SlotKind>();
 
     const prefix = cssClasses.PREFIX;
-    const errorMessageId = `${uid}-errormessage`;
-    const extraTextId = `${uid}-extraText`;
+    const ids = getFieldIds(uid);
     const formProps = $derived<AllFormProps>(form?.formProps ?? {});
     const shownLabelPosition = $derived(labelPosition || formProps.labelPosition);
     const labelConfig = $derived(isLabelConfig(label) ? label : { text: label });
-    const labelId = $derived((isLabelConfig(label) ? label.id : undefined) ?? `${uid}-label`);
+    const labelId = $derived((isLabelConfig(label) ? label.id : undefined) ?? ids.label);
     const hasLabel = $derived(Boolean(label) || Boolean(fieldLabel));
 
     const groupError = $derived(
@@ -51,8 +51,8 @@
         get aria() {
             return {
                 labelledby: joinIds(ariaLabelledby ?? undefined, hasLabel && labelId),
-                describedby: joinIds(ariaDescribedby ?? undefined, Boolean(extraText) && extraTextId),
-                errormessage: errorMessageId,
+                describedby: joinIds(ariaDescribedby ?? undefined, Boolean(extraText) && ids.extraText),
+                errormessage: ids.errorMessage,
             };
         },
     });
@@ -71,7 +71,7 @@
                 [`${prefix}-field-extra-bottom`]: extraTextPosition === 'bottom',
             },
         ]}
-        id={extraTextId}
+        id={ids.extraText}
         x-semi-prop="extraText"
     >
         {@render extraText?.()}
@@ -94,7 +94,7 @@
                 {@render extraView()}
             {/if}
             {#if groupError.length}
-                <ErrorMessage error={groupError} {errorMessageId} isInInputGroup showValidateIcon={formProps.showValidateIcon} />
+                <ErrorMessage error={groupError} errorMessageId={ids.errorMessage} isInInputGroup showValidateIcon={formProps.showValidateIcon} />
             {/if}
         </FieldGrid>
     </div>

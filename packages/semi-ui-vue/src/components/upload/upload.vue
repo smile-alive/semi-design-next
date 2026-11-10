@@ -4,6 +4,7 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation, { type UploadAdapter, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
     import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconUpload } from '@fibrae/semi-icons-vue';
@@ -12,7 +13,6 @@
     import SlotFragment from '../../base/slot-fragment';
     import useFoundation from '../../base/use-foundation';
     import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import { groupRole } from '../../utils/group-role';
     import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
     import Cropper, { type CropperHandle } from '../cropper';
     import useLocale from '../locale/use-locale';
@@ -24,8 +24,6 @@
 
     interface UploadState extends UploadBaseState {
         fileList: FileItem[];
-        inputKey: number;
-        replaceInputKey: number;
     }
 
     type FnKey = 'afterUpload' | 'beforeClear' | 'beforeCrop' | 'beforeRemove' | 'beforeUpload' | 'customRequest' | 'data' | 'headers' | 'onPreviewClick' | 'transformFile';
@@ -112,8 +110,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, UploadProps, UploadState>(
         UploadFoundation,
         props,
-        (view) => ({ ...UploadFoundation.getInitialState(view), inputKey: 0, replaceInputKey: 0 }),
-        (base) => ({
+        (view) => UploadFoundation.getInitialState(view),
+        () => ({
             notifyFileSelect: (files) => emit('fileChange', files),
             notifyError: (error, fileInstance, fileList, xhr) => emit('error', error, fileInstance, fileList, xhr),
             notifySuccess: (body, file, fileList) => emit('success', body, file, fileList),
@@ -123,8 +121,17 @@
             notifyExceed: (files) => emit('exceed', files),
             notifyBeforeUpload: (object) => (fnProp('beforeUpload') as NonNullable<UploadProps['beforeUpload']>)(object),
             notifyAfterUpload: (object) => (fnProp('afterUpload') as NonNullable<UploadProps['afterUpload']>)(object),
-            resetInput: () => base.setState({ inputKey: base.getState('inputKey') + 1 }),
-            resetReplaceInput: () => base.setState({ replaceInputKey: base.getState('replaceInputKey') + 1 }),
+            resetInput: () => {
+                if (input.value) {
+                    input.value.value = '';
+                }
+            },
+            resetReplaceInput: () => {
+                if (replaceInput.value) {
+                    replaceInput.value.value = '';
+                }
+            },
+            openReplacePicker: () => replaceInput.value?.click(),
             notifyBeforeRemove: (file, fileList) => fnProp('beforeRemove')?.(file, fileList) ?? true,
             notifyBeforeClear: (fileList) => fnProp('beforeClear')?.(fileList) ?? true,
             notifyChange: ({ currentFile, fileList }) => {
@@ -175,12 +182,6 @@
         emit('openFileDialog');
     };
 
-    const replace = (file: FileItem) => {
-        if (props.disabled) return;
-        foundation.setState({ replaceUid: file.uid });
-        replaceInput.value?.click();
-    };
-
     const filesOf = (e: Event) => (e.target as HTMLInputElement).files ?? [];
 
     const rootAttrs = (a: Record<string, unknown>) => Object.fromEntries(Object.entries(a).filter(([key]) => !DROPPED_ATTRS.has(key)));
@@ -211,33 +212,24 @@
         ...(props.draggable ? dragListeners : {}),
     });
 
-    const cardProps = (file: FileItem, index: number): UploadFileItemSlotProps => {
-        let validateMessage: string | undefined;
-        if (file.status === strings.FILE_STATUS_UPLOAD_FAIL && !file.validateMessage) {
-            validateMessage = i18n.value.locale.fail;
-        }
-        if (file._sizeInvalid && !file.validateMessage) {
-            validateMessage = i18n.value.locale.illegalSize;
-        }
-        return {
-            file,
-            index,
-            listType: props.listType,
-            disabled: props.disabled,
-            showRetry: props.showRetry,
-            showReplace: props.showReplace,
-            showPicInfo: props.showPicInfo,
-            showTooltip: props.showTooltip,
-            picWidth: props.picWidth,
-            picHeight: props.picHeight,
-            validateMessage,
-            style: props.itemStyle,
-            onRemove: () => foundation.handleRemove(file),
-            onRetry: () => foundation.retry(file),
-            onReplace: () => replace(file),
-            onPreviewClick: fnProp('onPreviewClick') ? () => foundation.handlePreviewClick(file) : undefined,
-        };
-    };
+    const cardProps = (file: FileItem, index: number): UploadFileItemSlotProps => ({
+        file,
+        index,
+        listType: props.listType,
+        disabled: props.disabled,
+        showRetry: props.showRetry,
+        showReplace: props.showReplace,
+        showPicInfo: props.showPicInfo,
+        showTooltip: props.showTooltip,
+        picWidth: props.picWidth,
+        picHeight: props.picHeight,
+        validateMessage: UploadFoundation.getFallbackValidateMessage(file, i18n.value.locale),
+        style: props.itemStyle,
+        onRemove: () => foundation.handleRemove(file),
+        onRetry: () => foundation.retry(file),
+        onReplace: () => foundation.startReplace(file.uid),
+        onPreviewClick: fnProp('onPreviewClick') ? () => foundation.handlePreviewClick(file) : undefined,
+    });
 
     const fileItemNodes = (file: FileItem, index: number) => slotNodes(slots.fileItem?.(cardProps(file, index)) ?? []);
 
@@ -270,13 +262,11 @@
                 [`${prefix}-success`]: props.validateStatus === 'success',
             },
         ]"
-        :role="groupRole($attrs)"
+        :role="namedRole($attrs)"
         :x-prompt-pos="props.promptPosition"
         @focusout="handleFocusout"
     >
-        <!-- a new key remounts the input, so picking the same file again fires change -->
         <input
-            :key="`input-${state.inputKey}`"
             ref="input"
             :accept="props.accept"
             autocomplete="off"
@@ -289,7 +279,7 @@
             :webkitdirectory="props.directory ? 'webkitdirectory' : undefined"
             @change="foundation.addFiles(filesOf($event))"
         />
-        <input :key="`replace-${state.replaceInputKey}`" ref="replaceInput" :accept="props.accept" autocomplete="off" :class="`${prefix}-hidden-input-replace`" :multiple="false" tabindex="-1" type="file" @change="foundation.handleReplaceChange(filesOf($event))" />
+        <input ref="replaceInput" :accept="props.accept" autocomplete="off" :class="`${prefix}-hidden-input-replace`" :multiple="false" tabindex="-1" type="file" @change="foundation.handleReplaceChange(filesOf($event))" />
         <template v-if="!isPicture">
             <AddArea
                 v-if="props.draggable"

@@ -1,9 +1,8 @@
-import { onMount, splitProps } from 'solid-js';
+import { splitProps } from 'solid-js';
 import clsx from 'clsx';
 import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
 import { IconClock } from '@fibrae/semi-icons-solid';
 import useFoundation from '../../base/use-foundation';
-import useRaf from '../../primitives/use-raf';
 import Input, { type InputProps } from '../input';
 
 export interface TimeInputProps extends Omit<InputProps, 'value' | 'defaultValue' | 'onChange' | 'readOnly' | 'readonly'> {
@@ -37,21 +36,10 @@ export default function TimeInput(props: TimeInputProps) {
         })
     );
 
-    const requestFrame = useRaf();
-
     const setInput = (node: HTMLInputElement) => {
         input = node;
         local.inputRef?.(node);
     };
-
-    onMount(() => {
-        requestFrame(() => {
-            if (local.focusOnOpen && input) {
-                input.focus({ preventScroll: props.preventScroll });
-                input.select();
-            }
-        });
-    });
 
     return (
         <div class={`${local.prefixCls}-input-wrap`}>

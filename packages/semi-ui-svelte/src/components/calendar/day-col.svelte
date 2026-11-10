@@ -15,14 +15,14 @@
         isWeekend: boolean;
         minEventHeight?: number;
         showCurrTime: boolean;
+        today: number | null;
         onSlotClick: (event: MouseEvent, value: Date) => void;
     }
 
-    // decided on mount; views key the column by date and showCurrTime so a change remounts it
     type Foundation = CalendarFoundation<CalendarBaseProps>;
     type Adapter = CalendarAdapter<CalendarBaseProps>;
 
-    let { displayValue, events, scrollHeight, isWeekend, minEventHeight, showCurrTime, onSlotClick, event, dateGrid }: Props = $props();
+    let { displayValue, events, scrollHeight, isWeekend, minEventHeight, showCurrTime, today, onSlotClick, event, dateGrid }: Props = $props();
 
     const calendar = getCalendarContext();
 
@@ -32,6 +32,9 @@
         },
         get showCurrTime() {
             return showCurrTime;
+        },
+        get today() {
+            return today;
         },
     };
 

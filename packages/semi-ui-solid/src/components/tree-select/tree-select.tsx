@@ -387,7 +387,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             },
             notifyChange: (value, node, e) => props.onChange?.(value, node, e),
             notifyChangeWithObject: (node, e) => props.onChange?.(node, e),
-            notifyExpand: (expandedKeys, { expanded, node }) => props.onExpand?.([...expandedKeys], { expanded, node: node as TreeNodeData }),
+            notifyExpand: (expandedKeys, { expanded, node }) => props.onExpand?.(expandedKeys, { expanded, node: node as TreeNodeData }),
             notifyFocus: (e) => props.onFocus?.(e),
             notifyBlur: (e) => props.onBlur?.(e),
             focusInput: () => {
@@ -543,7 +543,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
 
     const hasValue = () => TreeSelectFoundation.hasValue(props, state());
 
-    const clearable = () => Boolean(local.showClear && (hasValue() || (local.searchPosition === strings.SEARCH_POSITION_TRIGGER && state().inputValue)) && !local.disabled);
+    const clearable = () => TreeSelectFoundation.isClearable(props, state());
 
     const tagSize = () => (local.size === 'small' ? 'small' : 'large');
 
@@ -623,10 +623,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
     const handleKeyDown = (e: KeyboardEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onKeyDown, e);
         if (!isInnerControlKey(e) && !handleTreeKeyDown(e)) {
-            const wasOpen = state().isOpen;
-            foundation.handleSelectionKeyDown(e);
             // Home and End open the popup on the first or the last row
-            if (!wasOpen && state().isOpen && (e.key === 'Home' || e.key === 'End')) {
+            if (foundation.handleSelectionKeyDown(e)) {
                 keyboard.handleKeyDown(e);
             }
         }

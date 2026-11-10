@@ -4,8 +4,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
     import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type StateOptionItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
+    import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
-    import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
     import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
     import useDefaultProps from '../../base/use-default-props.js';
@@ -127,12 +128,7 @@
         foundationProps,
         (view) => AutoCompleteFoundation.getInitialState(view),
         () => ({
-            updateScrollTop: (index) => {
-                const destNode = listbox?.children[index];
-                if (listbox && destNode instanceof HTMLElement) {
-                    centerInScroller(destNode, listbox);
-                }
-            },
+            getListbox: () => listbox,
             notifySearch: (inputValue) => onSearch?.(inputValue),
             notifyChange: (next) => {
                 value = next;
@@ -200,7 +196,7 @@
     };
 
     const optionId = (index: number) => {
-        return `${uid}-option-${index}`;
+        return getOptionId(listId, index);
     };
 
     const optionProps = (option: StateOptionItem, index: number) => {

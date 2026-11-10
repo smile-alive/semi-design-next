@@ -8,6 +8,7 @@ export const strings = {
     TYPE_GROUP_LIST: 'groupList',
     TYPE_LIST: 'list',
     TYPE_TREE_TO_LIST: 'treeList',
+    PATH_SEPARATOR: ' > ',
 };
 
 export const numbers = {

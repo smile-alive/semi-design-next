@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import type { NoticeInstance } from '@fibrae/semi-foundation/components/notification/notification-foundation';
-import NotificationListStore, { type ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+import { type ConfigProps, createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { IconToutiaoLogo } from '@fibrae/semi-icons-react';
@@ -731,7 +731,7 @@ describe('Notification', () => {
             fireEvent.click(screen.getByRole('button', { name: 'add' }));
             const list = screen.getByTestId('holder').querySelector(`.${prefixCls}-list[x-placement=bottom]`);
             expect(list.querySelectorAll(`[role=status].${noticeCls}-info`)).toHaveLength(2);
-            expect(document.querySelector(`.${prefixCls}-wrapper`)).toBeNull();
+            expect([...document.querySelectorAll(`.${prefixCls}-wrapper`)]).toEqual([list.parentElement]);
         });
 
         it('到达 duration 后关闭并只调用一次 onClose，StrictMode 下同样如此', () => {
@@ -864,10 +864,8 @@ describe('Notification', () => {
         show('info', { title: 'focus', duration: 1 });
         const hideCls = `${noticeCls}-animation-hide_topRight`;
         const close = screen.getByRole('button', { name: zh_CN.Notification.close });
-        act(() => {
-            close.focus();
-            vi.advanceTimersByTime(2000);
-        });
+        act(() => close.focus());
+        void act(() => vi.advanceTimersByTime(2000));
         expect(screen.getByRole('status')).not.toHaveClass(hideCls);
         act(() => close.blur());
         void act(() => vi.advanceTimersByTime(999));
@@ -964,7 +962,7 @@ describe('Notification', () => {
     });
 
     it('内置默认值与选项类型都没有 motion，config 不接受 direction', () => {
-        expect(new NotificationListStore().defaults).not.toHaveProperty('motion');
+        expect(createNotificationListStore().defaults).not.toHaveProperty('motion');
         expectTypeOf<NoticeInstance>().not.toHaveProperty('motion');
         expectTypeOf<ConfigProps>().not.toHaveProperty('direction');
     });

@@ -2,16 +2,16 @@ import type React from 'react';
 import { type CSSProperties, type ReactNode, useId, useImperativeHandle, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { isEqualWith } from 'es-toolkit';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
 import AutoCompleteFoundation, { type AutoCompleteAdapter, type StateOptionItem, type DataItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
+import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
 import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
-import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
 import type { ElementProps } from '../../base/base';
-import type { ValidateStatus } from '../../base/base-component';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../hooks/use-click-outside';
@@ -183,12 +183,7 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
         props,
         () => AutoCompleteFoundation.getInitialState(props),
         (base) => ({
-            updateScrollTop: (index) => {
-                const destNode = optionContainerEl.current?.querySelector<HTMLDivElement>(`.${prefixCls}-option:nth-child(${index + 1})`);
-                if (destNode) {
-                    centerInScroller(destNode, destNode.parentNode as HTMLDivElement);
-                }
-            },
+            getListbox: () => optionContainerEl.current,
             notifySearch: (inputValue) => base.getProps().onSearch?.(inputValue),
             notifyChange: (value) => base.getProps().onChange?.(value),
             notifySelect: (option) => base.getProps().onSelect?.(option),
@@ -259,7 +254,7 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
     const shownOptions = useMemo(() => options.filter((option) => option.show), [options]);
 
     // the spinner replaces the options while loading, and a stale focusIndex can point past a shorter list
-    const activeDescendant = visible && !loading && focusIndex !== -1 && focusIndex < shownOptions.length ? `${optionListId}-option-${focusIndex}` : undefined;
+    const activeDescendant = visible && !loading && focusIndex !== -1 && focusIndex < shownOptions.length ? getOptionId(optionListId, focusIndex) : undefined;
 
     const input = (
         <div
@@ -343,7 +338,7 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
                     focused={optionIndex === focusIndex}
                     label={option.label}
                     prefixCls={cssClasses.PREFIX_OPTION}
-                    semiOptionId={`${optionListId}-option-${optionIndex}`}
+                    semiOptionId={getOptionId(optionListId, optionIndex)}
                     showTick={false}
                     {...optionHandlers[optionIndex]}
                 >

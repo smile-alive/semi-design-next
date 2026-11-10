@@ -9,8 +9,12 @@
     import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
+    import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
+    import { createHookApi } from '@fibrae/semi-foundation/base/hook-api';
     import { cssClasses as toastCssClasses } from '@fibrae/semi-foundation/components/toast/constants';
-    import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
+    import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+    import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
     import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
@@ -20,10 +24,10 @@
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import Divider from '@fibrae/semi-ui-svelte/divider/divider.svelte';
     import { observeResize, useLocale } from '@fibrae/semi-ui-svelte/hooks';
+    import type { ToastHookOptions } from '@fibrae/semi-ui-svelte/toast/interface';
     import ToastList from '@fibrae/semi-ui-svelte/toast/toast-list.svelte';
-    import { createToastHookApi } from '@fibrae/semi-ui-svelte/toast/use-toast';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';
-    import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
+    import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
     import { setChatContext } from './context.js';
     import type { ChatProps } from './interface.js';
     import ChatBox from './widgets/chat-box.svelte';
@@ -89,8 +93,8 @@
     let container: HTMLDivElement | undefined = $state();
     let dropArea: HTMLDivElement | undefined = $state();
     let inputBox = $state<ReturnType<typeof InputBox>>();
-    const toastStore = new ToastListStore();
 
+    const toastStore = createToastListStore();
     const followedChats = $derived(followChats(chats));
     const followedHints = $derived(followHints(hints));
 
@@ -102,6 +106,12 @@
             },
             get hints() {
                 return followedHints;
+            },
+            get enableUpload() {
+                return enableUpload;
+            },
+            get uploadProps() {
+                return uploadProps;
             },
         },
         () => ChatFoundation.getInitialState(),
@@ -125,7 +135,10 @@
         })
     );
 
-    const toast = createToastHookApi(toastStore);
+    const toast = createHookApi<ToastHookOptions>(toastStore, {
+        readGlobalDefaults: () => omitInstanceIds(semiGlobal.config.overrideDefaultProps?.Toast) as Partial<ToastInstance>,
+    });
+
     const { PREFIX, PREFIX_DIVIDER } = cssClasses;
     const { ROLE } = strings;
     const currentChats = $derived(chats ?? EMPTY_CHATS);
@@ -187,23 +200,17 @@
 
     // The root's own listeners run after Chat's, so a listener that stops propagation cannot starve the drop area
     const onDragOver = (event: DragEventOnRoot) => {
-        if (uploadWays.dragUpload) {
-            foundation.handleDragOver(event);
-        }
+        foundation.handleDragOver(event);
         rest.ondragover?.(event);
     };
 
     const onDragStart = (event: DragEventOnRoot) => {
-        if (uploadWays.dragUpload) {
-            foundation.handleDragStart();
-        }
+        foundation.handleDragStart();
         rest.ondragstart?.(event);
     };
 
     const onDragEnd = (event: DragEventOnRoot) => {
-        if (uploadWays.dragUpload) {
-            foundation.handleDragEnd();
-        }
+        foundation.handleDragEnd();
         rest.ondragend?.(event);
     };
 
@@ -228,7 +235,7 @@
     }
 </script>
 
-<div {...rest} class={[PREFIX, rest.class]} role={groupRole(rest)} ondragend={onDragEnd} ondragover={onDragOver} ondragstart={onDragStart}>
+<div {...rest} class={[PREFIX, rest.class]} role={namedRole(rest)} ondragend={onDragEnd} ondragover={onDragOver} ondragstart={onDragStart}>
     {#if uploadWays.dragUpload && states().uploadAreaVisible}
         <div bind:this={dropArea} class="{PREFIX}-dropArea" role="presentation" ondragleave={foundation.handleContainerDragLeave} ondragover={foundation.handleContainerDragOver} ondrop={foundation.handleContainerDrop}>
             <span class="{PREFIX}-dropArea-text">{locale().locale.dropAreaText}</span>

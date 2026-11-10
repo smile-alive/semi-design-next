@@ -2,7 +2,21 @@ import { For, Show, createSignal, getOwner, mergeProps, onCleanup, onMount, spli
 import { type ChainedCommands, Editor, type Extensions } from '@tiptap/core';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-import { type Level, type TextRange, canUploadImage, clearSelectionHighlight, confirmLink, getEditorAttributes, getFileEditorExtensions, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
+import {
+    type FileMenuButtonKey,
+    type FileMenuItem,
+    type Level,
+    type TextRange,
+    canUploadImage,
+    clearSelectionHighlight,
+    confirmLink,
+    getEditorAttributes,
+    getFileEditorExtensions,
+    getFileMenuItems,
+    readFileMenuState,
+    readLinkEditorOpenState,
+    unsetLink,
+} from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import {
     IconAlignCenter,
@@ -70,6 +84,26 @@ export interface FileContentProps extends SideBarCollapseProps {
 
 const headings = [IconH1, IconH2, IconH3, IconH4, IconH5, IconH6].map((Icon, index) => ({ Icon, level: (index + 1) as Level }));
 
+const MENU_ICONS = {
+    undo: IconUndo,
+    redo: IconRedo,
+    paragraph: IconText,
+    bulletList: IconList,
+    orderedList: IconOrderedList,
+    blockquote: IconQuote,
+    codeBlock: IconTerminal,
+    horizontalRule: IconMinus,
+    alignLeft: IconAlignLeft,
+    alignCenter: IconAlignCenter,
+    alignRight: IconAlignRight,
+    alignJustify: IconAlignJustify,
+    bold: IconBold,
+    italic: IconItalic,
+    strike: IconStrikeThrough,
+    code: IconCode,
+    image: IconImage,
+} satisfies Record<FileMenuButtonKey, unknown>;
+
 interface MenuButtonProps extends ButtonProps {
     active?: boolean;
 }
@@ -112,8 +146,7 @@ function MenuBar(props: { editor: Editor; canUpload: boolean }) {
     };
 
     const handleUnsetLink = () => {
-        clearSelectionHighlight(editor);
-        run((chain) => chain.unsetLink());
+        unsetLink(editor);
         Toast.success(text().linkRemoveSuccess);
         closeLink();
     };
@@ -133,50 +166,41 @@ function MenuBar(props: { editor: Editor; canUpload: boolean }) {
     // the editor is not reactive: its transactions drive the bar
     editor.on('transaction', update);
 
-    onCleanup(() => editor.off('transaction', update));
-
     // Dropdown triggers take getTriggerProps so aria-haspopup and aria-expanded land on the button itself
-    return (
-        <div class={`${prefixCls}-menu-bar`}>
-            <MenuButton aria-label={text().undo} disabled={!state().canUndo} icon={<IconUndo />} onClick={() => run((chain) => chain.undo())} />
-            <MenuButton aria-label={text().redo} disabled={!state().canRedo} icon={<IconRedo />} onClick={() => run((chain) => chain.redo())} />
-            <Divider layout="vertical" />
-            <Dropdown
-                render={
-                    <Dropdown.Menu>
-                        <For each={headings}>
-                            {({ Icon, level }) => (
-                                <Dropdown.Item
-                                    class={clsx(`${prefixCls}-menu-bar-dropdown-item`, { [`${prefixCls}-menu-bar-dropdown-item-active`]: state().headingLevel === level })}
-                                    aria-label={formatLocale(text().headingLevel, { level })}
-                                    active={state().headingLevel === level}
-                                    onClick={() => run((chain) => chain.toggleHeading({ level }))}
-                                >
-                                    <Icon />
-                                </Dropdown.Item>
-                            )}
-                        </For>
-                    </Dropdown.Menu>
-                }
-            >
-                {(getTriggerProps) => <MenuButton {...getTriggerProps()} aria-label={text().heading} active={state().isHeading} icon={<IconHn />} />}
-            </Dropdown>
-            <MenuButton aria-label={text().paragraph} aria-pressed={state().isParagraph} active={state().isParagraph} icon={<IconText />} onClick={() => run((chain) => chain.setParagraph())} />
-            <MenuButton aria-label={text().bulletList} aria-pressed={state().isBulletList} active={state().isBulletList} icon={<IconList />} onClick={() => run((chain) => chain.toggleBulletList())} />
-            <MenuButton aria-label={text().orderedList} aria-pressed={state().isOrderedList} active={state().isOrderedList} icon={<IconOrderedList />} onClick={() => run((chain) => chain.toggleOrderedList())} />
-            <MenuButton aria-label={text().blockquote} aria-pressed={state().isBlockquote} active={state().isBlockquote} icon={<IconQuote />} onClick={() => run((chain) => chain.toggleBlockquote())} />
-            <MenuButton aria-label={text().codeBlock} aria-pressed={state().isCodeBlock} active={state().isCodeBlock} icon={<IconTerminal />} onClick={() => run((chain) => chain.toggleCodeBlock())} />
-            <MenuButton aria-label={text().horizontalRule} icon={<IconMinus />} onClick={() => run((chain) => chain.setHorizontalRule())} />
-            <Divider layout="vertical" />
-            <MenuButton aria-label={text().alignLeft} aria-pressed={state().isAlignLeft} active={state().isAlignLeft} icon={<IconAlignLeft />} onClick={() => run((chain) => chain.setTextAlign('left'))} />
-            <MenuButton aria-label={text().alignCenter} aria-pressed={state().isAlignCenter} active={state().isAlignCenter} icon={<IconAlignCenter />} onClick={() => run((chain) => chain.setTextAlign('center'))} />
-            <MenuButton aria-label={text().alignRight} aria-pressed={state().isAlignRight} active={state().isAlignRight} icon={<IconAlignRight />} onClick={() => run((chain) => chain.setTextAlign('right'))} />
-            <MenuButton aria-label={text().alignJustify} aria-pressed={state().isAlignJustify} active={state().isAlignJustify} icon={<IconAlignJustify />} onClick={() => run((chain) => chain.setTextAlign('justify'))} />
-            <Divider layout="vertical" />
-            <MenuButton aria-label={text().bold} aria-pressed={state().isBold} active={state().isBold} icon={<IconBold />} onClick={() => run((chain) => chain.toggleBold())} />
-            <MenuButton aria-label={text().italic} aria-pressed={state().isItalic} disabled={!state().canItalic} active={state().isItalic} icon={<IconItalic />} onClick={() => run((chain) => chain.toggleItalic())} />
-            <MenuButton aria-label={text().strike} aria-pressed={state().isStrike} disabled={!state().canStrike} active={state().isStrike} icon={<IconStrikeThrough />} onClick={() => run((chain) => chain.toggleStrike())} />
-            <MenuButton aria-label={text().code} aria-pressed={state().isCode} disabled={!state().canCode} active={state().isCode} icon={<IconCode />} onClick={() => run((chain) => chain.toggleCode())} />
+    const renderItem = (item: FileMenuItem) => {
+        if (item.type === 'divider') {
+            return <Divider layout="vertical" />;
+        }
+        if (item.type === 'heading') {
+            return (
+                <Dropdown
+                    render={
+                        <Dropdown.Menu>
+                            <For each={headings}>
+                                {({ Icon, level }) => (
+                                    <Dropdown.Item
+                                        class={clsx(`${prefixCls}-menu-bar-dropdown-item`, { [`${prefixCls}-menu-bar-dropdown-item-active`]: state().headingLevel === level })}
+                                        aria-label={formatLocale(text().headingLevel, { level })}
+                                        active={state().headingLevel === level}
+                                        onClick={() => run((chain) => chain.toggleHeading({ level }))}
+                                    >
+                                        <Icon />
+                                    </Dropdown.Item>
+                                )}
+                            </For>
+                        </Dropdown.Menu>
+                    }
+                >
+                    {(getTriggerProps) => <MenuButton {...getTriggerProps()} aria-label={text().heading} active={state().isHeading} icon={<IconHn />} />}
+                </Dropdown>
+            );
+        }
+        if (item.type === 'button') {
+            const Icon = MENU_ICONS[item.key];
+            const active = () => (item.activeKey ? state()[item.activeKey] : undefined);
+            return <MenuButton aria-label={text()[item.key]} aria-pressed={active()} active={active()} disabled={item.enabledKey !== undefined && !state()[item.enabledKey]} icon={<Icon />} onClick={() => run(item.command)} />;
+        }
+        return (
             <Dropdown
                 render={
                     <div class={`${prefixCls}-menu-bar-link-dropdown`}>
@@ -205,10 +229,14 @@ function MenuBar(props: { editor: Editor; canUpload: boolean }) {
             >
                 {(getTriggerProps) => <MenuButton {...getTriggerProps()} aria-label={text().link} active={state().isLink} icon={<IconLink />} />}
             </Dropdown>
-            <Show when={props.canUpload}>
-                <Divider layout="vertical" />
-                <MenuButton aria-label={text().image} disabled={!state().canInsertImage} icon={<IconImage />} onClick={() => run((chain) => chain.insertContent({ type: 'imageUpload' }))} />
-            </Show>
+        );
+    };
+
+    onCleanup(() => editor.off('transaction', update));
+
+    return (
+        <div class={`${prefixCls}-menu-bar`}>
+            <For each={getFileMenuItems(props.canUpload)}>{renderItem}</For>
         </div>
     );
 }

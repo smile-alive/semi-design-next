@@ -1,10 +1,13 @@
 import { type ConfirmType, resolveConfirmProps } from '@fibrae/semi-foundation/components/modal/confirm';
+import ConfirmInstance from '@fibrae/semi-foundation/components/modal/confirm-instance';
 import ConfirmRegistry from '@fibrae/semi-foundation/components/modal/confirm-registry';
+import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
 import '@fibrae/semi-foundation/components/modal/modal.scss';
 import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-react';
-import { assertBrowser, render as reactRender, unmount as reactUnmount } from '../../utils/react-render';
+import { render as reactRender, unmount as reactUnmount } from '../../utils/react-render';
 import ConfirmModal from './confirm-modal';
 import type { ModalReactProps } from './modal';
+import type { HookModalRef } from './use-modal';
 
 export interface ConfirmProps extends ModalReactProps {
     type: ConfirmType;
@@ -14,72 +17,25 @@ const registry = new ConfirmRegistry();
 
 export const destroyAll = registry.destroyAll;
 
-export default function confirm(props: ConfirmProps) {
-    assertBrowser('Modal.confirm and its variants', 'Modal.useModal()');
+export default function confirm(props: ConfirmProps): HookModalRef {
+    assertClient('Modal.confirm and its variants', 'Modal.useModal()');
     const div = document.createElement('div');
     document.body.appendChild(div);
-
-    let currentConfig = { ...props };
-    // rendering after destroy would create a root on the detached div that nothing unmounts
-    let destroyed = false;
-    // A dialog that first renders hidden never reports afterClose. So a close before the first commit waits for the
-    // mount, and the dialog then hides through its normal path.
-    let mounted = false;
-    let closeBeforeMount = false;
-
-    const destroy = () => {
-        destroyed = true;
-        reactUnmount(div);
-        div.remove();
-        unregister();
-    };
-
-    const render = (renderProps: ConfirmProps) => {
-        if (destroyed || (closeBeforeMount && !mounted)) {
-            return;
-        }
-        const { afterClose } = renderProps;
-        reactRender(
-            <ConfirmModal
-                {...renderProps}
-                afterClose={() => {
-                    afterClose?.();
-                    destroy();
-                }}
-                onMount={() => {
-                    mounted = true;
-                    if (closeBeforeMount) {
-                        render(currentConfig);
-                    }
-                }}
-            />,
-            div
-        );
-    };
-
-    const close = () => {
-        currentConfig = {
-            ...currentConfig,
-            visible: false,
-        };
-        closeBeforeMount = !mounted;
-        render(currentConfig);
-    };
-
-    const update = (newConfig: ModalReactProps) => {
-        currentConfig = {
-            ...currentConfig,
-            ...newConfig,
-        };
-        render(currentConfig);
-    };
-
-    const unregister = registry.register(close);
-    render(currentConfig);
-    return {
-        destroy: close,
-        update,
-    };
+    // createRoot renders asynchronously, so the dialog exists only once ConfirmModal reports its first commit
+    const render = (renderProps: ConfirmProps) => reactRender(<ConfirmModal {...renderProps} onMount={instance.handleMount} />, div);
+    const instance = new ConfirmInstance(
+        props,
+        {
+            render,
+            remove: () => {
+                reactUnmount(div);
+                div.remove();
+            },
+        },
+        registry
+    );
+    render(instance.props);
+    return instance.handle;
 }
 
 export function withInfo(props: ModalReactProps): ConfirmProps {

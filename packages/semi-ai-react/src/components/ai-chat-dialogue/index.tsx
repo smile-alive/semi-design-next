@@ -3,13 +3,13 @@ import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
 import { IconChevronDown } from '@fibrae/semi-icons-react';
 import useDefaultProps from '@fibrae/semi-ui-react/base/use-default-props';
 import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useFocusHandover, useLocale } from '@fibrae/semi-ui-react/hooks';
-import { namedRole } from '@fibrae/semi-ui-react/utils/named-role';
 import type { AIChatDialogueHandle, AIChatDialogueProps } from './interface';
 import { AnnotationWidget } from './widgets/content-item/annotation';
 import Code from './widgets/content-item/code';
@@ -93,6 +93,7 @@ function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: React.Ref<AIChat
             getContainerRef: () => containerRef.current,
             notifySelect: (ids: string[]) => base.getProps().onSelect?.(ids),
             notifyChatsChange: (chats: Message[]) => base.getProps().onChatsChange?.(chats),
+            notifyChatsPropChange: () => base.getProps().onChatsChange?.(base.getProps().chats ?? EMPTY_CHATS),
             notifyLikeMessage: (message: Message) => base.getProps().onMessageGoodFeedback?.(message),
             notifyDislikeMessage: (message: Message) => base.getProps().onMessageBadFeedback?.(message),
             notifyEditMessage: (message: Message) => base.getProps().onMessageEdit?.(message),

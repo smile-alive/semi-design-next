@@ -76,3 +76,8 @@ export function normalizeFormErrors(input: unknown) {
 export function errorMessages(error: unknown) {
     return isErrorLeaf(error) ? error.filter((message) => message !== '') : [];
 }
+
+/** Whether an error has a message to render */
+export function hasErrorContent(error: unknown) {
+    return errorMessages(error).length > 0;
+}

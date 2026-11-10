@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import SelectFoundation from '../foundation';
+import SelectFoundation, { getOptionId } from '../foundation';
 import type { OptionRecord } from '../option-foundation';
 
 describe('SelectFoundation 渲染期静态函数', () => {
@@ -42,5 +42,29 @@ describe('SelectFoundation 渲染期静态函数', () => {
         expect(SelectFoundation.isInputCombobox(props, true, true)).toBe(false);
         expect(SelectFoundation.isInputCombobox({ ...props, filter: false }, true, false)).toBe(false);
         expect(SelectFoundation.isInputCombobox({ ...props, searchPosition: 'dropdown' }, true, false)).toBe(false);
+    });
+
+    it('getTagFold 未设 maxTagCount 或展开时按需展开全部标签', () => {
+        const closed = { isOpen: false, isFullTags: false };
+        expect(SelectFoundation.getTagFold({}, closed, 5).expanded).toBe(true);
+        expect(SelectFoundation.getTagFold({ maxTagCount: 2 }, closed, 5).expanded).toBe(false);
+        expect(SelectFoundation.getTagFold({ maxTagCount: 2, expandRestTagsOnClick: true }, closed, 5).expanded).toBe(false);
+        expect(SelectFoundation.getTagFold({ maxTagCount: 2, expandRestTagsOnClick: true }, { ...closed, isOpen: true }, 5).expanded).toBe(true);
+    });
+
+    it('getTagFold 给出显示数量、折叠数量，超出才设 limit', () => {
+        const closed = { isOpen: false, isFullTags: false };
+        expect(SelectFoundation.getTagFold({ maxTagCount: 2 }, closed, 5)).toMatchObject({ limit: 2, shownCount: 2, restCount: 3 });
+        expect(SelectFoundation.getTagFold({ maxTagCount: 2 }, closed, 1)).toMatchObject({ limit: undefined, shownCount: 1 });
+    });
+
+    it('getTagFold 在气泡请求完整标签后显示全部且不再给折叠数量', () => {
+        const props = { maxTagCount: 2, showRestTagsPopover: true };
+        expect(SelectFoundation.getTagFold(props, { isOpen: false, isFullTags: true }, 5)).toMatchObject({ shownCount: 5, restCount: undefined });
+        expect(SelectFoundation.getTagFold({ maxTagCount: 2 }, { isOpen: false, isFullTags: true }, 5)).toMatchObject({ shownCount: 2, restCount: 3 });
+    });
+
+    it('getOptionId 由列表 id 与下标拼出', () => {
+        expect(getOptionId('my-select', 3)).toBe('my-select-option-3');
     });
 });

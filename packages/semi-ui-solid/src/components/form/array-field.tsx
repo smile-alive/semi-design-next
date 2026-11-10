@@ -1,7 +1,6 @@
 import { type JSX, batch, createEffect, createMemo, createSignal, on, onCleanup, onMount, untrack } from 'solid-js';
 import ArrayFieldRows from '@fibrae/semi-foundation/components/form/array-field-rows';
-import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
-import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
+import { resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
 import useDefaultProps from '../../base/use-default-props';
 import useWatch from '../../primitives/use-watch';
 import { type ArrayFieldContextValue, ArrayFieldContext, useArrayFieldContext, useFormContext } from './context';
@@ -51,32 +50,13 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
     const rowEntries = new Map<string, ArrayFieldRow>();
 
     const { bridge } = form;
-
-    // read once: a changed field registers its own initial value in the effect below
-    const mountedField = props.field;
-
-    // an existing entry means setValues re-mounted this ArrayField, so its fields must not consume initValue
-    const [shouldUseInitValue, setShouldUseInitValue] = createSignal(!bridge.getArrayField(mountedField));
-
-    // Starts as the field the onMount below registers under, so a rename made before it ran (a parent's onMount)
-    // moves that registration
-    let registeredField = mountedField;
-
-    const mountedFormState = form.formState();
     const field = createMemo(() => props.field);
 
     const formValues = () => parent?.values() ?? form.formState().values ?? {};
 
-    // an entry left by an unmount with keepState: the rows show the values kept in the form, not initValue
-    const initValue = bridge.getArrayField(mountedField) ? ObjectUtil.get(formValues(), mountedField) : (props.initValue ?? ObjectUtil.get(formValues(), mountedField));
-    const initialKeys = generateKeys(initValue);
-
-    const [keys, setKeys] = createSignal(initialKeys);
-    const rows = new ArrayFieldRows(bridge, initialKeys, { setKeys: (next) => setKeys(next), setShouldUseInitValue });
-
-    // separate copies: reset, add and remove must not modify the array the rows read
-    const mountedInitValue = cloneDeep(initValue);
-    const resetValue = cloneDeep(initValue);
+    const rows = new ArrayFieldRows(bridge, { field: props.field, initValue: props.initValue, formValues: formValues(), formState: form.formState() }, { setKeys: (next) => setKeys(next), setShouldUseInitValue: (value) => setShouldUseInitValue(value), cloneDeep });
+    const [keys, setKeys] = createSignal(rows.keys);
+    const [shouldUseInitValue, setShouldUseInitValue] = createSignal(rows.shouldUseInitValue);
 
     const arrayFields = createMemo(() => {
         const current = keys();
@@ -106,26 +86,23 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
     const context: ArrayFieldContextValue = {
         shouldUseInitValue,
         keepState,
-        // rows read the initial value from here until the mount write renders
-        values: () => (form.formState() === mountedFormState ? ObjectUtil.set(formValues(), mountedField, mountedInitValue) : parent?.values()),
+        values: () => rows.rowValues(form.formState(), formValues(), parent?.values()),
     };
 
-    const syncKeys = () => rows.sync(field());
-
-    // Each row operation runs in one batch, so the rows and the form state change together and syncKeys sees the
+    // Each row operation runs in one batch, so the rows and the form state change together and sync sees the
     // updateKey the operation stored
-    const add = (index?: number | MouseEvent) => batch(() => rows.add(field(), index));
+    const add = (index?: number | MouseEvent) => batch(() => rows.add(index));
 
-    const addWithInitValue = (row: Record<string, any> | string, index?: number) => batch(() => rows.addWithInitValue(field(), row, index));
+    const addWithInitValue = (row: Record<string, any> | string, index?: number) => batch(() => rows.addWithInitValue(row, index));
 
     const remove = (index: number) => {
         // a row entry kept after its row was removed has no position; toSpliced(-1) would remove the last row
         if (index >= 0) {
-            batch(() => rows.remove(field(), index));
+            batch(() => rows.remove(index));
         }
     };
 
-    const move = (from: number, to: number) => batch(() => rows.move(field(), from, to));
+    const move = (from: number, to: number) => batch(() => rows.move(from, to));
 
     const childrenProps: ArrayFieldChildrenProps = {
         get arrayFields() {
@@ -140,26 +117,16 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
     // values over the initial array
     const view = <ArrayFieldContext.Provider value={context}>{untrack(() => props.children(childrenProps))}</ArrayFieldContext.Provider>;
 
-    createEffect(on(form.formState, syncKeys, { defer: true }));
+    createEffect(on(form.formState, () => rows.sync(), { defer: true }));
 
     onMount(() => {
-        bridge.mountArrayField(mountedField, resetValue);
+        rows.mount();
         // Disposed before the rows: a later computation of the same owner is cleaned first, so the array goes as a
         // whole and the rows' fields find their paths removed already
-        onCleanup(() => bridge.unRegisterArrayField(field(), keepState()));
+        onCleanup(() => rows.unmount(keepState()));
     });
 
-    // a rename leaves the old path as an unmount does
-    useWatch(field, (current) => {
-        bridge.unRegisterArrayField(registeredField, keepState());
-        registeredField = current;
-        if (!bridge.getArrayField(current)) {
-            // a changed field resets to its own initial value; its current value may hold rows the rename carried over
-            bridge.registerArrayField(current, current === mountedField ? resetValue : cloneDeep(props.initValue ?? bridge.getInitValue(current)));
-        }
-        // registering does not update the form state, so the rows follow the new field here
-        syncKeys();
-    });
+    useWatch(field, (current) => rows.rename(current, keepState(), props.initValue));
 
     return view;
 }

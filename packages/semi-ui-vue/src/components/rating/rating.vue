@@ -105,7 +105,7 @@
 
     const groupLabel = (unit?: string) => {
         const { label, star, stars: plural } = locale.value.locale;
-        return props.ariaLabel || formatLocale(label, { value: value.value, count: props.count, unit: unit ?? (value.value === 1 ? star : plural) });
+        return props.ariaLabel || formatLocale(label, { value: value.value, count: props.count, unit: RatingFoundation.getUnit(value.value, unit, { star, stars: plural }) });
     };
 
     const tipVisible = (index: number) => RatingFoundation.isTipVisible(index, state.value.hoverValue, state.value.focusVisibleStar, props.tooltips?.[index]);

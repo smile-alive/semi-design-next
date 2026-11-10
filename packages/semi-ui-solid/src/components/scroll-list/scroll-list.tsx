@@ -8,9 +8,6 @@ import useDefaultProps from '../../base/use-default-props';
 import hasContent from '../../utils/has-content';
 import ScrollItem from './scroll-item';
 
-// namedRole yields a plain string, which the typed role attribute does not accept
-type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
-
 export interface ScrollListProps extends ElementProps<'div'> {
     header?: JSX.Element;
     footer?: JSX.Element;
@@ -32,7 +29,7 @@ function ScrollList(rawProps: ScrollListProps) {
     const prefix = () => local.prefixCls || cssClasses.PREFIX;
 
     return (
-        <div {...rest} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as Role} class={clsx(local.class, prefix())}>
+        <div {...rest} role={namedRole(rest)} class={clsx(local.class, prefix())}>
             <Show when={hasContent(header())}>
                 <div class={`${prefix()}-header`}>
                     <div class={`${prefix()}-header-title`} x-semi-prop={local['x-semi-header-alias'] || 'header'}>

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import NavigationFoundation, { type NavigationAdapter, type NavigationState, type NavItemType } from '../foundation';
 import SubNavFoundation, { type SubNavAdapter } from '../sub-nav-foundation';
 
-const { getInitialState, getWillOpenKeys, getSelectedKeys, getIsCollapsed, buildItemKeysMap } = NavigationFoundation;
+const { getInitialState, getWillOpenKeys, deriveView, buildItemKeysMap } = NavigationFoundation;
 
 const items = ['home', { itemKey: 'user', items: ['list', { itemKey: 'role', items: ['admin'] }] }, { itemKey: 'job', items: ['query'] }];
 
@@ -70,36 +70,28 @@ describe('NavigationFoundation 静态 state', () => {
     it('从 props 推导受控的 isCollapsed 与 selectedKeys', () => {
         const state = { isCollapsed: true, selectedKeys: ['home'], openKeys: ['a'] } as unknown as NavigationState;
         const itemKeysMap = { admin: ['user', 'role'] };
-        expect(getIsCollapsed({}, state)).toBe(true);
-        expect(getIsCollapsed({ isCollapsed: false }, state)).toBe(false);
-        expect(getSelectedKeys({}, state, itemKeysMap)).toEqual(['home']);
+        expect(deriveView({}, state, itemKeysMap).isCollapsed).toBe(true);
+        expect(deriveView({ isCollapsed: false }, state, itemKeysMap).isCollapsed).toBe(false);
+        expect(deriveView({}, state, itemKeysMap).selectedKeys).toEqual(['home']);
+        expect(deriveView({ selectedKeys: ['admin'] }, state, itemKeysMap).selectedKeys).toEqual(['admin', 'user']);
+        expect(deriveView({ selectedKeys: null }, state, itemKeysMap).selectedKeys).toEqual([]);
     });
 
     it('水平模式下忽略 isCollapsed 与内部折叠状态', () => {
         const state = { isCollapsed: true, selectedKeys: [], openKeys: [] } as unknown as NavigationState;
-        expect(getIsCollapsed({ mode: 'horizontal' }, state)).toBe(false);
-        expect(getIsCollapsed({ mode: 'horizontal', isCollapsed: true }, state)).toBe(false);
-        expect(getIsCollapsed({ mode: 'vertical', isCollapsed: true }, state)).toBe(true);
-    });
-
-    it('从 props 推导受控的 selectedKeys', () => {
-        const state = { isCollapsed: true, selectedKeys: ['home'], openKeys: ['a'] } as unknown as NavigationState;
-        const itemKeysMap = { admin: ['user', 'role'] };
-        expect(getSelectedKeys({ selectedKeys: ['admin'] }, state, itemKeysMap)).toEqual(['admin', 'user']);
+        expect(deriveView({ mode: 'horizontal' }, state, {}).isCollapsed).toBe(false);
+        expect(deriveView({ mode: 'horizontal', isCollapsed: true }, state, {}).isCollapsed).toBe(false);
+        expect(deriveView({ mode: 'vertical', isCollapsed: true }, state, {}).isCollapsed).toBe(true);
     });
 
     it('openKeys 只在竖直且展开时受控，null 视为空，其余情况读 state', () => {
         const state = { isCollapsed: false, selectedKeys: [], openKeys: ['a'] } as unknown as NavigationState;
         const vertical = { mode: 'vertical', openKeys: ['b'] };
-        expect(NavigationFoundation.isOpenKeysControlled(vertical, false)).toBe(true);
-        expect(NavigationFoundation.isOpenKeysControlled(vertical, true)).toBe(false);
-        expect(NavigationFoundation.isOpenKeysControlled({ ...vertical, mode: 'horizontal' }, false)).toBe(false);
-        expect(NavigationFoundation.isOpenKeysControlled({ mode: 'vertical' }, false)).toBe(false);
-        expect(NavigationFoundation.getOpenKeys(vertical, state, false)).toEqual(['b']);
-        expect(NavigationFoundation.getOpenKeys(vertical, state, true)).toEqual(['a']);
-        expect(NavigationFoundation.getOpenKeys({ mode: 'horizontal', openKeys: ['b'] }, state, false)).toEqual(['a']);
-        expect(NavigationFoundation.getOpenKeys({ mode: 'vertical' }, state, false)).toEqual(['a']);
-        expect(NavigationFoundation.getOpenKeys({ mode: 'vertical', openKeys: null }, state, false)).toEqual([]);
+        expect(deriveView(vertical, state, {})).toMatchObject({ openKeysIsControlled: true, openKeys: ['b'] });
+        expect(deriveView({ ...vertical, isCollapsed: true }, state, {})).toMatchObject({ openKeysIsControlled: false, openKeys: ['a'] });
+        expect(deriveView({ ...vertical, mode: 'horizontal' }, state, {})).toMatchObject({ openKeysIsControlled: false, openKeys: ['a'] });
+        expect(deriveView({ mode: 'vertical' }, state, {})).toMatchObject({ openKeysIsControlled: false, openKeys: ['a'] });
+        expect(deriveView({ mode: 'vertical', openKeys: null }, state, {}).openKeys).toEqual([]);
     });
 });
 

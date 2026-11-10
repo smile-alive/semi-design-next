@@ -4,6 +4,7 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/transfer/constants';
     import TransferFoundation, { type BasicResolvedDataItem, type TransferAdapter, type TransferBaseProps, type TransferBaseState } from '@fibrae/semi-foundation/components/transfer/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/transfer/transfer.scss';
     import { IconSearch } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../../base/use-default-props.js';
@@ -11,7 +12,6 @@
     import type SortableComponent from '../../internal/sortable/sortable.svelte';
     import VirtualList from '../../internal/virtual-list.svelte';
     import { splitControlAttrs } from '../../utils/control-attrs.js';
-    import { groupRole } from '../../utils/group-role.js';
     import { Button } from '../button/index.js';
     import { Checkbox } from '../checkbox/index.js';
     import { Input } from '../input/index.js';
@@ -116,37 +116,14 @@
         })
     );
 
-    const data = $derived(TransferFoundation.getData(dataSource, type) as ResolvedItem[]);
-    const selectedItems = $derived(TransferFoundation.getSelectedItems(value, data, states().selectedValues) as Map<string | number, ResolvedItem>);
+    const { data, selectedItems, selectedData, values, filterData, showNumber, noMatch, allChecked, leafOnlyNum, showAllButton, showClearButton, pageSize, totalPage, currentPage, groups } = $derived(TransferFoundation.deriveView<ResolvedItem>(foundationProps, states()));
     const isTree = $derived(type === strings.TYPE_TREE_TO_LIST);
     const isList = $derived(type === strings.TYPE_LIST || type === strings.TYPE_GROUP_LIST);
-    const searchResult = $derived(states().inputValue === '' ? null : TransferFoundation.getSearchResult(data, states().inputValue, filter ?? true, type));
-    const filterData = $derived(TransferFoundation.getFilterData(data, searchResult));
-    const showNumber = $derived(searchResult?.size ?? data.length);
-    const noMatch = $derived(searchResult?.size === 0);
-    const enabledFilterData = $derived(TransferFoundation.getEnabledItems(filterData, type));
-    const leftContainsNotInSelected = $derived(enabledFilterData.some((item) => !selectedItems.has(item.key)));
-    const leafOnlyNum = $derived(TransferFoundation.getLeafCount(filterData, type));
-    const showAllButton = $derived(!isTree && enabledFilterData.length > 0);
-    const values = $derived(TransferFoundation.getValuesAndItemsFromMap(selectedItems, type, showPath).values);
-    const pageSize = $derived(TransferFoundation.getPageSize(pagination));
-    const totalPage = $derived(TransferFoundation.getTotalPage(pagination, filterData.length));
-    const currentPage = $derived(TransferFoundation.getCurrentPage(pagination, states().leftCurrentPage, filterData.length));
-    const leftGroups = $derived(TransferFoundation.getGroups(TransferFoundation.getVisibleData(filterData, pagination, currentPage), data));
-
-    const selectedData = $derived(
-        [...selectedItems.values()].map((item): ResolvedItem => ({
-            ...item,
-            fullPath: TransferFoundation.getFullPath(item, type, showPath) as TransferDataItem[] | undefined,
-        }))
-    );
-
     const selectedKeys = $derived(selectedData.map((item) => item.key));
     const selectedByKey = $derived(new Map(selectedData.map((item) => [item.key, item])));
     const virtualized = $derived(Boolean(virtualize && Object.keys(virtualize).length));
     const virtualHeight = $derived(typeof virtualize?.height === 'number' ? virtualize.height : undefined);
     const showsSortable = $derived(Boolean(draggable && !disabled && Sortable));
-    const hasSelectable = $derived(selectedData.some((item) => !item.disabled));
 
     // Transfer owns the Tree's value, data and handle: a caller's would fight the selection, break the flat item map or
     // replace the search handle. `class` and `style` merge with Transfer's own below.
@@ -165,7 +142,7 @@
     };
 
     const onAllClick = () => {
-        foundation.handleAll(leftContainsNotInSelected);
+        foundation.handleAll(!allChecked);
     };
 
     const sourcePanelProps: TransferSourcePanelSnippetProps = $derived({
@@ -175,7 +152,7 @@
         filterData,
         sourceData: data,
         propsDataSource: dataSource,
-        allChecked: !leftContainsNotInSelected,
+        allChecked,
         showNumber,
         inputValue: states().inputValue,
         selectedItems,
@@ -226,12 +203,9 @@
         }
     });
 
-    // The Tree unmounts while loading or empty, and a keyword typed meanwhile only reached the search box
     $effect(() => {
-        const handle = tree;
-        const keyword = untrack(() => states().inputValue);
-        if (handle && keyword) {
-            handle.search(keyword);
+        if (tree) {
+            untrack(() => foundation.handleTreeMount());
         }
     });
 
@@ -278,7 +252,7 @@
     {/if}
 {/snippet}
 
-<div {...attrs.root} class={[prefixCls, rest.class, { [`${prefixCls}-disabled`]: disabled, [`${prefixCls}-custom-panel`]: sourcePanel && selectedPanel }]} role={groupRole(rest)} onfocusout={handleFocusOut}>
+<div {...attrs.root} class={[prefixCls, rest.class, { [`${prefixCls}-disabled`]: disabled, [`${prefixCls}-custom-panel`]: sourcePanel && selectedPanel }]} role={namedRole(rest)} onfocusout={handleFocusOut}>
     {#if sourcePanel}
         {@render sourcePanel(sourcePanelProps)}
     {:else}
@@ -300,13 +274,13 @@
                 {@render emptyState(emptyLeft, 'left', locale().locale.emptyLeft)}
             {:else if isList || isTree}
                 {#if sourceHeader}
-                    {@render sourceHeader({ allChecked: !leftContainsNotInSelected, leafOnlyNum, num: showNumber, onAllClick, showButton: showAllButton })}
+                    {@render sourceHeader({ allChecked, leafOnlyNum, num: showNumber, onAllClick, showButton: showAllButton })}
                 {:else}
                     <div class={[`${prefixCls}-header`, `${prefixCls}-left-header`]}>
                         <span class={`${prefixCls}-header-total`}>{formatLocale(locale().locale.total, { total: showNumber })}</span>
                         {#if showAllButton}
                             <Button class={`${prefixCls}-header-all`} {disabled} size="small" theme="borderless" type="tertiary" onclick={onAllClick}>
-                                {leftContainsNotInSelected ? locale().locale.selectAll : locale().locale.clearSelectAll}
+                                {allChecked ? locale().locale.clearSelectAll : locale().locale.selectAll}
                             </Button>
                         {/if}
                     </div>
@@ -336,7 +310,7 @@
                 {:else}
                     <!-- checkboxes are disabled with the transfer, so the keyboard can only scroll the list -->
                     <div aria-label={locale().locale.optionList} class={`${prefixCls}-left-list`} role="list" tabindex={disabled ? 0 : undefined}>
-                        {#each leftGroups as group (group.index)}
+                        {#each groups as group (group.index)}
                             {#if group.grouped}
                                 <div role="listitem">
                                     <div class={`${prefixCls}-group-title`} id={groupTitleId(group.index)}>
@@ -365,11 +339,11 @@
     {:else}
         <section class={`${prefixCls}-right`}>
             {#if selectedHeader}
-                {@render selectedHeader({ num: selectedData.length, onClear, showButton: hasSelectable })}
+                {@render selectedHeader({ num: selectedData.length, onClear, showButton: showClearButton })}
             {:else}
                 <div class={[`${prefixCls}-header`, `${prefixCls}-right-header`]}>
                     <span class={`${prefixCls}-header-total`}>{formatLocale(locale().locale.selected, { total: selectedData.length })}</span>
-                    {#if hasSelectable}
+                    {#if showClearButton}
                         <Button class={`${prefixCls}-header-all`} {disabled} size="small" theme="borderless" type="tertiary" onclick={onClear}>{locale().locale.clear}</Button>
                     {/if}
                 </div>

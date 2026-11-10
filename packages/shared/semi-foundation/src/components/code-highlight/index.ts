@@ -27,6 +27,11 @@ export default class CodeHighlightFoundation<P extends CodeHighlightBaseProps = 
         return { html: '', highlightedCode: '' };
     }
 
+    // stale markup would lag behind a streaming `code`
+    static getVisibleHtml({ html, highlightedCode }: CodeHighlightBaseState, code = '') {
+        return highlightedCode === code ? html : '';
+    }
+
     // init does not run on the server, where loading shiki is pointless; destroy drops a highlight still in flight, so init starts it again
     override init() {
         // a grammar registered after mount (a later entry module) highlights this block again

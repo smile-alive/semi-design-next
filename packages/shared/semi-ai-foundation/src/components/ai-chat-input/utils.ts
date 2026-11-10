@@ -1,4 +1,4 @@
-import { getFileKind, getFileType } from '../../utils/file-suffix';
+import { type FileKind, getFileKind, getFileType } from '../../utils/file-suffix';
 import { strings } from './constants';
 import type { AIChatInputBaseProps, AIChatInputState } from './foundation';
 import type { Attachment, BaseSkill, Reference } from './interface';
@@ -47,7 +47,9 @@ export function getPastedFiles(clipboardData?: DataTransfer | null) {
     return [...clipboardData.items].map((item) => item.getAsFile()).filter((file) => file !== null);
 }
 
-export function getContentType(type: string) {
+export type ContentType = FileKind | 'unknown';
+
+export function getContentType(type: string): ContentType {
     return getFileKind(type) ?? 'unknown';
 }
 

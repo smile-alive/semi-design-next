@@ -1,4 +1,4 @@
-import { isEqual } from 'es-toolkit';
+import { isEqual, omitBy } from 'es-toolkit';
 import { type JsonViewerOptions, type CustomRenderRule, type TokenRenderType, JsonViewer } from '@fibrae/semi-json-viewer-core';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { cssClasses } from './constants';
@@ -41,13 +41,12 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
     #resetMeasuredHeights = false;
     #lastSearch: { text: string; caseSensitive: boolean; wholeWord: boolean; regex: boolean } | null = null;
     #appliedOptions: JsonViewerOptions | undefined;
+    #jsonViewer: JsonViewer | null = null;
 
     static override readonly propKeys = ['value', 'options'];
 
     // options is usually a fresh literal, so compare deeply
     static override readonly propEquals = { options: isEqual };
-
-    jsonViewer: JsonViewer | null = null;
 
     #observeResize() {
         const el = this.adapter.getEditorRef();
@@ -73,10 +72,10 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
                 this.#resizeRafId = null;
                 // wrapped line heights were measured at the old width
                 if (this.#resetMeasuredHeights) {
-                    this.jsonViewer?.resetMeasuredHeights();
+                    this.#jsonViewer?.resetMeasuredHeights();
                 }
                 this.#resetMeasuredHeights = false;
-                this.jsonViewer?.layout();
+                this.#jsonViewer?.layout();
             });
         });
         this.#resizeObserver.observe(el);
@@ -85,7 +84,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
     #searchAgain() {
         if (this.#lastSearch) {
             const { text, caseSensitive, wholeWord, regex } = this.#lastSearch;
-            this.jsonViewer?.getSearchWidget().search(text, caseSensitive, wholeWord, regex);
+            this.#jsonViewer?.getSearchWidget().search(text, caseSensitive, wholeWord, regex);
         }
     }
 
@@ -93,22 +92,27 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         return { searchOptions: defaultSearchOptions, showSearchBar: false };
     }
 
+    /** Fills the defaults per key: a caller's `options` must not replace the whole default object, and an explicit `undefined` must not replace a default */
+    static mergeOptions(options: JsonViewerOptions | undefined, ariaLabel: string): JsonViewerOptions {
+        return { ariaLabel, readOnly: false, autoWrap: true, ...omitBy(options ?? {}, (option) => option === undefined) };
+    }
+
     override init() {
         const props = this.getProps();
         const editorRef = this.adapter.getEditorRef();
         this.#appliedOptions = props.options;
-        this.jsonViewer = new JsonViewer(editorRef, props.value, {
+        this.#jsonViewer = new JsonViewer(editorRef, props.value, {
             prefixCls: cssClasses.PREFIX,
             ...this.adapter.toCoreOptions(props.options),
         });
-        this.jsonViewer.emitter.on('customRender', (e) => {
+        this.#jsonViewer.emitter.on('customRender', (e) => {
             this.adapter.setCustomRenderMap(e.customRenderMap);
         });
-        this.jsonViewer.layout();
+        this.#jsonViewer.layout();
         // a rebuilt editor starts without results, while the search bar still shows its query
         this.#searchAgain();
-        this.jsonViewer.emitter.on('contentChanged', () => {
-            this.adapter.notifyChange(this.jsonViewer?.getModel().getValue());
+        this.#jsonViewer.emitter.on('contentChanged', () => {
+            this.adapter.notifyChange(this.#jsonViewer?.getModel().getValue());
             // a search made through the handle has no bar open, yet its results must follow the edit
             this.#searchAgain();
         });
@@ -123,8 +127,8 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
             this.#resizeRafId = null;
         }
         this.#resetMeasuredHeights = false;
-        this.jsonViewer?.dispose();
-        this.jsonViewer = null;
+        this.#jsonViewer?.dispose();
+        this.#jsonViewer = null;
         // a re-created editor without rules never emits customRender, so the stale spans must be cleared here
         this.adapter.setCustomRenderMap(new Map());
     }
@@ -139,14 +143,22 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
      * position. Does nothing while there is no editor.
      */
     syncEditor = () => {
-        if (!this.jsonViewer) {
+        if (!this.#jsonViewer) {
             return;
         }
-        if (isEqual(this.getProp('options'), this.#appliedOptions) && this.getProp('value') === this.jsonViewer.getModel().getValue()) {
+        if (isEqual(this.getProp('options'), this.#appliedOptions) && this.getProp('value') === this.#jsonViewer.getModel().getValue()) {
             return;
         }
         this.destroy();
         this.init();
+    };
+
+    /** `''` while there is no editor */
+    getValue = (): string => this.#jsonViewer?.getModel().getValue() ?? '';
+
+    /** Does nothing while there is no editor */
+    format = () => {
+        this.#jsonViewer?.format();
     };
 
     search = (searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => {
@@ -162,22 +174,22 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         }
         // the search input may not exist (custom UI or closed bar), so edits re-search from this record
         this.#lastSearch = { text: searchText, ...options };
-        this.jsonViewer?.getSearchWidget().search(searchText, options.caseSensitive, options.wholeWord, options.regex);
+        this.#jsonViewer?.getSearchWidget().search(searchText, options.caseSensitive, options.wholeWord, options.regex);
     };
 
     prevSearch = (step?: number) => {
         if (step === undefined) {
-            this.jsonViewer?.getSearchWidget().navigateResults(-1);
+            this.#jsonViewer?.getSearchWidget().navigateResults(-1);
         } else {
-            this.jsonViewer?.getSearchWidget().navigateResults(-step);
+            this.#jsonViewer?.getSearchWidget().navigateResults(-step);
         }
     };
 
     nextSearch = (step?: number) => {
         if (step === undefined) {
-            this.jsonViewer?.getSearchWidget().navigateResults(1);
+            this.#jsonViewer?.getSearchWidget().navigateResults(1);
         } else {
-            this.jsonViewer?.getSearchWidget().navigateResults(step);
+            this.#jsonViewer?.getSearchWidget().navigateResults(step);
         }
     };
 
@@ -185,14 +197,14 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         if (this.getProps().options?.readOnly) {
             return;
         }
-        this.jsonViewer?.getSearchWidget().replace(replaceText);
+        this.#jsonViewer?.getSearchWidget().replace(replaceText);
     };
 
     replaceAll = (replaceText: string) => {
         if (this.getProps().options?.readOnly) {
             return;
         }
-        this.jsonViewer?.getSearchWidget().replaceAll(replaceText);
+        this.#jsonViewer?.getSearchWidget().replaceAll(replaceText);
     };
 
     toggleSearchOption = (key: keyof SearchOptions) => {
@@ -205,12 +217,12 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
     toggleSearchBar = () => {
         // a reopened bar starts with an empty input, so old results and highlights go too
         this.#lastSearch = null;
-        this.jsonViewer?.getSearchWidget().clear();
+        this.#jsonViewer?.getSearchWidget().clear();
         this.setState({ showSearchBar: !this.getState('showSearchBar'), searchOptions: defaultSearchOptions });
     };
 
     /** `null` when nothing was searched (or the bar was closed), `undefined` while there is no editor */
     getSearchResults = (): SearchResults | null | undefined => {
-        return this.jsonViewer?.getSearchWidget().searchResults;
+        return this.#jsonViewer?.getSearchWidget().searchResults;
     };
 }

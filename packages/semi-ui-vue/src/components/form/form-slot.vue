@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, useAttrs, useId } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
+    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/form/form.scss';
     import type { ElementProps } from '../../base/element-props';
-    import { groupRole } from '../../utils/group-role';
     import { hasSlotContent } from '../../utils/slot-nodes';
     import { useFormContext } from './context';
     import FormErrorMessage from './error-message.vue';
@@ -30,7 +30,7 @@
     const id = useId();
 
     const prefix = cssClasses.PREFIX;
-    const labelId = `${id}-label`;
+    const labelId = getFieldIds(id).label;
     const formProps = computed<AllFormProps>(() => form?.formProps.value ?? {});
     const labelPosition = computed(() => props.labelPosition || formProps.value.labelPosition || 'top');
     const labelConfig = computed(() => (isLabelConfig(props.label) ? props.label : { text: props.label }));
@@ -46,7 +46,7 @@
 
     const rootAria = () => {
         const labelledby = joinIds(attrs['aria-labelledby'], labelShown() && labelId);
-        return { role: groupRole({ ...attrs, 'aria-labelledby': labelledby }), 'aria-labelledby': labelledby };
+        return { role: namedRole({ ...attrs, 'aria-labelledby': labelledby }), 'aria-labelledby': labelledby };
     };
 </script>
 

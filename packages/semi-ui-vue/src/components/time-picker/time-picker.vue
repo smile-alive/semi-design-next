@@ -2,7 +2,6 @@
     import { computed, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef } from 'vue';
     import type { Locale } from 'date-fns';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import ComboboxFoundation from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
     import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
@@ -101,21 +100,7 @@
     const format = computed(() => TimePickerFoundation.getValidFormat(props));
     const position = computed(() => TimePickerFoundation.getPosition(props, config.value.direction));
     const placeholder = computed(() => props.placeholder ?? locale.value.locale.placeholder[props.type]);
-
-    const panelClass = computed(() => {
-        const { showHour, showMinute, showSecond } = ComboboxFoundation.getColumns(format.value);
-        const columnCount = [showHour, showMinute, showSecond, props.use12Hours].filter(Boolean).length;
-        return [
-            `${prefix}-panel`,
-            `${prefix}-panel-${looks.size}`,
-            props.popupClassName,
-            {
-                [`${prefix}-panel-narrow`]: (!showHour || !showMinute || !showSecond) && !props.use12Hours,
-                [cssClasses.RANGE_PICKER]: isRange.value,
-            },
-            `${prefix}-panel-column-${columnCount}`,
-        ];
-    });
+    const panelClass = computed(() => [...TimePickerFoundation.getPanelClassNames({ prefixCls: prefix, format: props.format, use12Hours: props.use12Hours, type: props.type }), `${prefix}-panel-${looks.size}`, props.popupClassName]);
 
     // the Input inside is part of this control, not a member of the group
     provideInputGroupContext(undefined);
@@ -145,6 +130,12 @@
             notifyBlur: (event) => emit('blur', event),
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel.value),
             setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(root.value, { preventScroll: props.preventScroll }),
+            blurFocusedElement: () => {
+                const active = FocusTrapHandle.getActiveElement(root.value);
+                if (active && (root.value?.contains(active) || panel.value?.contains(active))) {
+                    active.blur();
+                }
+            },
         }),
         {
             props: {
@@ -206,10 +197,7 @@
     onMounted(measureCustomTrigger);
     onUpdated(measureCustomTrigger);
 
-    defineExpose<TimePickerHandle>({
-        focus: () => root.value?.querySelector('input')?.focus({ preventScroll: props.preventScroll }),
-        blur: () => root.value?.querySelector('input')?.blur(),
-    });
+    defineExpose<TimePickerHandle>({ focus: foundation.focus, blur: foundation.blur });
 </script>
 
 <template>

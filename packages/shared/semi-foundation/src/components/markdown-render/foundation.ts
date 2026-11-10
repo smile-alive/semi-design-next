@@ -4,11 +4,11 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified, type PluggableList } from 'unified';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { isDev } from '../../utils/warning';
 
 export interface MarkdownRenderAdapter<P extends MarkdownRenderBaseProps = MarkdownRenderBaseProps> extends DefaultAdapter<P, MarkdownRenderBaseState> {
     /** `Fragment`, `jsx` and `jsxs` of the automatic JSX runtime */
     getRuntime: () => any;
-    notifyCompileError: (error: unknown) => void;
 }
 
 /**
@@ -156,7 +156,7 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
         void this.updateContent();
     }
 
-    /** A failed compile keeps the last content and goes to `notifyCompileError` */
+    /** A failed compile keeps the last content and is logged in development */
     updateContent = async () => {
         const requestId = ++this.#requestId;
         try {
@@ -166,7 +166,9 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
             }
         } catch (error) {
             if (requestId === this.#requestId) {
-                this.adapter.notifyCompileError(error);
+                if (isDev()) {
+                    console.error(error);
+                }
             }
         }
     };

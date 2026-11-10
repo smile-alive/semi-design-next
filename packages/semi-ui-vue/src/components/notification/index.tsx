@@ -4,9 +4,9 @@
 import { type App, render } from 'vue';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
 import NotificationApi from '@fibrae/semi-foundation/components/notification/notification-api-foundation';
+import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
 import { getInstalledApp, rootAppContext, setInstalledApp } from '../../base/installed-app';
 import { useSemiGlobal } from '../../base/semi-default';
-import { assertClient } from '../../utils/client-only';
 import semiGlobal from '../../utils/semi-global';
 import type { NoticeProps } from './interface';
 import NotificationList from './notification-list.vue';

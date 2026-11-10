@@ -1,8 +1,8 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/card/card.scss';
     import useDefaultProps from '../../base/use-default-props.js';
-    import { groupRole } from '../../utils/group-role.js';
     import { Skeleton, SkeletonParagraph, SkeletonTitle } from '../skeleton/index.js';
     import Space from '../space/space.svelte';
     import { TypographyTitle } from '../typography/index.js';
@@ -45,7 +45,7 @@
             [`${prefixCls}-shadows-${shadows}`]: shadows,
         },
     ]}
-    role={groupRole(rest)}
+    role={namedRole(rest)}
 >
     {#if header || headerExtraContent || hasTitle}
         <div class={[`${prefixCls}-header`, { [`${prefixCls}-header-bordered`]: headerLine }]} style={headerStyle}>

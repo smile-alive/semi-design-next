@@ -1,11 +1,10 @@
-import { type JSX, For, Show, children, createEffect, createMemo, createUniqueId, on, onCleanup, splitProps } from 'solid-js';
+import { type JSX, For, Show, children, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
 import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
 import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
-import useEventListener from '../../primitives/use-event-listener';
 import useMounted from '../../primitives/use-mounted';
 import hasContent from '../../utils/has-content';
 import mergeStyles from '../../utils/merge-styles';
@@ -123,25 +122,17 @@ export default function UserGuide(rawProps: UserGuideProps) {
     const current = createMemo(() => UserGuideFoundation.deriveCurrent(props, state()));
     const step = createMemo(() => local.steps[current()] as StepItem | undefined);
 
-    // nothing rendered (popup target not measured yet) must not lock the page or take focus
-    const shown = createMemo(() => Boolean(visible() && step() && (mode() === 'modal' || state().spotlightRect)));
-    const popupShown = createMemo(() => shown() && mode() === 'popup');
-
     const showMask = () => step()?.mask ?? local.mask;
 
     const isFirst = () => current() === 0;
 
     const isLast = () => current() === local.steps.length - 1;
 
-    const measuring = () => visible() && mode() === 'popup';
-
     const isPrimaryTheme = () => (step()?.theme ?? local.theme) === 'primary';
 
     const item = () => step() as StepItem;
 
     const rect = () => state().spotlightRect as DOMRect;
-
-    const remeasure = () => foundation.measureSpotlight(false);
 
     const prevText = () => local.prevButtonProps?.children || locale().locale.prev;
 
@@ -298,54 +289,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
             </Show>
         </svg>
     );
-
-    // mode and showMask are read by the foundation's lock rule
-    createEffect(
-        on([shown, mode, showMask], ([isShown]) => {
-            if (!isShown) {
-                return;
-            }
-            foundation.beforeShow();
-            onCleanup(foundation.releaseScroll);
-        })
-    );
-
-    createEffect(
-        on(visible, (isVisible) => {
-            if (isVisible) {
-                onCleanup(foundation.afterHide);
-            }
-        })
-    );
-
-    createEffect(
-        on(popupShown, (isShown) => {
-            if (!isShown) {
-                return;
-            }
-            foundation.recordFocus();
-            onCleanup(foundation.restoreFocus);
-        })
-    );
-
-    useEventListener(() => window, 'resize', remeasure, { enabled: measuring });
-
-    // capture: a scroll inside any container can move the target
-    useEventListener(() => window, 'scroll', remeasure, { capture: true, enabled: measuring });
-
-    createEffect(
-        on([measuring, current], ([isMeasuring]) => {
-            if (isMeasuring) {
-                foundation.measureSpotlight(true);
-            }
-        })
-    );
-
-    createEffect(() => {
-        if (measuring()) {
-            onCleanup(UserGuideFoundation.trackFrames(remeasure));
-        }
-    });
 
     return (
         <Show when={visible() && step()}>

@@ -104,6 +104,8 @@ export default class ComboboxFoundation {
         return {
             ...ComboboxFoundation.getColumns(format),
             isAM,
+            // the labels come from the locale, keyed by value
+            ampm: { list: [{ value: 'AM' as const }, { value: 'PM' as const }], selectedIndex: isAM ? 0 : 1 },
             hour: toColumn(hourOptions, disabledHourOptions, use12Hours ? hours % 12 || 12 : hours),
             minute: toColumn(minuteOptions, disabledMinuteOptions, minutes),
             second: toColumn(secondOptions, disabledSecondOptions, dateTime.getSeconds()),

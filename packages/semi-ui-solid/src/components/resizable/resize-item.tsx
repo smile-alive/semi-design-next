@@ -1,4 +1,4 @@
-import { type JSX, onCleanup, splitProps } from 'solid-js';
+import { onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
 import type { ResizeCallback, ResizeStartCallback } from '@fibrae/semi-foundation/components/resizable/types';
@@ -42,7 +42,7 @@ export default function ResizeItem(rawProps: ResizeItemProps) {
         );
 
     return (
-        <div role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} {...rest} ref={mergeRefs(local.ref, register)} class={clsx(local.class, `${prefixCls}-item`)}>
+        <div role={namedRole(rest)} {...rest} ref={mergeRefs(local.ref, register)} class={clsx(local.class, `${prefixCls}-item`)}>
             {local.children}
         </div>
     );

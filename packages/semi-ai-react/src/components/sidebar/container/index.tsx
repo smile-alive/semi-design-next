@@ -2,6 +2,7 @@ import { useInsertionEffect, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
 import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
@@ -10,7 +11,6 @@ import { useDidUpdate, useMergedRef, useLocale } from '@fibrae/semi-ui-react/hoo
 import useRealUnmount from '@fibrae/semi-ui-react/hooks/use-real-unmount';
 import CSSAnimation from '@fibrae/semi-ui-react/internal/css-animation/index';
 import Resizable from '@fibrae/semi-ui-react/resizable/resizable';
-import { namedRole } from '@fibrae/semi-ui-react/utils/named-role';
 import type { ContainerReactProps } from '../interface';
 const prefixCls = cssClasses.SIDEBAR;
 

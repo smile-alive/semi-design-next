@@ -139,7 +139,7 @@ export default function Tree(rawProps: TreeProps) {
         props as BasicTreeProps,
         () => TreeFoundation.getInitialState(snapshot()),
         () => ({
-            notifyExpand: (expandedKeys, info) => local.onExpand?.([...expandedKeys], info as ExpandedOtherProps),
+            notifyExpand: (expandedKeys, info) => local.onExpand?.(expandedKeys, info as ExpandedOtherProps),
             notifySelect: (selectKey, selected, node) => local.onSelect?.(selectKey, selected, node as TreeNodeData),
             notifyChange: (value) => local.onChange?.(value as Value),
             notifySearch: (input, filteredExpandedKeys) => local.onSearch?.(input, filteredExpandedKeys),

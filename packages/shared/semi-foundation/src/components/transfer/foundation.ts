@@ -41,7 +41,7 @@ export interface TransferBaseProps {
     defaultValue?: Array<number | string>;
     disabled?: boolean;
     filter?: BasicFilter;
-    pagination?: { currentPage?: number; defaultCurrentPage?: number };
+    pagination?: { currentPage?: number; defaultCurrentPage?: number; pageSize?: number };
     showPath?: boolean;
     type?: string;
     value?: Array<number | string>;
@@ -132,6 +132,40 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
             selectedValues: props.defaultValue ?? [],
             inputValue: '',
             leftCurrentPage: props.pagination?.defaultCurrentPage ?? props.pagination?.currentPage ?? 1,
+        };
+    }
+
+    /**
+     * What both panels render. `data` defaults to `getData`; Solid passes its memoized copy, as its keyed rows need
+     * the item objects to survive a search or a selection change.
+     */
+    static deriveView<T extends BasicResolvedDataItem = BasicResolvedDataItem>(props: TransferBaseProps, state: TransferBaseState, data = TransferFoundation.getData(props.dataSource, props.type) as Array<T>) {
+        const { type, filter, pagination, showPath } = props;
+        const selectedItems = TransferFoundation.getSelectedItems(props.value, data, state.selectedValues) as Map<number | string, T>;
+        const selectedData = [...selectedItems.values()].map((item) => ({ ...item, fullPath: TransferFoundation.getFullPath(item, type, showPath) }));
+        const searchResult = state.inputValue === '' ? null : TransferFoundation.getSearchResult(data, state.inputValue, filter ?? true, type);
+        const filterData = TransferFoundation.getFilterData(data, searchResult);
+        const enabledItems = TransferFoundation.getEnabledItems(filterData, type);
+        const currentPage = TransferFoundation.getCurrentPage(pagination, state.leftCurrentPage, filterData.length);
+        const visibleData = TransferFoundation.getVisibleData(filterData, pagination, currentPage);
+        return {
+            data,
+            selectedItems,
+            selectedData,
+            values: selectedData.map((item) => item.value),
+            filterData,
+            showNumber: searchResult?.size ?? data.length,
+            noMatch: searchResult?.size === 0,
+            /** True when "select all" would clear: every enabled shown item is selected */
+            allChecked: enabledItems.every((item) => selectedItems.has(item.key)),
+            showAllButton: type !== strings.TYPE_TREE_TO_LIST && enabledItems.length > 0,
+            leafOnlyNum: TransferFoundation.getLeafCount(filterData, type),
+            showClearButton: selectedData.some((item) => !item.disabled),
+            pageSize: TransferFoundation.getPageSize(pagination),
+            totalPage: TransferFoundation.getTotalPage(pagination, filterData.length),
+            currentPage,
+            visibleData,
+            groups: TransferFoundation.getGroups(visibleData, data),
         };
     }
 
@@ -240,8 +274,16 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
     }
 
     static generatePath({ _path = [] }: BasicResolvedDataItem) {
-        return _path.map((p) => p.label).join(' > ');
+        return _path.map((p) => p.label).join(strings.PATH_SEPARATOR);
     }
+
+    /** Called when the host's Tree handle appears: the Tree unmounts while loading or empty, so a keyword typed meanwhile has not reached it */
+    handleTreeMount = () => {
+        const keyword = this.getState('inputValue');
+        if (keyword) {
+            this.adapter.searchTree(keyword);
+        }
+    };
 
     handleInputChange = (inputVal: string, notify: boolean) => {
         if (this.getProp('type') === strings.TYPE_TREE_TO_LIST) {

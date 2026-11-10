@@ -3,7 +3,6 @@
     import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
     import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
-    import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
     import '@fibrae/semi-foundation/components/slider/slider.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
@@ -75,6 +74,8 @@
     let controlled = untrack(() => value !== undefined);
     let written: number | number[] | undefined;
 
+    const handleInputs: Partial<Record<Handle, HTMLInputElement>> = {};
+
     const foundationProps: BasicSliderProps = {
         get disabled() {
             return disabled;
@@ -121,6 +122,8 @@
         (view) => SliderFoundation.getInitialState(view),
         () => ({
             getSliderNode: () => slider,
+            getHandleInput: (pos) => handleInputs[pos],
+            notifyBlur: (event) => onBlur?.(event),
             notifyChange: (next) => {
                 written = next;
                 value = next;
@@ -133,22 +136,11 @@
     );
 
     const prefix = cssClasses.PREFIX;
-    const isRTL = $derived(config.direction === 'rtl' && !vertical);
-    const stylePos = $derived(vertical ? 'top' : isRTL ? 'right' : 'left');
-    const reverse = $derived(vertical && verticalReverse ? '-reverse' : '');
     const handles = $derived<Handle[]>(range ? ['min', 'max'] : ['min']);
     const currentValue = $derived(SliderFoundation.deriveValue(foundationProps, states()));
-    const percent = $derived(SliderFoundation.getMinAndMaxPercent({ range, min, max }, currentValue));
+    const layout = $derived(SliderFoundation.getLayout({ range, min, max, vertical, verticalReverse, included }, currentValue, states(), config.direction));
     const tips = $derived(SliderFoundation.computeHandleVisibleVal({ tooltipVisible, tipFormatter, range, step, min }, { ...states(), currentValue }));
-
-    const trackStyle = $derived.by(() => {
-        if (!included) {
-            return undefined;
-        }
-        const size = range ? `${Math.abs(percent.max - percent.min) * 100}%` : `${percent.min * 100}%`;
-        const start = range ? `${Math.min(percent.min, percent.max) * 100}%` : '0';
-        return `${vertical ? 'height' : 'width'}: ${size}; ${stylePos}: ${start}`;
-    });
+    const trackStyle = $derived(layout.track && `${layout.track.sizeProp}: ${layout.track.size}; ${layout.startProp}: ${layout.track.start}`);
 
     const markList = $derived<MarkItem[]>(
         Object.entries(marks ?? {}).map(([key, label]) => {
@@ -164,18 +156,10 @@
     // autofocus belongs to the start handle alone: the slider has one Tab stop to land on first
     const inputAttrs = (pos: Handle) => Object.fromEntries(Object.entries(attrs.control).filter(([key]) => key !== 'aria-required' && key !== 'tabindex' && (key !== 'autofocus' || pos === 'min')));
 
-    const markPercent = (markValue: number) => ((markValue - min) / (max - min)) * 100;
-
     const handleIndex = (pos: Handle) => (pos === 'min' ? 0 : 1);
 
     const handleValue = (pos: Handle) => {
         return Array.isArray(currentValue) ? currentValue[handleIndex(pos)] : currentValue;
-    };
-
-    const handleStyle = (pos: Handle) => {
-        const { chooseMovePos, isDrag } = states();
-        const active = chooseMovePos === pos && (range || isDrag);
-        return `${stylePos}: ${(pos === 'min' ? percent.min : percent.max) * 100}%; z-index: ${active ? 2 : 1}`;
     };
 
     const dotOf = (pos: Handle): HandleDot | undefined => (Array.isArray(handleDot) ? handleDot[handleIndex(pos)] : handleDot);
@@ -200,13 +184,6 @@
         }
     };
 
-    const onHandleDown = (event: PointerEvent & { currentTarget: HTMLElement }, pos: Handle) => {
-        // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
-        const input = event.currentTarget.querySelector('input');
-        if (input) focusWithoutRing(input, { preventScroll: true });
-        foundation.onHandleDown(event, pos);
-    };
-
     const onInput = (event: Event & { currentTarget: HTMLInputElement }, pos: Handle) => {
         foundation.handleInputChange(Number(event.currentTarget.value), pos);
         // A controlled or blocked handle keeps its rendered value, which Svelte does not patch back after the browser moved it.
@@ -215,9 +192,7 @@
 
     const onFocusout = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         rest.onfocusout?.(event);
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            onBlur?.(event);
-        }
+        foundation.handleBlur(event);
     };
 
     // The bindable write-back reads as undefined to the foundation, so a later reset to undefined is no prop change there.
@@ -237,7 +212,7 @@
 
 <!-- The mark tip is for the pointer only: the Tooltip trigger props must not make the dot a Tab stop -->
 {#snippet markDot(item: MarkItem, trigger?: TooltipTriggerProps)}
-    <span {...trigger} class={[`${prefix}-dot`, { [`${prefix}-dot-active`]: item.active === 'active' }]} style="{stylePos}: calc({markPercent(item.value)}% - 2px)" tabindex="-1" onclick={foundation.handleWrapClick}></span>
+    <span {...trigger} class={[`${prefix}-dot`, { [`${prefix}-dot-active`]: item.active === 'active' }]} style="{layout.startProp}: calc({SliderFoundation.getMarkPercent({ min, max }, item.value)}% - 2px)" tabindex="-1" onclick={foundation.handleWrapClick}></span>
 {/snippet}
 
 {#snippet handleView(pos: Handle)}
@@ -253,13 +228,13 @@
                 {...props}
                 aria-describedby={undefined}
                 class={[cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: states().chooseMovePos === pos && states().isDrag }]}
-                style={handleStyle(pos)}
+                style="{layout.startProp}: {layout.handles[pos].start}; z-index: {layout.handles[pos].zIndex}"
                 tabindex="-1"
                 onmousedown={(event) => event.preventDefault()}
                 onmouseenter={() => foundation.onHandleEnter(pos)}
                 onmouseleave={foundation.onHandleLeave}
                 onmouseover={syncSingle}
-                onpointerdown={(event) => onHandleDown(event, pos)}
+                onpointerdown={(event) => foundation.onHandleDown(event, pos)}
             >
                 <input
                     {...inputAttrs(pos)}
@@ -267,8 +242,9 @@
                     aria-labelledby={handleA11y(pos).ariaLabelledby}
                     aria-orientation={vertical ? 'vertical' : undefined}
                     aria-valuetext={valuetext(pos)}
+                    bind:this={handleInputs[pos]}
                     class={`${cssClasses.HANDLE}-input`}
-                    dir={isRTL || (vertical && verticalReverse) ? 'rtl' : 'ltr'}
+                    dir={layout.inputDir}
                     {disabled}
                     id={handleA11y(pos).id}
                     {max}
@@ -346,9 +322,9 @@
             {/each}
         </div>
         {#if showMarkLabel && markList.length}
-            <div class={cssClasses.MARKS + reverse}>
+            <div class={cssClasses.MARKS + layout.reverse}>
                 {#each shownMarks as item (item.key)}
-                    <span class={`${prefix}-mark${reverse}`} style="{stylePos}: {markPercent(item.value)}%" onclick={() => foundation.handleMarkClick(item.value)}>
+                    <span class={`${prefix}-mark${layout.reverse}`} style="{layout.startProp}: {SliderFoundation.getMarkPercent({ min, max }, item.value)}%" onclick={() => foundation.handleMarkClick(item.value)}>
                         {@render markLabel(item)}
                     </span>
                 {/each}

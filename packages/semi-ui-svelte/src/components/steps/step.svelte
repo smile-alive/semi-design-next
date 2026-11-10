@@ -2,9 +2,9 @@
     import { omit } from 'es-toolkit';
     import { focusableSelector, stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
     import { getStepState } from '@fibrae/semi-foundation/components/steps/utils';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
     import { IconAlertCircle, IconAlertTriangle, IconChevronRight, IconTickCircle } from '@fibrae/semi-icons-svelte';
-    import { groupRole } from '../../utils/group-role.js';
     import { getStepsContext } from './context.js';
     import type { StepData } from './interface.js';
 
@@ -24,7 +24,7 @@
     const status = $derived(state.status ?? item.status ?? 'wait');
     const StatusIcon = $derived(status in statusIcons ? statusIcons[status as keyof typeof statusIcons] : undefined);
     const clickable = $derived(steps.clickable || Boolean(item.onClick));
-    const role = $derived(clickable ? 'button' : groupRole(attrs));
+    const role = $derived(clickable ? 'button' : namedRole(attrs));
     const snippetProps = $derived({ item, index });
     const plainTitle = $derived(String(item.title ?? ''));
     const plainDescription = $derived(String(item.description ?? ''));

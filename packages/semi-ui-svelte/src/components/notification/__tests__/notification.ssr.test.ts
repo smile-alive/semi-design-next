@@ -1,6 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
-import NotificationListStore from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+import { createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Notification } from '../index';
 import type { NotificationHookApi } from '../interface';
@@ -21,7 +21,7 @@ describe('Svelte Notification 服务端首帧', () => {
     });
 
     it('列表首帧只有常驻播报区，没有通知', () => {
-        const { body } = render(NotificationList, { props: { store: new NotificationListStore() } });
+        const { body } = render(NotificationList, { props: { store: createNotificationListStore() } });
         expect(body).toContain('aria-live="polite"');
         expect(body).not.toContain('role="status"');
     });

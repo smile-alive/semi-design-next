@@ -1,5 +1,6 @@
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { crossesFocusBoundary } from '../../utils/a11y';
 import warning from '../../utils/warning';
 import type { BasicCheckboxEvent } from './checkbox-foundation';
 
@@ -16,6 +17,8 @@ export interface CheckboxGroupBaseState {
 
 export interface CheckboxGroupAdapter<P extends CheckboxGroupBaseProps = CheckboxGroupBaseProps> extends DefaultAdapter<P, CheckboxGroupBaseState> {
     notifyChange: (value: CheckboxValue[]) => void;
+    /** Form injects `onBlur` into the group */
+    notifyBlur: (e: any) => void;
 }
 
 export default class CheckboxGroupFoundation<P extends CheckboxGroupBaseProps = CheckboxGroupBaseProps> extends BaseFoundation<CheckboxGroupAdapter<P>, P, CheckboxGroupBaseState> {
@@ -54,6 +57,13 @@ export default class CheckboxGroupFoundation<P extends CheckboxGroupBaseProps = 
             warning(true, 'Warning: [Semi CheckboxGroup] value should be an Array');
         }
     }
+
+    // moving between the boxes is not leaving the group: Form's blur validation waits until focus is outside
+    handleBlur = (e: Parameters<typeof crossesFocusBoundary>[0]) => {
+        if (crossesFocusBoundary(e)) {
+            this.adapter.notifyBlur(e);
+        }
+    };
 
     handleChange = (evt: BasicCheckboxEvent) => {
         const prevValue = CheckboxGroupFoundation.deriveValue(this.getProps(), this.getStates());

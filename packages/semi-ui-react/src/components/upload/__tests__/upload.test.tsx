@@ -2100,15 +2100,14 @@ describe('Upload 补充覆盖', () => {
         expect(document.querySelector(`.${prefixCls}-file-card`)).toBeNull();
     });
 
-    it('resetReplaceInput 更新 replaceInputKey', async () => {
-        // input keys come from Math.random, which vitest/setup.ts cycles through four values; keep them distinct here
-        let seed = 0;
-        vi.spyOn(Math, 'random').mockImplementation(() => (seed += 0.01));
+    it('替换后清空替换输入框的值，同一文件可再次选择', async () => {
         renderUpload({ defaultFileList, showReplace: true });
-        const replaceInputBefore = getReplaceInput();
+        const replaceInput = getReplaceInput();
         await userEvent.click(document.querySelector(`.${prefixCls}-file-card-replace`));
-        selectFiles([createFile(100, 'replaced.png')], replaceInputBefore);
-        expect(getReplaceInput()).not.toBe(replaceInputBefore);
+        const valueSetter = vi.spyOn(replaceInput, 'value', 'set');
+        selectFiles([createFile(100, 'replaced.png')], replaceInput);
+        expect(valueSetter).toHaveBeenCalledWith('');
+        expect(getReplaceInput()).toBe(replaceInput);
         expect(getCardNames()).toEqual(['replaced.png', 'test.jpeg']);
     });
 
@@ -2629,23 +2628,24 @@ describe('Upload 审计余量', () => {
         expect(lastFileList(onChange)[0].preview).toBe(true);
     });
 
-    it('所有文件被 accept 拒绝后重置选择框，再选同一文件仍会触发 onAcceptInvalid', () => {
+    it('所有文件被 accept 拒绝后清空选择框的值，再选同一文件仍会触发 onAcceptInvalid', () => {
         const onAcceptInvalid = vi.fn<UploadCallback<'onAcceptInvalid'>>();
         renderUpload({ accept: '.png', onAcceptInvalid });
-        const before = getInput();
+        const valueSetter = vi.spyOn(getInput(), 'value', 'set');
         selectFiles([createFile(10, 'a.jpg', 'image/jpeg')]);
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
-        expect(getInput()).not.toBe(before);
+        expect(valueSetter).toHaveBeenCalledWith('');
     });
 
-    it('替换的文件被 accept 拒绝后重置替换选择框', async () => {
+    it('替换的文件被 accept 拒绝后清空替换选择框的值', async () => {
         const onAcceptInvalid = vi.fn<UploadCallback<'onAcceptInvalid'>>();
         renderUpload({ accept: '.png', showReplace: true, defaultFileList: items(1), onAcceptInvalid });
         await userEvent.click(document.querySelector(`.${prefixCls}-file-card-replace`));
-        const before = getReplaceInput();
-        selectFiles([createFile(10, 'a.jpg', 'image/jpeg')], before);
+        const replaceInput = getReplaceInput();
+        const valueSetter = vi.spyOn(replaceInput, 'value', 'set');
+        selectFiles([createFile(10, 'a.jpg', 'image/jpeg')], replaceInput);
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
-        expect(getReplaceInput()).not.toBe(before);
+        expect(valueSetter).toHaveBeenCalledWith('');
     });
 
     it('已有文件数超过 limit 时，选择与 insert 都不再追加文件', () => {

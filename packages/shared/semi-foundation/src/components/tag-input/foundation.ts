@@ -1,9 +1,12 @@
+import FocusTrapHandle from '../../base/focus-handle';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { crossesFocusBoundary } from '../../utils/a11y';
 import arrayMove from '../../utils/array-move';
 import { fitInputWidth, onFontsLoaded, supportsFieldSizing } from '../../utils/field-sizing';
 import { isComposing } from '../../utils/key-code';
 import getSplitedArray from './utils/get-splited-array';
 
+export type TagInputValidateStatus = 'default' | 'error' | 'warning';
 export type TagInputChangeEvent = Event;
 export type TagInputCursorEvent = any;
 export type TagInputKeyboardEvent = any;
@@ -29,9 +32,12 @@ export interface TagInputBaseProps {
     value?: string[] | null;
     defaultValue?: string[];
     inputValue?: string;
+    autoFocus?: boolean;
     disabled?: boolean;
     maxLength?: number;
     max?: number;
+    maxTagCount?: number;
+    expandRestTagsOnClick?: boolean;
     allowDuplicates?: boolean;
     addOnBlur?: boolean;
     separator?: string | string[] | null;
@@ -47,7 +53,7 @@ export interface TagInputBaseState {
 }
 
 export interface TagInputAdapter<P extends TagInputBaseProps = TagInputBaseProps, E = TagInputChangeEvent> extends DefaultAdapter<P, TagInputBaseState> {
-    focusInput(): void;
+    focusInput(options?: FocusOptions): void;
     /** A host that binds `inputValue` (Svelte) writes the typed text back here; it runs before every write of the text state */
     syncInputValue?: (inputValue: string) => void;
     notifyBlur: (e: TagInputCursorEvent) => void;
@@ -60,6 +66,7 @@ export interface TagInputAdapter<P extends TagInputBaseProps = TagInputBaseProps
     notifyInputExceed: (value: string) => void;
     notifyExceed: (tagList: string[]) => void;
     getInput(): HTMLInputElement | null;
+    getRoot(): HTMLElement | null;
 }
 
 export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBaseProps, E = TagInputChangeEvent> extends BaseFoundation<TagInputAdapter<P, E>, P, TagInputBaseState> {
@@ -157,6 +164,12 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         this.adapter.notifyInputChange(value, e);
     }
 
+    protected override initOnce() {
+        if (this.getProp('autoFocus') && !this.getProp('disabled')) {
+            this.focus();
+        }
+    }
+
     /** A controlled `value` wins over state, and a controlled `null` means no tags */
     static getTagsArray(props: { value?: string[] | null }, state: { tagsArray?: string[] }) {
         if (props.value !== undefined) {
@@ -193,6 +206,14 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
             return `${n}:${value}`;
         };
         return { values, ids: values.map((value) => unused.get(value)?.shift() ?? newId(value)) };
+    }
+
+    /**
+     * How many tags show before the rest fold into "+N": tags past maxTagCount fold until the TagInput is active (or for
+     * good with expandRestTagsOnClick off). A sortable list (`sorting`) shows every tag.
+     */
+    static getVisibleCount({ maxTagCount, expandRestTagsOnClick }: Pick<TagInputBaseProps, 'maxTagCount' | 'expandRestTagsOnClick'>, { active, sorting }: { active: boolean; sorting: boolean }, length: number) {
+        return !sorting && (!active || !expandRestTagsOnClick) && maxTagCount && maxTagCount < length ? maxTagCount : length;
     }
 
     static getInputValue(props: { inputValue?: string }, state: { inputValue?: string }) {
@@ -305,7 +326,11 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         this.adapter.notifyKeyDown(e);
     };
 
+    /** Bound to focusout on the root: focus moving among the input, tags and buttons inside is not leaving */
     handleInputBlur = (e: TagInputCursorEvent) => {
+        if (!crossesFocusBoundary(e)) {
+            return;
+        }
         const { addOnBlur } = this.adapter.getProps();
         if (addOnBlur === true && this.#current().inputValue !== '') {
             this.#handleAddTags(e);
@@ -317,11 +342,29 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         this.adapter.notifyBlur(e);
     };
 
+    /** Bound to focusin on the root; see handleInputBlur */
     handleInputFocus = (e: TagInputCursorEvent) => {
+        if (!crossesFocusBoundary(e)) {
+            return;
+        }
         // Tab entry gets the same state as a click
         this.handleClick();
         this.setState({ focusing: true });
         this.adapter.notifyFocus(e);
+    };
+
+    focus = (options?: FocusOptions) => {
+        this.adapter.focusInput(options);
+        this.handleClick();
+    };
+
+    blur = () => {
+        const root = this.adapter.getRoot();
+        const focused = FocusTrapHandle.getActiveElement(root);
+        if (focused instanceof HTMLElement && root?.contains(focused)) {
+            focused.blur();
+        }
+        this.deactivate();
     };
 
     handleClearBtn = (e: TagInputMouseEvent) => {

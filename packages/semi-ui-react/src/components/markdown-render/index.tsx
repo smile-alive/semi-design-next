@@ -4,12 +4,11 @@ import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
 import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/components/markdown-render/foundation';
-import { isDev } from '@fibrae/semi-foundation/utils/warning';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/markdown-render/markdown-render.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
-import { namedRole } from '../../utils/named-role';
 import * as SemiMarkdownComponents from './components';
 
 type Foundation = MarkdownRenderFoundation<MarkdownRenderProps>;
@@ -44,14 +43,7 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
         props,
         // effects do not run on the server, so md is compiled here for the server HTML and the hydrating render
         () => MarkdownRenderFoundation.getInitialState(props, runtime),
-        () => ({
-            getRuntime: () => runtime,
-            notifyCompileError: (error) => {
-                if (isDev()) {
-                    console.error(error);
-                }
-            },
-        })
+        () => ({ getRuntime: () => runtime })
     );
 
     return (

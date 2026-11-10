@@ -1,9 +1,9 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
-    import { cloneDeep } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
-    import ItemFoundation, { type ItemAdapter, type ItemKey, type ItemProps, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+    import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
+    import ItemFoundation, { type ItemAdapter, type ItemKey, type ItemProps, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import useFoundation from '../../base/use-foundation.svelte.js';
     import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs.js';
@@ -26,7 +26,10 @@
         text?: string | number;
         tooltipHideDelay?: number;
         tooltipShowDelay?: number;
-        given: Record<string, unknown>;
+        /** What onSelect reports for an item written as a component; a Sub's title passes none, it never selects */
+        reported?: Record<string, unknown>;
+        /** The `items` entry this item was made from, which onSelect reports whole */
+        itemConfig?: NavItemType;
         icon?: Snippet<[NavIconArgs]>;
         toggleIcon?: Snippet<[NavIconArgs]>;
         label?: Snippet;
@@ -37,7 +40,7 @@
     type Foundation = ItemFoundation<ItemProps>;
     type Adapter = ItemAdapter<ItemProps>;
 
-    let { isSubNav = false, isInSubNav, level, disabled, indent, isCollapsed: ownCollapsed, itemKey, link, linkOptions, text, tooltipHideDelay, tooltipShowDelay, given, icon, toggleIcon, label, content, onItemClick, ...rest }: ItemShellProps = $props();
+    let { isSubNav = false, isInSubNav, level, disabled, indent, isCollapsed: ownCollapsed, itemKey, link, linkOptions, text, tooltipHideDelay, tooltipShowDelay, reported, itemConfig, icon, toggleIcon, label, content, onItemClick, ...rest }: ItemShellProps = $props();
 
     const ctx = getNavContext('Nav.Item');
 
@@ -72,7 +75,7 @@
         foundationProps,
         () => ({}),
         () => ({
-            cloneDeep: <T>(_value: T) => cloneDeep(given) as T,
+            getSelectedItem: () => copySelectedItem(itemConfig ? { ...itemConfig, level } : { ...reported }) as ItemProps,
             selectSelf: () => ctx.updateSelectedKeys([itemKey as ItemKey]),
             getSelectedKeysIsControlled: () => ctx.selectedKeysIsControlled,
             notifyGlobalOnSelect: (data) => ctx.notifySelect(data as OnSelectedData),

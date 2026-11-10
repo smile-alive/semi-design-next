@@ -66,11 +66,9 @@ export default function AudioSlider(rawProps: AudioSliderProps) {
     // the duration is 0 until the metadata loads
     const percent = () => (props.max ? (props.value / props.max) * 100 : 0);
 
-    // the popup is anchored to the slider's center, so only a translate moves it to the pointer; the vertical offset
-    // counts up from the bottom
     const previewStyle = (): JSX.CSSProperties => {
         const info = state().movingInfo;
-        return { translate: info ? (props.vertical ? `0 ${-info.offset}px` : `${info.offset}px 0`) : undefined };
+        return { translate: info ? SeekFoundation.getPreviewTranslate(info.offset, props.vertical) : undefined };
     };
 
     const renderSlider = (triggerProps?: JSX.HTMLAttributes<HTMLDivElement>) => (
@@ -86,9 +84,9 @@ export default function AudioSlider(rawProps: AudioSliderProps) {
             onLostPointerCapture={foundation.handleLostPointerCapture}
             // keeps the press from moving focus from the input to this div
             onMouseDown={(event) => event.preventDefault()}
-            onMouseEnter={(event) => foundation.handlePointerPosition(event, { seek: false })}
+            onMouseEnter={foundation.handlePointerEnter}
             onPointerDown={foundation.handlePointerDown}
-            onPointerMove={(event) => foundation.handlePointerPosition(event, { seek: true })}
+            onPointerMove={foundation.handlePointerMove}
         >
             <input
                 ref={(node) => (input = node)}

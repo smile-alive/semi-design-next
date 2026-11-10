@@ -1,4 +1,4 @@
-import { debounce } from 'es-toolkit';
+import { debounce, omitBy } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
 import { easeInOutCubic, tween } from '@fibrae/semi-foundation/utils/tween';
 
@@ -156,6 +156,11 @@ export default abstract class MessageListFoundation<M extends ListMessage, A ext
 
     protected resumeFollowing() {
         this.#following = true;
+    }
+
+    /** Drops `undefined` entries of `custom`: one would replace the built-in component with a non-component */
+    static mergeMarkdownComponents<B extends object, C extends Record<string, any>>(builtin: B, custom: C | undefined) {
+        return { ...builtin, ...omitBy(custom ?? {}, (component) => component === undefined) };
     }
 
     override init() {

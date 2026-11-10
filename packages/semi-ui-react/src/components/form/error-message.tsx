@@ -23,11 +23,6 @@ export interface ErrorMessageProps extends ElementProps<'div'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-/** Whether an error has a message ErrorMessage renders */
-export function hasErrorContent(error?: FieldError) {
-    return errorMessages(error).length > 0;
-}
-
 function ErrorMessage({ error, className, style, validateStatus, helpText, showValidateIcon, isInInputGroup, errorMessageId, helpTextId, ref, ...rest }: ErrorMessageProps) {
     const messages = errorMessages(error);
     const failed = Boolean(error?.length);

@@ -110,9 +110,6 @@ export default function Avatar(rawProps: AvatarProps) {
         }
     });
 
-    // size is resolved from the group context, so it is not a prop of the foundation
-    useDidUpdate(size, foundation.changeScale);
-
     for (const [key, value] of Object.entries(rest)) {
         (hasFocusTarget && (key === 'tabIndex' || isAriaKey(key)) ? controlProps : rootProps)[key] = value;
     }

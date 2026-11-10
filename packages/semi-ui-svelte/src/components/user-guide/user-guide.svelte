@@ -1,6 +1,5 @@
 <script lang="ts">
     import { type Snippet, untrack } from 'svelte';
-    import { on } from 'svelte/events';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
     import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
@@ -15,7 +14,7 @@
     import type { UserGuideButtonProps, UserGuideProps, UserGuideStepItem, UserGuideStepSnippetProps } from './interface.js';
     import { anchorStyle, buttonProps } from './utils.js';
 
-    type FoundationProps = Pick<UserGuideProps, 'current' | 'spotlightPadding' | 'mode' | 'mask' | 'getPopupContainer'> & { steps: UserGuideStepItem[] };
+    type FoundationProps = Pick<UserGuideProps, 'visible' | 'current' | 'spotlightPadding' | 'mode' | 'mask' | 'getPopupContainer'> & { steps: UserGuideStepItem[] };
     type Foundation = UserGuideFoundation<FoundationProps>;
     type Adapter = UserGuideAdapter<FoundationProps>;
 
@@ -67,6 +66,9 @@
 
     // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: FoundationProps = {
+        get visible() {
+            return Boolean(visible ?? defaults('visible', false));
+        },
         get current() {
             return current ?? defaults('current');
         },
@@ -93,6 +95,9 @@
         (view) => UserGuideFoundation.getInitialState(view),
         () => ({
             getPopup: () => popover?.getPopup(),
+            clearWrittenCurrent: () => {
+                if (!pinned) current = undefined;
+            },
             // the bindable props are the source of truth: bound, the write reaches the parent; unbound, it overrides locally
             notifyChange: (next) => {
                 written = next;
@@ -112,7 +117,7 @@
         })
     );
 
-    const open = $derived(Boolean(visible ?? defaults('visible', false)));
+    const open = $derived(foundationProps.visible);
     const currentIndex = $derived(UserGuideFoundation.deriveCurrent(foundationProps, states()));
     const step = $derived<UserGuideStepItem | undefined>(steps[currentIndex]);
     const rect = $derived(states().spotlightRect);
@@ -124,11 +129,6 @@
     const hasDescription = $derived(Boolean(step?.description));
     const cardClass = $derived([`${prefix}-popover`, className, step?.class].filter(Boolean).join(' '));
     const cardStyle = $derived(['padding: 0', primary && 'background-color: var(--semi-color-primary)', style].filter(Boolean).join(';'));
-
-    // Without a step on screen (a modal step, or a popup step with a measured target) the guide renders nothing, so it
-    // must not lock the page or take focus
-    const shown = $derived(open && Boolean(step) && (mode === 'modal' || Boolean(rect)));
-    const measuring = $derived(open && mode === 'popup');
 
     const secondaryProps = $derived<UserGuideButtonProps>({
         style: primary ? 'background-color: var(--semi-color-fill-2)' : undefined,
@@ -151,52 +151,6 @@
             }
         }
     );
-
-    $effect(() => {
-        if (!measuring) return;
-        const remeasure = () => untrack(() => foundation.measureSpotlight(false));
-        const offResize = on(window, 'resize', remeasure);
-        // capture: a scroll inside any container can move the target
-        const offScroll = on(window, 'scroll', remeasure, { capture: true });
-        return () => {
-            offResize();
-            offScroll();
-        };
-    });
-
-    $effect(() => {
-        void currentIndex;
-        if (measuring) untrack(() => foundation.measureSpotlight(true));
-    });
-
-    $effect(() => {
-        if (!measuring) return;
-        return UserGuideFoundation.trackFrames(() => untrack(() => foundation.measureSpotlight(false)));
-    });
-
-    // mode and showMask are read by the foundation's lock rule
-    $effect(() => {
-        if (!shown) return;
-        void showMask;
-        void mode;
-        untrack(() => foundation.beforeShow());
-        return foundation.releaseScroll;
-    });
-
-    $effect(() => {
-        if (!open) return;
-        return () => {
-            // cleared first: afterHide restarts from the first step only when no current is left
-            if (!pinned) current = undefined;
-            foundation.afterHide();
-        };
-    });
-
-    $effect(() => {
-        if (!(shown && mode === 'popup')) return;
-        untrack(() => foundation.recordFocus());
-        return foundation.restoreFocus;
-    });
 </script>
 
 {#snippet text(value: string | Snippet<[UserGuideStepSnippetProps]> | undefined, args: UserGuideStepSnippetProps)}

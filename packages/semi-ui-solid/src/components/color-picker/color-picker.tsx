@@ -26,7 +26,6 @@ export interface ColorPickerProps extends BaseColorPickerProps, ElementProps<'di
     children?: PopoverProps['children'];
 }
 
-type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
 type Foundation = ColorPickerFoundation<BaseColorPickerProps>;
 type Adapter = ColorPickerAdapter<BaseColorPickerProps>;
 
@@ -58,24 +57,14 @@ function ColorPicker(rawProps: ColorPickerProps) {
         () => ({ notifyChange: (value) => props.onChange?.(value) })
     );
 
-    // shortcut: repeats ColorPickerFoundation.getCurrentColor, which is protected; share it when the foundation exports it
-    const currentColor = () => (local.value !== undefined ? (local.value ?? local.defaultValue) : state().currentColor);
+    const currentColor = () => ColorPickerFoundation.deriveColor(local, state());
 
     const width = () => local.width ?? 280;
 
     const renderPicker = () => (
-        <div {...rest} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as Role} class={clsx(cssClasses.PREFIX, local.class)}>
+        <div {...rest} role={namedRole(rest)} class={clsx(cssClasses.PREFIX, local.class)}>
             {local.topSlot}
-            <ColorChooseArea
-                handleSize={20}
-                height={local.height ?? 280}
-                hsva={currentColor().hsva}
-                width={width()}
-                onChange={({ s, v }) => {
-                    const { h, a } = currentColor().hsva;
-                    foundation.handleChange({ h, s, v, a }, 'hsva');
-                }}
-            />
+            <ColorChooseArea handleSize={20} height={local.height ?? 280} hsva={currentColor().hsva} width={width()} onChange={foundation.handleAreaChange} />
             <ColorSlider class="colorSliderWrapper" handleSize={18} height={10} hue={currentColor().hsva.h} width={width()} onChange={foundation.handleHueChange} />
             <Show when={local.alpha}>
                 <AlphaSlider handleSize={18} height={10} hsva={currentColor().hsva} width={width()} onChange={foundation.handleAlphaChange} />

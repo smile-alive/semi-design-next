@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/backtop/constants';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/backtop/constants';
 import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/components/backtop/foundation';
 import '@fibrae/semi-foundation/components/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-react';
@@ -18,10 +18,6 @@ type Foundation = BackTopFoundation<BackTopProps, React.MouseEvent>;
 type Adapter = BackTopAdapter<BackTopProps, React.MouseEvent>;
 
 const prefixCls = cssClasses.PREFIX;
-
-function getDefaultTarget() {
-    return window;
-}
 
 export interface BackTopProps extends ElementProps<'button', 'onClick' | 'type' | 'form' | 'formAction' | 'formEncType' | 'formMethod' | 'formNoValidate' | 'formTarget'>, Pick<FloatButtonProps, 'icon' | 'shape' | 'size' | 'colorful' | 'badge'> {
     target?: () => Target | null;
@@ -41,9 +37,8 @@ export interface BackTopProps extends ElementProps<'button', 'onClick' | 'type' 
 export type { BackTopState };
 
 const defaultProps = {
-    visibilityHeight: 400,
-    target: getDefaultTarget,
-    duration: 450,
+    visibilityHeight: numbers.DEFAULT_VISIBILITY_HEIGHT,
+    duration: numbers.DEFAULT_DURATION,
 } satisfies Partial<BackTopProps>;
 
 export default function BackTop(rawProps: BackTopProps) {

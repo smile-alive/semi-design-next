@@ -2,7 +2,6 @@
     import CheckboxFoundation, { type BaseCheckboxProps, type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
     import { checkboxClasses } from '@fibrae/semi-foundation/components/checkbox/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
     import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
     import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../../base/use-default-props.js';
@@ -58,6 +57,9 @@
         get type() {
             return type;
         },
+        get preventScroll() {
+            return preventScroll;
+        },
     };
 
     const { foundation, states } = useFoundation<Foundation, Adapter, BaseCheckboxProps, CheckboxBaseState>(
@@ -71,13 +73,7 @@
                 onChange?.(event as CheckboxEvent);
             },
             notifyGroupChange: (event) => group?.onChange(event),
-            // A click on the text lands on the wrapper, not the input. Script focus matches :focus-visible when nothing
-            // was focused before, so the focus a click moves in must say it is not keyboard focus.
-            focusCheckboxEntity: () => {
-                if (input && input !== input.ownerDocument.activeElement) {
-                    focusWithoutRing(input, { preventScroll });
-                }
-            },
+            getInput: () => input ?? null,
         }),
         { context: () => (group ? { checkboxGroup: group.view } : null) }
     );

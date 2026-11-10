@@ -1,6 +1,4 @@
-import type { DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
-import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
-import ActionBarFoundation, { type ActionBarState } from '../../base/action-bar-foundation';
+import ActionBarFoundation, { type ActionBarAdapter, type ActionBarState } from '../../base/action-bar-foundation';
 import { isUnfinishedStatus, strings } from './constants';
 import type { Message } from './foundation';
 import { getMessageText } from './message-text';
@@ -22,52 +20,41 @@ export function getDialogueActionFlags({ role, status = STATUS.COMPLETED, isLast
     };
 }
 
+export type DialogueActionKey = 'copyNode' | 'likeNode' | 'dislikeNode' | 'resetNode' | 'shareNode' | 'editNode' | 'moreNode';
+
+// A custom bar's `defaultActions` keep the order Semi has always given them; the built-in bar lays the buttons out differently
+const CUSTOM_ORDER: DialogueActionKey[] = ['copyNode', 'likeNode', 'dislikeNode', 'resetNode', 'shareNode', 'editNode', 'moreNode'];
+const BAR_ORDER: DialogueActionKey[] = ['copyNode', 'resetNode', 'shareNode', 'editNode', 'likeNode', 'dislikeNode', 'moreNode'];
+
+/** The buttons a message shows, in order: for a custom action bar (`defaultActions`) or for the built-in bar */
+export function getDialogueActionKeys(flags: ReturnType<typeof getDialogueActionFlags>, custom: boolean) {
+    const shown: Record<DialogueActionKey, boolean> = {
+        copyNode: flags.completed,
+        likeNode: flags.showFeedback,
+        dislikeNode: flags.showFeedback,
+        resetNode: flags.showReset,
+        shareNode: flags.completed,
+        editNode: flags.showEdit,
+        moreNode: true,
+    };
+    return (custom ? CUSTOM_ORDER : BAR_ORDER).filter((key) => shown[key]);
+}
+
 export interface DialogueActionBaseProps {
     message?: Message;
 }
 
 export type DialogueActionState = ActionBarState;
 
-export interface DialogueActionAdapter<P extends DialogueActionBaseProps = DialogueActionBaseProps> extends DefaultAdapter<P, DialogueActionState> {
-    notifyDeleteMessage: () => void;
-    notifyMessageCopy: () => void;
-    toastCopySuccess: () => void;
-    notifyLikeMessage: () => void;
-    notifyDislikeMessage: () => void;
-    notifyResetMessage: () => void;
+export interface DialogueActionAdapter<P extends DialogueActionBaseProps = DialogueActionBaseProps> extends ActionBarAdapter<P, DialogueActionState> {
     notifyShareMessage: () => void;
     notifyEditMessage: () => void;
 }
 
 export default class DialogueActionFoundation<P extends DialogueActionBaseProps = DialogueActionBaseProps> extends ActionBarFoundation<DialogueActionAdapter<P>, P, DialogueActionState> {
-    static getInitialState(): DialogueActionState {
-        return { visible: false, showAction: false };
+    getCopyText() {
+        return getMessageText(this.getProps().message);
     }
-
-    copyMessage = () => {
-        const text = getMessageText(this.getProps().message);
-        if (text === undefined) {
-            return;
-        }
-        void copyText(text).then((copied) => {
-            if (copied) {
-                this.adapter.toastCopySuccess();
-                this.adapter.notifyMessageCopy();
-            }
-        });
-    };
-
-    resetMessage = () => {
-        this.adapter.notifyResetMessage();
-    };
-
-    likeMessage = () => {
-        this.adapter.notifyLikeMessage();
-    };
-
-    dislikeMessage = () => {
-        this.adapter.notifyDislikeMessage();
-    };
 
     shareMessage = () => {
         this.adapter.notifyShareMessage();
@@ -77,17 +64,8 @@ export default class DialogueActionFoundation<P extends DialogueActionBaseProps 
         this.adapter.notifyEditMessage();
     };
 
-    deleteMessage = () => {
+    override deleteMessage = () => {
         this.adapter.notifyDeleteMessage();
-        this.hideMoreDropdown();
-    };
-
-    showMoreDropdown = () => {
-        this.openMenu();
-    };
-
-    /** Closes the more menu: after a delete, or on a mousedown outside its trigger while it is open */
-    hideMoreDropdown = () => {
         this.closeMenu();
     };
 }

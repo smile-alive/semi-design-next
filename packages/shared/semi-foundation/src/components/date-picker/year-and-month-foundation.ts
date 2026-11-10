@@ -19,7 +19,6 @@ export interface YearAndMonthFoundationProps {
     /** 0 stands for the current month, or the month after next for the right panel */
     currentMonth: { left: number; right: number };
     onSelect?: (obj: YearAndMonth) => void;
-    onBackToMain?: () => void;
     locale?: any;
     monthCycled?: boolean;
     yearCycled?: boolean;
@@ -27,8 +26,6 @@ export interface YearAndMonthFoundationProps {
     disabledDate?: (date: Date) => boolean;
     density?: string;
     presetPosition?: PresetPosition;
-    renderQuickControls?: any;
-    renderDateInput?: any;
     type?: Type;
     yearAndMonthOpts?: any;
     startYear?: number;
@@ -37,7 +34,6 @@ export interface YearAndMonthFoundationProps {
 
 export interface YearAndMonthAdapter extends DefaultAdapter<YearAndMonthFoundationProps, Record<string, never>> {
     notifySelect: (yearAndMonth: YearAndMonth) => void;
-    notifyBackToMain: () => void;
 }
 
 export interface MonthScrollItem {
@@ -62,9 +58,9 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
 
         const oppositeType = panelType === strings.PANEL_TYPE_LEFT ? 'right' : 'left';
 
-        const isValid = (month: number) => !disabledDate(new Date(item.year, month - 1));
+        const isValid = (month: number) => !disabledDate?.(new Date(item.year, month - 1));
         const isCurrentMonthDisabled = !isValid(currentMonth[panelType]);
-        const isOppositeMonthDisabled = disabledDate(new Date(year[oppositeType], currentMonth[oppositeType] - 1));
+        const isOppositeMonthDisabled = Boolean(disabledDate?.(new Date(year[oppositeType], currentMonth[oppositeType] - 1)));
 
         if (!isCurrentMonthDisabled && !isOppositeMonthDisabled) {
             return;
@@ -104,7 +100,7 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
         return getYears(startYear, endYear).map((year) => ({
             year,
             value: year,
-            disabled: type === 'year' ? disabledDate(new Date(year, 0)) : MONTHS.every((month) => disabledDate(new Date(year, month - 1))) || Boolean(panelType === strings.PANEL_TYPE_RIGHT && leftYear && leftYear > year),
+            disabled: type === 'year' ? Boolean(disabledDate?.(new Date(year, 0))) : MONTHS.every((month) => disabledDate?.(new Date(year, month - 1))) || Boolean(panelType === strings.PANEL_TYPE_RIGHT && leftYear && leftYear > year),
         }));
     }
 
@@ -116,7 +112,7 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
         const right = strings.PANEL_TYPE_RIGHT;
         return MONTHS.map((month) => ({
             month,
-            disabled: disabledDate(new Date(currentYear[panelType], month - 1)) || Boolean(panelType === right && currentMonth[left] && currentYear[left] === currentYear[right] && currentMonth[left] > month),
+            disabled: Boolean(disabledDate?.(new Date(currentYear[panelType], month - 1))) || Boolean(panelType === right && currentMonth[left] && currentYear[left] === currentYear[right] && currentMonth[left] > month),
             value: locale.fullMonths[month],
         }));
     }
@@ -159,9 +155,5 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
         }
 
         this.adapter.notifySelect({ currentYear, currentMonth: month });
-    };
-
-    backToMain = () => {
-        this.adapter.notifyBackToMain();
     };
 }

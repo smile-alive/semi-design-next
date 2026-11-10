@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { computed, mergeProps, toRaw, type VNode } from 'vue';
-    import { cloneDeep } from 'es-toolkit';
+    import { computed, isVNode, mergeProps, toRaw, useAttrs, type VNode } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
-    import ItemFoundation, { type ItemAdapter, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+    import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
+    import ItemFoundation, { type ItemAdapter, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import SlotFragment from '../../base/slot-fragment';
     import useFoundation from '../../base/use-foundation';
@@ -19,6 +19,8 @@
         isSubNav?: boolean;
         /** Resolved by the caller: a Sub provides isInSubNav to its own subtree, which includes this shell */
         isInSubNav?: boolean;
+        /** The `items` entry this item was made from, which `onSelect` reports whole */
+        itemConfig?: NavItemType;
     }
 
     defineOptions({ inheritAttrs: false });
@@ -42,6 +44,8 @@
         text?: () => VNode[];
         toggleIcon?: () => VNode[];
     }>();
+
+    const attrs = useAttrs();
 
     const ctx = useNav('Nav.Item');
 
@@ -68,14 +72,14 @@
 
     const selected = computed(isSelected);
 
-    const reportedProps = ({ isSubNav: _sub, isInSubNav: _in, ...rest }: ItemShellProps) => Object.fromEntries(Object.entries(toRaw(rest)).filter(([, value]) => value !== undefined));
+    const givenProps = ({ isSubNav: _sub, isInSubNav: _in, itemConfig: _config, ...rest }: ItemShellProps) => Object.fromEntries(Object.entries(toRaw(rest)).filter(([, value]) => value !== undefined));
 
     const { foundation } = useFoundation<ItemFoundation<ItemShellProps>, ItemAdapter<ItemShellProps>, ItemShellProps, object>(
         ItemFoundation,
         props,
         () => ({}),
         () => ({
-            cloneDeep: <T>(value: T) => cloneDeep(reportedProps(value as ItemShellProps)) as T,
+            getSelectedItem: () => copySelectedItem(props.itemConfig ? { ...props.itemConfig, level: props.level } : { ...attrs, ...givenProps(props) }, isVNode) as ItemShellProps,
             selectSelf: () => ctx.updateSelectedKeys([props.itemKey as NonNullable<typeof props.itemKey>]),
             getSelectedKeysIsControlled: () => ctx.view.value.selectedKeysIsControlled,
             notifyGlobalOnSelect: (data) => ctx.notifySelect(data as OnSelectedData),

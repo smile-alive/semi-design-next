@@ -1,6 +1,5 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
 import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
 import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
@@ -152,12 +151,8 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
             getFooter: () => footer,
             setInitialFocus: (button) => tooltipFocus?.(button),
-            focusPrevFocusElement: () => {
-                // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(popover?.getPopup(), false)) {
-                    popover?.focusTrigger();
-                }
-            },
+            getPopup: () => popover?.getPopup(),
+            focusTrigger: () => popover?.focusTrigger(),
         })
     );
 

@@ -2,9 +2,9 @@ import type React from 'react';
 import { cloneElement, Children, isValidElement, type ReactElement } from 'react';
 import clsx from 'clsx';
 import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../../base/base';
 import flattenChildren from '../../utils/flatten-children';
-import { namedRole } from '../../utils/named-role';
 import type { Size } from './types';
 
 export interface NavStepsProps extends ElementProps<'div', 'onChange'> {

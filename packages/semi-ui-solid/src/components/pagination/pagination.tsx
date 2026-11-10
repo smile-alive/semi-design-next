@@ -1,10 +1,9 @@
-import { type JSX, For, Show, children, createEffect, createMemo, on, splitProps, untrack } from 'solid-js';
+import { type JSX, For, Show, children, createMemo, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
 import PaginationFoundation, { type PageList, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/components/pagination/pagination.scss';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/element-props';
@@ -148,22 +147,13 @@ export default function Pagination(rawProps: PaginationProps) {
     const pageData = createMemo(() => PaginationFoundation.getPageList(state().currentPage, local.total, state().pageSize));
     const pageKeys = createMemo(() => pageData().pageList.map((page, i): PageKey => (page === '...' ? (i < 3 ? 'rest-left' : 'rest-right') : page)));
     const pageSizeOpts = createMemo(() => PaginationFoundation.getPageSizeOpts(local.pageSizeOpts, state().pageSize));
+    const view = createMemo(() => PaginationFoundation.getView(props, state().pageSize, config().direction));
 
     const text = () => locale().locale;
 
     const small = () => local.size === 'small';
 
-    const sizeChangerShown = () => local.showSizeChanger && !small();
-
-    const sizeChangerKeepsSinglePage = createMemo(() => sizeChangerShown() && local.hideOnSinglePage);
-
-    const totalPageNum = () => PaginationFoundation.getTotalPageNumber(local.total, state().pageSize);
-
-    const hidden = () => totalPageNum() < 2 && local.hideOnSinglePage && !sizeChangerShown();
-
     const disabledState = () => PaginationFoundation.getDisabled(state().currentPage, local.total, state().pageSize);
-
-    const quickJumpDisabled = () => totalPageNum() < 2 || local.disabled;
 
     const pageLabel = (page: number) => formatLocale(text().pageN, { page });
 
@@ -207,13 +197,13 @@ export default function Pagination(rawProps: PaginationProps) {
             clsx(`${prefixCls}-item`, `${prefixCls}-item-small`, {
                 [`${prefixCls}-item-all-disabled`]: local.disabled,
             });
-        const counterText = () => `${state().currentPage}/${totalPageNum()} `;
+        const counterText = () => `${state().currentPage}/${view().totalPageNum} `;
 
         return (
             <li>
                 {/* opens on hover or focus; ArrowDown moves into it */}
                 <Show when={local.hoverShowPageSelect && !local.disabled} fallback={<div class={counterClass()}>{counterText()}</div>}>
-                    <Popover content={<RestPages count={totalPageNum()} start={1} onSelect={foundation.goPage} />}>
+                    <Popover content={<RestPages count={view().totalPageNum} start={1} onSelect={foundation.goPage} />}>
                         {(getTriggerProps) => (
                             <button {...getTriggerProps()} type="button" class={counterClass()}>
                                 {counterText()}
@@ -225,35 +215,21 @@ export default function Pagination(rawProps: PaginationProps) {
         );
     };
 
-    createEffect(
-        on(sizeChangerKeepsSinglePage, (conflict) => {
-            warning(conflict, '[Semi Pagination] You should not use showSizeChanger and hideOnSinglePage in ths same time. At this time, hideOnSinglePage no longer takes effect, otherwise there may be a problem that the switch entry disappears');
-        })
-    );
-
     return (
-        <Show when={!hidden()}>
+        <Show when={!view().hidden}>
             {/* Show's children memo tracks the ref read; a spread props signal would recreate the whole list */}
             <ul {...rest} ref={untrack(() => mergeRefs(local.ref, registerTrigger))} class={clsx(prefixCls, local.class, { [`${prefixCls}-small`]: small(), [`${prefixCls}-disabled`]: local.disabled })}>
                 <Show when={local.showTotal && !small()}>
-                    <li class={`${prefixCls}-total`}>{formatLocale(text().total, { total: totalPageNum() })}</li>
+                    <li class={`${prefixCls}-total`}>{formatLocale(text().total, { total: view().totalPageNum })}</li>
                 </Show>
                 <StepButton disabled={disabledState().prevDisabled || local.disabled} kind="prev" label={text().prev} text={local.prevText} onClick={foundation.goPrev} />
                 <Show when={small()} fallback={<For each={pageKeys()}>{(pageKey) => <PageItem pageKey={pageKey} />}</For>}>
                     {renderSmallCounter()}
                 </Show>
                 <StepButton disabled={disabledState().nextDisabled || local.disabled} kind="next" label={text().next} text={local.nextText} onClick={foundation.goNext} />
-                <Show when={sizeChangerShown()}>
+                <Show when={view().sizeChangerShown}>
                     <li class={`${prefixCls}-switch`}>
-                        <Select<number>
-                            dropdownClassName={`${prefixCls}-select-dropdown`}
-                            aria-label={text().pageSizeSelector}
-                            disabled={local.disabled}
-                            value={state().pageSize}
-                            clickToHide
-                            position={local.popoverPosition ?? (config().direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
-                            onChange={(newPageSize) => newPageSize !== undefined && foundation.changePageSize(newPageSize)}
-                        >
+                        <Select<number> dropdownClassName={`${prefixCls}-select-dropdown`} aria-label={text().pageSizeSelector} disabled={local.disabled} value={state().pageSize} clickToHide position={view().switchPosition} onChange={(newPageSize) => newPageSize !== undefined && foundation.changePageSize(newPageSize)}>
                             <For each={pageSizeOpts()}>
                                 {(option) => (
                                     <Select.Option value={option}>
@@ -265,13 +241,13 @@ export default function Pagination(rawProps: PaginationProps) {
                     </li>
                 </Show>
                 <Show when={local.showQuickJumper}>
-                    <li class={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: quickJumpDisabled() })}>
+                    <li class={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: view().quickJumpDisabled })}>
                         <span>{text().jumpTo}</span>
                         {/* the adornments and showClear are set so global InputNumber defaults cannot add them to the jumper */}
                         <InputNumber
                             class={`${prefixCls}-quickjump-input-number`}
                             aria-label={text().jumpTo}
-                            disabled={quickJumpDisabled()}
+                            disabled={view().quickJumpDisabled}
                             value={state().quickJumpPage}
                             addonAfter={null}
                             addonBefore={null}

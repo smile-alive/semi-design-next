@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Comment, Text, computed, isVNode, onMounted, onUpdated, useId, useTemplateRef, watch, type VNode } from 'vue';
+    import { Comment, Text, computed, isVNode, onMounted, onUpdated, useId, useTemplateRef, type VNode } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
     import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
@@ -52,7 +52,6 @@
     // nothing. Rendering writes it instead: the value is derived from the slot, so the write is idempotent.
     // Limit: the count is only as fresh as the last render, which is when the slides could have changed anyway.
     let slideCount = 0;
-    let focusPending = false;
 
     // Slides that arrive after mount (data still loading) start the configured autoplay, as mounting with them would.
     // A controlled carousel waits for its first switch, and a pointer under hoverToPause keeps the pause.
@@ -68,6 +67,8 @@
                 emit('change', activeIndex, preIndex);
             },
             getSlideCount: () => slideCount,
+            // scoped to this carousel's own indicator: slides may contain tabs or nested carousels
+            focusTab: (index) => root.value?.querySelector<HTMLElement>(`:scope > .${indicator} [data-index="${index}"]`)?.focus(),
         }),
         { context: () => config.value }
     );
@@ -84,16 +85,6 @@
     const arrow = cssClasses.CAROUSEL_ARROW;
 
     const tabId = (index: number) => `${baseId}-tab-${index}`;
-
-    const onKeydown = (event: KeyboardEvent) => {
-        if (foundation.handleKeyDown(event)) {
-            focusPending = true;
-        }
-    };
-
-    const onTabBlur = () => {
-        focusPending = false;
-    };
 
     const collectSlides = (): KeyedNode[] => {
         const slides = slotNodes(slots.default?.() ?? []).filter(([node]) => node.type !== Text);
@@ -154,18 +145,6 @@
     // children with readable text name the button; arrowProps.*.props can set `aria-label` instead
     const arrowLabel = (slot: (() => VNode[]) | undefined, fallback: string) => (hasReadableText(slot?.()) ? undefined : fallback);
 
-    watch(
-        () => CarouselFoundation.deriveActiveIndex(props, state.value, slideCount),
-        () => {
-            if (focusPending) {
-                focusPending = false;
-                // scoped to this carousel's own indicator: slides may contain tabs or nested carousels
-                root.value?.querySelector<HTMLElement>(`:scope > .${indicator} [role="tab"][tabindex="0"]`)?.focus();
-            }
-        },
-        { flush: 'post' }
-    );
-
     useKeepAliveFoundation(foundation);
 
     onMounted(() => {
@@ -210,9 +189,9 @@
                         role="tab"
                         :tabindex="i === currentIndex(slides.length) ? 0 : -1"
                         type="button"
-                        @blur="onTabBlur"
+                        @blur="foundation.handleIndicatorBlur"
                         @click="props.trigger === 'click' && foundation.onIndicatorChange(i)"
-                        @keydown="onKeydown"
+                        @keydown="foundation.handleKeyDown"
                         @mouseenter="props.trigger === 'hover' && foundation.onIndicatorChange(i)"
                     />
                 </div>

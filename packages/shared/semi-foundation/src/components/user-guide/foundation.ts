@@ -16,6 +16,8 @@ export interface UserGuideAdapter<P extends UserGuideBaseProps = UserGuideBasePr
     notifyFinish: () => void;
     /** The card of a popup step; null while none is rendered */
     getPopup: () => HTMLElement | null | undefined;
+    /** A host that binds `current` (Svelte) clears a value only the guide wrote; it runs right before a hide resets the step */
+    clearWrittenCurrent?: () => void;
 }
 
 export interface UserGuideStepBase {
@@ -25,6 +27,7 @@ export interface UserGuideStepBase {
 }
 
 export interface UserGuideBaseProps {
+    visible?: boolean;
     current?: number;
     spotlightPadding?: number;
     steps: UserGuideStepBase[];
@@ -40,10 +43,86 @@ export interface UserGuideBaseState {
 
 export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuideBaseProps> extends BaseFoundation<UserGuideAdapter<P>, P, UserGuideBaseState> {
     readonly #resources = new ModalResources();
-    static override readonly propKeys = ['current'];
+    #stopFrames: (() => void) | null = null;
+    // what #sync last applied to the page, updated in place so a nested #sync is seen by the outer one
+    readonly #applied: { visible: boolean; measured: number | null; lock: string | null; popupShown: boolean } = { visible: false, measured: null, lock: null, popupShown: false };
+    static override readonly propKeys = ['visible', 'current', 'mode', 'mask', 'steps'];
 
     #getCurrent() {
         return UserGuideFoundation.deriveCurrent(this.getProps(), this.getStates());
+    }
+
+    // Only a step change scrolls, so a user scroll is followed, not fought
+    #measure(scrollIntoView: boolean) {
+        const { steps, spotlightPadding } = this.getProps();
+        const next = UserGuideFoundation.measure(steps[this.#getCurrent()], spotlightPadding, scrollIntoView);
+        if (!UserGuideFoundation.isSameRect(this.getState('spotlightRect'), next)) {
+            this.setState({ spotlightRect: next });
+            this.#sync();
+        }
+    }
+
+    /**
+     * Brings the page in line with the props and state, touching only what changed: per-frame measuring while a popup
+     * guide is visible, the scroll lock and focus while a step is on screen, and the step reset after a hide. Only a
+     * popup guide covers the page with its mask and locks scroll, and records focus; a modal guide gets both from Modal.
+     * The guide is never modal.
+     */
+    #sync() {
+        const { visible, mode, mask, steps, getPopupContainer } = this.getProps();
+        const applied = this.#applied;
+        if (visible && mode === 'popup') {
+            this.#stopFrames ??= UserGuideFoundation.trackFrames(() => this.#measure(false));
+            const current = this.#getCurrent();
+            if (applied.measured !== current) {
+                applied.measured = current;
+                // may run #sync again with the new rect; the rest below then finds nothing left to change
+                this.#measure(true);
+            }
+        } else {
+            this.#stopFrames?.();
+            this.#stopFrames = null;
+            applied.measured = null;
+        }
+
+        const step = steps[this.#getCurrent()];
+        const showMask = Boolean(step?.mask ?? mask);
+        // nothing rendered (popup target not measured yet) must not lock the page or take focus
+        const shown = Boolean(visible && step && (mode === 'modal' || this.getState('spotlightRect')));
+        const popupShown = shown && mode === 'popup';
+        const lock = shown ? `${mode}:${showMask}` : null;
+
+        if (popupShown && !applied.popupShown) {
+            this.#resources.record();
+        }
+        if (lock !== applied.lock) {
+            if (lock) {
+                const lockScroll = mode === 'popup' && showMask && coversPage(getPopupContainer ?? this.getContext('getPopupContainer'));
+                this.#resources.hold({ modal: false, lockScroll, preventScroll: true });
+            } else {
+                this.#resources.release();
+            }
+        }
+        // only if focus is still on the card (or lost with it), so a user who clicked elsewhere stays there
+        if (!popupShown && applied.popupShown) {
+            this.#resources.restoreFocus(this.adapter.getPopup());
+        }
+        const hidden = applied.visible && !visible;
+        applied.visible = Boolean(visible);
+        applied.lock = lock;
+        applied.popupShown = popupShown;
+        if (hidden) {
+            this.adapter.clearWrittenCurrent?.();
+            // a controlled current stays: the parent decides where the next show starts
+            this.setState({ current: this.getProp('current') ?? numbers.DEFAULT_CURRENT });
+        }
+    }
+
+    #goTo(newCurrent: number) {
+        if (!this.getIsControlledComponent()) {
+            // measured once the new step is rendered
+            this.setState({ current: newCurrent }, () => this.#sync());
+        }
     }
 
     protected getIsControlledComponent() {
@@ -107,8 +186,19 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
         return () => cancelAnimationFrame(id);
     }
 
+    override init() {
+        this.#sync();
+    }
+
+    // Undoes the page holds without writing state or resetting the step; the next init applies them again
     override destroy() {
+        this.#stopFrames?.();
+        this.#stopFrames = null;
         this.#resources.release();
+        if (this.#applied.popupShown) {
+            this.#resources.restoreFocus(this.adapter.getPopup());
+        }
+        Object.assign(this.#applied, { visible: false, measured: null, lock: null, popupShown: false });
     }
 
     // state mirrors a controlled current, so going uncontrolled continues from the last controlled step
@@ -117,56 +207,14 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
         if (current !== undefined) {
             this.setState({ current });
         }
+        this.#sync();
     }
-
-    /** Measures the current step's target; unchanged rects set no state. Only a step change scrolls, so a user scroll is followed, not fought */
-    measureSpotlight = (scrollIntoView: boolean) => {
-        const { steps, spotlightPadding } = this.getProps();
-        const next = UserGuideFoundation.measure(steps[this.#getCurrent()], spotlightPadding, scrollIntoView);
-        if (!UserGuideFoundation.isSameRect(this.getState('spotlightRect'), next)) {
-            this.setState({ spotlightRect: next });
-        }
-    };
-
-    /**
-     * Hosts call this while a step is on screen, again when the step's mask or the mode changes. Only a popup guide
-     * covers the page with its mask and locks scroll; a modal guide is locked by its Modal. The guide is never modal.
-     */
-    beforeShow = () => {
-        const { mode, mask, steps, getPopupContainer } = this.getProps();
-        const showMask = steps[this.#getCurrent()]?.mask ?? mask;
-        const lockScroll = mode === 'popup' && Boolean(showMask) && coversPage(getPopupContainer ?? this.getContext('getPopupContainer'));
-        this.#resources.hold({ modal: false, lockScroll, preventScroll: true });
-    };
-
-    // the scroll lock follows whether a step is on screen, which can end while the guide is still visible
-    releaseScroll = () => {
-        this.#resources.release();
-    };
-
-    /** Remembers the element to return focus to when a popup step leaves the screen; a modal guide gets this from Modal */
-    recordFocus = () => {
-        this.#resources.record();
-    };
-
-    /** Returns focus only if it is still on the card (or lost with it), so a user who clicked elsewhere stays there */
-    restoreFocus = () => {
-        this.#resources.restoreFocus(this.adapter.getPopup());
-    };
-
-    afterHide = () => {
-        this.releaseScroll();
-        // a controlled current stays: the parent decides where the next show starts
-        this.setState({ current: this.getProp('current') ?? numbers.DEFAULT_CURRENT });
-    };
 
     handlePrev = () => {
         const newCurrent = this.#getCurrent() - 1;
         this.adapter.notifyChange(newCurrent);
         this.adapter.notifyPrev(newCurrent);
-        if (!this.getIsControlledComponent()) {
-            this.setState({ current: newCurrent });
-        }
+        this.#goTo(newCurrent);
     };
 
     handleNext = () => {
@@ -178,9 +226,7 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
             const newCurrent = current + 1;
             this.adapter.notifyChange(newCurrent);
             this.adapter.notifyNext(newCurrent);
-            if (!this.getIsControlledComponent()) {
-                this.setState({ current: newCurrent });
-            }
+            this.#goTo(newCurrent);
         }
     };
 

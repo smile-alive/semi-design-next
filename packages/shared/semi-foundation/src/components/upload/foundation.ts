@@ -1,5 +1,6 @@
 import { isPlainObject } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import type { Locale } from '../../locale/interface';
 import isPromise from '../../utils/is-promise';
 import { createId } from '../../utils/uuid';
 import { strings, numbers } from './constants';
@@ -72,8 +73,10 @@ export interface UploadAdapter<P extends UploadBaseProps = UploadBaseProps, S ex
     notifyExceed: (files: Array<File>) => void;
     notifyBeforeUpload: ({ file, fileList }: { file: BaseFileItem; fileList: Array<BaseFileItem> }) => boolean | BeforeUploadObjectResult | Promise<BeforeUploadObjectResult>;
     notifyAfterUpload: ({ response, file, fileList }: { response: any; file: BaseFileItem; fileList: Array<BaseFileItem> }) => AfterUploadResult;
+    /** Clears the input's value, so picking the same file again fires change */
     resetInput: () => void;
     resetReplaceInput: () => void;
+    openReplacePicker: () => void;
     notifyBeforeRemove: (file: BaseFileItem, fileList: Array<BaseFileItem>) => boolean | Promise<boolean>;
     notifyBeforeClear: (fileList: Array<BaseFileItem>) => boolean | Promise<boolean>;
     notifyChange: ({ currentFile, fileList }: { currentFile?: BaseFileItem | null; fileList: Array<BaseFileItem> }) => void;
@@ -140,6 +143,25 @@ export interface UploadBaseState {
     /** Image files already cropped, accumulated until the queue drains */
     croppedFiles: File[];
     isReplaceOperation: boolean;
+}
+
+export interface FileCardFlagOptions {
+    disabled?: boolean;
+    /** The default for files without their own `showRetry` */
+    showRetry?: boolean;
+    showReplace?: boolean;
+}
+
+export interface FileCardFlags {
+    showRetry: boolean;
+    showReplace: boolean;
+    /** The progress bar of the list card */
+    showListProgress: boolean;
+    /** The progress ring of the picture card */
+    showPicProgress: boolean;
+    /** The hover layer of the picture card; the replace button takes its place */
+    showPreview: boolean;
+    failed: boolean;
 }
 
 function isImageFile(file: File) {
@@ -835,6 +857,31 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         });
     }
 
+    static getFileCardFlags(file: Pick<BaseFileItem, 'status' | 'percent' | 'showRetry' | 'showReplace'>, options: FileCardFlagOptions): FileCardFlags {
+        const { status, percent } = file;
+        const showRetry = !options.disabled && status === FILE_STATUS_UPLOAD_FAIL && Boolean(file.showRetry ?? options.showRetry);
+        const showReplace = !options.disabled && status === FILE_STATUS_SUCCESS && Boolean(file.showReplace ?? options.showReplace);
+        return {
+            showRetry,
+            showReplace,
+            showListProgress: status === FILE_STATUS_UPLOADING && percent !== undefined && percent !== 100,
+            showPicProgress: status === FILE_STATUS_UPLOADING && percent !== 100,
+            showPreview: status === FILE_STATUS_SUCCESS && !showReplace,
+            failed: status === FILE_STATUS_VALID_FAIL || status === FILE_STATUS_UPLOAD_FAIL,
+        };
+    }
+
+    /** The built-in message of a card whose file carries none of its own; undefined when the file's own message applies */
+    static getFallbackValidateMessage(file: Pick<BaseFileItem, 'status' | 'validateMessage' | '_sizeInvalid'>, locale: Pick<Locale['Upload'], 'fail' | 'illegalSize'>): string | undefined {
+        if (file.validateMessage) {
+            return undefined;
+        }
+        if (file._sizeInvalid) {
+            return locale.illegalSize;
+        }
+        return file.status === FILE_STATUS_UPLOAD_FAIL ? locale.fail : undefined;
+    }
+
     static getInitialState({ defaultFileList }: UploadBaseProps): UploadBaseState {
         return {
             fileList: defaultFileList ?? [],
@@ -927,6 +974,15 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
     /** Entry for picked, dropped and pasted files: with crop on, images are cropped before they are added */
     addFiles = (currentFileList: FileList | Array<File>) => {
         this.#selectFiles(Array.from(currentFileList), true);
+    };
+
+    /** Remembers the item to replace and opens the replace picker; does nothing while disabled */
+    startReplace = (uid: string) => {
+        if (this.getProps().disabled) {
+            return;
+        }
+        this.setState({ replaceUid: uid });
+        this.adapter.openReplacePicker();
     };
 
     /** Entry for the file picked to replace the item `replaceUid` names; with crop on, an image is cropped first */

@@ -42,6 +42,7 @@ export interface DayColProps {
     scrollHeight: number;
     isWeekend: boolean;
     showCurrTime?: boolean;
+    today: number | null;
     minEventHeight?: number;
     dateGridRender?: CalendarProps['dateGridRender'];
     handleClick: (e: MouseEvent, val: [Date, number, number, number]) => void;

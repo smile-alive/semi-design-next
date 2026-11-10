@@ -1,7 +1,7 @@
 import { type Mock, describe, expect, it, vi } from 'vite-plus/test';
-import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerBaseState } from '../foundation';
+import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerState } from '../foundation';
 
-const initialState: AudioPlayerBaseState = {
+const initialState: AudioPlayerState = {
     isPlaying: false,
     currentIndex: 0,
     totalTime: 0,
@@ -31,9 +31,9 @@ function createAudio(values: Partial<HTMLAudioElement> = {}) {
     } as MockAudio;
 }
 
-function setup(props: Partial<AudioPlayerBaseProps>, state: Partial<AudioPlayerBaseState> = {}, audio = createAudio()) {
+function setup(props: Partial<AudioPlayerBaseProps>, state: Partial<AudioPlayerState> = {}, audio = createAudio()) {
     const fullProps: AudioPlayerBaseProps = { audioUrl: 'https://example.com/a.mp3', skipDuration: 10, ...props };
-    let states: AudioPlayerBaseState = { ...initialState, ...state };
+    let states: AudioPlayerState = { ...initialState, ...state };
     const adapter: AudioPlayerAdapter = {
         getContext: () => undefined,
         getContexts: () => ({}),

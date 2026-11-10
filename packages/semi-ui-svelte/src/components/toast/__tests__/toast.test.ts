@@ -9,7 +9,6 @@ import { Toast, ToastFactory } from '../index';
 import type { ToastHookApi, ToastHookOptions, ToastProps } from '../interface';
 import ToastItem from '../toast.svelte';
 import HookHost from './hook-host.svelte';
-import ItemRef from './item-ref.svelte';
 import ProviderHost from './provider-host.svelte';
 import Snippets from './snippets.svelte';
 
@@ -572,19 +571,6 @@ describe('Toast', () => {
         expect(view.container.querySelector(`.${prefix}`)).not.toHaveAttribute('dir');
         const own = render(ToastItem, { props: { content: 'own', dir: 'rtl' } });
         expect(own.container.querySelector(`.${prefix}`)).toHaveAttribute('dir', 'rtl');
-    });
-
-    it('单个 Toast 的实例暴露 restartCloseTimer', async () => {
-        vi.useFakeTimers();
-        let handle!: { restartCloseTimer: () => void };
-        const onRemove = vi.fn<(id: string) => void>();
-        render(ItemRef, { props: { onHandle: (h: typeof handle) => (handle = h), onRemove } });
-        await advance(800);
-        handle.restartCloseTimer();
-        await advance(999);
-        expect(onRemove).not.toHaveBeenCalled();
-        await advance(1);
-        expect(onRemove).toHaveBeenCalledExactlyOnceWith('r');
     });
 
     it('悬停期间按同 id 更新不会重启计时，移出后满 duration 才关闭且 onClose 只触发一次', async () => {

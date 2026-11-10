@@ -1,8 +1,7 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, normalizeStyle, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
     import { cloneDeep } from 'es-toolkit';
-    import { get } from 'es-toolkit/compat';
-    import { numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
+    import { strings } from '@fibrae/semi-foundation/components/table/constants';
     import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/components/table/foundation';
     import { amendTableWidth, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -22,7 +21,7 @@
     import Body from './body/body.vue';
     import { provideTableContext, type RowEventName, type TableContextView, type TableFoundationProps as FoundationProps, type TableRowState, type TableState } from './context';
     import HeadTable from './head-table.vue';
-    import type { ColumnProps, TableChangeInfo, TableEmits, TableHandle, TableHeaderCellSlotProps, TablePaginationProps, TableProps, TableRowKey, TableSlots, TableVirtualizedProps } from './interface';
+    import type { ColumnProps, RowSelectionProps, TableChangeInfo, TableEmits, TableHandle, TableHeaderCellSlotProps, TablePaginationProps, TableProps, TableRowKey, TableSlots, TableVirtualizedProps } from './interface';
     import TablePagination from './table-pagination.vue';
     import { expandColumn, selectionColumn } from './use-table-features';
     import { buildColumns, mergeComponents, slotOutput, toElement, type CollectedColumns } from './utils';
@@ -115,10 +114,7 @@
 
     const fromFoundationColumns = (columns?: FoundationColumn[]) => (columns ?? []) as unknown as ColumnProps[];
 
-    const getRowSelectionFn = (state: TableState, name: string) => {
-        const fn = get(state.rowSelection, name);
-        return typeof fn === 'function' ? fn : () => undefined;
-    };
+    const getRowSelection = () => (typeof props.rowSelection === 'object' ? (props.rowSelection as RowSelectionProps<R>) : undefined);
 
     const rowExpandable = (record: AnyRecord) =>
         mergedRowExpandable(record, {
@@ -193,9 +189,9 @@
                 emit('update:expandedRowKeys', expandedRowKeys);
                 emit('expandedRowsChange', expandedRows as R[]);
             },
-            notifySelect: (record, selected, selectedRows, event) => getRowSelectionFn(base.getStates(), 'onSelect')(record, selected, selectedRows, event),
-            notifySelectAll: (selected, selectedRows, changedRows, event) => getRowSelectionFn(base.getStates(), 'onSelectAll')(selected, selectedRows, changedRows, event),
-            notifySelectionChange: (selectedRowKeys, selectedRows) => getRowSelectionFn(base.getStates(), 'onChange')(selectedRowKeys, selectedRows),
+            notifySelect: (record, selected, selectedRows, event) => getRowSelection()?.onSelect?.(record as R, selected, selectedRows as R[], event),
+            notifySelectAll: (selected, selectedRows, changedRows, event) => getRowSelection()?.onSelectAll?.(selected, selectedRows as R[], changedRows as R[], event),
+            notifySelectionChange: (selectedRowKeys, selectedRows) => getRowSelection()?.onChange?.(selectedRowKeys, selectedRows as R[]),
         }),
         {
             props: {
@@ -288,23 +284,7 @@
         resolveColumnSlot,
         renderTitle,
         setHeadWidths: foundation.setHeadWidths,
-        getCellWidths: (columns: ColumnProps[]) => {
-            const measured = getCellWidths(view.value.headWidths, columns);
-            if (measured.length || !virtualized.value) {
-                return measured;
-            }
-            // Nothing is measured before mount, and a virtualized body renders nothing without widths: the declared numeric
-            // widths stand in for the first frame, and the selection and expand columns take their default widths.
-            // shortcut: a column without a numeric width leaves the body to render after mount; upgrade if first-frame rows
-            // are needed for such columns, which would require a width estimate.
-            const declared = columns.map((column) => {
-                if (column.key === strings.DEFAULT_KEY_COLUMN_SELECTION) {
-                    return column.width ?? numbers.DEFAULT_WIDTH_COLUMN_SELECTION;
-                }
-                return column.key === strings.DEFAULT_KEY_COLUMN_EXPAND ? (column.width ?? numbers.DEFAULT_WIDTH_COLUMN_EXPAND) : column.width;
-            });
-            return declared.every((width) => typeof width === 'number') ? (declared as number[]) : [];
-        },
+        getCellWidths: (columns: ColumnProps[]) => getCellWidths(view.value.headWidths, columns, virtualized.value),
         setBodyHasScrollbar: foundation.setBodyHasScrollbar,
         handleBodyScroll,
         handleRowExpanded: (expanded: boolean, key: BaseRowKeyType, event?: Event) => foundation.handleRowExpanded(expanded, key, event),

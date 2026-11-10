@@ -1,5 +1,8 @@
+import { isEqual } from 'es-toolkit';
+import { crossesFocusBoundary } from '../../utils/a11y';
 import { fitTextareaHeight, onFontsLoaded, supportsFieldSizing } from '../../utils/field-sizing';
 import { ENTER_KEY, isComposing } from '../../utils/key-code';
+import { cssClasses } from './constants';
 import TextEntryFoundation, { type TextEntryAdapter, type TextEntryBaseProps, type TextEntryBaseState } from './text-entry-foundation';
 
 export interface TextAreaBaseProps extends TextEntryBaseProps {
@@ -8,7 +11,7 @@ export interface TextAreaBaseProps extends TextEntryBaseProps {
     disabled?: boolean;
     readonly?: boolean;
     disabledEnterStartNewLine?: boolean;
-    autosize?: unknown;
+    autosize?: boolean | { minRows?: number; maxRows?: number };
 }
 
 export interface TextAreaBaseState extends TextEntryBaseState {
@@ -32,7 +35,6 @@ export interface TextAreaAdapter<P extends TextAreaBaseProps = TextAreaBaseProps
     /** autosize changed the height (no width), or a native `resize` drag changed the size */
     notifyResize(size: { height: number; width?: number }): void;
     focusInput(): void;
-    isEventTarget(e: Pick<Event, 'target' | 'currentTarget'>): boolean;
     /** The native textarea currently rendered; showLineNumber remounts it */
     getTextarea(): HTMLTextAreaElement | null;
 }
@@ -47,7 +49,22 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
     #observed: HTMLTextAreaElement | null = null;
     #lastWidth = NaN;
 
-    static override readonly propKeys = ['value'];
+    static override readonly propKeys = ['value', 'autosize'];
+    // `autosize` is often a literal object, new on every render
+    static override readonly propEquals = { autosize: isEqual };
+
+    /** The style of the native textarea that follows `autosize` (the stylesheet turns the row counts into the min and max block size) or `resize`; `resize` applies only when provided */
+    static getSizeStyle({ autosize, resize, rows }: { autosize?: boolean | { minRows?: number; maxRows?: number }; resize?: string; rows?: number }): Record<string, string> {
+        if (autosize) {
+            const bounds = typeof autosize === 'object' ? autosize : {};
+            const style: Record<string, string> = { resize: 'none', [`--${cssClasses.PREFIX}-textarea-min-rows`]: String(bounds.minRows ?? rows) };
+            if (bounds.maxRows !== undefined) {
+                style[`--${cssClasses.PREFIX}-textarea-max-rows`] = String(bounds.maxRows);
+            }
+            return style;
+        }
+        return resize === undefined ? {} : { resize };
+    }
 
     static isAllowClear(props: { showClear?: boolean; disabled?: boolean; readonly?: boolean }, value?: string) {
         return Boolean(value && props.showClear && !props.disabled && !props.readonly);
@@ -62,9 +79,14 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
     }
 
     // `value` going back to undefined (a form reset) empties the text
-    override handlePropsChange() {
+    override handlePropsChange(prev: Partial<P>) {
         const value = this.getProp('value');
-        this.setState({ value, cachedValue: value });
+        if (prev.value !== value) {
+            this.setState({ value, cachedValue: value });
+        }
+        if (!isEqual(prev.autosize, this.getProp('autosize'))) {
+            this.fitAutosize();
+        }
     }
 
     override init() {
@@ -83,7 +105,7 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         this.#fitInline = false;
     }
 
-    /** Re-fits the inline height without field-sizing; hosts call it when the value, `autosize` or the node changes */
+    /** Re-fits the inline height without field-sizing; hosts call it when the value or the node changes, `autosize` changes call it themselves */
     fitAutosize = () => {
         const textarea = this.#fitInline ? this.adapter.getTextarea() : null;
         if (!textarea) {
@@ -114,7 +136,11 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         }
     };
 
-    handleBlur = (e: unknown) => {
+    /** Reports only focus leaving the wrapper, not focus moving among its buttons */
+    handleBlur = (e: Parameters<typeof crossesFocusBoundary>[0]) => {
+        if (!crossesFocusBoundary(e)) {
+            return;
+        }
         const { value } = this.getStates();
         let realValue = value;
         // blurring mid-composition commits the whole IME buffer, which may exceed maxLength; a value that only came
@@ -180,13 +206,21 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         e.stopPropagation();
     };
 
+    // only keyboard activation (detail 0) moves focus: the focused button is about to be removed
+    handleClearClick = (e: Pick<MouseEvent, 'detail' | 'stopPropagation'>) => {
+        this.handleClear(e);
+        if (e.detail === 0) {
+            this.adapter.focusInput();
+        }
+    };
+
     handleClick = (e: Pick<Event, 'target' | 'currentTarget'>) => {
         const { disabled, readonly } = this.getProps();
         const { isFocus } = this.getStates();
         if (disabled || readonly || isFocus) {
             return;
         }
-        if (this.adapter.isEventTarget(e)) {
+        if (e.target === e.currentTarget) {
             this.adapter.focusInput();
             this.setState({ isFocus: true });
         }

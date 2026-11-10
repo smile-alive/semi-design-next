@@ -1,9 +1,10 @@
 import { isPlainObject } from 'es-toolkit';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
+import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../../base/message-list-foundation';
 import { isImageFile } from '../../utils/file-suffix';
-import { strings, type MessageStatus } from './constants';
+import { cssClasses, strings, type MessageStatus } from './constants';
 
 const { MESSAGE_STATUS, MODE, ROLE } = strings;
 
@@ -51,7 +52,10 @@ export interface ChatAdapter<P extends ChatBaseProps = ChatBaseProps> extends Me
     getDropAreaElement: () => HTMLDivElement;
 }
 
-export type ChatBaseProps = MessageListBaseProps<Message>;
+export interface ChatBaseProps extends MessageListBaseProps<Message> {
+    enableUpload?: boolean | EnableUploadProps;
+    uploadProps?: { disabled?: boolean };
+}
 
 export interface ChatState extends MessageListState {
     uploadAreaVisible: boolean;
@@ -63,23 +67,28 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps> ext
 
     protected readonly completedStatus = MESSAGE_STATUS.COMPLETE;
 
+    #canDragUpload() {
+        return ChatFoundation.getUploadProps(this.getProp('enableUpload'), this.getProp('uploadProps')?.disabled).dragUpload;
+    }
+
     static getInitialState(): ChatState {
         return { backBottomVisible: false, uploadAreaVisible: false };
     }
 
     /**
-     * What the content class names depend on; `bubble` also covers the user's own message in userBubble mode. `user`
-     * and `error` hold only with a bubble, unlike AIChatDialogue's: here they are the bubble's colors, which a message
-     * without a bubble does not have.
+     * The `-${mode}` bubble class also covers the user's own message in userBubble mode. `-user` and `-error` hold only
+     * with a bubble, unlike AIChatDialogue's: here they are the bubble's colors, which a message without a bubble does
+     * not have.
      */
-    static getContentFlags(role?: string, status?: string, mode?: string) {
+    static getContentClass(role?: string, status?: string, mode?: string) {
         const isUser = role === ROLE.USER;
         const bubble = mode === MODE.BUBBLE || (mode === MODE.USER_BUBBLE && isUser);
-        return {
-            bubble,
-            user: bubble && isUser,
-            error: bubble && status === MESSAGE_STATUS.ERROR,
-        };
+        const prefix = `${cssClasses.PREFIX_CHAT_BOX}-content`;
+        return [prefix, bubble && `${prefix}-${mode}`, bubble && isUser && `${prefix}-user`, bubble && status === MESSAGE_STATUS.ERROR && `${prefix}-error`].filter(Boolean).join(' ');
+    }
+
+    static getMarkdownRaw(text = '', role?: string, escapeHtml?: boolean) {
+        return escapeHtml && role === ROLE.USER ? escapeHtmlInMarkdown(text) : text;
     }
 
     /**
@@ -191,18 +200,22 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps> ext
 
     handleDragOver = (e: { dataTransfer: DataTransfer | null }) => {
         // dragged text or links are not uploads, and the drop area would swallow them
-        if (this.#dragStartedInside || !e.dataTransfer?.types.includes('Files')) {
+        if (!this.#canDragUpload() || this.#dragStartedInside || !e.dataTransfer?.types.includes('Files')) {
             return;
         }
         this.setState({ uploadAreaVisible: true });
     };
 
     handleDragStart = () => {
-        this.#dragStartedInside = true;
+        if (this.#canDragUpload()) {
+            this.#dragStartedInside = true;
+        }
     };
 
     handleDragEnd = () => {
-        this.#dragStartedInside = false;
+        if (this.#canDragUpload()) {
+            this.#dragStartedInside = false;
+        }
     };
 
     handleContainerDragOver = (e: Pick<DragEvent, 'stopPropagation' | 'preventDefault'>) => {

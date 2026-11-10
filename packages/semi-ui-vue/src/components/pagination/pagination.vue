@@ -1,10 +1,9 @@
 <script setup lang="ts">
-    import { Text, computed, watch } from 'vue';
+    import { Text, computed } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
     import PaginationFoundation, { type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { ENTER_KEY, isComposing } from '@fibrae/semi-foundation/utils/key-code';
-    import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/pagination/pagination.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
@@ -65,14 +64,10 @@
 
     const prefix = cssClasses.PREFIX;
     const text = computed(() => locale.value.locale);
-    const sizeChangerShown = computed(() => props.showSizeChanger && props.size !== 'small');
-    const totalPageNum = computed(() => PaginationFoundation.getTotalPageNumber(props.total, state.value.pageSize));
+    const view = computed(() => PaginationFoundation.getView(props, state.value.pageSize, config.value.direction));
     const disabledState = computed(() => PaginationFoundation.getDisabled(state.value.currentPage, props.total, state.value.pageSize));
     const pageData = computed(() => PaginationFoundation.getPageList(state.value.currentPage, props.total, state.value.pageSize));
-    const hidden = computed(() => totalPageNum.value < 2 && props.hideOnSinglePage && !sizeChangerShown.value);
-    const quickJumpDisabled = computed(() => totalPageNum.value < 2 || props.disabled);
-    const smallText = computed(() => `${state.value.currentPage}/${totalPageNum.value} `);
-    const switchPosition = computed(() => props.popoverPosition ?? (config.value.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
+    const smallText = computed(() => `${state.value.currentPage}/${view.value.totalPageNum} `);
 
     const sizeOptions = computed(() =>
         PaginationFoundation.getPageSizeOpts(props.pageSizeOpts, state.value.pageSize).map((size) => ({
@@ -109,18 +104,12 @@
             foundation.handleQuickJumpEnterPress((event.target as HTMLInputElement).value);
         }
     };
-
-    watch(
-        () => sizeChangerShown.value && props.hideOnSinglePage,
-        (conflict) => warning(conflict, '[Semi Pagination] You should not use showSizeChanger and hideOnSinglePage in ths same time. At this time, hideOnSinglePage no longer takes effect, otherwise there may be a problem that the switch entry disappears'),
-        { immediate: true }
-    );
 </script>
 
 <template>
-    <ul v-if="!hidden" :class="[prefix, { [`${prefix}-small`]: props.size === 'small', [`${prefix}-disabled`]: props.disabled }]">
+    <ul v-if="!view.hidden" :class="[prefix, { [`${prefix}-small`]: props.size === 'small', [`${prefix}-disabled`]: props.disabled }]">
         <li v-if="props.showTotal && props.size !== 'small'" :class="`${prefix}-total`">
-            {{ formatLocale(text.total, { total: totalPageNum }) }}
+            {{ formatLocale(text.total, { total: view.totalPageNum }) }}
         </li>
         <!-- one-item list: the slot runs once per render; the constant key keeps the button and its focus -->
         <li v-for="(prev, i) in [textView($slots.prevText)]" :key="i">
@@ -142,7 +131,7 @@
             <Popover v-if="props.hoverShowPageSelect && !props.disabled">
                 <button :class="[`${prefix}-item`, `${prefix}-item-small`]" type="button">{{ smallText }}</button>
                 <template #content>
-                    <RestPages :count="totalPageNum" :start="1" @select="foundation.goPage" />
+                    <RestPages :count="view.totalPageNum" :start="1" @select="foundation.goPage" />
                 </template>
             </Popover>
             <div v-else :class="[`${prefix}-item`, `${prefix}-item-small`, { [`${prefix}-item-all-disabled`]: props.disabled }]">
@@ -190,12 +179,12 @@
                 <IconChevronRight v-else size="large" />
             </button>
         </li>
-        <li v-if="sizeChangerShown" :class="`${prefix}-switch`">
-            <Select :aria-label="text.pageSizeSelector" clickToHide :disabled="props.disabled" :dropdownClassName="`${prefix}-select-dropdown`" :modelValue="state.pageSize" :optionList="sizeOptions" :position="switchPosition" @change="changePageSize" />
+        <li v-if="view.sizeChangerShown" :class="`${prefix}-switch`">
+            <Select :aria-label="text.pageSizeSelector" clickToHide :disabled="props.disabled" :dropdownClassName="`${prefix}-select-dropdown`" :modelValue="state.pageSize" :optionList="sizeOptions" :position="view.switchPosition" @change="changePageSize" />
         </li>
-        <li v-if="props.showQuickJumper" :class="[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: quickJumpDisabled }]">
+        <li v-if="props.showQuickJumper" :class="[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: view.quickJumpDisabled }]">
             <span>{{ text.jumpTo }}</span>
-            <InputNumber :aria-label="text.jumpTo" :class="`${prefix}-quickjump-input-number`" :disabled="quickJumpDisabled" hideButtons :modelValue="state.quickJumpPage" :showClear="false" @blur="foundation.handleQuickJumpBlur" @change="foundation.handleQuickJumpNumberChange" @keydown="onQuickJumpKeydown" />
+            <InputNumber :aria-label="text.jumpTo" :class="`${prefix}-quickjump-input-number`" :disabled="view.quickJumpDisabled" hideButtons :modelValue="state.quickJumpPage" :showClear="false" @blur="foundation.handleQuickJumpBlur" @change="foundation.handleQuickJumpNumberChange" @keydown="onQuickJumpKeydown" />
             <span>{{ text.page }}</span>
         </li>
     </ul>

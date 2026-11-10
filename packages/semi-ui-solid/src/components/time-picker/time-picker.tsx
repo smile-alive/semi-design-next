@@ -2,7 +2,6 @@ import { type JSX, type Ref, For, Show, createEffect, createMemo, createSignal, 
 import clsx from 'clsx';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-import ComboboxFoundation from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
 import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
@@ -12,7 +11,7 @@ import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../primitives/use-click-outside';
 import { omitFormInjected } from '../../utils/control-attrs';
-import forwardFocus from '../../utils/forward-focus';
+import { focusElement } from '../../utils/forward-focus';
 import mergeRefs from '../../utils/merge-refs';
 import useConfig from '../config-provider/use-config';
 import type { InputSize, ValidateStatus } from '../input';
@@ -153,7 +152,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
     const layer = usePopupLayer();
     const locale = useLocale('TimePicker');
 
-    let root: HTMLDivElement | undefined;
+    let root!: HTMLDivElement;
     const [panel, setPanel] = createSignal<HTMLDivElement>();
     const panelId = createUniqueId();
     const [customTrigger, setCustomTrigger] = createSignal<HTMLDivElement>();
@@ -252,7 +251,22 @@ export default function TimePicker(rawProps: TimePickerProps) {
             notifyFocus: (e) => props.onFocus?.(e),
             notifyBlur: (e) => props.onBlur?.(e),
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel()),
-            setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(root, { preventScroll: props.preventScroll }),
+            // the root itself goes through the prototype: setRoot routes its own focus() and blur() to the foundation
+            setTriggerFocus: (focusOptions) => {
+                const target = FocusTrapHandle.getFocusableElements(root)[0] ?? root;
+                const options = { preventScroll: props.preventScroll, ...focusOptions };
+                if (target === root) {
+                    focusElement(root, options);
+                } else {
+                    target.focus(options);
+                }
+            },
+            blurFocusedElement: () => {
+                const active = FocusTrapHandle.getActiveElement(root);
+                if (active && (root.contains(active) || panel()?.contains(active))) {
+                    HTMLElement.prototype.blur.call(active);
+                }
+            },
         })
     );
 
@@ -283,19 +297,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
 
     const position = () => TimePickerFoundation.getPosition(props, config().direction);
 
-    const popupClassName = () => {
-        const { showHour, showMinute, showSecond } = ComboboxFoundation.getColumns(format());
-        const columnCount = [showHour, showMinute, showSecond, local.use12Hours].filter(Boolean).length;
-        return clsx(
-            `${local.prefixCls}-panel`,
-            local.popupClassName,
-            {
-                [`${local.prefixCls}-panel-narrow`]: (!showHour || !showMinute || !showSecond) && !local.use12Hours,
-                [cssClasses.RANGE_PICKER]: isRange(),
-            },
-            `${local.prefixCls}-panel-column-${columnCount}`
-        );
-    };
+    const popupClassName = () => clsx(TimePickerFoundation.getPanelClassNames(props), local.popupClassName);
 
     const isTriggerButton = () => !customTriggerFocusable();
 
@@ -332,11 +334,11 @@ export default function TimePicker(rawProps: TimePickerProps) {
 
     const footerOf = (index: number) => (isRange() ? (local.panels?.[index] ?? rangeSlot(local.panelFooter, index)) : local.panelFooter);
 
-    const focusOptions = () => ({ preventScroll: props.preventScroll });
-
     const setRoot = (node: HTMLDivElement) => {
         root = node;
-        forwardFocus(node, () => node.querySelector('input'), focusOptions);
+        // the consumer's ref receives the root (F2), and Solid has no imperative handle; options are not forwarded, preventScroll comes from props
+        node.focus = (options) => foundation.focus(options);
+        node.blur = foundation.blur;
         registerSpecialTrigger(node);
     };
 

@@ -125,15 +125,14 @@ export default function TimeGrid(props: TimeGridProps) {
                         const dayEvents = parsedEvents.day.get(dateString) ?? [];
                         return (
                             <DayCol
-                                // showCurrTime and isToday in the key: a column decides once per mount whether to run
-                                // the current time line
-                                key={`${dateString}-weekday-${String(showCurrTime)}-${String(day.isToday)}`}
+                                key={`${dateString}-weekday`}
                                 displayValue={day.date}
                                 events={CalendarFoundation.getParseDailyEvents(dayEvents, day.date).day}
                                 isWeekend={markWeekend && day.isWeekend}
                                 minEventHeight={minEventHeight}
                                 scrollHeight={scrollHeight}
                                 showCurrTime={showCurrTime}
+                                today={today}
                                 dateGridRender={dateGridRender}
                                 handleClick={handleClick}
                             />

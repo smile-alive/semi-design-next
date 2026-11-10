@@ -1,6 +1,5 @@
-import type { DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
-import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
-import ActionBarFoundation, { type ActionBarState } from '../../base/action-bar-foundation';
+import ActionBarFoundation, { type ActionBarAdapter, type ActionBarState } from '../../base/action-bar-foundation';
+import { isUnfinishedMessageStatus, strings } from './constants';
 import type { Message } from './foundation';
 
 export interface ChatBoxActionBaseProps {
@@ -14,57 +13,42 @@ export function getMessageText(message?: Message): string | undefined {
     return typeof text === 'string' && text !== '' ? text : undefined;
 }
 
-export type ChatBoxActionState = ActionBarState;
+const { ROLE, MESSAGE_STATUS } = strings;
 
-export interface ChatBoxActionAdapter<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> extends DefaultAdapter<P, ChatBoxActionState> {
-    notifyDeleteMessage: () => void;
-    notifyMessageCopy: () => void;
-    toastCopySuccess: () => void;
-    notifyLikeMessage: () => void;
-    notifyDislikeMessage: () => void;
-    notifyResetMessage: () => void;
+export function getChatBoxActionFlags({ role, status = MESSAGE_STATUS.COMPLETE, isLast }: { role?: string; status?: string; isLast?: boolean }) {
+    const complete = status === MESSAGE_STATUS.COMPLETE;
+    return {
+        complete,
+        finished: !isUnfinishedMessageStatus(status),
+        showFeedback: role !== ROLE.USER && complete,
+        showReset: Boolean(isLast && role === ROLE.ASSISTANT),
+    };
 }
 
-export default class ChatBoxActionFoundation<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> extends ActionBarFoundation<ChatBoxActionAdapter<P>, P, ChatBoxActionState> {
-    static getInitialState(): ChatBoxActionState {
-        return { visible: false, showAction: false };
+export type ChatBoxActionKey = 'copyNode' | 'likeNode' | 'dislikeNode' | 'resetNode' | 'deleteNode';
+
+/** The buttons a message shows, in order, for the built-in bar and for a custom one's `defaultActions` */
+export function getChatBoxActionKeys({ complete, showFeedback, showReset }: ReturnType<typeof getChatBoxActionFlags>) {
+    const keys: ChatBoxActionKey[] = [];
+    if (complete) {
+        keys.push('copyNode');
     }
+    if (showFeedback) {
+        keys.push('likeNode', 'dislikeNode');
+    }
+    if (showReset) {
+        keys.push('resetNode');
+    }
+    keys.push('deleteNode');
+    return keys;
+}
 
-    showDeletePopup = () => {
-        this.openMenu();
-    };
+export type ChatBoxActionState = ActionBarState;
 
-    /** Closes the delete popConfirm: from its buttons, or on a mousedown outside its trigger while it is open */
-    hideDeletePopup = () => {
-        this.closeMenu();
-    };
+export type ChatBoxActionAdapter<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> = ActionBarAdapter<P, ChatBoxActionState>;
 
-    deleteMessage = () => {
-        this.adapter.notifyDeleteMessage();
-    };
-
-    copyMessage = () => {
-        const text = getMessageText(this.getProps().message);
-        if (text === undefined) {
-            return;
-        }
-        void copyText(text).then((copied) => {
-            if (copied) {
-                this.adapter.toastCopySuccess();
-                this.adapter.notifyMessageCopy();
-            }
-        });
-    };
-
-    likeMessage = () => {
-        this.adapter.notifyLikeMessage();
-    };
-
-    dislikeMessage = () => {
-        this.adapter.notifyDislikeMessage();
-    };
-
-    resetMessage = () => {
-        this.adapter.notifyResetMessage();
-    };
+export default class ChatBoxActionFoundation<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> extends ActionBarFoundation<ChatBoxActionAdapter<P>, P, ChatBoxActionState> {
+    getCopyText() {
+        return getMessageText(this.getProps().message);
+    }
 }

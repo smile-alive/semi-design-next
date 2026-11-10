@@ -3,13 +3,13 @@ import { isValidElement, memo, useEffect, useState, useInsertionEffect, useLayou
 import clsx from 'clsx';
 import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
 import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
-import { type FieldRegistrationView, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/components/form/utils';
+import { type FieldRegistrationView, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveFieldView } from '@fibrae/semi-foundation/components/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { cloneDeep, hasContent } from '../../utils/index';
 import { Col, Row } from '../grid';
-import ErrorMessage, { hasErrorContent } from './error-message';
+import ErrorMessage from './error-message';
 import { useFormState, useFieldBridge, useArrayFieldState } from './hooks';
 import type { FieldProps } from './interface';
 import Label, { type LabelProps } from './label';
@@ -113,15 +113,6 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         const formProps = inForm ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol', 'disabled', 'showValidateIcon', 'extraTextPosition', 'stopValidateWithError', 'trigger', 'allowEmpty', 'keepState', 'schema', 'validator']) : {};
         const required = inForm && isRequiredByRules(formProps, rules);
         const { labelPosition: labelPos, labelWidth: mergeLabelWidth, labelAlign: mergeLabelAlign, labelCol: mergeLabelCol, wrapperCol: mergeWrapperCol, extraTextPosition: mergeExtraPos, trigger: mergeTrigger } = mergeFieldConfig(props, formProps);
-        // The control would be unnamed without an inset label, so the label goes on top: when the component cannot
-        // render one, or when a prefix or a custom trigger takes its place
-        const insetUnsupported = !insetLabel && labelPos === 'inset';
-        const insetFallback = labelPos === 'inset' && (insetUnsupported || hasContent(rest.prefix) || typeof rest.triggerRender === 'function');
-        const mergeLabelPos = insetFallback ? 'top' : labelPos;
-        const warnInsetFallback = insetUnsupported && !noLabel;
-        useEffect(() => {
-            warning(warnInsetFallback, `[Semi Form]: ${getDisplayName(Component)} has no inset label, so Field "${field}" is laid out with labelPosition 'top'`);
-        }, [warnInsetFallback, field]);
 
         const arrayFieldState = useArrayFieldState();
         // read from the rendered form state, not the Form instance, as a render may be discarded
@@ -135,6 +126,37 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         const [store] = useState(() => new FieldStore({ value: cloneDeep(initVal) }));
         const { value, touched, error, status } = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
         const validateOnMount = mergeTrigger.includes('mount');
+
+        const a11yId = id || generatedId;
+        const {
+            ids,
+            labelConfig,
+            labelText,
+            labelPosition: mergeLabelPos,
+            insetShown,
+            warnInsetFallback,
+            shownStatus,
+            withCol,
+            wrapInRow,
+        } = resolveFieldView<LabelProps, React.ReactNode>({
+            id: a11yId,
+            field,
+            label,
+            isNode: (node) => isValidElement(node),
+            noLabel,
+            validateStatus,
+            status,
+            labelPosition: labelPos,
+            labelCol: mergeLabelCol,
+            wrapperCol: mergeWrapperCol,
+            formHasCols: Boolean(formProps.labelCol && formProps.wrapperCol),
+            insetSupported: insetLabel,
+            hasPrefix: hasContent(rest.prefix),
+            hasTrigger: typeof rest.triggerRender === 'function',
+        });
+        useEffect(() => {
+            warning(warnInsetFallback, `[Semi Form]: ${getDisplayName(Component)} has no inset label, so Field "${field}" is laid out with labelPosition 'top'`);
+        }, [warnInsetFallback, field]);
 
         // The registration reads the props of the latest commit: the Form keeps the one registered, and the insertion
         // phase runs before the layout effects of the wrapped control, which may report a change with this render's props
@@ -194,17 +216,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             return null;
         }
 
-        const labelConfig: LabelProps | undefined = typeof label === 'object' && label !== null && !isValidElement(label) && !Array.isArray(label) ? label : undefined;
-        const labelText = labelConfig ? (labelConfig.text ?? field) : label || field;
-        const a11yId = id || generatedId;
-        const labelId = labelConfig?.id || `${a11yId}-label`;
-        const helpTextId = `${a11yId}-helpText`;
-        const extraTextId = `${a11yId}-extraText`;
-        const errorMessageId = `${a11yId}-errormessage`;
-
         const renderField = () => {
-            const blockStatus = validateStatus || status;
-
             const extraCls = clsx(`${prefix}-field-extra`, {
                 [`${prefix}-field-extra-string`]: typeof extraText === 'string',
                 [`${prefix}-field-extra-middle`]: mergeExtraPos === 'middle',
@@ -212,7 +224,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             });
 
             const extraContent = extraText ? (
-                <div id={extraTextId} className={extraCls} x-semi-prop="extraText">
+                <div id={ids.extraText} className={extraCls} x-semi-prop="extraText">
                     {extraText}
                 </div>
             ) : null;
@@ -224,10 +236,10 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
                 onBlur: handleBlur,
                 [options.onKeyChangeFnName]: handleChange,
                 [options.valueKey]: value,
-                validateStatus: blockStatus,
+                validateStatus: shownStatus,
                 ...getFieldAriaProps({
                     own: rest,
-                    ids: { label: labelId, helpText: helpTextId, extraText: extraTextId, errorMessage: errorMessageId },
+                    ids,
                     rulesRequired: required,
                     label: labelConfig,
                     labelPosition: mergeLabelPos,
@@ -238,9 +250,8 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
                     hasHelpText: Boolean(helpText),
                     hasExtraText: Boolean(extraText),
                     error,
-                    errorHasContent: hasErrorContent(error),
                     status,
-                    shownStatus: blockStatus,
+                    shownStatus,
                 }),
             };
             if (options.onKeyChangeFnName !== 'onChange') {
@@ -258,9 +269,9 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
                 [fieldClassName]: Boolean(fieldClassName),
             });
 
-            if (mergeLabelPos === 'inset' && !noLabel) {
+            if (insetShown) {
                 newProps.insetLabel = labelText;
-                newProps.insetLabelId = labelId;
+                newProps.insetLabelId = ids.label;
             }
 
             if (isInInputGroup) {
@@ -276,20 +287,19 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
                 return <Control {...newProps} />;
             }
 
-            const withCol = mergeLabelCol && mergeWrapperCol;
             const labelColCls = mergeLabelAlign ? `${prefix}-col-${mergeLabelAlign}` : '';
 
             let labelContent = null;
             if (!noLabel && mergeLabelPos !== 'inset') {
                 // id, name and text come last: they must match what the control references
-                labelContent = <Label required={required} align={mergeLabelAlign} width={mergeLabelWidth} {...labelConfig} id={labelId} name={a11yId} text={labelText} />;
+                labelContent = <Label required={required} align={mergeLabelAlign} width={mergeLabelWidth} {...labelConfig} id={ids.label} name={a11yId} text={labelText} />;
             }
 
             const fieldMainContent = (
                 <div className={`${prefix}-field-main`}>
                     {mergeExtraPos === 'middle' && extraContent}
                     <Control {...newProps} />
-                    {!noErrorMessage && <ErrorMessage error={error} errorMessageId={errorMessageId} helpText={helpText} helpTextId={helpTextId} showValidateIcon={formProps.showValidateIcon} validateStatus={blockStatus} />}
+                    {!noErrorMessage && <ErrorMessage error={error} errorMessageId={ids.errorMessage} helpText={helpText} helpTextId={ids.helpText} showValidateIcon={formProps.showValidateIcon} validateStatus={shownStatus} />}
                     {mergeExtraPos === 'bottom' && extraContent}
                 </div>
             );
@@ -313,8 +323,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
                 </>
             );
             if (withCol) {
-                // Form wraps in one Row only when it sets both cols itself
-                content = formProps.labelCol && formProps.wrapperCol ? withColContent : <Row>{withColContent}</Row>;
+                content = wrapInRow ? <Row>{withColContent}</Row> : withColContent;
             }
 
             return (

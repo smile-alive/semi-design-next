@@ -175,4 +175,25 @@ describe('TransferFoundation 静态辅助函数', () => {
         expect(treeItems[0].fullPath.map((node) => node.label)).toEqual(['Asia', 'Japan']);
         expect(getValuesAndItemsFromMap(new Map([[japan.key, japan]]), 'treeList', false).items[0]).not.toHaveProperty('fullPath');
     });
+
+    it('deriveView 按搜索、选择与分页给出两侧面板的内容', () => {
+        const dataSource = Array.from({ length: 5 }, (_, i) => ({ key: i, value: i, label: `item${i % 2}`, disabled: i === 4 }));
+        const view = TransferFoundation.deriveView({ dataSource, type: 'list', value: [0, 4], pagination: { pageSize: 2 } }, { inputValue: 'item0', selectedValues: [], leftCurrentPage: 5 });
+        expect(view.showNumber).toBe(3);
+        expect(view.filterData.map((item) => item.key)).toEqual([0, 2, 4]);
+        expect(view.totalPage).toBe(2);
+        expect(view.currentPage).toBe(2);
+        expect(view.visibleData.map((item) => item.key)).toEqual([4]);
+        expect(view.values).toEqual([0, 4]);
+        expect(view.allChecked).toBe(false);
+        expect(view.showAllButton).toBe(true);
+        expect(view.showClearButton).toBe(true);
+        expect(view.noMatch).toBe(false);
+
+        const empty = TransferFoundation.deriveView({ dataSource, type: 'list', value: [4] }, { inputValue: 'none', selectedValues: [], leftCurrentPage: 1 });
+        expect(empty.noMatch).toBe(true);
+        expect(empty.allChecked).toBe(true);
+        expect(empty.showAllButton).toBe(false);
+        expect(empty.showClearButton).toBe(false);
+    });
 });

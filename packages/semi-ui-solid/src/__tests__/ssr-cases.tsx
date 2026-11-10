@@ -392,8 +392,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         setup: crossMidnight,
         mountDiff: [{ selector: '[role="cell"][aria-label]', attrs: ['aria-current'], classes: ['semi-calendar-today'] }],
     },
-    // The week and day views rebuild the column that turns out to be today's, to start its current time line
-    // (docs/component-issues.md, Calendar)
+    // The column that turns out to be today's gains its current time line after mount
     { name: `${crossMidnightPrefix} week`, covers: ['Calendar'], render: () => <Calendar mode="week" displayValue={new Date(2026, 10, 4)} />, setup: crossMidnight, mountDiff: ['*'] },
     { name: `${crossMidnightPrefix} day`, covers: ['Calendar'], render: () => <Calendar mode="day" displayValue={new Date(2026, 10, 2, 12)} />, setup: crossMidnight, mountDiff: ['*'] },
     {

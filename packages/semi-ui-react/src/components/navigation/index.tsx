@@ -5,7 +5,7 @@ import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigati
 import NavigationFoundation, { type NavigationAdapter, type NavigationState, type NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useMergedRef from '../../hooks/use-merged-ref';
@@ -16,7 +16,7 @@ import useLocale from '../locale/use-locale';
 import { NavContext } from './context';
 import Footer, { type NavFooterProps } from './footer';
 import Header, { type NavHeaderProps } from './header';
-import Item, { type NavItemProps, type ItemKey } from './item';
+import Item, { type NavItemProps, type ItemKey, NavItemShell } from './item';
 import SubNav, { type SubNavProps } from './sub-nav';
 
 type Foundation = NavigationFoundation;
@@ -113,7 +113,7 @@ function renderItems(items: (SubNavPropsWithItems | NavItemPropsWithItems)[], le
                         </SubNav>
                     );
                 }
-                return <Item key={key} {...(pickConfigProps(item, ITEM_CONFIG_KEYS) as NavItemProps)} level={level} />;
+                return <NavItemShell key={key} {...(pickConfigProps(item, ITEM_CONFIG_KEYS) as NavItemProps)} itemConfig={item as NavItemType} level={level} />;
             })}
         </>
     );
@@ -190,15 +190,11 @@ function Nav(rawProps: NavProps) {
         })
     );
 
-    const isCollapsed = NavigationFoundation.getIsCollapsed(props, state);
+    const { formattedItems, itemKeysMap } = useMemo(() => NavigationFoundation.getFormattedItems({ items }, getItemsFromChildren(originChildren)), [items, originChildren]);
+    const { isCollapsed, openKeysIsControlled, openKeys, selectedKeys } = NavigationFoundation.deriveView(props, state, itemKeysMap);
 
     // texts remount on collapse, so they fade in only while the width animates (not for sub lists opened later)
     const [prevCollapsed, setPrevCollapsed] = useState(isCollapsed);
-
-    const openKeysIsControlled = NavigationFoundation.isOpenKeysControlled(props, isCollapsed);
-    const openKeys = NavigationFoundation.getOpenKeys(props, state, isCollapsed);
-    const { formattedItems, itemKeysMap } = useMemo(() => NavigationFoundation.getFormattedItems({ items }, getItemsFromChildren(originChildren)), [items, originChildren]);
-    const selectedKeys = NavigationFoundation.getSelectedKeys(props, state, itemKeysMap);
 
     if (isCollapsed !== prevCollapsed) {
         setPrevCollapsed(isCollapsed);

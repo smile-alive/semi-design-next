@@ -1,2 +1,3 @@
 export { default } from './audio-player';
-export type { AudioInfo, AudioPlayerProps, AudioPlayerState, AudioPlayerTheme, AudioUrl } from './interface';
+export type { AudioInfo, AudioPlayerState, AudioUrl } from '@fibrae/semi-foundation/components/audio-player/foundation';
+export type { AudioPlayerProps, AudioPlayerTheme } from './interface';

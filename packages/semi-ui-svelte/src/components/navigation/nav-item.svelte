@@ -11,10 +11,13 @@
 
     const level = $derived(ownLevel ?? ctx.level);
     const given: NavWrapperArgs['props'] = $derived(Object.fromEntries(Object.entries({ disabled, indent, isCollapsed, itemKey, level: ownLevel, link, linkOptions, text, tooltipHideDelay, tooltipShowDelay }).filter(([, value]) => value !== undefined)));
+
+    // onSelect reports everything the item was given, snippets and the rest included
+    const reported = $derived(Object.fromEntries(Object.entries({ ...given, label, icon, toggleIcon, onClick, ...rest }).filter(([, value]) => value !== undefined)));
 </script>
 
 {#snippet itemElement()}
-    <ItemShell {...rest} {disabled} {given} {icon} {indent} {isCollapsed} isInSubNav={ctx.isInSubNav} {itemKey} {label} {level} {link} {linkOptions} onItemClick={onClick} {text} {toggleIcon} {tooltipHideDelay} {tooltipShowDelay} />
+    <ItemShell {...rest} {disabled} {icon} {indent} {isCollapsed} isInSubNav={ctx.isInSubNav} {itemKey} {label} {level} {link} {linkOptions} onItemClick={onClick} {reported} {text} {toggleIcon} {tooltipHideDelay} {tooltipShowDelay} />
 {/snippet}
 
 <WrapperOutlet isInSubNav={ctx.isInSubNav} isSubNav={false} {itemElement} itemProps={given} />

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { scrollIntoViewWithin } from '@fibrae/semi-foundation/utils/supports';
 import { getBarItemKey, getItemKeyByBarItemKey, getTabKeyAttrs } from '../constants';
 import TabsFoundation, { type MotionView } from '../foundation';
+import TabBarFoundation from '../tab-bar-foundation';
 
 vi.mock('@fibrae/semi-foundation/utils/supports', () => ({ scrollIntoViewWithin: vi.fn<() => void>() }));
 
@@ -49,22 +50,22 @@ describe('TabsFoundation.splitMore', () => {
     });
 });
 
-describe('TabsFoundation.isTabsOverflowing', () => {
+describe('TabBarFoundation.isTabsOverflowing', () => {
     const bar = (tops: number[], scrollWidth = 100, clientWidth = 100) => ({ querySelectorAll: () => tops.map((offsetTop) => ({ offsetTop })), scrollWidth, clientWidth }) as unknown as HTMLElement;
 
     it('页签换行即溢出，纵向布局不看换行', () => {
-        expect(TabsFoundation.isTabsOverflowing(bar([0, 0, 30]), 'top')).toBe(true);
-        expect(TabsFoundation.isTabsOverflowing(bar([0, 30]), 'left')).toBe(false);
-        expect(TabsFoundation.isTabsOverflowing(bar([0]), 'top')).toBe(false);
+        expect(TabBarFoundation.isTabsOverflowing(bar([0, 0, 30]), 'top')).toBe(true);
+        expect(TabBarFoundation.isTabsOverflowing(bar([0, 30]), 'left')).toBe(false);
+        expect(TabBarFoundation.isTabsOverflowing(bar([0]), 'top')).toBe(false);
     });
 
     it('滚动宽度超出可见宽度 1px 以上才算溢出', () => {
-        expect(TabsFoundation.isTabsOverflowing(bar([0, 0], 101, 100), 'top')).toBe(false);
-        expect(TabsFoundation.isTabsOverflowing(bar([0, 0], 102, 100), 'left')).toBe(true);
+        expect(TabBarFoundation.isTabsOverflowing(bar([0, 0], 101, 100), 'top')).toBe(false);
+        expect(TabBarFoundation.isTabsOverflowing(bar([0, 0], 102, 100), 'left')).toBe(true);
     });
 });
 
-describe('TabsFoundation.scrollTabIntoView', () => {
+describe('TabBarFoundation.scrollTabIntoView', () => {
     afterEach(() => {
         vi.unstubAllGlobals();
         vi.mocked(scrollIntoViewWithin).mockClear();
@@ -76,10 +77,10 @@ describe('TabsFoundation.scrollTabIntoView', () => {
         const tabEl = { closest: vi.fn<(selector: string) => unknown>(() => wrapper) } as unknown as Element;
         const querySelector = vi.fn<(selector: string) => unknown>((selector) => (selector.includes('"a-bar"') ? tabEl : null));
         const barEl = { querySelector } as unknown as HTMLElement;
-        TabsFoundation.scrollTabIntoView(barEl, 'a-bar', 'center', 'auto');
+        TabBarFoundation.scrollTabIntoView(barEl, 'a-bar', 'center', 'auto');
         expect(scrollIntoViewWithin).toHaveBeenCalledExactlyOnceWith(tabEl, wrapper, { behavior: 'auto', block: 'center', inline: 'center' });
-        TabsFoundation.scrollTabIntoView(barEl, 'missing-bar');
-        TabsFoundation.scrollTabIntoView(null, 'a-bar');
+        TabBarFoundation.scrollTabIntoView(barEl, 'missing-bar');
+        TabBarFoundation.scrollTabIntoView(null, 'a-bar');
         expect(scrollIntoViewWithin).toHaveBeenCalledTimes(1);
     });
 
@@ -87,14 +88,14 @@ describe('TabsFoundation.scrollTabIntoView', () => {
         vi.stubGlobal('CSS', { escape: (value: string) => value });
         const tabEl = { closest: () => null } as unknown as Element;
         const barEl = { querySelector: () => tabEl } as unknown as HTMLElement;
-        TabsFoundation.scrollTabIntoView(barEl, 'a-bar');
+        TabBarFoundation.scrollTabIntoView(barEl, 'a-bar');
         expect(scrollIntoViewWithin).toHaveBeenCalledExactlyOnceWith(tabEl, barEl, { behavior: 'smooth', block: 'nearest', inline: 'nearest' });
     });
 });
 
-describe('TabsFoundation.readVisibleState', () => {
+describe('TabBarFoundation.readVisibleState', () => {
     it('去掉 -bar 后缀并汇总可见性', () => {
-        const { visibleState, isShowInViewport, hasHidden } = TabsFoundation.readVisibleState(
+        const { visibleState, isShowInViewport, hasHidden } = TabBarFoundation.readVisibleState(
             new Map([
                 ['a-bar', true],
                 ['b-bar', false],
@@ -106,7 +107,7 @@ describe('TabsFoundation.readVisibleState', () => {
         ]);
         expect(isShowInViewport).toBe(true);
         expect(hasHidden).toBe(true);
-        expect(TabsFoundation.readVisibleState(new Map([['a-bar', false]])).isShowInViewport).toBe(false);
+        expect(TabBarFoundation.readVisibleState(new Map([['a-bar', false]])).isShowInViewport).toBe(false);
     });
 });
 

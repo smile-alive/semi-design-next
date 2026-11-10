@@ -207,7 +207,7 @@ export default function SideSheet(rawProps: SideSheetProps) {
 
     return (
         <Show when={mounted() && shouldRender()}>
-            <PopupPortal getPopupContainer={local.getPopupContainer} zIndex={local.zIndex} inBody={inBody()}>
+            <PopupPortal getPopupContainer={local.getPopupContainer} zIndex={local.zIndex}>
                 <SideSheetContent
                     {...rest}
                     ref={mergeRefs(local.ref, attachRoot)}

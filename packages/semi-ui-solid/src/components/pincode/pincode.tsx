@@ -76,6 +76,8 @@ export default function PinCode(rawProps: PinCodeProps) {
         () => ({
             notifyValueChange: (values) => props.onChange?.(values.join('')),
             notifyComplete: (value) => props.onComplete?.(value),
+            notifyFocus: (e) => props.onFocus?.(e),
+            notifyBlur: (e) => props.onBlur?.(e),
             changeSpecificInputFocusState: (index, focusState) => {
                 if (focusState === 'focus') {
                     inputs[index]?.focus();
@@ -93,18 +95,6 @@ export default function PinCode(rawProps: PinCodeProps) {
 
     const digitLabel = (index: number) => formatLocale(locale().locale.digit, { index: index + 1, count: String(local.count) });
 
-    const handleFocusIn = (e: FocusEvent & { currentTarget: HTMLDivElement }) => {
-        if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
-            local.onFocus?.(e);
-        }
-    };
-
-    const handleFocusOut = (e: FocusEvent & { currentTarget: HTMLDivElement }) => {
-        if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
-            local.onBlur?.(e);
-        }
-    };
-
     const setRoot = (node: HTMLDivElement) => {
         // React's handle only focuses a given index; without one, the first empty cell (or the last when full) is where typing continues
         forwardFocus(node, () => {
@@ -115,7 +105,7 @@ export default function PinCode(rawProps: PinCodeProps) {
     };
 
     return (
-        <div role="group" {...rest} ref={mergeRefs(setRoot, local.ref)} class={clsx(`${cssClasses.PREFIX}-wrapper`, local.class)} onFocusIn={handleFocusIn} onFocusOut={handleFocusOut}>
+        <div role="group" {...rest} ref={mergeRefs(setRoot, local.ref)} class={clsx(`${cssClasses.PREFIX}-wrapper`, local.class)} onFocusIn={foundation.handleFocus} onFocusOut={foundation.handleBlur}>
             <Index each={Array.from({ length: local.count ?? 0 })}>
                 {(_, index) => (
                     <Input

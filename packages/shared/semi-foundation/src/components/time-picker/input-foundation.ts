@@ -2,15 +2,21 @@ import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 
 export type TimeInputState = Record<string, never>;
 
+export interface TimeInputBaseProps {
+    /** Focuses and selects the text once mounted */
+    focusOnOpen?: boolean;
+    preventScroll?: boolean;
+}
+
 /** `E` is the focus and blur event of the host framework, which the foundation only passes on */
-export interface TimeInputAdapter<P extends object = object, E = unknown> extends DefaultAdapter<P, TimeInputState> {
+export interface TimeInputAdapter<P extends TimeInputBaseProps = TimeInputBaseProps, E = unknown> extends DefaultAdapter<P, TimeInputState> {
     notifyChange: (value: string) => void;
     notifyFocus: (e: E) => void;
     notifyBlur: (e: E) => void;
     getInputNode: () => HTMLInputElement | null;
 }
 
-export default class TimeInputFoundation<P extends object = object, E = unknown> extends BaseFoundation<TimeInputAdapter<P, E>, P, TimeInputState> {
+export default class TimeInputFoundation<P extends TimeInputBaseProps = TimeInputBaseProps, E = unknown> extends BaseFoundation<TimeInputAdapter<P, E>, P, TimeInputState> {
     #cursorIndex: number | null = null;
     static override readonly propKeys = ['value'];
 
@@ -23,6 +29,14 @@ export default class TimeInputFoundation<P extends object = object, E = unknown>
 
     #clearCursor() {
         this.#cursorIndex = null;
+    }
+
+    protected override initOnce() {
+        const inputNode = this.adapter.getInputNode();
+        if (this.getProp('focusOnOpen') && inputNode) {
+            inputNode.focus({ preventScroll: this.getProp('preventScroll') });
+            inputNode.select();
+        }
     }
 
     /** Re-formatting the text moves the caret to the end; the host calls this after the input shows the new text */

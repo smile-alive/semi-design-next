@@ -7,7 +7,7 @@ import { strings } from './constants';
 export type Target = Window | HTMLElement;
 
 export interface BackTopBaseProps {
-    // null: node not available yet, nothing is bound
+    // null: node not available yet, nothing is bound; the window without a function
     target?: () => Target | null;
     visibilityHeight?: number;
     duration?: number;
@@ -32,8 +32,13 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
 
     static override readonly propKeys = ['target', 'duration'];
 
+    #getTarget() {
+        const { target } = this.getProps();
+        return target ? target() : window;
+    }
+
     #bind() {
-        const targetNode = this.getProps().target();
+        const targetNode = this.#getTarget();
         if (!targetNode) {
             return;
         }
@@ -111,7 +116,7 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
     }
 
     handleTargetChange = () => {
-        if (this.getProps().target() !== this.#targetNode) {
+        if (this.#getTarget() !== this.#targetNode) {
             this.#unbind();
             this.#bind();
         }

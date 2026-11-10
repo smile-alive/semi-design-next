@@ -3,13 +3,14 @@ import { Fragment, lazy, Suspense, useCallback, useId, useImperativeHandle, useL
 import clsx from 'clsx';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { type strings, cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
-import TagInputFoundation, { type TagInputAdapter, type TagInputBaseState } from '@fibrae/semi-foundation/components/tag-input/foundation';
+import TagInputFoundation, { type TagInputAdapter, type TagInputBaseState, type TagInputValidateStatus } from '@fibrae/semi-foundation/components/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/tag-input/tag-input.scss';
 import { IconClear, IconHandle } from '@fibrae/semi-icons-react';
-import type { ArrayElement, ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useEventListener, { getDocument } from '../../hooks/use-event-listener';
@@ -34,7 +35,7 @@ const prefixCls = cssClasses.PREFIX;
 
 export type Size = ArrayElement<typeof strings.SIZE_SET>;
 export type RestTagsPopoverProps = PopoverProps;
-export type ValidateStatus = 'default' | 'error' | 'warning';
+export type { TagInputValidateStatus };
 
 function SortContainer(props) {
     return <div className={`${prefixCls}-sortable-list`} {...props} />;
@@ -82,7 +83,7 @@ export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultVa
     split?: (originString: string, separators: string | string[] | null) => string[];
     style?: React.CSSProperties;
     suffix?: React.ReactNode;
-    validateStatus?: ValidateStatus;
+    validateStatus?: TagInputValidateStatus;
     value?: string[] | null;
     autoFocus?: boolean;
     'aria-label'?: string;
@@ -238,6 +239,7 @@ export default function TagInput(rawProps: TagInputProps) {
             notifyInputExceed: (value) => base.getProps().onInputExceed?.(value),
             notifyExceed: (tagList) => base.getProps().onExceed?.(tagList),
             getInput: () => runtime.input,
+            getRoot: () => runtime.root,
         })
     );
 
@@ -268,6 +270,7 @@ export default function TagInput(rawProps: TagInputProps) {
     const { focusing, active } = state;
     const nextSortIds = sortIds.values === tagsArray ? sortIds : TagInputFoundation.getSortIds(tagsArray, sortIds);
     const showPlaceholder = tagsArray.length === 0;
+    const sorting = active && draggable && tagsArray.length > 0;
 
     if (nextSortIds !== sortIds) {
         setSortIds(nextSortIds);
@@ -378,39 +381,12 @@ export default function TagInput(rawProps: TagInputProps) {
     );
 
     useLayoutEffect(() => {
-        const { disabled: isDisabled, autoFocus: shouldFocus, preventScroll: noScroll } = foundation.getProps();
-        if (!isDisabled && shouldFocus) {
-            runtime.input?.focus({ preventScroll: noScroll });
-            foundation.handleClick();
-        }
-    }, [foundation, runtime]);
-
-    useLayoutEffect(() => {
         foundation.fitInputWidth();
     }, [foundation, inputValue, showPlaceholder, placeholder, size]);
 
-    useImperativeHandle(
-        ref,
-        () => ({
-            focus: () => {
-                const { preventScroll: noScroll, disabled: isDisabled } = foundation.getProps();
-                runtime.input?.focus({ preventScroll: noScroll });
-                if (!isDisabled) {
-                    foundation.handleClick();
-                }
-            },
-            blur: () => {
-                const focused = FocusTrapHandle.getActiveElement(runtime.root);
-                if (focused instanceof HTMLElement && runtime.root?.contains(focused)) {
-                    focused.blur();
-                }
-                foundation.deactivate();
-            },
-        }),
-        [foundation, runtime]
-    );
+    useImperativeHandle(ref, () => ({ focus: foundation.focus, blur: foundation.blur }), [foundation]);
 
-    if (active && draggable && tagsArray.length > 0) {
+    if (sorting) {
         const { ids } = nextSortIds;
         tagsNode = (
             <Suspense
@@ -442,17 +418,13 @@ export default function TagInput(rawProps: TagInputProps) {
             </Suspense>
         );
     } else {
-        let tags = allTags;
-        let restTags: React.ReactNode[] = [];
-        if ((!active || !expandRestTagsOnClick) && maxTagCount && maxTagCount < allTags.length) {
-            tags = allTags.slice(0, maxTagCount);
-            restTags = allTags.slice(maxTagCount);
-        }
-        const restTagsContent = <span className={clsx(`${prefixCls}-wrapper-n`, { [`${prefixCls}-wrapper-n-disabled`]: disabled })}>+{tagsArray.length - maxTagCount}</span>;
+        const visibleCount = TagInputFoundation.getVisibleCount({ maxTagCount, expandRestTagsOnClick }, { active, sorting }, allTags.length);
+        const restTags = allTags.slice(visibleCount);
+        const restTagsContent = <span className={clsx(`${prefixCls}-wrapper-n`, { [`${prefixCls}-wrapper-n-disabled`]: disabled })}>+{restTags.length}</span>;
         tagsNode = (
             <>
                 <TagFocusKeeper runtime={runtime} />
-                {tags}
+                {allTags.slice(0, visibleCount)}
                 {restTags.length > 0 &&
                     (showRestTagsPopover ? (
                         <Popover autoAdjustOverflow content={restTags} position="top" showArrow trigger="hover" {...restTagsPopoverProps}>
@@ -547,14 +519,10 @@ export default function TagInput(rawProps: TagInputProps) {
                 // the input, tags and clear button form one control, so the group carries its disabled state as a whole
                 aria-disabled={disabled || undefined}
                 role="group"
-                // focus moving between the input, the tags and the clear button stays inside the TagInput
                 onBlur={(e) => {
                     // Chromium blurs the picked-up handle when dnd-kit moves it; that is not the focus leaving, and ending
                     // the active state would unmount the list under the drag
-                    if (runtime.dragging) {
-                        return;
-                    }
-                    if (!e.currentTarget.contains(e.relatedTarget)) {
+                    if (!runtime.dragging) {
                         foundation.handleInputBlur(e);
                     }
                 }}
@@ -562,11 +530,7 @@ export default function TagInput(rawProps: TagInputProps) {
                     rootRest.onClick?.(e);
                     foundation.handleClick();
                 }}
-                onFocus={(e) => {
-                    if (!e.currentTarget.contains(e.relatedTarget)) {
-                        foundation.handleInputFocus(e);
-                    }
-                }}
+                onFocus={foundation.handleInputFocus}
             >
                 {prefixNode}
                 <div ref={setWrapper} className={`${prefixCls}-wrapper`}>

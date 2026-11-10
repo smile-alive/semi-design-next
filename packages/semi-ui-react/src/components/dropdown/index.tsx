@@ -1,7 +1,7 @@
 import type React from 'react';
 import { cloneElement, isValidElement, useImperativeHandle, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
 import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
@@ -140,20 +140,14 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
         { ...parentContext, direction }
     );
 
-    const { menuDepth = 0 } = parentContext;
-    const isSubmenu = menuDepth > 0;
+    const { menuDepth } = parentContext;
     const popVisible = props.visible ?? state.popVisible;
     const content = render ?? (Array.isArray(menu) ? renderMenu(menu) : null);
-    const parentCloseAll = parentContext.closeAll;
 
     const contextValue = useMemo(() => {
-        const closeAll = () => {
-            foundation.close();
-            parentCloseAll?.();
-        };
         const getPopupId = () => tooltipRef.current?.getPopupId();
-        return { showTick, selectionMode, menuDepth: menuDepth + 1, trigger, close: foundation.close, closeAll, getPopupId };
-    }, [foundation, parentCloseAll, showTick, selectionMode, menuDepth, trigger]);
+        return { showTick, selectionMode, menuDepth: DropdownFoundation.getChildMenuDepth(menuDepth), trigger, close: foundation.close, closeAll: foundation.closeAll, getPopupId };
+    }, [foundation, showTick, selectionMode, menuDepth, trigger]);
 
     // moves focus into the menu when Tooltip gives the popup its initial focus
     const focusTarget = useMemo(() => ({ focus: foundation.handleOpened }), [foundation]);
@@ -217,7 +211,7 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
             prefixCls={prefixCls}
             returnFocusOnClose
             showArrow={false}
-            spacing={spacing ?? (isSubmenu ? numbers.NESTED_SPACING : numbers.SPACING)}
+            spacing={DropdownFoundation.getSpacing(spacing, menuDepth)}
             trigger={trigger}
             wrapWhenSpecial={isItem ? false : undefined}
             onVisibleChange={foundation.handleVisibleChange}

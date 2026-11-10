@@ -4,6 +4,7 @@ import { cssClasses, isUnfinishedMessageStatus } from '@fibrae/semi-ai-foundatio
 import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
 import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-react';
 import useDefaultProps from '@fibrae/semi-ui-react/base/use-default-props';
@@ -14,7 +15,6 @@ import ReactResizeObserver from '@fibrae/semi-ui-react/internal/resize-observer/
 import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';
 import Toast from '@fibrae/semi-ui-react/toast/index';
 import type { UploadHandle } from '@fibrae/semi-ui-react/upload/index';
-import { namedRole } from '@fibrae/semi-ui-react/utils/named-role';
 import type { ChatProps, InputBoxHandle } from './interface';
 import ChatContent from './widgets/chat-content';
 import Hint from './widgets/hint';
@@ -136,23 +136,17 @@ export default function Chat(rawProps: ChatProps) {
     }, []);
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-        if (dragUpload) {
-            foundation.handleDragOver(e);
-        }
+        foundation.handleDragOver(e);
         onDragOver?.(e);
     };
 
     const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
-        if (dragUpload) {
-            foundation.handleDragStart();
-        }
+        foundation.handleDragStart();
         onDragStart?.(e);
     };
 
     const handleDragEnd = (e: DragEvent<HTMLDivElement>) => {
-        if (dragUpload) {
-            foundation.handleDragEnd();
-        }
+        foundation.handleDragEnd();
         onDragEnd?.(e);
     };
 

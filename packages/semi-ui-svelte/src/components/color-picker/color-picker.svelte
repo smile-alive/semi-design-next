@@ -2,10 +2,10 @@
     import { omit } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
     import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as FoundationProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Popover } from '../popover/index.js';
     import type { TooltipTriggerProps } from '../tooltip/index.js';
@@ -78,8 +78,7 @@
         })
     );
 
-    // shortcut: repeats ColorPickerFoundation.getCurrentColor, which is protected; share it when the foundation exports it
-    const currentColor = $derived(value !== undefined ? (value ?? DEFAULT_COLOR) : states().currentColor);
+    const currentColor = $derived(ColorPickerFoundation.deriveColor(foundationProps, states()));
 
     // The root is not focusable; a Tooltip around the picker injects a tabindex that would add a Tab stop of its own
     const pickerAttrs = $derived(omit(rest, ['tabindex']));
@@ -89,11 +88,6 @@
     const popoverClass = $derived([`${cssClasses.PREFIX}-popover`, popoverProps?.class].filter(Boolean).join(' '));
     const popoverLabel = $derived(popoverProps?.['aria-label'] ?? (popoverProps?.['aria-labelledby'] ? undefined : locale().locale.color));
 
-    const handleAreaChange = ({ s, v }: { s: number; v: number }) => {
-        const { h, a } = currentColor.hsva;
-        foundation.handleChange({ s, v, a, h }, 'hsva');
-    };
-
     /** The picker div: inside the popover when `usePopover`, so null while the popover is closed */
     export function getRoot() {
         return picker ?? null;
@@ -101,9 +95,9 @@
 </script>
 
 {#snippet panel()}
-    <div bind:this={picker} {...pickerAttrs} class={[cssClasses.PREFIX, rest.class]} role={groupRole(rest)}>
+    <div bind:this={picker} {...pickerAttrs} class={[cssClasses.PREFIX, rest.class]} role={namedRole(rest)}>
         {@render topSlot?.()}
-        <ColorChooseArea handleSize={20} {height} hsva={currentColor.hsva} onChange={handleAreaChange} {width} />
+        <ColorChooseArea handleSize={20} {height} hsva={currentColor.hsva} onChange={foundation.handleAreaChange} {width} />
         <ColorSlider class="colorSliderWrapper" handleSize={18} height={10} hue={currentColor.hsva.h} onChange={foundation.handleHueChange} {width} />
         {#if alpha}
             <AlphaSlider handleSize={18} height={10} hsva={currentColor.hsva} onChange={foundation.handleAlphaChange} {width} />

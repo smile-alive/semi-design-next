@@ -31,7 +31,6 @@
         paste: [event: ClipboardEvent];
         focus: [event: FocusEvent];
         blur: [event: FocusEvent];
-        keydown: [event: KeyboardEvent];
     }>();
 
     const i18n = useLocale('AIChatInput');
@@ -74,5 +73,5 @@
 </script>
 
 <template>
-    <EditorContent :class="`${prefix}-editor-content`" :editor="editor" @focusin="emit('focus', $event)" @focusout="emit('blur', $event)" @keydown="emit('keydown', $event)" @paste="emit('paste', $event)" />
+    <EditorContent :class="`${prefix}-editor-content`" :editor="editor" @focusin="emit('focus', $event)" @focusout="emit('blur', $event)" @paste="emit('paste', $event)" />
 </template>

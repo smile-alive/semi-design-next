@@ -2,7 +2,7 @@ import { createMemo, createUniqueId, For, type JSX, Match, Show, splitProps, Swi
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/feedback/constants';
-import FeedbackFoundation, { type EmojiResult, type FeedbackAdapter, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
+import FeedbackFoundation, { type FeedbackAdapter, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
 import '@fibrae/semi-foundation/components/feedback/feedback.scss';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
@@ -89,44 +89,26 @@ export default function Feedback(rawProps: FeedbackProps) {
         })
     );
 
-    const emoji = createMemo(() => {
-        const value = state().value as EmojiResult | null;
-        return value !== null && typeof value === 'object' ? value.emoji : undefined;
-    });
+    const shown = createMemo(() => FeedbackFoundation.getContentValues(state().value));
 
     // mergeProps ignores an `undefined` written after a spread, so a consumer's `value` would show through while nothing is chosen
     const radioGroupRest = createMemo(() => omit((local.radioGroupProps ?? {}) as RadioGroupProps, ['value']));
 
     const disabledOkButton = () => isFeedbackValueEmpty(state().value);
 
-    const textValue = () => {
-        const value = state().value;
-        return typeof value === 'string' ? value : '';
-    };
-
-    const radioValue = () => {
-        const value = state().value;
-        return typeof value === 'object' ? undefined : value;
-    };
-
-    const checkboxValue = () => {
-        const value = state().value;
-        return Array.isArray(value) ? value : [];
-    };
-
     // a consumer's `onChange` is called by the foundation; the value and handlers written after the spreads keep a consumer's from replacing Feedback's
     const content = () => (
         <Switch>
             <Match when={local.type === 'custom'}>{local.children}</Match>
             <Match when={local.type === 'text'}>
-                <TextArea placeholder={locale().locale.placeholder} {...local.textAreaProps} value={textValue()} onChange={foundation.handleTextChange} />
+                <TextArea placeholder={locale().locale.placeholder} {...local.textAreaProps} value={shown().text} onChange={foundation.handleTextChange} />
             </Match>
             <Match when={local.type === 'emoji'}>
                 <div class={`${prefixCls}-emoji-container`} aria-label={locale().locale.rating} role="radiogroup">
                     <For each={Object.entries(Emoji)}>
                         {([name, item]) => (
-                            <label class={clsx(`${prefixCls}-emoji-item`, { [`${prefixCls}-emoji-item-selected`]: item === emoji() })} data-value={item}>
-                                <input name={emojiGroupName} type="radio" class={`${prefixCls}-emoji-input`} aria-label={locale().locale[name as keyof typeof Emoji]} checked={item === emoji()} value={item} onChange={() => foundation.handleEmojiChange(item)} />
+                            <label class={clsx(`${prefixCls}-emoji-item`, { [`${prefixCls}-emoji-item-selected`]: item === shown().emoji })} data-value={item}>
+                                <input name={emojiGroupName} type="radio" class={`${prefixCls}-emoji-input`} aria-label={locale().locale[name as keyof typeof Emoji]} checked={item === shown().emoji} value={item} onChange={() => foundation.handleEmojiChange(item)} />
                                 <span class={`${prefixCls}-emoji-glyph`} aria-hidden="true">
                                     {item}
                                 </span>
@@ -134,18 +116,18 @@ export default function Feedback(rawProps: FeedbackProps) {
                         )}
                     </For>
                 </div>
-                <Show when={emoji() === Emoji.bad}>
+                <Show when={shown().emoji === Emoji.bad}>
                     <TextArea placeholder={locale().locale.placeholderOptional} {...local.textAreaProps} onChange={foundation.handleEmojiReasonChange} />
                 </Show>
             </Match>
             <Match when={local.type === 'radio'}>
                 <div class={`${prefixCls}-radio-container`}>
-                    <RadioGroup direction="vertical" {...radioGroupRest()} value={radioValue()} onChange={foundation.handleRadioChange} />
+                    <RadioGroup direction="vertical" {...radioGroupRest()} value={shown().radio} onChange={foundation.handleRadioChange} />
                 </div>
             </Match>
             <Match when={local.type === 'checkbox'}>
                 <div class={`${prefixCls}-checkbox-container`}>
-                    <CheckboxGroup direction="vertical" {...local.checkboxGroupProps} value={checkboxValue()} onChange={foundation.handleCheckboxChange} />
+                    <CheckboxGroup direction="vertical" {...local.checkboxGroupProps} value={shown().checkbox} onChange={foundation.handleCheckboxChange} />
                 </div>
             </Match>
         </Switch>

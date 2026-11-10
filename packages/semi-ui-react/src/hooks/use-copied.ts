@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ResetTimer } from '@fibrae/semi-foundation/base/reset-timer';
-import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+import { CopiedTimer } from '@fibrae/semi-foundation/utils/clipboard';
 
 /**
  * `copy(text)` writes to the clipboard and resolves whether it succeeded; after a success `copied` stays true for
@@ -8,24 +7,14 @@ import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
  */
 export default function useCopied(duration: number): [boolean, (text: string) => Promise<boolean>] {
     const [copied, setCopied] = useState(false);
-    const [timer] = useState(() => new ResetTimer());
+    const [timer] = useState(() => new CopiedTimer(setCopied));
 
     useEffect(() => {
         timer.mount();
         return () => timer.unmount();
     }, [timer]);
 
-    const copy = useCallback(
-        (text: string) =>
-            copyText(text).then((res) => {
-                if (res && timer.isMounted) {
-                    setCopied(true);
-                    timer.start(duration, () => setCopied(false));
-                }
-                return res;
-            }),
-        [duration, timer]
-    );
+    const copy = useCallback((text: string) => timer.copy(text, duration), [duration, timer]);
 
     return [copied, copy];
 }

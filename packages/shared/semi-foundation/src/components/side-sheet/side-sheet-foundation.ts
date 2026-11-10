@@ -67,8 +67,6 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
     readonly #lifecycle = new PopupLifecycle();
     readonly #resources = new ModalResources();
 
-    static override readonly propKeys = ['visible'];
-
     constructor(adapter: SideSheetAdapter<P>) {
         super(adapter);
         // a sheet mounted visible is shown without a report, and its unmount still reports afterVisibleChange(false)
@@ -98,7 +96,7 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
 
     /**
      * Only a mask over the whole page makes the sheet modal: aria-modal, the inert page, the Tab trap, unconditional
-     * focus return and the body scroll lock. `inBody`: the sheet renders into body (`coversPage`).
+     * focus return and the body scroll lock. `inBody`: the sheet's container covers the page (`coversPage`).
      */
     static isModal({ mask, inBody }: { mask?: boolean; inBody: boolean }) {
         return Boolean(mask) && inBody;
@@ -123,12 +121,10 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         }
     }
 
-    // React refocuses the pre-commit element after the leave starts while the sheet is still mounted: restore again
-    override handlePropsChange() {
-        if (!this.getProp('visible')) {
-            this.#resources.restoreFocus();
-        }
-    }
+    /** Returns focus again, for a host whose framework refocuses the previously focused element after the close */
+    restoreFocus = () => {
+        this.#resources.restoreFocus();
+    };
 
     /** Remembers the element to return focus to; hosts call it on opening, before anything inside the sheet takes focus */
     recordFocus = () => {

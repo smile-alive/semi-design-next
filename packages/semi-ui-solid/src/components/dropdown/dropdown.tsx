@@ -2,7 +2,7 @@ import { type JSX, type Ref, For, Show, children, createMemo, createSignal, merg
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
 import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { cssClasses as tooltipClasses } from '@fibrae/semi-foundation/components/tooltip/constants';
@@ -128,21 +128,16 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     const ref = props.ref;
     const focusTarget = { focus: foundation.handleOpened };
     const handle: DropdownHandle = { focusTrigger: () => tooltip?.focusTrigger(), rePosition: () => tooltip?.rePosition() };
-    const view = createMemo(() => ({ menuDepth: (parent?.view().menuDepth ?? 0) + 1, showTick: props.showTick, selectionMode: local.selectionMode, trigger: props.trigger }));
+    const view = createMemo(() => ({ menuDepth: DropdownFoundation.getChildMenuDepth(parent?.view().menuDepth), showTick: props.showTick, selectionMode: local.selectionMode, trigger: props.trigger }));
 
     const context: DropdownContextValue = {
         view,
         close: foundation.close,
-        closeAll: () => {
-            foundation.close();
-            parent?.closeAll();
-        },
+        closeAll: foundation.closeAll,
         getPopupId: () => tooltip?.getPopupId() ?? '',
     };
 
     const popVisible = () => props.visible ?? state().popVisible;
-
-    const isSubmenu = () => (parent?.view().menuDepth ?? 0) > 0;
 
     const disabledItem = () => {
         const el = triggerElement();
@@ -258,7 +253,7 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
             content={renderPopup}
             // the foundation handles Up and Down on the trigger, so focus moves once
             disableArrowKeyDown
-            spacing={local.spacing ?? (isSubmenu() ? numbers.NESTED_SPACING : numbers.SPACING)}
+            spacing={DropdownFoundation.getSpacing(local.spacing, parent?.view().menuDepth)}
             // a disabled parent item opens no submenu
             condition={disabledItem() ? false : local.condition}
             onVisibleChange={foundation.handleVisibleChange}

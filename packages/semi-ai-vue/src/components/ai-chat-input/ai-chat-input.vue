@@ -1,13 +1,14 @@
 <script setup lang="ts">
-    import { computed, h, onBeforeUpdate, onUpdated, shallowRef, useId, useTemplateRef, type Component, type ComponentPublicInstance } from 'vue';
+    import { computed, h, onBeforeUpdate, onUpdated, useId, useTemplateRef, type Component, type ComponentPublicInstance } from 'vue';
     import type { Editor } from '@tiptap/core';
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/components/ai-chat-input/foundation';
-    import type { Attachment, Content, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
-    import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
+    import type { Attachment, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+    import { type ContentType, getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
     import { isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils/upload-status';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-ai-foundation/components/ai-chat-input/ai-chat-input.scss';
     import { IconClose, IconCode, IconCrossStroked, IconExcel, IconFile, IconMusic, IconPdf, IconSendMsgStroked, IconTemplateStroked, IconVideo, IconWord } from '@fibrae/semi-icons-vue';
@@ -19,7 +20,6 @@
     import useConfig from '@fibrae/semi-ui-vue/config-provider/use-config';
     import Popover from '@fibrae/semi-ui-vue/popover/index';
     import Progress from '@fibrae/semi-ui-vue/progress/index';
-    import { groupRole } from '@fibrae/semi-ui-vue/utils/group-role';
     import Configure from './configure';
     import type { AIChatInputEmits, AIChatInputHandle, AIChatInputProps, AIChatInputSkillItemSlotProps, AIChatInputSlots, AIChatInputSuggestionItemSlotProps, AIChatInputTopSlotProps, Skill } from './interface';
     import HorizontalScroller from './widgets/horizontal-scroller.vue';
@@ -82,7 +82,6 @@
     // when the caller drops one of two rendered upload nodes
     const upload = useTemplateRef('upload');
     let editor: Editor | null = null;
-    const transformedContent = shallowRef<Content[]>([]);
 
     // A delete button leaves with its item while it holds focus; the editor is where typing continues
     let focusedBeforeUpdate: Element | null = null;
@@ -96,13 +95,7 @@
             // the panel may render in a shadow root, out of reach of document queries
             getOptionNode: (kind, index) => ((kind === 'skill' ? skillPanel : suggestionPanel).value?.children[index] as HTMLElement | undefined) ?? null,
             notifySkillChange: (skill) => emit('skillChange', skill),
-            notifyContentChange: (result) => {
-                transformedContent.value = result;
-                emit('contentChange', result);
-            },
-            setTransformedContent: (result) => {
-                transformedContent.value = result;
-            },
+            notifyContentChange: (result) => emit('contentChange', result),
             notifyConfigureChange: (value, changedValue) => emit('configureChange', value, changedValue),
             manualUpload: (files) => upload.value?.insert(files),
             notifyMessageSend: (message) => emit('messageSend', message),
@@ -121,13 +114,16 @@
 
     const prefix = cssClasses.PREFIX;
 
-    const FILE_ICONS: Record<string, Component> = {
+    const FILE_ICONS: Record<ContentType, Component> = {
         word: IconWord,
         code: IconCode,
         excel: IconExcel,
         video: IconVideo,
         audio: IconMusic,
         pdf: IconPdf,
+        ppt: IconFile,
+        image: IconFile,
+        unknown: IconFile,
     };
 
     const editorId = `${prefix}-editor-${popupId}`;
@@ -156,11 +152,12 @@
         };
     });
 
+    const transformedContent = computed(() => AIChatInputFoundation.getTransformedContent(state.value.content, props.transformer));
     const sendEnabled = computed(() => AIChatInputFoundation.getCanSend(props.canSend, state.value.content, state.value.attachments ?? []));
 
     const iconType = (item: Attachment | Reference) => getContentType(getAttachmentType(item));
 
-    const fileIcon = (type: string) => FILE_ICONS[type] ?? IconFile;
+    const fileIcon = (type: ContentType) => FILE_ICONS[type];
 
     const onEditorCreate = (instance: Editor) => {
         editor = instance;
@@ -240,7 +237,7 @@
     <!-- a custom-trigger popup claims Escape and ignores outside presses, so the panels close here -->
     <Popover v-bind="popoverBindings" disableArrowKeyDown role="presentation" trigger="custom" :visible="state.templateVisible || state.skillVisible || state.suggestionVisible" @clickOutSide="foundation.hidePanels" @escKeyDown="foundation.hidePanels">
         <!-- the textbox is the Tab stop; Tooltip would add tabIndex 0 here -->
-        <div ref="trigger" v-bind="$attrs" :class="prefix" :role="groupRole($attrs)" tabindex="-1" @click="foundation.handleContainerClick" @mousedown="foundation.handleContainerMouseDown">
+        <div ref="trigger" v-bind="$attrs" :class="prefix" :role="namedRole($attrs)" tabindex="-1" @click="foundation.handleContainerClick" @mousedown="foundation.handleContainerMouseDown">
             <slot v-if="props.topSlotPosition === 'top'" name="topSlot" v-bind="topSlotProps()" />
             <div v-if="props.showReference && props.references?.length" :class="`${prefix}-references`">
                 <template v-for="(item, index) in props.references" :key="item.id">
@@ -292,14 +289,13 @@
                 :controls="listbox?.id"
                 :defaultContent="props.defaultContent"
                 :extensions="props.extensions"
-                :handleKeyDown="foundation.handleRichTextAreaKeyDown"
+                :handleKeyDown="foundation.handleKeyDown"
                 :placeholder="placeholder"
                 :showPlaceholderWhenSkillOnly="props.showPlaceholderWhenSkillOnly"
                 @blur="foundation.handleBlur"
                 @change="foundation.handleContentChange"
                 @create="onEditorCreate"
                 @focus="foundation.handleFocus"
-                @keydown="foundation.handleKeyDown"
                 @paste="(...args) => emit('paste', ...args)"
                 @pasteFiles="foundation.handlePaste"
             />

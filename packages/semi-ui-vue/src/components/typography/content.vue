@@ -51,8 +51,8 @@
                 <NumeralNodes v-else :format="props.format" :nodes="props.nodes" />
             </Decorate>
         </Decorate>
-        <button v-if="props.actionText !== undefined" ref="expandButton" :aria-expanded="props.actionToggles ? props.expanded : undefined" :class="`${prefix}-ellipsis-expand`" type="button" @click="emit('toggle', $event)">
-            {{ props.actionText }}
+        <button v-if="props.action" ref="expandButton" :aria-expanded="props.action.expanded" :class="`${prefix}-ellipsis-expand`" type="button" @click="emit('toggle', $event)">
+            {{ props.action.text }}
         </button>
         <Copyable v-if="props.copy" ref="copyable" v-bind="props.copy" @copiedChange="emit('copiedChange')" @copy="(...args) => emit('copy', ...args)">
             <template v-for="(_, name) in $slots" #[name]="scope">

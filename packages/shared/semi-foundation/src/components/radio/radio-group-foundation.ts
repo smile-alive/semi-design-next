@@ -1,8 +1,11 @@
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { crossesFocusBoundary } from '../../utils/a11y';
 import type { RadioChangeEvent } from './radio-foundation';
 
 export interface RadioGroupAdapter<P extends RadioGroupBaseProps = RadioGroupBaseProps> extends DefaultAdapter<P, RadioGroupBaseState> {
     notifyChange: (e: RadioChangeEvent) => void;
+    /** Form injects `onBlur` into the group */
+    notifyBlur: (e: any) => void;
 }
 
 export interface RadioGroupBaseProps {
@@ -22,9 +25,20 @@ export default class RadioGroupFoundation<P extends RadioGroupBaseProps = RadioG
         return { value: value === undefined ? defaultValue : value };
     }
 
+    static deriveValue({ value }: RadioGroupBaseProps, state: RadioGroupBaseState) {
+        return value === undefined ? state.value : value;
+    }
+
     override handlePropsChange() {
         this.setState({ value: this.getProp('value') });
     }
+
+    // moving between the radios is not leaving the group: Form's blur validation waits until focus is outside
+    handleBlur = (e: Parameters<typeof crossesFocusBoundary>[0]) => {
+        if (crossesFocusBoundary(e)) {
+            this.adapter.notifyBlur(e);
+        }
+    };
 
     handleChange = (evt: RadioChangeEvent) => {
         const mode = this.getProp('mode');

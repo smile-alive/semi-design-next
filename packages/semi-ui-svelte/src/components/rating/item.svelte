@@ -26,7 +26,7 @@
         return { root, describedby };
     });
 
-    const itemName = (n: number) => formatLocale(locale().locale.itemLabel, { value: n, unit: unit ?? (n === 1 ? locale().locale.star : locale().locale.stars) });
+    const itemName = (n: number) => formatLocale(locale().locale.itemLabel, { value: n, unit: RatingFoundation.getUnit(n, unit, locale().locale) });
 
     const radioValueOf = (target: EventTarget | null) => (target === first ? model.firstValue : target === second ? model.secondValue : undefined);
 

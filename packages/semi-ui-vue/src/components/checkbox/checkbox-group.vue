@@ -51,6 +51,7 @@
                 emit('update:modelValue', value);
                 emit('change', value);
             },
+            notifyBlur: (event) => emit('blur', event),
         }),
         { props: { value: () => props.modelValue } }
     );
@@ -87,13 +88,6 @@
 
     const rootAttrs = (a: Record<string, unknown>) => Object.fromEntries(Object.entries(a).filter(([key]) => !DROPPED_ATTRS.has(key)));
 
-    // Moving between the boxes is not leaving the group: a form's blur validation waits until focus is outside.
-    const handleFocusout = (event: FocusEvent) => {
-        if (!(event.currentTarget as Element).contains(event.relatedTarget as Node | null)) {
-            emit('blur', event);
-        }
-    };
-
     onBeforeUpdate(() => {
         const next = pickAria();
         if (next.invalid !== aria.value.invalid || next.errormessage !== aria.value.errormessage) {
@@ -103,7 +97,7 @@
 </script>
 
 <template>
-    <div v-bind="rootAttrs($attrs)" :class="rootClass" role="group" @focusout="handleFocusout">
+    <div v-bind="rootAttrs($attrs)" :class="rootClass" role="group" @focusout="foundation.handleBlur">
         <template v-if="props.options">
             <Checkbox v-for="(option, index) in items" :key="index" :class="option.class" :disabled="option.disabled || props.disabled" :prefixCls="props.prefixCls" :style="option.style" :value="option.value">
                 <template v-if="option.label !== undefined || $slots.label" #default>

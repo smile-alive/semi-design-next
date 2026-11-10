@@ -1,11 +1,15 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import SliderFoundation, { type SliderAdapter, type SliderProps, type SliderState } from '../foundation';
 
+const input = document.createElement('input');
+document.body.append(input);
+
 function createFoundation(props: SliderProps, state: Partial<SliderState> = {}, direction?: 'rtl') {
     const fullProps = { min: 0, max: 100, step: 1, ...props };
     const fullState = { ...SliderFoundation.getInitialState(fullProps), ...state };
     const adapter = {
         getSliderNode: () => null,
+        getHandleInput: () => input,
         getProp: (key: keyof SliderProps) => fullProps[key],
         getProps: () => fullProps,
         getState: (key: keyof SliderState) => fullState[key],
@@ -146,6 +150,14 @@ describe('SliderFoundation.onHandleDown', () => {
         expect(state.isDrag).toBe(true);
         foundation.destroy();
     });
+
+    it('先聚焦手柄的 input，再开始拖拽', () => {
+        input.blur();
+        const { foundation } = createFoundation({ value: 10 });
+        foundation.onHandleDown(press({ pointerType: 'mouse', button: 0 }) as never, 'min');
+        expect(document.activeElement).toBe(input);
+        foundation.destroy();
+    });
 });
 
 describe('SliderFoundation.getHandleA11y', () => {
@@ -166,5 +178,34 @@ describe('SliderFoundation.getHandleA11y', () => {
         expect(min).toEqual({ id: 'volume', ariaLabel: 'Start', ariaLabelledby: 'caption volume' });
         const max = SliderFoundation.getHandleA11y({ ...base, range: true, pos: 'max', ariaLabelledby: 'caption', endName: 'End' });
         expect(max).toEqual({ id: 'gen-max', ariaLabel: 'End', ariaLabelledby: 'caption gen-max' });
+    });
+});
+
+describe('SliderFoundation.getLayout', () => {
+    const props = { min: 0, max: 100, included: true };
+    const idle = { chooseMovePos: '' as const, isDrag: false };
+
+    it('单手柄：轨道从起点铺到手柄，最近按下的手柄在拖动时叠在上层', () => {
+        const layout = SliderFoundation.getLayout(props, 30, { chooseMovePos: 'min', isDrag: true });
+        expect(layout).toMatchObject({ startProp: 'left', inputDir: 'ltr', reverse: '', track: { sizeProp: 'width', size: '30%', start: '0' } });
+        expect(layout.handles.min).toEqual({ start: '30%', zIndex: 2 });
+        expect(SliderFoundation.getLayout(props, 30, idle).handles.min.zIndex).toBe(1);
+    });
+
+    it('范围：轨道在两手柄之间，选过的手柄停止拖动后仍在上层', () => {
+        const layout = SliderFoundation.getLayout({ ...props, range: true }, [25, 75], { chooseMovePos: 'max', isDrag: false });
+        expect(layout.track).toEqual({ sizeProp: 'width', size: '50%', start: '25%' });
+        expect(layout.handles).toEqual({ min: { start: '25%', zIndex: 1 }, max: { start: '75%', zIndex: 2 } });
+    });
+
+    it('RTL 从右侧起算；vertical 从上起算，verticalReverse 的 input 与类名后缀反向', () => {
+        expect(SliderFoundation.getLayout(props, 10, idle, 'rtl')).toMatchObject({ startProp: 'right', inputDir: 'rtl' });
+        expect(SliderFoundation.getLayout({ ...props, vertical: true }, 10, idle, 'rtl')).toMatchObject({ startProp: 'top', inputDir: 'ltr', track: { sizeProp: 'height' } });
+        expect(SliderFoundation.getLayout({ ...props, vertical: true, verticalReverse: true }, 10, idle)).toMatchObject({ inputDir: 'rtl', reverse: '-reverse' });
+    });
+
+    it('included 为 false 时没有轨道；刻度位置是百分数', () => {
+        expect(SliderFoundation.getLayout({ ...props, included: false }, 30, idle).track).toBeUndefined();
+        expect(SliderFoundation.getMarkPercent({ min: 20, max: 40 }, 25)).toBe(25);
     });
 });

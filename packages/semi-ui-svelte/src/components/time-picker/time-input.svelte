@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
     import { IconClock } from '@fibrae/semi-icons-svelte';
@@ -20,6 +19,12 @@
             get value() {
                 return value;
             },
+            get focusOnOpen() {
+                return focusOnOpen;
+            },
+            get preventScroll() {
+                return preventScroll;
+            },
         },
         () => ({}),
         () => ({
@@ -31,17 +36,6 @@
     );
 
     const prefix = cssClasses.PREFIX;
-
-    onMount(() => {
-        const frame = requestAnimationFrame(() => {
-            const node = input?.getInput();
-            if (focusOnOpen && node) {
-                node.focus({ preventScroll });
-                node.select();
-            }
-        });
-        return () => cancelAnimationFrame(frame);
-    });
 </script>
 
 <div class={`${prefix}-input-wrap`}>

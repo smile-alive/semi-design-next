@@ -57,9 +57,9 @@ export default function VideoProgress(props: VideoProgressProps) {
             onFocus={foundation.handleFocus}
             onKeyDown={foundation.handleKeyDown}
             onLostPointerCapture={foundation.handleLostPointerCapture}
-            onMouseEnter={(e) => foundation.handlePointerPosition(e, { seek: false })}
+            onMouseEnter={foundation.handlePointerEnter}
             onPointerDown={foundation.handlePointerDown}
-            onPointerMove={(e) => foundation.handlePointerPosition(e, { seek: true })}
+            onPointerMove={foundation.handlePointerMove}
         >
             <div className={`${prefixCls}-markers`}>
                 {markersList.map((marker: MarkerListItem, index: number) => (
@@ -94,14 +94,7 @@ export default function VideoProgress(props: VideoProgressProps) {
     };
 
     return showTooltip ? (
-        <Tooltip
-            className={`${prefixCls}-tooltip`}
-            // anchored to the bar's center, so only a translate moves it to the pointer
-            style={{ translate: movingInfo ? `${movingInfo.offset}px 0` : undefined }}
-            content={renderTooltipContent()}
-            position="top"
-            spacing={2}
-        >
+        <Tooltip className={`${prefixCls}-tooltip`} style={{ translate: movingInfo ? VideoProgressFoundation.getPreviewTranslate(movingInfo.offset) : undefined }} content={renderTooltipContent()} position="top" spacing={2}>
             {sliderContent}
         </Tooltip>
     ) : (

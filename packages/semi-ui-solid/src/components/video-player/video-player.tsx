@@ -1,7 +1,7 @@
 import { type JSX, Show, createMemo, onCleanup, onMount, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { DEFAULT_PLAYBACK_RATE, cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/video-player/constants';
-import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/components/video-player/foundation';
+import { DEFAULT_CONTROLS_LIST, DEFAULT_PLAYBACK_RATE, cssClasses, numbers, strings, type VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
+import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerState } from '@fibrae/semi-foundation/components/video-player/foundation';
 import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -18,7 +18,7 @@ import useLocale from '../locale/use-locale';
 import Popover from '../popover';
 import ControlsMenu from './controls-menu';
 import ErrorSvg from './error-svg';
-import type { VideoControl, VideoPlayerProps, VideoPlayerState } from './interface';
+import type { VideoPlayerProps } from './interface';
 import VideoProgress from './video-progress';
 
 type Foundation = VideoPlayerFoundation<VideoPlayerProps>;
@@ -32,7 +32,7 @@ const defaultProps = {
     autoPlay: false,
     clickToPlay: true,
     defaultPlaybackRate: numbers.DEFAULT_PLAYBACK_RATE,
-    controlsList: [strings.PLAY, strings.NEXT, strings.TIME, strings.VOLUME, strings.PLAYBACK_RATE, strings.QUALITY, strings.ROUTE, strings.MIRROR, strings.FULLSCREEN, strings.PICTURE_IN_PICTURE],
+    controlsList: DEFAULT_CONTROLS_LIST,
     loop: false,
     muted: false,
     playbackRateList: DEFAULT_PLAYBACK_RATE,
@@ -163,7 +163,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
     return (
         <div
             {...rest}
-            role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as VideoPlayerProps['role']}
+            role={namedRole(rest)}
             ref={(node) => (wrapper = node)}
             class={clsx(prefixCls, local.class, { [`${prefixCls}-mirror`]: state().isMirror })}
             style={rootStyle()}

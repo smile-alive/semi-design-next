@@ -1,10 +1,11 @@
-import { type Accessor, type JSX, Index, Show, createEffect, createMemo, createSignal, createUniqueId, on } from 'solid-js';
+import { type Accessor, type JSX, Index, Show, createEffect, createMemo, createUniqueId, on } from 'solid-js';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { DayStatusType } from '@fibrae/semi-foundation/components/date-picker/foundation';
-import MonthFoundation, { type MonthDayInfo, type MonthFoundationProps } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
+import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import useFoundation from '../../base/use-foundation';
 import useToday from '../calendar/use-today';
 import useConfig from '../config-provider/use-config';
 
@@ -23,11 +24,19 @@ export default function Month(props: MonthProps) {
 
     const gridId = createUniqueId();
 
-    // the day the keyboard moved to; stale once the month is switched another way
-    const [keyboardDate, setKeyboardDate] = createSignal('');
-
     // empty until mounted, so the server render and the hydration pass mark no day as today
     const today = useToday();
+
+    const { foundation, state } = useFoundation<MonthFoundation, MonthAdapter, MonthProps, MonthFoundationState>(
+        MonthFoundation,
+        props,
+        () => MonthFoundation.getInitialState(),
+        () => ({
+            notifyDayClick: (day) => props.onDayClick(day),
+            notifyMonthSwitch: (switchType) => props.onMonthSwitch(switchType),
+        }),
+        { context: config }
+    );
 
     const weeks = createMemo(() => MonthFoundation.getMonthTable(props.month, props.weekStartsOn).weeks);
 
@@ -36,9 +45,7 @@ export default function Month(props: MonthProps) {
         return value === null ? '' : format(value, strings.FORMAT_FULL_DATE);
     };
 
-    const monthText = () => format(props.month, strings.FORMAT_YEAR_MONTH);
-
-    const activeDate = () => MonthFoundation.getDefaultActiveDate(monthText(), [keyboardDate(), ...props.selected, props.rangeStart, props.rangeEnd, todayText()]);
+    const activeDate = () => MonthFoundation.getActiveDate(props, state(), todayText());
 
     const weekdaysText = () => MonthFoundation.getWeekdays(props.weekStartsOn).map((key) => props.locale.weeks[key as keyof Locale['DatePicker']['weeks']]);
 
@@ -56,34 +63,6 @@ export default function Month(props: MonthProps) {
     });
 
     const dayId = (fullDate: string) => `${gridId}-${fullDate}`;
-
-    const selectDay = (day?: MonthDayInfo) => {
-        if (day && !MonthFoundation.getDayStatus(day, statusOptions()).isDisabled) {
-            setKeyboardDate(day.fullDate);
-            props.onDayClick(day);
-        }
-    };
-
-    // APG grid: focus stays on the grid, the keys move the active day and Enter or Space selects it
-    const handleKeyDown = (event: KeyboardEvent) => {
-        const action = MonthFoundation.getKeyAction(event, { activeDate: activeDate(), month: props.month, weekStartsOn: props.weekStartsOn, rtl: config().direction === 'rtl' });
-        if (!action) {
-            return;
-        }
-        event.preventDefault();
-        if (action.type === 'select') {
-            selectDay(
-                weeks()
-                    .flat()
-                    .find((day) => day.fullDate === activeDate())
-            );
-            return;
-        }
-        setKeyboardDate(action.date);
-        if (action.monthSwitch) {
-            props.onMonthSwitch(action.monthSwitch);
-        }
-    };
 
     const renderDay = (day: Accessor<MonthDayInfo>) => {
         const status = createMemo(() => MonthFoundation.getDayStatus(day(), statusOptions()));
@@ -109,7 +88,7 @@ export default function Month(props: MonthProps) {
                     aria-selected={Boolean(status().isSelected || status().isSelectedStart || status().isSelectedEnd)}
                     role="gridcell"
                     title={day().fullDate}
-                    onClick={() => selectDay(day())}
+                    onClick={() => foundation.selectDay(day())}
                     onMouseEnter={() => props.onDayHover(day())}
                     onMouseLeave={() => props.onDayHover()}
                 >
@@ -134,12 +113,12 @@ export default function Month(props: MonthProps) {
     createEffect(
         on(
             () => weeks().length,
-            (rowNum) => props.onWeeksRowNumChange(rowNum)
+            () => props.onWeeksRowNumChange()
         )
     );
 
     return (
-        <div class={cssClasses.MONTH} aria-activedescendant={dayId(activeDate())} aria-labelledby={props.labelledby} aria-multiselectable={props.multiple} role="grid" tabIndex={0} onKeyDown={handleKeyDown}>
+        <div class={cssClasses.MONTH} aria-activedescendant={dayId(activeDate())} aria-labelledby={props.labelledby} aria-multiselectable={props.multiple} role="grid" tabIndex={0} onKeyDown={(event) => foundation.handleKeyDown(event, todayText())}>
             <div class={cssClasses.WEEKDAY} role="row">
                 <Index each={weekdaysText()}>
                     {(text) => (

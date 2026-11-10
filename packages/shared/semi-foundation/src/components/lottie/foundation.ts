@@ -2,6 +2,7 @@ import { isEqual } from 'es-toolkit';
 import type lottie from 'lottie-web';
 import type { AnimationItem } from 'lottie-web';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { isDev } from '../../utils/warning';
 
 type LoadParams = Parameters<typeof lottie.loadAnimation>[0];
 
@@ -10,7 +11,6 @@ export interface LottieAdapter<P extends LottieBaseProps = LottieBaseProps> exte
     getContainer: () => HTMLElement | null;
     notifyAnimationInstance: (animation: AnimationItem) => void;
     notifyLottie: (lottiePKG: typeof lottie) => void;
-    notifyLoadError: (error: unknown) => void;
 }
 
 export interface LottieBaseProps {
@@ -74,7 +74,9 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
             }
         } catch (error) {
             // load() is not awaited, so this would otherwise be an unhandled rejection
-            this.adapter.notifyLoadError(error);
+            if (isDev()) {
+                console.error(error);
+            }
         }
     }
 

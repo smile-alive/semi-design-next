@@ -8,7 +8,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
-import type { VideoControl, VideoPlayerEmits, VideoPlayerHandle, VideoPlayerProps } from '../interface';
+import type { VideoControl, VideoPlayerEmits, VideoPlayerHandle, VideoPlayerProps } from '../index';
 import VideoPlayer from '../video-player.vue';
 import CachedPlayer from './fixtures/cached-player.vue';
 import HandleHost from './fixtures/handle-host.vue';

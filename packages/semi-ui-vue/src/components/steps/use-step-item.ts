@@ -1,6 +1,6 @@
 import { useAttrs } from 'vue';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { hasClickListener } from '../../utils/control-attrs';
-import { groupRole } from '../../utils/group-role';
 
 /**
  * The click and keyboard behavior every step type shares: a step is a button when its Steps listens for changes
@@ -15,7 +15,7 @@ export function useStepItem(clickableByParent: () => boolean) {
         clickable,
         role: () => {
             if (clickable()) return 'button';
-            return groupRole(attrs);
+            return namedRole(attrs);
         },
         tabindex: () => (clickable() ? 0 : undefined),
         onKeydown: (event: KeyboardEvent) => {

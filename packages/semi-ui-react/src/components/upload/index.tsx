@@ -1,15 +1,15 @@
 import { useCallback, useImperativeHandle, useLayoutEffect, useRef, useState, type ReactNode, type CSSProperties, type ChangeEvent, type DragEvent, type FocusEvent, type KeyboardEvent } from 'react';
 import clsx from 'clsx';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import { strings, cssClasses } from '@fibrae/semi-foundation/components/upload/constants';
 import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState, type BeforeUploadObjectResult, type AfterUploadResult, type FileItemStatus } from '@fibrae/semi-foundation/components/upload/foundation';
 import { addAreaControlAttributes, containsControl, containsName, ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/upload/upload.scss';
 import { IconUpload } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
-import type { ValidateStatus } from '../../base/base-component';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
-import { namedRole } from '../../utils/named-role';
 import Cropper, { type CropperHandle } from '../cropper';
 import useLocale from '../locale/use-locale';
 import Modal from '../modal';
@@ -116,8 +116,6 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
 
 export interface UploadState extends UploadBaseState {
     fileList: Array<FileItem>;
-    inputKey: number;
-    replaceInputKey: number;
 }
 
 type Foundation = UploadFoundation<UploadProps, UploadState, DragEvent<HTMLDivElement>>;
@@ -164,6 +162,18 @@ class UploadRuntime {
 
     setReplaceInput(node: HTMLInputElement | null) {
         this.replaceInput = node;
+    }
+
+    resetInput() {
+        if (this.input) {
+            this.input.value = '';
+        }
+    }
+
+    resetReplaceInput() {
+        if (this.replaceInput) {
+            this.replaceInput.value = '';
+        }
     }
 
     setAddArea(node: HTMLElement | null) {
@@ -336,7 +346,7 @@ function Upload(rawProps: UploadProps) {
     const [foundation, state] = useFoundation<Foundation, Adapter, UploadProps, UploadState>(
         UploadFoundation,
         props,
-        () => ({ ...UploadFoundation.getInitialState(props), inputKey: 0, replaceInputKey: 0 }),
+        () => UploadFoundation.getInitialState(props),
         (base) => ({
             notifyFileSelect: (files) => base.getProps().onFileChange?.(files),
             notifyError: (error, fileInstance, fileList, xhr) => base.getProps().onError?.(error, fileInstance, fileList, xhr),
@@ -347,8 +357,9 @@ function Upload(rawProps: UploadProps) {
             notifyExceed: (fileList) => base.getProps().onExceed?.(fileList),
             notifyBeforeUpload: ({ file, fileList }) => base.getProps().beforeUpload({ file, fileList }),
             notifyAfterUpload: ({ response, file, fileList }) => base.getProps().afterUpload({ response, file, fileList }),
-            resetInput: () => base.setState({ inputKey: base.getState('inputKey') + 1 }),
-            resetReplaceInput: () => base.setState({ replaceInputKey: base.getState('replaceInputKey') + 1 }),
+            resetInput: () => runtime.resetInput(),
+            resetReplaceInput: () => runtime.resetReplaceInput(),
+            openReplacePicker: () => runtime.replaceInput?.click(),
             notifyPastingError: (error) => base.getProps().onPastingError?.(error),
             notifyCropError: (error) => base.getProps().onCropError?.(error),
             notifyChange: ({ currentFile, fileList }) => base.getProps().onChange?.({ currentFile, fileList }),
@@ -394,20 +405,13 @@ function Upload(rawProps: UploadProps) {
 
     const handleReplaceChange = (e: ChangeEvent<HTMLInputElement>) => foundation.handleReplaceChange(e.target.files);
 
-    const replace = (file: FileItem) => {
-        if (disabled) {
-            return;
-        }
-        foundation.setState({ replaceUid: file.uid });
-        runtime.replaceInput?.click();
-    };
-
     const renderFile = (file: FileItem, index: number): ReactNode => {
-        const { name: fileName, status, validateMessage: fileValidateMessage, _sizeInvalid, uid } = file;
+        const { name: fileName, uid } = file;
         const fileCardProps = {
             showRetry,
             showReplace,
             ...file,
+            validateMessage: UploadFoundation.getFallbackValidateMessage(file, locale) ?? file.validateMessage,
             previewFile,
             listType,
             onRemove: () => foundation.handleRemove(file),
@@ -422,19 +426,12 @@ function Upload(rawProps: UploadProps) {
             renderPicClose,
             renderFileOperation,
             renderThumbnail,
-            onReplace: () => replace(file),
+            onReplace: () => foundation.startReplace(file.uid),
             onPreviewClick: typeof onPreviewClick !== 'undefined' ? () => foundation.handlePreviewClick(file) : undefined,
             picWidth,
             picHeight,
             showTooltip,
         };
-
-        if (status === strings.FILE_STATUS_UPLOAD_FAIL && !fileValidateMessage) {
-            fileCardProps.validateMessage = locale.fail;
-        }
-        if (_sizeInvalid && !fileValidateMessage) {
-            fileCardProps.validateMessage = locale.illegalSize;
-        }
 
         if (typeof renderFileItem === 'undefined') {
             // the jsx runtime wants key outside spread props
@@ -602,9 +599,8 @@ function Upload(rawProps: UploadProps) {
 
     return (
         <div role={namedRole(rest)} {...rest} className={uploadCls} style={style} x-prompt-pos={promptPosition} onBlur={handleBlur}>
-            {/* a new key remounts the input, so picking the same file again fires onChange */}
-            <input key={`input-${state.inputKey}`} ref={setInput} type="file" className={`${prefixCls}-hidden-input`} tabIndex={-1} autoComplete="off" multiple={multiple} accept={accept} capture={capture} onChange={handleChange} {...dirProps} />
-            <input key={`replace-${state.replaceInputKey}`} ref={setReplaceInput} type="file" className={`${prefixCls}-hidden-input-replace`} tabIndex={-1} autoComplete="off" multiple={false} accept={accept} onChange={handleReplaceChange} />
+            <input ref={setInput} type="file" className={`${prefixCls}-hidden-input`} tabIndex={-1} autoComplete="off" multiple={multiple} accept={accept} capture={capture} onChange={handleChange} {...dirProps} />
+            <input ref={setReplaceInput} type="file" className={`${prefixCls}-hidden-input-replace`} tabIndex={-1} autoComplete="off" multiple={false} accept={accept} onChange={handleReplaceChange} />
             {addContent}
             {Boolean(prompt) && (
                 <div className={`${prefixCls}-prompt`} x-semi-prop="prompt">

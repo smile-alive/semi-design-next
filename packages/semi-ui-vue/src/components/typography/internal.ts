@@ -1,4 +1,5 @@
 import type { Component, StyleValue } from 'vue';
+import type { ExpandButton } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import type { KeyedNode } from '../../utils/slot-nodes';
 import type { Ellipsis, TypographyBaseSize, TypographyCommonProps } from './interface';
 
@@ -38,11 +39,8 @@ export interface ContentProps {
     /** The span around the text inside a link, or undefined without a link */
     linkClass?: unknown;
     iconSize: 'small' | 'default';
-    /** Text of the expand or collapse button; no button when undefined */
-    actionText?: string;
-    /** Whether the button toggles `expanded`; only then it is a disclosure with aria-expanded */
-    actionToggles: boolean;
-    expanded: boolean;
+    /** The expand or collapse button; none when undefined */
+    action?: ExpandButton;
     copy: false | ResolvedCopyConfig;
 }
 

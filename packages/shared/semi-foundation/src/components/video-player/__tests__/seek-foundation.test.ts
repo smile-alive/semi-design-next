@@ -32,9 +32,16 @@ describe('SeekFoundation', () => {
 
     it('不在拖动时只更新预览，不通知', () => {
         const { foundation, state, notifyChange } = setup({ max: 60 });
-        foundation.handlePointerPosition({ button: 0, clientX: 50, clientY: 0 }, { seek: true });
+        foundation.handlePointerMove({ button: 0, clientX: 50, clientY: 0 });
         expect(notifyChange).not.toHaveBeenCalled();
         expect(state.movingInfo).toEqual({ progress: 0.5, offset: 0, value: 30 });
+        foundation.handlePointerEnter({ button: 0, clientX: 25, clientY: 0 });
+        expect(state.movingInfo).toEqual({ progress: 0.25, offset: -25, value: 15 });
+    });
+
+    it('预览位移：横向沿 x，纵向反向沿 y', () => {
+        expect(SeekFoundation.getPreviewTranslate(12)).toBe('12px 0');
+        expect(SeekFoundation.getPreviewTranslate(12, true)).toBe('0 -12px');
     });
 
     it('主键按下后聚焦控件，其他键不聚焦也不捕获', () => {

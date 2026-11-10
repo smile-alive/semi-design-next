@@ -2,7 +2,7 @@ import { type JSX, For, Show, Suspense, batch, children, createEffect, createMem
 import clsx from 'clsx';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
-import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState, type TagSortIds } from '@fibrae/semi-foundation/components/tag-input/foundation';
+import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState, type TagInputValidateStatus, type TagSortIds } from '@fibrae/semi-foundation/components/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
@@ -13,7 +13,6 @@ import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import type { SortableHandle } from '../../internal/sortable/types';
 import useClickOutside from '../../primitives/use-click-outside';
-import autofocus from '../../utils/autofocus';
 import callHandler from '../../utils/call-handler';
 import { omitFormInjected } from '../../utils/control-attrs';
 import hasContent from '../../utils/has-content';
@@ -35,7 +34,7 @@ const prefixCls = cssClasses.PREFIX;
 
 export type TagInputSize = Size;
 export type RestTagsPopoverProps = PopoverProps;
-export type TagInputValidateStatus = 'default' | 'error' | 'warning';
+export type { TagInputValidateStatus };
 
 /** Focus entering or leaving the whole TagInput; focus moving among its input, tags and buttons does not fire it */
 type TagInputFocusEvent = FocusEvent & { currentTarget: HTMLDivElement; target: Element };
@@ -152,6 +151,9 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         get disabled() {
             return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled;
         },
+        get autoFocus() {
+            return defaulted.autofocus;
+        },
     });
 
     // validateStatus, insetLabel and insetLabelId are read from props: the Form-injected keys never reach the split
@@ -221,7 +223,7 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         props,
         (view) => TagInputFoundation.getInitialState(view),
         () => ({
-            focusInput: () => input?.focus({ preventScroll: props.preventScroll }),
+            focusInput: (options) => input?.focus({ preventScroll: props.preventScroll, ...options }),
             notifyBlur: (e) => props.onBlur?.(e),
             notifyFocus: (e) => props.onFocus?.(e),
             notifyInputChange: (value, e) => props.onInputChange?.(value, e),
@@ -232,6 +234,7 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
             notifyInputExceed: (value) => props.onInputExceed?.(value),
             notifyExceed: (tagList) => props.onExceed?.(tagList),
             getInput: () => input ?? null,
+            getRoot: () => root ?? null,
         })
     );
 
@@ -266,11 +269,7 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
 
     // tags past maxTagCount fold into "+N" until the TagInput is active (or for good with expandRestTagsOnClick off);
     // a sortable list, and the plain list standing in while it loads, shows every tag
-    const visibleCount = createMemo(() => {
-        const limit = props.maxTagCount;
-        return !sortable() && (!active() || !props.expandRestTagsOnClick) && limit && limit < tagsArray().length ? limit : tagsArray().length;
-    });
-
+    const visibleCount = createMemo(() => TagInputFoundation.getVisibleCount(props, { active: active(), sorting: sortable() }, tagsArray().length));
     const visibleTags = createMemo(() => tagsArray().slice(0, visibleCount()));
     const restTags = createMemo(() => tagsArray().slice(visibleCount()));
 
@@ -308,21 +307,8 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
     const setRoot = (node: HTMLDivElement) => {
         root = node;
         // the root is not the focus target, so the handle the consumer's ref reaches goes to the input
-        node.focus = (options) => {
-            untrack(() => {
-                input?.focus({ preventScroll: props.preventScroll, ...options });
-                if (!props.disabled) {
-                    foundation.handleClick();
-                }
-            });
-        };
-        node.blur = () => {
-            const focused = FocusTrapHandle.getActiveElement(node);
-            if (focused instanceof HTMLElement && node.contains(focused)) {
-                focused.blur();
-            }
-            foundation.deactivate();
-        };
+        node.focus = (options) => untrack(() => foundation.focus(options));
+        node.blur = () => untrack(foundation.blur);
         registerTrigger(node);
     };
 
@@ -443,13 +429,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
 
     createEffect(on([inputValue, () => tagsArray().length === 0, () => local.placeholder, () => local.size], foundation.fitInputWidth));
 
-    onMount(() => {
-        if (!props.disabled && props.autofocus) {
-            autofocus(true, input, { preventScroll: props.preventScroll });
-            foundation.handleClick();
-        }
-    });
-
     return (
         <div
             {...rest}
@@ -474,15 +453,11 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                 if (dragging) {
                     return;
                 }
-                if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
-                    foundation.handleInputBlur(e);
-                }
+                foundation.handleInputBlur(e);
             }}
             onFocusIn={(e) => {
                 callHandler(local.onFocusIn, e);
-                if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
-                    foundation.handleInputFocus(e);
-                }
+                foundation.handleInputFocus(e);
             }}
             onClick={(e) => {
                 callHandler(local.onClick, e);

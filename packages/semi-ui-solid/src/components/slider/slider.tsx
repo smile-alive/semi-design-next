@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
 import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
-import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
 import '@fibrae/semi-foundation/components/slider/slider.scss';
 import type { ElementProps } from '../../base/element-props';
 import useDefaultProps from '../../base/use-default-props';
@@ -130,6 +129,8 @@ export default function Slider(rawProps: SliderProps) {
         (view) => SliderFoundation.getInitialState(view),
         () => ({
             getSliderNode: () => slider,
+            getHandleInput: (pos) => (pos === 'min' ? minInput : maxInput),
+            notifyBlur: (event) => callHandler(local.onBlur, event),
             notifyChange: (value) => props.onChange?.(value),
             notifyAfterChange: (value) => props.onAfterChange?.(value),
             notifyMouseUp: (event) => props.onMouseUp?.(event),
@@ -138,18 +139,12 @@ export default function Slider(rawProps: SliderProps) {
     );
 
     const currentValue = createMemo(() => SliderFoundation.deriveValue(foundationProps, state()), undefined, { equals: isEqual });
-    const percent = createMemo(() => SliderFoundation.getMinAndMaxPercent(foundationProps, currentValue()), undefined, { equals: isEqual });
+    const layout = createMemo(() => SliderFoundation.getLayout(foundationProps, currentValue(), state(), config().direction), undefined, { equals: isEqual });
     const tips = createMemo(() => SliderFoundation.computeHandleVisibleVal(foundationProps, { ...state(), currentValue: currentValue() }));
-
-    const isRTL = () => config().direction === 'rtl' && !props.vertical;
-
-    const stylePos = () => (props.vertical ? 'top' : isRTL() ? 'right' : 'left');
 
     const markKeys = () => (props.marks ? Object.keys(props.marks) : []);
 
-    const reverse = () => (props.vertical && props.verticalReverse ? '-reverse' : '');
-
-    const markPercent = (mark: string) => (Number(mark) - props.min) / (props.max - props.min);
+    const markPercent = (mark: string) => SliderFoundation.getMarkPercent(props, Number(mark));
 
     const markActive = (mark: string) => SliderFoundation.isMarkActive(foundationProps, currentValue(), Number(mark));
 
@@ -160,20 +155,15 @@ export default function Slider(rawProps: SliderProps) {
     };
 
     const trackStyle = (): JSX.CSSProperties | undefined => {
-        if (!local.included) {
-            return undefined;
-        }
-        const { min, max } = percent();
-        const size = props.range ? `${Math.abs(max - min) * 100}%` : `${min * 100}%`;
-        const start = props.range ? `${Math.min(min, max) * 100}%` : '0';
-        return { [props.vertical ? 'height' : 'width']: size, [stylePos()]: start };
+        const { track, startProp } = layout();
+        return track && { [track.sizeProp]: track.size, [startProp]: track.start };
     };
 
     const renderHandle = (pos: Handle) => {
         const index = pos === 'min' ? 0 : 1;
         const handleValue = () => (props.range ? (currentValue() as number[])[index] : (currentValue() as number));
         const dot = () => (Array.isArray(local.handleDot) ? local.handleDot[index] : local.handleDot);
-        const active = () => state().chooseMovePos === pos && (props.range || state().isDrag);
+        const handle = () => layout().handles[pos];
         const a11y = createMemo(() =>
             SliderFoundation.getHandleA11y({
                 range: props.range,
@@ -200,7 +190,7 @@ export default function Slider(rawProps: SliderProps) {
                             'aria-describedby': null,
                         })}
                         class={clsx(cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: state().chooseMovePos === pos && state().isDrag })}
-                        style={{ [stylePos()]: `${(pos === 'min' ? percent().min : percent().max) * 100}%`, 'z-index': active() ? 2 : 1 }}
+                        style={{ [layout().startProp]: handle().start, 'z-index': handle().zIndex }}
                         onFocusIn={props.range ? undefined : foundation.syncIsInRenderTree}
                         // keeps focus on the input rather than moving it to this span
                         onMouseDown={(event) => event.preventDefault()}
@@ -208,12 +198,7 @@ export default function Slider(rawProps: SliderProps) {
                         onMouseLeave={foundation.onHandleLeave}
                         // a single slider re-checks for a hidden container whenever its tooltip would show
                         onMouseOver={props.range ? undefined : foundation.syncIsInRenderTree}
-                        onPointerDown={(event) => {
-                            // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
-                            const input = pos === 'min' ? minInput : maxInput;
-                            if (input) focusWithoutRing(input, { preventScroll: true });
-                            foundation.onHandleDown(event, pos);
-                        }}
+                        onPointerDown={(event) => foundation.onHandleDown(event, pos)}
                     >
                         <input
                             ref={(node) => (pos === 'min' ? (minInput = node) : (maxInput = node))}
@@ -230,7 +215,7 @@ export default function Slider(rawProps: SliderProps) {
                             aria-orientation={props.vertical ? 'vertical' : undefined}
                             aria-valuetext={local.getAriaValueText ? local.getAriaValueText(handleValue(), index) : local['aria-valuetext']}
                             // matches where the handle moves; arrows are stepped by the foundation since engines map them differently
-                            dir={isRTL() || (props.vertical && props.verticalReverse) ? 'rtl' : 'ltr'}
+                            dir={layout().inputDir}
                             disabled={local.disabled}
                             max={local.max}
                             min={local.min}
@@ -257,7 +242,7 @@ export default function Slider(rawProps: SliderProps) {
         );
     };
 
-    const markDot = (mark: string, trigger?: object) => <span {...trigger} class={clsx(`${prefixCls}-dot`, { [`${prefixCls}-dot-active`]: markActive(mark) === 'active' })} style={{ [stylePos()]: `calc(${markPercent(mark) * 100}% - 2px)` }} onClick={foundation.handleWrapClick} />;
+    const markDot = (mark: string, trigger?: object) => <span {...trigger} class={clsx(`${prefixCls}-dot`, { [`${prefixCls}-dot-active`]: markActive(mark) === 'active' })} style={{ [layout().startProp]: `calc(${markPercent(mark)}% - 2px)` }} onClick={foundation.handleWrapClick} />;
 
     const renderSlider = () => (
         <div
@@ -285,10 +270,7 @@ export default function Slider(rawProps: SliderProps) {
             }}
             onFocusOut={(event) => {
                 callHandler(local.onFocusOut, event);
-                // moving between handles is not leaving: Form's blur validation waits for focus outside
-                if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-                    callHandler(local.onBlur, event);
-                }
+                foundation.handleBlur(event);
             }}
             onMouseEnter={(event) => {
                 callHandler(local.onMouseEnter, event);
@@ -320,11 +302,11 @@ export default function Slider(rawProps: SliderProps) {
                 <Show when={props.range}>{renderHandle('max')}</Show>
             </div>
             <Show when={local.showMarkLabel && markKeys().length > 0}>
-                <div class={cssClasses.MARKS + reverse()}>
+                <div class={cssClasses.MARKS + layout().reverse}>
                     <For each={markKeys()}>
                         {(mark) => (
                             <Show when={markActive(mark)}>
-                                <span class={`${prefixCls}-mark${reverse()}`} style={{ [stylePos()]: `${markPercent(mark) * 100}%` }} onClick={() => foundation.handleMarkClick(Number(mark))}>
+                                <span class={`${prefixCls}-mark${layout().reverse}`} style={{ [layout().startProp]: `${markPercent(mark)}%` }} onClick={() => foundation.handleMarkClick(Number(mark))}>
                                     {markLabel(mark)}
                                 </span>
                             </Show>

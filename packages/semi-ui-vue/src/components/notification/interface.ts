@@ -1,4 +1,5 @@
 import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
+import type { HookApi } from '@fibrae/semi-foundation/base/hook-api';
 import type { NoticeProps as FoundationNoticeProps } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 
@@ -27,17 +28,4 @@ export interface NoticeProps extends Omit<FoundationNoticeProps, 'title' | 'cont
 /** A hook's notifications render where its Holder is, so the wrapper-level options do not apply */
 export type NotificationHookOptions = Omit<NoticeProps, 'type' | 'id' | 'zIndex' | 'getPopupContainer'>;
 
-export interface NotificationHookApi {
-    success: (config: NotificationHookOptions) => string;
-    info: (config: NotificationHookOptions) => string;
-    error: (config: NotificationHookOptions) => string;
-    warning: (config: NotificationHookOptions) => string;
-    open: (config: NotificationHookOptions) => string;
-    close: (id: string) => void;
-}
-
-export interface NoticeHandle {
-    restartCloseTimer: () => void;
-    pauseCloseTimer: () => void;
-    resumeCloseTimer: () => void;
-}
+export type NotificationHookApi = HookApi<NotificationHookOptions>;

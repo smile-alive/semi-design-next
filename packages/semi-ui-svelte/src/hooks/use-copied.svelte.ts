@@ -1,5 +1,4 @@
-import { ResetTimer } from '@fibrae/semi-foundation/base/reset-timer';
-import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+import { CopiedTimer } from '@fibrae/semi-foundation/utils/clipboard';
 
 /**
  * `copied` stays true for `duration()` ms after a successful copy; a repeated copy restarts the countdown.
@@ -7,20 +6,12 @@ import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
  */
 export default function useCopied(duration: () => number) {
     let copied = $state(false);
-    const timer = new ResetTimer();
+
+    const timer = new CopiedTimer((value) => {
+        copied = value;
+    });
 
     timer.mount();
-
-    const copy = (text: string) =>
-        copyText(text).then((res) => {
-            if (res && timer.isMounted) {
-                copied = true;
-                timer.start(duration(), () => {
-                    copied = false;
-                });
-            }
-            return res;
-        });
 
     $effect(() => () => timer.unmount());
 
@@ -28,6 +19,6 @@ export default function useCopied(duration: () => number) {
         get copied() {
             return copied;
         },
-        copy,
+        copy: (text: string) => timer.copy(text, duration()),
     };
 }

@@ -294,8 +294,8 @@ describe('Toast', () => {
         vi.useFakeTimers();
         show({ content: 'focus', duration: 1, motion: false });
         const close = screen.getByRole('button', { name: zh_CN.Toast.close });
+        act(() => close.focus());
         act(() => {
-            close.focus();
             vi.advanceTimersByTime(2000);
         });
         expect(getInfoToast()).not.toBeNull();
@@ -631,23 +631,10 @@ describe('Toast', () => {
         const own = render(<ToastItem dir="rtl" content="own" />);
         expect(own.container.querySelector(`.${BASE_CLASS_PREFIX}-toast`)).toHaveAttribute('dir', 'rtl');
     });
-    it('单个 Toast 的 ref 暴露 restartCloseTimer', () => {
-        vi.useFakeTimers();
-        const close = vi.fn<(id: string) => void>();
+    it('单个 Toast 的 ref 拿到 Toast 元素', () => {
         const ref = { current: null };
-        render(<ToastItem ref={ref} id="r" close={close} content="ref" duration={1} />);
-        act(() => {
-            vi.advanceTimersByTime(800);
-        });
-        void act(() => ref.current.restartCloseTimer());
-        act(() => {
-            vi.advanceTimersByTime(999);
-        });
-        expect(close).not.toHaveBeenCalled();
-        act(() => {
-            vi.advanceTimersByTime(1);
-        });
-        expect(close).toHaveBeenCalledWith('r');
+        const { container } = render(<ToastItem ref={ref} content="ref" />);
+        expect(ref.current).toBe(container.querySelector(`.${BASE_CLASS_PREFIX}-toast`));
     });
     it('StrictMode 下 useToast 正常工作', async () => {
         let api;

@@ -30,10 +30,9 @@
         onPaste?: (event: ClipboardEvent) => void;
         onFocus: (event: FocusEvent) => void;
         onBlur: (event: FocusEvent) => void;
-        onKeyDown: (event: KeyboardEvent) => void;
     }
 
-    let { id, controls, activeDescendant, placeholder, defaultContent, extensions, showPlaceholderWhenSkillOnly = false, onCreate, onChange, handleKeyDown, onPasteFiles, onPaste, onFocus, onBlur, onKeyDown }: RichTextInputProps = $props();
+    let { id, controls, activeDescendant, placeholder, defaultContent, extensions, showPlaceholderWhenSkillOnly = false, onCreate, onChange, handleKeyDown, onPasteFiles, onPaste, onFocus, onBlur }: RichTextInputProps = $props();
 
     const locale = useLocale('AIChatInput');
 
@@ -64,7 +63,7 @@
             onCreate(instance);
             // Listened here, not in the template: the wrapper only relays what bubbles from the editable element, which
             // carries the textbox semantics, so it takes no role of its own
-            const off = [on(element, 'focusin', (event) => onFocus(event)), on(element, 'focusout', (event) => onBlur(event)), on(element, 'keydown', (event) => onKeyDown(event)), on(element, 'paste', (event) => onPaste?.(event))];
+            const off = [on(element, 'focusin', (event) => onFocus(event)), on(element, 'focusout', (event) => onBlur(event)), on(element, 'paste', (event) => onPaste?.(event))];
             return () => {
                 off.forEach((remove) => remove());
                 editor = undefined;

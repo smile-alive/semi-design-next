@@ -73,9 +73,7 @@ export default function DateInput(rawProps: DateInputProps) {
         props as DateInputFoundationProps,
         () => ({}),
         () => ({
-            notifyChange: (value, e) => props.onChange?.(value, e),
             notifyEnter: (value) => props.onEnterPress?.(value),
-            notifyClear: (e) => props.onClear?.(e),
             notifyRangeInputClear: (e) => props.onRangeClear?.(e),
             notifyRangeInputFocus: (e, rangeType) => props.onFocus?.(e, rangeType),
             notifyTabPress: (e) => props.onRangeEndTabPress?.(e),
@@ -94,8 +92,6 @@ export default function DateInput(rawProps: DateInputProps) {
         });
 
     const handleInsetInputChange = (options: InsetInputChangeFoundationProps) => foundation.handleInsetInputChange(options);
-
-    const handleRangeInputFocus = (e: RangeFocusEvent, rangeType: RangeInput) => foundation.handleRangeInputFocus(e, rangeType);
 
     const getRangeInputValue = (rangeStart: string, rangeEnd: string) => `${rangeStart}${props.rangeSeparator}${rangeEnd}`;
 
@@ -150,23 +146,13 @@ export default function DateInput(rawProps: DateInputProps) {
             },
         };
 
-        const focusStartFromAffix = (e: MouseEvent) => {
-            if (!props.disabled && !props.rangeInputFocus) {
-                handleRangeInputFocus(e, 'rangeStart');
-            }
-        };
-
-        const focusFromWrapper = (rangeType: RangeInput) => (e: MouseEvent) => {
-            if (!props.disabled) {
-                handleRangeInputFocus(e, rangeType);
-            }
-        };
+        const focusFromWrapper = (rangeType: RangeInput) => (e: MouseEvent) => foundation.handleRangeInputFocus(e, rangeType);
 
         return (
             <>
                 <Show when={hasLabel()}>
                     {/* the id is what a Form inset label's aria-labelledby points at */}
-                    <div id={hasPrefix() ? undefined : props.insetLabelId} class={`${props.prefixCls}-range-input-prefix`} x-semi-prop="prefix,insetLabel" onClick={focusStartFromAffix}>
+                    <div id={hasPrefix() ? undefined : props.insetLabelId} class={`${props.prefixCls}-range-input-prefix`} x-semi-prop="prefix,insetLabel" onClick={foundation.handleRangeInputAffixClick}>
                         {hasPrefix() ? prefix() : insetLabel()}
                     </div>
                 </Show>
@@ -197,9 +183,9 @@ export default function DateInput(rawProps: DateInputProps) {
                         prefix={null}
                         suffix={null}
                         // no onBlur: the blur callback fires when the panel closes
-                        onChange={(value, e) => foundation.handleChange(getRangeInputValue(value, parts().rangeEnd), e)}
+                        onChange={(value, e) => props.onChange?.(getRangeInputValue(value, parts().rangeEnd), e)}
                         onEnterPress={(e) => foundation.handleRangeInputEnterPress(e, getRangeInputValue(parts().rangeStart, parts().rangeEnd))}
-                        onFocus={(e) => handleRangeInputFocus(e, 'rangeStart')}
+                        onFocus={(e) => foundation.handleRangeInputFocus(e, 'rangeStart')}
                     />
                 </div>
                 <span
@@ -233,9 +219,9 @@ export default function DateInput(rawProps: DateInputProps) {
                         size={rangeSize()}
                         prefix={null}
                         suffix={null}
-                        onChange={(value, e) => foundation.handleChange(getRangeInputValue(parts().rangeStart, value), e)}
+                        onChange={(value, e) => props.onChange?.(getRangeInputValue(parts().rangeStart, value), e)}
                         onEnterPress={(e) => foundation.handleRangeInputEnterPress(e, getRangeInputValue(parts().rangeStart, parts().rangeEnd))}
-                        onFocus={(e) => handleRangeInputFocus(e, 'rangeEnd')}
+                        onFocus={(e) => foundation.handleRangeInputFocus(e, 'rangeEnd')}
                         onKeyDown={foundation.handleRangeInputEndKeyPress}
                     />
                 </div>
@@ -246,7 +232,7 @@ export default function DateInput(rawProps: DateInputProps) {
                         </Show>
                     </button>
                 </Show>
-                <div class={`${props.prefixCls}-range-input-suffix`} onClick={focusStartFromAffix}>
+                <div class={`${props.prefixCls}-range-input-suffix`} onClick={foundation.handleRangeInputAffixClick}>
                     {props.type.includes('Time') ? <IconCalendarClock /> : <IconCalendar />}
                 </div>
             </>
@@ -341,8 +327,8 @@ export default function DateInput(rawProps: DateInputProps) {
             validateStatus={props.validateStatus}
             prefix={props.prefix ?? null}
             suffix={props.type.includes('Time') ? <IconCalendarClock /> : <IconCalendar />}
-            onChange={foundation.handleChange}
-            onClear={foundation.handleInputClear}
+            onChange={(value, e) => props.onChange?.(value, e)}
+            onClear={(e) => props.onClear?.(e)}
             onEnterPress={foundation.handleInputComplete}
             onFocus={(e) => props.onFocus?.(e)}
         />

@@ -1,5 +1,6 @@
 import type { strings } from '@fibrae/semi-foundation/components/float-button/constants';
-import type { ArrayElement, ElementProps } from '../../base/base';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ElementProps } from '../../base/base';
 import type { BadgeProps } from '../badge';
 
 // `type` and form* are omitted: the element is always `type="button"` or an `<a>`

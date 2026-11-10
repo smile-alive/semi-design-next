@@ -166,6 +166,7 @@ describe('MonthsGridFoundation 面板视图与尺寸', () => {
                 callback?.();
             },
             getPanelNode: (part, panelType) => nodes[part][panelType],
+            focusPanelTarget: vi.fn<MonthsGridAdapter['focusPanelTarget']>(),
             reselectScrollLists: vi.fn<MonthsGridAdapter['reselectScrollLists']>(),
         } as unknown as MonthsGridAdapter;
         return { foundation: new MonthsGridFoundation(adapter), adapter, nodes, state: () => state };
@@ -181,12 +182,34 @@ describe('MonthsGridFoundation 面板视图与尺寸', () => {
 
         foundation.showDatePanel('left');
         expect(adapter.reselectScrollLists).toHaveBeenCalledTimes(2);
-        foundation.applyPanelSize();
         expect(nodes.panel.left.style).toEqual({ minWidth: '', minHeight: '' });
         expect(nodes.panel.right.style).toEqual({ minWidth: '280px', minHeight: '' });
 
         foundation.switchPanels('date');
         expect(state().monthRight.isTimePickerOpen).toBe(false);
+        expect(adapter.focusPanelTarget).not.toHaveBeenCalled();
+    });
+
+    it('density 变化后按新的月面板宽度重写 minWidth', () => {
+        const props: Partial<MonthsGridFoundationProps> = { type: 'dateTimeRange', insetInput: false, density: 'default' };
+        const { foundation, nodes } = createStatefulFoundation(props);
+        foundation.switchPanels('time');
+        expect(nodes.panel.right.style.minWidth).toBe('280px');
+        nodes.wrap.right = node(216, 260);
+        props.density = 'compact';
+        foundation.handlePropsChange({ ...props, density: 'default' });
+        expect(nodes.panel.right.style.minWidth).toBe('216px');
+    });
+
+    it('从月份标题打开年月列表后聚焦列表，从返回按钮回到日期面板后聚焦标题', () => {
+        const { foundation, adapter } = createStatefulFoundation({ type: 'date', insetInput: false });
+        foundation.showYearPicker('left');
+        expect(adapter.focusPanelTarget).toHaveBeenLastCalledWith('left', 'yearList');
+        foundation.backToDatePanel('left');
+        expect(adapter.focusPanelTarget).toHaveBeenLastCalledWith('left', 'title');
+        foundation.showTimePicker('left');
+        foundation.showDatePanel('left');
+        expect(adapter.focusPanelTarget).toHaveBeenCalledTimes(2);
     });
 
     it('handleWeeksRowNumChange 只在一侧显示滚动列表时重新量高度并居中', () => {

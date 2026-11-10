@@ -1,12 +1,11 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { VALIDATE_STATUS } from '@fibrae/semi-foundation/base/constants';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { LabelProps } from '../form/interface';
 
 export type InputSize = Size;
 export type InputMode = 'password';
-// Form can pass 'success', which Input does not style
-export type ValidateStatus = (typeof VALIDATE_STATUS)[number];
+export type { ValidateStatus };
 
 /** What `change` receives: typing (input), an IME composition ending, or the clear button */
 export type InputChangeEvent = Event | CompositionEvent | MouseEvent;

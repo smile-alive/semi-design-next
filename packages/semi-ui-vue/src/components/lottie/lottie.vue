@@ -2,7 +2,6 @@
     import { toRaw, useAttrs, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
     import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
-    import { isDev } from '@fibrae/semi-foundation/utils/warning';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import { semiGlobalDefault } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
@@ -30,11 +29,6 @@
             getContainer: () => wrapper.value,
             notifyAnimationInstance: (animation) => emit('getAnimationInstance', animation),
             notifyLottie: (lottie) => emit('getLottie', lottie),
-            notifyLoadError: (error) => {
-                if (isDev()) {
-                    console.error(error);
-                }
-            },
         }),
         {
             // lottie-web mutates the animation data, so it must not be a reactive proxy

@@ -7,7 +7,7 @@ function mount(supported: boolean) {
     input.value = 'abcd';
     document.body.append(input);
     vi.spyOn(HTMLSpanElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: 33 } as DOMRect);
-    const foundation = new TagInputFoundation({ getInput: () => input } as unknown as TagInputAdapter);
+    const foundation = new TagInputFoundation({ getInput: () => input, getProp: () => undefined } as unknown as TagInputAdapter);
     foundation.connect();
     foundation.init();
     return { foundation, input };

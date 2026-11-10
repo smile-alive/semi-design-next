@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
-import ChatBoxActionFoundation, { type ChatBoxActionAdapter } from '../chat-box-action-foundation';
+import ChatBoxActionFoundation, { type ChatBoxActionAdapter, getChatBoxActionFlags, getChatBoxActionKeys } from '../chat-box-action-foundation';
 
 vi.mock('@fibrae/semi-foundation/utils/clipboard', () => ({ copyText: vi.fn<(text: string) => Promise<boolean>>() }));
 
@@ -31,5 +31,16 @@ describe('ChatBoxActionFoundation.copyMessage', () => {
         await Promise.resolve();
         expect(adapter.toastCopySuccess).not.toHaveBeenCalled();
         expect(adapter.notifyMessageCopy).not.toHaveBeenCalled();
+    });
+});
+
+describe('getChatBoxActionKeys', () => {
+    it('助手的最后一条完成的消息显示全部按钮', () => {
+        expect(getChatBoxActionKeys(getChatBoxActionFlags({ role: 'assistant', isLast: true }))).toEqual(['copyNode', 'likeNode', 'dislikeNode', 'resetNode', 'deleteNode']);
+    });
+
+    it('用户消息没有反馈与重新生成，未完成的消息没有复制', () => {
+        expect(getChatBoxActionKeys(getChatBoxActionFlags({ role: 'user', isLast: true }))).toEqual(['copyNode', 'deleteNode']);
+        expect(getChatBoxActionKeys(getChatBoxActionFlags({ role: 'assistant', status: 'loading' }))).toEqual(['deleteNode']);
     });
 });

@@ -26,7 +26,10 @@
         controls={store.controls}
         defaultContent={store.defaultContent}
         extensions={store.extensions}
-        handleKeyDown={() => false}
+        handleKeyDown={() => {
+            store.log.push('keydown');
+            return false;
+        }}
         id={store.id}
         onBlur={() => store.log.push('blur')}
         onChange={(text) => store.log.push(`change ${text}`)}
@@ -35,7 +38,6 @@
             store.log.push('create');
         }}
         onFocus={() => store.log.push('focus')}
-        onKeyDown={() => store.log.push('keydown')}
         onPasteFiles={(files) => store.log.push(`files ${files.length}`)}
         placeholder={store.placeholder}
     />

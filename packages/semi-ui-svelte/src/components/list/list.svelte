@@ -1,8 +1,8 @@
 <script lang="ts" generics="T = any">
     import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/list/list.scss';
     import useDefaultProps from '../../base/use-default-props.js';
-    import { groupRole } from '../../utils/group-role.js';
     import { Row } from '../grid/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import Spin from '../spin/spin.svelte';
@@ -55,7 +55,7 @@
     {@render children?.()}
 {/snippet}
 
-<div {...rest} class={[prefixCls, rest.class, { [`${prefixCls}-flex`]: layout === 'horizontal' }, `${prefixCls}-${size}`, { [`${prefixCls}-grid`]: grid, [`${prefixCls}-split`]: split, [`${prefixCls}-bordered`]: bordered }]} role={groupRole(rest)}>
+<div {...rest} class={[prefixCls, rest.class, { [`${prefixCls}-flex`]: layout === 'horizontal' }, `${prefixCls}-${size}`, { [`${prefixCls}-grid`]: grid, [`${prefixCls}-split`]: split, [`${prefixCls}-bordered`]: bordered }]} role={namedRole(rest)}>
     {#if header}
         <div class={`${prefixCls}-header`} x-semi-prop="header">{@render header()}</div>
     {/if}

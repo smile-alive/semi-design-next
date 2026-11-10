@@ -14,7 +14,8 @@ type PopoverListeners = {
 export type ColorPickerPopoverProps = PopoverProps & PopoverListeners & { class?: HTMLAttributes['class']; style?: StyleValue };
 
 export interface ColorPickerProps {
-    modelValue?: ColorValue;
+    /** `null` is a controlled empty value: shows `defaultValue` and only reports changes */
+    modelValue?: ColorValue | null;
     defaultValue?: ColorValue;
     alpha?: boolean;
     eyeDropper?: boolean;

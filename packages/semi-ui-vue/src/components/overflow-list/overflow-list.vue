@@ -1,15 +1,14 @@
 <script setup lang="ts" generic="T extends OverflowListItem = OverflowListItem">
     import { computed, onBeforeUpdate, onMounted, onUpdated, shallowRef, Text, useAttrs, useTemplateRef, type CSSProperties } from 'vue';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses, SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/components/overflow-list/constants';
-    import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+    import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
     import useIntersectionObserver from '../../composables/use-intersection-observer';
     import useResizeObserver from '../../composables/use-resize-observer';
-    import { groupRole } from '../../utils/group-role';
     import slotNodes from '../../utils/slot-nodes';
     import type { OverflowListEmits, OverflowListItem, OverflowListKey, OverflowListProps, OverflowListSlots } from './interface';
     import MeasuredBox from './measured-box.vue';
@@ -41,7 +40,6 @@
 
     const root = useTemplateRef('root');
     const wrapper = useTemplateRef('wrapper');
-    let committedKeys: OverflowListKey[] | null = null;
 
     // No root: visibility is judged against the viewport, which the foundation and Tabs rely on. The nodes come from slot
     // output no watcher tracks, so each commit compares them and assigns only a changed list; an item rendering another
@@ -55,17 +53,6 @@
     const itemKey = computed(() => (props.itemKey ?? readSemiDefault(semi, 'OverflowList', 'itemKey', 'key')) as ItemKeyOption);
     const isScroll = computed(() => props.renderMode === 'scroll');
 
-    const emptyView: OverflowListView = {
-        items: [],
-        style: undefined,
-        visible: [],
-        overflow: [],
-        pivot: -1,
-        maxCount: 0,
-        overflowStatus: 'calculating',
-        scrollOverflow: [[], []],
-    };
-
     const keyOf = (item: OverflowListItem, index: number) => OverflowListFoundation.getItemKey(itemKey.value, item, index);
 
     const viewProps = (): OverflowListBaseProps => ({
@@ -76,36 +63,7 @@
         itemKey: itemKey.value,
     });
 
-    const view = shallowRef(OverflowListFoundation.resetView(viewProps(), emptyView, 0));
-
-    const rootStyle = computed((): CSSProperties | undefined =>
-        isScroll.value
-            ? undefined
-            : {
-                  maxWidth: '100%',
-                  visibility: view.value.overflowStatus === 'calculating' && view.value.pivot < 0 ? 'hidden' : 'visible',
-              }
-    );
-
-    const layoutOf = (next: OverflowListView, reversed: boolean) => OverflowListFoundation.getVisibleLayout(next, props.collapseFrom === 'start', reversed);
-
-    let layout = layoutOf(view.value, props.collapseFrom === 'start' && !isScroll.value);
-
-    const collapseItems = computed(() =>
-        view.value.visible.map((item, i) => {
-            const index = layout.first + i * layout.step;
-            return { item: item as T, index, key: keyOf(item, index) };
-        })
-    );
-
-    const writeView = (next: OverflowListView, reset = false) => {
-        if (reset) {
-            layout = layoutOf(next, props.collapseFrom === 'start' && !isScroll.value);
-        } else if (next.visible !== view.value.visible) {
-            layout = layoutOf(next, false);
-        }
-        view.value = next;
-    };
+    const view = shallowRef(OverflowListFoundation.createView(viewProps()));
 
     const { foundation, state } = useFoundation<Foundation, Adapter, OverflowListBaseProps, OverflowListBaseState>(
         OverflowListFoundation,
@@ -113,30 +71,31 @@
         () => OverflowListFoundation.getInitialState(),
         () => ({
             notifyVisibleStateChange: (visibleState) => emit('visibleStateChange', visibleState),
-            updateView: (partial) => writeView({ ...view.value, ...partial }),
+            updateView: (update) => {
+                view.value = update(view.value);
+            },
             notifyIntersect: (res) => emit('intersect', res),
             notifyOverflow: (overflow) => emit('overflow', overflow as T[]),
         }),
         { props: { items: () => items.value, itemKey: () => itemKey.value } }
     );
 
+    const rootStyle = computed((): CSSProperties | undefined =>
+        isScroll.value
+            ? undefined
+            : {
+                  maxWidth: '100%',
+                  visibility: OverflowListFoundation.isHidden(view.value) ? 'hidden' : 'visible',
+              }
+    );
+
+    const collapseItems = computed(() => OverflowListFoundation.getVisibleItems(view.value, itemKey.value) as Array<{ item: T; index: number; key: OverflowListKey }>);
     const scrollOverflow = computed(() => OverflowListFoundation.getOverflowItem({ items: items.value, itemKey: itemKey.value }, { visibleState: state.value.visibleState, scrollOverflow: view.value.scrollOverflow }) as [T[], T[]]);
 
-    const markCalculating = () => {
-        view.value = { ...view.value, overflowStatus: 'calculating' };
-    };
+    // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
+    const onItemResize = (entry: ResizeObserverEntry, key: OverflowListKey) => foundation.handleItemResize(key, entry.contentRect.width, view.value.maxCount);
 
-    const onItemResize = (entry: ResizeObserverEntry, key: OverflowListKey) => {
-        // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
-        if (foundation.recordItemSize(key, entry.contentRect.width, view.value.maxCount)) {
-            markCalculating();
-        }
-    };
-
-    const onOverflowResize = (entry: ResizeObserverEntry) => {
-        foundation.setState({ overflowWidth: entry.contentRect.width });
-        markCalculating();
-    };
+    const onOverflowResize = (entry: ResizeObserverEntry) => foundation.handleOverflowResize(entry.contentRect.width);
 
     const syncScrollNodes = () => {
         const nodes = isScroll.value && wrapper.value ? [...wrapper.value.children].filter((node) => node.hasAttribute(SCROLL_KEY_ATTRIBUTE)) : [];
@@ -145,16 +104,9 @@
     };
 
     // Runs after every commit like React's dependency-free layout effect: keys and scroll nodes come from slot output no
-    // watcher tracks. It settles: handleCollapseOverflow writes the view only when leaving 'calculating'.
+    // watcher tracks. It settles: handleCommit writes the view only when leaving 'calculating'.
     const afterRender = () => {
-        const keys = items.value.map((item, index) => keyOf(item, index));
-        if (committedKeys && !isEqual(committedKeys, keys)) {
-            foundation.handleKeysChange(keys);
-        }
-        committedKeys = keys;
-        if (!isScroll.value && view.value.overflowStatus === 'calculating') {
-            foundation.handleCollapseOverflow();
-        }
+        foundation.handleCommit(view.value);
         syncScrollNodes();
     };
 
@@ -171,17 +123,12 @@
     // Like React, reset the view in render when items, style, keys or collapseFrom change. attrs.style is untracked, but
     // its change still updates the component and runs this hook first.
     onBeforeUpdate(() => {
-        if (!isEqual(view.value.items, items.value) || !isEqual(view.value.style, attrs.style) || !isEqual(view.value.keys, OverflowListFoundation.getItemKeys(items.value, itemKey.value)) || layout.fromStart !== (props.collapseFrom === 'start')) {
-            writeView(OverflowListFoundation.resetView(viewProps(), view.value, state.value.containerWidth), true);
-        }
+        view.value = OverflowListFoundation.syncView(viewProps(), view.value, state.value.containerWidth);
     });
 
     useResizeObserver(
         () => (isScroll.value ? null : root.value),
-        (entries) => {
-            foundation.setState({ containerWidth: entries[0]?.contentRect.width });
-            markCalculating();
-        }
+        ([entry]) => foundation.handleContainerResize(entry.contentRect.width)
     );
 
     // registered after useFoundation, so the foundation is connected first
@@ -193,7 +140,7 @@
 </script>
 
 <template>
-    <div ref="root" :class="prefix" :role="groupRole($attrs)" :style="rootStyle">
+    <div ref="root" :class="prefix" :role="namedRole($attrs)" :style="rootStyle">
         <template v-if="isScroll">
             <slot v-if="props.overflowRenderDirection !== 'end'" :items="scrollOverflow[0]" name="overflow" position="start" />
             <slot v-if="props.overflowRenderDirection === 'start'" :items="scrollOverflow[1]" name="overflow" position="end" />
