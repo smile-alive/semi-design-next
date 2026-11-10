@@ -15,7 +15,8 @@
             "@fibrae/semi-foundation/*": ["../packages/shared/semi-foundation/src/*"],
             "@fibrae/semi-ai-foundation/*": ["../packages/shared/semi-ai-foundation/src/*"],
             "@fibrae/semi-json-viewer-core": ["../packages/shared/semi-json-viewer-core/dist/index.d.ts"],
-            "lottie-web": ["../packages/shared/semi-foundation/node_modules/lottie-web"]
+            "lottie-web": ["../packages/shared/semi-foundation/node_modules/lottie-web"],
+            "lottie-web/*": ["../packages/shared/semi-foundation/node_modules/lottie-web/*"]
         }
     },
     "include": [

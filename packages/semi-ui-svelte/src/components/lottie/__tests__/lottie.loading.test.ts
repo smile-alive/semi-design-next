@@ -18,7 +18,7 @@ const { loadAnimation, lottie } = vi.hoisted(() => {
     return { loadAnimation, lottie: { loadAnimation } };
 });
 
-vi.mock('lottie-web', async () => {
+vi.mock('lottie-web/build/player/lottie_light', async () => {
     await gate.promise;
     return { default: lottie };
 });

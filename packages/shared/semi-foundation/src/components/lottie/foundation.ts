@@ -6,6 +6,16 @@ import { isDev } from '../../utils/warning';
 
 type LoadParams = Parameters<typeof lottie.loadAnimation>[0];
 
+const needsFullBuild = (renderer: LoadParams['renderer']) => renderer === 'canvas' || renderer === 'html';
+
+// An expression is stored as a string in the `x` field of a property object
+function hasExpression(node: unknown): boolean {
+    if (typeof node !== 'object' || node === null) {
+        return false;
+    }
+    return Object.entries(node).some(([key, value]) => (key === 'x' && typeof value === 'string') || hasExpression(value));
+}
+
 export interface LottieAdapter<P extends LottieBaseProps = LottieBaseProps> extends DefaultAdapter<P, LottieBaseState> {
     /** The element the animation renders into when `params.container` is not given */
     getContainer: () => HTMLElement | null;
@@ -24,9 +34,9 @@ export interface LottieBaseProps {
 export interface LottieBaseState {}
 
 export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProps> extends BaseFoundation<LottieAdapter<P>, P, LottieBaseState> {
-    // lottie-web is large, so it loads lazily; one import is shared
-    // and a failed one is dropped so the next caller retries
-    static #pending: Promise<typeof lottie> | null = null;
+    // lottie-web is large, so it loads lazily; one import per build (light: svg only, no expressions, no unsafe-eval;
+    // full: also canvas and html) is shared and a failed one is dropped so the next caller retries
+    static #pending = new Map<boolean, Promise<typeof lottie>>();
     #animation: null | AnimationItem = null;
     // bumped by every load and by destroy: a load that finds it changed is stale
     #generation = 0;
@@ -62,7 +72,11 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
     async #load() {
         const generation = ++this.#generation;
         try {
-            const lottie = await LottieFoundation.getLottie();
+            const params = this.getProp('params');
+            if (isDev() && 'animationData' in params && hasExpression(params.animationData) && !needsFullBuild(params.renderer)) {
+                console.warn('Warning: [Lottie] animationData contains expressions, which the default svg player (lottie_light) does not run. Set params.renderer to "canvas" or "html" to load the full lottie-web.');
+            }
+            const lottie = await LottieFoundation.getLottie(params.renderer);
             if (generation !== this.#generation) {
                 return;
             }
@@ -80,13 +94,20 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
         }
     }
 
-    static getLottie = () =>
-        (LottieFoundation.#pending ??= import('lottie-web')
-            .then((module) => module.default)
-            .catch((error) => {
-                LottieFoundation.#pending = null;
-                throw error;
-            }));
+    static getLottie = (renderer?: LoadParams['renderer']) => {
+        const full = needsFullBuild(renderer);
+        let pending = LottieFoundation.#pending.get(full);
+        if (!pending) {
+            pending = (full ? import('lottie-web') : import('lottie-web/build/player/lottie_light'))
+                .then((module) => module.default)
+                .catch((error) => {
+                    LottieFoundation.#pending.delete(full);
+                    throw error;
+                });
+            LottieFoundation.#pending.set(full, pending);
+        }
+        return pending;
+    };
 
     override init() {
         super.init();

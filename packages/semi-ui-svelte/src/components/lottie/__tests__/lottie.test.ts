@@ -9,7 +9,7 @@ import LottieHost from './lottie-host.svelte';
 
 // a hoisted mock the tests read directly: lottie-web types loadAnimation as a method, which lint forbids passing
 // around. The module object is hoisted too, because semi-ui-svelte does not depend on lottie-web to import it.
-const { loadAnimation, lottie } = vi.hoisted(() => {
+const { loadAnimation, lottie, fullLottie } = vi.hoisted(() => {
     const animation = (params: Record<string, unknown>) => ({
         params,
         destroy: vi.fn<() => void>(),
@@ -17,9 +17,11 @@ const { loadAnimation, lottie } = vi.hoisted(() => {
         pause: vi.fn<() => void>(),
     });
     const loadAnimation = vi.fn<typeof animation>(animation);
-    return { loadAnimation, lottie: { loadAnimation } };
+    return { loadAnimation, lottie: { loadAnimation }, fullLottie: { loadAnimation, full: true } };
 });
-vi.mock('lottie-web', () => ({ default: lottie }));
+// the default svg player is the light build; canvas and html load the full one
+vi.mock('lottie-web/build/player/lottie_light', () => ({ default: lottie }));
+vi.mock('lottie-web', () => ({ default: fullLottie }));
 
 type MediaHandler = (event: { matches: boolean }) => void;
 
@@ -186,6 +188,14 @@ describe('Lottie', () => {
         const result = Lottie.getLottie();
         expect(result).toBeInstanceOf(Promise);
         await expect(result).resolves.toBe(lottie);
+        await expect(Lottie.getLottie('canvas')).resolves.toBe(fullLottie);
+    });
+
+    it('canvas 渲染器通过 getLottie 交出完整构建', async () => {
+        const getLottie = vi.fn<NonNullable<LottieProps['getLottie']>>();
+        mount({ params: { renderer: 'canvas' }, getLottie });
+        await loaded();
+        expect(getLottie.mock.calls).toEqual([[fullLottie]]);
     });
 
     describe('params 变化', () => {

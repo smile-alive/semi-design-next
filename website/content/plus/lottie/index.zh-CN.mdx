@@ -100,7 +100,7 @@ import { Lottie } from '@fibrae/semi-ui-solid';
 //params
 {
     container: element, // 渲染容器，不传则由 Semi Lottie 组件自动配置并生成
-    renderer: 'svg', // 渲染方式， 默认 SVG
+    renderer: 'svg', // 渲染方式， 默认 SVG；SVG 使用 lottie-web 的 light 构建，不支持表达式，用到表达式时设为 'canvas' 或 'html'，此时加载完整构建
     loop: true, // 是否开启循环，默认 true
     autoplay: true, // 是否自动播放，默认 true，设置为 false 时需要通过动画实例上的 play 方法手动播放
     path: 'data.json' // 动画 JSON 文件的 URL 路径 （与 animationData 互斥）
@@ -213,9 +213,9 @@ import { Lottie } from '@fibrae/semi-ui-solid';
 
 ### 静态方法
 
-| 方法               | 说明                                               | 类型                    |
-| ------------------ | -------------------------------------------------- | ----------------------- |
-| `Lottie.getLottie` | 异步获取全局 Lottie，首次调用时才加载 `lottie-web` | () => Promise\<Lottie\> |
+| 方法               | 说明                                                                                                                     | 类型                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| `Lottie.getLottie` | 异步获取全局 Lottie，首次调用时才加载 `lottie-web`；`renderer` 为 `canvas` 或 `html` 时加载完整构建，否则加载 light 构建 | (renderer?: 'svg' \| 'canvas' \| 'html') => Promise\<Lottie\> |
 
 ## Accessibility
 

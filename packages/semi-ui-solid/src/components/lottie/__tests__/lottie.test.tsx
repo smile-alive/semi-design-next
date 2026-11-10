@@ -14,7 +14,10 @@ const loadAnimation = vi.hoisted(() => {
     });
     return vi.fn<typeof animation>(animation);
 });
-vi.mock('lottie-web', () => ({ default: { loadAnimation } }));
+// the default svg player is the light build; canvas and html load the full one
+const { lottie, fullLottie } = vi.hoisted(() => ({ lottie: { loadAnimation }, fullLottie: { loadAnimation, full: true } }));
+vi.mock('lottie-web/build/player/lottie_light', () => ({ default: lottie }));
+vi.mock('lottie-web', () => ({ default: fullLottie }));
 
 type MediaHandler = (event: { matches: boolean }) => void;
 
@@ -120,7 +123,7 @@ describe('Lottie', () => {
         await loaded();
         expect(getAnimationInstance).toHaveBeenLastCalledWith(animations()[0]);
         expect(getLottie).toHaveBeenCalledTimes(1);
-        expect(getLottie).toHaveBeenCalledWith({ loadAnimation });
+        expect(getLottie).toHaveBeenCalledWith(lottie);
     });
 
     it('加载动画失败时输出错误日志而不是放任未处理的 rejection，之后的更新仍可重新加载', async () => {
@@ -156,7 +159,15 @@ describe('Lottie', () => {
     it('静态 getLottie 解析为 lottie 模块', async () => {
         const result = Lottie.getLottie();
         expect(result).toBeInstanceOf(Promise);
-        await expect(result).resolves.toEqual({ loadAnimation });
+        await expect(result).resolves.toBe(lottie);
+        await expect(Lottie.getLottie('canvas')).resolves.toBe(fullLottie);
+    });
+
+    it('canvas 渲染器通过 getLottie 交出完整构建', async () => {
+        const getLottie = vi.fn<NonNullable<LottieProps['getLottie']>>();
+        render(() => <Lottie getLottie={getLottie} params={{ renderer: 'canvas' }} />);
+        await loaded();
+        expect(getLottie).toHaveBeenCalledWith(fullLottie);
     });
 
     it('params 深度相等时保留动画，变化时重新加载', async () => {
