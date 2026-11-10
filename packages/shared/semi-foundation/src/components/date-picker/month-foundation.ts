@@ -1,4 +1,5 @@
 import { addDays, addMonths, addYears, clamp, differenceInCalendarMonths, endOfMonth, endOfWeek, format, parseISO, startOfMonth, startOfWeek } from 'date-fns';
+import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
 import getDayOfWeek from './_utils/get-day-of-week';
 import getMonthTable, { type WeekStartNumber } from './_utils/get-month-table';
 import { isAfter, isBefore, isBetween, isSameDay } from './_utils/index';
@@ -32,8 +33,8 @@ export interface MonthFoundationProps {
     /** the keyboard moved the active day into the previous or next month or year */
     onMonthSwitch: (switchType: YearMonthChangeType) => void;
     weekStartsOn: WeekStartNumber;
-    disabledDate: (day: Date, options?: { rangeStart: string; rangeEnd: string }) => boolean;
-    onWeeksRowNumChange: (weeksRowNum: number) => void;
+    disabledDate?: (day: Date, options?: { rangeStart: string; rangeEnd: string }) => boolean;
+    onWeeksRowNumChange: () => void;
     renderDate: RenderDateType;
     renderFullDate: RenderFullDateType;
     hoverDay: string;
@@ -63,13 +64,23 @@ export interface MonthTable {
 
 export type DayStatusOptions = Pick<MonthFoundationProps, 'selected' | 'rangeStart' | 'rangeEnd' | 'offsetRangeStart' | 'offsetRangeEnd' | 'disabledDate' | 'hoverDay' | 'rangeInputFocus' | 'focusRecords'> & { todayText: string };
 
-export default class CalendarMonthFoundation {
+export interface MonthFoundationState {
+    /** the day the keyboard or a pick moved to; stale once the month is switched another way */
+    keyboardDate: string;
+}
+
+export interface MonthAdapter extends DefaultAdapter<MonthFoundationProps, MonthFoundationState, DirectionContext> {
+    notifyDayClick: (day: MonthDayInfo) => void;
+    notifyMonthSwitch: (switchType: YearMonthChangeType) => void;
+}
+
+export default class CalendarMonthFoundation extends BaseFoundation<MonthAdapter, MonthFoundationProps, MonthFoundationState> {
     static #getSingleDayStatus(fullDate: string, { todayText, selected, disabledDate, rangeStart, rangeEnd, rangeInputFocus, focusRecords }: DayStatusOptions) {
         const disabledOptions = { rangeStart, rangeEnd, rangeInputFocus };
         const isToday = fullDate === todayText;
         const isSelected = selected.has(fullDate);
 
-        let isDisabled = disabledDate && disabledDate(parseISO(fullDate), disabledOptions);
+        let isDisabled = disabledDate?.(parseISO(fullDate), disabledOptions);
         if (!isDisabled && rangeInputFocus === 'rangeStart' && rangeEnd && focusRecords?.rangeEnd) {
             isDisabled = isAfter(fullDate, rangeEnd.trim().split(/\s+/)[0]);
         }
@@ -221,14 +232,19 @@ export default class CalendarMonthFoundation {
         return { type: 'move', date: format(target, strings.FORMAT_FULL_DATE), monthSwitch: MONTH_SWITCHES[differenceInCalendarMonths(target, month)] };
     }
 
+    static getInitialState(): MonthFoundationState {
+        return { keyboardDate: '' };
+    }
+
     /**
-     * The active day of the grid of `month`: the first candidate that falls in the month, otherwise the first day of
-     * the month. Callers list the day the keyboard moved to first, then the selected day, the range ends and today.
-     * Values are 'yyyy-MM-dd', with a time part for range ends.
+     * The active day ('yyyy-MM-dd') of the grid: the first of the day the keyboard or a pick moved to, the selected
+     * days, the range ends and today that falls in `month`, otherwise the first day of the month
      */
-    static getDefaultActiveDate(month: string, candidates: string[]) {
-        const inMonth = candidates.map((value) => value?.slice(0, 10)).find((date) => date?.startsWith(month));
-        return inMonth ?? `${month}-01`;
+    static getActiveDate({ month, selected, rangeStart, rangeEnd }: Pick<MonthFoundationProps, 'month' | 'selected' | 'rangeStart' | 'rangeEnd'>, { keyboardDate }: MonthFoundationState, todayText: string) {
+        const monthText = format(month, strings.FORMAT_YEAR_MONTH);
+        // range ends carry a time part
+        const inMonth = [keyboardDate, ...selected, rangeStart, rangeEnd, todayText].map((value) => value?.slice(0, 10)).find((date) => date?.startsWith(monthText));
+        return inMonth ?? `${monthText}-01`;
     }
 
     /**
@@ -265,4 +281,34 @@ export default class CalendarMonthFoundation {
             [cssClasses.DAY_ACTIVE]: isActive,
         };
     }
+
+    selectDay = (day: MonthDayInfo | undefined) => {
+        if (day && !CalendarMonthFoundation.getDayStatus(day, { ...this.getProps(), todayText: '' }).isDisabled) {
+            this.setState({ keyboardDate: day.fullDate });
+            this.adapter.notifyDayClick(day);
+        }
+    };
+
+    /** APG grid: focus stays on the grid; the keys move the active day, Enter or Space selects it. `todayText` is empty until mounted. */
+    handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'shiftKey' | 'preventDefault'>, todayText: string) => {
+        const { month, weekStartsOn } = this.getProps();
+        const activeDate = CalendarMonthFoundation.getActiveDate(this.getProps(), this.getStates(), todayText);
+        const action = CalendarMonthFoundation.getKeyAction(event, { activeDate, month, weekStartsOn, rtl: this.getContext('direction') === 'rtl' });
+        if (!action) {
+            return;
+        }
+        event.preventDefault();
+        if (action.type === 'select') {
+            this.selectDay(
+                getMonthTable(month, weekStartsOn)
+                    .weeks.flat()
+                    .find((day) => day.fullDate === activeDate)
+            );
+            return;
+        }
+        this.setState({ keyboardDate: action.date });
+        if (action.monthSwitch) {
+            this.adapter.notifyMonthSwitch(action.monthSwitch);
+        }
+    };
 }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { computed, isVNode, useTemplateRef, type Component } from 'vue';
+    import { computed, isVNode, onBeforeUnmount, onMounted, useTemplateRef, type Component } from 'vue';
+    import { isAlertType } from '@fibrae/semi-foundation/base/list-store';
     import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/components/toast/constants';
     import ToastFoundation, { type ToastAdapter, type ToastState, type ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-    import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
@@ -13,7 +13,7 @@
     import IconButton from '../icon-button';
     import useLocale from '../locale/use-locale';
     import { useToastListContext } from './context';
-    import type { ToastHandle, ToastItemEmits, ToastItemProps } from './interface';
+    import type { ToastItemEmits, ToastItemProps } from './interface';
 
     type Foundation = ToastFoundation<ToastItemProps>;
     type Adapter = ToastAdapter<ToastItemProps>;
@@ -43,6 +43,7 @@
     const list = useToastListContext();
 
     const toastEl = useTemplateRef('toastEl');
+    let unregister: (() => void) | undefined;
 
     const { foundation } = useFoundation<Foundation, Adapter, ToastItemProps, ToastState>(
         ToastFoundation,
@@ -72,21 +73,17 @@
     const ariaLabel = computed(() => (props.type ? locale.value.locale[props.type] : locale.value.locale.default));
     const zeroHeightClass = computed(() => [`${prefix}-zero-height-wrapper`, { [`${prefix}-zero-height-wrapper-expanded`]: props.stackExpanded }]);
 
-    const announce = () => {
-        if (!isAlert.value && props.id !== undefined) list?.value.announce(props.id, () => toastEl.value?.textContent ?? '');
-    };
-
     const iconSize = (node: unknown) => (isVNode(node) ? (node.props?.size ?? 'large') : 'large');
 
     const close = (event: MouseEvent) => foundation.close(event);
 
-    useNoticeClose(foundation, list, announce);
+    useNoticeClose(foundation, list?.state);
 
-    defineExpose<ToastHandle>({
-        restartCloseTimer: foundation.restartCloseTimer,
-        pauseCloseTimer: foundation.pauseCloseTimer,
-        resumeCloseTimer: foundation.resumeCloseTimer,
+    onMounted(() => {
+        if (list && props.id !== undefined && toastEl.value) unregister = list.register(props.id, toastEl.value);
     });
+
+    onBeforeUnmount(() => unregister?.());
 </script>
 
 <template>

@@ -1,4 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { crossesFocusBoundary } from '../../utils/a11y';
 import truncateValue from './util/truncate-value';
 
 export interface TextEntryBaseProps {
@@ -69,6 +70,11 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
             }
         }
         return value;
+    }
+
+    // the native maxlength counts UTF-16 units, so getValueLength enforces the limit instead
+    static getNativeMaxLength({ maxLength, getValueLength }: { maxLength?: number; getValueLength?: (value: string) => number }) {
+        return typeof getValueLength === 'function' ? undefined : maxLength;
     }
 
     // the native minlength counts UTF-16 units; adding the missing characters makes the browser check
@@ -150,7 +156,11 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         this.adapter.notifyCompositionUpdate(e);
     };
 
-    handleFocus = (e: unknown) => {
+    /** Reports only focus entering the wrapper, not focus moving among its buttons */
+    handleFocus = (e: Parameters<typeof crossesFocusBoundary>[0]) => {
+        if (!crossesFocusBoundary(e)) {
+            return;
+        }
         const { value } = this.getStates();
         this.#composedSinceFocus = false;
         this.setEntryState({ isFocus: true });

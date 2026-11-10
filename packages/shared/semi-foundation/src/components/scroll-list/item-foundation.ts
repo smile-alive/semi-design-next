@@ -1,7 +1,7 @@
 import { debounce } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { getListTargetIndex, Typeahead } from '../../utils/a11y';
-import isElement from '../../utils/is-element';
+import { isHTMLElement } from '../../utils/dom';
 import { cssClasses, numbers } from './constants';
 import animatedScrollTo from './scroll-to';
 
@@ -23,6 +23,15 @@ export interface ScrollItemBaseProps<I extends Item = Item> {
     motion?: boolean;
     selectedIndex?: number;
     type?: string | number;
+}
+
+export interface ScrollItemRow {
+    /** Stable while copies are added around the row, so a host keeps the node and the foundation's cached nodes stay valid */
+    key: string;
+    /** The index of the item in `list` */
+    index: number;
+    /** A repeat of the list that only fills the wheel */
+    copy: boolean;
 }
 
 export interface ScrollItemBaseState {
@@ -85,7 +94,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     #getNodeByOffset(refNode: HTMLElement | null, offset: number) {
         const { list } = this.getProps();
         const listNode = this.adapter.getListNode();
-        if (isElement(refNode) && isElement(listNode) && Array.isArray(list) && list.length) {
+        if (isHTMLElement(refNode) && isHTMLElement(listNode) && Array.isArray(list) && list.length) {
             const sameCopyStep = offset % list.length;
             if (sameCopyStep) {
                 const wrapped = ((offset % list.length) + list.length) % list.length;
@@ -114,7 +123,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         }
         const listNode = this.adapter.getListNode();
         const node = this.#getNearestNodeInfo().nearestNode || this.#selectedNode;
-        if (isElement(node) && isElement(listNode)) {
+        if (isHTMLElement(node) && isHTMLElement(listNode)) {
             for (const child of Array.from(listNode.children)) {
                 child.classList.remove(cssClasses.SELECTED);
             }
@@ -163,7 +172,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     #scrollToCenter(node: HTMLElement) {
         const wrapper = this.adapter.getScrollNode();
-        if (isElement(node) && isElement(wrapper)) {
+        if (isHTMLElement(node) && isHTMLElement(wrapper)) {
             const scrollRect = wrapper.getBoundingClientRect();
             const selectedRect = node.getBoundingClientRect();
             const targetTop = wrapper.scrollTop + (selectedRect.top - (scrollRect.top + scrollRect.height / 2 - selectedRect.height / 2));
@@ -204,7 +213,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     #selectNode(node: HTMLElement) {
         const { type, list: data, selectedIndex } = this.getProps();
         const listNode = this.adapter.getListNode();
-        if (isElement(node) && isElement(listNode)) {
+        if (isHTMLElement(node) && isHTMLElement(listNode)) {
             const indexInList = Array.from(listNode.children).findIndex((ele) => ele === node);
             const indexInData = indexInList % data.length;
 
@@ -266,7 +275,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     #getNearestNodeInfo() {
         const listNode = this.adapter.getListNode();
         const selector = this.adapter.getSelectorNode();
-        if (isElement(listNode) && isElement(selector)) {
+        if (isHTMLElement(listNode) && isHTMLElement(selector)) {
             const selectorRect = selector.getBoundingClientRect();
             const selectorTop = selectorRect.top;
             const itemNodes = listNode.querySelectorAll('li');
@@ -294,7 +303,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     #getTargetNode(e: Pick<Event, 'target'>) {
         const listNode = this.adapter.getListNode();
-        if (e && isElement(listNode)) {
+        if (e && isHTMLElement(listNode)) {
             const targetTagName = 'li';
             const currentTarget = e.target instanceof Node ? e.target : null;
             const itemNodes = listNode.querySelectorAll(targetTagName);
@@ -359,6 +368,19 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     static getInitialState(): ScrollItemBaseState {
         return { prependCount: 0, appendCount: 0 };
+    }
+
+    /**
+     * The rows of the listbox in DOM order: the copies of a cycled wheel before the list itself (nearest copy last) and
+     * after it. The scroll positioning counts rows by this order, so every host renders exactly these rows.
+     */
+    static getRows({ list, mode }: Pick<ScrollItemBaseProps, 'list' | 'mode'>, { prependCount, appendCount }: ScrollItemBaseState): ScrollItemRow[] {
+        const rows = (name: string) => list.map((_item, index): ScrollItemRow => ({ key: `${name}${index}`, index, copy: name !== '' }));
+        if (mode !== wheelMode) {
+            return rows('');
+        }
+        const copies = (count: number, name: string) => Array.from({ length: count }, (_, i) => rows(`${name}_${i}_`));
+        return [...copies(prependCount, 'pre').toReversed().flat(), ...rows(''), ...copies(appendCount, 'app').flat()];
     }
 
     /** Only the selected row is shown through a transform; the item's own transform wins over the column's */
@@ -432,7 +454,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     selectIndex = (index: number) => {
         const { type, list } = this.getProps();
         const listNode = this.adapter.getListNode();
-        if (index > -1 && Array.isArray(list) && list.length && isElement(listNode)) {
+        if (index > -1 && Array.isArray(list) && list.length && isHTMLElement(listNode)) {
             const indexInData = index % list.length;
 
             const item = list[indexInData];
@@ -447,8 +469,9 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         }
     };
 
-    /** Click in a wheel column: the item under the pointer is selected once scrolling settles */
-    handleWheelClick = (e: Pick<Event, 'target'>) => {
+    /** Click in a wheel column: the item under the pointer is selected once scrolling settles; an ancestor's click listener does not see it */
+    handleWheelClick = (e: Pick<Event, 'target' | 'stopImmediatePropagation'>) => {
+        e.stopImmediatePropagation();
         const { targetNode, infoInList } = this.#getTargetNode(e);
         if (targetNode && infoInList && !infoInList.disabled) {
             this.#select(targetNode);
@@ -458,7 +481,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     /** Scroll of the column: in wheel mode the item at the selector is selected once scrolling settles */
     handleScroll = () => {
         // no selector: unmounted before a queued scroll event arrived
-        if (this.#isAnimating || !isElement(this.adapter.getSelectorNode())) {
+        if (this.#isAnimating || !isHTMLElement(this.adapter.getSelectorNode())) {
             return;
         }
         if (this.#isCycledWheel) {

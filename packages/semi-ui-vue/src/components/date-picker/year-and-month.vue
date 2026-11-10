@@ -33,31 +33,25 @@
     // v-for ref: inference types each item as nullable, but Vue only collects mounted instances.
     const columns = useTemplateRef<ScrollItemHandle[]>('columns');
 
-    const prefix = `${BASE_CLASS_PREFIX}-datepicker`;
-    const current = computed(() => YearAndMonthFoundation.getYearAndMonth(props));
-    const panelTypes = computed<PanelType[]>(() => (props.type === 'monthRange' ? [strings.PANEL_TYPE_LEFT, strings.PANEL_TYPE_RIGHT] : [strings.PANEL_TYPE_LEFT]));
-    const iconSize = computed(() => (props.density === 'compact' ? 'default' : 'large'));
-    const buttonSize = computed(() => (props.density === 'compact' ? 'small' : 'default'));
-
-    const enabled = () => false;
-
-    const view = computed(() => ({ ...props, disabledDate: props.disabledDate ?? enabled }));
-
     const { foundation } = useFoundation<YearAndMonthFoundation, YearAndMonthAdapter, YearAndMonthFoundationProps, Record<string, never>>(
         YearAndMonthFoundation,
         props,
         () => ({}),
         () => ({
             notifySelect: (yearAndMonth) => emit('select', yearAndMonth),
-            notifyBackToMain: () => emit('backToMain'),
-        }),
-        { props: { disabledDate: () => view.value.disabledDate } }
+        })
     );
+
+    const prefix = `${BASE_CLASS_PREFIX}-datepicker`;
+    const current = computed(() => YearAndMonthFoundation.getYearAndMonth(props));
+    const panelTypes = computed<PanelType[]>(() => (props.type === 'monthRange' ? [strings.PANEL_TYPE_LEFT, strings.PANEL_TYPE_RIGHT] : [strings.PANEL_TYPE_LEFT]));
+    const iconSize = computed(() => (props.density === 'compact' ? 'default' : 'large'));
+    const buttonSize = computed(() => (props.density === 'compact' ? 'small' : 'default'));
 
     const panels = computed(() =>
         panelTypes.value.map((panelType) => {
-            const years = YearAndMonthFoundation.getYearList(view.value, panelType);
-            const months = YearAndMonthFoundation.getMonthList(view.value, panelType);
+            const years = YearAndMonthFoundation.getYearList(props, panelType);
+            const months = YearAndMonthFoundation.getMonthList(props, panelType);
             return {
                 panelType,
                 years,
@@ -81,7 +75,7 @@
 
 <template>
     <div v-if="!props.noBackBtn" :class="`${prefix}-yearmonth-header`">
-        <IconButton :noHorizontalPadding="false" :size="buttonSize" @click="foundation.backToMain">
+        <IconButton :noHorizontalPadding="false" :size="buttonSize" @click="emit('backToMain')">
             <template #icon>
                 <IconChevronLeft :size="iconSize" />
             </template>

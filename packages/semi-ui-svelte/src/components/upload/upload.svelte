@@ -4,12 +4,12 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation, { type UploadAdapter, type UploadBaseProps, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
     import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import Cropper from '../cropper/cropper.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import Modal from '../modal/modal.svelte';
@@ -19,8 +19,6 @@
 
     interface UploadState extends UploadBaseState {
         fileList: FileItem[];
-        inputKey: number;
-        replaceInputKey: number;
     }
 
     type Foundation = UploadFoundation<UploadBaseProps, UploadState, DragEvent>;
@@ -185,8 +183,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, UploadBaseProps, UploadState>(
         UploadFoundation,
         foundationProps,
-        (view) => ({ ...UploadFoundation.getInitialState(view), inputKey: 0, replaceInputKey: 0 }),
-        (base) => ({
+        (view) => UploadFoundation.getInitialState(view),
+        () => ({
             notifyFileSelect: (files) => onFileChange?.(files),
             notifyError: (error, fileInstance, list, xhr) => onError?.(error, fileInstance, list as FileItem[], xhr),
             notifySuccess: (body, file, list) => onSuccess?.(body, file, list as FileItem[]),
@@ -196,8 +194,17 @@
             notifyExceed: (files) => onExceed?.(files),
             notifyBeforeUpload: (object) => (beforeUpload as NonNullable<UploadProps['beforeUpload']>)(object),
             notifyAfterUpload: (object) => (afterUpload as NonNullable<UploadProps['afterUpload']>)(object),
-            resetInput: () => base.setState({ inputKey: base.getState('inputKey') + 1 }),
-            resetReplaceInput: () => base.setState({ replaceInputKey: base.getState('replaceInputKey') + 1 }),
+            resetInput: () => {
+                if (input) {
+                    input.value = '';
+                }
+            },
+            resetReplaceInput: () => {
+                if (replaceInput) {
+                    replaceInput.value = '';
+                }
+            },
+            openReplacePicker: () => replaceInput?.click(),
             notifyBeforeRemove: (file, list) => beforeRemove?.(file as FileItem, list as FileItem[]) ?? true,
             notifyBeforeClear: (list) => beforeClear?.(list as FileItem[]) ?? true,
             notifyChange: ({ currentFile, fileList: next }) => {
@@ -254,14 +261,6 @@
         }
     };
 
-    const replace = (file: FileItem) => {
-        if (disabled) {
-            return;
-        }
-        foundation.setState({ replaceUid: file.uid });
-        replaceInput?.click();
-    };
-
     const handleFocusout = (event: FocusEvent & { currentTarget: HTMLDivElement }) => {
         rest.onfocusout?.(event);
         if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
@@ -269,33 +268,24 @@
         }
     };
 
-    const cardProps = (file: FileItem, index: number): UploadFileItemSlotProps => {
-        let message: string | undefined;
-        if (file.status === strings.FILE_STATUS_UPLOAD_FAIL && !file.validateMessage) {
-            message = locale().locale.fail;
-        }
-        if (file._sizeInvalid && !file.validateMessage) {
-            message = locale().locale.illegalSize;
-        }
-        return {
-            file,
-            index,
-            listType,
-            disabled,
-            showRetry,
-            showReplace,
-            showPicInfo,
-            showTooltip,
-            picWidth,
-            picHeight,
-            validateMessage: message,
-            style: itemStyle,
-            onRemove: () => foundation.handleRemove(file),
-            onRetry: () => foundation.retry(file),
-            onReplace: () => replace(file),
-            onPreviewClick: onPreviewClick ? () => foundation.handlePreviewClick(file) : undefined,
-        };
-    };
+    const cardProps = (file: FileItem, index: number): UploadFileItemSlotProps => ({
+        file,
+        index,
+        listType,
+        disabled,
+        showRetry,
+        showReplace,
+        showPicInfo,
+        showTooltip,
+        picWidth,
+        picHeight,
+        validateMessage: UploadFoundation.getFallbackValidateMessage(file, locale().locale),
+        style: itemStyle,
+        onRemove: () => foundation.handleRemove(file),
+        onRetry: () => foundation.retry(file),
+        onReplace: () => foundation.startReplace(file.uid),
+        onPreviewClick: onPreviewClick ? () => foundation.handlePreviewClick(file) : undefined,
+    });
 
     $effect(() => {
         void shownFiles;
@@ -366,17 +356,13 @@
             [`${prefix}-success`]: validateStatus === 'success',
         },
     ]}
-    role={groupRole(rest)}
+    role={namedRole(rest)}
     {...{ 'x-prompt-pos': promptPosition }}
     onfocusout={handleFocusout}
 >
-    <!-- a new key remounts the input, so picking the same file again fires change -->
-    {#key states().inputKey}
-        <input {accept} autocomplete="off" bind:this={input} capture={captureAttr} class={`${prefix}-hidden-input`} {...directory ? { directory: 'directory', webkitdirectory: true } : {}} {multiple} tabindex="-1" type="file" onchange={(event) => foundation.addFiles(event.currentTarget.files ?? [])} />
-    {/key}
-    {#key states().replaceInputKey}
-        <input {accept} autocomplete="off" bind:this={replaceInput} class={`${prefix}-hidden-input-replace`} multiple={false} tabindex="-1" type="file" onchange={(event) => foundation.handleReplaceChange(event.currentTarget.files ?? [])} />
-    {/key}
+    <input {accept} autocomplete="off" bind:this={input} capture={captureAttr} class={`${prefix}-hidden-input`} {...directory ? { directory: 'directory', webkitdirectory: true } : {}} {multiple} tabindex="-1" type="file" onchange={(event) => foundation.addFiles(event.currentTarget.files ?? [])} />
+    <input {accept} autocomplete="off" bind:this={replaceInput} class={`${prefix}-hidden-input-replace`} multiple={false} tabindex="-1" type="file" onchange={(event) => foundation.handleReplaceChange(event.currentTarget.files ?? [])} />
+
     {#if !isPicture}
         {#if draggable}
             <AddArea

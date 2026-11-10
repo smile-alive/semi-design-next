@@ -1,16 +1,16 @@
 import type React from 'react';
-import { useId, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
 import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
 import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/cropper/cropper.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useEventListener from '../../hooks/use-event-listener';
 import useResizeObserver from '../../hooks/use-resize-observer';
-import { namedRole } from '../../utils/named-role';
 import useLocale from '../locale/use-locale';
 
 type Foundation = CropperFoundation;
@@ -83,15 +83,6 @@ export default function Cropper(rawProps: CropperProps) {
     // a React onWheel listener is passive and cannot stop a pinch from zooming the page
     useEventListener(containerRef, 'wheel', foundation.handleWheel, { passive: false });
     useResizeObserver(containerRef, foundation.handleResize);
-
-    // every commit: wheel zoom and image load change the state too; an extra render lands before paint
-    useLayoutEffect(() => {
-        foundation.syncRotateAndZoom();
-    });
-
-    useLayoutEffect(() => {
-        foundation.updatePreview();
-    });
 
     useImperativeHandle(ref, () => ({ getCropperCanvas: foundation.getCropperCanvas }), [foundation]);
 

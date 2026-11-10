@@ -1,10 +1,10 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewFoundation, { getGroupPreviewList, type PreviewAdapter, type PreviewBaseState } from '@fibrae/semi-foundation/components/image/preview-foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/image/image.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import { setPreviewContext } from './context.js';
     import { previewDefaults } from './defaults.js';
     import type { PreviewProps } from './interface.js';
@@ -122,7 +122,7 @@
     });
 </script>
 
-<div {...rest} class={[`${prefixCls}-preview-group`, rest.class]} role={groupRole(rest)}>
+<div {...rest} class={[`${prefixCls}-preview-group`, rest.class]} role={namedRole(rest)}>
     {@render children?.()}
     <PreviewInner
         {adaptiveTip}

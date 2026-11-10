@@ -1,4 +1,4 @@
-import { type Editor, type Extensions, Mark, Node, mergeAttributes } from '@tiptap/core';
+import { type ChainedCommands, type Editor, type Extensions, Mark, Node, mergeAttributes } from '@tiptap/core';
 import { Blockquote } from '@tiptap/extension-blockquote';
 import { Bold } from '@tiptap/extension-bold';
 import { Code } from '@tiptap/extension-code';
@@ -17,6 +17,7 @@ import { Text } from '@tiptap/extension-text';
 import { TextAlign } from '@tiptap/extension-text-align';
 import { TextStyleKit } from '@tiptap/extension-text-style';
 import { Dropcursor, Gapcursor, TrailingNode, UndoRedo } from '@tiptap/extensions';
+import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 
 // Frameworks call ChainedCommands (toggleBold, setLink, ...) typed by each extension's augmentation of @tiptap/core;
 // re-exporting a type keeps that augmentation in the generated declarations they read
@@ -199,6 +200,59 @@ export function readFileMenuState(editor: Editor): FileMenuState {
     };
 }
 
+type FileMenuFlag = { [K in keyof FileMenuState]: FileMenuState[K] extends boolean ? K : never }[keyof FileMenuState];
+
+export type FileMenuButtonKey = Extract<keyof Locale['Sidebar'], 'undo' | 'redo' | 'paragraph' | 'bulletList' | 'orderedList' | 'blockquote' | 'codeBlock' | 'horizontalRule' | 'alignLeft' | 'alignCenter' | 'alignRight' | 'alignJustify' | 'bold' | 'italic' | 'strike' | 'code' | 'image'>;
+
+export interface FileMenuButton {
+    type: 'button';
+    /** Also the Sidebar locale key of the button's accessible name */
+    key: FileMenuButtonKey;
+    command: (chain: ChainedCommands) => ChainedCommands;
+    /** The state flag that lights the button and makes it a toggle (`aria-pressed`) */
+    activeKey?: FileMenuFlag;
+    /** The state flag that enables the button; the button is always enabled without one */
+    enabledKey?: FileMenuFlag;
+}
+
+/** The heading and link controls are dropdowns whose content each framework builds itself */
+export type FileMenuItem = FileMenuButton | { type: 'divider' } | { type: 'heading' } | { type: 'link' };
+
+const menuButton = (key: FileMenuButtonKey, command: FileMenuButton['command'], flags: Pick<FileMenuButton, 'activeKey' | 'enabledKey'> = {}): FileMenuButton => ({ type: 'button', key, command, ...flags });
+
+const DIVIDER: FileMenuItem = { type: 'divider' };
+
+const FILE_MENU_ITEMS: FileMenuItem[] = [
+    menuButton('undo', (chain) => chain.undo(), { enabledKey: 'canUndo' }),
+    menuButton('redo', (chain) => chain.redo(), { enabledKey: 'canRedo' }),
+    DIVIDER,
+    { type: 'heading' },
+    menuButton('paragraph', (chain) => chain.setParagraph(), { activeKey: 'isParagraph' }),
+    menuButton('bulletList', (chain) => chain.toggleBulletList(), { activeKey: 'isBulletList' }),
+    menuButton('orderedList', (chain) => chain.toggleOrderedList(), { activeKey: 'isOrderedList' }),
+    menuButton('blockquote', (chain) => chain.toggleBlockquote(), { activeKey: 'isBlockquote' }),
+    menuButton('codeBlock', (chain) => chain.toggleCodeBlock(), { activeKey: 'isCodeBlock' }),
+    menuButton('horizontalRule', (chain) => chain.setHorizontalRule()),
+    DIVIDER,
+    menuButton('alignLeft', (chain) => chain.setTextAlign('left'), { activeKey: 'isAlignLeft' }),
+    menuButton('alignCenter', (chain) => chain.setTextAlign('center'), { activeKey: 'isAlignCenter' }),
+    menuButton('alignRight', (chain) => chain.setTextAlign('right'), { activeKey: 'isAlignRight' }),
+    menuButton('alignJustify', (chain) => chain.setTextAlign('justify'), { activeKey: 'isAlignJustify' }),
+    DIVIDER,
+    menuButton('bold', (chain) => chain.toggleBold(), { activeKey: 'isBold' }),
+    menuButton('italic', (chain) => chain.toggleItalic(), { activeKey: 'isItalic', enabledKey: 'canItalic' }),
+    menuButton('strike', (chain) => chain.toggleStrike(), { activeKey: 'isStrike', enabledKey: 'canStrike' }),
+    menuButton('code', (chain) => chain.toggleCode(), { activeKey: 'isCode', enabledKey: 'canCode' }),
+    { type: 'link' },
+];
+
+const IMAGE_MENU_ITEMS: FileMenuItem[] = [DIVIDER, menuButton('image', (chain) => chain.insertContent({ type: 'imageUpload' }), { enabledKey: 'canInsertImage' })];
+
+/** The toolbar in order, dividers included; `canUpload` appends the image button */
+export function getFileMenuItems(canUpload: boolean): FileMenuItem[] {
+    return canUpload ? [...FILE_MENU_ITEMS, ...IMAGE_MENU_ITEMS] : FILE_MENU_ITEMS;
+}
+
 /** Snapshots the selection the link will apply to, since the link input takes the editor's focus */
 export function readLinkEditorOpenState(editor: Editor): { range: TextRange; href: string } {
     const { from, to } = editor.state.selection;
@@ -206,6 +260,11 @@ export function readLinkEditorOpenState(editor: Editor): { range: TextRange; hre
         highlightSelection(editor);
     }
     return { range: { from, to }, href: editor.getAttributes('link').href || '' };
+}
+
+export function unsetLink(editor: Editor) {
+    clearSelectionHighlight(editor);
+    editor.chain().focus().unsetLink().run();
 }
 
 /** Returns false, leaving the document untouched, for an empty href or one the Link extension rejects (a javascript: URL) */

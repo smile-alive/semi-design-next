@@ -1,12 +1,10 @@
-import { type CSSProperties, isValidElement, type RefObject, useId, useInsertionEffect, useLayoutEffect, useRef, useState } from 'react';
+import { isValidElement, type RefObject, useId, useInsertionEffect, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/image/constants';
-import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
+import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-react';
 import useFoundation from '../../base/use-foundation';
-import useDidUpdate from '../../hooks/use-did-update';
 import useIsServerRender from '../../hooks/use-is-server-render';
 import Portal from '../../internal/portal';
 import { useConfigContext } from '../config-provider/context';
@@ -119,12 +117,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const leftIconRef = useRef<HTMLButtonElement>(null);
     const rightIconRef = useRef<HTMLButtonElement>(null);
 
-    // an index change resets the ratio in the same commit as the new src, so PreviewImage does not re-fit the old image
-    const [ratioState, setRatioState] = useState<{ index: number; ratio: RatioType }>(() => ({
-        index: props.currentIndex ?? props.defaultCurrentIndex ?? 0,
-        ratio: 'adaptation',
-    }));
-
     const isServerRender = useIsServerRender();
 
     const titleId = useId();
@@ -137,7 +129,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         props,
         () => PreviewInnerFoundation.getInitialState(props),
         (base) => ({
-            getIsInGroup: () => Boolean(base.getContexts()?.isGroup),
             notifyChange: (index, direction) => {
                 const { onChange, onPrev, onNext } = base.getProps();
                 onChange?.(index);
@@ -163,32 +154,16 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
             notifyDownloadError: (src) => base.getProps().onDownloadError?.(src),
             getWrap: () => wrapRef.current,
             isValidTarget: (e) => !(e.target instanceof Node && [headerRef, footerRef, leftIconRef, rightIconRef].some((item) => item.current?.contains(e.target))),
-            setRatio: (ratio) => setRatioState((prev) => ({ ...prev, ratio })),
         }),
         context
     );
 
     const currentIndex = PreviewInnerFoundation.getCurrentIndex(props, state);
+    const ratio = PreviewInnerFoundation.getRatio(props, state);
 
-    if (ratioState.index !== currentIndex) {
-        setRatioState({ index: currentIndex, ratio: 'adaptation' });
-    }
-
-    const ratio = ratioState.index === currentIndex ? ratioState.ratio : 'adaptation';
-
-    // only a preview in body covers the page: it is modal, locks scroll and keeps Tab inside. The caller's getter may
-    // read document; on the server and while hydrating the Portal renders nothing anyway
+    // only a preview whose container covers the page is modal, locks scroll and keeps Tab inside. The caller's getter
+    // may read document; on the server and while hydrating the Portal renders nothing anyway
     const inBody = !isServerRender && coversPage(popupContainer);
-
-    // a focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
-    // moved elsewhere is left alone.
-    useDidUpdate(currentIndex, () => {
-        const wrap = wrapRef.current;
-        const active = FocusTrapHandle.getActiveElement();
-        if (wrap && (!active || active === document.body)) {
-            wrap.focus({ preventScroll: true });
-        }
-    });
 
     if (!visible) {
         return null;
@@ -196,7 +171,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     const { zoom, zoomEvent, rotation, viewerVisible } = state;
     const imgSrc = PreviewInnerFoundation.getSrcList(src);
-    const wrapperStyle: CSSProperties = inBody ? { zIndex } : { zIndex, position: 'static' };
     const previewPrefixCls = `${prefixCls}-preview`;
 
     const previewWrapperCls = clsx(
@@ -221,7 +195,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const handleNext = () => foundation.handleSwitchImage('next');
 
     return (
-        <Portal style={wrapperStyle} getPopupContainer={getPopupContainer}>
+        <Portal style={{ zIndex }} getPopupContainer={getPopupContainer}>
             <div
                 ref={wrapRef}
                 className={previewWrapperCls}

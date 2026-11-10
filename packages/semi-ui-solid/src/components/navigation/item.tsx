@@ -1,8 +1,8 @@
 import { type JSX, Index, Show, children, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cloneDeep, isPlainObject } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
-import ItemFoundation, { type ItemAdapter, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
+import ItemFoundation, { type ItemAdapter, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { createToken } from '../../base/token';
@@ -34,13 +34,9 @@ export function iconSlotClass(toggle: boolean, toggleIconPosition: 'left' | 'rig
 
 export const plainTrigger: GetTriggerProps = (own = {} as never) => own as never;
 
-/** onSelect reports the props an item was given, as React does without its ref: plain data is copied, nodes and functions are kept */
-function reportedProps(props: object) {
-    return Object.fromEntries(
-        Object.entries(props)
-            .filter(([key, value]) => key !== 'ref' && value !== undefined)
-            .map(([key, value]) => [key, isPlainObject(value) || Array.isArray(value) ? cloneDeep(value) : value])
-    );
+/** onSelect reports the props an item was given, as React does without its ref */
+function givenProps(props: object) {
+    return Object.fromEntries(Object.entries(props).filter(([key, value]) => key !== 'ref' && value !== undefined));
 }
 
 /** Passes the item's li through `Nav`'s `renderWrapper`; `element` must be created once by the caller, not written inline */
@@ -55,7 +51,9 @@ export function ItemWrapper(props: { element: JSX.Element; isInSubNav: boolean; 
 }
 
 /** The li of an item: a button or link in the list, or a Dropdown.Item inside a collapsed or horizontal popup */
-export function ItemView(props: NavItemProps) {
+export function ItemView(allProps: NavItemProps & { itemConfig?: NavItemType }) {
+    // itemConfig: the `items` entry this item was made from, which onSelect reports whole
+    const [internal, props] = splitProps(allProps, ['itemConfig']);
     const [local, rest] = splitProps(props, ['class', 'disabled', 'forwardRef', 'icon', 'indent', 'isCollapsed', 'itemKey', 'level', 'link', 'linkOptions', 'ref', 'style', 'tabIndex', 'text', 'toggleIcon', 'tooltipHideDelay', 'tooltipShowDelay', 'type', 'onClick']);
     const [aria, liRest] = splitControlAttrs(rest, isAriaKey);
 
@@ -86,7 +84,7 @@ export function ItemView(props: NavItemProps) {
         props,
         () => ({}),
         () => ({
-            cloneDeep: (value) => reportedProps(value as object) as typeof value,
+            getSelectedItem: () => copySelectedItem(internal.itemConfig ? { ...internal.itemConfig, level: props.level } : givenProps(props)),
             selectSelf: () => context.updateSelectedKeys([props.itemKey as ItemKey]),
             getSelectedKeysIsControlled: () => view().selectedKeysIsControlled,
             notifyGlobalOnSelect: (data) => context.notifySelect(data as OnSelectedData),

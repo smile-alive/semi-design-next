@@ -1,4 +1,4 @@
-import { type JSX, Show, createMemo, splitProps, untrack } from 'solid-js';
+import { Show, createMemo, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
 import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
@@ -75,7 +75,7 @@ export default function ResizeGroup(rawProps: ResizeGroupProps) {
     return (
         <ResizeGroupContext.Provider value={context}>
             <div
-                role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']}
+                role={namedRole(rest)}
                 {...rest}
                 // the Provider's children memo tracks the ref read; a spread props signal would rebuild the group and its panes
                 ref={untrack(() => mergeRefs(local.ref, (node: HTMLDivElement) => (group = node)))}

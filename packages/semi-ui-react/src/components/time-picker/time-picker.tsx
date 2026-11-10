@@ -1,14 +1,13 @@
 import type React from 'react';
 import { memo, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-import ComboboxFoundation from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
 import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import type { ElementProps } from '../../base/base';
-import type { ValidateStatus } from '../../base/base-component';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../hooks/use-click-outside';
@@ -249,18 +248,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
     const position = TimePickerFoundation.getPosition(props, direction);
     const isRange = type === strings.TYPE_TIME_RANGE_PICKER;
     const useCustomTrigger = typeof triggerRender === 'function';
-    const { showHour, showMinute, showSecond } = ComboboxFoundation.getColumns(format);
-    const selectColumnCount = [showHour, showMinute, showSecond, use12Hours].filter(Boolean).length;
-
-    const popupClassName = clsx(
-        `${prefixCls}-panel`,
-        props.popupClassName,
-        {
-            [`${prefixCls}-panel-narrow`]: (!showHour || !showMinute || !showSecond) && !use12Hours,
-            [cssClasses.RANGE_PICKER]: isRange,
-        },
-        `${prefixCls}-panel-column-${selectColumnCount}`
-    );
+    const popupClassName = clsx(TimePickerFoundation.getPanelClassNames(props), props.popupClassName);
 
     // class props never carried ref; a triggerRender that spreads componentProps must not grab the handle
     const componentProps = { ...props };
@@ -297,6 +285,12 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panelRef.current),
             // a custom trigger without a focus target of its own leaves the root as the Tab stop
             setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(rootRef.current, { preventScroll: base.getProps().preventScroll }),
+            blurFocusedElement: () => {
+                const active = FocusTrapHandle.getActiveElement(rootRef.current);
+                if (active && (rootRef.current?.contains(active) || panelRef.current?.contains(active))) {
+                    active.blur();
+                }
+            },
         })
     );
 
@@ -329,14 +323,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         </div>
     );
 
-    useImperativeHandle(
-        props.ref,
-        () => ({
-            focus: () => rootRef.current?.querySelector('input')?.focus({ preventScroll: foundation.getProp('preventScroll') }),
-            blur: () => rootRef.current?.querySelector('input')?.blur(),
-        }),
-        [foundation]
-    );
+    useImperativeHandle(props.ref, () => ({ focus: foundation.focus, blur: foundation.blur }), [foundation]);
 
     delete componentProps.ref;
 

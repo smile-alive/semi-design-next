@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { computed, shallowRef, useTemplateRef, watch } from 'vue';
+    import { computed, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
     import { omit } from 'es-toolkit';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+    import { canCollapseStack, FreshItems, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+    import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
     import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
@@ -18,6 +18,8 @@
     const pointerInside = shallowRef(false);
     const focusInside = shallowRef(false);
     const stackExpanded = shallowRef(false);
+    const elements = new Map<string, Element>();
+    const fresh = new FreshItems();
 
     const snapshot = useStoreSnapshot(props.store);
     const { text: announcement, announcer } = useAnnouncer();
@@ -25,11 +27,28 @@
     const prefix = cssClasses.PREFIX;
     const paused = computed(() => pointerInside.value || focusInside.value);
     const sources = { pointer: pointerInside, focus: focusInside };
-    const list = computed(() => snapshot.value.list);
-    const rows = computed(() => list.value.map((item, index) => ({ id: item.id, item, newerShown: list.value.length - 1 - index })));
-    const expanded = computed(() => snapshot.value.stack === 0 || stackExpanded.value || list.value.length <= snapshot.value.stack);
+    const list = computed(() => snapshot.value.items);
+    const updatedItems = computed(() => snapshot.value.updatedItems);
 
-    provideToastListContext(computed(() => ({ paused: paused.value, updatedItems: snapshot.value.updatedItems, announce: (key, read) => announcer.announce(key, read) })));
+    // TransitionGroup keeps a leaving toast itself, so only shown toasts are rows and every newer row is shown
+    const rows = computed(() => list.value.map((item, index) => ({ id: item.id, item, depth: list.value.length - 1 - index })));
+    const expanded = computed(() => isStackExpanded(snapshot.value.stack, stackExpanded.value, list.value.length));
+
+    provideToastListContext({
+        state: computed(() => ({ paused: paused.value, updatedItems: updatedItems.value })),
+        register: (id, element) => {
+            elements.set(id, element);
+            return () => {
+                if (elements.get(id) === element) elements.delete(id);
+            };
+        },
+    });
+
+    const announceFresh = () => {
+        for (const { id } of fresh.pick(list.value, updatedItems.value)) {
+            announcer.announce(id, () => readNoticeText(elements.get(id), prefix));
+        }
+    };
 
     const enter = (source: keyof typeof sources) => {
         sources[source].value = true;
@@ -38,7 +57,7 @@
 
     const leave = (source: keyof typeof sources) => {
         sources[source].value = false;
-        if (!paused.value && snapshot.value.stack && innerWrapper.value?.getBoundingClientRect().height) {
+        if (!paused.value && canCollapseStack(snapshot.value.stack, innerWrapper.value)) {
             stackExpanded.value = false;
         }
     };
@@ -51,8 +70,8 @@
     // leave, since the leaving element keeps the focus until TransitionGroup removes it.
     const onAfterLeave = () => {
         // An emptied list has no height, so leave() never collapses it; without this the next batch would start expanded.
-        if (!snapshot.value.list.length) stackExpanded.value = false;
-        if (focusInside.value && !innerWrapper.value?.contains(FocusTrapHandle.getActiveElement(innerWrapper.value))) leave('focus');
+        if (!list.value.length) stackExpanded.value = false;
+        if (hasLostFocus(focusInside.value, innerWrapper.value)) leave('focus');
     };
 
     // List-level options would otherwise land on the toast element as attributes like zindex="1010".
@@ -69,6 +88,10 @@
         },
         { flush: 'post' }
     );
+
+    watch([list, updatedItems], announceFresh, { flush: 'post' });
+
+    onMounted(announceFresh);
 </script>
 
 <template>
@@ -80,8 +103,8 @@
                 v-for="row in rows"
                 :key="row.id"
                 v-bind="itemProps(row.item)"
-                :class="{ [`${prefix}-stack-hidden`]: !expanded && row.newerShown >= numbers.stackVisibleCount }"
-                :positionInList="{ length: list.length, index: list.length - 1 - row.newerShown }"
+                :class="{ [`${prefix}-stack-hidden`]: isStackHidden(expanded, row.depth) }"
+                :positionInList="{ length: list.length, index: list.length - 1 - row.depth }"
                 :stack="snapshot.stack > 0"
                 :stackExpanded="expanded"
                 @remove="props.store.remove($event)"

@@ -1,10 +1,10 @@
 <script setup lang="ts" generic="T = any">
     import { computed, Comment, Fragment, useAttrs, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/list/list.scss';
     import type { ElementProps } from '../../base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import { groupRole } from '../../utils/group-role';
     import { type KeyedNode, hasSlotContent } from '../../utils/slot-nodes';
     import { Row } from '../grid';
     import useLocale from '../locale/use-locale';
@@ -76,7 +76,7 @@
                 [`${prefixCls}-bordered`]: props.bordered,
             },
         ]"
-        :role="groupRole(attrs)"
+        :role="namedRole(attrs)"
     >
         <div v-if="hasSlotContent($slots.header)" :class="`${prefixCls}-header`" x-semi-prop="header">
             <slot name="header" />

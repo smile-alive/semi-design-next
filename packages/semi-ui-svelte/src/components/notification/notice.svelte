@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { untrack } from 'svelte';
+    import { onMount, untrack } from 'svelte';
+    import { isAlertType, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
     import { cssClasses, getStackItemTransform, numbers } from '@fibrae/semi-foundation/components/notification/constants';
     import NotificationFoundation, { type NoticeAdapter, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
-    import { isAlertType, readNoticeText } from '@fibrae/semi-foundation/utils/announcer';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
@@ -96,10 +96,6 @@
     const collapsed = $derived(stack && !stackExpanded);
     const stackStyle = $derived(`z-index: ${layer}${collapsed && depth > 0 ? `; transform: ${getStackItemTransform(depth, placement)}` : ''}`);
 
-    const announce = () => {
-        if (!isAlert && id !== undefined) list?.announce(id, () => readNoticeText(noticeEl, prefix));
-    };
-
     const handleAnimationEnd = (event: AnimationEvent) => {
         if (event.target !== event.currentTarget) return;
         if (!leaving) {
@@ -110,11 +106,13 @@
         }
     };
 
-    useNoticeClose(foundation, list, announce);
+    useNoticeClose(foundation, list);
 
     $effect.pre(() => {
         if (leaving) entered = false;
     });
+
+    onMount(() => (list && id !== undefined && noticeEl ? list.register(id, noticeEl) : undefined));
 
     // The phase class is on the element once this runs. A theme or user CSS that cancels the animation fires no
     // animationend, so a run without an animation ends here, or a leaving notice would never be removed.
@@ -128,23 +126,11 @@
             entered = true;
         }
     });
-
-    export function restartCloseTimer() {
-        foundation.restartCloseTimer();
-    }
-
-    export function pauseCloseTimer() {
-        foundation.pauseCloseTimer();
-    }
-
-    export function resumeCloseTimer() {
-        foundation.resumeCloseTimer();
-    }
 </script>
 
 <div
     bind:this={outer}
-    class={[stack && `${prefix}-stack-item`, stack && stackExpanded && `${prefix}-stack-item-expanded`, collapsed && depth >= numbers.stackVisibleCount && `${prefix}-stack-item-hidden`, phase && `${prefix}-animation-${phase}_${placement}`]}
+    class={[stack && `${prefix}-stack-item`, stack && stackExpanded && `${prefix}-stack-item-expanded`, stack && isStackHidden(stackExpanded, depth) && `${prefix}-stack-item-hidden`, phase && `${prefix}-animation-${phase}_${placement}`]}
     style={stack ? stackStyle : undefined}
     onanimationend={handleAnimationEnd}
 >

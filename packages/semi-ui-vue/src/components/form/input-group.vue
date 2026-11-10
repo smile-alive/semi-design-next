@@ -2,6 +2,7 @@
     import { type VNode, computed, shallowReactive, useAttrs, useId } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
+    import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -37,12 +38,13 @@
     const fields = shallowReactive<string[]>([]);
 
     const prefix = cssClasses.PREFIX;
-    const errorMessageId = `${id}-errormessage`;
-    const extraTextId = `${id}-extraText`;
+    const ids = getFieldIds(id);
+    const errorMessageId = ids.errorMessage;
+    const extraTextId = ids.extraText;
     const formProps = computed<AllFormProps>(() => form?.formProps.value ?? {});
     const labelPosition = computed(() => props.labelPosition || formProps.value.labelPosition);
     const labelConfig = computed(() => (isLabelConfig(props.label) ? props.label : { text: props.label }));
-    const labelId = computed(() => labelConfig.value.id ?? `${id}-label`);
+    const labelId = computed(() => labelConfig.value.id ?? ids.label);
 
     const groupError = computed(() =>
         fields.flatMap((field) => {

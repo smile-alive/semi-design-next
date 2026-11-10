@@ -6,10 +6,9 @@
     import { untrack } from 'svelte';
     import { SvelteMap, SvelteSet } from 'svelte/reactivity';
     import { cloneDeep } from 'es-toolkit';
-    import { get } from 'es-toolkit/compat';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
     import TableFoundation, { type BaseColumnProps, type TableAdapter } from '@fibrae/semi-foundation/components/table/foundation';
-    import { amendTableWidth, assignColumnKeys, findColumn, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
+    import { amendTableWidth, applyColumnResize, findColumn, flattenColumns, flattenData, getCellWidths, getColumnResizeChange, getHeaderRowCount, getResizableColumns, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/table/table.scss';
@@ -24,7 +23,7 @@
     import HeadTable from './head-table.svelte';
     import type { ColumnProps, TableChangeInfo, TableHandle, TablePaginationProps, TableProps, TableRowKey, TableVirtualizedProps } from './interface.js';
     import TablePagination from './table-pagination.svelte';
-    import { addWidthPlaceholders, buildColumns, copyColumns, expandColumn, joinStyles, mergeComponents, selectionColumn } from './utils.js';
+    import { buildColumns, expandColumn, joinStyles, mergeComponents, selectionColumn } from './utils.js';
 
     type AnyRecord = Record<string, any>;
     type Foundation = TableFoundation<AnyRecord, TableFoundationProps>;
@@ -138,7 +137,7 @@
         return lastData;
     });
 
-    const resizeOptions = $derived(typeof resizable === 'object' ? resizable : {});
+    const selectionOptions = $derived(typeof rowSelection === 'object' ? rowSelection : undefined);
     const hasExpandedRow = $derived(Boolean(expandedRow));
 
     // the bindable top-level values win over the same fields inside the objects, which `bind:` cannot reach
@@ -181,24 +180,10 @@
         'aria-describedby': ariaDescribedby,
     });
 
-    // writes into a fresh copy of the columns
-    const applyOverrides = (list: ColumnProps[]): ColumnProps[] => {
-        for (const column of list) {
-            if (column.key != null) {
-                Object.assign(column, overrides.get(column.key));
-                if (resizing.has(column.key)) {
-                    column.class = [column.class, resizeOptions.handlerClassName ?? 'resizing'].filter(Boolean).join(' ');
-                }
-            }
-            if (Array.isArray(column.children)) {
-                applyOverrides(column.children);
-            }
-        }
-        return list;
-    };
-
-    // a resizable table finds the dragged column by key, so its columns get keys first; a plain table uses the prop as given
-    const cachedColumns = $derived(resizable ? applyOverrides(addWidthPlaceholders(assignColumnKeys(copyColumns(columns ?? [])) as ColumnProps[], hasExpandedRow ? innerColumns[0] : null, innerColumns[1])) : (columns ?? []));
+    // a resizable table finds the dragged column by key, so its columns get keys first; a plain table uses the prop as given.
+    // The placeholders are the table's own inner columns, so the drag class lands next to their class rather than replacing it
+    const resizableColumns = $derived(resizable ? getResizableColumns(columns, hasExpandedRow ? innerColumns[0] : null, innerColumns[1]) : []);
+    const cachedColumns = $derived(resizable ? applyColumnResize(resizableColumns, { resizable, classKey: 'class', getOverride: (key) => overrides.get(key), isResizing: (key) => resizing.has(key) }) : (columns ?? []));
     const flattened = $derived(flattenColumns(cachedColumns) as ColumnProps[]);
     const tableColumns = $derived(buildColumns(cachedColumns, innerColumns));
     const flattenedColumns = $derived(flattenColumns(tableColumns) as ColumnProps[]);
@@ -289,14 +274,14 @@
                 expandedRowKeys = nextKeys;
                 onExpandedRowsChange?.(expandedRows);
             },
-            notifySelect: (record, selected, selectedRows, event) => rowSelectionFn('onSelect')?.(record, selected, selectedRows, event),
-            notifySelectAll: (selected, selectedRows, changedRows, event) => rowSelectionFn('onSelectAll')?.(selected, selectedRows, changedRows, event),
+            notifySelect: (record, selected, selectedRows, event) => selectionOptions?.onSelect?.(record, selected, selectedRows, event),
+            notifySelectAll: (selected, selectedRows, changedRows, event) => selectionOptions?.onSelectAll?.(selected, selectedRows, changedRows, event),
             notifySelectionChange: (keys, selectedRows) => {
                 // a write would shadow the controlled field in rowSelection, whose owner is the one to accept or refuse the change
-                if (selectedRowKeys !== undefined || !Array.isArray(typeof rowSelection === 'object' ? rowSelection.selectedRowKeys : undefined)) {
+                if (selectedRowKeys !== undefined || !Array.isArray(selectionOptions?.selectedRowKeys)) {
                     selectedRowKeys = [...keys];
                 }
-                rowSelectionFn('onChange')?.(keys, selectedRows);
+                selectionOptions?.onChange?.(keys, selectedRows);
             },
         })
     );
@@ -350,23 +335,7 @@
         handlers[name]?.(record, event);
     };
 
-    const readCellWidths = (list: ColumnProps[]) => {
-        const measured = getCellWidths(view.headWidths, list);
-        if (measured.length || !isVirtualized) {
-            return measured;
-        }
-        // Nothing is measured before mount, and a virtualized body renders nothing without widths: the declared numeric
-        // widths stand in for the first frame, and the selection and expand columns take their default widths.
-        // shortcut: a column without a numeric width leaves the body to render after mount; upgrade if first-frame rows
-        // are needed for such columns, which would require a width estimate.
-        const declared = list.map((column) => {
-            if (column.key === strings.DEFAULT_KEY_COLUMN_SELECTION) {
-                return column.width ?? numbers.DEFAULT_WIDTH_COLUMN_SELECTION;
-            }
-            return column.key === strings.DEFAULT_KEY_COLUMN_EXPAND ? (column.width ?? numbers.DEFAULT_WIDTH_COLUMN_EXPAND) : column.width;
-        });
-        return declared.every((width) => typeof width === 'number') ? (declared as number[]) : [];
-    };
+    const readCellWidths = (list: ColumnProps[]) => getCellWidths(view.headWidths, list, isVirtualized);
 
     // synced on the DOM, not state, so a horizontal scroll re-renders nothing
     const handleBodyScroll = (event: Event) => {
@@ -386,36 +355,23 @@
         foundation.syncScrollEdges();
     };
 
-    // Reads the latest columns, not those of the last render: the moves of a fast drag can arrive before a render
+    // Reads the latest overrides, not those of the last render: the moves of a fast drag can arrive before a render
     const resizeColumn = (column: ColumnProps, phase: 'start' | 'move' | 'stop', width?: number) => {
-        const key = (
-            findColumn(
-                untrack(() => cachedColumns),
-                column
-            ) as ColumnProps | undefined
-        )?.key;
-        if (key == null) {
+        const base = findColumn(
+            untrack(() => resizableColumns),
+            column
+        ) as ColumnProps | undefined;
+        if (base?.key == null) {
             return;
         }
+        const key = base.key;
         if (phase === 'start') {
             resizing.add(key);
         } else if (phase === 'stop') {
             resizing.delete(key);
         }
-        // read after the resizing mark changes, so the callbacks see the class the header gets
-        const current = findColumn(
-            untrack(() => cachedColumns),
-            column
-        ) as ColumnProps;
-        let change: Partial<ColumnProps> | void;
-        if (phase === 'move') {
-            change = { width, ...resizeOptions.onResize?.({ ...current, width }) };
-        } else if (phase === 'start') {
-            change = resizeOptions.onResizeStart?.(current);
-        } else {
-            change = resizeOptions.onResizeStop?.(current);
-        }
-        overrides.set(key, { ...overrides.get(key), ...change });
+        const recorded = untrack(() => overrides.get(key));
+        overrides.set(key, { ...recorded, ...getColumnResizeChange({ phase, column: { ...base, ...recorded }, recorded, resizable: untrack(() => resizable), classKey: 'class', width }) });
     };
 
     const context: TableContextValue = {
@@ -582,12 +538,6 @@
     };
 
     setTableContext(context);
-
-    // the state keeps the user's rowSelection, whose callbacks the foundation's rowSelection type does not list
-    const rowSelectionFn = (name: 'onSelect' | 'onSelectAll' | 'onChange'): ((...args: unknown[]) => void) | undefined => {
-        const fn = get(foundation.getState('rowSelection'), name);
-        return typeof fn === 'function' ? fn : undefined;
-    };
 
     const syncTableWidth = () => {
         root?.style.setProperty('--semi-table-section-width', `${amendTableWidth(root.getBoundingClientRect().width)}px`);

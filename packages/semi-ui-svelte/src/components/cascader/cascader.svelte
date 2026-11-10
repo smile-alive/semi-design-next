@@ -204,6 +204,9 @@
         get separator() {
             return separator;
         },
+        get showClear() {
+            return showClear;
+        },
         get treeData() {
             return treeSource;
         },
@@ -263,9 +266,7 @@
     const resolvedPosition = $derived(position ?? (config.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
     const inputPlaceholder = $derived(searchPlaceholder || placeholder);
     const tagSize = $derived(size === 'default' ? 'large' : size);
-
-    // multiple mode keeps no selectedKeys beyond the one getInitialState writes; its value also holds controlled paths without tags
-    const clearable = $derived(showClear && Boolean(view.inputValue || (multiple ? CascaderFoundation.hasMultipleValue(foundationProps, view) : view.selectedKeys.size)) && !disabled);
+    const clearable = $derived(CascaderFoundation.isClearable(foundationProps, view));
 
     // ARIA 1.2: the search input is the combobox while mounted, otherwise the trigger is a select-only combobox
     const inputIsCombobox = $derived(triggerSearch && !trigger && (multiple || view.showInput));

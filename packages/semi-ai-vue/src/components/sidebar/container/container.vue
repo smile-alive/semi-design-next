@@ -2,6 +2,7 @@
     import { computed, onActivated, onDeactivated, shallowRef, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
@@ -10,7 +11,6 @@
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useLocale, useRecordFocus } from '@fibrae/semi-ui-vue/composables';
     import { Resizable } from '@fibrae/semi-ui-vue/resizable/index';
-    import { groupRole } from '@fibrae/semi-ui-vue/utils/group-role';
     import { hasSlotContent } from '@fibrae/semi-ui-vue/utils/slot-nodes';
     import type { ContainerEmits, ContainerHandle, ContainerProps, ContainerSlots } from './interface';
 
@@ -115,7 +115,7 @@
 <template>
     <component :is="props.resizable ? Resizable : SlotFragment" v-if="shouldRender" ref="resizable" v-bind="resizableProps">
         <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-animation-content_show`" :leaveActiveClass="`${prefix}-animation-content_hide`" :name="prefix" type="animation" @afterLeave="foundation.handleAnimationEnd" @enter="foundation.handleAnimationEnd">
-            <div v-show="props.visible" ref="root" v-bind="$attrs" :class="`${prefix}-container`" :role="groupRole($attrs)">
+            <div v-show="props.visible" ref="root" v-bind="$attrs" :class="`${prefix}-container`" :role="namedRole($attrs)">
                 <slot v-if="hasSlotContent($slots.header)" name="header" />
                 <div v-else :class="`${prefix}-container-header`">
                     <div :class="`${prefix}-container-header-title`">

@@ -3,9 +3,9 @@ import { useId } from 'react';
 import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/feedback/constants';
-import FeedbackFoundation, { type FeedbackAdapter, type EmojiResult, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
+import FeedbackFoundation, { type FeedbackAdapter, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/feedback/feedback.scss';
-import type { ArrayElement } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import Button, { type ButtonProps } from '../button';
@@ -84,14 +84,15 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
     const rest = omitBy(restProps, (value) => value === undefined);
     const { value, onOKReturnPromiseStatus, onCancelReturnPromiseStatus } = state;
     const disabledOkButton = isFeedbackValueEmpty(value);
+    const shown = FeedbackFoundation.getContentValues(value);
 
     // Feedback's value and handlers come after the spreads: the foundation calls the user's onChange itself, and a stray `value` must not desync the UI from onValueChange
     if (type === 'custom') {
         content = children;
     } else if (type === 'text') {
-        content = <TextArea placeholder={locale.placeholder} {...textAreaProps} value={typeof value === 'string' ? value : ''} onChange={foundation.handleTextChange} />;
+        content = <TextArea placeholder={locale.placeholder} {...textAreaProps} value={shown.text} onChange={foundation.handleTextChange} />;
     } else if (type === 'emoji') {
-        const { emoji } = (value ?? {}) as EmojiResult;
+        const { emoji } = shown;
         content = (
             <>
                 <div className={`${prefixCls}-emoji-container`} aria-label={locale.rating} role="radiogroup">
@@ -116,13 +117,13 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
     } else if (type === 'radio') {
         content = (
             <div className={`${prefixCls}-radio-container`}>
-                <RadioGroup direction="vertical" {...radioGroupProps} value={typeof value === 'object' ? undefined : value} onChange={foundation.handleRadioChange} />
+                <RadioGroup direction="vertical" {...radioGroupProps} value={shown.radio} onChange={foundation.handleRadioChange} />
             </div>
         );
     } else if (type === 'checkbox') {
         content = (
             <div className={`${prefixCls}-checkbox-container`}>
-                <CheckboxGroup direction="vertical" {...checkboxGroupProps} value={Array.isArray(value) ? value : []} onChange={foundation.handleCheckboxChange} />
+                <CheckboxGroup direction="vertical" {...checkboxGroupProps} value={shown.checkbox} onChange={foundation.handleCheckboxChange} />
             </div>
         );
     }

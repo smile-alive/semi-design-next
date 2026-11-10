@@ -153,8 +153,9 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         this.setActiveLink(links[lastNegativeIndex] ?? '', prevActiveLink);
     }
 
-    static getInitialState(): AnchorBaseState {
-        return { activeLink: '', links: [], clickLink: false, slideBarTop: '0' };
+    /** `links` is for hosts that know theirs up front, as with `setLinks` */
+    static getInitialState(links: string[] = []): AnchorBaseState {
+        return { activeLink: '', links, clickLink: false, slideBarTop: '0' };
     }
 
     /**

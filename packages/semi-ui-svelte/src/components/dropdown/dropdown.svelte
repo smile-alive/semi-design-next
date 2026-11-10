@@ -3,7 +3,7 @@
     import { type Attachment, createAttachmentKey } from 'svelte/attachments';
     import { on } from 'svelte/events';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
     import DropdownFoundation, { type DropdownAdapter, type DropdownBaseProps, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
     import { canRoleCarryPopupState, cssClasses as tooltipClasses } from '@fibrae/semi-foundation/components/tooltip/constants';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -104,7 +104,6 @@
     );
 
     const popVisible = $derived(visible ?? states().popVisible);
-    const isSubmenu = $derived((parent?.view.menuDepth ?? 0) > 0);
 
     // ARIA allows aria-haspopup and aria-expanded only on a button, a link, a parent item or an element with such a role
     const menuButton = $derived.by(() => {
@@ -131,7 +130,7 @@
         role,
         mouseEnterDelay,
         mouseLeaveDelay,
-        spacing: spacing ?? (isSubmenu ? numbers.NESTED_SPACING : numbers.SPACING),
+        spacing: DropdownFoundation.getSpacing(spacing, parent?.view.menuDepth),
         closeOnEsc,
         returnFocusOnClose,
         guardFocus,
@@ -159,7 +158,7 @@
     const context: DropdownContext = {
         view: {
             get menuDepth() {
-                return (parent?.view.menuDepth ?? 0) + 1;
+                return DropdownFoundation.getChildMenuDepth(parent?.view.menuDepth);
             },
             get showTick() {
                 return showTick;
@@ -172,10 +171,7 @@
             },
         },
         close: foundation.close,
-        closeAll: () => {
-            foundation.close();
-            parent?.closeAll();
-        },
+        closeAll: foundation.closeAll,
         getPopupId: () => tooltip?.getPopupId() ?? '',
     };
 

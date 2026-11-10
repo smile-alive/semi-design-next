@@ -1,23 +1,19 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { omitBy } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-    import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
+    import DialogueFoundation, { type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { IconSendMsgStroked } from '@fibrae/semi-icons-vue';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import MarkdownRender from '@fibrae/semi-ui-vue/markdown-render/index';
     import { useAIChatDialogueContext } from '../context';
     import Code from './content-item/code.vue';
-    import useContentClass from './use-content-class';
 
     const props = defineProps<{ text: string; message: Message }>();
 
     const { view, referenceClick } = useAIChatDialogueContext();
     const locale = useLocale('AIChatDialogue');
 
-    const wrapCls = useContentClass(() => props.message);
-
+    const wrapCls = computed(() => DialogueFoundation.getContentClass(props.message.role, props.message.status, view.value.mode));
     const { PREFIX_CONTENT } = cssClasses;
     const { ROLE } = strings;
     const isUser = computed(() => props.message.role === ROLE.USER);
@@ -27,9 +23,8 @@
         return {
             format: 'md' as const,
             ...markdownRenderProps,
-            // an explicit undefined entry would replace the built-in component with a non-component
-            components: { code: Code, ...omitBy(markdownRenderProps?.components ?? {}, (component) => component === undefined) },
-            raw: view.value.escapeHtml && isUser.value ? escapeHtmlInMarkdown(props.text) : props.text,
+            components: DialogueFoundation.mergeMarkdownComponents({ code: Code }, markdownRenderProps?.components),
+            raw: DialogueFoundation.getMarkdownRaw(props.text, props.message.role, view.value.escapeHtml),
         };
     });
 </script>

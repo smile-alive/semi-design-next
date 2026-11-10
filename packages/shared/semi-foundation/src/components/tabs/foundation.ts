@@ -1,8 +1,6 @@
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
-import { scrollIntoViewWithin } from '../../utils/supports';
-import { cssClasses as overflowListClasses, SCROLL_KEY_ATTRIBUTE } from '../overflow-list/constants';
-import { cssClasses, getItemKeyByBarItemKey, TAB_DATA_KEY_PREFIX, TAB_KEY_ATTRIBUTE } from './constants';
+import { cssClasses, TAB_DATA_KEY_PREFIX, TAB_KEY_ATTRIBUTE } from './constants';
 
 /** What the previous update showed, so the pane motion is derived in the same update as the key change */
 export interface MotionView {
@@ -180,33 +178,6 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, E =
         }
         const keep = list.length - Math.min(typeof more === 'number' ? more : more.count, list.length);
         return { kept: list.slice(0, keep), moved: list.slice(keep) };
-    }
-
-    /** Overflow shows as tabs wrapped into several rows or a scrolled bar; a vertical bar never wraps */
-    static isTabsOverflowing(barEl: HTMLElement, tabPosition?: 'top' | 'left') {
-        if (tabPosition !== 'left') {
-            const tabNodes = [...barEl.querySelectorAll<HTMLElement>(`.${cssClasses.TABS_TAB}`)];
-            if (tabNodes.length > 1 && tabNodes.some((node) => node.offsetTop !== tabNodes[0].offsetTop)) {
-                return true;
-            }
-        }
-        return barEl.scrollWidth > barEl.clientWidth + 1;
-    }
-
-    /** `barItemKey` is the OverflowList scroll key of the tab, see getBarItemKey */
-    static scrollTabIntoView(barEl: HTMLElement | null | undefined, barItemKey: string, position: ScrollLogicalPosition = 'nearest', behavior: ScrollBehavior = 'smooth') {
-        // only the bar scrolls: the call can land after the page has scrolled past the tabs, and must not pull it back
-        const tabEl = barEl?.querySelector(`.${cssClasses.TABS_TAB}[${SCROLL_KEY_ATTRIBUTE}="${CSS.escape(barItemKey)}"]`);
-        if (barEl && tabEl) {
-            // the collapsed bar scrolls inside OverflowList's wrapper, not the bar element
-            scrollIntoViewWithin(tabEl, tabEl.closest<HTMLElement>(`.${overflowListClasses.SCROLL_WRAPPER}`) ?? barEl, { behavior, block: position, inline: position });
-        }
-    }
-
-    static readVisibleState(visibleMap: ReadonlyMap<string, boolean>) {
-        const visibleState = new Map([...visibleMap].map(([barItemKey, visible]) => [getItemKeyByBarItemKey(barItemKey), visible]));
-        const visibles = [...visibleState.values()];
-        return { visibleState, isShowInViewport: visibles.some(Boolean), hasHidden: visibles.some((visible) => !visible) };
     }
 
     handleTabClick = (activeKey: string, event: E) => {

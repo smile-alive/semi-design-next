@@ -1,7 +1,6 @@
 import React, { type ReactNode, isValidElement, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { get } from 'es-toolkit/compat';
 import { strings } from '@fibrae/semi-foundation/components/table/constants';
 import TableFoundation, { type TableAdapter, type TableBaseState, type BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
 import { type FlattenData, type GroupFlattenData, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getExpandColumn, getHeaderRowCount, getSelectionColumn, mergedRowExpandable, placeInnerColumns, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
@@ -11,6 +10,7 @@ import '@fibrae/semi-foundation/components/table/table.scss';
 import { createContext } from '../../base/create-context';
 import useFoundation from '../../base/use-foundation';
 import useResizeObserver from '../../hooks/use-resize-observer';
+import { hasContent } from '../../utils';
 import LocaleConsumer from '../locale/locale-consumer';
 import useLocale from '../locale/use-locale';
 import Spin from '../spin';
@@ -247,9 +247,6 @@ function buildColumns(queries: ColumnProps[], cachedColumns: ColumnProps[], pref
     return columns;
 }
 
-// ReactNode includes numbers (0 too) and arrays; null, undefined and booleans render nothing
-const hasContent = (node: ReactNode) => node != null && typeof node !== 'boolean';
-
 function syncTableWidth(wrapper: HTMLElement | null) {
     wrapper?.style.setProperty('--semi-table-section-width', `${amendTableWidth(wrapper.getBoundingClientRect().width)}px`);
 }
@@ -334,10 +331,9 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
         foundationProps,
         () => getInitialState(foundationProps),
         (base) => {
-            // the callbacks of the latest rowSelection prop, merged into state
-            const getRowSelectionFn = (funcName: string): ((...args: unknown[]) => void) | undefined => {
-                const func = get(base.getState('rowSelection'), funcName);
-                return typeof func === 'function' ? func : undefined;
+            const getRowSelection = () => {
+                const selection = base.getProp('rowSelection');
+                return isObject(selection) ? selection : undefined;
             };
             return {
                 getWrapper: () => wrapRef.current,
@@ -347,9 +343,9 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
                 notifyChange: (changeInfo) => base.getProps().onChange?.(changeInfo),
                 notifyExpand: (expanded, record, mouseEvent) => base.getProps().onExpand?.(expanded, record, mouseEvent),
                 notifyExpandedRowsChange: (expandedRows) => base.getProps().onExpandedRowsChange?.(expandedRows),
-                notifySelect: (record, selected, selectedRows, event) => getRowSelectionFn('onSelect')?.(record, selected, selectedRows, event),
-                notifySelectAll: (selected, selectedRows, changedRows, e) => getRowSelectionFn('onSelectAll')?.(selected, selectedRows, changedRows, e),
-                notifySelectionChange: (selectedRowKeys, selectedRows) => getRowSelectionFn('onChange')?.(selectedRowKeys, selectedRows),
+                notifySelect: (record, selected, selectedRows, event) => getRowSelection()?.onSelect?.(record as RecordType, selected, selectedRows as RecordType[], event),
+                notifySelectAll: (selected, selectedRows, changedRows, e) => getRowSelection()?.onSelectAll?.(selected, selectedRows as RecordType[], changedRows as RecordType[], e),
+                notifySelectionChange: (selectedRowKeys, selectedRows) => getRowSelection()?.onChange?.(selectedRowKeys, selectedRows as RecordType[]),
             };
         }
     );
@@ -451,7 +447,7 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
         [foundation]
     );
 
-    const cellWidthsOf = useCallback((flattenedColumns: ColumnProps<RecordType>[]) => getCellWidths(headWidths, flattenedColumns), [headWidths]);
+    const cellWidthsOf = useCallback((flattenedColumns: ColumnProps<RecordType>[]) => getCellWidths(headWidths, flattenedColumns, isVirtualized), [headWidths, isVirtualized]);
 
     const handleRowExpanded = useCallback((expanded: boolean, key: BaseRowKeyType, e: React.MouseEvent<HTMLElement>) => foundation.handleRowExpanded(expanded, key, e), [foundation]);
 

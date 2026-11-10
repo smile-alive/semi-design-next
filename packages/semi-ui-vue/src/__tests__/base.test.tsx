@@ -48,15 +48,6 @@ describe('useControllable', () => {
         await fireEvent.click(view.getByRole('button'));
         expect(view.getByRole('button')).toHaveTextContent('next');
     });
-
-    it('keepLastControlled 从最后受控值继续', async () => {
-        const view = render(Controlled, { props: { modelValue: 'first', keepLastControlled: true } });
-        await view.rerender({ modelValue: 'last' });
-        await view.rerender({ modelValue: undefined });
-        expect(view.getByRole('button')).toHaveTextContent('last');
-        await fireEvent.click(view.getByRole('button'));
-        expect(view.getByRole('button')).toHaveTextContent('next');
-    });
 });
 
 describe('useFoundation', () => {

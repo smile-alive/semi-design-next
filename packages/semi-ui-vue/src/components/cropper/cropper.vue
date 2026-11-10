@@ -1,9 +1,10 @@
 <script setup lang="ts">
-    import { computed, useId, useTemplateRef, watch, type ImgHTMLAttributes } from 'vue';
+    import { computed, useId, useTemplateRef, type ImgHTMLAttributes } from 'vue';
     import { omit } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
     import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
     import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/cropper/cropper.scss';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
@@ -11,7 +12,6 @@
     import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
     import useEventListener from '../../composables/use-event-listener';
     import useResizeObserver from '../../composables/use-resize-observer';
-    import { groupRole } from '../../utils/group-role';
     import useLocale from '../locale/use-locale';
     import type { CropperEmits, CropperHandle, CropperProps } from './interface';
 
@@ -102,17 +102,6 @@
     useEventListener(root, 'wheel', foundation.handleWheel, { passive: false });
     useResizeObserver(root, foundation.handleResize);
 
-    // Wheel zooming and the image load change the state too. A controlled zoom thereby undoes a zoom the parent did
-    // not accept, and the preview mirrors every layout change.
-    watch(
-        [state, () => props.zoom, () => props.rotate],
-        () => {
-            foundation.syncRotateAndZoom();
-            foundation.updatePreview();
-        },
-        { flush: 'post' }
-    );
-
     // The preview lives in the user's DOM, so it has to leave with a cached subtree and come back with it.
     useKeepAliveFoundation(foundation);
 
@@ -120,7 +109,7 @@
 </script>
 
 <template>
-    <div ref="root" :class="prefix" :role="groupRole($attrs)">
+    <div ref="root" :class="prefix" :role="namedRole($attrs)">
         <div :class="cssClasses.IMG_WRAPPER">
             <img v-bind="imgAttrs" ref="img" :alt="props.imgProps?.alt ?? ''" :class="[cssClasses.IMG, props.imgProps?.class]" :src="props.src" :style="[props.imgProps?.style, imgStyle]" @load="handleLoad($event)" />
         </div>

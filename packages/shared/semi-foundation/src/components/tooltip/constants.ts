@@ -25,15 +25,6 @@ export const TRIGGER_EVENT_NAMES = {
     contextMenu: 'contextmenu',
 } as const;
 
-/** Trigger attribute listing the ids of the popups it opens, space separated: nested popups share one trigger (D5) */
-export const POPUP_ID_ATTRIBUTE = 'data-popupid';
-
-/** Matches the trigger that lists popup `id`; a token match, so a trigger shared by nested popups is found by each id */
-export const popupTriggerSelector = (id: string) => `[${POPUP_ID_ATTRIBUTE}~="${CSS.escape(id)}"]`;
-
-/** The popup element Tooltip renders (D5) */
-export const POPUP_SELECTOR = '[popover]';
-
 // ARIA allows aria-haspopup and aria-expanded only on these roles
 const POPUP_TRIGGER_ROLES: ReadonlySet<string> = new Set(['button', 'link', 'menuitem', 'combobox', 'tab', 'treeitem', 'gridcell']);
 const BLOCK_DISPLAYS: ReadonlySet<string | undefined> = new Set(['flex', 'block', 'table', 'flow-root', 'grid']);

@@ -1,7 +1,7 @@
 import { For, Show, createMemo, createSignal } from 'solid-js';
 import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
-import { sameKeys } from '@fibrae/semi-foundation/components/tree/shared';
+import { getTransitionNodes, sameKeys } from '@fibrae/semi-foundation/components/tree/shared';
 import VirtualList from '../../internal/virtual-list';
 import useConfig from '../config-provider/use-config';
 import AutoSizer from './auto-sizer';
@@ -39,26 +39,18 @@ export default function NodeList(props: NodeListProps) {
         if (!keys.size || (done && isEqual(done.keys, keys) && sameKeys(done.nodes, props.flattenNodes))) {
             return { ids: props.flattenNodes.map((node) => node.key), groups };
         }
-        // collapsing rows are gone from flattenNodes; they come from the list cached before the collapse
-        const lookUp = props.motionType === 'hide' && props.flattenList ? props.flattenList : props.flattenNodes;
-        const firstKey = keys.values().next().value;
         const ids: string[] = [];
-        const moving: string[] = [];
-        let start = 0;
-        lookUp.forEach((node, index) => {
-            if (keys.has(node.key)) {
-                moving.push(node.key);
-                if (node.key === firstKey) {
-                    start = index;
-                }
-            } else {
-                ids.push(node.key);
+        for (const item of getTransitionNodes(props.flattenNodes, keys, props.motionType, props.flattenList)) {
+            if (!Array.isArray(item)) {
+                ids.push(item.key);
+            } else if (item.length) {
+                const id = `${GROUP_PREFIX}${item[0].key}`;
+                groups.set(
+                    id,
+                    item.map((node) => node.key)
+                );
+                ids.push(id);
             }
-        });
-        if (moving.length) {
-            const id = `${GROUP_PREFIX}${moving[0]}`;
-            groups.set(id, moving);
-            ids.splice(start, 0, id);
         }
         return { ids, groups };
     });

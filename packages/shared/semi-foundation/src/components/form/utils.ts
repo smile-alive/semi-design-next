@@ -3,7 +3,7 @@ import { joinIds } from '../../utils/a11y';
 import { createId } from '../../utils/uuid';
 import warning from '../../utils/warning';
 import { strings } from './constants';
-import { hasErrors } from './errors';
+import { hasErrorContent, hasErrors } from './errors';
 import type { FieldValidateTriggerType, BasicTriggerType, StandardSchemaIssue, FieldRegistration, FieldValidator, RuleItem, StandardSchema } from './interface';
 import { isRequired } from './rules';
 
@@ -194,6 +194,63 @@ export function mergeFieldConfig(field: FieldConfig, form: FieldConfig) {
     };
 }
 
+/** The element ids of a field, which its control's aria attributes reference; an InputGroup and a Slot name theirs the same way */
+export function getFieldIds(id: string) {
+    return { label: `${id}-label`, helpText: `${id}-helpText`, extraText: `${id}-extraText`, errorMessage: `${id}-errormessage` };
+}
+
+export interface FieldViewInput {
+    /** The id of the control: the field's own, otherwise a generated one */
+    id: string;
+    field?: string;
+    label?: unknown;
+    /** Whether `label` is a framework node, which is then not a label config */
+    isNode?: (label: unknown) => boolean;
+    noLabel?: boolean;
+    validateStatus?: string;
+    /** The validation status */
+    status?: string;
+    /** The merged config: Form props where the field sets none */
+    labelPosition?: string;
+    labelCol?: object;
+    wrapperCol?: object;
+    /** The Form sets labelCol and wrapperCol itself, so it already wraps the fields in a Row */
+    formHasCols: boolean;
+    /** Whether the control renders an inset label */
+    insetSupported: boolean;
+    hasPrefix: boolean;
+    hasTrigger: boolean;
+}
+
+/**
+ * What a field's shell resolves from its props before it renders: the element ids, the label (a config object or the
+ * text itself; a config's `id` and `text: ''` are honored), the label position (an inset label falls back to top when the
+ * control cannot render it, or a prefix or custom trigger takes its place), the shown status and whether the field wraps
+ * its columns in a Row. `L` is the host's label config type, `N` its node type.
+ */
+export function resolveFieldView<L extends { id?: string; text?: unknown }, N = never>(input: FieldViewInput) {
+    const { field, label, isNode, noLabel, labelPosition, labelCol, wrapperCol } = input;
+    const labelConfig = typeof label === 'object' && label !== null && !Array.isArray(label) && !isNode?.(label) ? (label as L) : undefined;
+    const labelText = (labelConfig ? (labelConfig.text ?? field) : label || field) as L['text'] | N | string;
+    const ids = getFieldIds(input.id);
+    ids.label = labelConfig?.id || ids.label;
+    const insetUnsupported = labelPosition === 'inset' && !input.insetSupported;
+    const shownLabelPosition = labelPosition === 'inset' && (insetUnsupported || input.hasPrefix || input.hasTrigger) ? 'top' : labelPosition;
+    const withCol = Boolean(labelCol && wrapperCol);
+    return {
+        ids,
+        labelConfig,
+        labelText,
+        labelPosition: shownLabelPosition,
+        insetShown: shownLabelPosition === 'inset' && !noLabel,
+        /** The control cannot render an inset label although the field asked for one */
+        warnInsetFallback: insetUnsupported && !noLabel,
+        shownStatus: input.validateStatus || input.status,
+        withCol,
+        wrapInRow: withCol && !input.formHasCols,
+    };
+}
+
 /** What decides the aria attributes a field puts on its control; content checks differ per framework, so they come in as booleans */
 export interface FieldAriaState {
     /** The aria attributes the caller set on the field: its aria-required wins, its ids come first */
@@ -210,7 +267,6 @@ export interface FieldAriaState {
     hasHelpText: boolean;
     hasExtraText: boolean;
     error: unknown;
-    errorHasContent: boolean;
     status?: string;
     /** The shown status: validateStatus when set, otherwise the validation status */
     shownStatus?: string;
@@ -229,6 +285,7 @@ export function getFieldAriaProps(state: FieldAriaState) {
     const { own, ids, label, error, status, shownStatus } = state;
     const ownLayout = !state.inGroup && !state.pure;
     const ownErrorMessage = ownLayout && !state.noErrorMessage;
+    const errorHasContent = hasErrorContent(error);
     // the inset label renders in every layout, the Label only in the field's own one
     const labelRendered = !state.noLabel && (state.labelPosition === 'inset' || ownLayout);
     const helpTextRendered = ownErrorMessage && state.hasHelpText && !error;
@@ -243,9 +300,9 @@ export function getFieldAriaProps(state: FieldAriaState) {
     if (shownStatus === 'error' || status === 'error') {
         aria['aria-invalid'] = true;
     }
-    if (status === 'error' && ownErrorMessage && state.errorHasContent) {
+    if (status === 'error' && ownErrorMessage && errorHasContent) {
         aria['aria-errormessage'] = ids.errorMessage;
-    } else if (state.inGroup && !(status === 'error' && state.errorHasContent)) {
+    } else if (state.inGroup && !(status === 'error' && errorHasContent)) {
         // clears the error message id the group hands every field; the group lists only errors with content
         aria['aria-errormessage'] = undefined;
     }

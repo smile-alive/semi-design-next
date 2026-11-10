@@ -25,9 +25,6 @@ import { type AddAreaContextValue, AddAreaContext } from './context';
 import FileCard from './file-card';
 import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, CropProps, CustomError, FileItem, OnChangeProps, PromptPositionType, RenderFileItemProps, RenderFileListTitleProps, RenderPictureCloseProps, UploadCropModalProps, UploadListType, customRequestArgs } from './interface';
 
-// namedRole yields a plain string, which the typed role attribute does not accept
-type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
-
 export interface UploadHandle {
     /** Adds files at `index`, or at the end without one */
     insert: (files: Array<CustomFile>, index?: number) => void;
@@ -272,6 +269,7 @@ export default function Upload(rawProps: UploadProps) {
                     replaceInput.value = '';
                 }
             },
+            openReplacePicker: () => replaceInput?.click(),
             notifyPastingError: (error) => base.getProps().onPastingError?.(error),
             notifyCropError: (error) => base.getProps().onCropError?.(error),
             notifyChange: ({ currentFile, fileList }) => base.getProps().onChange?.({ currentFile, fileList }),
@@ -328,14 +326,6 @@ export default function Upload(rawProps: UploadProps) {
         openFileDialog,
     };
 
-    const replace = (file: FileItem) => {
-        if (local.disabled) {
-            return;
-        }
-        foundation.setState({ replaceUid: file.uid });
-        replaceInput?.click();
-    };
-
     const cards = () => root.querySelector(`.${prefixCls}-${isPicture() ? 'picture-list' : 'file-list-main'}`)?.children ?? [];
 
     const trackFocus = (e: FocusEvent & { target: Element }) => listFocus.track(e.target, cards());
@@ -372,7 +362,7 @@ export default function Upload(rawProps: UploadProps) {
                 index,
                 onRemove: () => foundation.handleRemove(file()),
                 onRetry: () => foundation.retry(file()),
-                onReplace: () => replace(file()),
+                onReplace: () => foundation.startReplace(file().uid),
                 get previewFile() {
                     return local.previewFile;
                 },
@@ -420,14 +410,7 @@ export default function Upload(rawProps: UploadProps) {
                 },
                 // undefined falls through to the file's own message
                 get validateMessage() {
-                    const { status, validateMessage, _sizeInvalid } = file();
-                    if (validateMessage) {
-                        return undefined;
-                    }
-                    if (_sizeInvalid) {
-                        return locale().locale.illegalSize;
-                    }
-                    return status === strings.FILE_STATUS_UPLOAD_FAIL ? locale().locale.fail : undefined;
+                    return UploadFoundation.getFallbackValidateMessage(file(), locale().locale);
                 },
             }
         );
@@ -564,7 +547,7 @@ export default function Upload(rawProps: UploadProps) {
                 },
                 local.class
             )}
-            role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as Role}
+            role={namedRole(rest)}
             x-prompt-pos={local.promptPosition}
             onFocusOut={handleFocusOut}
         >

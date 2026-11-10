@@ -24,6 +24,8 @@
 
     interface FoundationProps extends TagInputProps {
         value?: string[] | null;
+        /** The foundation's name for `autofocus` */
+        autoFocus?: boolean;
     }
 
     type Foundation = TagInputFoundation<FoundationProps, Event>;
@@ -119,8 +121,9 @@
             notifyInputExceed: (value) => emit('inputExceed', value),
             notifyExceed: (value) => emit('exceed', value),
             getInput: () => inputRef.value?.input ?? null,
+            getRoot: () => root.value ?? null,
         }),
-        { props: { size: () => looks.size, disabled: () => looks.disabled, value: () => props.modelValue, split: () => splitFn.value } }
+        { props: { size: () => looks.size, disabled: () => looks.disabled, value: () => props.modelValue, split: () => splitFn.value, autoFocus: () => props.autofocus } }
     );
 
     const tags = computed(() => TagInputFoundation.getTagsArray({ value: props.modelValue }, state.value));
@@ -130,9 +133,10 @@
     const inputValue = computed(() => TagInputFoundation.getInputValue(props, state.value));
     const draggableActive = computed(() => Boolean(state.value.active && props.draggable));
     const sorting = computed(() => draggableActive.value && tags.value.length > 0);
-    const restCount = computed(() => (!sorting.value && (!state.value.active || !props.expandRestTagsOnClick) && props.maxTagCount && props.maxTagCount < tags.value.length ? tags.value.length - props.maxTagCount : 0));
-    const shownTags = computed(() => (restCount.value > 0 ? tags.value.slice(0, props.maxTagCount) : tags.value));
-    const restTags = computed(() => (restCount.value > 0 ? tags.value.slice(props.maxTagCount) : []));
+    const visibleCount = computed(() => TagInputFoundation.getVisibleCount(props, { active: state.value.active, sorting: sorting.value }, tags.value.length));
+    const shownTags = computed(() => tags.value.slice(0, visibleCount.value));
+    const restTags = computed(() => tags.value.slice(visibleCount.value));
+    const restCount = computed(() => restTags.value.length);
     const clearable = computed(() => (inputValue.value !== '' || tags.value.length > 0) && !looks.disabled);
 
     const handleSortEnd = (move: OnSortEndProps) => {
@@ -160,18 +164,9 @@
         foundation.handleTagClose(index);
     };
 
-    const handleFocusIn = (event: FocusEvent) => {
-        if (!(event.currentTarget as Node).contains(event.relatedTarget as Node | null)) {
-            foundation.handleInputFocus(event);
-        }
-    };
-
     const handleFocusOut = (event: FocusEvent) => {
         // Chromium blurs the picked-up handle when dnd-kit moves it; ending the active state would unmount the list
-        if (dragging.value) {
-            return;
-        }
-        if (!(event.currentTarget as Node).contains(event.relatedTarget as Node | null)) {
+        if (!dragging.value) {
             foundation.handleInputBlur(event);
         }
     };
@@ -257,25 +252,11 @@
 
     const ariaLabelledby = () => (attrs['aria-labelledby'] ?? (attrs['aria-label'] ? undefined : insetNameId())) as string | undefined;
 
-    defineExpose<TagInputHandle>({
-        focus: () => {
-            focusInput();
-            if (!looks.disabled) {
-                foundation.handleClick();
-            }
-        },
-        blur: () => {
-            const activeElement = FocusTrapHandle.getActiveElement(root.value);
-            if (activeElement instanceof HTMLElement && root.value?.contains(activeElement)) {
-                activeElement.blur();
-            }
-            foundation.deactivate();
-        },
-    });
+    defineExpose<TagInputHandle>({ focus: foundation.focus, blur: foundation.blur });
 </script>
 
 <template>
-    <div ref="root" v-bind="splitControlAttrs($attrs, isControlKey).root" :aria-disabled="looks.disabled || undefined" :class="rootClass(kinds())" role="group" @click="foundation.handleClick" @focusin="handleFocusIn" @focusout="handleFocusOut">
+    <div ref="root" v-bind="splitControlAttrs($attrs, isControlKey).root" :aria-disabled="looks.disabled || undefined" :class="rootClass(kinds())" role="group" @click="foundation.handleClick" @focusin="foundation.handleInputFocus" @focusout="handleFocusOut">
         <template v-for="(k, i) in [kinds()]" :key="i">
             <div
                 v-if="k.prefix || k.insetLabel"
@@ -334,7 +315,6 @@
                 :aria-invalid="ariaInvalid()"
                 :aria-label="ariaLabel()"
                 :aria-labelledby="ariaLabelledby()"
-                :autofocus="props.autofocus"
                 :class="[`${prefix}-wrapper-input`, `${prefix}-wrapper-input-${looks.size}`]"
                 :disabled="looks.disabled"
                 :modelModifiers="props.inputValueModifiers"

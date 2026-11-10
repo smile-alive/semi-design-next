@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { Text, computed, useTemplateRef, type ShallowRef, type StyleValue, type VNode } from 'vue';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
     import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
     import { cssClasses as tooltipClasses } from '@fibrae/semi-foundation/components/tooltip/constants';
     import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
@@ -71,13 +71,12 @@
 
     const tooltipProps = computed<TooltipProps>(() => {
         const { contentClassName: _class, menu: _menu, selectionMode: _mode, showTick: _tick, spacing, ...shared } = props;
-        const isSubmenu = (parent?.view.value.menuDepth ?? 0) > 0;
         return {
             ...shared,
             // the foundation handles Up and Down on the trigger; on a parent item they move within the parent menu
             disableArrowKeyDown: true,
             showArrow: false,
-            spacing: spacing ?? (isSubmenu ? numbers.NESTED_SPACING : numbers.SPACING),
+            spacing: DropdownFoundation.getSpacing(spacing, parent?.view.value.menuDepth),
         };
     });
 
@@ -102,16 +101,13 @@
 
     const context: DropdownContext = {
         view: computed(() => ({
-            menuDepth: (parent?.view.value.menuDepth ?? 0) + 1,
+            menuDepth: DropdownFoundation.getChildMenuDepth(parent?.view.value.menuDepth),
             showTick: props.showTick,
             selectionMode: props.selectionMode,
             trigger: props.trigger,
         })),
         close: foundation.close,
-        closeAll: () => {
-            foundation.close();
-            parent?.closeAll();
-        },
+        closeAll: foundation.closeAll,
         getPopupId,
     };
 

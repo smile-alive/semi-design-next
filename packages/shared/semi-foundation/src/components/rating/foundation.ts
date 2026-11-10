@@ -1,4 +1,5 @@
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
+import { crossesFocusBoundary } from '../../utils/a11y';
 
 /** The members of a focus event the foundation reads; DOM events and React synthetic events both satisfy it */
 export type RatingFocusEvent = { currentTarget: Node; relatedTarget: Node | null };
@@ -118,6 +119,11 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         return props.value === undefined ? state.value : props.value;
     }
 
+    /** A custom unit is used as is, without pluralization; otherwise the locale names it */
+    static getUnit(value: number, customUnit: string | undefined, { star, stars }: { star: string; stars: string }) {
+        return customUnit ?? (value === 1 ? star : stars);
+    }
+
     /** A value between radios (2.5 without allowHalf) has no checked radio; the first radio is then the Tab stop (APG) */
     static isRadioValue(value: number, count: number, allowHalf: boolean) {
         return value >= 0 && value <= count && Number.isInteger(allowHalf ? value * 2 : value);
@@ -211,7 +217,7 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
     };
 
     handleFocus = (e: FE) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) {
+        if (crossesFocusBoundary(e)) {
             this.adapter.notifyFocus(e);
         }
     };
@@ -225,7 +231,7 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
     };
 
     handleBlur = (e: FE) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) {
+        if (crossesFocusBoundary(e)) {
             this.adapter.notifyBlur(e);
             this.setState({ focusVisibleStar: undefined });
         }

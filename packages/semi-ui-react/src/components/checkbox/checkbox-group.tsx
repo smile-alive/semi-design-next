@@ -3,7 +3,8 @@ import { useId } from 'react';
 import clsx from 'clsx';
 import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState, type CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
 import { checkboxGroupClasses as css, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
-import type { ArrayElement, ElementProps } from '../../base/base';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import { hasContent } from '../../utils';
@@ -84,7 +85,6 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         validateStatus,
         insetLabel,
         insetLabelId,
-        onBlur,
         ...rest
     } = props as CheckboxGroupProps & {
         validateStatus?: unknown;
@@ -94,7 +94,6 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         'aria-haspopup'?: unknown;
         'aria-controls'?: unknown;
         tabIndex?: unknown;
-        onBlur?: React.FocusEventHandler<HTMLDivElement>;
     };
 
     const generatedName = useId();
@@ -106,6 +105,7 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         () => CheckboxGroupFoundation.getInitialState(props),
         (base) => ({
             notifyChange: (value) => base.getProps().onChange?.(value),
+            notifyBlur: (e) => base.getProps().onBlur?.(e),
         })
     );
 
@@ -141,18 +141,7 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
     }
 
     return (
-        <div
-            {...rest}
-            ref={ref}
-            className={prefixClsDisplay}
-            role="group"
-            // moving between the boxes is not leaving the group: Form's blur validation waits until focus is outside
-            onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    onBlur?.(e);
-                }
-            }}
-        >
+        <div {...rest} ref={ref} className={prefixClsDisplay} role="group" onBlur={foundation.handleBlur}>
             <CheckboxGroupContext
                 value={{
                     checkboxGroup: {

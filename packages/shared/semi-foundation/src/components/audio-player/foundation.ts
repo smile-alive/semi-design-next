@@ -8,12 +8,14 @@ export type AudioInfo = {
     src: string;
 };
 
+export type AudioUrl = string | AudioInfo | (AudioInfo | string)[];
+
 export interface AudioPlayerBaseProps {
-    audioUrl: string | AudioInfo | (AudioInfo | string)[];
+    audioUrl: AudioUrl;
     skipDuration?: number;
 }
 
-export interface AudioPlayerBaseState {
+export interface AudioPlayerState {
     isPlaying: boolean;
     currentIndex: number;
     totalTime: number;
@@ -23,11 +25,11 @@ export interface AudioPlayerBaseState {
     error: boolean;
 }
 
-export interface AudioPlayerAdapter<P extends AudioPlayerBaseProps = AudioPlayerBaseProps> extends DefaultAdapter<P, AudioPlayerBaseState> {
+export interface AudioPlayerAdapter<P extends AudioPlayerBaseProps = AudioPlayerBaseProps> extends DefaultAdapter<P, AudioPlayerState> {
     getAudioRef: () => HTMLAudioElement | null;
 }
 
-export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = AudioPlayerBaseProps> extends BaseFoundation<AudioPlayerAdapter<P>, P, AudioPlayerBaseState> {
+export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = AudioPlayerBaseProps> extends BaseFoundation<AudioPlayerAdapter<P>, P, AudioPlayerState> {
     #initAudioState() {
         const audioElement = this.#getAudioRef();
 
@@ -66,7 +68,7 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
         });
     }
 
-    static getInitialState(_props: AudioPlayerBaseProps): AudioPlayerBaseState {
+    static getInitialState(_props: AudioPlayerBaseProps): AudioPlayerState {
         return {
             isPlaying: false,
             currentIndex: 0,

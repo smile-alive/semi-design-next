@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useCallback, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
 import InputFoundation, { type InputAdapter, type InputBaseState } from '@fibrae/semi-foundation/components/input/foundation';
@@ -8,7 +9,6 @@ import { stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/input/input.scss';
 import { IconClear, IconEyeOpened, IconEyeClosedSolid } from '@fibrae/semi-icons-react';
-import type { ValidateStatus } from '../../base/base-component';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import { hasContent, isSemiIcon, isText } from '../../utils';
@@ -196,7 +196,6 @@ export default function Input(rawProps: InputProps) {
             notifyCompositionStart: (e) => base.getProps().onCompositionStart?.(e),
             notifyCompositionEnd: (e) => base.getProps().onCompositionEnd?.(e),
             notifyCompositionUpdate: (e) => base.getProps().onCompositionUpdate?.(e),
-            isEventTarget: (e) => e && e.target === e.currentTarget,
         })
     );
 
@@ -206,8 +205,16 @@ export default function Input(rawProps: InputProps) {
     const hasBefore = hasContent(addonBefore);
     const hasAfter = hasContent(addonAfter);
     const labelNode = hasContent(prefix) ? prefix : insetLabel;
-    const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix);
-    const labelId = insetLabelId ?? (insetLabelShown ? `${generatedId}-inset-label` : undefined);
+
+    const { labelId, ariaInvalid, ariaLabelledby } = InputFoundation.getLabelA11y({
+        shown: hasContent(insetLabel) && !hasContent(prefix),
+        insetLabelId,
+        generatedId,
+        validateStatus,
+        ariaInvalid: rest['aria-invalid'],
+        ariaLabel: rest['aria-label'],
+        ariaLabelledby: rest['aria-labelledby'],
+    });
 
     const wrapperCls = clsx(wrapperPrefix, className, {
         [`${prefixCls}-wrapper__with-prefix`]: hasContent(labelNode),
@@ -293,22 +300,7 @@ export default function Input(rawProps: InputProps) {
     useImperativeHandle(props.ref, () => createHandle(inputRef, rootRef, foundation), [foundation]);
 
     return (
-        <div
-            ref={rootRef}
-            className={wrapperCls}
-            style={wrapperStyle}
-            onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    foundation.handleBlur(e);
-                }
-            }}
-            onClick={foundation.handleClick}
-            onFocus={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    foundation.handleFocus(e);
-                }
-            }}
-        >
+        <div ref={rootRef} className={wrapperCls} style={wrapperStyle} onBlur={foundation.handleBlur} onClick={foundation.handleClick} onFocus={foundation.handleFocus}>
             {hasBefore && (
                 <div
                     className={clsx(`${prefixCls}-prepend`, {
@@ -327,11 +319,10 @@ export default function Input(rawProps: InputProps) {
                 type={InputFoundation.getInputType(type, mode, state.eyeClosed)}
                 className={inputCls}
                 style={inputStyle}
-                aria-invalid={validateStatus === 'error' ? 'true' : rest['aria-invalid']}
-                aria-labelledby={rest['aria-labelledby'] ?? (insetLabelShown && !rest['aria-label'] ? labelId : undefined)}
+                aria-invalid={ariaInvalid}
+                aria-labelledby={ariaLabelledby}
                 disabled={disabled}
-                // the native maxLength counts UTF-16 units, so getValueLength enforces the limit instead
-                maxLength={typeof getValueLength === 'function' ? undefined : maxLength}
+                maxLength={InputFoundation.getNativeMaxLength({ maxLength, getValueLength })}
                 minLength={InputFoundation.getNativeMinLength(props, value)}
                 placeholder={placeholder as string}
                 // the native attribute locks typing only; `readonly` also blocks clearing (pickers rely on it)
@@ -346,27 +337,7 @@ export default function Input(rawProps: InputProps) {
                 onKeyUp={foundation.handleKeyUp}
             />
             {allowClear && (
-                <button
-                    ref={setClearButton}
-                    type="button"
-                    className={`${prefixCls}-clearbtn`}
-                    aria-label={locale.clear}
-                    // Enter and Space fire a click with detail 0; focus returns to the input as the button unmounts
-                    onClick={(e) => {
-                        if (e.detail === 0) {
-                            foundation.handleClear(e);
-                            inputRef.current?.focus({ preventScroll });
-                        }
-                    }}
-                    onKeyDown={stopButtonActivationKeys}
-                    // the primary button clears on mousedown (issue 1203) without moving focus
-                    onMouseDown={(e) => {
-                        e.preventDefault();
-                        if (e.button === 0) {
-                            foundation.handleClear(e);
-                        }
-                    }}
-                >
+                <button ref={setClearButton} type="button" className={`${prefixCls}-clearbtn`} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={foundation.handleClearMouseDown}>
                     {clearIcon ? clearIcon : <IconClear />}
                 </button>
             )}

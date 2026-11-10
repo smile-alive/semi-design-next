@@ -52,7 +52,6 @@
 
     // Used to find the indicator tab to focus, from the root: slides may contain tabs or nested carousels
     let root: HTMLElement | undefined;
-    let focusPending = false;
 
     // Slides that arrive after mount (data still loading) start the configured autoplay, as mounting with them would
     let renderedCount = 0;
@@ -83,6 +82,7 @@
                 onChange?.(next, preIndex);
             },
             getSlideCount: () => items.length,
+            focusTab: (index) => root?.querySelector<HTMLElement>(`:scope > .${indicator} [data-index="${index}"]`)?.focus(),
         }),
         { context: () => config }
     );
@@ -128,16 +128,6 @@
         onfocusout?.(event);
     };
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-        if (foundation.handleKeyDown(event)) {
-            focusPending = true;
-        }
-    };
-
-    const handleTabBlur = () => {
-        focusPending = false;
-    };
-
     const handleTabClick = (index: number) => {
         if (trigger === 'click') {
             foundation.onIndicatorChange(index);
@@ -166,16 +156,6 @@
             const previous = renderedCount;
             renderedCount = count;
             foundation.handleSlideCountChange(previous, count);
-        }
-    );
-
-    watch(
-        () => current,
-        () => {
-            if (focusPending) {
-                focusPending = false;
-                root?.querySelector<HTMLElement>(`:scope > .${indicator} [role="tab"][tabindex="0"]`)?.focus();
-            }
         }
     );
 
@@ -249,9 +229,9 @@
                         role="tab"
                         tabindex={isCurrent ? 0 : -1}
                         type="button"
-                        onblur={handleTabBlur}
+                        onblur={foundation.handleIndicatorBlur}
                         onclick={() => handleTabClick(index)}
-                        onkeydown={handleKeyDown}
+                        onkeydown={foundation.handleKeyDown}
                         onmouseenter={() => handleTabEnter(index)}
                     ></button>
                 {/each}

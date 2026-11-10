@@ -154,7 +154,7 @@ export default function Rating(rawProps: RatingProps) {
     const { hoverValue, focusVisibleStar } = state;
     const customUnit = typeof character === 'string' ? character : undefined;
 
-    const unitOf = (n: number) => customUnit ?? (n === 1 ? locale.star : locale.stars);
+    const unitOf = (n: number) => RatingFoundation.getUnit(n, customUnit, locale);
 
     const ariaLabel = ariaLabelProp || formatLocale(locale.label, { value, count, unit: unitOf(value) });
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onActivated, onBeforeUnmount, onDeactivated, onMounted, shallowRef, useTemplateRef } from 'vue';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
+    import { coversPage, defaultPopupContainer, resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/portal/portal.scss';
     import PopupLayerProvider from '../base/popup-layer-provider.vue';
     import useConfig from '../components/config-provider/use-config';
@@ -17,7 +17,6 @@
 
     const config = useConfig();
 
-    // Outside the fullscreen element nothing is shown or clickable, so a popup mounted during fullscreen goes into it.
     // Known limits: chosen once at mount, so a popup mounted before fullscreen stays in the body and one mounted during it
     // stays in the former fullscreen element afterwards, inheriting that ancestor chain's styles; moving it later would
     // drop the focus inside. Upgrade: re-target on show once keepDOM overlays are used across fullscreen.
@@ -38,14 +37,13 @@
 
     const target = () => {
         const container = resolvePopupContainer(props.getPopupContainer ?? config.value.getPopupContainer, defaultContainer);
-        // a fullscreen element is the whole visible page, so an overlay in it covers the page like one in the body
-        return { container, inBody: container === defaultContainer || container === container.ownerDocument.body };
+        return { container, inBody: coversPage(() => container) };
     };
 
     onBeforeUnmount(() => unregister?.());
 
     onMounted(() => {
-        defaultContainer = (document.fullscreenElement as HTMLElement | null) ?? document.body;
+        defaultContainer = defaultPopupContainer();
     });
 
     onDeactivated(() => {

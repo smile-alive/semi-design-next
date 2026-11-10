@@ -1,9 +1,7 @@
-import type { strings } from '@fibrae/semi-foundation/components/video-player/constants';
+import type { VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
 import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 
 export type VideoPlayerTheme = 'dark' | 'light';
-
-export type VideoControl = Exclude<(typeof strings)[keyof typeof strings], typeof strings.DARK>;
 
 export interface VideoPlayerOption<T> {
     label: string;
@@ -56,24 +54,6 @@ export interface VideoPlayerEmits {
 export interface VideoPlayerHandle {
     /** The native video element; null before mount */
     readonly video: HTMLVideoElement | null;
-}
-
-export interface VideoPlayerState {
-    bufferedValue: number;
-    currentQuality: string;
-    currentRoute: string;
-    currentTime: number;
-    isError: boolean;
-    isFullScreen: boolean;
-    isMirror: boolean;
-    isPlaying: boolean;
-    muted: boolean;
-    notificationContent: string;
-    playbackRate: number;
-    showNotification: boolean;
-    showControls: boolean;
-    totalTime: number;
-    volume: number;
 }
 
 export interface VideoProgressProps {

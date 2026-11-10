@@ -55,8 +55,7 @@
         { props: { value: () => props.modelValue } }
     );
 
-    // shortcut: repeats ColorPickerFoundation.getCurrentColor, which is protected; share it when the foundation exports it
-    const currentColor = computed(() => (props.modelValue !== undefined ? props.modelValue : state.value.currentColor));
+    const currentColor = computed(() => ColorPickerFoundation.deriveColor({ value: props.modelValue, defaultValue: props.defaultValue }, state.value));
 
     // The popup holds inputs and sliders: it is a dialog opened by click, not a hover tooltip, so moving the pointer away
     // cannot close it mid-edit. A dialog needs a name; the caller's wins.

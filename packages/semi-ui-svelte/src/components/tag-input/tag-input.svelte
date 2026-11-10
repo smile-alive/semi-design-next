@@ -109,6 +109,9 @@
         get disabled() {
             return disabled;
         },
+        get autoFocus() {
+            return autofocus;
+        },
         get maxLength() {
             return maxLength;
         },
@@ -153,6 +156,7 @@
             notifyInputExceed: (text) => onInputExceed?.(text),
             notifyExceed: (list) => onExceed?.(list),
             getInput: () => input?.getInput() ?? null,
+            getRoot: () => root ?? null,
         })
     );
 
@@ -162,9 +166,10 @@
     const popoverProps = $derived({ autoAdjustOverflow: true, position: 'top', showArrow: true, trigger: 'hover', ...restTagsPopoverProps } satisfies RestTagsPopoverProps);
     const draggableActive = $derived(Boolean(states().active && draggable));
     const sorting = $derived(draggableActive && tags.length > 0);
-    const restCount = $derived(!sorting && (!states().active || !expandRestTagsOnClick) && maxTagCount && maxTagCount < tags.length ? tags.length - maxTagCount : 0);
-    const shownTags = $derived(restCount > 0 ? tags.slice(0, maxTagCount) : tags);
-    const restTags = $derived(restCount > 0 ? tags.slice(maxTagCount) : []);
+    const visibleCount = $derived(TagInputFoundation.getVisibleCount({ maxTagCount, expandRestTagsOnClick }, { active: states().active, sorting }, tags.length));
+    const shownTags = $derived(tags.slice(0, visibleCount));
+    const restTags = $derived(tags.slice(visibleCount));
+    const restCount = $derived(restTags.length);
     const clearable = $derived((inputText !== '' || tags.length > 0) && !disabled);
     const insetLabelShown = $derived(!prefix && Boolean(insetLabel));
 
@@ -219,18 +224,13 @@
 
     const handleFocusIn = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         rest.onfocusin?.(event);
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            foundation.handleInputFocus(event);
-        }
+        foundation.handleInputFocus(event);
     };
 
     const handleFocusOut = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         rest.onfocusout?.(event);
         // Chromium blurs the picked-up handle when dnd-kit moves it; ending the active state would unmount the list
-        if (dragging) {
-            return;
-        }
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
+        if (!dragging) {
             foundation.handleInputBlur(event);
         }
     };
@@ -290,18 +290,11 @@
     useClickOutside([() => root], foundation.deactivate, () => Boolean(states().active), useNestedPopups());
 
     export function focus() {
-        focusInput();
-        if (!disabled) {
-            foundation.handleClick();
-        }
+        foundation.focus();
     }
 
     export function blur() {
-        const activeElement = FocusTrapHandle.getActiveElement(root);
-        if (activeElement instanceof HTMLElement && root?.contains(activeElement)) {
-            activeElement.blur();
-        }
-        foundation.deactivate();
+        foundation.blur();
     }
 </script>
 
@@ -384,7 +377,6 @@
             aria-invalid={ariaInvalid}
             aria-label={ariaLabel}
             aria-labelledby={ariaLabelledby}
-            {autofocus}
             class={[`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`]}
             {disabled}
             onChange={foundation.handleInputChange}

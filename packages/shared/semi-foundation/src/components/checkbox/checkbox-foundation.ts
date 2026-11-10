@@ -1,4 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { focusWithoutRing } from '../../utils/supports';
 import type { CheckboxValue } from './checkbox-group-foundation';
 import { strings } from './constants';
 
@@ -31,7 +32,7 @@ export interface CheckboxContextView {
 export interface CheckboxAdapter<P extends BaseCheckboxProps = BaseCheckboxProps> extends DefaultAdapter<P, CheckboxBaseState, CheckboxContextView | null | undefined> {
     notifyGroupChange: (e: BasicCheckboxEvent) => void;
     notifyChange: (e: BasicCheckboxEvent) => void;
-    focusCheckboxEntity: () => void;
+    getInput: () => HTMLInputElement | null;
 }
 
 export interface CheckboxBaseState {
@@ -142,7 +143,12 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
             return;
         }
 
-        this.adapter.focusCheckboxEntity();
+        // A click on the text lands on the wrapper, not the input. Script focus matches :focus-visible when nothing was
+        // focused, so the focus a click moves in must say it is not keyboard focus.
+        const input = this.adapter.getInput();
+        if (input && input !== input.ownerDocument.activeElement) {
+            focusWithoutRing(input, { preventScroll: this.getProp('preventScroll') });
+        }
 
         const view = this.#getView();
 

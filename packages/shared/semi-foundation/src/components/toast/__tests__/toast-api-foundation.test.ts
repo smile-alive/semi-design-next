@@ -34,10 +34,10 @@ describe('ToastApi', () => {
     it('默认值层级：内置默认、全局默认、调用参数依次覆盖，显式 undefined 不覆盖', () => {
         const { api, store } = setup({ duration: 8, theme: 'light' }, { duration: 5 });
         api.create({ content: 'a', theme: undefined } as Options);
-        const [shown] = store().getSnapshot().list;
+        const [shown] = store().getSnapshot().items;
         expect(shown).toMatchObject({ content: 'a', duration: 8, theme: 'light', zIndex: 1010 });
         api.create({ content: 'b', id: 'b', duration: 1 } as Options);
-        expect(store().getSnapshot().list[1]).toMatchObject({ id: 'b', duration: 1 });
+        expect(store().getSnapshot().items[1]).toMatchObject({ id: 'b', duration: 1 });
     });
 
     it('stack 写入列表，info 等快捷方法写入 type，字符串作为 content', () => {
@@ -48,7 +48,7 @@ describe('ToastApi', () => {
         expect(
             store()
                 .getSnapshot()
-                .list.map(({ type, content }) => [type, content])
+                .items.map(({ type, content }) => [type, content])
         ).toEqual([
             ['success', 'a'],
             ['info', 'plain'],
@@ -72,7 +72,7 @@ describe('ToastApi', () => {
         expect(unmount).toHaveBeenCalledTimes(1);
         expect(document.querySelector('.semi-toast-wrapper')).toBeNull();
         expect(api.getWrapperId()).toBeNull();
-        expect(first.getSnapshot().list).toEqual([]);
+        expect(first.getSnapshot().items).toEqual([]);
         api.create({ content: 'b' });
         expect(mount).toHaveBeenCalledTimes(2);
     });
@@ -81,10 +81,12 @@ describe('ToastApi', () => {
         const { api, store } = setup({}, { duration: 5 });
         const id = api.create({ content: 'a' });
         api.close(id);
-        expect(store().getSnapshot().list).toEqual([]);
-        api.config({ duration: 9 });
-        expect(api.defaultOpts.duration).toBe(9);
+        expect(store().getSnapshot().items).toEqual([]);
+        api.config({ duration: 9, theme: 'light' });
+        // an untyped caller may pass a theme outside the whitelist
+        api.config({ theme: 'dark' as 'light' });
+        expect(api.defaultOpts).toMatchObject({ duration: 9, theme: 'light' });
         api.resetConfig();
-        expect(api.defaultOpts.duration).toBe(5);
+        expect(api.defaultOpts).toEqual({ motion: true, zIndex: 1010, content: '', duration: 5 });
     });
 });

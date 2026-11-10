@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import ItemFoundation, { type ItemAdapter, type ItemProps } from '../item-foundation';
+import ItemFoundation, { type ItemAdapter, type ItemProps, copySelectedItem } from '../item-foundation';
 
 function createItem(props: ItemProps, { controlled = false, syncSelected = false } = {}) {
     let selected = false;
     const adapter = {
         getProps: () => props,
         getProp: (key: keyof ItemProps) => props[key],
-        cloneDeep: (value: unknown) => structuredClone(value),
+        getSelectedItem: () => structuredClone(props),
         // Vue-like state reads back the new value right after selectSelf
         selectSelf: vi.fn<ItemAdapter['selectSelf']>(() => {
             if (syncSelected) {
@@ -21,6 +21,27 @@ function createItem(props: ItemProps, { controlled = false, syncSelected = false
     };
     return { adapter, foundation: new ItemFoundation(adapter as unknown as ItemAdapter) };
 }
+
+describe('copySelectedItem', () => {
+    it('深拷贝纯对象、数组、Date、Map、Set、RegExp，函数、DOM 节点、框架元素、类实例保留引用', () => {
+        const onClick = () => undefined;
+        const node = document.createElement('span');
+        const element = { $$typeof: 'element', props: {} };
+        const instance = new (class Store {})();
+        const item = { itemKey: 'a', linkOptions: { target: '_blank' }, tags: [{ name: 't' }], date: new Date(0), map: new Map([['k', { v: 1 }]]), set: new Set([1]), pattern: /a/g, onClick, node, element, instance };
+        const copy = copySelectedItem(item, (value) => value === element);
+        expect(copy).toEqual(item);
+        for (const key of ['linkOptions', 'date', 'map', 'set', 'pattern'] as const) {
+            expect(copy[key]).not.toBe(item[key]);
+        }
+        expect(copy.tags[0]).not.toBe(item.tags[0]);
+        expect(copy.map.get('k')).not.toBe(item.map.get('k'));
+        expect(copy.onClick).toBe(onClick);
+        expect(copy.node).toBe(node);
+        expect(copy.element).toBe(element);
+        expect(copy.instance).toBe(instance);
+    });
+});
 
 describe('ItemFoundation.handleClick', () => {
     it('点击未选中的项时上报 onSelect 与 onClick', () => {

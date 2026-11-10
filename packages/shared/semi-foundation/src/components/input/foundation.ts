@@ -1,3 +1,4 @@
+import { crossesFocusBoundary } from '../../utils/a11y';
 import { ENTER_KEY, isComposing } from '../../utils/key-code';
 import TextEntryFoundation, { type TextEntryAdapter, type TextEntryBaseProps, type TextEntryBaseState } from './text-entry-foundation';
 
@@ -30,7 +31,6 @@ export interface InputAdapter<P extends InputBaseProps = InputBaseProps, KE = un
     notifyKeyDown(e: KE): void;
     notifyKeyUp(e: KE): void;
     notifyEnterPress(e: KE): void;
-    isEventTarget(e: Pick<Event, 'target' | 'currentTarget'>): boolean;
 }
 
 export default class InputFoundation<P extends InputBaseProps = InputBaseProps, KE extends InputKeyEvent = InputKeyEvent, CE = unknown, IE = unknown> extends TextEntryFoundation<InputAdapter<P, KE, CE, IE>, P, InputBaseState, CE> {
@@ -56,6 +56,19 @@ export default class InputFoundation<P extends InputBaseProps = InputBaseProps, 
     /** Whether the clear button is rendered; the stylesheet shows it on hover and while focus is inside */
     static isAllowClear(props: { showClear?: boolean; disabled?: boolean; readonly?: boolean; showClearIgnoreDisabled?: boolean }, value?: string | number) {
         return Boolean(value != null && value !== '' && props.showClear && !props.readonly && (!props.disabled || props.showClearIgnoreDisabled));
+    }
+
+    /**
+     * What names the inset label and flags the invalid state on the native input. `shown` is whether the inset label
+     * renders (it gives way to a prefix); an `aria-label` or `aria-labelledby` the caller set wins over it.
+     */
+    static getLabelA11y<I>({ shown, insetLabelId, generatedId, validateStatus, ariaInvalid, ariaLabel, ariaLabelledby }: { shown: boolean; insetLabelId?: string; generatedId: string; validateStatus?: string; ariaInvalid?: I; ariaLabel?: string; ariaLabelledby?: string }) {
+        const labelId = insetLabelId ?? (shown ? `${generatedId}-inset-label` : undefined);
+        return {
+            labelId,
+            ariaInvalid: validateStatus === 'error' ? ('true' as const) : ariaInvalid,
+            ariaLabelledby: ariaLabelledby ?? (shown && !ariaLabel ? labelId : undefined),
+        };
     }
 
     static getInputType(type: string, mode: string | undefined, eyeClosed: boolean) {
@@ -87,13 +100,29 @@ export default class InputFoundation<P extends InputBaseProps = InputBaseProps, 
         this.adapter.notifyClear(e);
     };
 
+    // the primary button clears on mousedown (issue 1203) without moving focus; the others only keep focus where it is
+    handleClearMouseDown = (e: Pick<MouseEvent, 'button' | 'preventDefault'>) => {
+        e.preventDefault();
+        if (e.button === 0) {
+            this.handleClear(e);
+        }
+    };
+
+    // keyboard activation (detail 0): focus returns to the input as the button unmounts
+    handleClearClick = (e: Pick<MouseEvent, 'detail'>) => {
+        if (e.detail === 0) {
+            this.handleClear(e);
+            this.adapter.focusInput();
+        }
+    };
+
     handleClick = (e: Pick<Event, 'target' | 'currentTarget'>) => {
         const { disabled } = this.getProps();
         const { isFocus } = this.getStates();
         if (disabled || isFocus) {
             return;
         }
-        if (this.adapter.isEventTarget(e)) {
+        if (e.target === e.currentTarget) {
             this.adapter.focusInput();
             this.setState({ isFocus: true });
         }
@@ -105,7 +134,11 @@ export default class InputFoundation<P extends InputBaseProps = InputBaseProps, 
         this.setState({ isFocus: true, eyeClosed: !eyeClosed });
     };
 
-    handleBlur = (e: unknown) => {
+    /** Reports only focus leaving the wrapper, not focus moving among its buttons */
+    handleBlur = (e: Parameters<typeof crossesFocusBoundary>[0]) => {
+        if (!crossesFocusBoundary(e)) {
+            return;
+        }
         const { value } = this.getStates();
         this.setState({ isFocus: false });
         this.adapter.notifyBlur(value, e);

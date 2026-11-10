@@ -90,6 +90,9 @@ const DIALOGUE_FILE_KINDS = ['word', 'image', 'pdf', 'excel', 'code', 'video'] a
 
 export type DialogueFileKind = (typeof DIALOGUE_FILE_KINDS)[number];
 
+/** The kinds drawn as an icon; an image is drawn as a thumbnail */
+export type DialogueIconKind = Exclude<DialogueFileKind, 'image'>;
+
 export function getDialogueFileKind(type?: string): DialogueFileKind | undefined {
     const kind = getFileKind(type);
     return DIALOGUE_FILE_KINDS.find((candidate) => candidate === kind);

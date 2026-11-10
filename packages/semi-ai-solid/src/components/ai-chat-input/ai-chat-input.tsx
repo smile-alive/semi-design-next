@@ -1,10 +1,10 @@
-import { For, Index, type JSX, Match, Show, Switch, createMemo, createSignal, createUniqueId, mergeProps, splitProps, untrack } from 'solid-js';
+import { For, Index, type JSX, Match, Show, Switch, createMemo, createUniqueId, mergeProps, splitProps, untrack } from 'solid-js';
 import type { Editor } from '@tiptap/core';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, numbers, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/components/ai-chat-input/foundation';
-import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
+import { type ContentType, getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
 import { isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
 import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils/upload-status';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
@@ -24,7 +24,7 @@ import callHandler from '@fibrae/semi-ui-solid/utils/call-handler';
 import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
 import mergeStyles from '@fibrae/semi-ui-solid/utils/merge-styles';
 import Configure, { type ConfigureHandle } from './configure';
-import type { AIChatInputHandle, AIChatInputProps, ActionAreaProps, Attachment, Content, Reference, RenderTopSlotProps, RenderUploadButtonProps, Skill } from './interface';
+import type { AIChatInputHandle, AIChatInputProps, ActionAreaProps, Attachment, Reference, RenderTopSlotProps, RenderUploadButtonProps, Skill } from './interface';
 import HorizontalScroller from './widgets/horizontal-scroller';
 import RichTextInput from './widgets/rich-text-input';
 import SkillItem from './widgets/skill-item';
@@ -50,23 +50,11 @@ const hiddenStyle = { display: 'none' } as const;
 type Foundation = AIChatInputFoundation<AIChatInputProps>;
 type Adapter = AIChatInputAdapter<AIChatInputProps>;
 
-function getIconByType(type: string, size: IconSize = 'small') {
-    switch (type) {
-        case 'word':
-            return <IconWord size={size} />;
-        case 'code':
-            return <IconCode size={size} />;
-        case 'excel':
-            return <IconExcel size={size} />;
-        case 'video':
-            return <IconVideo size={size} />;
-        case 'audio':
-            return <IconMusic size={size} />;
-        case 'pdf':
-            return <IconPdf size={size} />;
-        default:
-            return <IconFile size={size} />;
-    }
+const FILE_ICONS = { word: IconWord, code: IconCode, excel: IconExcel, video: IconVideo, audio: IconMusic, pdf: IconPdf, ppt: IconFile, image: IconFile, unknown: IconFile } satisfies Record<ContentType, unknown>;
+
+function getIconByType(type: ContentType, size: IconSize = 'small') {
+    const Icon = FILE_ICONS[type];
+    return <Icon size={size} />;
 }
 
 export default function AIChatInput(rawProps: AIChatInputProps) {
@@ -130,7 +118,6 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const locale = useLocale('AIChatInput');
 
     const popupId = createUniqueId();
-    const [transformedContent, setTransformedContent] = createSignal<Content[]>([]);
     let editor: Editor | null = null;
     let upload: UploadElement | null = null;
     let configure: ConfigureHandle | undefined;
@@ -147,11 +134,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
             // the panel may render in a shadow root, out of reach of document queries
             getOptionNode: (kind, index) => ((kind === 'skill' ? skillPanel : suggestionPanel)?.children[index] as HTMLElement | undefined) ?? null,
             notifySkillChange: (skill?: Skill) => local.onSkillChange?.(skill),
-            notifyContentChange: (result) => {
-                setTransformedContent(result);
-                local.onContentChange?.(result);
-            },
-            setTransformedContent: (result) => setTransformedContent(result),
+            notifyContentChange: (result) => local.onContentChange?.(result),
             notifyConfigureChange: (value, changedValue) => local.onConfigureChange?.(value, changedValue),
             manualUpload: (files) => upload?.insert(files),
             notifyMessageSend: (message) => local.onMessageSend?.(message),
@@ -189,7 +172,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const rootOwn = mergeProps(rest, {
         ref: (element: HTMLDivElement) => mergeRefs(ref)(Object.assign(element, handle)),
         get role() {
-            return namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']);
+            return namedRole(rest);
         },
         get class() {
             return clsx(prefixCls, local.class);
@@ -221,6 +204,8 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         setContent: foundation.setContent,
         setContentWhileSaveTool: foundation.setContentWhileSaveTool,
     };
+
+    const transformedContent = createMemo(() => AIChatInputFoundation.getTransformedContent(state().content, local.transformer));
 
     const openFileDialog = () => upload?.openFileDialog();
 
@@ -496,11 +481,10 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                             editor = instance;
                             foundation.handleCreate();
                         }}
-                        handleKeyDown={foundation.handleRichTextAreaKeyDown}
+                        handleKeyDown={foundation.handleKeyDown}
                         onBlur={foundation.handleBlur}
                         onChange={foundation.handleContentChange}
                         onFocus={foundation.handleFocus}
-                        onKeyDown={foundation.handleKeyDown}
                         onPasteFiles={foundation.handlePaste}
                         onPaste={(e) => local.onPaste?.(e)}
                     />

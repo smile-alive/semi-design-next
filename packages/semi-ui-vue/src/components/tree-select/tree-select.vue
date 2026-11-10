@@ -213,8 +213,8 @@
                 emit('change', node as TreeSelectChangeValue<T, Multiple>, node as TreeSelectChangeNode<Multiple>, event as FoundationEvent | null);
             },
             notifyExpand: (expandedKeys, { expanded, node }) => {
-                emit('update:expandedKeys', [...expandedKeys]);
-                emit('expand', [...expandedKeys], { expanded, node: node as TreeNodeData });
+                emit('update:expandedKeys', expandedKeys);
+                emit('expand', expandedKeys, { expanded, node: node as TreeNodeData });
             },
             notifyFocus: (event) => emit('focus', event),
             notifyBlur: (event) => emit('blur', event as FoundationEvent | FocusEvent),
@@ -279,7 +279,7 @@
 
     const selectionKeys = computed(() => TreeSelectFoundation.getTriggerKeys(foundationProps.value, view.value));
     const hasValue = computed(() => TreeSelectFoundation.hasValue(foundationProps.value, view.value));
-    const clearable = computed(() => props.showClear && (hasValue.value || (props.searchPosition === 'trigger' && Boolean(view.value.inputValue))) && !looks.disabled);
+    const clearable = computed(() => TreeSelectFoundation.isClearable(foundationProps.value, view.value));
 
     provideTreeContext(context);
 
@@ -491,9 +491,7 @@
     const handleKeyDown = (event: KeyboardEvent) => {
         emit('keydown', event);
         if (!isInnerControlKey(event) && !handleTreeKeyDown(event)) {
-            const wasOpen = view.value.isOpen;
-            foundation.handleSelectionKeyDown(event);
-            if (!wasOpen && view.value.isOpen && (event.key === 'Home' || event.key === 'End')) {
+            if (foundation.handleSelectionKeyDown(event)) {
                 handleRowKeyDown(event);
             }
         }

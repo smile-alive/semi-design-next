@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { Text } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/card/card.scss';
     import type { ElementProps } from '../../base/element-props';
     import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import { groupRole } from '../../utils/group-role';
     import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
     import Skeleton, { SkeletonParagraph, SkeletonTitle } from '../skeleton';
     import Space from '../space';
@@ -52,7 +52,7 @@
                 [`${prefixCls}-shadows-${props.shadows}`]: props.shadows,
             },
         ]"
-        :role="groupRole($attrs)"
+        :role="namedRole($attrs)"
     >
         <template v-for="header in [headerView()]" :key="String(header.show)">
             <div v-if="header.show" :class="[`${prefixCls}-header`, { [`${prefixCls}-header-bordered`]: props.headerLine }]" :style="props.headerStyle">

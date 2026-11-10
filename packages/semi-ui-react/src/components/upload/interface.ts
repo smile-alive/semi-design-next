@@ -1,7 +1,7 @@
 import type { ReactNode, CSSProperties, MouseEvent } from 'react';
 import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
 import type { BaseFileItem } from '@fibrae/semi-foundation/components/upload/foundation';
-import type { ArrayElement } from '../../base/base';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { ModalReactProps } from '../modal';
 import type { ShowTooltip } from '../typography';
 

@@ -1,7 +1,7 @@
 import type { JSX } from 'solid-js';
+import { createHookApi, type HookApi } from '@fibrae/semi-foundation/base/hook-api';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
-import type { ToastInstance, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
+import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { readGlobalDefaults } from '../../utils/semi-global';
 import type { ToastProps } from './toast';
@@ -10,23 +10,14 @@ import ToastList from './toast-list';
 /** The id is generated, and a hook's toasts render where its holder is, so the layer options do not apply */
 export type ToastHookOptions = Omit<ToastProps, 'type' | 'close' | 'id' | 'zIndex' | 'getPopupContainer'>;
 
-export interface ToastHookApi {
-    success: (config: ToastHookOptions) => string;
-    info: (config: ToastHookOptions) => string;
-    error: (config: ToastHookOptions) => string;
-    warning: (config: ToastHookOptions) => string;
-    open: (config: ToastHookOptions) => string;
-    close: (id: string) => void;
-}
+export type ToastHookApi = HookApi<ToastHookOptions>;
 
 /**
  * Toasts rendered by the returned holder. The holder is created here, under the caller's owner, so its toasts read the
  * caller's ConfigProvider, LocaleProvider and other context; place it once.
  */
 export default function useToast(): [ToastHookApi, JSX.Element] {
-    const store = new ToastListStore();
-
-    const addToast = (config: ToastHookOptions, type: ToastType) => store.open({ ...config, type } as ToastInstance, readGlobalDefaults('Toast'));
+    const store = createToastListStore();
 
     const contextHolder = (
         <div class={cssClasses.WRAPPER} {...{ [KEEP_INTERACTIVE_ATTRIBUTE]: '' }}>
@@ -34,15 +25,5 @@ export default function useToast(): [ToastHookApi, JSX.Element] {
         </div>
     );
 
-    return [
-        {
-            success: (config) => addToast(config, 'success'),
-            info: (config) => addToast(config, 'info'),
-            error: (config) => addToast(config, 'error'),
-            warning: (config) => addToast(config, 'warning'),
-            open: (config) => addToast(config, 'default'),
-            close: (id) => store.remove(id),
-        },
-        contextHolder,
-    ];
+    return [createHookApi<ToastHookOptions>(store, { readGlobalDefaults: () => readGlobalDefaults('Toast') }), contextHolder];
 }

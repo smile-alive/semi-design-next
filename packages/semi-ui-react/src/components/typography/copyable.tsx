@@ -3,7 +3,7 @@ import { isValidElement } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import { IconCopy, IconTick } from '@fibrae/semi-icons-react';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useCopied from '../../hooks/use-copied';
 import useDidUpdate from '../../hooks/use-did-update';
 import useLocale from '../locale/use-locale';
@@ -13,9 +13,10 @@ import type { CopyableConfig } from './interface';
 const prefixCls = cssClasses.PREFIX;
 
 export interface CopyableProps extends BaseProps {
-    content?: string;
+    content: string;
     copyTip?: React.ReactNode;
-    duration?: number;
+    /** Seconds the copied state lasts */
+    duration: number;
     /** Attached to the wrapping span, also around the node of `render` */
     ref?: React.Ref<HTMLSpanElement>;
     successTip?: React.ReactNode;
@@ -30,7 +31,7 @@ interface CopyableInnerProps extends CopyableProps {
 }
 
 export function Copyable(props: CopyableInnerProps) {
-    const { content = '', copyTip, duration = 3, ref, successTip, icon, onCopy, onCopiedChange, render, style, className } = props;
+    const { content, copyTip, duration, ref, successTip, icon, onCopy, onCopiedChange, render, style, className } = props;
 
     const { locale } = useLocale('Typography');
 

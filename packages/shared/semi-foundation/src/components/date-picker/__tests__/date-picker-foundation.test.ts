@@ -190,3 +190,13 @@ describe('DatePickerFoundation 面板打开时被禁用', () => {
         expect(adapter.notifyBlur).not.toHaveBeenCalled();
     });
 });
+
+describe('DatePickerFoundation.disposeDateFn', () => {
+    it('没有回调时什么都不禁用，有回调时按时区转换后的日期调用', () => {
+        const date = new Date(2021, 5, 1);
+        expect(DatePickerFoundation.disposeDateFn(undefined, undefined, date)).toBeUndefined();
+        const fn = vi.fn<(date: Date) => boolean>(() => true);
+        expect(DatePickerFoundation.disposeDateFn(undefined, fn, date)).toBe(true);
+        expect(fn).toHaveBeenCalledTimes(1);
+    });
+});

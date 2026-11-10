@@ -14,11 +14,12 @@ const prefixCls = cssClasses.PREFIX;
 /** Spread after the panel's own props, so the ones it fills in are left out to keep them from being overridden */
 export type YearAndMonthOpts = Partial<Omit<ScrollItemProps, 'list' | 'onSelect' | 'selectedIndex' | 'type' | 'ref'>>;
 
-export interface YearAndMonthProps extends Omit<YearAndMonthFoundationProps, 'renderQuickControls' | 'renderDateInput' | 'locale'> {
+export interface YearAndMonthProps extends Omit<YearAndMonthFoundationProps, 'locale'> {
     yearAndMonthOpts?: YearAndMonthOpts;
     locale: Locale['DatePicker'];
     renderQuickControls?: () => JSX.Element;
     renderDateInput?: () => JSX.Element;
+    onBackToMain?: () => void;
     /** Receives the handle once, while the panel is created */
     ref?: Ref<YearAndMonthHandle>;
 }
@@ -31,7 +32,6 @@ type Foundation = YearAndMonthFoundation;
 type Adapter = YearAndMonthAdapter;
 
 const defaultProps = {
-    disabledDate: () => false,
     monthCycled: false,
     yearCycled: false,
     noBackBtn: false,
@@ -49,7 +49,6 @@ export default function YearAndMonth(rawProps: YearAndMonthProps) {
         () => ({}),
         () => ({
             notifySelect: (yearAndMonth) => props.onSelect?.(yearAndMonth),
-            notifyBackToMain: () => props.onBackToMain?.(),
         })
     );
 
@@ -125,7 +124,7 @@ export default function YearAndMonth(rawProps: YearAndMonthProps) {
         <>
             <Show when={!props.noBackBtn}>
                 <div class={`${prefixCls}-yearmonth-header`}>
-                    <IconButton noHorizontalPadding={false} size={buttonSize()} icon={<IconChevronLeft size={iconSize()} />} onClick={foundation.backToMain}>
+                    <IconButton noHorizontalPadding={false} size={buttonSize()} icon={<IconChevronLeft size={iconSize()} />} onClick={() => props.onBackToMain?.()}>
                         <span>{props.locale.selectDate}</span>
                     </IconButton>
                 </div>

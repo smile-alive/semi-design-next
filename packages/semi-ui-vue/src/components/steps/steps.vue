@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, Text } from 'vue';
     import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
     import type { ElementProps } from '../../base/element-props';
     import semiDefault, { readSemiDefault, useSemiGlobal } from '../../base/semi-default';
-    import { groupRole } from '../../utils/group-role';
     import slotNodes from '../../utils/slot-nodes';
     import { Col, Row } from '../grid';
     import { provideStepsContext } from './context';
@@ -67,7 +67,7 @@
 </script>
 
 <template>
-    <div :class="rootClass" :role="groupRole($attrs)">
+    <div :class="rootClass" :role="namedRole($attrs)">
         <template v-for="(nodes, group) in [stepNodes()]" :key="group">
             <Row v-if="props.type === 'fill'" justify="start" type="flex">
                 <Col v-for="([node, key], index) in nodes" :key="key" :style="props.direction === 'vertical' ? undefined : { width: `${100 / nodes.length}%` }">

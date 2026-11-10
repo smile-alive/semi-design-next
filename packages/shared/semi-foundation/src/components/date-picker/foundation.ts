@@ -1,6 +1,7 @@
 import { TZDate } from '@date-fns/tz';
 import { format, isValid, isSameSecond, isEqual as isDateEqual, isDate, startOfDay } from 'date-fns';
 import { isEqual } from 'es-toolkit';
+import type { ValidateStatus } from '../../base/constants';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { isInnerControlActivation } from '../../utils/a11y';
 import { toIANA, utcToZonedTime, zonedTimeToUtc } from '../../utils/date-fns-extra';
@@ -26,7 +27,6 @@ export { default as getYearMonthFromValue } from './_utils/get-year-month-from-v
 export { isRangeType, isRangeValueComplete, isSplitRangeInputs, isYearOrMonthType, needConfirm } from './_utils/picker-type';
 export type { WeekStartNumber } from './_utils/get-month-table';
 
-export type ValidateStatus = ArrayElement<typeof strings.STATUS>;
 export type InputSize = ArrayElement<typeof strings.SIZE_SET>;
 export type Position = ArrayElement<typeof strings.POSITION_SET>;
 export type PresetPosition = ArrayElement<typeof strings.PRESET_POSITION_SET>;
@@ -55,18 +55,6 @@ export type PresetType = {
     start?: BaseValueType | null | (() => BaseValueType);
     end?: BaseValueType | null | (() => BaseValueType);
     text?: string;
-};
-
-export type TriggerRenderProps = {
-    [x: string]: any;
-    value?: ValueType;
-    inputValue?: string | null;
-    placeholder?: string | string[];
-    autoFocus?: boolean;
-    size?: InputSize;
-    disabled?: boolean;
-    inputReadOnly?: boolean;
-    componentProps?: DatePickerFoundationProps;
 };
 
 export type DateOffsetType = (selectedDate: Date) => Date;
@@ -742,12 +730,14 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     }
 
     /**
-     * Calls a date callback such as `disabledDate` with the dates converted from computer time to `timeZone`.
-     * Static so a render can pass the props it renders with: the instance reads the last committed ones.
+     * Calls a date callback such as `disabledDate` with the dates converted from computer time to `timeZone`; a callback
+     * that was not given allows everything: its undefined result is typed as `R` because every reader treats it as
+     * falsy, so the hosts can hand this to children whose props are typed with the callback's own result. Static so a
+     * render can pass the props it renders with: the instance reads the last committed ones.
      */
-    static disposeDateFn<R>(timeZone: string | number | undefined, fn: (date: any, ...rest: any) => R, date: Date | Date[], ...rest: any[]) {
+    static disposeDateFn<R>(timeZone: string | number | undefined, fn: ((date: any, ...rest: any) => R) | undefined, date: Date | Date[], ...rest: any[]) {
         const dates = toCallbackDates(date, timeZone);
-        return fn(Array.isArray(date) ? dates : dates[0], ...rest);
+        return fn?.(Array.isArray(date) ? dates : dates[0], ...rest) as R;
     }
 
     /** Whether a picked date is shown only once the owner passes it back as `value`: a confirm step keeps it unconfirmed instead */

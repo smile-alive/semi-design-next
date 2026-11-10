@@ -39,10 +39,7 @@ export default function MonthCalendar(props: MonthViewProps) {
     const rootRef = useRef<HTMLDivElement>(null);
     const cellRef = useRef<HTMLDivElement>(null);
 
-    // the row height is only known once mounted, so the first frame limits to 0
-    const [itemLimit, setItemLimit] = useState(0);
-
-    const [foundation, { openCardKey }] = useFoundation<Foundation, Adapter, MonthViewProps, CalendarMonthBaseState>(
+    const [foundation, { openCardKey, itemLimit }] = useFoundation<Foundation, Adapter, MonthViewProps, CalendarMonthBaseState>(
         CalendarMonthFoundation,
         props,
         () => CalendarMonthFoundation.getInitialState(),
@@ -67,8 +64,8 @@ export default function MonthCalendar(props: MonthViewProps) {
         if (!cell) {
             return;
         }
-        setItemLimit(CalendarFoundation.getItemLimit(cell.getBoundingClientRect().height));
-    }, []);
+        foundation.handleRowResize(cell.getBoundingClientRect().height);
+    }, [foundation]);
 
     // a percentage height or a style.height follows the container, which no prop reports
     const observeGrid = useCallback(
@@ -196,7 +193,7 @@ export default function MonthCalendar(props: MonthViewProps) {
     }, [measureItemLimit, height, weekCount]);
 
     useEffect(() => {
-        foundation.closeStaleCard(monthlyData, parsedEvents, itemLimit);
+        foundation.closeStaleCard(monthlyData, parsedEvents);
     }, [foundation, monthlyData, parsedEvents, itemLimit, openCardKey]);
 
     return (

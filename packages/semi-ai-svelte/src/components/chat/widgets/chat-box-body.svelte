@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { omitBy } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+    import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
     import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
-    import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
     import MarkdownRender from '@fibrae/semi-ui-svelte/markdown-render/markdown-render.svelte';
     import { getChatContext } from '../context.js';
     import type { ChatMessage } from '../interface.js';
@@ -15,22 +14,16 @@
     const { view } = getChatContext();
 
     const { PREFIX_CHAT_BOX } = cssClasses;
-    const { MESSAGE_STATUS, ROLE } = strings;
+    const { MESSAGE_STATUS } = strings;
 
     // one object: markdownRenderProps may replace format but never the components
     const markdownProps = $derived({
         format: 'md' as const,
         ...view.markdownRenderProps,
-        components: {
-            code: Code,
-            SemiFile: FileAttachment,
-            img: ImageAttachment,
-            // an explicit undefined entry would replace the built-in component with a non-component
-            ...omitBy(view.customMarkDownComponents ?? {}, (component) => component === undefined),
-        },
+        components: ChatFoundation.mergeMarkdownComponents({ code: Code, SemiFile: FileAttachment, img: ImageAttachment }, view.customMarkDownComponents),
     });
 
-    const raw = (text = '') => (view.escapeHtml && message.role === ROLE.USER ? escapeHtmlInMarkdown(text) : text);
+    const raw = (text?: string) => ChatFoundation.getMarkdownRaw(text, message.role, view.escapeHtml);
 </script>
 
 {#if message.status === MESSAGE_STATUS.LOADING}

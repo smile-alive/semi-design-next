@@ -84,17 +84,7 @@
         return [props.lineNumberStyle, height ? { height: `${height}px`, maxHeight: `${height}px` } : undefined];
     });
 
-    const sizeStyle = computed(() => {
-        if (props.autosize) {
-            const bounds = typeof props.autosize === 'object' ? props.autosize : {};
-            return {
-                resize: 'none' as const,
-                [`--${prefix}-textarea-min-rows`]: bounds.minRows ?? props.rows,
-                [`--${prefix}-textarea-max-rows`]: bounds.maxRows,
-            };
-        }
-        return props.resize === undefined ? undefined : { resize: props.resize };
-    });
+    const sizeStyle = computed(() => TextAreaFoundation.getSizeStyle(props));
 
     const focusTextarea = () => textareaEl.value?.focus();
 
@@ -122,7 +112,6 @@
             notifyCompositionEnd: (event) => emit('compositionend', event),
             notifyCompositionUpdate: (event) => emit('compositionupdate', event),
             focusInput: focusTextarea,
-            isEventTarget: (event) => event.target === event.currentTarget,
             getTextarea: () => textareaEl.value,
         }),
         {
@@ -138,7 +127,7 @@
     const value = computed(() => TextAreaFoundation.deriveValue({ value: props.modelValue }, state.value));
     const shown = computed(() => draft.value ?? value.value);
 
-    const { elementText, runInput, handleCompositionEnd, commitDraft, handleFocusIn, handleFocusOut } = useTextEntry({
+    const { elementText, runInput, handleCompositionEnd, commitDraft, handleFocusOut } = useTextEntry({
         element: textareaEl,
         draft,
         props,
@@ -159,14 +148,6 @@
             foundation.handleChange((event.target as HTMLTextAreaElement).value, event);
             emit('input', event);
         });
-
-    // keyboard activation (detail 0) returns focus to the textarea as the button unmounts
-    const handleClearClick = (event: MouseEvent) => {
-        foundation.handleClear(event);
-        if (event.detail === 0) {
-            focusTextarea();
-        }
-    };
 
     const isResizable = (directions: string[]) => !props.autosize && props.resize !== undefined && directions.includes(props.resize);
 
@@ -200,7 +181,7 @@
     );
 
     // the line number panel remounts the textarea
-    watch([shown, () => Boolean(props.autosize), () => props.showLineNumber], foundation.fitAutosize, { flush: 'post' });
+    watch([shown, () => props.showLineNumber], foundation.fitAutosize, { flush: 'post' });
 
     watch(
         [lineLayout, lines],
@@ -247,8 +228,7 @@
             ],
             cols: props.cols,
             disabled: looks.disabled,
-            // native maxlength counts UTF-16 units, so getValueLength enforces the limit
-            maxlength: getLength.value ? undefined : props.maxlength,
+            maxlength: TextAreaFoundation.getNativeMaxLength({ maxLength: props.maxlength, getValueLength: getLength.value }),
             minlength: TextAreaFoundation.getNativeMinLength({ minLength: props.minlength, getValueLength: getLength.value }, shown.value),
             placeholder: props.placeholder || undefined,
             readonly: props.readonly || isBooleanAttrOn(attrs.readOnly),
@@ -297,7 +277,7 @@
             },
         ]"
         @click="foundation.handleClick"
-        @focusin="handleFocusIn"
+        @focusin="foundation.handleFocus"
         @focusout="handleFocusOut"
     >
         <template v-if="props.showLineNumber">
@@ -312,7 +292,7 @@
             </div>
         </template>
         <textarea v-else ref="textarea" v-bind="textareaProps()" />
-        <button v-if="allowClear" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="handleClearClick" @mousedown.prevent>
+        <button v-if="allowClear" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="foundation.handleClearClick" @mousedown.prevent>
             <IconClear />
         </button>
         <div v-if="hasCounter" :id="counterId" :class="[`${prefix}-textarea-counter`, { [`${prefix}-textarea-counter-exceed`]: exceeds }]" @click="foundation.handleCounterClick">

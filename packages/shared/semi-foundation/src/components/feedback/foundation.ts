@@ -15,6 +15,13 @@ export function isFeedbackValueEmpty(value?: FeedbackValue | null) {
     return value == null || value === '' || (Array.isArray(value) && value.length === 0);
 }
 
+export interface FeedbackContentValues {
+    text: string;
+    radio?: CheckboxValue;
+    checkbox: CheckboxValue[];
+    emoji?: string;
+}
+
 type PromiseStatus = 'pending' | 'fulfilled' | 'rejected';
 
 export interface FeedbackBaseState {
@@ -69,6 +76,16 @@ export default class FeedbackFoundation<P extends object = object, CE = unknown,
 
     static getInitialState(): FeedbackBaseState {
         return { value: null, onOKReturnPromiseStatus: 'fulfilled', onCancelReturnPromiseStatus: 'fulfilled' };
+    }
+
+    /** What each built-in content shows of the value; null (submitted or cancelled) and another type's shape show nothing chosen */
+    static getContentValues(value: FeedbackValue | null): FeedbackContentValues {
+        return {
+            text: typeof value === 'string' ? value : '',
+            radio: typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' ? value : undefined,
+            checkbox: Array.isArray(value) ? value : [],
+            emoji: value !== null && typeof value === 'object' && !Array.isArray(value) ? value.emoji : undefined,
+        };
     }
 
     handleRadioChange = (e: RadioChangeEvent) => {

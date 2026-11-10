@@ -1,18 +1,19 @@
 import type { ComputedRef } from 'vue';
+import type { AutoCloseListState } from '@fibrae/semi-foundation/base/auto-close-foundation';
 import type { NoticeInstance } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { createContext } from '../../base/create-context';
 
-/** A notice as the store holds it: `add` always has an id, and the offsets ride along from the options */
+/** A notice as the store holds it: `open` always gives an id, and the offsets ride along from the options */
 export type ListedNotice = NoticeInstance & Required<Pick<NoticeInstance, 'id'>> & Pick<ConfigProps, 'top' | 'bottom' | 'left' | 'right'>;
 
+/** Gives the list the notice element it reads when it announces the notice; returns the unregister */
+export type RegisterNotice = (id: string, element: Element) => () => void;
+
 export interface NoticeListContext {
-    /** The pointer or focus is inside the position's list: every notice's countdown waits */
-    paused: boolean;
-    /** The notices the latest store change updated in place */
-    updatedItems: readonly NoticeInstance[];
-    /** Queues text for the live region; `read` runs when it is written */
-    announce: (key: string, read: () => string) => void;
+    /** What every notice's countdown in the position's list follows */
+    state: ComputedRef<AutoCloseListState>;
+    register: RegisterNotice;
 }
 
-export const [provideNoticeListContext, useNoticeListContext] = createContext<ComputedRef<NoticeListContext>>('NoticeList', { optional: true });
+export const [provideNoticeListContext, useNoticeListContext] = createContext<NoticeListContext>('NoticeList', { optional: true });

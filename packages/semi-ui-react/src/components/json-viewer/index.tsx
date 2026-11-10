@@ -2,16 +2,15 @@ import type React from 'react';
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
-import { omitBy } from 'es-toolkit';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
 import JsonViewerFoundation, { type JsonViewerOptions, type JsonViewerAdapter, type JsonViewerBaseState, type SearchOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
 import { IconCaseSensitive, IconChevronLeft, IconChevronRight, IconClose, IconRegExp, IconSearch, IconWholeWord } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
-import { namedRole } from '../../utils/named-role';
 import Button from '../button';
 import ButtonGroup from '../button/button-group';
 import DragMove from '../drag-move';
@@ -80,14 +79,8 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
 
     const { locale } = useLocale('JsonViewer');
 
-    // defaults merge per key: a whole-object default would be replaced by the caller's `options`. The locale-derived
     // ariaLabel is part of options, so a locale switch re-creates the editor
-    const props = {
-        ...defaultedProps,
-        // an explicit undefined would replace a default
-        options: { ariaLabel: locale.content, readOnly: false, autoWrap: true, ...omitBy(defaultedProps.options ?? {}, (option) => option === undefined) },
-    };
-
+    const props = { ...defaultedProps, options: JsonViewerFoundation.mergeOptions(defaultedProps.options, locale.content) };
     const { ref, value, width, height, showSearch, className, style, onChange, options, limitSearchButtonBounds, renderSearchButton, ...rest } = props;
 
     const editorRef = useRef<HTMLDivElement>(null);
@@ -289,8 +282,8 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
     useImperativeHandle(
         ref,
         () => ({
-            getValue: () => foundation.jsonViewer.getModel().getValue(),
-            format: () => foundation.jsonViewer.format(),
+            getValue: foundation.getValue,
+            format: foundation.format,
             search: foundation.search,
             getSearchResults: foundation.getSearchResults,
             prevSearch: foundation.prevSearch,

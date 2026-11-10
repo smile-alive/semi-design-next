@@ -158,12 +158,19 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
         [`${prefixCls}-hidden`]: keepDOM && hidden,
     });
 
-    const wrapperStyle: CSSProperties = inBody ? { zIndex } : { zIndex, position: 'static' };
     const shouldRender = visible || keepDOM || (motion && !hidden);
 
     const updateState = () => setDisplayNone(!visible);
 
     useDidUpdate(displayNone, foundation.handleHiddenChange);
+
+    // after the mutation-phase cleanup React refocuses the previously focused element if still in the document
+    // (a keepDOM sheet's element), so restore again in the layout phase
+    useDidUpdate(visible, (isVisible) => {
+        if (!isVisible) {
+            foundation.restoreFocus();
+        }
+    });
 
     useRealUnmount(() => {
         if (!runtime.lastRoot?.parentNode) {
@@ -178,7 +185,7 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
                 <CSSAnimation startClassName={visible ? `${prefixCls}-animation-content_show_${placement}` : `${prefixCls}-animation-content_hide_${placement}`} animationState={visible ? 'enter' : 'leave'} motion={motion} onAnimationEnd={updateState}>
                     {({ animationClassName, animationStyle, animationEventsNeedBind }) =>
                         shouldRender ? (
-                            <Portal style={wrapperStyle} getPopupContainer={getPopupContainer}>
+                            <Portal style={{ zIndex }} getPopupContainer={getPopupContainer}>
                                 <SideSheetContent
                                     {...rest}
                                     ref={rootRef}

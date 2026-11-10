@@ -1,17 +1,14 @@
 import { type JSX, Index, Match, Show, Switch, createMemo } from 'solid-js';
-import clsx from 'clsx';
-import { omitBy } from 'es-toolkit';
 import { cssClasses, strings, type ChatMode } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import ChatFoundation, { type Content } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
-import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import MarkdownRender, { type MarkdownRenderComponents } from '@fibrae/semi-ui-solid/markdown-render/index';
 import type { MarkdownRenderProps, Message, Metadata, RenderContentProps } from '../interface';
 import { FileAttachment, ImageAttachment } from './attachment';
 import Code from './code';
 
 const { PREFIX_CHAT_BOX } = cssClasses;
-const { MESSAGE_STATUS, ROLE } = strings;
+const { MESSAGE_STATUS } = strings;
 
 interface ChatBoxContentProps {
     mode?: ChatMode;
@@ -24,28 +21,11 @@ interface ChatBoxContentProps {
 }
 
 export default function ChatBoxContent(props: ChatBoxContentProps) {
-    const markdownComponents = createMemo<MarkdownRenderComponents>(() => ({
-        code: Code,
-        SemiFile: FileAttachment,
-        img: ImageAttachment,
-        // an explicit undefined entry would replace the built-in component with a non-component
-        ...omitBy(props.customMarkDownComponents ?? {}, (component) => component === undefined),
-    }));
+    const markdownComponents = createMemo<MarkdownRenderComponents>(() => ChatFoundation.mergeMarkdownComponents({ code: Code, SemiFile: FileAttachment, img: ImageAttachment }, props.customMarkDownComponents));
 
-    const isUser = () => props.message.role === ROLE.USER;
+    const wrapCls = () => ChatFoundation.getContentClass(props.message.role, props.message.status, props.mode);
 
-    const shouldEscapeHtml = () => props.escapeHtml && isUser();
-
-    const wrapCls = () => {
-        const { bubble, user, error } = ChatFoundation.getContentFlags(props.message.role, props.message.status, props.mode);
-        return clsx(`${PREFIX_CHAT_BOX}-content`, {
-            [`${PREFIX_CHAT_BOX}-content-${props.mode}`]: bubble,
-            [`${PREFIX_CHAT_BOX}-content-user`]: user,
-            [`${PREFIX_CHAT_BOX}-content-error`]: error,
-        });
-    };
-
-    const markdown = (text: () => string | undefined) => <MarkdownRender format="md" {...props.markdownRenderProps} components={markdownComponents()} raw={shouldEscapeHtml() ? escapeHtmlInMarkdown(text() ?? '') : (text() ?? '')} />;
+    const markdown = (text: () => string | undefined) => <MarkdownRender format="md" {...props.markdownRenderProps} components={markdownComponents()} raw={ChatFoundation.getMarkdownRaw(text(), props.message.role, props.escapeHtml)} />;
 
     const part = (item: () => Content) => (
         <Switch>

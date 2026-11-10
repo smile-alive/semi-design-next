@@ -1,5 +1,4 @@
-import { POPUP_SELECTOR } from '../components/tooltip/constants';
-import { getPopupTrigger } from '../utils/a11y';
+import { getPopupTrigger, POPUP_SELECTOR } from '../utils/layer';
 import FocusTrapHandle from './focus-handle';
 
 // the element may sit in a shadow root inside the popup (a third-party control), which closest() does not leave
@@ -13,7 +12,7 @@ function closestPopup(element: Element | null) {
     return null;
 }
 
-/** The triggers of the Tooltip-family popups around `element`, innermost first (D5 markup, see tooltip constants) */
+/** The triggers of the Tooltip-family popups around `element`, innermost first (D5 markup, see utils/layer) */
 function popupTriggers(element: Element | null) {
     const triggers: HTMLElement[] = [];
     for (let popup = closestPopup(element); popup;) {

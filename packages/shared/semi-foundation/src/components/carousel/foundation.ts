@@ -5,6 +5,7 @@ import { numbers } from './constants';
 export interface CarouselAdapter<P extends CarouselBaseProps = CarouselBaseProps> extends DefaultAdapter<P, CarouselState, DirectionContext> {
     notifyChange: (activeIndex: number, preIndex: number) => void;
     getSlideCount: () => number;
+    focusTab: (index: number) => void;
 }
 
 export type CarouselAutoPlay = boolean | { interval?: number; hoverToPause?: boolean };
@@ -32,6 +33,9 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     // set by the consumer's ref.stop(), so only ref.play() starts playback again
     #stoppedByUser = false;
     #pointerInside = false;
+    // APG tabs: a keyboard switch moves focus to the new tab once it is rendered; a tab blur drops it, so a later
+    // switch by mouse or rotation does not pull focus back
+    #focusPending = false;
 
     static override readonly propKeys = ['activeIndex', 'autoPlay'];
     // autoPlay is often a fresh object literal on every render; only switching it on or off matters
@@ -51,6 +55,13 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
 
     #getActiveIndex() {
         return CarouselFoundation.deriveActiveIndex(this.getProps(), this.getStates(), this.adapter.getSlideCount());
+    }
+
+    #focusActiveTab() {
+        if (this.#focusPending) {
+            this.#focusPending = false;
+            this.adapter.focusTab(this.#getActiveIndex());
+        }
     }
 
     #restartAfterManualSwitch() {
@@ -121,7 +132,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
 
     protected handleNewActiveIndex(activeIndex: number) {
         if (this.#getActiveIndex() !== activeIndex) {
-            this.setState({ activeIndex });
+            this.setState({ activeIndex }, () => this.#focusActiveTab());
         }
     }
 
@@ -279,33 +290,36 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         }
     };
 
-    // APG tabs keys for the indicator tablist; returns whether the key was handled
+    // APG tabs keys for the indicator tablist
     handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'altKey' | 'ctrlKey' | 'metaKey' | 'preventDefault'>) => {
         // browser and OS shortcuts such as Alt+Left (history back) stay theirs
         if (event.altKey || event.ctrlKey || event.metaKey) {
-            return false;
+            return;
         }
         const isRtl = this.adapter.getContext('direction') === 'rtl';
+        let switchSlide: () => void;
         switch (event.key) {
             case 'ArrowLeft':
             case 'ArrowRight':
-                if ((event.key === 'ArrowRight') !== isRtl) {
-                    this.next();
-                } else {
-                    this.prev();
-                }
+                switchSlide = (event.key === 'ArrowRight') !== isRtl ? this.next : this.prev;
                 break;
             case 'Home':
-                this.goTo(0);
+                switchSlide = () => this.goTo(0);
                 break;
             case 'End':
-                this.goTo(this.adapter.getSlideCount() - 1);
+                switchSlide = () => this.goTo(this.adapter.getSlideCount() - 1);
                 break;
             default:
-                return false;
+                return;
         }
+        // set before switching: a host may commit the switch, and run its setState callback, inside the call
+        this.#focusPending = true;
+        switchSlide();
         event.preventDefault();
-        return true;
+    };
+
+    handleIndicatorBlur = () => {
+        this.#focusPending = false;
     };
 
     onIndicatorChange = (activeIndex: number) => {
@@ -321,6 +335,9 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         // an activeIndex that goes back to undefined keeps the last controlled index, which later switches continue from
         if (prev.activeIndex !== activeIndex && activeIndex !== undefined && activeIndex !== this.getState('activeIndex')) {
             this.setState({ activeIndex });
+        }
+        if (prev.activeIndex !== activeIndex) {
+            this.#focusActiveTab();
         }
         if (!CarouselFoundation.isAutoPlayOn(autoPlay) && CarouselFoundation.isAutoPlayOn(prev.autoPlay) && !this.#forcePlay) {
             this.stop();

@@ -7,7 +7,11 @@ export function isEventInside(e: Event, ...nodes: (Node | null | undefined)[]) {
     return nodes.some((node) => node != null && path.includes(node));
 }
 
-export { default as isHTMLElement } from './is-element';
+// Returns a plain boolean: an inferred `obj is HTMLElement` predicate would wrongly narrow callers' Element types.
+// Also called during SSR (e.g. Tooltip), where HTMLElement does not exist.
+export function isHTMLElement(obj: any) {
+    return typeof HTMLElement !== 'undefined' && obj instanceof HTMLElement;
+}
 
 export interface RegisterMediaQueryOption {
     match?: (e: MediaQueryList | MediaQueryListEvent) => void;
@@ -34,12 +38,24 @@ export function registerMediaQuery(media: string, { match, unmatch, callInInit =
     return () => undefined;
 }
 
+/** Outside the fullscreen element nothing is shown or clickable, so a popup opened during fullscreen goes into it */
+export function defaultPopupContainer() {
+    return (document.fullscreenElement as HTMLElement | null) ?? document.body;
+}
+
 /**
- * Whether an overlay rendered through `getPopupContainer` covers the page: no container, or one that resolves to body.
- * Only such an overlay locks body scroll and is modal; one confined to another element leaves the page usable.
+ * Whether an overlay rendered through `getPopupContainer` covers the page: no container, or one that resolves to body
+ * or to the fullscreen element, which is the whole visible page. Only such an overlay locks body scroll and is modal;
+ * one confined to another element leaves the page usable. Known limitation: the fullscreen element is read when
+ * called, so an overlay left in it after fullscreen ends counts as confined; upgrade if keepDOM overlays must keep
+ * their modality across a fullscreen change.
  */
-export function coversPage(getPopupContainer?: () => HTMLElement) {
-    return !getPopupContainer || getPopupContainer() === globalThis.document?.body;
+export function coversPage(getPopupContainer?: () => HTMLElement | null) {
+    if (!getPopupContainer) {
+        return true;
+    }
+    const container = getPopupContainer();
+    return container != null && (container === container.ownerDocument.body || container === container.ownerDocument.fullscreenElement);
 }
 
 /**
@@ -47,7 +63,7 @@ export function coversPage(getPopupContainer?: () => HTMLElement) {
  * ConfigProvider's), `fallback` without one. A chosen getter returning null (a template ref not set yet) fails loud
  * instead of quietly falling back to body, where the popup would render somewhere the caller did not ask for.
  */
-export function resolvePopupContainer(get?: () => HTMLElement | null, fallback: HTMLElement = document.body) {
+export function resolvePopupContainer(get?: () => HTMLElement | null, fallback: HTMLElement = defaultPopupContainer()) {
     const container = get ? get() : fallback;
     if (!container) {
         throw new Error('[Semi Portal] getPopupContainer returned no element; it must return a node that exists when the popup renders');

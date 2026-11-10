@@ -1,9 +1,10 @@
 import type React from 'react';
-import { cloneElement, useImperativeHandle, useRef, type CSSProperties } from 'react';
+import { cloneElement, useLayoutEffect, type CSSProperties } from 'react';
 import clsx from 'clsx';
+import type { AutoCloseListState } from '@fibrae/semi-foundation/base/auto-close-foundation';
+import { isAlertType } from '@fibrae/semi-foundation/base/list-store';
 import { numbers, cssClasses, getStackLayerTransform } from '@fibrae/semi-foundation/components/toast/constants';
 import ToastFoundation, { type ToastAdapter, type ToastInstance, type ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
 import { IconClose, IconAlertTriangle, IconInfoCircle, IconTickCircle, IconAlertCircle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
@@ -18,20 +19,6 @@ type Adapter = ToastAdapter<ToastInstance>;
 
 const prefixCls = cssClasses.PREFIX;
 
-export interface ToastHandle {
-    restartCloseTimer: () => void;
-    /** Paused by the list while the pointer or focus is inside it */
-    pauseCloseTimer: () => void;
-    resumeCloseTimer: () => void;
-    /** Called on removal so the countdown cannot call onClose during the leave */
-    leave: () => void;
-    announcement: () => string;
-}
-
-export interface ToastItemHandle extends ToastHandle {
-    element: () => HTMLDivElement | null;
-}
-
 export interface ToastReactProps extends ToastInstance, ElementProps<'div', 'content' | 'style' | 'className' | 'id' | 'onAnimationEnd' | 'onAnimationStart' | 'children' | 'dangerouslySetInnerHTML'> {
     style?: CSSProperties;
     icon?: React.ReactNode;
@@ -44,7 +31,9 @@ export interface ToastReactProps extends ToastInstance, ElementProps<'div', 'con
         index: number;
         length: number;
     };
-    ref?: React.Ref<ToastItemHandle>;
+    /** Set by the list, which pauses, stops and restarts the countdown through it */
+    listState?: AutoCloseListState;
+    ref?: React.Ref<HTMLDivElement>;
 }
 
 export type { ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
@@ -68,12 +57,11 @@ const typeIcons: Record<string, React.ReactElement<any>> = {
 
 export default function Toast(rawProps: ToastReactProps) {
     const props = useDefaultProps('Toast', rawProps, defaultProps);
-    const { ref, id, motion, top, bottom, left, right, zIndex, getPopupContainer, duration, onClose, close, content, type, theme, textMaxWidth, showClose, icon, direction: propDirection, stack, stackExpanded, positionInList, className, style, onAnimationStart, onAnimationEnd, ...rest } = props;
+    const { ref, id, motion, top, bottom, left, right, zIndex, getPopupContainer, duration, onClose, close, content, type, theme, textMaxWidth, showClose, icon, direction: propDirection, stack, stackExpanded, positionInList, listState, className, style, onAnimationStart, onAnimationEnd, ...rest } = props;
 
     const { direction: contextDirection } = useConfigContext();
     const { locale } = useLocale('Toast');
 
-    const toastRef = useRef<HTMLDivElement>(null);
     let iconNode: React.ReactNode = null;
 
     const [foundation] = useFoundation<Foundation, Adapter, ToastInstance, ToastState>(
@@ -93,18 +81,11 @@ export default function Toast(rawProps: ToastReactProps) {
         [`${prefixCls}-${theme}`]: theme === 'light',
     });
 
-    useImperativeHandle(
-        ref,
-        () => ({
-            restartCloseTimer: foundation.restartCloseTimer,
-            pauseCloseTimer: foundation.pauseCloseTimer,
-            resumeCloseTimer: foundation.resumeCloseTimer,
-            leave: foundation.leave,
-            announcement: () => toastRef.current?.textContent ?? '',
-            element: () => toastRef.current,
-        }),
-        [foundation]
-    );
+    useLayoutEffect(() => {
+        if (listState) {
+            foundation.handleListChange(listState);
+        }
+    }, [foundation, listState]);
 
     if (icon) {
         iconNode = isSemiIcon(icon)
@@ -126,7 +107,7 @@ export default function Toast(rawProps: ToastReactProps) {
         <div
             dir={direction}
             {...rest}
-            ref={toastRef}
+            ref={ref}
             className={toastCls}
             style={{ ...style, transform: getStackLayerTransform(positionInList) }}
             aria-label={locale[type as keyof typeof locale] ?? locale.default}
@@ -150,7 +131,7 @@ export default function Toast(rawProps: ToastReactProps) {
         </div>
     );
 
-    // The wrapper is there without stack too: the list decides stacking from its newest toast, so a toast can switch
+    // The wrapper is there without stack too: the latest open decides the list's stacking, so a toast can switch
     // modes while shown, and a changed element structure would remount it, losing its state and focus.
     return (
         <div

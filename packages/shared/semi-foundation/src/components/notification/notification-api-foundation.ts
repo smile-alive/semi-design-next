@@ -1,7 +1,8 @@
+import type ListStore from '../../base/list-store';
 import StaticListWrapper from '../../base/static-list-wrapper';
 import { cssClasses } from './constants';
 import type { NoticeInstance } from './notification-foundation';
-import NotificationListStore, { type ConfigProps } from './notification-list-foundation';
+import { builtInDefaults, type ConfigProps, createNotificationListStore } from './notification-list-foundation';
 
 /** What the framework supplies to the static `Notification` */
 export interface NotificationApiHost {
@@ -9,7 +10,7 @@ export interface NotificationApiHost {
     assertClient: () => void;
     readGlobalDefaults: () => Partial<NoticeInstance>;
     /** Renders the notification list of `store` into `wrapper` and returns what unmounts it */
-    mount: (wrapper: HTMLDivElement, store: NotificationListStore) => () => void;
+    mount: (wrapper: HTMLDivElement, store: ListStore<NoticeInstance>) => () => void;
 }
 
 /**
@@ -18,7 +19,7 @@ export interface NotificationApiHost {
  */
 export default class NotificationApi<O extends object> {
     readonly #host: NotificationApiHost;
-    readonly #store = new NotificationListStore();
+    readonly #store = createNotificationListStore();
     readonly #wrapper = new StaticListWrapper(cssClasses.WRAPPER);
 
     constructor(host: NotificationApiHost) {
@@ -53,10 +54,27 @@ export default class NotificationApi<O extends object> {
     };
 
     config = (opts: ConfigProps) => {
-        this.#store.config(opts);
+        const defaults: NoticeInstance & ConfigProps = this.#store.defaults;
+        for (const pos of ['top', 'left', 'bottom', 'right'] as const) {
+            if (pos in opts) {
+                defaults[pos] = opts[pos];
+            }
+        }
+        if (typeof opts.zIndex === 'number') {
+            defaults.zIndex = opts.zIndex;
+        }
+        if (typeof opts.duration === 'number') {
+            defaults.duration = opts.duration;
+        }
+        if (typeof opts.position === 'string') {
+            defaults.position = opts.position;
+        }
+        if ('stack' in opts) {
+            defaults.stack = opts.stack;
+        }
     };
 
     resetConfig = () => {
-        this.#store.resetConfig();
+        this.#store.defaults = { ...builtInDefaults };
     };
 }

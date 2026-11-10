@@ -9,7 +9,7 @@ export function omitFormInjected<P extends object>(props: P) {
     return view(props, (key) => !formInjectedKeys.has(key)) as P;
 }
 
-export type NativeInputKey = 'id' | 'name' | 'tabIndex' | 'tabindex' | 'autofocus' | 'onFocus' | 'onBlur' | `aria-${string}`;
+export type NativeInputKey = 'id' | 'name' | 'tabIndex' | 'tabindex' | 'autofocus' | 'onFocus' | 'onBlur' | 'onfocus' | 'onblur' | `aria-${string}`;
 
 // narrows the key type so the root half of splitControlAttrs keeps the props type minus the control keys
 export const isNativeInputKey = (key: string): key is NativeInputKey => isNativeInputKeyOf(key);

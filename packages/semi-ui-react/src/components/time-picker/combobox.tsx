@@ -3,7 +3,7 @@ import { useImperativeHandle, useRef } from 'react';
 import { pick as pickKeys } from 'es-toolkit';
 import ComboboxFoundation, { type formatOption, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
 import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useLocale from '../locale/use-locale';
 import ScrollList from '../scroll-list/index';
 import ScrollItem, { type ScrollItemHandle } from '../scroll-list/scroll-item';
@@ -39,7 +39,7 @@ export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORM
     let ampmSelect: React.ReactNode = null;
 
     // the half day follows the value, so a value changed by typing, by props or by the time zone cannot leave it stale
-    const { showHour, showMinute, showSecond, isAM, hour, minute, second } = ComboboxFoundation.getOptions({
+    const { showHour, showMinute, showSecond, isAM, ampm, hour, minute, second } = ComboboxFoundation.getOptions({
         timeStampValue,
         format,
         use12Hours,
@@ -77,11 +77,8 @@ export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORM
     );
 
     if (use12Hours) {
-        const AMPMOptions: AMPMOptionItem[] = [
-            { value: 'AM', text: locale.AM },
-            { value: 'PM', text: locale.PM },
-        ];
-        ampmSelect = <ScrollItem<AMPMOptionItem> ref={ampmRef} type="ampm" className={listCls('ampm')} aria-label={locale.ampmList} list={AMPMOptions} mode="normal" selectedIndex={isAM ? 0 : 1} onSelect={pick('ampm')} {...itemProps} />;
+        const AMPMOptions: AMPMOptionItem[] = ampm.list.map(({ value }) => ({ value, text: locale[value] }));
+        ampmSelect = <ScrollItem<AMPMOptionItem> ref={ampmRef} type="ampm" className={listCls('ampm')} aria-label={locale.ampmList} list={AMPMOptions} mode="normal" selectedIndex={ampm.selectedIndex} onSelect={pick('ampm')} {...itemProps} />;
     }
 
     let hourSelect: React.ReactNode = null;

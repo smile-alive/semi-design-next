@@ -1,21 +1,22 @@
 import type React from 'react';
+import { isValidElement } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
-import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
+import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';
 import useMergedRef from '../../hooks/use-merged-ref';
-import { cloneDeep } from '../../utils';
 import Dropdown from '../dropdown';
 import Tooltip from '../tooltip';
 import { useNavContext } from './context';
 import { fitNavIcon } from './nav-icon';
 import type { SubNavProps } from './sub-nav';
 
-type Foundation = ItemFoundation;
-type Adapter = ItemAdapter<NavItemProps>;
+type Foundation = ItemFoundation<FoundationProps>;
+type Adapter = ItemAdapter<FoundationProps>;
 
 const clsPrefix = `${cssClasses.PREFIX}-item`;
 export interface NavItemProps extends ItemProps, Omit<BaseProps, 'children'>, ElementProps<'li', 'onClick' | 'children'> {
@@ -52,22 +53,29 @@ interface NavItemShellProps extends NavItemProps {
     itemContent?: React.ReactNode;
     /** What `renderWrapper` receives as props; the SubNav's own props */
     wrapperProps?: NavItemProps | SubNavProps;
+    /** The `items` entry this item was made from, which `onSelect` reports whole (passed by Nav) */
+    itemConfig?: NavItemType;
 }
 
-export function NavItemShell({ ref, itemContent, wrapperProps, ...props }: NavItemShellProps): React.ReactNode {
+type FoundationProps = NavItemProps & { itemConfig?: NavItemType };
+
+export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...props }: NavItemShellProps): React.ReactNode {
     const { text, icon, toggleIcon, className, isSubNav = false, style, indent = false, onMouseEnter, onMouseLeave, link, linkOptions, disabled = false, level = 0, tabIndex, itemKey, isCollapsed: isCollapsedProp, forwardRef, onClick, tooltipHideDelay, tooltipShowDelay, ...rest } = props;
 
     const context = useNavContext();
 
     let itemChildren: React.ReactNode = null;
 
-    // ref stays out of the props the foundation reads: onSelect reports a deep clone of them as selectedItems
-    const [foundation] = useFoundation<Foundation, Adapter, NavItemProps, object>(
+    // ref stays out of the props the foundation reads: onSelect reports a copy of them as selectedItems
+    const [foundation] = useFoundation<Foundation, Adapter, FoundationProps, object>(
         ItemFoundation,
-        props,
+        { ...props, itemConfig },
         () => ({}),
         (base) => ({
-            cloneDeep,
+            getSelectedItem: () => {
+                const { itemConfig: config, ...given } = base.getProps();
+                return copySelectedItem(config ? { ...config, level: given.level } : given, isValidElement);
+            },
             selectSelf: () => base.getContexts().updateSelectedKeys?.([base.getProp('itemKey')]),
             getSelectedKeysIsControlled: () => base.getContexts().selectedKeysIsControlled,
             notifyGlobalOnSelect: (data) => base.getContexts().onSelect?.(data),

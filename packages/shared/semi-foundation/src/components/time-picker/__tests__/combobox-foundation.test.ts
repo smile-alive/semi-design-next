@@ -65,6 +65,11 @@ describe('ComboboxFoundation', () => {
         expect(values(hour)[hour.selectedIndex]).toBe('09');
     });
 
+    it('getOptions 的上下午列按半天给出选中项', () => {
+        expect(ComboboxFoundation.getOptions({ timeStampValue: at(9).getTime(), use12Hours: true }).ampm).toEqual({ list: [{ value: 'AM' }, { value: 'PM' }], selectedIndex: 0 });
+        expect(ComboboxFoundation.getOptions({ timeStampValue: at(21).getTime(), use12Hours: true }).ampm.selectedIndex).toBe(1);
+    });
+
     it('getOptions 无值时分钟与秒按 0 点询问禁用项', () => {
         const { minute, second } = ComboboxFoundation.getOptions({
             disabledMinutes: (h) => (h === 0 ? [5] : []),

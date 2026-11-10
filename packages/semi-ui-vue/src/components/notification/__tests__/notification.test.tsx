@@ -8,11 +8,10 @@ import { IconToutiaoLogo } from '@fibrae/semi-icons-vue';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
 import Notification from '../index';
-import type { NoticeHandle, NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
+import type { NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
 import Notice from '../notice.vue';
 import HolderInProvider from './fixtures/holder-in-provider.vue';
 import HookHost from './fixtures/hook-host.vue';
-import ItemRef from './fixtures/item-ref.vue';
 import { reachableKey } from './fixtures/reachable';
 
 const prefix = 'semi-notification';
@@ -693,18 +692,6 @@ describe('Notification', () => {
         expect(root).not.toHaveAttribute('data-foo');
         expect(root?.firstElementChild).toHaveAttribute('data-foo', 'bar');
         expect(root?.firstElementChild).toHaveAttribute('role', 'status');
-    });
-
-    it('单个通知的 ref 暴露 restartCloseTimer', async () => {
-        vi.useFakeTimers();
-        let handle!: NoticeHandle;
-        const view = render(ItemRef, { props: { onHandle: (h: NoticeHandle) => (handle = h) } });
-        await advance(800);
-        handle.restartCloseTimer();
-        await advance(999);
-        expect(view.emitted().remove).toBeUndefined();
-        await advance(1);
-        expect(view.emitted().remove).toEqual([['r']]);
     });
 
     it('单项到点只通知一次 remove 与 close', async () => {

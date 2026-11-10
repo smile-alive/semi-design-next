@@ -63,8 +63,6 @@ export default function TimeGrid(props: TimeGridProps) {
         local.onClick?.(e, CalendarFoundation.formatCbValue(val));
     };
 
-    const columnKey = (day: { date: Date }) => `${day.date.toString()}-weekday-${String(local.showCurrTime)}-${String(isToday(day.date))}`;
-
     return (
         <div
             aria-labelledby={rest['aria-label'] ? undefined : monthId}
@@ -155,11 +153,22 @@ export default function TimeGrid(props: TimeGridProps) {
             <div class={`${prefixCls}-scroll-wrapper`} role="rowgroup">
                 <div ref={scrollRef} class={`${prefixCls}-scroll`} role="row">
                     <TimeCol class={`${prefixCls}-sticky-left`} renderTimeDisplay={renderTimeDisplay()} />
-                    {/* showCurrTime and isToday in the key: a column decides once per mount whether to run the current time line */}
-                    <ByKey each={data().week} by={columnKey}>
+                    <ByKey each={data().week} by={(day) => day.date.toString()}>
                         {(day) => {
                             const dayEvents = createMemo(() => CalendarFoundation.getParseDailyEvents(parsedEvents().day?.get(day().date.toString()) ?? [], day().date).day);
-                            return <DayCol displayValue={day().date} events={dayEvents()} isWeekend={Boolean(local.markWeekend && day().isWeekend)} minEventHeight={local.minEventHeight} scrollHeight={scrollHeight()} showCurrTime={local.showCurrTime} dateGridRender={dateGridRender()} handleClick={handleClick} />;
+                            return (
+                                <DayCol
+                                    displayValue={day().date}
+                                    events={dayEvents()}
+                                    isWeekend={Boolean(local.markWeekend && day().isWeekend)}
+                                    minEventHeight={local.minEventHeight}
+                                    scrollHeight={scrollHeight()}
+                                    showCurrTime={local.showCurrTime}
+                                    today={today()}
+                                    dateGridRender={dateGridRender()}
+                                    handleClick={handleClick}
+                                />
+                            );
                         }}
                     </ByKey>
                 </div>

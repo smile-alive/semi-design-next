@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/components/video-player/constants';
-    import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/components/video-player/foundation';
+    import { cssClasses, DEFAULT_CONTROLS_LIST, DEFAULT_PLAYBACK_RATE, numbers, strings, type VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
+    import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerState } from '@fibrae/semi-foundation/components/video-player/foundation';
     import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/video-player/video-player.scss';
     import { IconFlipHorizontal, IconMaximize, IconMiniPlayer, IconMinimize, IconMute, IconPause, IconPlay, IconPlayCircle, IconRestart, IconVolume1, IconVolume2 } from '@fibrae/semi-icons-vue';
@@ -10,13 +11,12 @@
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
     import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import { groupRole } from '../../utils/group-role';
     import AudioSlider from '../audio-player/audio-slider.vue';
     import Button from '../button';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover';
     import ControlsMenu from './controls-menu.vue';
-    import type { VideoControl, VideoPlayerEmits, VideoPlayerHandle, VideoPlayerProps, VideoPlayerState } from './interface';
+    import type { VideoPlayerEmits, VideoPlayerHandle, VideoPlayerProps } from './interface';
     import VideoProgress from './video-progress.vue';
 
     type Foundation = VideoPlayerFoundation<VideoPlayerProps>;
@@ -26,7 +26,7 @@
         autoPlay: () => semiDefault('VideoPlayer', 'autoPlay', false),
         captionsSrc: semiGlobalDefault('VideoPlayer', 'captionsSrc'),
         clickToPlay: () => semiDefault('VideoPlayer', 'clickToPlay', true),
-        controlsList: () => semiDefault('VideoPlayer', 'controlsList', [strings.PLAY, strings.NEXT, strings.TIME, strings.VOLUME, strings.PLAYBACK_RATE, strings.QUALITY, strings.ROUTE, strings.MIRROR, strings.FULLSCREEN, strings.PICTURE_IN_PICTURE]),
+        controlsList: () => semiDefault('VideoPlayer', 'controlsList', DEFAULT_CONTROLS_LIST),
         crossOrigin: semiGlobalDefault('VideoPlayer', 'crossOrigin'),
         defaultPlaybackRate: () => semiDefault('VideoPlayer', 'defaultPlaybackRate', numbers.DEFAULT_PLAYBACK_RATE),
         defaultQuality: semiGlobalDefault('VideoPlayer', 'defaultQuality'),
@@ -98,7 +98,7 @@
 </script>
 
 <template>
-    <div ref="root" :class="[prefix, { [`${prefix}-mirror`]: state.isMirror }]" :role="groupRole($attrs)" :style="{ width: toCssLength(props.width), height: toCssLength(props.height) }" @mouseenter="foundation.handleMouseEnterWrapper" @mouseleave="foundation.handleMouseLeaveWrapper">
+    <div ref="root" :class="[prefix, { [`${prefix}-mirror`]: state.isMirror }]" :role="namedRole($attrs)" :style="{ width: toCssLength(props.width), height: toCssLength(props.height) }" @mouseenter="foundation.handleMouseEnterWrapper" @mouseleave="foundation.handleMouseLeaveWrapper">
         <div :class="[`${prefix}-wrapper`, { [`${prefix}-wrapper-${props.theme}`]: props.theme }]">
             <video
                 ref="video"

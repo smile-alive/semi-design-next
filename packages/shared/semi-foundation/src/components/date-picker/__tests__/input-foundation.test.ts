@@ -23,6 +23,29 @@ describe('DateInputFoundation', () => {
         expect(DateInputFoundation.getInsetNames(locale, 'dateTime')).toEqual({ start: '选择日期', end: '选择日期', startTime: '选择时间', endTime: '选择时间' });
     });
 
+    it('范围输入框的聚焦与点击：禁用时不通知，标签与后缀只在没有输入框聚焦时聚焦起始框', () => {
+        let props: { disabled?: boolean; rangeInputFocus?: 'rangeStart' | 'rangeEnd' | false } = {};
+        const adapter = { getProp: (key: keyof typeof props) => props[key], notifyRangeInputFocus: vi.fn<DateInputAdapter['notifyRangeInputFocus']>() } as unknown as DateInputAdapter;
+        const foundation = new DateInputFoundation(adapter);
+        const click = {};
+
+        foundation.handleRangeInputFocus(click, 'rangeEnd');
+        expect(adapter.notifyRangeInputFocus).toHaveBeenLastCalledWith(click, 'rangeEnd');
+
+        foundation.handleRangeInputAffixClick(click);
+        expect(adapter.notifyRangeInputFocus).toHaveBeenLastCalledWith(click, 'rangeStart');
+        expect(adapter.notifyRangeInputFocus).toHaveBeenCalledTimes(2);
+
+        props = { rangeInputFocus: 'rangeEnd' };
+        foundation.handleRangeInputAffixClick(click);
+        expect(adapter.notifyRangeInputFocus).toHaveBeenCalledTimes(2);
+
+        props = { disabled: true };
+        foundation.handleRangeInputFocus(click, 'rangeStart');
+        foundation.handleRangeInputAffixClick(click);
+        expect(adapter.notifyRangeInputFocus).toHaveBeenCalledTimes(2);
+    });
+
     it('范围清除按钮：主键按下与键盘触发的 click 清除，其他按键只阻止默认行为', () => {
         const adapter = { notifyRangeInputClear: vi.fn<DateInputAdapter['notifyRangeInputClear']>() } as unknown as DateInputAdapter;
         const foundation = new DateInputFoundation(adapter);

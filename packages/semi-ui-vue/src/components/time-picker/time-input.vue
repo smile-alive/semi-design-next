@@ -1,10 +1,9 @@
 <script setup lang="ts">
-    import { onMounted, useTemplateRef } from 'vue';
+    import { useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
     import { IconClock } from '@fibrae/semi-icons-vue';
     import useFoundation from '../../base/use-foundation';
-    import useRaf from '../../composables/use-raf';
     import Input from '../input/input.vue';
     import type { InputHandle } from '../input/interface';
     import type { TimeInputEmits, TimeInputProps, TimeInputSlots } from './interface';
@@ -43,19 +42,7 @@
         { props: { value: () => props.modelValue } }
     );
 
-    const scheduleFrame = useRaf();
-
     const prefix = cssClasses.PREFIX;
-
-    onMounted(() =>
-        scheduleFrame(() => {
-            const node = input.value?.input;
-            if (props.focusOnOpen && node) {
-                node.focus({ preventScroll: props.preventScroll });
-                node.select();
-            }
-        })
-    );
 </script>
 
 <template>

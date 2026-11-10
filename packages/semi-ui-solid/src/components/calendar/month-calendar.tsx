@@ -39,8 +39,9 @@ export default function MonthCalendar(props: DayCalendarProps) {
     let cardElement: HTMLElement | undefined;
     const [grid, setGrid] = createSignal<HTMLElement>();
 
-    // the row height is measured after mount; until then every event shows, so the server HTML carries them
-    const [itemLimit, setItemLimit] = createSignal(Infinity);
+    // Until the rows are measured every event shows, so the server HTML carries the events' eagerly created JSX
+    // children and hydration finds their nodes
+    const [measured, setMeasured] = createSignal(false);
 
     const { foundation, state } = useFoundation<Foundation, Adapter, DayCalendarProps, CalendarMonthBaseState>(
         CalendarMonthFoundation,
@@ -79,11 +80,14 @@ export default function MonthCalendar(props: DayCalendarProps) {
 
     const openCardKey = () => state().openCardKey;
 
+    const itemLimit = () => (measured() ? state().itemLimit : Infinity);
+
     // rows split the grid height evenly; the last row is measured because it always renders
     const measureItemLimit = () => {
         const row = grid()?.lastElementChild;
         if (row) {
-            setItemLimit(CalendarFoundation.getItemLimit(row.getBoundingClientRect().height));
+            foundation.handleRowResize(row.getBoundingClientRect().height);
+            setMeasured(true);
         }
     };
 
@@ -232,7 +236,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
 
     useResizeObserver(grid, measureItemLimit);
     createEffect(on([() => local.height, () => weeks().length], measureItemLimit));
-    createEffect(on([monthlyData, parsedEvents, itemLimit, openCardKey], ([monthly, parsed, limit]) => foundation.closeStaleCard(monthly, parsed, limit)));
+    createEffect(on([monthlyData, parsedEvents, itemLimit, openCardKey], ([monthly, parsed]) => foundation.closeStaleCard(monthly, parsed)));
 
     return (
         <div aria-label={format(displayValue(), 'LLLL y', { locale: locale().dateFnsLocale })} role="table" {...rest} ref={mergeRefs(local.ref)} class={clsx(prefixCls, local.class)} style={rootStyle(local.style, local.width, local.height)}>

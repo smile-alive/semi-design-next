@@ -2,7 +2,7 @@ import type React from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 
 const prefixCls = cssClasses.PREFIX;
 

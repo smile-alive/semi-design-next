@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerBaseState } from '../foundation';
+import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerState } from '../foundation';
 
 function setup() {
     const state = { currentQuality: 'sd', currentRoute: 'a', notificationContent: '' };
@@ -43,18 +43,18 @@ class FakeVideo extends EventTarget {
     }
 }
 
-function createPlayer(initial: Partial<VideoPlayerBaseState> = {}) {
+function createPlayer(initial: Partial<VideoPlayerState> = {}) {
     const video = new FakeVideo();
     const wrapper = document.createElement('div');
-    const state: VideoPlayerBaseState = { ...VideoPlayerFoundation.getInitialState({ volume: 100, defaultQuality: 'sd', defaultRoute: 'a' }), ...initial };
-    const setState = vi.fn<(next: Partial<VideoPlayerBaseState>) => void>((next) => {
+    const state: VideoPlayerState = { ...VideoPlayerFoundation.getInitialState({ volume: 100, defaultQuality: 'sd', defaultRoute: 'a' }), ...initial };
+    const setState = vi.fn<(next: Partial<VideoPlayerState>) => void>((next) => {
         Object.assign(state, next);
     });
     const adapter = {
         getVideo: () => video,
         getVideoWrapper: () => wrapper,
         getProps: () => ({ muted: false, seekTime: 10, volume: 100 }),
-        getState: (key: keyof VideoPlayerBaseState) => state[key],
+        getState: (key: keyof VideoPlayerState) => state[key],
         getStates: () => state,
         setState,
         notifyQualityChange: vi.fn<VideoPlayerAdapter['notifyQualityChange']>(),

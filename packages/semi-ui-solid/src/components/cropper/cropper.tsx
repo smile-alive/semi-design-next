@@ -1,4 +1,4 @@
-import { For, type JSX, type Ref, Show, createEffect, createMemo, createUniqueId, splitProps } from 'solid-js';
+import { For, type JSX, type Ref, Show, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
 import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
@@ -14,8 +14,6 @@ import callHandler from '../../utils/call-handler';
 import mergeRefs from '../../utils/merge-refs';
 import useLocale from '../locale/use-locale';
 
-// namedRole yields a plain string, which the typed role attribute does not accept
-type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
 type Foundation = CropperFoundation;
 type Adapter = CropperAdapter<CropperFoundationProps>;
 
@@ -100,21 +98,8 @@ export default function Cropper(rawProps: CropperProps) {
     // preventDefault must stop a pinch from zooming the page, which only a non-passive listener can do
     useEventListener(() => root, 'wheel', foundation.handleWheel, { passive: false });
 
-    // Wheel zooming and the image load change the state too, so a controlled zoom undoes a zoom the parent did not
-    // accept; the foundation compares with Object.is, so the writes settle
-    createEffect(() => {
-        void [state().loaded, state().zoom, state().rotate, local.zoom, local.rotate];
-        foundation.syncRotateAndZoom();
-    });
-
-    createEffect(() => {
-        // updatePreview reads getStates(), which Solid does not track: subscribe to the keys it uses.
-        void [state().cropperBox, state().imgData, state().rotate];
-        foundation.updatePreview();
-    });
-
     return (
-        <div {...rest} ref={(node) => mergeRefs(local.ref)((root = Object.assign(node, handle)))} class={clsx(cssClasses.PREFIX, local.class)} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as Role}>
+        <div {...rest} ref={(node) => mergeRefs(local.ref)((root = Object.assign(node, handle)))} class={clsx(cssClasses.PREFIX, local.class)} role={namedRole(rest)}>
             <div class={cssClasses.IMG_WRAPPER}>
                 {/* the cropping surface, not content: there is no description to give */}
                 <img

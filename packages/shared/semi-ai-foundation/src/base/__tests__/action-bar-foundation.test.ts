@@ -1,11 +1,29 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import type { DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
-import ActionBarFoundation, { type ActionBarState } from '../action-bar-foundation';
+import ActionBarFoundation, { type ActionBarAdapter, type ActionBarState } from '../action-bar-foundation';
 
-class Bar extends ActionBarFoundation<DefaultAdapter<object, ActionBarState>, object, ActionBarState> {
+class Bar extends ActionBarFoundation<ActionBarAdapter<object>, object, ActionBarState> {
+    getCopyText() {
+        return undefined;
+    }
+
     open = () => this.openMenu();
     close = () => this.closeMenu();
 }
+
+describe('ActionBarFoundation.isActionBarShown', () => {
+    it.each([
+        [{ showReset: true, finished: true, showAction: false }, true],
+        [{ showReset: true, finished: false, showAction: false }, false],
+        [{ showReset: false, finished: true, showAction: false }, false],
+        [{ showReset: false, finished: false, showAction: true }, true],
+    ])('%o -> %s', (input, expected) => {
+        expect(ActionBarFoundation.isActionBarShown(input)).toBe(expected);
+    });
+
+    it('初始状态收起', () => {
+        expect(ActionBarFoundation.getInitialState()).toEqual({ visible: false, showAction: false });
+    });
+});
 
 describe('ActionBarFoundation', () => {
     beforeEach(() => {
@@ -24,7 +42,7 @@ describe('ActionBarFoundation', () => {
                 state = { ...state, ...partial };
             },
         };
-        const bar = new Bar(adapter as unknown as DefaultAdapter<object, ActionBarState>);
+        const bar = new Bar(adapter as unknown as ActionBarAdapter<object>);
         bar.init();
         return { bar, state: () => state };
     };

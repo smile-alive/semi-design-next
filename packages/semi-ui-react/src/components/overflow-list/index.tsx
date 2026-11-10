@@ -1,9 +1,9 @@
 import type React from 'react';
-import { cloneElement, isValidElement, useLayoutEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
+import { cloneElement, isValidElement, useLayoutEffect, useState, type CSSProperties, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses, SCROLL_KEY_ATTRIBUTE, strings } from '@fibrae/semi-foundation/components/overflow-list/constants';
-import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { isHTMLElement } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
 import type { ElementProps } from '../../base/base';
@@ -13,7 +13,6 @@ import useIntersectionObserver from '../../hooks/use-intersection-observer';
 import ReactResizeObserver, { type ResizeEntry } from '../../internal/resize-observer';
 import { hasContent } from '../../utils';
 import { mergeRefs } from '../../utils/merge-refs';
-import { namedRole } from '../../utils/named-role';
 
 type Foundation = OverflowListFoundation<OverflowListProps>;
 type Adapter = OverflowListAdapter<OverflowListProps>;
@@ -72,21 +71,6 @@ const defaultProps = {
     overflowRenderDirection: 'both',
 } satisfies Partial<OverflowListProps>;
 
-type ListView = OverflowListView & VisibleLayout;
-
-const withLayout = (view: OverflowListView, fromStart: boolean, measuring: boolean): ListView => ({ ...view, ...OverflowListFoundation.getVisibleLayout(view, fromStart, fromStart && measuring) });
-
-const emptyView: OverflowListView = {
-    items: [],
-    style: undefined,
-    visible: [],
-    overflow: [],
-    pivot: -1,
-    maxCount: 0,
-    overflowStatus: 'calculating',
-    scrollOverflow: [[], []],
-};
-
 // reference to https://github.com/palantir/blueprint/blob/1aa71605/packages/core/src/components/overflow-list/overflowList.tsx#L34
 // the overload carries the item type to callers; the foundation reads items as plain records
 export default function OverflowList<T = OverflowItem>(rawProps: OverflowListProps<T>): ReactElement;
@@ -95,16 +79,7 @@ export default function OverflowList(rawProps: OverflowListProps) {
     const { ref, className, collapseFrom, items, minVisibleItems, onIntersect, onOverflow, overflowRenderer, renderMode, style, threshold, visibleItemRenderer, wrapperClassName, wrapperStyle, wrapperProps, itemKey, onVisibleStateChange, overflowRenderDirection, ...rest } = props;
 
     const [itemNodes] = useState(() => new Map<Key, Element>());
-    const committedKeys = useRef<Array<Key>>(null);
-
-    const isScroll = renderMode === RenderMode.SCROLL;
-    const rootRole = namedRole(rest);
-    const keys = OverflowListFoundation.getItemKeys(items, itemKey);
-
-    const resetView = (view: OverflowListView, containerWidth: number) => withLayout(OverflowListFoundation.resetView(props, view, containerWidth), props.collapseFrom === Boundary.START, props.renderMode !== RenderMode.SCROLL);
-
-    const [storedView, setView] = useState(() => resetView(emptyView, 0));
-    let view = storedView;
+    const [storedView, setView] = useState(() => OverflowListFoundation.createView(props));
 
     const [foundation, state] = useFoundation<Foundation, Adapter, OverflowListProps, OverflowListBaseState>(
         OverflowListFoundation,
@@ -112,18 +87,17 @@ export default function OverflowList(rawProps: OverflowListProps) {
         () => OverflowListFoundation.getInitialState(),
         (base) => ({
             notifyVisibleStateChange: (visibleState) => base.getProps().onVisibleStateChange?.(visibleState),
-            updateView: (viewState) =>
-                setView((prev) => {
-                    const next = { ...prev, ...viewState };
-                    return viewState.visible ? withLayout(next, base.getProps().collapseFrom === Boundary.START, false) : next;
-                }),
+            updateView: setView,
             notifyIntersect: (res) => base.getProps().onIntersect?.(res),
             notifyOverflow: (overflow) => base.getProps().onOverflow(overflow),
         })
     );
 
-    if (!isEqual(view.items, items) || !isEqual(view.style, style) || !isEqual(view.keys, keys) || view.fromStart !== (collapseFrom === Boundary.START)) {
-        view = resetView(view, state.containerWidth);
+    const isScroll = renderMode === RenderMode.SCROLL;
+    const rootRole = namedRole(rest);
+    const view = OverflowListFoundation.syncView(props, storedView, state.containerWidth);
+
+    if (view !== storedView) {
         setView(view);
     }
 
@@ -142,29 +116,17 @@ export default function OverflowList(rawProps: OverflowListProps) {
         ...(renderMode === RenderMode.COLLAPSE
             ? {
                   maxWidth: '100%',
-                  visibility: view.overflowStatus === 'calculating' && view.pivot < 0 ? 'hidden' : 'visible',
+                  visibility: OverflowListFoundation.isHidden(view) ? 'hidden' : 'visible',
               }
             : null),
     };
 
-    const markCalculating = () => setView((prev) => ({ ...prev, overflowStatus: 'calculating' }));
-
-    const handleItemResize = (entry: ResizeEntry, key: Key) => {
-        // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
-        if (foundation.recordItemSize(key, entry.contentRect.width, view.maxCount)) {
-            markCalculating();
-        }
-    };
+    // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
+    const handleItemResize = (entry: ResizeEntry, key: Key) => foundation.handleItemResize(key, entry.contentRect.width, view.maxCount);
 
     // measure in the layout phase, before the hidden list is painted
     useLayoutEffect(() => {
-        if (committedKeys.current && !isEqual(committedKeys.current, keys)) {
-            foundation.handleKeysChange(keys);
-        }
-        committedKeys.current = keys;
-        if (!isScroll && view.overflowStatus === 'calculating') {
-            foundation.handleCollapseOverflow();
-        }
+        foundation.handleCommit(view);
     });
 
     // no root: the foundation and Tabs rely on viewport visibility to tell a list scrolled out of the page from one
@@ -219,36 +181,22 @@ export default function OverflowList(rawProps: OverflowListProps) {
 
     if (hasContent(overflowNode)) {
         overflowNode = (
-            <ReactResizeObserver
-                onResize={([entry]) => {
-                    foundation.setState({ overflowWidth: entry.contentRect.width });
-                    markCalculating();
-                }}
-            >
+            <ReactResizeObserver onResize={([entry]) => foundation.handleOverflowResize(entry.contentRect.width)}>
                 <div className={`${prefixCls}-overflow`}>{overflowNode}</div>
             </ReactResizeObserver>
         );
     }
 
     return (
-        <ReactResizeObserver
-            onResize={(entries) => {
-                foundation.setState({ containerWidth: entries[0]?.contentRect.width });
-                markCalculating();
-            }}
-        >
+        <ReactResizeObserver onResize={([entry]) => foundation.handleContainerResize(entry.contentRect.width)}>
             <div role={rootRole} {...rest} ref={ref} className={clsx(prefixCls, className)} style={listStyle}>
                 {collapseFrom === Boundary.START && overflowNode}
-                {view.visible.map((item, i) => {
-                    const idx = view.first + view.step * i;
-                    const key = OverflowListFoundation.getItemKey(itemKey, item, idx);
-                    return (
-                        <ReactResizeObserver key={key ?? idx} onResize={([entry]) => handleItemResize(entry, key)}>
-                            {/* the wrapper div gives the item width without adding up padding, margin and border */}
-                            <div className={`${prefixCls}-item`}>{visibleItemRenderer(item, idx)}</div>
-                        </ReactResizeObserver>
-                    );
-                })}
+                {OverflowListFoundation.getVisibleItems(view, itemKey).map(({ item, index, key }) => (
+                    <ReactResizeObserver key={key ?? index} onResize={([entry]) => handleItemResize(entry, key)}>
+                        {/* the wrapper div gives the item width without adding up padding, margin and border */}
+                        <div className={`${prefixCls}-item`}>{visibleItemRenderer(item, index)}</div>
+                    </ReactResizeObserver>
+                ))}
                 {collapseFrom === Boundary.END && overflowNode}
             </div>
         </ReactResizeObserver>

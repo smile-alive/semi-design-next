@@ -1277,6 +1277,24 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         );
     };
 
+    /** The native submit event: the Form validates and reports instead of the browser submitting */
+    handleSubmitEvent = (e: E & Pick<Event, 'preventDefault' | 'stopPropagation'>) => {
+        e.preventDefault();
+        if (this.getProp('stopPropagation')?.submit) {
+            e.stopPropagation();
+        }
+        this.submit(e);
+    };
+
+    /** The native reset event: the Form restores its init values instead of the browser resetting the controls */
+    handleResetEvent = (e: Pick<Event, 'preventDefault' | 'stopPropagation'>) => {
+        e.preventDefault();
+        if (this.getProp('stopPropagation')?.reset) {
+            e.stopPropagation();
+        }
+        this.reset();
+    };
+
     reset = (fieldPaths?: Array<string>) => {
         const targetFields = this.#getOperateFieldMap(fieldPaths);
         if (fieldPaths === undefined) {

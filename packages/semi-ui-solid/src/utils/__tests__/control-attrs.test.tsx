@@ -86,7 +86,7 @@ describe('omitFormInjected', () => {
 });
 
 describe('isNativeInputKey', () => {
-    it.each(['aria-label', 'aria-invalid', 'id', 'name', 'tabIndex', 'tabindex', 'autofocus', 'onFocus', 'onBlur'])('%s 属于原生控件', (key) => {
+    it.each(['aria-label', 'aria-invalid', 'id', 'name', 'tabIndex', 'tabindex', 'autofocus', 'onFocus', 'onBlur', 'onfocus', 'onblur'])('%s 属于原生控件', (key) => {
         expect(isNativeInputKey(key)).toBe(true);
     });
 

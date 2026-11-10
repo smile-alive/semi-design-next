@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
     import type { ElementProps } from '../../base/element-props';
     import { semiGlobalDefault } from '../../base/semi-default';
-    import { groupRole } from '../../utils/group-role';
     import { hasSlotContent } from '../../utils/slot-nodes';
     import type { ScrollListProps, ScrollListSlots } from './interface';
 
@@ -28,7 +28,7 @@
 </script>
 
 <template>
-    <div :class="prefix" :role="groupRole($attrs)">
+    <div :class="prefix" :role="namedRole($attrs)">
         <div v-if="hasHeader()" :class="`${prefix}-header`">
             <div :class="`${prefix}-header-title`" x-semi-prop="header">
                 <slot name="header">{{ props.header }}</slot>

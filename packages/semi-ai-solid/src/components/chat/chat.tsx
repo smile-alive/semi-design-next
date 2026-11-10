@@ -1,4 +1,4 @@
-import { For, type JSX, Show, createMemo, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
+import { For, Show, createMemo, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
 import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
@@ -187,23 +187,17 @@ export default function Chat(rawProps: ChatProps) {
     };
 
     const handleDragOver = (e: RootDragEvent) => {
-        if (upload().dragUpload) {
-            foundation.handleDragOver(e);
-        }
+        foundation.handleDragOver(e);
         callHandler(local.onDragOver, e);
     };
 
     const handleDragStart = (e: RootDragEvent) => {
-        if (upload().dragUpload) {
-            foundation.handleDragStart();
-        }
+        foundation.handleDragStart();
         callHandler(local.onDragStart, e);
     };
 
     const handleDragEnd = (e: RootDragEvent) => {
-        if (upload().dragUpload) {
-            foundation.handleDragEnd();
-        }
+        foundation.handleDragEnd();
         callHandler(local.onDragEnd, e);
     };
 
@@ -239,16 +233,7 @@ export default function Chat(rawProps: ChatProps) {
     useResizeObserver(container, foundation.handleScrollContainerResize);
 
     return (
-        <div
-            {...rest}
-            ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))}
-            role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']}
-            class={clsx(prefixCls, local.class)}
-            style={local.style}
-            onDragEnd={handleDragEnd}
-            onDragOver={handleDragOver}
-            onDragStart={handleDragStart}
-        >
+        <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest)} class={clsx(prefixCls, local.class)} style={local.style} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDragStart={handleDragStart}>
             <Show when={upload().dragUpload && state().uploadAreaVisible}>
                 <div ref={(node) => (dropArea = node)} class={`${prefixCls}-dropArea`} onDragLeave={foundation.handleContainerDragLeave} onDragOver={foundation.handleContainerDragOver} onDrop={foundation.handleContainerDrop}>
                     <span class={`${prefixCls}-dropArea-text`}>{locale().locale.dropAreaText}</span>

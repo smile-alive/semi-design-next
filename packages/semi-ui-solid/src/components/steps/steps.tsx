@@ -14,7 +14,6 @@ import FillStep from './fill-step';
 import type { BasicStepsProps, StepProps, StepsProps } from './interface';
 import NavStep from './nav-step';
 import { STEP } from './step';
-import type { Role } from './use-step-item';
 
 interface AllStepsProps extends BasicStepsProps {
     type?: 'fill' | 'basic' | 'nav';
@@ -145,7 +144,7 @@ export default function Steps(rawProps: StepsProps) {
     createEffect(() => warning(steps().length !== nodes().length, '[Semi Steps] Only Steps.Step is rendered as a child of Steps; other children are ignored.'));
 
     return (
-        <div {...rest} class={rootClass()} role={namedRole(props.role, props['aria-label'], props['aria-labelledby']) as Role}>
+        <div {...rest} class={rootClass()} role={namedRole(props)}>
             <Switch
                 fallback={
                     <Row type="flex" justify="start">

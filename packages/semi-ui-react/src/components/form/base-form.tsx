@@ -117,22 +117,6 @@ export default function Form<Values extends Record<string, any> = any, Output = 
         getFormApiProxyInternals(props.form)?.unbind();
     });
 
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (props.stopPropagation?.submit) {
-            e.stopPropagation();
-        }
-        foundation.submit(e);
-    };
-
-    const handleReset = (e: React.SyntheticEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (props.stopPropagation?.reset) {
-            e.stopPropagation();
-        }
-        foundation.reset();
-    };
-
     useLayoutEffect(() => {
         mount();
         return () => unmount();
@@ -156,7 +140,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
     const xId = id || generatedId;
 
     const formContent = (
-        <form style={style} noValidate {...rest} ref={formRef} id={xId} className={formCls} x-form-id={xId} onReset={handleReset} onSubmit={handleSubmit}>
+        <form style={style} noValidate {...rest} ref={formRef} id={xId} className={formCls} x-form-id={xId} onReset={foundation.handleResetEvent} onSubmit={foundation.handleSubmitEvent}>
             {content}
         </form>
     );

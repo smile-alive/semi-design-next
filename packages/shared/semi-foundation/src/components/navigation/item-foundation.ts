@@ -1,3 +1,4 @@
+import { cloneDeepWith, isPlainObject } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { strings } from './constants';
 
@@ -25,7 +26,11 @@ export interface SelectedItemProps<Props = ItemProps> {
 }
 
 export interface ItemAdapter<P extends ItemProps = ItemProps, S extends object = object> extends DefaultAdapter<P, S> {
-    cloneDeep<T>(value: T): T;
+    /**
+     * The entry `onSelect` reports in `selectedItems`, made with `copySelectedItem`: for an `items` entry the whole
+     * config plus `level`, otherwise every prop the item was given
+     */
+    getSelectedItem(): P;
     /** Replaces the selected keys with this item's key */
     selectSelf(): void;
     getSelectedKeysIsControlled(): boolean;
@@ -33,6 +38,18 @@ export interface ItemAdapter<P extends ItemProps = ItemProps, S extends object =
     notifyGlobalOnClick(item: SelectedItemProps<P>): void;
     notifyClick(item: SelectedItemProps<P>): void;
     getSelected(): boolean;
+}
+
+const copiedTypes = [Date, Map, Set, RegExp];
+
+/**
+ * The copy `onSelect` reports in `selectedItems`: plain objects, arrays, `Date`, `Map`, `Set` and `RegExp` are copied
+ * deeply, everything else (functions, DOM nodes, other class instances) is kept by reference. Framework elements that are
+ * plain objects (React elements, Vue VNodes) are kept too, which `isElement` recognizes.
+ */
+export function copySelectedItem<T>(item: T, isElement: (value: unknown) => boolean = () => false): T {
+    const copied = (value: unknown) => (isPlainObject(value) && !isElement(value)) || Array.isArray(value) || copiedTypes.some((type) => value instanceof type);
+    return cloneDeepWith(item, (value) => (copied(value) ? undefined : value));
 }
 
 /** Blank icon slots that indent an item `level` lists deep: each nesting level adds one */
@@ -67,9 +84,7 @@ export default class ItemFoundation<P extends ItemProps = ItemProps, S extends o
         // a SubNav triggers the click event itself
         if (!isSubNav) {
             if (!wasSelected) {
-                const selectedItems = [this.adapter.cloneDeep(this.getProps())];
-
-                this.adapter.notifyGlobalOnSelect({ itemKey, selectedKeys, selectedItems, domEvent: e });
+                this.adapter.notifyGlobalOnSelect({ itemKey, selectedKeys, selectedItems: [this.adapter.getSelectedItem()], domEvent: e });
             }
             this.adapter.notifyGlobalOnClick({ itemKey, text, domEvent: e });
         }

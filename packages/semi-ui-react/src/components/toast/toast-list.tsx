@@ -1,59 +1,59 @@
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+import { canCollapseStack, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
+import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
 import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
 import '@fibrae/semi-foundation/components/toast/toast.scss';
 import useNoticeListEffects from '../../hooks/use-notice-list-effects';
 import CSSAnimation from '../../internal/css-animation';
-import Toast, { type ToastItemHandle } from './toast';
+import Toast from './toast';
 
 export default function ToastList({ store }: ToastListProps) {
-    const { list, removedItems, order, stack, updatedItems } = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
-    const [handles] = useState(() => new Map<string, ToastItemHandle>());
+    const { items: shown, removedItems, order, stack, updatedItems } = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
+    const [elements] = useState(() => new Map<string, HTMLDivElement>());
     const [stackExpanded, setStackExpanded] = useState(false);
+    const [hovered, setHovered] = useState(false);
+    const [focused, setFocused] = useState(false);
     const innerWrapper = useRef<HTMLDivElement>(null);
-    const hovered = useRef(false);
-    const focused = useRef(false);
-    const byId = new Map([...list, ...removedItems].map((item) => [item.id, item]));
+    const byId = new Map([...shown, ...removedItems].map((item) => [item.id, item]));
 
-    const announcement = useNoticeListEffects(list, updatedItems, removedItems, handles);
+    const announcement = useNoticeListEffects(shown, updatedItems, elements, cssClasses.PREFIX);
 
     const items = order.filter((id) => byId.has(id)).map((id) => byId.get(id));
+    const depths = getStackDepths(items.map(({ id }) => id).reverse(), new Set(shown.map(({ id }) => id)));
+    const listState = { paused: hovered || focused, removedItems, updatedItems };
 
-    // An emptied list has no height, so leave() never collapses it; without this the next batch would start expanded.
+    // An emptied list has no height, so leaving it never collapses the stack; without this the next batch would start expanded.
     if (stackExpanded && items.length === 0) {
         setStackExpanded(false);
     }
 
-    const expanded = stack === 0 || stackExpanded || list.length <= stack;
+    const expanded = isStackExpanded(stack, stackExpanded, shown.length);
 
-    const enter = (source: typeof hovered) => {
-        source.current = true;
-        handles.forEach((handle) => handle.pauseCloseTimer());
+    const enter = (setSource: (value: boolean) => void) => {
+        setSource(true);
         if (stack) {
             setStackExpanded(true);
         }
     };
 
-    const leave = (source: typeof hovered) => {
-        source.current = false;
-        if (hovered.current || focused.current) {
-            return;
-        }
-        handles.forEach((handle) => handle.resumeCloseTimer());
-        if (stack && innerWrapper.current?.getBoundingClientRect().height) {
+    const leave = (setSource: (value: boolean) => void, otherSource: boolean) => {
+        setSource(false);
+        if (!otherSource && canCollapseStack(stack, innerWrapper.current)) {
             setStackExpanded(false);
         }
     };
 
-    // an unmounting focused toast fires no blur, which would leave every timer paused
+    // an item unmounts when the list's order changes
     useLayoutEffect(() => {
-        if (focused.current && !innerWrapper.current?.contains(FocusTrapHandle.getActiveElement(innerWrapper.current))) {
-            leave(focused);
+        if (hasLostFocus(focused, innerWrapper.current)) {
+            setFocused(false);
+            if (!hovered && canCollapseStack(stack, innerWrapper.current)) {
+                setStackExpanded(false);
+            }
         }
-    });
+    }, [focused, hovered, stack, order]);
 
     return (
         <>
@@ -68,24 +68,23 @@ export default function ToastList({ store }: ToastListProps) {
                 })}
                 onBlur={(event) => {
                     if (!event.currentTarget.contains(event.relatedTarget)) {
-                        leave(focused);
+                        leave(setFocused, hovered);
                     }
                 }}
-                onFocus={() => enter(focused)}
-                onMouseEnter={() => enter(hovered)}
-                onMouseLeave={() => leave(hovered)}
+                onFocus={() => enter(setFocused)}
+                onMouseEnter={() => enter(setHovered)}
+                onMouseLeave={() => leave(setHovered, focused)}
             >
-                {items.map((item, index) => {
-                    const isRemoved = removedItems.some((removed) => removed.id === item.id);
-                    // leaving toasts are not counted, or the ones behind would sink and spring back on unmount
-                    const newerShown = items.slice(index + 1).filter((newer) => list.includes(newer)).length;
+                {items.map((item) => {
+                    const isRemoved = removedItems.includes(item);
+                    const depth = depths.get(item.id);
                     const animationState = isRemoved ? 'leave' : 'enter';
                     return (
                         <CSSAnimation
                             key={item.id}
                             startClassName={isRemoved ? `${cssClasses.PREFIX}-animation-hide` : `${cssClasses.PREFIX}-animation-show`}
                             animationState={animationState}
-                            getElement={() => handles.get(item.id)?.element()}
+                            getElement={() => elements.get(item.id)}
                             motion={item.motion}
                             onAnimationEnd={() => {
                                 // a late enter-animation end must not cut the leave short
@@ -93,26 +92,24 @@ export default function ToastList({ store }: ToastListProps) {
                                     store.finishLeave(item.id);
                                 }
                             }}
-                            onAnimationStart={() => pinAnimatedHeight(handles.get(item.id)?.element())}
+                            onAnimationStart={() => pinAnimatedHeight(elements.get(item.id))}
                         >
                             {({ animationClassName, animationEventsNeedBind }) => (
                                 <Toast
                                     {...item}
                                     className={clsx(item.className, animationClassName, {
-                                        [`${cssClasses.PREFIX}-stack-hidden`]: !expanded && newerShown >= numbers.stackVisibleCount,
+                                        [`${cssClasses.PREFIX}-stack-hidden`]: isStackHidden(expanded, depth),
                                     })}
-                                    positionInList={{ length: list.length, index: list.length - 1 - newerShown }}
+                                    listState={listState}
+                                    positionInList={{ length: shown.length, index: shown.length - 1 - depth }}
                                     stack={stack > 0}
                                     // collapse the slot while leaving so toasts below move up instead of jumping on unmount
                                     stackExpanded={expanded && !isRemoved}
                                     {...animationEventsNeedBind}
-                                    ref={(handle) => {
-                                        handles.set(item.id, handle);
-                                        if (hovered.current || focused.current) {
-                                            handle.pauseCloseTimer();
-                                        }
+                                    ref={(element) => {
+                                        elements.set(item.id, element);
                                         return () => {
-                                            handles.delete(item.id);
+                                            elements.delete(item.id);
                                         };
                                     }}
                                     style={{ ...item.style }}

@@ -2,21 +2,21 @@ import { type JSX, type ValidComponent, Show, children, createEffect, createMemo
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
-import { errorMessages } from '@fibrae/semi-foundation/components/form/errors';
 import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
 import type { ExclusiveFieldValidation, FieldRegistration } from '@fibrae/semi-foundation/components/form/interface';
-import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/components/form/utils';
+import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveFieldView } from '@fibrae/semi-foundation/components/form/utils';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import useWatch from '../../primitives/use-watch';
 import hasContent from '../../utils/has-content';
+import isMarkup from '../../utils/is-markup';
 import { type FormContextValue, useArrayFieldContext, useFormContext, useFormInputGroupContext } from './context';
 import ErrorMessage from './error-message';
 import FieldGrid from './field-grid';
 import type { CommonFieldProps, FieldProps } from './interface';
-import Label from './label';
-import { cloneDeep, invoke, isLabelConfig } from './utils';
+import Label, { type LabelProps } from './label';
+import { cloneDeep, invoke } from './utils';
 
 const prefix = cssClasses.PREFIX;
 
@@ -74,7 +74,6 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
 
         const merged = createMemo(() => mergeFieldConfig(local, form.formProps));
         const fieldPath = createMemo(() => local.field as string | undefined);
-        const warnInsetFallback = createMemo(() => !insetLabel && merged().labelPosition === 'inset' && !local.noLabel);
         // each read of a JSX prop creates its nodes again, so these are read once; the control gets the resolved prefix
         const prefixContent = children(() => local.prefix as JSX.Element);
 
@@ -98,24 +97,23 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         let registered: { field: string; registration: FieldRegistration; leaveGroup?: () => void } | undefined;
 
         const a11yId = () => local.id || generatedId;
-        const labelConfig = () => {
-            const value = label();
-            return isLabelConfig(value) ? value : undefined;
-        };
-        const labelText = (): JSX.Element => {
-            const config = labelConfig();
-            return config ? (config.text ?? local.field) : (label() as JSX.Element) || local.field;
-        };
-        const labelId = () => labelConfig()?.id || `${a11yId()}-label`;
-        const helpTextId = () => `${a11yId()}-helpText`;
-        const extraTextId = () => `${a11yId()}-extraText`;
-        const errorMessageId = () => `${a11yId()}-errormessage`;
-        // The control would be unnamed without an inset label, so the label goes on top: when the component cannot
-        // render one, or when a prefix or a custom trigger takes its place
-        const insetFallback = () => merged().labelPosition === 'inset' && (!insetLabel || hasContent(prefixContent()) || typeof rest.triggerRender === 'function');
-        const labelPosition = () => (insetFallback() ? 'top' : merged().labelPosition);
-        const insetShown = () => labelPosition() === 'inset' && !local.noLabel;
-        const shownStatus = () => local.validateStatus || snapshot().status;
+        const viewInput = () => ({
+            id: a11yId(),
+            field: local.field,
+            noLabel: local.noLabel,
+            validateStatus: local.validateStatus,
+            status: snapshot().status,
+            labelPosition: merged().labelPosition,
+            labelCol: merged().labelCol,
+            wrapperCol: merged().wrapperCol,
+            formHasCols: Boolean(form.formProps.labelCol && form.formProps.wrapperCol),
+            insetSupported: insetLabel,
+            hasPrefix: hasContent(prefixContent()),
+            hasTrigger: typeof rest.triggerRender === 'function',
+            isNode: isMarkup,
+        });
+        // the position needs no label, and the label is read only where it renders
+        const labelPosition = createMemo(() => resolveFieldView(viewInput()).labelPosition);
         const rulesRequired = () => isRequiredByRules(form.formProps, local.rules);
 
         // A layout creates only the texts it renders: nodes created for a text left out have no server markup to hydrate
@@ -126,6 +124,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         const label = children(() => (!local.noLabel && (labelPosition() === 'inset' || ownLayout()) ? (local.label as JSX.Element) : undefined));
         const helpText = children(() => (ownLayout() && !local.noErrorMessage && !errorReplacesHelp() ? (local.helpText as JSX.Element) : undefined));
         const extraText = children(() => (ownLayout() && extraTextShown() ? (local.extraText as JSX.Element) : undefined));
+        const view = createMemo(() => resolveFieldView<LabelProps, JSX.Element>({ ...viewInput(), label: label() }));
 
         const ownAria = () => {
             if (!group) {
@@ -149,9 +148,9 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                 'aria-errormessage': own['aria-errormessage'],
                 ...getFieldAriaProps({
                     own,
-                    ids: { label: labelId(), helpText: helpTextId(), extraText: extraTextId(), errorMessage: errorMessageId() },
+                    ids: view().ids,
                     rulesRequired: rulesRequired(),
-                    label: labelConfig(),
+                    label: view().labelConfig,
                     labelPosition: labelPosition(),
                     noLabel: local.noLabel,
                     noErrorMessage: local.noErrorMessage,
@@ -160,9 +159,8 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                     hasHelpText: hasContent(helpText()),
                     hasExtraText: hasContent(extraText()),
                     error,
-                    errorHasContent: errorMessages(error).length > 0,
                     status,
-                    shownStatus: shownStatus(),
+                    shownStatus: view().shownStatus,
                 }),
             };
         });
@@ -221,13 +219,13 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                     return prefixContent();
                 },
                 get validateStatus() {
-                    return shownStatus();
+                    return view().shownStatus;
                 },
                 get insetLabel() {
-                    return insetShown() ? labelText() : undefined;
+                    return view().insetShown ? view().labelText : undefined;
                 },
                 get insetLabelId() {
-                    return insetShown() ? labelId() : undefined;
+                    return view().insetShown ? view().ids.label : undefined;
                 },
                 get 'aria-required'() {
                     return aria()['aria-required'];
@@ -257,7 +255,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         const extraContent = () => (
             <Show when={hasContent(extraText())}>
                 <div
-                    id={extraTextId()}
+                    id={view().ids.extraText}
                     class={clsx(`${prefix}-field-extra`, {
                         [`${prefix}-field-extra-string`]: typeof extraText() === 'string',
                         [`${prefix}-field-extra-middle`]: merged().extraTextPosition === 'middle',
@@ -283,21 +281,26 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                     return merged().labelWidth;
                 },
             },
-            () => labelConfig() ?? {},
+            () => view().labelConfig ?? {},
             {
                 get id() {
-                    return labelId();
+                    return view().ids.label;
                 },
                 get name() {
                     return a11yId();
                 },
                 get text() {
-                    return labelText();
+                    return view().labelText;
                 },
             }
         );
 
-        createEffect(on(warnInsetFallback, (warn) => warning(warn, `[Semi Form]: ${name} has no inset label, so Field "${local.field}" is laid out with labelPosition 'top'`)));
+        createEffect(
+            on(
+                () => view().warnInsetFallback,
+                (warn) => warning(warn, `[Semi Form]: ${name} has no inset label, so Field "${local.field}" is laid out with labelPosition 'top'`)
+            )
+        );
 
         useWatch(fieldPath, (field) => {
             unregister();
@@ -328,14 +331,13 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                         labelCol={merged().labelCol}
                         labelPosition={labelPosition()}
                         mainClass={`${prefix}-field-main`}
-                        // the Form wraps the columns in one Row only when it sets both cols itself
-                        row={!(form.formProps.labelCol && form.formProps.wrapperCol)}
+                        row={view().wrapInRow}
                         wrapperCol={merged().wrapperCol}
                     >
                         <Show when={merged().extraTextPosition === 'middle'}>{extraContent()}</Show>
                         {control()}
                         <Show when={!local.noErrorMessage}>
-                            <ErrorMessage error={snapshot().error} errorMessageId={errorMessageId()} helpText={helpText()} helpTextId={helpTextId()} showValidateIcon={form.formProps.showValidateIcon} validateStatus={shownStatus()} />
+                            <ErrorMessage error={snapshot().error} errorMessageId={view().ids.errorMessage} helpText={helpText()} helpTextId={view().ids.helpText} showValidateIcon={form.formProps.showValidateIcon} validateStatus={view().shownStatus} />
                         </Show>
                         <Show when={merged().extraTextPosition === 'bottom'}>{extraContent()}</Show>
                     </FieldGrid>

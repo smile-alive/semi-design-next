@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, onMounted, shallowRef, useId, useTemplateRef, watch, type ComponentPublicInstance, type ShallowRef } from 'vue';
+    import { computed, onMounted, useId, useTemplateRef, watch, type ComponentPublicInstance, type ShallowRef } from 'vue';
     import { format } from 'date-fns';
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
     import { toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
@@ -51,7 +51,6 @@
     const cards = new Map<string, HTMLElement | null>();
     const moreButtons = new Map<string, HTMLButtonElement | null>();
     const grid = useTemplateRef('grid');
-    const itemLimit = shallowRef(0);
 
     const { foundation, state } = useFoundation<Foundation, Adapter, MonthCalendarProps, CalendarMonthBaseState>(
         CalendarMonthFoundation,
@@ -66,6 +65,7 @@
     const prefixCls = `${cssClasses.PREFIX}-month`;
     const cardCls = `${prefixCls}-event-card`;
     const openCardKey = computed(() => state.value.openCardKey);
+    const itemLimit = computed(() => state.value.itemLimit);
     const monthlyData = computed(() => CalendarFoundation.getMonthlyData(props.displayValue, i18n.value.dateFnsLocale, props.weekStartsOn, props.today));
     const parsedEvents = computed(() => CalendarFoundation.getParseMonthlyEvents(props.events, props.displayValue, props.weekStartsOn));
     const weekCount = computed(() => Object.keys(monthlyData.value).length);
@@ -104,7 +104,7 @@
     const measure = () => {
         const row = grid.value?.lastElementChild;
         if (row) {
-            itemLimit.value = CalendarFoundation.getItemLimit(row.getBoundingClientRect().height);
+            foundation.handleRowResize(row.getBoundingClientRect().height);
         }
     };
 
@@ -145,7 +145,7 @@
     onMounted(measure);
 
     useResizeObserver(grid, measure);
-    watch([monthlyData, parsedEvents, itemLimit, openCardKey], () => foundation.closeStaleCard(monthlyData.value, parsedEvents.value, itemLimit.value));
+    watch([monthlyData, parsedEvents, itemLimit, openCardKey], () => foundation.closeStaleCard(monthlyData.value, parsedEvents.value));
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
-    import { arrayAdd } from '@fibrae/semi-foundation/components/table/utils';
+    import { arrayAdd, genExpandedRowKey } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { getTableContext } from '../context.js';
     import type { ColumnProps, TableCellAttrs } from '../interface.js';
@@ -39,7 +39,7 @@
         this={table.components.body.row}
         aria-rowindex={virtualIndex === undefined ? undefined : table.headerRowCount + virtualIndex + 1}
         class={[`${table.prefixCls}-row-expand`, `${table.prefixCls}-row`, { [`${table.prefixCls}-row-hidden`]: displayNone }]}
-        data-row-key="{rowKey}-expanded-row"
+        data-row-key={genExpandedRowKey(rowKey)}
         role="row"
         {style}
     >

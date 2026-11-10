@@ -46,10 +46,9 @@
     );
 
     const texts = $derived(locale().locale);
-    const previewValue = $derived(states().movingInfo?.value ?? value);
-
-    // The popup is anchored to the bar's center, so only a translate moves it to the pointer
-    const tooltipStyle = $derived(states().movingInfo ? `translate: ${states().movingInfo?.offset}px 0` : undefined);
+    const movingInfo = $derived(states().movingInfo);
+    const previewValue = $derived(movingInfo?.value ?? value);
+    const tooltipStyle = $derived(movingInfo ? `translate: ${VideoProgressFoundation.getPreviewTranslate(movingInfo.offset)}` : undefined);
 </script>
 
 {#snippet bar(triggerProps?: TooltipTriggerProps)}
@@ -67,9 +66,9 @@
         onfocus={foundation.handleFocus}
         onkeydown={foundation.handleKeyDown}
         onlostpointercapture={foundation.handleLostPointerCapture}
-        onmouseenter={(event) => foundation.handlePointerPosition(event, { seek: false })}
+        onmouseenter={foundation.handlePointerEnter}
         onpointerdown={foundation.handlePointerDown}
-        onpointermove={(event) => foundation.handlePointerPosition(event, { seek: true })}
+        onpointermove={foundation.handlePointerMove}
     >
         <div class={`${prefix}-markers`}>
             {#each markersList as marker, index (`${marker.start}-${index}`)}

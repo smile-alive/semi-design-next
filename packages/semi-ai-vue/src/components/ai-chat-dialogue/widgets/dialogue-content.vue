@@ -1,23 +1,24 @@
 <script setup lang="ts">
     import { computed, Fragment, h } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import DialogueFoundation, { type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { isAwaitingOutput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
+    import { useAIChatDialogueContext } from '../context';
     import type { AIChatDialogueSlots, Metadata } from '../interface';
     import ReferenceWidget from './content-item/reference.vue';
     import DialogueContentBody from './dialogue-content-body.vue';
-    import useContentClass from './use-content-class';
 
     type DialogueContentSlots = Pick<AIChatDialogueSlots, 'content' | 'contentItem' | 'messageText' | 'messageEdit'>;
 
     const props = defineProps<{ message: Message; role?: Metadata }>();
     const slots = defineSlots<DialogueContentSlots>();
 
+    const { view } = useAIChatDialogueContext();
     const locale = useLocale('AIChatDialogue');
 
-    const wrapCls = useContentClass(() => props.message);
-
+    // the #content slot receives the bubble classes of the text blocks
+    const wrapCls = computed(() => DialogueFoundation.getContentClass(props.message.role, props.message.status, view.value.mode));
     const { PREFIX_CONTENT } = cssClasses;
     const { ROLE } = strings;
     const loading = computed(() => isAwaitingOutput(props.message));

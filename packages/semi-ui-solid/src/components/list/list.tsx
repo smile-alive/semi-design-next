@@ -36,9 +36,6 @@ export interface ListProps<T> extends ElementProps<'div', 'onClick'> {
 
 const listRole = { role: 'list' } as const;
 
-// namedRole yields a plain string, which the typed role attribute does not accept
-type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
-
 const defaultProps = {
     bordered: false,
     split: true,
@@ -118,7 +115,7 @@ function List<T = any>(rawProps: ListProps<T>) {
     return (
         <div
             {...rest}
-            role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as Role}
+            role={namedRole(rest)}
             class={clsx(prefixCls, local.class, {
                 [`${prefixCls}-flex`]: local.layout === 'horizontal',
                 [`${prefixCls}-${local.size}`]: local.size,

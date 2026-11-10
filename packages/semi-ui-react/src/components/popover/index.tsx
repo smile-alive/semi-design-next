@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/components/popover/popover.scss';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useDefaultProps from '../../base/use-default-props';
 import Tooltip, { type Position, type TooltipHandle, type TooltipProps, type Trigger, type RenderContentProps } from '../tooltip/index';
 import Arrow from './arrow';

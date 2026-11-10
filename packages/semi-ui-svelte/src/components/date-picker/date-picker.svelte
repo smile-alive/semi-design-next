@@ -146,16 +146,6 @@
     const attrs = $derived(splitControlAttrs(rest, (key) => controlKeys.includes(key)));
     const rootRole = $derived((rest.role as string | undefined) ?? (hasRangeInputs || rest['aria-label'] ? 'group' : undefined));
 
-    setInputGroupContext(undefined);
-
-    const enabledDate = () => false;
-
-    const shownDisabledDate = $derived(disabledDate ?? enabledDate);
-
-    const noDisabledTime = () => ({});
-
-    const shownDisabledTime = $derived(disabledTime ?? noDisabledTime);
-
     // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: DatePickerFoundationProps = {
         get value() {
@@ -183,10 +173,10 @@
             return disabled;
         },
         get disabledDate() {
-            return shownDisabledDate;
+            return disabledDate;
         },
         get disabledTime() {
-            return shownDisabledTime;
+            return disabledTime;
         },
         get startDateOffset() {
             return startDateOffset;
@@ -360,10 +350,12 @@
         onClear: foundation.handleInputClear,
     });
 
-    // the panel calls them while rendering, so they read the current props: the foundation reads the last committed ones
-    const disabledDisposeDate = (date: Date, options?: DisabledDateOptions) => DatePickerFoundation.disposeDateFn(zone, shownDisabledDate, date, options);
+    setInputGroupContext(undefined);
 
-    const disabledDisposeTime = (date: Date | Date[], panelType: PanelType) => DatePickerFoundation.disposeDateFn(zone, shownDisabledTime, date, panelType);
+    // the panel calls them while rendering, so they read the current props: the foundation reads the last committed ones
+    const disabledDisposeDate = (date: Date, options?: DisabledDateOptions) => DatePickerFoundation.disposeDateFn(zone, disabledDate, date, options);
+
+    const disabledDisposeTime = (date: Date | Date[], panelType: PanelType) => DatePickerFoundation.disposeDateFn(zone, disabledTime, date, panelType);
 
     const handleTriggerKeyDown = (event: KeyboardEvent) => {
         // a control inside the trigger (the range clear button, a custom trigger's own) keeps its keys

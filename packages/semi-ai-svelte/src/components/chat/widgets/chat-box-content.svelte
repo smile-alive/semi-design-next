@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
     import { getChatContext } from '../context.js';
     import type { ChatMessage, ChatMetadata } from '../interface.js';
@@ -9,13 +8,7 @@
 
     const { view, snippets } = getChatContext();
 
-    const { PREFIX_CHAT_BOX } = cssClasses;
-
-    const wrapClass = $derived.by(() => {
-        const { mode } = view;
-        const { bubble, user, error } = ChatFoundation.getContentFlags(message.role, message.status, mode);
-        return [`${PREFIX_CHAT_BOX}-content`, bubble && `${PREFIX_CHAT_BOX}-content-${mode}`, user && `${PREFIX_CHAT_BOX}-content-user`, error && `${PREFIX_CHAT_BOX}-content-error`].filter(Boolean).join(' ');
-    });
+    const wrapClass = $derived(ChatFoundation.getContentClass(message.role, message.status, view.mode));
 </script>
 
 {#snippet defaultContent()}

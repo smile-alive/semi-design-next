@@ -3,7 +3,7 @@ import { memo, useLayoutEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
+import { coversPage, defaultPopupContainer, resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/components/portal/portal.scss';
 import { PopupLayerContext } from '../../base/popup-layer';
 import { useConfigContext } from '../../components/config-provider/context';
@@ -36,15 +36,16 @@ const defaultPrefixCls = `${BASE_CLASS_PREFIX}-portal`;
  */
 function Attach({ el, getContainer, className, style, dir }: AttachProps): React.ReactNode {
     useLayoutEffect(() => {
+        const container = getContainer();
         el.setAttribute('class', className);
         el.removeAttribute('style');
-        Object.assign(el.style, style);
+        // a container that leaves the page usable keeps the overlay in its flow
+        Object.assign(el.style, style, coversPage(() => container) ? undefined : { position: 'static' });
         if (dir) {
             el.setAttribute('dir', dir);
         } else {
             el.removeAttribute('dir');
         }
-        const container = getContainer();
         if (el.parentNode !== container) {
             container.appendChild(el);
         }
@@ -75,11 +76,10 @@ function ClientPortal(props: PortalProps): React.ReactNode {
     const [el] = useState(() => document.createElement('div'));
     const [layer] = useState(() => Symbol('semi-popup-layer'));
 
-    // Outside the fullscreen element nothing is shown or clickable, so a popup mounted during fullscreen goes into it.
     // Known limits: chosen once at mount, so a popup mounted before fullscreen stays in the body and one mounted
     // during it stays in the former fullscreen element afterwards, inheriting that ancestor chain's styles; moving it
     // later would drop the focus inside. Upgrade: re-target on show once keepDOM overlays are used across fullscreen.
-    const [defaultContainer] = useState(() => (document.fullscreenElement as HTMLElement | null) ?? document.body);
+    const [defaultContainer] = useState(defaultPopupContainer);
 
     useDidUpdate(props, (_, prevProps) => didUpdate?.(prevProps));
 

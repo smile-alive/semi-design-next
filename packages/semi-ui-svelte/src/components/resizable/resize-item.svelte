@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import useDefaultProps from '../../base/use-default-props.js';
-    import { groupRole } from '../../utils/group-role.js';
     import { getResizeGroupContext } from './context.js';
     import type { ResizeItemProps } from './interface.js';
 
@@ -32,6 +32,6 @@
     );
 </script>
 
-<div bind:this={item} {...rest} class={[`${prefix}-item`, rest.class]} role={groupRole(rest)}>
+<div bind:this={item} {...rest} class={[`${prefix}-item`, rest.class]} role={namedRole(rest)}>
     {@render children?.()}
 </div>

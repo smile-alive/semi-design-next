@@ -1,14 +1,12 @@
 import { Index, Match, Show, Switch, createMemo, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { omitBy } from 'es-toolkit';
-import { cssClasses, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import { cssClasses, type DialogueIconKind, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import { messageToChatInput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 import DialogueFoundation, { type ContentItem, type CustomToolCall, type FunctionToolCall, type InputFile, type InputImage, type InputMessage, type InputText, type Message, type OutputMessage, type OutputText, type Reasoning, type Refusal } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { findContentItemRenderer, getAttachmentLayout, getVisibleAnnotations, isAwaitingOutput, isImageList } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
 import { getMessageText } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-text';
 import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
-import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import { IconAlertCircle, IconCode, IconExcel, IconFile, IconPdf, IconSendMsgStroked, IconVideo, IconWord, IconWrench } from '@fibrae/semi-icons-solid';
 import Image from '@fibrae/semi-ui-solid/image/index';
 import MarkdownRender from '@fibrae/semi-ui-solid/markdown-render/index';
@@ -36,7 +34,7 @@ interface BlockProps {
 const { PREFIX_CONTENT } = cssClasses;
 const { STATUS, ROLE, MESSAGE_ITEM_TYPE, TEXT_TYPES } = strings;
 
-const FILE_ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile };
+const FILE_ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile } satisfies Record<DialogueIconKind | 'default', unknown>;
 
 const EMPTY: ContentItem[] = [];
 
@@ -51,22 +49,18 @@ function CustomRenderer(props: { renderer: DialogueContentItemRenderer; item: un
     return <div class={`${PREFIX_CONTENT}-custom-renderer`}>{node()}</div>;
 }
 
-function MarkdownBlock(props: { text: string; class: string; isUser: boolean }) {
+function MarkdownBlock(props: { text: string; class: string; role?: string }) {
     const { view, referenceClick } = useAIChatDialogueContext();
     const locale = useLocale('AIChatDialogue');
 
     // its own memo: a change of another view key (selecting, mode) must not render the markdown again
     const markdownRenderProps = createMemo(() => view().markdownRenderProps);
-
-    // an explicit undefined entry would replace the dialogue code block with the built-in one
-    const components = createMemo(() => ({ code: Code, ...omitBy(markdownRenderProps()?.components ?? {}, (component) => component === undefined) }));
-
-    const raw = () => (view().escapeHtml && props.isUser ? escapeHtmlInMarkdown(props.text) : props.text);
+    const components = createMemo(() => DialogueFoundation.mergeMarkdownComponents({ code: Code }, markdownRenderProps()?.components));
 
     return (
         <div class={props.class}>
-            <MarkdownRender format="md" {...markdownRenderProps()} components={components()} raw={raw()} />
-            <Show when={props.isUser && view().showReference}>
+            <MarkdownRender format="md" {...markdownRenderProps()} components={components()} raw={DialogueFoundation.getMarkdownRaw(props.text, props.role, view().escapeHtml)} />
+            <Show when={props.role === ROLE.USER && view().showReference}>
                 <button type="button" class={`${PREFIX_CONTENT}-icon-reference`} aria-label={locale().locale.reference} onClick={() => referenceClick({ type: 'text', content: props.text })}>
                     <IconSendMsgStroked />
                 </button>
@@ -194,8 +188,8 @@ function MessagePart(props: BlockProps & { part: MessagePartItem; layout: Return
                                 onClick={() => annotationClick(annotations())}
                             />
                         </Show>
-                        <Show when={(props.part as OutputText).text}>{(text) => <MarkdownBlock class={props.class} isUser={props.isUser} text={text()} />}</Show>
-                        <Show when={(props.part as Refusal).refusal}>{(refusal) => <MarkdownBlock class={props.class} isUser={props.isUser} text={refusal()} />}</Show>
+                        <Show when={(props.part as OutputText).text}>{(text) => <MarkdownBlock class={props.class} role={props.message.role} text={text()} />}</Show>
+                        <Show when={(props.part as Refusal).refusal}>{(refusal) => <MarkdownBlock class={props.class} role={props.message.role} text={refusal()} />}</Show>
                     </Match>
                     <Match when={type() === MESSAGE_ITEM_TYPE.INPUT_IMAGE}>
                         <ImageAttachment image={props.part as InputImage} isLast={props.layout.isLast} isList={props.isImageList} />
@@ -230,7 +224,7 @@ function MessageItem(props: BlockProps & { item: InputMessage | OutputMessage })
                 <Index each={parts()}>{(part, index) => <MessagePart class={props.class} isImageList={imageList()} isUser={props.isUser} layout={getAttachmentLayout(parts(), index)} message={props.message} part={part()} />}</Index>
             }
         >
-            {(text) => <MarkdownBlock class={props.class} isUser={props.isUser} text={text()} />}
+            {(text) => <MarkdownBlock class={props.class} role={props.message.role} text={text()} />}
         </Show>
     );
 }
@@ -277,15 +271,7 @@ export default function DialogueContent(props: DialogueContentProps) {
     const items = createMemo(() => (Array.isArray(props.message.content) ? props.message.content : EMPTY));
     const textRenderer = createMemo(() => findContentItemRenderer(view().renderDialogueContentItem, 'default'));
 
-    const wrapCls = () => {
-        const { bubble, user, error } = DialogueFoundation.getContentFlags(props.message.role, props.message.status, view().mode);
-        return clsx(PREFIX_CONTENT, {
-            [`${PREFIX_CONTENT}-${view().mode}`]: bubble,
-            [`${PREFIX_CONTENT}-no-bubble`]: !bubble,
-            [`${PREFIX_CONTENT}-user`]: user,
-            [`${PREFIX_CONTENT}-error`]: error,
-        });
-    };
+    const wrapCls = () => DialogueFoundation.getContentClass(props.message.role, props.message.status, view().mode);
 
     const failed = () => props.message.status === STATUS.FAILED || props.message.status === STATUS.CANCELLED;
 
@@ -309,7 +295,7 @@ export default function DialogueContent(props: DialogueContentProps) {
                     }
                 >
                     {(text) => (
-                        <Show when={textRenderer()} keyed fallback={<MarkdownBlock class={wrapCls()} isUser={isUser()} text={text()} />}>
+                        <Show when={textRenderer()} keyed fallback={<MarkdownBlock class={wrapCls()} role={props.message.role} text={text()} />}>
                             {(render) => <CustomRenderer item={text()} message={props.message} renderer={render} />}
                         </Show>
                     )}

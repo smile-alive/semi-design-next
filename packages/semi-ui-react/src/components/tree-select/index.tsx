@@ -1,5 +1,6 @@
 import React, { Fragment, useDeferredValue, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/tree-select/constants';
 import TreeSelectFoundation, { type Size, type BasicTriggerRenderProps, type BasicTreeSelectProps, type BasicTreeSelectInnerData, type TreeSelectAdapter } from '@fibrae/semi-foundation/components/tree-select/foundation';
@@ -11,7 +12,6 @@ import '@fibrae/semi-foundation/components/tree/tree.scss';
 import '@fibrae/semi-foundation/components/tree-select/tree-select.scss';
 import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-react';
 import type { Bivariant, ByMultiple, ElementProps } from '../../base/base';
-import type { ValidateStatus } from '../../base/base-component';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../hooks/use-click-outside';
@@ -323,7 +323,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
             notifyChange: (value, node, e) => base.getProps().onChange?.(value, node, e),
             notifyChangeWithObject: (node, e) => base.getProps().onChange?.(node, e),
-            notifyExpand: (expandedKeys, { expanded, node }) => base.getProps().onExpand?.([...expandedKeys], { expanded, node }),
+            notifyExpand: (expandedKeys, { expanded, node }) => base.getProps().onExpand?.(expandedKeys, { expanded, node }),
             notifyFocus: (e) => base.getProps().onFocus?.(e),
             notifyBlur: (e) => base.getProps().onBlur?.(e),
             focusInput: () => {
@@ -462,8 +462,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
               });
 
     const hasValue = TreeSelectFoundation.hasValue(props, view);
-    const triggerSearchHasInputValue = searchPosition === strings.SEARCH_POSITION_TRIGGER && inputValue;
-    const clearable = showClear && (hasValue || triggerSearchHasInputValue) && !disabled;
+    const clearable = TreeSelectFoundation.isClearable(props, view);
 
     const contextValue: TreeContextValue = useMemo(
         () => ({
@@ -813,9 +812,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                 onKeyDown={(e) => {
                     rest.onKeyDown?.(e);
                     if (!isInnerControlKey(e) && !handleTreeKeyDown(e)) {
-                        foundation.handleSelectionKeyDown(e);
-                        const opened = !isOpen && foundation.getState('isOpen');
-                        if (opened && (e.key === 'Home' || e.key === 'End')) {
+                        if (foundation.handleSelectionKeyDown(e)) {
                             handleRowKeyDown(e);
                         }
                     }

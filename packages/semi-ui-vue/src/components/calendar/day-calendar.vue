@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import { format, isSameDay, startOfDay } from 'date-fns';
+    import { format, startOfDay } from 'date-fns';
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
     import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
@@ -76,17 +76,7 @@
                         <slot name="timeDisplay" v-bind="slotProps" />
                     </template>
                 </TimeCol>
-                <!-- a new day, a new showCurrTime or a day that becomes today gets a new column, which decides again whether to show the line -->
-                <DayCol
-                    :key="`${dayStart.toDateString()}|${props.showCurrTime}|${props.today !== null && isSameDay(dayStart, props.today)}`"
-                    :displayValue="dayStart"
-                    :events="parsedEvents.day"
-                    :isWeekend="isWeekend"
-                    :minEventHeight="props.minEventHeight"
-                    :scrollHeight="scrollHeight"
-                    :showCurrTime="props.showCurrTime"
-                    @slotClick="(event, value) => emit('click', event, value)"
-                >
+                <DayCol :displayValue="dayStart" :events="parsedEvents.day" :isWeekend="isWeekend" :minEventHeight="props.minEventHeight" :scrollHeight="scrollHeight" :showCurrTime="props.showCurrTime" :today="props.today" @slotClick="(event, value) => emit('click', event, value)">
                     <template v-if="$slots.event" #event="slotProps">
                         <slot name="event" v-bind="slotProps" />
                     </template>

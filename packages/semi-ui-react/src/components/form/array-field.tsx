@@ -1,8 +1,7 @@
 import type React from 'react';
 import { useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import ArrayFieldRows from '@fibrae/semi-foundation/components/form/array-field-rows';
-import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
-import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
+import { resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
 import useDefaultProps from '../../base/use-default-props';
 import { cloneDeep } from '../../utils/index';
 import { ArrayFieldContext, useArrayFieldContext, useFieldBridgeContext } from './context';
@@ -44,82 +43,47 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
     const parentArrayField = useArrayFieldContext();
 
     const committed = useRef(false);
+    const [keysState, setKeys] = useState<string[] | null>(null);
+    const [shouldUseInitValueState, setShouldUseInitValue] = useState<boolean | null>(null);
 
     const formState = useFormState();
 
     const formValues = parentArrayField.values ?? formState.values;
 
-    const [mounted] = useState(() => {
-        // an existing entry: the ArrayField remounts after a keepState unmount or a setValues, so the rows read the form state
-        const registered = Boolean(fieldBridge.getArrayField(field));
-        const initValue = registered ? ObjectUtil.get(formValues, field) : props.initValue || ObjectUtil.get(formValues, field);
-        return {
-            field,
-            formState,
-            // separate copies: reset and add/remove must not modify the array the rows read
-            initValue: cloneDeep(initValue),
-            resetValue: cloneDeep(initValue),
-            keys: generateKeys(initValue),
-            shouldUseInitValue: !registered,
-        };
-    });
+    const [rows] = useState(() => new ArrayFieldRows(fieldBridge, { field, initValue: props.initValue, formValues, formState }, { setKeys, setShouldUseInitValue, cloneDeep }));
 
-    const [shouldUseInitValue, setShouldUseInitValue] = useState(mounted.shouldUseInitValue);
-    const [keys, setKeys] = useState(mounted.keys);
-
-    // a class, not a ref: add() reaches render through the children function
-    const [rows] = useState(() => new ArrayFieldRows(fieldBridge, mounted.keys, { setKeys, setShouldUseInitValue }));
-
-    const { resetValue } = mounted;
+    // until a setter is first called the rows still hold their initial values
+    const keys = keysState ?? rows.keys;
+    const shouldUseInitValue = shouldUseInitValueState ?? rows.shouldUseInitValue;
     const keepState = resolveKeepState(props.keepState, parentArrayField.keepState, fieldBridge.getFormProps(['keepState']).keepState);
-
-    // rows read the initial value from here until the mount write renders; a render may be discarded, so no write
-    const rowValues = formState === mounted.formState ? ObjectUtil.set(formValues, field, mounted.initValue) : parentArrayField.values;
 
     const arrayFields = keys.map((key, i) => ({
         key,
         field: `${field}[${i}]`,
-        remove: () => rows.remove(field, i),
+        remove: () => rows.remove(i),
     }));
 
-    const mountValue = useEffectEvent(() => fieldBridge.mountArrayField(field, resetValue));
+    // read the latest props without re-running the registration effect, which would wipe the rows on a keepState toggle
+    const register = useEffectEvent(() => rows.register(field, props.initValue));
 
-    // StrictMode's extra cleanup, a changed field, or another ArrayField of this field unmounting in the same commit
-    // removes the registration, so register again. A changed field resets to its own initial value, not the mounted
-    // field's; its current value may already hold rows the rename carried over.
-    const register = useEffectEvent(() => {
-        if (!fieldBridge.getArrayField(field)) {
-            fieldBridge.registerArrayField(field, field === mounted.field ? resetValue : cloneDeep(props.initValue || fieldBridge.getInitValue(field)));
-        }
-    });
-
-    // reads the latest keepState without re-running the registration effect, which would wipe the rows on a toggle
-    const unRegister = useEffectEvent((registeredField: string) => fieldBridge.unRegisterArrayField(registeredField, keepState));
-
-    const syncKeys = useEffectEvent(() => rows.sync(field));
-
-    const add = (index?: number | React.MouseEvent) => rows.add(field, index);
-
-    const addWithInitValue = (rowVal: Record<string, any> | string, index?: number) => rows.addWithInitValue(field, rowVal, index);
-
-    const move = (from: number, to: number) => rows.move(field, from, to);
+    const unRegister = useEffectEvent(() => rows.unmount(keepState));
 
     useLayoutEffect(() => {
-        mountValue();
-    }, []);
+        rows.mount();
+    }, [rows]);
 
     useLayoutEffect(() => {
         register();
-        return () => unRegister(field);
+        return () => unRegister();
     }, [field]);
 
     // from the second commit on
     useLayoutEffect(() => {
         if (committed.current) {
-            syncKeys();
+            rows.sync();
         }
         committed.current = true;
     });
 
-    return <ArrayFieldContext value={{ shouldUseInitValue, inArrayField: true, keepState, values: rowValues }}>{children({ arrayFields, add, addWithInitValue, move })}</ArrayFieldContext>;
+    return <ArrayFieldContext value={{ shouldUseInitValue, inArrayField: true, keepState, values: rows.rowValues(formState, formValues, parentArrayField.values) }}>{children({ arrayFields, add: rows.add, addWithInitValue: rows.addWithInitValue, move: rows.move })}</ArrayFieldContext>;
 }

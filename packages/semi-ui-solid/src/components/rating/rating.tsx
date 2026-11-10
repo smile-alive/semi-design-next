@@ -164,7 +164,7 @@ export default function Rating(rawProps: RatingProps) {
 
     const onRadio = () => RatingFoundation.isRadioValue(value(), props.count, props.allowHalf);
 
-    const unitOf = (n: number) => customUnit() ?? (n === 1 ? locale().locale.star : locale().locale.stars);
+    const unitOf = (n: number) => RatingFoundation.getUnit(n, customUnit(), locale().locale);
 
     // a caller-given aria-label replaces the generated summary as the radiogroup name
     const ariaLabel = () => local['aria-label'] || formatLocale(locale().locale.label, { value: value(), count: props.count, unit: unitOf(value()) });

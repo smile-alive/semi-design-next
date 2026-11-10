@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { CSSProperties } from 'vue';
     import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
-    import { arrayAdd } from '@fibrae/semi-foundation/components/table/utils';
+    import { arrayAdd, genExpandedRowKey } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { useTableContext } from '../context';
     import type { ColumnProps } from '../interface';
@@ -48,7 +48,7 @@
 
 <template>
     <template v-for="(nodes, nodesIndex) in [slotOutput(table.slots.expandedRow, { record: props.record, index: props.index, expanded: props.expanded })]" :key="nodesIndex">
-        <component :is="table.view.value.components.body.row" v-if="nodes" :aria-rowindex="ariaRowIndex()" :class="rowClass()" :data-row-key="`${props.rowKey}-expanded-row`" role="row" :style="props.style">
+        <component :is="table.view.value.components.body.row" v-if="nodes" :aria-rowindex="ariaRowIndex()" :class="rowClass()" :data-row-key="genExpandedRowKey(props.rowKey)" role="row" :style="props.style">
             <TableCell :cellAttrs="cellAttrs()" :column="EXPANDED_COLUMN" :component="table.view.value.components.body.cell">
                 <div :class="`${table.view.value.prefixCls}-expand-inner`" :style="{ width: table.view.value.anyColumnFixed ? 'var(--semi-table-section-width)' : undefined }">
                     <component :is="node" v-for="[node, key] in nodes" :key="key" />

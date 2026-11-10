@@ -1,5 +1,3 @@
-import { isNativeInputKey as isNativeInputKeyOf } from '@fibrae/semi-foundation/utils/a11y';
-
 export function splitControlAttrs<T extends Record<string, unknown>>(attrs: T, isControlKey: (key: string) => boolean) {
     const root: Record<string, unknown> = {};
     const control: Record<string, unknown> = {};
@@ -15,6 +13,4 @@ export function splitControlAttrs<T extends Record<string, unknown>>(attrs: T, i
     return { root, control };
 }
 
-export { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-
-export const isNativeInputKey = (key: string) => isNativeInputKeyOf(key, true);
+export { isAriaKey, isNativeInputKey } from '@fibrae/semi-foundation/utils/a11y';

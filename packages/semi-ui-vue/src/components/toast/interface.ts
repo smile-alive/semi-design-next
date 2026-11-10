@@ -1,4 +1,5 @@
 import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
+import type { HookApi } from '@fibrae/semi-foundation/base/hook-api';
 import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 
 export type { ConfigProps, ConfigProps as ToastConfigProps, Directions, ToastState, ToastTheme, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
@@ -30,20 +31,7 @@ export interface ToastItemEmits {
     remove: [id: string];
 }
 
-export interface ToastHandle {
-    restartCloseTimer: () => void;
-    pauseCloseTimer: () => void;
-    resumeCloseTimer: () => void;
-}
-
 /** Positioning and layer options belong to the static wrapper; a hook's toasts render where its Holder is */
 export type ToastHookOptions = Omit<ToastProps, 'type' | 'id' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex' | 'getPopupContainer'>;
 
-export interface ToastHookApi {
-    success: (config: ToastHookOptions) => string;
-    info: (config: ToastHookOptions) => string;
-    error: (config: ToastHookOptions) => string;
-    warning: (config: ToastHookOptions) => string;
-    open: (config: ToastHookOptions) => string;
-    close: (id: string) => void;
-}
+export type ToastHookApi = HookApi<ToastHookOptions>;

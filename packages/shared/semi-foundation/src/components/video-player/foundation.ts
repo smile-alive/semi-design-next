@@ -13,7 +13,7 @@ export interface VideoPlayerBaseProps {
     volume?: number;
 }
 
-export interface VideoPlayerBaseState {
+export interface VideoPlayerState {
     bufferedValue: number;
     currentQuality: string;
     currentRoute: string;
@@ -42,7 +42,7 @@ export interface VideoPlayerNotificationLocale {
     stall: string;
 }
 
-export interface VideoPlayerAdapter<P extends VideoPlayerBaseProps = VideoPlayerBaseProps> extends DefaultAdapter<P, VideoPlayerBaseState> {
+export interface VideoPlayerAdapter<P extends VideoPlayerBaseProps = VideoPlayerBaseProps> extends DefaultAdapter<P, VideoPlayerState> {
     getVideo: () => HTMLVideoElement | null;
     getVideoWrapper: () => HTMLDivElement | null;
     notifyPause: () => void;
@@ -53,7 +53,7 @@ export interface VideoPlayerAdapter<P extends VideoPlayerBaseProps = VideoPlayer
     notifyVolumeChange: (volume: number) => void;
 }
 
-export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = VideoPlayerBaseProps> extends BaseFoundation<VideoPlayerAdapter<P>, P, VideoPlayerBaseState> {
+export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = VideoPlayerBaseProps> extends BaseFoundation<VideoPlayerAdapter<P>, P, VideoPlayerState> {
     #controlsTimer: ReturnType<typeof setTimeout> | undefined;
     #notificationTimer: ReturnType<typeof setTimeout> | undefined;
     #scrollRestoreTimer: ReturnType<typeof setTimeout> | undefined;
@@ -192,7 +192,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         return !!videoWrapper && document.fullscreenElement === videoWrapper;
     }
 
-    static getInitialState({ defaultPlaybackRate, defaultQuality, defaultRoute, muted, volume }: VideoPlayerBaseProps): VideoPlayerBaseState {
+    static getInitialState({ defaultPlaybackRate, defaultQuality, defaultRoute, muted, volume }: VideoPlayerBaseProps): VideoPlayerState {
         const initialVolume = Math.floor(volume > 0 ? volume : 0);
         return {
             bufferedValue: 0,

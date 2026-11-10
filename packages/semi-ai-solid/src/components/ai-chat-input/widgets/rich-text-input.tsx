@@ -31,7 +31,6 @@ interface RichTextInputProps {
     onPaste?: (event: ClipboardEvent) => void;
     onFocus: (event: FocusEvent) => void;
     onBlur: (event: FocusEvent) => void;
-    onKeyDown: (event: KeyboardEvent) => void;
 }
 
 export default function RichTextInput(props: RichTextInputProps) {
@@ -79,7 +78,6 @@ export default function RichTextInput(props: RichTextInputProps) {
             class={`${prefix}-editor-content`}
             onFocusIn={(e) => props.onFocus(e)}
             onFocusOut={(e) => props.onBlur(e)}
-            onKeyDown={(e) => props.onKeyDown(e)}
             onPaste={(e) => props.onPaste?.(e)}
         />
     );

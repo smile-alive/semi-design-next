@@ -2,13 +2,13 @@
     import { computed, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
     import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/resizable/resizable.scss';
     import type { ElementProps } from '../../base/element-props';
     import semiDefault from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
     import useEventListener, { getWindow } from '../../composables/use-event-listener';
     import useResizeObserver from '../../composables/use-resize-observer';
-    import { groupRole } from '../../utils/group-role';
     import { provideResizeGroupContext } from './context';
     import type { ResizeGroupProps, ResizeGroupSlots } from './interface';
 
@@ -62,7 +62,7 @@
 </script>
 
 <template>
-    <div v-bind="$attrs" ref="group" :class="`${prefix}-group`" :role="groupRole($attrs)" :style="{ flexDirection: props.direction === 'vertical' ? 'column' : 'row' }">
+    <div v-bind="$attrs" ref="group" :class="`${prefix}-group`" :role="namedRole($attrs)" :style="{ flexDirection: props.direction === 'vertical' ? 'column' : 'row' }">
         <div v-if="state.isResizing" :class="`${prefix}-background`" :style="state.backgroundStyle" />
         <slot />
     </div>

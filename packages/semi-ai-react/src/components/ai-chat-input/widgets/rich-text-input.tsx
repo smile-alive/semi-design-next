@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import type { Content as TiptapContent } from '@tiptap/core';
+import type { EditorView } from '@tiptap/pm/view';
 import { type Editor, type Extensions, EditorContent, useEditor } from '@tiptap/react';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/editor-config';
@@ -35,7 +36,6 @@ export default function RichTextInput({
     controls,
     activeDescendant,
     onCreate,
-    onKeyDown,
     onChange,
     placeholder,
     extensions = noExtensions,
@@ -59,10 +59,9 @@ export default function RichTextInput({
     immediatelyRender?: boolean;
     /** Called once per editor, on the commit that shows it */
     onCreate: (editor: Editor) => void;
-    onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
     onChange: (content: string) => void;
     extensions?: Extensions;
-    handleKeyDown?: (view: any, event: KeyboardEvent) => boolean;
+    handleKeyDown?: (view: EditorView, event: KeyboardEvent) => boolean;
     /** File paste upload */
     onPaste?: (files: File[]) => void;
     /** Paste event on the editor content DOM */
@@ -104,5 +103,5 @@ export default function RichTextInput({
         return null;
     }
 
-    return <EditorContent ref={innerRef} className={`${prefix}-editor-content`} editor={editor} onBlur={onBlur} onFocus={onFocus} onKeyDown={onKeyDown} onPaste={onPasteEvent} />;
+    return <EditorContent ref={innerRef} className={`${prefix}-editor-content`} editor={editor} onBlur={onBlur} onFocus={onFocus} onPaste={onPasteEvent} />;
 }

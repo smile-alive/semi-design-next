@@ -1,7 +1,9 @@
 <script lang="ts">
+    import { untrack } from 'svelte';
+    import { SvelteMap } from 'svelte/reactivity';
     import { omit } from 'es-toolkit';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+    import { canCollapseStack, FreshItems, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+    import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
     import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import '@fibrae/semi-foundation/components/toast/toast.scss';
     import useAnnouncer from '../../hooks/use-announcer.svelte.js';
@@ -18,6 +20,8 @@
     let pointerInside = $state(false);
     let focusInside = $state(false);
     let stackExpanded = $state(false);
+    const elements = new SvelteMap<string, Element>();
+    const fresh = new FreshItems();
 
     const snapshot = useStoreSnapshot(store);
     const { text: announcement, announcer } = useAnnouncer();
@@ -25,21 +29,23 @@
     const prefix = cssClasses.PREFIX;
     const paused = $derived(pointerInside || focusInside);
     const view = $derived(snapshot());
-    const expanded = $derived(view.stack === 0 || stackExpanded || view.list.length <= view.stack);
+    const shownItems = $derived(view.items);
+    const updatedItems = $derived(view.updatedItems);
+    const expanded = $derived(isStackExpanded(view.stack, stackExpanded, shownItems.length));
 
     // The shown toasts and the leaving ones in display order; a leaving toast keeps its place until its leave ends.
-    // Leaving toasts are not counted as newer, or the ones behind them would sink and spring back on removal.
     const rows = $derived.by(() => {
-        const items = new Map([...view.list, ...view.removedItems].map((item) => [item.id, item]));
-        const shown = new Set(view.list.map((item) => item.id));
+        const items = new Map([...shownItems, ...view.removedItems].map((item) => [item.id, item]));
+        const shown = new Set(shownItems.map((item) => item.id));
         const ids = view.order.filter((id) => items.has(id));
-        return ids.map((id, index) => ({
+        const depths = getStackDepths(ids.toReversed(), shown);
+        return ids.map((id) => ({
             id,
             // The store holds the options as given to the static API (ToastProps), not the foundation's ToastInstance
             // shape. List-level options would otherwise land on the toast element as attributes like zindex="1010".
             props: omit(items.get(id) as ToastInstance, ['top', 'bottom', 'left', 'right', 'zIndex', 'getPopupContainer', 'stack']) as ToastItemProps,
             leaving: !shown.has(id),
-            newerShown: ids.slice(index + 1).filter((newer) => shown.has(newer)).length,
+            depth: depths.get(id) ?? 0,
         }));
     });
 
@@ -48,12 +54,17 @@
             return paused;
         },
         get updatedItems() {
-            return view.updatedItems;
+            return updatedItems;
         },
         get removedItems() {
             return view.removedItems;
         },
-        announce: (key, read) => announcer.announce(key, read),
+        register: (id, element) => {
+            elements.set(id, element);
+            return () => {
+                if (elements.get(id) === element) elements.delete(id);
+            };
+        },
     });
 
     const enter = (source: 'pointer' | 'focus') => {
@@ -65,7 +76,7 @@
     const leave = (source: 'pointer' | 'focus') => {
         if (source === 'pointer') pointerInside = false;
         else focusInside = false;
-        if (!paused && view.stack && innerWrapper?.getBoundingClientRect().height) {
+        if (!paused && canCollapseStack(view.stack, innerWrapper)) {
             stackExpanded = false;
         }
     };
@@ -74,14 +85,24 @@
         if (!(event.relatedTarget instanceof Node && innerWrapper?.contains(event.relatedTarget))) leave('focus');
     };
 
+    $effect(() => {
+        const items = shownItems;
+        const updated = updatedItems;
+        untrack(() => {
+            for (const { id } of fresh.pick(items, updated)) {
+                announcer.announce(id, () => readNoticeText(elements.get(id), prefix));
+            }
+        });
+    });
+
     // The order changes when a leave ends. A removed focused toast fires no reliable focusout, which would keep every
     // countdown paused.
     watch(
         () => view.order,
         () => {
             // An emptied list has no height, so leave() never collapses it; without this the next batch would start expanded.
-            if (!view.list.length && !view.removedItems.length) stackExpanded = false;
-            if (focusInside && innerWrapper && !innerWrapper.contains(FocusTrapHandle.getActiveElement(innerWrapper))) leave('focus');
+            if (!shownItems.length && !view.removedItems.length) stackExpanded = false;
+            if (hasLostFocus(focusInside, innerWrapper)) leave('focus');
         }
     );
 </script>
@@ -92,11 +113,11 @@
     {#each rows as row (row.id)}
         <Toast
             {...row.props}
-            class={[row.props.class, { [`${prefix}-stack-hidden`]: !expanded && !row.leaving && row.newerShown >= numbers.stackVisibleCount }]}
+            class={[row.props.class, { [`${prefix}-stack-hidden`]: isStackHidden(expanded, row.depth) }]}
             close={(id) => store.remove(id)}
             leaving={row.leaving}
             onLeaveEnd={() => store.finishLeave(row.id)}
-            positionInList={{ length: view.list.length, index: view.list.length - 1 - row.newerShown }}
+            positionInList={{ length: shownItems.length, index: shownItems.length - 1 - row.depth }}
             stack={view.stack > 0}
             stackExpanded={expanded && !row.leaving}
         />

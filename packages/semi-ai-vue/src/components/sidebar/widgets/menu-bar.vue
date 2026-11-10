@@ -1,9 +1,9 @@
 <script setup lang="ts">
-    import { computed, onBeforeUnmount, shallowRef } from 'vue';
+    import { type Component, computed, onBeforeUnmount, shallowRef } from 'vue';
     import type { ChainedCommands } from '@tiptap/core';
     import type { Editor } from '@tiptap/vue-3';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-    import { type Level, type TextRange, clearSelectionHighlight, confirmLink, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
+    import { type FileMenuButton, type FileMenuButtonKey, type Level, type TextRange, clearSelectionHighlight, confirmLink, getFileMenuItems, readFileMenuState, readLinkEditorOpenState, unsetLink } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import {
         IconAlignCenter,
@@ -54,6 +54,28 @@
     const prefix = cssClasses.FILE;
     const headingIcons = [IconH1, IconH2, IconH3, IconH4, IconH5, IconH6];
 
+    const icons: Record<FileMenuButtonKey, Component> = {
+        undo: IconUndo,
+        redo: IconRedo,
+        paragraph: IconText,
+        bulletList: IconList,
+        orderedList: IconOrderedList,
+        blockquote: IconQuote,
+        codeBlock: IconTerminal,
+        horizontalRule: IconMinus,
+        alignLeft: IconAlignLeft,
+        alignCenter: IconAlignCenter,
+        alignRight: IconAlignRight,
+        alignJustify: IconAlignJustify,
+        bold: IconBold,
+        italic: IconItalic,
+        strike: IconStrikeThrough,
+        code: IconCode,
+        image: IconImage,
+    };
+
+    const items = computed(() => getFileMenuItems(props.canUpload));
+
     const update = () => {
         state.value = readFileMenuState(props.editor);
     };
@@ -79,12 +101,15 @@
         closeLink();
     };
 
-    const unsetLink = () => {
-        clearSelectionHighlight(props.editor);
-        run((chain) => chain.unsetLink());
+    const handleUnsetLink = () => {
+        unsetLink(props.editor);
         Toast.success(text.value.linkRemoveSuccess);
         closeLink();
     };
+
+    const active = (item: FileMenuButton) => (item.activeKey ? state.value[item.activeKey] : undefined);
+
+    const disabled = (item: FileMenuButton) => item.enabledKey !== undefined && !state.value[item.enabledKey];
 
     const onLinkVisibleChange = (visible: boolean) => {
         linkVisible.value = visible;
@@ -103,142 +128,59 @@
 
 <template>
     <div :class="`${prefix}-menu-bar`">
-        <MenuButton :aria-label="text.undo" :disabled="!state.canUndo" @click="run((chain) => chain.undo())">
-            <template #icon>
-                <IconUndo />
-            </template>
-        </MenuButton>
-        <MenuButton :aria-label="text.redo" :disabled="!state.canRedo" @click="run((chain) => chain.redo())">
-            <template #icon>
-                <IconRedo />
-            </template>
-        </MenuButton>
-        <Divider layout="vertical" />
-        <Dropdown>
-            <MenuButton :active="state.isHeading" :aria-label="text.heading">
-                <template #icon>
-                    <IconHn />
+        <template v-for="(item, index) in items" :key="index">
+            <Divider v-if="item.type === 'divider'" layout="vertical" />
+            <Dropdown v-else-if="item.type === 'heading'">
+                <MenuButton :active="state.isHeading" :aria-label="text.heading">
+                    <template #icon>
+                        <IconHn />
+                    </template>
+                </MenuButton>
+                <template #content>
+                    <DropdownMenu>
+                        <DropdownItem
+                            v-for="(icon, level) in headingIcons"
+                            :key="level"
+                            :active="state.headingLevel === level + 1"
+                            :aria-label="formatLocale(text.headingLevel, { level: level + 1 })"
+                            :class="[
+                                `${prefix}-menu-bar-dropdown-item`,
+                                {
+                                    [`${prefix}-menu-bar-dropdown-item-active`]: state.headingLevel === level + 1,
+                                },
+                            ]"
+                            @click="run((chain) => chain.toggleHeading({ level: (level + 1) as Level }))"
+                        >
+                            <component :is="icon" />
+                        </DropdownItem>
+                    </DropdownMenu>
                 </template>
-            </MenuButton>
-            <template #content>
-                <DropdownMenu>
-                    <DropdownItem
-                        v-for="(icon, index) in headingIcons"
-                        :key="index"
-                        :active="state.headingLevel === index + 1"
-                        :aria-label="formatLocale(text.headingLevel, { level: index + 1 })"
-                        :class="[
-                            `${prefix}-menu-bar-dropdown-item`,
-                            {
-                                [`${prefix}-menu-bar-dropdown-item-active`]: state.headingLevel === index + 1,
-                            },
-                        ]"
-                        @click="run((chain) => chain.toggleHeading({ level: (index + 1) as Level }))"
-                    >
-                        <component :is="icon" />
-                    </DropdownItem>
-                </DropdownMenu>
-            </template>
-        </Dropdown>
-        <MenuButton :active="state.isParagraph" :aria-label="text.paragraph" :aria-pressed="state.isParagraph" @click="run((chain) => chain.setParagraph())">
-            <template #icon>
-                <IconText />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isBulletList" :aria-label="text.bulletList" :aria-pressed="state.isBulletList" @click="run((chain) => chain.toggleBulletList())">
-            <template #icon>
-                <IconList />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isOrderedList" :aria-label="text.orderedList" :aria-pressed="state.isOrderedList" @click="run((chain) => chain.toggleOrderedList())">
-            <template #icon>
-                <IconOrderedList />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isBlockquote" :aria-label="text.blockquote" :aria-pressed="state.isBlockquote" @click="run((chain) => chain.toggleBlockquote())">
-            <template #icon>
-                <IconQuote />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isCodeBlock" :aria-label="text.codeBlock" :aria-pressed="state.isCodeBlock" @click="run((chain) => chain.toggleCodeBlock())">
-            <template #icon>
-                <IconTerminal />
-            </template>
-        </MenuButton>
-        <MenuButton :aria-label="text.horizontalRule" @click="run((chain) => chain.setHorizontalRule())">
-            <template #icon>
-                <IconMinus />
-            </template>
-        </MenuButton>
-        <Divider layout="vertical" />
-        <MenuButton :active="state.isAlignLeft" :aria-label="text.alignLeft" :aria-pressed="state.isAlignLeft" @click="run((chain) => chain.setTextAlign('left'))">
-            <template #icon>
-                <IconAlignLeft />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isAlignCenter" :aria-label="text.alignCenter" :aria-pressed="state.isAlignCenter" @click="run((chain) => chain.setTextAlign('center'))">
-            <template #icon>
-                <IconAlignCenter />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isAlignRight" :aria-label="text.alignRight" :aria-pressed="state.isAlignRight" @click="run((chain) => chain.setTextAlign('right'))">
-            <template #icon>
-                <IconAlignRight />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isAlignJustify" :aria-label="text.alignJustify" :aria-pressed="state.isAlignJustify" @click="run((chain) => chain.setTextAlign('justify'))">
-            <template #icon>
-                <IconAlignJustify />
-            </template>
-        </MenuButton>
-        <Divider layout="vertical" />
-        <MenuButton :active="state.isBold" :aria-label="text.bold" :aria-pressed="state.isBold" @click="run((chain) => chain.toggleBold())">
-            <template #icon>
-                <IconBold />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isItalic" :aria-label="text.italic" :aria-pressed="state.isItalic" :disabled="!state.canItalic" @click="run((chain) => chain.toggleItalic())">
-            <template #icon>
-                <IconItalic />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isStrike" :aria-label="text.strike" :aria-pressed="state.isStrike" :disabled="!state.canStrike" @click="run((chain) => chain.toggleStrike())">
-            <template #icon>
-                <IconStrikeThrough />
-            </template>
-        </MenuButton>
-        <MenuButton :active="state.isCode" :aria-label="text.code" :aria-pressed="state.isCode" :disabled="!state.canCode" @click="run((chain) => chain.toggleCode())">
-            <template #icon>
-                <IconCode />
-            </template>
-        </MenuButton>
-        <Dropdown trigger="click" :visible="linkVisible" @visibleChange="onLinkVisibleChange">
-            <MenuButton :active="state.isLink" :aria-label="text.link">
-                <template #icon>
-                    <IconLink />
+            </Dropdown>
+            <Dropdown v-else-if="item.type === 'link'" trigger="click" :visible="linkVisible" @visibleChange="onLinkVisibleChange">
+                <MenuButton :active="state.isLink" :aria-label="text.link">
+                    <template #icon>
+                        <IconLink />
+                    </template>
+                </MenuButton>
+                <template #content>
+                    <div :class="`${prefix}-menu-bar-link-dropdown`">
+                        <Input v-model="linkInputValue" :class="`${prefix}-menu-bar-link-input`" :placeholder="text.enterLinkAddress" :showClear="false" size="small" @enterPress="handleConfirmLink" />
+                        <Button :aria-label="text.confirmLink" :disabled="!linkInputValue.trim()" size="small" theme="borderless" type="tertiary" @click="handleConfirmLink">
+                            <template #icon>
+                                <IconCheckCircleStroked />
+                            </template>
+                        </Button>
+                        <Button :aria-label="text.removeLink" :disabled="!state.isLink" size="small" theme="borderless" @click="handleUnsetLink">
+                            <template #icon>
+                                <IconDeleteStroked />
+                            </template>
+                        </Button>
+                    </div>
                 </template>
-            </MenuButton>
-            <template #content>
-                <div :class="`${prefix}-menu-bar-link-dropdown`">
-                    <Input v-model="linkInputValue" :class="`${prefix}-menu-bar-link-input`" :placeholder="text.enterLinkAddress" :showClear="false" size="small" @enterPress="handleConfirmLink" />
-                    <Button :aria-label="text.confirmLink" :disabled="!linkInputValue.trim()" size="small" theme="borderless" type="tertiary" @click="handleConfirmLink">
-                        <template #icon>
-                            <IconCheckCircleStroked />
-                        </template>
-                    </Button>
-                    <Button :aria-label="text.removeLink" :disabled="!state.isLink" size="small" theme="borderless" @click="unsetLink">
-                        <template #icon>
-                            <IconDeleteStroked />
-                        </template>
-                    </Button>
-                </div>
-            </template>
-        </Dropdown>
-        <template v-if="props.canUpload">
-            <Divider layout="vertical" />
-            <MenuButton :aria-label="text.image" :disabled="!state.canInsertImage" @click="run((chain) => chain.insertContent({ type: 'imageUpload' }))">
+            </Dropdown>
+            <MenuButton v-else :active="active(item)" :aria-label="text[item.key]" :aria-pressed="active(item)" :disabled="disabled(item)" @click="run(item.command)">
                 <template #icon>
-                    <IconImage />
+                    <component :is="icons[item.key]" />
                 </template>
             </MenuButton>
         </template>

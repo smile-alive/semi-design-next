@@ -1,4 +1,4 @@
-import { type JSX, type Ref, For, Show, createEffect, createMemo, createUniqueId, mergeProps, on, onCleanup, untrack } from 'solid-js';
+import { type JSX, type Ref, For, Show, createMemo, createUniqueId, mergeProps, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isRangeType, type DayStatusType } from '@fibrae/semi-foundation/components/date-picker/foundation';
@@ -17,7 +17,7 @@ const { isYearOrTime } = MonthsGridFoundation;
 
 export type DatePickerTimePickerOpts = Partial<Pick<ComboboxProps, 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'defaultIsAM' | 'scrollItemProps'>>;
 
-export interface MonthsGridProps extends Omit<MonthsGridFoundationProps, 'renderDate' | 'renderFullDate' | 'renderQuickControls' | 'renderDateInput' | 'locale'> {
+export interface MonthsGridProps extends Omit<MonthsGridFoundationProps, 'renderDate' | 'renderFullDate' | 'locale'> {
     renderDate?: (dayNumber?: number, fullDate?: string) => JSX.Element;
     renderFullDate?: (dayNumber?: number, fullDate?: string, dayStatus?: DayStatusType) => JSX.Element;
     renderQuickControls?: () => JSX.Element;
@@ -46,7 +46,6 @@ const defaultProps = {
     type: 'date',
     multiple: false,
     weekStartsOn: numbers.WEEK_START_ON,
-    disabledDate: () => false,
 } satisfies Partial<MonthsGridProps>;
 
 export default function MonthsGrid(rawProps: MonthsGridProps) {
@@ -65,6 +64,11 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
             notifySelectedChange: (value, options) => props.onChange?.(value, options),
             notifyPanelChange: (date, dateString) => props.onPanelChange?.(date, dateString),
             getPanelNode: (part, panelType) => nodes[part][panelType],
+            focusPanelTarget: (panelType, target) => {
+                const panel = nodes.panel[panelType];
+                const node = target === 'yearList' ? panel?.querySelector<HTMLElement>('[role="listbox"]') : (panel?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`);
+                node?.focus();
+            },
             reselectScrollLists: () => {
                 for (const column of columns) {
                     column.reselect();
@@ -95,20 +99,6 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
         onCleanup(() => columns.delete(handle));
     };
 
-    // the button that switches between the month and the year picker unmounts or hides under the focus, so the view it
-    // switches to takes the focus once the foundation call has rendered it
-    const showYearPicker = (panelType: PanelType) => {
-        foundation.showYearPicker(panelType);
-        nodes.panel[panelType]?.querySelector<HTMLElement>('[role="listbox"]')?.focus();
-    };
-
-    // in a microtask: the back button calls in from YearAndMonth's own foundation batch, which renders the date panel
-    // only after that call returns
-    const backToDatePanel = (panelType: PanelType) => {
-        foundation.showDatePanel(panelType);
-        queueMicrotask(() => (nodes.panel[panelType]?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`)?.focus());
-    };
-
     const renderMonth = (panelType: PanelType) => {
         const detail = () => detailOf(panelType);
         const style = (): JSX.CSSProperties | undefined => (isRange() && isYearOrTime(detail()) ? { visibility: 'hidden', position: 'absolute', 'pointer-events': 'none' } : undefined);
@@ -122,7 +112,7 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
                     panelType={panelType}
                     shouldBimonthSwitch={isRange() && props.syncSwitchMonth}
                     titleId={`${titleId}-${panelType}-title`}
-                    onMonthClick={() => showYearPicker(panelType)}
+                    onMonthClick={() => foundation.showYearPicker(panelType)}
                     onNextMonth={() => foundation.nextMonth(panelType)}
                     onNextYear={() => foundation.nextYear(panelType)}
                     onPrevMonth={() => foundation.prevMonth(panelType)}
@@ -189,7 +179,7 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
             locale={props.locale}
             startYear={props.startYear}
             yearAndMonthOpts={props.yearAndMonthOpts}
-            onBackToMain={() => backToDatePanel(panelType)}
+            onBackToMain={() => foundation.backToDatePanel(panelType)}
             onSelect={(item) => foundation.toYearMonth(panelType, new Date(item.currentYear.left, item.currentMonth.left - 1))}
         />
     );
@@ -252,8 +242,6 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
             </div>
         );
     };
-
-    createEffect(on([() => state().monthLeft, () => state().monthRight, () => props.insetInput], foundation.applyPanelSize));
 
     // delivered once while created, like an element ref
     if (typeof ref === 'function') {

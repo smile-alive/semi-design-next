@@ -2,17 +2,17 @@ import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
 import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
-import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/components/audio-player/foundation';
+import AudioPlayerFoundation, { type AudioInfo, type AudioPlayerAdapter, type AudioPlayerState, type AudioUrl } from '@fibrae/semi-foundation/components/audio-player/foundation';
 import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
 import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import type { MediaEventKeys } from '../../utils/media-event-keys';
-import { namedRole } from '../../utils/named-role';
 import Button from '../button';
 import Dropdown from '../dropdown';
 import Image from '../image';
@@ -24,13 +24,7 @@ import AudioSlider from './audio-slider';
 type Foundation = AudioPlayerFoundation<AudioPlayerProps>;
 type Adapter = AudioPlayerAdapter<AudioPlayerProps>;
 
-export interface AudioInfo {
-    title?: string;
-    cover?: string;
-    src: string;
-}
-
-export type AudioUrl = string | AudioInfo | (AudioInfo | string)[];
+export type { AudioInfo, AudioPlayerState, AudioUrl };
 
 export type AudioPlayerTheme = 'dark' | 'light';
 
@@ -44,16 +38,6 @@ export interface AudioPlayerProps extends ElementProps<'div', MediaEventKeys> {
     style?: React.CSSProperties;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;
-}
-
-export interface AudioPlayerState {
-    isPlaying: boolean;
-    currentIndex: number;
-    totalTime: number;
-    currentTime: number;
-    currentRate: { label: string; value: number };
-    volume: number;
-    error: boolean;
 }
 
 const prefixCls = cssClasses.PREFIX;

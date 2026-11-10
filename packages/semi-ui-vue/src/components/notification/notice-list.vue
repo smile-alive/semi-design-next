@@ -1,23 +1,24 @@
 <script setup lang="ts">
     import { computed, shallowRef, useTemplateRef, watch } from 'vue';
     import { omit } from 'es-toolkit';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import { cssClasses, getStackThreshold } from '@fibrae/semi-foundation/components/notification/constants';
+    import { hasLostFocus, isStackExpanded } from '@fibrae/semi-foundation/base/list-store';
+    import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
     import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
-    import type { default as NotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+    import type { NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { provideNoticeListContext, type ListedNotice } from './context';
+    import { provideNoticeListContext, type ListedNotice, type RegisterNotice } from './context';
     import Notice from './notice.vue';
 
-    interface NoticeListProps {
+    interface NoticeListProps extends NotificationListProps {
         placement: NoticePosition;
         /** The position's notices, newest first, leaving ones included */
         items: ListedNotice[];
         removedIds: readonly string[];
         updatedItems: readonly NoticeInstance[];
-        store: NotificationListStore;
-        announce: (key: string, read: () => string) => void;
+        /** The store's stack threshold */
+        stack: number;
+        register: RegisterNotice;
     }
 
     // One list per position: pointer and focus state goes when the position empties, so an unmounted list cannot leave
@@ -42,12 +43,13 @@
 
     // The newest notice decides the list's offsets.
     const listStyle = computed(() => Object.fromEntries(offsets.map((key) => [key, toCssLength(props.items[0][key])])));
-    const threshold = computed(() => getStackThreshold(props.items[0].stack));
     const shown = computed(() => props.items.filter((item) => !props.removedIds.includes(item.id)));
-    const expanded = computed(() => paused.value || shown.value.length <= threshold.value);
+    const expanded = computed(() => isStackExpanded(props.stack, paused.value, shown.value.length));
+
+    // TransitionGroup keeps a leaving notice itself, so only shown notices are rows and every newer row is shown
     const rows = computed(() => shown.value.map((item, index) => ({ item, depth: index, layer: shown.value.length - index })));
 
-    provideNoticeListContext(computed(() => ({ paused: paused.value, updatedItems: props.updatedItems, announce: props.announce })));
+    provideNoticeListContext({ state: computed(() => ({ paused: paused.value, updatedItems: props.updatedItems })), register: (id, element) => props.register(id, element) });
 
     const onFocusOut = (event: FocusEvent) => {
         if (!listEl.value?.contains(event.relatedTarget as Node | null)) focusInside.value = false;
@@ -75,7 +77,7 @@
     watch(
         () => props.items,
         () => {
-            if (focusInside.value && !listEl.value?.contains(FocusTrapHandle.getActiveElement(listEl.value))) focusInside.value = false;
+            if (hasLostFocus(focusInside.value, listEl.value)) focusInside.value = false;
         },
         { flush: 'post' }
     );
@@ -99,7 +101,7 @@
             @leave="pinAnimatedHeight($event)"
             @leaveCancelled="onLeaveEnd"
         >
-            <Notice v-for="row in rows" :key="row.item.id" v-bind="itemProps(row.item)" :depth="row.depth" :layer="row.layer" :placement="props.placement" :stack="threshold > 0" :stackExpanded="expanded" @remove="props.store.remove($event)" />
+            <Notice v-for="row in rows" :key="row.item.id" v-bind="itemProps(row.item)" :depth="row.depth" :layer="row.layer" :placement="props.placement" :stack="props.stack > 0" :stackExpanded="expanded" @remove="props.store.remove($event)" />
         </TransitionGroup>
     </div>
 </template>

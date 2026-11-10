@@ -1,3 +1,4 @@
+import FocusTrapHandle from '../../base/focus-handle';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import isPromise from '../../utils/is-promise';
 
@@ -10,7 +11,9 @@ export interface PopconfirmAdapter<P extends PopconfirmBaseProps = PopconfirmBas
     getFooter: () => HTMLElement | null | undefined;
     /** Hands the autoFocus button to Tooltip as its initial focus target, which Tooltip focuses after the card opens */
     setInitialFocus: (button: HTMLElement) => void;
-    focusPrevFocusElement: () => void;
+    /** The card element; null while the card is not mounted */
+    getPopup: () => HTMLElement | null | undefined;
+    focusTrigger: () => void;
 }
 
 interface FooterButtonProps {
@@ -148,6 +151,9 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
         this.#pendingFocus = null;
         this.setState({ visible: false });
         this.#closeCount++;
-        this.adapter.focusPrevFocusElement();
+        // focus that already left the card (Tab away from a focus trigger) stays where it went
+        if (FocusTrapHandle.shouldRestoreFocus(this.adapter.getPopup(), false)) {
+            this.adapter.focusTrigger();
+        }
     };
 }

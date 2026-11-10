@@ -69,7 +69,8 @@
             notifyLeave: (event) => emit('mouseLeave', event),
             getAvatarElement: () => content.value?.getAvatarElement() ?? null,
             getTextElement: () => content.value?.getTextElement() ?? null,
-        })
+        }),
+        { props: { size: () => size.value } }
     );
 
     const isImg = computed(() => Boolean(props.src) && state.value.isImgExist);
@@ -128,9 +129,6 @@
     };
 
     watch(content, foundation.changeScale, { flush: 'post' });
-
-    // size is resolved from the group context, so it is not a prop of the foundation
-    watch(size, foundation.changeScale, { flush: 'post' });
 
     onUpdated(() => {
         const value = content.value?.getText();

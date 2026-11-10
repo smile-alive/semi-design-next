@@ -75,7 +75,6 @@ export default function Carousel(rawProps: CarouselProps) {
 
     const baseId = createUniqueId();
     let tablist: HTMLDivElement | undefined;
-    let focusPending = false;
 
     const resolved = children(() => local.children);
 
@@ -92,6 +91,7 @@ export default function Carousel(rawProps: CarouselProps) {
         (base) => ({
             notifyChange: (activeIndex, preIndex) => base.getProps().onChange?.(activeIndex, preIndex),
             getSlideCount: () => total(),
+            focusTab: (index) => tablist?.querySelector<HTMLElement>(`[data-index="${index}"]`)?.focus(),
         }),
         { context: () => ({ direction: config().direction }) }
     );
@@ -139,19 +139,6 @@ export default function Carousel(rawProps: CarouselProps) {
                 foundation.handleSlideCountChange(previous, count);
             }
         })
-    );
-
-    createEffect(
-        on(
-            activeIndex,
-            () => {
-                if (focusPending) {
-                    focusPending = false;
-                    tablist?.querySelector<HTMLElement>('[role="tab"][tabindex="0"]')?.focus();
-                }
-            },
-            { defer: true }
-        )
     );
 
     return (
@@ -222,17 +209,9 @@ export default function Carousel(rawProps: CarouselProps) {
                         theme={local.theme}
                         total={total()}
                         trigger={local.trigger}
-                        onBlur={() => {
-                            focusPending = false;
-                        }}
+                        onBlur={foundation.handleIndicatorBlur}
                         onIndicatorChange={foundation.onIndicatorChange}
-                        onKeyDown={(event) => {
-                            // set first: the switch commits inside handleKeyDown, and the focus effect consumes the flag right then
-                            focusPending = true;
-                            if (!foundation.handleKeyDown(event)) {
-                                focusPending = false;
-                            }
-                        }}
+                        onKeyDown={foundation.handleKeyDown}
                     />
                 </div>
             </Show>

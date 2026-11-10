@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { computed, h, normalizeClass } from 'vue';
-    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
+    import { type VNode, computed, h, normalizeClass } from 'vue';
+    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionKey, type DialogueActionState, getDialogueActionFlags, getDialogueActionKeys } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
@@ -45,20 +45,19 @@
     );
 
     const { PREFIX, PREFIX_ACTION } = cssClasses;
+    const flags = computed(() => getDialogueActionFlags({ role: props.message.role, status: props.message.status, isLastChat: props.isLastChat, showReset: context.view.value.showReset }));
 
-    const flags = computed(() => {
-        const { finished, ...rest } = getDialogueActionFlags({ role: props.message.role, status: props.message.status, isLastChat: props.isLastChat, showReset: context.view.value.showReset });
-        return {
-            ...rest,
-            wrapCls: normalizeClass([
-                PREFIX_ACTION,
-                {
-                    [`${PREFIX_ACTION}-show`]: (rest.showReset && finished) || state.value.showAction,
-                    [`${PREFIX_ACTION}-hidden`]: !finished,
-                },
-            ]),
-        };
-    });
+    const wrapCls = computed(() =>
+        normalizeClass([
+            PREFIX_ACTION,
+            {
+                [`${PREFIX_ACTION}-show`]: DialogueActionFoundation.isActionBarShown({ showReset: flags.value.showReset, finished: flags.value.finished, showAction: state.value.showAction }),
+                [`${PREFIX_ACTION}-hidden`]: !flags.value.finished,
+            },
+        ])
+    );
+
+    const barKeys = computed(() => getDialogueActionKeys(flags.value, false));
 
     // the warning renders outside this tree, so its text is read here to follow the LocaleProvider
     const showDeleteModal = (trigger?: HTMLElement) => {
@@ -70,63 +69,43 @@
             // the deleted message took the more button along; the list takes the focus the modal gives up
             afterClose: () => trigger && handoverFocus(trigger, list),
         });
-        foundation.hideMoreDropdown();
+        foundation.closeMenu();
     };
 
     const moreProps = () => ({
         visible: state.value.visible,
-        onShow: foundation.showMoreDropdown,
-        onHide: foundation.hideMoreDropdown,
+        onShow: foundation.openMenu,
+        onHide: foundation.closeMenu,
         onDelete: showDeleteModal,
     });
 
-    const defaultActionsObj = () => {
-        const { completed, showFeedback, showReset, showEdit } = flags.value;
-        const { like, dislike } = props.message;
-        const button = (kind: ActionKind, onClick: () => void, active?: boolean) => h(DialogueActionButton, { key: kind, kind, active, onClick });
-        const nodes: DefaultActionNodeObj = {};
-        if (completed) {
-            nodes.copyNode = button('copy', foundation.copyMessage);
-        }
-        if (showFeedback) {
-            nodes.likeNode = button('like', foundation.likeMessage, like);
-            nodes.dislikeNode = button('dislike', foundation.dislikeMessage, dislike);
-        }
-        if (showReset) {
-            nodes.resetNode = button('reset', foundation.resetMessage);
-        }
-        if (completed) {
-            nodes.shareNode = button('share', foundation.shareMessage);
-        }
-        if (showEdit) {
-            nodes.editNode = button('edit', foundation.editMessage);
-        }
-        nodes.moreNode = h(DialogueActionMore, { key: 'more', ...moreProps() });
-        return nodes;
+    const button = (kind: ActionKind, onClick: () => void, active?: boolean) => h(DialogueActionButton, { key: kind, kind, active, onClick });
+
+    const nodes: Record<DialogueActionKey, () => VNode> = {
+        copyNode: () => button('copy', foundation.copyMessage),
+        likeNode: () => button('like', foundation.likeMessage, props.message.like),
+        dislikeNode: () => button('dislike', foundation.dislikeMessage, props.message.dislike),
+        resetNode: () => button('reset', foundation.resetMessage),
+        shareNode: () => button('share', foundation.shareMessage),
+        editNode: () => button('edit', foundation.editMessage),
+        moreNode: () => h(DialogueActionMore, { key: 'more', ...moreProps() }),
     };
 
     const actionSlotProps = () => {
-        const nodes = defaultActionsObj();
+        const keys = getDialogueActionKeys(flags.value, true);
+        const defaultActionsObj: DefaultActionNodeObj = Object.fromEntries(keys.map((key) => [key, nodes[key]()]));
         return {
             message: props.message,
-            defaultActions: Object.values(nodes),
-            defaultActionsObj: nodes,
-            class: flags.value.wrapCls,
+            defaultActions: Object.values(defaultActionsObj),
+            defaultActionsObj,
+            class: wrapCls.value,
         };
     };
 </script>
 
 <template>
     <slot v-if="$slots.action" name="action" v-bind="actionSlotProps()" />
-    <div v-else :class="flags.wrapCls">
-        <DialogueActionButton v-if="flags.completed" kind="copy" @click="foundation.copyMessage" />
-        <DialogueActionButton v-if="flags.showReset" kind="reset" @click="foundation.resetMessage" />
-        <DialogueActionButton v-if="flags.completed" kind="share" @click="foundation.shareMessage" />
-        <DialogueActionButton v-if="flags.showEdit" kind="edit" @click="foundation.editMessage" />
-        <template v-if="flags.showFeedback">
-            <DialogueActionButton :active="props.message.like" kind="like" @click="foundation.likeMessage" />
-            <DialogueActionButton :active="props.message.dislike" kind="dislike" @click="foundation.dislikeMessage" />
-        </template>
-        <DialogueActionMore v-bind="moreProps()" />
+    <div v-else :class="wrapCls">
+        <component :is="nodes[key]()" v-for="key in barKeys" :key="key" />
     </div>
 </template>

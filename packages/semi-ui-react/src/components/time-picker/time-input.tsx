@@ -1,10 +1,10 @@
 import type React from 'react';
-import { useEffect, useEffectEvent, useRef } from 'react';
+import { useRef } from 'react';
 import clsx from 'clsx';
 import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { IconClock } from '@fibrae/semi-icons-react';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';
 import Input, { type InputHandle } from '../input';
 import type { TimePickerProps } from './time-picker';
@@ -74,19 +74,6 @@ export default function TimeInput(props: TimeInputProps) {
         [`${prefixCls}-input-invalid`]: invalid,
         [`${prefixCls}-input-readonly`]: inputReadOnly,
     });
-
-    const focusOnMount = useEffectEvent(() => {
-        const inputNode = inputRef.current?.input;
-        if (props.focusOnOpen && inputNode) {
-            inputNode.focus({ preventScroll: props.preventScroll });
-            inputNode.select();
-        }
-    });
-
-    useEffect(() => {
-        const frame = requestAnimationFrame(() => focusOnMount());
-        return () => cancelAnimationFrame(frame);
-    }, []);
 
     return (
         <div className={`${prefixCls}-input-wrap`}>

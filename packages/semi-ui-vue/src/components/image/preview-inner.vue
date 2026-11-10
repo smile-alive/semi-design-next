@@ -1,6 +1,5 @@
 <script setup lang="ts">
-    import { computed, nextTick, shallowRef, useId, useTemplateRef, watch, type StyleValue } from 'vue';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { computed, nextTick, useId, useTemplateRef, watch, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-vue';
@@ -108,14 +107,12 @@
     const footer = useTemplateRef<InstanceType<typeof PreviewFooter>>('footer');
     const leftIcon = useTemplateRef<HTMLButtonElement>('leftIcon');
     const rightIcon = useTemplateRef<HTMLButtonElement>('rightIcon');
-    const ratio = shallowRef<RatioType>('adaptation');
 
     const { foundation, state } = useFoundation<Foundation, Adapter, PreviewInnerBaseProps, PreviewInnerState>(
         PreviewInnerFoundation,
         props,
         (view) => PreviewInnerFoundation.getInitialState(view),
         () => ({
-            getIsInGroup: () => Boolean(group),
             notifyChange: (index, direction) => {
                 emit('change', index);
                 if (direction === 'prev') {
@@ -133,13 +130,9 @@
             notifyDownloadError: (src) => emit('downloadError', src),
             getWrap: () => wrap.value,
             isValidTarget: (e: Event) => !(e.target instanceof Node && [header.value?.$el, footer.value?.$el, leftIcon.value, rightIcon.value].some((el) => el?.contains(e.target as Node))),
-            setRatio: (value) => {
-                ratio.value = value;
-            },
         }),
         {
             context: () => ({
-                isGroup: Boolean(group),
                 setCurrentIndex: group?.setCurrentIndex,
                 setDownloadName: group?.view.value.setDownloadName,
                 direction: config.value.direction,
@@ -152,6 +145,7 @@
     const srcList = computed(() => PreviewInnerFoundation.getSrcList(props.src as string | string[]));
     const total = computed(() => srcList.value.length);
     const currentIndex = computed(() => PreviewInnerFoundation.getCurrentIndex(props, state.value));
+    const ratio = computed(() => PreviewInnerFoundation.getRatio(props, state.value));
     const showPrev = computed(() => PreviewInnerFoundation.canSwitch('prev', currentIndex.value, total.value, props.infinite));
     const showNext = computed(() => PreviewInnerFoundation.canSwitch('next', currentIndex.value, total.value, props.infinite));
     const title = computed(() => group?.view.value.titles[currentIndex.value] ?? props.previewTitle);
@@ -175,25 +169,6 @@
             }
             foundation.beforeShow();
             onCleanup(foundation.afterHide);
-        },
-        { flush: 'post' }
-    );
-
-    // same render as the new src, so PreviewImage does not re-fit the leaving image
-    watch(currentIndex, () => {
-        ratio.value = 'adaptation';
-    });
-
-    // a focused prev/next button disappears at the ends; keep focus in the dialog. Focus the user moved elsewhere is left
-    // alone.
-    watch(
-        () => currentIndex.value,
-        () => {
-            const el = wrap.value;
-            const active = FocusTrapHandle.getActiveElement();
-            if (el && (!active || active === document.body)) {
-                el.focus({ preventScroll: true });
-            }
         },
         { flush: 'post' }
     );

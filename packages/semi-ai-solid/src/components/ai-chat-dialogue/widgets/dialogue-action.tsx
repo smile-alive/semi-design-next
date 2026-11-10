@@ -1,6 +1,6 @@
-import { Show, createMemo, createSignal } from 'solid-js';
+import { For, type JSX, Show, createMemo, createSignal } from 'solid-js';
 import clsx from 'clsx';
-import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
+import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionKey, type DialogueActionState, getDialogueActionFlags, getDialogueActionKeys } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
@@ -48,20 +48,22 @@ export default function DialogueAction(props: DialogueActionProps) {
         })
     );
 
-    const markPressInside = useClickOutside([trigger], foundation.hideMoreDropdown, () => state().visible);
+    const markPressInside = useClickOutside([trigger], foundation.closeMenu, () => state().visible);
 
     // memos: a new message object (a like, a streamed chunk) must not recreate the buttons a custom bar received
     const flags = () => getDialogueActionFlags({ role: props.message.role, status: props.message.status, isLastChat: props.isLastChat, showReset: context.view().showReset });
 
-    const completed = createMemo(() => flags().completed);
     const finished = createMemo(() => flags().finished);
-    const showFeedback = createMemo(() => flags().showFeedback);
     const showReset = createMemo(() => flags().showReset);
-    const showEdit = createMemo(() => flags().showEdit);
+
+    // compared by content: the custom renderer is called again only when the set of buttons changes
+    const sameKeys = (a: DialogueActionKey[], b: DialogueActionKey[]) => a.join() === b.join();
+
+    const barKeys = createMemo(() => getDialogueActionKeys(flags(), false), [], { equals: sameKeys });
 
     const wrapCls = () =>
         clsx(PREFIX_ACTION, {
-            [`${PREFIX_ACTION}-show`]: (showReset() && finished()) || state().showAction,
+            [`${PREFIX_ACTION}-show`]: DialogueActionFoundation.isActionBarShown({ showReset: showReset(), finished: finished(), showAction: state().showAction }),
             [`${PREFIX_ACTION}-hidden`]: !finished(),
         });
 
@@ -76,7 +78,7 @@ export default function DialogueAction(props: DialogueActionProps) {
             // the deleted message took the more button along; the list takes the focus the modal gives up
             afterClose: () => triggerNode && handoverFocus(triggerNode, list),
         });
-        foundation.hideMoreDropdown();
+        foundation.closeMenu();
     };
 
     const copyNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={foundation.copyMessage} />;
@@ -116,11 +118,13 @@ export default function DialogueAction(props: DialogueActionProps) {
             stopPropagation
             trigger="custom"
             visible={state().visible}
-            onEscKeyDown={foundation.hideMoreDropdown}
+            onEscKeyDown={foundation.closeMenu}
         >
-            {(getTriggerProps) => <Button {...getTriggerProps({ ref: setTrigger })} type="tertiary" aria-label={locale().locale.more} theme="borderless" icon={<IconMoreStroked />} onClick={foundation.showMoreDropdown} />}
+            {(getTriggerProps) => <Button {...getTriggerProps({ ref: setTrigger })} type="tertiary" aria-label={locale().locale.more} theme="borderless" icon={<IconMoreStroked />} onClick={foundation.openMenu} />}
         </Dropdown>
     );
+
+    const factories: Record<DialogueActionKey, () => JSX.Element> = { copyNode, likeNode, dislikeNode, resetNode, shareNode, editNode, moreNode };
 
     return (
         <Show
@@ -128,44 +132,12 @@ export default function DialogueAction(props: DialogueActionProps) {
             keyed
             fallback={
                 <div class={wrapCls()}>
-                    <Show when={completed()}>{copyNode()}</Show>
-                    <Show when={showReset()}>{resetNode()}</Show>
-                    <Show when={completed()}>{shareNode()}</Show>
-                    <Show when={showEdit()}>{editNode()}</Show>
-                    <Show when={showFeedback()}>
-                        {likeNode()}
-                        {dislikeNode()}
-                    </Show>
-                    {moreNode()}
+                    <For each={barKeys()}>{(key) => factories[key]()}</For>
                 </div>
             }
         >
             {(render) => {
-                const factories = { copyNode, likeNode, dislikeNode, resetNode, shareNode, editNode, moreNode };
-                const keys = createMemo(
-                    () => {
-                        const shown: (keyof typeof factories)[] = [];
-                        if (completed()) {
-                            shown.push('copyNode');
-                        }
-                        if (showFeedback()) {
-                            shown.push('likeNode', 'dislikeNode');
-                        }
-                        if (showReset()) {
-                            shown.push('resetNode');
-                        }
-                        if (completed()) {
-                            shown.push('shareNode');
-                        }
-                        if (showEdit()) {
-                            shown.push('editNode');
-                        }
-                        shown.push('moreNode');
-                        return shown;
-                    },
-                    [],
-                    { equals: (a, b) => a.join() === b.join() }
-                );
+                const keys = createMemo(() => getDialogueActionKeys(flags(), true), [], { equals: sameKeys });
                 // Render functions, so a button exists only where the custom bar calls one: a button created but left
                 // out of the bar is never inserted, which shifts the hydration keys after it.
                 return render({

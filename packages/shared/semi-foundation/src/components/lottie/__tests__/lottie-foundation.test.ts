@@ -51,7 +51,6 @@ function mount(params: LottieBaseProps['params'], reducedMotion: boolean) {
         getContainer: () => container,
         notifyAnimationInstance: vi.fn<LottieAdapter['notifyAnimationInstance']>(),
         notifyLottie: vi.fn<LottieAdapter['notifyLottie']>(),
-        notifyLoadError: vi.fn<LottieAdapter['notifyLoadError']>(),
     } as unknown as LottieAdapter;
     const foundation = new LottieFoundation(adapter);
     foundation.connect();

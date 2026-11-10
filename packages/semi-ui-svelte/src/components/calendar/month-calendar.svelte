@@ -50,9 +50,6 @@
     const moreButtons = new Map<string, HTMLButtonElement>();
     let grid = $state<HTMLDivElement>();
 
-    // Starts at 0 as in the other frameworks' first frame: the row height is only known once mounted
-    let itemLimit = $state(0);
-
     const { foundation, states } = useFoundation<Foundation, Adapter, object, CalendarMonthBaseState>(
         CalendarMonthFoundation,
         {},
@@ -68,6 +65,7 @@
     const prefixCls = `${cssClasses.PREFIX}-month`;
     const cardCls = `${prefixCls}-event-card`;
     const openCardKey = $derived(states().openCardKey);
+    const itemLimit = $derived(states().itemLimit);
     const monthlyData = $derived(CalendarFoundation.getMonthlyData(displayValue, locale().dateFnsLocale, weekStartsOn, today));
     const parsedEvents = $derived(CalendarFoundation.getParseMonthlyEvents(events, displayValue, weekStartsOn));
     const weekCount = $derived(Object.keys(monthlyData).length);
@@ -98,7 +96,7 @@
     const measure = () => {
         const row = grid?.lastElementChild;
         if (row) {
-            itemLimit = CalendarFoundation.getItemLimit(row.getBoundingClientRect().height);
+            foundation.handleRowResize(row.getBoundingClientRect().height);
         }
     };
 
@@ -145,7 +143,7 @@
 
     watch(
         () => [monthlyData, parsedEvents, itemLimit, openCardKey],
-        () => foundation.closeStaleCard(monthlyData, parsedEvents, itemLimit)
+        () => foundation.closeStaleCard(monthlyData, parsedEvents)
     );
 
     onMount(measure);

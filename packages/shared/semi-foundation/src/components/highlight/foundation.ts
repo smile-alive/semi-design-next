@@ -8,13 +8,17 @@ interface ChunkQuery {
     searchWords: SearchWords;
     sourceString: string;
 }
-/** Plain-text chunks carry neither className nor style */
-export interface Chunk {
+interface Range {
     start: number;
     end: number;
     highlight: boolean;
-    className?: string;
+    class?: string;
     style?: HighlightStyle;
+}
+
+/** Plain-text chunks carry neither class nor style */
+export interface Chunk extends Range {
+    text: string;
 }
 
 /** Inline style values: numbers such as `fontWeight: 600` are valid CSS property values too */
@@ -22,14 +26,14 @@ export type HighlightStyle = Record<string, string | number>;
 
 export interface ComplexSearchWord {
     text: string;
-    className?: string;
+    class?: string;
     style?: HighlightStyle;
 }
 
 export type SearchWord = string | ComplexSearchWord | undefined;
 export type SearchWords = SearchWord[];
 
-function findChunks({ autoEscape, caseSensitive, searchWords, sourceString }: ChunkQuery): Chunk[] {
+function findChunks({ autoEscape, caseSensitive, searchWords, sourceString }: ChunkQuery): Range[] {
     return searchWords
         .map((searchWord) => (typeof searchWord === 'string' ? { text: searchWord } : searchWord))
         .filter((searchWord) => searchWord?.text)
@@ -48,7 +52,7 @@ function findChunks({ autoEscape, caseSensitive, searchWords, sourceString }: Ch
                         highlight: true,
                         start,
                         end,
-                        className: searchWord.className,
+                        class: searchWord.class,
                         style: searchWord.style,
                     });
                 }
@@ -57,7 +61,7 @@ function findChunks({ autoEscape, caseSensitive, searchWords, sourceString }: Ch
         }, []);
 }
 
-function combineChunks({ chunks }: { chunks: Chunk[] }): Chunk[] {
+function combineChunks({ chunks }: { chunks: Range[] }): Range[] {
     return chunks
         .toSorted((first, second) => first.start - second.start)
         .reduce((processedChunks, nextChunk) => {
@@ -65,14 +69,14 @@ function combineChunks({ chunks }: { chunks: Chunk[] }): Chunk[] {
                 return [nextChunk];
             } else {
                 const prevChunk = processedChunks.pop();
-                // Touching chunks stay separate: each keeps its own className and style
+                // Touching chunks stay separate: each keeps its own class and style
                 if (nextChunk.start < prevChunk.end) {
                     const endIndex = Math.max(prevChunk.end, nextChunk.end);
                     processedChunks.push({
                         highlight: true,
                         start: prevChunk.start,
                         end: endIndex,
-                        className: prevChunk.className || nextChunk.className,
+                        class: prevChunk.class || nextChunk.class,
                         style: { ...prevChunk.style, ...nextChunk.style },
                     });
                 } else {
@@ -83,16 +87,18 @@ function combineChunks({ chunks }: { chunks: Chunk[] }): Chunk[] {
         }, []);
 }
 
-function fillInChunks({ chunksToHighlight, totalLength }: { chunksToHighlight: Chunk[]; totalLength: number }) {
+function fillInChunks({ chunksToHighlight, sourceString }: { chunksToHighlight: Range[]; sourceString: string }) {
     const allChunks: Chunk[] = [];
+    const totalLength = sourceString ? sourceString.length : 0;
     const append = (start: number, end: number, highlight: boolean, className?: string, style?: HighlightStyle) => {
         if (end - start > 0) {
             allChunks.push({
                 start,
                 end,
                 highlight,
-                className,
+                class: className,
                 style,
+                text: sourceString.slice(start, end),
             });
         }
     };
@@ -103,7 +109,7 @@ function fillInChunks({ chunksToHighlight, totalLength }: { chunksToHighlight: C
         let lastIndex = 0;
         chunksToHighlight.forEach((chunk) => {
             append(lastIndex, chunk.start, false);
-            append(chunk.start, chunk.end, true, chunk.className, chunk.style);
+            append(chunk.start, chunk.end, true, chunk.class, chunk.style);
             lastIndex = chunk.end;
         });
         append(lastIndex, totalLength, false);
@@ -149,8 +155,5 @@ export function findAll({ autoEscape = true, caseSensitive = false, searchWords,
         sourceString,
     });
     const chunksToHighlight = combineChunks({ chunks });
-    return fillInChunks({
-        chunksToHighlight,
-        totalLength: sourceString ? sourceString.length : 0,
-    });
+    return fillInChunks({ chunksToHighlight, sourceString });
 }

@@ -1,8 +1,8 @@
 import { type CSSProperties, useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-import { cssClasses, getStackItemTransform, getStackThreshold, numbers } from '@fibrae/semi-foundation/components/notification/constants';
-import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import { getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
+import { cssClasses, getStackItemTransform } from '@fibrae/semi-foundation/components/notification/constants';
+import type { NoticeInstance } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import { type ConfigProps, groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -10,7 +10,7 @@ import '@fibrae/semi-foundation/components/notification/notification.scss';
 import useNoticeListEffects from '../../hooks/use-notice-list-effects';
 import CSSAnimation from '../../internal/css-animation';
 import { useConfigContext } from '../config-provider/context';
-import Notice, { type NoticeHandle } from './notice';
+import Notice from './notice';
 
 // NoticeInstance does not declare the offsets, but they reach the store from Notification.config()
 function positionStyle(notice: NoticeInstance & Pick<ConfigProps, 'top' | 'left' | 'bottom' | 'right'>) {
@@ -28,7 +28,7 @@ export default function NotificationList({ store }: NotificationListProps) {
 
     // the server snapshot lets useNotification's contextHolder render on the server
     const state = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
-    const [handles] = useState(() => new Map<string, NoticeHandle>());
+    const [elements] = useState(() => new Map<string, HTMLDivElement>());
     const [hoveredPosition, setHoveredPosition] = useState<string | null>(null);
 
     // focus pauses and opens a list like the pointer, so keyboard users get the same time and no hidden tab stop
@@ -52,32 +52,22 @@ export default function NotificationList({ store }: NotificationListProps) {
         )
     );
 
-    const { removedItems, updatedItems } = state;
+    const { items, removedItems, updatedItems, stack } = state;
 
-    const announcement = useNoticeListEffects(state.notices, updatedItems, removedItems, handles);
+    const shownIds = new Set(items.map(({ id }) => id));
+
+    const announcement = useNoticeListEffects(items, updatedItems, elements, cssClasses.NOTICE);
 
     const noticesInPosition = groupNoticesByPosition(state, direction);
 
     const remove = (id: string) => store.remove(String(id));
 
-    const resumeIfIdle = (position: string, pointer: boolean, focus: boolean) => {
-        if (!pointer && !focus) {
-            noticesInPosition[position as NoticePosition].forEach((notice) => handles.get(notice.id)?.resumeCloseTimer());
-        }
-    };
-
-    const releaseFocus = (position: string) => {
-        setFocusedPosition(null);
-        resumeIfIdle(position, hoveredPosition === position, false);
-    };
-
-    // an unmounting focused notice fires no blur, which would keep the list paused
+    // a notice unmounts on a store change
     useLayoutEffect(() => {
-        const list = focusedPosition ? lists.get(focusedPosition) : undefined;
-        if (focusedPosition && !list?.contains(FocusTrapHandle.getActiveElement(list))) {
-            releaseFocus(focusedPosition);
+        if (focusedPosition && hasLostFocus(true, lists.get(focusedPosition))) {
+            setFocusedPosition(null);
         }
-    });
+    }, [focusedPosition, lists, state]);
 
     return (
         <>
@@ -89,13 +79,13 @@ export default function NotificationList({ store }: NotificationListProps) {
                 if (!notices.length) {
                     return null;
                 }
-                const hoveredHere = hoveredPosition === position;
-                const focusedHere = focusedPosition === position;
-                const hovered = hoveredHere || focusedHere;
-                const shown = notices.filter((notice) => !removedItems.includes(notice));
-                // the newest notice decides, so Notification.config({ stack }) applies from the next notice
-                const stack = getStackThreshold(notices[0].stack);
-                const expanded = hovered || shown.length <= stack;
+                const paused = hoveredPosition === position || focusedPosition === position;
+                const listState = { paused, removedItems, updatedItems };
+                const depths = getStackDepths(
+                    notices.map(({ id }) => id),
+                    shownIds
+                );
+                const expanded = isStackExpanded(stack, paused, notices.filter(({ id }) => shownIds.has(id)).length);
                 return (
                     <div
                         key={position}
@@ -105,52 +95,41 @@ export default function NotificationList({ store }: NotificationListProps) {
                         x-placement={position}
                         onBlur={(event) => {
                             if (!event.currentTarget.contains(event.relatedTarget)) {
-                                releaseFocus(position);
+                                setFocusedPosition(null);
                             }
                         }}
-                        onFocus={() => {
-                            setFocusedPosition(position);
-                            notices.forEach((notice) => handles.get(notice.id)?.pauseCloseTimer());
-                        }}
-                        onMouseEnter={() => {
-                            setHoveredPosition(position);
-                            notices.forEach((notice) => handles.get(notice.id)?.pauseCloseTimer());
-                        }}
-                        onMouseLeave={() => {
-                            setHoveredPosition(null);
-                            resumeIfIdle(position, false, focusedHere);
-                        }}
+                        onFocus={() => setFocusedPosition(position)}
+                        onMouseEnter={() => setHoveredPosition(position)}
+                        onMouseLeave={() => setHoveredPosition(null)}
                     >
                         {notices.map((notice, index) => {
                             const isRemoved = removedItems.includes(notice);
-                            const depth = notices.slice(0, index).filter((newer) => shown.includes(newer)).length;
+                            const depth = depths.get(notice.id);
                             const animation = (
                                 <CSSAnimation
                                     startClassName={`${cssClasses.NOTICE}-animation-${isRemoved ? 'hide' : 'show'}_${position}`}
                                     animationState={isRemoved ? 'leave' : 'enter'}
-                                    getElement={() => handles.get(notice.id)?.element()}
+                                    getElement={() => elements.get(notice.id)}
                                     onAnimationEnd={() => {
                                         // the enter animation ends here too
                                         if (isRemoved) {
                                             store.finishLeave(notice.id);
                                         }
                                     }}
-                                    onAnimationStart={() => pinAnimatedHeight(handles.get(notice.id)?.element())}
+                                    onAnimationStart={() => pinAnimatedHeight(elements.get(notice.id))}
                                 >
                                     {({ animationClassName, animationEventsNeedBind, isAnimating }) =>
                                         isRemoved && !isAnimating ? null : (
                                             <Notice
                                                 {...notice}
-                                                ref={(handle) => {
-                                                    handles.set(notice.id, handle);
-                                                    if (hovered) {
-                                                        handle.pauseCloseTimer();
-                                                    }
+                                                ref={(element) => {
+                                                    elements.set(notice.id, element);
                                                     return () => {
-                                                        handles.delete(notice.id);
+                                                        elements.delete(notice.id);
                                                     };
                                                 }}
                                                 className={clsx(notice.className, animationClassName)}
+                                                listState={listState}
                                                 {...animationEventsNeedBind}
                                                 close={remove}
                                             />
@@ -158,7 +137,7 @@ export default function NotificationList({ store }: NotificationListProps) {
                                     }
                                 </CSSAnimation>
                             );
-                            // The item is there without stack too: the list decides stacking from its newest notice, so a
+                            // The item is there without stack too: the latest open decides the list's stacking, so a
                             // notice can switch modes while shown, and a changed element structure would remount it,
                             // restarting its countdown and entrance and losing its state and focus.
                             const collapsed = !expanded && depth > 0;
@@ -169,7 +148,7 @@ export default function NotificationList({ store }: NotificationListProps) {
                                         stack
                                             ? clsx(`${cssClasses.NOTICE}-stack-item`, {
                                                   [`${cssClasses.NOTICE}-stack-item-expanded`]: expanded,
-                                                  [`${cssClasses.NOTICE}-stack-item-hidden`]: !expanded && depth >= numbers.stackVisibleCount,
+                                                  [`${cssClasses.NOTICE}-stack-item-hidden`]: isStackHidden(expanded, depth),
                                               })
                                             : undefined
                                     }

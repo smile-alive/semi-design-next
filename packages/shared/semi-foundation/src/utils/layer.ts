@@ -21,6 +21,24 @@ export interface Layer {
  * an inert live region is not announced.
  */
 export const KEEP_INTERACTIVE_ATTRIBUTE = 'data-semi-keep-interactive';
+
+/** Trigger attribute listing the ids of the popups it opens, space separated: nested popups share one trigger (D5) */
+export const POPUP_ID_ATTRIBUTE = 'data-popupid';
+
+/** Matches the trigger that lists popup `id`; a token match, so a trigger shared by nested popups is found by each id */
+export const popupTriggerSelector = (id: string) => `[${POPUP_ID_ATTRIBUTE}~="${CSS.escape(id)}"]`;
+
+/** The popup element Tooltip renders (D5) */
+export const POPUP_SELECTOR = '[popover]';
+
+/**
+ * The trigger of the Tooltip-family popup `id`. `root`: the document or shadow root the popup lives in, which also
+ * holds its trigger (the popup is portaled into the trigger's root).
+ */
+export function getPopupTrigger(id: string, root: ParentNode): HTMLElement | null {
+    return root.querySelector<HTMLElement>(popupTriggerSelector(id));
+}
+
 /** Marks a top-layer popover a modal layer covers; the popup styles hide it until the modal layer closes */
 const COVERED_ATTRIBUTE = 'data-semi-covered';
 

@@ -1,6 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
-import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
+import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Toast } from '../index';
 import type { ToastHookApi } from '../interface';
@@ -18,7 +18,7 @@ describe('Svelte Toast 服务端首帧', () => {
     });
 
     it('列表首帧只有常驻播报区，没有 Toast', () => {
-        const { body } = render(ToastList, { props: { store: new ToastListStore() } });
+        const { body } = render(ToastList, { props: { store: createToastListStore() } });
         expect(body).toContain('aria-live="polite"');
         expect(body).not.toContain('role="status"');
     });

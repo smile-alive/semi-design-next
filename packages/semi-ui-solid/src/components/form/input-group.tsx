@@ -2,6 +2,7 @@ import { type JSX, Show, children, createMemo, createSignal, createUniqueId, spl
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
+import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -35,8 +36,7 @@ export default function FormInputGroup(props: InputGroupProps) {
     // each read of a JSX prop creates its nodes again, so both are read once
     const label = children(() => local.label as JSX.Element);
     const extraText = children(() => local.extraText);
-    const errorMessageId = `${generatedId}-errormessage`;
-    const extraTextId = `${generatedId}-extraText`;
+    const ids = getFieldIds(generatedId);
 
     const groupError = createMemo(() =>
         fields().flatMap((field) => {
@@ -63,7 +63,7 @@ export default function FormInputGroup(props: InputGroupProps) {
 
     const labelId = () => {
         const config = labelConfig();
-        return config ? config.id || `${generatedId}-label` : undefined;
+        return config ? config.id || ids.label : undefined;
     };
 
     const context: FormInputGroupContextValue = {
@@ -74,8 +74,8 @@ export default function FormInputGroup(props: InputGroupProps) {
         // the group's own aria attributes stay on its role="group" element, so each field adds these to its own references
         aria: () => ({
             labelledby: joinIds(local['aria-labelledby'], labelId()),
-            describedby: joinIds(local['aria-describedby'], hasExtraText() && extraTextId),
-            errormessage: errorMessageId,
+            describedby: joinIds(local['aria-describedby'], hasExtraText() && ids.extraText),
+            errormessage: ids.errorMessage,
         }),
     };
 
@@ -84,7 +84,7 @@ export default function FormInputGroup(props: InputGroupProps) {
     const extraContent = () => (
         <Show when={hasExtraText()}>
             <div
-                id={extraTextId}
+                id={ids.extraText}
                 class={clsx(`${prefix}-field-extra`, {
                     [`${prefix}-field-extra-string`]: typeof extraText() === 'string',
                     [`${prefix}-field-extra-middle`]: extraTextPosition() === 'middle',
@@ -117,7 +117,7 @@ export default function FormInputGroup(props: InputGroupProps) {
                     </InputGroup>
                     <Show when={extraTextPosition() === 'bottom'}>{extraContent()}</Show>
                     <Show when={groupError().length > 0}>
-                        <ErrorMessage error={groupError()} errorMessageId={errorMessageId} isInInputGroup showValidateIcon={formProps()?.showValidateIcon} />
+                        <ErrorMessage error={groupError()} errorMessageId={ids.errorMessage} isInInputGroup showValidateIcon={formProps()?.showValidateIcon} />
                     </Show>
                 </FieldGrid>
             </div>

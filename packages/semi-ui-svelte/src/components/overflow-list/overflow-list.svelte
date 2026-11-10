@@ -1,12 +1,11 @@
 <script lang="ts" generics="T extends OverflowListItem = OverflowListItem">
     import { untrack } from 'svelte';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/overflow-list/constants';
-    import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+    import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import type { OverflowListItem, OverflowListKey, OverflowListProps } from './interface.js';
     import { markScrollItem, observeSize } from './observers.js';
 
@@ -38,7 +37,6 @@
 
     // Bumped when a scroll item's observed element appears or changes, which the snippet output hides from reactivity
     let scrollVersion = $state(0);
-    let committedKeys: OverflowListKey[] | null = null;
 
     const prefix = cssClasses.PREFIX;
     const isScroll = $derived(renderMode === 'scroll');
@@ -81,33 +79,7 @@
         return { items: readItems(), style: readStyle(), renderMode, collapseFrom, itemKey: readKeyOption() };
     };
 
-    const initialView = (): OverflowListView => {
-        const empty: OverflowListView = {
-            items: [],
-            style: undefined,
-            visible: [],
-            overflow: [],
-            pivot: -1,
-            maxCount: 0,
-            overflowStatus: 'calculating',
-            scrollOverflow: [[], []],
-        };
-        return OverflowListFoundation.resetView(viewProps(), empty, 0);
-    };
-
-    let view = $state.raw<OverflowListView>(untrack(initialView));
-
-    // Scroll mode keeps every item rendered; the observer decides which are visible. `key` is the string
-    // SCROLL_KEY_ATTRIBUTE carries.
-    const scrollItems = $derived(view.visible.map((entry, index) => ({ item: entry as T, index, key: String(keyOf(entry, index)) })));
-    const hidden = $derived(view.overflowStatus === 'calculating' && view.pivot < 0);
-
-    const layoutOf = (next: OverflowListView, reversed: boolean) => {
-        return OverflowListFoundation.getVisibleLayout(next, collapseFrom === 'start', reversed);
-    };
-
-    // Where the visible items sit in `items`; kept apart from the view so a later collapseFrom change is noticed
-    let layout: VisibleLayout = untrack(() => layoutOf(view, collapseFrom === 'start' && renderMode !== 'scroll'));
+    let view = $state.raw<OverflowListView>(untrack(() => OverflowListFoundation.createView(viewProps())));
 
     const { foundation, states } = useFoundation<Foundation, Adapter, OverflowListBaseProps, OverflowListBaseState>(
         OverflowListFoundation,
@@ -115,54 +87,31 @@
         () => OverflowListFoundation.getInitialState(),
         () => ({
             notifyVisibleStateChange: (visibleState) => onVisibleStateChange?.(visibleState),
-            updateView: (partial) => writeView({ ...view, ...partial }),
+            updateView: (update) => {
+                view = update(view);
+            },
             notifyIntersect: (res) => onIntersect?.(res),
             notifyOverflow: (overflowItems) => onOverflow?.(overflowItems as T[]),
         })
     );
 
-    const collapseItems = $derived(
-        view.visible.map((entry, i) => {
-            const index = layout.first + i * layout.step;
-            return { item: entry as T, index, key: keyOf(entry, index) };
-        })
-    );
-
+    // Scroll mode keeps every item rendered; the observer decides which are visible. `key` is the string
+    // SCROLL_KEY_ATTRIBUTE carries.
+    const scrollItems = $derived(view.visible.map((entry, index) => ({ item: entry as T, index, key: String(keyOf(entry, index)) })));
+    const hidden = $derived(OverflowListFoundation.isHidden(view));
+    const collapseItems = $derived(OverflowListFoundation.getVisibleItems(view, keyOption) as Array<{ item: T; index: number; key: OverflowListKey }>);
     const scrollOverflow = $derived(OverflowListFoundation.getOverflowItem({ items: itemList, itemKey: keyOption }, { visibleState: states().visibleState, scrollOverflow: view.scrollOverflow }) as [T[], T[]]);
 
     const keyOf = (entry: OverflowListItem, index: number) => {
         return OverflowListFoundation.getItemKey(keyOption, entry, index);
     };
 
-    const writeView = (next: OverflowListView, reset = false) => {
-        if (reset) {
-            layout = layoutOf(next, collapseFrom === 'start' && renderMode !== 'scroll');
-        } else if (next.visible !== view.visible) {
-            layout = layoutOf(next, false);
-        }
-        view = next;
-    };
+    const onContainerResize = (entry: ResizeObserverEntry) => foundation.handleContainerResize(entry.contentRect.width);
 
-    const markCalculating = () => {
-        view = { ...view, overflowStatus: 'calculating' };
-    };
+    // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
+    const onItemResize = (entry: ResizeObserverEntry, key: OverflowListKey) => foundation.handleItemResize(key, entry.contentRect.width, view.maxCount);
 
-    const onContainerResize = (entry: ResizeObserverEntry) => {
-        foundation.setState({ containerWidth: entry.contentRect.width });
-        markCalculating();
-    };
-
-    const onItemResize = (entry: ResizeObserverEntry, key: OverflowListKey) => {
-        // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
-        if (foundation.recordItemSize(key, entry.contentRect.width, view.maxCount)) {
-            markCalculating();
-        }
-    };
-
-    const onOverflowResize = (entry: ResizeObserverEntry) => {
-        foundation.setState({ overflowWidth: entry.contentRect.width });
-        markCalculating();
-    };
+    const onOverflowResize = (entry: ResizeObserverEntry) => foundation.handleOverflowResize(entry.contentRect.width);
 
     // Called from an attachment effect: reading the counter there would make the attachment depend on it
     const onScrollElement = () => {
@@ -171,34 +120,21 @@
         });
     };
 
+    // syncView reads the items in full here, so in-place edits of a $state array are tracked
     $effect.pre(() => {
-        const next = viewProps();
-        // read keys here so in-place edits of a $state array are tracked
-        const keys = OverflowListFoundation.getItemKeys(readItems(), readKeyOption());
-        const fromStart = collapseFrom === 'start';
-        untrack(() => {
-            if (!isEqual(view.items, next.items) || !isEqual(view.style, next.style) || !isEqual(view.keys, keys) || layout.fromStart !== fromStart) {
-                writeView(OverflowListFoundation.resetView(next, view, states().containerWidth), true);
-            }
-        });
+        const next = OverflowListFoundation.syncView(
+            viewProps(),
+            untrack(() => view),
+            untrack(() => states().containerWidth)
+        );
+        view = next;
     });
 
-    // Runs after every change of the view or the measured widths. It settles: handleCollapseOverflow writes the view
-    // only when leaving 'calculating'.
+    // Runs after every change of the view; a change of the item keys always resets it. It settles: handleCommit writes
+    // the view only when leaving 'calculating'.
     $effect(() => {
-        void view;
-        void states().containerWidth;
-        void states().overflowWidth;
-        const keys = itemList.map((entry, index) => keyOf(entry, index));
-        untrack(() => {
-            if (committedKeys && !isEqual(committedKeys, keys)) {
-                foundation.handleKeysChange(keys);
-            }
-            committedKeys = keys;
-            if (!isScroll && view.overflowStatus === 'calculating') {
-                foundation.handleCollapseOverflow();
-            }
-        });
+        const current = view;
+        untrack(() => foundation.handleCommit(current));
     });
 
     // No root: visibility is judged against the viewport, which the foundation and Tabs rely on
@@ -228,7 +164,7 @@
     {/if}
 {/snippet}
 
-<div {...rest} {@attach isScroll ? undefined : observeSize(onContainerResize)} class={[prefix, rest.class]} role={groupRole(rest)} style:max-width={isScroll ? undefined : '100%'} style:visibility={isScroll ? undefined : hidden ? 'hidden' : 'visible'}>
+<div {...rest} {@attach isScroll ? undefined : observeSize(onContainerResize)} class={[prefix, rest.class]} role={namedRole(rest)} style:max-width={isScroll ? undefined : '100%'} style:visibility={isScroll ? undefined : hidden ? 'hidden' : 'visible'}>
     {#if isScroll}
         {#if overflowRenderDirection !== 'end'}
             {@render overflow?.({ items: scrollOverflow[0], position: 'start' })}

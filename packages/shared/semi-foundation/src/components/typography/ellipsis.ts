@@ -39,6 +39,42 @@ export function canUseCSSEllipsis({ expandable, expandText, pos, suffix }: Pick<
     return !expandable && expandText === undefined && !copyable && pos === 'end' && !suffix;
 }
 
+export interface EllipsisViewState {
+    expanded: boolean;
+    isOverflowed: boolean;
+    isTruncated: boolean;
+}
+
+/** Whether the full text does not fit; CSS ellipsis reports it by measurement, JS truncation by having cut the text */
+export function isOverflowed({ expanded, isOverflowed: measured, isTruncated }: EllipsisViewState, cssEllipsis: boolean) {
+    return !expanded && (cssEllipsis ? measured : isTruncated);
+}
+
+/** Tooltip forces tabIndex 0 on its trigger; the text is a tab stop only when it sets its own, or when a tip can show and it holds no focusable item itself */
+export function isTooltipTriggerFocusable({ tabIndex, overflowed, condition, insideWidgetItem }: { tabIndex: unknown; overflowed: boolean; condition?: boolean; insideWidgetItem: boolean }) {
+    return tabIndex !== undefined || (overflowed && condition !== false && !insideWidgetItem);
+}
+
+/** `showTooltip.type` is case-insensitive */
+export function isPopoverTooltip(showTooltip: boolean | { type?: string } | undefined) {
+    return typeof showTooltip === 'object' && showTooltip.type?.toLowerCase() === 'popover';
+}
+
+export interface ExpandButton {
+    text: string;
+    /** The aria-expanded value; undefined when activating the button does not toggle, so it is no disclosure */
+    expanded: boolean | undefined;
+}
+
+/** The expand or collapse button of a truncated text; undefined when there is none */
+export function getExpandButton({ isTruncated, expanded }: Pick<EllipsisViewState, 'isTruncated' | 'expanded'>, { expandable, collapsible, expandText, collapseText }: Pick<EllipsisConfig<unknown>, 'expandable' | 'collapsible' | 'expandText' | 'collapseText'>): ExpandButton | undefined {
+    const text = expanded ? collapseText : expandText;
+    if (!isTruncated || text === undefined) {
+        return undefined;
+    }
+    return { text, expanded: (expanded ? collapsible : expandable) ? expanded : undefined };
+}
+
 /** Whether `node` is, or holds, a focusable item; the copy button is not the tab stop, so it does not count */
 export function isInsideWidgetItem(node: HTMLElement, copy?: Node | null) {
     const focusableDescendant = Array.from(node.querySelectorAll(WIDGET_ITEM)).some((item) => !copy?.contains(item));

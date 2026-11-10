@@ -15,12 +15,7 @@
     let second = $state<ScrollItemHandle>();
 
     const options = $derived(ComboboxFoundation.getOptions({ timeStampValue, format, use12Hours, defaultIsAM, hideDisabledOptions, hourStep, minuteStep, secondStep, disabledHours, disabledMinutes, disabledSeconds }));
-
-    const ampmOptions = $derived([
-        { value: 'AM', text: locale().locale.AM },
-        { value: 'PM', text: locale().locale.PM },
-    ]);
-
+    const ampmOptions = $derived(options.ampm.list.map(({ value }) => ({ value, text: locale().locale[value] })));
     const mode = $derived(scrollItemProps?.mode ?? 'normal');
 
     const columnClass = (type: ColumnType) => {
@@ -48,7 +43,7 @@
 
 <ScrollList footer={panelFooter} header={panelHeader}>
     {#if use12Hours}
-        <ScrollItem bind:this={ampm} {...scrollItemProps} aria-label={locale().locale.ampmList} bind:selectedIndex={() => (options.isAM ? 0 : 1), keepIndex} class={columnClass('ampm')} list={ampmOptions} {mode} onSelect={(item) => pick('ampm', item)} type="ampm" />
+        <ScrollItem bind:this={ampm} {...scrollItemProps} aria-label={locale().locale.ampmList} bind:selectedIndex={() => options.ampm.selectedIndex, keepIndex} class={columnClass('ampm')} list={ampmOptions} {mode} onSelect={(item) => pick('ampm', item)} type="ampm" />
     {/if}
     {#if options.showHour}
         <ScrollItem bind:this={hour} transform={withUnit('hour')} {...scrollItemProps} aria-label={locale().locale.hourList} bind:selectedIndex={() => options.hour.selectedIndex, keepIndex} class={columnClass('hour')} list={options.hour.list} {mode} onSelect={(item) => pick('hour', item)} type="hour" />

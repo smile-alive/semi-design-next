@@ -4,7 +4,8 @@ import clsx from 'clsx';
 import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
-import type { ArrayElement, ElementProps } from '../../base/base';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import { hasContent } from '../../utils';
@@ -80,7 +81,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         validateStatus,
         insetLabel,
         insetLabelId,
-        onBlur,
         // injected by Tooltip; unsupported on radiogroup, and tabIndex adds a stray Tab stop
         'aria-expanded': ariaExpanded,
         'aria-haspopup': ariaHaspopup,
@@ -95,7 +95,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         'aria-haspopup'?: unknown;
         'aria-controls'?: unknown;
         tabIndex?: unknown;
-        onBlur?: React.FocusEventHandler<HTMLDivElement>;
     };
 
     // one name per group keeps native arrow keys and form submission from crossing groups
@@ -108,6 +107,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         () => RadioGroupFoundation.getInitialState(props),
         (base) => ({
             notifyChange: (evt) => base.getProps().onChange?.(evt),
+            notifyBlur: (e) => base.getProps().onBlur?.(e),
         })
     );
 
@@ -143,24 +143,12 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
     }
 
     return (
-        <div
-            {...rest}
-            ref={ref}
-            className={prefixClsDisplay}
-            style={style}
-            role="radiogroup"
-            // Form's blur validation waits until focus leaves the group
-            onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    onBlur?.(e);
-                }
-            }}
-        >
+        <div {...rest} ref={ref} className={prefixClsDisplay} style={style} role="radiogroup" onBlur={foundation.handleBlur}>
             <RadioGroupContext
                 value={{
                     radioGroup: {
                         onChange: foundation.handleChange,
-                        value: valueProp === undefined ? state.value : valueProp,
+                        value: RadioGroupFoundation.deriveValue(props, state),
                         disabled,
                         name: name || generatedName,
                         isButtonRadio,

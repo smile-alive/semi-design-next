@@ -273,13 +273,13 @@ describe('Upload 选择校验', () => {
         expect(getCardNames()).toEqual(['vigo.png', 'test.jpeg', 'ok.png']);
     });
 
-    it('所有文件被 accept 拒绝后重置选择框，再选同一文件仍会发出 acceptInvalid', async () => {
+    it('所有文件被 accept 拒绝后清空选择框的值，再选同一文件仍会发出 acceptInvalid', async () => {
         const onAcceptInvalid = fn();
         renderUpload({ accept: '.png', onAcceptInvalid });
-        const before = getInput();
+        const valueSetter = vi.spyOn(getInput(), 'value', 'set');
         await selectFiles([createFile(10, 'a.jpg', 'image/jpeg')]);
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
-        expect(getInput()).not.toBe(before);
+        expect(valueSetter).toHaveBeenCalledWith('');
     });
 
     it('accept 的扩展名接受大写文件名，不接受仅以相同字母结尾的文件名', async () => {
@@ -293,15 +293,16 @@ describe('Upload 选择校验', () => {
         expect(requests).toHaveLength(1);
     });
 
-    it('替换的文件被 accept 拒绝后重置替换选择框', async () => {
+    it('替换的文件被 accept 拒绝后清空替换选择框的值', async () => {
         const onAcceptInvalid = fn();
         renderUpload({ accept: '.png', showReplace: true, fileList: [defaultFileList[0]], onAcceptInvalid });
         await click(replaceButton());
-        const before = getReplaceInput();
-        await selectFiles([createFile(10, 'a.jpg', 'image/jpeg')], before);
+        const replaceInput = getReplaceInput();
+        const valueSetter = vi.spyOn(replaceInput, 'value', 'set');
+        await selectFiles([createFile(10, 'a.jpg', 'image/jpeg')], replaceInput);
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
         expect(onAcceptInvalid.mock.calls[0][0].map((f: File) => f.name)).toEqual(['a.jpg']);
-        expect(getReplaceInput()).not.toBe(before);
+        expect(valueSetter).toHaveBeenCalledWith('');
         expect(getCardNames()).toEqual(['vigo.png']);
     });
 
@@ -664,14 +665,14 @@ describe('Upload insert、replace 与 openFileDialog', () => {
         renderUpload({ fileList: [{ uid: '1', name: 'test.jpg', status: 'success', size: '130KB' }], showReplace: true, onChange });
         await click(replaceButton());
         expect(inputClick.mock.contexts).toEqual([getReplaceInput()]);
-        const replaceInputBefore = getReplaceInput();
-        await selectFiles([createFile(100, 'replaced.png')], replaceInputBefore);
+        const replaceInput = getReplaceInput();
+        const valueSetter = vi.spyOn(replaceInput, 'value', 'set');
+        await selectFiles([createFile(100, 'replaced.png')], replaceInput);
         expect(getCardNames()).toEqual(['replaced.png']);
         expect(onChange.mock.calls[0][0].currentFile.name).toEqual('replaced.png');
         expect(onChange.mock.calls[0][0].fileList.map((item: FileItem) => item.name)).toEqual(['replaced.png']);
         expect(requests).toHaveLength(1);
-        // the replace input is remounted, so the same file can be picked again
-        expect(getReplaceInput()).not.toBe(replaceInputBefore);
+        expect(valueSetter).toHaveBeenCalledWith('');
         inputClick.mockRestore();
     });
 

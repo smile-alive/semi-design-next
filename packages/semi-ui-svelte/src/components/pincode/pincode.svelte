@@ -57,6 +57,8 @@
                 onChange?.(next);
             },
             notifyComplete: (next) => onComplete?.(next),
+            notifyFocus: (event) => onFocus?.(event),
+            notifyBlur: (event) => onBlur?.(event),
             changeSpecificInputFocusState: (index, focusState) => {
                 if (focusState === 'focus') {
                     inputs[index]?.focus();
@@ -77,21 +79,14 @@
 
     const handleCellChange = (index: number, text: string, event: InputChangeEvent) => foundation.handleCellChange(index, text, event instanceof InputEvent || event instanceof CompositionEvent ? event.data : undefined);
 
-    // moving between the digits is not entering or leaving the code: Form's blur validation waits until focus is outside
-    const isOutside = (event: FocusEvent & { currentTarget: HTMLElement }) => !(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget));
-
     const handleFocusIn = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         rest.onfocusin?.(event);
-        if (isOutside(event)) {
-            onFocus?.(event);
-        }
+        foundation.handleFocus(event);
     };
 
     const handleFocusOut = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         rest.onfocusout?.(event);
-        if (isOutside(event)) {
-            onBlur?.(event);
-        }
+        foundation.handleBlur(event);
     };
 
     export function focus(index: number) {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { computed, isVNode, useId, useTemplateRef, type Component } from 'vue';
+    import { computed, isVNode, onBeforeUnmount, onMounted, useId, useTemplateRef, type Component } from 'vue';
+    import { isAlertType, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
     import { cssClasses, getStackItemTransform, numbers } from '@fibrae/semi-foundation/components/notification/constants';
     import NotificationFoundation, { type NoticeAdapter, type NoticePosition, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
-    import { isAlertType, readNoticeText } from '@fibrae/semi-foundation/utils/announcer';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
@@ -12,7 +12,7 @@
     import IconButton from '../icon-button';
     import useLocale from '../locale/use-locale';
     import { useNoticeListContext } from './context';
-    import type { NoticeHandle, NoticeProps } from './interface';
+    import type { NoticeProps } from './interface';
 
     interface NoticeItemProps extends Omit<NoticeProps, 'onClick' | 'onClose' | 'onCloseClick' | 'class' | 'style' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex' | 'getPopupContainer' | 'stack' | 'position'> {
         placement: NoticePosition;
@@ -58,6 +58,7 @@
     const list = useNoticeListContext();
 
     const noticeEl = useTemplateRef('noticeEl');
+    let unregister: (() => void) | undefined;
 
     const { foundation } = useFoundation<Foundation, Adapter, NoticeItemProps, NoticeState>(
         NotificationFoundation,
@@ -96,22 +97,17 @@
         };
     });
 
-    const announce = () => {
-        if (isAlert.value) return;
-        list?.value.announce(props.id, () => readNoticeText(noticeEl.value, prefix));
-    };
-
     const iconSize = (node: unknown) => (isVNode(node) ? (node.props?.size ?? 'large') : 'large');
 
     const close = (event: MouseEvent) => foundation.clickClose(event);
 
-    useNoticeClose(foundation, list, announce);
+    useNoticeClose(foundation, list?.state);
 
-    defineExpose<NoticeHandle>({
-        restartCloseTimer: foundation.restartCloseTimer,
-        pauseCloseTimer: foundation.pauseCloseTimer,
-        resumeCloseTimer: foundation.resumeCloseTimer,
+    onMounted(() => {
+        if (list && noticeEl.value) unregister = list.register(props.id, noticeEl.value);
     });
+
+    onBeforeUnmount(() => unregister?.());
 </script>
 
 <template>
@@ -121,7 +117,7 @@
                 `${prefix}-stack-item`,
                 {
                     [`${prefix}-stack-item-expanded`]: props.stackExpanded,
-                    [`${prefix}-stack-item-hidden`]: !props.stackExpanded && props.depth >= numbers.stackVisibleCount,
+                    [`${prefix}-stack-item-hidden`]: isStackHidden(props.stackExpanded, props.depth),
                 },
             ]
         "

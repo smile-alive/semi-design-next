@@ -4,7 +4,6 @@ import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState } from
 import type { CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
 import { checkboxClasses as css } from '@fibrae/semi-foundation/components/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
 import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
 import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/element-props';
@@ -92,12 +91,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
         (base) => ({
             notifyChange: (event) => base.getProps().onChange?.(event as CheckboxEvent),
             notifyGroupChange: (event) => group?.onChange(event),
-            // script focus matches :focus-visible when nothing was focused; a click must not look like keyboard focus
-            focusCheckboxEntity: () => {
-                if (input !== input.ownerDocument.activeElement) {
-                    focusWithoutRing(input, { preventScroll: base.getProps().preventScroll });
-                }
-            },
+            getInput: () => input,
         }),
         { context: () => (group ? { checkboxGroup: group.view() } : null) }
     );

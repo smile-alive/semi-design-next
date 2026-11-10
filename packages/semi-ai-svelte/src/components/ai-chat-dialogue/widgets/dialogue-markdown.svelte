@@ -1,13 +1,10 @@
 <script lang="ts">
-    import { omitBy } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-    import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
+    import DialogueFoundation, { type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { IconSendMsgStroked } from '@fibrae/semi-icons-svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import MarkdownRender from '@fibrae/semi-ui-svelte/markdown-render/markdown-render.svelte';
     import { getAIChatDialogueContext } from '../context.js';
-    import contentClass from './content-class.js';
     import Code from './content-item/code.svelte';
 
     let { text, message }: { text: string; message: Message } = $props();
@@ -18,13 +15,11 @@
     const { PREFIX_CONTENT } = cssClasses;
     const isUser = $derived(message.role === strings.ROLE.USER);
     const markdownRenderProps = $derived(view.markdownRenderProps);
-
-    // an explicit undefined entry would replace the built-in component with a non-component
-    const components = $derived({ code: Code, ...omitBy(markdownRenderProps?.components ?? {}, (component) => component === undefined) });
-    const raw = $derived(view.escapeHtml && isUser ? escapeHtmlInMarkdown(text) : text);
+    const components = $derived(DialogueFoundation.mergeMarkdownComponents({ code: Code }, markdownRenderProps?.components));
+    const raw = $derived(DialogueFoundation.getMarkdownRaw(text, message.role, view.escapeHtml));
 </script>
 
-<div class={contentClass(message, view.mode)}>
+<div class={DialogueFoundation.getContentClass(message.role, message.status, view.mode)}>
     <MarkdownRender format="md" {...markdownRenderProps} {components} {raw} />
     {#if isUser && view.showReference}
         <button aria-label={locale().locale.reference} class="{PREFIX_CONTENT}-icon-reference" type="button" onclick={() => referenceClick({ type: 'text', content: text })}>

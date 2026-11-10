@@ -1,4 +1,4 @@
-import { For, type JSX, Show, createMemo, mergeProps, splitProps, untrack } from 'solid-js';
+import { For, Show, createMemo, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
@@ -100,8 +100,8 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
         () => ({
             getContainerRef: () => list as HTMLDivElement,
             notifySelect: (ids) => local.onSelect?.(ids),
-            // the followed copy stands for the list the parent already holds, so it is reported as that list
-            notifyChatsChange: (chats) => local.onChatsChange?.(chats === followedChats() ? (local.chats ?? EMPTY_CHATS) : chats),
+            notifyChatsChange: (chats) => local.onChatsChange?.(chats),
+            notifyChatsPropChange: () => local.onChatsChange?.(local.chats ?? EMPTY_CHATS),
             notifyLikeMessage: (message) => local.onMessageGoodFeedback?.(message),
             notifyDislikeMessage: (message) => local.onMessageBadFeedback?.(message),
             notifyEditMessage: (message) => local.onMessageEdit?.(message),
@@ -168,7 +168,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
     const streaming = () => isUnfinishedStatus(chats().at(-1)?.status);
 
     return (
-        <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} class={clsx(prefix, local.class)} style={local.style}>
+        <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest)} class={clsx(prefix, local.class)} style={local.style}>
             <div ref={(node) => (list = node)} class={`${prefix}-list`} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
                 <AIChatDialogueContext.Provider value={context}>
                     <For each={chatIds()}>

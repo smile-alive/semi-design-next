@@ -1,13 +1,12 @@
 import type { ComputedRef } from 'vue';
-import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+import type { AutoCloseListState } from '@fibrae/semi-foundation/base/auto-close-foundation';
 import { createContext } from '../../base/create-context';
 
 export interface ToastListContext {
-    /** The pointer or focus is inside the list: every toast's countdown waits */
-    paused: boolean;
-    updatedItems: readonly ToastInstance[];
-    /** `read` runs when the text is written to the live region */
-    announce: (key: string, read: () => string) => void;
+    /** What every toast's countdown follows */
+    state: ComputedRef<AutoCloseListState>;
+    /** Gives the list the toast element it reads when it announces the toast; returns the unregister */
+    register: (id: string, element: Element) => () => void;
 }
 
-export const [provideToastListContext, useToastListContext] = createContext<ComputedRef<ToastListContext>>('ToastList', { optional: true });
+export const [provideToastListContext, useToastListContext] = createContext<ToastListContext>('ToastList', { optional: true });

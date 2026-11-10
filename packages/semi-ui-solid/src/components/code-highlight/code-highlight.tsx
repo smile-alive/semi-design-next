@@ -1,4 +1,4 @@
-import { Show, splitProps, type JSX } from 'solid-js';
+import { Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses } from '@fibrae/semi-foundation/components/code-highlight/constants';
@@ -35,13 +35,12 @@ function CodeHighlight(rawProps: CodeHighlightProps) {
         () => ({})
     );
 
-    // stale markup would lag behind a streaming `code`
-    const html = () => (state().highlightedCode === (local.code ?? '') ? state().html : '');
+    const html = () => CodeHighlightFoundation.getVisibleHtml(state(), local.code);
 
     return (
         <div
             {...rest}
-            role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']}
+            role={namedRole(rest)}
             class={clsx(local.class, cssClasses.PREFIX, `${BASE_CLASS_PREFIX}-scrollbar`, {
                 [`${cssClasses.PREFIX}-lineNumber`]: local.lineNumber,
             })}

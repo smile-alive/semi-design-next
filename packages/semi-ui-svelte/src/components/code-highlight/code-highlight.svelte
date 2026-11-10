@@ -2,10 +2,10 @@
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
     import { cssClasses } from '@fibrae/semi-foundation/components/code-highlight/constants';
     import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseProps, type CodeHighlightBaseState } from '@fibrae/semi-foundation/components/code-highlight/index';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/code-highlight/code-highlight.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import type { CodeHighlightProps } from './interface.js';
 
     type Foundation = CodeHighlightFoundation<CodeHighlightBaseProps>;
@@ -36,9 +36,8 @@
         () => ({})
     );
 
-    // markup for earlier code would lag behind a streaming `code`, so it only shows while it matches
-    const html = $derived(states().highlightedCode === (code ?? '') ? states().html : '');
-    const role = $derived(groupRole(rest));
+    const html = $derived(CodeHighlightFoundation.getVisibleHtml(states(), code));
+    const role = $derived(namedRole(rest));
 </script>
 
 {#if html}

@@ -51,12 +51,13 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
         this.#commit({ rgba, hex: rgbaToHex(rgba), hsva: { ...currentColor.hsva, a } });
     }
 
-    protected getCurrentColor() {
-        return this.isControlledComponent('value') ? (this.getProp('value') ?? this.getProp('defaultValue')) : this.getState('currentColor');
-    }
-
     static getInitialState(props: Pick<ColorPickerProps, 'value' | 'defaultValue'>): ColorPickerState {
         return { currentColor: props.value ?? props.defaultValue };
+    }
+
+    /** The color shown: a controlled `value` wins on the render it arrives in, `null` shows `defaultValue` */
+    static deriveColor({ value, defaultValue }: Pick<ColorPickerProps, 'value' | 'defaultValue'>, { currentColor }: ColorPickerState) {
+        return value !== undefined ? (value ?? defaultValue) : currentColor;
     }
 
     /** The full color of a value given in `format`; without alpha support the opacity is dropped */
@@ -138,10 +139,15 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
     };
 
     handleAlphaChange = (alpha: number) => {
-        this.handleChangeA(this.getCurrentColor(), alpha);
+        this.handleChangeA(ColorPickerFoundation.deriveColor(this.getProps(), this.getStates()), alpha);
     };
 
     handleHueChange = (hue: number) => {
-        this.handleChangeH(this.getCurrentColor(), hue);
+        this.handleChangeH(ColorPickerFoundation.deriveColor(this.getProps(), this.getStates()), hue);
+    };
+
+    handleAreaChange = ({ s, v }: { s: number; v: number }) => {
+        const { h, a } = ColorPickerFoundation.deriveColor(this.getProps(), this.getStates()).hsva;
+        this.handleChange({ h, s, v, a }, 'hsva');
     };
 }

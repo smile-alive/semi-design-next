@@ -15,9 +15,9 @@
         isWeekend: boolean;
         minEventHeight?: number;
         showCurrTime: boolean;
+        today: number | null;
     }
 
-    // decided on mount and again on each KeepAlive activation; views key the column by date and showCurrTime
     type Foundation = CalendarFoundation<DayColProps>;
     type Adapter = CalendarAdapter<DayColProps>;
 

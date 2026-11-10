@@ -1,6 +1,8 @@
+import clsx from 'clsx';
 // compat get resolves deep path strings such as 'a.b'
 import { xor } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
+import { addClass, removeClass } from '../../utils/classnames';
 import { cssClasses, strings, numbers } from './constants';
 import type { BaseEllipsis, BaseHeadWidth, BaseRowKeyType } from './foundation';
 
@@ -110,11 +112,9 @@ export function getRecordChildren(record: Record<string, any>, childrenRecordNam
     return get(record, childrenRecordName);
 }
 
-export function genExpandedRowKey(recordKey = '', suffix?: string) {
-    if (suffix === undefined) {
-        suffix = '__expanded_row';
-    }
-    return recordKey + suffix;
+/** The key of a record's expanded row, also its `data-row-key` */
+export function genExpandedRowKey(recordKey: string | number = '') {
+    return `${recordKey}-expanded-row`;
 }
 
 export function getDefaultVirtualizedRowConfig(size = '', sectionRow = false) {
@@ -210,6 +210,67 @@ export function getExpandColumn<F>(hideExpandedColumn: boolean | undefined, expa
     return hideExpandedColumn ? null : { key: strings.DEFAULT_KEY_COLUMN_EXPAND, fixed: expandCellFixed };
 }
 
+type ColumnKey = string | number;
+
+/** The fields a resize callback returns are merged into the column */
+export interface BaseResizableOptions<C> {
+    onResize?: (column: C) => Partial<C> | void;
+    onResizeStart?: (column: C) => Partial<C> | void;
+    onResizeStop?: (column: C) => Partial<C> | void;
+    handlerClassName?: string;
+}
+
+type ResizableOption<C> = BaseResizableOptions<C> | boolean | undefined;
+
+const getHandlerClass = <C>(resizable: ResizableOption<C>) => (typeof resizable === 'object' ? resizable.handlerClassName : undefined) ?? 'resizing';
+
+/**
+ * The columns a resizable table tracks: keyed copies of `columns`, with the expand and selection columns placed where
+ * the table puts them, at their default widths. The table merges its own inner columns into these in place.
+ */
+export function getResizableColumns<C extends Record<string, any>>(columns: C[] | undefined, expandColumn: C | null, selectionColumn: C | null) {
+    const copy = (list: C[]): C[] => list.map((column) => (Array.isArray(column.children) && column.children.length ? { ...column, children: copy(column.children) } : { ...column }));
+    const withWidth = (column: C | null, width: number) => column && { ...column, width: column.width ?? width };
+    return placeInnerColumns(assignColumnKeys(copy(columns ?? [])) as C[], [withWidth(expandColumn, numbers.DEFAULT_WIDTH_COLUMN_EXPAND), withWidth(selectionColumn, numbers.DEFAULT_WIDTH_COLUMN_SELECTION)]);
+}
+
+/**
+ * The columns as dragging left them: each with the override recorded under its key, and the handler class on the
+ * columns being dragged. `classKey` is the host's class field; its value may be any clsx input.
+ */
+export function applyColumnResize<C extends Record<string, any>>(columns: C[], options: { resizable: ResizableOption<C>; classKey: 'class' | 'className'; getOverride: (key: ColumnKey) => Partial<C> | undefined; isResizing: (key: ColumnKey) => boolean }): C[] {
+    const { classKey, getOverride, isResizing } = options;
+    return columns.map((column) => {
+        const next: Record<string, any> = { ...column, ...getOverride(column.key) };
+        if (isResizing(column.key)) {
+            next[classKey] = addClass(clsx(next[classKey]), getHandlerClass(options.resizable));
+        }
+        if (Array.isArray(column.children) && column.children.length) {
+            next.children = applyColumnResize(column.children, options);
+        }
+        return next as C;
+    });
+}
+
+/**
+ * What one phase of a header drag merges into the column's override: the width and the fields the resize callbacks
+ * return. `column` carries its current override, which is `recorded`. The callbacks see the handler class while the
+ * column is dragged, and the stop strips it from a class recorded at the start, so it does not outlive the drag.
+ */
+export function getColumnResizeChange<C extends Record<string, any>>({ phase, column, recorded, resizable, classKey, width }: { phase: 'start' | 'move' | 'stop'; column: C; recorded: Partial<C> | undefined; resizable: ResizableOption<C>; classKey: 'class' | 'className'; width?: number }): Partial<C> {
+    const { onResize, onResizeStart, onResizeStop } = typeof resizable === 'object' ? resizable : {};
+    const handlerClass = getHandlerClass(resizable);
+    const marked: C = { ...column, [classKey]: addClass(clsx(column[classKey]), handlerClass) };
+    if (phase === 'start') {
+        return { ...onResizeStart?.(marked) };
+    }
+    if (phase === 'move') {
+        return { width, ...onResize?.({ ...marked, width }) } as Partial<C>;
+    }
+    const cleared: Partial<C> = { [classKey]: removeClass(clsx(column[classKey]), handlerClass) } as Partial<C>;
+    return { ...(recorded?.[classKey] != null ? cleared : {}), ...onResizeStop?.({ ...column, ...cleared }) };
+}
+
 type PartTags<K extends string> = Record<K, string>;
 
 /** The default element of each table part, as a new object for the host to merge the user's components into */
@@ -219,16 +280,28 @@ export function getDefaultComponents(virtualized: boolean): { table: string; hea
     return { table, header: { ...header }, body: { ...bodyTags, colgroup: { ...bodyTags.colgroup } } };
 }
 
-/** The measured widths of the columns in order; a column not measured yet is skipped */
-export function getCellWidths(headWidths?: BaseHeadWidth[][], columns?: { key?: unknown }[]) {
-    if (!columns?.length || !headWidths?.length) {
+/**
+ * The measured widths of the columns in order; a column not measured yet is skipped. Nothing is measured before
+ * mount, and a virtualized body renders nothing without widths, so a virtualized table then gets the declared numeric
+ * widths, the selection and expand columns at their default widths.
+ * shortcut: a column without a numeric width leaves the virtualized body to render after mount; upgrade if first-frame
+ * rows are needed for such columns, which would require a width estimate.
+ */
+export function getCellWidths(headWidths?: BaseHeadWidth[][], columns?: { key?: unknown; width?: unknown }[], virtualized = false) {
+    if (!columns?.length) {
         return [];
     }
-    const widths = headWidths.flat();
-    return columns.flatMap((column) => {
+    const widths = headWidths?.flat() ?? [];
+    const measured = columns.flatMap((column) => {
         const found = widths.find((item) => item?.key != null && item.key === column.key);
         return found ? [found.width] : [];
     });
+    if (measured.length || !virtualized) {
+        return measured;
+    }
+    const innerWidth = (key: unknown) => (key === strings.DEFAULT_KEY_COLUMN_SELECTION ? numbers.DEFAULT_WIDTH_COLUMN_SELECTION : key === strings.DEFAULT_KEY_COLUMN_EXPAND ? numbers.DEFAULT_WIDTH_COLUMN_EXPAND : undefined);
+    const declared = columns.map((column) => column.width ?? innerWidth(column.key));
+    return declared.every((width) => typeof width === 'number') ? (declared as number[]) : [];
 }
 
 /**

@@ -5,7 +5,7 @@ import { cssClasses } from '@fibrae/semi-foundation/components/button/constants'
 import { markEnds } from '@fibrae/semi-foundation/components/button/utils';
 import '@fibrae/semi-foundation/components/button/button.scss';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useDefaultProps from '../../base/use-default-props';
 import useMergedRef from '../../hooks/use-merged-ref';
 

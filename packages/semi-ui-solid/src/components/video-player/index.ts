@@ -1,2 +1,4 @@
 export { default } from './video-player';
-export type { VideoControl, VideoPlayerMarker, VideoPlayerOption, VideoPlayerProps, VideoPlayerState, VideoPlayerTheme } from './interface';
+export type { VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
+export type { VideoPlayerState } from '@fibrae/semi-foundation/components/video-player/foundation';
+export type { VideoPlayerMarker, VideoPlayerOption, VideoPlayerProps, VideoPlayerTheme } from './interface';

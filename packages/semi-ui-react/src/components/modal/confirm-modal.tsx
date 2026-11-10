@@ -9,7 +9,7 @@ import { useConfigContext } from '../config-provider/context';
 import type { ConfirmProps } from './confirm';
 import Modal from './modal';
 
-// onMount is private to Modal.confirm, which has to know when the first commit happened
+// onMount is private to Modal.confirm and useModal, which have to know when the first commit happened
 export default function ConfirmModal({ title, content, icon, type, onCancel, onOk, onMount, className, direction: directionProp, ...rest }: ConfirmProps & { onMount?: () => void }) {
     // Modal.confirm renders outside any ConfigProvider and passes the direction itself
     const { direction: contextDirection } = useConfigContext();

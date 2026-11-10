@@ -3,7 +3,6 @@ import { useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
 import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
-import { isDev } from '@fibrae/semi-foundation/utils/warning';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
@@ -37,11 +36,6 @@ function Lottie(rawProps: LottieProps) {
             getContainer: () => wrapperRef.current,
             notifyAnimationInstance: (animation) => base.getProps().getAnimationInstance?.(animation),
             notifyLottie: (lottie) => base.getProps().getLottie?.(lottie),
-            notifyLoadError: (error) => {
-                if (isDev()) {
-                    console.error(error);
-                }
-            },
         })
     );
 

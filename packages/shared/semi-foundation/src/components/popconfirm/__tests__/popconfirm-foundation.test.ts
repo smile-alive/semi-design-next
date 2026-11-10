@@ -9,7 +9,8 @@ function setup(props: PopconfirmBaseProps) {
         getFooter: () => footer,
         setInitialFocus,
         setState: () => {},
-        focusPrevFocusElement: () => {},
+        getPopup: () => null,
+        focusTrigger: () => {},
     } as unknown as PopconfirmAdapter;
     const foundation = new PopconfirmFoundation(adapter);
     const mountFooter = () => {

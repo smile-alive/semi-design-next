@@ -22,10 +22,10 @@
     const chunks = $derived(
         findAll({
             sourceString,
-            searchWords: typeof searchWords === 'string' ? searchWords : searchWords.map((word) => (word && typeof word === 'object' ? { text: word.text, className: word.class, style: word.style } : word)),
+            searchWords,
             caseSensitive,
             autoEscape,
-        }).map((chunk) => ({ ...chunk, text: sourceString.slice(chunk.start, chunk.end) }))
+        })
     );
 
     const toStyle = (...styles: (HighlightStyle | undefined)[]) =>
@@ -37,7 +37,7 @@
 
 {#each chunks as chunk, index (index)}
     {#if chunk.highlight}
-        <svelte:element this={component || 'mark'} class={[`${cssClasses.PREFIX}-tag`, highlightClassName, chunk.className]} style={toStyle(highlightStyle, chunk.style)}>{chunk.text}</svelte:element>
+        <svelte:element this={component || 'mark'} class={[`${cssClasses.PREFIX}-tag`, highlightClassName, chunk.class]} style={toStyle(highlightStyle, chunk.style)}>{chunk.text}</svelte:element>
     {:else}
         {chunk.text}
     {/if}

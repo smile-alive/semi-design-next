@@ -1,5 +1,6 @@
 <script lang="ts">
-    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionBaseProps, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
+    import type { Snippet } from 'svelte';
+    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionBaseProps, type DialogueActionKey, type DialogueActionState, getDialogueActionFlags, getDialogueActionKeys } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
@@ -42,29 +43,12 @@
 
     const { PREFIX, PREFIX_ACTION } = cssClasses;
     const flags = $derived(getDialogueActionFlags({ role: message.role, status: message.status, isLastChat, showReset: context.view.showReset }));
-    const wrapCls = $derived([PREFIX_ACTION, ((flags.showReset && flags.finished) || states().showAction) && `${PREFIX_ACTION}-show`, !flags.finished && `${PREFIX_ACTION}-hidden`].filter(Boolean).join(' '));
+    const wrapCls = $derived([PREFIX_ACTION, DialogueActionFoundation.isActionBarShown({ showReset: flags.showReset, finished: flags.finished, showAction: states().showAction }) && `${PREFIX_ACTION}-show`, !flags.finished && `${PREFIX_ACTION}-hidden`].filter(Boolean).join(' '));
+    const barKeys = $derived(getDialogueActionKeys(flags, false));
 
-    const defaultActionsObj = $derived.by(() => {
-        const nodes: DefaultActionNodeObj = {};
-        if (flags.completed) {
-            nodes.copyNode = copyNode;
-        }
-        if (flags.showFeedback) {
-            nodes.likeNode = likeNode;
-            nodes.dislikeNode = dislikeNode;
-        }
-        if (flags.showReset) {
-            nodes.resetNode = resetNode;
-        }
-        if (flags.completed) {
-            nodes.shareNode = shareNode;
-        }
-        if (flags.showEdit) {
-            nodes.editNode = editNode;
-        }
-        nodes.moreNode = moreNode;
-        return nodes;
-    });
+    // read lazily: the snippets below are declared after the script runs
+    const actionNodes: Record<DialogueActionKey, Snippet> = $derived({ copyNode, likeNode, dislikeNode, resetNode, shareNode, editNode, moreNode });
+    const defaultActionsObj: DefaultActionNodeObj = $derived(Object.fromEntries(getDialogueActionKeys(flags, true).map((key) => [key, actionNodes[key]])));
 
     // the warning renders outside this tree, so its text is read here to follow the LocaleProvider
     const showDeleteModal = (trigger?: HTMLElement) => {
@@ -76,7 +60,7 @@
             // the deleted message took the more button along; the list takes the focus the modal gives up
             afterClose: () => trigger && handoverFocus(trigger, list),
         });
-        foundation.hideMoreDropdown();
+        foundation.closeMenu();
     };
 </script>
 
@@ -105,14 +89,15 @@
 {/snippet}
 
 {#snippet moreNode()}
-    <DialogueActionMore onDelete={showDeleteModal} onHide={foundation.hideMoreDropdown} onShow={foundation.showMoreDropdown} visible={states().visible} />
+    <DialogueActionMore onDelete={showDeleteModal} onHide={foundation.closeMenu} onShow={foundation.openMenu} visible={states().visible} />
 {/snippet}
 
 {#if context.snippets.action}
     {@render context.snippets.action({ class: wrapCls, defaultActions: Object.values(defaultActionsObj), defaultActionsObj, message })}
 {:else}
-    <!-- the blocks touch: whitespace between them would render as gaps between the buttons, which Vue condenses away -->
     <div class={wrapCls}>
-        {#if flags.completed}{@render copyNode()}{/if}{#if flags.showReset}{@render resetNode()}{/if}{#if flags.completed}{@render shareNode()}{/if}{#if flags.showEdit}{@render editNode()}{/if}{#if flags.showFeedback}{@render likeNode()}{@render dislikeNode()}{/if}{@render moreNode()}
+        {#each barKeys as key (key)}
+            {@render actionNodes[key]()}
+        {/each}
     </div>
 {/if}

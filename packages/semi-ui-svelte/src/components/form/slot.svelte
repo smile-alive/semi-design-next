@@ -1,8 +1,8 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
+    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import { groupRole } from '../../utils/group-role.js';
     import { getFormContext } from './context.js';
     import ErrorMessage from './error-message.svelte';
     import FieldGrid from './field-grid.svelte';
@@ -17,7 +17,7 @@
     const uid = $props.id();
 
     const prefix = cssClasses.PREFIX;
-    const labelId = `${uid}-label`;
+    const labelId = getFieldIds(uid).label;
     const formProps = $derived<AllFormProps>(form?.formProps ?? {});
     const shownLabelPosition = $derived(labelPosition || formProps.labelPosition || 'top');
     const labelConfig = $derived(isLabelConfig(label) ? label : { text: label });
@@ -33,7 +33,7 @@
     {/if}
 {/snippet}
 
-<div {...rest} aria-labelledby={labelledby} class={[`${prefix}-field`, `${prefix}-slot`, rest.class]} role={groupRole({ ...rest, 'aria-labelledby': labelledby }) as 'group' | undefined} {...{ 'x-label-pos': shownLabelPosition }}>
+<div {...rest} aria-labelledby={labelledby} class={[`${prefix}-field`, `${prefix}-slot`, rest.class]} role={namedRole({ ...rest, 'aria-labelledby': labelledby }) as 'group' | undefined} {...{ 'x-label-pos': shownLabelPosition }}>
     <FieldGrid label={labelView} labelAlign={formProps.labelAlign} labelCol={formProps.labelCol} labelPosition={shownLabelPosition} mainClass={[`${prefix}-field-main`, `${prefix}-slot-main`]} wrapperCol={formProps.wrapperCol}>
         {@render children?.()}
         {#if error !== undefined}

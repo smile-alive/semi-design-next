@@ -2,7 +2,7 @@ import { mount, unmount } from 'svelte';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
 import ToastApi from '@fibrae/semi-foundation/components/toast/toast-api-foundation';
 import type { ConfigProps, ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import { assertClient } from '../../utils/client-only.js';
+import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
 import semiGlobal from '../../utils/semi-global.js';
 import type { ToastProps } from './interface.js';
 import ToastList from './toast-list.svelte';

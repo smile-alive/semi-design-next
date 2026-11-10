@@ -5,10 +5,11 @@
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputBaseProps, type AIChatInputState } from '@fibrae/semi-ai-foundation/components/ai-chat-input/foundation';
     import type { Attachment, Content, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
-    import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
+    import { type ContentType, getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
     import { isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils/upload-status';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-ai-foundation/components/ai-chat-input/ai-chat-input.scss';
     import { IconClose, IconCode, IconCrossStroked, IconExcel, IconFile, IconMusic, IconPdf, IconSendMsgStroked, IconTemplateStroked, IconVideo, IconWord } from '@fibrae/semi-icons-svelte';
@@ -20,7 +21,6 @@
     import { Popover } from '@fibrae/semi-ui-svelte/popover/index';
     import { Progress } from '@fibrae/semi-ui-svelte/progress/index';
     import type { TooltipTriggerProps } from '@fibrae/semi-ui-svelte/tooltip/index';
-    import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
     import Configure from './configure/configure.svelte';
     import type { AIChatInputProps, AIChatInputSkillIconSnippetProps, AIChatInputSkillItemSnippetProps, AIChatInputSuggestionItemSnippetProps, AIChatInputTopSlotSnippetProps, Skill } from './interface.js';
     import HorizontalScroller from './widgets/horizontal-scroller.svelte';
@@ -96,20 +96,22 @@
     // Pasted files go to any mounted upload button: a snippet of `actionArea` may render the node twice, or not at all
     const uploads = new SvelteSet<{ insert: (files: File[]) => void }>();
     let editor: Editor | undefined;
-    let transformedContent = $state.raw<Content[]>([]);
 
     // A delete button leaves with its item while it holds focus; the editor is where typing continues
     let focusedBeforeUpdate: Element | null = null;
 
     const prefix = cssClasses.PREFIX;
 
-    const FILE_ICONS: Record<string, Component<any>> = {
+    const FILE_ICONS: Record<ContentType, Component<any>> = {
         word: IconWord,
         code: IconCode,
         excel: IconExcel,
         video: IconVideo,
         audio: IconMusic,
         pdf: IconPdf,
+        ppt: IconFile,
+        image: IconFile,
+        unknown: IconFile,
     };
 
     const editorId = `${prefix}-editor-${uid}`;
@@ -170,13 +172,7 @@
                 return node instanceof HTMLElement ? node : null;
             },
             notifySkillChange: (skill) => onSkillChange?.(skill),
-            notifyContentChange: (result) => {
-                transformedContent = result;
-                onContentChange?.(result);
-            },
-            setTransformedContent: (result) => {
-                transformedContent = result;
-            },
+            notifyContentChange: (result) => onContentChange?.(result),
             notifyConfigureChange: (value, changedValue) => onConfigureChange?.(value, changedValue),
             manualUpload: (files) => [...uploads][0]?.insert(files),
             notifyMessageSend: (message) => onMessageSend?.(message),
@@ -195,6 +191,7 @@
 
     const attachments = $derived(states().attachments ?? []);
     const listbox = $derived(getListbox(states(), { skills, suggestions }, { skillListId, suggestionListId }));
+    const transformedContent = $derived(AIChatInputFoundation.getTransformedContent(states().content, transformer));
     const sendEnabled = $derived(AIChatInputFoundation.getCanSend(canSend, states().content, attachments));
     const panelVisible = $derived(states().templateVisible || states().skillVisible || states().suggestionVisible);
 
@@ -220,7 +217,7 @@
 
     const iconType = (item: Attachment | Reference) => getContentType(getAttachmentType(item));
 
-    const fileIcon = (type: string) => FILE_ICONS[type] ?? IconFile;
+    const fileIcon = (type: ContentType) => FILE_ICONS[type];
 
     const optionProps = (kind: 'skill' | 'suggestion', index: number, select: () => void) => {
         const active = kind === 'skill' ? states().activeSkillIndex === index : states().activeSuggestionIndex === index;
@@ -324,7 +321,7 @@
         {...rest}
         bind:this={trigger}
         class={[prefix, rest.class]}
-        role={groupRole(rest)}
+        role={namedRole(rest)}
         tabindex="-1"
         onclick={(event) => {
             rest.onclick?.(event);
@@ -417,7 +414,7 @@
             controls={listbox?.id}
             {defaultContent}
             {extensions}
-            handleKeyDown={foundation.handleRichTextAreaKeyDown}
+            handleKeyDown={foundation.handleKeyDown}
             id={editorId}
             onBlur={foundation.handleBlur}
             onChange={foundation.handleContentChange}
@@ -426,7 +423,6 @@
                 foundation.handleCreate();
             }}
             onFocus={foundation.handleFocus}
-            onKeyDown={foundation.handleKeyDown}
             {onPaste}
             onPasteFiles={foundation.handlePaste}
             {placeholder}

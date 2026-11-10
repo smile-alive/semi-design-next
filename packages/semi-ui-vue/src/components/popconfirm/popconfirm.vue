@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import { computed, shallowRef, useId, useTemplateRef, watch, type CSSProperties, type ShallowRef } from 'vue';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
     import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
     import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
@@ -12,7 +11,7 @@
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover';
-    import type { PopoverProps } from '../popover/interface';
+    import type { PopoverHandle, PopoverProps } from '../popover/interface';
     import type { FocusTarget } from '../tooltip/interface';
     import type { PopconfirmButtonProps, PopconfirmEmits, PopconfirmHandle, PopconfirmProps, PopconfirmSlots } from './interface';
 
@@ -69,7 +68,7 @@
     const i18n = useLocale('Popconfirm');
     const context = useConfig();
 
-    const popover = useTemplateRef('popover');
+    const popover = useTemplateRef<PopoverHandle>('popover');
     const footer = useTemplateRef('footer');
 
     const confirmFn = computed(() => props.onConfirm ?? readSemiDefault(semi, 'Popconfirm', 'onConfirm'));
@@ -96,10 +95,8 @@
             setInitialFocus: (button) => {
                 if (tooltip.focusRef) tooltip.focusRef.value = button;
             },
-            focusPrevFocusElement: () => {
-                // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(popover.value?.getPopup(), false)) popover.value?.focusTrigger();
-            },
+            getPopup: () => popover.value?.getPopup(),
+            focusTrigger: () => popover.value?.focusTrigger(),
         })
     );
 

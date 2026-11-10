@@ -87,6 +87,7 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         (view) => CheckboxGroupFoundation.getInitialState(view),
         (base) => ({
             notifyChange: (value) => base.getProps().onChange?.(value),
+            notifyBlur: (event) => callHandler(local.onBlur, event),
         })
     );
 
@@ -111,12 +112,9 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         onChange: foundation.handleChange,
     };
 
-    // moving between the boxes is not leaving the group: Form's blur validation waits until focus is outside
     const handleFocusOut = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusOut, event);
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            callHandler(local.onBlur, event);
-        }
+        foundation.handleBlur(event);
     };
 
     return (

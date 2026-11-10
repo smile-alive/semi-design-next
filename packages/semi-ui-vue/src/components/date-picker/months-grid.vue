@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, nextTick, onMounted, onUpdated, useId } from 'vue';
+    import { computed, useId } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
@@ -57,6 +57,11 @@
             notifySelectedChange: (value, options) => emit('change', value, options),
             notifyPanelChange: (date, dateString) => emit('panelChange', date, dateString),
             getPanelNode: (part, panelType) => nodes[part][panelType],
+            focusPanelTarget: (panelType, target) => {
+                const panel = nodes.panel[panelType];
+                const node = target === 'yearList' ? panel?.querySelector<HTMLElement>('[role="listbox"]') : (panel?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`);
+                node?.focus();
+            },
             reselectScrollLists: () => {
                 for (const handle of [timePickers.left, timePickers.right, yearAndMonths.left, yearAndMonths.right]) {
                     handle?.reselect();
@@ -78,18 +83,6 @@
         nodes[part][panelType] = node as HTMLElement | null;
     };
 
-    // The button that switches between the month and the year picker unmounts or hides under the focus, so the view it
-    // switched to takes the focus once rendered
-    const showYearPicker = (panelType: PanelType) => {
-        foundation.showYearPicker(panelType);
-        void nextTick(() => nodes.panel[panelType]?.querySelector<HTMLElement>('[role="listbox"]')?.focus());
-    };
-
-    const showDatePanel = (panelType: PanelType) => {
-        foundation.showDatePanel(panelType);
-        void nextTick(() => (nodes.panel[panelType]?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`)?.focus());
-    };
-
     const timeOptions = (panelType: PanelType): Partial<ComboboxProps> => ({ ...props.timePickerOpts, hideDisabledOptions: props.hideDisabledOptions, ...MonthsGridFoundation.calcDisabledTime(props, state.value, panelType) });
 
     const switchTexts = (panelType: PanelType) =>
@@ -106,9 +99,6 @@
         const detail = detailOf(panelType);
         return [`${prefix}-month-grid-${panelType}`, { [`${prefix}-yam-showing`]: !isRange.value && (detail.isTimePickerOpen || detail.isYearPickerOpen) }];
     };
-
-    onMounted(foundation.applyPanelSize);
-    onUpdated(foundation.applyPanelSize);
 
     defineExpose<DatePickerMonthsGridHandle>({ switchPanels: foundation.switchPanels });
 </script>
@@ -130,7 +120,7 @@
                             :locale="props.locale"
                             :startYear="props.startYear"
                             :yearAndMonthOpts="props.yearAndMonthOpts"
-                            @backToMain="showDatePanel(panelType)"
+                            @backToMain="foundation.backToDatePanel(panelType)"
                             @select="foundation.toYearMonth(panelType, new Date($event.currentYear.left, $event.currentMonth.left - 1))"
                         />
                     </div>
@@ -149,7 +139,7 @@
                             :panelType="panelType"
                             :shouldBimonthSwitch="isRange && props.syncSwitchMonth"
                             :titleId="`${titleId}-${panelType}-title`"
-                            @monthClick="showYearPicker(panelType)"
+                            @monthClick="foundation.showYearPicker(panelType)"
                             @nextMonth="foundation.nextMonth(panelType)"
                             @nextYear="foundation.nextYear(panelType)"
                             @prevMonth="foundation.prevMonth(panelType)"

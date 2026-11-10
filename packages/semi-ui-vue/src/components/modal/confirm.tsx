@@ -3,12 +3,13 @@
 
 import { type App, render } from 'vue';
 import { resolveConfirmProps } from '@fibrae/semi-foundation/components/modal/confirm';
+import ConfirmInstance from '@fibrae/semi-foundation/components/modal/confirm-instance';
 import ConfirmRegistry from '@fibrae/semi-foundation/components/modal/confirm-registry';
+import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
 import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
 import { rootAppContext, setInstalledApp } from '../../base/installed-app';
-import { assertClient } from '../../utils/client-only';
 import ConfirmModal from './confirm-modal.vue';
-import type { ConfirmProps, ModalConfirmProps } from './interface';
+import type { ConfirmProps, ModalConfirmProps, ModalHookRef } from './interface';
 
 const registry = new ConfirmRegistry();
 
@@ -19,53 +20,30 @@ export function install(app: App) {
     setInstalledApp(app);
 }
 
-export default function confirm(props: ConfirmProps) {
+export default function confirm(props: ConfirmProps): ModalHookRef {
     assertClient('Modal.confirm', 'Modal.useModal');
     const div = document.createElement('div');
     document.body.appendChild(div);
     const appContext = rootAppContext();
 
-    let current: ConfirmProps = { ...props };
-    // rendering after the container is gone would mount on a detached div nothing unmounts
-    let destroyed = false;
-
-    const destroy = () => {
-        destroyed = true;
-        render(null, div);
-        div.remove();
-        unregister();
-    };
-
     const mount = ({ afterClose, ...rest }: ConfirmProps) => {
-        if (destroyed) {
-            return;
-        }
-        const vnode = (
-            <ConfirmModal
-                {...rest}
-                onAfterClose={() => {
-                    afterClose?.();
-                    destroy();
-                }}
-            />
-        );
+        const vnode = <ConfirmModal {...rest} onAfterClose={afterClose} onVnodeMounted={instance.handleMount} />;
         vnode.appContext = appContext;
         render(vnode, div);
     };
-
-    const close = () => {
-        current = { ...current, visible: false };
-        mount(current);
-    };
-
-    const update = (config: ModalConfirmProps) => {
-        current = { ...current, ...config };
-        mount(current);
-    };
-
-    const unregister = registry.register(close);
-    mount(current);
-    return { destroy: close, update };
+    const instance = new ConfirmInstance(
+        props,
+        {
+            render: mount,
+            remove: () => {
+                render(null, div);
+                div.remove();
+            },
+        },
+        registry
+    );
+    mount(instance.props);
+    return instance.handle;
 }
 
 export function withInfo(props: ModalConfirmProps): ConfirmProps {

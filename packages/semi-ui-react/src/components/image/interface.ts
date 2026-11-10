@@ -2,7 +2,7 @@ import React, { type ReactNode } from 'react';
 import type { PreviewGroupImage } from '@fibrae/semi-foundation/components/image/preview-foundation';
 import type { RatioType, RotateDirection } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 
 export type { RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 

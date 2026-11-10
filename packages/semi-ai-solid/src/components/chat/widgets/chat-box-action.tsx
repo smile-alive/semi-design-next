@@ -1,7 +1,7 @@
-import { type JSX, Show, createMemo, onCleanup, untrack } from 'solid-js';
+import { For, type JSX, Show, createMemo, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
-import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
-import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionKey, type ChatBoxActionState, getChatBoxActionFlags, getChatBoxActionKeys } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconCopyStroked, IconDeleteStroked, IconLikeThumb, IconRedoStroked, IconThumbUpStroked } from '@fibrae/semi-icons-solid';
 import useFoundation from '@fibrae/semi-ui-solid/base/use-foundation';
@@ -9,10 +9,9 @@ import Button from '@fibrae/semi-ui-solid/button/index';
 import Popconfirm from '@fibrae/semi-ui-solid/popconfirm/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { useChatContext } from '../context';
-import type { DefaultActionNodeObj, Message, RenderActionProps } from '../interface';
+import type { Message, RenderActionProps } from '../interface';
 
 const { PREFIX_CHAT_BOX_ACTION } = cssClasses;
-const { ROLE, MESSAGE_STATUS } = strings;
 
 interface ChatBoxActionProps {
     message: Message;
@@ -22,8 +21,6 @@ interface ChatBoxActionProps {
 
 type Foundation = ChatBoxActionFoundation<ChatBoxActionProps>;
 type Adapter = ChatBoxActionAdapter<ChatBoxActionProps>;
-
-type ActionKey = keyof DefaultActionNodeObj;
 
 export default function ChatBoxAction(props: ChatBoxActionProps) {
     const chat = useChatContext('ChatBoxAction');
@@ -51,7 +48,7 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
     // a new render config object carrying the same renderer must not call it again
     const customRender = createMemo(() => props.customRenderFunc);
 
-    const actionNodes: Record<ActionKey, () => JSX.Element> = {
+    const actionNodes: Record<ChatBoxActionKey, () => JSX.Element> = {
         copyNode: () => <Button type="tertiary" class={btnCls} aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={foundation.copyMessage} />,
         likeNode: () => <Button type="tertiary" class={btnCls} aria-label={locale().locale.like} aria-pressed={Boolean(props.message.like)} theme="borderless" icon={props.message.like ? <IconLikeThumb /> : <IconThumbUpStroked />} onClick={foundation.likeMessage} />,
         dislikeNode: () => (
@@ -72,58 +69,33 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
                 position="top"
                 trigger="custom"
                 visible={state().visible}
-                onClickOutSide={foundation.hideDeletePopup}
+                onClickOutSide={foundation.closeMenu}
                 // trigger="custom" ignores Esc, and confirm or cancel only report through onVisibleChange
                 onConfirm={() => {
                     confirmed = true;
                     foundation.deleteMessage();
                 }}
-                onEscKeyDown={foundation.hideDeletePopup}
+                onEscKeyDown={foundation.closeMenu}
                 onVisibleChange={(isVisible) => {
                     if (!isVisible) {
-                        foundation.hideDeletePopup();
+                        foundation.closeMenu();
                     }
                 }}
             >
-                {(getTriggerProps) => <Button {...getTriggerProps({ ref: (node: HTMLButtonElement) => (trigger = node) })} type="tertiary" class={btnCls} aria-label={locale().locale.delete} theme="borderless" icon={<IconDeleteStroked />} onClick={foundation.showDeletePopup} />}
+                {(getTriggerProps) => <Button {...getTriggerProps({ ref: (node: HTMLButtonElement) => (trigger = node) })} type="tertiary" class={btnCls} aria-label={locale().locale.delete} theme="borderless" icon={<IconDeleteStroked />} onClick={foundation.openMenu} />}
             </Popconfirm>
         ),
     };
 
-    const status = () => props.message.status ?? MESSAGE_STATUS.COMPLETE;
-
-    const complete = () => status() === MESSAGE_STATUS.COMPLETE;
-
-    const showFeedback = () => props.message.role !== ROLE.USER && complete();
-
-    const showReset = () => props.isLast && props.message.role === ROLE.ASSISTANT;
+    const flags = () => getChatBoxActionFlags({ role: props.message.role, status: props.message.status, isLast: props.isLast });
 
     // compared by content: the custom renderer is called again only when the set of buttons changes
-    const shownKeys = createMemo(
-        () => {
-            const keys: ActionKey[] = [];
-            if (complete()) {
-                keys.push('copyNode');
-            }
-            if (showFeedback()) {
-                keys.push('likeNode', 'dislikeNode');
-            }
-            if (showReset()) {
-                keys.push('resetNode');
-            }
-            keys.push('deleteNode');
-            return keys;
-        },
-        [],
-        { equals: (a, b) => a.join() === b.join() }
-    );
-
-    const finished = () => !isUnfinishedMessageStatus(status());
+    const shownKeys = createMemo(() => getChatBoxActionKeys(flags()), [], { equals: (a, b) => a.join() === b.join() });
 
     const wrapCls = () =>
         clsx(PREFIX_CHAT_BOX_ACTION, {
-            [`${PREFIX_CHAT_BOX_ACTION}-show`]: (showReset() && finished()) || state().showAction,
-            [`${PREFIX_CHAT_BOX_ACTION}-hidden`]: !finished(),
+            [`${PREFIX_CHAT_BOX_ACTION}-show`]: ChatBoxActionFoundation.isActionBarShown({ showReset: flags().showReset, finished: flags().finished, showAction: state().showAction }),
+            [`${PREFIX_CHAT_BOX_ACTION}-hidden`]: !flags().finished,
         });
 
     // called again when the renderer or the set of buttons changes; what the renderer reads itself is not tracked
@@ -161,13 +133,7 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
             when={props.customRenderFunc}
             fallback={
                 <div class={wrapCls()}>
-                    <Show when={complete()}>{actionNodes.copyNode()}</Show>
-                    <Show when={showFeedback()}>
-                        {actionNodes.likeNode()}
-                        {actionNodes.dislikeNode()}
-                    </Show>
-                    <Show when={showReset()}>{actionNodes.resetNode()}</Show>
-                    {actionNodes.deleteNode()}
+                    <For each={shownKeys()}>{(key) => actionNodes[key]()}</For>
                 </div>
             }
         >

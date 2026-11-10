@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
-    import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+    import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionKey, type ChatBoxActionState, getChatBoxActionFlags, getChatBoxActionKeys } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { getChatContext } from '../context.js';
@@ -14,7 +14,6 @@
         isLast: boolean;
     }
 
-    type ActionName = 'copy' | 'like' | 'dislike' | 'reset' | 'delete';
     type Foundation = ChatBoxActionFoundation<ChatBoxActionProps>;
     type Adapter = ChatBoxActionAdapter<ChatBoxActionProps>;
 
@@ -46,34 +45,13 @@
     );
 
     const { PREFIX_CHAT_BOX_ACTION } = cssClasses;
-    const { ROLE, MESSAGE_STATUS } = strings;
-    const status = $derived(message.status ?? MESSAGE_STATUS.COMPLETE);
+    const flags = $derived(getChatBoxActionFlags({ role: message.role, status: message.status, isLast }));
+    const keys = $derived(getChatBoxActionKeys(flags));
+    const wrapClass = $derived([PREFIX_CHAT_BOX_ACTION, ChatBoxActionFoundation.isActionBarShown({ showReset: flags.showReset, finished: flags.finished, showAction: states().showAction }) && `${PREFIX_CHAT_BOX_ACTION}-show`, !flags.finished && `${PREFIX_CHAT_BOX_ACTION}-hidden`]);
 
-    const actions = $derived.by(() => {
-        const complete = status === MESSAGE_STATUS.COMPLETE;
-        const names: ActionName[] = [];
-        if (complete) {
-            names.push('copy');
-        }
-        if (complete && message.role !== ROLE.USER) {
-            names.push('like', 'dislike');
-        }
-        if (isLast && message.role === ROLE.ASSISTANT) {
-            names.push('reset');
-        }
-        names.push('delete');
-        return names;
-    });
-
-    const wrapClass = $derived.by(() => {
-        const finished = !isUnfinishedMessageStatus(status);
-        return [PREFIX_CHAT_BOX_ACTION, ((actions.includes('reset') && finished) || states().showAction) && `${PREFIX_CHAT_BOX_ACTION}-show`, !finished && `${PREFIX_CHAT_BOX_ACTION}-hidden`];
-    });
-
-    // a function, as the snippets below are declared after the script runs
-    const nodeOf = (name: ActionName): Snippet => ({ copy: copyNode, like: likeNode, dislike: dislikeNode, reset: resetNode, delete: deleteNode })[name];
-
-    const defaultActionsObj = $derived(Object.fromEntries(actions.map((name) => [`${name}Node`, nodeOf(name)])) as ChatDefaultActionNodeObj);
+    // read lazily: the snippets below are declared after the script runs
+    const actionNodes: Record<ChatBoxActionKey, Snippet> = $derived({ copyNode, likeNode, dislikeNode, resetNode, deleteNode });
+    const defaultActionsObj: ChatDefaultActionNodeObj = $derived(Object.fromEntries(keys.map((key) => [key, actionNodes[key]])));
 </script>
 
 {#snippet copyNode()}
@@ -93,15 +71,15 @@
 {/snippet}
 
 {#snippet deleteNode()}
-    <DeleteAction onConfirm={foundation.deleteMessage} onHide={foundation.hideDeletePopup} onShow={foundation.showDeletePopup} visible={states().visible} />
+    <DeleteAction onConfirm={foundation.deleteMessage} onHide={foundation.closeMenu} onShow={foundation.openMenu} visible={states().visible} />
 {/snippet}
 
 {#if context.snippets.action}
     {@render context.snippets.action({ class: wrapClass.filter(Boolean).join(' '), defaultActions: Object.values(defaultActionsObj), defaultActionsObj, message })}
 {:else}
     <div class={wrapClass}>
-        {#each actions as name (name)}
-            {@render nodeOf(name)()}
+        {#each keys as key (key)}
+            {@render actionNodes[key]()}
         {/each}
     </div>
 {/if}

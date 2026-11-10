@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { KEEP_INTERACTIVE_ATTRIBUTE, openLayer } from '../layer';
+import { getPopupTrigger, KEEP_INTERACTIVE_ATTRIBUTE, openLayer } from '../layer';
 
 function pressEsc(init = {}) {
     const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true, ...init });
@@ -135,5 +135,16 @@ describe('layer', () => {
         const close = open({ element: append(), modal: true });
         close();
         expect(page.inert).toBe(true);
+    });
+});
+
+describe('getPopupTrigger', () => {
+    it('data-popupid 列出多个弹层 id 时，按其中任一 id 都能找到触发器，部分匹配不算', () => {
+        const root = document.createElement('div');
+        root.innerHTML = '<button data-popupid="outer inner"></button>';
+        const trigger = root.querySelector('button');
+        expect(getPopupTrigger('outer', root)).toBe(trigger);
+        expect(getPopupTrigger('inner', root)).toBe(trigger);
+        expect(getPopupTrigger('inn', root)).toBeNull();
     });
 });

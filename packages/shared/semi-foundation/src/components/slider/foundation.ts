@@ -1,7 +1,8 @@
 import { clamp, isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
-import { handlePrevent } from '../../utils/a11y';
+import { crossesFocusBoundary, handlePrevent } from '../../utils/a11y';
 import { isSecondaryPress } from '../../utils/pointer';
+import { focusWithoutRing } from '../../utils/supports';
 
 export interface Marks {
     [key: number]: unknown;
@@ -69,6 +70,9 @@ interface SliderLengths {
 
 export interface SliderAdapter<P extends SliderProps = SliderProps> extends DefaultAdapter<P, SliderState, DirectionContext> {
     getSliderNode: () => HTMLElement | null | undefined;
+    getHandleInput: (pos: 'min' | 'max') => HTMLInputElement | null | undefined;
+    /** Form injects `onBlur` into the slider */
+    notifyBlur: (e: any) => void;
     notifyChange: (value: number | number[]) => void;
     notifyMouseUp: (e: any) => void;
     notifyAfterChange: (value: number | number[]) => void;
@@ -388,6 +392,30 @@ export default class SliderFoundation<P extends SliderProps = SliderProps> exten
         return { min: clamp(minPercent, 0, 1), max: clamp(maxPercent, 0, 1) };
     }
 
+    /**
+     * Where the track and the handles sit. Positions are CSS percentages written to `startProp`, which is the
+     * physical side the slider starts from (RTL starts on the right); the track is sized along `track.sizeProp`.
+     * `reverse` is the class suffix of a vertical slider drawn from the bottom.
+     */
+    static getLayout(props: SliderProps, value: SliderState['currentValue'], { chooseMovePos, isDrag }: Pick<SliderState, 'chooseMovePos' | 'isDrag'>, direction?: string) {
+        const { range, vertical, verticalReverse, included } = props;
+        const isRTL = direction === 'rtl' && !vertical;
+        const { min, max } = SliderFoundation.getMinAndMaxPercent(props, value);
+        const handle = (pos: 'min' | 'max') => ({ start: `${(pos === 'min' ? min : max) * 100}%`, zIndex: chooseMovePos === pos && (range || isDrag) ? 2 : 1 });
+        return {
+            startProp: vertical ? ('top' as const) : isRTL ? ('right' as const) : ('left' as const),
+            inputDir: isRTL || (vertical && verticalReverse) ? ('rtl' as const) : ('ltr' as const),
+            reverse: vertical && verticalReverse ? '-reverse' : '',
+            track: included ? { sizeProp: vertical ? ('height' as const) : ('width' as const), size: range ? `${Math.abs(max - min) * 100}%` : `${min * 100}%`, start: range ? `${Math.min(min, max) * 100}%` : '0' } : undefined,
+            handles: { min: handle('min'), max: handle('max') },
+        };
+    }
+
+    /** A mark's position along the slider as a percentage */
+    static getMarkPercent({ min, max }: Pick<SliderProps, 'min' | 'max'>, mark: number) {
+        return ((mark - min) / (max - min)) * 100;
+    }
+
     static computeHandleVisibleVal({ tooltipVisible, tipFormatter: formatter, range, step, min }: SliderProps, { activeHandle, currentValue, isInRenderTree }: SliderState) {
         const visible = tooltipVisible && isInRenderTree;
         const output = (value: number) => SliderFoundation.normalizeValue(step, min, activeHandle, value) as number;
@@ -507,6 +535,11 @@ export default class SliderFoundation<P extends SliderProps = SliderProps> exten
     };
 
     onHandleDown = (e: Pick<PointerEvent, 'pointerId' | 'pointerType' | 'button' | 'clientX' | 'clientY'> & { currentTarget: HTMLElement }, pos: 'min' | 'max') => {
+        // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
+        const input = this.adapter.getHandleInput(pos);
+        if (input) {
+            focusWithoutRing(input, { preventScroll: true });
+        }
         if (isSecondaryPress(e)) {
             return false;
         }
@@ -649,6 +682,13 @@ export default class SliderFoundation<P extends SliderProps = SliderProps> exten
             return;
         }
         this.#commitClick(nextValue);
+    };
+
+    // moving between handles is not leaving the slider: Form's blur validation waits until focus is outside
+    handleBlur = (e: Parameters<typeof crossesFocusBoundary>[0]) => {
+        if (crossesFocusBoundary(e)) {
+            this.adapter.notifyBlur(e);
+        }
     };
 
     handleWrapperEnter = () => {

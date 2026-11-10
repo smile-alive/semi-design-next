@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { computed, shallowRef, useAttrs, type StyleValue } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+    import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
     import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
@@ -47,9 +48,7 @@
     const message = computed(() => props.validateMessage ?? props.file.validateMessage);
     const showRetry = computed(() => props.file.showRetry ?? props.showRetry);
     const showReplace = computed(() => props.file.showReplace ?? props.showReplace);
-    const retryShown = computed(() => !props.disabled && props.file.status === strings.FILE_STATUS_UPLOAD_FAIL && Boolean(showRetry.value));
-    const replaceShown = computed(() => !props.disabled && props.file.status === strings.FILE_STATUS_SUCCESS && Boolean(showReplace.value));
-    const failed = computed(() => props.file.status === strings.FILE_STATUS_VALID_FAIL || props.file.status === strings.FILE_STATUS_UPLOAD_FAIL);
+    const flags = computed(() => UploadFoundation.getFileCardFlags(props.file, props));
 
     const size = computed(() => {
         const value: string | number = props.file.size;
@@ -94,7 +93,7 @@
     const picValidateIcon = () => {
         if (!message.value && !hasSlotContent(() => slots.validateMessage?.(slotProps()) ?? [])) return undefined;
         if (props.file.status === strings.FILE_STATUS_VALIDATING) return 'loading';
-        return failed.value ? 'error' : undefined;
+        return flags.value.failed ? 'error' : undefined;
     };
 </script>
 
@@ -105,7 +104,7 @@
         :class="[
             `${prefix}-file-card`,
             {
-                [`${prefix}-file-card-fail`]: failed,
+                [`${prefix}-file-card-fail`]: flags.failed,
                 [`${prefix}-file-card-show-pointer`]: props.onPreviewClick !== undefined,
             },
         ]"
@@ -137,7 +136,7 @@
                 <span>
                     <span :class="`${info}-size`">{{ size }}</span>
                     <!-- the Button is the trigger itself, so it stays the only Tab stop -->
-                    <Tooltip v-if="replaceShown" position="top" :showArrow="false" trigger="hover">
+                    <Tooltip v-if="flags.showReplace" position="top" :showArrow="false" trigger="hover">
                         <Button :aria-label="i18n.locale.replace" :class="`${prefix}-file-card-replace`" size="small" theme="borderless" type="tertiary" @click.stop="emit('replace')">
                             <template #icon>
                                 <svg aria-hidden="true" fill="none" focusable="false" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -149,7 +148,7 @@
                     </Tooltip>
                 </span>
             </div>
-            <Progress v-if="props.file.status === strings.FILE_STATUS_UPLOADING && props.file.percent !== undefined && props.file.percent !== 100" :aria-label="i18n.locale.uploadProgress" :percent="props.file.percent" style="width: 100%" />
+            <Progress v-if="flags.showListProgress" :aria-label="i18n.locale.uploadProgress" :percent="props.file.percent" style="width: 100%" />
             <div :class="`${info}-main-control`">
                 <span :class="`${info}-validate-message`">
                     <slot name="validateMessage" v-bind="slotProps()">
@@ -160,7 +159,7 @@
                         </template>
                     </slot>
                 </span>
-                <button v-if="retryShown" :class="`${info}-retry`" type="button" @click.stop="emit('retry')">
+                <button v-if="flags.showRetry" :class="`${info}-retry`" type="button" @click.stop="emit('retry')">
                     {{ i18n.locale.retry }}
                 </button>
             </div>
@@ -182,7 +181,7 @@
                 [`${prefix}-picture-file-card-disabled`]: props.disabled,
                 [`${prefix}-picture-file-card-show-pointer`]: props.onPreviewClick !== undefined,
                 [`${prefix}-picture-file-card-error`]: props.file.status === strings.FILE_STATUS_UPLOAD_FAIL,
-                [`${prefix}-picture-file-card-uploading`]: props.file.status === strings.FILE_STATUS_UPLOADING && props.file.percent !== 100,
+                [`${prefix}-picture-file-card-uploading`]: flags.showPicProgress,
                 [`${prefix}-picture-file-card-custom-thumbnail`]: $slots.thumbnail && props.picHeight && props.picWidth,
             },
         ]"
@@ -194,11 +193,11 @@
         <img v-else-if="!fallbackPreview" :alt="props.file.name" :src="props.file.url" :style="sizeStyle" @error="onImageError" />
         <IconFile v-else size="large" />
         <button v-if="props.onPreviewClick" :aria-label="i18n.locale.preview" :class="`${prefix}-preview-trigger`" type="button" />
-        <Progress v-if="props.file.status === strings.FILE_STATUS_UPLOADING && props.file.percent !== 100" :aria-label="i18n.locale.uploadProgress" orbitStroke="var(--semi-color-white)" :percent="props.file.percent" size="small" type="circle" />
-        <button v-if="retryShown" :aria-label="i18n.locale.retry" :class="`${prefix}-picture-file-card-retry`" type="button" @click.stop="emit('retry')">
+        <Progress v-if="flags.showPicProgress" :aria-label="i18n.locale.uploadProgress" orbitStroke="var(--semi-color-white)" :percent="props.file.percent" size="small" type="circle" />
+        <button v-if="flags.showRetry" :aria-label="i18n.locale.retry" :class="`${prefix}-picture-file-card-retry`" type="button" @click.stop="emit('retry')">
             <IconRefresh :class="`${prefix}-picture-file-card-icon-retry`" />
         </button>
-        <Tooltip v-if="replaceShown" position="top" :showArrow="false" :spacing="4" trigger="hover">
+        <Tooltip v-if="flags.showReplace" position="top" :showArrow="false" :spacing="4" trigger="hover">
             <button :aria-label="i18n.locale.replace" :class="`${prefix}-picture-file-card-replace`" type="button" @click.stop="emit('replace')">
                 <svg aria-hidden="true" :class="`${prefix}-picture-file-card-icon-replace`" fill="none" focusable="false" height="28" viewBox="0 0 28 28" width="28" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="14" cy="14" fill="#16161A" fill-opacity="0.6" r="14" />
@@ -208,7 +207,7 @@
             </button>
             <template #content>{{ i18n.locale.replace }}</template>
         </Tooltip>
-        <div v-if="props.file.status === strings.FILE_STATUS_SUCCESS && !replaceShown" :class="`${prefix}-picture-file-card-preview`">
+        <div v-if="flags.showPreview" :class="`${prefix}-picture-file-card-preview`">
             <slot name="picPreviewIcon" v-bind="slotProps()" />
         </div>
         <template v-if="props.showPicInfo">

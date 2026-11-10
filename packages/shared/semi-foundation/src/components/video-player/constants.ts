@@ -20,6 +20,36 @@ export const strings = {
     PICTURE_IN_PICTURE: 'pictureInPicture',
 } as const;
 
+export type VideoControl = Exclude<(typeof strings)[keyof typeof strings], typeof strings.DARK>;
+
+export const DEFAULT_CONTROLS_LIST: VideoControl[] = [strings.PLAY, strings.NEXT, strings.TIME, strings.VOLUME, strings.PLAYBACK_RATE, strings.QUALITY, strings.ROUTE, strings.MIRROR, strings.FULLSCREEN, strings.PICTURE_IN_PICTURE];
+
+// Media events do not bubble, so a handler on a player's root div never fires; hosts derive their spelling of these keys to exclude them from the div's props
+export type MediaEventKey =
+    | 'onAbort'
+    | 'onCanPlay'
+    | 'onCanPlayThrough'
+    | 'onDurationChange'
+    | 'onEmptied'
+    | 'onEncrypted'
+    | 'onEnded'
+    | 'onError'
+    | 'onLoadedData'
+    | 'onLoadedMetadata'
+    | 'onLoadStart'
+    | 'onPause'
+    | 'onPlay'
+    | 'onPlaying'
+    | 'onProgress'
+    | 'onRateChange'
+    | 'onSeeked'
+    | 'onSeeking'
+    | 'onStalled'
+    | 'onSuspend'
+    | 'onTimeUpdate'
+    | 'onVolumeChange'
+    | 'onWaiting';
+
 export const numbers = {
     DEFAULT_VOLUME: 100,
     DEFAULT_SEEK_TIME: 10,

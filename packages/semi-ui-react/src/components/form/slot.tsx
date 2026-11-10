@@ -2,10 +2,10 @@ import React, { useId } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { normalizeFieldError } from '@fibrae/semi-foundation/components/form/errors';
-import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
+import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../../base/base';
 import { hasContent } from '../../utils/index';
-import { namedRole } from '../../utils/named-role';
 import { Col } from '../grid';
 import { useFieldBridgeContext } from './context';
 import ErrorMessage, { type ErrorMessageProps } from './error-message';
@@ -61,7 +61,7 @@ export default function FormSlot({ children, label, className, style, error, noL
     const labelConfig = (isConfig(label) ? label : { text: label }) as LabelProps;
 
     // a rendered label names the slot, so the slot becomes a group its content belongs to
-    const labelId = !noLabel && hasContent(labelConfig.text ?? labelConfig.children) ? labelConfig.id || `${generatedId}-label` : undefined;
+    const labelId = !noLabel && hasContent(labelConfig.text ?? labelConfig.children) ? labelConfig.id || getFieldIds(generatedId).label : undefined;
 
     const mergeLabelProps = {
         align: labelAlign,

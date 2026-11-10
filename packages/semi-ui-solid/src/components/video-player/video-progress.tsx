@@ -35,7 +35,7 @@ export default function VideoProgress(props: VideoProgressProps) {
 
     const moveOffset = () => {
         const info = state().movingInfo;
-        return info ? `${info.offset}px 0` : undefined;
+        return info ? VideoProgressFoundation.getPreviewTranslate(info.offset) : undefined;
     };
 
     const renderTooltipContent = () => {
@@ -54,14 +54,7 @@ export default function VideoProgress(props: VideoProgressProps) {
     };
 
     return (
-        <Tooltip
-            class={`${prefixCls}-tooltip`}
-            // anchored to the bar's center, so only a translate moves it to the pointer
-            style={{ translate: moveOffset() }}
-            content={renderTooltipContent()}
-            position="top"
-            spacing={2}
-        >
+        <Tooltip class={`${prefixCls}-tooltip`} style={{ translate: moveOffset() }} content={renderTooltipContent()} position="top" spacing={2}>
             {(getTriggerProps) => (
                 <div
                     {...getTriggerProps({ ref: (node: HTMLDivElement) => (slider = node) })}
@@ -76,9 +69,9 @@ export default function VideoProgress(props: VideoProgressProps) {
                     onFocus={foundation.handleFocus}
                     onKeyDown={foundation.handleKeyDown}
                     onLostPointerCapture={foundation.handleLostPointerCapture}
-                    onMouseEnter={(event) => foundation.handlePointerPosition(event, { seek: false })}
+                    onMouseEnter={foundation.handlePointerEnter}
                     onPointerDown={foundation.handlePointerDown}
-                    onPointerMove={(event) => foundation.handlePointerPosition(event, { seek: true })}
+                    onPointerMove={foundation.handlePointerMove}
                 >
                     <div class={`${prefixCls}-markers`}>
                         <Index each={markersList()}>

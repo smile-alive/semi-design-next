@@ -2,9 +2,9 @@
 
 import type { Component } from 'vue';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
+import { createHookApi } from '@fibrae/semi-foundation/base/hook-api';
 import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
-import type { NoticeInstance, NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
-import NotificationListStore from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+import { createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { createHolder } from '../../base/holder';
 import { useSemiGlobal } from '../../base/semi-default';
@@ -18,7 +18,7 @@ import NotificationList from './notification-list.vue';
 export default function useNotification(): [NotificationHookApi, Component] {
     const semi = useSemiGlobal();
 
-    const store = new NotificationListStore();
+    const store = createNotificationListStore();
 
     // keep-interactive stops a modal layer from making the live region inert; display: contents keeps the fixed lists
     // out of a stacking context.
@@ -28,17 +28,5 @@ export default function useNotification(): [NotificationHookApi, Component] {
         </div>
     ));
 
-    const add = (config: NotificationHookOptions, type: NoticeType) => store.open({ ...config, type } as NoticeInstance, omitInstanceIds(semi.config.overrideDefaultProps?.Notification));
-
-    return [
-        {
-            success: (config) => add(config, 'success'),
-            info: (config) => add(config, 'info'),
-            error: (config) => add(config, 'error'),
-            warning: (config) => add(config, 'warning'),
-            open: (config) => add(config, 'default'),
-            close: (id) => store.remove(id),
-        },
-        Holder,
-    ];
+    return [createHookApi<NotificationHookOptions>(store, { readGlobalDefaults: () => omitInstanceIds(semi.config.overrideDefaultProps?.Notification) }), Holder];
 }

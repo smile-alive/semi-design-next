@@ -1,14 +1,17 @@
 import { isEqual } from 'es-toolkit';
+import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../../base/message-list-foundation';
 import type { Reference } from '../ai-chat-input/interface';
-import { strings } from './constants';
+import { cssClasses, strings } from './constants';
 import type { ResponseError } from './data-adapter/interface';
 
 export type { Reference };
 
 export interface DialogueAdapter<P extends DialogueBaseProps = DialogueBaseProps> extends MessageListAdapter<Message, P, DialogueState> {
     notifySelect: (selectedIds: string[]) => void;
+    /** Reports the `chats` prop the host holds, as it is; the host must not write it back */
+    notifyChatsPropChange: () => void;
     notifyEditMessage: (message: Message) => void;
     notifyMessageReset: (message: Message) => void;
     notifyHintClick: (hint: string) => void;
@@ -39,26 +42,30 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
     }
 
     /**
-     * `user` holds without a bubble too, unlike Chat's: here it lays out the user's message and its reference icon, and
-     * only `error` is a bubble color
+     * `-user` holds without a bubble too, unlike Chat's: here it lays out the user's message and its reference icon, and
+     * only `-error` is a bubble color
      */
-    static getContentFlags(role?: string, status?: string, mode?: string) {
+    static getContentClass(role?: string, status?: string, mode?: string) {
         const user = role === strings.ROLE.USER;
         const bubble = mode === strings.MODE.BUBBLE || (mode === strings.MODE.USER_BUBBLE && user);
-        return { bubble, user, error: status === strings.STATUS.FAILED && bubble };
+        const { PREFIX_CONTENT } = cssClasses;
+        return [PREFIX_CONTENT, bubble ? `${PREFIX_CONTENT}-${mode}` : `${PREFIX_CONTENT}-no-bubble`, user && `${PREFIX_CONTENT}-user`, bubble && status === strings.STATUS.FAILED && `${PREFIX_CONTENT}-error`].filter(Boolean).join(' ');
+    }
+
+    static getMarkdownRaw(text = '', role?: string, escapeHtml?: boolean) {
+        return escapeHtml && role === strings.ROLE.USER ? escapeHtmlInMarkdown(text) : text;
     }
 
     /**
-     * A `chats` change is reported through `notifyChatsChange` as well, unless it is the list this dialogue reported
+     * A `chats` change is reported through `notifyChatsPropChange` as well, unless it is the list this dialogue reported
      * itself. Compared by value: a reactive host hands over a copy (`followChats`), and Svelte proxies what a bindable
      * prop is assigned, items included.
      */
     override handlePropsChange(prev: Partial<P>) {
-        const chats = this.getChats();
         const reported = this.#reported;
         this.#reported = undefined;
-        if (this.getProp('chats') !== prev.chats && !(reported && isEqual(chats, reported))) {
-            this.adapter.notifyChatsChange(chats);
+        if (this.getProp('chats') !== prev.chats && !(reported && isEqual(this.getChats(), reported))) {
+            this.adapter.notifyChatsPropChange();
         }
         super.handlePropsChange(prev);
     }

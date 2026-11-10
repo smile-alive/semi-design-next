@@ -1,6 +1,5 @@
 import { type Accessor, type JSX, Show, children, createEffect, createMemo, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { get } from 'es-toolkit/compat';
 import { strings } from '@fibrae/semi-foundation/components/table/constants';
 import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter, type TableBaseState } from '@fibrae/semi-foundation/components/table/foundation';
 import { type FlattenDataProps, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getExpandColumn, getHeaderRowCount, getSelectionColumn, mergedRowExpandable, placeInnerColumns } from '@fibrae/semi-foundation/components/table/utils';
@@ -153,9 +152,9 @@ export default function NormalTable(props: TableProps) {
         // initialized in place, so they are copies; the clone keeps the nodes a column holds
         (fprops) => TableFoundation.getInitialState<AnyRecord>(fprops, toFoundationColumns(flattened()), TableFoundation.initColumnsFilteredValueAndSorterOrder<AnyRecord>(cloneDeep(toFoundationColumns(flattened())))),
         (base) => {
-            const getRowSelectionFn = (funcName: string) => {
-                const func = get(base.getState('rowSelection'), funcName);
-                return typeof func === 'function' ? func : undefined;
+            const getRowSelection = () => {
+                const selection = rowSelection();
+                return isObject(selection) ? selection : undefined;
             };
             return {
                 getWrapper: () => wrap,
@@ -165,9 +164,9 @@ export default function NormalTable(props: TableProps) {
                 notifyChange: (changeInfo) => base.getProps().onChange?.(changeInfo),
                 notifyExpand: (expanded, record, mouseEvent) => base.getProps().onExpand?.(expanded, record as AnyRecord, mouseEvent),
                 notifyExpandedRowsChange: (expandedRows) => base.getProps().onExpandedRowsChange?.(expandedRows as AnyRecord[]),
-                notifySelect: (record, selected, selectedRows, event) => getRowSelectionFn('onSelect')?.(record, selected, selectedRows, event),
-                notifySelectAll: (selected, selectedRows, changedRows, e) => getRowSelectionFn('onSelectAll')?.(selected, selectedRows, changedRows, e),
-                notifySelectionChange: (selectedRowKeys, selectedRows) => getRowSelectionFn('onChange')?.(selectedRowKeys, selectedRows),
+                notifySelect: (record, selected, selectedRows, event) => getRowSelection()?.onSelect?.(record, selected, selectedRows, event),
+                notifySelectAll: (selected, selectedRows, changedRows, e) => getRowSelection()?.onSelectAll?.(selected, selectedRows, changedRows, e),
+                notifySelectionChange: (selectedRowKeys, selectedRows) => getRowSelection()?.onChange?.(selectedRowKeys, selectedRows),
             };
         }
     );
@@ -314,7 +313,7 @@ export default function NormalTable(props: TableProps) {
         state,
         foundation,
         flattenedColumns,
-        getCellWidths: (cellColumns) => getCellWidths(state().headWidths, cellColumns),
+        getCellWidths: (cellColumns) => getCellWidths(state().headWidths, cellColumns, isVirtualized()),
         setHeadWidths: foundation.setHeadWidths,
         setBodyHasScrollbar: foundation.setBodyHasScrollbar,
         handleBodyScroll,

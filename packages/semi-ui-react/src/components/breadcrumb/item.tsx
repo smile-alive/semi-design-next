@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
 import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter, type Route, type BreadcrumbItemInfo as BaseBreadcrumbItemInfo } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';
 import { fitNavIcon } from '../navigation/nav-icon';
 import Typography, { type ShowTooltip } from '../typography';

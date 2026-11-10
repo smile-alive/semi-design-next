@@ -2,7 +2,8 @@
     import { type StyleValue, computed, h, mergeProps, nextTick, onMounted, shallowRef, useAttrs, useTemplateRef, watch, watchEffect } from 'vue';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
-    import { canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/components/typography/ellipsis';
+    import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
+    import { canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
     import { hasClickListener } from '../../utils/control-attrs';
@@ -61,7 +62,7 @@
         const { showTooltip, expandable, expandText } = opt.value;
         if (!showTooltip || expandable || expandText !== undefined) return false;
         const config = typeof showTooltip === 'object' ? showTooltip : {};
-        return { popover: config.type === 'popover', opts: config.opts ?? {} };
+        return { popover: isPopoverTooltip(config), opts: config.opts ?? {} };
     });
 
     // Switched by condition rather than unmounted, so the text element is not replaced when overflow changes
@@ -71,13 +72,8 @@
 
     const copyConfig = computed<false | ResolvedCopyConfig>(() => {
         if (!props.copyable) return false;
-        const config = typeof props.copyable === 'object' ? props.copyable : {};
-        return {
-            content: config.content ?? text.value.text,
-            duration: config.duration ?? 3,
-            class: config.class,
-            style: config.style,
-        };
+        const { content, duration, class: className, style } = getCopyConfig(props.copyable, text.value.text);
+        return { content, duration, class: className, style };
     });
 
     provideTypographyContext(realSize);
@@ -92,7 +88,7 @@
 
     const view = shallowRef<EllipsisView>({ ...resetView(text.value.text), isTruncated: hasEllipsis.value });
 
-    const overflowed = computed(() => !view.value.expanded && (cssEllipsis.value ? view.value.isOverflowed : view.value.isTruncated));
+    const overflowed = computed(() => isOverflowed(view.value, cssEllipsis.value));
 
     const tooltipBinding = computed(() => ({
         position: 'top' as const,
@@ -106,13 +102,10 @@
         class: [`${prefix}-ellipsis-popover`, tooltip.value && tooltip.value.opts.class],
     }));
 
-    const actionText = computed(() => {
-        if (!view.value.isTruncated) return undefined;
-        return view.value.expanded ? opt.value.collapseText : opt.value.expandText;
-    });
+    const expandButton = computed(() => getExpandButton(view.value, opt.value));
 
     // an expanded text that cannot collapse lost its button, so the text takes its focus
-    const focusTarget = computed(() => view.value.expanded && actionText.value === undefined);
+    const focusTarget = computed(() => view.value.expanded && expandButton.value === undefined);
 
     const ellipsisClass = computed(() => {
         if (!hasEllipsis.value) return [];
@@ -220,7 +213,7 @@
     // until the tip can show, and inside items of composite widgets.
     const triggerTabindex = () => {
         const own = attrs.tabindex;
-        return own !== undefined || (overflowed.value && conditionOn.value && !insideWidgetItem.value) ? (own ?? 0) : null;
+        return isTooltipTriggerFocusable({ tabIndex: own, overflowed: overflowed.value, condition: conditionOn.value, insideWidgetItem: insideWidgetItem.value }) ? (own ?? 0) : null;
     };
 
     // Runs before this component re-renders, so new text never shows with the previous truncation.
@@ -261,9 +254,7 @@
             decorations: tags,
             linkClass: linkClass.value,
             iconSize: realSize.value === 'small' ? ('small' as const) : ('default' as const),
-            actionText: actionText.value,
-            actionToggles: view.value.expanded ? opt.value.collapsible : opt.value.expandable,
-            expanded: view.value.expanded,
+            action: expandButton.value,
             copy: copyConfig.value,
             onToggle: toggle,
             onHover: hover,

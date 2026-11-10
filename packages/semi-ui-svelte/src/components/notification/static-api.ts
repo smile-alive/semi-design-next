@@ -1,7 +1,7 @@
 import { mount, unmount } from 'svelte';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
 import NotificationApi from '@fibrae/semi-foundation/components/notification/notification-api-foundation';
-import { assertClient } from '../../utils/client-only.js';
+import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
 import semiGlobal from '../../utils/semi-global.js';
 import type { NoticeProps } from './interface.js';
 import NotificationList from './notification-list.svelte';

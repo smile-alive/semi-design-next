@@ -3,7 +3,6 @@ import { useId, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
 import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
-import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
 import '@fibrae/semi-foundation/components/slider/slider.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
@@ -96,7 +95,6 @@ export default function Slider(rawProps: SliderProps) {
         validateStatus,
         insetLabel,
         insetLabelId,
-        onBlur,
         onKeyDown,
         ...rest
     } = props as SliderProps &
@@ -105,7 +103,6 @@ export default function Slider(rawProps: SliderProps) {
             validateStatus?: unknown;
             insetLabel?: unknown;
             insetLabelId?: unknown;
-            onBlur?: React.FocusEventHandler<HTMLDivElement>;
         };
 
     const { locale } = useLocale('Slider');
@@ -122,6 +119,8 @@ export default function Slider(rawProps: SliderProps) {
         () => SliderFoundation.getInitialState(props),
         (base) => ({
             getSliderNode: () => sliderRef.current,
+            getHandleInput: (pos) => (pos === 'min' ? minInputRef.current : maxInputRef.current),
+            notifyBlur: (e) => (base.getProps() as SliderProps).onBlur?.(e),
             notifyChange: (value) => base.getProps().onChange?.(value),
             notifyAfterChange: (value) => base.getProps().onAfterChange?.(value),
             notifyMouseUp: (e) => base.getProps().onMouseUp?.(e),
@@ -132,21 +131,15 @@ export default function Slider(rawProps: SliderProps) {
     const mergedRef = useMergedRef(ref, sliderRef);
     const { chooseMovePos, isDrag, isInRenderTree, focusVisibleHandle } = state;
     const currentValue = SliderFoundation.deriveValue(props, state);
-    const isRTL = context.direction === 'rtl' && !vertical;
-    const stylePos = vertical ? 'top' : isRTL ? 'right' : 'left';
-    const { min: minPercent, max: maxPercent } = SliderFoundation.getMinAndMaxPercent(props, currentValue);
+    const layout = SliderFoundation.getLayout(props, currentValue, state, context.direction);
     const { tipVisible, tipChildren } = SliderFoundation.computeHandleVisibleVal(props, { ...state, currentValue });
     const markKeys = marks ? Object.keys(marks) : [];
-    const reverse = vertical && verticalReverse ? '-reverse' : '';
-    const trackSize = range ? `${Math.abs(maxPercent - minPercent) * 100}%` : `${minPercent * 100}%`;
-    const trackStart = range ? `${Math.min(minPercent, maxPercent) * 100}%` : 0;
-    const trackStyle: React.CSSProperties = included ? { [vertical ? 'height' : 'width']: trackSize, [stylePos]: trackStart } : {};
+    const trackStyle: React.CSSProperties = layout.track ? { [layout.track.sizeProp]: layout.track.size, [layout.startProp]: layout.track.start } : {};
 
     const renderHandle = (pos: 'min' | 'max') => {
         const index = pos === 'min' ? 0 : 1;
         const handleValue = range ? currentValue[index] : (currentValue as number);
         const dot = Array.isArray(handleDot) ? handleDot[index] : handleDot;
-        const active = chooseMovePos === pos && (range || isDrag);
         const inputRef = pos === 'min' ? minInputRef : maxInputRef;
         const a11y = SliderFoundation.getHandleA11y({ range, pos, id, ariaLabel, ariaLabelledby, generatedId, endName: pos === 'min' ? locale.rangeStart : locale.rangeEnd });
         return (
@@ -156,10 +149,7 @@ export default function Slider(rawProps: SliderProps) {
                     className={clsx(cssClasses.HANDLE, {
                         [`${cssClasses.HANDLE}-clicked`]: chooseMovePos === pos && isDrag,
                     })}
-                    style={{
-                        [stylePos]: `${(pos === 'min' ? minPercent : maxPercent) * 100}%`,
-                        zIndex: active ? 2 : 1,
-                    }}
+                    style={{ [layout.startProp]: layout.handles[pos].start, zIndex: layout.handles[pos].zIndex }}
                     aria-describedby={undefined}
                     // the input is the control: the wrapping Tooltip would otherwise make this span a Tab stop
                     tabIndex={-1}
@@ -170,11 +160,7 @@ export default function Slider(rawProps: SliderProps) {
                     onMouseLeave={foundation.onHandleLeave}
                     // a single slider re-checks for a hidden container whenever its tooltip would show
                     onMouseOver={range ? undefined : foundation.syncIsInRenderTree}
-                    onPointerDown={(e) => {
-                        // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
-                        if (inputRef.current) focusWithoutRing(inputRef.current, { preventScroll: true });
-                        foundation.onHandleDown(e, pos);
-                    }}
+                    onPointerDown={(e) => foundation.onHandleDown(e, pos)}
                 >
                     <input
                         ref={inputRef}
@@ -193,7 +179,7 @@ export default function Slider(rawProps: SliderProps) {
                         // one Tab stop lands first: the start handle
                         autoFocus={pos === 'min' ? autoFocus : undefined}
                         // matches where the handle moves; arrows are stepped by the foundation since engines map them differently
-                        dir={isRTL || (vertical && verticalReverse) ? 'rtl' : 'ltr'}
+                        dir={layout.inputDir}
                         disabled={disabled}
                         max={max}
                         min={min}
@@ -224,8 +210,6 @@ export default function Slider(rawProps: SliderProps) {
         );
     };
 
-    const markPercent = (mark: string) => (Number(mark) - min) / (max - min);
-
     const slider = (
         <div
             {...rest}
@@ -240,12 +224,7 @@ export default function Slider(rawProps: SliderProps) {
                 className
             )}
             style={style}
-            // moving between handles is not leaving: Form's blur validation waits for focus outside
-            onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    onBlur?.(e);
-                }
-            }}
+            onBlur={foundation.handleBlur}
             onMouseEnter={foundation.handleWrapperEnter}
             onMouseLeave={foundation.handleWrapperLeave}
         >
@@ -264,7 +243,7 @@ export default function Slider(rawProps: SliderProps) {
                                 className={clsx(`${prefixCls}-dot`, {
                                     [`${prefixCls}-dot-active`]: activeResult === 'active',
                                 })}
-                                style={{ [stylePos]: `calc(${markPercent(mark) * 100}% - 2px)` }}
+                                style={{ [layout.startProp]: `calc(${SliderFoundation.getMarkPercent(props, Number(mark))}% - 2px)` }}
                                 // Tooltip would otherwise inject tabIndex 0
                                 tabIndex={-1}
                                 onClick={foundation.handleWrapClick}
@@ -285,10 +264,10 @@ export default function Slider(rawProps: SliderProps) {
                 {range && renderHandle('max')}
             </div>
             {showMarkLabel && markKeys.length > 0 && (
-                <div className={cssClasses.MARKS + reverse}>
+                <div className={cssClasses.MARKS + layout.reverse}>
                     {markKeys.map((mark) =>
                         SliderFoundation.isMarkActive(props, currentValue, Number(mark)) ? (
-                            <span key={mark} className={`${prefixCls}-mark${reverse}`} style={{ [stylePos]: `${markPercent(mark) * 100}%` }} onClick={() => foundation.handleMarkClick(Number(mark))}>
+                            <span key={mark} className={`${prefixCls}-mark${layout.reverse}`} style={{ [layout.startProp]: `${SliderFoundation.getMarkPercent(props, Number(mark))}%` }} onClick={() => foundation.handleMarkClick(Number(mark))}>
                                 {marks[mark]}
                             </span>
                         ) : null

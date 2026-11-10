@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
     import type { FieldRegistration } from '@fibrae/semi-foundation/components/form/interface';
-    import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/components/form/utils';
+    import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveFieldView } from '@fibrae/semi-foundation/components/form/utils';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -14,9 +14,9 @@
     import { type FormContextValue, getArrayFieldContext, getFormContext, getFormInputGroupContext } from './context.js';
     import ErrorMessage from './error-message.svelte';
     import FieldGrid from './field-grid.svelte';
-    import type { CommonFieldProps, WithFieldOption } from './interface.js';
+    import type { CommonFieldProps, FieldLabel, WithFieldOption } from './interface.js';
     import Label from './label.svelte';
-    import { cloneDeep, hasErrorContent, isLabelConfig } from './utils.js';
+    import { cloneDeep } from './utils.js';
 
     type Handler = (...args: unknown[]) => void;
     type InnerProps = Omit<CommonFieldProps, 'field'> & { field?: string; component: Component<any, any, any>; fieldOptions?: WithFieldOption; triggerContent?: Snippet<any[]>; [key: string]: unknown };
@@ -81,21 +81,8 @@
     } as ReturnType<typeof mergeFieldConfig> & { labelCol?: ColProps; wrapperCol?: ColProps; formHasCols: boolean });
 
     const a11yId = $derived(id || uid);
-    const labelId = $derived(`${a11yId}-label`);
-    const helpTextId = $derived(`${a11yId}-helpText`);
-    const extraTextId = $derived(`${a11yId}-extraText`);
-    const errorMessageId = $derived(`${a11yId}-errormessage`);
-    const labelConfig = $derived(isLabelConfig(label) ? label : undefined);
-    const labelText = $derived((isLabelConfig(label) ? label.text : label) || field);
     const rulesRequired = $derived(isRequiredByRules(form.formProps, rules));
-    const insetPosition = $derived(merged.labelPosition === 'inset');
-
-    // a prefix or a custom trigger takes the inset label's place, so the label goes on top
-    const insetFallback = $derived(insetPosition && (fieldOptions.insetLabel === false || Boolean(rest.prefix) || Boolean(triggerContent)));
-    const insetShown = $derived(insetPosition && !insetFallback && !noLabel);
-    const shownLabelPosition = $derived(insetFallback ? 'top' : merged.labelPosition);
     const ownLayout = $derived(!group && !pure);
-    const shellLabel = $derived(ownLayout && !noLabel && shownLabelPosition !== 'inset');
 
     const ownAria = $derived.by((): Record<string, unknown> => {
         if (!group) {
@@ -122,8 +109,28 @@
 
     const snapshot = useStoreSnapshot(store);
 
+    // a prefix or a custom trigger takes the inset label's place, so resolveFieldView puts the label on top
+    const view = $derived(
+        resolveFieldView<FieldLabel>({
+            id: a11yId,
+            field,
+            label,
+            noLabel,
+            validateStatus,
+            status: snapshot().status,
+            labelPosition: merged.labelPosition,
+            labelCol: merged.labelCol,
+            wrapperCol: merged.wrapperCol,
+            formHasCols: merged.formHasCols,
+            insetSupported: fieldOptions.insetLabel !== false,
+            hasPrefix: Boolean(rest.prefix),
+            hasTrigger: Boolean(triggerContent),
+        })
+    );
+
     // the foundation never sets 'validating', the one status a control does not accept
-    const shownStatus = $derived((validateStatus || snapshot().status) as CommonFieldProps['validateStatus']);
+    const shownStatus = $derived(view.shownStatus as CommonFieldProps['validateStatus']);
+    const shellLabel = $derived(ownLayout && !noLabel && view.labelPosition !== 'inset');
 
     const aria = $derived.by(() => {
         const { error, status } = snapshot();
@@ -133,10 +140,10 @@
             'aria-errormessage': ownAria['aria-errormessage'],
             ...getFieldAriaProps({
                 own: ownAria,
-                ids: { label: labelId, helpText: helpTextId, extraText: extraTextId, errorMessage: errorMessageId },
+                ids: view.ids,
                 rulesRequired,
-                label: labelConfig,
-                labelPosition: shownLabelPosition,
+                label: view.labelConfig,
+                labelPosition: view.labelPosition,
                 noLabel,
                 noErrorMessage,
                 pure,
@@ -144,7 +151,6 @@
                 hasHelpText: Boolean(helpText),
                 hasExtraText: Boolean(extraText),
                 error,
-                errorHasContent: hasErrorContent(error),
                 status,
                 shownStatus,
             }),
@@ -190,7 +196,7 @@
     };
 
     $effect(() => {
-        const warn = insetPosition && !noLabel && fieldOptions.insetLabel === false;
+        const warn = view.warnInsetFallback;
         untrack(() => warning(warn, `[Semi Form]: the component has no inset label, so Field "${field}" is laid out with labelPosition 'top'`));
     });
 
@@ -220,7 +226,7 @@
 </script>
 
 {#snippet insetText()}
-    {#if fieldLabel}{@render fieldLabel()}{:else}{labelText}{/if}
+    {#if fieldLabel}{@render fieldLabel()}{:else}{view.labelText}{/if}
 {/snippet}
 
 {#snippet control()}
@@ -232,7 +238,7 @@
         ...(name && { name }),
         ...(triggerContent && { trigger: triggerContent }),
         ...(fieldOptions.validateStatus !== false && { validateStatus: shownStatus }),
-        ...(insetShown && { insetLabel: insetText, insetLabelId: labelId }),
+        ...(view.insetShown && { insetLabel: insetText, insetLabelId: view.ids.label }),
         ...aria,
         [changeKey]: handleChange,
         ...(blurKey && { [blurKey]: handleBlur }),
@@ -248,7 +254,7 @@
 
 {#snippet labelView()}
     <!-- id, name and text come last: they must match what the control references -->
-    <Label align={merged.labelAlign} required={rulesRequired} width={merged.labelWidth} {...labelConfig} children={fieldLabel} extra={labelExtra} id={labelId} name={a11yId} text={labelText} />
+    <Label align={merged.labelAlign} required={rulesRequired} width={merged.labelWidth} {...view.labelConfig} children={fieldLabel} extra={labelExtra} id={view.ids.label} name={a11yId} text={view.labelText} />
 {/snippet}
 
 {#snippet extraView()}
@@ -262,7 +268,7 @@
                 [`${cssClasses.PREFIX}-field-extra-bottom`]: merged.extraTextPosition === 'bottom',
             },
         ]}
-        id={extraTextId}
+        id={view.ids.extraText}
         x-semi-prop="extraText"
     >
         {@render extraText?.()}
@@ -272,14 +278,14 @@
 {#if !ownLayout}
     {@render control()}
 {:else}
-    <div class={[`${cssClasses.PREFIX}-field`, { [`${cssClasses.PREFIX}-field-${name}`]: name }, fieldClassName]} style={fieldStyle} {...{ 'x-extra-pos': merged.extraTextPosition, 'x-field-id': field, 'x-label-pos': shownLabelPosition }}>
-        <FieldGrid label={shellLabel ? labelView : undefined} labelAlign={merged.labelAlign} labelCol={merged.labelCol} labelPosition={shownLabelPosition} mainClass={`${cssClasses.PREFIX}-field-main`} row={Boolean(merged.labelCol && merged.wrapperCol) && !merged.formHasCols} wrapperCol={merged.wrapperCol}>
+    <div class={[`${cssClasses.PREFIX}-field`, { [`${cssClasses.PREFIX}-field-${name}`]: name }, fieldClassName]} style={fieldStyle} {...{ 'x-extra-pos': merged.extraTextPosition, 'x-field-id': field, 'x-label-pos': view.labelPosition }}>
+        <FieldGrid label={shellLabel ? labelView : undefined} labelAlign={merged.labelAlign} labelCol={merged.labelCol} labelPosition={view.labelPosition} mainClass={`${cssClasses.PREFIX}-field-main`} row={view.wrapInRow} wrapperCol={merged.wrapperCol}>
             {#if extraText && merged.extraTextPosition === 'middle'}
                 {@render extraView()}
             {/if}
             {@render control()}
             {#if !noErrorMessage}
-                <ErrorMessage error={snapshot().error} {errorContent} {errorMessageId} {helpText} {helpTextId} showValidateIcon={form.formProps.showValidateIcon} validateStatus={shownStatus} />
+                <ErrorMessage error={snapshot().error} {errorContent} errorMessageId={view.ids.errorMessage} {helpText} helpTextId={view.ids.helpText} showValidateIcon={form.formProps.showValidateIcon} validateStatus={shownStatus} />
             {/if}
             {#if extraText && merged.extraTextPosition === 'bottom'}
                 {@render extraView()}

@@ -1,14 +1,7 @@
 import type { HTMLAttributes } from 'svelte/elements';
+import type { AudioUrl } from '@fibrae/semi-foundation/components/audio-player/foundation';
 
 export type AudioPlayerTheme = 'dark' | 'light';
-
-export interface AudioInfo {
-    title?: string;
-    cover?: string;
-    src: string;
-}
-
-export type AudioUrl = string | AudioInfo | (AudioInfo | string)[];
 
 // Native attributes fall through to the root div. Media event listeners (`onended`, ...) are not props: on the root
 // div they never fire, since media events do not bubble.

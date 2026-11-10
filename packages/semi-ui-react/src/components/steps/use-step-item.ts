@@ -1,6 +1,6 @@
 import type React from 'react';
 import { focusableSelector } from '@fibrae/semi-foundation/components/steps/constants';
-import { namedRole } from '../../utils/named-role';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 
 interface StepItemOptions {
     role?: React.AriaRole;

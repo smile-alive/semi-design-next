@@ -5,7 +5,7 @@ import type { JsonViewerSearchOptions } from './interface';
 export interface JsonViewerView {
     showSearchBar: boolean;
     searchOptions: JsonViewerSearchOptions;
-    readOnly: boolean;
+    readOnly?: boolean;
     width: number | string;
     limitSearchButtonBounds: boolean;
 }

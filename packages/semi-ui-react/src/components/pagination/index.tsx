@@ -1,11 +1,9 @@
 import type React from 'react';
-import { useEffect } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
 import PaginationFoundation, { type PageList, type PageRange, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/components/pagination/pagination.scss';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
@@ -137,16 +135,10 @@ export default function Pagination(rawProps: PaginationProps) {
         })
     );
 
-    const sizeChangerShown = Boolean(props.showSizeChanger && props.size !== 'small');
-    const sizeChangerKeepsSinglePage = sizeChangerShown && Boolean(props.hideOnSinglePage);
     const { currentPage, pageSize, quickJumpPage } = state;
-    const totalPageNum = PaginationFoundation.getTotalPageNumber(total, pageSize);
+    const { totalPageNum, hidden, quickJumpDisabled, switchPosition } = PaginationFoundation.getView(props, pageSize, direction);
 
-    useEffect(() => {
-        warning(sizeChangerKeepsSinglePage, '[Semi Pagination] You should not use showSizeChanger and hideOnSinglePage in ths same time. At this time, hideOnSinglePage no longer takes effect, otherwise there may be a problem that the switch entry disappears');
-    }, [sizeChangerKeepsSinglePage]);
-
-    if (totalPageNum < 2 && hideOnSinglePage && !sizeChangerShown) {
+    if (hidden) {
         return null;
     }
 
@@ -210,14 +202,13 @@ export default function Pagination(rawProps: PaginationProps) {
         if (!showQuickJumper) {
             return null;
         }
-        const isDisabled = totalPageNum < 2 || disabled;
         return (
-            <li className={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: isDisabled })}>
+            <li className={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: quickJumpDisabled })}>
                 <span>{locale.jumpTo}</span>
                 <InputNumber
                     className={`${prefixCls}-quickjump-input-number`}
                     aria-label={locale.jumpTo}
-                    disabled={isDisabled}
+                    disabled={quickJumpDisabled}
                     value={quickJumpPage}
                     // the adornments and showClear are set so global InputNumber defaults cannot add them to the jumper
                     addonAfter={null}
@@ -266,11 +257,10 @@ export default function Pagination(rawProps: PaginationProps) {
         if (!showSizeChanger) {
             return null;
         }
-        const switchPosition = popoverPosition === undefined ? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft') : popoverPosition;
         const pageSizeToken = locale.pageSize;
         return (
             <li className={`${prefixCls}-switch`}>
-                <Select dropdownClassName={`${prefixCls}-select-dropdown`} aria-label={locale.pageSizeSelector} disabled={disabled} value={pageSize} clickToHide position={switchPosition || 'bottomRight'} onChange={foundation.changePageSize}>
+                <Select dropdownClassName={`${prefixCls}-select-dropdown`} aria-label={locale.pageSizeSelector} disabled={disabled} value={pageSize} clickToHide position={switchPosition} onChange={foundation.changePageSize}>
                     {PaginationFoundation.getPageSizeOpts(pageSizeOpts, pageSize).map((option) => (
                         <Option key={option} value={option}>
                             <span>{formatLocale(pageSizeToken, { pageSize: option })}</span>

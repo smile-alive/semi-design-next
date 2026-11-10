@@ -1,6 +1,6 @@
 import { type JSX, Show, createMemo, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { arrayAdd } from '@fibrae/semi-foundation/components/table/utils';
+import { arrayAdd, genExpandedRowKey } from '@fibrae/semi-foundation/components/table/utils';
 import { useTableContext } from '../context';
 import type { ColumnProps, ExpandedRowRender } from '../interface';
 import { isRenderReturnObject } from '../utils';
@@ -62,7 +62,7 @@ export default function TableExpandedRow(props: TableExpandedRowProps) {
 
     return (
         <Show when={cell() !== null}>
-            <BaseRow class={clsx(props.class, `${prefixCls()}-row-expand`)} style={props.style} cellWidths={table.getCellWidths(columns())} columns={columns()} displayNone={props.displayNone} expandedRow index={props.index} rowKey={`${props.rowKey}-expanded-row`} />
+            <BaseRow class={clsx(props.class, `${prefixCls()}-row-expand`)} style={props.style} cellWidths={table.getCellWidths(columns())} columns={columns()} displayNone={props.displayNone} expandedRow index={props.index} rowKey={genExpandedRowKey(props.rowKey)} />
         </Show>
     );
 }

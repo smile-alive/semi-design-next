@@ -119,15 +119,6 @@
         return () => observer.disconnect();
     };
 
-    // Wheel zooming and the image load change the state too. A controlled zoom thereby undoes a zoom the parent did
-    // not accept, and the preview mirrors every layout change.
-    $effect(() => {
-        const current = states();
-        void [current.imgData, current.cropperBox, current.rotate, current.zoom, current.loaded, zoom, rotate];
-        foundation.syncRotateAndZoom();
-        foundation.updatePreview();
-    });
-
     /** Draws the area inside the cropper box, at the image's own resolution, onto a new canvas */
     export function getCropperCanvas() {
         return foundation.getCropperCanvas();

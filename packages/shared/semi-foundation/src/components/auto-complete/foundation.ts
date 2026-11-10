@@ -1,8 +1,10 @@
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { getEnabledStepIndex, isInnerControlActivation } from '../../utils/a11y';
+import { centerInScroller } from '../../utils/dom';
 import isObject from '../../utils/is-object';
 import { isComposing } from '../../utils/key-code';
 import warning from '../../utils/warning';
+import { getOptionId } from '../select/foundation';
 
 export interface DataItem {
     [x: string]: any;
@@ -44,7 +46,8 @@ export interface AutoCompleteBaseState {
 /** FE is the host's focus and blur event, which the foundation only passes through */
 export interface AutoCompleteAdapter<P extends AutoCompleteBaseProps = AutoCompleteBaseProps, S extends AutoCompleteBaseState = AutoCompleteBaseState, FE = unknown> extends DefaultAdapter<P, S> {
     notifyKeyDown: (e: any) => void;
-    updateScrollTop: (index: number) => void;
+    /** The listbox element; its id is the list id the option ids are built from, with `getOptionId` */
+    getListbox: () => HTMLElement | null | undefined;
     notifySearch: (inputValue: string) => void;
     notifyChange: (value: string | number) => void;
     notifySelect: (option: StateOptionItem | string | number) => void;
@@ -144,13 +147,21 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         this.#modifyFocusIndex(inputValue);
     }
 
+    #scrollToOption(index: number) {
+        const listbox = this.adapter.getListbox();
+        const destNode = listbox?.querySelector<HTMLElement>(`#${CSS.escape(getOptionId(listbox.id, index))}`);
+        if (listbox && destNode) {
+            centerInScroller(destNode, listbox);
+        }
+    }
+
     #moveFocus(offset: number) {
         const { focusIndex, options } = this.getStates();
         const visibleOptions = options.filter((item: StateOptionItem) => item.show);
         const index = getEnabledStepIndex(offset, focusIndex, visibleOptions.length, (i) => visibleOptions[i].disabled);
         this.setState({ focusIndex: index });
         if (index !== -1) {
-            this.adapter.updateScrollTop(index);
+            this.#scrollToOption(index);
         }
     }
 
@@ -274,14 +285,6 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
 
     /** Mousedown outside the input and dropdown while shown */
     handleClickOutside = (_e: MouseEvent) => {
-        this.#closeDropdown();
-    };
-
-    /**
-     * Hides the dropdown and reports dropdownVisibleChange(false), without blurring the input or moving focus.
-     * Called when Vue KeepAlive deactivates the host.
-     */
-    close = () => {
         this.#closeDropdown();
     };
 

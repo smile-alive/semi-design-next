@@ -25,6 +25,13 @@ export interface NavigationState {
     selectedKeys: ItemKey[];
 }
 
+export interface NavigationView {
+    isCollapsed: boolean;
+    openKeysIsControlled: boolean;
+    openKeys: ItemKey[];
+    selectedKeys: ItemKey[];
+}
+
 export interface NavigationAdapter<P extends NavigationBaseProps = NavigationBaseProps> extends DefaultAdapter<P, NavigationState> {
     getItemsFromChildren(): NavItemType[];
     notifyCollapseChange(isCollapsed: boolean): void;
@@ -45,6 +52,13 @@ export interface NavigationBaseProps {
 export default class NavigationFoundation<P extends NavigationBaseProps = NavigationBaseProps> extends BaseFoundation<NavigationAdapter<P>, P, NavigationState> {
     static override readonly propKeys = ['items', 'children', 'selectedKeys', 'openKeys'];
     static override readonly propEquals = { selectedKeys: isEqual, openKeys: isEqual };
+
+    static #getIsCollapsed(props: NavigationBaseProps, state: NavigationState) {
+        if (props.mode === strings.MODE_HORIZONTAL) {
+            return false;
+        }
+        return props.isCollapsed === undefined ? state.isCollapsed : props.isCollapsed;
+    }
 
     #getItemKeysMap() {
         return NavigationFoundation.getFormattedItems(this.getProps(), this.adapter.getItemsFromChildren()).itemKeysMap;
@@ -184,19 +198,20 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         };
     }
 
-    static getIsCollapsed(props: NavigationBaseProps, state: NavigationState) {
-        if (props.mode === strings.MODE_HORIZONTAL) {
-            return false;
-        }
-        return props.isCollapsed === undefined ? state.isCollapsed : props.isCollapsed;
-    }
-
-    static getSelectedKeys(props: NavigationBaseProps, state: NavigationState, itemKeysMap: ItemKey2ParentKeysMap) {
-        if (props.selectedKeys === undefined) {
-            return state.selectedKeys;
-        }
-        const selectedKeys: ItemKey[] = props.selectedKeys ?? [];
-        return selectedKeys.concat(NavigationFoundation.getZeroParentKeys(itemKeysMap, ...selectedKeys));
+    /**
+     * What the hosts render: openKeys is controlled only while the nav is vertical and expanded, and a given
+     * selectedKeys (null reads as empty) also selects the top-level ancestor of each key
+     */
+    static deriveView(props: NavigationBaseProps, state: NavigationState, itemKeysMap: ItemKey2ParentKeysMap): NavigationView {
+        const isCollapsed = NavigationFoundation.#getIsCollapsed(props, state);
+        const openKeysIsControlled = props.openKeys !== undefined && props.mode === strings.MODE_VERTICAL && !isCollapsed;
+        const givenSelectedKeys: ItemKey[] = props.selectedKeys ?? [];
+        return {
+            isCollapsed,
+            openKeysIsControlled,
+            openKeys: openKeysIsControlled ? (props.openKeys ?? []) : state.openKeys,
+            selectedKeys: props.selectedKeys === undefined ? state.selectedKeys : givenSelectedKeys.concat(NavigationFoundation.getZeroParentKeys(itemKeysMap, ...givenSelectedKeys)),
+        };
     }
 
     // a popup list is driven by its Dropdown, not by openKeys
@@ -212,14 +227,6 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
      */
     static isWidthAnimating(nav?: Element | null) {
         return Boolean(nav?.getAnimations().some((animation) => animation instanceof CSSTransition && animation.transitionProperty === 'width'));
-    }
-
-    static isOpenKeysControlled(props: NavigationBaseProps, isCollapsed: boolean) {
-        return props.openKeys !== undefined && props.mode === strings.MODE_VERTICAL && !isCollapsed;
-    }
-
-    static getOpenKeys(props: NavigationBaseProps, state: NavigationState, isCollapsed: boolean) {
-        return NavigationFoundation.isOpenKeysControlled(props, isCollapsed) ? (props.openKeys ?? []) : state.openKeys;
     }
 
     /**
@@ -270,7 +277,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
     };
 
     handleCollapseChange = () => {
-        const isCollapsed = !NavigationFoundation.getIsCollapsed(this.getProps(), this.getStates());
+        const isCollapsed = !NavigationFoundation.#getIsCollapsed(this.getProps(), this.getStates());
 
         if (!this.isControlledComponent('isCollapsed')) {
             this.setState({ isCollapsed });

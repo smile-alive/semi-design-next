@@ -262,6 +262,9 @@
         get disabled() {
             return disabled;
         },
+        get showClear() {
+            return showClear;
+        },
         get clickToHide() {
             return clickToHide;
         },
@@ -311,10 +314,9 @@
                 onChange?.(node as TreeSelectValue, node as TreeNodeData | TreeNodeData[], event as TreeSelectChangeEvent);
             },
             notifyExpand: (keys, info) => {
-                const next = [...keys];
-                echo('expandedKeys', next);
-                expandedKeys = next;
-                onExpand?.([...keys], { expanded: info.expanded, node: info.node as TreeNodeData });
+                echo('expandedKeys', keys);
+                expandedKeys = keys;
+                onExpand?.(keys, { expanded: info.expanded, node: info.node as TreeNodeData });
             },
             notifyFocus: (event) => onFocus?.(event),
             notifyBlur: (event) => onBlur?.(event as FoundationEvent | FocusEvent),
@@ -360,7 +362,7 @@
 
     const selectionKeys = $derived(TreeSelectFoundation.getTriggerKeys(foundationProps, view));
     const hasValue = $derived(TreeSelectFoundation.hasValue(foundationProps, view));
-    const clearable = $derived(showClear && (hasValue || (searchPosition === 'trigger' && Boolean(view.inputValue))) && !disabled);
+    const clearable = $derived(TreeSelectFoundation.isClearable(foundationProps, view));
     const activeDescendant = $derived(keyboard.activeKey === undefined ? undefined : nodeId(treeId, keyboard.activeKey));
 
     const comboboxAttrs = $derived({
@@ -532,9 +534,7 @@
     const handleKeyDown = (event: KeyboardEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         rest.onkeydown?.(event);
         if (!isInnerControlKey(event) && !handleTreeKeyDown(event)) {
-            const wasOpen = view.isOpen;
-            foundation.handleSelectionKeyDown(event);
-            if (!wasOpen && view.isOpen && (event.key === 'Home' || event.key === 'End')) {
+            if (foundation.handleSelectionKeyDown(event)) {
                 keyboard.handleKeyDown(event);
             }
         }

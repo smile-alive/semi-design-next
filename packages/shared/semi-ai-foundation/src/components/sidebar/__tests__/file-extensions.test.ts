@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { ImageUploadNode, canUploadImage, confirmLink, getEditorAttributes, getFileEditorExtensions, insertUploadedImage, readFileMenuState, readLinkEditorOpenState } from '../file-extensions';
+import { ImageUploadNode, canUploadImage, confirmLink, getEditorAttributes, getFileEditorExtensions, getFileMenuItems, insertUploadedImage, readFileMenuState, readLinkEditorOpenState, unsetLink } from '../file-extensions';
 
 function createEditor(content = '<p>hello</p>') {
     return new Editor({ extensions: [...getFileEditorExtensions(), ImageUploadNode], content });
@@ -39,6 +39,40 @@ describe('readFileMenuState', () => {
         expect(readFileMenuState(editor)).toMatchObject({ isHeading: true, headingLevel: 3 });
         editor.commands.setTextSelection(10);
         expect(readFileMenuState(editor)).toMatchObject({ isHeading: false, headingLevel: undefined, isParagraph: true });
+        editor.destroy();
+    });
+});
+
+describe('getFileMenuItems', () => {
+    it('图片按钮只在可上传时追加到末尾，且前面有分隔线', () => {
+        expect(getFileMenuItems(false).some((item) => item.type === 'button' && item.key === 'image')).toBe(false);
+        const items = getFileMenuItems(true);
+        expect(items.at(-2)).toEqual({ type: 'divider' });
+        expect(items.at(-1)).toMatchObject({ type: 'button', key: 'image' });
+    });
+
+    it('按钮的命令都能在编辑器上执行，激活键与禁用键都在菜单状态里', () => {
+        const editor = createEditor();
+        const state = readFileMenuState(editor);
+        for (const item of getFileMenuItems(true)) {
+            if (item.type !== 'button') {
+                continue;
+            }
+            expect(() => item.command(editor.chain().focus()).run()).not.toThrow();
+            for (const flag of [item.activeKey, item.enabledKey]) {
+                expect(flag === undefined || typeof state[flag] === 'boolean').toBe(true);
+            }
+        }
+        editor.destroy();
+    });
+});
+
+describe('unsetLink', () => {
+    it('移除选区的链接并清掉选区高亮', () => {
+        const editor = createEditor('<p><a href="https://example.com">hello</a></p>');
+        editor.commands.setTextSelection({ from: 1, to: 6 });
+        unsetLink(editor);
+        expect(editor.getHTML()).not.toContain('<a ');
         editor.destroy();
     });
 });

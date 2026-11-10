@@ -1,7 +1,7 @@
 import { type JSX, createMemo, createRenderEffect, createSignal, onCleanup, onMount } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
+import { coversPage, defaultPopupContainer, resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/components/portal/portal.scss';
 import { PopupLayerContext } from '../base/popup-layer';
 import useConfig from '../components/config-provider/use-config';
@@ -10,8 +10,6 @@ import { useTooltipPopups } from '../components/tooltip/context';
 export interface PopupPortalProps {
     getPopupContainer?: () => HTMLElement;
     zIndex?: number;
-    /** The container covers the whole page; otherwise the wrapper is positioned in the flow of the container */
-    inBody: boolean;
     children: JSX.Element;
 }
 
@@ -26,9 +24,7 @@ export default function PopupPortal(props: PopupPortalProps) {
     const [element, setElement] = createSignal<HTMLDivElement>();
 
     const layer = Symbol('semi-popup-layer');
-
-    // Outside the fullscreen element nothing is shown or clickable, so an overlay opened during fullscreen goes into it
-    const defaultContainer = (document.fullscreenElement as HTMLElement | null) ?? document.body;
+    const defaultContainer = defaultPopupContainer();
 
     // Memoized by element: Portal rebuilds its wrapper whenever `mount` notifies, which a consumer spreading a props
     // signal or any ConfigProvider change would do, moving the open overlay and dropping the focus inside it
@@ -41,7 +37,9 @@ export default function PopupPortal(props: PopupPortalProps) {
         }
         wrapper.className = `${BASE_CLASS_PREFIX}-portal`;
         wrapper.style.zIndex = props.zIndex === undefined ? '' : String(props.zIndex);
-        wrapper.style.position = props.inBody ? '' : 'static';
+        // a container that leaves the page usable keeps the overlay in its flow
+        const container = mount();
+        wrapper.style.position = coversPage(() => container) ? '' : 'static';
         const direction = config().direction;
         if (direction) {
             wrapper.setAttribute('dir', direction);

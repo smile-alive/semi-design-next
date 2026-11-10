@@ -3,7 +3,8 @@ import { Button, Toast } from '@fibrae/semi-ui-solid';
 
 const ReachableContext = createContext<string>();
 
-export default function ToastDemo() {
+// The holder must be created under the Provider: its toasts read the context around it
+function HookDemo() {
     const [toast, contextHolder] = Toast.useToast();
     const config = {
         duration: 0,
@@ -12,7 +13,7 @@ export default function ToastDemo() {
     };
 
     return (
-        <ReachableContext.Provider value="Light">
+        <>
             <div>
                 <Button
                     onClick={() => {
@@ -23,6 +24,14 @@ export default function ToastDemo() {
                 </Button>
             </div>
             {contextHolder}
+        </>
+    );
+}
+
+export default function ToastDemo() {
+    return (
+        <ReachableContext.Provider value="Light">
+            <HookDemo />
         </ReachableContext.Provider>
     );
 }

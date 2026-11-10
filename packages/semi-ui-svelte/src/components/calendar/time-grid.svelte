@@ -44,9 +44,6 @@
     const dayEvents = (day: DateObj) => CalendarFoundation.getParseDailyEvents(parsedEvents.day?.get(day.date.toString()) ?? [], day.date).day;
 
     const weekendCls = (day: DateObj) => ({ [`${cssClasses.PREFIX}-weekend`]: markWeekend && day.isWeekend });
-
-    // a new day, a new showCurrTime or a day that becomes today gets a new column, which decides again whether to show the line
-    const columnKey = (day: DateObj) => `${day.date.toString()}|${showCurrTime}|${day.isToday}`;
 </script>
 
 <!-- aria-labelledby, role and tabindex come before the rest so the caller can replace them -->
@@ -110,8 +107,8 @@
     <div class={`${prefixCls}-scroll-wrapper`} role="rowgroup">
         <div {@attach grid.observe} bind:this={scroll} class={`${prefixCls}-scroll`} role="row">
             <TimeCol class={`${prefixCls}-sticky-left`} {timeDisplay} />
-            {#each rangeData.week as day (columnKey(day))}
-                <DayCol {dateGrid} displayValue={day.date} {event} events={dayEvents(day)} isWeekend={markWeekend && day.isWeekend} {minEventHeight} onSlotClick={(mouseEvent, value) => onClick?.(mouseEvent, value)} scrollHeight={grid.scrollHeight()} {showCurrTime} />
+            {#each rangeData.week as day (day.date.toString())}
+                <DayCol {dateGrid} displayValue={day.date} {event} events={dayEvents(day)} isWeekend={markWeekend && day.isWeekend} {minEventHeight} onSlotClick={(mouseEvent, value) => onClick?.(mouseEvent, value)} scrollHeight={grid.scrollHeight()} {showCurrTime} {today} />
             {/each}
         </div>
     </div>

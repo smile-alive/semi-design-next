@@ -15,9 +15,10 @@ import DatePickerFoundation, {
     type PresetType,
     type Type,
     type RangeInput,
-    type TriggerRenderProps,
+    type InputSize,
+    type ValueType,
 } from '@fibrae/semi-foundation/components/date-picker/foundation';
-import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
+import { isInnerControlKey, namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
 import type { ElementProps } from '../../base/base';
@@ -25,7 +26,6 @@ import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../hooks/use-click-outside';
 import Trigger from '../../internal/trigger';
-import { namedRole } from '../../utils/named-role';
 import { useConfigContext } from '../config-provider/context';
 import type { InputHandle } from '../input';
 import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
@@ -36,6 +36,18 @@ import Footer from './footer';
 import MonthsGrid, { type MonthsGridHandle, type DatePickerTimePickerOpts } from './months-grid';
 import QuickControl from './quick-control';
 import YearAndMonth, { type YearAndMonthOpts } from './year-and-month';
+
+export type TriggerRenderProps = {
+    [x: string]: any;
+    value?: ValueType;
+    inputValue?: string | null;
+    placeholder?: string | string[];
+    autoFocus?: boolean;
+    size?: InputSize;
+    disabled?: boolean;
+    inputReadOnly?: boolean;
+    componentProps?: DatePickerFoundationProps;
+};
 
 export interface DatePickerProps extends Omit<DatePickerFoundationProps, 'dateFnsLocale'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus'> {
     clearIcon?: React.ReactNode;
@@ -102,8 +114,6 @@ const defaultProps = {
     defaultOpen: false,
     hideDisabledOptions: false,
     weekStartsOn: numbers.WEEK_START_ON,
-    disabledDate: () => false,
-    disabledTime: () => ({}),
     inputReadOnly: false,
     autoSwitchDate: true,
     syncSwitchMonth: false,

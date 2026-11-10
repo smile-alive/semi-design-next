@@ -4,6 +4,12 @@ import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBase
 const items = ['a', 'b', 'c', 'd'].map((key) => ({ key }));
 const visible = (...keys: string[]) => new Map(items.map(({ key }) => [key, keys.includes(key)]));
 const keysOf = (list: Array<Record<string, any>>) => list.map(({ key }) => key);
+/** The view each updateView call leaves, applied in order to `view` */
+const viewsOf = (updateView: { mock: { calls: Array<Parameters<OverflowListAdapter['updateView']>> } }, view = OverflowListFoundation.createView({ items })) =>
+    updateView.mock.calls.map(([update]) => {
+        view = update(view);
+        return view;
+    });
 
 describe('OverflowListFoundation.getOverflowItem', () => {
     const cache: [Array<Record<string, any>>, Array<Record<string, any>>] = [[{ key: 'cached' }], []];
@@ -30,6 +36,9 @@ describe('OverflowListFoundation.resetView', () => {
         maxCount: 0,
         overflowStatus: 'normal',
         scrollOverflow: [[items[0]], [items[3]]],
+        first: 0,
+        step: 1,
+        fromStart: false,
     };
 
     it('scroll 模式按 key 对齐缓存，已删除的项不再出现在溢出中', () => {
@@ -60,6 +69,53 @@ describe('OverflowListFoundation.resetView', () => {
     });
 });
 
+describe('OverflowListFoundation.syncView', () => {
+    const props: OverflowListBaseProps = { items, renderMode: 'collapse' };
+
+    it('items、style、key 与 collapseFrom 都没变时返回原 view', () => {
+        const view = OverflowListFoundation.createView(props);
+        expect(OverflowListFoundation.syncView({ ...props, items: items.map((item) => ({ ...item })) }, view, 0)).toBe(view);
+    });
+
+    it.each<[string, OverflowListBaseProps]>([
+        ['items', { ...props, items: items.slice(1) }],
+        ['style', { ...props, style: { color: 'red' } }],
+        ['itemKey', { ...props, itemKey: () => 'same' }],
+        ['collapseFrom', { ...props, collapseFrom: 'start' }],
+    ])('%s 变化时重置为测量中的 view', (_, next) => {
+        const view = { ...OverflowListFoundation.createView(props), overflowStatus: 'normal' as const };
+        expect(OverflowListFoundation.syncView(next, view, 0).overflowStatus).toBe('calculating');
+    });
+});
+
+describe('OverflowListFoundation.getVisibleItems', () => {
+    const entries = (view: OverflowListView) => OverflowListFoundation.getVisibleItems(view, 'key').map(({ key, index }) => [key, index]);
+
+    it('测量中的 start 折叠列表是倒序，settle 后是后缀，下标指回 items', () => {
+        const measuring = OverflowListFoundation.resetView({ items, renderMode: 'collapse', collapseFrom: 'start' }, OverflowListFoundation.createView({ items }), 0);
+        expect(entries(measuring)).toEqual([
+            ['d', 3],
+            ['c', 2],
+            ['b', 1],
+            ['a', 0],
+        ]);
+        const { foundation, adapter } = createCollapse(['a', 'b', 'c', 'd'], 'start', 160);
+        ['a', 'b', 'c', 'd'].forEach((key) => foundation.handleItemResize(key, 50, 0));
+        foundation.handleCollapseOverflow();
+        expect(entries(viewsOf(adapter.updateView, measuring).at(-1))).toEqual([
+            ['c', 2],
+            ['d', 3],
+        ]);
+    });
+
+    it('从末尾折叠时是前缀', () => {
+        expect(entries(OverflowListFoundation.resetView({ items, renderMode: 'collapse' }, OverflowListFoundation.createView({ items }), 8))).toEqual([
+            ['a', 0],
+            ['b', 1],
+        ]);
+    });
+});
+
 describe('OverflowListFoundation.handleIntersect', () => {
     const create = (props: OverflowListBaseProps) => {
         const adapter = {
@@ -83,7 +139,7 @@ describe('OverflowListFoundation.handleIntersect', () => {
     it('scroll 模式下可见性变化时更新溢出缓存', () => {
         const { foundation, adapter, entry } = create({ items, renderMode: 'scroll' });
         foundation.handleIntersect([entry('a', false), entry('b', true), entry('c', true), entry('d', false)]);
-        const { scrollOverflow } = adapter.updateView.mock.calls[0][0];
+        const [{ scrollOverflow }] = viewsOf(adapter.updateView);
         expect([keysOf(scrollOverflow[0]), keysOf(scrollOverflow[1])]).toEqual([['a'], ['d']]);
     });
 
@@ -100,67 +156,81 @@ describe('OverflowListFoundation.handleIntersect', () => {
     });
 });
 
-function createCollapse(keys: string[]) {
+function createCollapse(keys: string[], collapseFrom: 'start' | 'end' = 'end', containerWidth = 310) {
+    const props = { items: keys.map((key) => ({ key })), minVisibleItems: 0, collapseFrom };
     const adapter = {
-        getProps: () => ({ items: keys.map((key) => ({ key })), minVisibleItems: 0 }),
-        getStates: () => ({ overflowWidth: 30, containerWidth: 310 }),
+        getProp: (key: keyof typeof props) => props[key],
+        getProps: () => props,
+        getStates: () => ({ overflowWidth: 30, containerWidth }),
         setState: vi.fn<OverflowListAdapter['setState']>(),
         updateView: vi.fn<OverflowListAdapter['updateView']>(),
         notifyOverflow: vi.fn<OverflowListAdapter['notifyOverflow']>(),
     };
-    return { adapter, foundation: new OverflowListFoundation(adapter as unknown as OverflowListAdapter) };
+    return { props, adapter, foundation: new OverflowListFoundation(adapter as unknown as OverflowListAdapter) };
 }
+
+const calculating = { overflowStatus: 'calculating' } as OverflowListView;
 
 describe('OverflowListFoundation.handleCollapseOverflow', () => {
     it('全部放得下时不计入未渲染的溢出节点的旧宽度', () => {
         const keys = ['a', 'b', 'c', 'd', 'e', 'f'];
         const { adapter, foundation } = createCollapse(keys);
-        keys.forEach((key) => foundation.recordItemSize(key, 50, 0));
+        keys.forEach((key) => foundation.handleItemResize(key, 50, 0));
         foundation.handleCollapseOverflow();
-        const view = adapter.updateView.mock.calls[0][0];
+        const [view] = viewsOf(adapter.updateView);
         expect(view.visible).toHaveLength(6);
         expect(view.overflow).toEqual([]);
     });
 
     it('有项尚未上报宽度时不结算', () => {
         const { adapter, foundation } = createCollapse(['a', 'b']);
-        foundation.recordItemSize('a', 50, 0);
+        foundation.handleItemResize('a', 50, 0);
         foundation.handleCollapseOverflow();
         expect(adapter.updateView).not.toHaveBeenCalled();
     });
 });
 
-describe('OverflowListFoundation.recordItemSize / handleKeysChange', () => {
-    it('宽度变化或上报项数达到 maxCount 时要求重新测量，首次上报与同宽重报不要求', () => {
-        const { foundation } = createCollapse(['a', 'b']);
-        expect(foundation.recordItemSize('a', 50, 3)).toBe(false);
-        expect(foundation.recordItemSize('a', 50, 3)).toBe(false);
-        expect(foundation.recordItemSize('a', 60, 3)).toBe(true);
-        expect(foundation.recordItemSize('b', 20, 2)).toBe(true);
+describe('OverflowListFoundation.handleItemResize / handleCommit', () => {
+    it('宽度变化或上报项数达到 maxCount 时转为测量中，首次上报与同宽重报不转', () => {
+        const { adapter, foundation } = createCollapse(['a', 'b']);
+        foundation.handleItemResize('a', 50, 3);
+        foundation.handleItemResize('a', 50, 3);
+        expect(adapter.updateView).not.toHaveBeenCalled();
+        foundation.handleItemResize('a', 60, 3);
+        foundation.handleItemResize('b', 20, 2);
+        const normal = { ...OverflowListFoundation.createView({ items }), overflowStatus: 'normal' as const };
+        expect(viewsOf(adapter.updateView, normal).map(({ overflowStatus }) => overflowStatus)).toEqual(['calculating', 'calculating']);
+    });
+
+    it('容器与溢出节点的宽度变化时转为测量中', () => {
+        const { adapter, foundation } = createCollapse(['a']);
+        foundation.handleContainerResize(100);
+        foundation.handleOverflowResize(20);
+        expect(adapter.setState.mock.calls.map(([state]) => state)).toEqual([{ containerWidth: 100 }, { overflowWidth: 20 }]);
+        expect(adapter.updateView).toHaveBeenCalledTimes(2);
+    });
+
+    it('测量中的 view 提交后结算，其余状态不结算', () => {
+        const { adapter, foundation } = createCollapse(['a']);
+        foundation.handleItemResize('a', 50, 0);
+        foundation.handleCommit({ overflowStatus: 'normal' } as OverflowListView);
+        expect(adapter.updateView).not.toHaveBeenCalled();
+        foundation.handleCommit(calculating);
+        expect(viewsOf(adapter.updateView)[0].overflowStatus).toBe('normal');
     });
 
     it('key 变化后丢掉已移除 key 的宽度并清空可见性', () => {
-        const { adapter, foundation } = createCollapse(['a']);
-        foundation.recordItemSize('a', 50, 0);
-        foundation.recordItemSize('b', 50, 0);
-        foundation.handleKeysChange(['a']);
+        const { props, adapter, foundation } = createCollapse(['a', 'b']);
+        foundation.handleCommit(calculating);
+        foundation.handleItemResize('a', 50, 0);
+        foundation.handleItemResize('b', 50, 0);
+        props.items = [{ key: 'a' }];
+        foundation.handleCommit(calculating);
         expect(adapter.setState).toHaveBeenCalledWith({ visibleState: new Map() }, undefined);
-        foundation.handleCollapseOverflow();
-        expect(adapter.updateView.mock.calls[0][0].visible).toHaveLength(1);
+        expect(viewsOf(adapter.updateView)[0].visible).toHaveLength(1);
+        adapter.updateView.mockClear();
         // b was dropped: reporting it again is a first report, not a size change
-        expect(foundation.recordItemSize('b', 50, 0)).toBe(false);
-    });
-});
-
-describe('OverflowListFoundation.getVisibleLayout', () => {
-    const layoutItems = ['a', 'b', 'c', 'd'].map((key) => ({ key }));
-
-    it('测量中的 start 折叠列表是倒序，其余为前缀', () => {
-        expect(OverflowListFoundation.getVisibleLayout({ items: layoutItems, visible: layoutItems }, true, true)).toEqual({ first: 3, step: -1, fromStart: true });
-        expect(OverflowListFoundation.getVisibleLayout({ items: layoutItems, visible: layoutItems.slice(0, 2) }, false, false)).toEqual({ first: 0, step: 1, fromStart: false });
-    });
-
-    it('settle 后的 start 折叠列表是后缀', () => {
-        expect(OverflowListFoundation.getVisibleLayout({ items: layoutItems, visible: layoutItems.slice(2) }, true, false)).toEqual({ first: 2, step: 1, fromStart: true });
+        foundation.handleItemResize('b', 50, 0);
+        expect(adapter.updateView).not.toHaveBeenCalled();
     });
 });

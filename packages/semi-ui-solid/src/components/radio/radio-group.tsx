@@ -102,6 +102,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         (view) => RadioGroupFoundation.getInitialState(view),
         (base) => ({
             notifyChange: (event) => base.getProps().onChange?.(event),
+            notifyBlur: (event) => callHandler(local.onBlur, event),
         })
     );
 
@@ -118,7 +119,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
     const view = createMemo(() => ({
         mode: local.mode,
         radioGroup: {
-            value: local.value === undefined ? state().value : local.value,
+            value: RadioGroupFoundation.deriveValue(local, state()),
             disabled: local.disabled,
             name: local.name || generatedName,
             isButtonRadio: isButtonRadio(),
@@ -139,12 +140,9 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         sync: () => syncs.forEach((sync) => sync()),
     };
 
-    // Form's blur validation waits until focus leaves the group
     const handleFocusOut = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusOut, event);
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            callHandler(local.onBlur, event);
-        }
+        foundation.handleBlur(event);
     };
 
     return (

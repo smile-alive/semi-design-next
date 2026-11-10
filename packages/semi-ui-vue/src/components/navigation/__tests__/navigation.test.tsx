@@ -1111,8 +1111,9 @@ describe('Navigation 的属性落点与渲染时机', () => {
         expect(warn).not.toHaveBeenCalled();
     });
 
-    it('未声明的项配置字段不落到 DOM，但 data-* 与 aria-* 会透传', () => {
+    it('未声明的项配置字段不落到 DOM，但 data-* 与 aria-* 会透传，onSelect 上报整个配置', async () => {
         const warn = vi.spyOn(console, 'warn');
+        const onSelect = onSelectSpy();
         // a variable rather than a literal: undeclared config fields are the input under test
         const items = [
             { itemKey: 'home', text: '首页', path: '/home', someCamelKey: 1, 'data-x': 'a', 'aria-describedby': 'tip' },
@@ -1125,15 +1126,18 @@ describe('Navigation 的属性落点与渲染时机', () => {
                 items: [{ itemKey: 'list', text: '用户列表', path: '/list', someCamelKey: 3 }],
             },
         ];
-        renderNav({ defaultOpenKeys: ['user'], items });
+        renderNav({ defaultOpenKeys: ['user'], items, onSelect });
         for (const el of document.querySelectorAll(`.${prefixCls}-item`)) {
             expect(el).not.toHaveAttribute('path');
             expect(el).not.toHaveAttribute('somecamelkey');
+            expect(el).not.toHaveAttribute('itemconfig');
         }
         expect(getItem('首页')).toHaveAttribute('data-x', 'a');
         expect(getItem('首页')).not.toHaveAttribute('aria-describedby');
         expect(getItemControl('首页')).toHaveAttribute('aria-describedby', 'tip');
         expect(document.querySelector(`.${prefixCls}-item-sub`)).toHaveAttribute('data-sub', 'b');
+        await userEvent.click(getItemControl('用户列表'));
+        expect(onSelect.mock.calls[0][0].selectedItems).toEqual([{ itemKey: 'list', text: '用户列表', path: '/list', someCamelKey: 3, level: 1 }]);
         expect(warn).not.toHaveBeenCalled();
     });
 
@@ -1499,12 +1503,12 @@ describe('Navigation 的 Vue 用法', () => {
         expect(onFooterClick).toHaveBeenCalledTimes(1);
     });
 
-    it('select 的 selectedItems 不含未设置的字段与内部字段', async () => {
+    it('select 的 selectedItems 含传入的 props 与 attrs，不含未设置的字段与内部字段', async () => {
         const onSelect = onSelectSpy();
-        renderNav({ onSelect }, () => <NavItem itemKey="home" text="首页" />);
+        renderNav({ onSelect }, () => <NavItem itemKey="home" text="首页" data-id="x" />);
         await userEvent.click(getItemControl('首页'));
         const [item] = onSelect.mock.calls[0][0].selectedItems;
-        expect(item).toEqual({ itemKey: 'home', text: '首页' });
+        expect(item).toEqual({ itemKey: 'home', text: '首页', 'data-id': 'x' });
     });
 
     it('#wrapper 的 props 只含传入的字段', () => {

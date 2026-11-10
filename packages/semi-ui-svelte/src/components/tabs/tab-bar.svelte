@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { onMount, untrack, type Snippet } from 'svelte';
+    import type { Snippet } from 'svelte';
     import { cssClasses, getBarItemKey, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';
     import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
+    import TabBarFoundation, { type TabBarAdapter, type TabBarBaseProps, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
-    import watch from '../../hooks/watch.svelte.js';
+    import useFoundation from '../../base/use-foundation.svelte.js';
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { OverflowList } from '../overflow-list/index.js';
@@ -30,19 +31,32 @@
     const locale = useLocale('Tabs');
 
     let bar = $state<HTMLDivElement>();
-    let shouldCollapse = $state(false);
 
-    // Bar width at which the tabs overflowed. The collapsed layout can fit every tab at that width, but the uncollapsed one
-    // cannot, so leaving the collapse at or below this width would flip-flop between the two.
-    let collapsedWidth = 0;
-    let isFirstShowInViewport = true;
-    const arrowClicks = new WeakMap<OverflowItem[], number>();
+    const { foundation, states } = useFoundation<TabBarFoundation, TabBarAdapter, TabBarBaseProps, TabBarState>(
+        TabBarFoundation,
+        {
+            get activeKey() {
+                return activeKey;
+            },
+            get list() {
+                return list;
+            },
+            get collapsible() {
+                return collapsible;
+            },
+            get tabPosition() {
+                return tabPosition;
+            },
+        },
+        TabBarFoundation.getInitialState,
+        () => ({
+            getBarElement: () => bar,
+            notifyVisibleTabsChange: (visibleState) => onVisibleTabsChange?.(visibleState),
+        })
+    );
 
     const prefix = cssClasses.TABS_BAR;
-    const collapsed = $derived(collapsible === 'auto' ? shouldCollapse : collapsible);
-
-    // a derived string, so the watcher below only runs when a label really changes, not each time the list is rebuilt
-    const labelsSignature = $derived(list.map((entry) => `${entry.itemKey}:${entry.tab}`).join('\n'));
+    const collapsed = $derived(TabBarFoundation.isCollapsed(collapsible, states().shouldCollapse));
     const overflowItems = $derived(list.map((item): OverflowItem => ({ key: getBarItemKey(item.itemKey), active: item.itemKey === activeKey, ...item })));
 
     const layout = $derived.by(() => {
@@ -68,73 +82,14 @@
         deleteTab: ctx.deleteTab,
     });
 
-    // Only turns collapse on; once collapsed, the OverflowList visible-state event decides when to leave it.
-    const checkOverflow = () => {
-        if (collapsible !== 'auto' || shouldCollapse || !bar) {
-            return;
-        }
-        if (TabsFoundation.isTabsOverflowing(bar, tabPosition)) {
-            collapsedWidth = bar.clientWidth;
-            shouldCollapse = true;
-        }
-    };
-
-    const scrollActiveTabItemIntoView = (logicalPosition?: ScrollLogicalPosition, behavior?: ScrollBehavior) => {
-        TabsFoundation.scrollTabIntoView(bar, getBarItemKey(`${activeKey}`), logicalPosition, behavior);
-    };
-
     const onTabClick = (itemKey: string, event: MouseEvent) => {
         ctx.tabClick(itemKey, event);
     };
 
-    // Counts the clicks per items array, so repeated clicks before the next visibility update reach the following hidden tab
-    const handleArrowClick = (items: OverflowItem[], position: 'start' | 'end') => {
-        const taken = arrowClicks.get(items) ?? 0;
-        arrowClicks.set(items, taken + 1);
-        const next = position === 'start' ? items[items.length - 1 - taken] : items[taken];
-        if (next) {
-            TabsFoundation.scrollTabIntoView(bar, getBarItemKey(next.itemKey));
-        }
-    };
-
-    const onVisibleStateChange = (visibleMap: Map<string, boolean>) => {
-        const { visibleState, isShowInViewport, hasHidden } = TabsFoundation.readVisibleState(visibleMap);
-        // first show only: https://github.com/DouyinFE/semi-design/issues/2917
-        if (isFirstShowInViewport && isShowInViewport) {
-            scrollActiveTabItemIntoView('nearest', 'auto');
-            isFirstShowInViewport = false;
-        }
-        if (collapsible === 'auto' && isShowInViewport) {
-            shouldCollapse = hasHidden || (bar !== undefined && bar.clientWidth <= collapsedWidth);
-        }
-        onVisibleTabsChange?.(visibleState);
-    };
-
-    watch(
-        () => labelsSignature,
-        () => {
-            collapsedWidth = 0;
-        }
-    );
-
-    watch(
-        () => activeKey,
-        () => {
-            if (collapsed) {
-                scrollActiveTabItemIntoView();
-            }
-        }
-    );
-
     // The bar re-measures after what changes its tabs; a changed tab label made by a snippet is caught by the ResizeObserver
     $effect(() => {
         void [list, collapsible, tabPosition, size, type, more];
-        untrack(checkOverflow);
-    });
-
-    onMount(() => {
-        const frame = requestAnimationFrame(checkOverflow);
-        return () => cancelAnimationFrame(frame);
+        foundation.checkOverflow();
     });
 </script>
 
@@ -185,17 +140,17 @@
 
 {#snippet arrowOf(items: OverflowItem[], position: 'start' | 'end')}
     {#snippet defaultArrow()}
-        <TabBarArrow dropdownProps={dropdownProps?.[position]} {icon} {items} {list} onArrowClick={() => handleArrowClick(items, position)} {onTabClick} {position} {showRestInDropdown} {tab} />
+        <TabBarArrow dropdownProps={dropdownProps?.[position]} {icon} {items} {list} onArrowClick={() => foundation.handleArrowClick(items, position)} {onTabClick} {position} {showRestInDropdown} {tab} />
     {/snippet}
     {#if arrow}
-        {@render arrow({ items, position, onClick: () => handleArrowClick(items, position), defaultNode: defaultArrow })}
+        {@render arrow({ items, position, onClick: () => foundation.handleArrowClick(items, position), defaultNode: defaultArrow })}
     {:else}
         {@render defaultArrow()}
     {/if}
 {/snippet}
 
 <div
-    {@attach collapsible === 'auto' ? observeResize(checkOverflow) : undefined}
+    {@attach collapsible === 'auto' ? observeResize(foundation.checkOverflow) : undefined}
     bind:this={bar}
     class={[
         prefix,
@@ -212,7 +167,7 @@
     {style}
 >
     {#if collapsed}
-        <OverflowList class="{prefix}-overflow-list" itemKey="key" items={overflowItems} {onVisibleStateChange} overflowRenderDirection={arrowPosition} renderMode="scroll" wrapperProps={tablistProps} wrapperStyle={visibleTabsStyle}>
+        <OverflowList class="{prefix}-overflow-list" itemKey="key" items={overflowItems} onVisibleStateChange={foundation.handleVisibleStateChange} overflowRenderDirection={arrowPosition} renderMode="scroll" wrapperProps={tablistProps} wrapperStyle={visibleTabsStyle}>
             {#snippet item({ item: overflowItem, index })}
                 {@render tabItem(list[index] ?? overflowItem, index)}
             {/snippet}

@@ -8,7 +8,6 @@
     import { getPopupLayerContext } from '../../base/popup-layer.js';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
     import { splitControlAttrs } from '../../utils/control-attrs.js';
     import { getAvatarGroupMoreContext, setAvatarGroupMoreContext } from './context.js';
     import type { AvatarProps } from './interface.js';
@@ -56,6 +55,9 @@
     let isText = $state(untrack(() => children !== undefined));
     let text = $state<string>();
 
+    const more = outerMore?.layer === layer ? outerMore : undefined;
+    const size = $derived(ownSize ?? more?.size ?? defaults('size', 'medium'));
+
     const { foundation, states } = useFoundation<Foundation, Adapter, AvatarProps, AvatarState>(
         AvatarFoundation,
         {
@@ -64,6 +66,9 @@
             },
             get src() {
                 return src;
+            },
+            get size() {
+                return size;
             },
         },
         () => AvatarFoundation.getInitialState(),
@@ -77,8 +82,6 @@
     );
 
     const prefix = cssClasses.PREFIX;
-    const more = outerMore?.layer === layer ? outerMore : undefined;
-    const size = $derived(ownSize ?? more?.size ?? defaults('size', 'medium'));
     const shape = $derived(ownShape ?? more?.shape ?? defaults('shape', 'circle'));
     const clickable = $derived(rest.onclick !== undefined);
     const isImg = $derived(Boolean(src) && states().isImgExist);
@@ -156,9 +159,6 @@
             avatarEl = undefined;
         };
     };
-
-    // size is resolved from the group context, so it is not a prop of the foundation
-    watch(() => size, foundation.changeScale);
 </script>
 
 {#snippet body(outer: boolean)}

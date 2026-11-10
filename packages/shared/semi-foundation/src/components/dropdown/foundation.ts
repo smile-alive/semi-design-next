@@ -1,7 +1,8 @@
 import FocusTrapHandle from '../../base/focus-handle';
 import BaseFoundation from '../../base/foundation';
-import { getPopupTrigger, handlePrevent, isTextEditor, setFocusToFirstItem, setFocusToLastItem } from '../../utils/a11y';
-import { strings } from './constants';
+import { handlePrevent, isTextEditor, setFocusToFirstItem, setFocusToLastItem } from '../../utils/a11y';
+import { getPopupTrigger } from '../../utils/layer';
+import { numbers, strings } from './constants';
 import type { DropdownContextAdapter } from './menu-foundation';
 
 /** The context is the one around the Dropdown: a Dropdown inside a menu reads that menu's DropdownMenuContext */
@@ -90,9 +91,25 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
         return { popVisible: false };
     }
 
+    /** The `menuDepth` this Dropdown provides to its popup, from the one around it */
+    static getChildMenuDepth(menuDepth = 0) {
+        return menuDepth + 1;
+    }
+
+    /** A submenu (inside a menu) sits closer to its parent item than a top-level menu to its trigger */
+    static getSpacing(spacing: number | { x: number; y: number } | undefined, menuDepth = 0) {
+        return spacing ?? (menuDepth > 0 ? numbers.NESTED_SPACING : numbers.SPACING);
+    }
+
     /** Closes the menu without moving focus */
     close = () => {
         this.adapter.hidePopup();
+    };
+
+    /** Closes the menu and the menus of every enclosing Dropdown, without moving focus */
+    closeAll = () => {
+        this.close();
+        this.adapter.getContext('closeAll')?.();
     };
 
     /** Tooltip's onVisibleChange: an actual change when uncontrolled, only a request to the owner when controlled */
@@ -185,8 +202,7 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
             case 'Tab':
                 // APG: Tab closes the menu and moves focus as it normally would
                 if (popVisible) {
-                    this.close();
-                    this.adapter.getContext('closeAll')?.();
+                    this.closeAll();
                 }
                 break;
             default:

@@ -46,6 +46,8 @@ export type MonthData = Record<number, DateObj[]>;
 export interface CalendarBaseProps {
     displayValue?: Date;
     showCurrTime?: boolean;
+    /** The view's today as local midnight, `null` before mount */
+    today?: number | null;
 }
 
 export interface CalendarBaseState {
@@ -56,7 +58,10 @@ export interface CalendarBaseState {
 export type CalendarAdapter<P extends CalendarBaseProps = CalendarBaseProps> = DefaultAdapter<P, CalendarBaseState>;
 
 export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBaseProps> extends BaseFoundation<CalendarAdapter<P>, P, CalendarBaseState> {
-    #currTimeTimer: ReturnType<typeof setInterval>;
+    #currTimeTimer: ReturnType<typeof setInterval> | undefined;
+    // `today` is only a trigger: a week column turns into today with its own date and showCurrTime unchanged
+    static override readonly propKeys = ['displayValue', 'showCurrTime', 'today'];
+    static override readonly propEquals = { displayValue: isSameDay };
 
     static #parseEvents(events: EventObject[]) {
         const parsed: ParsedEventsWithArray = {
@@ -96,19 +101,25 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
         (map[index] ??= []).push(item);
     }
 
-    #startCurrentTimeTicker() {
-        const update = () => {
-            if (!isSameDay(this.getProp('displayValue'), getCurrDate())) {
-                // getPos reads only the time of day: the line would restart at 00:00 on a past column
-                clearInterval(this.#currTimeTimer);
-                this.setState({ showCurrTime: false });
-                return;
-            }
-            this.setState({ currPos: round(getPos(getCurrDate())) });
-        };
-        update();
+    /** Shows the line only on today's column, where a timer moves it; the timer's own check hides it past midnight */
+    #syncCurrentTime() {
+        const { showCurrTime, displayValue } = this.getProps();
+        const now = getCurrDate();
+        // getPos reads only the time of day: the line would restart at 00:00 on a past column
+        if (showCurrTime && isSameDay(displayValue, now)) {
+            this.setState({ showCurrTime: true, currPos: round(getPos(now)) });
+            this.#currTimeTimer ??= setInterval(() => this.#syncCurrentTime(), 30_000);
+            return;
+        }
+        this.#stopCurrentTime();
+        if (this.getState('showCurrTime')) {
+            this.setState({ showCurrTime: false });
+        }
+    }
+
+    #stopCurrentTime() {
         clearInterval(this.#currTimeTimer);
-        this.#currTimeTimer = setInterval(update, 30000);
+        this.#currTimeTimer = undefined;
     }
 
     static getInitialState(): CalendarBaseState {
@@ -263,16 +274,15 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
         return openCardKey !== undefined && !Object.values(monthlyData).some((weekDays, weekInd) => weekDays.some(({ date, ind }) => date.toString() === openCardKey && CalendarFoundation.countHidden(parsedEvents[weekInd]?.day?.[ind], itemLimit) > 0));
     }
 
-    // decided once per mount; the views remount a column when its date changes
     override init() {
-        const { showCurrTime, displayValue } = this.getProps();
-        if (showCurrTime && isSameDay(displayValue, getCurrDate())) {
-            this.setState({ showCurrTime: true });
-            this.#startCurrentTimeTicker();
-        }
+        this.#syncCurrentTime();
     }
 
     override destroy() {
-        clearInterval(this.#currTimeTimer);
+        this.#stopCurrentTime();
+    }
+
+    override handlePropsChange(_prev: Partial<P>) {
+        this.#syncCurrentTime();
     }
 }

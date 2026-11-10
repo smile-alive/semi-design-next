@@ -65,9 +65,9 @@ export default function AudioSlider({ value = 0, onChange, max = 100, vertical =
             onLostPointerCapture={foundation.handleLostPointerCapture}
             // keeps the press from moving focus from the input to this div
             onMouseDown={(e) => e.preventDefault()}
-            onMouseEnter={(e) => foundation.handlePointerPosition(e, { seek: false })}
+            onMouseEnter={foundation.handlePointerEnter}
             onPointerDown={foundation.handlePointerDown}
-            onPointerMove={(e) => foundation.handlePointerPosition(e, { seek: true })}
+            onPointerMove={foundation.handlePointerMove}
         >
             <input
                 ref={inputRef}
@@ -118,15 +118,7 @@ export default function AudioSlider({ value = 0, onChange, max = 100, vertical =
     );
 
     return showTooltip ? (
-        <Tooltip
-            // the popup is anchored to the slider's center, so only a translate moves it to the pointer
-            style={{
-                translate: movingInfo ? (vertical ? `0 ${-movingInfo.offset}px` : `${movingInfo.offset}px 0`) : undefined,
-            }}
-            autoAdjustOverflow
-            content={formatTime(movingInfo ? movingInfo.value : value)}
-            position={vertical ? 'right' : 'top'}
-        >
+        <Tooltip style={{ translate: movingInfo ? SeekFoundation.getPreviewTranslate(movingInfo.offset, vertical) : undefined }} autoAdjustOverflow content={formatTime(movingInfo ? movingInfo.value : value)} position={vertical ? 'right' : 'top'}>
             {sliderContent}
         </Tooltip>
     ) : (

@@ -1,9 +1,8 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { omitBy } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+    import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
     import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
-    import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
     import MarkdownRender from '@fibrae/semi-ui-vue/markdown-render/index';
     import { useChatContext } from '../context';
     import type { ChatMessage } from '../interface';
@@ -16,22 +15,16 @@
     const { view } = useChatContext();
 
     const { PREFIX_CHAT_BOX } = cssClasses;
-    const { MESSAGE_STATUS, ROLE } = strings;
+    const { MESSAGE_STATUS } = strings;
 
     // one object: markdownRenderProps may replace format but never the components
     const markdownProps = computed(() => ({
         format: 'md' as const,
         ...view.value.markdownRenderProps,
-        components: {
-            code: Code,
-            SemiFile: FileAttachment,
-            img: ImageAttachment,
-            // an explicit undefined entry would replace the built-in component with a non-component
-            ...omitBy(view.value.customMarkDownComponents ?? {}, (component) => component === undefined),
-        },
+        components: ChatFoundation.mergeMarkdownComponents({ code: Code, SemiFile: FileAttachment, img: ImageAttachment }, view.value.customMarkDownComponents),
     }));
 
-    const raw = (text = '') => (view.value.escapeHtml && props.message.role === ROLE.USER ? escapeHtmlInMarkdown(text) : text);
+    const raw = (text?: string) => ChatFoundation.getMarkdownRaw(text, props.message.role, view.value.escapeHtml);
 </script>
 
 <template>

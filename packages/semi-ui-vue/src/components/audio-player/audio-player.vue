@@ -1,16 +1,16 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
     import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
-    import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/components/audio-player/foundation';
+    import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerState } from '@fibrae/semi-foundation/components/audio-player/foundation';
     import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-vue';
     import type { ElementProps } from '../../base/element-props';
     import semiDefault from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
-    import { groupRole } from '../../utils/group-role';
     import Button from '../button';
     import Dropdown, { DropdownItem, DropdownMenu } from '../dropdown';
     import Image from '../image';
@@ -18,7 +18,7 @@
     import Popover from '../popover';
     import Tooltip from '../tooltip';
     import AudioSlider from './audio-slider.vue';
-    import type { AudioPlayerProps, AudioPlayerState } from './interface';
+    import type { AudioPlayerProps } from './interface';
 
     type Foundation = AudioPlayerFoundation<AudioPlayerProps>;
     type Adapter = AudioPlayerAdapter<AudioPlayerProps>;
@@ -56,25 +56,19 @@
     // the visible rate alone does not say what the menu sets
     const speedLabel = computed(() => [locale.value.playbackRate, state.value.currentRate.label].join(' '));
 
-    const changeTrack = (direction: 'next' | 'prev') => {
-        if (Array.isArray(props.audioUrl) && props.audioUrl.length > 0) {
-            foundation.handleTrackChange(direction);
-        }
-    };
-
     const progressText = (value: number) => `${formatTimeText(value, locale.value)} / ${formatTimeText(state.value.totalTime, locale.value)}`;
 
     const volumeText = (value: number) => `${value}%`;
 </script>
 
 <template>
-    <div :class="[prefix, `${prefix}-${props.theme}`]" :role="groupRole($attrs)">
+    <div :class="[prefix, `${prefix}-${props.theme}`]" :role="namedRole($attrs)">
         <audio ref="audio" :autoplay="props.autoPlay" :src="info?.src" @pause="foundation.handleAudioPause" @play="foundation.handleAudioPlay" @timeupdate="foundation.handleTimeUpdate">
             <track kind="captions" />
         </audio>
         <div :class="`${prefix}-control`">
             <Tooltip v-if="isList" autoAdjustOverflow :showArrow="false">
-                <Button :aria-label="locale.prev" size="large" :style="[circleStyle, transparentStyle]" @click="changeTrack('prev')">
+                <Button :aria-label="locale.prev" size="large" :style="[circleStyle, transparentStyle]" @click="foundation.handleTrackChange('prev')">
                     <template #icon>
                         <IconRestart :class="iconClass" size="large" />
                     </template>
@@ -88,7 +82,7 @@
                 </template>
             </Button>
             <Tooltip v-if="isList" autoAdjustOverflow :showArrow="false">
-                <Button :aria-label="locale.next" size="large" :style="[circleStyle, transparentStyle]" @click="changeTrack('next')">
+                <Button :aria-label="locale.next" size="large" :style="[circleStyle, transparentStyle]" @click="foundation.handleTrackChange('next')">
                     <template #icon>
                         <IconRestart :class="iconClass" :rotate="180" size="large" />
                     </template>

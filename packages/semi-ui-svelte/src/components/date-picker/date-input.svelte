@@ -26,9 +26,7 @@
         props as DateInputFoundationProps,
         () => ({}),
         () => ({
-            notifyChange: (value, event) => props.onChange?.(value, event),
             notifyEnter: (value) => props.onEnterPress?.(value),
-            notifyClear: (event) => props.onClear?.(event),
             notifyRangeInputClear: (event) => props.onRangeClear?.(event),
             notifyRangeInputFocus: (event, rangeType) => props.onFocus?.(event, rangeType),
             notifyTabPress: (event) => props.onRangeEndTabPress?.(event),
@@ -76,18 +74,6 @@
 
     const focusRange = (event: FocusEvent | MouseEvent, rangeType: RangeInput) => {
         foundation.handleRangeInputFocus(event, rangeType);
-    };
-
-    const focusStartOnClick = (event: MouseEvent) => {
-        if (!props.disabled && !props.rangeInputFocus) {
-            focusRange(event, 'rangeStart');
-        }
-    };
-
-    const clickRange = (event: MouseEvent, rangeType: RangeInput) => {
-        if (!props.disabled) {
-            focusRange(event, rangeType);
-        }
     };
 
     const changeInset = (options: InsetInputChangeFoundationProps) => {
@@ -159,7 +145,7 @@
 {:else if isRange}
     {#if hasLabel}
         <!-- The pointer target of the label only moves the focus to the start input. The id is what a Form inset label's aria-labelledby points at. -->
-        <div class={`${prefix}-range-input-prefix`} id={props.prefix ? undefined : props.insetLabelId} x-semi-prop="prefix,insetLabel" onclick={focusStartOnClick}>
+        <div class={`${prefix}-range-input-prefix`} id={props.prefix ? undefined : props.insetLabelId} x-semi-prop="prefix,insetLabel" onclick={foundation.handleRangeInputAffixClick}>
             {#if props.prefix}
                 {@render props.prefix()}
             {:else if props.insetLabel}
@@ -178,7 +164,7 @@
                 [`${prefix}-borderless`]: props.borderless,
             },
         ]}
-        onclick={(event) => clickRange(event, 'rangeStart')}
+        onclick={(event) => focusRange(event, 'rangeStart')}
     >
         <!-- Fully controlled: the picker owns the text -->
         <Input
@@ -188,7 +174,7 @@
             bind:value={() => rangeParts.start, () => {}}
             borderless={props.borderless}
             disabled={props.disabled}
-            onChange={(next, event) => foundation.handleChange(rangeValue(next, rangeParts.end), event)}
+            onChange={(next, event) => props.onChange?.(rangeValue(next, rangeParts.end), event)}
             onEnterPress={(event) => foundation.handleRangeInputEnterPress(event, rangeValue(rangeParts.start, rangeParts.end))}
             onFocus={(event) => focusRange(event, 'rangeStart')}
             placeholder={rangePlaceholder[0]}
@@ -198,7 +184,7 @@
             style={props.inputStyle}
         />
     </div>
-    <span class={[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: Boolean(rangeParts.start || rangeParts.end) && !props.disabled }]} onclick={(event) => clickRange(event, 'rangeStart')}>
+    <span class={[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: Boolean(rangeParts.start || rangeParts.end) && !props.disabled }]} onclick={(event) => focusRange(event, 'rangeStart')}>
         {#if props.rangeSeparatorNode}
             {@render props.rangeSeparatorNode()}
         {:else}
@@ -215,7 +201,7 @@
                 [`${prefix}-borderless`]: props.borderless,
             },
         ]}
-        onclick={(event) => clickRange(event, 'rangeEnd')}
+        onclick={(event) => focusRange(event, 'rangeEnd')}
     >
         <Input
             bind:this={rangeEndInput}
@@ -223,7 +209,7 @@
             bind:value={() => rangeParts.end, () => {}}
             borderless={props.borderless}
             disabled={props.disabled}
-            onChange={(next, event) => foundation.handleChange(rangeValue(rangeParts.start, next), event)}
+            onChange={(next, event) => props.onChange?.(rangeValue(rangeParts.start, next), event)}
             onEnterPress={(event) => foundation.handleRangeInputEnterPress(event, rangeValue(rangeParts.start, rangeParts.end))}
             onFocus={(event) => focusRange(event, 'rangeEnd')}
             onKeyDown={foundation.handleRangeInputEndKeyPress}
@@ -243,7 +229,7 @@
             {/if}
         </button>
     {/if}
-    <div class={`${prefix}-range-input-suffix`} onclick={focusStartOnClick}>
+    <div class={`${prefix}-range-input-suffix`} onclick={foundation.handleRangeInputAffixClick}>
         {@render calendarIcon()}
     </div>
 {:else}
@@ -260,9 +246,9 @@
         hideSuffix={props.showClear}
         insetLabel={props.insetLabel}
         insetLabelId={props.insetLabelId}
-        onChange={foundation.handleChange}
+        onChange={(next, event) => props.onChange?.(next, event)}
         onClear={(event) => {
-            foundation.handleInputClear(event);
+            props.onClear?.(event);
             // the Input clears on mousedown without moving focus, which leaves it on the body or the trigger wrapper
             single?.focus();
         }}

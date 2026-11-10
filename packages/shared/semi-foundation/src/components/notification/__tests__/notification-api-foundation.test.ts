@@ -30,7 +30,7 @@ describe('NotificationApi', () => {
         const { api, store } = setup({ position: 'bottomLeft', duration: 8 });
         api.info({ title: 'a', position: undefined });
         api.info({ title: 'b', position: 'top' });
-        const [b, a] = store().getSnapshot().notices;
+        const [b, a] = store().getSnapshot().items;
         expect(a).toMatchObject({ type: 'info', position: 'bottomLeft', duration: 8 });
         expect(b).toMatchObject({ position: 'top' });
     });
@@ -42,7 +42,7 @@ describe('NotificationApi', () => {
         expect(
             store()
                 .getSnapshot()
-                .notices.map(({ id, type }) => [id, type])
+                .items.map(({ id, type }) => [id, type])
         ).toEqual([
             ['b', 'error'],
             ['a', 'default'],
@@ -51,7 +51,7 @@ describe('NotificationApi', () => {
         expect(
             store()
                 .getSnapshot()
-                .notices.map(({ id }) => id)
+                .items.map(({ id }) => id)
         ).toEqual(['b']);
     });
 
@@ -64,8 +64,21 @@ describe('NotificationApi', () => {
         api.destroyAll();
         expect(unmount).toHaveBeenCalledTimes(1);
         expect(document.querySelector('.semi-notification-wrapper')).toBeNull();
-        expect(first.getSnapshot().notices).toEqual([]);
+        expect(first.getSnapshot().items).toEqual([]);
         api.addNotice({ title: 'b' });
         expect(mount).toHaveBeenCalledTimes(2);
+    });
+
+    it('config 修改之后通知的默认值，stack 写入列表；resetConfig 恢复内置默认值', () => {
+        const { api, store } = setup();
+        api.config({ top: 10, duration: 0, position: 'bottom', zIndex: 2000, stack: true });
+        api.open({ title: 'a' });
+        expect(store().getSnapshot().items[0]).toMatchObject({ top: 10, duration: 0, position: 'bottom', zIndex: 2000 });
+        expect(store().getSnapshot().stack).toBe(3);
+        api.resetConfig();
+        api.open({ title: 'b' });
+        expect(store().getSnapshot().items[0]).toMatchObject({ duration: 3, zIndex: 1010 });
+        expect(store().getSnapshot().items[0]).not.toHaveProperty('position');
+        expect(store().getSnapshot().stack).toBe(0);
     });
 });

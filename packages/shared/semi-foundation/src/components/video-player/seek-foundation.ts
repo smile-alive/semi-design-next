@@ -30,30 +30,7 @@ export interface SeekAdapter<P extends SeekBaseProps = SeekBaseProps, S extends 
 
 /** A track that seeks to the pointer: press and drag, plus a preview of the hovered position */
 export default class SeekFoundation<P extends SeekBaseProps = SeekBaseProps, S extends SeekBaseState = SeekBaseState> extends BaseFoundation<SeekAdapter<P, S>, P, S> {
-    protected seek(value: number) {
-        this.adapter.notifyChange(value);
-    }
-
-    static getInitialState(): SeekBaseState {
-        return { isDragging: false, movingInfo: null };
-    }
-
-    /** The track keeps the pointer from the press on, so the moves and the release reach it even outside it */
-    handlePointerDown = (e: SeekPointerEvent & { currentTarget: Element; pointerId: number }) => {
-        if (isSecondaryPress(e)) return;
-        e.currentTarget.setPointerCapture(e.pointerId);
-        this.adapter.focusOnPress?.();
-        this.setState({ isDragging: true } as Pick<S, 'isDragging'>);
-        this.handlePointerPosition(e, { seek: true });
-    };
-
-    /** Follows pointerup and pointercancel, and also fires when the track leaves the page mid-drag */
-    handleLostPointerCapture = () => {
-        this.setState({ isDragging: false } as Pick<S, 'isDragging'>);
-    };
-
-    /** Tracks the pointer over the track for the tooltip; `seek` also moves the playhead while dragging or on the press. */
-    handlePointerPosition = (e: SeekPointerEvent, { seek }: { seek: boolean }) => {
+    #trackPointer(e: SeekPointerEvent, seek: boolean) {
         const isDragging = this.getState('isDragging');
         const { max, vertical } = this.getProps();
         const sliderRef = this.adapter.getSliderRef();
@@ -67,6 +44,42 @@ export default class SeekFoundation<P extends SeekBaseProps = SeekBaseProps, S e
 
         // from the track's center to where the handle sits at this ratio, so the preview stays over the dragged handle
         this.setState({ movingInfo: { progress: ratio, offset: offset - total / 2, value } } as Pick<S, 'movingInfo'>);
+    }
+
+    protected seek(value: number) {
+        this.adapter.notifyChange(value);
+    }
+
+    static getInitialState(): SeekBaseState {
+        return { isDragging: false, movingInfo: null };
+    }
+
+    /** The popup is anchored to the track's center, so only a translate moves it to the pointer */
+    static getPreviewTranslate(offset: number, vertical?: boolean) {
+        return vertical ? `0 ${-offset}px` : `${offset}px 0`;
+    }
+
+    /** The track keeps the pointer from the press on, so the moves and the release reach it even outside it */
+    handlePointerDown = (e: SeekPointerEvent & { currentTarget: Element; pointerId: number }) => {
+        if (isSecondaryPress(e)) return;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        this.adapter.focusOnPress?.();
+        this.setState({ isDragging: true } as Pick<S, 'isDragging'>);
+        this.#trackPointer(e, true);
+    };
+
+    handlePointerEnter = (e: SeekPointerEvent) => {
+        this.#trackPointer(e, false);
+    };
+
+    /** Also moves the playhead while dragging */
+    handlePointerMove = (e: SeekPointerEvent) => {
+        this.#trackPointer(e, true);
+    };
+
+    /** Follows pointerup and pointercancel, and also fires when the track leaves the page mid-drag */
+    handleLostPointerCapture = () => {
+        this.setState({ isDragging: false } as Pick<S, 'isDragging'>);
     };
 
     /** A keyboard focus shows the playhead's value, not the last hovered one */

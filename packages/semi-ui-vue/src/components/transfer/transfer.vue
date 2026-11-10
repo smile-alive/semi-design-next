@@ -4,6 +4,7 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/transfer/constants';
     import TransferFoundation, { type BasicResolvedDataItem, type TransferAdapter, type TransferBaseProps, type TransferBaseState } from '@fibrae/semi-foundation/components/transfer/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/transfer/transfer.scss';
     import { IconSearch } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
@@ -13,7 +14,6 @@
     import type SortableComponent from '../../internal/sortable/sortable.vue';
     import VirtualList from '../../internal/virtual-list.vue';
     import { splitControlAttrs } from '../../utils/control-attrs';
-    import { groupRole } from '../../utils/group-role';
     import { nativeTag } from '../../utils/native-tag';
     import { hasSlotContent } from '../../utils/slot-nodes';
     import Button from '../button';
@@ -84,31 +84,10 @@
         { props: { value: () => props.modelValue, filter: () => filter.value } }
     );
 
-    const data = computed(() => TransferFoundation.getData(props.dataSource, props.type) as ResolvedItem[]);
-    const selectedItems = computed(() => TransferFoundation.getSelectedItems(props.modelValue, data.value, state.value.selectedValues) as Map<string | number, ResolvedItem>);
+    const view = computed(() => TransferFoundation.deriveView<ResolvedItem>({ dataSource: props.dataSource, type: props.type, value: props.modelValue, filter: filter.value, pagination: props.pagination, showPath: props.showPath }, state.value));
     const isTree = computed(() => props.type === strings.TYPE_TREE_TO_LIST);
     const isList = computed(() => props.type === strings.TYPE_LIST || props.type === strings.TYPE_GROUP_LIST);
-    const searchResult = computed(() => (state.value.inputValue === '' ? null : TransferFoundation.getSearchResult(data.value, state.value.inputValue, filter.value ?? true, props.type)));
-    const filterData = computed(() => TransferFoundation.getFilterData(data.value, searchResult.value));
-    const showNumber = computed(() => searchResult.value?.size ?? data.value.length);
-    const noMatch = computed(() => searchResult.value?.size === 0);
-    const enabledFilterData = computed(() => TransferFoundation.getEnabledItems(filterData.value, props.type));
-    const leftContainsNotInSelected = computed(() => enabledFilterData.value.some((item) => !selectedItems.value.has(item.key)));
-    const leafOnlyNum = computed(() => TransferFoundation.getLeafCount(filterData.value, props.type));
-    const showAllButton = computed(() => !isTree.value && enabledFilterData.value.length > 0);
-    const values = computed(() => TransferFoundation.getValuesAndItemsFromMap(selectedItems.value, props.type, props.showPath).values);
-    const pageSize = computed(() => TransferFoundation.getPageSize(props.pagination));
-    const totalPage = computed(() => TransferFoundation.getTotalPage(props.pagination, filterData.value.length));
-    const currentPage = computed(() => TransferFoundation.getCurrentPage(props.pagination, state.value.leftCurrentPage, filterData.value.length));
-    const leftGroups = computed(() => TransferFoundation.getGroups(TransferFoundation.getVisibleData(filterData.value, props.pagination, currentPage.value), data.value));
-
-    const selectedData = computed((): ResolvedItem[] =>
-        [...selectedItems.value.values()].map((item) => ({
-            ...item,
-            fullPath: TransferFoundation.getFullPath(item, props.type, props.showPath) as TransferDataItem[] | undefined,
-        }))
-    );
-
+    const selectedData = computed(() => view.value.selectedData);
     const selectedKeys = computed(() => selectedData.value.map((item) => item.key));
     const virtualized = computed(() => Boolean(props.virtualize && Object.keys(props.virtualize).length));
     const virtualHeight = computed(() => (typeof props.virtualize?.height === 'number' ? props.virtualize.height : undefined));
@@ -131,19 +110,19 @@
 
     const onSelectOrRemove = (item: TransferDataItem) => foundation.handleSelectOrRemove(item);
 
-    const onAllClick = () => foundation.handleAll(leftContainsNotInSelected.value);
+    const onAllClick = () => foundation.handleAll(!view.value.allChecked);
 
     const sourcePanelProps = (): TransferSourcePanelSlotProps => ({
-        value: values.value,
+        value: view.value.values,
         loading: props.loading,
-        noMatch: noMatch.value,
-        filterData: filterData.value,
-        sourceData: data.value,
+        noMatch: view.value.noMatch,
+        filterData: view.value.filterData,
+        sourceData: view.value.data,
         propsDataSource: props.dataSource,
-        allChecked: !leftContainsNotInSelected.value,
-        showNumber: showNumber.value,
+        allChecked: view.value.allChecked,
+        showNumber: view.value.showNumber,
         inputValue: state.value.inputValue,
-        selectedItems: selectedItems.value,
+        selectedItems: view.value.selectedItems,
         onSelect: foundation.handleSelect,
         onAllClick,
         onSearch: onInputChange,
@@ -174,12 +153,11 @@
         { immediate: true }
     );
 
-    // The Tree unmounts while loading or empty, and a keyword typed meanwhile only reached the search box
     watch(
         tree,
         (handle) => {
-            if (handle && state.value.inputValue) {
-                handle.search(state.value.inputValue);
+            if (handle) {
+                foundation.handleTreeMount();
             }
         },
         { flush: 'post' }
@@ -191,7 +169,7 @@
 </script>
 
 <template>
-    <div :class="[prefixCls, { [`${prefixCls}-disabled`]: props.disabled, [`${prefixCls}-custom-panel`]: $slots.sourcePanel && $slots.selectedPanel }]" :role="groupRole($attrs)" v-bind="splitAttrs($attrs).root" @focusout="foundation.handleFocusOut">
+    <div :class="[prefixCls, { [`${prefixCls}-disabled`]: props.disabled, [`${prefixCls}-custom-panel`]: $slots.sourcePanel && $slots.selectedPanel }]" :role="namedRole($attrs)" v-bind="splitAttrs($attrs).root" @focusout="foundation.handleFocusOut">
         <slot v-if="$slots.sourcePanel" name="sourcePanel" v-bind="sourcePanelProps()" />
         <section v-else :class="`${prefixCls}-left`">
             <SearchLandmark v-if="filter !== false" :aria-label="locale.locale.filter" :class="`${prefixCls}-filter`">
@@ -202,21 +180,21 @@
                 </Input>
             </SearchLandmark>
             <Spin v-if="props.loading" />
-            <template v-else-if="noMatch">
+            <template v-else-if="view.noMatch">
                 <div v-if="showsEmpty($slots.emptySearch)" :class="[`${prefixCls}-empty`, `${prefixCls}-left-empty`]">
                     <slot name="emptySearch">{{ locale.locale.emptySearch }}</slot>
                 </div>
             </template>
-            <template v-else-if="data.length === 0">
+            <template v-else-if="view.data.length === 0">
                 <div v-if="showsEmpty($slots.emptyLeft)" :class="[`${prefixCls}-empty`, `${prefixCls}-left-empty`]">
                     <slot name="emptyLeft">{{ locale.locale.emptyLeft }}</slot>
                 </div>
             </template>
             <template v-else-if="isList || isTree">
-                <slot v-if="$slots.sourceHeader" :allChecked="!leftContainsNotInSelected" :leafOnlyNum="leafOnlyNum" name="sourceHeader" :num="showNumber" :onAllClick="onAllClick" :showButton="showAllButton" />
+                <slot v-if="$slots.sourceHeader" :allChecked="view.allChecked" :leafOnlyNum="view.leafOnlyNum" name="sourceHeader" :num="view.showNumber" :onAllClick="onAllClick" :showButton="view.showAllButton" />
                 <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-left-header`]">
-                    <span :class="`${prefixCls}-header-total`">{{ formatLocale(locale.locale.total, { total: showNumber }) }}</span>
-                    <Button v-if="showAllButton" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="onAllClick">{{ leftContainsNotInSelected ? locale.locale.selectAll : locale.locale.clearSelectAll }}</Button>
+                    <span :class="`${prefixCls}-header-total`">{{ formatLocale(locale.locale.total, { total: view.showNumber }) }}</span>
+                    <Button v-if="view.showAllButton" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="onAllClick">{{ view.allChecked ? locale.locale.clearSelectAll : locale.locale.selectAll }}</Button>
                 </div>
                 <Tree
                     v-if="isTree"
@@ -227,7 +205,7 @@
                     disableStrictly
                     filterTreeNode
                     leafOnly
-                    :modelValue="values"
+                    :modelValue="view.values"
                     multiple
                     :style="{ flex: 1, overflow: 'auto' }"
                     :treeData="props.dataSource as TreeNodeData[]"
@@ -241,33 +219,33 @@
                 </Tree>
                 <!-- checkboxes are disabled with the transfer, so the keyboard can only scroll the list -->
                 <div v-else :aria-label="locale.locale.optionList" :class="`${prefixCls}-left-list`" role="list" :tabindex="props.disabled ? 0 : undefined">
-                    <component :is="group.grouped ? 'div' : SlotFragment" v-for="group in leftGroups" :key="group.index" :role="group.grouped ? 'listitem' : undefined">
+                    <component :is="group.grouped ? 'div' : SlotFragment" v-for="group in view.groups" :key="group.index" :role="group.grouped ? 'listitem' : undefined">
                         <div v-if="group.grouped" :id="groupTitleId(group.index)" :class="`${prefixCls}-group-title`">
                             {{ group.title }}
                         </div>
                         <component :is="group.grouped ? 'div' : SlotFragment" :aria-labelledby="group.grouped ? groupTitleId(group.index) : undefined" :role="group.grouped ? 'list' : undefined">
                             <template v-for="{ item, index } in group.items" :key="item.key">
                                 <div v-if="$slots.sourceItem" role="listitem">
-                                    <slot :checked="selectedItems.has(item.key)" :index="index" :item="item" name="sourceItem" :onChange="() => onSelectOrRemove(item)" />
+                                    <slot :checked="view.selectedItems.has(item.key)" :index="index" :item="item" name="sourceItem" :onChange="() => onSelectOrRemove(item)" />
                                 </div>
-                                <Checkbox v-else :class="[`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: item.disabled }]" :disabled="item.disabled || props.disabled" :modelValue="selectedItems.has(item.key)" role="listitem" @change="onSelectOrRemove(item)">
+                                <Checkbox v-else :class="[`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: item.disabled }]" :disabled="item.disabled || props.disabled" :modelValue="view.selectedItems.has(item.key)" role="listitem" @change="onSelectOrRemove(item)">
                                     <slot :item="item" name="label">{{ item.label }}</slot>
                                 </Checkbox>
                             </template>
                         </component>
                     </component>
                 </div>
-                <div v-if="isList && props.pagination && totalPage > 1" :class="`${prefixCls}-left-pagination`">
-                    <Pagination :currentPage="currentPage" :pageSize="pageSize" :total="filterData.length" @pageChange="foundation.handlePageChange" />
+                <div v-if="isList && props.pagination && view.totalPage > 1" :class="`${prefixCls}-left-pagination`">
+                    <Pagination :currentPage="view.currentPage" :pageSize="view.pageSize" :total="view.filterData.length" @pageChange="foundation.handlePageChange" />
                 </div>
             </template>
         </section>
         <slot v-if="$slots.selectedPanel" name="selectedPanel" v-bind="selectedPanelProps()" />
         <section v-else :class="`${prefixCls}-right`">
-            <slot v-if="$slots.selectedHeader" name="selectedHeader" :num="selectedData.length" :onClear="foundation.handleClear" :showButton="selectedData.some((item) => !item.disabled)" />
+            <slot v-if="$slots.selectedHeader" name="selectedHeader" :num="selectedData.length" :onClear="foundation.handleClear" :showButton="view.showClearButton" />
             <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-right-header`]">
                 <span :class="`${prefixCls}-header-total`">{{ formatLocale(locale.locale.selected, { total: selectedData.length }) }}</span>
-                <Button v-if="selectedData.some((item) => !item.disabled)" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="foundation.handleClear">{{ locale.locale.clear }}</Button>
+                <Button v-if="view.showClearButton" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="foundation.handleClear">{{ locale.locale.clear }}</Button>
             </div>
             <template v-if="selectedData.length === 0">
                 <div v-if="showsEmpty($slots.emptyRight)" :class="[`${prefixCls}-empty`, `${prefixCls}-right-empty`]">

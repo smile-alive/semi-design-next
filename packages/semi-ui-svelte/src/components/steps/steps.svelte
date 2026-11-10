@@ -1,8 +1,8 @@
 <script lang="ts">
     import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
     import useDefaultProps from '../../base/use-default-props.js';
-    import { groupRole } from '../../utils/group-role.js';
     import { Col, Row } from '../grid/index.js';
     import { setStepsContext } from './context.js';
     import type { StepsProps } from './interface.js';
@@ -74,7 +74,7 @@
     });
 </script>
 
-<div {...rest} class={[rootClass, rest.class]} role={groupRole(rest)}>
+<div {...rest} class={[rootClass, rest.class]} role={namedRole(rest)}>
     {#if type === 'fill'}
         <Row justify="start" type="flex">
             {#each dataSource as item, index (index)}

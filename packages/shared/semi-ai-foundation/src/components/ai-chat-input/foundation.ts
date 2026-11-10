@@ -1,4 +1,5 @@
 import type { Content as TiptapContent, FocusPosition } from '@tiptap/core';
+import type { EditorView } from '@tiptap/pm/view';
 import { isEqual } from 'es-toolkit';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
@@ -46,8 +47,6 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
     getEditor: () => any;
     getOptionNode: (kind: 'skill' | 'suggestion', index: number) => HTMLElement | null;
     notifyContentChange: (result: Content[]) => void;
-    /** Writes the transformed content without notifying `onContentChange` */
-    setTransformedContent: (result: Content[]) => void;
     /** `changedValue` is undefined when an item is removed */
     notifyConfigureChange: (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void;
     manualUpload: (files: File[]) => void;
@@ -82,10 +81,82 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         }
     }
 
+    /** Send and line-break keys; true claims the key from ProseMirror */
+    #handleEditorKey(event: KeyboardEvent) {
+        const { sendHotKey } = this.getProps();
+        const { suggestionVisible, skillVisible } = this.getStates();
+        if ((suggestionVisible || skillVisible) && ['ArrowUp', 'ArrowDown', 'Enter'].includes(event.key)) {
+            return true;
+        }
+        const editor = this.adapter.getEditor();
+        const allowHotKeySend = editor.storage[strings.STATUS_EXTENSION_NAME]?.allowHotKeySend;
+        if (event.key === 'Enter' && (sendHotKey === strings.SEND_HOTKEY.ENTER ? !event.shiftKey : event.shiftKey) && allowHotKeySend) {
+            this.handleSend();
+            return true;
+        }
+        if (event.key === 'Enter' && (sendHotKey === strings.SEND_HOTKEY.ENTER ? event.shiftKey : !event.shiftKey)) {
+            // With shift+enter as the send key a plain Enter is the extension's own key once it has cleared allowHotKeySend
+            if (sendHotKey !== strings.SEND_HOTKEY.ENTER && !allowHotKeySend) {
+                return false;
+            }
+            // A new <p> instead of Tiptap's <br /> keeps the zero-width character logic working
+            event.preventDefault();
+            editor.chain().focus().splitBlock().run();
+            return true;
+        }
+        return false;
+    }
+
+    /** Opens, moves through, picks from and closes the skill and suggestion panels; reads the text before the key applies */
+    #handlePanelKey(event: KeyboardEvent) {
+        const { skills, suggestions, skillHotKey } = this.getProps();
+        const { skillVisible, suggestionVisible, activeSkillIndex, activeSuggestionIndex } = this.getStates();
+        const oldValue = this.adapter.getEditor()?.getText();
+        if (oldValue === '' && event.key === skillHotKey && skills && skills.length) {
+            this.setState({ skillVisible: true, activeSkillIndex: 0 });
+        } else if ((oldValue === skillHotKey || oldValue?.length === 0) && event.key === 'Backspace') {
+            this.setState({ skillVisible: false });
+        } else if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+            // Same condition as #handleEditorKey, so the highlight Enter selects always moves
+            if (skillVisible && skills?.length) {
+                const newIndex = (activeSkillIndex + (event.key === 'ArrowUp' ? -1 : 1) + skills.length) % skills.length;
+                this.setActiveSkillIndex(newIndex);
+                this.#updateScrollTop('skill', newIndex);
+            } else if (suggestionVisible && suggestions?.length) {
+                const newIndex = (activeSuggestionIndex + (event.key === 'ArrowUp' ? -1 : 1) + suggestions.length) % suggestions.length;
+                this.setActiveSuggestionIndex(newIndex);
+                this.#updateScrollTop('suggestion', newIndex);
+            }
+        } else if (event.key === 'Enter') {
+            if (skillVisible) {
+                this.setState({ skillVisible: false });
+                const newSkill = skills[activeSkillIndex];
+                if (newSkill) {
+                    this.handleSkillSelect(newSkill);
+                }
+            } else if (suggestionVisible) {
+                const newSuggestion = suggestions[activeSuggestionIndex];
+                this.handleSuggestionSelect(newSuggestion);
+                this.hideSuggestionPanel();
+            }
+        } else if (event.key === 'Escape') {
+            // Claiming the key when a panel closes keeps an enclosing dialog open
+            if (skillVisible || suggestionVisible) {
+                event.preventDefault();
+            }
+            if (skillVisible) {
+                this.setState({ skillVisible: false });
+            }
+            if (suggestionVisible) {
+                this.hideSuggestionPanel();
+            }
+        }
+    }
+
     protected canSend() {
         const { attachments } = this.getStates();
         const editor = this.adapter.getEditor();
-        return AIChatInputFoundation.getCanSend(this.getProp('canSend'), editor?.getJSON?.(), attachments);
+        return AIChatInputFoundation.getCanSend(this.getProp('canSend'), editor?.getJSON(), attachments);
     }
 
     /**
@@ -100,6 +171,11 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         const validRichText = Boolean(content) && content.content.some((node) => node.content !== undefined);
         const validAttachment = Array.isArray(attachments) && attachments.length > 0;
         return validRichText || validAttachment;
+    }
+
+    /** The `content` of the top slot: the editor JSON in the form `onContentChange` reports, empty before the editor exists */
+    static getTransformedContent(content: RichTextJSON | undefined, transformer?: Map<string, (obj: any) => any>): Content[] {
+        return content ? transformJSONResult(content, transformer) : [];
     }
 
     static getInitialState(props: AIChatInputBaseProps): AIChatInputState {
@@ -216,55 +292,18 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         this.setState({ activeSkillIndex: index });
     };
 
-    handleKeyDown = (e: { key: string; preventDefault: () => void; isComposing?: boolean; nativeEvent?: { isComposing?: boolean } }) => {
-        // The Enter that commits a composition, or an arrow that picks a candidate, is not a panel key
-        if (isComposing(e)) {
-            return;
+    /**
+     * The editor's `editorProps.handleKeyDown`. ProseMirror skips it during composition and for keys from controls
+     * inside slot node views; `isComposing` also covers the keydown that starts a composition.
+     */
+    handleKeyDown = (view: EditorView, event: KeyboardEvent) => {
+        if (view.composing || isComposing(event)) {
+            return false;
         }
-        const { skills, suggestions, skillHotKey } = this.getProps();
-        const { skillVisible, suggestionVisible } = this.getStates();
-        const editor = this.adapter.getEditor();
-        const oldValue = editor?.getText();
-        const { activeSkillIndex, activeSuggestionIndex } = this.getStates();
-        if (oldValue === '' && e.key === skillHotKey && skills && skills.length) {
-            this.setState({ skillVisible: true, activeSkillIndex: 0 });
-        } else if ((oldValue === skillHotKey || oldValue?.length === 0) && e.key === 'Backspace') {
-            this.setState({ skillVisible: false });
-        } else if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
-            // Same condition as handleRichTextAreaKeyDown, so the highlight Enter selects always moves
-            if (skillVisible && skills?.length) {
-                const newIndex = (activeSkillIndex + (e.key === 'ArrowUp' ? -1 : 1) + skills.length) % skills.length;
-                this.setActiveSkillIndex(newIndex);
-                this.#updateScrollTop('skill', newIndex);
-            } else if (suggestionVisible && suggestions?.length) {
-                const newIndex = (activeSuggestionIndex + (e.key === 'ArrowUp' ? -1 : 1) + suggestions.length) % suggestions.length;
-                this.setActiveSuggestionIndex(newIndex);
-                this.#updateScrollTop('suggestion', newIndex);
-            }
-        } else if (e.key === 'Enter') {
-            if (skillVisible) {
-                this.setState({ skillVisible: false });
-                const newSkill = skills[activeSkillIndex];
-                if (newSkill) {
-                    this.handleSkillSelect(newSkill);
-                }
-            } else if (suggestionVisible) {
-                const newSuggestion = suggestions[activeSuggestionIndex];
-                this.handleSuggestionSelect(newSuggestion);
-                this.hideSuggestionPanel();
-            }
-        } else if (e.key === 'Escape') {
-            // Claiming the key when a panel closes keeps an enclosing dialog open
-            if (skillVisible || suggestionVisible) {
-                e.preventDefault();
-            }
-            if (skillVisible) {
-                this.setState({ skillVisible: false });
-            }
-            if (suggestionVisible) {
-                this.hideSuggestionPanel();
-            }
-        }
+        // Editor keys first: picking a panel item on Enter closes the panel, and that Enter must not then send
+        const handled = this.#handleEditorKey(event);
+        this.#handlePanelKey(event);
+        return handled;
     };
 
     onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
@@ -295,10 +334,8 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         if (tr) {
             editor.view.dispatch(tr);
         }
-        const json = editor.getJSON();
         // A default content that normalizes without a transaction never reaches handleContentChange
-        this.adapter.setTransformedContent(transformJSONResult(json, this.getProps().transformer));
-        this.setState({ content: json });
+        this.setState({ content: editor.getJSON() });
     };
 
     handleContentChange = (_content: string) => {
@@ -368,8 +405,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         const editor = this.adapter.getEditor();
         let richTextResult = [];
         if (editor) {
-            const json = editor.getJSON?.();
-            richTextResult = transformJSONResult(json, transformer);
+            richTextResult = transformJSONResult(editor.getJSON(), transformer);
         }
         this.setState({
             templateVisible: false,
@@ -412,40 +448,6 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             return;
         }
         this.focusEditor();
-    };
-
-    handleRichTextAreaKeyDown = (view: any, event: KeyboardEvent) => {
-        if (view.composing) {
-            return false;
-        }
-        const { sendHotKey } = this.getProps();
-        const { suggestionVisible, skillVisible } = this.getStates();
-        if ((suggestionVisible || skillVisible) && ['ArrowUp', 'ArrowDown', 'Enter'].includes(event.key)) {
-            return true;
-        }
-        const editor = this.adapter.getEditor() ?? {};
-        const allowHotKeySend = editor.storage?.[strings.STATUS_EXTENSION_NAME]?.allowHotKeySend;
-        if (event.key === 'Enter' && (sendHotKey === strings.SEND_HOTKEY.ENTER ? !event.shiftKey : event.shiftKey) && allowHotKeySend) {
-            this.handleSend();
-            return true;
-        }
-        if (event.key === 'Enter' && (sendHotKey === strings.SEND_HOTKEY.ENTER ? event.shiftKey : !event.shiftKey)) {
-            // With shift+enter as the send key a plain Enter is the extension's own key once it has cleared allowHotKeySend
-            if (sendHotKey !== strings.SEND_HOTKEY.ENTER && !allowHotKeySend) {
-                return false;
-            }
-            // A new <p> instead of Tiptap's <br /> keeps the zero-width character logic working
-            event.preventDefault();
-            const editor = this.adapter.getEditor();
-            if (editor && editor.chain && editor.chain().splitBlock) {
-                editor.chain().focus().splitBlock().run();
-            } else if (editor && editor.view) {
-                const { state, view } = editor;
-                view.dispatch(state.tr.split(state.selection.from));
-            }
-            return true;
-        }
-        return false;
     };
 
     handleDeleteContent = ({ uniqueKey }: Content) => {

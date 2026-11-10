@@ -4,11 +4,11 @@
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
-    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
+    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState, getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
     import { type BasicOptionProps, type OptionRecord as BaseOptionRecord, getOptionRuns, toOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
     import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
     import '@fibrae/semi-foundation/components/select/select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-svelte';
@@ -224,20 +224,9 @@
             notifyListScroll: (event) => onListScroll?.(event),
             focusTrigger: () => root?.focus({ preventScroll }),
             getOptionList: () => optionContainer,
-            updateScrollTop: (index) => {
-                if (index !== undefined && virtualList) {
-                    // only the rows in view are rendered, so the target may not be in the DOM yet
-                    virtualList.scrollToItem(index);
-                    return;
-                }
-                const custom = optionItem ? '-custom' : '';
-                // document.getElementById misses a list rendered inside a ShadowRoot
-                const destNode = optionContainer?.querySelector<HTMLElement>(index === undefined ? `.${cls}-option${custom}-selected` : `#${CSS.escape(optionId(index))}`);
-                const listbox = destNode?.closest<HTMLElement>('[role="listbox"]');
-                if (destNode && listbox) {
-                    centerInScroller(destNode, listbox);
-                }
-            },
+            getListId: () => selectId,
+            getTriggerInput: () => triggerInput?.getInput(),
+            scrollVirtualTo: (index, align) => virtualList?.scrollToItem(index, align),
         })
     );
 
@@ -289,11 +278,9 @@
 
     // the same size mapping as TreeSelect, Cascader and TagInput: a default-size trigger holds large tags
     const tagSize = $derived(size === 'small' ? 'small' : 'large');
-    const tagLimit = $derived(maxTagCount ?? 0);
-    const collapsedTags = $derived(selectedItems.length > tagLimit ? selectedItems.slice(0, tagLimit) : selectedItems);
-    const groupTags = $derived(showRestTagsPopover && states().isFullTags ? selectedItems : selectedItems.slice(0, tagLimit));
-    const groupMaxTagCount = $derived(selectedItems.length > tagLimit ? maxTagCount : undefined);
-    const groupRestCount = $derived(showRestTagsPopover && states().isFullTags ? undefined : selectedItems.length - tagLimit);
+    const tagFold = $derived(SelectFoundation.getTagFold({ maxTagCount, expandRestTagsOnClick, showRestTagsPopover }, states(), selectedItems.length));
+    const collapsedTags = $derived(selectedItems.slice(0, tagFold.limit));
+    const groupTags = $derived(selectedItems.slice(0, tagFold.shownCount));
     const restPopoverProps = $derived({ autoAdjustOverflow: true, position: 'top' as const, showArrow: true, trigger: 'hover' as const, ...restTagsPopoverProps });
 
     const triggerSnippetProps: SelectTriggerSnippetProps = $derived({
@@ -303,7 +290,7 @@
         disabled,
         onSearch: (keyword) => handleInputChange(keyword),
         // bound to a click inside the trigger: stopped so the trigger does not reopen the list
-        onClear: (event) => handleClear(event),
+        onClear: (event) => foundation.handleClearClick(event),
         onRemove: (option) => foundation.removeTag(option as BasicOptionProps),
     });
 
@@ -312,9 +299,7 @@
 
     setInputGroupContext(undefined);
 
-    const optionId = (index: number) => {
-        return `${selectId}-option-${index}`;
-    };
+    const optionId = (index: number) => getOptionId(selectId, index);
 
     const rowKey = ({ data, childKey, index }: OptionRecord) => {
         return String(data.key ?? childKey ?? `${data.label}${data.value}${index}`);
@@ -336,17 +321,8 @@
         foundation.handleInputChange(keyword, event);
     };
 
-    const handleClear = (event?: MouseEvent) => {
-        event?.stopImmediatePropagation();
-        foundation.handleClearClick(event);
-    };
-
     const handleSelect = (option: OptionRecord, index: number, event: MouseEvent) => {
         foundation.onSelect(option as BaseOptionRecord, index, event);
-    };
-
-    const isTriggerInput = (target: EventTarget | null) => {
-        return Boolean(target) && target === triggerInput?.getInput();
     };
 
     // The search input is inside the trigger, so its keys bubble here. The Select handles a key before the listener
@@ -361,21 +337,12 @@
     };
 
     const handleFocusIn = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
-        if (isTriggerInput(event.target)) {
-            foundation.handleInputFocus(event);
-        } else {
-            foundation.handleTriggerFocus(event);
-        }
+        foundation.handleFocusIn(event);
         rest.onfocusin?.(event);
     };
 
     const handleFocusOut = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
-        if (isTriggerInput(event.target)) {
-            foundation.handleInputBlur();
-        }
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            foundation.handleTriggerBlur(event);
-        }
+        foundation.handleFocusOut(event);
         rest.onfocusout?.(event);
     };
 
@@ -391,19 +358,6 @@
         // the button's own Enter and Space must not reach the combobox's keydown handler
         if (event.key === 'Enter' || event.key === ' ') {
             event.stopPropagation();
-        }
-    };
-
-    const scrollToSelection = () => {
-        if (virtualize && states().focusIndex !== -1) {
-            virtualList?.scrollToItem(states().focusIndex, 'center');
-        } else if (virtualize) {
-            const first = states().options.find((option) => option.selected && option.index >= 0);
-            if (first) {
-                virtualList?.scrollToItem(first.index, 'center');
-            }
-        } else {
-            foundation.updateScrollTop();
         }
     };
 
@@ -467,7 +421,7 @@
     };
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
-    const handleOverflow = (items: SelectOptionProps[]) => foundation.updateOverflowItemCount(states().selections.size, Math.max(items.length - 1, 0));
+    const handleOverflow = (items: SelectOptionProps[]) => foundation.updateOverflowItemCount(Math.max(items.length - 1, 0));
 
     useClickOutside([() => root, () => optionContainer], foundation.handleClickOutside, () => states().isOpen, nestedPopups);
 
@@ -579,7 +533,7 @@
 {/snippet}
 
 {#snippet multipleContent()}
-    {#if !maxTagCount || (expandRestTagsOnClick && states().isOpen)}
+    {#if tagFold.expanded}
         {#each selectedItems as item, index (item.value)}
             {@render tagItem(item, index)}
         {/each}
@@ -606,7 +560,7 @@
             {/if}
         </div>
     {:else}
-        <TagGroup maxTagCount={groupMaxTagCount} onPlusNMouseEnter={foundation.updateIsFullTags} popoverProps={showRestTagsPopover ? restTagsPopoverProps : undefined} restCount={groupRestCount} showPopover={showRestTagsPopover} size={tagSize} tagList={groupTags.map((item) => ({ tagKey: item.value }))}>
+        <TagGroup maxTagCount={tagFold.limit} onPlusNMouseEnter={foundation.updateIsFullTags} popoverProps={showRestTagsPopover ? restTagsPopoverProps : undefined} restCount={tagFold.restCount} showPopover={showRestTagsPopover} size={tagSize} tagList={groupTags.map((item) => ({ tagKey: item.value }))}>
             {#snippet tag({ index }: { index: number })}
                 {@render tagItem(selectedItems[index], index, true)}
             {/snippet}
@@ -672,7 +626,7 @@
                 >
                     {#if singleItem && hasSingleContent}
                         {#if selectedItem}
-                            {@render selectedItem({ option: singleItem, index: 0, disabled, onClose: () => handleClear() })}
+                            {@render selectedItem({ option: singleItem, index: 0, disabled, onClose: () => foundation.handleClearClick() })}
                         {:else}
                             {singleItem.label}
                         {/if}
@@ -742,7 +696,7 @@
         {:else}
             {@render triggerContent()}
             {#if clearable}
-                <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${cls}-clear`} type="button" onclick={handleClear} onkeydown={stopOwnKeys}>
+                <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${cls}-clear`} type="button" onclick={foundation.handleClearClick} onkeydown={stopOwnKeys}>
                     {#if clearIcon}
                         {@render clearIcon()}
                     {:else}
@@ -891,7 +845,7 @@
     content={panel}
     disableArrowKeyDown
     {motion}
-    onOpen={scrollToSelection}
+    onOpen={foundation.scrollToSelection}
     position={resolvedPosition}
     role="presentation"
     {spacing}

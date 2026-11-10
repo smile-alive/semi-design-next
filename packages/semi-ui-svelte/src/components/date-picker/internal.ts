@@ -69,7 +69,7 @@ export interface MonthProps {
     onDayHover: (day?: MonthDayInfo) => void;
     /** The keyboard moved the active day into another month or year */
     onMonthSwitch: (switchType: YearMonthChangeType) => void;
-    onWeeksRowNumChange: (weeksRowNum: number) => void;
+    onWeeksRowNumChange: () => void;
 }
 
 export interface YearAndMonthProps {

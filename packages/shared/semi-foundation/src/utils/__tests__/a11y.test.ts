@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { getEnabledStepIndex, getListTargetIndex, getPopupTrigger, isInnerControlActivation, isInnerControlKey, isNativeInputKey, joinIds, namedRole, stopButtonActivationKeys, Typeahead, type ListNavigationOptions } from '../a11y';
+import { getEnabledStepIndex, getListTargetIndex, isInnerControlActivation, isInnerControlKey, isNativeInputKey, joinIds, namedRole, stopButtonActivationKeys, Typeahead, type ListNavigationOptions } from '../a11y';
 
 describe('getListTargetIndex', () => {
     const none = () => false;
@@ -154,17 +154,6 @@ describe('isInnerControlKey', () => {
     });
 });
 
-describe('getPopupTrigger', () => {
-    it('data-popupid 列出多个弹层 id 时，按其中任一 id 都能找到触发器，部分匹配不算', () => {
-        const root = document.createElement('div');
-        root.innerHTML = '<button data-popupid="outer inner"></button>';
-        const trigger = root.querySelector('button');
-        expect(getPopupTrigger('outer', root)).toBe(trigger);
-        expect(getPopupTrigger('inner', root)).toBe(trigger);
-        expect(getPopupTrigger('inn', root)).toBeNull();
-    });
-});
-
 describe('joinIds', () => {
     it('只保留非空字符串，按顺序用空格拼接，全部为空时为 undefined', () => {
         expect(joinIds('a', '', false, undefined, null, 1, 'b')).toBe('a b');
@@ -188,30 +177,24 @@ describe('stopButtonActivationKeys', () => {
 
 describe('namedRole', () => {
     it('有 aria-label 或 aria-labelledby 时为 group，没有名称时不加角色', () => {
-        expect(namedRole(undefined, 'a', undefined)).toBe('group');
-        expect(namedRole(undefined, undefined, 'id')).toBe('group');
-        expect(namedRole(undefined, undefined, undefined)).toBeUndefined();
-        expect(namedRole(undefined, '', undefined)).toBeUndefined();
+        expect(namedRole({ 'aria-label': 'a' })).toBe('group');
+        expect(namedRole({ 'aria-labelledby': 'id' })).toBe('group');
+        expect(namedRole({})).toBeUndefined();
+        expect(namedRole({ 'aria-label': '' })).toBeUndefined();
     });
 
     it('使用方传入的 role 优先', () => {
-        expect(namedRole('region', 'a', undefined)).toBe('region');
-        expect(namedRole('toolbar', undefined, undefined)).toBe('toolbar');
+        expect(namedRole({ role: 'region', 'aria-label': 'a' })).toBe('region');
+        expect(namedRole({ role: 'toolbar' })).toBe('toolbar');
     });
 });
 
 describe('isNativeInputKey', () => {
-    it.each(['aria-label', 'aria-invalid', 'id', 'name', 'tabIndex', 'tabindex', 'autofocus', 'onFocus', 'onBlur'])('%s 属于原生控件', (key) => {
+    it.each(['aria-label', 'aria-invalid', 'id', 'name', 'tabIndex', 'tabindex', 'autofocus', 'onFocus', 'onBlur', 'onfocus', 'onblur'])('%s 属于原生控件', (key) => {
         expect(isNativeInputKey(key)).toBe(true);
     });
 
-    it.each(['class', 'style', 'title', 'data-x', 'onClick', 'role', 'onfocus'])('%s 不属于原生控件', (key) => {
+    it.each(['class', 'style', 'title', 'data-x', 'onClick', 'onclick', 'role'])('%s 不属于原生控件', (key) => {
         expect(isNativeInputKey(key)).toBe(false);
-    });
-
-    it('Svelte 的监听键用小写', () => {
-        expect(isNativeInputKey('onfocus', true)).toBe(true);
-        expect(isNativeInputKey('onblur', true)).toBe(true);
-        expect(isNativeInputKey('onFocus', true)).toBe(false);
     });
 });

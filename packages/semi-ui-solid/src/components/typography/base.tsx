@@ -1,9 +1,10 @@
 import { type Component, type JSX, Match, Show, Switch, type ValidComponent, children, createEffect, createMemo, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import { Dynamic, isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/components/tooltip/constants';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
-import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/components/typography/ellipsis';
+import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
+import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
+import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import type { ElementProps } from '../../base/element-props';
 import useResizeObserver from '../../primitives/use-resize-observer';
@@ -91,7 +92,7 @@ function getTooltipConfig({ showTooltip, expandable, expandText }: Pick<Ellipsis
     if (typeof showTooltip !== 'object') {
         return { type: 'tooltip' };
     }
-    if (showTooltip.type?.toLowerCase() === 'popover') {
+    if (isPopoverTooltip(showTooltip)) {
         return {
             ...showTooltip,
             opts: {
@@ -202,17 +203,11 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
         if (typeof config.renderTooltip === 'function') {
             return 'custom';
         }
-        return config.type?.toLowerCase() === 'popover' ? 'popover' : 'tooltip';
+        return isPopoverTooltip(config) ? 'popover' : 'tooltip';
     });
 
-    const copyConfig = createMemo(() => {
-        const value = copyable();
-        const config = typeof value === 'object' ? value : undefined;
-        // after the spread, so an explicit `content: undefined` cannot override the fallback
-        return { duration: 3, ...config, content: config?.content ?? text() };
-    });
-
-    const noExpandText = () => !expandable() && expandText() === undefined;
+    const copyConfig = createMemo(() => getCopyConfig(copyable(), text()));
+    const expandButton = createMemo(() => getExpandButton({ isTruncated: isTruncated(), expanded: expanded() }, opt()));
 
     const noCollapseText = () => !collapsible() && collapseText() === undefined;
 
@@ -284,20 +279,6 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
         if (changed.length > 0) {
             runtime.handleResize();
         }
-    };
-
-    const expandLabel = () => {
-        if (!isTruncated()) {
-            return undefined;
-        }
-        // an explicit undefined in the ellipsis object overrides the default text, so the locale text is the fallback
-        if (!expanded() && !noExpandText()) {
-            return expandText() ?? locale().locale.expand;
-        }
-        if (expanded() && !noCollapseText()) {
-            return collapseText() ?? locale().locale.collapse;
-        }
-        return undefined;
     };
 
     const iconComponent = () => {
@@ -380,20 +361,21 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
                     </Layer>
                 </Layer>
             </Layer>
-            <Show when={expandLabel() !== undefined}>
-                <button
-                    ref={(element) => {
-                        expandElement = element;
-                        onCleanup(() => (expandElement = undefined));
-                    }}
-                    type="button"
-                    class={`${prefixCls}-ellipsis-expand`}
-                    // only a button that toggles is a disclosure
-                    aria-expanded={(expanded() ? collapsible() : expandable()) ? expanded() : undefined}
-                    onClick={toggleOverflow}
-                >
-                    {expandLabel()}
-                </button>
+            <Show when={expandButton()}>
+                {(button) => (
+                    <button
+                        ref={(element) => {
+                            expandElement = element;
+                            onCleanup(() => (expandElement = undefined));
+                        }}
+                        type="button"
+                        class={`${prefixCls}-ellipsis-expand`}
+                        aria-expanded={button().expanded}
+                        onClick={toggleOverflow}
+                    >
+                        {button().text}
+                    </button>
+                )}
             </Show>
             <Show when={hasCopyable()}>
                 <Copyable
@@ -408,11 +390,11 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
         </>
     );
 
-    const overflowed = () => !expanded() && (cssEllipsis() ? view().isOverflowed : isTruncated());
+    const overflowed = () => isOverflowed(view(), cssEllipsis());
 
     const tooltipEnabled = () => overflowed() && tooltipConfig()?.opts?.condition !== false;
 
-    const focusable = () => local.tabIndex !== undefined || (tooltipEnabled() && !insideWidgetItem());
+    const focusable = () => isTooltipTriggerFocusable({ tabIndex: local.tabIndex, overflowed: overflowed(), condition: tooltipConfig()?.opts?.condition, insideWidgetItem: insideWidgetItem() });
 
     // the description goes to the focusable link inside (see DescribedAnchor), unless the caller set their own
     const describedByLink = () => {

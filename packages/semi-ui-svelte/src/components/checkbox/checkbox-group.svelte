@@ -54,6 +54,7 @@
                 value = next;
                 onChange?.(next);
             },
+            notifyBlur: (event) => onBlur?.(event),
         })
     );
 
@@ -80,12 +81,9 @@
         onChange: foundation.handleChange,
     });
 
-    // Moving between the boxes is not leaving the group: a form's blur validation waits until focus is outside.
     const handleFocusout = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         onfocusout?.(event);
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            onBlur?.(event);
-        }
+        foundation.handleBlur(event);
     };
 </script>
 

@@ -3,7 +3,6 @@
     import PaginationFoundation, { type PaginationAdapter, type PaginationBaseProps, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { ENTER_KEY, isComposing } from '@fibrae/semi-foundation/utils/key-code';
-    import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/pagination/pagination.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
@@ -65,14 +64,29 @@
         get defaultCurrentPage() {
             return 1;
         },
+        get disabled() {
+            return disabled;
+        },
+        get hideOnSinglePage() {
+            return hideOnSinglePage;
+        },
         get pageSize() {
             return pageSize ?? globalPageSize;
         },
         get pageSizeOpts() {
             return pageSizeOpts;
         },
+        get popoverPosition() {
+            return popoverPosition;
+        },
         get preventPageChangeOnPageSizeChange() {
             return preventPageChangeOnPageSizeChange;
+        },
+        get showSizeChanger() {
+            return showSizeChanger;
+        },
+        get size() {
+            return size;
         },
         get total() {
             return total;
@@ -99,14 +113,10 @@
 
     const prefix = cssClasses.PREFIX;
     const text = $derived(locale().locale);
-    const sizeChangerShown = $derived(showSizeChanger && size !== 'small');
-    const totalPageNum = $derived(PaginationFoundation.getTotalPageNumber(total, states().pageSize));
+    const view = $derived(PaginationFoundation.getView({ total, size, showSizeChanger, hideOnSinglePage, disabled, popoverPosition }, states().pageSize, config.direction));
     const disabledState = $derived(PaginationFoundation.getDisabled(states().currentPage, total, states().pageSize));
     const pageData = $derived(PaginationFoundation.getPageList(states().currentPage, total, states().pageSize));
-    const hidden = $derived(totalPageNum < 2 && hideOnSinglePage && !sizeChangerShown);
-    const quickJumpDisabled = $derived(totalPageNum < 2 || disabled);
-    const smallText = $derived(`${states().currentPage}/${totalPageNum} `);
-    const switchPosition = $derived(popoverPosition ?? (config.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
+    const smallText = $derived(`${states().currentPage}/${view.totalPageNum} `);
 
     const sizeOptions = $derived(
         PaginationFoundation.getPageSizeOpts(pageSizeOpts, states().pageSize).map((option) => ({
@@ -131,10 +141,6 @@
             foundation.handleQuickJumpEnterPress(event.target.value);
         }
     };
-
-    $effect(() => {
-        warning(sizeChangerShown && hideOnSinglePage, '[Semi Pagination] You should not use showSizeChanger and hideOnSinglePage in ths same time. At this time, hideOnSinglePage no longer takes effect, otherwise there may be a problem that the switch entry disappears');
-    });
 </script>
 
 {#snippet pageButton(page: number | '...', trigger?: TooltipTriggerProps)}
@@ -158,10 +164,10 @@
     </button>
 {/snippet}
 
-{#if !hidden}
+{#if !view.hidden}
     <ul {...rest} class={[prefix, rest.class, { [`${prefix}-small`]: size === 'small', [`${prefix}-disabled`]: disabled }]}>
         {#if showTotal && size !== 'small'}
-            <li class={`${prefix}-total`}>{formatLocale(text.total, { total: totalPageNum })}</li>
+            <li class={`${prefix}-total`}>{formatLocale(text.total, { total: view.totalPageNum })}</li>
         {/if}
         <li>
             <StepButton disabled={disabledState.prevDisabled || disabled} kind="prev" label={text.prev} text={prevText} onclick={foundation.goPrev} />
@@ -174,7 +180,7 @@
                             <button {...props} class={`${prefix}-item ${prefix}-item-small`} type="button">{smallText}</button>
                         {/snippet}
                         {#snippet content()}
-                            <RestPages count={totalPageNum} onSelect={foundation.goPage} start={1} />
+                            <RestPages count={view.totalPageNum} onSelect={foundation.goPage} start={1} />
                         {/snippet}
                     </Popover>
                 {:else}
@@ -204,15 +210,15 @@
         <li>
             <StepButton disabled={disabledState.nextDisabled || disabled} kind="next" label={text.next} text={nextText} onclick={foundation.goNext} />
         </li>
-        {#if sizeChangerShown}
+        {#if view.sizeChangerShown}
             <li class={`${prefix}-switch`}>
-                <Select aria-label={text.pageSizeSelector} clickToHide {disabled} dropdownClassName={`${prefix}-select-dropdown`} onChange={changePageSize} optionList={sizeOptions} position={switchPosition} value={states().pageSize} />
+                <Select aria-label={text.pageSizeSelector} clickToHide {disabled} dropdownClassName={`${prefix}-select-dropdown`} onChange={changePageSize} optionList={sizeOptions} position={view.switchPosition} value={states().pageSize} />
             </li>
         {/if}
         {#if showQuickJumper}
-            <li class={[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: quickJumpDisabled }]}>
+            <li class={[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: view.quickJumpDisabled }]}>
                 <span>{text.jumpTo}</span>
-                <InputNumber aria-label={text.jumpTo} class={`${prefix}-quickjump-input-number`} disabled={quickJumpDisabled} hideButtons onBlur={foundation.handleQuickJumpBlur} onChange={foundation.handleQuickJumpNumberChange} onKeyDown={onQuickJumpKeydown} showClear={false} value={states().quickJumpPage} />
+                <InputNumber aria-label={text.jumpTo} class={`${prefix}-quickjump-input-number`} disabled={view.quickJumpDisabled} hideButtons onBlur={foundation.handleQuickJumpBlur} onChange={foundation.handleQuickJumpNumberChange} onKeyDown={onQuickJumpKeydown} showClear={false} value={states().quickJumpPage} />
                 <span>{text.page}</span>
             </li>
         {/if}

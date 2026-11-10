@@ -1,9 +1,8 @@
-import { Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, untrack } from 'solid-js';
+import { Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/image/constants';
-import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
+import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-solid';
 import useFoundation from '../../base/use-foundation';
@@ -54,9 +53,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     const titleId = createUniqueId();
     const [wrap, setWrap] = createSignal<HTMLDivElement>();
-
-    // an index change resets the ratio together with the new src, so PreviewImage does not re-fit the old image
-    const [ratioState, setRatioState] = createSignal<{ index: number; ratio: RatioType }>({ index: -1, ratio: 'adaptation' });
     let header: HTMLElement | undefined;
     let footer: HTMLElement | undefined;
     let leftIcon: HTMLButtonElement | undefined;
@@ -70,7 +66,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         props,
         (initial) => PreviewInnerFoundation.getInitialState(initial),
         (base) => ({
-            getIsInGroup: () => Boolean(previewContext),
             notifyChange: (index, direction) => {
                 const { onChange, onPrev, onNext } = base.getProps();
                 onChange?.(index);
@@ -89,11 +84,9 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
             notifyDownloadError: (src) => base.getProps().onDownloadError?.(src),
             getWrap: () => wrap(),
             isValidTarget: (e) => !(e.target instanceof Node && [header, footer, leftIcon, rightIcon].some((element) => element?.contains(e.target))),
-            setRatio: (ratio) => setRatioState({ index: currentIndex(), ratio }),
         }),
         {
             context: () => ({
-                isGroup: Boolean(previewContext),
                 setCurrentIndex: previewContext?.setCurrentIndex,
                 setDownloadName: previewContext?.view().setDownloadName,
                 direction: config().direction,
@@ -117,8 +110,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     // the container the consumer's getter queries may not be inserted yet
     const inBody = createMemo(() => !mounted() || coversPage(props.getPopupContainer ?? config().getPopupContainer));
 
-    const ratio = () => (ratioState().index === currentIndex() ? ratioState().ratio : 'adaptation');
-
     const leftIconSlot = children(() => {
         const render = props.renderLeftIcon;
         if (!shown() || !showPrev()) {
@@ -134,6 +125,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         }
         return typeof render === 'function' ? render(currentIndex()) : render;
     });
+
+    const ratio = () => PreviewInnerFoundation.getRatio(props, state());
 
     const hideCls = () => (state().viewerVisible ? '' : `${previewPrefixCls}-hide`);
 
@@ -152,25 +145,9 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         onCleanup(foundation.afterHide);
     });
 
-    // a focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
-    // moved elsewhere is left alone.
-    createEffect(
-        on(
-            currentIndex,
-            () => {
-                const element = wrap();
-                const active = FocusTrapHandle.getActiveElement();
-                if (element && (!active || active === document.body)) {
-                    element.focus({ preventScroll: true });
-                }
-            },
-            { defer: true }
-        )
-    );
-
     return (
         <Show when={mounted() && visible()}>
-            <PopupPortal getPopupContainer={props.getPopupContainer} zIndex={props.zIndex} inBody={inBody()}>
+            <PopupPortal getPopupContainer={props.getPopupContainer} zIndex={props.zIndex}>
                 <div
                     ref={(node) => {
                         setWrap(node);

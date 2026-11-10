@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { format, isSameDay, startOfDay } from 'date-fns';
+    import { format, startOfDay } from 'date-fns';
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
     import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
@@ -77,9 +77,7 @@
     <div class={`${prefixCls}-scroll-wrapper`} role="rowgroup">
         <div {@attach grid.observe} bind:this={scroll} class={`${prefixCls}-scroll`} role="row">
             <TimeCol class={`${prefixCls}-sticky-left`} {timeDisplay} />
-            {#key `${dayStart.toDateString()}|${showCurrTime}|${today !== null && isSameDay(dayStart, today)}`}
-                <DayCol {dateGrid} displayValue={dayStart} {event} events={parsedEvents.day} {isWeekend} {minEventHeight} onSlotClick={(mouseEvent, value) => onClick?.(mouseEvent, value)} scrollHeight={grid.scrollHeight()} {showCurrTime} />
-            {/key}
+            <DayCol {dateGrid} displayValue={dayStart} {event} events={parsedEvents.day} {isWeekend} {minEventHeight} onSlotClick={(mouseEvent, value) => onClick?.(mouseEvent, value)} scrollHeight={grid.scrollHeight()} {showCurrTime} {today} />
         </div>
     </div>
 </div>

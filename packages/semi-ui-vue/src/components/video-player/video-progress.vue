@@ -47,7 +47,6 @@
         return VideoProgressFoundation.getMarkerTitle(markersList.value, value);
     };
 
-    // The popup is anchored to the bar's center, so only a translate moves it to the pointer
     const tooltipProps = () => {
         if (!props.showTooltip) return {};
         const info = state.value.movingInfo;
@@ -55,7 +54,7 @@
             class: `${prefix}-tooltip`,
             position: 'top',
             spacing: 2,
-            style: { translate: info ? `${info.offset}px 0` : undefined },
+            style: { translate: info ? VideoProgressFoundation.getPreviewTranslate(info.offset) : undefined },
         };
     };
 </script>
@@ -82,9 +81,9 @@
             @focus="onFocus"
             @keydown="foundation.handleKeyDown"
             @lostpointercapture="foundation.handleLostPointerCapture"
-            @mouseenter="foundation.handlePointerPosition($event, { seek: false })"
+            @mouseenter="foundation.handlePointerEnter"
             @pointerdown="onPointerDown"
-            @pointermove="foundation.handlePointerPosition($event, { seek: true })"
+            @pointermove="foundation.handlePointerMove"
         >
             <div :class="`${prefix}-markers`">
                 <div v-for="(marker, index) in markersList" :key="`${marker.start}-${index}`" :class="[`${prefix}-slider`, { [`${prefix}-slider-active`]: index === state.activeIndex && state.isDragging }]" :style="{ left: marker.left, width: marker.width }">

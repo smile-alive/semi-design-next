@@ -1,19 +1,19 @@
 <script lang="ts">
-    import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/components/video-player/constants';
-    import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerBaseProps } from '@fibrae/semi-foundation/components/video-player/foundation';
+    import { cssClasses, DEFAULT_CONTROLS_LIST, DEFAULT_PLAYBACK_RATE, numbers, strings, type VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
+    import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerBaseProps, type VideoPlayerState } from '@fibrae/semi-foundation/components/video-player/foundation';
     import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/video-player/video-player.scss';
     import { IconFlipHorizontal, IconMaximize, IconMiniPlayer, IconMinimize, IconMute, IconPause, IconPlay, IconPlayCircle, IconRestart, IconVolume1, IconVolume2 } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import AudioSlider from '../audio-player/audio-slider.svelte';
     import { Button } from '../button/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Popover } from '../popover/index.js';
     import ControlsMenu from './controls-menu.svelte';
-    import type { VideoControl, VideoPlayerProps, VideoPlayerState } from './interface.js';
+    import type { VideoPlayerProps } from './interface.js';
     import VideoProgress from './video-progress.svelte';
 
     type Foundation = VideoPlayerFoundation<VideoPlayerBaseProps>;
@@ -25,7 +25,7 @@
         autoPlay = defaults('autoPlay', false),
         captionsSrc = defaults('captionsSrc'),
         clickToPlay = defaults('clickToPlay', true),
-        controlsList = defaults('controlsList', [strings.PLAY, strings.NEXT, strings.TIME, strings.VOLUME, strings.PLAYBACK_RATE, strings.QUALITY, strings.ROUTE, strings.MIRROR, strings.FULLSCREEN, strings.PICTURE_IN_PICTURE]),
+        controlsList = defaults('controlsList', DEFAULT_CONTROLS_LIST),
         crossOrigin = defaults('crossOrigin'),
         defaultPlaybackRate = defaults('defaultPlaybackRate', numbers.DEFAULT_PLAYBACK_RATE),
         defaultQuality = defaults('defaultQuality'),
@@ -126,7 +126,7 @@
     bind:this={root}
     {...rest}
     class={[prefix, rest.class, { [`${prefix}-mirror`]: states().isMirror }]}
-    role={groupRole(rest)}
+    role={namedRole(rest)}
     style={rootStyle}
     onmouseenter={(event) => {
         rest.onmouseenter?.(event);

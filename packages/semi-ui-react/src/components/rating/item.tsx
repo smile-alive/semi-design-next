@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import { type strings, cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
 import RatingFoundation from '@fibrae/semi-foundation/components/rating/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/rating/rating.scss';
 import { IconStar } from '@fibrae/semi-icons-react';
-import type { ArrayElement } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useLocale from '../locale/use-locale';
 
 export interface RatingItemHandle {

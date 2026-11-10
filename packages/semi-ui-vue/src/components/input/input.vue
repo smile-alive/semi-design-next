@@ -61,6 +61,7 @@
     const root = useTemplateRef('root');
     const inputEl = useTemplateRef('input');
     const clearButton = useTemplateRef('clearButton');
+    const generatedId = useId();
 
     // The typed value `.lazy` holds back until the native change event. Reactive so that any re-render keeps showing it
     // instead of patching the input back to modelValue.
@@ -98,7 +99,6 @@
             notifyCompositionStart: (event) => emit('compositionstart', event),
             notifyCompositionEnd: (event) => emit('compositionend', event),
             notifyCompositionUpdate: (event) => emit('compositionupdate', event),
-            isEventTarget: (event) => event.target === event.currentTarget,
         }),
         {
             props: {
@@ -115,7 +115,7 @@
     const value = computed(() => InputFoundation.deriveValue({ value: props.modelValue }, state.value));
     const shown = computed(() => draft.value ?? value.value);
 
-    const { elementText, runInput, handleCompositionEnd, commitDraft, handleFocusIn, handleFocusOut } = useTextEntry({
+    const { elementText, runInput, handleCompositionEnd, commitDraft, handleFocusOut } = useTextEntry({
         element: inputEl,
         draft,
         props,
@@ -132,24 +132,18 @@
             foundation.handleChange((event.target as HTMLInputElement).value, event);
         });
 
-    // the primary button clears on mousedown (issue 1203) without moving focus; the others only keep focus where it is
-    const handleClearMouseDown = (event: MouseEvent) => {
-        if (event.button === 0) {
-            foundation.handleClear(event);
-        }
-    };
-
-    // keyboard activation (detail 0): focus returns to the input as the button unmounts
-    const handleClearClick = (event: MouseEvent) => {
-        if (event.detail === 0) {
-            foundation.handleClear(event);
-            focusInput();
-        }
-    };
-
     const insetLabelShown = () => Boolean(slotKind(slots.insetLabel)) && !slotKind(slots.prefix);
 
-    const ariaInvalid = () => (props.validateStatus === 'error' ? 'true' : attrs['aria-invalid']) as InputHTMLAttributes['aria-invalid'];
+    const labelA11y = () =>
+        InputFoundation.getLabelA11y({
+            shown: insetLabelShown(),
+            insetLabelId: props.insetLabelId,
+            generatedId,
+            validateStatus: props.validateStatus,
+            ariaInvalid: attrs['aria-invalid'] as InputHTMLAttributes['aria-invalid'],
+            ariaLabel: attrs['aria-label'] as string | undefined,
+            ariaLabelledby: attrs['aria-labelledby'] as string | undefined,
+        });
 
     const kinds = () => ({
         prefix: slotKind(slots.prefix),
@@ -201,12 +195,6 @@
         }
     });
 
-    const generatedId = useId();
-
-    const labelId = () => props.insetLabelId ?? (insetLabelShown() ? `${generatedId}-inset-label` : undefined);
-
-    const labelledby = () => (attrs['aria-labelledby'] ?? (insetLabelShown() && !attrs['aria-label'] ? labelId() : undefined)) as string | undefined;
-
     defineExpose<InputHandle>({
         focus: (options) => inputEl.value?.focus({ preventScroll: props.preventScroll, ...options }),
         blur: () => inputEl.value?.blur(),
@@ -222,7 +210,7 @@
 </script>
 
 <template>
-    <div ref="root" v-bind="splitControlAttrs($attrs, isNotClassOrStyle).root" :class="wrapperClass(kinds())" @click="foundation.handleClick" @focusin="handleFocusIn" @focusout="handleFocusOut">
+    <div ref="root" v-bind="splitControlAttrs($attrs, isNotClassOrStyle).root" :class="wrapperClass(kinds())" @click="foundation.handleClick" @focusin="foundation.handleFocus" @focusout="handleFocusOut">
         <template v-for="(k, i) in [kinds()]" :key="i">
             <div
                 v-if="k.addonBefore"
@@ -239,7 +227,7 @@
             </div>
             <div
                 v-if="k.prefix || k.insetLabel"
-                :id="labelId()"
+                :id="labelA11y().labelId"
                 :class="[
                     `${prefix}-prefix`,
                     {
@@ -260,8 +248,8 @@
         <input
             ref="input"
             v-bind="splitControlAttrs($attrs, isNotClassOrStyle).control"
-            :aria-invalid="ariaInvalid()"
-            :aria-labelledby="labelledby()"
+            :aria-invalid="labelA11y().ariaInvalid"
+            :aria-labelledby="labelA11y().ariaLabelledby"
             :class="[
                 prefix,
                 {
@@ -272,7 +260,7 @@
                 },
             ]"
             :disabled="looks.disabled"
-            :maxlength="getLength ? undefined : props.maxlength"
+            :maxlength="InputFoundation.getNativeMaxLength({ maxLength: props.maxlength, getValueLength: getLength })"
             :minlength="InputFoundation.getNativeMinLength({ minLength: props.minlength, getValueLength: getLength }, shown)"
             :placeholder="props.placeholder?.toString()"
             :readonly="props.readonly || isBooleanAttrOn(attrs.readOnly)"
@@ -289,7 +277,7 @@
         />
         <!-- .stop: a host key handler (AutoComplete picks an option on Enter) must not take the keys that press the button;
              mousedown clears (issue 1203) without moving focus -->
-        <button v-if="allowClear" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="handleClearClick" @keydown.enter.space.stop @mousedown.prevent="handleClearMouseDown">
+        <button v-if="allowClear" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="foundation.handleClearClick" @keydown.enter.space.stop @mousedown="foundation.handleClearMouseDown">
             <slot name="clearIcon">
                 <IconClear />
             </slot>

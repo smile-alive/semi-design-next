@@ -1,5 +1,6 @@
 <script lang="ts">
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+    import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
     import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
@@ -51,9 +52,7 @@
     const message = $derived(validateMessage ?? file.validateMessage);
     const retryEnabled = $derived(file.showRetry ?? showRetry);
     const replaceEnabled = $derived(file.showReplace ?? showReplace);
-    const retryShown = $derived(!disabled && file.status === strings.FILE_STATUS_UPLOAD_FAIL && Boolean(retryEnabled));
-    const replaceShown = $derived(!disabled && file.status === strings.FILE_STATUS_SUCCESS && Boolean(replaceEnabled));
-    const failed = $derived(file.status === strings.FILE_STATUS_VALID_FAIL || file.status === strings.FILE_STATUS_UPLOAD_FAIL);
+    const flags = $derived(UploadFoundation.getFileCardFlags(file, { disabled, showRetry, showReplace }));
 
     const size = $derived.by(() => {
         const value: string | number = file.size;
@@ -67,7 +66,7 @@
 
     // Shortcut: a snippet cannot be asked whether it renders anything, so the icon follows the message text only;
     // `fileValidateMessage` replaces the text inside the tooltip and gets the message as `validateMessage`.
-    const validateIcon = $derived(message ? (file.status === strings.FILE_STATUS_VALIDATING ? 'loading' : failed ? 'error' : undefined) : undefined);
+    const validateIcon = $derived(message ? (file.status === strings.FILE_STATUS_VALIDATING ? 'loading' : flags.failed ? 'error' : undefined) : undefined);
 
     const slotProps = (): UploadFileItemSlotProps => ({
         file,
@@ -111,7 +110,7 @@
             `${prefix}-file-card`,
             rest.class,
             {
-                [`${prefix}-file-card-fail`]: failed,
+                [`${prefix}-file-card-fail`]: flags.failed,
                 [`${prefix}-file-card-show-pointer`]: onPreviewClick !== undefined,
             },
         ]}
@@ -143,7 +142,7 @@
                 <TypographyText class={`${info}-name`} ellipsis={nameEllipsis} {ellipsisTooltip}>{file.name}</TypographyText>
                 <span>
                     <span class={`${info}-size`}>{size}</span>
-                    {#if replaceShown}
+                    {#if flags.showReplace}
                         <!-- the Button is the trigger itself, so it stays the only Tab stop -->
                         <Tooltip position="top" showArrow={false} trigger="hover">
                             {#snippet child({ props })}
@@ -167,7 +166,7 @@
                     {/if}
                 </span>
             </div>
-            {#if file.status === strings.FILE_STATUS_UPLOADING && file.percent !== undefined && file.percent !== 100}
+            {#if flags.showListProgress}
                 <Progress aria-label={locale().locale.uploadProgress} percent={file.percent} style="width: 100%" />
             {/if}
             <div class={`${info}-main-control`}>
@@ -183,7 +182,7 @@
                         {message}
                     {/if}
                 </span>
-                {#if retryShown}
+                {#if flags.showRetry}
                     <button
                         class={`${info}-retry`}
                         type="button"
@@ -226,7 +225,7 @@
                 [`${prefix}-picture-file-card-disabled`]: disabled,
                 [`${prefix}-picture-file-card-show-pointer`]: onPreviewClick !== undefined,
                 [`${prefix}-picture-file-card-error`]: file.status === strings.FILE_STATUS_UPLOAD_FAIL,
-                [`${prefix}-picture-file-card-uploading`]: file.status === strings.FILE_STATUS_UPLOADING && file.percent !== 100,
+                [`${prefix}-picture-file-card-uploading`]: flags.showPicProgress,
                 [`${prefix}-picture-file-card-custom-thumbnail`]: thumbnail && picHeight && picWidth,
             },
         ]}
@@ -244,10 +243,10 @@
         {#if onPreviewClick}
             <button aria-label={locale().locale.preview} class={`${prefix}-preview-trigger`} type="button"></button>
         {/if}
-        {#if file.status === strings.FILE_STATUS_UPLOADING && file.percent !== 100}
+        {#if flags.showPicProgress}
             <Progress aria-label={locale().locale.uploadProgress} orbitStroke="var(--semi-color-white)" percent={file.percent} size="small" type="circle" />
         {/if}
-        {#if retryShown}
+        {#if flags.showRetry}
             <button
                 aria-label={locale().locale.retry}
                 class={`${prefix}-picture-file-card-retry`}
@@ -260,7 +259,7 @@
                 <IconRefresh class={`${prefix}-picture-file-card-icon-retry`} />
             </button>
         {/if}
-        {#if replaceShown}
+        {#if flags.showReplace}
             <Tooltip position="top" showArrow={false} spacing={4} trigger="hover">
                 {#snippet child({ props })}
                     <button
@@ -283,7 +282,7 @@
                 {#snippet content()}{locale().locale.replace}{/snippet}
             </Tooltip>
         {/if}
-        {#if file.status === strings.FILE_STATUS_SUCCESS && !replaceShown}
+        {#if flags.showPreview}
             <div class={`${prefix}-picture-file-card-preview`}>
                 {@render picPreviewIcon?.(slotProps())}
             </div>

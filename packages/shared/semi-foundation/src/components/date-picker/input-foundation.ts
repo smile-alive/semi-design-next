@@ -1,4 +1,5 @@
 import { format as formatFn } from 'date-fns';
+import type { ValidateStatus } from '../../base/constants';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import type { Locale } from '../../locale/interface';
 import isObject from '../../utils/is-object';
@@ -12,7 +13,7 @@ import getInsetInputValueFromInsetInputStr from './_utils/get-inset-input-value-
 import { compatibleParse } from './_utils/parser';
 import { isSplitRangeInputs } from './_utils/picker-type';
 import { strings } from './constants';
-import type { BaseValueType, ValidateStatus, ValueType } from './foundation';
+import type { BaseValueType, ValueType } from './foundation';
 
 const KEY_CODE_ENTER = 'Enter';
 const KEY_CODE_TAB = 'Tab';
@@ -63,6 +64,8 @@ export interface DateInputFoundationProps extends DateInputElementProps, DateInp
     /** `any` keeps the foundation framework-agnostic; each framework package declares its own node type */
     rangeSeparatorNode?: any;
     panelType?: PanelType;
+    /** the range input that has focus, `false` while none has it */
+    rangeInputFocus?: RangeInput | false;
     insetInput?: boolean | InsetInputProps;
     insetInputValue?: InsetInputValue;
     density?: (typeof strings.DENSITY_SET)[number];
@@ -96,10 +99,8 @@ export interface InsetInputChangeProps {
 }
 
 export interface DateInputAdapter extends DefaultAdapter<DateInputFoundationProps, Record<string, never>> {
-    notifyChange: DateInputFoundationProps['onChange'];
     notifyInsetInputChange: DateInputFoundationProps['onInsetInputChange'];
     notifyEnter: DateInputFoundationProps['onEnterPress'];
-    notifyClear: DateInputFoundationProps['onClear'];
     notifyRangeInputClear: DateInputFoundationProps['onRangeClear'];
     notifyRangeInputFocus: DateInputFoundationProps['onFocus'];
     notifyTabPress: DateInputFoundationProps['onRangeEndTabPress'];
@@ -250,18 +251,10 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         });
     }
 
-    handleChange = (value: string, e: unknown) => {
-        this.adapter.notifyChange(value, e);
-    };
-
     handleInputComplete = (e: Pick<KeyboardEvent, 'key' | 'target'>) => {
         if (e.key === KEY_CODE_ENTER && e.target instanceof HTMLInputElement) {
             this.adapter.notifyEnter(e.target.value);
         }
-    };
-
-    handleInputClear = (e: unknown) => {
-        this.adapter.notifyClear(e);
     };
 
     handleRangeInputClear(e: Pick<Event, 'stopPropagation'>) {
@@ -298,8 +291,18 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         }
     };
 
+    /** A range input gets focus, or its wrapper or the separator is clicked: a disabled picker takes none */
     handleRangeInputFocus = (e: unknown, rangeType: RangeInput) => {
-        this.adapter.notifyRangeInputFocus(e, rangeType);
+        if (!this.getProp('disabled')) {
+            this.adapter.notifyRangeInputFocus(e, rangeType);
+        }
+    };
+
+    /** A click on the label or the suffix around the range inputs focuses the start input only while neither is focused */
+    handleRangeInputAffixClick = (e: unknown) => {
+        if (!this.getProp('rangeInputFocus')) {
+            this.handleRangeInputFocus(e, 'rangeStart');
+        }
     };
 
     handleInsetInputChange = ({ value, panel, field, insetInputValue }: InsetInputChangeFoundationProps) => {

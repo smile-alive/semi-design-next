@@ -69,7 +69,7 @@
 
     const iconSize = computed(() => (isCustomSize.value ? 'inherit' : props.size === 'small' ? 'default' : 'extra-large'));
 
-    const itemName = (n: number) => formatLocale(locale.value.locale.itemLabel, { value: n, unit: props.unit ?? (n === 1 ? locale.value.locale.star : locale.value.locale.stars) });
+    const itemName = (n: number) => formatLocale(locale.value.locale.itemLabel, { value: n, unit: RatingFoundation.getUnit(n, props.unit, locale.value.locale) });
 
     const describedby = () => attrs['aria-describedby'] as string | undefined;
 

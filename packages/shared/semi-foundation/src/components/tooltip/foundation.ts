@@ -3,11 +3,11 @@ import FocusTrapHandle from '../../base/focus-handle';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import PopupLifecycle from '../../base/popup-lifecycle';
 import ReleaseHolder from '../../base/release-holder';
-import { openLayer } from '../../utils/layer';
+import { openLayer, popupTriggerSelector } from '../../utils/layer';
 import type { ArrayElement } from '../../utils/type';
 import warning from '../../utils/warning';
 import { adjustPosition } from './adjust-position';
-import { numbers, popupTriggerSelector, strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
+import { numbers, strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
 
 export interface TooltipAdapter<P extends TooltipBaseProps = TooltipBaseProps> extends DefaultAdapter<P, TooltipBaseState> {
     /** Reports a visibility change, or under a controlled `visible` a request the owner decides on */

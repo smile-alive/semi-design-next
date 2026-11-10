@@ -1,11 +1,10 @@
 <script lang="ts">
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import DialogueFoundation, { type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { isAwaitingOutput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { getAIChatDialogueContext } from '../context.js';
     import type { Metadata } from '../interface.js';
-    import contentClass from './content-class.js';
     import ReferenceWidget from './content-item/reference.svelte';
     import DialogueContentBody from './dialogue-content-body.svelte';
 
@@ -37,7 +36,7 @@
 {/snippet}
 
 {#if snippets.content}
-    {@render snippets.content({ class: contentClass(message, view.mode), defaultContent, message, role })}
+    {@render snippets.content({ class: DialogueFoundation.getContentClass(message.role, message.status, view.mode), defaultContent, message, role })}
 {:else}
     <div class={[PREFIX_CONTENT, { [`${PREFIX_CONTENT}-editing`]: editing }]}>
         {@render defaultContent()}

@@ -1,4 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { crossesFocusBoundary } from '../../utils/a11y';
 
 export interface PinCodeBaseProps {
     disabled?: boolean;
@@ -20,6 +21,9 @@ export interface PinCodeAdapter<P extends PinCodeBaseProps = PinCodeBaseProps> e
     notifyValueChange: (values: string[]) => void;
     notifyComplete: (value: string) => void;
     changeSpecificInputFocusState: (index: number, state: 'blur' | 'focus') => void;
+    /** Focus entering or leaving the whole code; Form injects `onBlur` */
+    notifyFocus: (e: any) => void;
+    notifyBlur: (e: any) => void;
 }
 
 export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseProps> extends BaseFoundation<PinCodeAdapter<P>, P, PinCodeBaseState> {
@@ -36,6 +40,19 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
     override handlePropsChange() {
         this.setState({ valueList: Array.from(this.getProp('value') ?? '') });
     }
+
+    // moving between the cells is not entering or leaving the code: Form's blur validation waits until focus is outside
+    handleFocus = (e: Parameters<typeof crossesFocusBoundary>[0]) => {
+        if (crossesFocusBoundary(e)) {
+            this.adapter.notifyFocus(e);
+        }
+    };
+
+    handleBlur = (e: Parameters<typeof crossesFocusBoundary>[0]) => {
+        if (crossesFocusBoundary(e)) {
+            this.adapter.notifyBlur(e);
+        }
+    };
 
     handleCurrentActiveIndexChange = (index: number, state: 'focus' | 'blur') => {
         if (state === 'focus') {

@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import CheckboxFoundation, { type CheckboxAdapter, type BasicCheckboxEvent, type BasicTargetObject, type BaseCheckboxProps, type CheckboxBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
 import { checkboxClasses as css } from '@fibrae/semi-foundation/components/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
 import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
@@ -108,13 +107,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
         (base) => ({
             notifyChange: (event) => base.getProps().onChange?.(event as CheckboxEvent),
             notifyGroupChange: (event) => base.getContexts()?.checkboxGroup?.onChange?.(event),
-            // script focus matches :focus-visible when nothing was focused; a click must not look like keyboard focus
-            focusCheckboxEntity: () => {
-                const input = inputRef.current;
-                if (input && input !== input.ownerDocument.activeElement) {
-                    focusWithoutRing(input, { preventScroll: base.getProps().preventScroll });
-                }
-            },
+            getInput: () => inputRef.current,
         }),
         context
     );

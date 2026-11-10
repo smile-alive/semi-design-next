@@ -1,5 +1,3 @@
-export type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-
 /**
  * Native attributes of the element that receives a component's undeclared props (F2, F6). `Omitted` lists the names
  * the component redefines with an incompatible type; a missing entry fails the `extends` check instead of passing

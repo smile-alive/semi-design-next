@@ -70,7 +70,7 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, AnchorProps, AnchorBaseState>(
         AnchorFoundation,
         foundationProps,
-        () => ({ ...AnchorFoundation.getInitialState(), links: hrefs }),
+        () => AnchorFoundation.getInitialState(hrefs),
         () => ({
             getContainer: () => getContainer?.() ?? null,
             getRoot: () => root ?? null,

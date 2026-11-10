@@ -76,7 +76,7 @@ export interface DatePickerMonthEmits {
     dayHover: [day?: MonthDayInfo];
     /** The keyboard moved the active day into another month or year */
     monthSwitch: [switchType: YearMonthChangeType];
-    weeksRowNumChange: [weeksRowNum: number];
+    weeksRowNumChange: [];
 }
 
 export interface DatePickerMonthSlots {

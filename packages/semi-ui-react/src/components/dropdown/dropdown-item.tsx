@@ -4,7 +4,7 @@ import { cssClasses as css } from '@fibrae/semi-foundation/components/dropdown/c
 import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { IconTick } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useMergedRef from '../../hooks/use-merged-ref';
 import { useDropdownContext } from './context';
 

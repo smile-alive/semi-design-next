@@ -250,10 +250,13 @@ describe('AIChatInputFoundation', () => {
         revoke.mockRestore();
     });
 
+    const idleView = { composing: false } as EditorView;
+    const keyEvent = (key: string, init: { isComposing?: boolean } = {}) => ({ key, preventDefault: () => {}, ...init }) as KeyboardEvent;
+
     const skillPanel = (initialState = {}) => {
         let state: Record<string, any> = { skillVisible: false, suggestionVisible: false, activeSkillIndex: 0 };
         state = { ...state, ...initialState };
-        const editor = { text: '', getText: () => editor.text };
+        const editor = { text: '', getText: () => editor.text, storage: {} };
         const adapter = {
             getProps: () => ({
                 skillHotKey: '/',
@@ -271,7 +274,7 @@ describe('AIChatInputFoundation', () => {
             getOptionNode: () => null,
         };
         const foundation = new AIChatInputFoundation(asAdapter(adapter));
-        const press = (key: string) => foundation.handleKeyDown({ key, preventDefault: () => {} });
+        const press = (key: string) => foundation.handleKeyDown(idleView, keyEvent(key));
         return { press, editor, state: () => state };
     };
 
@@ -312,11 +315,11 @@ describe('AIChatInputFoundation', () => {
                 getOptionNode: () => null,
             })
         );
-        const composing = (key: string) => foundation.handleKeyDown({ key, preventDefault: () => {}, nativeEvent: { isComposing: true } });
-        composing('ArrowDown');
-        composing('Enter');
-        composing('Escape');
-        expect(() => foundation.handleKeyDown({ key: 'Enter', preventDefault: () => {}, isComposing: true })).not.toThrow();
+        const composingView = { composing: true } as EditorView;
+        for (const key of ['ArrowDown', 'Enter', 'Escape']) {
+            expect(foundation.handleKeyDown(composingView, keyEvent(key))).toBe(false);
+            expect(foundation.handleKeyDown(idleView, keyEvent(key, { isComposing: true }))).toBe(false);
+        }
         expect(state().skillVisible).toBe(true);
     });
 
@@ -344,21 +347,29 @@ describe('AIChatInputFoundation', () => {
         expect(state).toEqual({ templateVisible: false, skillVisible: false, suggestionVisible: false });
     });
 
-    it('handleCreate 把初始内容的转换结果交给 adapter，不触发 onContentChange', () => {
-        const setTransformedContent = vi.fn<AIChatInputAdapter['setTransformedContent']>();
+    it('handleCreate 把初始内容写入 state，不触发 onContentChange', () => {
+        let state: Record<string, any> = {};
         const notifyContentChange = vi.fn<AIChatInputAdapter['notifyContentChange']>();
         const foundation = new AIChatInputFoundation(
             asAdapter({
                 getProps: () => ({}),
-                setState: () => {},
+                setState: (next: Record<string, any>) => {
+                    state = { ...state, ...next };
+                },
                 getEditor: () => ({ getJSON: () => textDoc, state: { doc: { descendants: () => {} } } }),
-                setTransformedContent,
                 notifyContentChange,
             })
         );
         foundation.handleCreate();
-        expect(setTransformedContent).toHaveBeenCalledWith([{ type: 'text', text: 'hi' }]);
+        expect(AIChatInputFoundation.getTransformedContent(state.content, undefined)).toEqual([{ type: 'text', text: 'hi' }]);
         expect(notifyContentChange).not.toHaveBeenCalled();
+    });
+
+    it('getTransformedContent 在编辑器创建前为空，并应用 transformer', () => {
+        expect(AIChatInputFoundation.getTransformedContent(undefined, undefined)).toEqual([]);
+        const doc = { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'custom', attrs: { id: 1 } }] }] };
+        const transformer = new Map([['custom', (node: any) => ({ type: 'custom', id: node.attrs.id })]]);
+        expect(AIChatInputFoundation.getTransformedContent(doc, transformer)).toEqual([{ type: 'custom', id: 1 }]);
     });
 
     it('placeholder 变化时派发空事务让占位文字重绘，编辑器销毁后不再派发', () => {

@@ -1,11 +1,12 @@
 import type React from 'react';
-import { useId, useLayoutEffect, useRef, useState } from 'react';
+import { useId, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
-import MonthFoundation, { type MonthDayInfo, type MonthFoundationProps } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
+import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
+import useFoundation from '../../base/use-foundation';
 import useToday from '../calendar/use-today';
 import { useConfigContext } from '../config-provider/context';
 
@@ -19,20 +20,30 @@ export interface MonthProps extends MonthFoundationProps, BaseProps {
     labelledby?: string;
 }
 
-export default function Month({ ref, labelledby, month, weekStartsOn, locale, multiple, renderDate, renderFullDate, selected, rangeStart, rangeEnd, offsetRangeStart, offsetRangeEnd, disabledDate, hoverDay, rangeInputFocus, focusRecords, onDayClick, onDayHover, onMonthSwitch, onWeeksRowNumChange }: MonthProps) {
+export default function Month(props: MonthProps) {
+    const { ref, labelledby, month, weekStartsOn, locale, multiple, renderDate, renderFullDate, selected, rangeStart, rangeEnd, offsetRangeStart, offsetRangeEnd, disabledDate, hoverDay, rangeInputFocus, focusRecords, onDayHover, onWeeksRowNumChange } = props;
+
+    const context = useConfigContext();
+
     const gridId = useId();
     const reportedRowNum = useRef(0);
 
-    // the day the keyboard moved to; stale once the month is switched another way
-    const [keyboardDate, setKeyboardDate] = useState('');
-
     const today = useToday();
 
+    const [foundation, state] = useFoundation<MonthFoundation, MonthAdapter, MonthProps, MonthFoundationState>(
+        MonthFoundation,
+        props,
+        () => MonthFoundation.getInitialState(),
+        (base) => ({
+            notifyDayClick: (day) => base.getProps().onDayClick(day),
+            notifyMonthSwitch: (switchType) => base.getProps().onMonthSwitch(switchType),
+        }),
+        context
+    );
+
     const todayText = today === null ? '' : format(today, strings.FORMAT_FULL_DATE);
-    const rtl = useConfigContext().direction === 'rtl';
     const { weeks } = MonthFoundation.getMonthTable(month, weekStartsOn);
-    const monthText = format(month, strings.FORMAT_YEAR_MONTH);
-    const activeDate = MonthFoundation.getDefaultActiveDate(monthText, [keyboardDate, ...selected, rangeStart, rangeEnd, todayText]);
+    const activeDate = MonthFoundation.getActiveDate(props, state, todayText);
 
     const statusOptions = {
         selected,
@@ -50,30 +61,6 @@ export default function Month({ ref, labelledby, month, weekStartsOn, locale, mu
     const weekdaysText = MonthFoundation.getWeekdays(weekStartsOn).map((key) => locale.weeks[key]);
 
     const dayId = (fullDate: string) => `${gridId}-${fullDate}`;
-
-    const selectDay = (day: MonthDayInfo) => {
-        if (!MonthFoundation.getDayStatus(day, statusOptions).isDisabled) {
-            setKeyboardDate(day.fullDate);
-            onDayClick(day);
-        }
-    };
-
-    // APG grid: focus stays on the grid, the keys move the active day and Enter or Space selects it
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-        const action = MonthFoundation.getKeyAction(event, { activeDate, month, weekStartsOn, rtl });
-        if (!action) {
-            return;
-        }
-        event.preventDefault();
-        if (action.type === 'select') {
-            selectDay(weeks.flat().find((day) => day.fullDate === activeDate));
-            return;
-        }
-        setKeyboardDate(action.date);
-        if (action.monthSwitch) {
-            onMonthSwitch(action.monthSwitch);
-        }
-    };
 
     const renderDay = (day: MonthDayInfo, dayIndex: number) => {
         const { fullDate, dayNumber } = day;
@@ -102,7 +89,7 @@ export default function Month({ ref, labelledby, month, weekStartsOn, locale, mu
                 aria-selected={Boolean(dayStatus.isSelected || dayStatus.isSelectedStart || dayStatus.isSelectedEnd)}
                 role="gridcell"
                 title={fullDate}
-                onClick={() => selectDay(day)}
+                onClick={() => foundation.selectDay(day)}
                 onMouseEnter={() => onDayHover(day)}
                 onMouseLeave={() => onDayHover()}
             >
@@ -114,12 +101,12 @@ export default function Month({ ref, labelledby, month, weekStartsOn, locale, mu
     useLayoutEffect(() => {
         if (weeks.length !== reportedRowNum.current) {
             reportedRowNum.current = weeks.length;
-            onWeeksRowNumChange(weeks.length);
+            onWeeksRowNumChange();
         }
     });
 
     return (
-        <div ref={ref} className={cssClasses.MONTH} aria-activedescendant={dayId(activeDate)} aria-labelledby={labelledby} aria-multiselectable={multiple} role="grid" tabIndex={0} onKeyDown={handleKeyDown}>
+        <div ref={ref} className={cssClasses.MONTH} aria-activedescendant={dayId(activeDate)} aria-labelledby={labelledby} aria-multiselectable={multiple} role="grid" tabIndex={0} onKeyDown={(event) => foundation.handleKeyDown(event, todayText)}>
             <div className={cssClasses.WEEKDAY} role="row">
                 {weekdaysText.map((text, i) => (
                     <div key={text + i} className={`${prefixCls}-weekday-item`} role="columnheader">

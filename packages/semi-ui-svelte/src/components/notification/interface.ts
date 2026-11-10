@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
+import type { HookApi } from '@fibrae/semi-foundation/base/hook-api';
 import type { NoticeProps as FoundationNoticeProps, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 
@@ -37,17 +38,4 @@ export interface NoticeItemProps extends Omit<NoticeProps, 'top' | 'bottom' | 'l
 
 export type NotificationHookOptions = Omit<NoticeProps, 'type' | 'id' | 'zIndex' | 'getPopupContainer'>;
 
-export interface NotificationHookApi {
-    success: (config: NotificationHookOptions) => string;
-    info: (config: NotificationHookOptions) => string;
-    error: (config: NotificationHookOptions) => string;
-    warning: (config: NotificationHookOptions) => string;
-    open: (config: NotificationHookOptions) => string;
-    close: (id: string) => void;
-}
-
-export interface NoticeHandle {
-    restartCloseTimer: () => void;
-    pauseCloseTimer: () => void;
-    resumeCloseTimer: () => void;
-}
+export type NotificationHookApi = HookApi<NotificationHookOptions>;

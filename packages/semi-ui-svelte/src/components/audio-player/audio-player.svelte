@@ -1,14 +1,14 @@
 <script lang="ts">
     import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
-    import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerBaseState } from '@fibrae/semi-foundation/components/audio-player/foundation';
+    import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerState } from '@fibrae/semi-foundation/components/audio-player/foundation';
     import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import { groupRole } from '../../utils/group-role.js';
     import { Button } from '../button/index.js';
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';
     import { Image } from '../image/index.js';
@@ -37,7 +37,7 @@
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, AudioPlayerBaseProps, AudioPlayerBaseState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, AudioPlayerBaseProps, AudioPlayerState>(
         AudioPlayerFoundation,
         foundationProps,
         (view) => AudioPlayerFoundation.getInitialState(view),
@@ -57,19 +57,13 @@
     const forwardLabel = $derived(formatLocale(texts.forward, { skipDuration }));
     const speedLabel = $derived([texts.playbackRate, states().currentRate.label].join(' '));
 
-    const changeTrack = (direction: 'next' | 'prev') => {
-        if (Array.isArray(audioUrl) && audioUrl.length > 0) {
-            foundation.handleTrackChange(direction);
-        }
-    };
-
     const progressText = (value: number) => `${formatTimeText(value, texts)} / ${formatTimeText(states().totalTime, texts)}`;
 
     const volumeText = (value: number) => `${value}%`;
 </script>
 
 {#snippet trackButton(direction: 'next' | 'prev', triggerProps: TooltipTriggerProps)}
-    <Button {...triggerProps} aria-label={texts[direction]} size="large" style={`${circleStyle}; ${transparentStyle}`} onclick={() => changeTrack(direction)}>
+    <Button {...triggerProps} aria-label={texts[direction]} size="large" style={`${circleStyle}; ${transparentStyle}`} onclick={() => foundation.handleTrackChange(direction)}>
         {#snippet icon()}
             <IconRestart class={iconClass} rotate={direction === 'next' ? 180 : undefined} size="large" />
         {/snippet}
@@ -94,7 +88,7 @@
     </button>
 {/snippet}
 
-<div {...rest} class={[prefix, rest.class, `${prefix}-${theme}`]} role={groupRole(rest)}>
+<div {...rest} class={[prefix, rest.class, `${prefix}-${theme}`]} role={namedRole(rest)}>
     <audio autoplay={autoPlay} bind:this={audio} src={info?.src} onpause={foundation.handleAudioPause} onplay={foundation.handleAudioPlay} ontimeupdate={foundation.handleTimeUpdate}>
         <track kind="captions" />
     </audio>

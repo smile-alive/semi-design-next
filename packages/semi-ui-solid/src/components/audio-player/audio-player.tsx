@@ -1,7 +1,7 @@
 import { For, Show, createMemo, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
-import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/components/audio-player/foundation';
+import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerState } from '@fibrae/semi-foundation/components/audio-player/foundation';
 import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
@@ -17,7 +17,7 @@ import useLocale from '../locale/use-locale';
 import Popover from '../popover';
 import Tooltip from '../tooltip';
 import AudioSlider from './audio-slider';
-import type { AudioPlayerProps, AudioPlayerState } from './interface';
+import type { AudioPlayerProps } from './interface';
 
 type Foundation = AudioPlayerFoundation<AudioPlayerProps>;
 type Adapter = AudioPlayerAdapter<AudioPlayerProps>;
@@ -171,7 +171,7 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
     );
 
     return (
-        <div {...rest} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as AudioPlayerProps['role']} class={clsx(prefixCls, local.class, `${prefixCls}-${local.theme}`)}>
+        <div {...rest} role={namedRole(rest)} class={clsx(prefixCls, local.class, `${prefixCls}-${local.theme}`)}>
             <audio ref={(node) => (audio = node)} autoplay={local.autoPlay} src={info()?.src} onPause={foundation.handleAudioPause} onPlay={foundation.handleAudioPlay} onTimeUpdate={foundation.handleTimeUpdate}>
                 {/* satisfies media-has-caption; there is no captions file */}
                 <track kind="captions" />

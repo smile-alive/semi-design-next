@@ -1,10 +1,10 @@
 import type React from 'react';
-import { type ReactNode, useId, useLayoutEffect, useRef } from 'react';
+import { type ReactNode, useId, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
 import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
 import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import Button, { type ButtonProps } from '../button';
@@ -121,56 +121,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
     const step = steps[current];
     const showMask = step?.mask ?? mask;
 
-    // nothing rendered (popup target not measured yet) must not lock the page or take focus
-    const shown = Boolean(visible && step && (mode === 'modal' || spotlightRect));
-
-    // mode and showMask are read by the foundation's lock rule
-    useLayoutEffect(() => {
-        if (!shown) {
-            return undefined;
-        }
-        foundation.beforeShow();
-        return foundation.releaseScroll;
-    }, [shown, mode, showMask, foundation]);
-
-    useLayoutEffect(() => {
-        if (!visible) {
-            return undefined;
-        }
-        return foundation.afterHide;
-    }, [visible, foundation]);
-
-    // modal mode gets this from Modal
-    useLayoutEffect(() => {
-        if (!shown || mode !== 'popup') {
-            return undefined;
-        }
-        foundation.recordFocus();
-        return foundation.restoreFocus;
-    }, [shown, mode, foundation]);
-
-    useLayoutEffect(() => {
-        if (!visible || mode !== 'popup') {
-            return undefined;
-        }
-        foundation.measureSpotlight(true);
-        const remeasure = () => foundation.measureSpotlight(false);
-        window.addEventListener('resize', remeasure);
-        // capture: a scroll inside any container can move the target
-        window.addEventListener('scroll', remeasure, true);
-        return () => {
-            window.removeEventListener('resize', remeasure);
-            window.removeEventListener('scroll', remeasure, true);
-        };
-    }, [visible, mode, current, foundation]);
-
-    // steps, padding and the target can change without current moving; an unchanged rect sets no state
-    useLayoutEffect(() => {
-        if (visible && mode === 'popup') {
-            foundation.measureSpotlight(false);
-        }
-    });
-
     if (!visible || !step) {
         return null;
     }
@@ -250,7 +200,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
         return null;
     }
 
-    // spotlightRect comes from the layout effect; measuring here would be a layout read during render
+    // spotlightRect comes from the foundation's measuring; measuring here would be a layout read during render
     if (!spotlightRect) {
         return null;
     }

@@ -2,9 +2,17 @@ import type React from 'react';
 import { createElement, memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
-import { findAll, type SearchWords } from '@fibrae/semi-foundation/components/highlight/foundation';
+import { findAll, type HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
 import '@fibrae/semi-foundation/components/highlight/highlight.scss';
 import useDefaultProps from '../../base/use-default-props';
+
+interface ComplexSearchWord {
+    text: string;
+    className?: string;
+    style?: HighlightStyle;
+}
+
+type SearchWords = (string | ComplexSearchWord | undefined)[];
 
 export interface HighlightProps {
     autoEscape?: boolean;
@@ -31,8 +39,10 @@ function Highlight(rawProps: HighlightProps): React.ReactNode[] {
 
     const tagCls = clsx(`${prefixCls}-tag`, highlightClassName);
 
-    return findAll({ sourceString, searchWords, caseSensitive, autoEscape }).map(({ start, end, highlight, style, className }, index) => {
-        const text = sourceString.slice(start, end);
+    // the foundation names a word's class `class`
+    const words = typeof searchWords === 'string' ? searchWords : searchWords.map((word) => (word && typeof word === 'object' ? { text: word.text, class: word.className, style: word.style } : word));
+
+    return findAll({ sourceString, searchWords: words, caseSensitive, autoEscape }).map(({ highlight, style, class: className, text }, index) => {
         if (!highlight) {
             return text;
         }

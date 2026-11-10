@@ -3,8 +3,7 @@ import { focusableSelector } from '@fibrae/semi-foundation/components/steps/cons
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import callHandler from '../../utils/call-handler';
 
-// namedRole yields a plain string, which the typed role attribute does not accept
-export type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
+type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
 
 interface StepItemProps {
     role?: Role;
@@ -22,7 +21,7 @@ export function createStepItem(local: StepItemProps, named: StepItemNames) {
     const clickable = () => Boolean(local.onChange || local.onClick);
     return {
         clickable,
-        role: (): Role => local.role ?? (clickable() ? 'button' : (namedRole(undefined, named['aria-label'], named['aria-labelledby']) as Role)),
+        role: (): Role => local.role ?? (clickable() ? 'button' : namedRole(named)),
         tabIndex: () => (clickable() ? 0 : undefined),
         onClick: (event: MouseEvent & { currentTarget: HTMLDivElement; target: Element }) => {
             callHandler(local.onClick, event);

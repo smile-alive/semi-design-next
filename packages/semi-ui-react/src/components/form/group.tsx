@@ -2,6 +2,7 @@ import React, { isValidElement, useEffect, useId } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
+import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -65,13 +66,11 @@ export default function FormInputGroup(props: InputGroupProps) {
 
     const formProps = fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'showValidateIcon', 'wrapperCol', 'labelCol', 'disabled']);
     const labelPosition = props.labelPosition || formProps.labelPosition;
-    const generatedLabelId = `${generatedId}-label`;
-    const groupErrorId = `${generatedId}-errormessage`;
-    const extraTextId = `${generatedId}-extraText`;
+    const ids = getFieldIds(generatedId);
 
     if (label) {
         const labelProps: LabelProps = typeof label === 'object' && !isValidElement(label) && !Array.isArray(label) ? (label as LabelProps) : { text: label };
-        labelId = labelProps.id || generatedLabelId;
+        labelId = labelProps.id || ids.label;
         labelContent = <Label width={formProps.labelWidth} {...labelProps} id={labelId} />;
     }
 
@@ -86,8 +85,8 @@ export default function FormInputGroup(props: InputGroupProps) {
             return React.cloneElement(child, {
                 isInInputGroup: true,
                 'aria-labelledby': joinIds(child.props['aria-labelledby'], ariaLabelledby, labelId),
-                'aria-describedby': joinIds(child.props['aria-describedby'], ariaDescribedby, extraText && extraTextId),
-                'aria-errormessage': groupErrorId,
+                'aria-describedby': joinIds(child.props['aria-describedby'], ariaDescribedby, extraText && ids.extraText),
+                'aria-errormessage': ids.errorMessage,
             });
         }
         return null;
@@ -104,7 +103,7 @@ export default function FormInputGroup(props: InputGroupProps) {
     });
 
     const extraContent = extraText ? (
-        <div id={extraTextId} className={extraCls} x-semi-prop="extraText">
+        <div id={ids.extraText} className={extraCls} x-semi-prop="extraText">
             {extraText}
         </div>
     ) : null;
@@ -116,7 +115,7 @@ export default function FormInputGroup(props: InputGroupProps) {
                 {inner}
             </InputGroup>
             {extraTextPosition === 'bottom' && extraContent}
-            <GroupError errorMessageId={groupErrorId} fieldSet={groupFieldSet} isInInputGroup showValidateIcon={formProps.showValidateIcon} />
+            <GroupError errorMessageId={ids.errorMessage} fieldSet={groupFieldSet} isInInputGroup showValidateIcon={formProps.showValidateIcon} />
         </>
     );
 

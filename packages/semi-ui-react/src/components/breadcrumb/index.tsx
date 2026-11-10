@@ -7,7 +7,7 @@ import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/components/breadcrumb/breadcrumb.scss';
 import { IconMore } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useFocusHandover from '../../hooks/use-focus-handover';

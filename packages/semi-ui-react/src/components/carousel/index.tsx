@@ -1,5 +1,5 @@
 import type React from 'react';
-import { cloneElement, isValidElement, useEffect, useId, useImperativeHandle, useRef } from 'react';
+import { cloneElement, isValidElement, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
 import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
@@ -52,7 +52,6 @@ export default function Carousel(rawProps: CarouselProps) {
 
     const baseId = useId();
     const tablistRef = useRef<HTMLDivElement>(null);
-    const focusPending = useRef(false);
 
     const [foundation, state] = useFoundation<Foundation, Adapter, CarouselProps, CarouselState>(
         CarouselFoundation,
@@ -61,6 +60,7 @@ export default function Carousel(rawProps: CarouselProps) {
         (base) => ({
             notifyChange: (activeIndex, preIndex) => base.getProps().onChange?.(activeIndex, preIndex),
             getSlideCount: () => getSlides(base.getProps().children).length,
+            focusTab: (index) => tablistRef.current?.querySelector<HTMLElement>(`[data-index="${index}"]`)?.focus(),
         }),
         { direction }
     );
@@ -83,13 +83,6 @@ export default function Carousel(rawProps: CarouselProps) {
     const getSlideId = (index: number): string => slides[index].props.id ?? `${baseId}-slide-${index}`;
 
     useDidUpdate(total, (count, previous) => foundation.handleSlideCountChange(previous, count));
-
-    useEffect(() => {
-        if (focusPending.current) {
-            focusPending.current = false;
-            tablistRef.current?.querySelector<HTMLElement>('[role="tab"][tabindex="0"]')?.focus();
-        }
-    }, [activeIndex]);
 
     useImperativeHandle(
         props.ref,
@@ -177,15 +170,9 @@ export default function Carousel(rawProps: CarouselProps) {
                         theme={theme}
                         total={total}
                         trigger={trigger}
-                        onBlur={() => {
-                            focusPending.current = false;
-                        }}
+                        onBlur={foundation.handleIndicatorBlur}
                         onIndicatorChange={foundation.onIndicatorChange}
-                        onKeyDown={(e) => {
-                            if (foundation.handleKeyDown(e)) {
-                                focusPending.current = true;
-                            }
-                        }}
+                        onKeyDown={foundation.handleKeyDown}
                     />
                 </div>
             )}

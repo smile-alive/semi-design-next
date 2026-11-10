@@ -1289,8 +1289,9 @@ describe('函数组件形式的 Navigation', () => {
         error.mockRestore();
     });
 
-    it('未声明的项配置字段不落到 DOM，但 data-* 与 aria-* 会透传', () => {
+    it('未声明的项配置字段不落到 DOM，但 data-* 与 aria-* 会透传，onSelect 上报整个配置', async () => {
         const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+        const onSelect = vi.fn<NonNullable<NavProps['onSelect']>>();
         // a variable rather than a literal: undeclared config fields are the input under test
         const items = [
             {
@@ -1310,15 +1311,18 @@ describe('函数组件形式的 Navigation', () => {
                 items: [{ itemKey: 'list', text: '用户列表', path: '/list', someCamelKey: 3 }],
             },
         ];
-        render(<Nav defaultOpenKeys={['user']} items={items} />);
+        render(<Nav defaultOpenKeys={['user']} items={items} onSelect={onSelect} />);
         for (const el of document.querySelectorAll(`.${prefixCls}-item`)) {
             expect(el).not.toHaveAttribute('path');
             expect(el).not.toHaveAttribute('somecamelkey');
+            expect(el).not.toHaveAttribute('itemconfig');
         }
         expect(getItem('首页')).toHaveAttribute('data-x', 'a');
         expect(getItem('首页')).not.toHaveAttribute('aria-describedby');
         expect(getItemControl('首页')).toHaveAttribute('aria-describedby', 'tip');
         expect(document.querySelector(`.${prefixCls}-item-sub`)).toHaveAttribute('data-sub', 'b');
+        await userEvent.click(getItemControl('用户列表'));
+        expect(onSelect.mock.calls[0][0].selectedItems).toEqual([{ itemKey: 'list', text: '用户列表', path: '/list', someCamelKey: 3, level: 1 }]);
         expect(error).not.toHaveBeenCalled();
         error.mockRestore();
     });

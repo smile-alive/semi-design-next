@@ -1,4 +1,6 @@
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import warning from '../../utils/warning';
+import type { Position } from '../tooltip/foundation';
 import { numbers } from './constants';
 
 export interface PaginationAdapter<P extends PaginationBaseProps = PaginationBaseProps> extends DefaultAdapter<P, PaginationState> {
@@ -24,8 +26,13 @@ export interface AdapterPageList {
 
 export interface PaginationBaseProps {
     currentPage?: number;
+    disabled?: boolean;
+    hideOnSinglePage?: boolean;
     pageSize?: number;
+    popoverPosition?: Position;
     preventPageChangeOnPageSizeChange?: boolean;
+    showSizeChanger?: boolean;
+    size?: 'small' | 'default';
     total?: number;
 }
 
@@ -36,7 +43,12 @@ export interface PaginationState {
 }
 
 export default class PaginationFoundation<P extends PaginationBaseProps = PaginationBaseProps> extends BaseFoundation<PaginationAdapter<P>, P, PaginationState> {
-    static override readonly propKeys = ['currentPage', 'total', 'pageSize'];
+    static override readonly propKeys = ['currentPage', 'total', 'pageSize', 'showSizeChanger', 'size', 'hideOnSinglePage'];
+
+    /** The small size has no size changer, so only the default size can hide the entry that hideOnSinglePage would hide with the pager */
+    static #hasSizeChangerConflict({ showSizeChanger, size, hideOnSinglePage }: PaginationBaseProps) {
+        return Boolean(showSizeChanger && size !== 'small' && hideOnSinglePage);
+    }
 
     // undefined means page 1: an uncontrolled pager restarts when its total or pageSize prop changes
     #updatePage(targetPageIndex = 1, pageSize?: number) {
@@ -48,6 +60,10 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         if (newPageSize !== currentPageSize) {
             this.setState({ pageSize: newPageSize });
         }
+    }
+
+    #warnSizeChangerConflict(conflict: boolean) {
+        warning(conflict, '[Semi Pagination] You should not use showSizeChanger and hideOnSinglePage in ths same time. At this time, hideOnSinglePage no longer takes effect, otherwise there may be a problem that the switch entry disappears');
     }
 
     #handleQuickJump(quickJumpPage: string | number) {
@@ -72,6 +88,10 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         this.goPage(page);
     }
 
+    protected override initOnce() {
+        this.#warnSizeChangerConflict(PaginationFoundation.#hasSizeChangerConflict(this.getProps()));
+    }
+
     static getInitialState(props: { currentPage?: number; defaultCurrentPage?: number; pageSize?: number; pageSizeOpts?: readonly number[] }): PaginationState {
         return {
             currentPage: props.currentPage || props.defaultCurrentPage,
@@ -82,6 +102,19 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
 
     static getTotalPageNumber(total: number, pageSize: number) {
         return Math.ceil(total / pageSize);
+    }
+
+    /** What the render shows: `hidden` is the whole pager, a size changer keeps a single page visible */
+    static getView({ total, size, showSizeChanger, hideOnSinglePage, disabled, popoverPosition }: PaginationBaseProps & { total: number }, pageSize: number, direction?: string) {
+        const totalPageNum = PaginationFoundation.getTotalPageNumber(total, pageSize);
+        const sizeChangerShown = Boolean(showSizeChanger && size !== 'small');
+        return {
+            totalPageNum,
+            sizeChangerShown,
+            hidden: totalPageNum < 2 && Boolean(hideOnSinglePage) && !sizeChangerShown,
+            quickJumpDisabled: totalPageNum < 2 || Boolean(disabled),
+            switchPosition: popoverPosition ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft'),
+        };
     }
 
     static getDisabled(currentPage: number, total: number, pageSize: number) {
@@ -200,6 +233,7 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
 
     override handlePropsChange(prev: Partial<P>) {
         const { currentPage, total, pageSize } = this.getProps();
+        this.#warnSizeChangerConflict(!PaginationFoundation.#hasSizeChangerConflict(prev) && PaginationFoundation.#hasSizeChangerConflict(this.getProps()));
         if (prev.currentPage !== currentPage || prev.total !== total) {
             this.#updatePage(currentPage);
         }

@@ -4,11 +4,11 @@ import { isEqual } from 'es-toolkit';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
-import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
+import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState, getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
 import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
 import { isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
-import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
+import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/select/select.scss';
@@ -433,20 +433,9 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             notifyListScroll: (event) => props.onListScroll?.(event),
             focusTrigger: () => root && focusElement(root, { preventScroll: props.preventScroll }),
             getOptionList: () => optionContainer,
-            updateScrollTop: (index) => {
-                if (index !== undefined && virtualList) {
-                    // only the rows in view are rendered, so the target may not be in the DOM yet
-                    virtualList.scrollToItem(index);
-                    return;
-                }
-                const custom = props.renderOptionItem ? '-custom' : '';
-                // by id inside the list, not :nth-child (group titles are siblings of the options) or getElementById (misses a ShadowRoot)
-                const destNode = optionContainer?.querySelector<HTMLElement>(index === undefined ? `.${prefix}-option${custom}-selected` : `#${CSS.escape(optionId(index))}`);
-                const listbox = destNode?.closest<HTMLElement>('[role="listbox"]');
-                if (destNode && listbox) {
-                    centerInScroller(destNode, listbox);
-                }
-            },
+            getListId: () => selectId(),
+            getTriggerInput: () => triggerInput,
+            scrollVirtualTo: (index, align) => virtualList?.scrollToItem(index, align),
         })
     );
 
@@ -469,10 +458,9 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
 
     const selectId = () => local.id || generatedId;
 
-    const optionId = (index: number) => `${selectId()}-option-${index}`;
-
     const visibleOptions = createMemo(() => SelectFoundation.getVisibleOptions(state().options as OptionRecord[]));
     const selectedItems = createMemo(() => [...state().selections.values()] as OptionData[]);
+    const tagFold = createMemo(() => SelectFoundation.getTagFold(local, state(), selectedItems().length));
 
     const triggerRenderProps: TriggerRenderProps = {
         get value() {
@@ -489,9 +477,11 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         },
         componentProps,
         onSearch: (value) => handleInputChange(value),
-        onClear: (e) => handleClear(e),
+        onClear: (e) => foundation.handleClearClick(e),
         onRemove: (option) => foundation.removeTag(option as BasicOptionProps),
     };
+
+    const optionId = (index: number) => getOptionId(selectId(), index);
 
     const filterable = () => Boolean(local.filter);
 
@@ -570,11 +560,6 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
 
     const handleInputChange = (value: string, event?: InputChangeEvent) => foundation.handleInputChange(value, event);
 
-    const handleClear = (e?: MouseEvent) => {
-        e?.stopImmediatePropagation();
-        foundation.handleClearClick(e);
-    };
-
     const handleClick = (e: MouseEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onClick, e);
         foundation.handleClick(e);
@@ -592,11 +577,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
 
     const handleFocusIn = (e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusIn, e);
-        if (triggerInput && e.target === triggerInput) {
-            foundation.handleInputFocus(e);
-        } else {
-            foundation.handleTriggerFocus(e);
-        }
+        foundation.handleFocusIn(e);
     };
 
     const handleFocusOut = (e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
@@ -605,14 +586,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         if (clearButton && e.target === clearButton && !clearable()) {
             return;
         }
-        batch(() => {
-            if (triggerInput && e.target === triggerInput) {
-                foundation.handleInputBlur();
-            }
-            if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
-                foundation.handleTriggerBlur(e);
-            }
-        });
+        batch(() => foundation.handleFocusOut(e));
     };
 
     const triggerOwn = mergeProps(rest, () => (inputIsCombobox() ? {} : { ...comboboxAttrs, 'aria-disabled': local.disabled }), {
@@ -681,22 +655,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     };
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
-    const handleOverflow = (items: OverflowItem[]) => foundation.updateOverflowItemCount(state().selections.size, Math.max(items.length - 1, 0));
-
-    const scrollToSelection = () => {
-        const { focusIndex } = state();
-        // Home, End or typing may have moved the highlight off the selection before the list mounted
-        if (local.virtualize && focusIndex !== -1) {
-            virtualList?.scrollToItem(focusIndex, 'center');
-        } else if (local.virtualize) {
-            const first = state().options.find((option) => option.selected && option.index >= 0);
-            if (first) {
-                virtualList?.scrollToItem(first.index, 'center');
-            }
-        } else {
-            foundation.updateScrollTop();
-        }
-    };
+    const handleOverflow = (items: OverflowItem[]) => foundation.updateOverflowItemCount(Math.max(items.length - 1, 0));
 
     const focusOptions = () => ({ preventScroll: props.preventScroll });
 
@@ -840,7 +799,10 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         );
     };
 
-    const groupTagList = (full: boolean) => (full && state().isFullTags ? selectedItems() : selectedItems().slice(0, local.maxTagCount)).map((option) => ({ tagKey: option.value }));
+    const groupTagList = () =>
+        selectedItems()
+            .slice(0, tagFold().shownCount)
+            .map((option) => ({ tagKey: option.value }));
 
     // the group list is a prefix of the selection, so a tag's index is its option's
     const renderGroupTag = (_tag: TagGroupItem, index: number) => <SelectedTag option={selectedItems()[index]} index={index} inTagGroup />;
@@ -852,10 +814,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     );
 
     const CollapsedTags = () => {
-        const items = () => {
-            const count = local.maxTagCount ?? 0;
-            return selectedItems().length > count ? selectedItems().slice(0, count) : selectedItems();
-        };
+        const items = () => selectedItems().slice(0, tagFold().limit);
         const restItems = () => selectedItems().slice(selectedItems().length - state().overflowItemCount);
         return (
             <div class={`${prefix}-content-wrapper-collapse`}>
@@ -892,8 +851,6 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     };
 
     const MultipleSelection = () => {
-        const limited = () => (selectedItems().length > (local.maxTagCount ?? 0) ? local.maxTagCount : undefined);
-        const restCount = () => selectedItems().length - (local.maxTagCount ?? 0);
         return (
             <div
                 class={clsx(`${prefix}-content-wrapper`, {
@@ -910,17 +867,17 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                     }
                 >
                     <Switch>
-                        <Match when={!local.maxTagCount || (local.expandRestTagsOnClick && state().isOpen)}>
+                        <Match when={tagFold().expanded}>
                             <For each={selectedItems()}>{(option, index) => <SelectedTag option={option} index={index()} />}</For>
                         </Match>
                         <Match when={local.ellipsisTrigger}>
                             <CollapsedTags />
                         </Match>
                         <Match when={local.showRestTagsPopover}>
-                            <TagGroup maxTagCount={limited()} popoverProps={local.restTagsPopoverProps} restCount={state().isFullTags ? undefined : restCount()} showPopover size={tagSize()} tagList={groupTagList(true)} renderTag={renderGroupTag} onPlusNMouseEnter={foundation.updateIsFullTags} />
+                            <TagGroup maxTagCount={tagFold().limit} popoverProps={local.restTagsPopoverProps} restCount={tagFold().restCount} showPopover size={tagSize()} tagList={groupTagList()} renderTag={renderGroupTag} onPlusNMouseEnter={foundation.updateIsFullTags} />
                         </Match>
                         <Match when={true}>
-                            <TagGroup maxTagCount={limited()} restCount={restCount()} size={tagSize()} tagList={groupTagList(false)} renderTag={renderGroupTag} />
+                            <TagGroup maxTagCount={tagFold().limit} restCount={tagFold().restCount} size={tagSize()} tagList={groupTagList()} renderTag={renderGroupTag} />
                         </Match>
                     </Switch>
                 </Show>
@@ -995,7 +952,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                 </div>
             </Show>
             <Show when={clearable()}>
-                <button ref={setClearButton} type="button" class={`${prefix}-clear`} aria-label={locale().locale.clear} onClick={(e) => handleClear(e)} onKeyDown={stopButtonActivationKeys}>
+                <button ref={setClearButton} type="button" class={`${prefix}-clear`} aria-label={locale().locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys}>
                     <Show when={hasContent(clearIcon())} fallback={<IconClear />}>
                         {clearIcon()}
                     </Show>
@@ -1236,7 +1193,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={state().isOpen}
-            onOpen={scrollToSelection}
+            onOpen={foundation.scrollToSelection}
         >
             {(getTriggerProps) => (
                 <div

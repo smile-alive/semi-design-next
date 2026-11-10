@@ -3,7 +3,21 @@ import type { Extensions } from '@tiptap/core';
 import { type Editor, EditorContent, useEditor, useEditorState } from '@tiptap/react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-import { type TextRange, canUploadImage, clearSelectionHighlight, confirmLink, getEditorAttributes, getFileEditorExtensions, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
+import {
+    type FileMenuButtonKey,
+    type FileMenuItem,
+    type Level,
+    type TextRange,
+    canUploadImage,
+    clearSelectionHighlight,
+    confirmLink,
+    getEditorAttributes,
+    getFileEditorExtensions,
+    getFileMenuItems,
+    readFileMenuState,
+    readLinkEditorOpenState,
+    unsetLink,
+} from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import {
     IconH1,
@@ -97,6 +111,28 @@ function ConfigureDropdownItem({ active, children, className, ...rest }: Dropdow
     );
 }
 
+const HEADINGS = [IconH1, IconH2, IconH3, IconH4, IconH5, IconH6].map((Icon, index) => ({ Icon, level: (index + 1) as Level }));
+
+const MENU_ICONS: Record<FileMenuButtonKey, React.ComponentType> = {
+    undo: IconUndo,
+    redo: IconRedo,
+    paragraph: IconText,
+    bulletList: IconList,
+    orderedList: IconOrderedList,
+    blockquote: IconQuote,
+    codeBlock: IconTerminal,
+    horizontalRule: IconMinus,
+    alignLeft: IconAlignLeft,
+    alignCenter: IconAlignCenter,
+    alignRight: IconAlignRight,
+    alignJustify: IconAlignJustify,
+    bold: IconBold,
+    italic: IconItalic,
+    strike: IconStrikeThrough,
+    code: IconCode,
+    image: IconImage,
+};
+
 function MenuBar({ editor, className, canUpload }: { editor: Editor; className: string; canUpload: boolean }) {
     const { locale: menuLocale } = useLocale('Sidebar');
 
@@ -116,63 +152,42 @@ function MenuBar({ editor, className, canUpload }: { editor: Editor; className: 
     };
 
     const handleUnsetLink = () => {
-        clearSelectionHighlight(editor);
-        editor.chain().focus().unsetLink().run();
+        unsetLink(editor);
         Toast.success(menuLocale.linkRemoveSuccess);
         setLinkDropdownVisible(false);
         setLinkSelectionRange(null);
     };
 
-    const handleImageAdd = () => editor.chain().focus().insertContent({ type: 'imageUpload' }).run();
-
-    return (
-        <div className={className}>
-            <ConfigureButton aria-label={menuLocale.undo} disabled={!editorState.canUndo} icon={<IconUndo />} onClick={() => editor.chain().focus().undo().run()} />
-            <ConfigureButton aria-label={menuLocale.redo} disabled={!editorState.canRedo} icon={<IconRedo />} onClick={() => editor.chain().focus().redo().run()} />
-            <Divider layout="vertical" />
+    const renderItem = (item: FileMenuItem, index: number) => {
+        if (item.type === 'divider') {
+            return <Divider key={index} layout="vertical" />;
+        }
+        if (item.type === 'heading') {
+            return (
+                <Dropdown
+                    key={index}
+                    render={
+                        <Dropdown.Menu>
+                            {HEADINGS.map(({ Icon, level }) => (
+                                <ConfigureDropdownItem key={level} aria-label={formatLocale(menuLocale.headingLevel, { level })} active={editorState.headingLevel === level} onClick={() => editor.chain().focus().toggleHeading({ level }).run()}>
+                                    <Icon />
+                                </ConfigureDropdownItem>
+                            ))}
+                        </Dropdown.Menu>
+                    }
+                >
+                    <ConfigureButton aria-label={menuLocale.heading} active={editorState.isHeading} icon={<IconHn />} />
+                </Dropdown>
+            );
+        }
+        if (item.type === 'button') {
+            const Icon = MENU_ICONS[item.key];
+            const active = item.activeKey ? editorState[item.activeKey] : undefined;
+            return <ConfigureButton key={item.key} aria-label={menuLocale[item.key]} aria-pressed={active} disabled={item.enabledKey !== undefined && !editorState[item.enabledKey]} active={active} icon={<Icon />} onClick={() => item.command(editor.chain().focus()).run()} />;
+        }
+        return (
             <Dropdown
-                render={
-                    <Dropdown.Menu>
-                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 1 })} active={editorState.headingLevel === 1} onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
-                            <IconH1 />
-                        </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 2 })} active={editorState.headingLevel === 2} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
-                            <IconH2 />
-                        </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 3 })} active={editorState.headingLevel === 3} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
-                            <IconH3 />
-                        </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 4 })} active={editorState.headingLevel === 4} onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}>
-                            <IconH4 />
-                        </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 5 })} active={editorState.headingLevel === 5} onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}>
-                            <IconH5 />
-                        </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 6 })} active={editorState.headingLevel === 6} onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}>
-                            <IconH6 />
-                        </ConfigureDropdownItem>
-                    </Dropdown.Menu>
-                }
-            >
-                <ConfigureButton aria-label={menuLocale.heading} active={editorState.isHeading} icon={<IconHn />} />
-            </Dropdown>
-            <ConfigureButton aria-label={menuLocale.paragraph} aria-pressed={editorState.isParagraph} active={editorState.isParagraph} icon={<IconText />} onClick={() => editor.chain().focus().setParagraph().run()} />
-            <ConfigureButton aria-label={menuLocale.bulletList} aria-pressed={editorState.isBulletList} active={editorState.isBulletList} icon={<IconList />} onClick={() => editor.chain().focus().toggleBulletList().run()} />
-            <ConfigureButton aria-label={menuLocale.orderedList} aria-pressed={editorState.isOrderedList} active={editorState.isOrderedList} icon={<IconOrderedList />} onClick={() => editor.chain().focus().toggleOrderedList().run()} />
-            <ConfigureButton aria-label={menuLocale.blockquote} aria-pressed={editorState.isBlockquote} active={editorState.isBlockquote} icon={<IconQuote />} onClick={() => editor.chain().focus().toggleBlockquote().run()} />
-            <ConfigureButton aria-label={menuLocale.codeBlock} aria-pressed={editorState.isCodeBlock} active={editorState.isCodeBlock} icon={<IconTerminal />} onClick={() => editor.chain().focus().toggleCodeBlock().run()} />
-            <ConfigureButton aria-label={menuLocale.horizontalRule} icon={<IconMinus />} onClick={() => editor.chain().focus().setHorizontalRule().run()} />
-            <Divider layout="vertical" />
-            <ConfigureButton aria-label={menuLocale.alignLeft} aria-pressed={editorState.isAlignLeft} active={editorState.isAlignLeft} icon={<IconAlignLeft />} onClick={() => editor.chain().focus().setTextAlign('left').run()} />
-            <ConfigureButton aria-label={menuLocale.alignCenter} aria-pressed={editorState.isAlignCenter} active={editorState.isAlignCenter} icon={<IconAlignCenter />} onClick={() => editor.chain().focus().setTextAlign('center').run()} />
-            <ConfigureButton aria-label={menuLocale.alignRight} aria-pressed={editorState.isAlignRight} active={editorState.isAlignRight} icon={<IconAlignRight />} onClick={() => editor.chain().focus().setTextAlign('right').run()} />
-            <ConfigureButton aria-label={menuLocale.alignJustify} aria-pressed={editorState.isAlignJustify} active={editorState.isAlignJustify} icon={<IconAlignJustify />} onClick={() => editor.chain().focus().setTextAlign('justify').run()} />
-            <Divider layout="vertical" />
-            <ConfigureButton aria-label={menuLocale.bold} aria-pressed={editorState.isBold} active={editorState.isBold} icon={<IconBold />} onClick={() => editor.chain().focus().toggleBold().run()} />
-            <ConfigureButton aria-label={menuLocale.italic} aria-pressed={editorState.isItalic} disabled={!editorState.canItalic} active={editorState.isItalic} icon={<IconItalic />} onClick={() => editor.chain().focus().toggleItalic().run()} />
-            <ConfigureButton aria-label={menuLocale.strike} aria-pressed={editorState.isStrike} disabled={!editorState.canStrike} active={editorState.isStrike} icon={<IconStrikeThrough />} onClick={() => editor.chain().focus().toggleStrike().run()} />
-            <ConfigureButton aria-label={menuLocale.code} aria-pressed={editorState.isCode} disabled={!editorState.canCode} active={editorState.isCode} icon={<IconCode />} onClick={() => editor.chain().focus().toggleCode().run()} />
-            <Dropdown
+                key={index}
                 render={
                     <div className={`${prefixCls}-menu-bar-link-dropdown`}>
                         <Input
@@ -210,14 +225,10 @@ function MenuBar({ editor, className, canUpload }: { editor: Editor; className: 
             >
                 <ConfigureButton aria-label={menuLocale.link} active={editorState.isLink} icon={<IconLink />} />
             </Dropdown>
-            {canUpload && (
-                <>
-                    <Divider layout="vertical" />
-                    <ConfigureButton aria-label={menuLocale.image} disabled={!editorState.canInsertImage} icon={<IconImage />} onClick={handleImageAdd} />
-                </>
-            )}
-        </div>
-    );
+        );
+    };
+
+    return <div className={className}>{getFileMenuItems(canUpload).map(renderItem)}</div>;
 }
 
 export const FileItem = React.memo(function FileItem({ editable = true, name, content, onContentChange, extensions = [], className, style, imgUploadProps, ...rest }: FileItemProps) {

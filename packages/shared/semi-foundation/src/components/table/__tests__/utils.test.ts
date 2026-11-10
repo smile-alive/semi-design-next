@@ -1,11 +1,13 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import {
     type BodyRow,
+    applyColumnResize,
     buildRecordsByKey,
     flattenBodyRows,
     flattenData,
     getCellWidths,
     getChangedRowKeys,
+    getColumnResizeChange,
     getDefaultComponents,
     getDefaultVirtualizedRowConfig,
     getExpandColumn,
@@ -13,6 +15,7 @@ import {
     getHeaderRowCount,
     getHeaderStickyOffset,
     getNextSortOrder,
+    getResizableColumns,
     getRowSpanHoverKeys,
     mergeColumns,
     mergedRowExpandable,
@@ -38,13 +41,13 @@ describe('flattenData', () => {
 
     it('展开行紧跟在记录之后，并标记为展开', () => {
         const rows = flattenData({ expandedRowKeys: ['b'], expandedRowRender: () => null }, tree);
-        expect(rows.map((row) => row.key)).toEqual(['a', 'b', 'b__expanded_row']);
+        expect(rows.map((row) => row.key)).toEqual(['a', 'b', 'b-expanded-row']);
         expect(rows[2]).toMatchObject({ expandedRow: true, expanded: true, level: 0 });
     });
 
     it('有子行的展开记录依次展平为记录、展开行、子行', () => {
         const rows = flattenData({ expandedRowKeys: ['a'], expandedRowRender: () => null }, tree);
-        expect(rows.map((row) => row.key)).toEqual(['a', 'a__expanded_row', 'a1', 'a2', 'b']);
+        expect(rows.map((row) => row.key)).toEqual(['a', 'a-expanded-row', 'a1', 'a2', 'b']);
     });
 
     it('rowExpandable 为假的记录没有展开行', () => {
@@ -276,6 +279,33 @@ describe('getCellWidths', () => {
     it('columns 为空或 undefined 时返回空数组', () => {
         expect(getCellWidths(headWidths, undefined)).toEqual([]);
         expect(getCellWidths([], [{ key: 'a' }])).toEqual([]);
+    });
+
+    it('虚拟化且未测量时取声明的数值宽度，选择列与展开列取默认宽度，有列未声明数值宽度时返回空数组', () => {
+        expect(getCellWidths([], [{ key: 'column-selection' }, { key: 'column-expand' }, { key: 'a', width: 80 }], true)).toEqual([60, 60, 80]);
+        expect(getCellWidths([], [{ key: 'a', width: 80 }, { key: 'b' }], true)).toEqual([]);
+        expect(getCellWidths([], [{ key: 'a', width: 80 }])).toEqual([]);
+    });
+});
+
+describe('列宽拖拽', () => {
+    const resizable = { handlerClassName: 'dragging', onResizeStart: (column: Record<string, any>) => ({ class: column.class }) };
+
+    it('占位列按 fixed 放在表格放内置列的位置并带默认宽度，列得到生成的 key', () => {
+        const columns = getResizableColumns<Record<string, any>>([{ dataIndex: 'name' }], { key: 'column-expand' }, { key: 'column-selection', fixed: 'right' });
+        expect(columns.map((column) => [column.key, column.width])).toEqual([
+            ['column-expand', 60],
+            ['0-name', undefined],
+            ['column-selection', 60],
+        ]);
+    });
+
+    it('拖动中的列带 handler class，开始时返回的 class 在结束时剥掉 handler class', () => {
+        const column = { key: 'a', class: 'own' };
+        const started = getColumnResizeChange({ phase: 'start', column, recorded: undefined, resizable, classKey: 'class' });
+        expect(started).toEqual({ class: 'own dragging' });
+        expect(applyColumnResize([column], { resizable, classKey: 'class', getOverride: () => started, isResizing: () => true })[0].class).toBe('own dragging');
+        expect(getColumnResizeChange({ phase: 'stop', column: { ...column, ...started }, recorded: started, resizable, classKey: 'class' })).toEqual({ class: 'own' });
     });
 });
 

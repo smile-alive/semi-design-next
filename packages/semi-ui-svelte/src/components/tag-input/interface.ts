@@ -1,11 +1,12 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
+import type { TagInputValidateStatus } from '@fibrae/semi-foundation/components/tag-input/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { PopoverProps } from '../popover/index.js';
 import type { TypographyShowTooltip as ShowTooltip } from '../typography/index.js';
 
 export type TagInputSize = Size;
-export type TagInputValidateStatus = 'default' | 'error' | 'warning';
+export type { TagInputValidateStatus };
 /** The `+N` popover shows the rest tags itself, so its trigger and content are not configurable */
 export type RestTagsPopoverProps = Omit<PopoverProps, 'children' | 'child' | 'content'>;
 

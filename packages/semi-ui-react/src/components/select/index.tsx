@@ -2,19 +2,18 @@ import type React from 'react';
 import { type CSSProperties, type MouseEvent, type ReactNode, Children, Fragment, useCallback, useDeferredValue, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { isEqualWith } from 'es-toolkit';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/select/constants';
-import SelectFoundation, { type SelectAdapter } from '@fibrae/semi-foundation/components/select/foundation';
+import SelectFoundation, { type SelectAdapter, getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
 import { type OptionRecord, getOptionRuns, optionListToRecords } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
 import { isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
-import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/select/select.scss';
 import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-react';
 import type { Bivariant, ByMultiple, ElementProps } from '../../base/base';
-import type { ValidateStatus } from '../../base/base-component';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../hooks/use-click-outside';
@@ -398,24 +397,9 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             notifyListScroll: (e) => base.getProps().onListScroll?.(e),
             focusTrigger: () => triggerRef.current?.focus({ preventScroll: base.getProp('preventScroll') }),
             getOptionList: () => optionContainerEl.current,
-            updateScrollTop: (index) => {
-                if (index !== undefined && virtualizeListRef.current) {
-                    virtualizeListRef.current.scrollToItem(index);
-                    return;
-                }
-                const custom = base.getProps().renderOptionItem !== undefined;
-                let destNode: HTMLElement | null | undefined;
-                if (index === undefined) {
-                    destNode = optionContainerEl.current?.querySelector<HTMLElement>(`.${prefixcls}-option${custom ? '-custom' : ''}-selected`);
-                } else {
-                    // by id inside the list, not :nth-child (group titles are siblings of the options) or document.getElementById (misses a ShadowRoot)
-                    destNode = optionContainerEl.current?.querySelector<HTMLElement>(`#${CSS.escape(`${base.getProps().id || generatedId}-option-${index}`)}`);
-                }
-                const listbox = destNode?.closest<HTMLElement>('[role="listbox"]');
-                if (destNode && listbox) {
-                    centerInScroller(destNode, listbox);
-                }
-            },
+            getListId: () => base.getProps().id || generatedId,
+            getTriggerInput: () => inputRef.current?.input,
+            scrollVirtualTo: (index, align) => virtualizeListRef.current?.scrollToItem(index, align),
         })
     );
 
@@ -423,7 +407,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const triggerInputRef = useMergedRef(inputRef, props.inputProps?.ref);
     const dropdownSearchRef = useMergedRef(dropdownInputRef, props.inputProps?.ref);
     const { isOpen } = state;
-    const { selections, inputValue, isFocus, showInput, focusIndex, options, isFullTags, overflowItemCount } = state;
+    const { selections, inputValue, isFocus, showInput, focusIndex, options, overflowItemCount } = state;
 
     // only a keyword change is deferred; clicks and arrow keys paint with the live state
     const lagOptions = useDeferredValue(options);
@@ -440,7 +424,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const position = SelectFoundation.getPosition(positionProp, direction);
     const filterable = Boolean(filter);
     const activeIndex = SelectFoundation.getActiveOptionIndex({ isOpen, loading, focusIndex: deferredFocusIndex, visibleCount: visibleOptions.length });
-    const activeDescendant = activeIndex === undefined ? undefined : `${selectID}-option-${activeIndex}`;
+    const activeDescendant = activeIndex === undefined ? undefined : getOptionId(selectID, activeIndex);
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
     const prefixId = insetLabelId ?? (insetLabelShown ? `${selectID}-inset-label` : undefined);
@@ -517,11 +501,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
 
     const handleInputChange = (sugInput: string, event?: InputChangeEvent) => foundation.handleInputChange(sugInput, event);
 
-    const handleClear = (e?: React.MouseEvent) => {
-        e?.nativeEvent.stopImmediatePropagation();
-        foundation.handleClearClick(e);
-    };
-
     const renderTriggerInput = () => {
         const inputcls = clsx(
             `${prefixcls}-input`,
@@ -547,10 +526,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             ...inputProps,
             className: inputcls,
             ref: triggerInputRef,
-            onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
-                inputProps?.onBlur?.(e);
-                foundation.handleInputBlur();
-            },
         };
 
         if (multiple) {
@@ -563,11 +538,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 // the single-select input is empty until typing, so the selected text is exposed as its description
                 aria-describedby={joinIds(ariaDescribedby, multiple || inputValue ? undefined : selectionTextId)}
                 size={size}
-                onFocus={(e) => {
-                    foundation.handleInputFocus(e);
-                    // prevent event bubbling which will fire trigger onFocus event
-                    e.stopPropagation();
-                }}
                 {...selectInputProps}
             />
         );
@@ -615,7 +585,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const renderCreateOption = (option: OptionProps, isFocused: boolean, optionIndex: number, optionStyle: React.CSSProperties) => {
         if (typeof renderCreateItem === 'undefined') {
             return (
-                <Option key={option.key || (option.label as string) + option.value} showTick {...optionHandlers[optionIndex]} {...option} style={optionStyle} focused={isFocused} semiOptionId={`${selectID}-option-${optionIndex}`}>
+                <Option key={option.key || (option.label as string) + option.value} showTick {...optionHandlers[optionIndex]} {...option} style={optionStyle} focused={isFocused} semiOptionId={getOptionId(selectID, optionIndex)}>
                     <span className={`${prefixcls}-create-tips`}>{locale.createText}</span>
                     {option.value}
                 </Option>
@@ -625,7 +595,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         const customCreateItem = renderCreateItem(option.value, isFocused, optionStyle);
 
         return (
-            <div key={option.key || option.label} id={`${selectID}-option-${optionIndex}`} aria-selected="false" role="option" onClick={(e) => optionHandlers[optionIndex].onSelect(option, e)}>
+            <div key={option.key || option.label} id={getOptionId(selectID, optionIndex)} aria-selected="false" role="option" onClick={(e) => optionHandlers[optionIndex].onSelect(option, e)}>
                 {customCreateItem}
             </div>
         );
@@ -648,7 +618,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 focused={isFocused}
                 inputValue={inputValue}
                 selected={record.selected}
-                semiOptionId={`${selectID}-option-${optionIndex}`}
+                semiOptionId={getOptionId(selectID, optionIndex)}
                 renderOptionItem={renderOptionItem}
                 {...optionHandlers[optionIndex]}
             >
@@ -772,7 +742,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     };
 
     // OverflowList shows the first overflowed item collapsed, so only the others count as hidden
-    const handleOverflow = (items: [OptionProps['value'], any][]) => foundation.updateOverflowItemCount(selections.size, Math.max(items.length - 1, 0));
+    const handleOverflow = (items: [OptionProps['value'], any][]) => foundation.updateOverflowItemCount(Math.max(items.length - 1, 0));
 
     const renderCollapsedTags = (selectedItems: [OptionProps['value'], any][], length?: number) => {
         const normalTags = typeof length === 'number' ? selectedItems.slice(0, length) : selectedItems;
@@ -796,23 +766,12 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         );
     };
 
-    const renderOneLineTags = (selectedItems: [OptionProps['value'], any][], n?: number) => {
+    const renderOneLineTags = (selectedItems: [OptionProps['value'], any][], { limit, shownCount, restCount }: ReturnType<typeof SelectFoundation.getTagFold>) => {
+        const tagList = selectedItems.slice(0, shownCount).map((item, i) => renderTag(item, i, { inTagGroup: true }));
         if (showRestTagsPopover) {
-            const mapItems = isFullTags ? selectedItems : selectedItems.slice(0, maxTagCount);
-            return (
-                <TagGroup
-                    maxTagCount={n}
-                    mode="custom"
-                    popoverProps={restTagsPopoverProps}
-                    restCount={isFullTags ? undefined : selectedItems.length - maxTagCount}
-                    showPopover={showRestTagsPopover}
-                    size={tagSize}
-                    tagList={mapItems.map((item, i) => renderTag(item, i, { inTagGroup: true }))}
-                    onPlusNMouseEnter={foundation.updateIsFullTags}
-                />
-            );
+            return <TagGroup maxTagCount={limit} mode="custom" popoverProps={restTagsPopoverProps} restCount={restCount} showPopover={showRestTagsPopover} size={tagSize} tagList={tagList} onPlusNMouseEnter={foundation.updateIsFullTags} />;
         }
-        return <TagGroup maxTagCount={n} mode="custom" restCount={selectedItems.length - maxTagCount} size={tagSize} tagList={selectedItems.slice(0, maxTagCount).map((item, i) => renderTag(item, i, { inTagGroup: true }))} />;
+        return <TagGroup maxTagCount={limit} mode="custom" restCount={restCount} size={tagSize} tagList={tagList} />;
     };
 
     const renderMultipleSelection = () => {
@@ -830,16 +789,15 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             [`${prefixcls}-selection-text-hide`]: selectedItems && selectedItems.length,
         });
         const placeholderText = placeholder && !inputValue ? <span className={spanCls}>{placeholder}</span> : null;
-        const n = selectedItems.length > maxTagCount ? maxTagCount : undefined;
-        const NotOneLine = !maxTagCount;
+        const fold = SelectFoundation.getTagFold({ maxTagCount, expandRestTagsOnClick, showRestTagsPopover }, state, selectedItems.length);
 
         let tagContent: ReactNode;
-        if (NotOneLine || (expandRestTagsOnClick && isOpen)) {
+        if (fold.expanded) {
             tagContent = selectedItems.map((item, i) => renderTag(item, i));
         } else if (ellipsisTrigger) {
-            tagContent = renderCollapsedTags(selectedItems, n);
+            tagContent = renderCollapsedTags(selectedItems, fold.limit);
         } else {
-            tagContent = renderOneLineTags(selectedItems, n);
+            tagContent = renderOneLineTags(selectedItems, fold);
         }
 
         const showTriggerInput = filterable && searchPosition === strings.SEARCH_POSITION_TRIGGER;
@@ -850,20 +808,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 {showTriggerInput && renderTriggerInput()}
             </div>
         );
-    };
-
-    const scrollToSelection = () => {
-        // Home, End or typing may have moved the highlight off the selection before the list mounted
-        if (virtualize && focusIndex !== -1) {
-            virtualizeListRef.current?.scrollToItem(focusIndex, 'center');
-        } else if (virtualize) {
-            const first = options.find((option) => option.selected && option.index >= 0);
-            if (first) {
-                virtualizeListRef.current?.scrollToItem(first.index, 'center');
-            }
-        } else {
-            foundation.updateScrollTop();
-        }
     };
 
     // The selection keeps labels of earlier options, so it is not derived in render
@@ -969,7 +913,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         // a triggerRender that spreads componentProps must not grab the Select's ref
         const componentProps = { ...props };
         delete componentProps.ref;
-        inner = <Trigger disabled={disabled} placeholder={placeholder} value={Array.from(selections.values())} componentProps={componentProps} inputValue={inputValue} triggerRender={triggerRender} onClear={handleClear} onRemove={foundation.removeTag} onSearch={handleInputChange} />;
+        inner = <Trigger disabled={disabled} placeholder={placeholder} value={Array.from(selections.values())} componentProps={componentProps} inputValue={inputValue} triggerRender={triggerRender} onClear={foundation.handleClearClick} onRemove={foundation.removeTag} onSearch={handleInputChange} />;
     } else {
         inner = (
             <>
@@ -977,7 +921,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 <div className={`${prefixcls}-selection`}>{multiple ? renderMultipleSelection() : renderSingleSelection()}</div>
                 {hasContent(suffix) && renderTriggerSuffix(prefixcls, suffix)}
                 {clearable && (
-                    <button ref={setClearButton} type="button" className={`${prefixcls}-clear`} aria-label={locale.clear} onClick={handleClear} onKeyDown={stopButtonActivationKeys}>
+                    <button ref={setClearButton} type="button" className={`${prefixcls}-clear`} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys}>
                         {clearIcon ? clearIcon : <IconClear />}
                     </button>
                 )}
@@ -1010,7 +954,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 stopPropagation={stopPropagation}
                 trigger="custom"
                 visible={isOpen}
-                onOpen={scrollToSelection}
+                onOpen={foundation.scrollToSelection}
             >
                 <div
                     {...rest}
@@ -1020,16 +964,12 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                     style={style}
                     {...triggerAriaProps}
                     tabIndex={disabled || inputIsCombobox ? -1 : 0}
-                    onBlur={(e) => {
-                        if (!e.currentTarget.contains(e.relatedTarget)) {
-                            foundation.handleTriggerBlur(e);
-                        }
-                    }}
+                    onBlur={foundation.handleFocusOut}
                     onClick={(e) => {
                         rest.onClick?.(e);
                         foundation.handleClick(e);
                     }}
-                    onFocus={foundation.handleTriggerFocus}
+                    onFocus={foundation.handleFocusIn}
                     onKeyDown={(e) => {
                         rest.onKeyDown?.(e);
                         foundation.handleKeyDown(e);

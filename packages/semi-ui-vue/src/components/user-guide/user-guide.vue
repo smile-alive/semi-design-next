@@ -1,11 +1,11 @@
 <script setup lang="ts">
-    import { computed, onActivated, onDeactivated, onMounted, onUpdated, shallowRef, useAttrs, useId, watch } from 'vue';
+    import { computed, onActivated, onDeactivated, shallowRef, useAttrs, useId } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
     import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
-    import useEventListener, { getWindow } from '../../composables/use-event-listener';
+    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
     import Button from '../button';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
@@ -52,8 +52,8 @@
 
     let popover: PopoverHandle | null = null;
 
-    // A deactivated KeepAlive subtree leaves the page: close the card, stop the scroll lock and measuring silently, and
-    // resume on reactivation. Tooltip would not close a controlled card.
+    // A deactivated KeepAlive subtree leaves the page: the foundation gives up its holds and measuring silently, and the
+    // card closes until reactivation. Tooltip would not close a controlled card.
     const active = shallowRef(true);
 
     const prefix = cssClasses.PREFIX;
@@ -94,16 +94,6 @@
     const showMask = computed(() => step.value?.mask ?? props.mask);
     const primary = computed(() => (step.value?.theme ?? props.theme) === 'primary');
 
-    // Without a step on screen (a modal step, or a popup step with a measured target) the guide renders nothing, so it
-    // must not lock the page or take focus.
-    const shown = computed(() => Boolean(props.visible && step.value && (props.mode === 'modal' || state.value.spotlightRect)) && active.value);
-
-    const measuring = () => props.visible && props.mode === 'popup' && active.value;
-
-    const remeasure = () => {
-        if (measuring()) foundation.measureSpotlight(false);
-    };
-
     // a function ref: inside the v-for below, a string ref would collect an array
     const setPopover = (instance: unknown) => {
         popover = instance as PopoverHandle | null;
@@ -139,6 +129,8 @@
 
     const modalNextBind = () => buttonBind({ theme: 'solid' }, props.nextButtonProps, foundation.handleNext);
 
+    useKeepAliveFoundation(foundation);
+
     onDeactivated(() => {
         active.value = false;
     });
@@ -146,57 +138,6 @@
     onActivated(() => {
         active.value = true;
     });
-
-    useEventListener(getWindow, 'resize', remeasure, { enabled: measuring });
-
-    // capture: a scroll inside any container can move the target
-    useEventListener(getWindow, 'scroll', remeasure, { capture: true, enabled: measuring });
-
-    watch(
-        () => shown.value && props.mode === 'popup',
-        (on, _, onCleanup) => {
-            if (!on) return;
-            foundation.recordFocus();
-            onCleanup(foundation.restoreFocus);
-        }
-    );
-
-    // These need the target elements, which exist once mounted; the first measure scrolls into view
-    onMounted(() => {
-        watch(
-            [() => props.visible, () => props.mode, current, active],
-            () => {
-                if (measuring()) foundation.measureSpotlight(true);
-            },
-            { immediate: true, flush: 'post' }
-        );
-        watch(
-            measuring,
-            (on, _, onCleanup) => {
-                if (on) onCleanup(UserGuideFoundation.trackFrames(remeasure));
-            },
-            { immediate: true, flush: 'post' }
-        );
-        watch(
-            () => [shown.value, showMask.value, props.mode] as const,
-            ([isShown], _, onCleanup) => {
-                if (!isShown) return;
-                foundation.beforeShow();
-                onCleanup(foundation.releaseScroll);
-            },
-            { immediate: true, flush: 'post' }
-        );
-        watch(
-            () => props.visible,
-            (visible, _, onCleanup) => {
-                if (visible) onCleanup(foundation.afterHide);
-            },
-            { immediate: true, flush: 'post' }
-        );
-    });
-
-    // a render can move the target without any reactive change in this component
-    onUpdated(remeasure);
 </script>
 
 <template>

@@ -1,4 +1,3 @@
-import { popupTriggerSelector } from '../components/tooltip/constants';
 import { isDev } from './warning';
 
 export function handlePrevent(event: Pick<Event, 'stopPropagation' | 'preventDefault'>) {
@@ -15,20 +14,21 @@ export function joinIds(...ids: unknown[]): string | undefined {
 }
 
 /** An explicit role wins; otherwise a generic div given a name becomes a group, since a div without a role cannot carry one */
-export function namedRole(role?: string, ariaLabel?: string, ariaLabelledby?: string) {
-    return role ?? (ariaLabel || ariaLabelledby ? 'group' : undefined);
+export function namedRole<A extends object>(attrs: A): RoleOf<A> | 'group' | undefined {
+    const { role, 'aria-label': label, 'aria-labelledby': labelledby } = attrs as { role?: RoleOf<A> | null; 'aria-label'?: unknown; 'aria-labelledby'?: unknown };
+    return role ?? (label || labelledby ? 'group' : undefined);
 }
+
+/** The role type the caller's own attribute bag declares, so each framework's typed `role` attribute accepts the result */
+type RoleOf<A> = 'role' extends keyof A ? (NonNullable<A[keyof A & 'role']> extends string ? NonNullable<A[keyof A & 'role']> : string) : never;
 
 export const isAriaKey = (key: string): key is `aria-${string}` => key.startsWith('aria-');
 
 const NATIVE_INPUT_ATTRIBUTE_KEYS = new Set(['id', 'name', 'tabindex', 'tabIndex', 'autofocus']);
 
-/**
- * What names, identifies and focuses a native input that sits inside a styled root. Svelte spells listener keys in
- * lowercase (`onfocus`), every other framework in camelCase (`onFocus`).
- */
-export function isNativeInputKey(key: string, lowercaseEvents = false) {
-    return isAriaKey(key) || NATIVE_INPUT_ATTRIBUTE_KEYS.has(key) || (lowercaseEvents ? key === 'onfocus' || key === 'onblur' : key === 'onFocus' || key === 'onBlur');
+/** What names, identifies and focuses a native input that sits inside a styled root; listener keys come in camelCase and lowercase spellings */
+export function isNativeInputKey(key: string) {
+    return isAriaKey(key) || NATIVE_INPUT_ATTRIBUTE_KEYS.has(key) || key === 'onFocus' || key === 'onfocus' || key === 'onBlur' || key === 'onblur';
 }
 
 // the u flag makes one code point one character, so characters outside the BMP count too
@@ -123,6 +123,14 @@ export function getEnabledStepIndex(offset: number, current: number, count: numb
 /** Whether keys on `target` edit text, so they must not type-to-select or activate: a custom search may be any editor */
 export function isTextEditor(target: EventTarget | null) {
     return target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || (target instanceof HTMLElement && target.isContentEditable);
+}
+
+/**
+ * Whether a focusin or focusout on a group crosses its boundary: focus comes from, or goes to, outside `currentTarget`
+ * (or nowhere). A group reports focus and blur only then, not when focus moves between its own parts.
+ */
+export function crossesFocusBoundary({ currentTarget, relatedTarget }: { currentTarget: EventTarget | null; relatedTarget: EventTarget | null }) {
+    return !(currentTarget instanceof Node && relatedTarget instanceof Node && currentTarget.contains(relatedTarget));
 }
 
 /**
@@ -225,12 +233,4 @@ export function warnIfDialogUnnamed(dialog: HTMLElement | null, component: strin
     if (!dialog.getAttribute('aria-label')?.trim() && !hasLabelElement) {
         console.warn(`Warning: [Semi ${component}] the dialog has no accessible name. Pass \`title\`, \`aria-label\` or \`aria-labelledby\`.`);
     }
-}
-
-/**
- * The trigger of the Tooltip-family popup `id`. `root`: the document or shadow root the popup lives in, which also
- * holds its trigger (the popup is portaled into the trigger's root).
- */
-export function getPopupTrigger(id: string, root: ParentNode): HTMLElement | null {
-    return root.querySelector<HTMLElement>(popupTriggerSelector(id));
 }

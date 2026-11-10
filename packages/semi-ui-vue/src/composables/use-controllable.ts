@@ -1,6 +1,6 @@
 import { type ComputedRef, computed, shallowRef, watch } from 'vue';
 
-export default function useControllable<T>(get: () => T | undefined, getDefault: () => T | undefined, onChange: (value: T) => void, { keepLastControlled = false }: { keepLastControlled?: boolean } = {}): [ComputedRef<T | undefined>, (value: T) => void] {
+export default function useControllable<T>(get: () => T | undefined, getDefault: () => T | undefined, onChange: (value: T) => void): [ComputedRef<T | undefined>, (value: T) => void] {
     const initial = get();
 
     const local = shallowRef<T | undefined>(initial !== undefined ? initial : getDefault());
@@ -17,9 +17,7 @@ export default function useControllable<T>(get: () => T | undefined, getDefault:
     watch(
         get,
         (value) => {
-            if (value !== undefined && keepLastControlled) {
-                local.value = value;
-            } else if (value === undefined && !keepLastControlled) {
+            if (value === undefined) {
                 local.value = undefined;
             }
         },

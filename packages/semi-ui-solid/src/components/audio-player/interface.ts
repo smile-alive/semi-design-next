@@ -1,13 +1,6 @@
+import type { AudioUrl } from '@fibrae/semi-foundation/components/audio-player/foundation';
 import type { ElementProps } from '../../base/element-props';
 import type { MediaEventKeys } from '../../utils/media-event-keys';
-
-export interface AudioInfo {
-    title?: string;
-    cover?: string;
-    src: string;
-}
-
-export type AudioUrl = string | AudioInfo | (AudioInfo | string)[];
 
 export type AudioPlayerTheme = 'dark' | 'light';
 
@@ -18,14 +11,4 @@ export interface AudioPlayerProps extends ElementProps<'div', MediaEventKeys | '
     showToolbar?: boolean;
     skipDuration?: number;
     theme?: AudioPlayerTheme;
-}
-
-export interface AudioPlayerState {
-    isPlaying: boolean;
-    currentIndex: number;
-    totalTime: number;
-    currentTime: number;
-    currentRate: { label: string; value: number };
-    volume: number;
-    error: boolean;
 }

@@ -84,20 +84,6 @@
 
     provideFormContext({ formState, formProps, formApi, bridge: foundation.getFieldBridge() });
 
-    const onSubmit = (e: SubmitEvent) => {
-        if (props.stopPropagation?.submit) {
-            e.stopPropagation();
-        }
-        foundation.submit(e);
-    };
-
-    const onReset = (e: Event) => {
-        if (props.stopPropagation?.reset) {
-            e.stopPropagation();
-        }
-        foundation.reset();
-    };
-
     onMounted(() => {
         emit('getFormApi', formApi);
         getFormApiProxyInternals(props.form)?.bind(formApi);
@@ -111,7 +97,7 @@
 <template>
     <component :is="props.labelCol && props.wrapperCol ? Row : SlotFragment">
         <!-- $attrs come after novalidate so that :novalidate="false" turns it off -->
-        <form v-bind="{ novalidate: true, ...$attrs }" :id="formId" ref="form" :class="[prefix, { [`${prefix}-vertical`]: props.layout === 'vertical', [`${prefix}-horizontal`]: props.layout === 'horizontal' }]" :x-form-id="formId" @reset.prevent="onReset" @submit.prevent="onSubmit">
+        <form v-bind="{ novalidate: true, ...$attrs }" :id="formId" ref="form" :class="[prefix, { [`${prefix}-vertical`]: props.layout === 'vertical', [`${prefix}-horizontal`]: props.layout === 'horizontal' }]" :x-form-id="formId" @reset="foundation.handleResetEvent" @submit="foundation.handleSubmitEvent">
             <slot :formApi="formApi" :formState="formState" :values="values" />
         </form>
     </component>

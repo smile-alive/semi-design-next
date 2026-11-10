@@ -1,12 +1,13 @@
 import NotificationApi from '@fibrae/semi-foundation/components/notification/notification-api-foundation';
-import renderDetached, { assertClient } from '../../base/detached-render';
+import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
+import renderDetached from '../../base/detached-render';
 import { readGlobalDefaults } from '../../utils/semi-global';
 import type { NotificationOptions } from './notice';
 import NotificationList from './notification-list';
 import useNotification from './use-notification';
 
 const api = new NotificationApi<NotificationOptions>({
-    assertClient,
+    assertClient: () => assertClient('Notification', 'Notification.useNotification'),
     readGlobalDefaults: () => readGlobalDefaults('Notification'),
     // detached: static notifications read the global defaults and the default locale, never a caller's context
     mount: (wrapper, store) => renderDetached(() => <NotificationList store={store} />, wrapper),

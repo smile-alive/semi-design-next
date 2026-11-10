@@ -1,9 +1,9 @@
 import { Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
+import { isAlertType } from '@fibrae/semi-foundation/base/list-store';
 import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/components/toast/constants';
 import ToastFoundation, { type ToastAdapter, type ToastProps as FoundationToastProps, type ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/element-props';

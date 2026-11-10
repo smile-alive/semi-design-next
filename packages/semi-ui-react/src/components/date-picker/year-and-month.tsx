@@ -8,7 +8,7 @@ import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconChevronLeft } from '@fibrae/semi-icons-react';
-import type { BaseProps } from '../../base/base-component';
+import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';
 import IconButton from '../icon-button';
 import ScrollList from '../scroll-list/index';
@@ -22,6 +22,9 @@ export type YearAndMonthOpts = Partial<Omit<ScrollItemProps<any>, 'list' | 'onSe
 export interface YearAndMonthProps extends YearAndMonthFoundationProps, BaseProps {
     yearAndMonthOpts?: YearAndMonthOpts;
     locale?: Locale['DatePicker'];
+    renderQuickControls?: React.ReactNode;
+    renderDateInput?: React.ReactNode;
+    onBackToMain?: () => void;
     ref?: React.Ref<YearAndMonthHandle>;
 }
 
@@ -30,18 +33,14 @@ export interface YearAndMonthHandle {
     reselect: () => void;
 }
 
-function noDisabledDate() {
-    return false;
-}
-
 export default function YearAndMonth({ ref, ...rawProps }: YearAndMonthProps) {
     const yearRef = useRef<ScrollItemHandle>(null);
     const monthRef = useRef<ScrollItemHandle>(null);
 
-    const { disabledDate = noDisabledDate, monthCycled = false, yearCycled = false, noBackBtn = false, onSelect = noop, type = 'month' } = rawProps;
+    const { monthCycled = false, yearCycled = false, noBackBtn = false, onSelect = noop, type = 'month' } = rawProps;
 
-    const props = { ...rawProps, disabledDate, monthCycled, yearCycled, noBackBtn, onSelect, type };
-    const { locale, density, presetPosition, renderQuickControls, renderDateInput, yearAndMonthOpts } = props;
+    const props = { ...rawProps, monthCycled, yearCycled, noBackBtn, onSelect, type };
+    const { locale, density, presetPosition, renderQuickControls, renderDateInput, yearAndMonthOpts, onBackToMain } = props;
 
     const [foundation] = useFoundation<YearAndMonthFoundation, YearAndMonthAdapter, YearAndMonthProps, Record<string, never>>(
         YearAndMonthFoundation,
@@ -49,7 +48,6 @@ export default function YearAndMonth({ ref, ...rawProps }: YearAndMonthProps) {
         () => ({}),
         (base) => ({
             notifySelect: (yearAndMonth) => base.getProps().onSelect(yearAndMonth),
-            notifyBackToMain: () => base.getProps().onBackToMain(),
         })
     );
 
@@ -106,7 +104,7 @@ export default function YearAndMonth({ ref, ...rawProps }: YearAndMonthProps) {
         <>
             {!noBackBtn && (
                 <div className={`${prefixCls}-yearmonth-header`}>
-                    <IconButton noHorizontalPadding={false} size={buttonSize} icon={<IconChevronLeft size={iconSize} />} onClick={foundation.backToMain}>
+                    <IconButton noHorizontalPadding={false} size={buttonSize} icon={<IconChevronLeft size={iconSize} />} onClick={() => onBackToMain?.()}>
                         <span>{locale.selectDate}</span>
                     </IconButton>
                 </div>

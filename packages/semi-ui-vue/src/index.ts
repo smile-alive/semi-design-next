@@ -67,7 +67,7 @@ export type {
 export { default as Popconfirm } from './components/popconfirm';
 export type { PopconfirmProps, PopconfirmSlots, PopconfirmEmits, PopconfirmHandle, PopconfirmButtonProps } from './components/popconfirm';
 export { default as Toast, ToastFactory } from './components/toast';
-export type { ToastProps, ToastConfigProps, ToastHandle, ToastHookApi, ToastHookOptions, ToastNode } from './components/toast';
+export type { ToastProps, ToastConfigProps, ToastHookApi, ToastHookOptions, ToastNode } from './components/toast';
 export { default as Badge } from './components/badge';
 export type * from './components/badge/interface';
 export { default as Empty } from './components/empty';
@@ -121,7 +121,7 @@ export type { ModalProps, ModalSlots, ModalEmits, ModalButtonProps, ModalConfirm
 export { default as SideSheet } from './components/side-sheet';
 export type { SideSheetProps, SideSheetEmits, SideSheetSlots, SideSheetHandle } from './components/side-sheet';
 export { default as Notification } from './components/notification';
-export type { NoticeProps, NoticeHandle, NotificationConfigProps, NotificationHookApi, NotificationHookOptions, NotificationNode, NoticePosition, NoticeTheme, NoticeType } from './components/notification';
+export type { NoticeProps, NotificationConfigProps, NotificationHookApi, NotificationHookOptions, NotificationNode, NoticePosition, NoticeTheme, NoticeType } from './components/notification';
 export { default as OverflowList } from './components/overflow-list';
 export type { OverflowListProps, OverflowListEmits, OverflowListSlots, OverflowListItem, OverflowListKey, OverflowListItemSlotProps, OverflowListOverflowSlotProps } from './components/overflow-list';
 export { default as ScrollList, ScrollItem } from './components/scroll-list';

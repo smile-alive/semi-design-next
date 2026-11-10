@@ -1,11 +1,12 @@
-import { type CSSProperties, type ReactElement, type ReactNode, isValidElement, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
+import { type CSSProperties, type ReactElement, type ReactNode, isValidElement, useRef } from 'react';
 import clsx from 'clsx';
 // compat pick also copies inherited properties of user-provided tabList items
 import { pick } from 'es-toolkit/compat';
 import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/components/tabs/constants';
 import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
+import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
 import { IconChevronRight, IconChevronLeft, IconChevronDown } from '@fibrae/semi-icons-react';
-import useDidUpdate from '../../hooks/use-did-update';
+import useFoundation from '../../base/use-foundation';
 import useMergedRef from '../../hooks/use-merged-ref';
 import ReactResizeObserver from '../../internal/resize-observer';
 import Button from '../button';
@@ -22,48 +23,49 @@ export interface OverflowItem extends PlainTab {
     active: boolean;
 }
 
-export default function TabBar({
-    activeKey,
-    className,
-    collapsible,
-    list,
-    onTabClick,
-    showRestInDropdown,
-    size,
-    style,
-    tabBarExtraContent,
-    tabPosition,
-    type,
-    dropdownClassName,
-    dropdownStyle,
-    deleteTabItem,
-    handleKeyDown,
-    more,
-    onVisibleTabsChange,
-    visibleTabsStyle,
-    arrowPosition,
-    renderArrow,
-    dropdownProps,
-    'aria-label': ariaLabel,
-    'aria-labelledby': ariaLabelledby,
-    ref,
-    ...rest
-}: TabBarProps) {
+export default function TabBar(props: TabBarProps) {
+    const {
+        activeKey,
+        className,
+        collapsible,
+        list,
+        onTabClick,
+        showRestInDropdown,
+        size,
+        style,
+        tabBarExtraContent,
+        tabPosition,
+        type,
+        dropdownClassName,
+        dropdownStyle,
+        deleteTabItem,
+        handleKeyDown,
+        more,
+        onVisibleTabsChange: _onVisibleTabsChange,
+        visibleTabsStyle,
+        arrowPosition,
+        renderArrow,
+        dropdownProps,
+        'aria-label': ariaLabel,
+        'aria-labelledby': ariaLabelledby,
+        ref,
+        ...rest
+    } = props;
+
     const { locale } = useLocale('Tabs');
     const tabsContext = useTabsContext();
 
     const tabBarRef = useRef<HTMLDivElement>(null);
-    const isFirstShowInViewport = useRef(true);
-    const [shouldCollapse, setShouldCollapse] = useState(false);
-
-    // Bar width at which the tabs overflowed. The collapsed layout can fit every tab at that width, but the uncollapsed
-    // one cannot, so leaving the collapse below this width would flip-flop between the two.
-    const collapsedWidth = useRef(0);
     let contents: ReactNode;
+
+    const [foundation, state] = useFoundation<TabBarFoundation<TabBarProps>, TabBarAdapter<TabBarProps>, TabBarProps, TabBarState>(TabBarFoundation, props, TabBarFoundation.getInitialState, (base) => ({
+        getBarElement: () => tabBarRef.current,
+        notifyVisibleTabsChange: (visibleState) => base.getProps().onVisibleTabsChange?.(visibleState),
+    }));
 
     // the library build does not go through React Compiler, so the merged ref is memoized by hand
     const mergedRef = useMergedRef(ref, tabBarRef);
-    const effectiveCollapsible = collapsible === 'auto' ? shouldCollapse : collapsible || false;
+    const effectiveCollapsible = TabBarFoundation.isCollapsed(collapsible, state.shouldCollapse);
 
     const tablistProps = {
         role: 'tablist',
@@ -71,25 +73,6 @@ export default function TabBar({
         'aria-label': ariaLabel,
         'aria-labelledby': ariaLabelledby,
     } as const;
-
-    // Not collapsed yet. Once collapsed, the OverflowList visible-state callback decides whether to leave the collapse,
-    // so this only ever turns it on.
-    const checkOverflow = () => {
-        const tabBarEl = tabBarRef.current;
-        if (collapsible !== 'auto' || shouldCollapse || !tabBarEl) {
-            return;
-        }
-        if (TabsFoundation.isTabsOverflowing(tabBarEl, tabPosition)) {
-            collapsedWidth.current = tabBarEl.clientWidth;
-            setShouldCollapse(true);
-        }
-    };
-
-    const checkOverflowOnMount = useEffectEvent(checkOverflow);
-
-    const scrollActiveTabItemIntoView = (logicalPosition?: ScrollLogicalPosition, behavior?: ScrollBehavior) => {
-        TabsFoundation.scrollTabIntoView(tabBarRef.current, getBarItemKey(activeKey), logicalPosition, behavior);
-    };
 
     const renderExtra = (): ReactNode => {
         if (!tabBarExtraContent) {
@@ -120,14 +103,6 @@ export default function TabBar({
         </div>
     );
 
-    // takes the item off `items`, so repeated clicks before the next render step on to the following hidden tab
-    const handleArrowClick = (items: Array<OverflowItem>, pos: 'start' | 'end') => {
-        const lastItem = pos === 'start' ? items.pop() : items.shift();
-        if (lastItem) {
-            TabsFoundation.scrollTabIntoView(tabBarRef.current, getBarItemKey(lastItem.itemKey));
-        }
-    };
-
     const renderCollapse = (items: Array<OverflowItem>, icon: ReactNode, pos: 'start' | 'end'): ReactNode => {
         const arrowCls = clsx(`${cssClasses.TABS_BAR}-arrow-${pos}`, `${cssClasses.TABS_BAR}-arrow`);
         const arrowName = pos === 'start' ? locale.prevTabs : locale.nextTabs;
@@ -152,7 +127,7 @@ export default function TabBar({
 
         const button = (
             // the Button is the Tab stop; Dropdown would add 0 here
-            <div className={arrowCls} role="presentation" tabIndex={-1} onClick={() => handleArrowClick(items, pos)}>
+            <div className={arrowCls} role="presentation" tabIndex={-1} onClick={() => foundation.handleArrowClick(items, pos)}>
                 <Button aria-label={arrowName} theme="borderless" icon={icon} />
             </div>
         );
@@ -184,29 +159,12 @@ export default function TabBar({
         const icon = pos === 'start' ? <IconChevronLeft /> : <IconChevronRight />;
         const overflowNode = renderCollapse(items, icon, pos);
         if (renderArrow) {
-            return renderArrow(items, pos, () => handleArrowClick(items, pos), overflowNode);
+            return renderArrow(items, pos, () => foundation.handleArrowClick(items, pos), overflowNode);
         }
         return overflowNode;
     };
 
     const renderOverflow = ([start, end]: [Array<OverflowItem>, Array<OverflowItem>]): [ReactNode, ReactNode] => [renderArrowSide(start, 'start'), renderArrowSide(end, 'end')];
-
-    const handleVisibleStateChange = (visibleMap: Map<string, boolean>) => {
-        const { visibleState, isShowInViewport, hasHidden } = TabsFoundation.readVisibleState(visibleMap);
-        // only when the tabs component appears in the viewport for the first time triggered scrollActiveTabItemIntoView
-        // refer to issue 2917 https://github.com/DouyinFE/semi-design/issues/2917
-        if (isFirstShowInViewport.current && isShowInViewport) {
-            scrollActiveTabItemIntoView('nearest', 'auto');
-            isFirstShowInViewport.current = false;
-        }
-        // all false: the bar is off-screen, which must not change the collapse state
-        if (collapsible === 'auto' && isShowInViewport) {
-            const tabBarEl = tabBarRef.current;
-            const stillTooNarrow = tabBarEl !== null && tabBarEl.clientWidth <= collapsedWidth.current;
-            setShouldCollapse(hasHidden || stillTooNarrow);
-        }
-        onVisibleTabsChange?.(visibleState);
-    };
 
     const renderCollapsedTab = (): ReactNode => {
         const renderedList = list.map((item) => ({
@@ -224,7 +182,7 @@ export default function TabBar({
                 visibleItemRenderer={renderTabItem}
                 wrapperProps={tablistProps}
                 renderMode="scroll"
-                onVisibleStateChange={handleVisibleStateChange}
+                onVisibleStateChange={foundation.handleVisibleStateChange}
             />
         );
     };
@@ -289,29 +247,6 @@ export default function TabBar({
         );
     };
 
-    // ResizeObserver reports after mount as well; this frame is the fallback when it does not fire
-    useLayoutEffect(() => {
-        const frame = requestAnimationFrame(() => checkOverflowOnMount());
-        return () => cancelAnimationFrame(frame);
-    }, []);
-
-    useDidUpdate(activeKey, () => {
-        if (effectiveCollapsible) {
-            scrollActiveTabItemIntoView();
-        }
-    });
-
-    useDidUpdate(
-        list,
-        () => {
-            // tabs added, removed or retitled change how wide the bar must be, so the remembered width no longer applies
-            collapsedWidth.current = 0;
-            checkOverflow();
-        },
-        // a parent re-render hands over a new list of the same tabs; element titles are new objects each time and only count by key
-        (a, b) => a.length === b.length && a.every((pane, i) => pane.itemKey === b[i].itemKey && (typeof pane.tab === 'object' || Object.is(pane.tab, b[i].tab)))
-    );
-
     if (effectiveCollapsible) {
         contents = renderCollapsedTab();
     } else if (more) {
@@ -341,7 +276,7 @@ export default function TabBar({
     );
 
     if (collapsible === 'auto') {
-        return <ReactResizeObserver onResize={() => checkOverflow()}>{tabBarContent}</ReactResizeObserver>;
+        return <ReactResizeObserver onResize={foundation.checkOverflow}>{tabBarContent}</ReactResizeObserver>;
     }
 
     return tabBarContent;

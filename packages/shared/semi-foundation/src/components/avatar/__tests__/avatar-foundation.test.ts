@@ -34,4 +34,10 @@ describe('AvatarFoundation.changeScale', () => {
         fullGap.foundation.changeScale();
         expect(fullGap.setState).not.toHaveBeenCalled();
     });
+
+    it('size 变化后重新计算比例', () => {
+        const { foundation, setState } = createFoundation({ gap: 3, size: 'large' }, { container: 40, text: 68 });
+        foundation.handlePropsChange({ gap: 3, size: 'small' });
+        expect(setState).toHaveBeenCalledWith({ scale: 0.5 }, undefined);
+    });
 });

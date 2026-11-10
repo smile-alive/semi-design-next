@@ -1,6 +1,7 @@
 import { type JSX, Match, Show, Switch, children, createSignal } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
 import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import { IconAlertCircle, IconClear, IconClose, IconFile, IconRefresh } from '@fibrae/semi-icons-solid';
@@ -72,9 +73,7 @@ export default function FileCard(props: FileCardProps) {
 
     const listType = () => props.listType ?? strings.FILE_LIST_DEFAULT;
 
-    const showRetry = () => !props.disabled && props.status === strings.FILE_STATUS_UPLOAD_FAIL && props.showRetry;
-
-    const showReplace = () => !props.disabled && props.status === strings.FILE_STATUS_SUCCESS && props.showReplace;
+    const flags = () => UploadFoundation.getFileCardFlags(props, props);
 
     const onImageError = () => setFailedUrl(props.url);
 
@@ -89,8 +88,6 @@ export default function FileCard(props: FileCardProps) {
     );
 
     const renderPic = () => {
-        const showProgress = () => props.status === strings.FILE_STATUS_UPLOADING && props.percent !== 100;
-        const showPreview = () => props.status === strings.FILE_STATUS_SUCCESS && !showReplace();
         const customThumbnail = () => typeof props.renderThumbnail === 'function';
         const sizeStyle = (): JSX.CSSProperties => ({
             ...(props.picHeight ? { height: toCssLength(props.picHeight) } : {}),
@@ -102,8 +99,7 @@ export default function FileCard(props: FileCardProps) {
             if (props.status === strings.FILE_STATUS_VALIDATING) {
                 return props.validateMessage ? 'loading' : undefined;
             }
-            const failed = props.status === strings.FILE_STATUS_VALID_FAIL || props.status === strings.FILE_STATUS_UPLOAD_FAIL;
-            return failed && props.validateMessage ? 'error' : undefined;
+            return flags().failed && props.validateMessage ? 'error' : undefined;
         };
         const tooltipContent = () => {
             const custom = children(() => props.renderValidateMessage?.(props));
@@ -117,7 +113,7 @@ export default function FileCard(props: FileCardProps) {
                     [`${prefixCls}-picture-file-card-disabled`]: props.disabled,
                     [`${prefixCls}-picture-file-card-show-pointer`]: props.onPreviewClick !== undefined,
                     [`${prefixCls}-picture-file-card-error`]: props.status === strings.FILE_STATUS_UPLOAD_FAIL,
-                    [`${prefixCls}-picture-file-card-uploading`]: showProgress(),
+                    [`${prefixCls}-picture-file-card-uploading`]: flags().showPicProgress,
                     [`${prefixCls}-picture-file-card-custom-thumbnail`]: Boolean(customThumbnail() && props.picHeight && props.picWidth),
                 })}
                 style={{ ...props.style, ...sizeStyle() }}
@@ -136,15 +132,15 @@ export default function FileCard(props: FileCardProps) {
                     {(render) => render(props)}
                 </Show>
                 {previewTrigger()}
-                <Show when={showProgress()}>
+                <Show when={flags().showPicProgress}>
                     <Progress type="circle" aria-label={locale().locale.uploadProgress} orbitStroke="var(--semi-color-white)" percent={props.percent} size="small" />
                 </Show>
-                <Show when={showRetry()}>
+                <Show when={flags().showRetry}>
                     <button type="button" class={`${prefixCls}-picture-file-card-retry`} aria-label={locale().locale.retry} onClick={(e) => stopThen(e, props.onRetry)}>
                         <IconRefresh class={`${prefixCls}-picture-file-card-icon-retry`} />
                     </button>
                 </Show>
-                <Show when={showReplace()}>
+                <Show when={flags().showReplace}>
                     <Tooltip content={locale().locale.replace} position="top" showArrow={false} spacing={4} trigger="hover">
                         {(getTriggerProps: GetTriggerProps) => (
                             <button {...getTriggerProps({ type: 'button', class: `${prefixCls}-picture-file-card-replace`, 'aria-label': locale().locale.replace })} onClick={(e) => stopThen(e, props.onReplace)}>
@@ -153,7 +149,7 @@ export default function FileCard(props: FileCardProps) {
                         )}
                     </Tooltip>
                 </Show>
-                <Show when={showPreview()}>
+                <Show when={flags().showPreview}>
                     <div class={`${prefixCls}-picture-file-card-preview`}>
                         <Show keyed when={props.renderPicPreviewIcon}>
                             {(render) => render(props)}
@@ -201,14 +197,13 @@ export default function FileCard(props: FileCardProps) {
 
     const renderFile = () => {
         const infoCls = `${prefixCls}-file-card-info`;
-        const showProgress = () => !(props.percent === 100 || props.percent === undefined) && props.status === strings.FILE_STATUS_UPLOADING;
         // inserted unless empty, so nothing is created without being shown
         const customMessage = children(() => props.renderValidateMessage?.(props));
         return (
             <div
                 {...domAttrs}
                 class={clsx(`${prefixCls}-file-card`, {
-                    [`${prefixCls}-file-card-fail`]: props.status === strings.FILE_STATUS_VALID_FAIL || props.status === strings.FILE_STATUS_UPLOAD_FAIL,
+                    [`${prefixCls}-file-card-fail`]: flags().failed,
                     [`${prefixCls}-file-card-show-pointer`]: props.onPreviewClick !== undefined,
                 })}
                 style={props.style}
@@ -240,14 +235,14 @@ export default function FileCard(props: FileCardProps) {
                         </Typography.Text>
                         <span>
                             <span class={`${infoCls}-size`}>{transSize(props.size)}</span>
-                            <Show when={showReplace()}>
+                            <Show when={flags().showReplace}>
                                 <Tooltip content={locale().locale.replace} position="top" showArrow={false} trigger="hover">
                                     {(getTriggerProps: GetTriggerProps) => <Button {...getTriggerProps({ class: `${prefixCls}-file-card-replace`, 'aria-label': locale().locale.replace })} type="tertiary" size="small" theme="borderless" icon={<DirectorySvg />} onClick={(e) => stopThen(e, props.onReplace)} />}
                                 </Tooltip>
                             </Show>
                         </span>
                     </div>
-                    <Show when={showProgress()}>
+                    <Show when={flags().showListProgress}>
                         <Progress style={{ width: '100%' }} aria-label={locale().locale.uploadProgress} percent={props.percent} />
                     </Show>
                     <div class={`${infoCls}-main-control`}>
@@ -266,7 +261,7 @@ export default function FileCard(props: FileCardProps) {
                                 {customMessage()}
                             </Show>
                         </span>
-                        <Show when={showRetry()}>
+                        <Show when={flags().showRetry}>
                             <button type="button" class={`${infoCls}-retry`} onClick={(e) => stopThen(e, props.onRetry)}>
                                 {locale().locale.retry}
                             </button>

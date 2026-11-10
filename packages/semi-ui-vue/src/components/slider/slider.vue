@@ -2,7 +2,6 @@
     import { computed, useAttrs, useId, useTemplateRef, type CSSProperties } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
     import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
-    import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
     import '@fibrae/semi-foundation/components/slider/slider.scss';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
@@ -72,9 +71,7 @@
     const DROPPED_INPUT_ATTRS = new Set(['tabindex', 'tabIndex', 'aria-required']);
 
     const prefix = cssClasses.PREFIX;
-    const isRTL = computed(() => config.value.direction === 'rtl' && !props.vertical);
-    const stylePos = computed(() => (props.vertical ? 'top' : isRTL.value ? 'right' : 'left'));
-    const reverse = computed(() => (props.vertical && props.verticalReverse ? '-reverse' : ''));
+    const handleInputs: Record<Handle, HTMLInputElement | null> = { min: null, max: null };
     const handles = computed<Handle[]>(() => (props.range ? ['min', 'max'] : ['min']));
 
     // The input inside a handle is the control. Tooltip injects only keys its trigger leaves undefined, so these keep it
@@ -89,6 +86,8 @@
         (view) => SliderFoundation.getInitialState(view),
         () => ({
             getSliderNode: () => slider.value,
+            getHandleInput: (pos) => handleInputs[pos],
+            notifyBlur: (event) => emit('blur', event),
             notifyChange: (value) => {
                 emit('update:modelValue', value);
                 emit('change', value);
@@ -100,7 +99,7 @@
     );
 
     const currentValue = computed(() => SliderFoundation.deriveValue({ value: props.modelValue, min: props.min, max: props.max }, state.value));
-    const percent = computed(() => SliderFoundation.getMinAndMaxPercent({ range: props.range, min: props.min, max: props.max }, currentValue.value));
+    const layout = computed(() => SliderFoundation.getLayout(props as FoundationProps, currentValue.value, state.value, config.value.direction));
 
     const tips = computed(() =>
         SliderFoundation.computeHandleVisibleVal(
@@ -116,20 +115,15 @@
     );
 
     const trackStyle = computed<CSSProperties>(() => {
-        if (!props.included) {
-            return {};
-        }
-        const { min, max } = percent.value;
-        const size = props.range ? `${Math.abs(max - min) * 100}%` : `${min * 100}%`;
-        const start = props.range ? `${Math.min(min, max) * 100}%` : 0;
-        return { [props.vertical ? 'height' : 'width']: size, [stylePos.value]: start };
+        const { track, startProp } = layout.value;
+        return track ? { [track.sizeProp]: track.size, [startProp]: track.start } : {};
     });
 
     const marks = computed(() =>
         Object.entries(props.marks ?? {}).map(([key, label]) => {
             const value = Number(key);
             const active = SliderFoundation.isMarkActive({ min: props.min, max: props.max, range: props.range, included: props.included }, currentValue.value, value);
-            return { key, value, label, active };
+            return { key, value, label, active, percent: SliderFoundation.getMarkPercent(props, value) };
         })
     );
 
@@ -137,21 +131,10 @@
 
     const getAriaValueText = () => props.getAriaValueText ?? readSemiDefault(semi, 'Slider', 'getAriaValueText');
 
-    const markPercent = (value: number) => ((value - props.min) / (props.max - props.min)) * 100;
-
     const handleIndex = (pos: Handle) => (pos === 'min' ? 0 : 1);
 
     const handleValue = (pos: Handle) => {
         return Array.isArray(currentValue.value) ? currentValue.value[handleIndex(pos)] : currentValue.value;
-    };
-
-    const handleStyle = (pos: Handle) => {
-        const { chooseMovePos, isDrag } = state.value;
-        const active = chooseMovePos === pos && (props.range || isDrag);
-        return {
-            [stylePos.value]: `${(pos === 'min' ? percent.value.min : percent.value.max) * 100}%`,
-            zIndex: active ? 2 : 1,
-        };
     };
 
     const handleDot = (pos: Handle): HandleDot | undefined => {
@@ -192,13 +175,7 @@
         }
     };
 
-    const onHandleDown = (event: PointerEvent, pos: Handle) => {
-        const handle = event.currentTarget as HTMLElement;
-        // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
-        const input = handle.querySelector('input');
-        if (input) focusWithoutRing(input, { preventScroll: true });
-        foundation.onHandleDown({ pointerId: event.pointerId, pointerType: event.pointerType, button: event.button, clientX: event.clientX, clientY: event.clientY, currentTarget: handle }, pos);
-    };
+    const onHandleDown = (event: PointerEvent, pos: Handle) => foundation.onHandleDown({ pointerId: event.pointerId, pointerType: event.pointerType, button: event.button, clientX: event.clientX, clientY: event.clientY, currentTarget: event.currentTarget as HTMLElement }, pos);
 
     const onInputFocus = (event: FocusEvent, pos: Handle) => {
         foundation.onFocus({ target: event.target as HTMLInputElement }, pos);
@@ -210,12 +187,6 @@
         foundation.handleInputChange(Number(input.value), pos);
         // A controlled or blocked handle keeps its rendered value, which Vue does not patch back after the browser moved it.
         input.value = String(handleValue(pos));
-    };
-
-    const onFocusout = (event: FocusEvent) => {
-        if (!(event.currentTarget as Element).contains(event.relatedTarget as Node | null)) {
-            emit('blur', event);
-        }
     };
 </script>
 
@@ -233,7 +204,7 @@
                 },
             ]"
             @focusin="emit('focus', $event)"
-            @focusout="onFocusout"
+            @focusout="foundation.handleBlur"
             @mouseenter="foundation.handleWrapperEnter"
             @mouseleave="foundation.handleWrapperLeave"
         >
@@ -245,7 +216,7 @@
                         <slot :label="mark.label" name="mark" :value="mark.value">{{ mark.label }}</slot>
                     </template>
                     <!-- Tooltip would otherwise inject tabindex 0; the mark tip is for the pointer only -->
-                    <span :class="[`${prefix}-dot`, { [`${prefix}-dot-active`]: mark.active === 'active' }]" :style="{ [stylePos]: `calc(${markPercent(mark.value)}% - 2px)` }" :tabindex="-1" @click="foundation.handleWrapClick" />
+                    <span :class="[`${prefix}-dot`, { [`${prefix}-dot-active`]: mark.active === 'active' }]" :style="{ [layout.startProp]: `calc(${mark.percent}% - 2px)` }" :tabindex="-1" @click="foundation.handleWrapClick" />
                 </component>
             </div>
             <div>
@@ -257,7 +228,7 @@
                     <span
                         v-bind="NOT_A_TRIGGER_TARGET"
                         :class="[cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: state.chooseMovePos === pos && state.isDrag }]"
-                        :style="handleStyle(pos)"
+                        :style="{ [layout.startProp]: layout.handles[pos].start, zIndex: layout.handles[pos].zIndex }"
                         @mousedown.prevent
                         @mouseenter="foundation.onHandleEnter(pos)"
                         @mouseleave="foundation.onHandleLeave"
@@ -266,6 +237,7 @@
                     >
                         <input
                             :id="handleA11y(pos).id"
+                            :ref="(el) => (handleInputs[pos] = el as HTMLInputElement | null)"
                             v-autofocus="pos === 'min' && hasAutofocus($attrs)"
                             v-bind="inputAttrs(pos)"
                             :aria-label="handleA11y(pos).ariaLabel"
@@ -273,7 +245,7 @@
                             :aria-orientation="props.vertical ? 'vertical' : undefined"
                             :aria-valuetext="valuetext(pos)"
                             :class="`${cssClasses.HANDLE}-input`"
-                            :dir="isRTL || (props.vertical && props.verticalReverse) ? 'rtl' : 'ltr'"
+                            :dir="layout.inputDir"
                             :disabled="props.disabled"
                             :max="props.max"
                             :min="props.min"
@@ -291,8 +263,8 @@
                     </span>
                 </Tooltip>
             </div>
-            <div v-if="props.showMarkLabel && marks.length" :class="cssClasses.MARKS + reverse">
-                <span v-for="mark in shownMarks" :key="mark.key" :class="`${prefix}-mark${reverse}`" :style="{ [stylePos]: `${markPercent(mark.value)}%` }" @click="foundation.handleMarkClick(mark.value)">
+            <div v-if="props.showMarkLabel && marks.length" :class="cssClasses.MARKS + layout.reverse">
+                <span v-for="mark in shownMarks" :key="mark.key" :class="`${prefix}-mark${layout.reverse}`" :style="{ [layout.startProp]: `${mark.percent}%` }" @click="foundation.handleMarkClick(mark.value)">
                     <slot :label="mark.label" name="mark" :value="mark.value">{{ mark.label }}</slot>
                 </span>
             </div>

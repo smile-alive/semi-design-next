@@ -1,6 +1,7 @@
 /** @jsxImportSource vue */
 
 import { type Component, shallowRef } from 'vue';
+import ConfirmInstance from '@fibrae/semi-foundation/components/modal/confirm-instance';
 import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import { createHolder } from '../../base/holder';
 import { withConfirm, withError, withInfo, withSuccess, withWarning } from './confirm';
@@ -12,54 +13,24 @@ import type { ConfirmProps, ModalConfirmProps, ModalHookApi, ModalHookRef } from
  * destroy and update before the Holder mounts change the list it will render, so nothing waits for a mounted handle.
  */
 export default function useModal(): [ModalHookApi, Component] {
-    const list = shallowRef<Array<{ id: string; config: ConfirmProps }>>([]);
-    const mounted = new Set<string>();
+    const list = shallowRef<Array<{ id: string; props: ConfirmProps; instance: ConfirmInstance<ConfirmProps> }>>([]);
 
-    const remove = (id: string) => {
-        mounted.delete(id);
-        list.value = list.value.filter((entry) => entry.id !== id);
-    };
-
-    const Holder = createHolder('ModalHolder', () =>
-        list.value.map(({ id, config: { afterClose, ...rest } }) => {
-            return (
-                <ConfirmModal
-                    key={id}
-                    {...rest}
-                    onVnodeMounted={() => mounted.add(id)}
-                    onAfterClose={() => {
-                        afterClose?.();
-                        remove(id);
-                    }}
-                />
-            );
-        })
-    );
-
-    const patch = (id: string, change: ModalConfirmProps) => {
-        list.value = list.value.map((entry) => (entry.id === id ? { id, config: { ...entry.config, ...change } } : entry));
-    };
-
-    const destroy = (id: string) => {
-        const entry = list.value.find((item) => item.id === id);
-        if (entry && !mounted.has(id)) {
-            // never rendered, so no dialog will report its close; report it here
-            remove(id);
-            entry.config.afterClose?.();
-        } else {
-            patch(id, { visible: false });
-        }
-    };
+    const Holder = createHolder('ModalHolder', () => list.value.map(({ id, props: { afterClose, ...rest }, instance }) => <ConfirmModal key={id} {...rest} onVnodeMounted={instance.handleMount} onAfterClose={afterClose} />));
 
     const open =
         (withType: (config: ModalConfirmProps) => ConfirmProps) =>
         (config: ModalConfirmProps): ModalHookRef => {
             const id = createId('modal');
-            list.value = [...list.value, { id, config: withType(config) }];
-            return {
-                destroy: () => destroy(id),
-                update: (change) => patch(id, change),
-            };
+            const instance = new ConfirmInstance(withType(config), {
+                render: (props) => {
+                    list.value = list.value.map((entry) => (entry.id === id ? { ...entry, props } : entry));
+                },
+                remove: () => {
+                    list.value = list.value.filter((entry) => entry.id !== id);
+                },
+            });
+            list.value = [...list.value, { id, props: instance.props, instance }];
+            return instance.handle;
         };
 
     return [

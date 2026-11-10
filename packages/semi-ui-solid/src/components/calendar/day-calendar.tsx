@@ -1,6 +1,6 @@
-import { For, Show, children, createMemo, splitProps } from 'solid-js';
+import { Show, children, createMemo, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { format, isSameDay, startOfDay } from 'date-fns';
+import { format, startOfDay } from 'date-fns';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
 import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
@@ -42,13 +42,6 @@ export default function DayCalendar(props: DayCalendarProps) {
     const dayStart = createMemo(() => startOfDay(displayValue()));
 
     const isWeekend = () => Boolean(local.markWeekend && checkWeekend(displayValue()));
-
-    // showCurrTime and whether the day is today in the key: a column decides once per mount whether to run the current
-    // time line
-    const columnKey = () => {
-        const day = today();
-        return `${dayStart().toDateString()}-${String(local.showCurrTime)}-${String(day !== null && isSameDay(dayStart(), day))}`;
-    };
 
     const handleClick: DayColProps['handleClick'] = (e, val) => {
         local.onClick?.(e, CalendarFoundation.formatCbValue(val));
@@ -100,7 +93,7 @@ export default function DayCalendar(props: DayCalendarProps) {
             <div class={`${prefixCls}-scroll-wrapper`} role="rowgroup">
                 <div ref={scrollRef} class={`${prefixCls}-scroll`} role="row">
                     <TimeCol class={`${prefixCls}-sticky-left`} renderTimeDisplay={renderTimeDisplay()} />
-                    <For each={[columnKey()]}>{() => <DayCol displayValue={dayStart()} events={parsedEvents().day} isWeekend={isWeekend()} minEventHeight={local.minEventHeight} scrollHeight={scrollHeight()} showCurrTime={local.showCurrTime} dateGridRender={dateGridRender()} handleClick={handleClick} />}</For>
+                    <DayCol displayValue={dayStart()} events={parsedEvents().day} isWeekend={isWeekend()} minEventHeight={local.minEventHeight} scrollHeight={scrollHeight()} showCurrTime={local.showCurrTime} today={today()} dateGridRender={dateGridRender()} handleClick={handleClick} />
                 </div>
             </div>
         </div>
