@@ -19,6 +19,7 @@ export interface PopoverProps {
     /** Names the popup when it is a dialog (click, contextMenu or custom trigger) */
     'aria-label'?: string;
     'aria-labelledby'?: string;
+    'aria-describedby'?: string;
     /**
      * Role of the popup; dialog with a click, contextMenu or custom trigger, tooltip otherwise.
      * A combobox passes presentation because it points at the inner listbox itself

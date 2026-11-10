@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | afterClose | 确认框关闭且离场动画结束后调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | afterOpen | 确认框打开且进场动画结束后调用；没有进场动画时打开后即调用，受控与非受控相同；进场结束前被关闭的打开不调用。 | `TooltipProps['afterOpen']` | - |
+| aria-describedby | 对话框的 `aria-describedby`，缺省在同时有标题和内容时指向内容。 | `string` | - |
 | aria-label | 对话框的 `aria-label`，传入后优先于标题。 | `string` | - |
 | aria-labelledby | 对话框的 `aria-labelledby`，缺省指向标题，没有标题时指向内容。 | `string` | - |
 | arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 `showArrow`，缺省为 `true`。 | `boolean` | - |

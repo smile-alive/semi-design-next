@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | afterClose | Called after the card has closed and its leave animation has finished. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | afterOpen | Called after the card has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not. An open that is closed before the enter animation ends does not call it. | `TooltipProps['afterOpen']` | - |
+| aria-describedby | `aria-describedby` of the dialog. Defaults to the content when there are both a title and content. | `string` | - |
 | aria-label | `aria-label` of the dialog. When given, it takes precedence over the title. | `string` | - |
 | aria-labelledby | `aria-labelledby` of the dialog. Defaults to the title, or to the content without a title. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires `showArrow`. Defaults to `true`. | `boolean` | - |

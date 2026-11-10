@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | afterClose | Called after the menu has closed and its leave animation has ended. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | afterOpen | Called after the menu has opened and its enter animation has ended, or right after opening when there is no enter animation. An opening closed before the enter animation ends does not call it. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| aria-describedby | `aria-describedby` of the popup when its `role` is `dialog`. | `string` | - |
 | aria-label | `aria-label` of the popup when its `role` is `dialog`. | `string` | - |
 | aria-labelledby | `aria-labelledby` of the popup when its `role` is `dialog`. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Takes effect only when `showArrow` is `true`. Defaults to `true`. | `boolean` | - |

@@ -365,6 +365,23 @@ describe('Popover', () => {
         expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby', 'pop-title');
     });
 
+    it('对话框 Popover 上的 aria-describedby 落在对话框上，tooltip 类型不落弹层', () => {
+        const { unmount } = render(() => (
+            <Popover aria-describedby="pop-desc" content="dialog content" trigger="custom" visible>
+                {(t) => <Button {...t()}>dialog trigger</Button>}
+            </Popover>
+        ));
+        expect(screen.getByRole('dialog')).toHaveAttribute('aria-describedby', 'pop-desc');
+        unmount();
+
+        render(() => (
+            <Popover aria-describedby="pop-desc" content="tip content" visible>
+                {(t) => <Button {...t()}>tip trigger</Button>}
+            </Popover>
+        ));
+        expect(screen.getByRole('tooltip')).not.toHaveAttribute('aria-describedby');
+    });
+
     it('tooltip 类型的 Popover 不接受 aria-label', () => {
         render(() => (
             <Popover aria-label="Details" content="tip content" visible>

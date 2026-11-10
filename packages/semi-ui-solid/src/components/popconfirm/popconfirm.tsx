@@ -103,6 +103,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
     const props = useDefaultProps('Popconfirm', rawProps, defaultProps);
 
     const [local, rest] = splitProps(props, [
+        'aria-describedby',
         'aria-labelledby',
         'cancelButtonProps',
         'cancelText',
@@ -170,6 +171,9 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
         return titled() ? titleId : bodied() ? contentId : undefined;
     };
 
+    // without a title the content already names the dialog
+    const describedBy = () => local['aria-describedby'] || (titled() && bodied() ? contentId : undefined);
+
     const defaultPosition = () => (config().direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
 
     // As Tooltip's renderTrigger: children() reads the getter once and unwraps JSX compiled to an accessor (Show, For),
@@ -205,16 +209,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             setBodied(false);
             footer = undefined;
             tooltipFocus = undefined;
-        });
-
-        // Tooltip owns the dialog element and has no describedby prop; without a title the content already names it
-        createEffect(() => {
-            const dialog = popover?.getPopup();
-            if (!dialog || !showTitle() || !showContent()) {
-                return;
-            }
-            dialog.setAttribute('aria-describedby', contentId);
-            onCleanup(() => dialog.removeAttribute('aria-describedby'));
         });
 
         onMount(() => {
@@ -292,7 +286,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
 
     return (
         <Show when={!local.disabled} fallback={disabledTrigger()}>
-            <Popover {...rest} ref={(instance) => (popover = instance)} class={cssClasses.POPOVER} aria-labelledby={labelledBy()} content={renderCard} position={local.position ?? defaultPosition()} visible={open()} onVisibleChange={foundation.handleVisibleChange}>
+            <Popover {...rest} ref={(instance) => (popover = instance)} class={cssClasses.POPOVER} aria-describedby={describedBy()} aria-labelledby={labelledBy()} content={renderCard} position={local.position ?? defaultPosition()} visible={open()} onVisibleChange={foundation.handleVisibleChange}>
                 {local.children}
             </Popover>
         </Show>
