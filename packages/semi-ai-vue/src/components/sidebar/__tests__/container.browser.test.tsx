@@ -3,7 +3,7 @@ import { defineComponent, ref } from 'vue';
 import { waitFor } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import Sidebar from '..';
 

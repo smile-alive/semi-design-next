@@ -2,7 +2,7 @@ import { render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import { en_US } from '@fibrae/semi-ui-solid/locale';
 import { type FormApi, Form, FormInput, SchemaField, SchemaForm, withField } from '..';
 import Button from '../../button';
 import LocaleProvider from '../../locale/locale-provider';
@@ -30,7 +30,7 @@ const emails = () => screen.queryAllByRole('textbox', { name: 'Email' }).map((in
 function renderSchema(jsonSchema: Record<string, any>, initValues?: Record<string, any>, field?: string) {
     let api: FormApi | undefined;
     const result = render(() => (
-        <LocaleProvider locale={ja_JP}>
+        <LocaleProvider locale={en_US}>
             <Form getFormApi={(formApi) => (api = formApi)} initValues={initValues}>
                 <SchemaField field={field} jsonSchema={jsonSchema} />
             </Form>
@@ -87,27 +87,27 @@ describe('SchemaField', () => {
     it('数组按 minItems 与 maxItems 禁用删除与新增，行可上下移动，可访问名称来自语言包', async () => {
         const user = userEvent.setup();
         const { api } = renderSchema(contacts({ minItems: 1, maxItems: 2 }), { contacts: [{ email: 'a' }] });
-        const add = screen.getByRole('button', { name: '項目を追加' });
-        expect(screen.getByText('1番目の項目')).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: '1番目の項目を削除' })).toBeDisabled();
-        expect(screen.getByRole('button', { name: '1番目の項目を上へ移動' })).toBeDisabled();
-        expect(screen.getByRole('button', { name: '1番目の項目を下へ移動' })).toBeDisabled();
+        const add = screen.getByRole('button', { name: 'Add item' });
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Remove item 1' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'Move item 1 up' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'Move item 1 down' })).toBeDisabled();
         await user.click(add);
         expect(emails()).toEqual(['a', '']);
         expect(add).toBeDisabled();
         await user.type(screen.getAllByRole('textbox', { name: 'Email' })[1], 'b');
-        await user.click(screen.getByRole('button', { name: '1番目の項目を下へ移動' }));
+        await user.click(screen.getByRole('button', { name: 'Move item 1 down' }));
         expect(emails()).toEqual(['b', 'a']);
         expect(api().getValue('contacts')).toEqual([{ email: 'b' }, { email: 'a' }]);
-        await user.click(screen.getByRole('button', { name: '2番目の項目を削除' }));
+        await user.click(screen.getByRole('button', { name: 'Remove item 2' }));
         expect(emails()).toEqual(['b']);
         expect(add).not.toBeDisabled();
     });
 
     it('minItems 等于 maxItems 时不显示新增与删除按钮', () => {
         renderSchema(contacts({ minItems: 1, maxItems: 1 }), { contacts: [{ email: 'a' }] });
-        expect(screen.queryByRole('button', { name: '項目を追加' })).toBeNull();
-        expect(screen.queryByRole('button', { name: '1番目の項目を削除' })).toBeNull();
+        expect(screen.queryByRole('button', { name: 'Add item' })).toBeNull();
+        expect(screen.queryByRole('button', { name: 'Remove item 1' })).toBeNull();
         expect(emails()).toEqual(['a']);
     });
 });

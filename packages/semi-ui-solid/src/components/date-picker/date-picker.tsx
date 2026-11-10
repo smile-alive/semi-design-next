@@ -18,6 +18,7 @@ import DatePickerFoundation, {
     type Type,
 } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import { isInnerControlKey, namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
 import type { ElementProps } from '../../base/element-props';
 import { usePopupLayer } from '../../base/popup-layer';
@@ -191,7 +192,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             return rawProps.timeZone ?? config().timeZone ?? defaulted.timeZone;
         },
         get dateFnsLocale() {
-            return locale().dateFnsLocale;
+            return getDateFnsLocale(locale().localeCode, config().dateFnsLocale);
         },
         get type() {
             return normalized().type;

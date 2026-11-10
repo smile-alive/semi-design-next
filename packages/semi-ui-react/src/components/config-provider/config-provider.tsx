@@ -20,7 +20,7 @@ export const ConfigConsumer = ConfigContext.Consumer;
 function ConfigProvider(props: ConfigProviderProps) {
     const outer = useConfigContext();
 
-    const { direction, locale, timeZone, getPopupContainer, responsiveObserve, responsiveMap: givenMap } = inheritConfig(props, outer);
+    const { direction, locale, dateFnsLocale, timeZone, getPopupContainer, responsiveObserve, responsiveMap: givenMap } = inheritConfig(props, outer);
 
     // an inline map literal is a new object every render; keep the old one to avoid re-registering media queries
     const [stableMap, setStableMap] = useState(givenMap);
@@ -37,6 +37,7 @@ function ConfigProvider(props: ConfigProviderProps) {
     const value = useMemo<ContextValue>(
         () => ({
             locale,
+            dateFnsLocale,
             timeZone,
             getPopupContainer,
             responsiveObserve,
@@ -45,7 +46,7 @@ function ConfigProvider(props: ConfigProviderProps) {
             onBreakpoint: observer.subscribe,
             screens,
         }),
-        [locale, timeZone, getPopupContainer, responsiveObserve, direction, responsiveMap, observer, screens]
+        [locale, dateFnsLocale, timeZone, getPopupContainer, responsiveObserve, direction, responsiveMap, observer, screens]
     );
 
     useInsertionEffect(() => {

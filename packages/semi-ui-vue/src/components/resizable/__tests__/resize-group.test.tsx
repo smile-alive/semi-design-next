@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { nextTick, ref, type ComponentPublicInstance, type VNode } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { mockResizeObserver, render } from '@test/utils/vue';
 import { ResizeGroup, ResizeHandler, ResizeItem, type ResizeCallback, type Size } from '..';

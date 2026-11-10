@@ -31,9 +31,8 @@ const locale = Astro.params.locale as Locale;
 const t = translate(locale);
 const l = landingText[locale];
 
-const languageCount = Object.keys(import.meta.glob('#packages/shared/semi-foundation/src/locale/source/*.ts')).length;
 const componentCount = await getComponentCount(locale, 'react');
-const fill = (value: string) => value.replace('{count}', String(componentCount)).replace('{languages}', String(languageCount));
+const fill = (value: string) => value.replace('{count}', String(componentCount));
 
 const heroFrameworks: Record<(typeof frameworks)[number], string> = { react: 'React 19', vue: 'Vue 3.5+', solid: 'Solid', svelte: 'Svelte 5' };
 const localeHrefs = Object.fromEntries(locales.map((item) => [item, `/${item}/`])) as Record<Locale, string>;
@@ -173,11 +172,11 @@ const samples = [
                         <div class="feature">
                             <p class="feature-label">{l.i18n_label}</p>
                             <div class="feature-visual feature-i18n" aria-hidden="true">
-                                <span class="feature-stat"><strong>{languageCount}</strong>{l.i18n_unit}</span>
+                                <span class="feature-stat"><strong>中 / EN</strong></span>
                                 <span class="feature-rtl" dir="rtl" lang="ar">حفظ التغييرات؟<span>حفظ</span></span>
                                 <code class="feature-caption">dir="rtl"</code>
                             </div>
-                            <h3>{fill(l.i18n_title)}</h3>
+                            <h3>{l.i18n_title}</h3>
                             <p>{l.i18n_brief}</p>
                         </div>
                         <div class="feature">

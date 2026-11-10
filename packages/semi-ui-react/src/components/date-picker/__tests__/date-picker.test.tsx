@@ -18,12 +18,10 @@ import * as parserModule from '@fibrae/semi-foundation/components/date-picker/_u
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import DatePickerFoundation from '@fibrae/semi-foundation/components/date-picker/foundation';
 import MonthFoundation from '@fibrae/semi-foundation/components/date-picker/month-foundation';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { toIANA, zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
 import { Form, FormDatePicker } from '@fibrae/semi-ui-react/form';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import Popover from '@fibrae/semi-ui-react/popover';
 import Tabs from '@fibrae/semi-ui-react/tabs';
@@ -1826,9 +1824,9 @@ describe(`DatePicker`, () => {
         expect(within(getYMLists()[1]).getByRole('option', { name: '7月' })).toBeInTheDocument();
     });
 
-    it('YearAndMonth 在 ja_JP 下显示语言包的年后缀和月份名', async () => {
-        renderYearAndMonth({ locale: ja_JP.DatePicker });
-        expect(getYMSelected()).toEqual(['2021年', ja_JP.DatePicker.fullMonths[6]]);
+    it('YearAndMonth 在 zh_CN 下显示语言包的年后缀和月份名', async () => {
+        renderYearAndMonth({ locale: zh_CN.DatePicker });
+        expect(getYMSelected()).toEqual(['2021年', zh_CN.DatePicker.fullMonths[6]]);
         expect(within(getYMLists()[0]).getByRole('option', { name: '2022' })).toBeInTheDocument();
     });
 
@@ -4964,7 +4962,7 @@ describe('DatePicker 属性回落', () => {
         const withLocale: DatePickerProps = { locale: en_US.DatePicker };
         // @ts-expect-error the locale always comes from the LocaleProvider
         const withCode: DatePickerProps = { localeCode: 'en-US' };
-        // @ts-expect-error the locale always comes from the LocaleProvider
+        // @ts-expect-error the date-fns locale comes from ConfigProvider
         const withDateFns: DatePickerProps = { dateFnsLocale: enUS };
         expect([withLocale, withCode, withDateFns]).toHaveLength(3);
     });

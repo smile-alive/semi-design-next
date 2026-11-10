@@ -1,5 +1,5 @@
 <script lang="ts">
-    import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+    import { en_US } from '@fibrae/semi-ui-svelte/locale';
     import { ConfigProvider } from '../../config-provider';
     import type { RatingProps } from '../interface';
     import Rating from '../rating.svelte';

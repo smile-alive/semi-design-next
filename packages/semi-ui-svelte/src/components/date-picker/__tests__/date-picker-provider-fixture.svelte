@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-svelte/locale';
     import type { DatePickerProps } from '../interface';
 
     export interface ProviderFixtureStore {

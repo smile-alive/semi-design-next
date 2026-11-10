@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import DatePicker from '../date-picker.svelte';
 import type { DatePickerProps } from '../interface';
 import { click, getFooterButtons, getPanel, getPopup } from './date-picker-dom-utils';

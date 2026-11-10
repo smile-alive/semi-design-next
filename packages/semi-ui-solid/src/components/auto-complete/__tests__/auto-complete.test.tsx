@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners } from '@test/utils/solid';
 import AutoComplete, { type AutoCompleteProps, type AutoCompleteTriggerRenderProps, type BaseDataItem } from '..';

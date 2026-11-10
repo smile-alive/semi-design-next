@@ -2,9 +2,8 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { UserGuideProps, UserGuideStepItem } from '../interface';
 import ConfigContainer from './config-container.svelte';
@@ -337,16 +336,16 @@ describe('Svelte UserGuide 弹出模式', () => {
         expect(await screen.findByRole('button', { name: 'Finish' })).toBeInTheDocument();
     });
 
-    it('按钮文案在日语语言包下跟随语言包', async () => {
+    it('按钮文案在 en_US 语言包下跟随语言包', async () => {
         const steps = makeSteps();
-        const view = render(LocaleGuide, { props: { locale: ja_JP, steps, current: 1 } });
+        const view = render(LocaleGuide, { props: { locale: en_US, steps, current: 1 } });
         await screen.findByText('Title B');
-        for (const name of [ja_JP.UserGuide.skip, ja_JP.UserGuide.prev, ja_JP.UserGuide.next]) {
+        for (const name of [en_US.UserGuide.skip, en_US.UserGuide.prev, en_US.UserGuide.next]) {
             expect(screen.getByRole('button', { name })).toBeInTheDocument();
         }
         view.unmount();
-        render(LocaleGuide, { props: { locale: ja_JP, steps, current: 2 } });
-        expect(await screen.findByRole('button', { name: ja_JP.UserGuide.finish })).toBeInTheDocument();
+        render(LocaleGuide, { props: { locale: en_US, steps, current: 2 } });
+        expect(await screen.findByRole('button', { name: en_US.UserGuide.finish })).toBeInTheDocument();
     });
 
     it('步骤的 mask 覆盖全局 mask', async () => {

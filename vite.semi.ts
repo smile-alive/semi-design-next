@@ -35,7 +35,7 @@ const sourcePackages: { name: string; dir: string; entry?: string }[] = [
 
 // A UI or AI package's subpaths mirror its exports map: entry files and the infrastructure directories map to src/ as
 // written, every other subpath is a component under src/components/
-const uiEntryFiles = 'hooks|composables|primitives|tokens';
+const uiEntryFiles = 'hooks|composables|primitives|tokens|locale';
 const uiDirs = 'base|utils|hooks|composables|primitives|internal|__tests__';
 
 export const semiSourceAliases: Alias[] = [
@@ -160,26 +160,6 @@ export function semiPackStyles(srcDir: string, { ignore = [], sourceOnly = [], b
             }
             for (const [fileName, build] of Object.entries(bundles)) {
                 this.emitFile({ type: 'asset', fileName, source: build() });
-            }
-        },
-    };
-}
-
-// The locale packs live in semi-foundation; each UI package republishes them as one-line re-exports so an app can
-// import `@fibrae/semi-ui-<framework>/locale/source/<name>` without installing foundation itself. Solid needs a `.jsx`
-// twin because its `./*` export resolves to `.jsx` under the `solid` condition.
-export function semiLocaleReexports({ jsx = false }: { jsx?: boolean } = {}): Plugin {
-    const sourceDir = resolve('packages/shared/semi-foundation/src/locale/source');
-    return {
-        name: 'semi:locale-reexports',
-        generateBundle() {
-            const extensions = jsx ? ['.js', '.jsx', '.d.ts'] : ['.js', '.d.ts'];
-            for (const file of fs.globSync('*.ts', { cwd: sourceDir })) {
-                const name = path.basename(file, '.ts');
-                const source = `export { default } from '@fibrae/semi-foundation/locale/source/${name}';\n`;
-                for (const extension of extensions) {
-                    this.emitFile({ type: 'asset', fileName: `components/locale/source/${name}${extension}`, source });
-                }
             }
         },
     };

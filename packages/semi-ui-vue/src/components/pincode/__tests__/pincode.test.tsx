@@ -4,8 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import PinCode, { type PinCodeHandle, type PinCodeProps } from '..';
@@ -733,9 +732,9 @@ describe('PinCode', () => {
 
         it('位置名称跟随 LocaleProvider 的语言，group 的名称不被覆盖', () => {
             render({
-                render: () => <LocaleProvider locale={ja_JP}>{() => <PinCode count={2} aria-label="Verification code" />}</LocaleProvider>,
+                render: () => <LocaleProvider locale={en_US}>{() => <PinCode count={2} aria-label="Verification code" />}</LocaleProvider>,
             });
-            const expected = ja_JP.PinCode.digit.replace('${index}', '1').replace('${count}', '2');
+            const expected = en_US.PinCode.digit.replace('${index}', '1').replace('${count}', '2');
             expect(screen.getByRole('textbox', { name: expected })).toBeInTheDocument();
             expect(screen.getByRole('group', { name: 'Verification code' })).toBe(getWrapper());
         });

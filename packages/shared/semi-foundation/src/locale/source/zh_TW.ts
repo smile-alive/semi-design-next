@@ -1,9 +1,7 @@
-import { zhTW } from 'date-fns/locale/zh-TW';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'zh-TW',
-    dateFnsLocale: zhTW,
     currency: 'TWD',
     BackTop: {
         backToTop: '回到頂部',

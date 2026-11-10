@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { isEqual, pick } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import { toggleFilteredValue } from '@fibrae/semi-foundation/components/table/utils';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconFilter } from '@fibrae/semi-icons-react';
 import Button from '../button';

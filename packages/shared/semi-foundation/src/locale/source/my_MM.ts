@@ -1,10 +1,7 @@
-// date-fns has no my locale; enUS is its default, so text tokens never show another language
-import { enUS } from 'date-fns/locale/en-US';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'my-MM',
-    dateFnsLocale: enUS,
     currency: 'MMK',
     BackTop: {
         backToTop: 'အပေါ်ဆုံးသို့ ပြန်သွားရန်',

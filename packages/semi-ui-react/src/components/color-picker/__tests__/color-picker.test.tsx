@@ -8,8 +8,8 @@ import ColorSliderFoundation from '@fibrae/semi-foundation/components/color-pick
 import DataPartFoundation, { type DataPartAdapter } from '@fibrae/semi-foundation/components/color-picker/data-part-foundation';
 import ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
 import { hexToHsva, hexToRgba, hsvaToHex, hsvaToHslaString, hsvaToHslString, hsvaToRgba, rgbaStringToHsva, rgbaStringToRgba, rgbaToHex, rgbaToHsva } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { ColorPicker, type ColorFormat as PackageColorFormat, type ColorValue as PackageColorValue, type HsvaColor as PackageHsvaColor, type RgbaColor as PackageRgbaColor } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type * as ColorPickerModule from '../index';
 

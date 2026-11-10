@@ -4,7 +4,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
     import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import { hasSlotContent } from '../../utils/slot-nodes';
+    import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
     import useScrollGrid from './composables/use-scroll-grid';
     import { useCalendarContext } from './context';
@@ -26,6 +28,7 @@
     defineSlots<Omit<CalendarSlots, 'dateDisplay'>>();
 
     const i18n = useLocale('Calendar');
+    const config = useConfig();
     const eventsByKey = useCalendarContext();
 
     const root = useTemplateRef('root');
@@ -36,6 +39,7 @@
     const prefixCls = `${cssClasses.PREFIX}-day`;
     const allDayCls = `${cssClasses.PREFIX}-all-day`;
     const parsedEvents = computed(() => CalendarFoundation.getParseDailyEvents(props.events, props.displayValue));
+    const dateFnsLocale = computed(() => getDateFnsLocale(i18n.value.localeCode, config.value.dateFnsLocale));
 
     // every view hands the dateGrid slot the day's midnight, not the caller's time of day
     const dayStart = computed(() => startOfDay(props.displayValue));
@@ -45,7 +49,7 @@
 </script>
 
 <template>
-    <div ref="root" :aria-label="format(props.displayValue, 'PPP', { locale: i18n.dateFnsLocale })" :class="prefixCls" role="table" tabindex="0">
+    <div ref="root" :aria-label="format(props.displayValue, 'PPP', { locale: dateFnsLocale })" :class="prefixCls" role="table" tabindex="0">
         <!-- the view scrolls and nothing inside it takes focus, so the keyboard can only scroll it through the root -->
         <div :class="`${prefixCls}-sticky-top`" role="rowgroup">
             <div v-if="hasSlotContent($slots.header)" role="row">

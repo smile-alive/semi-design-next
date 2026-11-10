@@ -6,12 +6,14 @@
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../../base/slot-fragment';
     import useFoundation from '../../base/use-foundation';
     import useClickOutside from '../../composables/use-click-outside';
     import useResizeObserver from '../../composables/use-resize-observer';
     import { hasSlotContent } from '../../utils/slot-nodes';
+    import useConfig from '../config-provider/use-config';
     import IconButton from '../icon-button';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover';
@@ -42,6 +44,7 @@
     defineSlots<Pick<CalendarSlots, 'header' | 'event' | 'dateDisplay' | 'dateGrid'>>();
 
     const i18n = useLocale('Calendar');
+    const config = useConfig();
     const eventsByKey = useCalendarContext();
 
     const cardIdPrefix = useId();
@@ -66,7 +69,8 @@
     const cardCls = `${prefixCls}-event-card`;
     const openCardKey = computed(() => state.value.openCardKey);
     const itemLimit = computed(() => state.value.itemLimit);
-    const monthlyData = computed(() => CalendarFoundation.getMonthlyData(props.displayValue, i18n.value.dateFnsLocale, props.weekStartsOn, props.today));
+    const dateFnsLocale = computed(() => getDateFnsLocale(i18n.value.localeCode, config.value.dateFnsLocale));
+    const monthlyData = computed(() => CalendarFoundation.getMonthlyData(props.displayValue, dateFnsLocale.value, props.weekStartsOn, props.today));
     const parsedEvents = computed(() => CalendarFoundation.getParseMonthlyEvents(props.events, props.displayValue, props.weekStartsOn));
     const weekCount = computed(() => Object.keys(monthlyData.value).length);
 
@@ -149,7 +153,7 @@
 </script>
 
 <template>
-    <div :aria-label="format(props.displayValue, 'LLLL y', { locale: i18n.dateFnsLocale })" :class="prefixCls" role="table">
+    <div :aria-label="format(props.displayValue, 'LLLL y', { locale: dateFnsLocale })" :class="prefixCls" role="table">
         <div :class="`${prefixCls}-sticky-top`" role="rowgroup">
             <div v-if="hasSlotContent($slots.header)" role="row">
                 <div role="cell">
@@ -175,7 +179,7 @@
                                 <!-- Tooltip makes a trigger without a tabindex a tab stop; "more" is the stop -->
                                 <div
                                     :aria-current="day.isToday ? 'date' : undefined"
-                                    :aria-label="format(day.date, 'PPP', { locale: i18n.dateFnsLocale })"
+                                    :aria-label="format(day.date, 'PPP', { locale: dateFnsLocale })"
                                     :class="{
                                         [`${cssClasses.PREFIX}-today`]: day.isToday,
                                         [`${cssClasses.PREFIX}-weekend`]: props.markWeekend && day.isWeekend,

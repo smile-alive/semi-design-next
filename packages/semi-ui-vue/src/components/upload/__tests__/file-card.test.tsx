@@ -2,7 +2,7 @@
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import FileCard from '../file-card.vue';
 import type { FileItem, UploadFileItemSlotProps, UploadPicCloseSlotProps, UploadSlots } from '../interface';

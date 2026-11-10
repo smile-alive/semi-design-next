@@ -2,9 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { DatePickerTriggerRenderProps } from '../interface';
 import ContextFixture, { type ContextFixtureStore } from './date-picker-context-fixture.svelte';
@@ -262,9 +261,9 @@ describe('Svelte DatePicker 默认值与属性', () => {
         expect(disabledDate.mock.calls.filter(([date]) => ymd(date) === '2019-09-15')).toHaveLength(1);
     });
 
-    it('LocaleProvider 的 ja_JP 用于面板名称与预设标题', async () => {
-        await renderProvided({ locale: ja_JP, props: { open: true, presetPosition: 'left', presets: [{ text: 'Today', start: baseDate, end: baseDate }] } });
-        expect(await screen.findByRole('dialog', { name: ja_JP.DatePicker.panel.date })).toBeInTheDocument();
-        expect(screen.getByText(ja_JP.DatePicker.presets)).toBeInTheDocument();
+    it('LocaleProvider 的 en_US 用于面板名称与预设标题', async () => {
+        await renderProvided({ locale: en_US, props: { open: true, presetPosition: 'left', presets: [{ text: 'Today', start: baseDate, end: baseDate }] } });
+        expect(await screen.findByRole('dialog', { name: en_US.DatePicker.panel.date })).toBeInTheDocument();
+        expect(screen.getByText(en_US.DatePicker.presets)).toBeInTheDocument();
     });
 });

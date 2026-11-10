@@ -1,10 +1,8 @@
-import { zhCN } from 'date-fns/locale/zh-CN';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'zh-CN',
     currency: 'CNY',
-    dateFnsLocale: zhCN,
     BackTop: {
         backToTop: '回到顶部',
     },

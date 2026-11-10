@@ -2,8 +2,8 @@ import { StrictMode } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Image, ImagePreview } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { ImageProps, PreviewImageProps, PreviewProps } from '../index';
 

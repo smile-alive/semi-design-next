@@ -1,9 +1,8 @@
 import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import ContextFixture, { type ContextFixtureStore } from './date-picker-context-fixture.svelte';
 import { click, getPanel, getPopup } from './date-picker-dom-utils';
 import ProviderFixture, { type ProviderFixtureStore } from './date-picker-provider-fixture.svelte';

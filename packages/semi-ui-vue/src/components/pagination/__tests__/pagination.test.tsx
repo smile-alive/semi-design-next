@@ -3,10 +3,8 @@ import { KeepAlive, nextTick, shallowRef } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconChevronLeft } from '@fibrae/semi-icons-vue';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endLeaveAnimations, render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
@@ -656,11 +654,11 @@ describe('Pagination', () => {
             expect(screen.getByRole('button', { name: zh_CN.Pagination.prev })).toBeInTheDocument();
         });
 
-        it('名称随 ja_JP 语言包变化', () => {
+        it('名称随 en_US 语言包变化', () => {
             render({
-                render: () => <LocaleProvider locale={ja_JP}>{() => <Pagination defaultCurrentPage={10} showQuickJumper showSizeChanger total={200} />}</LocaleProvider>,
+                render: () => <LocaleProvider locale={en_US}>{() => <Pagination defaultCurrentPage={10} showQuickJumper showSizeChanger total={200} />}</LocaleProvider>,
             });
-            const text = ja_JP.Pagination;
+            const text = en_US.Pagination;
             expect(screen.getByRole('button', { name: text.prev })).toBeInTheDocument();
             expect(screen.getByRole('button', { name: text.next })).toBeInTheDocument();
             expect(screen.getByRole('button', { name: text.pageN.replace('${page}', '10') })).toBeInTheDocument();

@@ -1,9 +1,7 @@
-import { kk } from 'date-fns/locale/kk';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'kk',
-    dateFnsLocale: kk,
     currency: 'KZT',
     BackTop: {
         backToTop: 'Жоғарыға оралу',

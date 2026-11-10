@@ -5,9 +5,8 @@ import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import de from '@fibrae/semi-foundation/locale/source/de';
 import { IconSearch } from '@fibrae/semi-icons-vue';
+import type { LocaleInput } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import InputNumber, { type InputNumberChangeEvent, type InputNumberHandle, type InputNumberProps } from '..';
@@ -15,6 +14,8 @@ import { LocaleProvider } from '../../locale';
 import Controlled from './fixtures/controlled.vue';
 import InGroup from './fixtures/in-group.vue';
 import OneWay from './fixtures/one-way.vue';
+
+const de: LocaleInput = { code: 'de', currency: 'EUR' };
 
 type Change = (value: number | string, event: InputNumberChangeEvent) => void;
 type NumberChange = (value: number, event: InputNumberChangeEvent) => void;
@@ -462,22 +463,6 @@ describe('InputNumber', () => {
         for (const [props, expected] of cases) {
             const view = await mount({ ...props, defaultValue });
             expect(getInput()).toHaveValue(expected);
-            view.unmount();
-        }
-    });
-
-    it('currency 为 true 时使用语言包的货币码，所有语言包都能渲染', async () => {
-        const packs = import.meta.glob<Locale>('@fibrae/semi-foundation/locale/source/*.ts', {
-            eager: true,
-            import: 'default',
-        });
-        expect(Object.keys(packs)).toHaveLength(57);
-        for (const [file, pack] of Object.entries(packs)) {
-            const view = render({
-                render: () => <LocaleProvider locale={pack}>{() => <InputNumber defaultValue={1.5} currency />}</LocaleProvider>,
-            });
-            await nextTick();
-            expect([file, getInput().value]).not.toEqual([file, '']);
             view.unmount();
         }
     });

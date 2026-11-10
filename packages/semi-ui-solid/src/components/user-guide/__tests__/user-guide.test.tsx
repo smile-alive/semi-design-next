@@ -2,7 +2,7 @@ import { type JSX, Show, createSignal, onMount } from 'solid-js';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { sleep } from '@test/utils/solid';
 import UserGuide, { type StepItem, type StepRenderProps, type UserGuideProps } from '..';

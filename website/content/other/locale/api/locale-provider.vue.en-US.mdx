@@ -1,8 +1,8 @@
 **Props**
 
-| Property | Description                                                                                                                                                                                                            | Type             | Default     |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ----------- |
-| locale   | Locale pack. When omitted, undefined or null, the language of the outer LocaleProvider is inherited; without any outer provider, components fall back to zh_CN. The locale of ConfigProvider takes precedence over it. | `Locale \| null` | `undefined` |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| locale | Locale pack. When omitted, undefined or null, the language of the outer LocaleProvider is inherited; without any outer provider, components fall back to zh_CN. The locale of ConfigProvider takes precedence over it. Takes the built-in zh_CN or en_US, or a custom pack with at least code, whose missing text and currency fall back to en_US. | `LocaleInput \| null` | `undefined` |
 
 **Events**
 

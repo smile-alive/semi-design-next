@@ -1,9 +1,7 @@
-import { km } from 'date-fns/locale/km';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'km-KH',
-    dateFnsLocale: km,
     currency: 'USD',
     BackTop: {
         backToTop: 'ត្រឡប់ទៅកំពូល',

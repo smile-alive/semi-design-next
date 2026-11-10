@@ -2,10 +2,8 @@ import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { click, getPopup, getYMLists, getYMSelected } from './date-picker-dom-utils';
 import YamFixture, { type YamFixtureStore } from './date-picker-yam-fixture.svelte';
 import { changes, dp, getInput, settle, setup, useBaseDate } from './test-utils';
@@ -118,9 +116,9 @@ describe('Svelte DatePicker YearAndMonth 组件', () => {
         expect(within(getYMLists()[1]).getByRole('option', { name: '7月' })).toBeInTheDocument();
     });
 
-    it('ja_JP 下显示语言包的年后缀和月份名', async () => {
-        await renderYearAndMonth({ props: { locale: ja_JP.DatePicker } });
-        expect(getYMSelected()).toEqual(['2021年', ja_JP.DatePicker.fullMonths[6]]);
+    it('zh_CN 下显示语言包的年后缀和月份名', async () => {
+        await renderYearAndMonth({ props: { locale: zh_CN.DatePicker } });
+        expect(getYMSelected()).toEqual(['2021年', zh_CN.DatePicker.fullMonths[6]]);
         expect(within(getYMLists()[0]).getByRole('option', { name: '2022' })).toBeInTheDocument();
     });
 

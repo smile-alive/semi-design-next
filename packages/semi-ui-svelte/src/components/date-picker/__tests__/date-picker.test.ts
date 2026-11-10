@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { changes, clickDay, clickOutside, clickTrigger, dp, getContainer, getDay, getInput, getRoot, getSelectedDays, getTrigger, settle, setup, typeText, useBaseDate } from './test-utils';
 
 useBaseDate();

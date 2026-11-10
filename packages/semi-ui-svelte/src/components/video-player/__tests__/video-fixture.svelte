@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-svelte/locale';
     import ConfigProvider from '../../config-provider/config-provider.svelte';
     import type { VideoPlayerProps } from '../interface';
     import VideoPlayer from '../video-player.svelte';

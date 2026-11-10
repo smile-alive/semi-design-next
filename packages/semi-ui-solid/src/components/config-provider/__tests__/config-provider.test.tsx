@@ -2,7 +2,7 @@ import { Index, Show, createEffect, createSignal, onCleanup, onMount } from 'sol
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-solid/locale';
 import { mockMatchMedia } from '@test/utils/solid';
 import ConfigProvider, { ConfigConsumer, type ConfigConsumerProps, type ConfigProviderProps, type ContextValue, defaultResponsiveMap, useConfig } from '../index';
 

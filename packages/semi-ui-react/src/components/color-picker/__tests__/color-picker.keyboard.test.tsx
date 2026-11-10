@@ -2,8 +2,8 @@ import type { ComponentProps } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { ColorPicker } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 
 const text = zh_CN.ColorPicker;
 const color = {

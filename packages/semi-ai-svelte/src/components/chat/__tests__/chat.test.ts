@@ -1,8 +1,8 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import type { FileItem, UploadOnChangeProps } from '@fibrae/semi-ui-svelte/upload/interface';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Chat } from '../index';

@@ -3,9 +3,8 @@ import { createCommentVNode, nextTick, shallowRef } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconEyeClosed } from '@fibrae/semi-icons-vue';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
 import Button from '../../button';
@@ -803,9 +802,9 @@ describe('SideSheet Vue 写法', () => {
     });
 
     it('关闭按钮名称随语言包', async () => {
-        render(() => <ConfigProvider locale={ja_JP}>{() => <SideSheet visible />}</ConfigProvider>);
+        render(() => <ConfigProvider locale={en_US}>{() => <SideSheet visible />}</ConfigProvider>);
         await nextTick();
-        expect(screen.getByRole('button', { name: ja_JP.SideSheet.close })).toHaveClass(`${prefix}-close`);
+        expect(screen.getByRole('button', { name: en_US.SideSheet.close })).toHaveClass(`${prefix}-close`);
     });
 
     it('放在 ButtonGroup 内时，抽屉中的 Button 不继承组的配置', async () => {

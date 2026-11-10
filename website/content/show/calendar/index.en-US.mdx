@@ -295,6 +295,8 @@ An event needs at least a start or an end time to be valid; an event with neithe
 - In the month view, "N more" for the collapsed events is a button: `Enter` or `Space` opens the card of the day and moves focus to its close button; `Esc` or the close button closes the card and returns focus to "N more"
 - Clicks on a day cell or a time slot (`onClick` in React, `@click` in Vue, `onClick` in Svelte) respond to the pointer only and have no keyboard equivalent
 
+The accessible names of the views and day cells are formatted by date-fns: with the built-in zh-CN or en-US picked by the current locale's `code`, and enUS for other languages. When needed, import another language from `date-fns/locale` and pass it to the `dateFnsLocale` of ConfigProvider; see [Internationalization](/en-US/react/other/locale).
+
 ## Content Guidelines
 
 - Both 12-hour and 24-hour clocks can be used when the time needs to be displayed

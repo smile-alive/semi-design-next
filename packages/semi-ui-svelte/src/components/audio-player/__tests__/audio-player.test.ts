@@ -1,10 +1,8 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { AudioPlayerProps } from '../interface';
 import AudioFixture from './audio-fixture.svelte';
@@ -659,11 +657,11 @@ describe('Svelte AudioPlayer', () => {
         });
 
         it('按钮与滑块的名称随语言包切换', () => {
-            renderPlayer({ audioUrl: tracks, skipDuration: 10 }, ja_JP);
-            for (const name of ['前へ', '次へ', '戻る 10秒', '進む 10秒', '再生', '再読み込み', '音量']) {
+            renderPlayer({ audioUrl: tracks, skipDuration: 10 }, en_US);
+            for (const name of ['Previous', 'Next', 'Backward 10s', 'Forward 10s', 'Play', 'Refresh', 'Volume']) {
                 expect(screen.getByRole('button', { name })).toBeInTheDocument();
             }
-            expect(screen.getByRole('slider', { name: '再生の進行状況' })).toBeInTheDocument();
+            expect(screen.getByRole('slider', { name: 'Playback progress' })).toBeInTheDocument();
         });
 
         it('时长未知时进度样式保持有效', () => {

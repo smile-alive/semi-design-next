@@ -1,13 +1,11 @@
 import { Component } from 'react';
 import { render, screen } from '@testing-library/react';
 import { format } from 'date-fns';
-import { enUS, zhCN } from 'date-fns/locale';
+import { de, enUS, zhCN } from 'date-fns/locale';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import Calendar from '@fibrae/semi-ui-react/calendar';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
+import { en_US, zh_CN, type Locale } from '@fibrae/semi-ui-react/locale';
 import Modal from '@fibrae/semi-ui-react/modal';
 import { LocaleContext } from '../context';
 import LocaleConsumer from '../locale-consumer';
@@ -17,12 +15,11 @@ import useLocale, { type LocaleComponentName } from '../use-locale';
 function Probe({ componentName = 'Modal' }: { componentName?: LocaleComponentName }) {
     return (
         <LocaleConsumer componentName={componentName}>
-            {(componentLocale, localeCode, dateFnsLocale, currency) => (
+            {(componentLocale, localeCode, currency) => (
                 <span data-testid="probe">
                     {JSON.stringify({
                         componentLocale,
                         localeCode,
-                        dateFns: dateFnsLocale?.code,
                         currency,
                     })}
                 </span>
@@ -34,7 +31,7 @@ function Probe({ componentName = 'Modal' }: { componentName?: LocaleComponentNam
 const read = () => JSON.parse(screen.getByTestId('probe').textContent);
 
 describe('locale', () => {
-    it('LocaleConsumer 传递组件片段、code、date-fns 语言与货币', () => {
+    it('LocaleConsumer 传递组件片段、code 与货币', () => {
         render(
             <LocaleProvider locale={en_US}>
                 <Probe />
@@ -43,7 +40,6 @@ describe('locale', () => {
         expect(read()).toEqual({
             componentLocale: en_US.Modal,
             localeCode: 'en-US',
-            dateFns: enUS.code,
             currency: 'USD',
         });
     });
@@ -53,7 +49,6 @@ describe('locale', () => {
         expect(read()).toEqual({
             componentLocale: zh_CN.Modal,
             localeCode: 'zh-CN',
-            dateFns: zhCN.code,
             currency: 'CNY',
         });
     });
@@ -82,7 +77,7 @@ describe('locale', () => {
 
     it('ConfigProvider 的 locale 优先于 LocaleProvider', () => {
         render(
-            <LocaleProvider locale={ja_JP}>
+            <LocaleProvider locale={zh_CN}>
                 <ConfigProvider locale={en_US}>
                     <Probe />
                 </ConfigProvider>
@@ -111,7 +106,6 @@ describe('locale', () => {
         expect(read()).toEqual({
             componentLocale: zh_CN.Modal,
             localeCode: 'zh-CN',
-            dateFns: zhCN.code,
             currency: 'CNY',
         });
     });
@@ -120,7 +114,7 @@ describe('locale', () => {
         render(
             <ConfigProvider locale={en_US}>
                 <ConfigProvider timeZone={8}>
-                    <LocaleProvider locale={ja_JP}>
+                    <LocaleProvider locale={zh_CN}>
                         <Probe />
                     </LocaleProvider>
                 </ConfigProvider>
@@ -131,7 +125,7 @@ describe('locale', () => {
 
     it('locale={null} 的 ConfigProvider 清除继承的 locale，并让 LocaleProvider 生效', () => {
         render(
-            <ConfigProvider locale={ja_JP}>
+            <ConfigProvider locale={zh_CN}>
                 <ConfigProvider locale={null}>
                     <LocaleProvider locale={en_US}>
                         <Probe />
@@ -151,22 +145,25 @@ describe('locale', () => {
         expect(read()).toEqual({
             componentLocale: zh_CN.Modal,
             localeCode: 'zh-CN',
-            dateFns: zhCN.code,
             currency: 'CNY',
         });
     });
 
-    it('没有 dateFnsLocale 的 locale 交给 date-fns 默认语言（enUS），不借用 zh_CN', () => {
-        function Reader() {
-            const { localeCode, dateFnsLocale } = useLocale('DatePicker');
-            return <span>{`${localeCode} ${format(new Date(2026, 9, 13), 'EEEE', { locale: dateFnsLocale })}`}</span>;
-        }
+    it('日期组件按语言代码取内置的 date-fns 语言，其他语言用 enUS，ConfigProvider 的 dateFnsLocale 优先', () => {
+        const date = new Date(2026, 9, 13);
+        const label = (locale: typeof de) => format(date, 'PPP', { locale });
         render(
-            <LocaleProvider locale={{ ...en_US, dateFnsLocale: undefined }}>
-                <Reader />
-            </LocaleProvider>
+            <>
+                <Calendar displayValue={date} mode="day" />
+                <LocaleProvider locale={{ code: 'ja-JP' }}>
+                    <Calendar displayValue={date} mode="day" />
+                    <ConfigProvider dateFnsLocale={de}>
+                        <Calendar displayValue={date} mode="day" />
+                    </ConfigProvider>
+                </LocaleProvider>
+            </>
         );
-        expect(screen.getByText(/^en-US /)).toHaveTextContent('en-US Tuesday');
+        expect(screen.getAllByRole('table').map((table) => table.getAttribute('aria-label'))).toEqual([label(zhCN), label(enUS), label(de)]);
     });
 
     it('不传 locale 的 LocaleProvider 继承外层，最外层时不提供语言包', () => {
@@ -200,13 +197,13 @@ describe('locale', () => {
 
     it('嵌套且不传 locale 的 LocaleProvider 内，组件沿用外层语言', () => {
         render(
-            <LocaleProvider locale={ja_JP}>
+            <LocaleProvider locale={en_US}>
                 <LocaleProvider>
                     <Probe />
                 </LocaleProvider>
             </LocaleProvider>
         );
-        expect(read()).toMatchObject({ componentLocale: ja_JP.Modal, localeCode: 'ja-JP' });
+        expect(read()).toMatchObject({ componentLocale: en_US.Modal, localeCode: 'en-US' });
     });
 
     it('useLocale 的解析方式与 LocaleConsumer 一致', () => {
@@ -217,7 +214,7 @@ describe('locale', () => {
             return null;
         }
         const { rerender } = render(
-            <LocaleProvider locale={ja_JP}>
+            <LocaleProvider locale={zh_CN}>
                 <ConfigProvider locale={en_US}>
                     <Reader />
                 </ConfigProvider>
@@ -226,11 +223,10 @@ describe('locale', () => {
         expect(result).toEqual({
             locale: en_US.Modal,
             localeCode: 'en-US',
-            dateFnsLocale: enUS,
             currency: 'USD',
         });
         rerender(<Reader />);
-        expect(result).toEqual({ locale: zh_CN.Modal, localeCode: 'zh-CN', dateFnsLocale: zhCN, currency: 'CNY' });
+        expect(result).toEqual({ locale: zh_CN.Modal, localeCode: 'zh-CN', currency: 'CNY' });
     });
 
     it('useLocale 只接受存放组件文案的键', () => {
@@ -239,8 +235,6 @@ describe('locale', () => {
             useLocale('code');
             // @ts-expect-error 'currency' is not a component's strings
             useLocale('currency');
-            // @ts-expect-error 'dateFnsLocale' is not a component's strings
-            useLocale('dateFnsLocale');
             expectTypeOf(useLocale('Table').locale).toEqualTypeOf<Locale['Table']>();
         };
         expect(TypeOnly).toBeTypeOf('function');

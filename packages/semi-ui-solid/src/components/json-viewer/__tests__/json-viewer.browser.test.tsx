@@ -3,8 +3,8 @@ import { fireEvent, render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { JsonViewer as Core } from '@fibrae/semi-json-viewer-core';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import JsonViewer from '..';
 

@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/svelte';
 import { format } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { click, getFooterButtons, getYMLists, ymd } from './date-picker-dom-utils';
 import { changes, dp, getContainer, getDay, getGrid, getInput, getInputs, getSelectedDays, settle, setup, typeText, useBaseDate } from './test-utils';
 

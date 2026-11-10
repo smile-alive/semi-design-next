@@ -1,9 +1,8 @@
 import { createRawSnippet } from 'svelte';
 import { createEvent, fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { AnnotationInfo, AnnotationProps } from '../annotation/interface';
 import { Annotation } from '../index';
@@ -112,8 +111,8 @@ describe('Svelte Annotation', () => {
     });
 
     it('默认标题随语言包变化', () => {
-        render(LocaleHost, { props: { locale: ja_JP, kind: 'annotation' } });
-        expect($('.semi-sidebar-container-header-title')).toHaveTextContent(ja_JP.Sidebar.annotationTitle);
+        render(LocaleHost, { props: { locale: en_US, kind: 'annotation' } });
+        expect($('.semi-sidebar-container-header-title')).toHaveTextContent(en_US.Sidebar.annotationTitle);
     });
 
     // jsdom does not navigate, so the default is cancelled up front to keep it from logging

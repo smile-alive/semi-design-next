@@ -2,9 +2,8 @@ import { createRawSnippet, flushSync, tick } from 'svelte';
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import type { Editor } from '@tiptap/core';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Annotation, MCPConfigure, Sidebar } from '../index';
 import type { SideBarMainContentSnippetProps, SideBarProps } from '../interface';
@@ -154,8 +153,8 @@ describe('Svelte Sidebar 主模式', () => {
     });
 
     it('关闭按钮的可访问名称随语言包变化', () => {
-        render(LocaleHost, { props: { locale: ja_JP, kind: 'sidebar' } });
-        expect(screen.getByRole('button', { name: ja_JP.Sidebar.close })).toBeInTheDocument();
+        render(LocaleHost, { props: { locale: en_US, kind: 'sidebar' } });
+        expect(screen.getByRole('button', { name: en_US.Sidebar.close })).toBeInTheDocument();
     });
 });
 
@@ -442,10 +441,10 @@ describe('Svelte Sidebar 主模式与详情的补充行为', () => {
     });
 
     it('语言包切换后详情按钮名称跟随', () => {
-        render(LocaleHost, { props: { locale: ja_JP, kind: 'sidebar-code' } });
-        expect(ja_JP.Sidebar.copy).not.toBe(text.copy);
-        expect(screen.getByRole('button', { name: ja_JP.Sidebar.copy })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: ja_JP.Sidebar.close })).toBeInTheDocument();
+        render(LocaleHost, { props: { locale: en_US, kind: 'sidebar-code' } });
+        expect(en_US.Sidebar.copy).not.toBe(text.copy);
+        expect(screen.getByRole('button', { name: en_US.Sidebar.copy })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Sidebar.close })).toBeInTheDocument();
     });
 
     it('类型：detailContent 不是 any，也没有被忽略的 onChange', () => {

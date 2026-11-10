@@ -1,13 +1,13 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { LocaleInput } from '@fibrae/semi-ui-svelte/locale';
     import { ConfigProvider } from '../../config-provider';
     import LocaleProvider from '../locale-provider.svelte';
     import Nest from './nest.svelte';
 
     export interface Layer {
         kind: 'locale' | 'config';
-        locale?: Locale | null;
+        locale?: LocaleInput | null;
     }
 
     let { chain, children }: { chain: Layer[]; children: Snippet } = $props();

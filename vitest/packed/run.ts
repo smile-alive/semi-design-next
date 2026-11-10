@@ -184,15 +184,13 @@ write(
     path.join(appDir, 'src/types-probe.ts'),
     [
         "import type * as Ui from '@fibrae/semi-ui-react';",
+        "import type * as UiLocale from '@fibrae/semi-ui-react/locale';",
         "import type * as Ai from '@fibrae/semi-ai-react';",
         "import type { ButtonProps } from '@fibrae/semi-ui-react/button/index';",
         "import type { ColumnProps } from '@fibrae/semi-ui-react/table/interface';",
         "import type { useForm } from '@fibrae/semi-ui-react/form/hooks/index';",
         "import type * as Foundation from '@fibrae/semi-foundation/components/transfer/foundation';",
         "import type * as TableFoundation from '@fibrae/semi-foundation/components/table/foundation';",
-        "import type * as EnUS from '@fibrae/semi-foundation/locale/source/en_US';",
-        "import type * as ReactEnUS from '@fibrae/semi-ui-react/locale/source/en_US';",
-        "import type * as VueEnUS from '@fibrae/semi-ui-vue/locale/source/en_US';",
         "import type * as ChatFoundation from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';",
         "import type * as Icons from '@fibrae/semi-icons-react';",
         "import type * as LabIcons from '@fibrae/semi-icons-react/lab';",
@@ -206,9 +204,8 @@ write(
         '    typeof Ai,',
         '    typeof Foundation,',
         '    typeof TableFoundation,',
-        '    typeof EnUS,',
-        '    typeof ReactEnUS,',
-        '    typeof VueEnUS,',
+        '    typeof UiLocale.zh_CN,',
+        '    UiLocale.LocaleInput,',
         '    typeof ChatFoundation,',
         '    typeof Icons,',
         '    typeof LabIcons,',
@@ -255,6 +252,7 @@ write(
     path.join(appDir, 'src/types-probe-vue.ts'),
     [
         "import type * as Ui from '@fibrae/semi-ui-vue';",
+        "import type * as UiLocale from '@fibrae/semi-ui-vue/locale';",
         "import type * as Ai from '@fibrae/semi-ai-vue';",
         "import type * as Icons from '@fibrae/semi-icons-vue';",
         "import type * as LabIcons from '@fibrae/semi-icons-vue/lab';",
@@ -262,7 +260,7 @@ write(
         "import type { IconProps } from '@fibrae/semi-ui-vue/icons/index';",
         "import type { ChatProps } from '@fibrae/semi-ai-vue/chat/interface';",
         "import '@fibrae/semi-ui-vue/tokens';",
-        'export type Probe = [typeof Ui, typeof Ai, typeof Icons, typeof LabIcons, typeof Illustrations, ChatProps];',
+        'export type Probe = [typeof Ui, typeof UiLocale.zh_CN, UiLocale.LocaleInput, typeof Ai, typeof Icons, typeof LabIcons, typeof Illustrations, ChatProps];',
         "export const props: IconProps = { size: 'small', spin: false, rotate: 90 };",
         '',
     ].join('\n')
@@ -443,11 +441,9 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
             assert.doesNotMatch(fs.readFileSync(path.join(root, file), 'utf-8'), /(?:\bfrom|\bimport)\s*['"][^'"]+\.scss['"]/, `${name}/${file} does not import a .scss file`);
         }
     }
-    const ui = path.join(scope, 'semi-ui-svelte');
-    assert.strictEqual(fs.globSync('*.js', { cwd: path.join(ui, 'dist/components/locale/source') }).length, fs.globSync('*.js', { cwd: path.join(scope, 'semi-foundation/dist/locale/source') }).length, 'semi-ui-svelte re-exports every foundation locale pack');
     // Svelte-aware tools resolve with the `svelte` condition; plain Node and other bundlers take `default`. The AI package
     // reaches the UI package's internals by deep path: a `.ts` module without extension, a `.svelte.ts` one as `.svelte.js`
-    const subpaths = ['hooks', 'tokens', 'locale/source/en_US', 'styles.css', 'tailwind.css', 'switch/switch.svelte', 'base/create-context', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'];
+    const subpaths = ['hooks', 'tokens', 'styles.css', 'tailwind.css', 'switch/switch.svelte', 'base/create-context', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'];
     for (const condition of [[], ['--conditions=svelte']]) {
         const resolved = execFileSync(process.execPath, [...condition, '--input-type=module', '-e', 'for (const specifier of process.argv.slice(1)) console.log(import.meta.resolve(specifier));', ...subpaths.map((subpath) => `@fibrae/semi-ui-svelte/${subpath}`)], { cwd: appDir, encoding: 'utf-8' })
             .trim()
@@ -458,7 +454,7 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
             });
         assert.deepStrictEqual(
             resolved,
-            ['hooks.js', 'tokens.js', 'components/locale/source/en_US.js', 'styles.css', 'tailwind.css', 'components/switch/switch.svelte', 'base/create-context.js', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'].map((file) => `semi-ui-svelte/dist/${file}`),
+            ['hooks.js', 'tokens.js', 'styles.css', 'tailwind.css', 'components/switch/switch.svelte', 'base/create-context.js', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'].map((file) => `semi-ui-svelte/dist/${file}`),
             `the semi-ui-svelte subpaths resolve ${condition.join(' ') || 'by default'}`
         );
     }
@@ -486,13 +482,14 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
     execFileSync(process.execPath, [importDist, 'collect', exportsFile, ...reactDists, ...distDirs(['semi-ui-vue', 'semi-ai-vue', 'semi-icons-vue'])], { stdio: 'inherit' });
 
     const startsWithUseClient = (distDir: string, file: string) => /^["']use client["']/.test(fs.readFileSync(path.join(distDir, file), 'utf-8').slice(0, 20));
-    // The root entry only re-exports, and the locale re-exports are plain data
-    const isUnmarked = (file: string) => file === 'index.js' || file.startsWith('components/locale/source/');
     for (const name of ['semi-ui-react', 'semi-ai-react']) {
         const distDir = path.join(scope, name, 'dist');
-        const missing = fs.globSync('**/*.js', { cwd: distDir }).filter((file) => !isUnmarked(file) && !startsWithUseClient(distDir, file));
-        assert.deepStrictEqual(missing, [], `every ${name} module but the root entry starts with 'use client'`);
-        assert.ok(!startsWithUseClient(distDir, 'index.js'), `the ${name} root entry is not marked 'use client'`);
+        const serverEntries = name === 'semi-ui-react' ? ['index.js', 'locale.js'] : ['index.js'];
+        const missing = fs.globSync('**/*.js', { cwd: distDir }).filter((file) => !serverEntries.includes(file) && !startsWithUseClient(distDir, file));
+        assert.deepStrictEqual(missing, [], `every ${name} module but ${serverEntries.join(' and ')} starts with 'use client'`);
+        for (const file of serverEntries) {
+            assert.ok(!startsWithUseClient(distDir, file), `${name}/dist/${file} is not marked 'use client'`);
+        }
     }
     {
         const distDir = path.join(scope, 'semi-icons-react', 'dist');
@@ -501,18 +498,13 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
     }
     execFileSync(process.execPath, ['--conditions=react-server', importDist, 'rsc', exportsFile, ...reactDists], { stdio: 'inherit' });
 
-    // `./*` serves the locale re-exports; Solid's `solid` condition picks the JSX twin
-    const resolveLocale = (condition: string[]) =>
-        execFileSync(process.execPath, [...condition, '--input-type=module', '-e', 'for (const specifier of process.argv.slice(1)) console.log(import.meta.resolve(specifier));', ...['react', 'vue', 'solid'].map((framework) => `@fibrae/semi-ui-${framework}/locale/source/en_US`)], { cwd: appDir, encoding: 'utf-8' })
-            .trim()
-            .split('\n')
-            .map((url) => {
-                // import.meta.resolve maps the exports pattern without checking that the file exists
-                assert.ok(fs.existsSync(fileURLToPath(url)), `${url} exists`);
-                return url.replace(/^.*\/@fibrae\//, '');
-            });
-    assert.deepStrictEqual(resolveLocale([]), ['semi-ui-react/dist/components/locale/source/en_US.js', 'semi-ui-vue/dist/components/locale/source/en_US.js', 'semi-ui-solid/dist/components/locale/source/en_US.js'], 'the locale subpath resolves by default');
-    assert.deepStrictEqual(resolveLocale(['--conditions=solid']), ['semi-ui-react/dist/components/locale/source/en_US.js', 'semi-ui-vue/dist/components/locale/source/en_US.js', 'semi-ui-solid/dist/components/locale/source/en_US.jsx'], 'the locale subpath resolves under the solid condition');
+    const collected: Record<string, string[]> = JSON.parse(fs.readFileSync(exportsFile, 'utf-8'));
+    for (const name of ['semi-ui-react', 'semi-ui-vue']) {
+        const localeExports = collected[fs.realpathSync(path.join(scope, name, 'dist/locale.js'))];
+        assert.deepStrictEqual([...localeExports].sort(), ['en_US', 'zh_CN'], `the ${name} locale entry exports zh_CN and en_US`);
+        const entryExports = collected[fs.realpathSync(path.join(scope, name, 'dist/index.js'))];
+        assert.ok(!entryExports.includes('zh_CN') && !entryExports.includes('en_US'), `the ${name} root entry leaves the locale packs to the locale entry`);
+    }
 }
 
 // The app's own copies, typed by the workspace sources they were packed from
@@ -819,7 +811,7 @@ for (const ui of ['', 'vue-']) {
         [
             '<script lang="ts">',
             "    import { Button, LocaleProvider, Switch } from '@fibrae/semi-ui-svelte';",
-            "    import en_US from '@fibrae/semi-ui-svelte/locale/source/en_US';",
+            "    import { en_US } from '@fibrae/semi-ui-svelte/locale';",
             "    import { IconHome } from '@fibrae/semi-icons-svelte';",
             "    import { IllustrationIdle } from '@fibrae/semi-icons-svelte/illustrations';",
             '</script>',
@@ -846,13 +838,13 @@ for (const ui of ['', 'vue-']) {
         path.join(appDir, 'src/types-probe-svelte.ts'),
         [
             "import type * as Ui from '@fibrae/semi-ui-svelte';",
+            "import type * as UiLocale from '@fibrae/semi-ui-svelte/locale';",
             "import type * as Hooks from '@fibrae/semi-ui-svelte/hooks';",
             "import type * as Ai from '@fibrae/semi-ai-svelte';",
             "import type * as Icons from '@fibrae/semi-icons-svelte';",
             "import type * as LabIcons from '@fibrae/semi-icons-svelte/lab';",
             "import type * as Illustrations from '@fibrae/semi-icons-svelte/illustrations';",
-            "import type * as EnUS from '@fibrae/semi-ui-svelte/locale/source/en_US';",
-            'export type Probe = [typeof Ui, typeof Hooks, typeof Ai, typeof Icons, typeof LabIcons, typeof Illustrations, typeof EnUS];',
+            'export type Probe = [typeof Ui, typeof UiLocale.zh_CN, UiLocale.LocaleInput, typeof Hooks, typeof Ai, typeof Icons, typeof LabIcons, typeof Illustrations];',
             '',
         ].join('\n')
     );

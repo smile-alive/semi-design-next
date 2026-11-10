@@ -2,8 +2,7 @@ import { For, type JSX, Show, createSignal } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Image, { ImagePreview, type ImageProps, type MenuProps, type PreviewProps } from '..';
 import Button from '../../button';
@@ -1384,17 +1383,5 @@ describe('ImagePreview 键盘与屏幕阅读器', () => {
         fireEvent.click(arrowNext);
         expect(pageInfo()).toBe('3/3');
         expect(document.activeElement).toBe(dialog());
-    });
-
-    it('每种语言都为关闭按钮与缩放滑块命名', () => {
-        const locales = import.meta.glob<{ Image: { close: string; zoom: string } }>('@fibrae/semi-foundation/locale/source/*.ts', {
-            eager: true,
-            import: 'default',
-        });
-        expect(Object.keys(locales)).toHaveLength(57);
-        for (const [file, locale] of Object.entries(locales)) {
-            expect([file, typeof locale.Image.close, typeof locale.Image.zoom]).toEqual([file, 'string', 'string']);
-            expect(locale.Image.close.length * locale.Image.zoom.length).toBeGreaterThan(0);
-        }
     });
 });

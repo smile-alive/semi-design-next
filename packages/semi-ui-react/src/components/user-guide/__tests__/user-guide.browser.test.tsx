@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Button, UserGuide } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 
 function Tour(props) {
     const [visible, setVisible] = useState(false);

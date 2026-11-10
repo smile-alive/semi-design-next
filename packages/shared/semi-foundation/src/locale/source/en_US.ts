@@ -1,9 +1,7 @@
-import { enUS } from 'date-fns/locale/en-US';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'en-US',
-    dateFnsLocale: enUS,
     currency: 'USD',
     BackTop: {
         backToTop: 'Back to top',

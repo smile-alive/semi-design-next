@@ -4,12 +4,11 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, type Mock, o
 import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 // the package entry, which also loads the semi-global type augmentation
 import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { AvatarProps } from '@fibrae/semi-ui-svelte/avatar/interface';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';

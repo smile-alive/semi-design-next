@@ -28,14 +28,14 @@ peer 依赖：`vue` ^3.5.0。浏览器、模块格式、Node.js 与构建插件�
 
 ### 入口
 
-| 入口                                       | 说明                                                                                            |
-| ------------------------------------------ | ----------------------------------------------------------------------------------------------- |
-| `@fibrae/semi-ui-vue`                      | 全部组件、类型、`ConfigProvider`、`LocaleProvider`、`LocaleConsumer`、`useLocale`、`semiGlobal` |
-| `@fibrae/semi-ui-vue/<目录>/index`         | 逐文件深路径，与 `src/components/` 下的目录一一对应                                             |
-| `@fibrae/semi-ui-vue/tokens`               | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载            |
-| `@fibrae/semi-ui-vue/styles.css`           | 整包样式，需要一次性加载全部组件样式时使用                                                      |
-| `@fibrae/semi-ui-vue/tailwind.css`         | Tailwind v4 的 `@theme inline` 映射                                                             |
-| `@fibrae/semi-ui-vue/locale/source/<语言>` | 内置语言包，重导出 `@fibrae/semi-foundation/locale/source/<语言>`                               |
+| 入口                               | 说明                                                                                            |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `@fibrae/semi-ui-vue`              | 全部组件、类型、`ConfigProvider`、`LocaleProvider`、`LocaleConsumer`、`useLocale`、`semiGlobal` |
+| `@fibrae/semi-ui-vue/locale`       | 内置语言包 `zh_CN`、`en_US` 与类型 `Locale`、`LocaleInput`                                      |
+| `@fibrae/semi-ui-vue/<目录>/index` | 逐文件深路径，与 `src/components/` 下的目录一一对应                                             |
+| `@fibrae/semi-ui-vue/tokens`       | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载            |
+| `@fibrae/semi-ui-vue/styles.css`   | 整包样式，需要一次性加载全部组件样式时使用                                                      |
+| `@fibrae/semi-ui-vue/tailwind.css` | Tailwind v4 的 `@theme inline` 映射                                                             |
 
 使用整包 `styles.css` 时，需要开启 Semi 构建插件（`@fibrae/semi-vite-plugin`、`@fibrae/semi-webpack-plugin`、`@fibrae/semi-rspack-plugin`）的 `omitCss`，否则组件自带的样式导入会被再打包一份；Nuxt 用 `@fibrae/semi-nuxt` 的 `semi: { omitCss: true }`。整包样式已含 token，`omitCss` 下 `tokens` 入口和组件样式一起被移除。
 
@@ -47,20 +47,20 @@ peer 依赖：`vue` ^3.5.0。浏览器、模块格式、Node.js 与构建插件�
 
 ### 多语言
 
-默认语言为 `zh_CN`。用 `LocaleProvider` 传入语言包，`useLocale(组件名)` 返回当前语言下该组件的文案：
+默认语言为 `zh_CN`。内置语言包 `zh_CN`、`en_US` 从 `locale` 入口导入，用 `LocaleProvider` 传入；`useLocale(组件名)` 返回当前语言下该组件的文案：
 
 ```vue
 <script setup lang="ts">
     import { LocaleProvider } from '@fibrae/semi-ui-vue';
-    import en_GB from '@fibrae/semi-ui-vue/locale/source/en_GB';
+    import { en_US } from '@fibrae/semi-ui-vue/locale';
 </script>
 
 <template>
-    <LocaleProvider :locale="en_GB"><App /></LocaleProvider>
+    <LocaleProvider :locale="en_US"><App /></LocaleProvider>
 </template>
 ```
 
-语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
+其他语言传入自己的 `LocaleInput` 语言包：`code` 必填，没写的文案回退到 `en_US`。语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
 
 ### 服务端渲染
 

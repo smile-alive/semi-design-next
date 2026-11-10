@@ -3,7 +3,7 @@ import { defineComponent, nextTick, ref, type VNode } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { getData, getRandomNumber, getTreeData, render } from '@test/utils/vue';
 import Table, { type ColumnProps, type TableEmits, type TableExpandIconSlotProps, type TableExpandedRowSlotProps } from '..';
 import ExpandedRow from './fixtures/expanded-row.vue';

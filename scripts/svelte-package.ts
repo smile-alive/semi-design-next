@@ -1,15 +1,14 @@
 // Packages the Svelte package in the current directory into dist/: svelte-package ships `.svelte` sources and `.d.ts`,
 // then the Semi publish contract is applied on top (Y8): stylesheets are imported as `.css`, tests are not published,
 // and the files `vp pack` emits for the other frameworks are written by hand.
-// Run from a package root: node ../../scripts/svelte-package.ts [--bundles ui|ai] [--locale]
+// Run from a package root: node ../../scripts/svelte-package.ts [--bundles ui|ai]
 //   --bundles  whole-package stylesheets of vite.semi.ts (`ui`: styles.css and tailwind.css, `ai`: styles.css)
-//   --locale   dist/components/locale/source/<name> re-exports of the foundation locale packs
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 
-const { values: options } = parseArgs({ options: { bundles: { type: 'string' }, locale: { type: 'boolean' } } });
+const { values: options } = parseArgs({ options: { bundles: { type: 'string' } } });
 const cwd = process.cwd();
 const dist = path.join(cwd, 'dist');
 const bin = [path.join(cwd, 'node_modules/.bin/svelte-package'), path.resolve(import.meta.dirname, '../node_modules/.bin/svelte-package')].find((file) => fs.existsSync(file));
@@ -59,20 +58,5 @@ if (options.bundles) {
     }
     for (const [fileName, build] of Object.entries(bundles)) {
         fs.writeFileSync(path.join(dist, fileName), build());
-    }
-}
-
-// Same files as semiLocaleReexports in vite.semi.ts: an app imports `@fibrae/semi-ui-svelte/locale/source/<name>`
-// without installing foundation itself
-if (options.locale) {
-    const sourceDir = path.resolve(import.meta.dirname, '../packages/shared/semi-foundation/src/locale/source');
-    const outDir = path.join(dist, 'components/locale/source');
-    fs.mkdirSync(outDir, { recursive: true });
-    for (const file of fs.globSync('*.ts', { cwd: sourceDir })) {
-        const name = path.basename(file, '.ts');
-        const source = `export { default } from '@fibrae/semi-foundation/locale/source/${name}';\n`;
-        for (const extension of ['.js', '.d.ts']) {
-            fs.writeFileSync(path.join(outDir, `${name}${extension}`), source);
-        }
     }
 }

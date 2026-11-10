@@ -5,8 +5,7 @@ import { addDays, format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import DatePicker, { type DatePickerElement, type DatePickerProps, type TriggerRenderProps, type YearAndMonthProps } from '..';
 import ConfigProvider from '../../config-provider';
@@ -580,7 +579,7 @@ describe('DatePicker 属性回落', () => {
         const withLocale: DatePickerProps = { locale: en_US.DatePicker };
         // @ts-expect-error the locale always comes from the LocaleProvider
         const withCode: DatePickerProps = { localeCode: 'en-US' };
-        // @ts-expect-error the locale always comes from the LocaleProvider
+        // @ts-expect-error the date-fns locale comes from ConfigProvider
         const withDateFns: DatePickerProps = { dateFnsLocale: enUS };
         expect([withLocale, withCode, withDateFns]).toHaveLength(3);
     });

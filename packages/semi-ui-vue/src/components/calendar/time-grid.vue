@@ -3,7 +3,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
     import { calcRowHeight, toPercent, type DateObj } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import { hasSlotContent } from '../../utils/slot-nodes';
+    import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
     import useScrollGrid from './composables/use-scroll-grid';
     import { useCalendarContext } from './context';
@@ -27,6 +29,7 @@
     defineSlots<CalendarSlots>();
 
     const i18n = useLocale('Calendar');
+    const config = useConfig();
     const eventsByKey = useCalendarContext();
 
     const monthId = useId();
@@ -37,7 +40,7 @@
 
     const prefixCls = `${cssClasses.PREFIX}-week`;
     const allDayCls = `${cssClasses.PREFIX}-all-day`;
-    const rangeData = computed(() => CalendarFoundation.getRangeData(props.range, i18n.value.dateFnsLocale, props.weekStartsOn, props.today, props.labelDate));
+    const rangeData = computed(() => CalendarFoundation.getRangeData(props.range, getDateFnsLocale(i18n.value.localeCode, config.value.dateFnsLocale), props.weekStartsOn, props.today, props.labelDate));
     const parsedEvents = computed(() => CalendarFoundation.getParsedRangeEvents(props.events));
     const allDayEvents = computed(() => CalendarFoundation.parseRangeAllDayEvents(parsedEvents.value.allDay, props.range));
 

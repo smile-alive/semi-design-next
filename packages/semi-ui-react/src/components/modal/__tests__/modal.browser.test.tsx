@@ -3,9 +3,8 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Button, ConfigProvider, Modal, Radio, RadioGroup, Select, Tag } from '@fibrae/semi-ui-react';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import { keyboardClick, tab } from '@test/utils/browser';
 
 const prefix = `${BASE_CLASS_PREFIX}-modal`;
@@ -14,7 +13,7 @@ const query = (selector) => document.querySelector(selector);
 function UseModalDemo({ onOpen }) {
     const [modal, contextHolder] = Modal.useModal();
     return (
-        <ConfigProvider locale={en_GB}>
+        <ConfigProvider locale={en_US}>
             <Button onClick={() => onOpen(modal.confirm({ title: 'old title', content: 'old content' }))}>Confirm Modal</Button>
             {contextHolder}
         </ConfigProvider>
@@ -33,7 +32,7 @@ function UseModalAfterClose() {
         setTimeout(() => currentModal.destroy(), 0);
     };
     return (
-        <ConfigProvider locale={en_GB}>
+        <ConfigProvider locale={en_US}>
             <Button onClick={open}>Confirm Modal</Button>
             <Tag>{`closed: ${closed}`}</Tag>
             {contextHolder}

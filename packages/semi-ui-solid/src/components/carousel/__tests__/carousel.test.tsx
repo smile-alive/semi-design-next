@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/carousel/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockMatchMedia } from '@test/utils/solid';
 import Carousel, { type CarouselElement, type CarouselHandle, type CarouselProps } from '..';

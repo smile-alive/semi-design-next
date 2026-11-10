@@ -5,8 +5,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider/config-provider.vue';
@@ -106,10 +105,10 @@ describe('Feedback', () => {
         });
 
         it('placeholder 跟随语言包', async () => {
-            render(() => <ConfigProvider locale={ja_JP}>{() => <Feedback type="text" title="T" visible />}</ConfigProvider>);
+            render(() => <ConfigProvider locale={en_US}>{() => <Feedback type="text" title="T" visible />}</ConfigProvider>);
             await nextTick();
-            expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', ja_JP.Feedback.placeholder);
-            expect(screen.getByRole('button', { name: ja_JP.Feedback.submit })).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', en_US.Feedback.placeholder);
+            expect(screen.getByRole('button', { name: en_US.Feedback.submit })).toBeInTheDocument();
         });
 
         it('多个根的 type 不产生 Vue 告警', async () => {

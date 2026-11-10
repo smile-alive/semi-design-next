@@ -350,7 +350,7 @@ Vue 的命令式调用读不到 ConfigProvider（它是组件级 provide），�
 
 ### 嵌套使用
 
-`ConfigProvider` 可以嵌套。内层只覆盖显式传入的属性，没传的属性（`direction`、`locale`、`timeZone`、`getPopupContainer`、`responsiveObserve`、`responsiveMap`）继承外层。属性值为 `undefined` 视为没传；`locale={null}` 是显式传入，会清除外层的 `locale`，交给其内部的 `LocaleProvider` 或默认语言。
+`ConfigProvider` 可以嵌套。内层只覆盖显式传入的属性，没传的属性（`direction`、`locale`、`dateFnsLocale`、`timeZone`、`getPopupContainer`、`responsiveObserve`、`responsiveMap`）继承外层。属性值为 `undefined` 视为没传；`locale={null}` 是显式传入，会清除外层的 `locale`，交给其内部的 `LocaleProvider` 或默认语言。
 
 `direction` 为 `rtl` 的 ConfigProvider 内可以用 `direction="ltr"` 把子树切回从左到右，内层组件的逻辑和样式都按 `ltr` 处理。
 
@@ -380,7 +380,7 @@ Vue 的命令式调用读不到 ConfigProvider（它是组件级 provide），�
 
 ### useConfig
 
-`useConfig(): ComputedRef<ContextValue>` 返回当前生效的配置，没有 ConfigProvider 时为空对象。`ContextValue` 包含上表的 `direction`、`timeZone`、`locale`、`getPopupContainer`、`responsiveObserve`、`responsiveMap`，以及只读的 `screens`（各断点的命中情况）和 `onBreakpoint`（订阅函数，见上文「订阅 API」）。
+`useConfig(): ComputedRef<ContextValue>` 返回当前生效的配置，没有 ConfigProvider 时为空对象。`ContextValue` 包含上表的 `direction`、`timeZone`、`locale`、`dateFnsLocale`、`getPopupContainer`、`responsiveObserve`、`responsiveMap`，以及只读的 `screens`（各断点的命中情况）和 `onBreakpoint`（订阅函数，见上文「订阅 API」）。
 
 </Framework>
 
@@ -398,7 +398,7 @@ ConfigConsumer 同样不渲染元素，未声明的属性会被丢弃。
 
 ### useConfig
 
-`useConfig(): Accessor<ContextValue>` 返回当前生效配置的访问器，调用它才能读到值，没有 ConfigProvider 时为空对象。`ContextValue` 包含上表的 `direction`、`timeZone`、`locale`、`getPopupContainer`、`responsiveObserve` 和 `responsiveMap`，以及只读的 `screens`（各断点的命中情况）和 `onBreakpoint`（订阅函数，见上文「订阅 API」）。
+`useConfig(): Accessor<ContextValue>` 返回当前生效配置的访问器，调用它才能读到值，没有 ConfigProvider 时为空对象。`ContextValue` 包含上表的 `direction`、`timeZone`、`locale`、`dateFnsLocale`、`getPopupContainer`、`responsiveObserve` 和 `responsiveMap`，以及只读的 `screens`（各断点的命中情况）和 `onBreakpoint`（订阅函数，见上文「订阅 API」）。
 
 </Framework>
 
@@ -416,7 +416,7 @@ ConfigConsumer 同样不渲染元素，未声明的属性会被丢弃。
 
 ### useConfig
 
-`useConfig(): ContextValue` 返回当前生效的配置对象，没有 ConfigProvider 时为空对象；需要在组件初始化时调用。`ContextValue` 包含上表的 `direction`、`timeZone`、`locale`、`getPopupContainer`、`responsiveObserve` 和 `responsiveMap`，以及只读的 `screens`（各断点的命中情况）和 `onBreakpoint`（订阅函数，见上文「订阅 API」）。字段是 getter，读取时才取当前值。
+`useConfig(): ContextValue` 返回当前生效的配置对象，没有 ConfigProvider 时为空对象；需要在组件初始化时调用。`ContextValue` 包含上表的 `direction`、`timeZone`、`locale`、`dateFnsLocale`、`getPopupContainer`、`responsiveObserve` 和 `responsiveMap`，以及只读的 `screens`（各断点的命中情况）和 `onBreakpoint`（订阅函数，见上文「订阅 API」）。字段是 getter，读取时才取当前值。
 
 </Framework>
 

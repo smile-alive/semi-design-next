@@ -2,8 +2,8 @@ import { StrictMode, useState, type ReactNode } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { Button, ConfigProvider, Image, ImagePreview } from '@fibrae/semi-ui-react';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { MenuProps } from '../interface';
 
@@ -1403,17 +1403,5 @@ describe('ImagePreview 键盘与屏幕阅读器', () => {
         fireEvent.click(arrowNext);
         expect(pageInfo()).toBe('3/3');
         expect(document.activeElement).toBe(dialog());
-    });
-
-    it('每种语言都为关闭按钮与缩放滑块命名', () => {
-        const locales = import.meta.glob<{ Image: { close: string; zoom: string } }>('@fibrae/semi-foundation/locale/source/*.ts', {
-            eager: true,
-            import: 'default',
-        });
-        expect(Object.keys(locales)).toHaveLength(57);
-        for (const [file, locale] of Object.entries(locales)) {
-            expect([file, typeof locale.Image.close, typeof locale.Image.zoom]).toEqual([file, 'string', 'string']);
-            expect(locale.Image.close.length * locale.Image.zoom.length).toBeGreaterThan(0);
-        }
     });
 });

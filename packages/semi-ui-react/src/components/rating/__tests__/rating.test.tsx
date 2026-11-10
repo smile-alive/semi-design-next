@@ -1,8 +1,7 @@
 import { StrictMode, createRef, type ReactElement, type ReactNode } from 'react';
 import { render as renderWithLibrary, screen, fireEvent, act, waitFor, type RenderOptions } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 
 // the assertions below spell the English names the en_US pack gives the stars

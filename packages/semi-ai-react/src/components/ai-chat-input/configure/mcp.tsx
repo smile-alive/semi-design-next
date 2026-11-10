@@ -2,7 +2,7 @@ import React, { type MouseEvent, useCallback } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import Button from '@fibrae/semi-ui-react/button/index';
 import Dropdown, { type DropdownProps } from '@fibrae/semi-ui-react/dropdown/index';
 import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';

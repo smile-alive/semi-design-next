@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import { Sortable, type OnSortEnd } from '../index';
 
 function renderSortable(onSortEnd: OnSortEnd, items: Array<string | number> = ['a', 'b', 'c']) {

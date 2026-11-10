@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Banner } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 
 describe('Banner（浏览器）', () => {

@@ -8,15 +8,12 @@
 </script>
 
 <script lang="ts">
-    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
-    import ko_KR from '@fibrae/semi-foundation/locale/source/ko_KR';
-    import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
     import { LocaleConsumer, LocaleProvider } from '@fibrae/semi-ui-svelte';
+    import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 
     const locales = [
         { ...zh_CN, ComponentA: { customKey: 'semi' } },
-        { ...ko_KR, ComponentA: { customKey: 'design' } },
-        { ...en_GB, ComponentA: { customKey: 'dsm' } },
+        { ...en_US, ComponentA: { customKey: 'design' } },
     ];
 </script>
 

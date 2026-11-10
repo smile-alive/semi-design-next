@@ -1,17 +1,18 @@
-import type { Locale as dateFnsLocale } from 'date-fns';
-
-export type LocaleComponentName = Exclude<keyof Locale, 'code' | 'dateFnsLocale' | 'currency'>;
+export type LocaleComponentName = Exclude<keyof Locale, 'code' | 'currency'>;
 
 export interface LocaleResult<T> {
     locale: T;
     localeCode: string;
-    dateFnsLocale: dateFnsLocale;
     currency: string;
 }
 
+type DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] };
+
+/** The `locale` a ConfigProvider or LocaleProvider accepts: texts and `currency` left out fall back to en_US */
+export type LocaleInput = Pick<Locale, 'code'> & Partial<Pick<Locale, 'currency'>> & DeepPartial<Pick<Locale, LocaleComponentName>>;
+
 export interface Locale {
     code: string;
-    dateFnsLocale: dateFnsLocale;
     /** ISO 4217 code, passed to Intl.NumberFormat by InputNumber */
     currency: string;
     Pagination: {

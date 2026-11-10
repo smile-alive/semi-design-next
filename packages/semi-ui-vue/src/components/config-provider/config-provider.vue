@@ -40,6 +40,7 @@
         const next: ContextValue = {
             direction: resolvedDirection.value,
             locale: inherited.value.locale,
+            dateFnsLocale: inherited.value.dateFnsLocale,
             timeZone: inherited.value.timeZone,
             getPopupContainer: inherited.value.getPopupContainer,
             responsiveObserve: observe.value,

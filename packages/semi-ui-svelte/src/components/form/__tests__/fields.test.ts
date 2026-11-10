@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { misplacedAriaRequired } from '@test/utils/dom/common';
 import type { FormApi } from '../interface';
 import BareControls from './b-bare-controls.svelte';

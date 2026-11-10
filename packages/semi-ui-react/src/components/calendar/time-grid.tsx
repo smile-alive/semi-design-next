@@ -3,8 +3,10 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
 import { calcRowHeight, toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import useMergedRef from '../../hooks/use-merged-ref';
+import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import DayCol from './day-col';
 import useScrollGrid from './hooks/use-scroll-grid';
@@ -25,7 +27,8 @@ export interface TimeGridProps extends CalendarProps {
 export default function TimeGrid(props: TimeGridProps) {
     const { ref, className, style, mode, displayValue, range, labelDate, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest } = props;
 
-    const { locale, dateFnsLocale } = useLocale('Calendar');
+    const { locale, localeCode } = useLocale('Calendar');
+    const { dateFnsLocale: contextDateFnsLocale } = useConfigContext();
 
     const monthId = useId();
 
@@ -33,6 +36,7 @@ export default function TimeGrid(props: TimeGridProps) {
     const today = useToday();
 
     const mergedRef = useMergedRef(ref, rootRef);
+    const dateFnsLocale = getDateFnsLocale(localeCode, contextDateFnsLocale);
     const { month, week } = useMemo(() => CalendarFoundation.getRangeData(range, dateFnsLocale, weekStartsOn, today, labelDate), [range, dateFnsLocale, weekStartsOn, today, labelDate]);
     const parsedEvents = useMemo(() => CalendarFoundation.getParsedRangeEvents(events), [events]);
     const allDayEvents = CalendarFoundation.parseRangeAllDayEvents(parsedEvents.allDay, range);

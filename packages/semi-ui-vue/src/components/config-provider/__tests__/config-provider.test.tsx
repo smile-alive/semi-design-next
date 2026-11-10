@@ -2,7 +2,7 @@
 import { nextTick, toRaw } from 'vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import type { OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { mockMatchMedia, render } from '@test/utils/vue';
 import ConfigProvider, { ConfigConsumer, defaultResponsiveMap } from '../index';
 import type { ContextValue } from '../interface';

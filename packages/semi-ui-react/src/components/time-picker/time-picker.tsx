@@ -5,8 +5,9 @@ import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
@@ -164,8 +165,8 @@ function getPanelSlots({ panels, panelFooter, panelHeader, locale, type }: TimeP
 function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHandle> }) {
     const withDefaults = useDefaultProps('TimePicker', withInputGroup(rawProps, useInputGroupInScope()), defaultProps);
 
-    const { locale, localeCode, dateFnsLocale } = useLocale('TimePicker');
-    const { timeZone: contextTimeZone, direction } = useConfigContext();
+    const { locale, localeCode } = useLocale('TimePicker');
+    const { timeZone: contextTimeZone, direction, dateFnsLocale: contextDateFnsLocale } = useConfigContext();
 
     // explicit undefined falls back too: prop, then context, then the global default; the locale is never a prop
     const props = {
@@ -174,7 +175,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         placeholder: withDefaults.placeholder ?? locale?.placeholder?.[withDefaults.type],
         locale,
         localeCode,
-        dateFnsLocale,
+        dateFnsLocale: getDateFnsLocale(localeCode, contextDateFnsLocale),
     };
 
     const {

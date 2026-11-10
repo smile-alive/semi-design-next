@@ -1,7 +1,7 @@
 import type { Component, CSSProperties, HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes, VNode } from 'vue';
 import type { strings } from '@fibrae/semi-foundation/components/table/constants';
 import type { BaseAlign, BaseChangeInfoFilter, BaseChangeInfoSorter, BaseEllipsis, BaseFixed, BaseIncludeGroupRecord, BasePageData, CheckRelation, OnChangeExtra } from '@fibrae/semi-foundation/components/table/foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import type { VirtualListAlign, VirtualListScrollArgs } from '../../internal/virtual-list.vue';
 import type { CheckboxProps } from '../checkbox/interface';
 import type { DropdownProps } from '../dropdown/interface';

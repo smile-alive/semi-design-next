@@ -4,8 +4,8 @@
 
 <template>
     <LocaleConsumer componentName="Table">
-        <template #default="{ locale, currency, localeCode, dateFnsLocale }">
-            <span>{{ locale.emptyText }} {{ currency }} {{ localeCode }} {{ dateFnsLocale.code }}</span>
+        <template #default="{ locale, currency, localeCode }">
+            <span>{{ locale.emptyText }} {{ currency }} {{ localeCode }}</span>
         </template>
     </LocaleConsumer>
 </template>

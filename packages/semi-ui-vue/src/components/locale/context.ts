@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { LocaleInput } from '@fibrae/semi-foundation/locale/index';
 import { createContext } from '../../base/create-context';
 
-export const [provideLocaleContext, useLocaleContext] = createContext<ComputedRef<Locale | null>>('LocaleProvider', { optional: true });
+export const [provideLocaleContext, useLocaleContext] = createContext<ComputedRef<LocaleInput | null>>('LocaleProvider', { optional: true });

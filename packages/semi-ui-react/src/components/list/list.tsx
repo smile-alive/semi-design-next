@@ -3,7 +3,7 @@ import { Children, cloneElement, isValidElement, useMemo } from 'react';
 import clsx from 'clsx';
 import { pick } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/list/list.scss';

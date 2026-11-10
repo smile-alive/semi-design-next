@@ -28,14 +28,14 @@ Styles and theme tokens load with the components. You do not need to import base
 
 ### Entry points
 
-| Entry                                        | Description                                                                                                                                       |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@fibrae/semi-ui-vue`                        | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
-| `@fibrae/semi-ui-vue/<directory>/index`      | Deep file paths that map one-to-one to the directories under `src/components/`                                                                    |
-| `@fibrae/semi-ui-vue/tokens`                 | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
-| `@fibrae/semi-ui-vue/styles.css`             | The full stylesheet, for loading all component styles at once                                                                                     |
-| `@fibrae/semi-ui-vue/tailwind.css`           | The Tailwind v4 `@theme inline` mapping                                                                                                           |
-| `@fibrae/semi-ui-vue/locale/source/<locale>` | Built-in locale packs, re-exporting `@fibrae/semi-foundation/locale/source/<locale>`                                                              |
+| Entry                                   | Description                                                                                                                                       |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@fibrae/semi-ui-vue`                   | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
+| `@fibrae/semi-ui-vue/locale`            | The built-in locale packs `zh_CN` and `en_US`, and the `Locale` and `LocaleInput` types                                                           |
+| `@fibrae/semi-ui-vue/<directory>/index` | Deep file paths that map one-to-one to the directories under `src/components/`                                                                    |
+| `@fibrae/semi-ui-vue/tokens`            | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
+| `@fibrae/semi-ui-vue/styles.css`        | The full stylesheet, for loading all component styles at once                                                                                     |
+| `@fibrae/semi-ui-vue/tailwind.css`      | The Tailwind v4 `@theme inline` mapping                                                                                                           |
 
 To use the full `styles.css`, turn on `omitCss` in the Semi build plugin (`@fibrae/semi-vite-plugin`, `@fibrae/semi-webpack-plugin` or `@fibrae/semi-rspack-plugin`); otherwise the style imports inside the components are bundled a second time. For Nuxt, use `semi: { omitCss: true }` in `@fibrae/semi-nuxt`. The full stylesheet already includes tokens, and under `omitCss` the `tokens` entry is removed along with the component styles.
 
@@ -47,20 +47,20 @@ Override `--semi-*` CSS variables to change global colors, radii, font sizes and
 
 ### Internationalization
 
-The default locale is `zh_CN`. Pass a locale pack with `LocaleProvider`. `useLocale(componentName)` returns that component's text in the current locale:
+The default locale is `zh_CN`. The built-in packs `zh_CN` and `en_US` come from the `locale` entry. Pass a locale pack with `LocaleProvider`. `useLocale(componentName)` returns that component's text in the current locale:
 
 ```vue
 <script setup lang="ts">
     import { LocaleProvider } from '@fibrae/semi-ui-vue';
-    import en_GB from '@fibrae/semi-ui-vue/locale/source/en_GB';
+    import { en_US } from '@fibrae/semi-ui-vue/locale';
 </script>
 
 <template>
-    <LocaleProvider :locale="en_GB"><App /></LocaleProvider>
+    <LocaleProvider :locale="en_US"><App /></LocaleProvider>
 </template>
 ```
 
-For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
+For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 

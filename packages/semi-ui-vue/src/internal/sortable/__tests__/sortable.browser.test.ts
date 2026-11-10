@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import type { SortEndPayload } from '..';
 import List from './fixtures/list.vue';

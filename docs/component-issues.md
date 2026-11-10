@@ -84,10 +84,6 @@
 
 - 保持原样：Sider `breakpoint` 只挂载时读取；`hasSider={false}` 去不掉 has-sider class；根元素为 `section`；React、Vue、Svelte：深层 Sider 在 SSR 首帧缺 `has-sider`；Vue 渲染期读默认插槽最多执行两次。
 
-### Grid（Row、Col）
-
-- 保持原样：float 与 clearfix 样式生成 70 KB CSS。
-
 ### Collapsible
 
 - 保持原样：收起态预览区不设 `inert`。
@@ -115,6 +111,7 @@
 ### Lottie
 
 - 保持原样：`params` 显式传 `container: undefined` 覆盖包裹节点。
+- 开发环境的表达式告警只检查 `params.animationData`，`params.path` 加载的数据不检查。已知限制（升级条件：需要时在 lottie-web 的 `data_ready` 事件里检查已加载的数据）。
 
 ### HotKeys
 
@@ -171,6 +168,7 @@
 ### Cropper
 
 - 保持原样：切换 src 后 zoom、rotate 不重置。
+- RTL 下图片、裁剪框与预览只设 `transform` 不设物理 `left`，绝对定位的静态位置落在右侧，推测会错位。待处理（处理方式：在 RTL 下截图确认，成立则让定位层固定 `direction: ltr` 或补 `inset-inline-start: 0`）。
 - Solid：内联尺寸与定位要测量后才写入，服务端 HTML 不含。已知限制（升级条件：需要首帧即正确时，按 props 推算）。
 
 ### Pagination

@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { LocaleInput } from '@fibrae/semi-ui-svelte/locale';
     import LocaleProvider from '../locale-provider.svelte';
     import RawProbe from './raw-probe.svelte';
 
-    let { locale, onSeen }: { locale: Locale; onSeen: (locale: Locale | null) => void } = $props();
+    let { locale, onSeen }: { locale: LocaleInput; onSeen: (locale: LocaleInput | null) => void } = $props();
 </script>
 
 <LocaleProvider><RawProbe {onSeen} /></LocaleProvider>

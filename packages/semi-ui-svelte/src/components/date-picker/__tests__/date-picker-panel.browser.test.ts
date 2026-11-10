@@ -3,7 +3,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import scrollListCss from '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss?inline';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { clickOutside } from '@test/utils/browser';
 import type { DatePickerProps } from '../interface';
 import { getPanel, getPopup, getYMLists, getYMSelected } from './date-picker-dom-utils';

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, within } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import { type FormApi, SchemaField, type SchemaFieldRenderer, SchemaForm, withField } from '..';
 import Button from '../../button';

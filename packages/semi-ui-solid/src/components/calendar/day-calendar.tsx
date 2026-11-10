@@ -4,9 +4,11 @@ import { format, startOfDay } from 'date-fns';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
 import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import hasContent from '../../utils/has-content';
 import mergeRefs from '../../utils/merge-refs';
+import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
 import ByKey from './by-key';
 import DayCol from './day-col';
@@ -24,6 +26,7 @@ export default function DayCalendar(props: DayCalendarProps) {
     const [local, rest] = splitProps(props, viewPropKeys);
 
     const locale = useLocale('Calendar');
+    const config = useConfig();
 
     const { rootRef, scrollRef, scrollHeight } = useScrollGrid(() => local.scrollTop ?? 0);
     const today = useToday();
@@ -49,7 +52,7 @@ export default function DayCalendar(props: DayCalendarProps) {
 
     return (
         <div
-            aria-label={format(displayValue(), 'PPP', { locale: locale().dateFnsLocale })}
+            aria-label={format(displayValue(), 'PPP', { locale: getDateFnsLocale(locale().localeCode, config().dateFnsLocale) })}
             role="table"
             // the view scrolls and nothing inside it takes focus, so the keyboard can only scroll it through the root
             tabIndex={0}

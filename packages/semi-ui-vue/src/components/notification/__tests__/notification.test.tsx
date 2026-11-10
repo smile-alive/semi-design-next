@@ -3,8 +3,8 @@ import { type Component, createApp, inject, nextTick, ref } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { IconToutiaoLogo } from '@fibrae/semi-icons-vue';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
 import Notification from '../index';
@@ -872,12 +872,12 @@ describe('Notification', () => {
             const holder = view.getByTestId('holder');
             const hooked = holder.querySelector(`.${noticeCls}`) as HTMLElement;
             expect(hooked).toHaveAttribute('dir', 'rtl');
-            expect(hooked.querySelector('button')).toHaveAccessibleName(ja_JP.Notification.close);
+            expect(hooked.querySelector('button')).toHaveAccessibleName(en_US.Notification.close);
             expect(holder.querySelector(`.${prefix}-list`)).toHaveAttribute('x-placement', 'topLeft');
             const staticNotice = document.body.querySelector(`:scope > .${prefix}-wrapper .${noticeCls}`) as HTMLElement;
             expect(staticNotice).toHaveTextContent('static');
             expect(staticNotice).not.toHaveAttribute('dir');
-            expect(staticNotice.querySelector('button')).not.toHaveAccessibleName(ja_JP.Notification.close);
+            expect(staticNotice.querySelector('button')).not.toHaveAccessibleName(en_US.Notification.close);
         });
 
         it('函数内容在 Holder 位置渲染，可读到该处的 provide', async () => {

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-svelte/locale';
     import { ConfigProvider } from '../../config-provider';
     import type { TransferHandle, TransferProps, TransferSelectedHeaderSnippetProps, TransferSelectedItemSnippetProps, TransferSelectedPanelSnippetProps, TransferSourceHeaderSnippetProps, TransferSourceItemSnippetProps, TransferSourcePanelSnippetProps } from '../interface';
     import Transfer from '../transfer.svelte';

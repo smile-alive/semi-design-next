@@ -1,11 +1,14 @@
 import type { VNode } from 'vue';
+import type { Locale as DateFnsLocale } from 'date-fns';
 import type { ResponsiveConfig } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { LocaleInput } from '@fibrae/semi-foundation/locale/index';
 
 export interface ContextValue extends ResponsiveConfig {
     direction?: 'ltr' | 'rtl';
     timeZone?: string | number;
-    locale?: Locale | null;
+    locale?: LocaleInput | null;
+    /** date-fns locale of DatePicker, TimePicker and Calendar; omitted: looked up by the locale code (zh-CN, en-US), else enUS */
+    dateFnsLocale?: DateFnsLocale;
     getPopupContainer?: () => HTMLElement;
     responsiveObserve?: boolean;
 }

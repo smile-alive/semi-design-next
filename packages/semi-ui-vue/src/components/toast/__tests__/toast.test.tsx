@@ -2,9 +2,8 @@
 import { type Component, createApp, inject, nextTick, ref } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconWifi } from '@fibrae/semi-icons-vue';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
 import Toast, { ToastFactory } from '../index';
@@ -379,9 +378,9 @@ describe('Toast', () => {
         await show({ content: 'static', duration: 0 });
         const holder = view.getByTestId('holder');
         const hooked = holder.querySelector(`.${prefix}-info`) as HTMLElement;
-        expect(hooked).toHaveAttribute('aria-label', ja_JP.Toast.info);
+        expect(hooked).toHaveAttribute('aria-label', en_US.Toast.info);
         expect(hooked).toHaveAttribute('dir', 'rtl');
-        expect(hooked.querySelector('button')).toHaveAccessibleName(ja_JP.Toast.close);
+        expect(hooked.querySelector('button')).toHaveAccessibleName(en_US.Toast.close);
         const staticToast = document.getElementById(Toast.getWrapperId() ?? '')?.querySelector(`.${prefix}-info`);
         expect(staticToast).toHaveTextContent(/^static$/);
         expect(staticToast).toHaveAttribute('aria-label', zh_CN.Toast.info);

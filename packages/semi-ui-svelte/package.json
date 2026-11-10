@@ -33,6 +33,11 @@
             "svelte": "./dist/tokens.js",
             "default": "./dist/tokens.js"
         },
+        "./locale": {
+            "types": "./dist/locale.d.ts",
+            "svelte": "./dist/locale.js",
+            "default": "./dist/locale.js"
+        },
         "./base/*.svelte": {
             "types": "./dist/base/*.svelte.d.ts",
             "svelte": "./dist/base/*.svelte",
@@ -100,7 +105,7 @@
         "./src/tokens.ts"
     ],
     "scripts": {
-        "build": "node ../../scripts/svelte-package.ts --bundles ui --locale"
+        "build": "node ../../scripts/svelte-package.ts --bundles ui"
     },
     "dependencies": {
         "@dnd-kit/dom": "catalog:",

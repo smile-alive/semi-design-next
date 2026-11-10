@@ -3,8 +3,8 @@ import { render, screen, fireEvent, within, act, waitFor } from '@testing-librar
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Tooltip } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import Transfer, { type SelectedPanelProps, type SourcePanelProps, type TransferHandle, type TransferPaginationProps, type TransferProps } from '../index';
 

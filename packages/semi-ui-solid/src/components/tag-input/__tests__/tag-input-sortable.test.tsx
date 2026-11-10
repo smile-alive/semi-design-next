@@ -3,8 +3,8 @@ import { Dynamic } from 'solid-js/web';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import type { SortableProps } from '@fibrae/semi-ui-solid/internal/sortable/types';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import TagInput, { type TagInputProps } from '..';
 
 // The sortable list loads lazily; this stand-in waits for the test to release it, and shows its ids and a sort end

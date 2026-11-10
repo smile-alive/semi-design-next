@@ -3,8 +3,7 @@ import { nextTick, type ComponentPublicInstance, type VNode } from 'vue';
 import { fireEvent, screen, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Image, { ImagePreview, type ImageProps, type MenuProps } from '..';
@@ -1225,11 +1224,11 @@ describe('ImagePreview 键盘与屏幕阅读器', () => {
     });
 
     it('关闭按钮与缩放滑块的名称随语言切换', async () => {
-        withLocale(ja_JP, () => <ImagePreview src={srcList} visible />);
+        withLocale(en_US, () => <ImagePreview src={srcList} visible />);
         await nextTick();
-        expect(screen.getByRole('button', { name: ja_JP.Image.close })).toBeInTheDocument();
-        expect(screen.getByRole('slider', { name: ja_JP.Image.zoom })).toBeInTheDocument();
-        expect(screen.getByRole('dialog')).toHaveAccessibleName(ja_JP.Image.preview);
+        expect(screen.getByRole('button', { name: en_US.Image.close })).toBeInTheDocument();
+        expect(screen.getByRole('slider', { name: en_US.Image.zoom })).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toHaveAccessibleName(en_US.Image.preview);
     });
 
     it('tip 属性为按钮命名；设置 showTooltip 时按钮为 Tooltip 触发器', async () => {

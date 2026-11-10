@@ -3,8 +3,8 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/sve
 import { Extension, Node, type Editor } from '@tiptap/core';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import type { Attachment, MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { AIChatInput } from '../index';
 import type { AIChatInputProps } from '../interface';

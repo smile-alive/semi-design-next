@@ -8,10 +8,8 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { DatePickerFoundationState } from '@fibrae/semi-foundation/components/date-picker/foundation';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { toIANA, zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import DatePicker, { type DatePickerDisabledDateType, type DatePickerEmits, type DatePickerHandle, type DatePickerPresetType, type DatePickerProps, type DatePickerTimePickerOpts, type DatePickerTriggerSlotProps, type DatePickerType } from '..';
@@ -1929,9 +1927,9 @@ describe(`DatePicker`, () => {
         expect(within(getYMLists()[1]).getByRole('option', { name: '7月' })).toBeInTheDocument();
     });
 
-    it('YearAndMonth 在 ja_JP 下显示语言包的年后缀和月份名', async () => {
-        await renderYearAndMonth({ locale: ja_JP.DatePicker });
-        expect(getYMSelected()).toEqual(['2021年', ja_JP.DatePicker.fullMonths[6]]);
+    it('YearAndMonth 在 zh_CN 下显示语言包的年后缀和月份名', async () => {
+        await renderYearAndMonth({ locale: zh_CN.DatePicker });
+        expect(getYMSelected()).toEqual(['2021年', zh_CN.DatePicker.fullMonths[6]]);
         expect(within(getYMLists()[0]).getByRole('option', { name: '2022' })).toBeInTheDocument();
     });
 
@@ -6039,10 +6037,10 @@ describe('DatePicker Vue 写法', () => {
             expect(june).toHaveLength(1);
         });
 
-        it('LocaleProvider 的 ja_JP 用于面板名称与预设标题', async () => {
-            await renderNode(() => <LocaleProvider locale={ja_JP}>{() => <DatePicker defaultOpen motion={false} presetPosition="left" presets={[{ text: 'Today', start: baseDate, end: baseDate }]} />}</LocaleProvider>);
-            expect(await screen.findByRole('dialog', { name: ja_JP.DatePicker.panel.date })).toBeInTheDocument();
-            expect(screen.getByText(ja_JP.DatePicker.presets)).toBeInTheDocument();
+        it('LocaleProvider 的 en_US 用于面板名称与预设标题', async () => {
+            await renderNode(() => <LocaleProvider locale={en_US}>{() => <DatePicker defaultOpen motion={false} presetPosition="left" presets={[{ text: 'Today', start: baseDate, end: baseDate }]} />}</LocaleProvider>);
+            expect(await screen.findByRole('dialog', { name: en_US.DatePicker.panel.date })).toBeInTheDocument();
+            expect(screen.getByText(en_US.DatePicker.presets)).toBeInTheDocument();
         });
     });
 

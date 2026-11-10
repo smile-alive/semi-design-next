@@ -1,4 +1,4 @@
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { createContext } from '../../base/create-context';
 import type { NavProps, ItemKey } from './nav';
 export interface NavContextType {

@@ -2,7 +2,7 @@ import { tick } from 'svelte';
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import { Extension, type Editor } from '@tiptap/core';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
 import type { UploadCustomRequestArgs } from '@fibrae/semi-ui-svelte/upload/interface';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';

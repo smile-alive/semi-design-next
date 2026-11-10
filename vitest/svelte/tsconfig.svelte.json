@@ -11,6 +11,7 @@
             "@fibrae/semi-ui-svelte": ["../../packages/semi-ui-svelte/src/index.ts"],
             "@fibrae/semi-ui-svelte/hooks": ["../../packages/semi-ui-svelte/src/hooks.ts"],
             "@fibrae/semi-ui-svelte/tokens": ["../../packages/semi-ui-svelte/src/tokens.ts"],
+            "@fibrae/semi-ui-svelte/locale": ["../../packages/semi-ui-svelte/src/locale.ts"],
             "@fibrae/semi-ui-svelte/base/*": ["../../packages/semi-ui-svelte/src/base/*"],
             "@fibrae/semi-ui-svelte/hooks/*": ["../../packages/semi-ui-svelte/src/hooks/*"],
             "@fibrae/semi-ui-svelte/internal/*": ["../../packages/semi-ui-svelte/src/internal/*"],

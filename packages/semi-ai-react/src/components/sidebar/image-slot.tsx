@@ -3,7 +3,7 @@ import { NodeViewWrapper, type NodeViewProps, ReactNodeViewRenderer } from '@tip
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { ImageUploadNode as ImageUploadSchema, insertUploadedImage } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';
 import Upload, { type FileItem, type UploadProps } from '@fibrae/semi-ui-react/upload/index';
 

@@ -7,10 +7,12 @@
     import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/components/calendar/foundation';
     import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../../base/use-foundation.svelte.js';
     import useClickOutside from '../../hooks/use-click-outside.svelte.js';
     import watch from '../../hooks/watch.svelte.js';
+    import { useConfig } from '../config-provider/index.js';
     import { IconButton } from '../icon-button/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Popover } from '../popover/index.js';
@@ -41,6 +43,7 @@
 
     const calendar = getCalendarContext();
     const locale = useLocale('Calendar');
+    const config = useConfig();
 
     const cardIdPrefix = $props.id();
 
@@ -66,7 +69,8 @@
     const cardCls = `${prefixCls}-event-card`;
     const openCardKey = $derived(states().openCardKey);
     const itemLimit = $derived(states().itemLimit);
-    const monthlyData = $derived(CalendarFoundation.getMonthlyData(displayValue, locale().dateFnsLocale, weekStartsOn, today));
+    const dateFnsLocale = $derived(getDateFnsLocale(locale().localeCode, config.dateFnsLocale));
+    const monthlyData = $derived(CalendarFoundation.getMonthlyData(displayValue, dateFnsLocale, weekStartsOn, today));
     const parsedEvents = $derived(CalendarFoundation.getParseMonthlyEvents(events, displayValue, weekStartsOn));
     const weekCount = $derived(Object.keys(monthlyData).length);
 
@@ -154,7 +158,7 @@
     <div
         {...popup}
         aria-current={day.isToday ? 'date' : undefined}
-        aria-label={format(day.date, 'PPP', { locale: locale().dateFnsLocale })}
+        aria-label={format(day.date, 'PPP', { locale: dateFnsLocale })}
         class={{
             [`${cssClasses.PREFIX}-today`]: day.isToday,
             [`${cssClasses.PREFIX}-weekend`]: markWeekend && day.isWeekend,
@@ -185,7 +189,7 @@
 {/snippet}
 
 <!-- aria-label and role come before the rest so the caller can replace them -->
-<div aria-label={format(displayValue, 'LLLL y', { locale: locale().dateFnsLocale })} role="table" {...rest} class={[prefixCls, rest.class]} style={rootStyle(rest.style, width, height)}>
+<div aria-label={format(displayValue, 'LLLL y', { locale: dateFnsLocale })} role="table" {...rest} class={[prefixCls, rest.class]} style={rootStyle(rest.style, width, height)}>
     <div class={`${prefixCls}-sticky-top`} role="rowgroup">
         {#if header}
             <div role="row">

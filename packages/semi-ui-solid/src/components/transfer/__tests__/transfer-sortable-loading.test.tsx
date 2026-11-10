@@ -1,6 +1,6 @@
 import { render, screen } from '@solidjs/testing-library';
 import { expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import Transfer from '..';
 
 // dnd-kit never finishes loading, so the stand-in list stays on screen

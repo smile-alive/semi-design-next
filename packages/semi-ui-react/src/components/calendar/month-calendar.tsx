@@ -7,11 +7,13 @@ import { toPercent, type DateObj } from '@fibrae/semi-foundation/components/cale
 import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/components/calendar/foundation';
 import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../hooks/use-click-outside';
 import useMergedRef from '../../hooks/use-merged-ref';
+import { useConfigContext } from '../config-provider/context';
 import Button from '../icon-button';
 import useLocale from '../locale/use-locale';
 import Popover from '../popover';
@@ -30,7 +32,8 @@ type MonthViewProps = MonthCalendarProps & Pick<CalendarProps, 'range' | 'showCu
 export default function MonthCalendar(props: MonthViewProps) {
     const { ref, className, style, mode, displayValue, range, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest } = props;
 
-    const { locale, dateFnsLocale } = useLocale('Calendar');
+    const { locale, localeCode } = useLocale('Calendar');
+    const { dateFnsLocale: contextDateFnsLocale } = useConfigContext();
 
     const cardIdPrefix = useId();
     const cardRef = useRef<HTMLDivElement>(null);
@@ -54,6 +57,7 @@ export default function MonthCalendar(props: MonthViewProps) {
     const today = useToday();
 
     const mergedRef = useMergedRef(ref, rootRef);
+    const dateFnsLocale = getDateFnsLocale(localeCode, contextDateFnsLocale);
     const monthlyData = useMemo(() => CalendarFoundation.getMonthlyData(displayValue, dateFnsLocale, weekStartsOn, today), [displayValue, dateFnsLocale, weekStartsOn, today]);
     const weekCount = Object.keys(monthlyData).length;
     const parsedEvents = useMemo(() => CalendarFoundation.getParseMonthlyEvents(events, displayValue, weekStartsOn), [events, displayValue, weekStartsOn]);

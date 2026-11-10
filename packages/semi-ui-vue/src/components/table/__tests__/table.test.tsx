@@ -5,9 +5,8 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/table/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import type { VirtualListScrollArgs } from '@fibrae/semi-ui-vue/internal/virtual-list.vue';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { getData, getNestData, getRandomNumber, render } from '@test/utils/vue';
 import Table, { TableColumn, type ColumnProps, type TableCellSlotProps, type TableHandle, type TableHeaderCellSlotProps, type TableRowAttrs, type TableTitleSlotProps } from '..';
@@ -1478,7 +1477,7 @@ describe('Table 可访问名称', () => {
             }
         );
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: {
                 default: () => (
                     <Table
@@ -1492,8 +1491,8 @@ describe('Table 可访问名称', () => {
                 ),
             },
         });
-        expect(await screen.findByRole('group', { name: ja_JP.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
-        expect(screen.getByText(ja_JP.Table.untitledColumn)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: ja_JP.Table.ascend })).toBeInTheDocument();
+        expect(await screen.findByRole('group', { name: en_US.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
+        expect(screen.getByText(en_US.Table.untitledColumn)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Table.ascend })).toBeInTheDocument();
     });
 });

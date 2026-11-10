@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses, isUnfinishedMessageStatus } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
 import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-react';

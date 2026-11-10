@@ -4,7 +4,7 @@ import { pickBy } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
 import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
 import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { IconAlertCircle, IconClose, IconClear, IconFile, IconRefresh } from '@fibrae/semi-icons-react';
 import HydratedImage from '../../internal/hydrated-image';
 import Button from '../button/index';

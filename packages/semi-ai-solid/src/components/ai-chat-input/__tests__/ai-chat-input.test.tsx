@@ -2,7 +2,7 @@ import { type ComponentProps, For, type JSX, Show, createSignal, onMount } from 
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import { type Editor, Extension, Node } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import Popover from '@fibrae/semi-ui-solid/popover/index';
 import type { UploadHandle, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';

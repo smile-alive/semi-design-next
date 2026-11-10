@@ -3,9 +3,8 @@ import { defineComponent, h, nextTick, ref, type Component } from 'vue';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import type { Editor } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconCode } from '@fibrae/semi-icons-vue';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
@@ -862,11 +861,11 @@ describe('Sidebar 全局默认值与透传', () => {
 
     it('语言包切换后详情按钮名称跟随', () => {
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: { default: () => <Sidebar detailContent={codeDetail} mode="code" visible /> },
         });
-        expect(ja_JP.Sidebar.copy).not.toBe(text.copy);
-        expect(screen.getByRole('button', { name: ja_JP.Sidebar.copy })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: ja_JP.Sidebar.close })).toBeInTheDocument();
+        expect(en_US.Sidebar.copy).not.toBe(text.copy);
+        expect(screen.getByRole('button', { name: en_US.Sidebar.copy })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Sidebar.close })).toBeInTheDocument();
     });
 });

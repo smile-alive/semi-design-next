@@ -1,7 +1,7 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import BannerFixture from './banner-fixture.svelte';
 
 describe('Svelte Banner 服务端首帧', () => {

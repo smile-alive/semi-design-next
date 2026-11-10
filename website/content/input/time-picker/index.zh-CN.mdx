@@ -96,6 +96,8 @@ TimePicker 浮层中的列会随着 `format` 变化，当略去 `format` 中的�
 
 NOTE: `format` 遵循 date-fns v4 的 `format` 格式。 https://date-fns.org/docs/format
 
+上午、下午等文字 token 使用 date-fns 的语言对象：按当前语言的 `code` 取内置的 zh-CN 或 en-US，其他语言使用 enUS，需要时从 `date-fns/locale` 导入后传给 ConfigProvider 的 `dateFnsLocale`，见[国际化](/zh-CN/react/other/locale)。
+
 <Demo id="format" />
 
 ### 设置面板头部，底部

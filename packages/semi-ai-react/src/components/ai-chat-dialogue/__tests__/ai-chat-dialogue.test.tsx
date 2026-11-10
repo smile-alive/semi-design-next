@@ -4,12 +4,10 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinish
 import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { AIChatDialogue } from '@fibrae/semi-ai-react';
 import { Modal, Toast } from '@fibrae/semi-ui-react';
 import type { AvatarProps } from '@fibrae/semi-ui-react/avatar/index';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, sleep } from '@test/utils/react';
@@ -994,14 +992,14 @@ describe('AIChatDialogue 消息操作', () => {
         fireEvent.click(getActionButton(getWrappers(container)[1], 'copy_stroked'));
         await waitFor(() => expect(success).toHaveBeenCalledWith({ content: en_US.AIChatDialogue.copySuccess }));
 
-        rerender(dialogue(ja_JP));
+        rerender(dialogue(zh_CN));
         fireEvent.click(getActionButton(getWrappers(container)[1], 'copy_stroked'));
-        await waitFor(() => expect(success).toHaveBeenLastCalledWith({ content: ja_JP.AIChatDialogue.copySuccess }));
+        await waitFor(() => expect(success).toHaveBeenLastCalledWith({ content: zh_CN.AIChatDialogue.copySuccess }));
 
         fireEvent.click(getActionButton(getWrappers(container)[0], 'more_stroked'));
-        fireEvent.click(await screen.findByRole('menuitem', { name: ja_JP.AIChatDialogue.delete }));
-        const dialog = await screen.findByRole('alertdialog', { name: ja_JP.AIChatDialogue.deleteConfirm });
-        expect(dialog).toHaveTextContent(ja_JP.AIChatDialogue.deleteContent);
+        fireEvent.click(await screen.findByRole('menuitem', { name: zh_CN.AIChatDialogue.delete }));
+        const dialog = await screen.findByRole('alertdialog', { name: zh_CN.AIChatDialogue.deleteConfirm });
+        expect(dialog).toHaveTextContent(zh_CN.AIChatDialogue.deleteContent);
     });
 
     it('在更多菜单内 mousedown 不关闭菜单', async () => {

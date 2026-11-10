@@ -1,7 +1,6 @@
 <script lang="ts">
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-    import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
     import ConfigProvider from '@fibrae/semi-ui-svelte/config-provider/config-provider.svelte';
+    import { zh_CN, type Locale } from '@fibrae/semi-ui-svelte/locale';
     import { Sortable, SortableHandle, type SortEndPayload } from '..';
 
     let { items = ['a', 'b', 'c'], locale, onSortEnd }: { items?: (string | number)[]; locale?: Locale; onSortEnd?: (payload: SortEndPayload) => void } = $props();

@@ -1,9 +1,9 @@
 import { createRawSnippet, flushSync, tick } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { openLayer } from '@fibrae/semi-foundation/utils/layer';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import type { ContainerProps } from '../container/interface';
 import { Sidebar } from '../index';
 import BindHost, { type BindHostStore } from './bind-host.svelte';

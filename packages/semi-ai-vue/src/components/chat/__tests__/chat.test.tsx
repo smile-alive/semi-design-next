@@ -3,7 +3,7 @@ import { type VNode, defineComponent, nextTick, shallowRef } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import type { FileItem, UploadOnChangeProps } from '@fibrae/semi-ui-vue/upload/index';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';

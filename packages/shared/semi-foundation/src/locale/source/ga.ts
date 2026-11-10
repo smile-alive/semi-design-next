@@ -1,10 +1,7 @@
-// date-fns has no ga locale; enIE is the closest Irish-market text
-import { enIE } from 'date-fns/locale/en-IE';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'ga',
-    dateFnsLocale: enIE,
     currency: 'EUR',
     BackTop: {
         backToTop: 'Ar ais go dtí an barr',

@@ -29,15 +29,15 @@ peer 依赖：`svelte` ^5.57.0。浏览器、模块格式、Node.js 与构建插
 
 ### 入口
 
-| 入口                                          | 说明                                                                                            |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `@fibrae/semi-ui-svelte`                      | 全部组件、类型、`ConfigProvider`、`LocaleProvider`、`LocaleConsumer`、`useLocale`、`semiGlobal` |
-| `@fibrae/semi-ui-svelte/<目录>/index`         | 逐文件深路径，与 `src/components/` 下的目录一一对应；组件文件是 `<目录>/<名>.svelte`            |
-| `@fibrae/semi-ui-svelte/hooks`                | `useLocale`、`useClickOutside`、`useCopied`，以及 attachment `observeResize`                    |
-| `@fibrae/semi-ui-svelte/tokens`               | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载            |
-| `@fibrae/semi-ui-svelte/styles.css`           | 整包样式，需要一次性加载全部组件样式时使用                                                      |
-| `@fibrae/semi-ui-svelte/tailwind.css`         | Tailwind v4 的 `@theme inline` 映射                                                             |
-| `@fibrae/semi-ui-svelte/locale/source/<语言>` | 内置语言包，重导出 `@fibrae/semi-foundation/locale/source/<语言>`                               |
+| 入口                                  | 说明                                                                                            |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `@fibrae/semi-ui-svelte`              | 全部组件、类型、`ConfigProvider`、`LocaleProvider`、`LocaleConsumer`、`useLocale`、`semiGlobal` |
+| `@fibrae/semi-ui-svelte/locale`       | 内置语言包 `zh_CN`、`en_US` 与类型 `Locale`、`LocaleInput`                                      |
+| `@fibrae/semi-ui-svelte/<目录>/index` | 逐文件深路径，与 `src/components/` 下的目录一一对应；组件文件是 `<目录>/<名>.svelte`            |
+| `@fibrae/semi-ui-svelte/hooks`        | `useLocale`、`useClickOutside`、`useCopied`，以及 attachment `observeResize`                    |
+| `@fibrae/semi-ui-svelte/tokens`       | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载            |
+| `@fibrae/semi-ui-svelte/styles.css`   | 整包样式，需要一次性加载全部组件样式时使用                                                      |
+| `@fibrae/semi-ui-svelte/tailwind.css` | Tailwind v4 的 `@theme inline` 映射                                                             |
 
 包里发布的是 `.svelte` 源码与 `.d.ts`，不是编译产物：`exports` 带 `svelte` 条件，由 `@sveltejs/vite-plugin-svelte`（SvelteKit 已内置）按应用的目标（DOM 或服务端）编译。不认 `svelte` 条件、也不编译 `.svelte` 的工具无法使用本包。
 
@@ -51,20 +51,20 @@ peer 依赖：`svelte` ^5.57.0。浏览器、模块格式、Node.js 与构建插
 
 ### 多语言
 
-默认语言为 `zh_CN`。用 `LocaleProvider` 传入语言包；`useLocale(组件名)` 在组件初始化时调用，返回一个函数，读作 `locale().locale.xxx`，语言切换后随之更新：
+默认语言为 `zh_CN`。内置语言包 `zh_CN`、`en_US` 从 `locale` 入口导入，用 `LocaleProvider` 传入；`useLocale(组件名)` 在组件初始化时调用，返回一个函数，读作 `locale().locale.xxx`，语言切换后随之更新：
 
 ```svelte
 <script lang="ts">
     import { LocaleProvider } from '@fibrae/semi-ui-svelte';
-    import en_GB from '@fibrae/semi-ui-svelte/locale/source/en_GB';
+    import { en_US } from '@fibrae/semi-ui-svelte/locale';
 </script>
 
-<LocaleProvider locale={en_GB}>
+<LocaleProvider locale={en_US}>
     <App />
 </LocaleProvider>
 ```
 
-语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
+其他语言传入自己的 `LocaleInput` 语言包：`code` 必填，没写的文案回退到 `en_US`。语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
 
 ### 服务端渲染
 
@@ -86,6 +86,6 @@ peer 依赖：`svelte` ^5.57.0。浏览器、模块格式、Node.js 与构建插
 
 ## 开发
 
-`pnpm --filter @fibrae/semi-ui-svelte build` 执行 `scripts/svelte-package.ts`：用 `svelte-package` 把 `src` 输出到 `dist`（`.svelte` 原样、`.ts` 编译为 `.js` 与 `.d.ts`），把样式导入改为 foundation 的 `.css`，去掉 `__tests__`，并写出整包 `styles.css`、`tailwind.css` 与 `locale/source/` 的重导出。
+`pnpm --filter @fibrae/semi-ui-svelte build` 执行 `scripts/svelte-package.ts`：用 `svelte-package` 把 `src` 输出到 `dist`（`.svelte` 原样、`.ts` 编译为 `.js` 与 `.d.ts`），把样式导入改为 foundation 的 `.css`，去掉 `__tests__`，并写出整包 `styles.css`、`tailwind.css`。
 
 通用命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。组件写法见 [components](../../.agents/references/svelte/components.md)，相对上游的变化见 [release-notes](../../docs/release-notes.md)。

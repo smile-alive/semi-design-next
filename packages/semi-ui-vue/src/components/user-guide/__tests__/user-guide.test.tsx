@@ -3,8 +3,7 @@ import { nextTick } from 'vue';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider/config-provider.vue';
@@ -320,23 +319,23 @@ describe('UserGuide 弹出模式', () => {
         expect(await screen.findByRole('button', { name: 'Finish' })).toBeInTheDocument();
     });
 
-    it('按钮文案在日语语言包下跟随语言包', async () => {
+    it('按钮文案在 en_US 语言包下跟随语言包', async () => {
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: { default: () => <UserGuide current={1} steps={makeSteps()} visible /> },
         });
         await screen.findByText('Title B');
-        for (const name of [ja_JP.UserGuide.skip, ja_JP.UserGuide.prev, ja_JP.UserGuide.next]) {
+        for (const name of [en_US.UserGuide.skip, en_US.UserGuide.prev, en_US.UserGuide.next]) {
             expect(screen.getByRole('button', { name })).toBeInTheDocument();
         }
     });
 
-    it('完成按钮在日语语言包下跟随语言包', async () => {
+    it('完成按钮在 en_US 语言包下跟随语言包', async () => {
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: { default: () => <UserGuide current={2} steps={makeSteps()} visible /> },
         });
-        expect(await screen.findByRole('button', { name: ja_JP.UserGuide.finish })).toBeInTheDocument();
+        expect(await screen.findByRole('button', { name: en_US.UserGuide.finish })).toBeInTheDocument();
     });
 
     it('显示时锁定 body 滚动，关闭与卸载时恢复', async () => {

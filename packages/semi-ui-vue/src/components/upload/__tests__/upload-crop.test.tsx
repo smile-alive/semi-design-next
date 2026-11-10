@@ -2,7 +2,7 @@
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import de from '@fibrae/semi-foundation/locale/source/de';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import Button from '../../button';
 import LocaleProvider from '../../locale/locale-provider.vue';
@@ -61,7 +61,7 @@ describe('Upload 裁剪', () => {
 
     it('裁剪弹窗的标题与按钮取自当前语言包', async () => {
         render(LocaleProvider, {
-            props: { locale: de },
+            props: { locale: en_US },
             slots: {
                 default: () => (
                     <Upload action={action} crop cropModalProps={{ motion: false }}>
@@ -71,10 +71,10 @@ describe('Upload 裁剪', () => {
             },
         });
         await selectFiles([createFile(100, 'avatar.png', 'image/png')]);
-        expect(await screen.findByText(de.Upload.cropTitle)).toBeInTheDocument();
+        expect(await screen.findByText(en_US.Upload.cropTitle)).toBeInTheDocument();
         expect(screen.queryByText(cropTitle)).toBeNull();
-        expect(screen.getByRole('button', { name: de.Modal.confirm })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: de.Modal.cancel })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Modal.confirm })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Modal.cancel })).toBeInTheDocument();
     });
 
     it('即使开启 crop，非图片文件也跳过裁剪器', async () => {

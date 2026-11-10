@@ -3,9 +3,8 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/sve
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { TransferDataItem, TransferHandle, TransferPagination, TransferProps, TransferSelectedPanelSnippetProps, TransferSourceHeaderSnippetProps, TransferSourcePanelSnippetProps, TransferValue } from '../interface';
 import Transfer from '../transfer.svelte';
@@ -650,13 +649,13 @@ describe('Svelte Transfer 行为', () => {
     });
 
     it('列表、筛选框、删除按钮与排序手柄的名称跟随语言包', async () => {
-        mount({ value: ['a'], dataSource: [items[0]], draggable: true }, { locale: ja_JP });
-        expect(screen.getByRole('list', { name: ja_JP.Transfer.optionList })).toBeInTheDocument();
-        expect(screen.getByRole('list', { name: ja_JP.Transfer.selectedList })).toBeInTheDocument();
-        expect(document.querySelector('search')).toHaveAttribute('aria-label', ja_JP.Transfer.filter);
-        expect(screen.getByRole('button', { name: ja_JP.Transfer.remove })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: ja_JP.Transfer.dragSort })).toBeInTheDocument();
-        await waitFor(() => expect(screen.getByRole('button', { name: ja_JP.Transfer.dragSort })).toHaveAttribute('aria-roledescription', ja_JP.Sortable.roleDescription));
+        mount({ value: ['a'], dataSource: [items[0]], draggable: true }, { locale: en_US });
+        expect(screen.getByRole('list', { name: en_US.Transfer.optionList })).toBeInTheDocument();
+        expect(screen.getByRole('list', { name: en_US.Transfer.selectedList })).toBeInTheDocument();
+        expect(document.querySelector('search')).toHaveAttribute('aria-label', en_US.Transfer.filter);
+        expect(screen.getByRole('button', { name: en_US.Transfer.remove })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Transfer.dragSort })).toBeInTheDocument();
+        await waitFor(() => expect(screen.getByRole('button', { name: en_US.Transfer.dragSort })).toHaveAttribute('aria-roledescription', en_US.Sortable.roleDescription));
     });
 });
 

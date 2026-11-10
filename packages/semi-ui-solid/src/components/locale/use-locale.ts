@@ -1,5 +1,5 @@
 import { type Accessor, createMemo } from 'solid-js';
-import type { LocaleComponentName, LocaleResult } from '@fibrae/semi-foundation/locale/interface';
+import type { LocaleComponentName, LocaleResult } from '@fibrae/semi-foundation/locale/index';
 import { resolveLocale } from '@fibrae/semi-foundation/locale/resolve-locale';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import useConfig from '../config-provider/use-config';

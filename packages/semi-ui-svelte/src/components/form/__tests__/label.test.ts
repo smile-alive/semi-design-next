@@ -1,8 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import Label from '../label.svelte';
 import ALabelLocale from './a-label-locale.svelte';
 import { labelSelector, prefix } from './helpers';
@@ -84,7 +83,7 @@ describe('FormLabel', () => {
         expect(document.querySelector(`.${prefixCls}-optional-text`)).toHaveTextContent(zh_CN.Form.optional);
         view.unmount();
         render(ALabelLocale);
-        expect(document.querySelector(`.${prefixCls}-optional-text`)).toHaveTextContent(ja_JP.Form.optional);
+        expect(document.querySelector(`.${prefixCls}-optional-text`)).toHaveTextContent(en_US.Form.optional);
     });
 
     it('disabled', () => {

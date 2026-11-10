@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import type { CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconUser } from '@fibrae/semi-icons-solid';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Upload, {
     type AfterUploadProps,

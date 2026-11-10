@@ -1,9 +1,8 @@
 import { createRawSnippet, tick } from 'svelte';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore, snapshot } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { MCPConfigure } from '../index';
 import type { MCPConfigureOption, MCPConfigureProps } from '../mcp-configure/interface';
@@ -149,8 +148,8 @@ describe('Svelte MCPConfigure', () => {
     });
 
     it('默认标题随语言包变化', () => {
-        render(LocaleHost, { props: { locale: ja_JP, kind: 'mcp' } });
-        expect($('.semi-sidebar-container-header-title')).toHaveTextContent(ja_JP.Sidebar.mcpConfigure);
+        render(LocaleHost, { props: { locale: en_US, kind: 'mcp' } });
+        expect($('.semi-sidebar-container-header-title')).toHaveTextContent(en_US.Sidebar.mcpConfigure);
     });
 });
 
@@ -180,10 +179,10 @@ describe('Svelte MCPConfigure 列表与状态', () => {
     });
 
     it('模式切换随语言包切换', () => {
-        render(LocaleHost, { props: { locale: ja_JP, kind: 'mcp' } });
-        expect(ja_JP.Sidebar.mcpServers).not.toBe(text.mcpServers);
-        expect(screen.getByRole('radio', { name: ja_JP.Sidebar.mcpServers })).toBeInTheDocument();
-        expect(screen.getByRole('radiogroup', { name: ja_JP.Sidebar.mcpConfigure })).toBeInTheDocument();
+        render(LocaleHost, { props: { locale: en_US, kind: 'mcp' } });
+        expect(en_US.Sidebar.mcpServers).not.toBe(text.mcpServers);
+        expect(screen.getByRole('radio', { name: en_US.Sidebar.mcpServers })).toBeInTheDocument();
+        expect(screen.getByRole('radiogroup', { name: en_US.Sidebar.mcpConfigure })).toBeInTheDocument();
     });
 
     it('title 与 placeholder 属性替换语言包文案', () => {

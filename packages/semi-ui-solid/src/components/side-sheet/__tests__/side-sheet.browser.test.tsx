@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js';
 import { render, screen, waitFor, within } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { keyboardClick, tab } from '@test/utils/browser';
 import SideSheet, { type SideSheetProps } from '..';
 import Button from '../../button';

@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { fireEvent } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobalKey, SemiGlobal } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import TagGroup from '../group.vue';

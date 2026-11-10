@@ -2,6 +2,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
     import { calcRowHeight, toPercent, type DateObj } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
+    import { useConfig } from '../config-provider/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { getCalendarContext } from './context.js';
     import DayCol from './day-col.svelte';
@@ -24,6 +26,7 @@
 
     const calendar = getCalendarContext();
     const locale = useLocale('Calendar');
+    const config = useConfig();
 
     const monthId = $props.id();
     let root = $state<HTMLDivElement>();
@@ -37,7 +40,7 @@
 
     const prefixCls = `${cssClasses.PREFIX}-week`;
     const allDayCls = `${cssClasses.PREFIX}-all-day`;
-    const rangeData = $derived(CalendarFoundation.getRangeData(range, locale().dateFnsLocale, weekStartsOn, today, labelDate));
+    const rangeData = $derived(CalendarFoundation.getRangeData(range, getDateFnsLocale(locale().localeCode, config.dateFnsLocale), weekStartsOn, today, labelDate));
     const parsedEvents = $derived(CalendarFoundation.getParsedRangeEvents(events));
     const allDayItems = $derived(CalendarFoundation.parseRangeAllDayEvents(parsedEvents.allDay, range));
 

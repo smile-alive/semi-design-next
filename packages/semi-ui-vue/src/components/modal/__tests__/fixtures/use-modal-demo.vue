@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
+    import { en_US } from '@fibrae/semi-ui-vue/locale';
     import Modal from '../../index';
     import type { ModalHookRef } from '../../interface';
 
@@ -24,7 +24,7 @@
 </script>
 
 <template>
-    <ConfigProvider :locale="en_GB">
+    <ConfigProvider :locale="en_US">
         <Button @click="open">Confirm Modal</Button>
         <output aria-label="closed">{{ `closed: ${closed}` }}</output>
         <Holder />

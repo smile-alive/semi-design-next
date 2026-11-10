@@ -4,9 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconHandle } from '@fibrae/semi-icons-vue';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Transfer, {
@@ -1103,13 +1102,13 @@ describe('Transfer 语言与 KeepAlive', () => {
     const items = [{ label: 'apple', value: 'a', key: 'a' }];
 
     it('列表、筛选框、删除按钮与排序手柄的名称跟随语言包', async () => {
-        render(() => <ConfigProvider locale={ja_JP}>{() => <Transfer defaultValue={['a']} dataSource={items} draggable />}</ConfigProvider>);
-        expect(screen.getByRole('list', { name: ja_JP.Transfer.optionList })).toBeInTheDocument();
-        expect(screen.getByRole('list', { name: ja_JP.Transfer.selectedList })).toBeInTheDocument();
-        expect(document.querySelector('search')).toHaveAttribute('aria-label', ja_JP.Transfer.filter);
-        expect(screen.getByRole('button', { name: ja_JP.Transfer.remove })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: ja_JP.Transfer.dragSort })).toBeInTheDocument();
-        await waitFor(() => expect(screen.getByRole('button', { name: ja_JP.Transfer.dragSort })).toHaveAttribute('aria-roledescription', ja_JP.Sortable.roleDescription));
+        render(() => <ConfigProvider locale={en_US}>{() => <Transfer defaultValue={['a']} dataSource={items} draggable />}</ConfigProvider>);
+        expect(screen.getByRole('list', { name: en_US.Transfer.optionList })).toBeInTheDocument();
+        expect(screen.getByRole('list', { name: en_US.Transfer.selectedList })).toBeInTheDocument();
+        expect(document.querySelector('search')).toHaveAttribute('aria-label', en_US.Transfer.filter);
+        expect(screen.getByRole('button', { name: en_US.Transfer.remove })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Transfer.dragSort })).toBeInTheDocument();
+        await waitFor(() => expect(screen.getByRole('button', { name: en_US.Transfer.dragSort })).toHaveAttribute('aria-roledescription', en_US.Sortable.roleDescription));
     });
 
     it('筛选框容器是带名称的原生 search 元素', () => {

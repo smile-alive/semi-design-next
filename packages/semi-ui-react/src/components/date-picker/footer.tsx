@@ -1,6 +1,6 @@
 import React from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import Button from '../button';
 
 interface FooterProps {

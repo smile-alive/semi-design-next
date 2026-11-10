@@ -340,7 +340,6 @@ export { default as LocaleConsumer } from './components/locale/locale-consumer';
 export type { LocaleProviderProps } from './components/locale/locale-provider';
 export type { LocaleConsumerProps } from './components/locale/locale-consumer';
 export type { LocaleComponentName } from './components/locale/use-locale';
-export type { Locale } from '@fibrae/semi-foundation/locale/interface';
 
 export {
     Form,

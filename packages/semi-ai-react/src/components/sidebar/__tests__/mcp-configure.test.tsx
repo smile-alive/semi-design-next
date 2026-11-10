@@ -2,9 +2,8 @@ import { StrictMode } from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import type { MCPConfigureContentProps, MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { MCPConfigure } from '@fibrae/semi-ai-react';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 
@@ -51,11 +50,11 @@ describe('MCPConfigure', () => {
 
     it('模式切换的内置 MCP 标签随语言包切换', () => {
         render(
-            <LocaleProvider locale={ja_JP}>
+            <LocaleProvider locale={en_US}>
                 <MCPConfigure options={options} visible />
             </LocaleProvider>
         );
-        expect(screen.getByText(ja_JP.Sidebar.mcpServers, { selector: '.semi-radio *' })).toBeInTheDocument();
+        expect(screen.getByText(en_US.Sidebar.mcpServers, { selector: '.semi-radio *' })).toBeInTheDocument();
     });
 
     it('title 和 placeholder 属性替换语言包文案', () => {

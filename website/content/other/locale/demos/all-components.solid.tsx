@@ -1,75 +1,8 @@
 import { createSignal, For } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconUser, IconSemiLogo, IconStar } from '@fibrae/semi-icons-solid';
 import { LocaleProvider, ConfigProvider, Pagination, Modal, Button, Select, Cascader, DatePicker, TreeSelect, Table, TimePicker, List, Calendar, Typography, Transfer, ImagePreview, Image, Form, FormInput, Nav, type ColumnProps } from '@fibrae/semi-ui-solid';
-
-// A pack loads when it is picked, so the page does not bundle every language up front
-const loaders = {
-    ar: () => import('@fibrae/semi-foundation/locale/source/ar'),
-    az: () => import('@fibrae/semi-foundation/locale/source/az'),
-    bg: () => import('@fibrae/semi-foundation/locale/source/bg'),
-    bn_IN: () => import('@fibrae/semi-foundation/locale/source/bn_IN'),
-    ca: () => import('@fibrae/semi-foundation/locale/source/ca'),
-    ceb_PH: () => import('@fibrae/semi-foundation/locale/source/ceb_PH'),
-    cs_CZ: () => import('@fibrae/semi-foundation/locale/source/cs_CZ'),
-    da: () => import('@fibrae/semi-foundation/locale/source/da'),
-    de: () => import('@fibrae/semi-foundation/locale/source/de'),
-    el_GR: () => import('@fibrae/semi-foundation/locale/source/el_GR'),
-    en_GB: () => import('@fibrae/semi-foundation/locale/source/en_GB'),
-    en_US: () => import('@fibrae/semi-foundation/locale/source/en_US'),
-    es: () => import('@fibrae/semi-foundation/locale/source/es'),
-    es_419: () => import('@fibrae/semi-foundation/locale/source/es_419'),
-    et: () => import('@fibrae/semi-foundation/locale/source/et'),
-    fa_IR: () => import('@fibrae/semi-foundation/locale/source/fa_IR'),
-    fi_FI: () => import('@fibrae/semi-foundation/locale/source/fi_FI'),
-    fil_PH: () => import('@fibrae/semi-foundation/locale/source/fil_PH'),
-    fr: () => import('@fibrae/semi-foundation/locale/source/fr'),
-    fr_CA: () => import('@fibrae/semi-foundation/locale/source/fr_CA'),
-    ga: () => import('@fibrae/semi-foundation/locale/source/ga'),
-    he_IL: () => import('@fibrae/semi-foundation/locale/source/he_IL'),
-    hi_IN: () => import('@fibrae/semi-foundation/locale/source/hi_IN'),
-    hr: () => import('@fibrae/semi-foundation/locale/source/hr'),
-    hu_HU: () => import('@fibrae/semi-foundation/locale/source/hu_HU'),
-    id_ID: () => import('@fibrae/semi-foundation/locale/source/id_ID'),
-    is: () => import('@fibrae/semi-foundation/locale/source/is'),
-    it: () => import('@fibrae/semi-foundation/locale/source/it'),
-    ja_JP: () => import('@fibrae/semi-foundation/locale/source/ja_JP'),
-    jv_ID: () => import('@fibrae/semi-foundation/locale/source/jv_ID'),
-    kk: () => import('@fibrae/semi-foundation/locale/source/kk'),
-    km_KH: () => import('@fibrae/semi-foundation/locale/source/km_KH'),
-    ko_KR: () => import('@fibrae/semi-foundation/locale/source/ko_KR'),
-    lt: () => import('@fibrae/semi-foundation/locale/source/lt'),
-    lv: () => import('@fibrae/semi-foundation/locale/source/lv'),
-    ms_MY: () => import('@fibrae/semi-foundation/locale/source/ms_MY'),
-    my_MM: () => import('@fibrae/semi-foundation/locale/source/my_MM'),
-    nb: () => import('@fibrae/semi-foundation/locale/source/nb'),
-    nl_NL: () => import('@fibrae/semi-foundation/locale/source/nl_NL'),
-    pl_PL: () => import('@fibrae/semi-foundation/locale/source/pl_PL'),
-    pt: () => import('@fibrae/semi-foundation/locale/source/pt'),
-    pt_BR: () => import('@fibrae/semi-foundation/locale/source/pt_BR'),
-    ro: () => import('@fibrae/semi-foundation/locale/source/ro'),
-    ru_RU: () => import('@fibrae/semi-foundation/locale/source/ru_RU'),
-    sk: () => import('@fibrae/semi-foundation/locale/source/sk'),
-    sl: () => import('@fibrae/semi-foundation/locale/source/sl'),
-    sq: () => import('@fibrae/semi-foundation/locale/source/sq'),
-    sv_SE: () => import('@fibrae/semi-foundation/locale/source/sv_SE'),
-    sw: () => import('@fibrae/semi-foundation/locale/source/sw'),
-    th_TH: () => import('@fibrae/semi-foundation/locale/source/th_TH'),
-    tr_TR: () => import('@fibrae/semi-foundation/locale/source/tr_TR'),
-    uk_UA: () => import('@fibrae/semi-foundation/locale/source/uk_UA'),
-    ur: () => import('@fibrae/semi-foundation/locale/source/ur'),
-    uz: () => import('@fibrae/semi-foundation/locale/source/uz'),
-    vi_VN: () => import('@fibrae/semi-foundation/locale/source/vi_VN'),
-    zh_TW: () => import('@fibrae/semi-foundation/locale/source/zh_TW'),
-};
-type LocaleCode = 'zh_CN' | keyof typeof loaders;
-
-interface Current {
-    code: LocaleCode;
-    locale: Locale;
-}
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 
 interface Person {
     key: string;
@@ -220,85 +153,21 @@ function I18nComponent() {
 }
 
 export default function LocaleDemo() {
-    const [current, setCurrent] = createSignal<Current>({ code: 'zh_CN', locale: zh_CN });
-    let latest: LocaleCode = 'zh_CN';
-
-    const onLanguageChange = async (code: LocaleCode) => {
-        latest = code;
-        const locale = code === 'zh_CN' ? zh_CN : (await loaders[code]()).default;
-        // A pick made while this pack was loading wins
-        if (latest === code) {
-            setCurrent({ code, locale });
-        }
-    };
+    const [code, setCode] = createSignal('zh_CN');
+    const locale = () => (code() === 'en_US' ? en_US : zh_CN);
 
     return (
         <>
             <div style={{ 'border-block-end': '1px solid var(--semi-color-border)', 'padding-block-end': '20px' }}>
-                <Select aria-label="切换语言" onChange={(value) => onLanguageChange(value as LocaleCode)} prefix="切换语言" style={{ width: '250px' }} defaultValue="zh_CN">
+                <Select aria-label="切换语言" onChange={(value) => setCode(String(value))} prefix="切换语言" style={{ width: '250px' }} value={code()}>
                     <Select.Option value="zh_CN">简体中文</Select.Option>
                     <Select.Option value="en_US">英语（美）</Select.Option>
-                    <Select.Option value="en_GB">英语（英）</Select.Option>
-                    <Select.Option value="ja_JP">日语</Select.Option>
-                    <Select.Option value="ko_KR">韩语</Select.Option>
-                    <Select.Option value="ar">阿拉伯语</Select.Option>
-                    <Select.Option value="vi_VN">越南语</Select.Option>
-                    <Select.Option value="ru_RU">俄罗斯语</Select.Option>
-                    <Select.Option value="id_ID">印尼语</Select.Option>
-                    <Select.Option value="ms_MY">马来语</Select.Option>
-                    <Select.Option value="th_TH">泰语</Select.Option>
-                    <Select.Option value="tr_TR">土耳其语</Select.Option>
-                    <Select.Option value="pt_BR">葡萄牙语（巴西）</Select.Option>
-                    <Select.Option value="zh_TW">繁体中文</Select.Option>
-                    <Select.Option value="es">西班牙语</Select.Option>
-                    <Select.Option value="de">德语</Select.Option>
-                    <Select.Option value="it">意大利语</Select.Option>
-                    <Select.Option value="fr">法语</Select.Option>
-                    <Select.Option value="ro">罗马尼亚语</Select.Option>
-                    <Select.Option value="sv_SE">瑞典语</Select.Option>
-                    <Select.Option value="pl_PL">波兰语</Select.Option>
-                    <Select.Option value="nl_NL">荷兰语</Select.Option>
-                    <Select.Option value="az">阿塞拜疆语</Select.Option>
-                    <Select.Option value="bn_IN">孟加拉语</Select.Option>
-                    <Select.Option value="bg">保加利亚语</Select.Option>
-                    <Select.Option value="ca">加泰罗尼亚语</Select.Option>
-                    <Select.Option value="cs_CZ">捷克语</Select.Option>
-                    <Select.Option value="ceb_PH">宿务语</Select.Option>
-                    <Select.Option value="da">丹麦语</Select.Option>
-                    <Select.Option value="el_GR">希腊语</Select.Option>
-                    <Select.Option value="es_419">西班牙语（拉美）</Select.Option>
-                    <Select.Option value="et">爱沙尼亚语</Select.Option>
-                    <Select.Option value="fa_IR">波斯语</Select.Option>
-                    <Select.Option value="fil_PH">菲律宾语</Select.Option>
-                    <Select.Option value="fi_FI">芬兰语</Select.Option>
-                    <Select.Option value="fr_CA">法语（加）</Select.Option>
-                    <Select.Option value="ga">爱尔兰语</Select.Option>
-                    <Select.Option value="he_IL">希伯来语</Select.Option>
-                    <Select.Option value="hi_IN">印地语</Select.Option>
-                    <Select.Option value="hr">克罗地亚语</Select.Option>
-                    <Select.Option value="hu_HU">匈牙利语</Select.Option>
-                    <Select.Option value="is">冰岛语</Select.Option>
-                    <Select.Option value="jv_ID">爪哇语</Select.Option>
-                    <Select.Option value="kk">哈萨克语</Select.Option>
-                    <Select.Option value="km_KH">高棉语</Select.Option>
-                    <Select.Option value="lt">立陶宛语</Select.Option>
-                    <Select.Option value="lv">拉脱维亚语</Select.Option>
-                    <Select.Option value="my_MM">缅甸语</Select.Option>
-                    <Select.Option value="nb">挪威语</Select.Option>
-                    <Select.Option value="pt">葡萄牙语</Select.Option>
-                    <Select.Option value="sk">斯洛伐克语</Select.Option>
-                    <Select.Option value="sl">斯洛文尼亚语</Select.Option>
-                    <Select.Option value="sq">阿尔巴尼亚语</Select.Option>
-                    <Select.Option value="sw">斯瓦希里语</Select.Option>
-                    <Select.Option value="uk_UA">乌克兰语</Select.Option>
-                    <Select.Option value="ur">乌尔都语</Select.Option>
-                    <Select.Option value="uz">乌兹别克语</Select.Option>
                 </Select>
             </div>
-            <LocaleProvider locale={current().locale}>
-                <ConfigProvider direction={current().code === 'ar' ? 'rtl' : 'ltr'} locale={current().locale}>
-                    {/* Keyed by the Current object so each language switch remounts the demo, as the React version does with key */}
-                    <For each={[current()]}>{() => <I18nComponent />}</For>
+            <LocaleProvider locale={locale()}>
+                <ConfigProvider locale={locale()}>
+                    {/* Keyed by the code so each language switch remounts the demo, as the React version does with key */}
+                    <For each={[code()]}>{() => <I18nComponent />}</For>
                 </ConfigProvider>
             </LocaleProvider>
         </>

@@ -4,10 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import { calcRowHeight } from '@fibrae/semi-foundation/components/calendar/event-util';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal, { SemiGlobal } from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations } from '@test/utils/dom/common';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
@@ -1223,17 +1221,17 @@ describe('Calendar 语言包', () => {
         expect(screen.getByText('2 more')).toBeInTheDocument();
     });
 
-    it('ja_JP 下的关闭按钮、全天与 "更多" 名称', async () => {
+    it('en_US 下的关闭按钮、全天与 "更多" 名称', async () => {
         semiGlobal.config = { overrideDefaultProps: { Popover: { motion: false } } };
-        const inJapanese = (props: CalendarProps) => render(CalendarLocale, { props: { locale: ja_JP, props } });
-        const week = inJapanese({ displayValue: today, mode: 'week' });
-        expect(screen.getByRole('rowheader')).toHaveTextContent(ja_JP.Calendar.allDay);
+        const inEnglish = (props: CalendarProps) => render(CalendarLocale, { props: { locale: en_US, props } });
+        const week = inEnglish({ displayValue: today, mode: 'week' });
+        expect(screen.getByRole('rowheader')).toHaveTextContent(en_US.Calendar.allDay);
         week.unmount();
 
-        inJapanese({ displayValue: today, events: [event('a', new Date(2019, 7, 8, 9))], mode: 'month' });
-        const more = screen.getByRole('button', { name: ja_JP.Calendar.remaining.replace('${remained}', '1') });
+        inEnglish({ displayValue: today, events: [event('a', new Date(2019, 7, 8, 9))], mode: 'month' });
+        const more = screen.getByRole('button', { name: en_US.Calendar.remaining.replace('${remained}', '1') });
         await userEvent.click(more);
-        await waitFor(() => expect(screen.getByRole('button', { name: ja_JP.Calendar.close })).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('button', { name: en_US.Calendar.close })).toBeInTheDocument());
     });
 });
 

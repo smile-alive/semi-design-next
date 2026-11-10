@@ -4,9 +4,9 @@ import { render, screen, fireEvent, waitFor, act, createEvent } from '@testing-l
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { IconEyeClosed } from '@fibrae/semi-icons-react';
 import { ConfigProvider, Input, LocaleProvider, Modal } from '@fibrae/semi-ui-react';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { ModalReactProps } from '../modal';
 

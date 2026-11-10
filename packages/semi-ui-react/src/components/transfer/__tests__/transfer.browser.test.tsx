@@ -2,8 +2,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Button, Popover, Transfer } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-transfer`;

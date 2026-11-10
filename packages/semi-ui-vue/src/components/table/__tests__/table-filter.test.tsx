@@ -2,8 +2,7 @@
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { getData, render } from '@test/utils/vue';
 import Table, { type ColumnProps, type TableChangeInfo, type TableFilterDropdownSlotProps } from '..';
 import LocaleProvider from '../../locale/locale-provider.vue';
@@ -456,12 +455,12 @@ describe('Table 筛选触发器', () => {
 
     it('筛选按钮的名称从语言包读取', () => {
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: {
                 default: () => <Table columns={filterColumns()} dataSource={[{ key: '1', name: 'a' }]} pagination={false} />,
             },
         });
-        expect(screen.getByRole('button', { name: ja_JP.Table.filterColumn })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Table.filterColumn })).toBeInTheDocument();
     });
 });
 

@@ -6,6 +6,10 @@
                 "zh-CN": "受该配置影响的内容。显式传入的 `direction` 与外层不同时（含最外层），内容外包一层带 `dir` 属性的 `div`。",
                 "en-US": "Content affected by the configuration. When an explicitly passed `direction` differs from the outer one, including at the outermost level, the content is wrapped in a `div` carrying the `dir` attribute."
             },
+            "dateFnsLocale": {
+                "zh-CN": "DatePicker、TimePicker、Calendar 格式化与解析日期使用的 date-fns 语言对象。未传时继承外层 ConfigProvider；都没有时按当前语言的 `code` 取内置的 zh-CN 或 en-US，其他语言回落 enUS。其他语言从 `date-fns/locale` 导入后传入。",
+                "en-US": "date-fns locale that DatePicker, TimePicker and Calendar use to format and parse dates. Inherited from the outer ConfigProvider when omitted; without one, the built-in zh-CN or en-US is picked by the current locale's `code`, and other languages fall back to enUS. For other languages, import the locale from `date-fns/locale` and pass it."
+            },
             "direction": {
                 "zh-CN": "文本方向，可选 `ltr` 或 `rtl`。未传时继承外层 ConfigProvider，最外层默认为 `ltr`。",
                 "en-US": "Text direction: `ltr` or `rtl`. Inherited from the outer ConfigProvider when omitted, and `ltr` at the outermost level."
@@ -15,8 +19,8 @@
                 "en-US": "Function returning the popup container. It only affects Modal, SideSheet and ImagePreview, which still render through a Portal; the container needs `position: relative`. Inherited from the outer ConfigProvider when omitted, and `document.body` at the outermost level."
             },
             "locale": {
-                "zh-CN": "多语言配置，优先级高于 LocaleProvider。未传时继承外层 ConfigProvider；没有 ConfigProvider 设置时由 LocaleProvider 决定，两者都没有时使用 `zh_CN`。传 `null` 清除外层的 locale。",
-                "en-US": "Locale configuration, which takes precedence over LocaleProvider. Inherited from the outer ConfigProvider when omitted; when no ConfigProvider sets it, LocaleProvider decides, and `zh_CN` is used without either. Pass `null` to clear the outer locale."
+                "zh-CN": "多语言配置，优先级高于 LocaleProvider。未传时继承外层 ConfigProvider；没有 ConfigProvider 设置时由 LocaleProvider 决定，两者都没有时使用 `zh_CN`。传 `null` 清除外层的 locale。可传内置的 `zh_CN`、`en_US`，或至少含 `code` 的自定义语言包，自定义语言包缺的文案与 `currency` 回退到 `en_US`。",
+                "en-US": "Locale configuration, which takes precedence over LocaleProvider. Inherited from the outer ConfigProvider when omitted; when no ConfigProvider sets it, LocaleProvider decides, and `zh_CN` is used without either. Pass `null` to clear the outer locale. Takes the built-in `zh_CN` or `en_US`, or a custom pack with at least `code`, whose missing text and `currency` fall back to `en_US`."
             },
             "responsiveMap": {
                 "zh-CN": "自定义响应式断点，key 为 `xs`、`sm`、`md`、`lg`、`xl`、`xxl`，value 为 media query 字符串。按内容比较，内联写对象不会重新注册监听；未传时继承外层，最外层使用 `defaultResponsiveMap`。",
