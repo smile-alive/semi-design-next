@@ -13,7 +13,7 @@ const markers = [
     },
     {
         start: 38,
-        title: 'Figma Plugin',
+        title: 'Theming',
     },
     {
         start: 51,

@@ -22,9 +22,9 @@
             <Avatar color="blue" :style="{ marginInlineEnd: '12px' }">UI</Avatar>
             <div>
                 <h3>Semi UI</h3>
-                <p>Hi, Bytedance dance dance.</p>
-                <p>Hi, Bytedance dance dance.</p>
-                <p>Hi, Bytedance dance dance.</p>
+                <p>Hi, Semi dance dance.</p>
+                <p>Hi, Semi dance dance.</p>
+                <p>Hi, Semi dance dance.</p>
             </div>
         </div>
     </Skeleton>

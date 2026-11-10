@@ -12,7 +12,7 @@
     <article style="padding: 6px">这是一个 Card</article>
 {/snippet}
 
-<Card style="max-width: 360px">Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。</Card>
+<Card style="max-width: 360px">Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。</Card>
 <br />
 <Card {bodyStyle} style="max-width: 360px">
     <Card.Meta {avatar} title="Semi Doc" />

@@ -9,6 +9,6 @@
 </script>
 
 <template>
-    <TagInput ref="tagInput" :defaultValue="['抖音', '火山']" />
+    <TagInput ref="tagInput" :defaultValue="['短视频', '直播']" />
     <Button style="margin-block-start: 10px" @click="handleTagInputFocus">点击按钮聚焦</Button>
 </template>

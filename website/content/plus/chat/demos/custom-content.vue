@@ -3,6 +3,7 @@
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-vue';
     import { IconChevronUp } from '@fibrae/semi-icons-vue';
     import { Avatar, AvatarGroup, MarkdownRender } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const roleInfo = {
         user: {
@@ -25,7 +26,7 @@
         height: '500px',
     };
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     let id = 0;
     const getId = () => `id-${id++}`;
@@ -35,28 +36,28 @@
             role: 'assistant',
             id: '3',
             createAt: 1715676751919,
-            content: 'Semi Design 是由抖音前端团队，MED 产品设计团队设计、开发并维护的设计系统。它作为全面、易用、优质的现代应用 UI 解决方案，从字节跳动各业务线的复杂场景提炼而来，支撑近千计平台产品，服务内外部 10 万+ 用户。',
+            content: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。它作为全面、易用、优质的现代应用 UI 解决方案。',
             source: [
                 {
                     avatar: '/assets/placeholder/logo.svg',
-                    url: '/zh-CN/start/introduction',
+                    url: '/zh-CN/vue/start/introduction',
                     title: 'semi Design',
                     subTitle: 'Semi design website',
-                    content: 'Semi Design 是由抖音前端团队，MED 产品设计团队设计、开发并维护的设计系统。',
+                    content: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。',
                 },
                 {
                     avatar: '/assets/placeholder/logo.svg',
-                    url: '/dsm/landing',
-                    subTitle: 'Semi DSM website',
-                    title: 'Semi 设计系统',
-                    content: '从 Semi Design，到 Any Design 快速定义你的设计系统，并应用在设计稿和代码中',
+                    url: '/zh-CN/vue/start/getting-started',
+                    subTitle: 'Semi theme website',
+                    title: 'Semi 主题',
+                    content: '用 --semi-* 变量定制主题，从 Semi Design 到 Any Design，并应用在设计稿和代码中',
                 },
                 {
                     avatar: '/assets/placeholder/logo.svg',
-                    url: '/code/zh-CN/start/introduction',
-                    subTitle: 'Semi D2C website',
-                    title: '设计稿转代码',
-                    content: 'Semi 设计稿转代码（Semi Design to Code，或简称 Semi D2C），是由抖音前端 Semi Design 团队推出的全新的提效工具',
+                    url: '/zh-CN/vue/start/overview',
+                    subTitle: 'Semi framework website',
+                    title: '多框架',
+                    content: '一套组件，四个框架原生可用，React、Vue、Solid、Svelte 共用同一套 foundation 逻辑',
                 },
             ],
         },

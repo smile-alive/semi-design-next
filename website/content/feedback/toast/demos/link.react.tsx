@@ -3,7 +3,7 @@ import { Toast, Typography, Button } from '@fibrae/semi-ui-react';
 const opts = {
     content: (
         <span>
-            <Typography.Text>Hi, Bytedance dance dance</Typography.Text>
+            <Typography.Text>Hi, Semi dance dance</Typography.Text>
             <Typography.Text link style={{ marginInlineStart: 12 }}>
                 更多
             </Typography.Text>
@@ -15,7 +15,7 @@ const opts = {
 const multiLineOpts = {
     content: (
         <>
-            <div>Hi, Bytedance dance dance</div>
+            <div>Hi, Semi dance dance</div>
             <div style={{ marginBlockStart: 8 }}>
                 <Typography.Text link>查看详情</Typography.Text>
                 <Typography.Text link style={{ marginInlineStart: 20 }}>

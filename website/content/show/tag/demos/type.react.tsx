@@ -8,19 +8,19 @@ export default function TagDemo() {
                 Semi Design Light Tag
             </Tag>
             <Tag color="cyan" size="large" shape="circle" suffixIcon={<IconSemiLogo />} type="light">
-                D2C: figma to code in one click
+                Semi: one component library for four frameworks
             </Tag>
             <Tag color="light-blue" prefixIcon={<IconGithubLogo />} size="large" shape="circle" type="ghost">
                 Semi Design Ghost Tag
             </Tag>
             <Tag color="cyan" size="large" shape="circle" type="ghost" suffixIcon={<IconSemiLogo />}>
-                D2C: figma to code in one click
+                Semi: one component library for four frameworks
             </Tag>
             <Tag color="light-blue" prefixIcon={<IconGithubLogo />} size="large" shape="circle" type="solid">
                 Semi Design Solid Tag
             </Tag>
             <Tag color="cyan" size="large" shape="circle" type="solid" suffixIcon={<IconSemiLogo />}>
-                D2C: figma to code in one click
+                Semi: one component library for four frameworks
             </Tag>
         </Space>
     );

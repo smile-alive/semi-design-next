@@ -1,8 +1,9 @@
 <script lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const action = 'https://api.semi.design/upload';
+    const action = '/upload';
 
     const fileList: FileItem[] = [
         {
@@ -25,7 +26,7 @@
     ];
 </script>
 
-<Upload {action} {fileList}>
+<Upload {action} customRequest={mockUpload} {fileList}>
     <Button theme="light">
         {#snippet icon()}<IconUpload />{/snippet}
         点击上传

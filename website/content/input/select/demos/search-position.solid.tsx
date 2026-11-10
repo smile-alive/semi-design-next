@@ -3,11 +3,11 @@ import { Select } from '@fibrae/semi-ui-solid';
 export default function SelectDemo() {
     return (
         <>
-            <Select aria-label="单选" filter searchPosition="dropdown" style={{ width: '200px' }} defaultValue="ulikecam" placeholder="我的搜索框在下拉菜单中" searchPlaceholder="带搜索功能的单选">
-                <Select.Option value="douyin" label="抖音" />
-                <Select.Option value="ulikecam" label="轻颜相机" />
-                <Select.Option value="jianying" label="剪映" />
-                <Select.Option value="xigua" label="西瓜视频" />
+            <Select aria-label="单选" filter searchPosition="dropdown" style={{ width: '200px' }} defaultValue="camera" placeholder="我的搜索框在下拉菜单中" searchPlaceholder="带搜索功能的单选">
+                <Select.Option value="video" label="短视频" />
+                <Select.Option value="camera" label="相机" />
+                <Select.Option value="editing" label="剪辑" />
+                <Select.Option value="movie" label="长视频" />
             </Select>
             <br />
             <br />

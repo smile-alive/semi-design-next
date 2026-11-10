@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type AfterUploadProps, type AfterUploadResult } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const afterUpload = ({ response }: AfterUploadProps): AfterUploadResult => {
         if (response.status_code === 200) {
@@ -17,7 +18,7 @@
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :afterUpload="afterUpload">
+    <Upload action="/upload" :afterUpload="afterUpload" :customRequest="mockUpload">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

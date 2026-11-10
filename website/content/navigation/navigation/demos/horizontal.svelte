@@ -27,8 +27,8 @@
 {#snippet footer()}
     <Nav.Footer>
         <Dropdown position="bottomRight">
-            <Avatar color="light-blue" size="small" style="margin: 4px">BD</Avatar>
-            <span>Bytedancer</span>
+            <Avatar color="light-blue" size="small" style="margin: 4px">SD</Avatar>
+            <span>Semi</span>
             {#snippet content()}
                 <Dropdown.Menu>
                     <Dropdown.Item>详情</Dropdown.Item>

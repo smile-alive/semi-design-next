@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { AIChatInput, type AIChatInputContent as Content } from '@fibrae/semi-ai-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
     const suggestionTemplate = ['天气如何', '空气质量', '工作进程', '日程安排'];
 
     const suggestion = ref<string[]>([]);

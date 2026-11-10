@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { IconPlus } from '@fibrae/semi-icons-vue';
     import { Upload, type FileItem } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const defaultFileList: FileItem[] = [
         {
@@ -15,7 +16,7 @@
 </script>
 
 <template>
-    <Upload accept="image/*" action="https://api.semi.design/upload" :defaultFileList="defaultFileList" listType="picture" multiple>
+    <Upload accept="image/*" action="/upload" :customRequest="mockUpload" :defaultFileList="defaultFileList" listType="picture" multiple>
         <IconPlus aria-label="上传图片" size="extra-large" />
     </Upload>
 </template>

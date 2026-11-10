@@ -4,7 +4,7 @@
     let visible = $state<RadioValue | undefined>(false);
 </script>
 
-{#snippet text()}hi bytedance{/snippet}
+{#snippet text()}hi semi{/snippet}
 
 <div>
     <Tooltip content={text}>

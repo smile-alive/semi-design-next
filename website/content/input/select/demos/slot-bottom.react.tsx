@@ -42,19 +42,19 @@ export default function SelectDemo() {
                 autoAdjustOverflow={false}
                 position="bottom"
             >
-                <Select.Option value="douyin">抖音</Select.Option>
-                <Select.Option value="ulikecam">轻颜相机</Select.Option>
-                <Select.Option value="jianying">剪映</Select.Option>
-                <Select.Option value="duoshan">多闪</Select.Option>
-                <Select.Option value="xigua">西瓜视频</Select.Option>
+                <Select.Option value="video">短视频</Select.Option>
+                <Select.Option value="camera">相机</Select.Option>
+                <Select.Option value="editing">剪辑</Select.Option>
+                <Select.Option value="social">社交</Select.Option>
+                <Select.Option value="movie">长视频</Select.Option>
             </Select>
             <p style={{ marginTop: 200 }}>innerBottomSlot:</p>
             <Select aria-label="innerBottomSlot" style={{ width: 300 }} dropdownStyle={{ width: 180 }} maxHeight={150} innerBottomSlot={<div style={innerSlotStyle}>点击加载更多</div>} placeholder="自定义内侧底部slot，滚动至底部显示">
-                <Select.Option value="douyin">抖音</Select.Option>
-                <Select.Option value="ulikecam">轻颜相机</Select.Option>
-                <Select.Option value="jianying">剪映</Select.Option>
-                <Select.Option value="duoshan">多闪</Select.Option>
-                <Select.Option value="xigua">西瓜视频</Select.Option>
+                <Select.Option value="video">短视频</Select.Option>
+                <Select.Option value="camera">相机</Select.Option>
+                <Select.Option value="editing">剪辑</Select.Option>
+                <Select.Option value="social">社交</Select.Option>
+                <Select.Option value="movie">长视频</Select.Option>
             </Select>
         </div>
     );

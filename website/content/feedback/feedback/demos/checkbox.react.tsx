@@ -12,7 +12,7 @@ export default function FeedbackDemo() {
             <Feedback
                 type="checkbox"
                 checkboxGroupProps={{
-                    options: ['抖音', '火山', '豆包'],
+                    options: ['短视频', '直播', '资讯'],
                 }}
                 title="您最常使用以下哪些产品？"
                 visible={visible}

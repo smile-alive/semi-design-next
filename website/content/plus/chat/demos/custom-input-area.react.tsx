@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, type CSSProperties } from 'react';
 import { Chat, type ChatMessage as Message, type ChatRenderInputAreaProps as RenderInputAreaProps } from '@fibrae/semi-ai-react';
 import { IconUpload } from '@fibrae/semi-icons-react';
 import { Form, FormInput, FormUpload, Button, type FormApi as BaseFormApi, type FileItem } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 interface InputValues {
     name?: string;
@@ -42,7 +43,7 @@ let id = 0;
 function getId() {
     return `id-${id++}`;
 }
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 
 const inputStyle: CSSProperties = {
     display: 'flex',

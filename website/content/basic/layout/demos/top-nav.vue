@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { IconBell, IconBytedanceLogo, IconHelpCircle, IconHome, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-vue';
+    import { IconBell, IconHelpCircle, IconHome, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-vue';
     import { Avatar, Breadcrumb, Button, Layout, Nav, Skeleton } from '@fibrae/semi-ui-vue';
 </script>
 
@@ -56,8 +56,8 @@
                     <template #placeholder>
                         <Skeleton.Paragraph :rows="2" />
                     </template>
-                    <p>Hi, Bytedance dance dance.</p>
-                    <p>Hi, Bytedance dance dance.</p>
+                    <p>Hi, Semi dance dance.</p>
+                    <p>Hi, Semi dance dance.</p>
                 </Skeleton>
             </div>
         </Layout.Content>
@@ -71,8 +71,8 @@
             }"
         >
             <span :style="{ display: 'flex', alignItems: 'center' }">
-                <IconBytedanceLogo size="large" :style="{ marginInlineEnd: '8px' }" />
-                <span>Copyright © 2023 ByteDance. All Rights Reserved. </span>
+                <IconSemiLogo size="large" :style="{ marginInlineEnd: '8px' }" />
+                <span>Copyright © 2023 Semi Design Next. All Rights Reserved. </span>
             </span>
             <span>
                 <span :style="{ marginInlineEnd: '24px' }">平台客服</span>

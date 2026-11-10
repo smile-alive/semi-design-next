@@ -28,7 +28,7 @@ pnpm add @fibrae/semi-foundation
 ```ts
 import BaseFoundation from '@fibrae/semi-foundation/base/foundation';
 import InputFoundation from '@fibrae/semi-foundation/components/input/foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
 ```
 
@@ -36,27 +36,26 @@ import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
 
 ## 目录
 
-| 目录          | 内容                                                                                                                      |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `components/` | 每个组件一个目录，按需包含 `foundation.ts`、`constants.ts` 与 `*.scss`（`variables.scss`、`mixin.scss` 等只按源文件发布） |
-| `base/`       | `BaseFoundation`、通用常量，以及 foundation 组合使用的有状态类（焦点范围、弹层生命周期、模态资源等）                      |
-| `utils/`      | 无状态工具：DOM、日期、焦点辅助、层栈等                                                                                   |
-| `theme/`      | 唯一的主题：全局 token、色板、mixin，组件 SCSS 经 `semi:theme` 加载                                                       |
-| `locale/`     | 语言包、`Locale` 与 `LocaleInput` 类型，以及各框架共用的语言解析                                                          |
+| 目录          | 内容                                                                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/` | 每个组件一个目录，按需包含 `foundation.ts`、`constants.ts` 与 `*.scss`（`variables.scss`、`mixin.scss`、`rtl.scss` 等只按源文件发布） |
+| `base/`       | `BaseFoundation`、通用常量，以及 foundation 组合使用的有状态类（焦点范围、弹层生命周期、模态资源等）                                  |
+| `utils/`      | 无状态工具：DOM、日期、焦点辅助、层栈等                                                                                               |
+| `theme/`      | 唯一的主题：全局 token、色板、mixin，组件 SCSS 经 `semi:theme` 加载                                                                   |
+| `locale/`     | 语言包、`Locale` 与 `LocaleInput` 类型，以及各框架共用的语言解析                                                                      |
 
 ## 语言包
 
-`src/locale/source/` 下有 `zh_CN`、`en_US` 两个内置语言包，每个文件默认导出一个 `Locale`。`src/locale/index.ts` 统一导出两个语言包与 `Locale`、`LocaleInput`、`LocaleComponentName`、`LocaleResult` 类型，其他包从 `@fibrae/semi-foundation/locale/index` 导入：
+`src/locale/source/` 下有 `zh_CN`、`en_US` 两个内置语言包，每个文件默认导出一个 `Locale`，类型在 `src/locale/interface.ts`：
 
 - `code`：语言代码。日期组件按它取 date-fns locale（`src/utils/date-fns-locale.ts` 只内置 zh-CN、en-US，其余由 ConfigProvider 的 `dateFnsLocale` 传入）。
 - `currency`：ISO 4217 货币代码，InputNumber 传给 `Intl.NumberFormat`。
 - 其余键按组件分组，是组件的内置文案和可访问名称。含 `${名字}` 的值是占位符，翻译时不要替换占位符本身。
 
-各 UI 包的 `locale` 入口导出 `zh_CN`、`en_US`，传给 UI 包的 `LocaleProvider` 或 `ConfigProvider`：
+各 UI 包的包根入口导出 `zh_CN`、`en_US`，传给 UI 包的 `LocaleProvider` 或 `ConfigProvider`：
 
 ```tsx
-import { LocaleProvider } from '@fibrae/semi-ui-react';
-import { en_US } from '@fibrae/semi-ui-react/locale';
+import { en_US, LocaleProvider } from '@fibrae/semi-ui-react';
 
 <LocaleProvider locale={en_US}>
     <App />

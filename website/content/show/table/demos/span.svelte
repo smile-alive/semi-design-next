@@ -79,7 +79,7 @@
         const randomNumber = (i * 1000) % 199;
         dataSource.push({
             key: '' + i,
-            name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
+            name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi 设计稿${i}.fig`,
             owner: isSemiDesign ? '姜鹏志' : '郝宣',
             size: randomNumber,
             updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,

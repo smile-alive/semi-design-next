@@ -1,8 +1,8 @@
 import { Notification, Button } from '@fibrae/semi-ui-react';
 
 const opts = {
-    title: 'Hi, Bytedance',
-    content: 'Hi, Bytedance dance dance',
+    title: 'Hi, Semi',
+    content: 'Hi, Semi dance dance',
     duration: 3,
     theme: 'light',
 } as const;

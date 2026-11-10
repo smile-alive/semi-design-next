@@ -1,7 +1,7 @@
 import { Descriptions, Tag } from '@fibrae/semi-ui-react';
 
 const data = [
-    { key: '抖音号', value: 'SemiDesign' },
+    { key: '短视频号', value: 'SemiDesign' },
     { key: '主播类型', value: '自由主播' },
     { key: '安全等级', value: '3级' },
     {

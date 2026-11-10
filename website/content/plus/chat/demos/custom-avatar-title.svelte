@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Chat, type ChatAvatarSnippetProps, type ChatMessage, type ChatTitleSnippetProps } from '@fibrae/semi-ai-svelte';
     import { Avatar, Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const roleInfo = {
         user: {
@@ -19,7 +20,7 @@
 
     const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     let id = 0;
     const getId = () => `id-${id++}`;

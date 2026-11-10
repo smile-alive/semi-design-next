@@ -2,8 +2,9 @@ import { For, Show, type Component, createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { AIChatInput, type AIChatInputAttachment as Attachment, type AIChatInputElement, type AIChatInputReference as Reference, type AIChatInputRenderTopSlotProps as RenderTopSlotProps } from '@fibrae/semi-ai-solid';
 import { IconClose, IconUpload, IconFile, IconFolder, IconBranch, IconTerminal, IconGlobeStroke, IconConnectionPoint2, IconTemplateStroked, IconSearch, IconGit, IconCode, type IconProps } from '@fibrae/semi-icons-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: '12px' };
 
 const customReferences: Reference[] = [

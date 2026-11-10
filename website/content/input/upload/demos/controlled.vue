@@ -2,6 +2,7 @@
     import { ref } from 'vue';
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type FileItem, type UploadOnChangeProps } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const initList: FileItem[] = [
         {
@@ -34,7 +35,7 @@
 </script>
 
 <template>
-    <Upload v-model:fileList="list" action="https://api.semi.design/upload" :showRetry="false" @change="onChange">
+    <Upload v-model:fileList="list" action="/upload" :customRequest="mockUpload" :showRetry="false" @change="onChange">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

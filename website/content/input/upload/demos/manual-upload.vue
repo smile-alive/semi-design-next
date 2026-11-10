@@ -2,8 +2,9 @@
     import { useTemplateRef } from 'vue';
     import { IconPlus, IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type UploadHandle } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const action = 'https://api.semi.design/upload';
+    const action = '/upload';
     const uploadRef = useTemplateRef<UploadHandle>('uploadRef');
     const manualUpload = () => {
         uploadRef.value?.upload();
@@ -12,7 +13,7 @@
 
 <template>
     <div>
-        <Upload ref="uploadRef" accept="image/gif, image/png, image/jpeg, image/bmp, image/webp" :action="action" uploadTrigger="custom" @error="(...v) => console.log(...v)" @success="(...v) => console.log(...v)">
+        <Upload ref="uploadRef" accept="image/gif, image/png, image/jpeg, image/bmp, image/webp" :action="action" :customRequest="mockUpload" uploadTrigger="custom" @error="(...v) => console.log(...v)" @success="(...v) => console.log(...v)">
             <Button style="margin-inline-end: 8px" theme="light">
                 <template #icon>
                     <IconPlus />

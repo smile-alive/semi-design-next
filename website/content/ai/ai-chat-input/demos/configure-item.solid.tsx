@@ -1,7 +1,8 @@
 import { AIChatInput, getConfigureItem, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-solid';
 import { Cascader, type CascaderProps } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: '12px' };
 const cascaderModalOptions = [
     {

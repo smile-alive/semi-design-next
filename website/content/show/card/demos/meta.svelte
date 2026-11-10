@@ -23,4 +23,4 @@
     </Space>
 {/snippet}
 
-<Card {cover} {footer} footerLine footerStyle="display: flex; justify-content: flex-end" {headerExtraContent} style="max-width: 340px" {title}>Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。</Card>
+<Card {cover} {footer} footerLine footerStyle="display: flex; justify-content: flex-end" {headerExtraContent} style="max-width: 340px" {title}>Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。</Card>

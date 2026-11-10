@@ -19,7 +19,7 @@ export default function TabsDemo() {
             <Tabs type="line">
                 <TabPane tab="文档" itemKey="1">
                     <h3>文档</h3>
-                    <p style={paragraphStyle}>Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。</p>
+                    <p style={paragraphStyle}>Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。</p>
                     <p style={paragraphStyle}>区别于其他的设计系统而言，Semi Design 以用户中心、内容优先、设计人性化为设计理念，具有以下优势：</p>
                     <ul>
                         <li>

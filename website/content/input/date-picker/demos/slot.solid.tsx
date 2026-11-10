@@ -30,7 +30,7 @@ function BottomSlot(props: SlotProps) {
             <Typography.Text strong style={{ color: 'var(--semi-color-text-2)' }}>
                 定版前请阅读
             </Typography.Text>
-            <Typography.Text link={{ href: 'https://semi.design/', target: '_blank' }}>发版须知</Typography.Text>
+            <Typography.Text link={{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }}>发版须知</Typography.Text>
         </Space>
     );
 }
@@ -42,7 +42,7 @@ function MonthBottomSlot(props: SlotProps) {
             <Typography.Text strong style={{ color: 'var(--semi-color-text-2)' }}>
                 请阅读
             </Typography.Text>
-            <Typography.Text link={{ href: 'https://semi.design/', target: '_blank' }}>须知</Typography.Text>
+            <Typography.Text link={{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }}>须知</Typography.Text>
         </Space>
     );
 }

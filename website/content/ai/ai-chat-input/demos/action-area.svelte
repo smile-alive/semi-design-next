@@ -2,8 +2,9 @@
     import { AIChatInput } from '@fibrae/semi-ai-svelte';
     import { IconDeleteStroked } from '@fibrae/semi-icons-svelte';
     import { Button, Divider } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 </script>
 
 <AIChatInput placeholder="输入内容或者上传内容..." style="margin: 12px" {uploadProps}>

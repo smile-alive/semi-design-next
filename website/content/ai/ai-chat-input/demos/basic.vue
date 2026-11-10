@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { AIChatInput, type AIChatInputContent as Content } from '@fibrae/semi-ai-vue';
     import type { UploadOnChangeProps as OnChangeProps } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     const onContentChange = (content: Content[]) => {
         console.log('onContentChange', content);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { IconBell, IconBytedanceLogo, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-vue';
+    import { IconBell, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-vue';
     import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Steps, Tag, Timeline, Tooltip, type NavItemConfig } from '@fibrae/semi-ui-vue';
 
     const rowStyle = { margin: '16px 10px' };
@@ -218,8 +218,8 @@
             }"
         >
             <span :style="{ display: 'flex', alignItems: 'center' }">
-                <IconBytedanceLogo size="large" :style="{ marginInlineEnd: '8px' }" />
-                <span>Copyright © 2019 ByteDance. All Rights Reserved. </span>
+                <IconSemiLogo size="large" :style="{ marginInlineEnd: '8px' }" />
+                <span>Copyright © 2019 Semi Design Next. All Rights Reserved. </span>
             </span>
             <span>
                 <span :style="{ marginInlineEnd: '24px' }">平台客服</span>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { Chat, type ChatMessage as Message } from '@fibrae/semi-ai-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const roleInfo = {
         user: {
@@ -23,7 +24,7 @@
         height: '400px',
     };
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     let id = 0;
     const getId = () => `id-${id++}`;

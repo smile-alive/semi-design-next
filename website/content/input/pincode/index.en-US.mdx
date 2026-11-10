@@ -177,7 +177,7 @@ Call `focus(index)` and `blur(index)` through the template ref. The index is cou
 ### Keyboard and Focus
 
 - Each box is its own input; after a valid character is entered, focus moves to the next box, and entering the last box blurs it. The filled characters always run from the first box without gaps, so a character typed after an empty box lands in the first empty box. `Tab` and `Shift` + `Tab` move between boxes.
-- `Left Arrow` and `Right Arrow` move focus between boxes. `Backspace` and `Delete` both delete the character in the current box and the following characters move forward; `Backspace` also moves focus to the previous box.
+- `Left Arrow` and `Right Arrow` move focus between boxes, reversed when the ConfigProvider `direction` is `rtl` (`Left Arrow` moves to the next box). `Backspace` and `Delete` both delete the character in the current box and the following characters move forward; `Backspace` also moves focus to the previous box.
 - Pasting a whole code fills the boxes by character from the current box, and stops at the first invalid character.
 - `autoFocus` (`autofocus` in Vue) should be turned on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it.
 

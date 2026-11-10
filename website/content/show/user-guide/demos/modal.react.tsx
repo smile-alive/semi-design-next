@@ -3,7 +3,7 @@ import { UserGuide, Button, Image, Typography, type UserGuideStepItem } from '@f
 
 const steps: UserGuideStepItem[] = [
     {
-        title: '欢迎使用 Semi DSM!',
+        title: '欢迎使用 Semi Design Next!',
         description: (
             <div>
                 你可以从已发布的主题出发，或者选择<Typography.Text strong>立即创造</Typography.Text>

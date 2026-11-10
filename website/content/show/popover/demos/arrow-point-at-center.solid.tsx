@@ -24,7 +24,7 @@ const bottoms: [Position, string][] = [
 
 const article = () => (
     <article>
-        Hi ByteDancer, this is a popover.
+        Hi Semi, this is a popover.
         <br /> We have 2 lines.
     </article>
 );

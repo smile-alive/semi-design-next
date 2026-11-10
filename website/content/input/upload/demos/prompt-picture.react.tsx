@@ -1,8 +1,9 @@
 import { Fragment, type CSSProperties } from 'react';
 import { IconPlus } from '@fibrae/semi-icons-react';
 import { Upload, type FileItem, type PromptPositionType } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const action = 'https://api.semi.design/upload';
+const action = '/upload';
 const marginStyle: Partial<Record<PromptPositionType, CSSProperties>> = {
     right: { marginInlineStart: 10 },
 };
@@ -46,7 +47,7 @@ export default function UploadDemo() {
                             }}
                         />
                     )}
-                    <Upload action={action} prompt={<div style={promptStyle(pos)}>请上传认证材料</div>} promptPosition={pos} listType="picture" defaultFileList={defaultFileList}>
+                    <Upload action={action} customRequest={mockUpload} prompt={<div style={promptStyle(pos)}>请上传认证材料</div>} promptPosition={pos} listType="picture" defaultFileList={defaultFileList}>
                         <IconPlus aria-label="上传图片" size="extra-large" />
                     </Upload>
                 </Fragment>

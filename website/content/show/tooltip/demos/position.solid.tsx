@@ -31,8 +31,8 @@ export default function TooltipDemo() {
                         <Tooltip
                             content={
                                 <article>
-                                    <p>hi bytedance</p>
-                                    <p>hi bytedance</p>
+                                    <p>hi semi</p>
+                                    <p>hi semi</p>
                                 </article>
                             }
                             arrowPointAtCenter={false}
@@ -53,8 +53,8 @@ export default function TooltipDemo() {
                         <Tooltip
                             content={
                                 <article>
-                                    <p>hi bytedance</p>
-                                    <p>hi bytedance</p>
+                                    <p>hi semi</p>
+                                    <p>hi semi</p>
                                 </article>
                             }
                             arrowPointAtCenter={false}
@@ -75,8 +75,8 @@ export default function TooltipDemo() {
                         <Tooltip
                             content={
                                 <article>
-                                    <p>hi bytedance</p>
-                                    <p>hi bytedance</p>
+                                    <p>hi semi</p>
+                                    <p>hi semi</p>
                                 </article>
                             }
                             arrowPointAtCenter={false}
@@ -97,8 +97,8 @@ export default function TooltipDemo() {
                         <Tooltip
                             content={
                                 <article>
-                                    <p>hi bytedance</p>
-                                    <p>hi bytedance</p>
+                                    <p>hi semi</p>
+                                    <p>hi semi</p>
                                 </article>
                             }
                             arrowPointAtCenter={false}

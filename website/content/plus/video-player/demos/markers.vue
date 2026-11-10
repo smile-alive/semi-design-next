@@ -6,7 +6,7 @@
     const markers = [
         { start: 0, title: '片头' },
         { start: 4, title: '功能介绍' },
-        { start: 38, title: 'Figma Plugin' },
+        { start: 38, title: 'Theming' },
         { start: 51, title: '片尾' },
     ];
 </script>

@@ -2,13 +2,13 @@
     import { Button, Toast } from '@fibrae/semi-ui-vue';
 
     const opts = {
-        content: 'Hi, Bytedance dance dance',
+        content: 'Hi, Semi dance dance',
         duration: 3,
     };
 </script>
 
 <template>
-    <Button style="color: var(--semi-color-success)" @click="Toast.success('Hi,Bytedance dance dance')"> Success </Button>
+    <Button style="color: var(--semi-color-success)" @click="Toast.success('Hi,Semi dance dance')"> Success </Button>
     <br />
     <br />
     <Button type="warning" @click="Toast.warning(opts)">Warning</Button>

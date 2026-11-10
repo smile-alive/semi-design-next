@@ -9,22 +9,22 @@
     <div>
         <Tooltip>
             <Button :style="{ marginBlockEnd: '20px' }" theme="solid" type="tertiary">悬停显示</Button>
-            <template #content>hi bytedance</template>
+            <template #content>hi semi</template>
         </Tooltip>
         <br />
         <Tooltip trigger="click">
             <Button :style="{ marginBlockEnd: '20px' }">点击显示</Button>
-            <template #content>hi bytedance</template>
+            <template #content>hi semi</template>
         </Tooltip>
         <br />
         <Tooltip trigger="focus">
             <Input aria-label="聚焦显示" placeholder="聚焦显示" :style="{ width: '100px', marginBlockEnd: '20px' }" />
-            <template #content>hi bytedance</template>
+            <template #content>hi semi</template>
         </Tooltip>
         <br />
         <Tooltip trigger="contextMenu">
             <Button :style="{ marginBlockEnd: '20px' }" theme="solid" type="secondary">右键点击展示</Button>
-            <template #content>hi bytedance</template>
+            <template #content>hi semi</template>
         </Tooltip>
         <br />
         <Tooltip trigger="custom" :visible="visible === 1">
@@ -34,7 +34,7 @@
                     <Radio :value="0">受控隐藏</Radio>
                 </RadioGroup>
             </span>
-            <template #content>hi bytedance</template>
+            <template #content>hi semi</template>
         </Tooltip>
     </div>
 </template>

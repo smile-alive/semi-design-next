@@ -1,6 +1,7 @@
 <script lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Upload, type BeforeUploadObjectResult, type BeforeUploadProps } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     let count = 0;
 
@@ -28,7 +29,7 @@
     };
 </script>
 
-<Upload action="https://api.semi.design/upload" {beforeUpload}>
+<Upload action="/upload" {beforeUpload} customRequest={mockUpload}>
     <Button theme="light">
         {#snippet icon()}<IconUpload />{/snippet}
         点击上传（上传前异步校验）

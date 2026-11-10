@@ -3,13 +3,13 @@
 
     const show = () => {
         const id = Notification.open({
-            title: 'Hi, Bytedance',
+            title: 'Hi, Semi',
             content: 'ies dance dance dance',
             duration: 3,
         });
         setTimeout(() => {
             Notification.open({
-                title: 'Hi, Bytedance',
+                title: 'Hi, Semi',
                 content: 'updated',
                 duration: 10,
                 id,

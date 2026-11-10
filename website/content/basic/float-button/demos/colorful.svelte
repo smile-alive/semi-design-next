@@ -4,7 +4,7 @@
 </script>
 
 <span>多彩按钮：页面右下第一列</span>
-<FloatButton aria-label="访问 Semi 官网" colorful href="https://semi.design" rel="noopener noreferrer" style="inset-block-end: 110px; inset-inline-end: 150px" target="_blank">
+<FloatButton aria-label="访问 Semi 官网" colorful href="https://semi-design-next.pages.dev/" rel="noopener noreferrer" style="inset-block-end: 110px; inset-inline-end: 150px" target="_blank">
     {#snippet icon()}
         <IconAIEditLevel1 />
     {/snippet}

@@ -2,8 +2,8 @@
     import { Button, Notification } from '@fibrae/semi-ui-vue';
 
     const opts = {
-        title: 'Hi, Bytedance',
-        content: 'Hi, Bytedance dance dance',
+        title: 'Hi, Semi',
+        content: 'Hi, Semi dance dance',
         duration: 3,
         theme: 'light',
     } as const;

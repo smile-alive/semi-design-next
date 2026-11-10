@@ -1,10 +1,11 @@
 import { type Component, createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { AIChatInput } from '@fibrae/semi-ai-solid';
-import { IconBookOpenStroked, IconFeishuLogo, IconGit, IconFigma } from '@fibrae/semi-icons-solid';
+import { IconBookOpenStroked, IconGit, IconTemplateStroked, IconWord } from '@fibrae/semi-icons-solid';
 import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: '12px' };
 const modelOptions = [
     { value: 'GPT-5', label: 'GPT-5' },
@@ -19,15 +20,15 @@ const radioButtonProps = [
 ];
 
 const mcpOptions = [
-    { label: '飞书文档', value: 'feishu' },
+    { label: '办公文档', value: 'office' },
     { label: 'Github Mcp', value: 'github' },
-    { label: 'IconFigma Mcp', value: 'IconFigma' },
+    { label: 'Design Mcp', value: 'design' },
 ];
 
 const mcpIcons: Record<string, Component> = {
-    feishu: IconFeishuLogo,
+    office: IconWord,
     github: IconGit,
-    IconFigma,
+    design: IconTemplateStroked,
 };
 
 export default function AIChatInputDemo() {

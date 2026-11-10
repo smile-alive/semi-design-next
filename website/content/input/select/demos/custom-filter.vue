@@ -9,10 +9,10 @@
 </script>
 
 <template>
-    <Select aria-label="业务线" :filter="searchLabel" placeholder="try douyin" style="width: 180px">
-        <Select.Option value="douyin">douyin</Select.Option>
-        <Select.Option value="ulikecam">HOTSOON</Select.Option>
-        <Select.Option value="jianying">PIPIXIA</Select.Option>
-        <Select.Option value="xigua">XIGUA</Select.Option>
+    <Select aria-label="业务线" :filter="searchLabel" placeholder="try video" style="width: 180px">
+        <Select.Option value="video">video</Select.Option>
+        <Select.Option value="camera">LIVE</Select.Option>
+        <Select.Option value="editing">COMMUNITY</Select.Option>
+        <Select.Option value="movie">MOVIE</Select.Option>
     </Select>
 </template>

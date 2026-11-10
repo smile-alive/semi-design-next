@@ -6,11 +6,11 @@ function searchLabel(sugInput: string, option: SelectOptionProps) {
 
 export default function SelectDemo() {
     return (
-        <Select aria-label="业务线" filter={searchLabel} style={{ width: '180px' }} placeholder="try douyin">
-            <Select.Option value="douyin" label="douyin" />
-            <Select.Option value="ulikecam" label="HOTSOON" />
-            <Select.Option value="jianying" label="PIPIXIA" />
-            <Select.Option value="xigua" label="XIGUA" />
+        <Select aria-label="业务线" filter={searchLabel} style={{ width: '180px' }} placeholder="try video">
+            <Select.Option value="video" label="video" />
+            <Select.Option value="camera" label="LIVE" />
+            <Select.Option value="editing" label="COMMUNITY" />
+            <Select.Option value="movie" label="MOVIE" />
         </Select>
     );
 }

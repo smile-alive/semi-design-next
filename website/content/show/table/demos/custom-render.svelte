@@ -53,7 +53,7 @@
         },
         {
             key: '4',
-            name: 'Semi D2C 设计文档可能也有点长所以也会显示 Tooltip',
+            name: 'Semi 设计文档可能也有点长所以也会显示 Tooltip',
             nameIconSrc: '/assets/docs-icon.png',
             size: '34KB',
             status: 'success',

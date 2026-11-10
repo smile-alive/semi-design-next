@@ -1,7 +1,8 @@
 import { AIChatInput } from '@fibrae/semi-ai-react';
 import { IconUpload } from '@fibrae/semi-icons-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: 12 };
 
 export default function AIChatInputDemo() {

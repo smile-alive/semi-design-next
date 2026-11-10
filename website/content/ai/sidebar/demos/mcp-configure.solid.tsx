@@ -1,7 +1,7 @@
 import { type Component, type JSX, Show, createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { MCPConfigure, type MCPConfigureOption as MCPOption } from '@fibrae/semi-ai-solid';
-import { IconFigma, IconSemiLogo } from '@fibrae/semi-icons-solid';
+import { IconSemiLogo, IconTemplateStroked } from '@fibrae/semi-icons-solid';
 import { Button, Form, FormInput, FormTextArea, Modal, type FormHandle } from '@fibrae/semi-ui-solid';
 
 interface McpFormValues {
@@ -13,7 +13,7 @@ interface McpFormValues {
 // icon only takes an image URL, so the built-in options get their icons from renderIcon
 const builtinIcons: Record<string, Component> = {
     'Semi mcp': IconSemiLogo,
-    figma: IconFigma,
+    design: IconTemplateStroked,
 };
 
 const imageStyle: JSX.CSSProperties = { width: '100%', height: '100%' };
@@ -26,9 +26,9 @@ const defaultOptions: MCPOption[] = [
         desc: '支持 Semi 的文档、源码搜索，辅助开发',
     },
     {
-        value: 'figma',
-        label: 'Figma',
-        desc: 'Figma MCP Server 连接Figma与AI开发工具的功能。它通过标准化的模型上下文协MCP），将组件、变量等设计数据和上下文暴露给AI，从而实现从设计稿到代码的智能生成，显著提升开发效率。',
+        value: 'design',
+        label: 'Design',
+        desc: 'Design MCP Server 连接设计工具与AI开发工具的功能。它通过标准化的模型上下文协MCP），将组件、变量等设计数据和上下文暴露给AI，从而实现从设计稿到代码的智能生成，显著提升开发效率。',
     },
 ];
 

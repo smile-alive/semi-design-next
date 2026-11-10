@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { AIChatInput, type AIChatInputContent as Content } from '@fibrae/semi-ai-react';
 import type { UploadOnChangeProps as OnChangeProps } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: 12 };
 
 export default function AIChatInputDemo() {

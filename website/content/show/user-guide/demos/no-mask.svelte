@@ -6,7 +6,7 @@
         {
             target: () => document.querySelector('#mask-demo'),
             title: 'No Mask',
-            description: 'Hello ByteDancer!',
+            description: 'Hello Semi!',
         },
     ];
 </script>

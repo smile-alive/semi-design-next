@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { IconUpload } from '@fibrae/semi-icons-react';
 import { Upload, Button, type BeforeUploadProps, type BeforeUploadObjectResult } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 export default function UploadDemo() {
     const countRef = useRef(0);
@@ -28,7 +29,7 @@ export default function UploadDemo() {
     };
 
     return (
-        <Upload action="https://api.semi.design/upload" beforeUpload={beforeUpload}>
+        <Upload action="/upload" customRequest={mockUpload} beforeUpload={beforeUpload}>
             <Button icon={<IconUpload />} theme="light">
                 点击上传（上传前异步校验）
             </Button>

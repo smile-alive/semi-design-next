@@ -1,9 +1,11 @@
 import { createSignal } from 'solid-js';
 import { AIChatInput, type AIChatInputContent as Content, type AIChatInputReference as Reference } from '@fibrae/semi-ai-solid';
 import type { UploadOnChangeProps as OnChangeProps, UploadProps } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 const uploadProps: UploadProps = {
-    action: 'https://api.semi.design/upload',
+    action: '/upload',
+    customRequest: mockUpload,
     defaultFileList: [
         {
             uid: '1',

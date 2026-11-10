@@ -17,7 +17,7 @@ export default function BannerDemo() {
         <>
             <Layout className="components-layout-demo banner-basic">
                 <Layout.Header style={commonStyle}>Header</Layout.Header>
-                {visible && <Banner onClose={changeVisible} description="Semi D2C 现已支持 Figma DevMode, 安装插件，随时查阅图层对应的前端代码" />}
+                {visible && <Banner onClose={changeVisible} description="一套组件，四个框架原生可用，随时查阅对应的前端代码" />}
                 <Layout.Content style={{ height: 300, lineHeight: '300px' }}>Content</Layout.Content>
                 <Layout.Footer style={commonStyle}>Footer</Layout.Footer>
             </Layout>

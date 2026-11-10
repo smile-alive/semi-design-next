@@ -1,7 +1,7 @@
 import { Notification, Button } from '@fibrae/semi-ui-react';
 
 const opts = {
-    content: 'Hi, Bytedance dance dance',
+    content: 'Hi, Semi dance dance',
     duration: 10,
 };
 

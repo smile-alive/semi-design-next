@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type UploadOnChangeProps } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const limit = 1;
     const onChange = (props: UploadOnChangeProps) => {
@@ -9,7 +10,7 @@
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :limit="limit" @change="onChange">
+    <Upload action="/upload" :customRequest="mockUpload" :limit="limit" @change="onChange">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

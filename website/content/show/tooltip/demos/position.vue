@@ -30,8 +30,8 @@
                 <Tag :style="{ margin: '8px', padding: '20px' }">{{ label }}</Tag>
                 <template #content>
                     <article>
-                        <p>hi bytedance</p>
-                        <p>hi bytedance</p>
+                        <p>hi semi</p>
+                        <p>hi semi</p>
                     </article>
                 </template>
             </Tooltip>
@@ -41,8 +41,8 @@
                 <Tag :style="{ margin: '8px', padding: '20px', width: '60px' }">{{ label }}</Tag>
                 <template #content>
                     <article>
-                        <p>hi bytedance</p>
-                        <p>hi bytedance</p>
+                        <p>hi semi</p>
+                        <p>hi semi</p>
                     </article>
                 </template>
             </Tooltip>
@@ -52,8 +52,8 @@
                 <Tag :style="{ margin: '8px', padding: '20px', width: '60px' }">{{ label }}</Tag>
                 <template #content>
                     <article>
-                        <p>hi bytedance</p>
-                        <p>hi bytedance</p>
+                        <p>hi semi</p>
+                        <p>hi semi</p>
                     </article>
                 </template>
             </Tooltip>
@@ -63,8 +63,8 @@
                 <Tag :style="{ margin: '8px', padding: '20px', width: '60px' }">{{ label }}</Tag>
                 <template #content>
                     <article>
-                        <p>hi bytedance</p>
-                        <p>hi bytedance</p>
+                        <p>hi semi</p>
+                        <p>hi semi</p>
                     </article>
                 </template>
             </Tooltip>

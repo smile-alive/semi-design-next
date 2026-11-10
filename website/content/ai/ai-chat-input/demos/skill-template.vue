@@ -2,13 +2,14 @@
     import { ref, useTemplateRef } from 'vue';
     import { AIChatInput, type AIChatInputHandle } from '@fibrae/semi-ai-vue';
     import { IconTemplateStroked, IconSearch } from '@fibrae/semi-icons-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const modelOptions = [
         { value: 'GPT-5', label: 'GPT-5' },
         { value: 'GPT-4o', label: 'GPT-4o' },
         { value: 'Claude 3.5 Sonnet', label: 'Claude 3.5 Sonnet' },
     ];
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
     const skills = [
         {
             value: 'writing',

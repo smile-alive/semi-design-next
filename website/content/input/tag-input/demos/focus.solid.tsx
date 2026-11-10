@@ -5,7 +5,7 @@ export default function TagInputDemo() {
 
     return (
         <>
-            <TagInput defaultValue={['抖音', '火山']} ref={(node) => (tagInput = node)} />
+            <TagInput defaultValue={['短视频', '直播']} ref={(node) => (tagInput = node)} />
             <Button style={{ 'margin-block-start': '10px' }} onClick={() => tagInput?.focus()}>
                 点击按钮聚焦
             </Button>

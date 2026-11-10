@@ -1,6 +1,6 @@
 <script lang="ts">
     import { MCPConfigure, type MCPConfigureOption } from '@fibrae/semi-ai-svelte';
-    import { IconFigma, IconSemiLogo } from '@fibrae/semi-icons-svelte';
+    import { IconSemiLogo, IconTemplateStroked } from '@fibrae/semi-icons-svelte';
     import { Button, Form, FormInput, FormTextArea, Modal, type FormApi } from '@fibrae/semi-ui-svelte';
 
     interface McpFormValues {
@@ -12,9 +12,9 @@
     const containerStyle = 'display: flex; height: 500px; border: 1px solid var(--semi-color-border); border-radius: 8px; overflow: hidden; box-sizing: border-box';
 
     // icon only takes an image URL, so the built-in options get their icons from the icon snippet
-    const builtinIcons: Record<string, typeof IconFigma> = {
+    const builtinIcons: Record<string, typeof IconTemplateStroked> = {
         'Semi mcp': IconSemiLogo,
-        figma: IconFigma,
+        design: IconTemplateStroked,
     };
 
     const srcRules = [
@@ -36,9 +36,9 @@
             desc: '支持 Semi 的文档、源码搜索，辅助开发',
         },
         {
-            value: 'figma',
-            label: 'Figma',
-            desc: 'Figma MCP Server 连接Figma与AI开发工具的功能。它通过标准化的模型上下文协MCP），将组件、变量等设计数据和上下文暴露给AI，从而实现从设计稿到代码的智能生成，显著提升开发效率。',
+            value: 'design',
+            label: 'Design',
+            desc: 'Design MCP Server 连接设计工具与AI开发工具的功能。它通过标准化的模型上下文协MCP），将组件、变量等设计数据和上下文暴露给AI，从而实现从设计稿到代码的智能生成，显著提升开发效率。',
         },
     ]);
     let customOptions = $state.raw<MCPConfigureOption[]>([]);

@@ -3,11 +3,11 @@
     import { Select } from '@fibrae/semi-ui-vue';
 
     const optionList = [
-        { value: 'douyin', label: '抖音' },
-        { value: 'jianying', label: '剪映' },
+        { value: 'video', label: '短视频' },
+        { value: 'editing', label: '剪辑' },
     ];
 
-    const value = ref<string | undefined>('douyin');
+    const value = ref<string | undefined>('video');
 </script>
 
 <template>

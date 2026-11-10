@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { IconEyeOpened, IconPlus } from '@fibrae/semi-icons-vue';
     import { Upload, type FileItem } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const defaultFileList: FileItem[] = [
         {
@@ -19,7 +20,7 @@
 </script>
 
 <template>
-    <Upload accept="image/*" action="https://api.semi.design/upload" :defaultFileList="defaultFileList" listType="picture" multiple showPicInfo @previewClick="handlePreview">
+    <Upload accept="image/*" action="/upload" :customRequest="mockUpload" :defaultFileList="defaultFileList" listType="picture" multiple showPicInfo @previewClick="handlePreview">
         <template #picPreviewIcon>
             <IconEyeOpened style="color: var(--semi-color-white); font-size: 24px" />
         </template>

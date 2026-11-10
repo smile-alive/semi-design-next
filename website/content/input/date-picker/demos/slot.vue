@@ -32,7 +32,7 @@
                 <Space :style="{ padding: '12px 20px' }">
                     <IconBulb :style="{ color: 'var(--semi-amber-5)' }" />
                     <Typography.Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Typography.Text>
-                    <Typography.Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Typography.Text>
+                    <Typography.Text :link="{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }">发版须知</Typography.Text>
                 </Space>
             </template>
         </DatePicker>
@@ -43,7 +43,7 @@
                 <Space :style="{ padding: '12px 20px' }">
                     <IconBulb :style="{ color: 'var(--semi-amber-5)' }" />
                     <Typography.Text strong :style="{ color: 'var(--semi-color-text-2)' }">请阅读</Typography.Text>
-                    <Typography.Text :link="{ href: 'https://semi.design/', target: '_blank' }">须知</Typography.Text>
+                    <Typography.Text :link="{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }">须知</Typography.Text>
                 </Space>
             </template>
         </DatePicker>
@@ -64,7 +64,7 @@
                 <Space :style="{ padding: '8px 12px' }">
                     <IconBulb :style="{ color: 'var(--semi-amber-5)' }" />
                     <Typography.Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Typography.Text>
-                    <Typography.Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Typography.Text>
+                    <Typography.Text :link="{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }">发版须知</Typography.Text>
                 </Space>
             </template>
         </DatePicker>
@@ -75,7 +75,7 @@
                 <Space :style="{ padding: '12px 20px' }">
                     <IconBulb :style="{ color: 'var(--semi-amber-5)' }" />
                     <Typography.Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Typography.Text>
-                    <Typography.Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Typography.Text>
+                    <Typography.Text :link="{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }">发版须知</Typography.Text>
                 </Space>
             </template>
         </DatePicker>

@@ -140,7 +140,7 @@ import { Tree } from '@fibrae/semi-ui-solid';
 
 `TreeNodeData` 的 label 属性支持传入 ReactNode 来自定义显示的节点内容。注意如果设置 `filterTreeNode` 开启搜索，默认是对 label 的值进行搜索，当 label 为节点时，需要自定义 `filterTreeNode` 的函数来满足搜索需求。
 
-在**v>=1.6.0**的版本中，你也可以使用 `renderLabel` 来传入自定义的渲染方法，此时搜索值仍为treeData中的相应的label属性。
+你也可以使用 `renderLabel` 来传入自定义的渲染方法，此时搜索值仍为treeData中的相应的label属性。
 
 节点内容最好只用于展示。节点里的按钮、链接虽然可以用 Tab 到达（见 [Accessibility](#accessibility)），但读屏软件会把它们当作节点名称的一部分，方向键浏览时也不会经过它们。需要对节点执行的操作请放在树外，例如 `onContextMenu` 打开的菜单或树旁的工具栏。
 
@@ -174,7 +174,7 @@ import { Tree } from '@fibrae/semi-ui-solid';
 
 <Framework only="react">
 
-过长省略。在**v>=1.6.0**的版本中，可以使用 `renderLabel` 来实现文本过长省略的效果。
+过长省略。可以使用 `renderLabel` 来实现文本过长省略的效果。
 
 </Framework>
 
@@ -240,8 +240,6 @@ import { Tree } from '@fibrae/semi-ui-solid';
 
 ### 节点选中关系
 
-版本：>= 2.5.0
-
 多选时，可以使用 `checkRelation` 来设置节点选中关系的类型，可选：'related'（默认）、'unRelated'。当选中关系为 'unRelated'，意味着节点之间的选中互不影响。
 
 <Demo id="checked-relation" />
@@ -249,8 +247,6 @@ import { Tree } from '@fibrae/semi-ui-solid';
 ### 默认展开
 
 `defaultExpandAll` 和 `expandAll` 均可以设置 `Tree` 的默认展开/收起状态。二者的区别是，`defaultExpandAll` 只在初始化时生效，而 `expandAll` 不仅会在初始化时生效，当数据(`treeData`/`treeDataSimpleJson`)发生动态更新时，`expandAll` 也仍然生效。
-
-其中，`expandAll` 是从 1.30.0 开始支持的。
 
 在下面的 demo 中，点击按钮更新 `TreeData` 后，`defaultExpandAll` 失效，`expandAll` 仍然生效。
 
@@ -260,7 +256,7 @@ import { Tree } from '@fibrae/semi-ui-solid';
 
 <Framework only="react">
 
-传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys`（version: >= 2.38.0） 来实现展开受控时的搜索展开效果。
+传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys` 来实现展开受控时的搜索展开效果。
 
 </Framework>
 
@@ -322,7 +318,7 @@ import { Tree } from '@fibrae/semi-ui-solid';
 
 <Framework only="react">
 
-可以通过 `expandIcon` 自定义展开 Icon。 支持传入 ReactNode 或者函数。`expandIcon` 自 2.75.0 开始支持。
+可以通过 `expandIcon` 自定义展开 Icon。 支持传入 ReactNode 或者函数。
 
 ```ts
 expandIcon: ReactNode | ((props: {
@@ -389,7 +385,7 @@ expandIcon: JSX.Element | ((props: { onClick: (e: MouseEvent) => void; class: st
 
 ### 连接线
 
-通过 `showLine` 设置节点之间的连接线，默认为 false，从 2.50.0 开始支持
+通过 `showLine` 设置节点之间的连接线，默认为 false。
 
 <Demo id="line" />
 
@@ -461,7 +457,7 @@ expandIcon: JSX.Element | ((props: { onClick: (e: MouseEvent) => void; class: st
 
 </Framework>
 
-<Notice title="注意">拖拽功能于 v 1.8.0 后开始提供。目前不支持与虚拟化同时使用</Notice>
+<Notice title="注意">目前不支持与虚拟化同时使用</Notice>
 
 <Framework only="react">
 
@@ -581,8 +577,6 @@ interface TreeDragNode extends TreeNodeData {
 <Demo id="draggable" />
 
 ### 高级定制
-
-**版本 v>=1.7.0**
 
 <Framework only="react">
 
@@ -863,7 +857,7 @@ Tree 自己提供带 `id`、`role="treeitem"` 和行状态的行元素（`li`）
 
 <Framework only="react">
 
-我们从 1.27.0 版本开始支持可拖拽（`draggable`）和高级定制（`renderFullLabel`）同时使用，在该版本之前，并不支持二者同时使用。
+可拖拽（`draggable`）和高级定制（`renderFullLabel`）可以同时使用。
 
 </Framework>
 

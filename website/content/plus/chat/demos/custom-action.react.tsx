@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Chat, type ChatMessage as Message, type ChatRenderActionProps as RenderActionProps } from '@fibrae/semi-ai-react';
 import { IconForward, IconMoreStroked } from '@fibrae/semi-icons-react';
 import { Dropdown, Button } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 const defaultMessage: Message[] = [
     {
@@ -20,7 +21,7 @@ const defaultMessage: Message[] = [
         role: 'assistant',
         id: '3',
         createAt: 1715676751919,
-        content: 'Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统',
+        content: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用',
     },
 ];
 
@@ -49,7 +50,7 @@ let id = 0;
 function getId() {
     return `id-${id++}`;
 }
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 
 const CustomActions = React.memo(({ defaultActions, className }: RenderActionProps) => {
     return (

@@ -1,7 +1,7 @@
 import { Toast, Button } from '@fibrae/semi-ui-react';
 
 const opts = {
-    content: 'Hi, Bytedance dance dance',
+    content: 'Hi, Semi dance dance',
     duration: 3,
     theme: 'light',
 } as const;

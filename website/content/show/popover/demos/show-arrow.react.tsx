@@ -30,7 +30,7 @@ export default function PopoverDemo() {
                         showArrow
                         content={
                             <article>
-                                Hi ByteDancer, this is a popover.
+                                Hi Semi, this is a popover.
                                 <br /> We have 2 lines.
                             </article>
                         }
@@ -47,7 +47,7 @@ export default function PopoverDemo() {
                         showArrow
                         content={
                             <article>
-                                Hi ByteDancer, this is a popover.
+                                Hi Semi, this is a popover.
                                 <br /> We have 2 lines.
                             </article>
                         }
@@ -64,7 +64,7 @@ export default function PopoverDemo() {
                         showArrow
                         content={
                             <article>
-                                Hi ByteDancer, this is a popover.
+                                Hi Semi, this is a popover.
                                 <br /> We have 2 lines.
                             </article>
                         }
@@ -81,7 +81,7 @@ export default function PopoverDemo() {
                         showArrow
                         content={
                             <article>
-                                Hi ByteDancer, this is a popover.
+                                Hi Semi, this is a popover.
                                 <br /> We have 2 lines.
                             </article>
                         }

@@ -9,7 +9,7 @@
     const businessOptions = [
         { label: 'Semi', value: 'abc' },
         { label: '轻颜相机', value: 'ulikeCam' },
-        { label: '今日头条', value: 'toutiao' },
+        { label: '资讯', value: 'news' },
     ];
     const roleOptions = [
         { label: '运营', value: 'operate' },

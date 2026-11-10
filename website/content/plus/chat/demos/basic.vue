@@ -2,6 +2,7 @@
     import { ref } from 'vue';
     import { Chat, type ChatMessage, type ChatProps } from '@fibrae/semi-ai-vue';
     import { Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const roleInfo = {
         user: {
@@ -25,7 +26,7 @@
         height: '550px',
     };
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     let id = 0;
     const getId = () => `id-${id++}`;

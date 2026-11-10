@@ -23,7 +23,7 @@
     <Space style={`padding: ${padding}`}>
         <IconBulb style="color: var(--semi-amber-5)" />
         <Typography.Text strong style="color: var(--semi-color-text-2)">{text}</Typography.Text>
-        <Typography.Text link={{ href: 'https://semi.design/', target: '_blank' }}>{linkText}</Typography.Text>
+        <Typography.Text link={{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }}>{linkText}</Typography.Text>
     </Space>
 {/snippet}
 

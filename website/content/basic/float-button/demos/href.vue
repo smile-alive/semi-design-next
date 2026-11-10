@@ -5,7 +5,7 @@
 
 <template>
     <span>点击跳转：页面右下第三列 4</span>
-    <FloatButton aria-label="访问 Semi 官网" href="https://semi.design" rel="noopener noreferrer" style="inset-block-end: 100px" target="_blank">
+    <FloatButton aria-label="访问 Semi 官网" href="https://semi-design-next.pages.dev/" rel="noopener noreferrer" style="inset-block-end: 100px" target="_blank">
         <template #icon>
             <IconAIEditLevel1 />
         </template>

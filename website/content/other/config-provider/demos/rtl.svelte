@@ -43,16 +43,16 @@
     const tagStyle = 'margin-inline-end: 8px; margin-block-end: 8px';
     const buttonStyle = tagStyle;
     const opts = () => ({
-        title: 'Hi,Bytedance',
-        content: 'ies dance dance dance',
+        title: 'Hi,semi',
+        content: 'Semi Design Next',
         duration: 3,
         direction,
     });
     const optionList = [
-        { value: 'abc', label: '抖音' },
-        { value: 'hotsoon', label: '火山' },
-        { value: 'pipixia', label: '皮皮虾', disabled: true },
-        { value: 'xigua', label: '西瓜视频' },
+        { value: 'video', label: '短视频' },
+        { value: 'live', label: '直播' },
+        { value: 'community', label: '社区', disabled: true },
+        { value: 'movie', label: '长视频' },
     ];
     const treeData = [
         {

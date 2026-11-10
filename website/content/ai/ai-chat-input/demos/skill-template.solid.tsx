@@ -1,13 +1,14 @@
 import { For, createSignal } from 'solid-js';
 import { AIChatInput, type AIChatInputElement, type AIChatInputSkill as Skill } from '@fibrae/semi-ai-solid';
 import { IconTemplateStroked, IconSearch } from '@fibrae/semi-icons-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 const modelOptions = [
     { value: 'GPT-5', label: 'GPT-5' },
     { value: 'GPT-4o', label: 'GPT-4o' },
     { value: 'Claude 3.5 Sonnet', label: 'Claude 3.5 Sonnet' },
 ];
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: '12px' };
 
 const skills: Skill[] = [

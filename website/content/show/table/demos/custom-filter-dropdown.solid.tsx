@@ -22,7 +22,7 @@ function getData() {
         const randomNumber = (i * 1000) % 199;
         data.push({
             key: '' + i,
-            name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 首页${i}.fig`,
+            name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi 首页${i}.fig`,
             owner: isSemiDesign ? '姜鹏志' : '郝宣',
             size: randomNumber,
             status: isSemiDesign ? 'success' : 'wait',

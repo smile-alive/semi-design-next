@@ -1,14 +1,14 @@
 <script lang="ts">
     import { Select, TagInput, type SelectValue } from '@fibrae/semi-ui-svelte';
 
-    let valList = $state<SelectValue>(['douyin', 'ulikecam']);
+    let valList = $state<SelectValue>(['video', 'camera']);
     let inputVal = $state('');
 
     const list = [
-        { value: 'douyin', label: '抖音' },
-        { value: 'ulikecam', label: '轻颜相机' },
-        { value: 'jianying', label: '剪映' },
-        { value: 'toutiao', label: '今日头条' },
+        { value: 'video', label: '短视频' },
+        { value: 'camera', label: '相机' },
+        { value: 'editing', label: '剪辑' },
+        { value: 'news', label: '资讯' },
     ];
 
     const handleSort = (currentLabels: string[]) => {

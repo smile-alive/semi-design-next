@@ -16,7 +16,7 @@ const slides = [
     {
         src: '/assets/carousel/bg-3.png',
         title: 'Semi 设计/代码模板',
-        lines: ['高效的 Design2Code 设计稿转代码', '海量 Figma 设计模板一键转为真实前端代码'],
+        lines: ['一套组件，四个框架原生可用', '在 React、Vue、Solid、Svelte 中共用同一套设计'],
     },
 ];
 

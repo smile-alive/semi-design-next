@@ -29,7 +29,7 @@ export default function FloatButtonDemo() {
                         icon: <IconHelpCircleStroked />,
                         content: '帮助',
                         value: 'help',
-                        href: 'https://semi.design',
+                        href: 'https://semi-design-next.pages.dev/',
                         target: '_blank',
                     },
                 ]}

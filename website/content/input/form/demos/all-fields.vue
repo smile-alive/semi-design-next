@@ -26,6 +26,7 @@
         Row,
         Space,
     } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const today = new Date(2024, 4, 6, 10, 30, 0);
 
@@ -55,7 +56,7 @@
             },
             {
                 uid: '3',
-                name: 'douyin.jpeg',
+                name: 'video.jpeg',
                 status: 'uploading',
                 size: '222KB',
                 percent: 50,
@@ -135,7 +136,7 @@
                         </template>
                         <FormSelect.Option value="abc">Semi</FormSelect.Option>
                         <FormSelect.Option value="ulikeCam">轻颜相机</FormSelect.Option>
-                        <FormSelect.Option value="toutiao">今日头条</FormSelect.Option>
+                        <FormSelect.Option value="news">资讯</FormSelect.Option>
                     </FormSelect>
                 </Col>
             </Row>
@@ -154,7 +155,7 @@
             </Row>
             <Row>
                 <Col :span="24">
-                    <FormUpload action="//semi.design/api/upload" field="files" label="证明文件（Upload）">
+                    <FormUpload action="/upload" :customRequest="mockUpload" field="files" label="证明文件（Upload）">
                         <Button theme="light">
                             <template #icon>
                                 <IconUpload />

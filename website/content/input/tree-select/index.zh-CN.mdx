@@ -93,7 +93,7 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 ### 限制标签展示数量
 
 在多选的场景中，利用 `maxTagCount` 可以限制展示的标签数量，超出部分将以 +N 的方式展示。  
-使用 `showRestTagsPopover` (>= v2.22.0) 可以设置在超出 `maxTagCount` 后，hover +N 是否显示 Popover，默认为 `false`。并且，还可以在 `restTagsPopoverProps` 属性中配置 Popover。
+使用 `showRestTagsPopover` 可以设置在超出 `maxTagCount` 后，hover +N 是否显示 Popover，默认为 `false`。并且，还可以在 `restTagsPopoverProps` 属性中配置 Popover。
 
 <Demo id="max-tag-count" />
 
@@ -232,8 +232,6 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 
 ### 节点选中关系
 
-版本：>= 2.5.0
-
 多选时，可以使用 `checkRelation` 来设置节点之间选中关系的类型，可选：'related'（默认）、'unRelated'。当选中关系为 'unRelated' 时，意味着节点之间的选中互不影响。
 
 <Demo id="check-relation" />
@@ -242,7 +240,7 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 
 <Framework only="react">
 
-传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys`（version: >= 2.6.0） 来实现展开受控时的搜索展开效果。
+传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys` 来实现展开受控时的搜索展开效果。
 
 </Framework>
 
@@ -335,16 +333,13 @@ interface TriggerRenderProps {
     inputValue: string;             // 当前 input 框的输入值
     onClear: e => void;             // 用于清空值的函数
     placeholder: string;            // placeholder
-    /* 删除单个 item 时调用的函数，以 item 的 key 作为入参，
-     * 从 v2.32.0 版本开始支持
-    */
+    /* 删除单个 item 时调用的函数，以 item 的 key 作为入参 */
     onRemove: key => void;
     /**
      * 用于在 Input 框值更新时候启动搜索，当你在 triggerRender 自定义的
      * Input 组件值更新时，你应该调用该函数，用于向 TreeSelect 内部
      * 同步状态, 使用同时需要设置 filterTreeNode 参数非 false,
      * searchPosition 为 'trigger'
-     * 从 v2.32.0 版本开始支持
     */
     onSearch: inputValue => void;
 }

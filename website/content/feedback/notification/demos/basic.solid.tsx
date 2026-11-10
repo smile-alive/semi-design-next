@@ -5,7 +5,7 @@ export default function NotificationDemo() {
         <Button
             onClick={() =>
                 Notification.open({
-                    title: 'Hi, Bytedance',
+                    title: 'Hi, Semi',
                     content: 'ies dance dance dance',
                     duration: 3,
                 })

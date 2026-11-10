@@ -3,29 +3,29 @@ import { Select } from '@fibrae/semi-ui-solid';
 export default function SelectDemo() {
     return (
         <>
-            <Select aria-label="业务线" defaultValue="douyin" style={{ width: '120px' }}>
-                <Select.Option value="douyin">抖音</Select.Option>
-                <Select.Option value="ulikecam">轻颜相机</Select.Option>
-                <Select.Option value="jianying" disabled>
-                    剪映
+            <Select aria-label="业务线" defaultValue="video" style={{ width: '120px' }}>
+                <Select.Option value="video">短视频</Select.Option>
+                <Select.Option value="camera">相机</Select.Option>
+                <Select.Option value="editing" disabled>
+                    剪辑
                 </Select.Option>
-                <Select.Option value="xigua">西瓜视频</Select.Option>
+                <Select.Option value="movie">长视频</Select.Option>
             </Select>
             <br />
             <br />
-            <Select aria-label="业务线" defaultValue="douyin" disabled style={{ width: '120px' }}>
-                <Select.Option value="douyin">抖音</Select.Option>
-                <Select.Option value="ulikecam">轻颜相机</Select.Option>
+            <Select aria-label="业务线" defaultValue="video" disabled style={{ width: '120px' }}>
+                <Select.Option value="video">短视频</Select.Option>
+                <Select.Option value="camera">相机</Select.Option>
             </Select>
             <br />
             <br />
             <Select aria-label="业务线" placeholder="请选择业务线" style={{ width: '120px' }}>
-                <Select.Option value="douyin">抖音</Select.Option>
-                <Select.Option value="ulikecam">轻颜相机</Select.Option>
-                <Select.Option value="jianying" disabled>
-                    剪映
+                <Select.Option value="video">短视频</Select.Option>
+                <Select.Option value="camera">相机</Select.Option>
+                <Select.Option value="editing" disabled>
+                    剪辑
                 </Select.Option>
-                <Select.Option value="xigua">西瓜视频</Select.Option>
+                <Select.Option value="movie">长视频</Select.Option>
             </Select>
         </>
     );

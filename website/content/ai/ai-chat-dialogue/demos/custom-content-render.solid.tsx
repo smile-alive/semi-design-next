@@ -54,14 +54,14 @@ const defaultMessages: Message[] = [
                 ],
                 annotations: [
                     {
-                        title: 'semi.design',
-                        url: 'https://semi.design/',
+                        title: 'semi-design-next.pages.dev',
+                        url: 'https://semi-design-next.pages.dev/',
                         detail: 'semi design page',
                         logo: '/assets/placeholder/logo.svg',
                     },
                     {
-                        title: 'semi.design',
-                        url: 'https://semi.design/',
+                        title: 'semi-design-next.pages.dev',
+                        url: 'https://semi-design-next.pages.dev/',
                         detail: 'semi design page',
                         logo: '/assets/placeholder/logo.svg',
                     },

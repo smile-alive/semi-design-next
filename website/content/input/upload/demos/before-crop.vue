@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type UploadProps } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     // Declared here, not inline: Vue templates cannot reach `window`
     const beforeCrop: UploadProps['beforeCrop'] = (file, fileList) => {
@@ -11,7 +12,7 @@
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :beforeCrop="beforeCrop" :crop="{ aspectRatio: 1, shape: 'round' }" @cropError="(error) => console.error('裁切失败:', error)" @success="(response, file) => console.log('上传成功:', response, file)">
+    <Upload action="/upload" :beforeCrop="beforeCrop" :crop="{ aspectRatio: 1, shape: 'round' }" :customRequest="mockUpload" @cropError="(error) => console.error('裁切失败:', error)" @success="(response, file) => console.log('上传成功:', response, file)">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

@@ -11,8 +11,8 @@
                     value: 'Semi-Material',
                 },
                 {
-                    label: 'Semi-DSM Semi-DSM Semi-DSM Semi-DSM',
-                    value: 'Semi-DSM',
+                    label: 'Semi-Theme Semi-Theme Semi-Theme Semi-Theme',
+                    value: 'Semi-Theme',
                 },
                 {
                     label: 'Semi Design Semi Design Semi Design Semi Design',
@@ -23,8 +23,8 @@
                     value: 'Semi-C2D',
                 },
                 {
-                    label: 'Semi-D2C Semi-D2C Semi-D2C Semi-D2C Semi-D2C ',
-                    value: 'Semi-D2C',
+                    label: 'Semi-Icons Semi-Icons Semi-Icons Semi-Icons Semi-Icons ',
+                    value: 'Semi-Icons',
                 },
             ],
         },

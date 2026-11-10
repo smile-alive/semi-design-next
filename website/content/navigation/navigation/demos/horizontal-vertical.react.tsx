@@ -1,4 +1,4 @@
-import { IconSemiLogo, IconBytedanceLogo } from '@fibrae/semi-icons-react';
+import { IconSemiLogo } from '@fibrae/semi-icons-react';
 import { IconTreeSelect, IconBreadcrumb, IconBadge, IconSteps } from '@fibrae/semi-icons-react/lab';
 import { Nav, Avatar, Dropdown, Layout, Breadcrumb, Skeleton } from '@fibrae/semi-ui-react';
 
@@ -47,9 +47,9 @@ function TopHeader() {
                             }
                         >
                             <Avatar size="small" color="light-blue" style={{ margin: 4 }}>
-                                BD
+                                SD
                             </Avatar>
-                            <span>Bytedancer</span>
+                            <span>Semi</span>
                         </Dropdown>
                     }
                 />
@@ -80,8 +80,8 @@ function FooterContent() {
                     alignItems: 'center',
                 }}
             >
-                <IconBytedanceLogo size="large" style={{ marginInlineEnd: '8px' }} />
-                <span>Copyright © {currentYear} ByteDance. All Rights Reserved. </span>
+                <IconSemiLogo size="large" style={{ marginInlineEnd: '8px' }} />
+                <span>Copyright © {currentYear} Semi Design Next. All Rights Reserved. </span>
             </span>
             <span>
                 <span style={{ marginInlineEnd: '24px' }}>平台客服</span>
@@ -120,8 +120,8 @@ export default function NavigationDemo() {
                         }}
                     >
                         <Skeleton placeholder={<Skeleton.Paragraph rows={2} />} loading>
-                            <p>Hi, Bytedance dance dance.</p>
-                            <p>Hi, Bytedance dance dance.</p>
+                            <p>Hi, Semi dance dance.</p>
+                            <p>Hi, Semi dance dance.</p>
                         </Skeleton>
                     </div>
                 </Layout.Content>

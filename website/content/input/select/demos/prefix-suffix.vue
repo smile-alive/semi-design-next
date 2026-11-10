@@ -4,27 +4,27 @@
 </script>
 
 <template>
-    <Select aria-label="Select 示例" defaultValue="ulikecam" showClear style="width: 320px">
+    <Select aria-label="Select 示例" defaultValue="camera" showClear style="width: 320px">
         <template #prefix>
             <IconVigoLogo />
         </template>
-        <Select.Option value="douyin">抖音</Select.Option>
-        <Select.Option value="ulikecam">轻颜相机</Select.Option>
-        <Select.Option value="jianying">剪映</Select.Option>
-        <Select.Option value="xigua">西瓜视频</Select.Option>
+        <Select.Option value="video">短视频</Select.Option>
+        <Select.Option value="camera">相机</Select.Option>
+        <Select.Option value="editing">剪辑</Select.Option>
+        <Select.Option value="movie">长视频</Select.Option>
     </Select>
     <br />
     <br />
-    <Select aria-label="Select 示例" defaultValue="ulikecam" :showArrow="false" style="width: 320px">
+    <Select aria-label="Select 示例" defaultValue="camera" :showArrow="false" style="width: 320px">
         <template #prefix>
             <IconVigoLogo />
         </template>
         <template #suffix>
             <IconGift />
         </template>
-        <Select.Option value="douyin">抖音</Select.Option>
-        <Select.Option value="ulikecam">轻颜相机</Select.Option>
-        <Select.Option value="jianying">剪映</Select.Option>
-        <Select.Option value="xigua">西瓜视频</Select.Option>
+        <Select.Option value="video">短视频</Select.Option>
+        <Select.Option value="camera">相机</Select.Option>
+        <Select.Option value="editing">剪辑</Select.Option>
+        <Select.Option value="movie">长视频</Select.Option>
     </Select>
 </template>

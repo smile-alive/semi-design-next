@@ -2,6 +2,7 @@ import { type JSX, createSignal } from 'solid-js';
 import { Chat, type ChatMessage as Message, type ChatRenderInputAreaProps as RenderInputAreaProps } from '@fibrae/semi-ai-solid';
 import { IconUpload } from '@fibrae/semi-icons-solid';
 import { Button, Form, type FileItem, type FormApi, FormInput, FormUpload } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 interface InputValues {
     name?: string;
@@ -42,7 +43,7 @@ let id = 0;
 function getId() {
     return `id-${id++}`;
 }
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 
 const inputStyle: JSX.CSSProperties = {
     display: 'flex',

@@ -4,7 +4,7 @@
 
     const visible = ref(false);
     const steps: UserGuideStepItem[] = [
-        { title: '欢迎使用 Semi DSM!', position: 'bottom' },
+        { title: '欢迎使用 Semi Design Next!', position: 'bottom' },
         {
             title: '高可用的色盘',
             description: '选取主色后，我们的颜色算法会为你生成一套高可用的色盘',

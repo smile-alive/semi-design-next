@@ -1,5 +1,5 @@
 import { Dynamic } from 'solid-js/web';
-import { IconSemiLogo, IconBytedanceLogo } from '@fibrae/semi-icons-solid';
+import { IconSemiLogo } from '@fibrae/semi-icons-solid';
 import { IconTreeSelect, IconBreadcrumb, IconBadge, IconSteps } from '@fibrae/semi-icons-solid/lab';
 import { Nav, Avatar, Dropdown, Layout, Breadcrumb, Skeleton, type NavItemConfig, type NavItemRenderProps } from '@fibrae/semi-ui-solid';
 
@@ -52,9 +52,9 @@ function TopHeader() {
                             }
                         >
                             <Avatar size="small" color="light-blue" style={{ margin: '4px' }}>
-                                BD
+                                SD
                             </Avatar>
-                            <span>Bytedancer</span>
+                            <span>Semi</span>
                         </Dropdown>
                     }
                 />
@@ -86,8 +86,8 @@ function FooterContent() {
                     'align-items': 'center',
                 }}
             >
-                <IconBytedanceLogo size="large" style={{ 'margin-inline-end': '8px' }} />
-                <span>Copyright © {currentYear} ByteDance. All Rights Reserved. </span>
+                <IconSemiLogo size="large" style={{ 'margin-inline-end': '8px' }} />
+                <span>Copyright © {currentYear} Semi Design Next. All Rights Reserved. </span>
             </span>
             <span>
                 <span style={{ 'margin-inline-end': '24px' }}>平台客服</span>
@@ -126,8 +126,8 @@ export default function NavigationDemo() {
                         }}
                     >
                         <Skeleton placeholder={<Skeleton.Paragraph rows={2} />} loading>
-                            <p>Hi, Bytedance dance dance.</p>
-                            <p>Hi, Bytedance dance dance.</p>
+                            <p>Hi, Semi dance dance.</p>
+                            <p>Hi, Semi dance dance.</p>
                         </Skeleton>
                     </div>
                 </Layout.Content>

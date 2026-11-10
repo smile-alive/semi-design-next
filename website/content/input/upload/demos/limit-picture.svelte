@@ -1,6 +1,7 @@
 <script lang="ts">
     import { IconPlus } from '@fibrae/semi-icons-svelte';
     import { Toast, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const defaultFileList: FileItem[] = [
         {
@@ -23,6 +24,6 @@
     ];
 </script>
 
-<Upload accept="image/*" action="https://api.semi.design/upload" fileList={defaultFileList} limit={2} listType="picture" onExceed={() => Toast.warning('最多只允许上传2个文件')}>
+<Upload accept="image/*" action="/upload" customRequest={mockUpload} fileList={defaultFileList} limit={2} listType="picture" onExceed={() => Toast.warning('最多只允许上传2个文件')}>
     <IconPlus aria-label="上传图片" size="extra-large" />
 </Upload>

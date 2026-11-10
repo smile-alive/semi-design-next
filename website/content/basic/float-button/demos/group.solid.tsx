@@ -5,7 +5,7 @@ export default function FloatButtonDemo() {
     const items = [
         { icon: <IconAIStrokedLevel3 />, content: '编辑', value: 'editor' },
         { icon: <IconSearchStroked />, content: '搜索', value: 'search', disabled: true },
-        { icon: <IconHelpCircleStroked />, content: '帮助', value: 'help', href: 'https://semi.design', target: '_blank' },
+        { icon: <IconHelpCircleStroked />, content: '帮助', value: 'help', href: 'https://semi-design-next.pages.dev/', target: '_blank' },
     ];
 
     return (

@@ -32,15 +32,15 @@ export default function TypographyDemo() {
             </Typography.Text>
             <br />
             <Typography.Paragraph ellipsis={{ suffix: '小尾巴' }} style={{ width: '300px' }}>
-                有后缀的情况：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。
+                有后缀的情况：Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。
             </Typography.Paragraph>
             <br />
             <Typography.Paragraph ellipsis={{ rows: 3 }} style={{ width: '300px' }}>
-                这是一个多行截断的例子：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
+                这是一个多行截断的例子：Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
             </Typography.Paragraph>
             <br />
             <Typography.Paragraph ellipsis={{ rows: 3, showTooltip: { type: 'popover', opts: { style: { width: '300px' } } } }} style={{ width: '300px' }}>
-                多行截断，展示 Popover：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
+                多行截断，展示 Popover：Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
             </Typography.Paragraph>
             <br />
             <Typography.Paragraph
@@ -53,7 +53,7 @@ export default function TypographyDemo() {
                 }}
                 style={{ width: '300px' }}
             >
-                支持展开和折叠：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
+                支持展开和折叠：Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
             </Typography.Paragraph>
             <br />
             <Typography.Text

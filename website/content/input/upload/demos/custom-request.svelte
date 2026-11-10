@@ -16,7 +16,7 @@
     };
 </script>
 
-<Upload action="https://api.semi.design/upload" customRequest={mockRequest}>
+<Upload action="/upload" customRequest={mockRequest}>
     <Button theme="light">
         {#snippet icon()}<IconUpload />{/snippet}
         点击上传

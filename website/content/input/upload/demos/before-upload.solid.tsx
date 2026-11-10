@@ -1,5 +1,6 @@
 import { IconUpload } from '@fibrae/semi-icons-solid';
 import { type BeforeUploadObjectResult, type BeforeUploadProps, Button, Upload } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 export default function UploadDemo() {
     let count = 0;
@@ -32,7 +33,7 @@ export default function UploadDemo() {
     };
 
     return (
-        <Upload action="https://api.semi.design/upload" transformFile={transformFile} beforeUpload={beforeUpload}>
+        <Upload action="/upload" customRequest={mockUpload} transformFile={transformFile} beforeUpload={beforeUpload}>
             <Button icon={<IconUpload />} theme="light">
                 点击上传（上传前同步校验）
             </Button>

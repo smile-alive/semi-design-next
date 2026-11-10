@@ -1,9 +1,11 @@
 <script lang="ts">
     import { AIChatInput, type AIChatInputContent as Content, type AIChatInputReference as Reference, type AIChatInputUploadProps } from '@fibrae/semi-ai-svelte';
     import type { UploadOnChangeProps as OnChangeProps } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const uploadProps: AIChatInputUploadProps = {
-        action: 'https://api.semi.design/upload',
+        action: '/upload',
+        customRequest: mockUpload,
         defaultFileList: [
             {
                 uid: '1',

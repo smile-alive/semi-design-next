@@ -1,10 +1,11 @@
 <script lang="ts">
     import type { Component } from 'svelte';
     import { AIChatInput } from '@fibrae/semi-ai-svelte';
-    import { IconBookOpenStroked, IconFeishuLogo, IconFigma, IconGit } from '@fibrae/semi-icons-svelte';
+    import { IconBookOpenStroked, IconGit, IconTemplateStroked, IconWord } from '@fibrae/semi-icons-svelte';
     import { Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
     const modelOptions = [
         { value: 'GPT-5', label: 'GPT-5' },
         { value: 'GPT-4o', label: 'GPT-4o' },
@@ -12,11 +13,11 @@
     ];
 
     const mcpOptions = [
-        { label: '飞书文档', value: 'feishu' },
+        { label: '办公文档', value: 'office' },
         { label: 'Github Mcp', value: 'github' },
-        { label: 'IconFigma Mcp', value: 'IconFigma' },
+        { label: 'Design Mcp', value: 'design' },
     ];
-    const mcpIcons: Record<string, Component> = { feishu: IconFeishuLogo, github: IconGit, IconFigma };
+    const mcpIcons: Record<string, Component> = { office: IconWord, github: IconGit, design: IconTemplateStroked };
 
     const radioButtonProps = [
         { label: '极速', value: 'fast' },

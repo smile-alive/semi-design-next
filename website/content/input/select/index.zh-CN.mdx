@@ -102,7 +102,7 @@ Svelte 版没有 `Select.Option` 与 `Select.OptGroup`：子组件的数据在�
 
 <Framework only="svelte">
 
-选项写在 `optionList` 里，每个条目必须声明 `value`，`label` 是选项的文本。单向传入 `value="douyin"` 只作初值，要读写选中值用 `bind:value`
+选项写在 `optionList` 里，每个条目必须声明 `value`，`label` 是选项的文本。单向传入 `value="video"` 只作初值，要读写选中值用 `bind:value`
 
 </Framework>
 
@@ -128,17 +128,17 @@ Svelte 版没有 `Select.Option` 与 `Select.OptGroup`：子组件的数据在�
 
 ### 多选
 
-自 v2.28后，select 的选择器会自带 maxHeight 270，内容超出后可以通过垂直滚动查看。
+Select 的下拉列表默认 `maxHeight` 为 270，内容超出后可以通过垂直滚动查看。
 
 配置`multiple`属性，可以支持多选
 
 配置 `maxTagCount` 可以限制已选项展示的数量，超出部分将以+N 的方式展示
 
-配置 `ellipsisTrigger` (>= v2.28.0) 对溢出部分的 tag 做自适应处理，当宽度不足时，最后一个tag内容作截断处理。开启该功能后会有一定性能损耗，不推荐在大表单场景下使用
+配置 `ellipsisTrigger` 对溢出部分的 tag 做自适应处理，当宽度不足时，最后一个tag内容作截断处理。开启该功能后会有一定性能损耗，不推荐在大表单场景下使用
 
-配置 `expandRestTagsOnClick` (>= v2.28.0) 可以在设置 `maxTagCount` 情况下通过点击展示全剩余的tag
+配置 `expandRestTagsOnClick` 可以在设置 `maxTagCount` 情况下通过点击展示全剩余的tag
 
-使用 `showRestTagsPopover` (>= v2.22.0) 可以设置在超出 `maxTagCount` 后，hover +N 是否显示 Popover，默认为 `false`。并且，还可以在 `restTagsPopoverProps` 属性中配置 Popover。
+使用 `showRestTagsPopover` 可以设置在超出 `maxTagCount` 后，hover +N 是否显示 Popover，默认为 `false`。并且，还可以在 `restTagsPopoverProps` 属性中配置 Popover。
 
 <Framework only="react">
 
@@ -375,13 +375,13 @@ validateStatus: default / warning / error
 ### 开启搜索
 
 将 `filter` 置为 true，开启搜索能力。默认搜索策略将为 input 输入值与 option 的 label 值进行 include 对比  
-默认情况下，多选选中后会自动清空搜索关键字。若你希望保留，可以通过 autoClearSearchValue 设为 false 关闭默认行为（v2.3 后提供）
+默认情况下，多选选中后会自动清空搜索关键字。若你希望保留，可以通过 autoClearSearchValue 设为 false 关闭默认行为
 
 <Demo id="search" />
 
 ### 搜索框位置
 
-默认搜索框展示于 Select 的 Trigger 触发器上。通过 `searchPosition` 可以指定不同的位置，可选 `dropdown`、`trigger`。 在 v2.61.0后提供若希望定制位于 dropdown 中的 Input 搜索框的 placeholder，可以通过 `searchPlaceholder` 控制  
+默认搜索框展示于 Select 的 Trigger 触发器上。通过 `searchPosition` 可以指定不同的位置，可选 `dropdown`、`trigger`。 若希望定制位于 dropdown 中的 Input 搜索框的 placeholder，可以通过 `searchPlaceholder` 控制  
 若 `searchPosition` 值为 `trigger`，当showClear=true 时，点击Trigger区域的清空按钮，将同时清空已选项以及搜索框中的文本  
 若 `searchPosition` 值为 `dropdown`，当showClear=true 时，点击Trigger区域清空按钮，仅清空已选项。点击搜索框中的清空按钮，仅清空搜索文本
 
@@ -595,7 +595,7 @@ validateStatus: default / warning / error
 传入`virtualize`时开启列表虚拟化，用于大量 Option 节点的情况优化性能  
 virtualize 是一个包含下列值的对象：
 
-- height: Option 列表高度值，默认 270 (v2.20.8 前为 300)
+- height: Option 列表高度值，默认 270
 - width: Option 列表宽度值，默认 100%
 - itemSize: 每行 Option 的高度，必传
 
@@ -616,8 +616,8 @@ triggerRender 入参如下
 interface TriggerRenderProps {
     value: array<object>; // 当前所有已选中的options
     inputValue: string; // 当前input框的输入值
-    onSearch: (inputValue: string) => void; // 用于更新 input框值的函数，当你在triggerRender自定义的Input组件值更新时你应该调用该函数，用于向Select内部同步状态。注意 filter 需同时设为true, v2.32 提供
-    onRemove: (option: object) => void; // 用于移除单个已选项，option至少需带有 label、value 两项，v2.32提供
+    onSearch: (inputValue: string) => void; // 用于更新 input框值的函数，当你在triggerRender自定义的Input组件值更新时你应该调用该函数，用于向Select内部同步状态。注意 filter 需同时设为true
+    onRemove: (option: object) => void; // 用于移除单个已选项，option至少需带有 label、value 两项
     onClear: () => void; // 用于清空值的函数
     disabled: boolean; // 是否禁用Select
     placeholder: ReactNode; // Select的placeholder
@@ -1045,6 +1045,7 @@ Select 经 `bind:this` 取得组件实例，调用下列方法：
 
 - Select 聚焦后，键盘用户可以通过 `上箭头` 或 `下箭头` 或 `Enter` 键打开下拉菜单。此时焦点仍然处于 Select 框，用户可以输入内容，同时也能使用 `上箭头` 或 `下箭头` 切换选项
 - 当下拉菜单打开时：使用 `上箭头` 或 `下箭头` 切换选项；`Enter` 选中被聚焦的选项，单选选中后收起面板，多选切换选中状态并保持打开；`Esc` 或 `Tab` 关闭菜单。`Home`、`End`、`空格` 与字符留给 Select 框内的输入框，用于编辑搜索内容，不移动选项焦点
+- 单选在下拉菜单关闭后 Select 框内不显示输入框，`空格`、`Home`、`End` 与字符按无 Filter 的 Select 处理：打开下拉菜单并移动选项焦点
 - 当焦点在 Select 框上，且用户使用的 `innerBottomSlot` 或 `outerBottomSlot` 属性的自定义 slot 中含有可交互元素时：
     - 可以使用 `Tab` 键切换到这些可交互元素上
     - 当焦点在自定义 slot 的首个可交互元素上时，使用 `Shift` + `Tab` ，焦点回到 Select 框上
@@ -1177,7 +1178,6 @@ import { Select } from '@fibrae/semi-ui-solid';
     - 会给 minWidth，但不会写死 width。如果有需要的话，可以自己通过 dropdownStyle 来添加。
 
 - **为什么单选选择选项后没有触发 blur 事件？**
-    - 在 V2.17.0 前，Select 单选选择后，会触发 Select 的 blur 事件。
-    - 在 V2.17.0 后，Select 增加了 A11y 支持，不会触发 Select 的 blur 事件。
+    - Select 支持 A11y，单选选择后不会触发 Select 的 blur 事件。
         - 单选选择中，Select 浮层关闭，依然保持焦点在 trigger（此时可以通过 Enter 回车键再次打开 Select 浮层）
         - 无论单选或多选，按下 Esc，仅 Select 浮层关闭，trigger 保持焦点（此时可以通过 Enter 回车键再次打开 Select 浮层）

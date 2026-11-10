@@ -1,13 +1,14 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { AIChatInput, type AIChatInputHandle, type AIChatInputAttachment as Attachment, type AIChatInputReference as Reference, type AIChatInputRenderTopSlotProps as RenderTopSlotProps } from '@fibrae/semi-ai-react';
 import { IconClose, IconUpload, IconFile, IconFolder, IconBranch, IconTerminal, IconGlobeStroke, IconConnectionPoint2, IconTemplateStroked, IconSearch, IconGit, IconCode } from '@fibrae/semi-icons-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 const radioButtonProps = [
     // the icon is the only label, so it carries the name
     { label: <IconTemplateStroked aria-label="快速" />, value: 'fast' },
     { label: <IconSearch aria-label="深度思考" />, value: 'think' },
 ];
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: 12 };
 
 const customReferences: Reference[] = [

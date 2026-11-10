@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type FileItem } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const defaultFileList: FileItem[] = [
         {
@@ -23,7 +24,7 @@
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :defaultFileList="defaultFileList" disabled>
+    <Upload action="/upload" :customRequest="mockUpload" :defaultFileList="defaultFileList" disabled>
         <Button disabled theme="light">
             <template #icon>
                 <IconUpload />

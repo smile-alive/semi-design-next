@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { IconPlus } from '@fibrae/semi-icons-vue';
     import { Upload, type FileItem, type PromptPositionType } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const action = 'https://api.semi.design/upload';
+    const action = '/upload';
     const marginStyle: Partial<Record<PromptPositionType, string>> = {
         right: 'margin-inline-start: 10px',
     };
@@ -30,7 +31,7 @@
 <template>
     <template v-for="(pos, index) in positions" :key="pos">
         <div v-if="index" style="margin-block-end: 12px; margin-block-start: 12px; border-block-end: 1px solid var(--semi-color-border)" />
-        <Upload :action="action" :defaultFileList="defaultFileList" listType="picture" :promptPosition="pos">
+        <Upload :action="action" :customRequest="mockUpload" :defaultFileList="defaultFileList" listType="picture" :promptPosition="pos">
             <template #prompt>
                 <div :style="promptStyle(pos)">请上传认证材料</div>
             </template>

@@ -3,5 +3,5 @@
 </script>
 
 <template>
-    <TagInput :defaultValue="['抖音', '火山', '西瓜视频']" disabled placeholder="请输入..." showClear />
+    <TagInput :defaultValue="['短视频', '直播', '长视频']" disabled placeholder="请输入..." showClear />
 </template>

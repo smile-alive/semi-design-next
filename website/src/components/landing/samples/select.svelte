@@ -2,11 +2,11 @@
     import { Select } from '@fibrae/semi-ui-svelte';
 
     const optionList = [
-        { value: 'douyin', label: '抖音' },
-        { value: 'jianying', label: '剪映' },
+        { value: 'video', label: '短视频' },
+        { value: 'editing', label: '剪辑' },
     ];
 
-    let value = $state<string | undefined>('douyin');
+    let value = $state<string | undefined>('video');
 </script>
 
 <Select

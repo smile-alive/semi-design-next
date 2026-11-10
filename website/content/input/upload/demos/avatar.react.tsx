@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { IconCamera } from '@fibrae/semi-icons-react';
 import { Upload, Avatar, Toast } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const api = 'https://api.semi.design/upload';
+const api = '/upload';
 const imageOnly = 'image/*';
 
 const maskStyle = {
@@ -24,7 +25,7 @@ export default function UploadDemo() {
     };
 
     return (
-        <Upload className="avatar-upload" action={api} onSuccess={onSuccess} accept={imageOnly} showUploadList={false} onError={() => Toast.error('上传失败')}>
+        <Upload className="avatar-upload" action={api} customRequest={mockUpload} onSuccess={onSuccess} accept={imageOnly} showUploadList={false} onError={() => Toast.error('上传失败')}>
             {/* the avatar is the whole content of the upload button, so its alt names the button */}
             <Avatar
                 src={url}

@@ -3,8 +3,8 @@
 
     const data = [
         { title: 'Semi UI', rating: 4.5, feedbacks: 124 },
-        { title: 'Semi DSM', rating: 4, feedbacks: 108 },
-        { title: 'Semi D2C', rating: 4.5, feedbacks: 244 },
+        { title: 'Semi Icons', rating: 4, feedbacks: 108 },
+        { title: 'Semi Theme', rating: 4.5, feedbacks: 244 },
     ];
 
     const grid = { gutter: 12, span: 6 };

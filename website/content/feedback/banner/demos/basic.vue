@@ -18,7 +18,7 @@
     <Layout class="components-layout-demo banner-basic">
         <Layout.Header :style="commonStyle">Header</Layout.Header>
         <Banner v-if="visible" @close="toggle">
-            <template #description>Semi D2C 现已支持 Figma DevMode, 安装插件，随时查阅图层对应的前端代码</template>
+            <template #description>一套组件，四个框架原生可用，随时查阅对应的前端代码</template>
         </Banner>
         <Layout.Content style="height: 300px; line-height: 300px">Content</Layout.Content>
         <Layout.Footer :style="commonStyle">Footer</Layout.Footer>

@@ -1,8 +1,9 @@
 <script lang="ts">
     import { IconClose, IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const action = 'https://api.semi.design/upload';
+    const action = '/upload';
 
     const defaultFileList: FileItem[] = [
         {
@@ -20,7 +21,7 @@
     ];
 </script>
 
-<Upload {action} fileList={defaultFileList} style="margin-bottom: 20px">
+<Upload {action} customRequest={mockUpload} fileList={defaultFileList} style="margin-bottom: 20px">
     {#snippet fileListHeader(title)}
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
             <span style="color: var(--semi-color-primary)">📂 共 {title.fileList.length} 个文件</span>
@@ -35,7 +36,7 @@
         自定义清空按钮样式
     </Button>
 </Upload>
-<Upload {action} fileList={defaultFileList}>
+<Upload {action} customRequest={mockUpload} fileList={defaultFileList}>
     {#snippet fileListHeader(title)}
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
             <span>

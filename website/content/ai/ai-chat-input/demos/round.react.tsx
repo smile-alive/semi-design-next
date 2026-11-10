@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
 import { AIChatInput } from '@fibrae/semi-ai-react';
-import { IconBookOpenStroked, IconFeishuLogo, IconGit, IconFigma } from '@fibrae/semi-icons-react';
+import { IconBookOpenStroked, IconGit, IconTemplateStroked, IconWord } from '@fibrae/semi-icons-react';
 import { RadioGroup, Radio, type RadioChangeEvent } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: 12 };
 const modelOptions = [
     { value: 'GPT-5', label: 'GPT-5' },
@@ -12,9 +13,9 @@ const modelOptions = [
 ];
 
 const mcpOptions = [
-    { icon: <IconFeishuLogo />, label: '飞书文档', value: 'feishu' },
+    { icon: <IconWord />, label: '办公文档', value: 'office' },
     { icon: <IconGit />, label: 'Github Mcp', value: 'github' },
-    { icon: <IconFigma />, label: 'IconFigma Mcp', value: 'IconFigma' },
+    { icon: <IconTemplateStroked />, label: 'Design Mcp', value: 'design' },
 ];
 
 const radioButtonProps = [

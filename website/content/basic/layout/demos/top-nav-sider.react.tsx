@@ -1,4 +1,4 @@
-import { IconSemiLogo, IconBell, IconHelpCircle, IconBytedanceLogo, IconHome, IconHistogram, IconLive, IconSetting } from '@fibrae/semi-icons-react';
+import { IconSemiLogo, IconBell, IconHelpCircle, IconHome, IconHistogram, IconLive, IconSetting } from '@fibrae/semi-icons-react';
 import { Layout, Nav, Button, Breadcrumb, Skeleton, Avatar } from '@fibrae/semi-ui-react';
 
 const items = [
@@ -93,8 +93,8 @@ export default function LayoutDemo() {
                         }}
                     >
                         <Skeleton placeholder={<Skeleton.Paragraph rows={2} />} loading>
-                            <p>Hi, Bytedance dance dance.</p>
-                            <p>Hi, Bytedance dance dance.</p>
+                            <p>Hi, Semi dance dance.</p>
+                            <p>Hi, Semi dance dance.</p>
                         </Skeleton>
                     </div>
                 </Layout.Content>
@@ -114,8 +114,8 @@ export default function LayoutDemo() {
                         alignItems: 'center',
                     }}
                 >
-                    <IconBytedanceLogo size="large" style={{ marginInlineEnd: '8px' }} />
-                    <span>Copyright © 2023 ByteDance. All Rights Reserved. </span>
+                    <IconSemiLogo size="large" style={{ marginInlineEnd: '8px' }} />
+                    <span>Copyright © 2023 Semi Design Next. All Rights Reserved. </span>
                 </span>
                 <span>
                     <span style={{ marginInlineEnd: '24px' }}>平台客服</span>

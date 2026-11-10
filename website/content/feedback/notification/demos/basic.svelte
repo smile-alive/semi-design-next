@@ -5,7 +5,7 @@
 <Button
     onclick={() =>
         Notification.open({
-            title: 'Hi, Bytedance',
+            title: 'Hi, Semi',
             content: 'ies dance dance dance',
             duration: 3,
         })}

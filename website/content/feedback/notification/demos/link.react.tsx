@@ -4,7 +4,7 @@ const opts = {
     title: 'This is a title',
     content: (
         <>
-            <div>Hi, Bytedance dance dance</div>
+            <div>Hi, Semi dance dance</div>
             <div style={{ marginBlockStart: 8 }}>
                 <Typography.Text link>查看详情</Typography.Text>
                 <Typography.Text link style={{ marginInlineStart: 20 }}>

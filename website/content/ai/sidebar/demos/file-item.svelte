@@ -1,12 +1,13 @@
 <script lang="ts">
     import { Sidebar, type ImageUploadNodeOptions } from '@fibrae/semi-ai-svelte';
     import { Button } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const defaultFileContent = `<h2>
   Semi Design 介绍
 </h2>
 <p>
-  Semi Design 是由 <strong>抖音前端团队</strong>和MED产品设计团队设计、开发并维护的<em>设计系统</em>。作为一个全面、易用、优质的现代应用UI解决方案，Semi Design从字节跳动各业务线的复杂场景中提炼而来，目前已经支撑了近千个平台产品，服务了内外部超过10万用户，详情见https://semi.design/zh-CN/start/introduction。Semi Design的特点包括：
+  Semi Design Next 是 <strong>Semi Design</strong> 的社区版<em>设计系统</em>，一套组件在 React、Vue、Solid、Svelte 中原生可用。作为一个全面、易用、优质的现代应用UI解决方案，详情见https://semi-design-next.pages.dev/zh-CN/svelte/start/introduction。Semi Design的特点包括：
 </p>
 <ul>
   <li>
@@ -26,13 +27,14 @@
   采用 Foundation 和 Adapter 跨框架技术方案，方便扩展。
 </p>
 <blockquote>
-  Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统
+  Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用
   <br />
   — Semi Design
 </blockquote>`;
 
     const imgUploadProps: ImageUploadNodeOptions = {
-        action: 'https://api.semi.design/upload',
+        action: '/upload',
+        customRequest: mockUpload,
         // response is the action's result; real code reads the uploaded image URL from it
         getUploadImageSrc: () => '/assets/placeholder/avatar-a.svg',
     };

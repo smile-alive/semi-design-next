@@ -102,7 +102,7 @@ Each Option tag must declare the `value` attribute. `label` is the text of the o
 
 <Framework only="svelte">
 
-Write the options in `optionList`. Each entry must declare `value`, and `label` is the text of the option. A one-way `value="douyin"` only seeds the selection; use `bind:value` to read and write it
+Write the options in `optionList`. Each entry must declare `value`, and `label` is the text of the option. A one-way `value="video"` only seeds the selection; use `bind:value` to read and write it
 
 </Framework>
 
@@ -128,17 +128,17 @@ You can pass an array of objects directly through `optionList`. Each object must
 
 ### Multi-choice
 
-Since v2.28, the selector will have its own maxHeight 270, and the content can be viewed by scrolling vertically after it exceeds.
+The dropdown list of Select has a default `maxHeight` of 270, and the content can be viewed by scrolling vertically after it exceeds.
 
 Configuration `multiple` properties that can support multi-selection
 
 Configuration `maxTagCount`. You can limit the number of options displayed, and the excess will be displayed in the form of + N
 
-Configure `ellipsisTrigger` (>= v2.28.0) to do adaptive processing on the overflow part of the tag. When the width is insufficient, the last tag content will be truncated. After enabling this function, there will be a certain performance loss, and it is not recommended to use it in large form scenarios
+Configure `ellipsisTrigger` to do adaptive processing on the overflow part of the tag. When the width is insufficient, the last tag content will be truncated. After enabling this function, there will be a certain performance loss, and it is not recommended to use it in large form scenarios
 
-Configure `expandRestTagsOnClick` (>= v2.28.0) to display all remaining tags by clicking when `maxTagCount` is set
+Configure `expandRestTagsOnClick` to display all remaining tags by clicking when `maxTagCount` is set
 
-Use `showRestTagsPopover` (>= v2.22.0) to set whether hover +N displays Popover after exceeding `maxTagCount`, the default is `false`. Also, popovers can be configured in the `restTagsPopoverProps` property
+Use `showRestTagsPopover` to set whether hover +N displays Popover after exceeding `maxTagCount`, the default is `false`. Also, popovers can be configured in the `restTagsPopoverProps` property
 
 <Framework only="react">
 
@@ -376,13 +376,13 @@ Use `bind:value`, or write the value back in `onChange`, to link different Selec
 You can turn on the search capability by setting `filter` to true.  
 The default search strategy will include comparison of the input value with the label value of option
 
-By default, the search keywords will be cleared automatically after multiple selection is selected. If you want to keep it, you can turn off the default behavior by setting `autoClearSearchValue` to false (provided after v2.3)
+By default, the search keywords will be cleared automatically after multiple selection is selected. If you want to keep it, you can turn off the default behavior by setting `autoClearSearchValue` to false
 
 <Demo id="search" />
 
 ### Search position
 
-The default search input is displayed on the Select Trigger. You can specify different positions through `searchPosition`, and you can choose `dropdown` or `trigger`. Available after `v2.61.0`  
+The default search input is displayed on the Select Trigger. You can specify different positions through `searchPosition`, and you can choose `dropdown` or `trigger`.  
 If you want to customize the placeholder of the Input search box in the dropdown, you can control it through `searchPlaceholder`  
 If the `searchPosition` is `trigger`, when `showClear=true`, clicking the clear button of the input will clear the selected items and the search text in the input at the same time  
 If the `searchPosition` is `dropdown`, when `showClear=true`, clicking the clear button of the trigger will clear the selected items, clicking the clear button in the dropdown input will clear search text
@@ -586,7 +586,7 @@ In addition, can be used with the `defaultActiveFirstOption` property to automat
 
 Turn on list virtualization when passing in `virtualize` to optimize performance when there are a large number of Option nodes virtualize is an object containing the following values:
 
-- height: Option list height value, default 270 （before v2.20.8 was 300）
+- height: Option list height value, default 270
 - width: Option list width value, default 100%
 - itemSize: The height of each line of Option, must be passed
 
@@ -608,9 +608,9 @@ The parameters of triggerRender are as follows
 interface TriggerRenderProps {
   value: array<object> // All currently selected options
   inputValue: string; // The input value of the current input box
-  onSearch: (inputValue: string) => void; // The function used to update the value of the input box. You should call this function when the value of the Input component you customize in triggerRender is updated to synchronize the state to the Select internal. props.filter needs to be true, support after v2.32
+  onSearch: (inputValue: string) => void; // The function used to update the value of the input box. You should call this function when the value of the Input component you customize in triggerRender is updated to synchronize the state to the Select internal. props.filter needs to be true
   onClear: () => void; // Function to clear the value
-  onRemove: (option: object) => void; // support after v2.32
+  onRemove: (option: object) => void; // remove a single selected item
   disabled: boolean; // Whether to disable Select
   placeholder: ReactNode; // Select placeholder
   componentProps: //All props passed to Select by users
@@ -1036,6 +1036,7 @@ Get the component instance of Select through `bind:this` and call the methods be
 
 - When Select is focused, keyboard users can open dropdown menus with `Up Arrow` or `Down Arrow` or `Enter` keys. At this point, the focus is still on the Select box, the user can enter content, and can also use the `up arrow` or `down arrow` to switch options
 - When the dropdown menu is open: `Up Arrow` and `Down Arrow` switch options; `Enter` selects the focused option, collapsing the panel in a single Select and toggling it while staying open in a multiple Select; `Esc` or `Tab` closes the menu. `Home`, `End`, `Space` and characters belong to the input in the Select box and edit the search text without moving the option focus
+- A single Select shows no input in the Select box once the dropdown menu is closed, so `Space`, `Home`, `End` and characters work as in a Select without filter: they open the dropdown menu and move the option focus
 - When the focus is on the Select box, and the user uses an `innerBottomSlot` or `outerBottomSlot` property with a custom slot with an interactive element:
     - You can use the `Tab` key to switch to these interactive elements
     - When the focus is on the first interactive element of the custom slot, use `Shift` + `Tab` to return the focus to the Select box
@@ -1168,4 +1169,4 @@ import { Select } from '@fibrae/semi-ui-solid';
 
 - **Why is the blur event not fired after a radio selection option?**
 
-    Before V2.17.0, after Select radio is selected, the blur event of Select will be triggered. After V2.17.0, Select has added A11y support, which will not trigger Select's blur event. In single-selection selection, the Select floating layer is closed, and the focus is still on the trigger (at this time, the Select floating layer can be opened again by pressing the Enter key) No matter single selection or multiple selection, press Esc, only the Select floating layer is closed, and the trigger keeps the focus (the Select floating layer can be opened again by pressing the Enter key at this time)
+    Select supports A11y, so it does not trigger Select's blur event after a radio selection. In single-selection selection, the Select floating layer is closed, and the focus is still on the trigger (at this time, the Select floating layer can be opened again by pressing the Enter key) No matter single selection or multiple selection, press Esc, only the Select floating layer is closed, and the trigger keeps the focus (the Select floating layer can be opened again by pressing the Enter key at this time)

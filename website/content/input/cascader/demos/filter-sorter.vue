@@ -7,10 +7,10 @@
             value: 'Product',
             children: [
                 { label: 'Semi-Material', value: 'Semi-Material' },
-                { label: 'Semi-DSM', value: 'Semi-DSM' },
+                { label: 'Semi-Theme', value: 'Semi-Theme' },
                 { label: 'Semi', value: 'Semi' },
                 { label: 'Semi-C2D', value: 'Semi-C2D' },
-                { label: 'Semi-D2C', value: 'Semi-D2C' },
+                { label: 'Semi-Icons', value: 'Semi-Icons' },
             ],
         },
     ];

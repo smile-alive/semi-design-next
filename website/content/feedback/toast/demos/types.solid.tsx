@@ -1,14 +1,14 @@
 import { Button, Toast } from '@fibrae/semi-ui-solid';
 
 const opts = {
-    content: 'Hi, Bytedance dance dance',
+    content: 'Hi, Semi dance dance',
     duration: 3,
 };
 
 export default function ToastDemo() {
     return (
         <>
-            <Button style={{ color: 'var(--semi-color-success)' }} onClick={() => Toast.success('Hi,Bytedance dance dance')}>
+            <Button style={{ color: 'var(--semi-color-success)' }} onClick={() => Toast.success('Hi,Semi dance dance')}>
                 Success
             </Button>
             <br />

@@ -2,8 +2,9 @@ import { useCallback } from 'react';
 import { AIChatInput, type AIChatInputActionAreaProps as ActionAreaProps } from '@fibrae/semi-ai-react';
 import { IconDeleteStroked } from '@fibrae/semi-icons-react';
 import { Divider, Button } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: 12 };
 
 export default function AIChatInputDemo() {

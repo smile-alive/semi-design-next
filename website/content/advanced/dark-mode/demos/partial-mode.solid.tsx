@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-import { IconBell, IconBytedanceLogo, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-solid';
+import { IconBell, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-solid';
 import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Steps, Tag, Timeline, Tooltip } from '@fibrae/semi-ui-solid';
 
 const rowStyle = { margin: '16px 10px' };
@@ -214,8 +214,8 @@ export default function DarkModeDemo() {
                     }}
                 >
                     <span style={{ display: 'flex', 'align-items': 'center' }}>
-                        <IconBytedanceLogo size="large" style={{ 'margin-inline-end': '8px' }} />
-                        <span>Copyright © 2019 ByteDance. All Rights Reserved. </span>
+                        <IconSemiLogo size="large" style={{ 'margin-inline-end': '8px' }} />
+                        <span>Copyright © 2019 Semi Design Next. All Rights Reserved. </span>
                     </span>
                     <span>
                         <span style={{ 'margin-inline-end': '24px' }}>平台客服</span>

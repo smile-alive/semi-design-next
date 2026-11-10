@@ -26,8 +26,8 @@
                     value: 'Semi Design 设计稿',
                 },
                 {
-                    text: 'Semi D2C 设计稿',
-                    value: 'Semi D2C 设计稿',
+                    text: 'Semi 设计稿',
+                    value: 'Semi 设计稿',
                 },
             ],
             onFilter: (value, record) => record.name.includes(value),
@@ -66,7 +66,7 @@
             const randomNumber = (i * 1000) % 199;
             data.push({
                 key: '' + i,
-                name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
+                name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi 设计稿${i}.fig`,
                 owner: isSemiDesign ? '姜鹏志' : '郝宣',
                 size: randomNumber,
                 status: isSemiDesign ? 'success' : 'wait',
