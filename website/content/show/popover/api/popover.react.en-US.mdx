@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | afterClose | Called after the popup has closed and its leave transition has ended. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | afterOpen | Called after the popup has opened and its enter transition has ended, or right after opening when there is no enter transition. An opening that is closed before the transition ends does not call it. | `TooltipProps['afterOpen']` | - |
+| aria-describedby | aria-describedby of the popup when its role is dialog. | `string` | - |
 | aria-label | Name of the popup when its role is dialog. | `string` | - |
 | aria-labelledby | id of the element that names the popup when its role is dialog. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires `showArrow`. Unset, it is true. | `boolean` | - |
@@ -46,4 +47,5 @@ import ApiType from '#/components/ApiType.astro';
 | Method | Description | Type |
 | --- | --- | --- |
 | focusTrigger | Focuses the trigger. Takes effect only when `returnFocusOnClose` is true and trigger is not `custom`. | <ApiType detail={"() => void"}>Type</ApiType> |
+| getPopup | Returns the popup element, or `null` while the popup is not in the document. | <ApiType detail={"() => HTMLElement \u007c null"}>Type</ApiType> |
 | rePosition | Recomputes the popup position from the trigger's current position at once. The popup already follows scrolling, window resizing, trigger moves and size changes of the trigger or popup, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame. | <ApiType detail={"() => void"}>Type</ApiType> |

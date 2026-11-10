@@ -118,6 +118,10 @@
                 "zh-CN": "包裹菜单的弹层容器的 ARIA role，菜单本身的 role 为 menu。",
                 "en-US": "ARIA role of the popup container around the menu. The menu itself has role menu."
             },
+            "aria-describedby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-describedby。",
+                "en-US": "aria-describedby of the popup when its role is dialog."
+            },
             "aria-label": {
                 "zh-CN": "弹出层 role 为 dialog 时的 aria-label。",
                 "en-US": "aria-label of the popup when its role is dialog."

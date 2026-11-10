@@ -6,6 +6,10 @@
                 "zh-CN": "接收句柄的回调，句柄只有 `focusTrigger` 方法；组件创建时调用一次。",
                 "en-US": "Callback that receives the handle, which only has `focusTrigger`. It is called once when the component is created."
             },
+            "aria-describedby": {
+                "zh-CN": "对话框的 `aria-describedby`，缺省在同时有标题和内容时指向内容。",
+                "en-US": "`aria-describedby` of the dialog. Defaults to the content when there are both a title and content."
+            },
             "aria-label": {
                 "zh-CN": "对话框的 `aria-label`，传入后优先于标题。",
                 "en-US": "`aria-label` of the dialog. When given, it takes precedence over the title."

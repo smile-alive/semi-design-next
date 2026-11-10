@@ -226,13 +226,13 @@
 
 - 破坏性：弹层改用 Popover API 进入 top layer，Portal 到触发元素所在根节点，不受祖先 `overflow`、`transform`、`z-index` 影响，也不在触发元素 DOM 内。位置按视口计算，`x-placement` 是自动翻转后的方位；放得下视口的弹层夹在视口内，触发器滚出或被裁出可见区域时弹层隐藏；打开期间随滚动、窗口 resize、触发器或弹层的尺寸变化重新定位，只随触发器所在区域的滚动重算，同一帧内的多个弹层一起重算；触发器只因别处布局变化而移动时也会跟随，但晚一帧。Tooltip、Popover、Dropdown 与 Select 的 ref 都提供 `rePosition()`（Popover 的 `PopoverHandle` 为新增），立即按触发器当前位置重新定位，一般无需调用。Tooltip 左右两侧边角方位（`leftTop`、`leftBottom`、`rightTop`、`rightBottom`）的箭头离弹层角 1px 更远，与 Popover 和上下方位一致，`arrowPointAtCenter` 时正对触发器中心。
 - 新增：页面有固定顶栏时，在 `:root` 上设 CSS 变量 `--semi-tooltip-viewport-inset-top`（顶栏高度，可写 `calc()`、`var()`），所有基于 Tooltip 的弹层把视口顶部这一段当作不可用：翻转与夹取都避开它，触发器整个落在顶栏下方时弹层隐藏。top layer 不受 `z-index` 影响，顶栏无法靠层级盖住弹层。打开时读取一次，打开期间修改要到下次打开才生效。
-- 新增：Tooltip、Popover 与 Dropdown 的 ref 提供 `getPopup()`，返回当前弹层元素，未显示时为 `null`（Svelte 经 `bind:this` 调用，Dropdown 原有）；React 的 Tooltip、Popover 新增 `aria-describedby`，`role="dialog"` 时落在弹层上。
+- 新增：Tooltip、Popover 与 Dropdown 的 ref 提供 `getPopup()`，返回当前弹层元素，未显示时为 `null`（Svelte 经 `bind:this` 调用，Dropdown 原有）；React、Solid 的 Tooltip、Popover 新增 `aria-describedby`，`role="dialog"` 时落在弹层上，其他 role 不落弹层。
 - 破坏性：删除 Tooltip、Popover、Popconfirm 的 `getPopupContainer`、`zIndex`、`margin`、`rePosKey`，`numbers.DEFAULT_Z_INDEX`、`MARGIN`、`ARROW_BOUNDING`，以及 `arrowBounding`、`transformFromCenter`、`ArrowBounding`；新增 `TooltipHandle.hide()`。`onEscKeyDown`、`onClickOutSide` 的参数类型改为原生 `KeyboardEvent`、`MouseEvent`。
 - 行为变化：`closeOnEsc` 默认 `true`（Modal 内的提示先按 Esc 只关提示，旧行为传 `closeOnEsc={false}`）；Popover 的 `disableFocusListener` 默认改为 `false`；新增 `afterOpen`（Vue `afterOpen` 事件，进场动画结束后调用）与 `onOpen`（Vue `open` 事件，弹层显示时调用，早于 `afterOpen`），Popover、Popconfirm、Dropdown 一并转发；受控 `visible` 只报告请求，触发器操作只报告 `onVisibleChange(true)`、关闭类操作只报告 `(false)`，React 在 `visible={false}` 时须在回调中回写才会打开。
 - 行为变化：进出场改为 keyframes 动画（`semi-tooltip-zoom-in`、`semi-tooltip-zoom-out`），Popover、Dropdown 同样适用；关闭时弹层在出场动画期间仍为 `:popover-open`，动画结束才隐藏，出场中重新打开从头播放进场。覆盖过弹层 `transition` 的自定义样式改为覆盖 `animation`。
 - 行为变化：React 中触发元素卸载后仍显示的弹层，在外部按下时照常通知 `onClickOutSide` 并按触发方式关闭，与 Vue 一致。
 - 行为变化：hover 触发的弹层在隐藏后重新显示时，若指针与焦点都已离开触发器与弹层则关闭；隐藏期间受控 `visible` 变为 false 或 `condition` 变为 false，重新显示时关闭。React 的 `<Activity>` 隐藏不再误发 `afterClose`；Svelte 无出场动画的关闭，`afterClose` 推迟一个微任务。
-- Vue：内容用 `#content="{ initialFocusRef }"`，触发器用默认插槽，可见性用 `visible`、`update:visible`、`visibleChange`；`class`、`style` 落在弹层，其他未声明属性丢弃；可访问名称键为 `ariaLabel`、`ariaLabelledby`，另有 `ariaDescribedby`（React 无）。
+- Vue：内容用 `#content="{ initialFocusRef }"`，触发器用默认插槽，可见性用 `visible`、`update:visible`、`visibleChange`；`class`、`style` 落在弹层，其他未声明属性丢弃；可访问名称键为 `ariaLabel`、`ariaLabelledby`，另有 `ariaDescribedby`（React、Solid 写作 `aria-describedby`）。
 - Solid：触发器写成函数 children `(getTriggerProps) => JSX`，把 `getTriggerProps(own)` 的结果展开到触发元素上；要与注入值合并的 `ref`、`tabIndex`、`aria-*`、`data-popupid` 作为 `own` 传入，写在展开之后会整体覆盖。退出描述写 `getTriggerProps({ 'aria-describedby': null })`，后代经 `useTooltipDescription()` 取弹层 id。
 - Solid：非函数 children 一律包进 Tooltip 自己的 span，Button、Input、链接这类可聚焦触发器要用函数形式；禁用、加载中的特殊触发器只识别 Semi Button、IconButton、Input、TextArea、InputNumber、PinCode、TagInput、Switch、Checkbox、Radio、Rating、Slider、Select、TreeSelect、Cascader、AutoComplete、TimePicker、DatePicker、Upload、Pagination、Transfer，不识别原生 `<button disabled>`。`role="dialog"` 时按渲染出的元素（`own.role`、`role` 属性、button、带 href 的 a）决定是否输出 `aria-haspopup`、`aria-expanded`、`aria-controls`。
 - Solid：弹层位于 挂载点 > div > [popover]，`body > .semi-tooltip-wrapper` 这类选择器不再匹配；弹层内的组件用 `preventDefault` 认领 Escape，`stopPropagation` 无效。
@@ -495,6 +495,7 @@
 - Solid：触发器写法同 Tooltip（函数 children），`disabled` 时函数 children 收到的 `getTriggerProps` 原样返回 own，`<Show>` 这类 JSX children 照常随数据更新；`content` 的函数与 JSX 形式同 Popover；`okButtonProps`、`cancelButtonProps` 的初始聚焦用 `autoFocus`（不落到 DOM），Solid 原生的 `autofocus` 不触发聚焦；`ref` 在组件创建时交出 `PopconfirmHandle`；`onConfirm`、`onCancel` 的返回值只在是 Promise 时等待。卡片内的点击在 Solid 的事件委托中止于卡片，弹层的 `clickToHide` 与外层元素的 `onClick` 收不到，`stopPropagation={false}` 对卡片内的点击无效。
 - Svelte：`title` 接受字符串或 snippet；`content` 是 snippet，参数含 `initialFocusRef`；`icon` 是 snippet，传 `null` 不显示图标，空 snippet 无法判断，照常显示图标框；可见性用可绑定的 `visible` 配 `onVisibleChange`，没有 `defaultVisible`；`okButtonProps`、`cancelButtonProps` 的 `onclick` 先于内置的确认、取消流程调用，`autoFocus` 不落到 DOM；`class`、`style` 落在 `.semi-popconfirm` 卡片上；`stopPropagation={false}` 时，卡片内的点击会到达 document 与外层监听；`focusTrigger()` 经 `bind:this` 调用。
 - React：`disabled` 与启用之间切换时触发器不再重新挂载；禁用时触发器也带 Tooltip 的 aria 属性与 `data-popupid`。
+- React、Solid：使用方传入的 `aria-describedby` 落在确认框上，优先于默认指向内容的描述（同时有标题与内容时）。
 
 ### Rating
 

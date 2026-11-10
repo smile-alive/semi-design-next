@@ -279,7 +279,6 @@
 
 - 保持原样：Popconfirm 的 `onConfirm`、`onCancel` 实际收到 `e.nativeEvent`。
 - React、Vue：Popover 箭头的 svg 缺 `aria-hidden="true"`（Solid、Svelte 的 Popover 箭头与四个框架的 Tooltip 箭头都有）。待处理（补上，装饰性箭头不进可访问树）。
-- React、Solid：Tooltip、Popover 无给弹层 `aria-describedby` 的通道，Popconfirm 直接改弹层元素。待决（加公开 `ariaDescribedby` 属公开 API 变化，Vue、Svelte 已有）。
 - Solid：与 Input（经 InputHandle 设置初始焦点）的集成用例未移植。UNKNOWN（影响：Popover 初始焦点交给 Input 的路径未经用例覆盖；解决条件：补 Solid 集成用例）。
 - Solid：Popconfirm 卡片的 click 用 `stopImmediatePropagation` 对 document 监听隐藏，同一次点击不再到达 Tooltip 容器与外层的委托处理函数（`clickToHide` 在卡片内不生效）。已知限制（升级条件：出现需要 `clickToHide` 的 Popconfirm 用法，或 Tooltip 提供卡片内点击的统一出口）。
 - Vue、Solid、Svelte：`disabled` 的 Popconfirm 直接渲染触发器，与启用之间切换时触发器重新挂载，焦点与内部状态丢失（React 已始终渲染弹层包裹层）。待处理。

@@ -101,6 +101,7 @@ export interface TooltipProps extends TooltipBaseProps {
     /** Name of a role="dialog" popup (F12); ignored for other roles */
     'aria-label'?: string;
     'aria-labelledby'?: string;
+    'aria-describedby'?: string;
     arrowPointAtCenter?: boolean;
     wrapWhenSpecial?: boolean;
     stopPropagation?: boolean;
@@ -592,6 +593,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                             dir={config().direction}
                             aria-label={props.role === 'dialog' ? props['aria-label'] : undefined}
                             aria-labelledby={props.role === 'dialog' ? props['aria-labelledby'] : undefined}
+                            aria-describedby={props.role === 'dialog' ? props['aria-describedby'] : undefined}
                             class={clsx(state().colorScheme, props.class, `${props.prefixCls}-wrapper`, {
                                 [`${props.prefixCls}-wrapper-show`]: state().visible,
                                 [`${props.prefixCls}-with-arrow`]: Boolean(arrowChild()),

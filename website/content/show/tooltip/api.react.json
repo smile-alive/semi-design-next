@@ -7,6 +7,10 @@
                 "zh-CN": "弹出层打开且进场动画结束后调用；没有进场动画时打开后即调用；进场结束前被关闭的打开不调用。",
                 "en-US": "Called after the popup has opened and its enter animation has finished, or right after opening when there is no enter animation; not called for an open that is closed before the enter animation ends."
             },
+            "aria-describedby": {
+                "zh-CN": "弹出层 `role` 为 `dialog` 时的 `aria-describedby`，其他 `role` 下忽略。",
+                "en-US": "`aria-describedby` of the popup when its `role` is `dialog`; ignored for other roles."
+            },
             "aria-label": {
                 "zh-CN": "弹出层 `role` 为 `dialog` 时的 `aria-label`，其他 `role` 下忽略。",
                 "en-US": "`aria-label` of the popup when its `role` is `dialog`; ignored for other roles."
@@ -151,6 +155,10 @@
             "focusTrigger": {
                 "zh-CN": "让触发元素获得焦点，仅在 `returnFocusOnClose` 为 `true` 且 `trigger` 不是 `custom` 时生效。",
                 "en-US": "Focuses the trigger. Only works when `returnFocusOnClose` is `true` and `trigger` is not `custom`."
+            },
+            "getPopup": {
+                "zh-CN": "返回弹出层元素；弹出层不在文档中时返回 `null`。",
+                "en-US": "Returns the popup element, or `null` while the popup is not in the document."
             },
             "getPopupId": { "zh-CN": "返回弹出层的 id。", "en-US": "Returns the id of the popup." },
             "hide": {

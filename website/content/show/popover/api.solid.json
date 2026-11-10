@@ -18,6 +18,10 @@
                 "zh-CN": "小三角的 `borderColor`、`backgroundColor` 与 `borderOpacity`（驼峰键名的对象，不是 Solid 的 style 对象）；缺省跟随对象形式 `style` 中的 `background-color` 与 `border-color`。",
                 "en-US": "`borderColor`, `backgroundColor` and `borderOpacity` of the arrow, an object with camelCase keys rather than a Solid style object. They follow `background-color` and `border-color` of an object `style` by default."
             },
+            "aria-describedby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-describedby。",
+                "en-US": "aria-describedby of the popup when its role is dialog."
+            },
             "aria-label": {
                 "zh-CN": "弹出层 role 为 dialog 时的名称。",
                 "en-US": "Name of the popup when its role is dialog."
@@ -151,6 +155,10 @@
             "focusTrigger": {
                 "zh-CN": "让触发元素获得焦点，仅在 `returnFocusOnClose` 为 true 且 trigger 不是 custom 时生效。",
                 "en-US": "Focuses the trigger. Takes effect only when `returnFocusOnClose` is true and trigger is not custom."
+            },
+            "getPopup": {
+                "zh-CN": "返回弹出层元素；弹出层不在文档中时返回 `null`。",
+                "en-US": "Returns the popup element, or `null` while the popup is not in the document."
             },
             "rePosition": {
                 "zh-CN": "按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。",
