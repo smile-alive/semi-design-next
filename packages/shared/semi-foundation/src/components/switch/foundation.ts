@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 
 /** E is the host's change event, which the foundation only passes through */
 export interface SwitchAdapter<P extends SwitchBaseProps = SwitchBaseProps, E = unknown> extends DefaultAdapter<P, SwitchState> {

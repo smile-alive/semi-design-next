@@ -1,5 +1,5 @@
 import { clamp } from 'es-toolkit';
-import { tween } from '../../utils/tween';
+import { tween } from '../../utils/index';
 
 export function calcPercent(percent: number) {
     return clamp(percent, 0, 100);

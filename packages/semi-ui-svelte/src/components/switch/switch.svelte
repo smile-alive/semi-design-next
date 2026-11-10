@@ -1,11 +1,10 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
     import SwitchFoundation, { type SwitchAdapter, type SwitchBaseProps, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/switch/switch.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { isNativeInputKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { isNativeInputKey, splitControlAttrs } from '../../utils/index.js';
     import Spin from '../spin/spin.svelte';
     import useTrigger, { attachmentProps } from '../tooltip/use-trigger.svelte.js';
     import type { SwitchProps } from './interface.js';

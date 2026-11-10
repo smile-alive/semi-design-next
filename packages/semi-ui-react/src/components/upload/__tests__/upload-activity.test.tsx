@@ -1,7 +1,7 @@
 import { Activity } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import Upload, { type UploadProps } from '../index';
 
 type UploadCallback<K extends keyof UploadProps> = NonNullable<UploadProps[K]>;

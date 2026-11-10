@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { Attachment } from 'svelte/attachments';
 import type { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
 import type { Position, TooltipBaseProps } from '@fibrae/semi-foundation/components/tooltip/foundation';
-import type { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
+import type { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
 
 export type { Position } from '@fibrae/semi-foundation/components/tooltip/foundation';
 export type Trigger = (typeof strings.TRIGGER_SET)[number];

@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import FloatButton, { FloatButtonGroup, type FloatButtonElement, type FloatButtonGroupProps, type FloatButtonProps } from '..';
 
 type ClickHandler = (event: MouseEvent) => void;

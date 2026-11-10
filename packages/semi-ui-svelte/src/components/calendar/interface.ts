@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 
 export type CalendarMode = ArrayElement<typeof strings.MODE>;
 export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;

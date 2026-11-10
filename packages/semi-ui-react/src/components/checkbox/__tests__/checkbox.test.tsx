@@ -3,11 +3,11 @@ import { renderToString } from 'react-dom/server';
 import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Checkbox, Popover } from '@fibrae/semi-ui-react';
 import { Form, FormCheckbox, FormCheckboxGroup } from '@fibrae/semi-ui-react/form';
 import Tooltip from '@fibrae/semi-ui-react/tooltip';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { CheckboxEvent, CheckboxGroupProps, CheckboxHandle, CheckboxProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-checkbox`;

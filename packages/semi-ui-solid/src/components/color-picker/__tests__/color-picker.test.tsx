@@ -2,9 +2,9 @@ import { createSignal, onMount } from 'solid-js';
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import ColorPicker, { type ColorFormat, type ColorPickerProps, type ColorValue, type HsvaColor, type RgbaColor } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-colorPicker`;

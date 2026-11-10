@@ -2,8 +2,7 @@ import React, { memo, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
 import '@fibrae/semi-foundation/components/popover/popover.scss';
-import type { BaseProps } from '../../base/base-props';
-import useDefaultProps from '../../base/use-default-props';
+import { type BaseProps, useDefaultProps } from '../../base/index';
 import Tooltip, { type Position, type TooltipHandle, type TooltipInternalProps, type TooltipProps, type Trigger, type RenderContentProps } from '../tooltip/index';
 import Arrow from './arrow';
 

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconBolt } from '@fibrae/semi-icons-solid';
 import Upload, { type UploadProps } from '..';
 

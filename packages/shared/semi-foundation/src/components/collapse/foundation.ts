@@ -1,5 +1,5 @@
 import { isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import CollapsibleFoundation from '../collapsible/foundation';
 
 export interface CollapseProps {

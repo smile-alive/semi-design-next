@@ -1,6 +1,6 @@
 import type { Component, StyleValue } from 'vue';
 import type { ExpandButton } from '@fibrae/semi-foundation/components/typography/ellipsis';
-import type { KeyedNode } from '../../utils/slot-nodes';
+import type { KeyedNode } from '../../utils/index';
 import type { Ellipsis, TypographyBaseSize, TypographyCommonProps } from './interface';
 
 export interface TypographyBaseProps extends TypographyCommonProps {

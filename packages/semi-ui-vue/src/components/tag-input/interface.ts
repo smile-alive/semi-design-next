@@ -1,6 +1,6 @@
 import type { VNode } from 'vue';
 import type { TagInputValidateStatus } from '@fibrae/semi-foundation/components/tag-input/foundation';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ModelModifiers } from '../input/interface';
 import type { PopoverProps } from '../popover/interface';
 import type { ShowTooltip } from '../typography/interface';

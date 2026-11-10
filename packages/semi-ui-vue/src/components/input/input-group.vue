@@ -2,9 +2,7 @@
     import { computed, useId } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
     import '@fibrae/semi-foundation/components/input/input.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import { usePopupLayer } from '../../base/popup-layer';
-    import { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, type EmitHandlers, usePopupLayer, semiGlobalDefault } from '../../base/index';
     import FormLabel from '../form/label.vue';
     import useLocale from '../locale/use-locale';
     import { type InputGroupContext, provideInputGroupContext } from './context';

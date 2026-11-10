@@ -1,7 +1,7 @@
 import { createMemo } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/components/pagination/constants';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import VirtualList, { type VirtualListRowProps } from '../../internal/virtual-list';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
+import { VirtualList, type VirtualListRowProps } from '../../internal/index';
 import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
 

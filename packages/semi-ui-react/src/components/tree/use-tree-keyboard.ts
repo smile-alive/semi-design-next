@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useState } from 'react';
 import { getTreeKeyboardAction, isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
-import { Typeahead } from '@fibrae/semi-foundation/utils/a11y';
+import { Typeahead } from '@fibrae/semi-foundation/utils';
 import type { FlattenNode, TreeNodeProps } from './interface';
 
 export interface TreeKeyboardOptions {

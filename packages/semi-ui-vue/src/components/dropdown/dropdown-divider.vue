@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
-    import type { ElementProps } from '../../base/element-props';
+    import type { ElementProps } from '../../base/index';
     import type { DropdownDividerProps } from './interface';
 
     defineProps<DropdownDividerProps & /* @vue-ignore */ ElementProps<'li', keyof DropdownDividerProps>>();

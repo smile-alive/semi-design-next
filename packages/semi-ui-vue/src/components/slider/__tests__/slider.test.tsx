@@ -3,9 +3,9 @@ import { defineComponent, nextTick, onUpdated, shallowRef, type StyleValue } fro
 import userEvent from '@testing-library/user-event';
 import { createEvent, fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Slider, { type HandleDot, type SliderProps } from '..';
 import ConfigProvider from '../../config-provider';

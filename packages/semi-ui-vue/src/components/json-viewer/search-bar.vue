@@ -2,7 +2,7 @@
     import { onMounted, shallowRef, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import { IconCaseSensitive, IconChevronLeft, IconChevronRight, IconClose, IconRegExp, IconWholeWord } from '@fibrae/semi-icons-vue';
-    import { nativeTag } from '../../utils/native-tag';
+    import { nativeTag } from '../../utils/index';
     import Button, { ButtonGroup } from '../button';
     import Input from '../input';
     import useLocale from '../locale/use-locale';

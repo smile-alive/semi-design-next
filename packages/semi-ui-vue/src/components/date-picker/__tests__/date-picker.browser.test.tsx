@@ -4,7 +4,7 @@ import { screen, waitFor, within } from '@testing-library/vue';
 import { addDays } from 'date-fns';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import scrollListCss from '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss?inline';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';

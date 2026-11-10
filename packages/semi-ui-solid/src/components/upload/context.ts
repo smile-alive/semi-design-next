@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export interface AddAreaContextValue {
     /** Set by a Semi Button or IconButton created inside the add area */

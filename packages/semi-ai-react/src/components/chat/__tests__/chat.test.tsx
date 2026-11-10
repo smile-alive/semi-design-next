@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import type { Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-react/upload/index';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { mockResizeObserver, sleep } from '@test/utils/react';
 import Code from '../code';
 import Chat, { type ChatHandle } from '../index';

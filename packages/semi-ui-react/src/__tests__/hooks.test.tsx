@@ -3,16 +3,12 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { isEqual } from 'es-toolkit';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '@fibrae/semi-foundation/base';
 import Select from '@fibrae/semi-ui-react/select';
-import semiGlobal, { type OverrideDefaultProps } from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal, type OverrideDefaultProps } from '@fibrae/semi-ui-react/utils';
 import { mockResizeObserver } from '@test/utils/react';
-import useDefaultProps from '../base/use-default-props';
-import useFoundation from '../base/use-foundation';
-import useCopied from '../hooks/use-copied';
-import useDidUpdate from '../hooks/use-did-update';
-import useEventListener, { getWindow } from '../hooks/use-event-listener';
-import useResizeObserver from '../hooks/use-resize-observer';
+import { useDefaultProps, useFoundation } from '../base/index';
+import { useCopied, useDidUpdate, useEventListener, getWindow, useResizeObserver } from '../hooks/index';
 
 interface CounterProps {
     label?: string;

@@ -5,10 +5,9 @@ import { cssClasses, strings } from '@fibrae/semi-foundation/components/dropdown
 import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useUnwrappedLazy from '../../hooks/use-unwrapped-lazy';
-import elementTypeOf from '../../utils/element-type';
+import { useDefaultProps, useFoundation } from '../../base/index';
+import { useUnwrappedLazy } from '../../hooks/index';
+import { elementTypeOf } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
 import Tooltip, { type Position, type RenderContentProps, type TooltipHandle, type TooltipInternalProps, type TooltipProps, type Trigger, canCarryPopupState, wrapSpan } from '../tooltip/index';
 import { DropdownContext, useDropdownContext } from './context';

@@ -2,9 +2,8 @@
     import { computed, nextTick, normalizeStyle, useTemplateRef, type CSSProperties } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/tooltip/constants';
     import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
-    import PopupLayerProvider from '../../base/popup-layer-provider.vue';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import slotNodes from '../../utils/slot-nodes';
+    import { PopupLayerProvider, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { slotNodes } from '../../utils/index';
     import { provideTooltipDescription, provideTooltipPrefixContext, useTooltipPrefixContext } from './context';
     import type { TooltipEmits, TooltipHandle, TooltipProps, TooltipSlots } from './interface';
     import TooltipTrigger from './tooltip-trigger.vue';

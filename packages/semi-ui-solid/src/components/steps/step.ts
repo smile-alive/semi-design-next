@@ -1,4 +1,4 @@
-import { createToken } from '../../base/token';
+import { createToken } from '../../base/index';
 import type { StepProps } from './interface';
 
 export const STEP = 'Steps.Step';

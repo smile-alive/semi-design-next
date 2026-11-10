@@ -1,5 +1,5 @@
 import '@fibrae/semi-foundation/components/steps/steps.scss';
-import useDefaultProps from '../../base/use-default-props';
+import { useDefaultProps } from '../../base/index';
 import BasicSteps, { type BasicStepsProps } from './basic-steps';
 import { StepsContext } from './context';
 import FillSteps, { type FillStepsProps } from './fill-steps';

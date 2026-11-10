@@ -1,7 +1,7 @@
 import { createMemo, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
-import useDefaultProps from '../../base/use-default-props';
+import { useDefaultProps } from '../../base/index';
 import DayCalendar from './day-calendar';
 import type { CalendarProps } from './interface';
 import MonthCalendar from './month-calendar';

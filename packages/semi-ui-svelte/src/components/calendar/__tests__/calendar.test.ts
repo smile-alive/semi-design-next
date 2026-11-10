@@ -6,7 +6,7 @@ import type { strings } from '@fibrae/semi-foundation/components/calendar/consta
 import { calcRowHeight } from '@fibrae/semi-foundation/components/calendar/event-util';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
-import semiGlobal, { SemiGlobal } from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal, SemiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { countLiveListeners, endLeaveAnimations } from '@test/utils/dom/common';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 import { Calendar, type CalendarAllDayEventsArgs, type CalendarDateDisplayArgs, type CalendarDateGridArgs, type CalendarEventArgs, type CalendarMode, type CalendarProps, type CalendarTimeDisplayArgs, type EventObject } from '..';

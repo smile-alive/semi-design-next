@@ -2,11 +2,10 @@ import { type Accessor, type Component, type JSX, For, Index, Match, Show, Switc
 import { Dynamic } from 'solid-js/web';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { type JsonSchema, type SchemaFieldKind, type SchemaFieldNode, blankRow, describeSchemaField, resolveJsonSchema } from '@fibrae/semi-foundation/components/form/json-schema';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
-import warning from '@fibrae/semi-foundation/utils/warning';
+import { formatLocale, type Locale } from '@fibrae/semi-foundation/locale';
+import { warning } from '@fibrae/semi-foundation/utils';
 import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-solid';
-import useDefaultProps from '../../../base/use-default-props';
+import { useDefaultProps } from '../../../base/index';
 import Button from '../../button';
 import IconButton from '../../icon-button';
 import useLocale from '../../locale/use-locale';

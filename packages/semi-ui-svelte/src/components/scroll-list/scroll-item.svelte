@@ -4,9 +4,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
     import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseProps, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
     import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import type { ScrollItemProps, ScrollItemSelectData, ScrollListItem } from './interface.js';
 
     type Foundation = ItemFoundation<T, ScrollItemBaseProps<T>>;

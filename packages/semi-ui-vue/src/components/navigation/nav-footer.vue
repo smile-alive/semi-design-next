@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import CollapseButton from './collapse-button.vue';
     import { useNav } from './context';
     import type { NavFooterProps, NavFooterSlots } from './interface';

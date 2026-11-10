@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { type ConfigProps, createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { Notification } from '../index';
 import type { NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
 import NoticeItem from '../notice.svelte';

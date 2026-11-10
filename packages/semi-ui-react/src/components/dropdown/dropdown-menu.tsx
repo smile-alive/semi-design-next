@@ -2,9 +2,7 @@ import type React from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
 import DropdownMenuFoundation, { type DropdownContextAdapter } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
-import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-props';
-import useFoundation from '../../base/use-foundation';
+import { type ElementProps, type BaseProps, useFoundation } from '../../base/index';
 import { useConfigContext } from '../config-provider/context';
 import { useDropdownContext } from './context';
 

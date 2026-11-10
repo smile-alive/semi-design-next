@@ -4,7 +4,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
     import type { ScrollAlign } from '@fibrae/semi-foundation/components/tree/foundation';
     import { getTransitionNodes, sameKeys } from '@fibrae/semi-foundation/components/tree/shared';
-    import VirtualList from '../../internal/virtual-list.vue';
+    import { VirtualList } from '../../internal/index';
     import useConfig from '../config-provider/use-config';
     import AutoSizer from './auto-sizer.vue';
     import type { FlattenNode, NodeListProps } from './interface';

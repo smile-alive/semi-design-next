@@ -2,7 +2,7 @@
     import { computed, h } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterBaseProps, type PreviewFooterState } from '@fibrae/semi-foundation/components/image/preview-footer-foundation';
-    import useFoundation from '../../../base/use-foundation';
+    import { useFoundation } from '../../../base/index';
     import Divider from '../../divider';
     import useLocale from '../../locale/use-locale';
     import type { ImagePreviewSlots, MenuProps, RatioType, RotateDirection } from '../interface';

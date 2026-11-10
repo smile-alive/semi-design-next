@@ -2,15 +2,11 @@ import { type JSX, For, Show, children, createMemo, splitProps, untrack } from '
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
 import PaginationFoundation, { type PageList, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import { formatLocale, type Locale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/pagination/pagination.scss';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { hasContent, mergeRefs } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import InputNumber from '../input-number';
 import useLocale from '../locale/use-locale';

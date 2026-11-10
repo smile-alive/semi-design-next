@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
 import type { VideoControl, VideoPlayerEmits, VideoPlayerHandle, VideoPlayerProps } from '../index';

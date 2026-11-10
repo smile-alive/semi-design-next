@@ -1,4 +1,4 @@
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { dp } from './test-utils';
 
 export const focusClass = `${BASE_CLASS_PREFIX}-input-wrapper-focus`;

@@ -1,6 +1,5 @@
 import { inheritGroupLooks } from '@fibrae/semi-foundation/components/button/utils';
-import { createContext } from '../../base/create-context';
-import { usePopupLayer } from '../../base/popup-layer';
+import { createContext, usePopupLayer } from '../../base/index';
 import { useInputGroupInScope } from '../input/context';
 import type { ButtonProps } from './base-button';
 

@@ -1,9 +1,7 @@
 // compat toString maps null/undefined to '' and keeps the sign of -0
 import { toString } from 'es-toolkit/compat';
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { isComposing } from '../../utils/key-code';
-import { isSecondaryPress } from '../../utils/pointer';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isComposing, isSecondaryPress } from '../../utils/index';
 import { recordCaretTail, restoreCaretTail } from './caret';
 import { numbers } from './constants';
 

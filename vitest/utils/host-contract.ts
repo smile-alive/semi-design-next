@@ -1,5 +1,5 @@
 import { expect, it } from 'vite-plus/test';
-import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '@fibrae/semi-foundation/base';
 
 export interface ContractProps {
     label?: string;

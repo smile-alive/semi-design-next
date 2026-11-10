@@ -4,13 +4,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
     import TabsFoundation, { type MotionView, type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/components/tabs/foundation';
     import '@fibrae/semi-foundation/components/tabs/tabs.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useDidUpdate from '../../composables/use-did-update';
-    import useSlotVersion from '../../composables/use-slot-version';
-    import { splitControlAttrs } from '../../utils/control-attrs';
-    import slotNodes from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
+    import { useDidUpdate, useSlotVersion } from '../../composables/index';
+    import { splitControlAttrs, slotNodes } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import { provideTabsContext } from './context';
     import { getPanelId, getTabId } from './ids';

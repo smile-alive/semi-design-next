@@ -1,6 +1,6 @@
 import type { JSX, Ref } from 'solid-js';
 import type { ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
-import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base';
 import type { CodeItemProps } from './code';
 import type { FileItemProps } from './file';
 import type { ImageUploadNodeOptions } from './image-slot';

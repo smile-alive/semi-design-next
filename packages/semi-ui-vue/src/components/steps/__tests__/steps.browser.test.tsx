@@ -1,6 +1,6 @@
 /** @jsxImportSource vue */
 import { describe, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import Steps, { Step } from '../index';

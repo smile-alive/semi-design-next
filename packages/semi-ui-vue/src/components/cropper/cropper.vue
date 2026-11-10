@@ -4,15 +4,11 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
     import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
     import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/cropper/cropper.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import useEventListener from '../../composables/use-event-listener';
-    import useResizeObserver from '../../composables/use-resize-observer';
-    import HydratedImage from '../../internal/hydrated-image.vue';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
+    import { useEventListener, useResizeObserver } from '../../composables/index';
+    import { HydratedImage } from '../../internal/index';
     import useLocale from '../locale/use-locale';
     import type { CropperEmits, CropperHandle, CropperProps } from './interface';
 

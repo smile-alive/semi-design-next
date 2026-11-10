@@ -2,7 +2,7 @@ import { createRawSnippet, flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore, snapshot } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import type { CascaderChangeValue, CascaderData, CascaderEntity, CascaderProps, CascaderTriggerSnippetProps, CascaderValue } from '..';
 import CascaderCase from './cascader-case.svelte';
 

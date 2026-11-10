@@ -1,7 +1,7 @@
 <script lang="ts">
     import { settleConfirm } from '@fibrae/semi-foundation/components/modal/confirm';
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
-    import { createId } from '@fibrae/semi-foundation/utils/uuid';
+    import { createId } from '@fibrae/semi-foundation/utils';
     import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-svelte';
     import { getConfigContext } from '../config-provider/context.js';
     import type { ConfirmProps, ModalNode } from './interface.js';

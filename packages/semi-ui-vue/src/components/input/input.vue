@@ -1,15 +1,12 @@
 <script setup lang="ts">
     import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch, type InputHTMLAttributes } from 'vue';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
     import InputFoundation, { type InputAdapter } from '@fibrae/semi-foundation/components/input/foundation';
     import '@fibrae/semi-foundation/components/input/input.scss';
     import { IconClear, IconEyeClosedSolid, IconEyeOpened } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
-    import slotKind from '../../utils/slot-kind';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs, slotKind } from '../../utils/index';
     import useLocale from '../locale/use-locale';
     import useGroupLooks from './composables/use-group-looks';
     import useTextEntry from './composables/use-text-entry';

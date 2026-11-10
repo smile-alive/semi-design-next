@@ -7,7 +7,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import Popover from '@fibrae/semi-ui-vue/popover/index';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import AIChatInput, { getConfigureItem, type AIChatInputActionAreaSlotProps, type AIChatInputHandle, type AIChatInputSuggestionItemSlotProps, type AIChatInputTemplateSlotProps, type AIChatInputTopSlotProps, type AIChatInputUploadButtonSlotProps } from '../index';
 import InputHost from './fixtures/input-host.vue';

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 import type { PopoverProps } from '../popover/index';
 
 export type TagColor = (typeof strings.TAG_COLOR)[number];

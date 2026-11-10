@@ -3,8 +3,8 @@ import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/cons
 import ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
 import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
 import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import useFoundation from '../../base/use-foundation';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
+import { useFoundation } from '../../base/index';
 import { useLocale } from '../locale';
 
 export type ColorChooseAreaProps = ColorChooseAreaBaseProps;

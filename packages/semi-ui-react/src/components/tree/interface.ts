@@ -15,7 +15,7 @@ import type {
     ScrollAlign,
     TreeMotionType,
 } from '@fibrae/semi-foundation/components/tree/foundation';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 
 export type ExpandIcon = ReactNode | ((props: { onClick: (e: MouseEvent) => void; className: string; expanded: boolean }) => ReactNode);
 

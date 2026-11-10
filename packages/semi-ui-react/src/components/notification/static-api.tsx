@@ -1,7 +1,6 @@
 import NotificationApi from '@fibrae/semi-foundation/components/notification/notification-api-foundation';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
-import { render as reactRender, unmount as reactUnmount } from '../../utils/react-render';
-import { readGlobalDefaults } from '../../utils/semi-global';
+import { assertClient } from '@fibrae/semi-foundation/utils';
+import { render as reactRender, unmount as reactUnmount, readGlobalDefaults } from '../../utils/index';
 import type { NotificationOptions } from './notice';
 import NotificationList from './notification-list';
 import useNotification from './use-notification';

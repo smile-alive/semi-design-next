@@ -1,7 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
-    import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils/upload-status';
+    import { getFileType, isImageFile, isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils';
     import { IconAlertCircle, IconClear } from '@fibrae/semi-icons-svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import Progress from '@fibrae/semi-ui-svelte/progress/progress.svelte';

@@ -1,4 +1,4 @@
-import { isImageFile } from '../../../utils/file-suffix';
+import { isImageFile } from '../../../utils/index';
 import type { MessageContent, Reference, Setup } from '../../ai-chat-input/interface';
 import type { InputMessage } from '../foundation';
 

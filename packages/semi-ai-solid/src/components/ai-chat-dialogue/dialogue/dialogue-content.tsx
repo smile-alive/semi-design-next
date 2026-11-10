@@ -6,7 +6,7 @@ import { messageToChatInput } from '@fibrae/semi-ai-foundation/components/ai-cha
 import DialogueFoundation, { type ContentItem, type CustomToolCall, type FunctionToolCall, type InputFile, type InputImage, type InputMessage, type InputText, type Message, type OutputMessage, type OutputText, type Reasoning, type Refusal } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { findContentItemRenderer, getAttachmentLayout, getVisibleAnnotations, isAwaitingOutput, isImageList } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
 import { getMessageText } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-text';
-import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+import { getFileType } from '@fibrae/semi-ai-foundation/utils';
 import { IconAlertCircle, IconCode, IconExcel, IconFile, IconPdf, IconSendMsgStroked, IconVideo, IconWord, IconWrench } from '@fibrae/semi-icons-solid';
 import Image from '@fibrae/semi-ui-solid/image/index';
 import MarkdownRender from '@fibrae/semi-ui-solid/markdown-render/index';

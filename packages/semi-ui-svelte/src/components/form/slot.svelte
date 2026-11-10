@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
-    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/form/form.scss';
     import { getFormContext } from './context.js';
     import ErrorMessage from './error-message.svelte';

@@ -2,7 +2,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
 import AudioPlayer from '../audio-player.vue';

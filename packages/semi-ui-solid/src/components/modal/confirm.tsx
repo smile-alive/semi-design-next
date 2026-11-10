@@ -2,8 +2,8 @@ import { createSignal, onMount } from 'solid-js';
 import { resolveConfirmProps } from '@fibrae/semi-foundation/components/modal/confirm';
 import ConfirmInstance from '@fibrae/semi-foundation/components/modal/confirm-instance';
 import ConfirmRegistry from '@fibrae/semi-foundation/components/modal/confirm-registry';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
-import renderDetached from '../../base/detached-render';
+import { assertClient } from '@fibrae/semi-foundation/utils';
+import { renderDetached } from '../../base/index';
 import ConfirmModal, { type ConfirmProps } from './confirm-modal';
 import type { ModalProps } from './modal';
 

@@ -1,8 +1,7 @@
 <script setup lang="ts" generic="T = BasicSelectValue, Multiple extends boolean | undefined = undefined">
     import { useTemplateRef } from 'vue';
     import { numbers } from '@fibrae/semi-foundation/components/select/constants';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault } from '../../base/index';
     import type { BasicSelectValue, SelectCreateItemSlotProps, SelectEmits, SelectHandle, SelectOptionItemSlotProps, SelectProps, SelectSelectedItemSlotProps, SelectSlots, SelectTriggerSlotProps } from './interface';
     import SelectBody from './select-body.vue';
     import { readOptions } from './utils';

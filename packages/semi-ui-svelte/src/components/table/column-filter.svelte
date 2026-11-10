@@ -1,7 +1,7 @@
 <script lang="ts">
     import { isEqual } from 'es-toolkit';
     import { IconFilter } from '@fibrae/semi-icons-svelte';
-    import watch from '../../hooks/watch.svelte.js';
+    import { watch } from '../../hooks/index.js';
     import Dropdown from '../dropdown/dropdown.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import ColumnFilterMenu, { type FilterMenuState } from './column-filter-menu.svelte';

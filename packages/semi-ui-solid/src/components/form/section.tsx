@@ -2,8 +2,8 @@ import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import '@fibrae/semi-foundation/components/form/form.scss';
-import type { ElementProps } from '../../base/element-props';
-import hasContent from '../../utils/has-content';
+import type { ElementProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 
 const prefix = cssClasses.PREFIX;
 

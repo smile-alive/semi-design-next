@@ -2,8 +2,8 @@
 
 import { type Component, shallowRef } from 'vue';
 import ConfirmInstance from '@fibrae/semi-foundation/components/modal/confirm-instance';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
-import { createHolder } from '../../base/holder';
+import { createId } from '@fibrae/semi-foundation/utils';
+import { createHolder } from '../../base/index';
 import { withConfirm, withError, withInfo, withSuccess, withWarning } from './confirm';
 import ConfirmModal from './confirm-modal.vue';
 import type { ConfirmProps, ModalConfirmProps, ModalHookApi, ModalHookRef } from './interface';

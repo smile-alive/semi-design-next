@@ -2,9 +2,9 @@
 import { defineComponent, nextTick, shallowRef, type ComponentPublicInstance } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Image, { ImagePreview, type ImagePreviewProps, type ImageProps } from '..';
 

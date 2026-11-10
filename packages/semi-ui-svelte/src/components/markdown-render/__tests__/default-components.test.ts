@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { registerCodeHighlight } from '../../code-highlight';
 import { grammar } from '../../code-highlight/__tests__/grammars';
 import { MarkdownRender } from '../index';

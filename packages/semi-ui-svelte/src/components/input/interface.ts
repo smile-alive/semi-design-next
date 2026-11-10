@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
-import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import type { LabelProps } from '../form/interface.js';
 
 export type InputSize = Size;

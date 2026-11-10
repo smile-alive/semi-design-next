@@ -1,7 +1,7 @@
 import { StrictMode, useState, type ReactElement } from 'react';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { hydrateFromServer } from '@test/utils/react';
 import { Avatar, Calendar, Feedback, Image, ImagePreview, Modal, SideSheet, Table, Transfer, UserGuide } from '../index';
 import { ssrCases } from './ssr-cases';

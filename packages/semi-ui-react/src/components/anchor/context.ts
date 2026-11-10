@@ -1,5 +1,5 @@
 import type { AnchorProps, AnchorState } from '.';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export type AnchorContextType = Pick<AnchorProps, 'showTooltip' | 'position' | 'autoCollapse' | 'size'> &
     Pick<AnchorState, 'activeLink'> & {

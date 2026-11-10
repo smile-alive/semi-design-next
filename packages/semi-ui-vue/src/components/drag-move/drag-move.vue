@@ -1,9 +1,8 @@
 <script setup lang="ts">
     import { onBeforeUnmount, type ComponentPublicInstance } from 'vue';
     import DragMoveFoundation, { type DragMoveAdapter } from '@fibrae/semi-foundation/components/drag-move/foundation';
-    import semiDefault, { readSemiDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import slotNodes from '../../utils/slot-nodes';
+    import { semiDefault, readSemiDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { slotNodes } from '../../utils/index';
     import type { DragMoveEmits, DragMoveProps, DragMoveSlots } from './interface';
 
     type Foundation = DragMoveFoundation<DragMoveProps>;

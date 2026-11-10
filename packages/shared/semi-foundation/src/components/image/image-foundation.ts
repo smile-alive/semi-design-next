@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 
 export type ImageLoadStatus = 'loading' | 'success' | 'error';
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { applyColumnResize, findColumn, getColumnResizeChange, getExpandColumn, getResizableColumns, getSelectionColumn } from '@fibrae/semi-foundation/components/table/utils';
-import warning from '@fibrae/semi-foundation/utils/warning';
+import { warning } from '@fibrae/semi-foundation/utils';
 import type { TableProps, ColumnProps, RowSelectionProps } from './interface';
 import NormalTable from './normal-table';
 import ResizableHeaderCell from './table-header/resizable-header-cell';

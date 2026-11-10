@@ -1,4 +1,4 @@
-import { formatLocale } from '../../locale/format';
+import { formatLocale } from '../../locale/index';
 import { normalizeFieldError, type FieldError, type FieldErrorInput } from './errors';
 
 export type RuleType = 'string' | 'number' | 'integer' | 'float' | 'boolean' | 'array' | 'object' | 'date' | 'email' | 'url' | 'regexp' | 'method';

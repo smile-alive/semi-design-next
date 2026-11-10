@@ -2,7 +2,7 @@
     import { computed, onBeforeUnmount, onMounted, shallowRef, watch } from 'vue';
     import ArrayFieldRows from '@fibrae/semi-foundation/components/form/array-field-rows';
     import { resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
-    import { semiGlobalDefault } from '../../base/semi-default';
+    import { semiGlobalDefault } from '../../base/index';
     import { provideArrayFieldContext, requireFormContext, useArrayFieldContext } from './context';
     import type { ArrayFieldItem, ArrayFieldProps, ArrayFieldSlots } from './interface';
     import { cloneDeep } from './utils';

@@ -1,13 +1,12 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+    import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
     import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import YearAndMonthFoundation, { type MonthScrollItem, type YearAndMonthAdapter, type YearAndMonthFoundationProps, type YearScrollItem } from '@fibrae/semi-foundation/components/date-picker/year-and-month-foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import { IconChevronLeft } from '@fibrae/semi-icons-vue';
-    import SlotFragment from '../../base/slot-fragment';
-    import useFoundation from '../../base/use-foundation';
+    import { SlotFragment, useFoundation } from '../../base/index';
     import IconButton from '../icon-button/icon-button.vue';
     import type { ScrollItemHandle, ScrollItemSelectData } from '../scroll-list/interface';
     import ScrollItem from '../scroll-list/scroll-item.vue';

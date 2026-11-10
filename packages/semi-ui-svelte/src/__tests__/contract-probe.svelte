@@ -1,6 +1,6 @@
 <script lang="ts">
     import { type ContractAdapter, type ContractProps, type ContractState, ContractFoundation } from '@test/utils/host-contract';
-    import useFoundation from '../base/use-foundation.svelte';
+    import { useFoundation } from '../base/index.js';
 
     interface Hooks {
         log: (entry: string) => void;

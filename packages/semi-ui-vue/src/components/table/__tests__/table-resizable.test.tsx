@@ -2,7 +2,7 @@
 import { defineComponent, nextTick, ref } from 'vue';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { getData, render } from '@test/utils/vue';
 import Table, { TableColumn, type ColumnProps, type TableExpandedRowSlotProps, type TableResizeFn } from '..';
 import { P, getBodyRows, mountTable, query, queryAll } from './table-helpers';

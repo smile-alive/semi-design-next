@@ -2,8 +2,8 @@ import { StrictMode, createRef } from 'react';
 import { renderToString } from 'react-dom/server';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { mockMatchMedia } from '@test/utils/react';
 import { Layout } from '../index';
 

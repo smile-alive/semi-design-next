@@ -4,8 +4,8 @@ import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/components/ta
 import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
 import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
 import { IconChevronRight, IconChevronLeft, IconChevronDown } from '@fibrae/semi-icons-react';
-import useFoundation from '../../base/use-foundation';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { useFoundation } from '../../base/index';
+import { useMergedRef } from '../../hooks/index';
 import ReactResizeObserver from '../../internal/resize-observer';
 import Button from '../button';
 import Dropdown, { type DropdownProps } from '../dropdown';

@@ -3,9 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/spin/constants';
     import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
     import '@fibrae/semi-foundation/components/spin/spin.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import SpinIcon from './icon.vue';
     import type { SpinProps, SpinSlots } from './interface';

@@ -1,8 +1,8 @@
 import type { JSX } from 'solid-js';
 import type { VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
 import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
-import type { ElementProps } from '../../base/element-props';
-import type { MediaEventKeys } from '../../utils/media-event-keys';
+import type { ElementProps } from '../../base/index';
+import type { MediaEventKeys } from '../../utils/index';
 
 export interface VideoPlayerOption<T> {
     label: string;

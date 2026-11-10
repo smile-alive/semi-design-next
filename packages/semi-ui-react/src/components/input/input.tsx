@@ -1,17 +1,14 @@
 import type React from 'react';
 import { useCallback, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { type ValidateStatus, FocusTrapHandle } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
 import InputFoundation, { type InputAdapter, type InputBaseState } from '@fibrae/semi-foundation/components/input/foundation';
-import { stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import { stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/input/input.scss';
 import { IconClear, IconEyeOpened, IconEyeClosedSolid } from '@fibrae/semi-icons-react';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import { hasContent, isSemiIcon, isText } from '../../utils';
+import { useDefaultProps, useFoundation } from '../../base/index';
+import { hasContent, isSemiIcon, isText } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import { InputGroupContext, useInputGroupInScope, withInputGroup } from './context';
 

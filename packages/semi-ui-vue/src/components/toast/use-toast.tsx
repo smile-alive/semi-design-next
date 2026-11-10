@@ -1,14 +1,12 @@
 /** @jsxImportSource vue */
 
 import type { Component } from 'vue';
-import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-import { createHookApi } from '@fibrae/semi-foundation/base/hook-api';
+import { omitInstanceIds, createHookApi } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
 import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
-import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createHolder } from '../../base/holder';
-import { useSemiGlobal } from '../../base/semi-default';
+import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
+import { createHolder, useSemiGlobal } from '../../base/index';
 import type { ToastHookApi, ToastHookOptions } from './interface';
 import ToastList from './toast-list.vue';
 

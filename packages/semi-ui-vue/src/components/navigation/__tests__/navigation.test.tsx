@@ -6,7 +6,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi, type MockInstance } from 'vite-plus/test';
 import { IconHome } from '@fibrae/semi-icons-vue';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Nav, { NavFooter, NavHeader, NavItem, SubNav, type ItemKey, type NavClickData, type NavItemConfig, type NavOpenChangeData, type NavWrapperSlotProps, type OnSelectedData, type SelectedData } from '..';
 import Button from '../../button';

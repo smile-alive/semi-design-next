@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconMapPin } from '@fibrae/semi-icons-vue';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { mockResizeObserver, render } from '@test/utils/vue';

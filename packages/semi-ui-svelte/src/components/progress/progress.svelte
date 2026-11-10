@@ -4,8 +4,8 @@
     import { generateColor } from '@fibrae/semi-foundation/components/progress/generates';
     import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/components/progress/utils';
     import '@fibrae/semi-foundation/components/progress/progress.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import type { ProgressProps } from './interface.js';
 
     const defaults = useDefaultProps('Progress');

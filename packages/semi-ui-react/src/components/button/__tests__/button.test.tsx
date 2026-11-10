@@ -1,12 +1,12 @@
 import { StrictMode, createRef } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconEdit } from '@fibrae/semi-icons-react';
 import IconButton from '@fibrae/semi-ui-react/icon-button';
 import InputGroup from '@fibrae/semi-ui-react/input/input-group';
 import Space from '@fibrae/semi-ui-react/space';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import ButtonGroup from '../button-group';
 import Button, { type ButtonProps, type HtmlType } from '../index';
 import SplitButtonGroup from '../split-button-group';

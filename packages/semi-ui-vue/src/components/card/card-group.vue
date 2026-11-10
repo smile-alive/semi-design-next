@@ -2,8 +2,7 @@
     import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
     import '@fibrae/semi-foundation/components/card/card.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
     import Space from '../space';
     import type { CardGroupProps, CardGroupSlots } from './interface';
 

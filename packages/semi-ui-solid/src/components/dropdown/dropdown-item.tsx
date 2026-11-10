@@ -3,10 +3,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
 import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { IconTick } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '../../base/element-props';
-import callHandler from '../../utils/call-handler';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import type { ElementProps } from '../../base/index';
+import { callHandler, hasContent, mergeRefs } from '../../utils/index';
 import { menuItems, useDropdownContext } from './context';
 
 export type Type = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';

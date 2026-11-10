@@ -3,12 +3,10 @@
     import { pick } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewFoundation, { getGroupPreviewList, loadLazyImages, type PreviewAdapter, type PreviewBaseState } from '@fibrae/semi-foundation/components/image/preview-foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/image/image.scss';
-    import type { ElementProps, EmitHandlers } from '../../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../../base/semi-default';
-    import useFoundation from '../../../base/use-foundation';
-    import useIntersectionObserver from '../../../composables/use-intersection-observer';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../../base/index';
+    import { useIntersectionObserver } from '../../../composables/index';
     import { providePreviewContext, type GroupImage } from '../context';
     import type { ImagePreviewComponentProps, ImagePreviewEmits, ImagePreviewSlots } from '../interface';
     import { previewDefaults } from './defaults';

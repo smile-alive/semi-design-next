@@ -1,13 +1,11 @@
 import { children, createSignal, Match, Show, splitProps, Switch, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, type strings } from '@fibrae/semi-foundation/components/empty/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/empty/empty.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useMutationObserver from '../../primitives/use-mutation-observer';
-import hasContent from '../../utils/has-content';
-import isMarkup from '../../utils/is-markup';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { useMutationObserver } from '../../primitives/index';
+import { hasContent, isMarkup } from '../../utils/index';
 import Typography from '../typography';
 
 const prefixCls = cssClasses.PREFIX;

@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { crossesFocusBoundary } from '../../utils/a11y';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { crossesFocusBoundary } from '../../utils/index';
 import type { RadioChangeEvent } from './radio-foundation';
 
 export interface RadioGroupAdapter<P extends RadioGroupBaseProps = RadioGroupBaseProps> extends DefaultAdapter<P, RadioGroupBaseState> {

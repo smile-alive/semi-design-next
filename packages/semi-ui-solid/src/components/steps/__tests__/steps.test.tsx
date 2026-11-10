@@ -2,9 +2,9 @@ import { createSignal, For, Show } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import Steps, { type BasicStepProps, type FillStepProps, type NavStepProps, type Status, type StepProps, type StepsProps } from '..';
 
 const Step = Steps.Step;

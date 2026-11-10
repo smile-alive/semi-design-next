@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { Comment, createTextVNode, h } from 'vue';
 import { describe, expect, it } from 'vite-plus/test';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Divider from '../index';
 import WithIcon from './fixtures/with-icon.vue';

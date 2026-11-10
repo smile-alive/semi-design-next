@@ -2,13 +2,12 @@
     import { Text, useAttrs } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/components/tag/focus';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import '@fibrae/semi-foundation/components/tag/tag.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useControllable from '../../composables/use-controllable';
-    import { hasClickListener } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { useControllable } from '../../composables/index';
+    import { hasClickListener } from '../../utils/index';
     import Avatar from '../avatar';
     import useLocale from '../locale/use-locale';
     import type { TagCloseEvent, TagEmits, TagProps, TagSlots } from './interface';

@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import { crossesFocusBoundary } from '@fibrae/semi-foundation/utils/a11y';
+import { crossesFocusBoundary } from '@fibrae/semi-foundation/utils';
 
 interface TextEntry {
     handleChange(value: string, e: unknown): void;

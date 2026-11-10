@@ -2,7 +2,7 @@ import { fireEvent, render } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { type FormApi, Form, FormInput } from '..';
 
 const errorSelector = '.semi-form-field-error-message';

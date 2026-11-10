@@ -1,9 +1,8 @@
 import { children, createEffect, createSignal, splitProps, untrack } from 'solid-js';
 import { addAreaObservedAttributes, containsControl, containsName } from '@fibrae/semi-foundation/components/upload/utils';
-import type { ElementProps } from '../../base/element-props';
-import useMutationObserver from '../../primitives/use-mutation-observer';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import type { ElementProps } from '../../base/index';
+import { useMutationObserver } from '../../primitives/index';
+import { hasContent, mergeRefs } from '../../utils/index';
 import { AddAreaContext, type AddAreaContextValue } from './context';
 
 interface AddAreaProps extends ElementProps<'div', 'ref'> {

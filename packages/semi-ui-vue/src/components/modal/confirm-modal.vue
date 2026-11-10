@@ -2,9 +2,9 @@
     import { computed, isVNode, shallowRef, type FunctionalComponent, type ShallowRef, type VNode } from 'vue';
     import { settleConfirm } from '@fibrae/semi-foundation/components/modal/confirm';
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
-    import { createId } from '@fibrae/semi-foundation/utils/uuid';
-    import type { EmitProps } from '../../base/element-props';
-    import elementType from '../../utils/element-type';
+    import { createId } from '@fibrae/semi-foundation/utils';
+    import type { EmitProps } from '../../base/index';
+    import { elementType } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import type { ConfirmModalProps, ModalEmits } from './interface';
     import Modal from './modal.vue';

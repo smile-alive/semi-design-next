@@ -2,13 +2,12 @@ import { type DragEvent, useCallback, useImperativeHandle, useRef } from 'react'
 import clsx from 'clsx';
 import { cssClasses, isUnfinishedMessageStatus } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
+import type { Locale } from '@fibrae/semi-foundation/locale';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
 import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-react';
-import useDefaultProps from '@fibrae/semi-ui-react/base/use-default-props';
-import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
+import { useDefaultProps, useFoundation } from '@fibrae/semi-ui-react/base';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import ReactResizeObserver from '@fibrae/semi-ui-react/internal/resize-observer/index';

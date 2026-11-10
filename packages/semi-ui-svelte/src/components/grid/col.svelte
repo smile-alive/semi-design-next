@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
     import { getColClassName, getColStyle } from '@fibrae/semi-foundation/components/grid/utils';
     import '@fibrae/semi-foundation/components/grid/grid.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { ColProps } from './interface.js';
 
     const defaults = useDefaultProps('Col');

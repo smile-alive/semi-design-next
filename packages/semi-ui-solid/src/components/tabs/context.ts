@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { TabPosition, TabType } from './interface';
 
 export interface TabsView {

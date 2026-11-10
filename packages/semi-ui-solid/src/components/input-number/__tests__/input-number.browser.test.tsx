@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import InputNumber, { type InputNumberProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-input-number`;

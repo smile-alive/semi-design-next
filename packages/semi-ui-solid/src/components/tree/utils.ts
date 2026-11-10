@@ -1,4 +1,4 @@
-import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
+import { shallowEqualObjects } from '@fibrae/semi-foundation/utils';
 import type { TreeRowProps } from './interface';
 
 /** Every re-flatten builds new nodes and isEnd arrays; rows with the same content compare equal and do not re-render */

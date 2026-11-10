@@ -1,5 +1,5 @@
 import { throttle } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '@fibrae/semi-foundation/base';
 import { strings } from './constants';
 
 /** Each framework narrows `icon` and `desc` to what it renders and passes its option type as the `O` parameter below */

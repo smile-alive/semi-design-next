@@ -3,9 +3,9 @@
     import { get } from 'es-toolkit/compat';
     import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
     import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import SlotFragment from '../../base/slot-fragment';
-    import type { KeyedNode } from '../../utils/slot-nodes';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
+    import { SlotFragment } from '../../base/index';
+    import type { KeyedNode } from '../../utils/index';
     import ColumnSelection from './column-selection.vue';
     import { useTableContext } from './context';
     import CustomExpandIcon from './custom-expand-icon.vue';

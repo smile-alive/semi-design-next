@@ -1,7 +1,5 @@
 import { Text, type VNode } from 'vue';
-import elementType from '../../utils/element-type';
-import { childSlots, normalizeVNodeProps, toVNodes as toNodes } from '../../utils/read-vnode';
-import slotNodes from '../../utils/slot-nodes';
+import { elementType, childSlots, normalizeVNodeProps, toVNodes as toNodes, slotNodes } from '../../utils/index';
 import type { OverflowItem, PlainTab } from './interface';
 
 export interface TabEntry extends PlainTab {

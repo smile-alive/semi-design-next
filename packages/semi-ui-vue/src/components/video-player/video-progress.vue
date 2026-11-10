@@ -4,8 +4,7 @@
     import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
     import '@fibrae/semi-foundation/components/video-player/video-player.scss';
-    import SlotFragment from '../../base/slot-fragment';
-    import useFoundation from '../../base/use-foundation';
+    import { SlotFragment, useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip/tooltip.vue';
     import type { VideoProgressEmits, VideoProgressProps } from './interface';

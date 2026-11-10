@@ -2,7 +2,7 @@
     import type { ClassValue } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { IconCopy, IconTick } from '@fibrae/semi-icons-svelte';
-    import useCopied from '../../hooks/use-copied.svelte.js';
+    import { useCopied } from '../../hooks/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import Tooltip from '../tooltip/tooltip.svelte';
     import type { TypographyCopySnippets } from './interface.js';

@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinish
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { mockResizeObserver, sleep } from '@test/utils/solid';
 import Code from '../code';
 import Chat from '../index';

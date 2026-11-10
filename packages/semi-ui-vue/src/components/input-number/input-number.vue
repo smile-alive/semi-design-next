@@ -3,10 +3,8 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/input-number/constants';
     import InputNumberFoundation, { reachesBound, type InputNumberAdapter } from '@fibrae/semi-foundation/components/input-number/foundation';
     import '@fibrae/semi-foundation/components/input-number/input-number.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { isNotClassOrStyle, splitControlAttrs } from '../../utils/index';
     import Input, { type InputHandle } from '../input';
     import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';

@@ -1,7 +1,7 @@
 import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
-import type { HookApi } from '@fibrae/semi-foundation/base/hook-api';
+import type { HookApi } from '@fibrae/semi-foundation/base';
 import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 
 export type { ConfigProps, ConfigProps as ToastConfigProps, Directions, ToastState, ToastTheme, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';

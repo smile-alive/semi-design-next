@@ -18,8 +18,7 @@
         sliceColumnsByLevel,
         type TableHeaderCell,
     } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
+    import { toCssLength, isSecondaryPress } from '@fibrae/semi-foundation/utils';
     import useLocale from '../../locale/use-locale.svelte.js';
     import type { TooltipTriggerProps } from '../../tooltip/interface.js';
     import Tooltip from '../../tooltip/tooltip.svelte';

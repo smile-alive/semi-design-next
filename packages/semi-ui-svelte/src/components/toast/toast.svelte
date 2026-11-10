@@ -1,14 +1,12 @@
 <script lang="ts">
     import { onMount, untrack } from 'svelte';
-    import { isAlertType } from '@fibrae/semi-foundation/base/list-store';
+    import { isAlertType } from '@fibrae/semi-foundation/base';
     import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/components/toast/constants';
     import ToastFoundation, { type ToastAdapter, type ToastState, type ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-    import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { pinAnimatedHeight, toCssLength } from '@fibrae/semi-foundation/utils';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import useNoticeClose from '../../hooks/use-notice-close.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { useNoticeClose } from '../../hooks/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import IconButton from '../icon-button/icon-button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';

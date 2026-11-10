@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import type { strings } from '@fibrae/semi-foundation/components/anchor/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { Position } from '../tooltip/interface.js';
 import type { ShowTooltip } from '../typography/interface.js';
 

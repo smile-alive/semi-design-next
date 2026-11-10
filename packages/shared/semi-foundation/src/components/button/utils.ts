@@ -1,4 +1,4 @@
-import type { Size } from '../../utils/type';
+import type { Size } from '../../utils/index';
 import { cssClasses } from './constants';
 
 export type ButtonTheme = 'solid' | 'borderless' | 'light' | 'outline';

@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { TagInputValidateStatus } from '@fibrae/semi-foundation/components/tag-input/foundation';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import type { PopoverProps } from '../popover/index.js';
 import type { TypographyShowTooltip as ShowTooltip } from '../typography/index.js';
 

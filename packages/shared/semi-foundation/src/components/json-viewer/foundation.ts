@@ -1,6 +1,6 @@
 import { isEqual, omitBy } from 'es-toolkit';
 import { type JsonViewerOptions, type CustomRenderRule, type FindMatch, type TokenRenderType, JsonViewer } from '@fibrae/semi-json-viewer-core';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { cssClasses } from './constants';
 export type { JsonViewerOptions, CustomRenderRule, FindMatch, TokenRenderType };
 

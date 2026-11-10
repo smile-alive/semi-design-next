@@ -1,7 +1,5 @@
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation from '../../base/foundation';
-import { handlePrevent, isTextEditor, setFocusToFirstItem, setFocusToLastItem } from '../../utils/a11y';
-import { getPopupTrigger } from '../../utils/layer';
+import { FocusTrapHandle, BaseFoundation } from '../../base/index';
+import { handlePrevent, isTextEditor, setFocusToFirstItem, setFocusToLastItem, getPopupTrigger } from '../../utils/index';
 import { numbers, strings } from './constants';
 import type { DropdownContextAdapter } from './menu-foundation';
 

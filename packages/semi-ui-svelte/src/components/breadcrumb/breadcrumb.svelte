@@ -1,12 +1,10 @@
 <script lang="ts">
     import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
     import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/components/breadcrumb/foundation';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
-    import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
+    import { handoverFocus, getDataAttr } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/breadcrumb/breadcrumb.scss';
     import { IconMore } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Popover } from '../popover/index.js';
     import BreadcrumbItem from './breadcrumb-item.svelte';

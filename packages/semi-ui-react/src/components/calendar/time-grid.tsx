@@ -5,7 +5,7 @@ import { calcRowHeight, toPercent } from '@fibrae/semi-foundation/components/cal
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { useMergedRef } from '../../hooks/index';
 import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import DayCol from './day-col';

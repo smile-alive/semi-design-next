@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import ConfigProvider, { type ConfigProviderProps } from '@fibrae/semi-ui-react/config-provider';
 import { isWebKit, tab } from '@test/utils/browser';
 import Slider, { type SliderProps } from '../index';

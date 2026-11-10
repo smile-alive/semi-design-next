@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import warning from '../../utils/warning';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { warning } from '../../utils/index';
 import type { Position } from '../tooltip/foundation';
 import { numbers } from './constants';
 

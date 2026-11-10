@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import Carousel from '..';

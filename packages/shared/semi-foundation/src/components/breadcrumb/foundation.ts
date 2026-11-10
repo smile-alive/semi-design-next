@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import isEnterPress from '../../utils/is-enter-press';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isEnterPress } from '../../utils/index';
 import type { Route } from './item-foundation';
 
 export interface BreadcrumbState {

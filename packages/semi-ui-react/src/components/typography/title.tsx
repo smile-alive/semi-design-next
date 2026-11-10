@@ -1,7 +1,7 @@
 import type React from 'react';
 import { memo } from 'react';
 import { strings } from '@fibrae/semi-foundation/components/typography/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import Base from './base';
 import type { OmitTypographyProps, TypographyCommonProps, TypographyEllipsisProps } from './interface';
 

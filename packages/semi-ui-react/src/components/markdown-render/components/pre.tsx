@@ -1,6 +1,6 @@
 import { type PropsWithChildren, Children, isValidElement } from 'react';
 import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
-import elementTypeOf from '../../../utils/element-type';
+import { elementTypeOf } from '../../../utils/index';
 
 // CodeHighlight's div and pre are invalid inside a pre, so the wrapper of a highlighted block goes; only a code component
 // marked 'MarkdownRender.Code' is detected, and code it does not highlight (split into elements by a plugin) keeps the pre

@@ -18,12 +18,9 @@
         type FlattenData,
         type GroupFlattenData,
     } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import warning from '@fibrae/semi-foundation/utils/warning';
-    import useEventListener from '../../../composables/use-event-listener';
-    import useRaf from '../../../composables/use-raf';
-    import useResizeObserver from '../../../composables/use-resize-observer';
-    import VirtualList, { type VirtualListAlign, type VirtualListScrollArgs } from '../../../internal/virtual-list.vue';
+    import { toCssLength, warning } from '@fibrae/semi-foundation/utils';
+    import { useEventListener, useRaf, useResizeObserver } from '../../../composables/index';
+    import { VirtualList, type VirtualListAlign, type VirtualListScrollArgs } from '../../../internal/index';
     import useLocale from '../../locale/use-locale';
     import ColGroup from '../col-group.vue';
     import { useTableContext } from '../context';

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { omit } from 'es-toolkit';
-    import { getStackDepths, hasLostFocus, isStackExpanded } from '@fibrae/semi-foundation/base/list-store';
+    import { getStackDepths, hasLostFocus, isStackExpanded } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
     import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import watch from '../../hooks/watch.svelte.js';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
+    import { watch } from '../../hooks/index.js';
     import { type ListedNotice, type RegisterNotice, setNoticeListContext } from './context.js';
     import type { NotificationListProps } from './interface.js';
     import Notice from './notice.svelte';

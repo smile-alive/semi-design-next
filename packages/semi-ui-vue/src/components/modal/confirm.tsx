@@ -5,9 +5,9 @@ import { type App, render } from 'vue';
 import { resolveConfirmProps } from '@fibrae/semi-foundation/components/modal/confirm';
 import ConfirmInstance from '@fibrae/semi-foundation/components/modal/confirm-instance';
 import ConfirmRegistry from '@fibrae/semi-foundation/components/modal/confirm-registry';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
+import { assertClient } from '@fibrae/semi-foundation/utils';
 import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
-import { rootAppContext, setInstalledApp } from '../../base/installed-app';
+import { rootAppContext, setInstalledApp } from '../../base/index';
 import ConfirmModal from './confirm-modal.vue';
 import type { ConfirmProps, ModalConfirmProps, ModalHookRef } from './interface';
 

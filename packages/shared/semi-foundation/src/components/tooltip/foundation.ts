@@ -1,11 +1,6 @@
 import type { FocusableElement } from 'tabbable';
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import PopupLifecycle from '../../base/popup-lifecycle';
-import ReleaseHolder from '../../base/release-holder';
-import { openLayer, popupTriggerSelector } from '../../utils/layer';
-import type { ArrayElement } from '../../utils/type';
-import warning from '../../utils/warning';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, PopupLifecycle, ReleaseHolder } from '../../base/index';
+import { openLayer, popupTriggerSelector, type ArrayElement, warning } from '../../utils/index';
 import { adjustPosition } from './adjust-position';
 import { numbers, strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
 

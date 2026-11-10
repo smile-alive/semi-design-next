@@ -1,8 +1,5 @@
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import ModalResources from '../../base/modal-resources';
-import PopupLifecycle from '../../base/popup-lifecycle';
-import { coversPage } from '../../utils/dom';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, ModalResources, PopupLifecycle } from '../../base/index';
+import { coversPage } from '../../utils/index';
 import { strings } from './constants';
 
 export type Placement = 'top' | 'bottom' | 'left' | 'right';

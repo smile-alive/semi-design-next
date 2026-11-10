@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import Nav, { type NavItemProps, type SubNavProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-navigation`;

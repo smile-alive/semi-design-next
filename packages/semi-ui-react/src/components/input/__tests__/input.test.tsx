@@ -2,11 +2,11 @@ import { createRef, StrictMode, useState } from 'react';
 import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSearch } from '@fibrae/semi-icons-react';
 import { Form, FormInput, InputGroup, InputNumber, Tooltip } from '@fibrae/semi-ui-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Input, { type InputChangeEvent, type InputGroupProps, type InputHandle, type InputProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-input`;

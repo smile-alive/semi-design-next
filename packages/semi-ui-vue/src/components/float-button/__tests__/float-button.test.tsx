@@ -2,7 +2,7 @@
 import { nextTick } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import FloatButtonGroup from '../float-button-group.vue';
 import FloatButton from '../float-button.vue';

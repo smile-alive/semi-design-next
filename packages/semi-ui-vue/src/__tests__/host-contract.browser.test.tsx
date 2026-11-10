@@ -2,7 +2,7 @@
 import { createApp, defineComponent } from 'vue';
 import { describe, expect, it } from 'vite-plus/test';
 import { type ContractAdapter, type ContractProps, type ContractState, ContractFoundation, stateText } from '@test/utils/host-contract';
-import useFoundation from '../base/use-foundation';
+import { useFoundation } from '../base/index';
 
 class StateWritingFoundation extends ContractFoundation {
     override init() {

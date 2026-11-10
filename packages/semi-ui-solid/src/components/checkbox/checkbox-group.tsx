@@ -2,11 +2,8 @@ import { createMemo, createUniqueId, Index, Show, splitProps, type JSX } from 's
 import clsx from 'clsx';
 import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState, type CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
 import { checkboxGroupClasses as css, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import callHandler from '../../utils/call-handler';
-import { omitFormInjected } from '../../utils/control-attrs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { callHandler, omitFormInjected } from '../../utils/index';
 import Checkbox, { type CheckboxProps } from './checkbox';
 import { CheckboxGroupContext, type CheckboxGroupContextValue } from './context';
 

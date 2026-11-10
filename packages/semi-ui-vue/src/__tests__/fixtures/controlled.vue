@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import useControllable from '../../composables/use-controllable';
+    import { useControllable } from '../../composables/index';
 
     const props = withDefaults(
         defineProps<{

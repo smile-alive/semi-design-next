@@ -1,12 +1,9 @@
 import { isEqual, merge, pick } from 'es-toolkit';
 // compat get resolves deep path strings such as 'a.b'
 import { get } from 'es-toolkit/compat';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { formatLocale } from '../../locale/format';
-import { differenceUnique, withOrderSort } from '../../utils/array';
-import isObject from '../../utils/is-object';
-import type { ArrayElement } from '../../utils/type';
-import warning, { isDev } from '../../utils/warning';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { formatLocale } from '../../locale/index';
+import { differenceUnique, withOrderSort, isObject, type ArrayElement, warning, isDev } from '../../utils/index';
 import type { BaseCheckboxProps } from '../checkbox/checkbox-foundation';
 import { convertDataToEntities, calcCheckedKeysForChecked, calcCheckedKeysForCheckedKeys, calcCheckedKeysForUnchecked } from '../tree/tree-util';
 import { strings, numbers } from './constants';

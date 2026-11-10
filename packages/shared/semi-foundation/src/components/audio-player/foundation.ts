@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { ignoreExpectedMediaErrors } from '../video-player/utils';
 import { DEFAULT_RATE } from './constants';
 

@@ -1,6 +1,6 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import type { LabelProps } from '../form/interface';
 
 export type InputSize = Size;

@@ -17,6 +17,9 @@
         "./*.css": "./dist/*.css",
         "./*.scss": "./dist/*.scss",
         "./package.json": "./package.json",
+        "./base": "./dist/base/index.js",
+        "./locale": "./dist/locale/index.js",
+        "./utils": "./dist/utils/index.js",
         "./*": "./dist/*.js"
     },
     "scripts": {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { shallowRef, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import useResizeObserver from '../../composables/use-resize-observer';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
+    import { useResizeObserver } from '../../composables/index';
     import type { AutoSizerProps } from './interface';
 
     const props = withDefaults(defineProps<AutoSizerProps>(), { defaultWidth: '100%' });

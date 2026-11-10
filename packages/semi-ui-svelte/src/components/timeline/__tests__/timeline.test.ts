@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { Timeline, type TimelineData, type TimelineMode } from '../index';
 import TimelineDemo from './timeline-demo.svelte';
 

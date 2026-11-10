@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, type VNode } from 'vue';
-    import { usePopupLayer } from '../../base/popup-layer';
+    import { usePopupLayer } from '../../base/index';
     import { type AvatarGroupMoreItem, provideAvatarGroupMoreContext } from './context';
 
     // provide() covers this component's subtree, so the more slot gets its own component scope.

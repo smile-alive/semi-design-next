@@ -2,11 +2,11 @@ import { createRef, StrictMode, useState } from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { PinCode, Form, FormPinCode, Tooltip } from '@fibrae/semi-ui-react';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
 import { en_US } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { PinCodeHandle, PinCodeProps } from '../index';
 
 const wrapperSelector = `.${BASE_CLASS_PREFIX}-pincode-wrapper`;

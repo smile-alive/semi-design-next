@@ -3,8 +3,7 @@ import { memo, type ReactNode, type CSSProperties } from 'react';
 import clsx from 'clsx';
 import { strings, cssClasses } from '@fibrae/semi-foundation/components/space/constants';
 import '@fibrae/semi-foundation/components/space/space.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
+import { type ElementProps, useDefaultProps } from '../../base/index';
 
 const prefixCls = cssClasses.PREFIX;
 

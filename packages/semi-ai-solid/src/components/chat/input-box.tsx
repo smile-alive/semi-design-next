@@ -4,13 +4,13 @@ import { omit } from 'es-toolkit';
 import { cssClasses, strings, type SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/components/chat/inputbox-foundation';
 import { IconArrowUp, IconChainStroked, IconDeleteStroked } from '@fibrae/semi-icons-solid';
-import useFoundation from '@fibrae/semi-ui-solid/base/use-foundation';
+import { useFoundation } from '@fibrae/semi-ui-solid/base';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import TextArea, { type TextAreaInternalProps } from '@fibrae/semi-ui-solid/input/textarea';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import Tooltip, { type GetTriggerProps, type TooltipProps } from '@fibrae/semi-ui-solid/tooltip/index';
 import Upload, { type FileItem, type UploadElement } from '@fibrae/semi-ui-solid/upload/index';
-import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
+import { mergeRefs } from '@fibrae/semi-ui-solid/utils';
 import Attachment from './attachment';
 import type { ChatProps, RenderInputAreaProps } from './interface';
 

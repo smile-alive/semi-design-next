@@ -1,6 +1,6 @@
 import { memo, useRef, type PointerEvent, type SyntheticEvent, type ThHTMLAttributes } from 'react';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/table/constants';
-import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
+import { isSecondaryPress } from '@fibrae/semi-foundation/utils';
 
 export interface ResizableHeaderCellProps extends ThHTMLAttributes<HTMLTableCellElement> {
     onResize?: ResizeHandler;

@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
 import type { StepStatus } from '@fibrae/semi-foundation/components/steps/utils';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 
 export type Status = StepStatus;
 export type Size = 'default' | 'small';

@@ -2,13 +2,12 @@ import { batch, children, createMemo, createSignal, Show, splitProps } from 'sol
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/tag/constants';
 import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/components/tag/focus';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
+import { handlePrevent } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/tag/tag.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
-import useDefaultProps from '../../base/use-default-props';
-import callHandler from '../../utils/call-handler';
-import hasContent from '../../utils/has-content';
+import { useDefaultProps } from '../../base/index';
+import { callHandler, hasContent } from '../../utils/index';
 import Avatar from '../avatar';
 import useLocale from '../locale/use-locale';
 import type { TagCloseEvent, TagColor, TagProps, TagSize, TagType } from './interface';

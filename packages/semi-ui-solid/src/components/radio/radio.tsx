@@ -2,18 +2,11 @@ import { children, createMemo, createUniqueId, onCleanup, onMount, Show, splitPr
 import clsx from 'clsx';
 import { radioClasses as css, type strings } from '@fibrae/semi-foundation/components/radio/constants';
 import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
-import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+import { joinIds } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/radio/radio.scss';
 import { IconRadio } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import autofocus from '../../utils/autofocus';
-import callHandler from '../../utils/call-handler';
-import { isNativeInputKey, omitFormInjected, splitControlAttrs } from '../../utils/control-attrs';
-import forwardFocus from '../../utils/forward-focus';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { autofocus, callHandler, isNativeInputKey, omitFormInjected, splitControlAttrs, forwardFocus, hasContent, mergeRefs } from '../../utils/index';
 import { useSpecialTrigger } from '../tooltip/context';
 import { type RadioMode, useRadioGroupContext } from './context';
 

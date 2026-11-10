@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import clsx from 'clsx';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/date-picker/constants';
 import DatePickerFoundation, {
     getYearMonthFromValue,
@@ -18,14 +18,11 @@ import DatePickerFoundation, {
     type InputSize,
     type ValueType,
 } from '@fibrae/semi-foundation/components/date-picker/foundation';
-import { isInnerControlKey, namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { isInnerControlKey, namedRole, noop } from '@fibrae/semi-foundation/utils';
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useClickOutside from '../../hooks/use-click-outside';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useClickOutside } from '../../hooks/index';
 import Trigger from '../../internal/trigger';
 import { useConfigContext } from '../config-provider/context';
 import type { InputHandle } from '../input';

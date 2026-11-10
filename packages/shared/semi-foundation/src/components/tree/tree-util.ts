@@ -5,7 +5,7 @@
 
 import { difference, uniq, omit } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
-import isObject from '../../utils/is-object';
+import { isObject } from '../../utils/index';
 import { strings } from './constants';
 import type { BasicKeyEntities, BasicTreeNodeData, BasicTreeNodeProps, BasicValue } from './foundation';
 

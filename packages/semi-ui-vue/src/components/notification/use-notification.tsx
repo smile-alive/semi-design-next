@@ -1,13 +1,11 @@
 /** @jsxImportSource vue */
 
 import type { Component } from 'vue';
-import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-import { createHookApi } from '@fibrae/semi-foundation/base/hook-api';
+import { omitInstanceIds, createHookApi } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
 import { createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createHolder } from '../../base/holder';
-import { useSemiGlobal } from '../../base/semi-default';
+import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
+import { createHolder, useSemiGlobal } from '../../base/index';
 import type { NotificationHookApi, NotificationHookOptions } from './interface';
 import NotificationList from './notification-list.vue';
 

@@ -4,8 +4,7 @@
 import type React from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
 import { getColClassName, getColStyle, type ColSize } from '@fibrae/semi-foundation/components/grid/utils';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
+import { type ElementProps, useDefaultProps } from '../../base/index';
 
 export type { ColSize };
 

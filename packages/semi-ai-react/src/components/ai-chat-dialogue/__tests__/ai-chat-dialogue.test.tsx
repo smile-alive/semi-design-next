@@ -3,13 +3,13 @@ import { act, fireEvent, render, screen, waitFor, within } from '@testing-librar
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi, type Mock } from 'vite-plus/test';
 import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { AIChatDialogue } from '@fibrae/semi-ai-react';
 import { Modal, Toast } from '@fibrae/semi-ui-react';
 import type { AvatarProps } from '@fibrae/semi-ui-react/avatar/index';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { countLiveListeners, endLeaveAnimations, sleep } from '@test/utils/react';
 import { ReferenceWidget } from '../dialogue/content-item/reference';
 import DialogueAvatar from '../dialogue/dialogue-avatar';

@@ -1,5 +1,5 @@
 import { clamp } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import type { ColorFormat, HsvaColor, RgbaColor } from './interface';
 import { hexToHsva, hexToRgba, hsvaStringToHsva, hsvaToHex, hsvaToRgba, invalidColorString, rgbaToHex, rgbaStringToHsva, rgbaStringToRgba, rgbaToHsva } from './utils/convert';
 

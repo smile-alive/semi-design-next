@@ -4,12 +4,10 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation, { type UploadAdapter, type UploadBaseProps, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
     import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
-    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { joinIds, namedRole, toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconUpload } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import Cropper from '../cropper/cropper.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import Modal from '../modal/modal.svelte';

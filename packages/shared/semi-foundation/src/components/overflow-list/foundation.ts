@@ -1,6 +1,6 @@
 import { isEqual } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { numbers, SCROLL_KEY_ATTRIBUTE, strings } from './constants';
 
 const Boundary = strings.BOUNDARY_MAP;

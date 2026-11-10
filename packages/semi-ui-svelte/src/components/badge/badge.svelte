@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
     import '@fibrae/semi-foundation/components/badge/badge.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import type { BadgeProps } from './interface.js';
 

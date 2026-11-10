@@ -1,7 +1,7 @@
 import { For } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import useLocale from '../locale/use-locale';
 import type { TimeColProps } from './interface';

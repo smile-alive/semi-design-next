@@ -2,7 +2,7 @@ import { type ReactElement, useEffect } from 'react';
 import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSend } from '@fibrae/semi-icons-react';
 import { ConfigProvider, Modal, type ModalHookApi } from '@fibrae/semi-ui-react';
 import type { ModalReactProps } from '../modal';

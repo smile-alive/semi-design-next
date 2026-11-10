@@ -1,5 +1,5 @@
 import { type ShallowRef, shallowRef } from 'vue';
-import useMutationObserver from '../../composables/use-mutation-observer';
+import { useMutationObserver } from '../../composables/index';
 
 /**
  * The `theme-mode` attribute of document.body, tracked after mount. Server render and hydration see null, so the

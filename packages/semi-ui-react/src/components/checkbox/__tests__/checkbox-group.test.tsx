@@ -2,7 +2,7 @@ import { useLayoutEffect } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Checkbox, CheckboxGroup } from '@fibrae/semi-ui-react';
 import type { CheckboxEvent, CheckboxGroupProps, CheckboxOptionItem, CheckboxProps } from '../index';
 

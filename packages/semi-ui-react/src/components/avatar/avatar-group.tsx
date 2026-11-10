@@ -1,10 +1,9 @@
 import React, { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { usePopupLayer } from '../../base/popup-layer';
-import useDefaultProps from '../../base/use-default-props';
-import flattenChildren from '../../utils/flatten-children';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
+import { usePopupLayer, useDefaultProps } from '../../base/index';
+import { flattenChildren } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import Avatar from './avatar';
 import { AvatarGroupContext } from './context';

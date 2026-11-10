@@ -3,11 +3,10 @@ import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
 import type { Direction, HandlerCallback } from '@fibrae/semi-foundation/components/resizable/types';
-import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
+import { isSecondaryPress } from '@fibrae/semi-foundation/utils';
 import { IconHandle } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { useMergedRef } from '../../hooks/index';
 import useLocale from '../locale/use-locale';
 import { useResizeContext } from './context';
 

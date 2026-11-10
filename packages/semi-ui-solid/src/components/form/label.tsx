@@ -1,11 +1,10 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+import { toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/form/form.scss';
-import type { ElementProps } from '../../base/element-props';
-import hasContent from '../../utils/has-content';
-import mergeStyles from '../../utils/merge-styles';
+import type { ElementProps } from '../../base/index';
+import { hasContent, mergeStyles } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 
 const prefixCls = cssClasses.PREFIX;

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { useDefaultProps } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import AvatarGroupMore from './avatar-group-more.svelte';
     import Avatar from './avatar.svelte';

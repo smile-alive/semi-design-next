@@ -1,11 +1,11 @@
 import { StrictMode } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { ConfigProvider, UserGuide, LocaleProvider, Modal } from '@fibrae/semi-ui-react';
 import type { ButtonProps } from '@fibrae/semi-ui-react/button';
 import { en_US } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { StepItem, UserGuideProps } from '../index';
 
 let popoverProps: object = {};

@@ -1,6 +1,6 @@
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { DefaultAdapter } from '../../base/foundation';
-import type { Locale } from '../../locale/interface';
+import type { DefaultAdapter } from '../../base/index';
+import type { Locale } from '../../locale/index';
 import type { FieldError, FieldErrorInput } from './errors';
 import type FieldStore from './field-store';
 import type { RuleItem } from './rules';

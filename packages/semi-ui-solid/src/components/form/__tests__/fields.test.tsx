@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import userEvent from '@testing-library/user-event';
 import { format } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { type FormApi, Form, FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormRadio, FormRadioGroup, FormSwitch, FormTagInput, FormTransfer, FormTreeSelect, FormUpload } from '..';
 

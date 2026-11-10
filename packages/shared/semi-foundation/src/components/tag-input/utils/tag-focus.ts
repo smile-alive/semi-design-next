@@ -1,5 +1,5 @@
 import { type FocusableElement, tabbable } from 'tabbable';
-import FocusTrapHandle from '../../../base/focus-handle';
+import { FocusTrapHandle } from '../../../base/index';
 import { cssClasses } from '../constants';
 
 // Tags are rebuilt when drag handles come or go, so a focused tag is found again by its place among the tags' tab stops

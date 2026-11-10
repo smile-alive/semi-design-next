@@ -1,6 +1,6 @@
 import { omit } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import arrayMove from '../../utils/array-move';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { arrayMove } from '../../utils/index';
 import type { BasicValue as BasicTreeValue } from '../tree/foundation';
 import { numbers, strings } from './constants';
 import { _generateDataByType, _generateSelectedItems } from './transfer-utils';

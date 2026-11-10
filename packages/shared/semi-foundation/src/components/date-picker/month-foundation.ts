@@ -1,5 +1,5 @@
 import { addDays, addMonths, addYears, clamp, differenceInCalendarMonths, endOfMonth, endOfWeek, format, parseISO, startOfMonth, startOfWeek } from 'date-fns';
-import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter, type DirectionContext } from '../../base/index';
 import getDayOfWeek from './_utils/get-day-of-week';
 import getMonthTable, { type WeekStartNumber } from './_utils/get-month-table';
 import { isAfter, isBefore, isBetween, isSameDay } from './_utils/index';

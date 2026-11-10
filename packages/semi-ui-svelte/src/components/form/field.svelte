@@ -1,6 +1,6 @@
 <script lang="ts" generics="C extends Component<any, any, any>">
     import { type Component, untrack } from 'svelte';
-    import warning from '@fibrae/semi-foundation/utils/warning';
+    import { warning } from '@fibrae/semi-foundation/utils';
     import { getFormContext } from './context.js';
     import FieldInner from './field-inner.svelte';
     import type { FormFieldProps } from './interface.js';

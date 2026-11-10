@@ -1,7 +1,7 @@
 import { type JSX, Show, createSignal, untrack } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import useResizeObserver from '../../primitives/use-resize-observer';
+import { toCssLength } from '@fibrae/semi-foundation/utils';
+import { useResizeObserver } from '../../primitives/index';
 
 export interface AutoSizerProps {
     defaultHeight?: number | string;

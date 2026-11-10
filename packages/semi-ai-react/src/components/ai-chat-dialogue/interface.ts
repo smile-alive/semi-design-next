@@ -2,7 +2,7 @@ import React, { type ReactNode } from 'react';
 import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { AvatarProps } from '@fibrae/semi-ui-react/avatar/index';
-import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
+import type { ElementProps } from '@fibrae/semi-ui-react/base';
 import type { MarkdownRenderProps as OriginMarkdownRenderProps } from '@fibrae/semi-ui-react/markdown-render/index';
 
 // raw and ref belong to each message's own renderer

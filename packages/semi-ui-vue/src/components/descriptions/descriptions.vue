@@ -3,10 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
     import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
     import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault from '../../base/semi-default';
-    import elementType from '../../utils/element-type';
-    import slotNodes from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault } from '../../base/index';
+    import { elementType, slotNodes } from '../../utils/index';
     import { provideDescriptionsContext } from './context';
     import DescriptionsItem from './descriptions-item.vue';
     import type { DescriptionsData, DescriptionsProps, DescriptionsSlots } from './interface';

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
-    import useResizeObserver from '../../composables/use-resize-observer';
+    import { useResizeObserver } from '../../composables/index';
 
     // Reports its own size. A component, not a v-for function ref: an inline ref is new each render, so the observer would
     // re-observe, report the initial size again, and the measurement would re-render forever.

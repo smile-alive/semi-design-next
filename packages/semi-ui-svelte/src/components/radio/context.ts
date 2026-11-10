@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { RadioChangeEvent, RadioGroupButtonSize, RadioMode, RadioValue } from './interface.js';
 
 // Read by property, so a radio re-renders for the keys it uses only.

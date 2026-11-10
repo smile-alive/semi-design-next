@@ -2,7 +2,7 @@
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, preventBackspaceNavigation, tab } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import Checkbox, { CheckboxGroup } from '..';

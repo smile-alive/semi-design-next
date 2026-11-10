@@ -4,14 +4,10 @@
     import { ResizableFoundation, type ResizableAdapter, type ResizableBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
     import { directions, type Direction } from '@fibrae/semi-foundation/components/resizable/types';
     import { getStringSize, isKeyboardEdge } from '@fibrae/semi-foundation/components/resizable/utils';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
+    import { namedRole, toCssLength, isSecondaryPress } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/resizable/resizable.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useResizeObserver from '../../composables/use-resize-observer';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { useResizeObserver } from '../../composables/index';
     import useLocale from '../locale/use-locale';
     import type { ResizableEmits, ResizableProps, ResizableSlots } from './interface';
 

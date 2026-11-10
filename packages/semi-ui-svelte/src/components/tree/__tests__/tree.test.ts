@@ -1,10 +1,10 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 import type { TreeProps } from '../interface';
 import { click, collapsedCls, getExpandIcon, getLevelNodes, getNode, getOptions, getSearchWrapper, getSelected, getTree, optionCls, press, search, selectedCls, spyOn, treeData, treeData2 } from './data';

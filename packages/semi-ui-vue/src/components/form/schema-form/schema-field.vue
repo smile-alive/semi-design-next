@@ -2,11 +2,10 @@
     import { type Component, computed, h, watch } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { blankRow, describeSchemaField, resolveJsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import warning from '@fibrae/semi-foundation/utils/warning';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { warning } from '@fibrae/semi-foundation/utils';
     import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-vue';
-    import { semiGlobalDefault } from '../../../base/semi-default';
-    import SlotFragment from '../../../base/slot-fragment';
+    import { semiGlobalDefault, SlotFragment } from '../../../base/index';
     import Button from '../../button';
     import useLocale from '../../locale/use-locale';
     import ArrayField from '../array-field.vue';

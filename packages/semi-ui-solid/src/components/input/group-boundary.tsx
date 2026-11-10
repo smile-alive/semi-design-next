@@ -1,5 +1,5 @@
 import { type JSX, untrack } from 'solid-js';
-import { usePopupLayer } from '../../base/popup-layer';
+import { usePopupLayer } from '../../base/index';
 import { type InputGroupContextValue, InputGroupContext, useInputGroupContext } from './context';
 
 export interface InputGroupBoundaryProps {

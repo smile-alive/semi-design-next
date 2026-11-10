@@ -2,7 +2,7 @@
     import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
     import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
-    import type { ElementProps } from '../../base/element-props';
+    import type { ElementProps } from '../../base/index';
     import type { SkeletonParagraphProps } from './interface';
 
     const props = withDefaults(defineProps<SkeletonParagraphProps & /* @vue-ignore */ ElementProps<'ul', keyof SkeletonParagraphProps>>(), { rows: 4 });

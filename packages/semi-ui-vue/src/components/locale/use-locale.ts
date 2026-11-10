@@ -1,6 +1,5 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue';
-import type { LocaleComponentName, LocaleResult } from '@fibrae/semi-foundation/locale/index';
-import { resolveLocale } from '@fibrae/semi-foundation/locale/resolve-locale';
+import { type LocaleComponentName, type LocaleResult, resolveLocale } from '@fibrae/semi-foundation/locale';
 import useConfig from '../config-provider/use-config';
 import { useLocaleContext } from './context';
 

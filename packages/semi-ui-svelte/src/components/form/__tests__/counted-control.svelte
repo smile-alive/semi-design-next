@@ -1,5 +1,5 @@
 <script lang="ts">
-    import watch from '@fibrae/semi-ui-svelte/hooks/watch.svelte';
+    import { watch } from '@fibrae/semi-ui-svelte/hooks/index';
 
     let { value = $bindable(), onUpdate }: { value?: unknown; onUpdate?: (value: unknown) => void } = $props();
 

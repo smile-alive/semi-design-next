@@ -4,10 +4,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/collapsible/constants';
 import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleFoundationProps } from '@fibrae/semi-foundation/components/collapsible/foundation';
 import '@fibrae/semi-foundation/components/collapsible/collapsible.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useMergedRef } from '../../hooks/index';
 
 export interface CollapsibleProps extends CollapsibleFoundationProps, ElementProps<'div'> {
     motion?: boolean;

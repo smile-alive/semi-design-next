@@ -6,28 +6,24 @@
 </script>
 
 <script lang="ts">
-    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
-    import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-    import { createHookApi } from '@fibrae/semi-foundation/base/hook-api';
+    import { omitInstanceIds, createHookApi } from '@fibrae/semi-foundation/base';
     import { cssClasses as toastCssClasses } from '@fibrae/semi-foundation/components/toast/constants';
     import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
-    import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
+    import { namedRole, handoverFocus, KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
-    import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '@fibrae/semi-ui-svelte/base';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import Divider from '@fibrae/semi-ui-svelte/divider/divider.svelte';
     import { observeResize, useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import type { ToastHookOptions } from '@fibrae/semi-ui-svelte/toast/interface';
     import ToastList from '@fibrae/semi-ui-svelte/toast/toast-list.svelte';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';
-    import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+    import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
     import ChatBox from './chat-box/chat-box.svelte';
     import { setChatContext } from './context.js';
     import Hint from './hint.svelte';

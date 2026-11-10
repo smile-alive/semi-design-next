@@ -1,4 +1,4 @@
-import { VALIDATE_STATUS, BASE_CLASS_PREFIX } from '../../base/constants';
+import { VALIDATE_STATUS, BASE_CLASS_PREFIX } from '../../base/index';
 import { numbers as popoverNumber, strings as POPOVER_STRINGS } from '../popover/constants';
 
 const dayItemClasses = {

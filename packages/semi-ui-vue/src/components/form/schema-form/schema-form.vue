@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="Values extends Record<string, any> = Record<string, any>, Output = Values">
     import { useTemplateRef } from 'vue';
-    import type { ElementProps, EmitHandlers, EmitProps } from '../../../base/element-props';
-    import { semiGlobalDefault } from '../../../base/semi-default';
+    import { type ElementProps, type EmitHandlers, type EmitProps, semiGlobalDefault } from '../../../base/index';
     import Form from '../form.vue';
     import type { FormDefaultSlotProps, FormEmits, FormHandle, FormProps, FormSlots, SchemaFieldSharedProps } from '../interface';
     import SchemaField from './schema-field.vue';

@@ -2,9 +2,8 @@ import { splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
 import DropdownMenuFoundation, { type DropdownContextAdapter } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
-import type { ElementProps } from '../../base/element-props';
-import useFoundation from '../../base/use-foundation';
-import callHandler from '../../utils/call-handler';
+import { type ElementProps, useFoundation } from '../../base/index';
+import { callHandler } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { menuContext, useDropdownContext } from './context';
 

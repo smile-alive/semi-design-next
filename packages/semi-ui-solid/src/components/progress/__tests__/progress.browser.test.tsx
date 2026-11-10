@@ -1,6 +1,6 @@
 import { render } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import Progress, { type ProgressProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-progress`;

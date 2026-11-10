@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
-import { crossesFocusBoundary } from '../../utils/a11y';
+import { BaseFoundation, type DefaultAdapter, type DirectionContext } from '../../base/index';
+import { crossesFocusBoundary } from '../../utils/index';
 
 /** The members of a focus event the foundation reads; DOM events and React synthetic events both satisfy it */
 export type RatingFocusEvent = { currentTarget: Node; relatedTarget: Node | null };

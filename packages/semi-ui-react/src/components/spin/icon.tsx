@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import semiGlobal from '../../utils/semi-global';
+import { semiGlobal } from '../../utils/index';
 
 export default function Icon() {
     // the url(#id) gradient reference needs an id unique per instance and equal on server and client

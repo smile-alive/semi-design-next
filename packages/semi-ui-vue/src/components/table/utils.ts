@@ -1,11 +1,8 @@
 import { Text, type VNode, type VNodeChild } from 'vue';
 import { isEqualWith } from 'es-toolkit';
 import { assignColumnKeys, getDefaultComponents, placeInnerColumns } from '@fibrae/semi-foundation/components/table/utils';
-import warning from '@fibrae/semi-foundation/utils/warning';
-import elementType from '../../utils/element-type';
-import { nativeTag } from '../../utils/native-tag';
-import { childSlots, normalizeVNodeProps, toVNodes, type RawSlots } from '../../utils/read-vnode';
-import slotNodes, { isSlotContent, type KeyedNode } from '../../utils/slot-nodes';
+import { warning } from '@fibrae/semi-foundation/utils';
+import { elementType, nativeTag, childSlots, normalizeVNodeProps, toVNodes, type RawSlots, slotNodes, isSlotContent, type KeyedNode } from '../../utils/index';
 import type { MergedTableComponents } from './context';
 import type { ColumnProps, TableComponent, TableComponents } from './interface';
 

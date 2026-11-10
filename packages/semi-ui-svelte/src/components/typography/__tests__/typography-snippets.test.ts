@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import Fixture from './snippets-fixture.svelte';
 
 const prefix = 'semi-typography';

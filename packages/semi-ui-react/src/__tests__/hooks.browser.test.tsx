@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import useClickOutside from '../hooks/use-click-outside';
+import { useClickOutside } from '../hooks/index';
 
 function Picker({ onOutside }: { onOutside: (e: MouseEvent) => void }) {
     const listRef = useRef<HTMLDivElement>(null);

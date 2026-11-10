@@ -3,8 +3,7 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
-import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-props';
+import type { ElementProps, BaseProps } from '../../base/index';
 import { useNavContext } from './context';
 
 export type Logo = React.ReactNode;

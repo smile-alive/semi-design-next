@@ -2,7 +2,7 @@ import type { JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { flattenColumns, getColumnsMinWidth } from '@fibrae/semi-foundation/components/table/utils';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+import { toCssLength } from '@fibrae/semi-foundation/utils';
 import ColGroup from '../col-group';
 import { useTableContext } from '../context';
 import type { ColumnProps, Sticky } from '../interface';

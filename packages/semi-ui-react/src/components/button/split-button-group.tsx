@@ -4,10 +4,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
 import { markEnds } from '@fibrae/semi-foundation/components/button/utils';
 import '@fibrae/semi-foundation/components/button/button.scss';
-import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-props';
-import useDefaultProps from '../../base/use-default-props';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { type ElementProps, type BaseProps, useDefaultProps } from '../../base/index';
+import { useMergedRef } from '../../hooks/index';
 
 const prefixCls = cssClasses.PREFIX;
 

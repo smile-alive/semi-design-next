@@ -1,7 +1,7 @@
 import type { VNode } from 'vue';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import type { ResponsiveConfig } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
-import type { LocaleInput } from '@fibrae/semi-foundation/locale/index';
+import type { LocaleInput } from '@fibrae/semi-foundation/locale';
 
 export interface ContextValue extends ResponsiveConfig {
     direction?: 'ltr' | 'rtl';

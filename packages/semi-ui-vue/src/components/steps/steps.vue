@@ -1,11 +1,10 @@
 <script setup lang="ts">
     import { computed, Text } from 'vue';
     import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, useSemiGlobal } from '../../base/semi-default';
-    import slotNodes from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, readSemiDefault, useSemiGlobal } from '../../base/index';
+    import { slotNodes } from '../../utils/index';
     import { Col, Row } from '../grid';
     import { provideStepsContext } from './context';
     import type { StepsProps, StepsSlots } from './interface';

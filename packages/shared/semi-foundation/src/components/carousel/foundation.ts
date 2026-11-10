@@ -1,5 +1,5 @@
 import { debounce } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter, type DirectionContext } from '../../base/index';
 import { numbers } from './constants';
 
 export interface CarouselAdapter<P extends CarouselBaseProps = CarouselBaseProps> extends DefaultAdapter<P, CarouselState, DirectionContext> {

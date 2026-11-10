@@ -3,9 +3,9 @@ import { createApp, defineComponent, h, KeepAlive, ref, type Component, type VNo
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { countLiveListeners, render } from '@test/utils/vue';
 import TreeSelect, { type TreeSelectEmits, type TreeSelectHandle, type TreeSelectSearchSlotProps, type TreeSelectSelectedItemSlotProps, type TreeSelectTriggerSlotProps } from '..';
 import { CheckboxGroup } from '../../checkbox';

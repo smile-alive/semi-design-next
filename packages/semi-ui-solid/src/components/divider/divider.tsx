@@ -1,11 +1,10 @@
 import { children, createMemo, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/divider/constants';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+import { toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/divider/divider.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import hasContent from '../../utils/has-content';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 
 const prefixCls = cssClasses.PREFIX;
 

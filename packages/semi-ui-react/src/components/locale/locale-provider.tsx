@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { LocaleInput } from '@fibrae/semi-foundation/locale/index';
+import type { LocaleInput } from '@fibrae/semi-foundation/locale';
 import { LocaleContext, useLocaleContext } from './context';
 
 export interface LocaleProviderProps {

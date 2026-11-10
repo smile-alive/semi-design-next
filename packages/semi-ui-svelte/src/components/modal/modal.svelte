@@ -2,11 +2,10 @@
     import { onMount, untrack } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import ModalFoundation, { type ModalAdapter, type ModalProps as FoundationModalProps, type ModalState } from '@fibrae/semi-foundation/components/modal/modal-foundation';
-    import isPromise from '@fibrae/semi-foundation/utils/is-promise';
+    import { isPromise } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/modal/modal.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import Portal from '../../internal/portal.svelte';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { Portal } from '../../internal/index.js';
     import Button from '../button/button.svelte';
     import { getConfigContext } from '../config-provider/context.js';
     import useLocale from '../locale/use-locale.svelte.js';

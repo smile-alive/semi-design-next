@@ -1,11 +1,9 @@
 <script setup lang="ts">
     import { Text, computed, type Slots, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import type { ElementProps } from '../../base/element-props';
-    import { usePopupLayer } from '../../base/popup-layer';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { type ElementProps, usePopupLayer, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { slotNodes, type KeyedNode } from '../../utils/index';
     import useLocale from '../locale/use-locale';
     import AvatarGroupMore from './avatar-group-more.vue';
     import Avatar from './avatar.vue';

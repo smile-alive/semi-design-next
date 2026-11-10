@@ -1,4 +1,4 @@
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
 import { cssClasses, strings } from './constants';
 import type { MCPConfigureMode, MCPOption } from './mcp-cof-content-foundation';
 

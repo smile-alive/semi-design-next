@@ -3,11 +3,9 @@ import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
 import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/components/markdown-render/foundation';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/markdown-render/markdown-render.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import * as defaultComponents from './components';
 import runtime, { Fragment, isMarkdownElement, markdownNodeKey, renderMarkdownNode } from './runtime';
 

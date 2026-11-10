@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import type { ElementProps } from '../../base/element-props';
+    import type { ElementProps } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import type { LabelProps, LabelSlots } from './interface';
 

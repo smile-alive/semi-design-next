@@ -1,5 +1,5 @@
 import { mergeProps, type VNode } from 'vue';
-import slotNodes, { isSlotContent, type KeyedNode } from '../../utils/slot-nodes';
+import { slotNodes, isSlotContent, type KeyedNode } from '../../utils/index';
 import type { UserGuideButtonProps } from './interface';
 
 // A false v-if leaves a comment and template whitespace an empty text: neither is content. Call once per render so a

@@ -2,12 +2,12 @@ import { createRef, Profiler, StrictMode, useState } from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
 import { Form, FormInputNumber, withField } from '@fibrae/semi-ui-react';
 import type { LocaleInput } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { default as InputNumber, type InputNumberHandle, type InputNumberProps } from '../index';
 
 type InputNumberCallback<K extends keyof InputNumberProps> = NonNullable<InputNumberProps[K]>;

@@ -1,8 +1,8 @@
 import { children, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
-import type { ElementProps } from '../../base/element-props';
-import hasContent from '../../utils/has-content';
+import type { ElementProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 
 const prefixCls = cssClasses.PREFIX;
 

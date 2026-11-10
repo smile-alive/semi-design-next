@@ -3,10 +3,9 @@
     import { omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/feedback/constants';
     import FeedbackFoundation, { isFeedbackValueEmpty, type FeedbackAdapter, type FeedbackBaseState } from '@fibrae/semi-foundation/components/feedback/foundation';
-    import isPromise from '@fibrae/semi-foundation/utils/is-promise';
+    import { isPromise } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/feedback/feedback.scss';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
     import Button from '../button';
     import useLocale from '../locale/use-locale';
     import Modal from '../modal';

@@ -2,8 +2,8 @@ import { createSignal, For, onMount } from 'solid-js';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import Checkbox, { CheckboxGroup, type CheckboxGroupProps, type CheckboxOptionItem, type CheckboxProps } from '..';
 import Popover from '../../popover';
 

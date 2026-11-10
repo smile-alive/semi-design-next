@@ -3,9 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
     import { IconTick } from '@fibrae/semi-icons-vue';
-    import type { ElementProps } from '../../base/element-props';
-    import { isClickListenerKey } from '../../utils/control-attrs';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { isClickListenerKey, hasSlotContent } from '../../utils/index';
     import { useDropdownContext } from './context';
     import type { DropdownItemProps, DropdownItemSlots } from './interface';
 

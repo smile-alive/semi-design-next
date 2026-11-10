@@ -2,9 +2,9 @@ import { StrictMode, createRef, type MouseEvent as ReactMouseEvent } from 'react
 import { createPortal } from 'react-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Collapse } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { CollapseReactProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-collapse`;

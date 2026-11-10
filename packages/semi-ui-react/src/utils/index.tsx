@@ -3,6 +3,14 @@ import clsx from 'clsx';
 import { isEqualWith } from 'es-toolkit';
 import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
 import elementTypeOf from './element-type';
+
+export { default as elementTypeOf } from './element-type';
+export { default as flattenChildren } from './flatten-children';
+export * from './media-event-keys';
+export * from './merge-refs';
+export * from './react-render';
+export { default as semiGlobal } from './semi-global';
+export * from './semi-global';
 /** `noImmediate` skips stopImmediatePropagation on the native event */
 export function stopPropagation(e: React.MouseEvent | React.FocusEvent<HTMLElement>, noImmediate?: boolean) {
     if (e && typeof e.stopPropagation === 'function') {

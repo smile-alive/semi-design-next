@@ -1,6 +1,6 @@
 import { type Locale, format, getWeeksInMonth, getWeekOfMonth, isSameMonth, startOfMonth, endOfMonth, compareAsc, isBefore, isAfter, addDays, startOfWeek, endOfWeek, differenceInCalendarDays, isSameDay, startOfDay, isSameWeek } from 'date-fns';
 import { countBy } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { numbers } from './constants';
 import { parseEvent, parseAllDayEvent, normalizeEvent, calcWeekData, getCurrDate, collectDailyEvents, round, getPos, convertEventsArrToMap, renderDailyEvent, calcRangeData, filterEvents, parseRangeAllDayEvent, type DailyEventLayout, type WeekStartsOn, type DateObj } from './event-util';
 

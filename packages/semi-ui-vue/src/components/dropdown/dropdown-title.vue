@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
-    import type { ElementProps } from '../../base/element-props';
+    import type { ElementProps } from '../../base/index';
     import { useDropdownContext } from './context';
     import type { DropdownTitleProps, DropdownTitleSlots } from './interface';
 

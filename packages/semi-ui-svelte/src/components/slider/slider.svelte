@@ -4,10 +4,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
     import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
     import '@fibrae/semi-foundation/components/slider/slider.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
+    import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { TooltipTriggerProps } from '../tooltip/interface.js';

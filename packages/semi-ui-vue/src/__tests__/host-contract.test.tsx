@@ -3,7 +3,7 @@ import { KeepAlive, defineComponent, nextTick, onMounted, onUpdated, ref } from 
 import { describe, expect, it } from 'vite-plus/test';
 import { type ContractAdapter, type ContractHost, type ContractMountOptions, type ContractProps, type ContractState, ContractFoundation, defineHostContract, stateText } from '@test/utils/host-contract';
 import { render } from '@test/utils/vue';
-import useFoundation from '../base/use-foundation';
+import { useFoundation } from '../base/index';
 
 async function mount(options: ContractMountOptions & { wrapInKeepAlive?: boolean } = {}): Promise<ContractHost & { setActive: (active: boolean) => Promise<void> }> {
     if (options.strictMode) {

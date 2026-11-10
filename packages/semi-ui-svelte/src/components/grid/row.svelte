@@ -3,7 +3,7 @@
     import { gutterStyle, normalizeGutter } from '@fibrae/semi-foundation/components/grid/gutter';
     import { getRowClassName } from '@fibrae/semi-foundation/components/grid/utils';
     import '@fibrae/semi-foundation/components/grid/grid.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { RowProps } from './interface.js';
 
     const defaults = useDefaultProps('Row');

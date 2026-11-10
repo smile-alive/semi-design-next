@@ -2,8 +2,8 @@
     import { type Snippet, tick } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
+    import { handoverFocus } from '@fibrae/semi-foundation/utils';
     import { IconChevronRightStroked } from '@fibrae/semi-icons-svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
 

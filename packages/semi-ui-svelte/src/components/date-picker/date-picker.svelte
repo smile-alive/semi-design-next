@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import DatePickerFoundation, {
         getYearMonthFromValue,
@@ -15,13 +15,12 @@
     } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import type { RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
-    import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
+    import { isInnerControlKey } from '@fibrae/semi-foundation/utils';
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import useClickOutside from '../../hooks/use-click-outside.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { useClickOutside } from '../../hooks/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { useLocale } from '../locale/index.js';

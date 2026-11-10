@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import type { SheetSize, SideSheetProps } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
-import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
+import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import { IconClose } from '@fibrae/semi-icons-react';
-import { hasContent } from '../../utils';
+import { hasContent } from '../../utils/index';
 import Button from '../icon-button';
 import useLocale from '../locale/use-locale';
 

@@ -1,5 +1,5 @@
 import type { VNode } from 'vue';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 
 export interface SwitchProps {
     modelValue?: boolean;

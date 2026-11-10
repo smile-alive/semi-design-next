@@ -6,8 +6,8 @@
     import SubNavFoundation, { type SubNavAdapter, type SubNavBaseProps } from '@fibrae/semi-foundation/components/navigation/sub-nav-foundation';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-svelte';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useFoundation } from '../../base/index.js';
+    import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import { Collapsible } from '../collapsible/index.js';
     import { Dropdown, DropdownMenu, type DropdownProps, type DropdownTriggerProps } from '../dropdown/index.js';
     import { Tooltip } from '../tooltip/index.js';

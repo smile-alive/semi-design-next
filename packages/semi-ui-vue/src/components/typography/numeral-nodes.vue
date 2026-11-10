@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { type VNode, Text } from 'vue';
-    import type { KeyedNode } from '../../utils/slot-nodes';
+    import type { KeyedNode } from '../../utils/index';
     import { elementChildren } from './slot-text';
 
     /**

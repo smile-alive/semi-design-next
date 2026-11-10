@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
     import { IconClock } from '@fibrae/semi-icons-vue';
-    import useFoundation from '../../base/use-foundation';
+    import { useFoundation } from '../../base/index';
     import Input from '../input/input.vue';
     import type { InputHandle } from '../input/interface';
     import type { TimeInputEmits, TimeInputProps, TimeInputSlots } from './interface';

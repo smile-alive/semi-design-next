@@ -1,4 +1,4 @@
-import ListStore, { type ListStoreState } from '../../base/list-store';
+import { ListStore, type ListStoreState } from '../../base/index';
 import { builtInOpts } from './constants';
 import type { ToastInstance } from './toast-foundation';
 

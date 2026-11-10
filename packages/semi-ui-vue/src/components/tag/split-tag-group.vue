@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import '@fibrae/semi-foundation/components/tag/tag.scss';
-    import type { ElementProps } from '../../base/element-props';
+    import type { ElementProps } from '../../base/index';
     import type { SplitTagGroupProps, SplitTagGroupSlots } from './interface';
 
     defineOptions({ inheritAttrs: false });

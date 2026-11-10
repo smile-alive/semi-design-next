@@ -2,9 +2,9 @@
     import { onMounted, useTemplateRef, watch, type StyleValue } from 'vue';
     import { strings } from '@fibrae/semi-foundation/components/table/constants';
     import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import SlotFragment from '../../../base/slot-fragment';
-    import type { KeyedNode } from '../../../utils/slot-nodes';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
+    import { SlotFragment } from '../../../base/index';
+    import type { KeyedNode } from '../../../utils/index';
     import useLocale from '../../locale/use-locale';
     import Tooltip from '../../tooltip';
     import ColumnSelection from '../column-selection.vue';

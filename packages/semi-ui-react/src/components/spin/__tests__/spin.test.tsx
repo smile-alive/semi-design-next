@@ -1,11 +1,11 @@
 import { StrictMode, createRef } from 'react';
 import { render, act, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import Button from '@fibrae/semi-ui-react/button';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Spin from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-spin`;

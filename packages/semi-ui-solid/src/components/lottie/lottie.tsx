@@ -2,10 +2,8 @@ import { Show, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
 import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { mergeRefs } from '../../utils/index';
 
 export interface LottieProps extends LottieBaseProps, ElementProps<'div'> {}
 

@@ -5,7 +5,7 @@ import type { MCPConfigureContentProps, MCPOption } from '@fibrae/semi-ai-founda
 import { MCPConfigure } from '@fibrae/semi-ai-react';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 
 const options = [
     { label: 'GitHub', value: 'github', desc: 'Code hosting', icon: 'https://semi.design/github.png', active: true },

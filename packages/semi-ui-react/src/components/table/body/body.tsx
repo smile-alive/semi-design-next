@@ -20,12 +20,10 @@ import {
     isSelected,
     resolveVirtualizedItemSize,
 } from '@fibrae/semi-foundation/components/table/utils';
-import warning from '@fibrae/semi-foundation/utils/warning';
-import type { BaseProps } from '../../../base/base-props';
-import { createContext } from '../../../base/create-context';
-import useMergedRef from '../../../hooks/use-merged-ref';
-import useResizeObserver from '../../../hooks/use-resize-observer';
-import VirtualList, { type VirtualListHandle, type VirtualListRowProps, type VirtualListScrollArgs } from '../../../internal/virtual-list';
+import { warning } from '@fibrae/semi-foundation/utils';
+import { type BaseProps, createContext } from '../../../base/index';
+import { useMergedRef, useResizeObserver } from '../../../hooks/index';
+import { VirtualList, type VirtualListHandle, type VirtualListRowProps, type VirtualListScrollArgs } from '../../../internal/index';
 import useLocale from '../../locale/use-locale';
 import ColGroup from '../col-group';
 import { useTableContext } from '../context';

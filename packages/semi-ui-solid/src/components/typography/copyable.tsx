@@ -2,7 +2,7 @@ import { type JSX, Show, children, createEffect, on } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import { IconCopy, IconTick } from '@fibrae/semi-icons-solid';
-import useCopied from '../../primitives/use-copied';
+import { useCopied } from '../../primitives/index';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';
 import type { CopyableConfig } from './interface';

@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { Text, useAttrs } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
-    import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
+    import { getDataAttr } from '@fibrae/semi-foundation/utils';
     import { IconTick } from '@fibrae/semi-icons-vue';
-    import slotNodes from '../../utils/slot-nodes';
+    import { slotNodes } from '../../utils/index';
     import Highlight from '../highlight';
     import { useOptionPrefixContext } from './context';
     import type { SelectOptionBaseProps, SelectOptionProps, SelectOptionSlots } from './interface';

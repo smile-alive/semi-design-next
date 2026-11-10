@@ -1,10 +1,9 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, defineAsyncComponent, useTemplateRef } from 'vue';
-    import warning from '@fibrae/semi-foundation/utils/warning';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useSlotVersion from '../../composables/use-slot-version';
-    import type { VirtualListAlign } from '../../internal/virtual-list.vue';
+    import { warning } from '@fibrae/semi-foundation/utils';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { useSlotVersion } from '../../composables/index';
+    import type { VirtualListAlign } from '../../internal/index';
     import type { TableEmits, TableHandle, TableProps, TableSlots } from './interface';
     import NormalTable from './normal-table.vue';
     import { collectColumns, type CollectedColumns } from './utils';

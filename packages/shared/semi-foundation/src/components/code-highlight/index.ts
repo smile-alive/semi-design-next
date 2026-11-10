@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { subscribe, type CodeHighlightThemes, type LanguageInput } from './registry';
 
 export interface CodeHighlightBaseProps {

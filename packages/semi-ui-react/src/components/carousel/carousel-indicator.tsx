@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/carousel/constants';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import useLocale from '../locale/use-locale';
 import type { CarouselIndicatorProps } from './interface';
 

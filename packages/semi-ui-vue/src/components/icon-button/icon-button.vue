@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { strings } from '@fibrae/semi-foundation/components/button/constants';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
     import Button from '../button';
     import useButtonLooks from '../button/use-button';
     import type { IconButtonProps, IconButtonSlots } from './interface';

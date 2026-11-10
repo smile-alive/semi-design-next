@@ -1,5 +1,5 @@
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
-import { createContext } from '../../base/create-context';
+import type { Locale } from '@fibrae/semi-foundation/locale';
+import { createContext } from '../../base/index';
 import type { NavProps, ItemKey } from './nav';
 export interface NavContextType {
     isCollapsed?: boolean;

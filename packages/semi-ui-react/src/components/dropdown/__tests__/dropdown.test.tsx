@@ -2,9 +2,9 @@ import { StrictMode, createRef, useState, type MouseEvent as ReactMouseEvent } f
 import { act, render, fireEvent, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { ConfigProvider, Dropdown, Tag } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { sleep } from '@test/utils/react';
 import type { DropdownMenuItem, DropdownHandle, DropdownProps } from '../index';
 

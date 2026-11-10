@@ -3,8 +3,8 @@ import { type ComponentPublicInstance, type FunctionalComponent, createSSRApp, d
 import { renderToString } from 'vue/server-renderer';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render, sleep } from '@test/utils/vue';
 import CodeHighlight from '../../code-highlight';
 import { grammar } from '../../code-highlight/__tests__/grammars';

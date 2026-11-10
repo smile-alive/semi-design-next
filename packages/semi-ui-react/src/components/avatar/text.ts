@@ -1,6 +1,6 @@
 import type React from 'react';
 import { Children } from 'react';
-import { isText } from '../../utils';
+import { isText } from '../../utils/index';
 
 export function getAvatarText(children: React.ReactNode): string | undefined {
     const nodes = Children.toArray(children);

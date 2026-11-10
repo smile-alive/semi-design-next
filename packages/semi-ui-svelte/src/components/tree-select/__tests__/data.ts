@@ -1,6 +1,6 @@
 import { flushSync } from 'svelte';
 import { fireEvent } from '@testing-library/svelte';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { TreeNodeData } from '../../tree';
 
 export const prefixCls = `${BASE_CLASS_PREFIX}-tree-select`;

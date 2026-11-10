@@ -1,6 +1,6 @@
 <script lang="ts">
     import { flattenColumns } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import type { ColumnProps } from './interface.js';
 
     interface ColGroupProps {

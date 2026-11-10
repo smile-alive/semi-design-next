@@ -4,12 +4,8 @@ import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components
 import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/components/input-number/foundation';
 import '@fibrae/semi-foundation/components/input-number/input-number.scss';
 import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-solid';
-import { usePopupLayer } from '../../base/popup-layer';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import callHandler from '../../utils/call-handler';
-import forwardFocus from '../../utils/forward-focus';
-import mergeRefs from '../../utils/merge-refs';
+import { usePopupLayer, useDefaultProps, useFoundation } from '../../base/index';
+import { callHandler, forwardFocus, mergeRefs } from '../../utils/index';
 import Input, { type InputChangeEvent, type InputElementEvent, type InputProps } from '../input';
 import { InputGroupContext, useInputGroupContext } from '../input/context';
 import useLocale from '../locale/use-locale';

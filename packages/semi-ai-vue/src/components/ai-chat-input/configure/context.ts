@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue';
 import type { Setup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
-import { createContext } from '@fibrae/semi-ui-vue/base/create-context';
+import { createContext } from '@fibrae/semi-ui-vue/base';
 
 export interface ConfigureContext {
     view: ComputedRef<Setup>;

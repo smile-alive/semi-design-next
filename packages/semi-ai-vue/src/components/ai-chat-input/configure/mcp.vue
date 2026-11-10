@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Dropdown, { DropdownItem, DropdownMenu } from '@fibrae/semi-ui-vue/dropdown/index';

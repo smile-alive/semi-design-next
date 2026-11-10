@@ -4,8 +4,7 @@
     import { generateColor } from '@fibrae/semi-foundation/components/progress/generates';
     import { calcCircleGeometry, calcPercent } from '@fibrae/semi-foundation/components/progress/utils';
     import '@fibrae/semi-foundation/components/progress/progress.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
     import type { ProgressProps, ProgressSlots } from './interface';
     import { useAnimatedPercent } from './use-progress';
 

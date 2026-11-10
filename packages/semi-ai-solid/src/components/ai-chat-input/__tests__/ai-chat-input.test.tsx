@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import Popover from '@fibrae/semi-ui-solid/popover/index';
 import type { UploadHandle, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { countLiveListeners } from '@test/utils/solid';
 import AIChatInput, { getConfigureItem, type AIChatInputElement, type AIChatInputHandle, type AIChatInputProps, type Attachment, type Setup } from '../index';
 

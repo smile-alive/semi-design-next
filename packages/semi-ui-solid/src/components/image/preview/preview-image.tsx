@@ -1,8 +1,8 @@
 import { type JSX, For, Show } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageState } from '@fibrae/semi-foundation/components/image/preview-image-foundation';
-import useFoundation from '../../../base/use-foundation';
-import useEventListener from '../../../primitives/use-event-listener';
+import { useFoundation } from '../../../base/index';
+import { useEventListener } from '../../../primitives/index';
 import Spin from '../../spin';
 import type { PreviewImageProps } from '../interface';
 

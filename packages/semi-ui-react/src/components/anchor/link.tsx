@@ -3,8 +3,8 @@ import { Children, isValidElement, useLayoutEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
 import AnchorFoundation, { type AnchorNode } from '@fibrae/semi-foundation/components/anchor/foundation';
-import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
-import type { ElementProps } from '../../base/base';
+import { isEnterPress } from '@fibrae/semi-foundation/utils';
+import type { ElementProps } from '../../base/index';
 import Typography from '../typography/index';
 import { AnchorContext, useAnchorContext } from './context';
 

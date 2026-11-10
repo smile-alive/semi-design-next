@@ -2,7 +2,7 @@
     import { Text, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
     import { IconSidebar } from '@fibrae/semi-icons-vue';
-    import slotNodes from '../../utils/slot-nodes';
+    import { slotNodes } from '../../utils/index';
     import Button from '../button/button.vue';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip/tooltip.vue';

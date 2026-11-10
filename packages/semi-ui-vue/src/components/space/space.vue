@@ -2,8 +2,7 @@
     import { computed, type StyleValue } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/space/constants';
     import '@fibrae/semi-foundation/components/space/space.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault from '../../base/semi-default';
+    import { type ElementProps, semiDefault } from '../../base/index';
     import type { SpaceProps, SpaceSlots, Spacing } from './interface';
 
     const props = withDefaults(defineProps<SpaceProps & /* @vue-ignore */ ElementProps<'div', keyof SpaceProps>>(), {

@@ -1,4 +1,4 @@
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 
 const PREFIX = `${BASE_CLASS_PREFIX}-aiChatInput`;
 

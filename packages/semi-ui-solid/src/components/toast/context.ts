@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { ToastListState } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export interface ToastListContextValue {
     paused: Accessor<boolean>;

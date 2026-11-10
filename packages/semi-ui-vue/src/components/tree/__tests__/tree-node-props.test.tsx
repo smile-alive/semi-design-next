@@ -2,7 +2,7 @@
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconMapPin } from '@fibrae/semi-icons-vue';
 import type { TreeIconSlotProps, TreeLabelSlotProps, TreeNodeData } from '..';
 import Button from '../../button';

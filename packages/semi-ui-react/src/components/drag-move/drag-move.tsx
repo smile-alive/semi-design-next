@@ -1,7 +1,6 @@
 import { Fragment, useCallback, type FragmentInstance, type ReactNode } from 'react';
 import DragMoveFoundation, { type DragMoveAdapter } from '@fibrae/semi-foundation/components/drag-move/foundation';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { useDefaultProps, useFoundation } from '../../base/index';
 
 type Foundation = DragMoveFoundation<DragMoveProps>;
 type Adapter = DragMoveAdapter<DragMoveProps>;

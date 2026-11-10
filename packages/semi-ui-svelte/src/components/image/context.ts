@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 
 /** What an Image in an ImagePreview group reads: the group's list is data, so images never register themselves */
 export interface PreviewContextValue {

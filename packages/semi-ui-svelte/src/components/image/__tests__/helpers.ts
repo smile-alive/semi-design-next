@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { fireEvent } from '@testing-library/svelte';
 import { vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 
 export const prefixCls = `${BASE_CLASS_PREFIX}-image`;
 export const previewCls = `${prefixCls}-preview`;

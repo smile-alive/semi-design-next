@@ -1,11 +1,10 @@
 <script setup lang="ts">
     import { Text, computed, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/divider/constants';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/divider/divider.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { slotNodes, type KeyedNode } from '../../utils/index';
     import type { DividerProps, DividerSlots } from './interface';
 
     const props = withDefaults(defineProps<DividerProps & /* @vue-ignore */ ElementProps<'div', keyof DividerProps>>(), {

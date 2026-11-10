@@ -1,7 +1,7 @@
-import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '@fibrae/semi-foundation/base';
 import { strings as uploadStrings } from '@fibrae/semi-foundation/components/upload/constants';
 import { removeUnlessPrevented } from '@fibrae/semi-foundation/components/upload/utils';
-import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
+import { handlePrevent } from '@fibrae/semi-foundation/utils';
 import { strings, type SendHotKey } from './constants';
 
 const { SEND_HOT_KEY } = strings;

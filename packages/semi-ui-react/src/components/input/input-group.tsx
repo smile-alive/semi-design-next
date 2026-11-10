@@ -1,9 +1,7 @@
 import React, { useId, useMemo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
-import type { ElementProps } from '../../base/base';
-import { usePopupLayer } from '../../base/popup-layer';
-import useDefaultProps from '../../base/use-default-props';
+import { type ElementProps, usePopupLayer, useDefaultProps } from '../../base/index';
 import Label, { type LabelProps } from '../form/label';
 import useLocale from '../locale/use-locale';
 import { InputGroupContext } from './context';

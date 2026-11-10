@@ -5,9 +5,7 @@
     import FormFoundation from '@fibrae/semi-foundation/components/form/foundation';
     import type { AllErrors, BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/components/form/interface';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import { provideFormContext } from './context';
     import type { AllFormProps, FormApi, FormEmits, FormHandle, FormProps, FormSlots } from './interface';

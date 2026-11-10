@@ -3,12 +3,10 @@
     import type { Attachment } from 'svelte/attachments';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/avatar/constants';
     import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/components/avatar/foundation';
-    import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
+    import { isAriaKey } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/avatar/avatar.scss';
-    import { getPopupLayerContext } from '../../base/popup-layer.js';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { getPopupLayerContext, useDefaultProps, useFoundation } from '../../base/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import { getAvatarGroupMoreContext, setAvatarGroupMoreContext } from './context.js';
     import type { AvatarProps } from './interface.js';
     import TopSlotSvg from './top-slot-svg.svelte';

@@ -2,8 +2,7 @@ import { children, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
 import '@fibrae/semi-foundation/components/timeline/timeline.scss';
-import callHandler from '../../utils/call-handler';
-import hasContent from '../../utils/has-content';
+import { callHandler, hasContent } from '../../utils/index';
 import type { TimelineItemProps } from './interface';
 
 const prefixCls = cssClasses.ITEM;

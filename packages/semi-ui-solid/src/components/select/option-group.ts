@@ -1,6 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { ElementProps } from '../../base/element-props';
-import { createToken } from '../../base/token';
+import { type ElementProps, createToken } from '../../base/index';
 
 export const OPTGROUP = 'Select.OptGroup';
 

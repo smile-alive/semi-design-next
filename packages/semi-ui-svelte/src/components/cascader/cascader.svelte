@@ -1,18 +1,16 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { isEqual } from 'es-toolkit';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
     import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicValue, type CascaderAdapter } from '@fibrae/semi-foundation/components/cascader/foundation';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-    import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/cascader/cascader.scss';
     import { IconChevronDown, IconClear } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import useClickOutside from '../../hooks/use-click-outside.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
-    import { type SlotKind, trackSlotKind } from '../../utils/slot-kind.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { useClickOutside } from '../../hooks/index.js';
+    import { splitControlAttrs, type SlotKind, trackSlotKind } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { Input } from '../input/index.js';

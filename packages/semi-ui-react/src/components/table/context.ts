@@ -1,6 +1,6 @@
 import type { BaseRowKeyType, BaseHeadWidth } from '@fibrae/semi-foundation/components/table/foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
-import { createContext } from '../../base/create-context';
+import { noop } from '@fibrae/semi-foundation/utils';
+import { createContext } from '../../base/index';
 import type { ContextValue } from '../config-provider/context';
 import type { ColumnProps, GetVirtualizedListRef } from './interface';
 

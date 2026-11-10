@@ -3,7 +3,7 @@ import { defineComponent, h, KeepAlive, nextTick, ref, type Component, type VNod
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, within } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { misplacedAriaRequired } from '@test/utils/dom/common';
 import { render } from '@test/utils/vue';

@@ -3,8 +3,8 @@ import { type CSSProperties, memo, useEffectEvent, useId, useLayoutEffect, useSt
 import clsx from 'clsx';
 import { defaultResponsiveMap, type ResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
 import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
-import { registerMediaQuery } from '@fibrae/semi-foundation/utils/dom';
-import type { ElementProps } from '../../base/base';
+import { registerMediaQuery } from '@fibrae/semi-foundation/utils';
+import type { ElementProps } from '../../base/index';
 import { useLayoutContext } from './context';
 
 export type { ResponsiveMap };

@@ -4,8 +4,8 @@ import { format } from 'date-fns';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { DayStatusType } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
-import useFoundation from '../../base/use-foundation';
+import type { Locale } from '@fibrae/semi-foundation/locale';
+import { useFoundation } from '../../base/index';
 import useToday from '../calendar/primitives/use-today';
 import useConfig from '../config-provider/use-config';
 

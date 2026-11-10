@@ -1,8 +1,7 @@
 import { computed } from 'vue';
 import { resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
-import { usePopupLayer } from '../../base/popup-layer';
-import { useSemiGlobal } from '../../base/semi-default';
-import type { SemiGlobal } from '../../utils/semi-global';
+import { usePopupLayer, useSemiGlobal } from '../../base/index';
+import type { SemiGlobal } from '../../utils/index';
 import { useInputGroupInScope } from '../input/context';
 import { type ButtonGroupContext, useButtonGroupContext } from './context';
 import type { Size, Theme, Type } from './interface';

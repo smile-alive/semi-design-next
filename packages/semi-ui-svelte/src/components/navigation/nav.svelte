@@ -3,9 +3,8 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigation/constants';
     import NavigationFoundation, { type NavigationAdapter, type NavigationBaseProps, type NavigationState } from '@fibrae/semi-foundation/components/navigation/foundation';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import { setNavContext } from './context.js';
     import type { ItemKey, NavProps } from './interface.js';
     import NavFooter from './nav-footer.svelte';

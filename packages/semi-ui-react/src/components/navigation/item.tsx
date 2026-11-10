@@ -5,11 +5,9 @@ import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/component
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
 import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
-import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-props';
-import useFoundation from '../../base/use-foundation';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { isAriaKey } from '@fibrae/semi-foundation/utils';
+import { type ElementProps, type BaseProps, useFoundation } from '../../base/index';
+import { useMergedRef } from '../../hooks/index';
 import Dropdown from '../dropdown';
 import Tooltip from '../tooltip';
 import { type NavContextType, useNavContext } from './context';

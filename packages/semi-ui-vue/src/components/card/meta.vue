@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
     import '@fibrae/semi-foundation/components/card/card.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import type { MetaProps, MetaSlots } from './interface';
 
     const props = defineProps<MetaProps & /* @vue-ignore */ ElementProps<'div', keyof MetaProps>>();

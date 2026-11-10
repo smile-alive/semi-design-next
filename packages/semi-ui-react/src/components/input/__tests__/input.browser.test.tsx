@@ -2,7 +2,7 @@ import { createRef } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, Form, FormInput, Input, TextArea, TimePicker } from '@fibrae/semi-ui-react';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
 import type { InputHandle } from '../index';

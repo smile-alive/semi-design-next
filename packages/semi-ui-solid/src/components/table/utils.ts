@@ -2,7 +2,7 @@ import { isServer } from 'solid-js/web';
 import { merge } from 'es-toolkit';
 import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
 import { getDefaultComponents } from '@fibrae/semi-foundation/components/table/utils';
-import isMarkup from '../../utils/is-markup';
+import { isMarkup } from '../../utils/index';
 import type { TableComponent, TableComponents } from './interface';
 
 export interface MergedTableComponents {

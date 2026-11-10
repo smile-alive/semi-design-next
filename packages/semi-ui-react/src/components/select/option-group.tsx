@@ -1,7 +1,7 @@
 import type React from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 
 export interface OptionGroupProps extends ElementProps<'div'> {
     children?: React.ReactNode;

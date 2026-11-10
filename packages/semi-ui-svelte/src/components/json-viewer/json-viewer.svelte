@@ -3,12 +3,10 @@
     import type { Attachment } from 'svelte/attachments';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import JsonViewerFoundation, { type FindMatch, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { namedRole, toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import teleport from '../../utils/teleport.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { teleport } from '../../utils/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { setJsonViewerContext } from './context.js';
     import type { JsonViewerCustomRenderArgs, JsonViewerOptions, JsonViewerProps } from './interface.js';

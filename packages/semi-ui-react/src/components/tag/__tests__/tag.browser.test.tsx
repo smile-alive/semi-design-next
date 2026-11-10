@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Dropdown, Modal, Popover, Tag, TagGroup } from '@fibrae/semi-ui-react';
 import type { TagProps } from '../index';
 

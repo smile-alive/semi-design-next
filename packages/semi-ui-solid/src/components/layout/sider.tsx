@@ -2,9 +2,9 @@ import { onCleanup, onMount, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { defaultResponsiveMap, type ResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
 import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
-import { registerMediaQuery } from '@fibrae/semi-foundation/utils/dom';
+import { registerMediaQuery } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/layout/layout.scss';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 import { useLayoutContext } from './context';
 
 export interface SiderProps extends ElementProps<'aside'> {

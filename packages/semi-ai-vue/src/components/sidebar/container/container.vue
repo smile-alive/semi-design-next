@@ -2,16 +2,14 @@
     import { computed, onActivated, onDeactivated, shallowRef, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
-    import SlotFragment from '@fibrae/semi-ui-vue/base/slot-fragment';
-    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
+    import { type ElementProps, type EmitHandlers, SlotFragment, useFoundation } from '@fibrae/semi-ui-vue/base';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useLocale, useRecordFocus } from '@fibrae/semi-ui-vue/composables';
     import { Resizable } from '@fibrae/semi-ui-vue/resizable/index';
-    import { hasSlotContent } from '@fibrae/semi-ui-vue/utils/slot-nodes';
+    import { hasSlotContent } from '@fibrae/semi-ui-vue/utils';
     import type { ContainerEmits, ContainerHandle, ContainerProps, ContainerSlots } from './interface';
 
     // attrs go on the container element inside the optional Resizable wrapper

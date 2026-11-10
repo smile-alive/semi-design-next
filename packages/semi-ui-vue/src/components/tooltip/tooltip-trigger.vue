@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, type ComponentPublicInstance } from 'vue';
-    import { usePopupLayer } from '../../base/popup-layer';
-    import type { KeyedNode } from '../../utils/slot-nodes';
+    import { usePopupLayer } from '../../base/index';
+    import type { KeyedNode } from '../../utils/index';
     import { useButtonGroupContext } from '../button/context';
     import { provideTooltipDescription } from './context';
     import type { TooltipProps } from './interface';

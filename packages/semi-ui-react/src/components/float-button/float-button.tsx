@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/float-button/constants';
 import '@fibrae/semi-foundation/components/float-button/float-button.scss';
-import useDefaultProps from '../../base/use-default-props';
+import { useDefaultProps } from '../../base/index';
 import Badge from '../badge';
 import type { FloatButtonProps } from './interface';
 import renderAction from './render-action';

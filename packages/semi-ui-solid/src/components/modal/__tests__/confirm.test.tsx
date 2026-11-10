@@ -2,7 +2,7 @@ import type { JSX } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSend } from '@fibrae/semi-icons-solid';
 import { sleep } from '@test/utils/solid';
 import Modal, { type ModalHookApi, type ModalHookRef, type ModalProps } from '..';

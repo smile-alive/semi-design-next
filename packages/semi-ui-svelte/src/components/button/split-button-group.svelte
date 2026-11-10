@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { markEnds } from '@fibrae/semi-foundation/components/button/utils';
     import '@fibrae/semi-foundation/components/button/button.scss';
-    import observeMutations from '../../utils/observe-mutations.js';
+    import { observeMutations } from '../../utils/index.js';
     import type { SplitButtonGroupProps } from './interface.js';
 
     let { children, ...rest }: SplitButtonGroupProps = $props();

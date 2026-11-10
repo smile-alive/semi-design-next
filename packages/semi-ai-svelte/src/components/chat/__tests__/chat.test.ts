@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import type { FileItem, UploadOnChangeProps } from '@fibrae/semi-ui-svelte/upload/interface';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { Chat } from '../index';
 import type { ChatDefaultActionNodeObj, ChatMarkdownRenderProps, ChatMessage, ChatProps } from '../interface';
 import ChatHost, { type ChatHostStore } from './chat-host.svelte';

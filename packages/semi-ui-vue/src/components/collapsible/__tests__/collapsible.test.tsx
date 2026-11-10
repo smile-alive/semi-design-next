@@ -3,7 +3,7 @@ import { createSSRApp, nextTick, shallowRef, type ComponentPublicInstance } from
 import { renderToString } from 'vue/server-renderer';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Collapsible from '..';
 import type { CollapsibleProps } from '../interface';

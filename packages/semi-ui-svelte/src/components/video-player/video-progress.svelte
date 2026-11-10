@@ -3,7 +3,7 @@
     import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseProps, type VideoProgressBaseState } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
     import '@fibrae/semi-foundation/components/video-player/video-player.scss';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';
     import type { VideoProgressProps } from './interface.js';

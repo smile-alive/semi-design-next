@@ -4,7 +4,7 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconChevronDown, IconChevronUp, IconStoryStroked } from '@fibrae/semi-icons-svelte';
     import Collapsible from '@fibrae/semi-ui-svelte/collapsible/collapsible.svelte';
-    import watch from '@fibrae/semi-ui-svelte/hooks/watch.svelte.js';
+    import { watch } from '@fibrae/semi-ui-svelte/hooks/index';
     // renamed: the generated declaration names the component DialogueStep after this file
     import type { DialogueStep as StepItem, DialogueStepWidgetProps } from '../../interface.js';
 

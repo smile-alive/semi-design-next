@@ -2,7 +2,7 @@ import type React from 'react';
 import { memo } from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
 import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 import { useDescriptionsContext } from './context';
 
 export interface DescriptionsItemProps extends ElementProps<'tr', 'children'> {

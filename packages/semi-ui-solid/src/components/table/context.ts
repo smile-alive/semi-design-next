@@ -2,7 +2,7 @@ import type { Accessor } from 'solid-js';
 import type TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
 import type { BaseHeadWidth, BaseRowKeyType, TableBaseProps, TableBaseState } from '@fibrae/semi-foundation/components/table/foundation';
 import type { FlattenData, GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { ColumnProps, Direction, RowSelectionProps, TableProps } from './interface';
 import type { MergedTableComponents } from './utils';
 

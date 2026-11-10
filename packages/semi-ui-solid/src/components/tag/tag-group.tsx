@@ -2,7 +2,7 @@ import { createMemo, For, mergeProps, Show, splitProps, type JSX } from 'solid-j
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/tag/constants';
 import { getTagListKeys } from '@fibrae/semi-foundation/components/tag/tag-key';
-import useDefaultProps from '../../base/use-default-props';
+import { useDefaultProps } from '../../base/index';
 import Popover from '../popover';
 import type { TagCloseEvent, TagGroupItem, TagGroupProps, TagSize } from './interface';
 import Tag from './tag';

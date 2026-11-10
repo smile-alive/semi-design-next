@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import type { ElementProps } from '../../base/element-props';
+    import type { ElementProps } from '../../base/index';
     import { Col } from '../grid';
     import { useListContext } from './context';
     import type { ListItemProps, ListItemSlots } from './interface';

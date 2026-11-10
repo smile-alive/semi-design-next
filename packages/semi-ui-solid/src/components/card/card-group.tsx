@@ -1,7 +1,7 @@
 import { splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
-import useDefaultProps from '../../base/use-default-props';
+import { useDefaultProps } from '../../base/index';
 import Space, { type SpaceProps } from '../space';
 
 const prefixCls = cssClasses.PREFIX;

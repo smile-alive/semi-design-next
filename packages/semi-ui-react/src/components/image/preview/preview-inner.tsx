@@ -2,10 +2,10 @@ import { isValidElement, type RefObject, useId, useInsertionEffect, useLayoutEff
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/image/constants';
 import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
-import { coversPage } from '@fibrae/semi-foundation/utils/dom';
+import { coversPage } from '@fibrae/semi-foundation/utils';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-react';
-import useFoundation from '../../../base/use-foundation';
-import useIsServerRender from '../../../hooks/use-is-server-render';
+import { useFoundation } from '../../../base/index';
+import { useIsServerRender } from '../../../hooks/index';
 import Portal from '../../../internal/portal';
 import { useConfigContext } from '../../config-provider/context';
 import useLocale from '../../locale/use-locale';

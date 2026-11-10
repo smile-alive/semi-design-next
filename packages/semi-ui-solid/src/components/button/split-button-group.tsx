@@ -3,10 +3,9 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
 import { markEnds } from '@fibrae/semi-foundation/components/button/utils';
 import '@fibrae/semi-foundation/components/button/button.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useMutationObserver from '../../primitives/use-mutation-observer';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { useMutationObserver } from '../../primitives/index';
+import { mergeRefs } from '../../utils/index';
 
 export interface SplitButtonGroupProps extends ElementProps<'div'> {}
 

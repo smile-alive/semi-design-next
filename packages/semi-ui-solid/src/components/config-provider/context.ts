@@ -1,8 +1,8 @@
 import type { Accessor } from 'solid-js';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import type { Breakpoint, BreakpointScreens, OnBreakpointChangeCallback, OnBreakpointScreensCallback, ResponsiveMap } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
-import type { LocaleInput } from '@fibrae/semi-foundation/locale/index';
-import { createContext } from '../../base/create-context';
+import type { LocaleInput } from '@fibrae/semi-foundation/locale';
+import { createContext } from '../../base/index';
 
 export interface ContextValue {
     direction?: 'ltr' | 'rtl';

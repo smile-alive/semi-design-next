@@ -1,6 +1,6 @@
 import { debounce, throttle } from 'es-toolkit';
 import scrollIntoView, { type CustomBehaviorOptions, type Options } from 'scroll-into-view-if-needed';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { cssClasses } from './constants';
 import { findAnchorTarget } from './utils';
 

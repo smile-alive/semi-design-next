@@ -4,7 +4,7 @@
     import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import { IconCalendar, IconClock } from '@fibrae/semi-icons-vue';
-    import useFoundation from '../../base/use-foundation';
+    import { useFoundation } from '../../base/index';
     import Combobox from '../time-picker/combobox.vue';
     import type { ComboboxHandle, ComboboxProps } from '../time-picker/interface';
     import type { DatePickerMonthsGridEmits, DatePickerMonthsGridHandle, DatePickerMonthsGridProps, DatePickerMonthsGridSlots, DatePickerYearAndMonthHandle } from './internal';

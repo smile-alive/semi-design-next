@@ -1,10 +1,9 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewFoundation, { getGroupPreviewList, type PreviewAdapter, type PreviewBaseState } from '@fibrae/semi-foundation/components/image/preview-foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/image/image.scss';
-    import useDefaultProps from '../../../base/use-default-props.js';
-    import useFoundation from '../../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../../base/index.js';
     import { setPreviewContext } from '../context.js';
     import type { PreviewProps } from '../interface.js';
     import { previewDefaults } from './defaults.js';

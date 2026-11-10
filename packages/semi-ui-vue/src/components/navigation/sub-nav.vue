@@ -5,13 +5,9 @@
     import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/components/navigation/sub-nav-foundation';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-vue';
-    import type { ElementProps } from '../../base/element-props';
-    import SlotFragment from '../../base/slot-fragment';
-    import useFoundation from '../../base/use-foundation';
-    import useFocusHandover from '../../composables/use-focus-handover';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs';
-    import { nativeTag } from '../../utils/native-tag';
-    import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, SlotFragment, useFoundation } from '../../base/index';
+    import { useFocusHandover } from '../../composables/index';
+    import { isAriaKey, splitControlAttrs, nativeTag, slotNodes, hasSlotContent } from '../../utils/index';
     import Collapsible from '../collapsible/collapsible.vue';
     import DropdownMenu from '../dropdown/dropdown-menu.vue';
     import Dropdown from '../dropdown/dropdown.vue';

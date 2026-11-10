@@ -2,12 +2,12 @@ import { StrictMode, createRef, useState } from 'react';
 import { render, screen, fireEvent as testingFireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import SliderFoundation, { type HandleDot } from '@fibrae/semi-foundation/components/slider/foundation';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
 import { Form, FormSlider } from '@fibrae/semi-ui-react/form';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Slider, { type SliderProps } from '..';
 
 const mouse = { pointerId: 1, pointerType: 'mouse' };

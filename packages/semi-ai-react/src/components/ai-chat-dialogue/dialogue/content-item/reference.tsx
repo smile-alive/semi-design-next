@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { cssClasses, type DialogueIconKind, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/utils';
 import { IconCode, IconWord, IconExcel, IconPdf, IconSendMsgStroked, IconVideo } from '@fibrae/semi-icons-react';
 import Image from '@fibrae/semi-ui-react/image/index';
 

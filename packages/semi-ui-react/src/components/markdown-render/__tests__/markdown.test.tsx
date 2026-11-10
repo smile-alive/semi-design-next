@@ -1,10 +1,10 @@
 import React, { StrictMode } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import CodeHighlight from '@fibrae/semi-ui-react/code-highlight';
 import type { ParagraphProps } from '@fibrae/semi-ui-react/typography';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { sleep } from '@test/utils/react';
 import { h1 as H1, p as P } from '../components';
 import MarkdownRender, { type MarkdownRenderProps } from '../index';

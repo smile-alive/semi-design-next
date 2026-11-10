@@ -1,9 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { getEnabledStepIndex, isInnerControlActivation } from '../../utils/a11y';
-import { centerInScroller } from '../../utils/dom';
-import isObject from '../../utils/is-object';
-import { isComposing } from '../../utils/key-code';
-import warning from '../../utils/warning';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { getEnabledStepIndex, isInnerControlActivation, centerInScroller, isObject, isComposing, warning } from '../../utils/index';
 import { getOptionId } from '../select/foundation';
 
 export interface DataItem {

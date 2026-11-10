@@ -1,8 +1,7 @@
 import { Accessibility } from '@dnd-kit/dom';
 import { isSortable } from '@dnd-kit/dom/sortable';
-import { BASE_CLASS_PREFIX } from '../../base/constants';
-import { formatLocale } from '../../locale/format';
-import type { Locale } from '../../locale/interface';
+import { BASE_CLASS_PREFIX } from '../../base/index';
+import { formatLocale, type Locale } from '../../locale/index';
 
 type SortableLocale = Locale['Sortable'];
 

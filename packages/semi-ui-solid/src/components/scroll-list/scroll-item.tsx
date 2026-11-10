@@ -3,10 +3,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
 import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, type ScrollItemRow, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { mergeRefs } from '../../utils/index';
 
 const prefix = cssClasses.PREFIX;
 

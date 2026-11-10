@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
-    import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
+    import { isEnterPress } from '@fibrae/semi-foundation/utils';
     import { TypographyText } from '../typography/index.js';
     import { getAnchorContext } from './context.js';
     import type { AnchorClickEvent, AnchorLinkItem } from './interface.js';

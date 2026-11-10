@@ -2,10 +2,10 @@ import React, { StrictMode, createRef, useState } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { ConfigProvider, TabPane, Tabs } from '@fibrae/semi-ui-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { TabBarProps, TabContextValue, TabPaneProps, TabsProps } from '../interface';
 
 // jsdom has no layout, so these tests assert the native scrollIntoView path; the fallback is covered by supports.test.ts

@@ -3,15 +3,10 @@ import { type CSSProperties, useEffect, useInsertionEffect, useLayoutEffect, use
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
-import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
-import { coversPage } from '@fibrae/semi-foundation/utils/dom';
+import { warnIfDialogUnnamed, coversPage } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useDidUpdate from '../../hooks/use-did-update';
-import useIsServerRender from '../../hooks/use-is-server-render';
-import useMergedRef from '../../hooks/use-merged-ref';
-import useRealUnmount from '../../hooks/use-real-unmount';
+import { useDefaultProps, useFoundation } from '../../base/index';
+import { useDidUpdate, useIsServerRender, useMergedRef, useRealUnmount } from '../../hooks/index';
 import CSSAnimation from '../../internal/css-animation';
 import Portal from '../../internal/portal';
 import { useConfigContext } from '../config-provider/context';

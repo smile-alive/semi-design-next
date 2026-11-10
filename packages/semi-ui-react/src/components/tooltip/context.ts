@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 // A trigger that opts out of aria-describedby (an explicit undefined) because the element the popup describes sits
 // inside it (Typography's ellipsis text) reads the popup id here; undefined while the popup is not in the document.

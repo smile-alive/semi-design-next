@@ -3,9 +3,7 @@ import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
 import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
-import type { ElementProps, Motion } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { type ElementProps, type Motion, useDefaultProps, useFoundation } from '../../base/index';
 
 const prefix = cssClasses.PREFIX;
 

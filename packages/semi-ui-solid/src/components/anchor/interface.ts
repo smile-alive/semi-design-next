@@ -1,8 +1,8 @@
 import type { JSX } from 'solid-js';
 import type { strings } from '@fibrae/semi-foundation/components/anchor/constants';
 import type { AnchorBaseProps } from '@fibrae/semi-foundation/components/anchor/foundation';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-import type { ElementProps } from '../../base/element-props';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
+import type { ElementProps } from '../../base/index';
 import type { Position } from '../tooltip';
 import type { ShowTooltip } from '../typography/interface';
 

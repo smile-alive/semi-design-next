@@ -17,7 +17,7 @@ import {
     readLinkEditorOpenState,
     unsetLink,
 } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import {
     IconAlignCenter,
     IconAlignJustify,
@@ -47,14 +47,14 @@ import {
     IconText,
     IconUndo,
 } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base';
 import Button, { type ButtonProps } from '@fibrae/semi-ui-solid/button/index';
 import Collapse from '@fibrae/semi-ui-solid/collapse/index';
 import Divider from '@fibrae/semi-ui-solid/divider/index';
 import Dropdown from '@fibrae/semi-ui-solid/dropdown/index';
 import Input from '@fibrae/semi-ui-solid/input/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
-import useWatch from '@fibrae/semi-ui-solid/primitives/use-watch';
+import { useWatch } from '@fibrae/semi-ui-solid/primitives/index';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import { CollapseExpandButton, CollapseHeader } from './code';
 import { type ImageUploadNodeOptions, createImageUploadNode } from './image-slot';

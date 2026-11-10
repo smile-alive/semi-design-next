@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, mergeProps, useTemplateRef, type ImgHTMLAttributes, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
-    import HydratedImage from '../../internal/hydrated-image.vue';
+    import { HydratedImage } from '../../internal/index';
 
     const props = defineProps<{
         image?: ImgHTMLAttributes;

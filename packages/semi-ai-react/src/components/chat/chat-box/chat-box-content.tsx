@@ -1,7 +1,7 @@
 import { type ReactNode, useMemo } from 'react';
 import { cssClasses, strings, type ChatMode } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
-import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+import { getFileType } from '@fibrae/semi-ai-foundation/utils';
 import MarkdownRender from '@fibrae/semi-ui-react/markdown-render/index';
 import { FileAttachment, ImageAttachment } from '../attachment';
 import Code from '../code';

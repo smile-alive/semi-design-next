@@ -1,10 +1,6 @@
 import { get } from 'es-toolkit/compat';
-import type { ValidateStatus } from '../../base/constants';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { isInnerControlActivation, isTextEditor } from '../../utils/a11y';
-import isEnterPress from '../../utils/is-enter-press';
-import { ESC_KEY } from '../../utils/key-code';
-import type { Size } from '../../utils/type';
+import { type ValidateStatus, BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isInnerControlActivation, isTextEditor, isEnterPress, ESC_KEY, type Size } from '../../utils/index';
 import type { BasicTreeInnerData, BasicTreeProps, BasicTreeNodeData, BasicTreeNodeProps, BasicExpandedOtherProps, TreeMotionType } from '../tree/foundation';
 import { calcRelatedCheckedKeys, deriveTreeState, getClearedSelection, getMultipleChange, getMultipleSelectResult, getNodeData, getSearchState, isTreeNodeLeaf, loadTreeNode } from '../tree/shared';
 import { flattenTreeData, findAncestorKeys, normalizeKeyList, getMotionKeys, getValueOrKey } from '../tree/tree-util';

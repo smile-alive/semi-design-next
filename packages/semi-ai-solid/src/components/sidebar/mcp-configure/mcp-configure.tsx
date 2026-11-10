@@ -1,5 +1,5 @@
 import { splitProps } from 'solid-js';
-import useDefaultProps from '@fibrae/semi-ui-solid/base/use-default-props';
+import { useDefaultProps } from '@fibrae/semi-ui-solid/base';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import Container from '../container';
 import type { ContainerSolidProps } from '../interface';

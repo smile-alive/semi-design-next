@@ -5,11 +5,8 @@
     import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
     import ItemFoundation, { type ItemAdapter, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
-    import SlotFragment from '../../base/slot-fragment';
-    import useFoundation from '../../base/use-foundation';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs';
-    import { nativeTag } from '../../utils/native-tag';
-    import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
+    import { SlotFragment, useFoundation } from '../../base/index';
+    import { isAriaKey, splitControlAttrs, nativeTag, slotNodes, hasSlotContent } from '../../utils/index';
     import DropdownItem from '../dropdown/dropdown-item.vue';
     import Tooltip from '../tooltip/tooltip.vue';
     import { useNav } from './context';

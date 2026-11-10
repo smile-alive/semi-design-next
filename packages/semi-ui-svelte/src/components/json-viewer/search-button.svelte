@@ -2,7 +2,7 @@
     import { tick } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { IconSearch } from '@fibrae/semi-icons-svelte';
     import Button from '../button/button.svelte';
     import dragMove from '../drag-move/drag-move.js';

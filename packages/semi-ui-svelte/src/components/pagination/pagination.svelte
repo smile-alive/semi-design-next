@@ -1,11 +1,10 @@
 <script lang="ts">
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
     import PaginationFoundation, { type PaginationAdapter, type PaginationBaseProps, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { ENTER_KEY, isComposing } from '@fibrae/semi-foundation/utils/key-code';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { ENTER_KEY, isComposing } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/pagination/pagination.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import { InputNumber } from '../input-number/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

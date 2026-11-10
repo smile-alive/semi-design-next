@@ -19,13 +19,10 @@ import {
     isSelected,
     resolveVirtualizedItemSize,
 } from '@fibrae/semi-foundation/components/table/utils';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import warning from '@fibrae/semi-foundation/utils/warning';
-import VirtualList, { type VirtualListHandle } from '../../../internal/virtual-list';
-import useRaf from '../../../primitives/use-raf';
-import useResizeObserver from '../../../primitives/use-resize-observer';
-import callHandler from '../../../utils/call-handler';
-import mergeStyles from '../../../utils/merge-styles';
+import { toCssLength, warning } from '@fibrae/semi-foundation/utils';
+import { VirtualList, type VirtualListHandle } from '../../../internal/index';
+import { useRaf, useResizeObserver } from '../../../primitives/index';
+import { callHandler, mergeStyles } from '../../../utils/index';
 import useLocale from '../../locale/use-locale';
 import ColGroup from '../col-group';
 import { useTableContext } from '../context';

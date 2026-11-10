@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h, type VNode } from 'vue';
     import TableFoundation, { type BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
-    import type { KeyedNode } from '../../utils/slot-nodes';
+    import type { KeyedNode } from '../../utils/index';
     import Checkbox, { type CheckboxEvent } from '../checkbox';
     import useLocale from '../locale/use-locale';
     import { useTableContext } from './context';

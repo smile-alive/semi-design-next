@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { StepSnippetProps, StepStatus, StepsSize, StepsType } from './interface.js';
 
 export interface StepsContextValue {

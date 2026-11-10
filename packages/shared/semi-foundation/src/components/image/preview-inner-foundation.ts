@@ -1,10 +1,6 @@
 import { isEqual, throttle, type ThrottledFunction } from 'es-toolkit';
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
-import ModalResources from '../../base/modal-resources';
-import { handlePrevent } from '../../utils/a11y';
-import { coversPage, resolvePopupContainer } from '../../utils/dom';
-import { ESC_KEY } from '../../utils/key-code';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, type DirectionContext, ModalResources } from '../../base/index';
+import { handlePrevent, coversPage, resolvePopupContainer, ESC_KEY } from '../../utils/index';
 import { clampZoom, getPreloadSrcList, downloadImage } from './utils';
 
 export type RatioType = 'adaptation' | 'realSize';

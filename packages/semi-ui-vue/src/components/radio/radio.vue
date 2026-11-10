@@ -2,14 +2,11 @@
     import { computed, nextTick, onBeforeUnmount, onMounted, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
     import { radioClasses } from '@fibrae/semi-foundation/components/radio/constants';
     import RadioFoundation, { type RadioAdapter, type RadioBaseState } from '@fibrae/semi-foundation/components/radio/radio-foundation';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { hasAutofocus, vAutofocus } from '../../utils/autofocus';
-    import { isNativeInputKey, splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
+    import { hasAutofocus, vAutofocus, isNativeInputKey, splitControlAttrs } from '../../utils/index';
     import { useRadioGroupContext } from './context';
     import type { RadioEmits, RadioHandle, RadioProps, RadioSlots } from './interface';
 

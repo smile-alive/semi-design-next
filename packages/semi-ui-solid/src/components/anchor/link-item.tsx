@@ -1,7 +1,7 @@
 import { For, Show, children, createEffect, createMemo, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
-import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
+import { isEnterPress } from '@fibrae/semi-foundation/utils';
 import Typography from '../typography';
 import { useAnchorContext } from './context';
 import type { AnchorClickEvent } from './interface';

@@ -1,14 +1,12 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/code-highlight/constants';
 import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseProps, type CodeHighlightBaseState } from '@fibrae/semi-foundation/components/code-highlight/index';
 import { register } from '@fibrae/semi-foundation/components/code-highlight/registry';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/code-highlight/code-highlight.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 
 type Foundation = CodeHighlightFoundation<CodeHighlightProps>;
 type Adapter = CodeHighlightAdapter<CodeHighlightProps>;

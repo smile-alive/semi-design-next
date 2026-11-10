@@ -2,7 +2,7 @@ import { Profiler, type ProfilerOnRenderCallback, useRef, useState, useEffect } 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, ConfigProvider, Input, Space, Switch, Table, Typography } from '@fibrae/semi-ui-react';
 import type { InputHandle } from '@fibrae/semi-ui-react/input';
 import { expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';

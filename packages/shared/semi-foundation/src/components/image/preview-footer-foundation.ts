@@ -1,5 +1,5 @@
 import { throttle, type ThrottledFunction } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import type { RatioType, RotateDirection } from './preview-inner-foundation';
 import { clampZoom } from './utils';
 

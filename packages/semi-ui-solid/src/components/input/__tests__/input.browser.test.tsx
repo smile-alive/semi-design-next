@@ -3,7 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
 import Input, { type InputProps, type TextAreaProps, TextArea } from '..';
 import Button from '../../button';

@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue';
 import type { Annotation, InputFile, InputImage, Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { createContext } from '@fibrae/semi-ui-vue/base/create-context';
+import { createContext } from '@fibrae/semi-ui-vue/base';
 import type { AIChatDialogueEmits, AIChatDialogueProps } from './interface';
 
 export type AIChatDialogueView = Required<Pick<AIChatDialogueProps, 'align' | 'disabledFileItemClick' | 'escapeHtml' | 'mode' | 'selecting' | 'showReference' | 'showReset'>> & Pick<AIChatDialogueProps, 'markdownRenderProps'>;

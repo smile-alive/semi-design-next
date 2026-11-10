@@ -1,8 +1,6 @@
 import { clamp, isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
-import { crossesFocusBoundary, handlePrevent } from '../../utils/a11y';
-import { isSecondaryPress } from '../../utils/pointer';
-import { focusWithoutRing } from '../../utils/supports';
+import { BaseFoundation, type DefaultAdapter, type DirectionContext } from '../../base/index';
+import { crossesFocusBoundary, handlePrevent, isSecondaryPress, focusWithoutRing } from '../../utils/index';
 
 export interface Marks {
     [key: number]: unknown;

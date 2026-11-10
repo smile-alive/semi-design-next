@@ -2,12 +2,12 @@
     import { onMount } from 'svelte';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
-    import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+    import { copyText } from '@fibrae/semi-foundation/utils';
     import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
+    import { useDefaultProps } from '@fibrae/semi-ui-svelte/base';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
-    import watch from '@fibrae/semi-ui-svelte/hooks/watch.svelte.js';
+    import { watch } from '@fibrae/semi-ui-svelte/hooks/index';
     import { ToastFactory } from '@fibrae/semi-ui-svelte/toast/index';
     import CodeItem from './code-item.svelte';
     import Container from './container/container.svelte';

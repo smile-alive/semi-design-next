@@ -1,8 +1,8 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { ScrollListProps } from './interface.js';
 
     const defaults = useDefaultProps('ScrollList');

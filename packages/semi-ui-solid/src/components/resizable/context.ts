@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { ResizeGroupItem } from '@fibrae/semi-foundation/components/resizable/foundation';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export interface ResizeGroupContextValue {
     view: Accessor<{ direction: 'horizontal' | 'vertical' }>;

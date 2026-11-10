@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js';
 import { render, screen, waitFor, within } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import TimePicker, { type TimePickerProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';

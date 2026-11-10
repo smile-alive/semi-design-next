@@ -2,10 +2,9 @@
     import { Text, computed, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
     import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import type { ElementProps } from '../../base/element-props';
-    import useFoundation from '../../base/use-foundation';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
+    import { type ElementProps, useFoundation } from '../../base/index';
+    import { slotNodes, type KeyedNode } from '../../utils/index';
     import { iconAttrs } from '../navigation/nav-icon';
     import slotText from '../typography/slot-text';
     import TypographyText from '../typography/text.vue';

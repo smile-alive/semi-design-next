@@ -1,5 +1,5 @@
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { getFileKind } from '../../utils/file-suffix';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getFileKind } from '../../utils/index';
 
 export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-ai-chat-dialogue`,

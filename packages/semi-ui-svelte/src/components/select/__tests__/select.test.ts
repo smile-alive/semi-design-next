@@ -2,7 +2,7 @@ import { createRawSnippet, flushSync } from 'svelte';
 import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import type { SelectOptionItemSnippetProps, SelectOptionProps, SelectProps, SelectValue } from '..';
 import SelectCase from './select-case.svelte';
 

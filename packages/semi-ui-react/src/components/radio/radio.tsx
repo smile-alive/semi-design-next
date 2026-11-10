@@ -4,10 +4,8 @@ import clsx from 'clsx';
 import { type strings, radioClasses as css } from '@fibrae/semi-foundation/components/radio/constants';
 import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import '@fibrae/semi-foundation/components/radio/radio.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import { hasContent } from '../../utils';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { hasContent } from '../../utils/index';
 import { type RadioMode, useRadioGroupContext } from './context';
 import RadioInner from './radio-inner';
 

@@ -3,10 +3,8 @@ import { useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
 import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useMergedRef } from '../../hooks/index';
 
 type Foundation = LottieFoundation<LottieProps>;
 type Adapter = LottieAdapter<LottieProps>;

@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
     import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
     import type { SkeletonProps, SkeletonSlots } from './interface';
 
     // The root is absent once loading ends, so attrs are bound by hand and are dropped together with the placeholder.

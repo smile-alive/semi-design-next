@@ -2,7 +2,7 @@ import { splitProps } from 'solid-js';
 import clsx from 'clsx';
 import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
 import { IconClock } from '@fibrae/semi-icons-solid';
-import useFoundation from '../../base/use-foundation';
+import { useFoundation } from '../../base/index';
 import Input, { type InputProps } from '../input';
 
 export interface TimeInputProps extends Omit<InputProps, 'value' | 'defaultValue' | 'onChange' | 'readOnly' | 'readonly'> {

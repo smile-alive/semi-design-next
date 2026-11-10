@@ -3,11 +3,11 @@ import { type ReactNode, cloneElement, isValidElement } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
 import { buttonClassList, colorfulFill, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/button/button.scss';
 import '@fibrae/semi-foundation/components/button/icon-button.scss';
 import { IconAILoading } from '@fibrae/semi-icons-react';
-import { hasContent } from '../../utils';
+import { hasContent } from '../../utils/index';
 import SpinIcon from '../spin/icon';
 
 export type HtmlType = 'button' | 'reset' | 'submit';

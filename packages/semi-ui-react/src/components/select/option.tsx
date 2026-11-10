@@ -3,7 +3,7 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
 import type { BasicOptionProps } from '@fibrae/semi-foundation/components/select/option-foundation';
-import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
+import { getDataAttr } from '@fibrae/semi-foundation/utils';
 import { IconTick } from '@fibrae/semi-icons-react';
 import Highlight from '../highlight';
 import useLocale from '../locale/use-locale';

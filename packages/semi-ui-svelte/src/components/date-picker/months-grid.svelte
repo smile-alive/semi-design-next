@@ -3,7 +3,7 @@
     import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import { IconCalendar, IconClock } from '@fibrae/semi-icons-svelte';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useFoundation } from '../../base/index.js';
     import Combobox from '../time-picker/combobox.svelte';
     import type { ComboboxHandle, ComboboxProps } from '../time-picker/interface.js';
     import type { MonthsGridProps } from './internal.js';

@@ -1,7 +1,7 @@
 import type { NoticeInstance } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import { createContext } from '../../base/create-context.js';
-import type { NoticeListState } from '../../hooks/use-notice-close.js';
+import { createContext } from '../../base/index.js';
+import type { NoticeListState } from '../../hooks/index.js';
 
 export type ListedNotice = NoticeInstance & Required<Pick<NoticeInstance, 'id'>> & Pick<ConfigProps, 'top' | 'bottom' | 'left' | 'right'>;
 

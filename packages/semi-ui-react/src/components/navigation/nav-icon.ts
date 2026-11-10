@@ -1,7 +1,7 @@
 import type React from 'react';
 import { cloneElement, isValidElement } from 'react';
 import clsx from 'clsx';
-import { isSemiIcon } from '../../utils';
+import { isSemiIcon } from '../../utils/index';
 
 interface IconElementProps {
     size?: string;

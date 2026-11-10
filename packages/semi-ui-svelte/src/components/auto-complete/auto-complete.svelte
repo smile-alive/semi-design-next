@@ -5,14 +5,11 @@
     import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type StateOptionItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
-    import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
+    import { isInnerControlKey, toCssLength, getDataAttr } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import useClickOutside from '../../hooks/use-click-outside.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { useClickOutside } from '../../hooks/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { Input } from '../input/index.js';

@@ -1,9 +1,9 @@
 import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { SkeletonAvatar, SkeletonButton, SkeletonImage, SkeletonParagraph, SkeletonTitle } from '../index';
 import KitsDemo from './kits-demo.svelte';
 import SkeletonDemo from './skeleton-demo.svelte';

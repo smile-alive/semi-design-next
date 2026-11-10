@@ -1,5 +1,4 @@
-import type { LocaleComponentName } from '@fibrae/semi-foundation/locale/index';
-import { resolveLocale } from '@fibrae/semi-foundation/locale/resolve-locale';
+import { type LocaleComponentName, resolveLocale } from '@fibrae/semi-foundation/locale';
 import { getConfigContext } from '../config-provider/context.js';
 import { getLocaleContext } from './context.js';
 

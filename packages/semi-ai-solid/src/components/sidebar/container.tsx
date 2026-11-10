@@ -2,17 +2,16 @@ import { Show, children, createComputed, createEffect, createMemo, createSignal,
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
-import useFoundation from '@fibrae/semi-ui-solid/base/use-foundation';
+import { useFoundation } from '@fibrae/semi-ui-solid/base';
 import Button from '@fibrae/semi-ui-solid/button/index';
-import useCSSAnimation from '@fibrae/semi-ui-solid/internal/css-animation';
+import { useCSSAnimation } from '@fibrae/semi-ui-solid/internal';
 import { useLocale, useRecordFocus } from '@fibrae/semi-ui-solid/primitives';
-import useWatch from '@fibrae/semi-ui-solid/primitives/use-watch';
+import { useWatch } from '@fibrae/semi-ui-solid/primitives/index';
 import { Resizable } from '@fibrae/semi-ui-solid/resizable/index';
-import hasContent from '@fibrae/semi-ui-solid/utils/has-content';
-import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
+import { hasContent, mergeRefs } from '@fibrae/semi-ui-solid/utils';
 import type { ContainerSolidProps } from './interface';
 
 const prefixCls = cssClasses.SIDEBAR;

@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { TabPosition, TabSize, TabType } from './interface.js';
 
 export interface TabsView {

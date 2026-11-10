@@ -3,7 +3,7 @@ import { nextTick, ref, shallowRef, type ComponentPublicInstance, type StyleValu
 import { screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import { Resizable, type ResizeCallback, type ResizeStartCallback, type Size } from '..';
 import ConfigProvider from '../../config-provider';

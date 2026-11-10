@@ -3,7 +3,7 @@
     import { getCurrDate } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import '@fibrae/semi-foundation/components/calendar/calendar.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import { setCalendarContext } from './context.js';
     import DayCalendar from './day-calendar.svelte';
     import useToday from './hooks/use-today.svelte.js';

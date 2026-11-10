@@ -2,8 +2,8 @@
     import { type Component, untrack } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { blankRow, describeSchemaField, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import warning from '@fibrae/semi-foundation/utils/warning';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { warning } from '@fibrae/semi-foundation/utils';
     import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-svelte';
     import Button from '../../button/button.svelte';
     import useLocale from '../../locale/use-locale.svelte.js';

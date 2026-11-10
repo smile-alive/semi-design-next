@@ -4,8 +4,8 @@
     import { getStepState } from '@fibrae/semi-foundation/components/steps/utils';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
     import { IconAlertCircle, IconAlertTriangle, IconChevronRight, IconTickCircle } from '@fibrae/semi-icons-vue';
-    import type { ElementProps } from '../../base/element-props';
-    import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { slotNodes, hasSlotContent } from '../../utils/index';
     import { useStepItemContext, useStepsContext } from './context';
     import type { StepProps, StepSlots } from './interface';
     import { useStepItem } from './use-step-item';

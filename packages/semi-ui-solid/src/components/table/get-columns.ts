@@ -1,4 +1,4 @@
-import { isToken, type Token } from '../../base/token';
+import { isToken, type Token } from '../../base/index';
 import { type ColumnElementProps, TABLE_COLUMN } from './column';
 import type { ColumnProps } from './interface';
 

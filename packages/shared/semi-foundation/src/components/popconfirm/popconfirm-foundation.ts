@@ -1,6 +1,5 @@
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import isPromise from '../../utils/is-promise';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isPromise } from '../../utils/index';
 
 export interface PopconfirmAdapter<P extends PopconfirmBaseProps = PopconfirmBaseProps> extends DefaultAdapter<P, PopconfirmBaseState> {
     // only a returned promise is awaited, so any other value is accepted, such as a setter's

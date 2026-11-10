@@ -2,10 +2,10 @@ import { For, createSignal, onMount } from 'solid-js';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSearch } from '@fibrae/semi-icons-solid';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import Input, { type InputChangeEvent, type InputGroupProps, type InputInternalProps, type InputMode, type InputProps, InputGroup, TextArea } from '..';
 import Tooltip from '../../tooltip';
 

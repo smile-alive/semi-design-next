@@ -4,10 +4,8 @@ import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/consta
 import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
 import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
 import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-solid';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import callHandler from '../../utils/call-handler';
-import hasContent from '../../utils/has-content';
+import { useDefaultProps, useFoundation } from '../../base/index';
+import { callHandler, hasContent } from '../../utils/index';
 import Button, { type ButtonProps, type Type as ButtonType } from '../button';
 import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';

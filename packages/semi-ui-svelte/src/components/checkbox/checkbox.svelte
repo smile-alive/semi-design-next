@@ -1,12 +1,11 @@
 <script lang="ts">
     import CheckboxFoundation, { type BaseCheckboxProps, type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
     import { checkboxClasses } from '@fibrae/semi-foundation/components/checkbox/constants';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
     import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { isNativeInputKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { isNativeInputKey, splitControlAttrs } from '../../utils/index.js';
     import useTrigger, { attachmentProps } from '../tooltip/use-trigger.svelte.js';
     import { getCheckboxGroupContext } from './context.js';
     import type { CheckboxEvent, CheckboxProps } from './interface.js';

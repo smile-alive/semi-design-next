@@ -3,7 +3,7 @@
     import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/components/color-picker/color-slider-foundation';
     import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
     import { hsvaToHslString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
-    import useFoundation from '../../base/use-foundation';
+    import { useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import { toDragEvent } from './drag-event';
     import type { ColorSliderProps } from './interface';

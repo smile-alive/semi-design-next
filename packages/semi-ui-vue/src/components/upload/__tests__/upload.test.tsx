@@ -6,7 +6,7 @@ import { createEvent, fireEvent, screen, waitFor } from '@testing-library/vue';
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { IconUser } from '@fibrae/semi-icons-vue';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import UploadIndex, { UploadFileCard } from '../index';
 import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, CustomFile, FileItem, UploadEmits, UploadFileItemSlotProps, UploadHandle, UploadPicCloseSlotProps, UploadProps } from '../interface';

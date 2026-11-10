@@ -1,9 +1,7 @@
 import { Text, type FunctionalComponent, type VNode } from 'vue';
 import { optionListToRecords, toOptionRecord, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
-import warning from '@fibrae/semi-foundation/utils/warning';
-import elementType from '../../utils/element-type';
-import { childSlots, normalizeVNodeProps, toVNodes as toNodes } from '../../utils/read-vnode';
-import slotNodes from '../../utils/slot-nodes';
+import { warning } from '@fibrae/semi-foundation/utils';
+import { elementType, childSlots, normalizeVNodeProps, toVNodes as toNodes, slotNodes } from '../../utils/index';
 import type { SelectOptionProps } from './interface';
 
 export interface OptionRecord extends BaseOptionRecord<SelectOptionProps, GroupRecord> {

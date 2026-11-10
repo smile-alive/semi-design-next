@@ -2,9 +2,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
     import type { DailyEventLayout } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/components/calendar/foundation';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
+    import { useFoundation, useKeepAliveFoundation } from '../../base/index';
     import { useCalendarContext } from './context';
     import type { CalendarSlots } from './interface';
 

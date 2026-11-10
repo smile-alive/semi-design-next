@@ -18,7 +18,7 @@ import {
     readLinkEditorOpenState,
     unsetLink,
 } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import {
     IconH1,
     IconHn,
@@ -48,7 +48,7 @@ import {
     IconAlignRight,
     IconImage,
 } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
+import type { ElementProps } from '@fibrae/semi-ui-react/base';
 import Button, { type ButtonProps } from '@fibrae/semi-ui-react/button/index';
 import Collapse from '@fibrae/semi-ui-react/collapse/index';
 import Divider from '@fibrae/semi-ui-react/divider/index';

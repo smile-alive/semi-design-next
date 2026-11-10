@@ -1,8 +1,8 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/card/card.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import { Skeleton, SkeletonParagraph, SkeletonTitle } from '../skeleton/index.js';
     import Space from '../space/space.svelte';
     import { TypographyTitle } from '../typography/index.js';

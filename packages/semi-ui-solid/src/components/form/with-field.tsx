@@ -5,12 +5,10 @@ import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/components/
 import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
 import type { ExclusiveFieldValidation, FieldRegistration } from '@fibrae/semi-foundation/components/form/interface';
 import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveFieldView } from '@fibrae/semi-foundation/components/form/utils';
-import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+import { joinIds, warning } from '@fibrae/semi-foundation/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
-import warning from '@fibrae/semi-foundation/utils/warning';
-import useWatch from '../../primitives/use-watch';
-import hasContent from '../../utils/has-content';
-import isMarkup from '../../utils/is-markup';
+import { useWatch } from '../../primitives/index';
+import { hasContent, isMarkup } from '../../utils/index';
 import { type FormContextValue, useArrayFieldContext, useFormContext, useFormInputGroupContext } from './context';
 import ErrorMessage, { type ErrorMessageInternalProps } from './error-message';
 import FieldGrid from './field-grid';

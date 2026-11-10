@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { ExclusiveFormValidation } from '@fibrae/semi-foundation/components/form/interface';
-import useDefaultProps from '../../../base/use-default-props';
+import { useDefaultProps } from '../../../base/index';
 import Form from '../form';
 import type { AllFormProps } from '../interface';
 import SchemaField, { type SchemaFieldProps } from './schema-field';

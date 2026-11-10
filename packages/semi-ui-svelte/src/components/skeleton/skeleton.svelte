@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
     import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { SkeletonProps } from './interface.js';
 
     const defaults = useDefaultProps('Skeleton');

@@ -6,12 +6,11 @@
     import { type DateObj, toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/components/calendar/foundation';
     import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import { IconClose } from '@fibrae/semi-icons-svelte';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import useClickOutside from '../../hooks/use-click-outside.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useFoundation } from '../../base/index.js';
+    import { useClickOutside, watch } from '../../hooks/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { IconButton } from '../icon-button/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

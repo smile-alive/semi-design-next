@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
 
     interface AutoSizerProps {
         defaultHeight: number | string;

@@ -1,7 +1,6 @@
 import { isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { crossesFocusBoundary } from '../../utils/a11y';
-import warning from '../../utils/warning';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { crossesFocusBoundary, warning } from '../../utils/index';
 import type { BasicCheckboxEvent } from './checkbox-foundation';
 
 export type CheckboxValue = string | number | boolean;

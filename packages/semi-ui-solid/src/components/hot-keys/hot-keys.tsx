@@ -3,9 +3,7 @@ import clsx from 'clsx';
 import { cssClasses, Keys } from '@fibrae/semi-foundation/components/hot-keys/constants';
 import HotKeysFoundation, { type HotKeysAdapter } from '@fibrae/semi-foundation/components/hot-keys/foundation';
 import '@fibrae/semi-foundation/components/hot-keys/hot-keys.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 
 const prefixCls = cssClasses.PREFIX;
 

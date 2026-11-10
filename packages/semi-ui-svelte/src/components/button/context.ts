@@ -1,6 +1,5 @@
 import type { ButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
-import { createContext } from '../../base/create-context.js';
-import { getPopupLayerContext } from '../../base/popup-layer.js';
+import { createContext, getPopupLayerContext } from '../../base/index.js';
 
 export interface ButtonGroupContext extends Partial<ButtonLooks> {
     /** The popup layer the group renders in; buttons in a popup opened from inside the group do not inherit */

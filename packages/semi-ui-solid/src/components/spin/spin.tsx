@@ -3,11 +3,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/spin/constants';
 import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
 import '@fibrae/semi-foundation/components/spin/spin.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { hasContent, mergeRefs } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import SpinIcon from './icon';
 

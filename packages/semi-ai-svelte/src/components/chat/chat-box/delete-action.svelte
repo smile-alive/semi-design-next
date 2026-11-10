@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
+    import { handoverFocus } from '@fibrae/semi-foundation/utils';
     import { IconDeleteStroked } from '@fibrae/semi-icons-svelte';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';

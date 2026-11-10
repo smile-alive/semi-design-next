@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
-import { crossesFocusBoundary } from '../../utils/a11y';
+import { BaseFoundation, type DefaultAdapter, type DirectionContext } from '../../base/index';
+import { crossesFocusBoundary } from '../../utils/index';
 
 export interface PinCodeBaseProps {
     disabled?: boolean;

@@ -4,12 +4,11 @@ import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/components/aud
 import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerState } from '@fibrae/semi-foundation/components/audio-player/foundation';
 import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
 import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-solid';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { useDefaultProps, useFoundation } from '../../base/index';
 import Button from '../button';
 import Dropdown from '../dropdown';
 import Image from '../image';

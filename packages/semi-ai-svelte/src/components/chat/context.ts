@@ -1,4 +1,4 @@
-import { createContext } from '@fibrae/semi-ui-svelte/base/create-context';
+import { createContext } from '@fibrae/semi-ui-svelte/base';
 import type { ToastHookApi } from '@fibrae/semi-ui-svelte/toast/interface';
 import type { ChatMessage, ChatProps } from './interface.js';
 

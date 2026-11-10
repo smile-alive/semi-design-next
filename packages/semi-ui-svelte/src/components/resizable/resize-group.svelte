@@ -2,10 +2,9 @@
     import { on } from 'svelte/events';
     import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
     import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseProps, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/resizable/resizable.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import { observeResize } from '../resize-observer/index.js';
     import { setResizeGroupContext } from './context.js';
     import type { ResizeGroupProps } from './interface.js';

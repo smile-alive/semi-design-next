@@ -4,7 +4,7 @@ import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { IconWifi } from '@fibrae/semi-icons-vue';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { endTransitions, render } from '@test/utils/vue';
 import Toast, { ToastFactory } from '../index';
 import type { ToastHookApi, ToastHookOptions, ToastProps } from '../interface';

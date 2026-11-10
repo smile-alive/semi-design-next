@@ -1,14 +1,12 @@
 <script lang="ts">
     import { tick } from 'svelte';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
     import InputFoundation, { type InputAdapter, type InputBaseProps } from '@fibrae/semi-foundation/components/input/foundation';
     import '@fibrae/semi-foundation/components/input/input.scss';
     import { IconClear, IconEyeClosedSolid, IconEyeOpened } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
-    import { type SlotKind, trackSlotKind } from '../../utils/slot-kind.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { splitControlAttrs, type SlotKind, trackSlotKind } from '../../utils/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { getInputGroupInScope, setInputGroupContext } from './context.js';
     import { isNotClassOrStyle } from './control-attrs.js';

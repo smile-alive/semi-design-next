@@ -3,8 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { markEnds } from '@fibrae/semi-foundation/components/button/utils';
     import '@fibrae/semi-foundation/components/button/button.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import useMutationObserver from '../../composables/use-mutation-observer';
+    import type { ElementProps } from '../../base/index';
+    import { useMutationObserver } from '../../composables/index';
     import type { SplitButtonGroupProps, SplitButtonGroupSlots } from './interface';
 
     defineOptions({ inheritAttrs: false });

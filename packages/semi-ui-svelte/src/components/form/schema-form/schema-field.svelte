@@ -1,8 +1,8 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { describeSchemaField, resolveJsonSchema } from '@fibrae/semi-foundation/components/form/json-schema';
-    import warning from '@fibrae/semi-foundation/utils/warning';
-    import useDefaultProps from '../../../base/use-default-props.js';
+    import { warning } from '@fibrae/semi-foundation/utils';
+    import { useDefaultProps } from '../../../base/index.js';
     import { getFormContext } from '../context.js';
     import type { SchemaFieldProps } from '../interface.js';
     import SchemaNode from './schema-node.svelte';

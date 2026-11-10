@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { AvatarProps } from './interface';
 
 export type AvatarContextType = {

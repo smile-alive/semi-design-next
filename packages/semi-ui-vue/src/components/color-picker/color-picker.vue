@@ -4,9 +4,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
     import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as FoundationProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
     import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover';
     import ColorPickerPanel from './color-picker-panel.vue';

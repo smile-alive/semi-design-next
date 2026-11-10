@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { VNode } from 'vue';
-    import slotNodes from '../../utils/slot-nodes';
+    import { slotNodes } from '../../utils/index';
     import { useNav } from './context';
     import type { NavItemProps, SubNavProps } from './interface';
 

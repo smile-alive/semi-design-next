@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
 import type { StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import { Form, FormInput } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { FormApi } from '../interface';
 
 const errorSelector = '.semi-form-field-error-message';

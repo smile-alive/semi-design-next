@@ -3,7 +3,7 @@ import { isServer } from 'solid-js/web';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
 import { IconChevronRight, IconTreeTriangleRight } from '@fibrae/semi-icons-solid';
-import isMarkup from '../../utils/is-markup';
+import { isMarkup } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import { useTableContext } from './context';
 import type { ExpandIcon } from './interface';

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
 import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/components/calendar/foundation';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
-import useFoundation from '../../base/use-foundation';
+import { useFoundation } from '../../base/index';
 import type { DayColProps } from './interface';
 
 type Foundation = CalendarFoundation<DayColProps>;

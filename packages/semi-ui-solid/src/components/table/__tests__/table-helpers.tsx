@@ -1,4 +1,4 @@
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { getData } from '@test/utils/solid';
 import Tag from '../../tag';
 import Tooltip from '../../tooltip';

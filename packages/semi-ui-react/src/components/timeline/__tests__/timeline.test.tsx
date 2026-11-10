@@ -3,10 +3,10 @@ import { createPortal } from 'react-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Timeline, Icon } from '@fibrae/semi-ui-react';
 import type { IconProps } from '@fibrae/semi-ui-react/icons';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { Data, TimelineProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-timeline`;

@@ -3,9 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
     import CollapseFoundation from '@fibrae/semi-foundation/components/collapse/foundation';
     import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import SlotFragment from '../../base/slot-fragment';
-    import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, SlotFragment } from '../../base/index';
+    import { slotNodes, hasSlotContent } from '../../utils/index';
     import Collapsible from '../collapsible';
     import { useCollapseContext } from './context';
     import type { CollapsePanelEmits, CollapsePanelProps, CollapsePanelSlots } from './interface';

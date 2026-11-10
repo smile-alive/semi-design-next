@@ -1,8 +1,8 @@
 import React, { StrictMode, createRef } from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Progress, { type ProgressProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-progress`;

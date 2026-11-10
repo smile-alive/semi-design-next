@@ -4,12 +4,8 @@ import { cssClasses, numbers } from '@fibrae/semi-foundation/components/backtop/
 import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/components/backtop/foundation';
 import '@fibrae/semi-foundation/components/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import callHandler from '../../utils/call-handler';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { callHandler, hasContent, mergeRefs } from '../../utils/index';
 import FloatButton, { type FloatButtonElement, type FloatButtonProps } from '../float-button';
 import type { FloatButtonOmittedKeys } from '../float-button/interface';
 import useLocale from '../locale/use-locale';

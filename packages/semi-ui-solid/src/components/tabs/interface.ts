@@ -1,5 +1,5 @@
 import type { Component, JSX } from 'solid-js';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 import type { DropdownProps, GetDropdownTriggerProps } from '../dropdown';
 
 export type TabType = 'line' | 'card' | 'button' | 'slash';

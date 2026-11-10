@@ -1,6 +1,6 @@
 import type { AudioUrl } from '@fibrae/semi-foundation/components/audio-player/foundation';
-import type { ElementProps } from '../../base/element-props';
-import type { MediaEventKeys } from '../../utils/media-event-keys';
+import type { ElementProps } from '../../base/index';
+import type { MediaEventKeys } from '../../utils/index';
 
 export type AudioPlayerTheme = 'dark' | 'light';
 

@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { Collapsible } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 
 function getCollapsible(props?, children?) {
     return <Collapsible {...(props || {})}>{children || <div>hello</div>}</Collapsible>;

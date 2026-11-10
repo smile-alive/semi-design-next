@@ -1,7 +1,5 @@
 import { cloneDeepWith } from 'es-toolkit';
-import { joinIds } from '../../utils/a11y';
-import { createId } from '../../utils/uuid';
-import warning from '../../utils/warning';
+import { joinIds, createId, warning } from '../../utils/index';
 import { strings } from './constants';
 import { hasErrorContent, hasErrors } from './errors';
 import type { FieldValidateTriggerType, BasicTriggerType, StandardSchemaIssue, FieldRegistration, FieldValidator, RuleItem, StandardSchema } from './interface';

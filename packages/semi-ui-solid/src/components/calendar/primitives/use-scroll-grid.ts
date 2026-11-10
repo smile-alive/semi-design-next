@@ -1,5 +1,5 @@
 import { createSignal, onMount, untrack } from 'solid-js';
-import useResizeObserver from '../../../primitives/use-resize-observer';
+import { useResizeObserver } from '../../../primitives/index';
 
 /**
  * The scrolling time grid shared by the day, week and range views: measures the grid height events are placed

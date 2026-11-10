@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
-import { noop } from '@fibrae/semi-foundation/utils/function';
+import { noop } from '@fibrae/semi-foundation/utils';
 import { type CheckboxEvent, type CheckboxProps, Checkbox } from '../checkbox';
 
 export interface ColumnSelectionProps {

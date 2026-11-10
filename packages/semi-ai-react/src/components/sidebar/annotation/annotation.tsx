@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-import useDefaultProps from '@fibrae/semi-ui-react/base/use-default-props';
+import { useDefaultProps } from '@fibrae/semi-ui-react/base';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import Container from '../container';
 import type { ContainerReactProps } from '../interface';

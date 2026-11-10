@@ -1,7 +1,6 @@
 import { isEqual } from 'es-toolkit';
-import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
-import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../../base/message-list-foundation';
+import { escapeHtmlInMarkdown, createId } from '@fibrae/semi-foundation/utils';
+import { MessageListFoundation, type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../../base/index';
 import type { Reference } from '../ai-chat-input/interface';
 import { cssClasses, strings } from './constants';
 import type { ResponseError } from './data-adapter/interface';

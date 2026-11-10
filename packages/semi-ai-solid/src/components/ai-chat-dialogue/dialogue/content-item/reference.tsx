@@ -3,7 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses, type DialogueIconKind, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/utils';
 import { IconCode, IconExcel, IconPdf, IconSendMsgStroked, IconVideo, IconWord } from '@fibrae/semi-icons-solid';
 import Image from '@fibrae/semi-ui-solid/image/index';
 

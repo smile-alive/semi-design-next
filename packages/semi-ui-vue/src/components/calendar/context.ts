@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { EventObject } from './interface';
 
 // The layouts the foundation returns are copies (split spans, timed events without custom fields), so the views

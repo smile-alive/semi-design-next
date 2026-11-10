@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { Locale, LocaleComponentName, LocaleInput, LocaleResult } from '@fibrae/semi-foundation/locale/index';
+import type { Locale, LocaleComponentName, LocaleInput, LocaleResult } from '@fibrae/semi-foundation/locale';
 
 export type { LocaleComponentName, LocaleResult };
 

@@ -1,13 +1,7 @@
 import { isEqual } from 'es-toolkit';
 import type { FocusableElement } from 'tabbable';
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { crossesFocusBoundary, getEnabledStepIndex, getListTargetIndex, handlePrevent, isInnerControlActivation, isInnerControlKey, isTextEditor, Typeahead } from '../../utils/a11y';
-import { centerInScroller } from '../../utils/dom';
-import EventEmitter from '../../utils/event';
-import { ENTER_KEY, isComposing } from '../../utils/key-code';
-import { containsWithPopups } from '../../utils/layer';
-import warning from '../../utils/warning';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { crossesFocusBoundary, getEnabledStepIndex, getListTargetIndex, handlePrevent, isInnerControlActivation, isInnerControlKey, isTextEditor, Typeahead, centerInScroller, EventEmitter, ENTER_KEY, isComposing, containsWithPopups, warning } from '../../utils/index';
 import { cssClasses, strings } from './constants';
 import type { BasicOptionProps, OptionRecord } from './option-foundation';
 

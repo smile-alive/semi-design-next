@@ -1,7 +1,5 @@
 import { isEqual } from 'es-toolkit';
-import { crossesFocusBoundary } from '../../utils/a11y';
-import { fitTextareaHeight, onFontsLoaded, supportsFieldSizing } from '../../utils/field-sizing';
-import { ENTER_KEY, isComposing } from '../../utils/key-code';
+import { crossesFocusBoundary, fitTextareaHeight, onFontsLoaded, supportsFieldSizing, ENTER_KEY, isComposing } from '../../utils/index';
 import { cssClasses } from './constants';
 import TextEntryFoundation, { type TextEntryAdapter, type TextEntryBaseProps, type TextEntryBaseState } from './text-entry-foundation';
 

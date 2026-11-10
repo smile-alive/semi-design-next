@@ -4,9 +4,9 @@
     import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputValue, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-vue';
-    import useFoundation from '../../base/use-foundation';
-    import useFocusHandover from '../../composables/use-focus-handover';
-    import slotKind from '../../utils/slot-kind';
+    import { useFoundation } from '../../base/index';
+    import { useFocusHandover } from '../../composables/index';
+    import { slotKind } from '../../utils/index';
     import Input from '../input/input.vue';
     import useLocale from '../locale/use-locale';
     import InsetInput from './inset-input.vue';

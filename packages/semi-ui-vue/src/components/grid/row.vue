@@ -4,8 +4,7 @@
     import { gutterStyle, normalizeGutter } from '@fibrae/semi-foundation/components/grid/gutter';
     import { getRowClassName } from '@fibrae/semi-foundation/components/grid/utils';
     import '@fibrae/semi-foundation/components/grid/grid.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
     import type { RowProps, RowSlots } from './interface';
 
     const props = withDefaults(defineProps<RowProps & /* @vue-ignore */ ElementProps<'div', keyof RowProps>>(), {

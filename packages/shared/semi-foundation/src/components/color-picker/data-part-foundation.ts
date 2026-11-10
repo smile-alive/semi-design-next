@@ -1,5 +1,5 @@
 import { isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import ColorPickerFoundation, { type ColorValue } from './foundation';
 import type { ColorFormat, HsvaColor, RgbaColor } from './interface';
 import { hexToRgba, rgbaToHex } from './utils/convert';

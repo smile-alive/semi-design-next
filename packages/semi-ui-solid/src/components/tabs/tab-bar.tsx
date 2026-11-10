@@ -6,11 +6,9 @@ import { cssClasses, getBarItemKey, getTabId } from '@fibrae/semi-foundation/com
 import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
 import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
 import { IconChevronDown, IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
-import useFoundation from '../../base/use-foundation';
-import useResizeObserver from '../../primitives/use-resize-observer';
-import hasContent from '../../utils/has-content';
-import { serverHtml } from '../../utils/is-markup';
-import mergeRefs from '../../utils/merge-refs';
+import { useFoundation } from '../../base/index';
+import { useResizeObserver } from '../../primitives/index';
+import { hasContent, serverHtml, mergeRefs } from '../../utils/index';
 import Button from '../button';
 import Dropdown, { type GetDropdownTriggerProps } from '../dropdown';
 import useLocale from '../locale/use-locale';

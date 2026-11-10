@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { fireEvent, screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { render } from '@test/utils/vue';
 import SelectOption from '../../select/option.vue';
 

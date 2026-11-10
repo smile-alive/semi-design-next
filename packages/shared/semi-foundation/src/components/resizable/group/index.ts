@@ -1,7 +1,6 @@
 import { debounce } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../../base/foundation';
-import { isSecondaryPress } from '../../../utils/pointer';
-import { createId } from '../../../utils/uuid';
+import { BaseFoundation, type DefaultAdapter } from '../../../base/index';
+import { isSecondaryPress, createId } from '../../../utils/index';
 import type { ResizeStartCallback, ResizeCallback } from '../types';
 import { clamp, getItemDirection, getNumberSize } from '../utils';
 

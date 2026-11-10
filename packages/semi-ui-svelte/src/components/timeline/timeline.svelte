@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
     import { getPosCls } from '@fibrae/semi-foundation/components/timeline/utils';
     import '@fibrae/semi-foundation/components/timeline/timeline.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { TimelineData, TimelineProps } from './interface.js';
 
     const defaults = useDefaultProps('Timeline');

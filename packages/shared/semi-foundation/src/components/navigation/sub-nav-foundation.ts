@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 
 function addKeys(originKeys: (string | number)[] = [], ...willAddKeys: (string | number)[]) {
     const keySet = new Set(originKeys);

@@ -1,18 +1,14 @@
 <script setup lang="ts">
     import { computed, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef } from 'vue';
     import type { Locale } from 'date-fns';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import useClickOutside from '../../composables/use-click-outside';
-    import { isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
+    import { useClickOutside } from '../../composables/index';
+    import { isNotClassOrStyle, splitControlAttrs, hasSlotContent } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';

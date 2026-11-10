@@ -1,10 +1,7 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
-    import useClickOutside from '../../composables/use-click-outside';
-    import useDidUpdate from '../../composables/use-did-update';
-    import useEventListener from '../../composables/use-event-listener';
-    import useResizeObserver from '../../composables/use-resize-observer';
-    import { splitControlAttrs } from '../../utils/control-attrs';
+    import { useClickOutside, useDidUpdate, useEventListener, useResizeObserver } from '../../composables/index';
+    import { splitControlAttrs } from '../../utils/index';
 
     defineOptions({ inheritAttrs: false });
     const props = withDefaults(defineProps<{ enabled?: boolean; value?: string }>(), { enabled: true, value: 'a' });

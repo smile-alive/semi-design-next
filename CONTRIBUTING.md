@@ -72,7 +72,7 @@ pnpm site:dev
 | `utils/`             | 无状态工具函数                        | 无状态工具与 `semi-global`                                                                                    |
 | `__tests__/`         | 跨组件测试                            | 跨组件测试；只测单个文件的用例放在该文件旁的 `__tests__/`                                                     |
 
-foundation 包另有 `locale/`、`theme/`。UI 包与 AI 包的 `exports` 先列入口文件和上述基础目录，其余子路径映射到 `dist/components/`；新增基础目录时同步 `package.json` 的 `exports`、`vite.semi.ts` 的别名、`vitest/<框架>/tsconfig.<框架>.json` 的 `paths` 与 `scripts/lint-private.ts`。
+foundation 包另有 `locale/`、`theme/`。基础目录各有一个 `index` 汇总导出（D22）：组件与测试从入口导入，同一入口只写一条 import，如 `@fibrae/semi-foundation/utils`、`../../base/index`，hook 目录写 `../../hooks/index`；基础目录内部只用深路径，不导入任何入口。UI 包与 AI 包的 `exports` 先列入口文件和上述基础目录（UI 包另列 `base`、`utils`、`internal` 入口），其余子路径映射到 `dist/components/`；新增基础目录时同步 `package.json` 的 `exports`、`vite.semi.ts` 的别名、`vitest/<框架>/tsconfig.<框架>.json` 的 `paths` 与 `scripts/lint-private.ts`。
 
 ## 样式定制
 

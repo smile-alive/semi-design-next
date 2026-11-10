@@ -3,7 +3,7 @@ import type { VNode } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { endLeaveAnimations, getData, getRandomNumber } from '@test/utils/vue';
 import type { ColumnProps, TableChangeInfo, TablePaginationProps, TablePaginationSlotProps } from '..';
 import Pagination from '../../pagination';

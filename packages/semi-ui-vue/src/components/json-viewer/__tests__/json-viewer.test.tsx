@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { beforeEach, describe, expect, expectTypeOf, it, vi, type Mock } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { mockResizeObserver, render, sleep } from '@test/utils/vue';
 import JsonViewer, { type JsonViewerHandle, type JsonViewerOptions, type JsonViewerProps } from '..';
 import LocaleProvider from '../../locale/locale-provider.vue';

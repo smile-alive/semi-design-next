@@ -2,9 +2,8 @@
     import { Text, computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
     import '@fibrae/semi-foundation/components/badge/badge.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { slotNodes, type KeyedNode } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import type { BadgeProps, BadgeSlots } from './interface';
 

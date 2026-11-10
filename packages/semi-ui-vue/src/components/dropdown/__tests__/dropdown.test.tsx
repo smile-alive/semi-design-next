@@ -3,7 +3,7 @@ import { createCommentVNode, defineComponent, ref, type VNode } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Dropdown, { DropdownDivider, DropdownItem, DropdownMenu, DropdownTitle, type DropdownMenuItem, type DropdownHandle, type DropdownProps } from '..';
 import Tag from '../../tag';

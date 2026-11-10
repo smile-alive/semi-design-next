@@ -1,7 +1,7 @@
 import { batch } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
-import isMarkup from '../../utils/is-markup';
+import { isMarkup } from '../../utils/index';
 import type { LabelProps } from './label';
 
 /**

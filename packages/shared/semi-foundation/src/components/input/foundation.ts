@@ -1,5 +1,4 @@
-import { crossesFocusBoundary } from '../../utils/a11y';
-import { ENTER_KEY, isComposing } from '../../utils/key-code';
+import { crossesFocusBoundary, ENTER_KEY, isComposing } from '../../utils/index';
 import TextEntryFoundation, { type TextEntryAdapter, type TextEntryBaseProps, type TextEntryBaseState } from './text-entry-foundation';
 
 export interface InputBaseProps extends TextEntryBaseProps {

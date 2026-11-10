@@ -6,7 +6,7 @@
 import { throttle } from 'es-toolkit';
 // compat pick resolves deep paths (treeDataSimpleJson)
 import { get, pick } from 'es-toolkit/compat';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { strings } from './constants';
 import { deriveTreeState, getMultipleChange, getMultipleSelectResult, getSearchState, isTreeNodeLeaf, loadTreeNode } from './shared';
 import { flattenTreeData, normalizedArr, getMotionKeys, getValueOrKey, getDragNodesKeys, calcDropRelativePosition, calcDropActualPosition, type KeyMapProps } from './tree-util';

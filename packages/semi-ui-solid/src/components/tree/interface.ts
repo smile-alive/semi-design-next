@@ -1,7 +1,7 @@
 import type { Accessor, JSX, Ref } from 'solid-js';
 import type { BasicExpandedOtherProps, BasicFlattenNode, BasicOnDragProps, BasicRenderFullLabelProps, BasicSearchRenderProps, BasicTreeNodeData, BasicTreeNodeProps, BasicTreeProps, KeyMapProps, ScrollAlign, TreeMotionType, Virtualize } from '@fibrae/semi-foundation/components/tree/foundation';
-import type { ElementProps } from '../../base/element-props';
-import type { VirtualListHandle } from '../../internal/virtual-list';
+import type { ElementProps } from '../../base/index';
+import type { VirtualListHandle } from '../../internal/index';
 
 export type { KeyMapProps, ScrollAlign, Virtualize };
 export type { TreeDataSimpleJson } from '@fibrae/semi-foundation/components/tree/foundation';

@@ -2,12 +2,11 @@
     import { tick } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import type { HTMLAnchorAttributes } from 'svelte/elements';
-    import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { BASE_CLASS_PREFIX, FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
     import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
+    import { handoverFocus } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
     import useLocale from '../locale/use-locale.svelte.js';
     import Popover from '../popover/popover.svelte';

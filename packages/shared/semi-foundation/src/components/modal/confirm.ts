@@ -1,5 +1,5 @@
 import { omitBy } from 'es-toolkit';
-import isPromise from '../../utils/is-promise';
+import { isPromise } from '../../utils/index';
 
 export type ConfirmType = 'success' | 'info' | 'warning' | 'error' | 'confirm';
 

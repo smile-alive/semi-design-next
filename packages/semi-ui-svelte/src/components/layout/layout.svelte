@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
     import '@fibrae/semi-foundation/components/layout/layout.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import { setLayoutContext } from './context.js';
     import type { LayoutProps } from './interface.js';
 

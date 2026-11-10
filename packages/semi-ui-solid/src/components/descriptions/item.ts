@@ -1,4 +1,4 @@
-import { createToken } from '../../base/token';
+import { createToken } from '../../base/index';
 import type { DescriptionsItemProps } from './interface';
 
 export const DESCRIPTIONS_ITEM = 'Descriptions.Item';

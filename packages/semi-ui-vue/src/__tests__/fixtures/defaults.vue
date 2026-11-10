@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import semiDefault, { readSemiDefault, useSemiGlobal } from '../../base/semi-default';
+    import { semiDefault, readSemiDefault, useSemiGlobal } from '../../base/index';
     import type { DefaultsProps } from './defaults-types';
 
     const props = withDefaults(defineProps<DefaultsProps>(), {

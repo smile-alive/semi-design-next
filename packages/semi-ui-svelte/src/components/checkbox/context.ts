@@ -1,5 +1,5 @@
 import type { BasicCheckboxEvent, CheckboxGroupView } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 
 export interface CheckboxGroupContext {
     readonly view: CheckboxGroupView;

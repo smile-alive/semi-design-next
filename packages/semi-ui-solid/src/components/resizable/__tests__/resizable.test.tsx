@@ -1,7 +1,7 @@
 import { type ComponentProps, createSignal } from 'solid-js';
 import { fireEvent, render } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { mockResizeObserver } from '@test/utils/solid';
 import { Resizable, ResizeGroup, ResizeHandler, ResizeItem } from '..';
 

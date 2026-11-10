@@ -3,13 +3,13 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, type Mock, onTestFinished, vi } from 'vite-plus/test';
 import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 import type { Annotation, Step } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { AvatarProps } from '@fibrae/semi-ui-solid/avatar/index';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import LocaleProvider from '@fibrae/semi-ui-solid/locale/locale-provider';
 import Modal from '@fibrae/semi-ui-solid/modal/index';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { countLiveListeners, endLeaveAnimations, sleep } from '@test/utils/solid';
 import { ReferenceWidget } from '../dialogue/content-item/reference';
 import AIChatDialogue, { type AIChatDialogueElement, type AIChatDialogueProps, type DefaultActionNodeObj, type DialogueRenderConfig, type MarkdownRenderProps, type Message, type Metadata } from '../index';

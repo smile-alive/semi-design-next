@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { scrollIntoViewWithin } from '@fibrae/semi-foundation/utils/supports';
+import { scrollIntoViewWithin } from '@fibrae/semi-foundation/utils';
 import TabBarFoundation, { type TabBarAdapter, type TabBarBaseProps, type TabBarState } from '../tab-bar-foundation';
 
 vi.mock('@fibrae/semi-foundation/utils/supports', () => ({ scrollIntoViewWithin: vi.fn<() => void>() }));

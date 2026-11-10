@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconChevronRight } from '@fibrae/semi-icons-vue';
     import Avatar, { AvatarGroup } from '@fibrae/semi-ui-vue/avatar/index';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
+    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import type { AnnotationItemProps, AnnotationWidgetEmits, AnnotationWidgetProps } from '../../interface';
 

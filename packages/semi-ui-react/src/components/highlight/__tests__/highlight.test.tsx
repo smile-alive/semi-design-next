@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Highlight from '../index';
 
 const marks = (container, tag = 'mark') => [...container.querySelectorAll(tag)];

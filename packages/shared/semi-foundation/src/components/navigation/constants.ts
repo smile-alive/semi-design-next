@@ -1,4 +1,4 @@
-import { BASE_CLASS_PREFIX } from '../../base/constants';
+import { BASE_CLASS_PREFIX } from '../../base/index';
 
 const MODE_HORIZONTAL = 'horizontal';
 const MODE_VERTICAL = 'vertical';

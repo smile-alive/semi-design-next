@@ -1,7 +1,7 @@
 import { waitFor } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { clickOutside } from '@test/utils/browser';
 import { getNavTitles } from './date-picker-browser-utils';
 import { dp, getInput, getInputs, getRoot, getSelectedDays, setup } from './test-utils';

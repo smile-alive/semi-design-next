@@ -2,7 +2,7 @@ import { Index, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
 import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 
 export interface BasicProps extends ElementProps<'div'> {
     type?: string;

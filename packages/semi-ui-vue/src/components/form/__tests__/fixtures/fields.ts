@@ -1,5 +1,5 @@
 import { h, type VNodeChild } from 'vue';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { render } from '@test/utils/vue';
 import { Form, type FormApi, type FormDefaultSlotProps } from '../..';
 import { FormSelect } from '../../field';

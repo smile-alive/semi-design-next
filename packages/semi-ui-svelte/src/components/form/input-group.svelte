@@ -4,11 +4,10 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
     import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds, warning } from '@fibrae/semi-foundation/utils';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
-    import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import { type SlotKind, trackSlotKind } from '../../utils/slot-kind.js';
+    import { type SlotKind, trackSlotKind } from '../../utils/index.js';
     // aliased: the generated declaration names this component `InputGroup` after its file
     import BaseInputGroup from '../input/input-group.svelte';
     import { getFormContext, setFormInputGroupContext } from './context.js';

@@ -1,11 +1,10 @@
 <script setup lang="ts">
     import { Text } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/card/card.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { slotNodes, hasSlotContent } from '../../utils/index';
     import Skeleton, { SkeletonParagraph, SkeletonTitle } from '../skeleton';
     import Space from '../space';
     import { TypographyTitle } from '../typography';

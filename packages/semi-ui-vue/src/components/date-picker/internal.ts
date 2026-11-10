@@ -5,7 +5,7 @@ import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInput
 import type { FocusRecords, MonthDayInfo } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
 import type { PanelType, PanelView, YearMonthChangeType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import type { YearAndMonth } from '@fibrae/semi-foundation/components/date-picker/year-and-month-foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import type { Locale } from '@fibrae/semi-foundation/locale';
 import type { InputHandle, InputSize, ValidateStatus } from '../input/interface';
 import type { DatePickerDateSlotProps, DatePickerDensity, DatePickerFullDateSlotProps, DatePickerInsetInputProps, DatePickerPresetPosition, DatePickerPresetsType, DatePickerTimePickerOpts, DatePickerValueType, DatePickerYearAndMonthOpts } from './interface';
 

@@ -1,4 +1,4 @@
-import AutoCloseFoundation, { type AutoCloseAdapter, type AutoCloseBaseProps } from '../../base/auto-close-foundation';
+import { AutoCloseFoundation, type AutoCloseAdapter, type AutoCloseBaseProps } from '../../base/index';
 import type { strings } from './constants';
 
 export type NoticePosition = 'top' | 'bottom' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';

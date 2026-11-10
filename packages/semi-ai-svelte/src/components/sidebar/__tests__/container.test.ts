@@ -1,7 +1,7 @@
 import { createRawSnippet, flushSync, tick } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
+import { openLayer } from '@fibrae/semi-foundation/utils';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import type { ContainerProps } from '../container/interface';

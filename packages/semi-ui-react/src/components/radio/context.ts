@@ -1,7 +1,7 @@
 import type { strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-import { createContext } from '../../base/create-context';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
+import { createContext } from '../../base/index';
 
 export type RadioGroupButtonSize = ArrayElement<typeof strings.BUTTON_SIZE>;
 export type RadioMode = ArrayElement<typeof strings.MODE>;

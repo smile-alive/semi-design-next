@@ -1,6 +1,6 @@
 import type { JSX, Ref } from 'solid-js';
 import type { BasicDataItem, OnSortEndProps } from '@fibrae/semi-foundation/components/transfer/foundation';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 import type { SortableHandle } from '../../internal/sortable/types';
 import type { InputProps } from '../input';
 import type { TreeProps } from '../tree';

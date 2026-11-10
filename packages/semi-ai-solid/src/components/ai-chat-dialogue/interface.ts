@@ -2,7 +2,7 @@ import type { JSX, Ref } from 'solid-js';
 import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { AvatarProps } from '@fibrae/semi-ui-solid/avatar/index';
-import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base';
 import type { MarkdownRenderProps as OriginMarkdownRenderProps } from '@fibrae/semi-ui-solid/markdown-render/index';
 
 // raw and ref belong to each message's own renderer

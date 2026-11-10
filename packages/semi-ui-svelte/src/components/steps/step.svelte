@@ -2,7 +2,7 @@
     import { omit } from 'es-toolkit';
     import { focusableSelector, stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
     import { getStepState } from '@fibrae/semi-foundation/components/steps/utils';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
     import { IconAlertCircle, IconAlertTriangle, IconChevronRight, IconTickCircle } from '@fibrae/semi-icons-svelte';
     import { getStepsContext } from './context.js';

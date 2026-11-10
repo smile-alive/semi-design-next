@@ -1,4 +1,4 @@
-import { createContext } from '@fibrae/semi-ui-react/base/create-context';
+import { createContext } from '@fibrae/semi-ui-react/base';
 
 export interface ConfigureContextType {
     value: any;

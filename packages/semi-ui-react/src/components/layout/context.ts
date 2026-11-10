@@ -1,5 +1,5 @@
-import { noop } from '@fibrae/semi-foundation/utils/function';
-import { createContext } from '../../base/create-context';
+import { noop } from '@fibrae/semi-foundation/utils';
+import { createContext } from '../../base/index';
 
 export interface ContextType {
     siderHook: {

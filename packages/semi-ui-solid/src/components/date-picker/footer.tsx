@@ -1,4 +1,4 @@
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import type { Locale } from '@fibrae/semi-foundation/locale';
 import Button from '../button';
 
 interface FooterProps {

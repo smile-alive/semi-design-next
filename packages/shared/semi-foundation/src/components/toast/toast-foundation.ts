@@ -1,4 +1,4 @@
-import AutoCloseFoundation, { type AutoCloseAdapter, type AutoCloseBaseProps } from '../../base/auto-close-foundation';
+import { AutoCloseFoundation, type AutoCloseAdapter, type AutoCloseBaseProps } from '../../base/index';
 
 export type ToastType = 'success' | 'warning' | 'error' | 'info' | 'default';
 export type ToastTheme = 'light' | 'normal';

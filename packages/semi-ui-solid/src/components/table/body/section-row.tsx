@@ -1,7 +1,7 @@
 import { type JSX, createMemo, untrack } from 'solid-js';
 import clsx from 'clsx';
 import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
-import callHandler from '../../../utils/call-handler';
+import { callHandler } from '../../../utils/index';
 import { useTableContext } from '../context';
 import { TableExpandIcon } from '../custom-expand-icon';
 import type { ColumnProps, OnGroupedRow, OnRowReturnObject } from '../interface';

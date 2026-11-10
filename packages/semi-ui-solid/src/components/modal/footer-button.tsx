@@ -1,6 +1,5 @@
 import { type JSX, mergeProps, splitProps } from 'solid-js';
-import callHandler from '../../utils/call-handler';
-import mergeStyles from '../../utils/merge-styles';
+import { callHandler, mergeStyles } from '../../utils/index';
 import Button from '../button';
 import type { ButtonProps } from '../button/button';
 

@@ -1,9 +1,8 @@
 import type { ComputedRef, CSSProperties } from 'vue';
 import type TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
 import type { BaseHeadWidth, BaseRowKeyType, TableBaseProps, TableBaseState, TableBaseStateRowSelection } from '@fibrae/semi-foundation/components/table/foundation';
-import { createContext } from '../../base/create-context';
-import type { RawSlots } from '../../utils/read-vnode';
-import type { KeyedNode } from '../../utils/slot-nodes';
+import { createContext } from '../../base/index';
+import type { RawSlots, KeyedNode } from '../../utils/index';
 import type { ColumnProps, TableComponent, TableHeaderCellSlotProps, TableProps, TableRowKey, TableScroll, TableSize, TableSlots, TableSticky, TableVirtualizedProps } from './interface';
 
 type AnyRecord = Record<string, any>;

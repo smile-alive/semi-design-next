@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
 import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf, type TreeRowFlags } from '@fibrae/semi-foundation/components/tree/shared';
 import { IconFile, IconFolder, IconFolderOpen } from '@fibrae/semi-icons-solid';
-import hasContent from '../../utils/has-content';
+import { hasContent } from '../../utils/index';
 import Checkbox from '../checkbox';
 import Highlight from '../highlight';
 import { useTreeContext } from './context';

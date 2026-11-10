@@ -1,5 +1,5 @@
 import { useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
-import useResizeObserver from '../../../hooks/use-resize-observer';
+import { useResizeObserver } from '../../../hooks/index';
 
 /**
  * The scrolling time grid shared by the day, week and range views: measures the grid height events are placed

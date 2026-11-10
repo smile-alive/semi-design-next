@@ -2,13 +2,10 @@
     import { computed, onUpdated, useTemplateRef, watch } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/anchor/constants';
     import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/components/anchor/foundation';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/anchor/anchor.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import useResizeObserver from '../../composables/use-resize-observer';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
+    import { useResizeObserver } from '../../composables/index';
     import useLocale from '../locale/use-locale';
     import { provideAnchorContext } from './context';
     import type { AnchorClickEvent, AnchorEmits, AnchorProps, AnchorSlots } from './interface';

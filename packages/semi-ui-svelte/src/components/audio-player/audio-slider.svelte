@@ -2,10 +2,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
     import SeekFoundation, { type SeekAdapter, type SeekBaseProps, type SeekBaseState } from '@fibrae/semi-foundation/components/video-player/seek-foundation';
     import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
+    import { toCssLength, focusWithoutRing } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useFoundation } from '../../base/index.js';
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';
     import type { AudioSliderProps } from './interface.js';
 

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-foundation/locale';
 import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerState } from '../foundation';
 
 function setup() {

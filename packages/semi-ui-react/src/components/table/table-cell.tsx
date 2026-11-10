@@ -5,7 +5,7 @@ import { omit, isEqual, merge } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/table/constants';
 import { isSelectionColumn, isExpandedColumn, getRTLAlign, shouldShowEllipsisTitle, getRTLFlexAlign } from '@fibrae/semi-foundation/components/table/utils';
-import type { BaseProps } from '../../base/base-props';
+import type { BaseProps } from '../../base/index';
 import { useTableContext } from './context';
 import type { ColumnProps, ExpandIcon } from './interface';
 

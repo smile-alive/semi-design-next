@@ -2,10 +2,9 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/input-number/constants';
     import InputNumberFoundation, { type InputNumberAdapter, type InputNumberBaseProps, reachesBound } from '@fibrae/semi-foundation/components/input-number/foundation';
     import '@fibrae/semi-foundation/components/input-number/input-number.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { Input } from '../input/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

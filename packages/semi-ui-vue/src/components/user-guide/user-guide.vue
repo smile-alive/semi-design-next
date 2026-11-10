@@ -3,9 +3,7 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
     import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
+    import { semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
     import Button from '../button';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';

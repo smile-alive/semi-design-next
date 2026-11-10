@@ -3,11 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/hot-keys/constants';
     import HotKeysFoundation, { type HotKeysAdapter } from '@fibrae/semi-foundation/components/hot-keys/foundation';
     import '@fibrae/semi-foundation/components/hot-keys/hot-keys.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import type { HotKeysEmits, HotKeysProps, HotKeysSlots, HotKeysState } from './interface';
 
     type Foundation = HotKeysFoundation<HotKeysProps>;

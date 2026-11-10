@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconEdit } from '@fibrae/semi-icons-react';
 import { AutoComplete, Button, ButtonGroup, Cascader, DatePicker, IconButton, InputGroup, InputNumber, Select, Space, TagInput, TimePicker, TreeSelect } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Input from '../index';
 import TextArea from '../textarea';
 

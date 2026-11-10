@@ -2,8 +2,8 @@
     import { watch, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { IconCopy, IconTick } from '@fibrae/semi-icons-vue';
-    import useCopied from '../../composables/use-copied';
-    import slotNodes from '../../utils/slot-nodes';
+    import { useCopied } from '../../composables/index';
+    import { slotNodes } from '../../utils/index';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip/tooltip.vue';
     import type { TypographyCopySlots, TypographyNumeralEmits } from './interface';

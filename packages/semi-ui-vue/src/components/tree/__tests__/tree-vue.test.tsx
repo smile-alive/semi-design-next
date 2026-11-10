@@ -3,9 +3,9 @@ import { defineComponent, KeepAlive, nextTick, shallowRef, type VNode } from 'vu
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconMapPin } from '@fibrae/semi-icons-vue';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Tree, { type TreeExpandIconSlotProps, type TreeFullLabelSlotProps, type TreeLabelSlotProps, type TreeNodeData, type TreeProps, type TreeSearchSlotProps, type TreeValue } from '..';
 import { collapsedCls, getExpandIcon, getHighlights, getNode, getSearchWrapper, optionCls, renderTree, renderWith, selectedCls, spyOn, treeData } from './fixtures/data';

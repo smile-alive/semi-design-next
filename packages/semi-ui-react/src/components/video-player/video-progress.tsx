@@ -4,7 +4,7 @@ import { cssClasses } from '@fibrae/semi-foundation/components/video-player/cons
 import VideoProgressFoundation, { type Marker, type MarkerListItem, type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
 import '@fibrae/semi-foundation/components/video-player/video-player.scss';
-import useFoundation from '../../base/use-foundation';
+import { useFoundation } from '../../base/index';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';
 

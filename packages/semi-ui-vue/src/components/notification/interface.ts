@@ -1,8 +1,8 @@
 import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
-import type { HookApi } from '@fibrae/semi-foundation/base/hook-api';
+import type { HookApi } from '@fibrae/semi-foundation/base';
 import type { NoticeProps as FoundationNoticeProps } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 
 export type { ConfigProps as NotificationConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 export type { NoticePosition, NoticeTheme, NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';

@@ -1,6 +1,6 @@
 import type { Accessor, JSX } from 'solid-js';
 import type { ButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export type { ButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 

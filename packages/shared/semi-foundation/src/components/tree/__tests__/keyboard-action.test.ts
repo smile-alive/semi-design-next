@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { Typeahead } from '@fibrae/semi-foundation/utils/a11y';
+import { Typeahead } from '@fibrae/semi-foundation/utils';
 import type { BasicFlattenNode } from '../foundation';
 import { getTreeKeyboardAction } from '../shared';
 

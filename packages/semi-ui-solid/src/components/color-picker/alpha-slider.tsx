@@ -3,7 +3,7 @@ import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/cons
 import type { HsvaColor } from '@fibrae/semi-foundation/components/color-picker/interface';
 import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
 import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
-import useFoundation from '../../base/use-foundation';
+import { useFoundation } from '../../base/index';
 import { useLocale } from '../locale';
 
 export interface AlphaSliderProps {

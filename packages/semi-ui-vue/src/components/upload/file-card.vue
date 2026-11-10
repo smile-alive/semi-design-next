@@ -3,12 +3,12 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
     import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconAlertCircle, IconClear, IconClose, IconFile, IconRefresh } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import HydratedImage from '../../internal/hydrated-image.vue';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps, EmitHandlers } from '../../base/index';
+    import { HydratedImage } from '../../internal/index';
+    import { hasSlotContent } from '../../utils/index';
     import Button from '../button';
     import useLocale from '../locale/use-locale';
     import Progress from '../progress';

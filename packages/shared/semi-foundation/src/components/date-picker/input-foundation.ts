@@ -1,9 +1,7 @@
 import { format as formatFn } from 'date-fns';
-import type { ValidateStatus } from '../../base/constants';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import type { Locale } from '../../locale/interface';
-import isObject from '../../utils/is-object';
-import { isSecondaryPress } from '../../utils/pointer';
+import { type ValidateStatus, BaseFoundation, type DefaultAdapter } from '../../base/index';
+import type { Locale } from '../../locale/index';
+import { isObject, isSecondaryPress } from '../../utils/index';
 import { isValidDate } from './_utils';
 import { formatDateValues } from './_utils/formatter';
 import { getDefaultFormatTokenByType } from './_utils/get-default-format-token';

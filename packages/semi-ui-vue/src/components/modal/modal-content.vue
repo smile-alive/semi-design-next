@@ -2,11 +2,10 @@
     import { Transition, h, normalizeStyle, onActivated, onDeactivated, onMounted, shallowRef, useAttrs, useId, useTemplateRef, vShow, watch, withDirectives, type CSSProperties, type ComponentPublicInstance, type TransitionProps } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
-    import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import useFoundation from '../../base/use-foundation';
-    import useRecordFocus from '../../composables/use-record-focus';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs';
+    import { warnIfDialogUnnamed, toCssLength } from '@fibrae/semi-foundation/utils';
+    import { useFoundation } from '../../base/index';
+    import { useRecordFocus } from '../../composables/index';
+    import { isAriaKey, splitControlAttrs } from '../../utils/index';
     import type { ModalContentEmits, ModalContentProps, ModalSlots } from './interface';
     import ModalDialog from './modal-dialog.vue';
 

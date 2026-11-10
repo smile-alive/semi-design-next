@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/components/float-button/constants';
     import '@fibrae/semi-foundation/components/float-button/float-button.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import Badge from '../badge/badge.svelte';
     import FloatButtonAction from './float-button-action.svelte';
     import type { FloatButtonGroupItem, FloatButtonGroupProps } from './interface.js';

@@ -1,5 +1,4 @@
-import type ListStore from '../../base/list-store';
-import StaticListWrapper from '../../base/static-list-wrapper';
+import { type ListStore, StaticListWrapper } from '../../base/index';
 import { cssClasses } from './constants';
 import type { NoticeInstance } from './notification-foundation';
 import { builtInDefaults, type ConfigProps, createNotificationListStore } from './notification-list-foundation';

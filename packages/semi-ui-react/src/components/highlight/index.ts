@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
 import { findAll, type HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
 import '@fibrae/semi-foundation/components/highlight/highlight.scss';
-import useDefaultProps from '../../base/use-default-props';
+import { useDefaultProps } from '../../base/index';
 
 interface ComplexSearchWord {
     text: string;

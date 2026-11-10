@@ -2,11 +2,10 @@ import type React from 'react';
 import { useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 import { type strings, cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/empty/empty.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import { hasContent } from '../../utils';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 import Typography from '../typography';
 
 const prefixCls = cssClasses.PREFIX;

@@ -1,5 +1,5 @@
 import { merge } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { DEFAULT_TOOLTIP } from './constants';
 
 export interface BreadcrumbItemInfo {

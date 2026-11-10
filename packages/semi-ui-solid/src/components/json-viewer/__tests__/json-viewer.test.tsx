@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, expectTypeOf, it, vi, type Mock } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { mockResizeObserver, sleep } from '@test/utils/solid';
 import JsonViewer, { type JsonViewerElement, type JsonViewerHandle, type JsonViewerProps } from '..';
 import LocaleProvider from '../../locale/locale-provider';

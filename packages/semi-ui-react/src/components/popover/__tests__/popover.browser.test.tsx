@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, Input, Popover, Select, Tag } from '@fibrae/semi-ui-react';
 import type { RenderContentProps } from '@fibrae/semi-ui-react/tooltip';
 

@@ -2,7 +2,7 @@ import { Activity, StrictMode, useLayoutEffect, useState } from 'react';
 import { act, render } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { type ContractHost, type ContractMountOptions, type ContractProps, type ContractState, ContractFoundation, defineHostContract, stateText } from '@test/utils/host-contract';
-import useFoundation from '../base/use-foundation';
+import { useFoundation } from '../base/index';
 
 async function mount(options: ContractMountOptions & { wrapInActivity?: boolean } = {}): Promise<ContractHost & { setVisible: (visible: boolean) => Promise<void> }> {
     const log: string[] = [];

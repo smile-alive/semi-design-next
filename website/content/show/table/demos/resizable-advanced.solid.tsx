@@ -1,5 +1,5 @@
 import * as dateFns from 'date-fns';
-import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
+import { addClass, removeClass } from '@fibrae/semi-foundation/utils';
 import { Table, Avatar, type ColumnProps, type TableResizableProps } from '@fibrae/semi-ui-solid';
 
 const DAY = 24 * 60 * 60 * 1000;

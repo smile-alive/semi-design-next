@@ -5,8 +5,7 @@
     import FormFoundation from '@fibrae/semi-foundation/components/form/foundation';
     import type { BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/components/form/interface';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { setFormContext } from './context.js';
     import type { AllFormProps, FormApi, FormProps } from './interface.js';

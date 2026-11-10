@@ -1,5 +1,4 @@
-import type ListStore from '../../base/list-store';
-import StaticListWrapper from '../../base/static-list-wrapper';
+import { type ListStore, StaticListWrapper } from '../../base/index';
 import { builtInOpts, cssClasses, positions, setPosition, strings } from './constants';
 import type { ConfigProps, ToastInstance, ToastType } from './toast-foundation';
 import { createToastListStore } from './toast-list-foundation';

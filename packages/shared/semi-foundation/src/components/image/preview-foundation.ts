@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 
 export interface PreviewGroupImage {
     /** The thumbnail element: the group lists its images in document order */

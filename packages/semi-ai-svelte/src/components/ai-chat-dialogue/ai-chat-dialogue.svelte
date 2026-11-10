@@ -7,15 +7,13 @@
 </script>
 
 <script lang="ts">
-    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import DialogueFoundation, { type DialogueAdapter, type DialogueBaseProps, type DialogueState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
+    import { namedRole, handoverFocus } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
-    import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '@fibrae/semi-ui-svelte/base';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { setAIChatDialogueContext } from './context.js';
