@@ -19,6 +19,9 @@ const SEMI_FOUNDATION_RE = /@fibrae\/semi-(ai-)?foundation(\/|$)/;
 const SEMI_REACT_DIST_RE = /@fibrae[\\/]+semi-(ui|ai)-react[\\/]+dist[\\/]/;
 const SOLID_PACKAGES = ['@fibrae/semi-ui-solid', '@fibrae/semi-ai-solid'];
 const FOUNDATION_NAME_RE = /^@fibrae\/semi-(ai-)?foundation$/;
+// CommonJS files foundation imports by a deep path the dependency does not export, so they are not found by name; keep
+// in step with foundation's imports
+const CJS_DEEP_IMPORTS = ['lottie-web/build/player/lottie_light'];
 
 function tryResolve(require: NodeJS.Require, id: string) {
     try {
@@ -82,7 +85,8 @@ function solidOptimizeDepsInclude(root: string) {
                         if (!dependencyPackageJson) {
                             return [];
                         }
-                        return tryResolve(fromFoundation, dependency) ? [dependency] : exportedSubpaths(dependencyPackageJson, dependency);
+                        const deep = CJS_DEEP_IMPORTS.filter((id) => id.startsWith(`${dependency}/`));
+                        return tryResolve(fromFoundation, dependency) ? [dependency, ...deep] : exportedSubpaths(dependencyPackageJson, dependency);
                     })
                     .map((dependency) => `${solid} > ${foundation} > ${dependency}`);
             });
