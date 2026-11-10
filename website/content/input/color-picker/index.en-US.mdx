@@ -86,8 +86,9 @@ The eyedropper is enabled by default and supports picking colors from the browse
 
 </Framework>
 
-<Notice title='Notes'>
-To enable this function, the current web page must be deployed in a secure context such as HTTPS or localhost domain name, otherwise it will have no effect. The user's browser version must be Chromium > 95
+<Notice title="Notes">
+    To enable this function, the current web page must be deployed in a secure context such as HTTPS or localhost domain name, otherwise it will have no effect. It relies on the [EyeDropper API](https://developer.mozilla.org/docs/Web/API/EyeDropper), which only Chromium-based browsers support for now; in Firefox and
+    Safari the eyedropper button does nothing
 </Notice>
 
 <Demo id="eye-dropper" />

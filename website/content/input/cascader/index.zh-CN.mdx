@@ -97,7 +97,7 @@ import { Cascader } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
-默认搜索结果只会展示叶子结点的路径，想要显示更多的结果，可以设置 `filterLeafOnly` 为 `false`。
+默认搜索结果只会展示叶子结点的路径，想要显示更多的结果，可以设置 `filterLeafOnly` 为 `false`，此时单选可以从搜索结果中选中非叶子节点，受控与非受控用法一致。
 
 <Demo id="searchable" />
 
@@ -505,7 +505,7 @@ Cascader 支持远程搜索。设置 `remote` 后，搜索输入不再走本地�
 
 <Framework only="vue">
 
-**v>=2.97.0** 起 Cascader 支持远程搜索。设置 `remote` 后，搜索输入不再走本地匹配，而是仅触发 `search` 事件，由你根据输入异步拉取 `treeData`。这与 Select 的 `remote` 行为一致。
+Cascader 支持远程搜索。设置 `remote` 后，搜索输入不再走本地匹配，而是仅触发 `search` 事件，由你根据输入异步拉取 `treeData`。这与 Select 的 `remote` 行为一致。
 
 </Framework>
 

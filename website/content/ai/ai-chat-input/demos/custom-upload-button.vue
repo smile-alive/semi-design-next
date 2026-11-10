@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { AIChatInput } from '@fibrae/semi-ai-vue';
     import { IconUpload } from '@fibrae/semi-icons-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 </script>
 
 <template>

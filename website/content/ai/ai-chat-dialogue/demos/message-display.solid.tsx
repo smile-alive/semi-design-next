@@ -82,7 +82,7 @@ const defaultMessages: Message[] = [
                 content: [
                     {
                         type: 'output_text',
-                        text: 'Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统。',
+                        text: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。',
                     },
                 ],
                 status: 'completed',
@@ -103,14 +103,14 @@ const defaultMessages: Message[] = [
                         text: '恭喜你，你已经掌握了 semi design 的所有知识！',
                         annotations: [
                             {
-                                title: 'semi.design',
-                                url: 'https://semi.design/',
+                                title: 'semi-design-next.pages.dev',
+                                url: 'https://semi-design-next.pages.dev/',
                                 detail: 'semi design page',
                                 logo: '/assets/placeholder/logo.svg',
                             },
                             {
-                                title: 'semi.design',
-                                url: 'https://semi.design/',
+                                title: 'semi-design-next.pages.dev',
+                                url: 'https://semi-design-next.pages.dev/',
                                 detail: 'semi design page',
                                 logo: '/assets/placeholder/logo.svg',
                             },

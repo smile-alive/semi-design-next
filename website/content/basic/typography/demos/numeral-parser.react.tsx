@@ -26,8 +26,8 @@ export default function TypographyDemo() {
                 ))}
             </Typography.Numeral>
             <br />
-            <Typography.Numeral link={{ href: 'https://semi.design', target: '_blank' }} parser={parserTCH}>
-                现已服务 {1e5} 用户，前往官网 &gt;&gt;
+            <Typography.Numeral link={{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }} parser={parserTCH}>
+                共计 {1e5} 条数据，前往官网 &gt;&gt;
             </Typography.Numeral>
         </div>
     );

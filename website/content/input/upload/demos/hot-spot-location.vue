@@ -2,8 +2,9 @@
     import { ref } from 'vue';
     import { IconPlus } from '@fibrae/semi-icons-vue';
     import { Radio, RadioGroup, Upload, type FileItem, type UploadProps } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const action = 'https://api.semi.design/upload';
+    const action = '/upload';
     const defaultFileList: FileItem[] = [
         {
             uid: '1',
@@ -26,7 +27,7 @@
         <Radio value="end">end</Radio>
     </RadioGroup>
     <hr />
-    <Upload accept="image/*" :action="action" :defaultFileList="defaultFileList" :hotSpotLocation="hotSpotLocation" listType="picture" multiple showPicInfo @previewClick="handlePreview">
+    <Upload accept="image/*" :action="action" :customRequest="mockUpload" :defaultFileList="defaultFileList" :hotSpotLocation="hotSpotLocation" listType="picture" multiple showPicInfo @previewClick="handlePreview">
         <IconPlus aria-label="上传图片" size="extra-large" />
     </Upload>
 </template>

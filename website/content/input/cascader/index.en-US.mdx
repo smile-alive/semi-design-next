@@ -97,7 +97,7 @@ By default, the `label` value is searched (using the includes method of the stri
 
 </Framework>
 
-The default search results will only display the paths of leaf nodes. If you want to display more results, you can set `filterLeafOnly` to `false`.
+The default search results will only display the paths of leaf nodes. If you want to display more results, you can set `filterLeafOnly` to `false`; a single Cascader can then select a non-leaf node from the search results, in both controlled and uncontrolled use.
 
 <Demo id="searchable" />
 
@@ -505,7 +505,7 @@ Cascader supports remote search. With `remote` enabled, search input no longer g
 
 <Framework only="vue">
 
-**v>=2.97.0** Cascader supports remote search. With `remote` enabled, search input no longer goes through local filtering; only the `search` event is emitted, and you are responsible for fetching `treeData` asynchronously based on the input. This mirrors Select's `remote` behavior.
+Cascader supports remote search. With `remote` enabled, search input no longer goes through local filtering; only the `search` event is emitted, and you are responsible for fetching `treeData` asynchronously based on the input. This mirrors Select's `remote` behavior.
 
 </Framework>
 

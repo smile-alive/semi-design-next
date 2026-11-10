@@ -1,6 +1,7 @@
 import { Show, createMemo, createSignal } from 'solid-js';
 import { Chat, type ChatMessage as Message, type ChatRenderAvatarProps as RenderAvatarProps, type ChatRenderTitleProps as RenderTitleProps } from '@fibrae/semi-ai-solid';
 import { Avatar, Radio, RadioGroup } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 const defaultMessage: Message[] = [
     {
@@ -59,7 +60,7 @@ let id = 0;
 function getId() {
     return `id-${id++}`;
 }
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 
 function formatTime(createAt?: number) {
     const date = new Date(createAt ?? Date.now());

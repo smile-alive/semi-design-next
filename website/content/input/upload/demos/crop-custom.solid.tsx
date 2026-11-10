@@ -1,10 +1,12 @@
 import { IconUpload } from '@fibrae/semi-icons-solid';
 import { Button, Upload } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 export default function UploadDemo() {
     return (
         <Upload
-            action="https://api.semi.design/upload"
+            action="/upload"
+            customRequest={mockUpload}
             crop={{
                 aspectRatio: 16 / 9,
                 shape: 'rect',

@@ -1,8 +1,9 @@
 <script lang="ts">
     import { AIChatInput } from '@fibrae/semi-ai-svelte';
     import { IconUpload } from '@fibrae/semi-icons-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     // Upload opens the dialog on a click that reaches it; stopping the click here opens it once, from the callback
     const open = (event: MouseEvent, onOpenFileDialog: () => void) => {

@@ -2,8 +2,8 @@
     import { CheckboxGroup } from '@fibrae/semi-ui-svelte';
 
     const options = [
-        { label: '抖音', value: 'abc' },
-        { label: '今日头条', value: 'toutiao' },
+        { label: '短视频', value: 'video' },
+        { label: '资讯', value: 'news' },
     ];
 </script>
 

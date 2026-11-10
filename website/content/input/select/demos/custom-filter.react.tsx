@@ -7,11 +7,11 @@ export default function SelectDemo() {
         return label.includes(sug);
     };
     return (
-        <Select aria-label="业务线" filter={searchLabel} style={{ width: '180px' }} placeholder="try douyin">
-            <Select.Option value="douyin">douyin</Select.Option>
-            <Select.Option value="ulikecam">HOTSOON</Select.Option>
-            <Select.Option value="jianying">PIPIXIA</Select.Option>
-            <Select.Option value="xigua">XIGUA</Select.Option>
+        <Select aria-label="业务线" filter={searchLabel} style={{ width: '180px' }} placeholder="try video">
+            <Select.Option value="video">video</Select.Option>
+            <Select.Option value="camera">LIVE</Select.Option>
+            <Select.Option value="editing">COMMUNITY</Select.Option>
+            <Select.Option value="movie">MOVIE</Select.Option>
         </Select>
     );
 }

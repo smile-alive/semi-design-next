@@ -37,7 +37,7 @@
                         <template #darkModeImage>
                             <IllustrationSuccessDark :style="{ width: '150px', height: '150px' }" />
                         </template>
-                        <template #description>使用 Semi D2C 快速还原 Figma 设计稿，一键转代码</template>
+                        <template #description>一套组件，四个框架原生可用</template>
                     </Empty>
                 </template>
             </Popover>
@@ -53,7 +53,7 @@
                         <template #darkModeImage>
                             <IllustrationSuccessDark :style="{ width: '150px', height: '150px' }" />
                         </template>
-                        <template #description>使用 Semi D2C 快速还原 Figma 设计稿，一键转代码</template>
+                        <template #description>一套组件，四个框架原生可用</template>
                     </Empty>
                 </template>
             </Popover>
@@ -69,7 +69,7 @@
                         <template #darkModeImage>
                             <IllustrationSuccessDark :style="{ width: '150px', height: '150px' }" />
                         </template>
-                        <template #description>使用 Semi D2C 快速还原 Figma 设计稿，一键转代码</template>
+                        <template #description>一套组件，四个框架原生可用</template>
                     </Empty>
                 </template>
             </Popover>
@@ -85,7 +85,7 @@
                         <template #darkModeImage>
                             <IllustrationSuccessDark :style="{ width: '150px', height: '150px' }" />
                         </template>
-                        <template #description>使用 Semi D2C 快速还原 Figma 设计稿，一键转代码</template>
+                        <template #description>一套组件，四个框架原生可用</template>
                     </Empty>
                 </template>
             </Popover>

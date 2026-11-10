@@ -2,11 +2,11 @@
     import { Select } from '@fibrae/semi-ui-svelte';
 
     const optionList = [
-        { value: 'douyin', label: '抖音' },
-        { value: 'ulikecam', label: '轻颜相机' },
-        { value: 'jianying', label: '剪映' },
-        { value: 'duoshan', label: '多闪' },
-        { value: 'xigua', label: '西瓜视频' },
+        { value: 'video', label: '短视频' },
+        { value: 'camera', label: '相机' },
+        { value: 'editing', label: '剪辑' },
+        { value: 'social', label: '社交' },
+        { value: 'movie', label: '长视频' },
     ];
     const innerSlotStyle = 'background-color: var(--color-white); height: 36px; display: flex; align-items: center; cursor: pointer; padding-left: 32px; border-top: 1px solid var(--semi-color-border); border-radius: 0 0 6px 6px; color: var(--semi-color-link)';
     const outSlotStyle = 'background-color: var(--semi-color-fill-0); height: 36px; display: flex; padding-left: 32px; color: var(--semi-color-link); align-items: center; cursor: pointer; border-top: 1px solid var(--semi-color-border); border-radius: 0 0 6px 6px';

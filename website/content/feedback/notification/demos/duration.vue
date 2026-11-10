@@ -2,7 +2,7 @@
     import { Button, Notification } from '@fibrae/semi-ui-vue';
 
     const opts = {
-        content: 'Hi, Bytedance dance dance',
+        content: 'Hi, Semi dance dance',
         duration: 10,
     };
 </script>

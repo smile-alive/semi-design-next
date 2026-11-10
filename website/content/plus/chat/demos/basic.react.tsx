@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Chat, type ChatMessage as Message, type ChatProps } from '@fibrae/semi-ai-react';
 import { Radio, RadioGroup, type RadioChangeEvent } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 const defaultMessage: Message[] = [
     {
@@ -50,7 +51,7 @@ function getId() {
     return `id-${id++}`;
 }
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const uploadTipProps = { content: '自定义上传按钮提示信息' };
 
 export default function ChatDemo() {

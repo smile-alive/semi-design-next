@@ -11,8 +11,9 @@ import {
     type AnnotationItemProps,
     type DialogueContentItemRendererMap,
 } from '@fibrae/semi-ai-solid';
-import { IconFeishuLogo, IconBookOpenStroked, IconGit, IconFigma, IconWord, IconClose, IconTemplateStroked, IconSearch, type IconProps } from '@fibrae/semi-icons-solid';
+import { IconBookOpenStroked, IconGit, IconWord, IconClose, IconTemplateStroked, IconSearch, type IconProps } from '@fibrae/semi-icons-solid';
 import { Typography, Button } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 type SideBarContent = { type?: undefined; value?: undefined } | { type: 'annotation'; value: AnnotationItemProps[] } | { type: 'resource'; value: { name: string } };
 
@@ -48,15 +49,15 @@ function simpleIsEqual(a: unknown, b: unknown) {
 }
 
 const mcpOptions = [
-    { label: '飞书文档', value: 'feishu' },
+    { label: '办公文档', value: 'office' },
     { label: 'Github Mcp', value: 'github' },
-    { label: 'IconFigma Mcp', value: 'IconFigma' },
+    { label: 'Design Mcp', value: 'design' },
 ];
 
 const mcpIcons: Record<string, Component> = {
-    feishu: IconFeishuLogo,
+    office: IconWord,
     github: IconGit,
-    IconFigma,
+    design: IconTemplateStroked,
 };
 
 // the icon is the only visible label, so the label text becomes its name
@@ -356,20 +357,20 @@ const defaultMessages: Message[] = [
                         annotations: [
                             {
                                 title: 'Semi Design',
-                                url: 'https://semi.design/zh-CN/start/getting-started',
-                                detail: 'Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统。作为一个全面、易用、优质的现代应用UI解决方案，Semi Design从字节跳动各业务线的复杂场景中提炼而来，目前已经支撑了近千个平台产品，服务了内外部超过10万用户',
+                                url: 'https://semi-design-next.pages.dev/zh-CN/solid/start/getting-started',
+                                detail: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。作为一个全面、易用、优质的现代应用UI解决方案',
                                 logo: '/assets/placeholder/logo.svg',
                             },
                             {
-                                title: 'Semi DSM',
-                                url: 'https://semi.design/zh-CN/start/getting-started',
-                                detail: 'Semi DSM 支持全局、组件级别的样式定制，并在 Figma 和线上代码之间保持同步。使用 DSM，将 Semi Design 适配为 Any Design',
+                                title: 'Semi Design Next 主题',
+                                url: 'https://semi-design-next.pages.dev/zh-CN/solid/start/getting-started',
+                                detail: 'Semi Design Next 用 --semi-* 变量定制主题，支持全局、组件级别的样式定制，将 Semi Design 适配为 Any Design',
                                 logo: '/assets/placeholder/logo.svg',
                             },
                             {
-                                title: 'Semi D2C',
-                                url: 'https://semi.design/zh-CN/start/getting-started',
-                                detail: 'Semi D2C 提供开箱即用的设计稿转代码：支持一键识别 Figma 页面中图层布局 + 设计系统组件，像素级还原设计稿，转译为 React JSX 和 CSS 代码。此外还提供了丰富的扩展能力，基于自定义插件系统快速打造团队专属的设计研发协作工具。',
+                                title: 'Semi 设计稿',
+                                url: 'https://semi-design-next.pages.dev/zh-CN/solid/start/getting-started',
+                                detail: '一套组件，四个框架原生可用：React、Vue、Solid、Svelte 共用同一套 foundation 逻辑，各框架按自己的习惯使用，像素级还原设计稿。',
                                 logo: '/assets/placeholder/logo.svg',
                             },
                         ],
@@ -473,7 +474,8 @@ const roleConfig = {
 };
 
 const uploadProps = {
-    action: 'https://api.semi.design/upload',
+    action: '/upload',
+    customRequest: mockUpload,
 };
 
 const modelOptions = [

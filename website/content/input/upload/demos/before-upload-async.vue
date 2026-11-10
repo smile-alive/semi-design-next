@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type BeforeUploadObjectResult, type BeforeUploadProps } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     let count = 0;
 
@@ -29,7 +30,7 @@
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :beforeUpload="beforeUpload">
+    <Upload action="/upload" :beforeUpload="beforeUpload" :customRequest="mockUpload">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

@@ -17,10 +17,10 @@
 
     let loading = $state(false);
     let list = $state<Item[]>([
-        { value: 'douyin', label: '抖音', type: 1 },
-        { value: 'xingtu', label: '醒图', type: 2 },
-        { value: 'jianying', label: '剪映', type: 3 },
-        { value: 'toutiao', label: '今日头条', type: 4 },
+        { value: 'video', label: '短视频', type: 1 },
+        { value: 'retouch', label: '修图', type: 2 },
+        { value: 'editing', label: '剪辑', type: 3 },
+        { value: 'news', label: '资讯', type: 4 },
     ]);
     let value = $state<SelectValue>([]);
 

@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { AIChatInput, type AIChatInputReference as Reference } from '@fibrae/semi-ai-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
     const referenceTemp: Reference[] = [
         {
             id: '1',
@@ -11,11 +12,11 @@
         },
         {
             id: '2',
-            name: '飞书文档.docx',
+            name: '办公文档.docx',
         },
         {
             id: '3',
-            name: '飞书文档.pdf',
+            name: '办公文档.pdf',
         },
         {
             id: '4',

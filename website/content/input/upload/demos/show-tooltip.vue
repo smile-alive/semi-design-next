@@ -1,10 +1,11 @@
 <script setup lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :showTooltip="false">
+    <Upload action="/upload" :customRequest="mockUpload" :showTooltip="false">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

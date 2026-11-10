@@ -4,7 +4,7 @@ const opts = {
     duration: 3,
     position: 'topRight',
     content: 'semi-ui-notification',
-    title: 'Hi bytedance',
+    title: 'Hi semi',
 } as const;
 
 export default function NotificationDemo() {

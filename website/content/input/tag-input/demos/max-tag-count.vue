@@ -3,5 +3,5 @@
 </script>
 
 <template>
-    <TagInput :defaultValue="['抖音', '火山', '西瓜视频']" :maxTagCount="2" :restTagsPopoverProps="{ position: 'top' }" showRestTagsPopover @change="(v) => console.log(v)" />
+    <TagInput :defaultValue="['短视频', '直播', '长视频']" :maxTagCount="2" :restTagsPopoverProps="{ position: 'top' }" showRestTagsPopover @change="(v) => console.log(v)" />
 </template>

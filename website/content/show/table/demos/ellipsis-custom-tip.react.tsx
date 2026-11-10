@@ -13,8 +13,8 @@ const columns: ColumnProps[] = [
                 value: 'Semi Design 设计稿',
             },
             {
-                text: 'Semi D2C 设计稿',
-                value: 'Semi D2C 设计稿',
+                text: 'Semi 设计稿',
+                value: 'Semi 设计稿',
             },
         ],
         onFilter: (value, record) => record.name.includes(value),
@@ -64,7 +64,7 @@ const data = [
     },
     {
         key: '2',
-        name: '由抖音前端与 UED 团队维护，易于定制的现代化设计系统，帮助设计师与开发者打造高质量产品。由抖音前端与 UED 团队维护，易于定制的现代化设计系统，帮助设计师与开发者打造高质量产品。',
+        name: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用，帮助设计师与开发者打造高质量产品。Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用，帮助设计师与开发者打造高质量产品。',
         nameIconSrc: '/assets/docs-icon.png',
         size: '2M',
         owner: '郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣郝宣',
@@ -82,7 +82,7 @@ const data = [
     },
     {
         key: '4',
-        name: '由抖音前端与 UED 团队维护，易于定制的现代化设计系统，帮助设计师与开发者打造高质量产品。由抖音前端与 UED 团队维护，易于定制的现代化设计系统，帮助设计师与开发者打造高质量产品。',
+        name: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用，帮助设计师与开发者打造高质量产品。Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用，帮助设计师与开发者打造高质量产品。',
         nameIconSrc: '/assets/docs-icon.png',
         size: '34KB',
         owner: '郝宣',

@@ -9,7 +9,7 @@ export default function PopoverDemo() {
                     title="先进的设计 / 研发协作方式"
                     image={<IllustrationSuccess style={{ width: '150px', height: '150px' }} />}
                     darkModeImage={<IllustrationSuccessDark style={{ width: '150px', height: '150px' }} />}
-                    description="使用 Semi D2C 快速还原 Figma 设计稿，一键转代码"
+                    description="一套组件，四个框架原生可用"
                     style={{ width: '400px', margin: '0 auto', display: 'flex', padding: '20px' }}
                 />
             )}

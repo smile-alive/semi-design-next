@@ -1,5 +1,6 @@
 import { IconPlus } from '@fibrae/semi-icons-react';
 import { Upload, type FileItem } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 const defaultFileList: FileItem[] = [
     {
@@ -22,7 +23,7 @@ const defaultFileList: FileItem[] = [
 
 export default function UploadDemo() {
     return (
-        <Upload action="https://api.semi.design/upload" listType="picture" showPicInfo accept="image/*" multiple defaultFileList={defaultFileList}>
+        <Upload action="/upload" customRequest={mockUpload} listType="picture" showPicInfo accept="image/*" multiple defaultFileList={defaultFileList}>
             <IconPlus aria-label="上传图片" size="extra-large" />
         </Upload>
     );

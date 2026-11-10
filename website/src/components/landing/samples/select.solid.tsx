@@ -2,12 +2,12 @@ import { createSignal } from 'solid-js';
 import { Select } from '@fibrae/semi-ui-solid';
 
 const optionList = [
-    { value: 'douyin', label: '抖音' },
-    { value: 'jianying', label: '剪映' },
+    { value: 'video', label: '短视频' },
+    { value: 'editing', label: '剪辑' },
 ];
 
 export default function Demo() {
-    const [value, setValue] = createSignal<string | undefined>('douyin');
+    const [value, setValue] = createSignal<string | undefined>('video');
 
     return (
         <Select

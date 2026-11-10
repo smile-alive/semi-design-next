@@ -1,8 +1,9 @@
 import { For, Show, type JSX } from 'solid-js';
 import { IconPlus } from '@fibrae/semi-icons-solid';
 import { type FileItem, type PromptPositionType, Upload } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const action = 'https://api.semi.design/upload';
+const action = '/upload';
 const marginStyle: Partial<Record<PromptPositionType, JSX.CSSProperties>> = {
     right: { 'margin-inline-start': '10px' },
 };
@@ -40,7 +41,7 @@ export default function UploadDemo() {
                     <Show when={index() > 0}>
                         <div style={{ 'margin-block-end': '12px', 'margin-block-start': '12px', 'border-block-end': '1px solid var(--semi-color-border)' }} />
                     </Show>
-                    <Upload action={action} prompt={<div style={promptStyle(pos)}>请上传认证材料</div>} promptPosition={pos} listType="picture" defaultFileList={defaultFileList}>
+                    <Upload action={action} customRequest={mockUpload} prompt={<div style={promptStyle(pos)}>请上传认证材料</div>} promptPosition={pos} listType="picture" defaultFileList={defaultFileList}>
                         <IconPlus aria-label="上传图片" size="extra-large" />
                     </Upload>
                 </>

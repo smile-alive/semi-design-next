@@ -2,13 +2,14 @@
     import { ref, type Component } from 'vue';
     import { AIChatInput, type AIChatInputAttachment as Attachment, type AIChatInputReference as Reference } from '@fibrae/semi-ai-vue';
     import { IconClose, IconUpload, IconFile, IconFolder, IconBranch, IconTerminal, IconGlobeStroke, IconConnectionPoint2, IconTemplateStroked, IconSearch, IconGit, IconCode } from '@fibrae/semi-icons-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const radioButtonProps = [
         { label: '快速', value: 'fast' },
         { label: '深度思考', value: 'think' },
     ];
     const modeIcons: Record<string, Component> = { fast: IconTemplateStroked, think: IconSearch };
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     const customReferences: Reference[] = [
         {

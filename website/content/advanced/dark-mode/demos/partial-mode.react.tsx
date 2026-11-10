@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IconSemiLogo, IconCamera, IconBell, IconHelpCircle, IconBytedanceLogo, IconHome, IconHistogram, IconLive, IconSetting, IconEdit, IconList } from '@fibrae/semi-icons-react';
+import { IconSemiLogo, IconCamera, IconBell, IconHelpCircle, IconHome, IconHistogram, IconLive, IconSetting, IconEdit, IconList } from '@fibrae/semi-icons-react';
 import { Layout, Nav, Button, Breadcrumb, Avatar, Steps, Pagination, Badge, Tag, Rating, Tooltip, Timeline, Popover } from '@fibrae/semi-ui-react';
 
 const rowStyle = { margin: '16px 10px' };
@@ -267,8 +267,8 @@ export default function DarkModeDemo() {
                             alignItems: 'center',
                         }}
                     >
-                        <IconBytedanceLogo size="large" style={{ marginInlineEnd: '8px' }} />
-                        <span>Copyright © 2019 ByteDance. All Rights Reserved. </span>
+                        <IconSemiLogo size="large" style={{ marginInlineEnd: '8px' }} />
+                        <span>Copyright © 2019 Semi Design Next. All Rights Reserved. </span>
                     </span>
                     <span>
                         <span style={{ marginInlineEnd: '24px' }}>平台客服</span>

@@ -5,7 +5,6 @@ icon: doc-datepicker
 brief: The date selector is used to help the user select a compliant, formatted date (time) or date (time) range.
 ---
 
-import { Image } from '@fibrae/semi-ui-react';
 import DatePickerReactApi from './api/date-picker.react.en-US.mdx';
 import DatePickerVueApi from './api/date-picker.vue.en-US.mdx';
 import DatePickerSolidApi from './api/date-picker.solid.en-US.mdx';
@@ -57,7 +56,7 @@ import { Button, ButtonGroup, DatePicker, Space, TabPane, Tabs, Tooltip, Typogra
 
 ### Picker Density
 
-The density can be used to control the size of the picker panel. The `compact` is the small size and the `default` is the default size. Support after v1.17.0.
+The density can be used to control the size of the picker panel. The `compact` is the small size and the `default` is the default size.
 
 <Demo id="density" />
 
@@ -70,7 +69,7 @@ Set `Multiple` to `true`, can choose multiple dates.
 ### Date and Time Selection
 
 Set `type` to `dateTime`, can choose date and time.  
-Starting from version V2.22.0, we changed the default mode of ScrollItem in TimePicker from wheel to normal. If you want to apply the infinite scrolling effect again, you can enable it by passing in a specific configuration through timePickerOpts.
+The default mode of ScrollItem in TimePicker is normal. If you want the infinite scrolling effect, you can enable it by passing in a specific configuration through timePickerOpts.
 
 <Demo id="date-time" />
 
@@ -120,7 +119,7 @@ Set `type` to `dateTimeRange`, can choose the date range and choose time;
 
 ### Input in Panel
 
-Use `insetInput` to control whether the date panel is inset with the input box, the default is `false`. Supported since `v2.7.0`. Inset input boxes are suitable for the following scenarios:
+Use `insetInput` to control whether the date panel is inset with the input box, the default is `false`. Inset input boxes are suitable for the following scenarios:
 
 - Date and time selection, you can directly input the time through the embedded input box, no need to select the time through the scroll wheel
 - With a custom trigger and range selection, use the inset input box to modify the start and end dates independently
@@ -145,8 +144,6 @@ Note that some adjustments and restrictions will be made to the components after
 
 ### Synchronously switch months
 
-version：>= 1.28.0
-
 In the scenario of range selection, turning on `syncSwitchMonth` means to switch the two panels simultaneously. The default is false.
 
 > Note: Clicking the year button will also switch the two panels synchronously. Switching the year and month from the scroll wheel will not switch the panels synchronously. This ensures the user's ability to select months at non-fixed intervals.
@@ -154,8 +151,6 @@ In the scenario of range selection, turning on `syncSwitchMonth` means to switch
 <Demo id="sync-switch-month" />
 
 ### Panel Change Callback
-
-version：>=1.28.0
 
 <Framework only="react">
 
@@ -185,21 +180,17 @@ The `panelChange` event is emitted when the month or year of the panel is change
 
 ### Select Week
 
-`daterange` is used with `startDateOffset` and `endDateOffset` to select range with single click, such as weekly selection and biweekly selection. Support after v1.10.0.
+`daterange` is used with `startDateOffset` and `endDateOffset` to select range with single click, such as weekly selection and biweekly selection.
 
 <Demo id="week" />
 
 ### Selection
-
-**Version:** > = 0.21.0
 
 Set `type` to `month`, can make year-to-month selection.
 
 <Demo id="month" />
 
 ### Year and Month Range Selection
-
-**version：** >= 2.32.0
 
 Set `type` to `monthRange` to select the year and month range, small size and quick panel are not supported yet.
 
@@ -212,8 +203,6 @@ Set `type` to `year` to select a year. The panel has a single year column, the s
 <Demo id="year" />
 
 ### Confirm Date and Time Selection
-
-**Version: > = 0.18.0**
 
 For the selection of "datetime" (type = "dateTime") or "datetime range" (type = "dateTimeRange"), you can confirm it before writing the value into the input box. You can pass `NeedConfirm` = true to enable this behavior.
 
@@ -249,7 +238,7 @@ The following example binds three callbacks: `onChange`, `onConfirm` and `onCanc
 
 </Framework>
 
-> Note: When opening `needConfirm`, you need to click the cancel button to close the panel, and clicking the blank area will no longer close the panel (v2.2.0)
+> Note: When opening `needConfirm`, you need to click the cancel button to close the panel, and clicking the blank area will no longer close the panel
 
 <Demo id="need-confirm" />
 
@@ -263,7 +252,7 @@ Pass parameter `Presets` to set shortcuts for date selection.
 
 <Framework only="react">
 
-With `topSlot` and `bottomSlot`, you can customize the rendering of the top and bottom extra areas. With `leftSlot` and `rightSlot`, you can customize the rendering of the left and right extra areas (since v2.65.0).
+With `topSlot` and `bottomSlot`, you can customize the rendering of the top and bottom extra areas. With `leftSlot` and `rightSlot`, you can customize the rendering of the left and right extra areas.
 
 </Framework>
 
@@ -315,7 +304,7 @@ Pass in `disabledDate` to disable the specified date, pass in `disabledTime` to 
 
 <Demo id="disabled-date" />
 
-When `type` contains `range`, the date can be disabled dynamically according to the rangeStart. The `options` parameter is supported after 1.9.0
+When `type` contains `range`, the date can be disabled dynamically according to the rangeStart.
 
 <Demo id="disabled-date-range" />
 
@@ -330,8 +319,6 @@ Pass parameter `format` to custom display format.
 <Demo id="format" />
 
 ### Custom Trigger
-
-**Version:** >=0.34.0
 
 <Framework only="react">
 
@@ -375,14 +362,12 @@ The custom trigger is a complete customization of the trigger, the default clear
 
 <Notice type="primary" title="Note">
     <div>When DatePicker is range type, the default date selected after the panel is opened is the start date, and it will switch to the end date selection after selection. The focus is reset when the panel is closed.</div>
-    <div>We recommend providing a clear button, when you pass null value to DatePicker, DatePicker will also reset focus internally. This allows the user to reselect the date range after clearing. (from v2.15)</div>
+    <div>We recommend providing a clear button, when you pass null value to DatePicker, DatePicker will also reset focus internally. This allows the user to reselect the date range after clearing.</div>
 </Notice>
 
 <Demo id="trigger-render-range" />
 
 ### Custom Render Date Content
-
-**Version：**>=1.4.0
 
 <Framework only="react">
 
@@ -423,8 +408,6 @@ The `date` snippet receives `{ dayNumber, fullDate }`.
 <Demo id="render-date" />
 
 ### Custom Render Date Box
-
-**Version：**>=1.4.0
 
 <Framework only="react">
 
@@ -748,7 +731,7 @@ Text tokens such as month and weekday names, and parsing input by `format`, use 
 ## FAQ
 
 - **Date time picker, when you choose time, minute and second, you don't want to scroll infinitely. How to achieve the effect?**  
-  Starting from version V2.22.0, we changed the default mode of ScrollItem in TimePicker from wheel to normal. If you want to apply the infinite scrolling effect again, you can control this behavior through a specific switch in timePickerOpts, that is:
+  The default mode of ScrollItem in TimePicker is normal. If you want the infinite scrolling effect, you can control this behavior through a specific switch in timePickerOpts, that is:
 
       <Framework only="react">
 
@@ -786,5 +769,3 @@ Text tokens such as month and weekday names, and parsing input by `format`, use 
     When no time is selected, it is the value of the time in `defaultPickerValue`, if not set it is the time when the panel was opened. After selecting a time, it is the selected time.
 
     Since it has two hidden meanings in design, which may lead to ambiguity, it is recommended to use inline styles and open them through `insetInput`. It is recommended to read the relevant <a href="#input-in-panel">Documentation</a> before use.
-
-    <Image src="https://lf9-static.semi.design/obj/semi-tos/images/a0d68960-bccf-11ed-84ab-fbdf4dc2eb57.png" alt="The time at the bottom of the date time selection panel" width={600} />

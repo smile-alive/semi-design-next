@@ -1,9 +1,10 @@
 import { IconBolt } from '@fibrae/semi-icons-solid';
 import { Upload } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 export default function UploadDemo() {
     return (
-        <Upload action="https://api.semi.design/upload" dragIcon={<IconBolt />} draggable accept="application/pdf,.jpeg" style={{ 'margin-top': '10px' }}>
+        <Upload action="/upload" customRequest={mockUpload} dragIcon={<IconBolt />} draggable accept="application/pdf,.jpeg" style={{ 'margin-top': '10px' }}>
             <div class="components-upload-demo-drag-area">
                 <img src="/assets/placeholder/avatar-a.svg" height="96" alt="demo img" style={{ 'border-radius': '4px' }} />
                 <div

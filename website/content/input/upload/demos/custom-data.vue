@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const action = 'https://api.semi.design/upload';
+    const action = '/upload';
     // A data function is evaluated per upload, so time is the upload moment
     const data = () => ({
         role: 'ies',
@@ -14,7 +15,7 @@
 </script>
 
 <template>
-    <Upload :action="action" :data="data" :headers="headers">
+    <Upload :action="action" :customRequest="mockUpload" :data="data" :headers="headers">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

@@ -7,7 +7,7 @@
     const items = [
         { content: '编辑', value: 'editor' },
         { content: '搜索', value: 'search', disabled: true },
-        { content: '帮助', value: 'help', href: 'https://semi.design', target: '_blank' },
+        { content: '帮助', value: 'help', href: 'https://semi-design-next.pages.dev/', target: '_blank' },
     ];
 
     const onClick = (value?: string) => {

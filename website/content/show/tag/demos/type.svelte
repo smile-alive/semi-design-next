@@ -11,7 +11,7 @@
         Semi Design Light Tag
     </Tag>
     <Tag color="cyan" shape="circle" size="large" type="light">
-        D2C: figma to code in one click
+        Semi: one component library for four frameworks
         {#snippet suffixIcon()}
             <IconSemiLogo />
         {/snippet}
@@ -23,7 +23,7 @@
         Semi Design Ghost Tag
     </Tag>
     <Tag color="cyan" shape="circle" size="large" type="ghost">
-        D2C: figma to code in one click
+        Semi: one component library for four frameworks
         {#snippet suffixIcon()}
             <IconSemiLogo />
         {/snippet}
@@ -35,7 +35,7 @@
         Semi Design Solid Tag
     </Tag>
     <Tag color="cyan" shape="circle" size="large" type="solid">
-        D2C: figma to code in one click
+        Semi: one component library for four frameworks
         {#snippet suffixIcon()}
             <IconSemiLogo />
         {/snippet}

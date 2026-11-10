@@ -2,7 +2,7 @@ import { IconPlusCircle, IconMinusCircle } from '@fibrae/semi-icons-react';
 import { ArrayField, TextArea, Form, FormInput, FormSelect, Button } from '@fibrae/semi-ui-react';
 
 const data = [
-    { name: 'Semi D2C', role: 'Engineer' },
+    { name: 'Semi Core', role: 'Engineer' },
     { name: 'Semi C2D', role: 'Designer' },
 ];
 
@@ -22,7 +22,7 @@ export default function FormDemo() {
                                 <Button onClick={arrayField.add} icon={<IconPlusCircle />} theme="light">
                                     Add new line
                                 </Button>
-                                <Button icon={<IconPlusCircle />} onClick={() => arrayField.addWithInitValue({ name: 'Semi DSM', role: 'Designer' })} style={{ marginInlineStart: 8 }}>
+                                <Button icon={<IconPlusCircle />} onClick={() => arrayField.addWithInitValue({ name: 'Semi Theme', role: 'Designer' })} style={{ marginInlineStart: 8 }}>
                                     Add new line with init value
                                 </Button>
                                 {arrayField.arrayFields.map((item) => (

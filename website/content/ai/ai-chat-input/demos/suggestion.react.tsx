@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import { AIChatInput, type AIChatInputContent as Content } from '@fibrae/semi-ai-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: 12 };
 const suggestionTemplate = ['天气如何', '空气质量', '工作进程', '日程安排'];
 

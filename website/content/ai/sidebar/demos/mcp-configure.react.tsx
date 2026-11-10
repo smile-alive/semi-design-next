@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, type CSSProperties, type MouseEvent } from 'react';
 import { MCPConfigure, type MCPConfigureOption as MCPOption } from '@fibrae/semi-ai-react';
-import { IconSemiLogo, IconFigma } from '@fibrae/semi-icons-react';
+import { IconSemiLogo, IconTemplateStroked } from '@fibrae/semi-icons-react';
 import { Button, Modal, Form, FormInput, FormTextArea, type FormHandle } from '@fibrae/semi-ui-react';
 
 interface McpFormValues {
@@ -18,10 +18,10 @@ const defaultOptions: MCPOption[] = [
         desc: '支持 Semi 的文档、源码搜索，辅助开发',
     },
     {
-        icon: <IconFigma />,
-        value: 'figma',
-        label: 'Figma',
-        desc: 'Figma MCP Server 连接Figma与AI开发工具的功能。它通过标准化的模型上下文协MCP），将组件、变量等设计数据和上下文暴露给AI，从而实现从设计稿到代码的智能生成，显著提升开发效率。',
+        icon: <IconTemplateStroked />,
+        value: 'design',
+        label: 'Design',
+        desc: 'Design MCP Server 连接设计工具与AI开发工具的功能。它通过标准化的模型上下文协MCP），将组件、变量等设计数据和上下文暴露给AI，从而实现从设计稿到代码的智能生成，显著提升开发效率。',
     },
 ];
 

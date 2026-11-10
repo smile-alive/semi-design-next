@@ -24,6 +24,7 @@ import {
     Row,
     Space,
 } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 const today = new Date(2024, 4, 6, 10, 30, 0);
 
@@ -53,7 +54,7 @@ const initValues = {
         },
         {
             uid: '3',
-            name: 'douyin.jpeg',
+            name: 'video.jpeg',
             status: 'uploading',
             size: '222KB',
             percent: 50,
@@ -124,7 +125,7 @@ export default function FormDemo() {
                         <FormSelect field="business" multiple style={style} placeholder="请选择业务线" label="业务线（多选Select）" extraText={<div style={extraTextStyle}>没有找到合适的业务线？</div>}>
                             <FormSelect.Option value="abc">Semi</FormSelect.Option>
                             <FormSelect.Option value="ulikeCam">轻颜相机</FormSelect.Option>
-                            <FormSelect.Option value="toutiao">今日头条</FormSelect.Option>
+                            <FormSelect.Option value="news">资讯</FormSelect.Option>
                         </FormSelect>
                     </Col>
                 </Row>
@@ -143,7 +144,7 @@ export default function FormDemo() {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        <FormUpload field="files" label="证明文件（Upload）" action="//semi.design/api/upload">
+                        <FormUpload field="files" label="证明文件（Upload）" action="/upload" customRequest={mockUpload}>
                             <Button icon={<IconUpload />} theme="light">
                                 点击上传
                             </Button>

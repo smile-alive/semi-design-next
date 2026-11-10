@@ -4,7 +4,7 @@
     let visible = $state(false);
     const covers = ['/assets/root-web-sites/sky.jpg', '/assets/root-web-sites/greenleaf.jpg', '/assets/root-web-sites/colorful.jpg'];
     const steps: UserGuideStepItem[] = [
-        { title: '欢迎使用 Semi DSM!', description: welcome, cover, position: 'bottom' },
+        { title: '欢迎使用 Semi Design Next!', description: welcome, cover, position: 'bottom' },
         { title: '高可用的色盘', description: '选取主色后，我们的颜色算法会为你生成一套高可用的色盘', cover, position: 'bottom' },
         { title: '自由定制', description: '开始定制属于你的设计系统吧！', cover, position: 'bottom' },
     ];

@@ -1,5 +1,5 @@
 import { Dynamic } from 'solid-js/web';
-import { IconBell, IconBytedanceLogo, IconHelpCircle, IconHistogram, IconHome, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-solid';
+import { IconBell, IconHelpCircle, IconHistogram, IconHome, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-solid';
 import { Avatar, Breadcrumb, Button, Layout, Nav, Skeleton } from '@fibrae/semi-ui-solid';
 
 const items = [
@@ -49,15 +49,15 @@ export default function LayoutDemo() {
                     <Breadcrumb style={{ 'margin-block-end': '24px' }} routes={['首页', '当这个页面标题很长时需要省略', '上一页', '详情页']} />
                     <div style={{ 'border-radius': '10px', border: '1px solid var(--semi-color-border)', height: '376px', padding: '32px' }}>
                         <Skeleton placeholder={<Skeleton.Paragraph rows={2} />} loading>
-                            <p>Hi, Bytedance dance dance.</p>
-                            <p>Hi, Bytedance dance dance.</p>
+                            <p>Hi, Semi dance dance.</p>
+                            <p>Hi, Semi dance dance.</p>
                         </Skeleton>
                     </div>
                 </Layout.Content>
                 <Layout.Footer style={{ display: 'flex', 'justify-content': 'space-between', padding: '20px', color: 'var(--semi-color-text-2)', 'background-color': 'var(--semi-grey-0)' }}>
                     <span style={{ display: 'flex', 'align-items': 'center' }}>
-                        <IconBytedanceLogo size="large" style={{ 'margin-inline-end': '8px' }} />
-                        <span>Copyright © 2019 ByteDance. All Rights Reserved. </span>
+                        <IconSemiLogo size="large" style={{ 'margin-inline-end': '8px' }} />
+                        <span>Copyright © 2019 Semi Design Next. All Rights Reserved. </span>
                     </span>
                     <span>
                         <span style={{ 'margin-inline-end': '24px' }}>平台客服</span>

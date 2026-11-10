@@ -2,10 +2,10 @@
     import { Select, type SelectOptionProps } from '@fibrae/semi-ui-svelte';
 
     const optionList = [
-        { value: 'douyin', label: 'douyin' },
-        { value: 'ulikecam', label: 'HOTSOON' },
-        { value: 'jianying', label: 'PIPIXIA' },
-        { value: 'xigua', label: 'XIGUA' },
+        { value: 'video', label: 'video' },
+        { value: 'camera', label: 'LIVE' },
+        { value: 'editing', label: 'COMMUNITY' },
+        { value: 'movie', label: 'MOVIE' },
     ];
 
     const searchLabel = (sugInput: string, option: SelectOptionProps) => {
@@ -15,4 +15,4 @@
     };
 </script>
 
-<Select aria-label="业务线" filter={searchLabel} {optionList} placeholder="try douyin" style="width: 180px" />
+<Select aria-label="业务线" filter={searchLabel} {optionList} placeholder="try video" style="width: 180px" />

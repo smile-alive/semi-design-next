@@ -1,8 +1,9 @@
 import { createSignal } from 'solid-js';
 import { IconCamera } from '@fibrae/semi-icons-solid';
 import { Avatar, Toast, Upload } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const api = 'https://api.semi.design/upload';
+const api = '/upload';
 const imageOnly = 'image/*';
 
 const maskStyle = {
@@ -24,7 +25,7 @@ export default function UploadDemo() {
     };
 
     return (
-        <Upload class="avatar-upload" action={api} onSuccess={onSuccess} accept={imageOnly} showUploadList={false} onError={() => Toast.error('上传失败')}>
+        <Upload class="avatar-upload" action={api} customRequest={mockUpload} onSuccess={onSuccess} accept={imageOnly} showUploadList={false} onError={() => Toast.error('上传失败')}>
             {/* the avatar is the whole content of the upload button, so its alt names the button */}
             <Avatar
                 src={url()}

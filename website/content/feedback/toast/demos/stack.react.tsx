@@ -2,7 +2,7 @@ import { Toast, Button } from '@fibrae/semi-ui-react';
 
 export default function ToastDemo() {
     const opts = {
-        content: 'Hi, Bytedance dance dance',
+        content: 'Hi, Semi dance dance',
         duration: 10,
         stack: true,
     };

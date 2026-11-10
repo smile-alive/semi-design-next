@@ -1,7 +1,8 @@
 import { For, createSignal } from 'solid-js';
 import { AIChatInput, type AIChatInputElement } from '@fibrae/semi-ai-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: '12px' };
 const temp = {
     'input-slot': '我是一个<input-slot placeholder="[职业]">程序员</input-slot>',

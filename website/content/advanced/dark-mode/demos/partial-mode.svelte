@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IconBell, IconBytedanceLogo, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-svelte';
+    import { IconBell, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-svelte';
     import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Steps, Tag, Timeline, Tooltip, type StepData, type TimelineData } from '@fibrae/semi-ui-svelte';
 
     const rowStyle = 'margin: 16px 10px';
@@ -172,8 +172,8 @@
     </Layout>
     <Layout.Footer style="display: flex; justify-content: space-between; padding: 20px; color: var(--semi-color-text-2); background-color: var(--semi-grey-0)">
         <span style="display: flex; align-items: center">
-            <IconBytedanceLogo size="large" style="margin-inline-end: 8px" />
-            <span>Copyright © 2019 ByteDance. All Rights Reserved. </span>
+            <IconSemiLogo size="large" style="margin-inline-end: 8px" />
+            <span>Copyright © 2019 Semi Design Next. All Rights Reserved. </span>
         </span>
         <span>
             <span style="margin-inline-end: 24px">平台客服</span>

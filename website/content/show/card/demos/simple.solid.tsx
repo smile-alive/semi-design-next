@@ -6,7 +6,7 @@ const bodyStyle = { display: 'flex', 'align-items': 'center', 'justify-content':
 export default function CardDemo() {
     return (
         <>
-            <Card style={{ 'max-width': '360px' }}>Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。</Card>
+            <Card style={{ 'max-width': '360px' }}>Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。</Card>
             <br />
             <Card style={{ 'max-width': '360px' }} bodyStyle={bodyStyle}>
                 <Card.Meta title="Semi Doc" avatar={<Avatar alt="Card meta img" size="default" src="/assets/placeholder/logo.svg" />} />

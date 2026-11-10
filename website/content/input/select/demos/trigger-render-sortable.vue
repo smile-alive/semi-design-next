@@ -2,13 +2,13 @@
     import { ref } from 'vue';
     import { Select, TagInput } from '@fibrae/semi-ui-vue';
 
-    const valList = ref(['douyin', 'ulikecam']);
+    const valList = ref(['video', 'camera']);
     const inputVal = ref('');
     const list = [
-        { value: 'douyin', label: '抖音' },
-        { value: 'ulikecam', label: '轻颜相机' },
-        { value: 'jianying', label: '剪映' },
-        { value: 'toutiao', label: '今日头条' },
+        { value: 'video', label: '短视频' },
+        { value: 'camera', label: '相机' },
+        { value: 'editing', label: '剪辑' },
+        { value: 'news', label: '资讯' },
     ];
 
     const handleSort = (currentLabels: string[]) => {

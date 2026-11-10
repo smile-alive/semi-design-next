@@ -5,8 +5,9 @@
     import { Mention, type MentionNodeAttrs, type MentionOptions } from '@tiptap/extension-mention';
     import { AIChatInput, type AIChatInputAttachment as Attachment, type AIChatInputContent as Content, type AIChatInputReference as Reference } from '@fibrae/semi-ai-svelte';
     import { IconBranch, IconChevronRight, IconClose, IconCode, IconConnectionPoint2, IconFile, IconFolder, IconGit, IconGlobeStroke, IconTerminal, IconUpload } from '@fibrae/semi-icons-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     interface PanelItem {
         icon: Component;

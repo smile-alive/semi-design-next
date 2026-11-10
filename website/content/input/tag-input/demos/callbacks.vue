@@ -4,7 +4,7 @@
 
 <template>
     <TagInput
-        :defaultValue="['抖音']"
+        :defaultValue="['短视频']"
         placeholder="请输入..."
         showClear
         @add="(tag) => console.log(`onAdd，新增：${tag}`)"

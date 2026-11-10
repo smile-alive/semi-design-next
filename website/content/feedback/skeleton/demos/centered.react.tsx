@@ -20,8 +20,8 @@ export default function SkeletonDemo() {
     return (
         <Skeleton placeholder={placeholder} loading style={{ textAlign: 'center' }}>
             <div style={{ textAlign: 'center' }}>
-                <p>Hi, Bytedance dance dance.</p>
-                <p>Hi, Bytedance dance dance.</p>
+                <p>Hi, Semi dance dance.</p>
+                <p>Hi, Semi dance dance.</p>
                 <Button>Button</Button>
             </div>
         </Skeleton>

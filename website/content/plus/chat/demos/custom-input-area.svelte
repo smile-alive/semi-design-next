@@ -2,6 +2,7 @@
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-svelte';
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Form, FormInput, FormUpload, type FileItem, type FormApi } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     interface InputValues {
         name?: string;
@@ -25,7 +26,7 @@
 
     const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 500px';
     const inputStyle = 'display: flex; flex-direction: column; border: 1px solid var(--semi-color-border); margin: 8px 16px; border-radius: 8px; padding: 8px';
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     let id = 0;
     const getId = () => `id-${id++}`;

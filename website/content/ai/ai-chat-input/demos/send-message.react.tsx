@@ -1,9 +1,11 @@
 import { useState, useCallback } from 'react';
 import { AIChatInput, type AIChatInputContent as Content, type AIChatInputReference as Reference } from '@fibrae/semi-ai-react';
 import type { UploadOnChangeProps as OnChangeProps, UploadProps } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 const uploadProps: UploadProps = {
-    action: 'https://api.semi.design/upload',
+    action: '/upload',
+    customRequest: mockUpload,
     defaultFileList: [
         {
             uid: '1',

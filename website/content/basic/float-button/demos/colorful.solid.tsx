@@ -5,7 +5,7 @@ export default function FloatButtonDemo() {
     return (
         <>
             <span>多彩按钮：页面右下第一列</span>
-            <FloatButton aria-label="访问 Semi 官网" colorful icon={<IconAIEditLevel1 />} style={{ 'inset-block-end': '110px', 'inset-inline-end': '150px' }} href="https://semi.design" rel="noopener noreferrer" target="_blank" />
+            <FloatButton aria-label="访问 Semi 官网" colorful icon={<IconAIEditLevel1 />} style={{ 'inset-block-end': '110px', 'inset-inline-end': '150px' }} href="https://semi-design-next.pages.dev/" rel="noopener noreferrer" target="_blank" />
         </>
     );
 }

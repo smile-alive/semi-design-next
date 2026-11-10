@@ -4,10 +4,10 @@
     let inputValue = $state('');
 
     const optionList = [
-        { value: 'douyin', label: '抖音', otherKey: 0 },
-        { value: 'ulikecam', label: '轻颜相机', disabled: true, otherKey: 1 },
-        { value: 'jianying', label: '剪映', otherKey: 2 },
-        { value: 'toutiao', label: '今日头条', otherKey: 3 },
+        { value: 'video', label: '短视频', otherKey: 0 },
+        { value: 'camera', label: '相机', disabled: true, otherKey: 1 },
+        { value: 'editing', label: '剪辑', otherKey: 2 },
+        { value: 'news', label: '资讯', otherKey: 3 },
     ];
 </script>
 

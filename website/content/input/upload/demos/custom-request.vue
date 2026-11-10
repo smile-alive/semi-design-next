@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :customRequest="mockRequest">
+    <Upload action="/upload" :customRequest="mockRequest">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

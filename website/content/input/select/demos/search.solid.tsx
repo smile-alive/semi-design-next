@@ -4,10 +4,10 @@ export default function SelectDemo() {
     return (
         <>
             <Select aria-label="单选" filter style={{ width: '180px' }} placeholder="带搜索功能的单选">
-                <Select.Option value="douyin" label="抖音" />
-                <Select.Option value="ulikecam" label="轻颜相机" />
-                <Select.Option value="jianying" label="剪映" />
-                <Select.Option value="xigua" label="西瓜视频" />
+                <Select.Option value="video" label="短视频" />
+                <Select.Option value="camera" label="相机" />
+                <Select.Option value="editing" label="剪辑" />
+                <Select.Option value="movie" label="长视频" />
             </Select>
             <br />
             <br />

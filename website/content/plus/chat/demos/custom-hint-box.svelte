@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-svelte';
     import { IconArrowRight } from '@fibrae/semi-icons-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const roleInfo = {
         user: {
@@ -18,10 +19,10 @@
     };
 
     const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px';
-    const hintsExample = ['告诉我更多', 'Semi Design 的组件有哪些？', '我能够通过 DSM 定制自己的主题吗？'];
+    const hintsExample = ['告诉我更多', 'Semi Design 的组件有哪些？', '我能够自定义主题吗？'];
     const commonHintStyle =
         'border: 1px solid var(--semi-color-border); padding: 10px; border-radius: 10px; background: none; color: var(--semi-color-text-1); display: flex; justify-content: space-between; align-items: center; text-align: left; cursor: pointer; font-family: inherit; font-size: 14px; line-height: inherit';
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     let id = 0;
     const getId = () => `id-${id++}`;
@@ -31,7 +32,7 @@
             role: 'assistant',
             id: '1',
             createAt: 1715676751919,
-            content: 'Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统，你可以向我提问任何关于 Semi 的问题。',
+            content: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用，你可以向我提问任何关于 Semi 的问题。',
         },
     ]);
     let hints = $state(hintsExample);

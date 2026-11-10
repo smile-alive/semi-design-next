@@ -177,7 +177,7 @@ import { Button, PinCode, Typography } from '@fibrae/semi-ui-solid';
 ### 键盘和焦点
 
 - 每个格子是独立的输入框，输入一个合法字符后焦点移到下一格，在最后一格输入后失焦；已填内容总是从第一格起连续，在空格子之后输入的字符落在第一个空格子上。`Tab` 与 `Shift` + `Tab` 在格子之间切换。
-- `左箭头`、`右箭头` 在格子之间移动焦点；`Backspace` 与 `Delete` 都删除当前格字符，后面的字符依次前移，`Backspace` 还会把焦点移到上一格。
+- `左箭头`、`右箭头` 在格子之间移动焦点，ConfigProvider 的 `direction` 为 `rtl` 时方向相反（`左箭头` 移到下一格）；`Backspace` 与 `Delete` 都删除当前格字符，后面的字符依次前移，`Backspace` 还会把焦点移到上一格。
 - 粘贴整段验证码时，从当前格起按字符依次填入各格，遇到不合法字符即停止。
 - `autoFocus`（Vue 为 `autofocus`）只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。
 

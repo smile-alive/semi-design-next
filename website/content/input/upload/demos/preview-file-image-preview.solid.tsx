@@ -1,6 +1,7 @@
 import { createSignal } from 'solid-js';
 import { IconDelete, IconDownload, IconExpand, IconUpload } from '@fibrae/semi-icons-solid';
 import { Button, type FileItem, ImagePreview, type RenderFileItemProps, Upload } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 const defaultFileList: FileItem[] = [
     {
@@ -26,7 +27,7 @@ export default function UploadDemo() {
     );
 
     return (
-        <Upload action="https://api.semi.design/upload" defaultFileList={defaultFileList} itemStyle={{ width: '300px' }} renderFileOperation={renderFileOperation}>
+        <Upload action="/upload" customRequest={mockUpload} defaultFileList={defaultFileList} itemStyle={{ width: '300px' }} renderFileOperation={renderFileOperation}>
             <Button icon={<IconUpload />} theme="light">
                 点击上传
             </Button>

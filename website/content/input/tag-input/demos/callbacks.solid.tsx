@@ -3,7 +3,7 @@ import { TagInput } from '@fibrae/semi-ui-solid';
 export default function TagInputDemo() {
     return (
         <TagInput
-            defaultValue={['抖音']}
+            defaultValue={['短视频']}
             placeholder="请输入..."
             showClear
             onFocus={() => {

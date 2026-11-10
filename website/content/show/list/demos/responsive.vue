@@ -5,7 +5,7 @@
         { title: '审核管理平台', rating: 4.5, feedbacks: 124 },
         { title: '扁鹊', rating: 4, feedbacks: 108 },
         { title: '直播审核平台', rating: 3.5, feedbacks: 244 },
-        { title: '抖音安全测试', feedbacks: 189 },
+        { title: '短视频安全测试', feedbacks: 189 },
         { title: '内容平台', rating: 3, feedbacks: 128 },
         { title: '策略平台', rating: 4, feedbacks: 156 },
     ];

@@ -1,8 +1,9 @@
 <script lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Upload, type PromptPositionType } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const action = 'https://api.semi.design/upload';
+    const action = '/upload';
     const marginStyle: Partial<Record<PromptPositionType, string>> = {
         left: 'margin-inline-end: 10px',
         right: 'margin-inline-start: 10px',
@@ -15,7 +16,7 @@
     {#if index}
         <div style="margin-block-end: 12px; margin-block-start: 12px; border-block-end: 1px solid var(--semi-color-border)"></div>
     {/if}
-    <Upload {action} promptPosition={pos}>
+    <Upload {action} customRequest={mockUpload} promptPosition={pos}>
         {#snippet prompt()}
             <div style={promptStyle(pos)}>请上传资格认证材料</div>
         {/snippet}

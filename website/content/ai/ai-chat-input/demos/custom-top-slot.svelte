@@ -2,13 +2,14 @@
     import type { Component } from 'svelte';
     import { AIChatInput, type AIChatInputAttachment as Attachment, type AIChatInputReference as Reference } from '@fibrae/semi-ai-svelte';
     import { IconBranch, IconClose, IconCode, IconConnectionPoint2, IconFile, IconFolder, IconGit, IconGlobeStroke, IconSearch, IconTemplateStroked, IconTerminal, IconUpload } from '@fibrae/semi-icons-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const radioButtonProps = [
         { label: '快速', value: 'fast' },
         { label: '深度思考', value: 'think' },
     ];
     const modeIcons: Record<string, Component> = { fast: IconTemplateStroked, think: IconSearch };
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     const customReferences: Reference[] = [
         {

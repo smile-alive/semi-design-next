@@ -16,7 +16,7 @@ function mockRequest({ onProgress, onSuccess }: UploadCustomRequestArgs) {
 
 export default function UploadDemo() {
     return (
-        <Upload action="https://api.semi.design/upload" customRequest={mockRequest}>
+        <Upload action="/upload" customRequest={mockRequest}>
             <Button icon={<IconUpload />} theme="light">
                 点击上传
             </Button>

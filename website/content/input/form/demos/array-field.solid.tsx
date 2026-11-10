@@ -3,7 +3,7 @@ import { IconMinusCircle, IconPlusCircle } from '@fibrae/semi-icons-solid';
 import { ArrayField, Button, Form, FormInput, FormSelect, TextArea } from '@fibrae/semi-ui-solid';
 
 const data = [
-    { name: 'Semi D2C', role: 'Engineer' },
+    { name: 'Semi Core', role: 'Engineer' },
     { name: 'Semi C2D', role: 'Designer' },
 ];
 
@@ -23,7 +23,7 @@ export default function FormDemo() {
                                 <Button onClick={arrayField.add} icon={<IconPlusCircle />} theme="light">
                                     Add new line
                                 </Button>
-                                <Button icon={<IconPlusCircle />} onClick={() => arrayField.addWithInitValue({ name: 'Semi DSM', role: 'Designer' })} style={{ 'margin-inline-start': '8px' }}>
+                                <Button icon={<IconPlusCircle />} onClick={() => arrayField.addWithInitValue({ name: 'Semi Theme', role: 'Designer' })} style={{ 'margin-inline-start': '8px' }}>
                                     Add new line with init value
                                 </Button>
                                 <For each={arrayField.arrayFields}>

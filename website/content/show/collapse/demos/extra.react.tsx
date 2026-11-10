@@ -5,10 +5,10 @@ export default function CollapseDemo() {
     return (
         <Collapse>
             <Collapse.Panel header="This is panel header 1" itemKey="1" extra="1234">
-                <p>Hi, bytedance dance dance. This is the docsite of Semi UI. </p>
+                <p>Hi, this is the docsite of Semi Design Next. </p>
             </Collapse.Panel>
             <Collapse.Panel header="This is panel header 2" itemKey="2" extra={<IconCopy />}>
-                <p>Hi, bytedance dance dance. This is the docsite of Semi UI. </p>
+                <p>Hi, this is the docsite of Semi Design Next. </p>
             </Collapse.Panel>
             <Collapse.Panel
                 header="This is panel header 3"
@@ -19,7 +19,7 @@ export default function CollapseDemo() {
                     </Tag>
                 }
             >
-                <p>Hi, bytedance dance dance. This is the docsite of Semi UI. </p>
+                <p>Hi, this is the docsite of Semi Design Next. </p>
             </Collapse.Panel>
         </Collapse>
     );

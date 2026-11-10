@@ -1,16 +1,18 @@
 <script lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Upload } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 </script>
 
 <Upload
-    action="https://api.semi.design/upload"
+    action="/upload"
     beforeCrop={(file, fileList) => {
         console.log('beforeCrop:', file, fileList);
         // true continues cropping; false skips it and uploads directly
         return window.confirm('是否裁切图片？');
     }}
     crop={{ aspectRatio: 1, shape: 'round' }}
+    customRequest={mockUpload}
     onCropError={(error) => console.error('裁切失败:', error)}
     onSuccess={(response, file) => console.log('上传成功:', response, file)}
 >

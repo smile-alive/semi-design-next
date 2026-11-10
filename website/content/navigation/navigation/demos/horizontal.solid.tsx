@@ -38,9 +38,9 @@ export default function NavigationDemo() {
                         }
                     >
                         <Avatar size="small" color="light-blue" style={{ margin: '4px' }}>
-                            BD
+                            SD
                         </Avatar>
-                        <span>Bytedancer</span>
+                        <span>Semi</span>
                     </Dropdown>
                 }
             />

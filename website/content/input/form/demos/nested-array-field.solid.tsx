@@ -21,7 +21,7 @@ const initValue = {
         {
             name: '收信规则1',
             rules: [
-                { ruleType: 'address', type: 'include', text: 'bytedance.com' },
+                { ruleType: 'address', type: 'include', text: 'example.com' },
                 { ruleType: 'title', type: 'exclude', text: '更新日志' },
             ],
         },

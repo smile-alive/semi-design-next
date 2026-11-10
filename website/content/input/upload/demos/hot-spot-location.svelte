@@ -1,8 +1,9 @@
 <script lang="ts">
     import { IconPlus } from '@fibrae/semi-icons-svelte';
     import { Radio, RadioGroup, Upload, type FileItem, type UploadProps } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const action = 'https://api.semi.design/upload';
+    const action = '/upload';
     const defaultFileList: FileItem[] = [
         {
             uid: '1',
@@ -24,6 +25,6 @@
     <Radio value="end">end</Radio>
 </RadioGroup>
 <hr />
-<Upload accept="image/*" {action} fileList={defaultFileList} {hotSpotLocation} listType="picture" multiple onPreviewClick={handlePreview} showPicInfo>
+<Upload accept="image/*" {action} customRequest={mockUpload} fileList={defaultFileList} {hotSpotLocation} listType="picture" multiple onPreviewClick={handlePreview} showPicInfo>
     <IconPlus aria-label="上传图片" size="extra-large" />
 </Upload>

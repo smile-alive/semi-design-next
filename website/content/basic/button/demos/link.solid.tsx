@@ -4,10 +4,10 @@ import { Typography } from '@fibrae/semi-ui-solid';
 export default function ButtonDemo() {
     return (
         <div>
-            <Typography.Text link={{ href: 'https://semi.design/' }}>链接文本</Typography.Text>
+            <Typography.Text link={{ href: 'https://semi-design-next.pages.dev/' }}>链接文本</Typography.Text>
             <br />
             <br />
-            <Typography.Text link={{ href: 'https://semi.design/' }}>打开网站</Typography.Text>
+            <Typography.Text link={{ href: 'https://semi-design-next.pages.dev/' }}>打开网站</Typography.Text>
             <br />
             <br />
             <Typography.Text link icon={<IconLink />} underline>

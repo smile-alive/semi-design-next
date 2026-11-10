@@ -9,10 +9,10 @@
     }
 
     const list: Item[] = [
-        { value: 'douyin', label: '抖音', type: 1 },
-        { value: 'ulikecam', label: '轻颜相机', type: 2 },
-        { value: 'jianying', label: '剪映', type: 3 },
-        { value: 'toutiao', label: '今日头条', type: 4 },
+        { value: 'video', label: '短视频', type: 1 },
+        { value: 'camera', label: '相机', type: 2 },
+        { value: 'editing', label: '剪辑', type: 3 },
+        { value: 'news', label: '资讯', type: 4 },
     ];
     const cbValue = ref<Item>();
     const multipleCbValue = ref<Item[]>();

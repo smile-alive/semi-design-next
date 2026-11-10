@@ -3,10 +3,10 @@ import { IconAppCenter, IconChevronDown } from '@fibrae/semi-icons-react';
 import { Select, Tag, type SelectTriggerRenderProps } from '@fibrae/semi-ui-react';
 
 const list = [
-    { value: 'douyin', label: '抖音' },
-    { value: 'ulikecam', label: '轻颜相机' },
-    { value: 'jianying', label: '剪映' },
-    { value: 'toutiao', label: '今日头条' },
+    { value: 'video', label: '短视频' },
+    { value: 'camera', label: '相机' },
+    { value: 'editing', label: '剪辑' },
+    { value: 'news', label: '资讯' },
 ];
 
 const triggerRender = (selectState: SelectTriggerRenderProps) => (
@@ -65,7 +65,7 @@ const triggerRender2 = (selectState: SelectTriggerRenderProps) => (
 );
 
 export default function SelectDemo() {
-    const [valList, setValList] = useState(['douyin', 'ulikecam']);
+    const [valList, setValList] = useState(['video', 'camera']);
 
     return (
         <div>

@@ -5,7 +5,6 @@ icon: doc-datepicker
 brief: 日期选择器用于帮助用户选择一个符合要求的、格式化的日期（时间）或日期（时间）范围
 ---
 
-import { Image } from '@fibrae/semi-ui-react';
 import DatePickerReactApi from './api/date-picker.react.zh-CN.mdx';
 import DatePickerVueApi from './api/date-picker.vue.zh-CN.mdx';
 import DatePickerSolidApi from './api/date-picker.solid.zh-CN.mdx';
@@ -70,7 +69,7 @@ import { Button, ButtonGroup, DatePicker, Space, TabPane, Tabs, Tooltip, Typogra
 ### 日期与时间选择
 
 将 `type` 设定为 `dateTime`，可以选择日期时间。  
-版本V2.22.0开始，我们将 TimePicker 内的 ScrollItem 的默认模式从 wheel 变更为了 normal, 若想应用回无限滚动的效果，可以通过 timePickerOpts 传入特定配置开启。
+TimePicker 内 ScrollItem 的默认模式为 normal，若想使用无限滚动的效果，可以通过 timePickerOpts 传入特定配置开启。
 
 <Demo id="date-time" />
 
@@ -121,7 +120,7 @@ import { Button, ButtonGroup, DatePicker, Space, TabPane, Tabs, Tooltip, Typogra
 
 ### 内嵌输入框
 
-使用 insetInput 可以控制日期面板是否展示内嵌输入框，默认为 false。v2.7.0 后支持。内嵌输入框适用于以下场景：
+使用 insetInput 可以控制日期面板是否展示内嵌输入框，默认为 false。内嵌输入框适用于以下场景：
 
 - 日期时间选择，可以直接通过内嵌输入框单独修改时间，无须通过滚轮选择时间
 - 自定义触发器时 + 范围选择，使用内嵌输入框可以单独对开始和结束日期进行修改
@@ -194,8 +193,6 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 
 ### 年月范围选择
 
-**版本：** >= 2.32.0
-
 将 `type` 设定为 `monthRange`，可以进行年月范围选择。暂不支持小尺寸与快捷面板。
 
 <Demo id="month-range" />
@@ -242,7 +239,7 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 
 </Framework>
 
-> 注意：开启确认选择时，需要点击取消按钮关闭面板，点击空白区域不再关闭面板（v2.2.0）
+> 注意：开启确认选择时，需要点击取消按钮关闭面板，点击空白区域不再关闭面板
 
 <Demo id="need-confirm" />
 
@@ -257,7 +254,7 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 <Framework only="react">
 
 通过 `topSlot` 和 `bottomSlot` 可以自定义渲染顶部和底部额外区域  
-通过 `leftSlot` 和 `rightSlot` 可以自定义渲染左侧和右侧额外区域（v2.65.0后支持）
+通过 `leftSlot` 和 `rightSlot` 可以自定义渲染左侧和右侧额外区域
 
 </Framework>
 
@@ -311,7 +308,7 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 
 <Demo id="disabled-date" />
 
-在 type 包含 range 时，可以根据当前选择动态禁止日期。options 参数 1.9.0 后支持。
+在 type 包含 range 时，可以根据当前选择动态禁止日期。
 
 <Demo id="disabled-date-range" />
 
@@ -369,7 +366,7 @@ snippet 参数提供 `value`、`inputValue`、`placeholder`、`disabled`、`size
 
 <Notice type="primary" title="注意事项">
     <div>范围选择时，面板打开后默认选择的日期为开始日期，选择后会切到结束日期选择。面板关闭后焦点会重置。</div>
-    <div>我们建议提供一个清除按钮，当你给 DatePicker 传入空值时，DatePicker 内部也会重置焦点。这样用户可以在清除后重新选择日期范围。（from v2.15）</div>
+    <div>我们建议提供一个清除按钮，当你给 DatePicker 传入空值时，DatePicker 内部也会重置焦点。这样用户可以在清除后重新选择日期范围。</div>
 </Notice>
 
 <Demo id="trigger-render-range" />
@@ -737,7 +734,7 @@ semi-ui 组件库中采用 [date-fns v4](https://date-fns.org/docs/Getting-Start
 ## FAQ
 
 - **日期时间选择器，时分秒选择时想要无限滚动效果如何实现？**  
-  版本V2.22.0开始，我们将 TimePicker 内的 ScrollItem 的默认模式从 wheel 变更为了 normal, 若想应用回无限滚动的效果，可以通过 timePickerOpts 中的特定开关控制该行为。
+  TimePicker 内 ScrollItem 的默认模式为 normal，若想使用无限滚动的效果，可以通过 timePickerOpts 中的特定开关控制该行为。
 
       <Framework only="react">
 
@@ -775,5 +772,3 @@ semi-ui 组件库中采用 [date-fns v4](https://date-fns.org/docs/Getting-Start
     未选择时间时，它为 defaultPickerValue 中时间的值，如果没有设置则是面板打开时的时间。选择时间后，它为已选择的时间。
 
     由于设计上它有隐含两层含义，可能会导致歧义，建议使用内嵌样式，通过 `insetInput` 打开。使用前推荐阅读相关 <a href="#内嵌输入框">文档</a>。
-
-    <Image src="https://lf6-static.semi.design/obj/semi-tos/images/9c9e8500-bccf-11ed-a8cf-bfecde588f0d.png" alt="日期时间选择面板底部的时间" width={600} />

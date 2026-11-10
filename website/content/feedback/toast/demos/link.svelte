@@ -4,12 +4,12 @@
 
 {#snippet single()}
     <span>
-        <Typography.Text>Hi, Bytedance dance dance</Typography.Text>
+        <Typography.Text>Hi, Semi dance dance</Typography.Text>
         <Typography.Text link style="margin-inline-start: 12px">更多</Typography.Text>
     </span>
 {/snippet}
 {#snippet multiLine()}
-    <div>Hi, Bytedance dance dance</div>
+    <div>Hi, Semi dance dance</div>
     <div style="margin-block-start: 8px">
         <Typography.Text link>查看详情</Typography.Text>
         <Typography.Text link style="margin-inline-start: 20px">一会再看</Typography.Text>

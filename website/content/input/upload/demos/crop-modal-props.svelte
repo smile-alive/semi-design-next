@@ -1,10 +1,11 @@
 <script lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Upload } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 </script>
 
 <Upload
-    action="https://api.semi.design/upload"
+    action="/upload"
     crop={{
         aspectRatio: 1,
         shape: 'rect',
@@ -14,6 +15,7 @@
         style: 'height: 600px',
         bodyStyle: 'height: 500px; background-color: #f5f5f5',
     }}
+    customRequest={mockUpload}
     onSuccess={(response, file) => console.log('上传成功:', response, file)}
 >
     <Button theme="light">

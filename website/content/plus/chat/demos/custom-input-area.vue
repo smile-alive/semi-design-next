@@ -3,6 +3,7 @@
     import { Chat, type ChatMessage as Message } from '@fibrae/semi-ai-vue';
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Form, FormInput, FormUpload, type FileItem, type FormApi } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
     interface InputValues {
         name?: string;
@@ -39,7 +40,7 @@
         padding: '8px',
     } as const;
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 
     let id = 0;
     const getId = () => `id-${id++}`;

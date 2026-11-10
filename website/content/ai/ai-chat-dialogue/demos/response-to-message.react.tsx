@@ -44,7 +44,7 @@ const RESPONSE_DATA = {
             summary: [
                 {
                     type: 'summary_text',
-                    text: '**用户询问什么是 Semi Design** 用户问 “Semi Design”需整合多源信息。首先发现抖音的 Semi Design 是设计系统，支持多平台且含 Design Token 和代码转换工具。印度 Semi Design 专注半导体培训，但用户可能更关注抖音案例。其他结果涉及半定制设计，但关联性较低。需确认是否有其他解释，但当前信息已覆盖主要维度。虽然继续推理可能提高完备性，但现阶段已足够支撑答案，可以开始输出给用户。',
+                    text: '**用户询问什么是 Semi Design** 用户问 “Semi Design”需整合多源信息。首先发现 Semi Design Next 是 Semi Design 的社区版设计系统，支持多框架且含 Design Token。印度 Semi Design 专注半导体培训，但用户可能更关注设计系统案例。其他结果涉及半定制设计，但关联性较低。需确认是否有其他解释，但当前信息已覆盖主要维度。虽然继续推理可能提高完备性，但现阶段已足够支撑答案，可以开始输出给用户。',
                 },
             ],
         },
@@ -56,23 +56,23 @@ const RESPONSE_DATA = {
             content: [
                 {
                     type: 'output_text',
-                    text: 'Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统',
+                    text: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用',
                     annotations: [
                         {
                             title: 'Semi Design',
-                            url: 'https://semi.design/zh-CN/start/getting-started',
+                            url: 'https://semi-design-next.pages.dev/zh-CN/react/start/getting-started',
                             detail: 'Semi Design 快速开始',
                             logo: '/assets/docs-icon.png',
                         },
                         {
                             title: 'Semi Design',
-                            url: 'https://semi.design/zh-CN/start/getting-started',
+                            url: 'https://semi-design-next.pages.dev/zh-CN/react/start/getting-started',
                             detail: 'Semi Design 快速开始',
                             logo: '/assets/docs-icon.png',
                         },
                         {
                             title: 'Semi Design',
-                            url: 'https://semi.design/zh-CN/start/getting-started',
+                            url: 'https://semi-design-next.pages.dev/zh-CN/react/start/getting-started',
                             detail: 'Semi Design 快速开始',
                             logo: '/assets/docs-icon.png',
                         },

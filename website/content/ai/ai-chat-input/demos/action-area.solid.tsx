@@ -2,8 +2,9 @@ import { For } from 'solid-js';
 import { AIChatInput, type AIChatInputActionAreaProps as ActionAreaProps } from '@fibrae/semi-ai-solid';
 import { IconDeleteStroked } from '@fibrae/semi-icons-solid';
 import { Button, Divider } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: '12px' };
 
 const renderActionArea = (actionArea: ActionAreaProps) => (

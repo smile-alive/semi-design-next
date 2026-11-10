@@ -48,8 +48,8 @@
     const tagStyle = { marginInlineEnd: '8px', marginBlockEnd: '8px' };
     const buttonStyle = { ...tagStyle };
     const opts = () => ({
-        title: 'Hi,Bytedance',
-        content: 'ies dance dance dance',
+        title: 'Hi,semi',
+        content: 'Semi Design Next',
         duration: 3,
         direction: direction.value,
     });
@@ -172,26 +172,26 @@
                     <br />
                     <br />
                     <Select aria-label="选择器-单选" placeholder="选择器-单选" :style="{ width: '100%' }">
-                        <Select.Option value="abc">抖音</Select.Option>
-                        <Select.Option value="hotsoon">火山</Select.Option>
-                        <Select.Option disabled value="pipixia">皮皮虾</Select.Option>
-                        <Select.Option value="xigua">西瓜视频</Select.Option>
+                        <Select.Option value="video">短视频</Select.Option>
+                        <Select.Option value="live">直播</Select.Option>
+                        <Select.Option disabled value="community">社区</Select.Option>
+                        <Select.Option value="movie">长视频</Select.Option>
                     </Select>
                     <br />
                     <br />
                     <Select aria-label="选择器-禁用" disabled placeholder="选择器-禁用" :style="{ width: '100%' }">
-                        <Select.Option value="abc">抖音</Select.Option>
-                        <Select.Option value="hotsoon">火山</Select.Option>
-                        <Select.Option disabled value="pipixia">皮皮虾</Select.Option>
-                        <Select.Option value="xigua">西瓜视频</Select.Option>
+                        <Select.Option value="video">短视频</Select.Option>
+                        <Select.Option value="live">直播</Select.Option>
+                        <Select.Option disabled value="community">社区</Select.Option>
+                        <Select.Option value="movie">长视频</Select.Option>
                     </Select>
                     <br />
                     <br />
                     <Select aria-label="选择器-多选" multiple placeholder="选择器-多选" :style="{ width: '100%' }">
-                        <Select.Option value="abc">抖音</Select.Option>
-                        <Select.Option value="hotsoon">火山</Select.Option>
-                        <Select.Option disabled value="pipixia">皮皮虾</Select.Option>
-                        <Select.Option value="xigua">西瓜视频</Select.Option>
+                        <Select.Option value="video">短视频</Select.Option>
+                        <Select.Option value="live">直播</Select.Option>
+                        <Select.Option disabled value="community">社区</Select.Option>
+                        <Select.Option value="movie">长视频</Select.Option>
                     </Select>
                     <br />
                     <br />

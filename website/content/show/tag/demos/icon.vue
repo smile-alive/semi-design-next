@@ -12,7 +12,7 @@
             Semi Design
         </Tag>
         <Tag color="cyan" shape="circle" size="large">
-            D2C: figma to code in one click
+            Semi: one component library for four frameworks
             <template #suffixIcon>
                 <IconSemiLogo />
             </template>

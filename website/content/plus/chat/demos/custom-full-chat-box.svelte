@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-svelte';
     import { Avatar } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const roleInfo = {
         user: {
@@ -18,7 +19,7 @@
     };
 
     const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px';
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
     const titleStyle = 'display: flex; align-items: center; justify-content: center; column-gap: 10px; padding: 5px 0px; width: fit-content';
 
     let id = 0;
@@ -41,7 +42,7 @@
             role: 'assistant',
             id: '3',
             createAt: 1715676751919,
-            content: 'Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统',
+            content: 'Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用',
         },
     ]);
 

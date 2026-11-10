@@ -1,7 +1,8 @@
 import { IconPlus, IconUpload } from '@fibrae/semi-icons-solid';
 import { Button, Upload, type UploadElement } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const action = 'https://api.semi.design/upload';
+const action = '/upload';
 
 export default function UploadDemo() {
     let uploadRef: UploadElement | undefined;
@@ -12,7 +13,7 @@ export default function UploadDemo() {
 
     return (
         <div>
-            <Upload accept="image/gif, image/png, image/jpeg, image/bmp, image/webp" action={action} uploadTrigger="custom" ref={(element) => (uploadRef = element)} onSuccess={(...v) => console.log(...v)} onError={(...v) => console.log(...v)}>
+            <Upload accept="image/gif, image/png, image/jpeg, image/bmp, image/webp" action={action} customRequest={mockUpload} uploadTrigger="custom" ref={(element) => (uploadRef = element)} onSuccess={(...v) => console.log(...v)} onError={(...v) => console.log(...v)}>
                 <Button icon={<IconPlus />} theme="light" style={{ 'margin-inline-end': '8px' }}>
                     选择文件
                 </Button>

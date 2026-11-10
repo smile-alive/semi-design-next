@@ -30,8 +30,8 @@
                 <Tag style="margin: 8px; padding: 20px">{label}</Tag>
                 {#snippet content()}
                     <article>
-                        <p>hi bytedance</p>
-                        <p>hi bytedance</p>
+                        <p>hi semi</p>
+                        <p>hi semi</p>
                     </article>
                 {/snippet}
             </Tooltip>
@@ -43,8 +43,8 @@
                 <Tag style="margin: 8px; padding: 20px; width: 60px">{label}</Tag>
                 {#snippet content()}
                     <article>
-                        <p>hi bytedance</p>
-                        <p>hi bytedance</p>
+                        <p>hi semi</p>
+                        <p>hi semi</p>
                     </article>
                 {/snippet}
             </Tooltip>
@@ -56,8 +56,8 @@
                 <Tag style="margin: 8px; padding: 20px; width: 60px">{label}</Tag>
                 {#snippet content()}
                     <article>
-                        <p>hi bytedance</p>
-                        <p>hi bytedance</p>
+                        <p>hi semi</p>
+                        <p>hi semi</p>
                     </article>
                 {/snippet}
             </Tooltip>
@@ -69,8 +69,8 @@
                 <Tag style="margin: 8px; padding: 20px; width: 60px">{label}</Tag>
                 {#snippet content()}
                     <article>
-                        <p>hi bytedance</p>
-                        <p>hi bytedance</p>
+                        <p>hi semi</p>
+                        <p>hi semi</p>
                     </article>
                 {/snippet}
             </Tooltip>

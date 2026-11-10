@@ -2,7 +2,7 @@
     import { Form, FormCheckboxGroup, FormInputNumber } from '@fibrae/semi-ui-vue';
 
     const options = [
-        { label: '飞书通知', value: 'lark' },
+        { label: '办公通知', value: 'office' },
         { label: '邮件通知', value: 'email' },
         { label: '顶部横幅通知', value: 'notification' },
     ];

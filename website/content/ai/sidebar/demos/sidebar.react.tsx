@@ -1,6 +1,7 @@
 import { useState, useCallback, type ComponentProps, type CSSProperties, type MouseEvent } from 'react';
 import { Sidebar, Annotation, type CodeItemProps, type FileItemProps, type ImageUploadNodeOptions } from '@fibrae/semi-ai-react';
 import { IconSearch, IconBriefStroked, IconCodeStroked, IconModalStroked } from '@fibrae/semi-icons-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 const containerStyle: CSSProperties = {
     display: 'flex',
@@ -181,7 +182,7 @@ const defaultFiles = [
   Semi Design 介绍
 </h2>
 <p>
-  Semi Design 是由 <strong>抖音前端团队</strong>和MED产品设计团队设计、开发并维护的<em>设计系统</em>。作为一个全面、易用、优质的现代应用UI解决方案，Semi Design从字节跳动各业务线的复杂场景中提炼而来，目前已经支撑了近千个平台产品，服务了内外部超过10万用户，详情见https://semi.design/zh-CN/start/introduction。Semi Design的特点包括：
+  Semi Design Next 是 <strong>Semi Design</strong> 的社区版<em>设计系统</em>，一套组件在 React、Vue、Solid、Svelte 中原生可用。作为一个全面、易用、优质的现代应用UI解决方案，详情见https://semi-design-next.pages.dev/zh-CN/react/start/introduction。Semi Design的特点包括：
 </p>
 <ul>
   <li>
@@ -201,12 +202,12 @@ const defaultFiles = [
   采用 Foundation 和 Adapter 跨框架技术方案，方便扩展。
 </p>
 <blockquote>
-  Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统
+  Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用
   <br />
   — Semi Design
 </blockquote>
 <p>
-  Semi Design 是由 <strong>抖音前端团队</strong>和MED产品设计团队设计、开发并维护的<em>设计系统</em>。作为一个全面、易用、优质的现代应用UI解决方案，Semi Design从字节跳动各业务线的复杂场景中提炼而来，目前已经支撑了近千个平台产品，服务了内外部超过10万用户，详情见https://semi.design/zh-CN/start/introduction。Semi Design的特点包括：
+  Semi Design Next 是 <strong>Semi Design</strong> 的社区版<em>设计系统</em>，一套组件在 React、Vue、Solid、Svelte 中原生可用。作为一个全面、易用、优质的现代应用UI解决方案，详情见https://semi-design-next.pages.dev/zh-CN/react/start/introduction。Semi Design的特点包括：
 </p>
 <ul>
   <li>
@@ -226,12 +227,12 @@ const defaultFiles = [
   采用 Foundation 和 Adapter 跨框架技术方案，方便扩展。
 </p>
 <blockquote>
-  Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统
+  Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用
   <br />
   — Semi Design
 </blockquote>
 <p>
-  Semi Design 是由 <strong>抖音前端团队</strong>和MED产品设计团队设计、开发并维护的<em>设计系统</em>。作为一个全面、易用、优质的现代应用UI解决方案，Semi Design从字节跳动各业务线的复杂场景中提炼而来，目前已经支撑了近千个平台产品，服务了内外部超过10万用户，详情见https://semi.design/zh-CN/start/introduction。Semi Design的特点包括：
+  Semi Design Next 是 <strong>Semi Design</strong> 的社区版<em>设计系统</em>，一套组件在 React、Vue、Solid、Svelte 中原生可用。作为一个全面、易用、优质的现代应用UI解决方案，详情见https://semi-design-next.pages.dev/zh-CN/react/start/introduction。Semi Design的特点包括：
 </p>
 <ul>
   <li>
@@ -251,7 +252,7 @@ const defaultFiles = [
   采用 Foundation 和 Adapter 跨框架技术方案，方便扩展。
 </p>
 <blockquote>
-  Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统
+  Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用
   <br />
   — Semi Design
 </blockquote>
@@ -259,11 +260,11 @@ const defaultFiles = [
     },
     {
         key: 'file2',
-        name: 'Semi Design DSM',
+        name: 'Semi Design Next theming',
         content: `<h2>
-  Semi Design DSM
+  Semi Design Next theming
 </h2>
-<p>Semi DSM is a design system management tool provided by Semi Design. It supports global and component-level style customization and keeps synchronization between Figma and front-end code. Suitable for teams of all sizes. Whether you need to simplify workflow, improve team collaboration, or increase productivity, we have features suitable for you.</p>
+<p>Semi Design Next themes through <code>--semi-*</code> variables. It supports global and component-level style customization. Suitable for teams of all sizes. Whether you need to simplify workflow, improve team collaboration, or increase productivity, we have features suitable for you.</p>
 `,
     },
     {
@@ -289,7 +290,7 @@ const defaultInfoList: ComponentProps<typeof Annotation.AnnotationContent>['info
                 type: 'video',
                 duration: 4432,
                 title: 'Semi Design is a design system designed',
-                url: 'https://semi.design/',
+                url: 'https://semi-design-next.pages.dev/',
                 logo: '/assets/placeholder/avatar-a.svg',
                 siteName: 'Semi Design',
                 detail: ' As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution',
@@ -300,7 +301,7 @@ const defaultInfoList: ComponentProps<typeof Annotation.AnnotationContent>['info
                 title: 'Quick start',
                 type: 'video',
                 duration: 56,
-                url: 'https://semi.design/',
+                url: 'https://semi-design-next.pages.dev/',
                 detail: ' As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution',
                 logo: '/assets/placeholder/avatar-a.svg',
                 siteName: 'Semi Design',
@@ -309,7 +310,7 @@ const defaultInfoList: ComponentProps<typeof Annotation.AnnotationContent>['info
             {
                 order: 3,
                 title: 'Use components in a modular way',
-                url: 'https://semi.design/',
+                url: 'https://semi-design-next.pages.dev/',
                 detail: `Semi provides esm format dist, and the css of the component is only imported by the corresponding js.
 When used in Webpack, Rspack, create-react-app or Vite projects, there is no need to configure any compilation items.`,
                 logo: '/assets/placeholder/avatar-a.svg',
@@ -325,8 +326,8 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
             {
                 order: 2,
                 title: 'Semi Design resource',
-                url: 'https://semi.design/',
-                detail: 'Semi Design provides a wealth of design resources to help designers and developers collaborate efficiently. Whether you are a community user or a ByteDance internal designer, you can find UI Kit resource and Figma plug-ins that suit you here.',
+                url: 'https://semi-design-next.pages.dev/',
+                detail: 'Semi Design provides a wealth of design resources to help designers and developers collaborate efficiently. Whether you are a community user or an internal designer, you can find UI Kit resources that suit you here.',
                 logo: '/assets/placeholder/avatar-a.svg',
                 siteName: 'Semi Design resource',
                 img: '/assets/root-web-sites/abstract.jpg',
@@ -336,7 +337,8 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
 ];
 
 const imgUploadProps: ImageUploadNodeOptions = {
-    action: 'https://api.semi.design/upload',
+    action: '/upload',
+    customRequest: mockUpload,
     getUploadImageSrc: () => {
         // response is the action's result; real code reads the uploaded image URL from it
         return '/assets/placeholder/avatar-a.svg';

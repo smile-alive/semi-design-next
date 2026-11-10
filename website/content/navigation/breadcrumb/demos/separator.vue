@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { IconArrowRight } from '@fibrae/semi-icons-vue';
-    import { Breadcrumb, Tag } from '@fibrae/semi-ui-vue';
+    import { Breadcrumb } from '@fibrae/semi-ui-vue';
 </script>
 
 <template>
@@ -20,8 +20,6 @@
             <Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>
             <Breadcrumb.Item>Default</Breadcrumb.Item>
         </Breadcrumb>
-        <br />
-        <Tag>v&gt;=1.16.0</Tag>
         <br />
         <Breadcrumb aria-label="单项分隔符">
             <Breadcrumb.Item separator=":">Semi-ui</Breadcrumb.Item>

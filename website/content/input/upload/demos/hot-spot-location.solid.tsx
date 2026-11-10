@@ -1,8 +1,9 @@
 import { createSignal } from 'solid-js';
 import { IconPlus } from '@fibrae/semi-icons-solid';
 import { type FileItem, Radio, RadioGroup, Upload, type UploadProps } from '@fibrae/semi-ui-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const action = 'https://api.semi.design/upload';
+const action = '/upload';
 const defaultFileList: FileItem[] = [
     {
         uid: '1',
@@ -26,7 +27,7 @@ export default function UploadDemo() {
                 <Radio value="end">end</Radio>
             </RadioGroup>
             <hr />
-            <Upload action={action} listType="picture" showPicInfo accept="image/*" multiple hotSpotLocation={hotSpotLocation()} defaultFileList={defaultFileList} onPreviewClick={handlePreview}>
+            <Upload action={action} customRequest={mockUpload} listType="picture" showPicInfo accept="image/*" multiple hotSpotLocation={hotSpotLocation()} defaultFileList={defaultFileList} onPreviewClick={handlePreview}>
                 <IconPlus aria-label="上传图片" size="extra-large" />
             </Upload>
         </>

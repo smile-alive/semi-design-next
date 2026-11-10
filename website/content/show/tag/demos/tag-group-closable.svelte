@@ -2,11 +2,11 @@
     import { TagGroup, type TagCloseEvent, type TagGroupItem } from '@fibrae/semi-ui-svelte';
 
     let tagList = $state<TagGroupItem[]>([
-        { tagKey: '1', color: 'light-blue', children: '抖音', closable: true },
-        { tagKey: '3', color: 'cyan', children: '剪映', closable: true },
+        { tagKey: '1', color: 'light-blue', children: '短视频', closable: true },
+        { tagKey: '3', color: 'cyan', children: '剪辑', closable: true },
         { tagKey: '2', color: 'violet', children: '醒图', closable: true },
         { tagKey: '4', color: 'teal', children: '轻颜相机', closable: true },
-        { tagKey: '5', color: 'white', children: '飞书', closable: true },
+        { tagKey: '5', color: 'white', children: '办公', closable: true },
     ]);
 
     const closeTag = (_event: TagCloseEvent, tagKey?: string | number) => {

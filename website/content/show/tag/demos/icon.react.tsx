@@ -8,7 +8,7 @@ export default function TagDemo() {
                 Semi Design
             </Tag>
             <Tag color="cyan" size="large" shape="circle" suffixIcon={<IconSemiLogo />}>
-                D2C: figma to code in one click
+                Semi: one component library for four frameworks
             </Tag>
         </Space>
     );

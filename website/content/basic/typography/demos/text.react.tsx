@@ -9,10 +9,10 @@ export default function TypographyDemo() {
             <Typography.Text type="secondary">Secondary</Typography.Text>
             <br />
             <br />
-            <Typography.Text type="tertiary">{`Tertiary v>=1.2.0`}</Typography.Text>
+            <Typography.Text type="tertiary">Tertiary</Typography.Text>
             <br />
             <br />
-            <Typography.Text type="quaternary">{`Quaternary v>=1.2.0`}</Typography.Text>
+            <Typography.Text type="quaternary">Quaternary</Typography.Text>
             <br />
             <br />
             <Typography.Text type="warning">Warning</Typography.Text>
@@ -21,7 +21,7 @@ export default function TypographyDemo() {
             <Typography.Text type="danger">Danger</Typography.Text>
             <br />
             <br />
-            <Typography.Text type="success">{`Success v>=1.7.0`}</Typography.Text>
+            <Typography.Text type="success">Success</Typography.Text>
             <br />
             <br />
             <Typography.Text disabled>Disabled</Typography.Text>

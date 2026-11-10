@@ -3,7 +3,7 @@
     import { ArrayField, Button, Form, FormInput, FormSelect, TextArea } from '@fibrae/semi-ui-svelte';
 
     const data = [
-        { name: 'Semi D2C', role: 'Engineer' },
+        { name: 'Semi Core', role: 'Engineer' },
         { name: 'Semi C2D', role: 'Designer' },
     ];
     const roleOptions = [
@@ -25,7 +25,7 @@
         <ArrayField field="rules" initValue={data}>
             {#snippet children(arrayField)}
                 <Button icon={plus} theme="light" onclick={arrayField.onAdd}>Add new line</Button>
-                <Button icon={plus} style="margin-inline-start: 8px" onclick={() => arrayField.onAddWithInitValue({ name: 'Semi DSM', role: 'Designer' })}>Add new line with init value</Button>
+                <Button icon={plus} style="margin-inline-start: 8px" onclick={() => arrayField.onAddWithInitValue({ name: 'Semi Theme', role: 'Designer' })}>Add new line with init value</Button>
                 {#each arrayField.arrayFields as item (item.key)}
                     <div style="width: 1000px; display: flex">
                         <FormInput field={`${item.field}[name]`} label={`${item.field}.name`} style="width: 200px; margin-inline-end: 16px" />

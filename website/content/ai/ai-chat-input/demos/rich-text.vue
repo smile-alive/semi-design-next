@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { ref, useTemplateRef } from 'vue';
     import { AIChatInput, type AIChatInputHandle } from '@fibrae/semi-ai-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
     const temp = {
         'input-slot': '我是一个<input-slot placeholder="[职业]">程序员</input-slot>',
         'select-slot': `我是<select-slot value="前端开发" options='["设计","前端开发","后端开发"]'></select-slot>，帮我完成...`,

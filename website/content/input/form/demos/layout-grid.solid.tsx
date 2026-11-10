@@ -20,7 +20,7 @@ export default function FormDemo() {
                     <FormSelect label="业务线" field="business1" style={{ width: '250px' }}>
                         <FormSelect.Option value="abc">Semi</FormSelect.Option>
                         <FormSelect.Option value="ulikeCam">轻颜相机</FormSelect.Option>
-                        <FormSelect.Option value="toutiao">今日头条</FormSelect.Option>
+                        <FormSelect.Option value="news">资讯</FormSelect.Option>
                     </FormSelect>
                 </Col>
             </Row>
@@ -35,7 +35,7 @@ export default function FormDemo() {
                     <FormSelect label="业务线" field="business2" style={{ width: '200px' }}>
                         <FormSelect.Option value="abc">Semi</FormSelect.Option>
                         <FormSelect.Option value="ulikeCam">轻颜相机</FormSelect.Option>
-                        <FormSelect.Option value="toutiao">今日头条</FormSelect.Option>
+                        <FormSelect.Option value="news">资讯</FormSelect.Option>
                     </FormSelect>
                 </Col>
                 <Col span={6}>

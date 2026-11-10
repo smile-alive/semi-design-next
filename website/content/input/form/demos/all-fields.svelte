@@ -25,6 +25,7 @@
         Row,
         Space,
     } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     const today = new Date(2024, 4, 6, 10, 30, 0);
 
@@ -54,7 +55,7 @@
             },
             {
                 uid: '3',
-                name: 'douyin.jpeg',
+                name: 'video.jpeg',
                 status: 'uploading',
                 size: '222KB',
                 percent: 50,
@@ -98,7 +99,7 @@
     const businessOptions = [
         { label: 'Semi', value: 'abc' },
         { label: '轻颜相机', value: 'ulikeCam' },
-        { label: '今日头条', value: 'toutiao' },
+        { label: '资讯', value: 'news' },
     ];
 
     const style = 'width: 90%';
@@ -142,7 +143,7 @@
         </Row>
         <Row>
             <Col span={24}>
-                <FormUpload action="//semi.design/api/upload" field="files" label="证明文件（Upload）">
+                <FormUpload action="/upload" customRequest={mockUpload} field="files" label="证明文件（Upload）">
                     <Button theme="light">
                         {#snippet icon()}
                             <IconUpload />

@@ -1,8 +1,9 @@
 <script lang="ts">
     import { AIChatInput, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-svelte';
     import { Cascader } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
     const cascaderModalOptions = [
         {
             label: 'GPT',

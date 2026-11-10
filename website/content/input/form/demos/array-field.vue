@@ -3,7 +3,7 @@
     import { ArrayField, Button, Form, FormInput, FormSelect, TextArea } from '@fibrae/semi-ui-vue';
 
     const data = [
-        { name: 'Semi D2C', role: 'Engineer' },
+        { name: 'Semi Core', role: 'Engineer' },
         { name: 'Semi C2D', role: 'Designer' },
     ];
     const roleOptions = [
@@ -23,7 +23,7 @@
                         </template>
                         Add new line
                     </Button>
-                    <Button :style="{ marginInlineStart: '8px' }" @click="arrayField.onAddWithInitValue({ name: 'Semi DSM', role: 'Designer' })">
+                    <Button :style="{ marginInlineStart: '8px' }" @click="arrayField.onAddWithInitValue({ name: 'Semi Theme', role: 'Designer' })">
                         <template #icon>
                             <IconPlusCircle />
                         </template>

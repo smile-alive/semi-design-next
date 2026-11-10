@@ -2,7 +2,7 @@
     import { Button, Notification } from '@fibrae/semi-ui-vue';
 
     const show = () => {
-        Notification.info({ title: 'Hi', content: 'Hi, Bytedance dance dance', duration: 10, stack: true });
+        Notification.info({ title: 'Hi', content: 'Hi, Semi dance dance', duration: 10, stack: true });
     };
 </script>
 

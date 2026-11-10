@@ -1,8 +1,8 @@
-import { IconToutiaoLogo, IconVigoLogo } from '@fibrae/semi-icons-react';
+import { IconBell, IconHome } from '@fibrae/semi-icons-react';
 import { Notification, Button } from '@fibrae/semi-ui-react';
 
 const opts = {
-    title: 'Hi, Bytedance',
+    title: 'Hi, Semi',
     content: 'ies dance dance dance',
     duration: 3,
 };
@@ -25,18 +25,18 @@ export default function NotificationDemo() {
             </Button>
             <h5>自定义图标</h5>
             <Button
-                aria-label="Toutiao 图标通知"
-                icon={<IconToutiaoLogo />}
+                aria-label="铃铛图标通知"
+                icon={<IconBell />}
                 style={{ marginInlineEnd: 5 }}
                 onClick={() =>
                     Notification.info({
                         ...opts,
-                        icon: <IconToutiaoLogo style={{ color: 'red' }} />,
+                        icon: <IconBell style={{ color: 'red' }} />,
                     })
                 }
             />
-            <Button aria-label="Vigo 图标通知" icon={<IconVigoLogo />} style={{ marginInlineEnd: 5 }} onClick={() => Notification.info({ ...opts, icon: <IconVigoLogo /> })} />
-            <Button aria-label="粉色 Vigo 图标通知" icon={<IconVigoLogo />} onClick={() => Notification.info({ ...opts, icon: <IconVigoLogo style={{ color: 'pink' }} /> })} />
+            <Button aria-label="主页图标通知" icon={<IconHome />} style={{ marginInlineEnd: 5 }} onClick={() => Notification.info({ ...opts, icon: <IconHome /> })} />
+            <Button aria-label="粉色主页图标通知" icon={<IconHome />} onClick={() => Notification.info({ ...opts, icon: <IconHome style={{ color: 'pink' }} /> })} />
         </>
     );
 }

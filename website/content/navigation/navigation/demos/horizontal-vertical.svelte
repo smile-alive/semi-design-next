@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IconBytedanceLogo, IconSemiLogo } from '@fibrae/semi-icons-svelte';
+    import { IconSemiLogo } from '@fibrae/semi-icons-svelte';
     import { IconBadge, IconBreadcrumb, IconSteps, IconTreeSelect } from '@fibrae/semi-icons-svelte/lab';
     import { Avatar, Breadcrumb, Dropdown, Layout, Nav, Skeleton, type NavIconArgs, type NavItemConfig, type NavItemRenderProps, type NavItems } from '@fibrae/semi-ui-svelte';
 
@@ -37,8 +37,8 @@
 {#snippet footer()}
     <Nav.Footer>
         <Dropdown position="bottomRight">
-            <Avatar color="light-blue" size="small" style="margin: 4px">BD</Avatar>
-            <span>Bytedancer</span>
+            <Avatar color="light-blue" size="small" style="margin: 4px">SD</Avatar>
+            <span>Semi</span>
             {#snippet content()}
                 <Dropdown.Menu>
                     <Dropdown.Item>详情</Dropdown.Item>
@@ -73,16 +73,16 @@
                     {#snippet placeholder()}
                         <Skeleton.Paragraph rows={2} />
                     {/snippet}
-                    <p>Hi, Bytedance dance dance.</p>
-                    <p>Hi, Bytedance dance dance.</p>
+                    <p>Hi, Semi dance dance.</p>
+                    <p>Hi, Semi dance dance.</p>
                 </Skeleton>
             </div>
         </Layout.Content>
     </Layout>
     <Layout.Footer style="display: flex; justify-content: space-between; padding: 20px; color: var(--semi-color-text-2); background-color: var(--semi-grey-0)">
         <span style="display: flex; align-items: center">
-            <IconBytedanceLogo size="large" style="margin-inline-end: 8px" />
-            <span>Copyright © {currentYear} ByteDance. All Rights Reserved. </span>
+            <IconSemiLogo size="large" style="margin-inline-end: 8px" />
+            <span>Copyright © {currentYear} Semi Design Next. All Rights Reserved. </span>
         </span>
         <span>
             <span style="margin-inline-end: 24px">平台客服</span>

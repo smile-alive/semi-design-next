@@ -6,27 +6,27 @@ export default function TooltipDemo() {
 
     return (
         <div>
-            <Tooltip content="hi bytedance">
+            <Tooltip content="hi semi">
                 <Button theme="solid" type="tertiary" style={{ marginBlockEnd: 20 }}>
                     悬停显示
                 </Button>
             </Tooltip>
             <br />
-            <Tooltip content="hi bytedance" trigger="click">
+            <Tooltip content="hi semi" trigger="click">
                 <Button style={{ marginBlockEnd: 20 }}>点击显示</Button>
             </Tooltip>
             <br />
-            <Tooltip content="hi bytedance" trigger="focus">
+            <Tooltip content="hi semi" trigger="focus">
                 <Input aria-label="聚焦显示" style={{ width: 100, marginBlockEnd: 20 }} placeholder="聚焦显示" />
             </Tooltip>
             <br />
-            <Tooltip content="hi bytedance" trigger="contextMenu">
+            <Tooltip content="hi semi" trigger="contextMenu">
                 <Button theme="solid" type="secondary" style={{ marginBlockEnd: 20 }}>
                     右键点击展示
                 </Button>
             </Tooltip>
             <br />
-            <Tooltip content="hi bytedance" trigger="custom" visible={visible}>
+            <Tooltip content="hi semi" trigger="custom" visible={visible}>
                 <span style={{ display: 'inline-block' }}>
                     <RadioGroup type="button" onChange={(e) => setVisible(e.target.value)} value={visible}>
                         <Radio value>受控显示</Radio>

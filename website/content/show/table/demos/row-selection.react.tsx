@@ -45,7 +45,7 @@ const data: Row[] = [
     },
     {
         key: '4',
-        name: 'Semi D2C 设计稿.fig',
+        name: 'Semi 设计稿.fig',
         nameIconSrc: '/assets/placeholder/app.svg',
         size: '2M',
         owner: '姜鹏志',
@@ -55,7 +55,7 @@ const data: Row[] = [
     },
     {
         key: '5',
-        name: 'Semi D2C 分享演示文稿',
+        name: 'Semi 分享演示文稿',
         nameIconSrc: '/assets/docs-icon.png',
         size: '2M',
         owner: '郝宣',
@@ -65,7 +65,7 @@ const data: Row[] = [
     },
     {
         key: '6',
-        name: 'Semi D2C 设计文档',
+        name: 'Semi 设计文档',
         nameIconSrc: '/assets/docs-icon.png',
         size: '34KB',
         status: 'success',

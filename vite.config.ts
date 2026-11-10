@@ -16,7 +16,13 @@ export default defineConfig({
         rolldownOptions: { moduleTypes: { '.js': 'jsx' }, transform: { jsx: { runtime: 'automatic' } } },
     },
     resolve: {
-        alias: [{ find: /^lottie-web$/, replacement: resolve('vitest/__mocks__/lottie.ts') }, { find: /^lottie-web\/build\/player\/lottie_light$/, replacement: resolve('vitest/__mocks__/lottie-light.ts') }, ...semiSourceAliases, { find: '@test', replacement: resolve('vitest') }],
+        alias: [
+            { find: /^lottie-web$/, replacement: resolve('vitest/__mocks__/lottie.ts') },
+            { find: /^lottie-web\/build\/player\/lottie_light$/, replacement: resolve('vitest/__mocks__/lottie-light.ts') },
+            ...semiSourceAliases,
+            { find: '@test', replacement: resolve('vitest') },
+            { find: '#/', replacement: `${resolve('website/src')}/` },
+        ],
     },
     test: {
         maxWorkers: 2,

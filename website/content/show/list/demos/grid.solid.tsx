@@ -7,12 +7,12 @@ const data = [
         feedbacks: 124,
     },
     {
-        title: 'Semi DSM',
+        title: 'Semi Icons',
         rating: 4,
         feedbacks: 108,
     },
     {
-        title: 'Semi D2C',
+        title: 'Semi Theme',
         rating: 4.5,
         feedbacks: 244,
     },

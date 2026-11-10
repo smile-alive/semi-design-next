@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IconBell, IconBytedanceLogo, IconHelpCircle, IconHome, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-svelte';
+    import { IconBell, IconHelpCircle, IconHome, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-svelte';
     import { Avatar, Breadcrumb, Button, Layout, Nav, Skeleton } from '@fibrae/semi-ui-svelte';
 </script>
 
@@ -54,15 +54,15 @@
                 {#snippet placeholder()}
                     <Skeleton.Paragraph rows={2} />
                 {/snippet}
-                <p>Hi, Bytedance dance dance.</p>
-                <p>Hi, Bytedance dance dance.</p>
+                <p>Hi, Semi dance dance.</p>
+                <p>Hi, Semi dance dance.</p>
             </Skeleton>
         </div>
     </Layout.Content>
     <Layout.Footer style="display: flex; justify-content: space-between; padding: 20px; color: var(--semi-color-text-2); background-color: var(--semi-grey-0)">
         <span style="display: flex; align-items: center">
-            <IconBytedanceLogo size="large" style="margin-inline-end: 8px" />
-            <span>Copyright © 2023 ByteDance. All Rights Reserved. </span>
+            <IconSemiLogo size="large" style="margin-inline-end: 8px" />
+            <span>Copyright © 2023 Semi Design Next. All Rights Reserved. </span>
         </span>
         <span>
             <span style="margin-inline-end: 24px">平台客服</span>

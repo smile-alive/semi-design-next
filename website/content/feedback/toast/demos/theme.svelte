@@ -2,7 +2,7 @@
     import { Button, Toast } from '@fibrae/semi-ui-svelte';
 
     const opts = {
-        content: 'Hi, Bytedance dance dance',
+        content: 'Hi, Semi dance dance',
         duration: 3,
         theme: 'light',
     } as const;

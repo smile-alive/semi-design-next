@@ -5,8 +5,9 @@ import { Mention, type MentionNodeAttrs, type MentionOptions } from '@tiptap/ext
 import { ReactNodeViewRenderer, NodeViewWrapper, posToDOMRect, ReactRenderer, type ReactNodeViewProps } from '@tiptap/react';
 import { AIChatInput, type AIChatInputHandle, type AIChatInputAttachment as Attachment, type AIChatInputContent as Content, type AIChatInputReference as Reference, type AIChatInputRenderTopSlotProps as RenderTopSlotProps } from '@fibrae/semi-ai-react';
 import { IconFile, IconFolder, IconBranch, IconCode, IconGit, IconGlobeStroke, IconChevronRight, IconClose, IconUpload, IconTerminal, IconConnectionPoint2 } from '@fibrae/semi-icons-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: 12 };
 
 interface PanelItem {

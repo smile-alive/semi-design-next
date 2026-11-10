@@ -5,7 +5,7 @@ const steps: UserGuideStepItem[] = [
     {
         target: () => document.querySelector('#button-demo-1'),
         title: '新手引导',
-        description: 'Hello ByteDancer!',
+        description: 'Hello Semi!',
     },
     {
         target: () => document.querySelector('#button-demo-2'),

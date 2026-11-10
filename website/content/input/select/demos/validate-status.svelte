@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Select } from '@fibrae/semi-ui-svelte';
 
-    const optionList = [{ value: 'ulikecam', label: '轻颜相机' }];
+    const optionList = [{ value: 'camera', label: '相机' }];
 </script>
 
 <Select aria-label="default" {optionList} style="width: 180px" />

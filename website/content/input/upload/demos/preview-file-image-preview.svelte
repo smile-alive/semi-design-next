@@ -1,6 +1,7 @@
 <script lang="ts">
     import { IconDelete, IconDownload, IconExpand, IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, ImagePreview, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 
     let visible = $state(false);
     const defaultFileList: FileItem[] = [
@@ -15,7 +16,7 @@
     ];
 </script>
 
-<Upload action="https://api.semi.design/upload" fileList={defaultFileList} itemStyle="width: 300px">
+<Upload action="/upload" customRequest={mockUpload} fileList={defaultFileList} itemStyle="width: 300px">
     {#snippet fileOperation(fileItem)}
         <div style="display: flex; column-gap: 8px; padding: 0 8px">
             <Button aria-label="预览" size="small" theme="borderless" type="tertiary" onclick={() => (visible = true)}>

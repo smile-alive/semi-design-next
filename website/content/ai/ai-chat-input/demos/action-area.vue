@@ -2,8 +2,9 @@
     import { AIChatInput } from '@fibrae/semi-ai-vue';
     import { IconDeleteStroked } from '@fibrae/semi-icons-vue';
     import { Divider, Button } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 
-    const uploadProps = { action: 'https://api.semi.design/upload' };
+    const uploadProps = { action: '/upload', customRequest: mockUpload };
 </script>
 
 <template>

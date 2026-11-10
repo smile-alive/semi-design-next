@@ -1,16 +1,16 @@
 <script setup lang="ts">
     import { h } from 'vue';
-    import { IconToutiaoLogo, IconVigoLogo } from '@fibrae/semi-icons-vue';
+    import { IconBell, IconHome } from '@fibrae/semi-icons-vue';
     import { Button, Notification } from '@fibrae/semi-ui-vue';
 
     const opts = {
-        title: 'Hi, Bytedance',
+        title: 'Hi, Semi',
         content: 'ies dance dance dance',
         duration: 3,
     };
 
     // icon is a VNode or a render function, which a template cannot express
-    const showIcon = (icon: typeof IconVigoLogo, color?: string) => Notification.info({ ...opts, icon: h(icon, color ? { style: { color } } : null) });
+    const showIcon = (icon: typeof IconHome, color?: string) => Notification.info({ ...opts, icon: h(icon, color ? { style: { color } } : null) });
 </script>
 
 <template>
@@ -20,19 +20,19 @@
     <Button :style="{ margin: '4px' }" type="warning" @click="Notification.warning(opts)">Warning</Button>
     <Button :style="{ margin: '4px' }" type="danger" @click="Notification.error(opts)">Error</Button>
     <h5>自定义图标</h5>
-    <Button aria-label="Toutiao 图标通知" :style="{ marginInlineEnd: '5px' }" @click="showIcon(IconToutiaoLogo, 'red')">
+    <Button aria-label="铃铛图标通知" :style="{ marginInlineEnd: '5px' }" @click="showIcon(IconBell, 'red')">
         <template #icon>
-            <IconToutiaoLogo />
+            <IconBell />
         </template>
     </Button>
-    <Button aria-label="Vigo 图标通知" :style="{ marginInlineEnd: '5px' }" @click="showIcon(IconVigoLogo)">
+    <Button aria-label="主页图标通知" :style="{ marginInlineEnd: '5px' }" @click="showIcon(IconHome)">
         <template #icon>
-            <IconVigoLogo />
+            <IconHome />
         </template>
     </Button>
-    <Button aria-label="粉色 Vigo 图标通知" @click="showIcon(IconVigoLogo, 'pink')">
+    <Button aria-label="粉色主页图标通知" @click="showIcon(IconHome, 'pink')">
         <template #icon>
-            <IconVigoLogo />
+            <IconHome />
         </template>
     </Button>
 </template>

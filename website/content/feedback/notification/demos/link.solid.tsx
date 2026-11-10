@@ -9,7 +9,7 @@ export default function NotificationDemo() {
                     title: 'This is a title',
                     content: (
                         <>
-                            <div>Hi, Bytedance dance dance</div>
+                            <div>Hi, Semi dance dance</div>
                             <div style={{ 'margin-block-start': '8px' }}>
                                 <Typography.Text link>查看详情</Typography.Text>
                                 <Typography.Text link style={{ 'margin-inline-start': '20px' }}>

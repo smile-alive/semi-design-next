@@ -1,9 +1,10 @@
 <script lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Tooltip, Upload } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 </script>
 
-<Upload action="https://api.semi.design/upload" showTooltip>
+<Upload action="/upload" customRequest={mockUpload} showTooltip>
     {#snippet ellipsisTooltip({ content: text, trigger })}
         <Tooltip position="bottom">
             {#snippet content()}{text}{/snippet}

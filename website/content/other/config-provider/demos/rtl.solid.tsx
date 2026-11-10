@@ -56,8 +56,8 @@ export default function ConfigProviderDemo() {
     const [direction, setDirection] = createSignal<'ltr' | 'rtl'>();
     // Read at each call so a notification shows the direction selected at the time it is opened
     const opts = () => ({
-        title: 'Hi,Bytedance',
-        content: 'ies dance dance dance',
+        title: 'Hi,semi',
+        content: 'Semi Design Next',
         duration: 3,
         direction: direction(),
     });
@@ -156,32 +156,32 @@ export default function ConfigProviderDemo() {
                         <br />
                         <br />
                         <Select aria-label="选择器-单选" style={{ width: '100%' }} placeholder="选择器-单选">
-                            <Select.Option value="abc">抖音</Select.Option>
-                            <Select.Option value="hotsoon">火山</Select.Option>
-                            <Select.Option value="pipixia" disabled>
-                                皮皮虾
+                            <Select.Option value="video">短视频</Select.Option>
+                            <Select.Option value="live">直播</Select.Option>
+                            <Select.Option value="community" disabled>
+                                社区
                             </Select.Option>
-                            <Select.Option value="xigua">西瓜视频</Select.Option>
+                            <Select.Option value="movie">长视频</Select.Option>
                         </Select>
                         <br />
                         <br />
                         <Select aria-label="选择器-禁用" disabled style={{ width: '100%' }} placeholder="选择器-禁用">
-                            <Select.Option value="abc">抖音</Select.Option>
-                            <Select.Option value="hotsoon">火山</Select.Option>
-                            <Select.Option value="pipixia" disabled>
-                                皮皮虾
+                            <Select.Option value="video">短视频</Select.Option>
+                            <Select.Option value="live">直播</Select.Option>
+                            <Select.Option value="community" disabled>
+                                社区
                             </Select.Option>
-                            <Select.Option value="xigua">西瓜视频</Select.Option>
+                            <Select.Option value="movie">长视频</Select.Option>
                         </Select>
                         <br />
                         <br />
                         <Select aria-label="选择器-多选" multiple style={{ width: '100%' }} placeholder="选择器-多选">
-                            <Select.Option value="abc">抖音</Select.Option>
-                            <Select.Option value="hotsoon">火山</Select.Option>
-                            <Select.Option value="pipixia" disabled>
-                                皮皮虾
+                            <Select.Option value="video">短视频</Select.Option>
+                            <Select.Option value="live">直播</Select.Option>
+                            <Select.Option value="community" disabled>
+                                社区
                             </Select.Option>
-                            <Select.Option value="xigua">西瓜视频</Select.Option>
+                            <Select.Option value="movie">长视频</Select.Option>
                         </Select>
                         <br />
                         <br />

@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js';
 import { Chat, type ChatMessage as Message } from '@fibrae/semi-ai-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
 const defaultMessage: Message[] = [
     {
@@ -46,7 +47,7 @@ let id = 0;
 function getId() {
     return `id-${id++}`;
 }
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 
 export default function ChatDemo() {
     const [message, setMessage] = createSignal<Message[]>(defaultMessage);

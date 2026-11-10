@@ -1,7 +1,7 @@
 <script lang="ts">
     import { TagInput } from '@fibrae/semi-ui-svelte';
 
-    let value = $state(['抖音', '火山', '西瓜视频']);
+    let value = $state(['短视频', '直播', '长视频']);
 </script>
 
 <TagInput allowDuplicates={false} bind:value draggable onChange={(v) => console.log(v)} placeholder="请输入..." />

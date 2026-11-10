@@ -1,9 +1,10 @@
 <script lang="ts">
     import { IconBolt } from '@fibrae/semi-icons-svelte';
     import { Upload } from '@fibrae/semi-ui-svelte';
+    import { mockUpload } from '#/lib/mock-upload';
 </script>
 
-<Upload accept="application/pdf,.jpeg" action="https://api.semi.design/upload" draggable style="margin-top: 10px">
+<Upload accept="application/pdf,.jpeg" action="/upload" customRequest={mockUpload} draggable style="margin-top: 10px">
     {#snippet dragIcon()}
         <IconBolt />
     {/snippet}

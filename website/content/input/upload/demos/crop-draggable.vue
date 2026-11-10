@@ -1,15 +1,17 @@
 <script setup lang="ts">
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload } from '@fibrae/semi-ui-vue';
+    import { mockUpload } from '#/lib/mock-upload';
 </script>
 
 <template>
     <Upload
-        action="https://api.semi.design/upload"
+        action="/upload"
         :crop="{
             aspectRatio: 1,
             shape: 'rect',
         }"
+        :customRequest="mockUpload"
         draggable
         @drop="(_e, files) => console.log('拖拽文件:', files)"
         @success="(response, file) => console.log('上传成功:', response, file)"

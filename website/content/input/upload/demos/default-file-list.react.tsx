@@ -1,7 +1,8 @@
 import { IconUpload } from '@fibrae/semi-icons-react';
 import { Upload, Button, type FileItem } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
-const action = 'https://api.semi.design/upload';
+const action = '/upload';
 
 const defaultFileList: FileItem[] = [
     {
@@ -25,7 +26,7 @@ const defaultFileList: FileItem[] = [
 
 export default function UploadDemo() {
     return (
-        <Upload action={action} defaultFileList={defaultFileList}>
+        <Upload action={action} customRequest={mockUpload} defaultFileList={defaultFileList}>
             <Button icon={<IconUpload />} theme="light">
                 点击上传
             </Button>

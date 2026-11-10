@@ -5,7 +5,7 @@ const steps = [
     {
         target: () => document.querySelector('#position-demo'),
         title: '新手引导',
-        description: 'Hello ByteDancer!',
+        description: 'Hello Semi!',
         position: 'top',
     },
     {

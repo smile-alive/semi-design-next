@@ -1,7 +1,8 @@
 import { createSignal } from 'solid-js';
 import { AIChatInput, type AIChatInputReference as Reference } from '@fibrae/semi-ai-solid';
+import { mockUpload } from '#/lib/mock-upload';
 
-const uploadProps = { action: 'https://api.semi.design/upload' };
+const uploadProps = { action: '/upload', customRequest: mockUpload };
 const outerStyle = { margin: '12px' };
 const referenceTemp: Reference[] = [
     {
@@ -11,11 +12,11 @@ const referenceTemp: Reference[] = [
     },
     {
         id: '2',
-        name: '飞书文档.docx',
+        name: '办公文档.docx',
     },
     {
         id: '3',
-        name: '飞书文档.pdf',
+        name: '办公文档.pdf',
     },
     {
         id: '4',

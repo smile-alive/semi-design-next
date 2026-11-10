@@ -4,12 +4,12 @@
 
     // content is a VNode or a render function, which a template cannot express
     const opts = {
-        content: () => h('span', [h(Typography.Text, () => 'Hi, Bytedance dance dance'), h(Typography.Text, { link: true, style: { marginInlineStart: '12px' } }, () => '更多')]),
+        content: () => h('span', [h(Typography.Text, () => 'Hi, Semi dance dance'), h(Typography.Text, { link: true, style: { marginInlineStart: '12px' } }, () => '更多')]),
         duration: 3,
     };
 
     const multiLineOpts = {
-        content: () => [h('div', 'Hi, Bytedance dance dance'), h('div', { style: { marginBlockStart: '8px' } }, [h(Typography.Text, { link: true }, () => '查看详情'), h(Typography.Text, { link: true, style: { marginInlineStart: '20px' } }, () => '一会再看')])],
+        content: () => [h('div', 'Hi, Semi dance dance'), h('div', { style: { marginBlockStart: '8px' } }, [h(Typography.Text, { link: true }, () => '查看详情'), h(Typography.Text, { link: true, style: { marginInlineStart: '20px' } }, () => '一会再看')])],
         duration: 3,
     };
 </script>

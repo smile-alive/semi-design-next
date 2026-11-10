@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { IconBytedanceLogo, IconSemiLogo } from '@fibrae/semi-icons-vue';
+    import { IconSemiLogo } from '@fibrae/semi-icons-vue';
     import { IconBadge, IconBreadcrumb, IconSteps, IconTreeSelect } from '@fibrae/semi-icons-vue/lab';
     import { Avatar, Breadcrumb, Dropdown, Layout, Nav, Skeleton, type NavItemConfig, type NavItems } from '@fibrae/semi-ui-vue';
 
@@ -37,8 +37,8 @@
                     </template>
                     <template #footer>
                         <Dropdown position="bottomRight">
-                            <Avatar color="light-blue" size="small" :style="{ margin: '4px' }">BD</Avatar>
-                            <span>Bytedancer</span>
+                            <Avatar color="light-blue" size="small" :style="{ margin: '4px' }">SD</Avatar>
+                            <span>Semi</span>
                             <template #content>
                                 <Dropdown.Menu>
                                     <Dropdown.Item>详情</Dropdown.Item>
@@ -77,8 +77,8 @@
                         <template #placeholder>
                             <Skeleton.Paragraph :rows="2" />
                         </template>
-                        <p>Hi, Bytedance dance dance.</p>
-                        <p>Hi, Bytedance dance dance.</p>
+                        <p>Hi, Semi dance dance.</p>
+                        <p>Hi, Semi dance dance.</p>
                     </Skeleton>
                 </div>
             </Layout.Content>
@@ -93,8 +93,8 @@
             }"
         >
             <span :style="{ display: 'flex', alignItems: 'center' }">
-                <IconBytedanceLogo size="large" :style="{ marginInlineEnd: '8px' }" />
-                <span>Copyright © {{ currentYear }} ByteDance. All Rights Reserved. </span>
+                <IconSemiLogo size="large" :style="{ marginInlineEnd: '8px' }" />
+                <span>Copyright © {{ currentYear }} Semi Design Next. All Rights Reserved. </span>
             </span>
             <span>
                 <span :style="{ marginInlineEnd: '24px' }">平台客服</span>

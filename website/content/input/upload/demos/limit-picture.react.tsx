@@ -1,5 +1,6 @@
 import { IconPlus } from '@fibrae/semi-icons-react';
 import { Upload, Toast, type FileItem } from '@fibrae/semi-ui-react';
+import { mockUpload } from '#/lib/mock-upload';
 
 const defaultFileList: FileItem[] = [
     {
@@ -23,7 +24,7 @@ const defaultFileList: FileItem[] = [
 
 export default function UploadDemo() {
     return (
-        <Upload action="https://api.semi.design/upload" limit={2} listType="picture" accept="image/*" defaultFileList={defaultFileList} onExceed={() => Toast.warning('最多只允许上传2个文件')}>
+        <Upload action="/upload" customRequest={mockUpload} limit={2} listType="picture" accept="image/*" defaultFileList={defaultFileList} onExceed={() => Toast.warning('最多只允许上传2个文件')}>
             <IconPlus aria-label="上传图片" size="extra-large" />
         </Upload>
     );
