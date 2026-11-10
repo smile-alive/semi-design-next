@@ -7,6 +7,7 @@ import NotificationFoundation, { type NoticeAdapter, type NoticeProps, type Noti
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-react';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { hasContent, isSemiIcon } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
 import Button from '../icon-button';
@@ -84,7 +85,7 @@ export default function Notice(rawProps: NoticeReactProps) {
     const direction = directionProp || context.direction;
     const hasTitle = hasContent(title);
     const hasBody = hasContent(content);
-    const typeIcon = icon || iconMap[type];
+    const typeIcon = useUnwrappedLazy(icon || iconMap[type]);
     const isAlert = isAlertType(type);
 
     useLayoutEffect(() => {

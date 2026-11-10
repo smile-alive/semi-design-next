@@ -5,7 +5,7 @@ import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigati
 import NavigationFoundation, { type NavigationAdapter, type NavigationState, type NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { type ElementProps, type BaseProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useMergedRef } from '../../hooks/index';
+import { useMergedRef, useUnwrappedLazy } from '../../hooks/index';
 import { elementTypeOf, flattenChildren } from '../../utils/index';
 import type { DropdownProps } from '../dropdown';
 import useLocale from '../locale/use-locale';
@@ -150,8 +150,8 @@ function Nav(rawProps: NavProps) {
         tooltipShowDelay,
         tooltipHideDelay,
         bodyStyle,
-        footer,
-        header,
+        footer: rawFooter,
+        header: rawHeader,
         toggleIconPosition,
         limitIndent,
         renderWrapper,
@@ -169,6 +169,8 @@ function Nav(rawProps: NavProps) {
     } = props;
 
     const { locale } = useLocale('Navigation');
+    const footer = useUnwrappedLazy(rawFooter);
+    const header = useUnwrappedLazy(rawHeader);
 
     const [collapseAnimating, setCollapseAnimating] = useState(false);
 

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { strings, cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import type { ElementProps, BaseProps } from '../../base/index';
+import { useUnwrappedLazy } from '../../hooks/index';
 import CollapseButton from './collapse-button';
 import { useNavContext } from './context';
 
@@ -15,8 +16,9 @@ export interface NavFooterProps extends BaseProps, ElementProps<'div', 'onClick'
     ref?: React.Ref<HTMLDivElement>;
 }
 
-function NavFooter({ ref, style, className, collapseButton = false, collapseText, onClick, children, ...rest }: NavFooterProps) {
+function NavFooter({ ref, style, className, collapseButton: rawCollapseButton = false, collapseText, onClick, children, ...rest }: NavFooterProps) {
     const { isCollapsed, mode, toggleCollapsed, locale } = useNavContext();
+    const collapseButton = useUnwrappedLazy(rawCollapseButton);
 
     let content: React.ReactNode = children;
 

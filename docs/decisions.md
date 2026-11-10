@@ -13,26 +13,14 @@
 
 ## 待办与待核实
 
-- **待处理** Cropper：RTL 下图片、裁剪框与预览只设 `transform`、不设 `left`，推测会错位（先截图确认；成立时让定位层固定 `direction: ltr` 或补 `inset-inline-start: 0`）。
-- **待处理** Dropdown：React、Solid 浏览器用例「子菜单被关闭后在父项按 ArrowRight 再次打开」在全量同跑时偶发失败，首项没按时获得焦点（先查打开后聚焦首项的时序）。
-- **待核实** Tooltip，Svelte：在外部元素的 mousedown 里打开受控弹层（`trigger="custom"`）时，同一次按下可能被判为点击外部而立即关闭（用 svelte-browser 写复现）。
-- **待核实** Tooltip，React：Server Component 传入的节点属性（Image 预览的 `leftIcon`、Nav 的 `collapseButton`、Table 的 `filterDropdown` 等）在 Next dev 下可能以 lazy 元素到达，走默认分支（在 next-app 的 rsc 页面看 dev console）。
-- **待核实** Descriptions：横向布局一行多组 th/td，没有 `scope`、`headers` 关联，读屏可能读不出键值对应（实机核实后用 `useId` 加 `headers`）。
-- **待核实** JsonViewer：浏览器用例「编辑」与覆盖率、站点扫描同跑时偶发 15 秒超时（下次 `check:full` 观察；仍出现时拆成撤销、补全、搜索替换三条用例定位）。
+- **待处理** 测试，React：`hydrateFromServer` 只移走 `document`，按 `typeof window` 分支的依赖在服务端也走浏览器分支，这类 hydration 不一致只有 check-pages 能发现（改为读取 `react-ssr` 项目在 Node 中产出的 HTML）。
 - **待核实** ScrollList：cycled wheel 按整段副本跳转 `scrollTop`，触控板与 iOS Safari 的惯性滚动可能被打断（真机验证；受影响时改为滚动停止后再跳转）。
 - **待核实** Toast：播报区在真实读屏器中没验证过，相同文本 1 秒内连播可能不播报（VoiceOver、NVDA 实机核对）。
-- **待核实** Tabs，Vue：`collapsible="auto"` 折叠后，要放大到比标签总宽多 6px 才展开，不确定是否是有意的回差（对照 React 同一情形）。
-- **待核实** Modal：`aria-modal` 对话框外 Portal 到 body 的下拉 listbox 是否被读屏视为不可达（SideSheet、Image 预览同；实机核对）。
-- **待核实** Navigation：RTL 下布局没做改动前后对比（补 RTL 快照比对）。
+- **待核实** Navigation：RTL 下折叠态悬停弹出的子菜单与横向模式的 Dropdown 子菜单没核对位置（展开、折叠、横向的主体布局已确认镜像正确；补这两处的 RTL 截图比对）。
 - **待核实** Typography：复制成功后的读屏播报因读屏而异（实机核对）。
 - **待核实** Input：输入法组合中失焦时 Input 是否要像 TextArea 一样按 `maxLength` 截断；Vue TextArea 同设 `maxlength` 与 `composition` 时，受控或 `v-model.lazy` 下截断结果可能与显示不一致（真实输入法复现后补用例）。
-- **待核实** Input：自动填充靠延迟 `transition` 保持主题色，只在 Chromium 实测，Firefox、Safari 可能仍显示自动填充底色。
-- **待核实** Image：RTL 下 prev、next 按钮的竖向居中没目视核对。
-- **待核实** AutoComplete：浏览器用例「下拉宽度不小于触发器宽度」连跑时偶发 109px（复现时记录 `--semi-tooltip-trigger-width` 与触发器宽度）。
 - **待核实** Tree：键盘用 `aria-activedescendant` 而不是 roving tabindex，读屏效果没验证（VoiceOver、NVDA 实机）。
-- **待核实** AIChatInput：浏览器用例「方向键移到长列表末项时面板滚动」在全量 coverage 中失败过一次（失败时记录面板 `clientHeight`、`scrollHeight`）。
 - **待核实** AIChatInput：macOS Chrome 从 Finder 复制文件后粘贴，剪贴板是否同时带文件名和文件（只带文件名时只插入文字、不上传）。
-- **待核实** 测试，React：`hydrateFromServer` 只移走 `document`，按 `typeof window` 分支的依赖在服务端也走浏览器分支，这类 hydration 不一致只有 check-pages 能发现（改为读取 `react-ssr` 项目在 Node 中产出的 HTML）。
 
 ## 全局决策
 
@@ -225,7 +213,7 @@ lint 经 oxlint jsPlugins 接 eslint-plugin-solid 的 TypeScript 预设。受控
 
 **范围**（2026-10-25）
 
-React、Vue、Solid、Svelte 支持服务端渲染与 hydration，React 另支持 RSC 客户端边界。`semi-ui-react`、`semi-ai-react` 的 `dist` 里除入口 `index.js` 以外的模块首行加 `'use client'`，图标包不加。只给导入 react 的模块加不够：有些模块在顶层调用 client 模块的函数，在服务端求值就会抛错。
+React、Vue、Solid、Svelte 支持服务端渲染与 hydration，React 另支持 RSC 客户端边界。`semi-ui-react`、`semi-ai-react`、`semi-icons-react` 的 `dist` 里除入口以外的模块首行加 `'use client'`。只给导入 react 的模块加不够：有些模块在顶层调用 client 模块的函数，在服务端求值就会抛错。图标也要加：组件按 `elementType` 识别图标，不加时 Server Component 里的图标在服务端渲染成普通 `span`，组件认不出（与 lucide-react、MUI、Ant Design 的图标包相同）。
 
 **默认打开的弹层**（2026-10-25）
 

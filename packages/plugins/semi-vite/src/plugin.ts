@@ -16,7 +16,7 @@ const SEMI_NO_EXTERNAL_RE = /@fibrae\/semi-(ui|ai|icons)-(react|vue)(\/|$)/;
 // Foundation holds BASE_CLASS_PREFIX, which `prefixCls` rewrites in the module itself: left external, Node would load the
 // original and the server's class names would differ from the client bundle's
 const SEMI_FOUNDATION_RE = /@fibrae\/semi-(ai-)?foundation(\/|$)/;
-const SEMI_REACT_DIST_RE = /@fibrae[\\/]+semi-(ui|ai)-react[\\/]+dist[\\/]/;
+const SEMI_REACT_DIST_RE = /@fibrae[\\/]+semi-(ui|ai|icons)-react[\\/]+dist[\\/]/;
 const SOLID_PACKAGES = ['@fibrae/semi-ui-solid', '@fibrae/semi-ai-solid'];
 const FOUNDATION_NAME_RE = /^@fibrae\/semi-(ai-)?foundation$/;
 // CommonJS files foundation imports by a deep path the dependency does not export, so they are not found by name; keep

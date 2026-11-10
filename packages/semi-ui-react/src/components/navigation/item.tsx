@@ -7,7 +7,7 @@ import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/
 import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import { type ElementProps, type BaseProps, useFoundation } from '../../base/index';
-import { useMergedRef } from '../../hooks/index';
+import { useMergedRef, useUnwrappedLazy } from '../../hooks/index';
 import Dropdown from '../dropdown';
 import Tooltip from '../tooltip';
 import { type NavContextType, useNavContext } from './context';
@@ -61,9 +61,11 @@ interface NavItemShellProps extends NavItemProps {
 type FoundationProps = NavItemProps & { itemConfig?: NavItemType };
 
 export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...props }: NavItemShellProps): React.ReactNode {
-    const { text, icon, toggleIcon, className, isSubNav = false, style, indent = false, onMouseEnter, onMouseLeave, link, linkOptions, disabled = false, level = 0, tabIndex, itemKey, isCollapsed: isCollapsedProp, forwardRef, onClick, tooltipHideDelay, tooltipShowDelay, ...rest } = props;
+    const { text, icon: rawIcon, toggleIcon: rawToggleIcon, className, isSubNav = false, style, indent = false, onMouseEnter, onMouseLeave, link, linkOptions, disabled = false, level = 0, tabIndex, itemKey, isCollapsed: isCollapsedProp, forwardRef, onClick, tooltipHideDelay, tooltipShowDelay, ...rest } = props;
 
     const context = useNavContext();
+    const icon = useUnwrappedLazy(rawIcon);
+    const toggleIcon = useUnwrappedLazy(rawToggleIcon);
 
     let itemChildren: React.ReactNode = null;
 

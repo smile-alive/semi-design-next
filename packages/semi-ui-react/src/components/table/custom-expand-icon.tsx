@@ -2,6 +2,7 @@ import React from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import { noop } from '@fibrae/semi-foundation/utils';
 import { IconChevronRight, IconTreeTriangleRight } from '@fibrae/semi-icons-react';
+import { useUnwrappedLazy } from '../../hooks/index';
 import CSSAnimation from '../../internal/css-animation';
 import useLocale from '../locale/use-locale';
 
@@ -15,8 +16,9 @@ export interface CustomExpandIconProps {
     prefixCls?: string;
 }
 
-export default function CustomExpandIcon({ expanded, componentType = 'expand', onClick = noop, onMouseEnter = noop, onMouseLeave = noop, expandIcon, prefixCls = cssClasses.PREFIX }: CustomExpandIconProps) {
+export default function CustomExpandIcon({ expanded, componentType = 'expand', onClick = noop, onMouseEnter = noop, onMouseLeave = noop, expandIcon: rawExpandIcon, prefixCls = cssClasses.PREFIX }: CustomExpandIconProps) {
     const { locale } = useLocale('Table');
+    const expandIcon = useUnwrappedLazy(rawExpandIcon);
 
     let icon;
 

@@ -300,7 +300,8 @@ export function canCarryPopupState(child: React.ReactElement<Record<string, any>
 
 export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<TooltipHandle> }) {
     const props = useDefaultProps('Tooltip', rawProps as TooltipInternalProps & { ref?: React.Ref<TooltipHandle> }, defaultProps);
-    const { wrapWhenSpecial, role, trigger, wrapperClassName, showArrow, prefixCls, style, content, motion, className: propClassName } = props;
+    const { wrapWhenSpecial, role, trigger, wrapperClassName, prefixCls, style, content, motion, className: propClassName } = props;
+    const showArrow = useUnwrappedLazy(props.showArrow);
 
     const context = useConfigContext();
 

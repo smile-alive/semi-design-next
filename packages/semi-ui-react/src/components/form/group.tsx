@@ -5,6 +5,7 @@ import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
 import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
 import { joinIds, warning } from '@fibrae/semi-foundation/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { flattenChildren } from '../../utils/index';
 import { Col } from '../grid/index';
 import InputGroup, { type InputGroupProps as BacisInputGroupProps } from '../input/input-group';
@@ -48,9 +49,10 @@ function GroupError(props: GroupErrorProps) {
 }
 
 export default function FormInputGroup(props: InputGroupProps) {
-    const { children, label, extraText, extraTextPosition = 'bottom', 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, 'aria-errormessage': _ariaErrormessage, ...rest } = props as InputGroupProps & Record<`aria-${string}`, string | undefined>;
+    const { children, label: rawLabel, extraText, extraTextPosition = 'bottom', 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, 'aria-errormessage': _ariaErrormessage, ...rest } = props as InputGroupProps & Record<`aria-${string}`, string | undefined>;
 
     const fieldBridge = useFieldBridgeContext();
+    const label = useUnwrappedLazy(rawLabel);
 
     const generatedId = useId();
 

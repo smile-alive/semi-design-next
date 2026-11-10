@@ -6,6 +6,7 @@ import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
 import { type FieldRegistrationView, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveFieldView } from '@fibrae/semi-foundation/components/form/utils';
 import { shallowEqualObjects, warning } from '@fibrae/semi-foundation/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { cloneDeep, hasContent } from '../../utils/index';
 import { Col, Row } from '../grid';
 import ErrorMessage, { type ErrorMessageInternalProps } from './error-message';
@@ -99,7 +100,8 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
     const Control: React.ElementType = Component;
 
     function InjectedField(props: any) {
-        const { field, label, noLabel, noErrorMessage, isInInputGroup, initValue, validateStatus, rules, name, fieldClassName, fieldStyle, helpText, extraText, pure, id } = props;
+        const { field, noLabel, noErrorMessage, isInInputGroup, initValue, validateStatus, rules, name, fieldClassName, fieldStyle, helpText, extraText, pure, id } = props;
+        const label = useUnwrappedLazy(props.label);
         const rest = controlProps(props);
         const { options } = mergeOptions(opts, props);
 

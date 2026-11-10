@@ -282,7 +282,7 @@ export default function Page() {
             <Button id="rsc-button" theme="solid" type="primary">
                 rsc button
             </Button>
-            <Input id="rsc-input" defaultValue="rsc-input-value" />
+            <Input id="rsc-input" defaultValue="rsc-input-value" prefix={<IconHome id="rsc-prefix-icon" />} />
             <Tooltip content="rsc tooltip content">
                 <Button id="rsc-tooltip-trigger">rsc hover</Button>
             </Tooltip>
@@ -363,11 +363,17 @@ const heavyPage: HostPage = {
 // Not named `lang`: langIsolation() is the server check of that name and ids must be unique within a step
 const localePage: HostPage = { name: 'locale', path: '/lang', ready: READY, checks: [ssrText('ssr-locale', ['No Result']), idsStable()] };
 
+// Input recognizes the icon by its elementType only if the icon module is a client boundary
+const rscPrefixIcon: PageCheck = {
+    name: 'rsc-prefix-icon',
+    run: async ({ page }) => page.locator('.semi-input-prefix-icon #rsc-prefix-icon').waitFor({ state: 'attached' }),
+};
+
 const rscPage: HostPage = {
     name: 'rsc',
     path: '/rsc',
     ready: READY,
-    checks: [ssrText('ssr-rsc', ['rsc title', 'rsc text', 'rsc-input-value']), idsStable(), primaryButton('#rsc-button'), tooltipHover('#rsc-tooltip-trigger', 'rsc tooltip content')],
+    checks: [ssrText('ssr-rsc', ['rsc title', 'rsc text', 'rsc-input-value']), idsStable(), primaryButton('#rsc-button'), tooltipHover('#rsc-tooltip-trigger', 'rsc tooltip content'), rscPrefixIcon],
 };
 
 const allExportsPage: HostPage = { name: 'all-exports', path: '/all-exports', ready: READY, checks: [allExports('#all-exports')] };

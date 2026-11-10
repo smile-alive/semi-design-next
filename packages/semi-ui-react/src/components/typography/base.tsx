@@ -6,7 +6,7 @@ import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/cop
 import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import { warning } from '@fibrae/semi-foundation/utils';
 import type { BaseProps } from '../../base/index';
-import { useFocusHandover, useMergedRef } from '../../hooks/index';
+import { useFocusHandover, useMergedRef, useUnwrappedLazy } from '../../hooks/index';
 import ReactResizeObserver, { ObserverProperty } from '../../internal/resize-observer';
 import { isSemiIcon } from '../../utils/index';
 import type { IconSize as Size } from '../icons/index';
@@ -169,7 +169,7 @@ export default function Base({
     disabled = false,
     style,
     ellipsis = false,
-    icon = '',
+    icon: rawIcon = '',
     size = 'normal',
     link = false,
     headingTag,
@@ -185,6 +185,7 @@ export default function Base({
 }: BaseTypographyProps): React.ReactNode {
     const contextSize = useSizeContext();
     const { locale } = useLocale('Typography');
+    const icon = useUnwrappedLazy(rawIcon);
 
     const wrapperRef = useRef<HTMLElement>(null);
     const expandRef = useRef<HTMLButtonElement>(null);

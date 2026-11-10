@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import { IconCopy, IconTick } from '@fibrae/semi-icons-react';
 import type { BaseProps } from '../../base/index';
-import { useCopied, useDidUpdate } from '../../hooks/index';
+import { useCopied, useDidUpdate, useUnwrappedLazy } from '../../hooks/index';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip/index';
 import type { CopyableConfig } from './interface';
@@ -30,7 +30,9 @@ interface CopyableInnerProps extends CopyableProps {
 }
 
 export default function Copyable(props: CopyableInnerProps) {
-    const { content, copyTip, duration, ref, successTip, icon, onCopy, onCopiedChange, render, style, className } = props;
+    const { content, copyTip, duration, ref, onCopy, onCopiedChange, render, style, className } = props;
+    const successTip = useUnwrappedLazy(props.successTip);
+    const icon = useUnwrappedLazy(props.icon);
 
     const { locale } = useLocale('Typography');
 

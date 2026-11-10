@@ -4,6 +4,7 @@ import { debounce } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
 import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
 import { IconTreeTriangleDown, IconFile, IconFolder, IconFolderOpen } from '@fibrae/semi-icons-react';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { Checkbox } from '../checkbox';
 import Highlight from '../highlight';
 import Spin from '../spin';
@@ -19,9 +20,10 @@ function isEmptyStyle(style: React.CSSProperties) {
 
 /** The row takes no focus: the tree keeps it and points at the row with aria-activedescendant (`id`, `focused`) */
 function TreeNode(props: TreeNodeProps): React.ReactNode {
-    const { id, focused, eventKey, expanded, checked, halfChecked, loading, level, empty, emptyContent, filtered, style, isEnd, showLine, expandIcon, disabled: disabledProp, icon, label, keyword, data } = props;
+    const { id, focused, eventKey, expanded, checked, halfChecked, loading, level, empty, emptyContent, filtered, style, isEnd, showLine, disabled: disabledProp, icon, label, keyword, data } = props;
 
     const context = useTreeContext('Tree.Node');
+    const expandIcon = useUnwrappedLazy(props.expandIcon);
 
     // a double-click expands, so clicks right after the first do not select again
     const [debouncedSelect] = useState(() => debounce((select: () => void) => select(), 500, { edges: ['leading'] }));

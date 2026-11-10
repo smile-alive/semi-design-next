@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { isEqualWith } from 'es-toolkit';
 import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
-import elementTypeOf from './element-type';
+import elementTypeOf, { REACT_LAZY_TYPE } from './element-type';
 
 export { default as elementTypeOf } from './element-type';
 export { default as flattenChildren } from './flatten-children';
@@ -29,11 +29,17 @@ export function cloneDeep<T>(value: T) {
 
 /**
  * An `isEqualWith` customizer that compares React elements by type, key and props: a plain deep compare would also
- * walk the dev-only `_owner` fiber, and with it the component tree
+ * walk the dev-only `_owner` fiber, and with it the component tree. A lazy node (a Server Component's element in dev)
+ * compares by its Flight chunk, whose `_response` holds every chunk of the page
  */
 export function isSameNode(a: unknown, b: unknown): boolean | undefined {
     if (React.isValidElement(a) && React.isValidElement(b)) {
         return a.type === b.type && a.key === b.key && isEqualWith(a.props, b.props, isSameNode);
+    }
+    const lazyA = (a as { $$typeof?: symbol })?.$$typeof === REACT_LAZY_TYPE;
+    const lazyB = (b as { $$typeof?: symbol })?.$$typeof === REACT_LAZY_TYPE;
+    if (lazyA || lazyB) {
+        return lazyA && lazyB && (a as { _payload: unknown })._payload === (b as { _payload: unknown })._payload;
     }
     return undefined;
 }

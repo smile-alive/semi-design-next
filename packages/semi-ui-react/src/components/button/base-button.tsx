@@ -7,6 +7,7 @@ import type { Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/button/button.scss';
 import '@fibrae/semi-foundation/components/button/icon-button.scss';
 import { IconAILoading } from '@fibrae/semi-icons-react';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { hasContent } from '../../utils/index';
 import SpinIcon from '../spin/icon';
 
@@ -60,7 +61,7 @@ export default function BaseButton({
     theme: rawTheme,
     type: rawType,
     colorful: rawColorful,
-    icon,
+    icon: rawIcon,
     iconPosition = strings.DEFAULT_ICON_POSITION,
     noHorizontalPadding = false,
     contentClassName,
@@ -69,6 +70,7 @@ export default function BaseButton({
     'x-semi-children-alias': childrenAlias,
     ...attr
 }: ButtonProps & { 'x-semi-children-alias'?: string }) {
+    const icon = useUnwrappedLazy(rawIcon);
     let iconElem: React.ReactNode = null;
 
     const { disabled, size, type, theme, colorful } = resolveButtonLooks({ disabled: rawDisabled, size: rawSize, type: rawType, theme: rawTheme, colorful: rawColorful }, undefined, {});

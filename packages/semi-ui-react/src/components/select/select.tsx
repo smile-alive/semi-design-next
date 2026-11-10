@@ -12,7 +12,7 @@ import { isTextEditor, joinIds, stopButtonActivationKeys, type Size } from '@fib
 import '@fibrae/semi-foundation/components/select/select.scss';
 import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-react';
 import { type Bivariant, type ByMultiple, type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside, useMergedRef } from '../../hooks/index';
+import { useClickOutside, useMergedRef, useUnwrappedLazy } from '../../hooks/index';
 import { VirtualList, type VirtualListHandle } from '../../internal/index';
 import Trigger from '../../internal/trigger';
 import { hasContent, isSameNode, renderTriggerPrefix, renderTriggerSuffix } from '../../utils/index';
@@ -421,6 +421,9 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const activeIndex = SelectFoundation.getActiveOptionIndex({ isOpen, loading, focusIndex: deferredFocusIndex, visibleCount: visibleOptions.length });
     const activeDescendant = activeIndex === undefined ? undefined : getOptionId(selectID, activeIndex);
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
+    const prefixNode = useUnwrappedLazy(prefix);
+    const insetLabelNode = useUnwrappedLazy(insetLabel);
+    const suffixNode = useUnwrappedLazy(suffix);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
     const prefixId = insetLabelId ?? (insetLabelShown ? `${selectID}-inset-label` : undefined);
     const name = comboboxName(ariaLabelledby, ariaLabel, insetLabelShown ? prefixId : undefined, locale.label);
@@ -912,9 +915,9 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     } else {
         inner = (
             <>
-                {hasPrefix && renderTriggerPrefix(prefixcls, prefix, insetLabel, prefixId)}
+                {hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId)}
                 <div className={`${prefixcls}-selection`}>{multiple ? renderMultipleSelection() : renderSingleSelection()}</div>
-                {hasContent(suffix) && renderTriggerSuffix(prefixcls, suffix)}
+                {hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode)}
                 {clearable && (
                     <button ref={setClearButton} type="button" className={`${prefixcls}-clear`} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys}>
                         {clearIcon || <IconClear />}

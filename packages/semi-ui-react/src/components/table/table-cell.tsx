@@ -6,6 +6,7 @@ import { get } from 'es-toolkit/compat';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/table/constants';
 import { isSelectionColumn, isExpandedColumn, getRTLAlign, shouldShowEllipsisTitle, getRTLFlexAlign } from '@fibrae/semi-foundation/components/table/utils';
 import type { BaseProps } from '../../base/index';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { useTableContext } from './context';
 import type { ColumnProps, ExpandIcon } from './interface';
 
@@ -121,6 +122,7 @@ function TableCell({
     } else {
         text = get(record, dataIndex);
     }
+    text = useUnwrappedLazy(text);
 
     const indentText = indent && indentSize ? <span className={`${prefixCls}-row-indent indent-level-${indent}`} style={{ paddingInlineStart: `${indentSize * indent}px` }} /> : null;
     const realExpandIcon = (typeof renderExpandIcon === 'function' ? renderExpandIcon(record) : expandIcon) as React.ReactNode;
