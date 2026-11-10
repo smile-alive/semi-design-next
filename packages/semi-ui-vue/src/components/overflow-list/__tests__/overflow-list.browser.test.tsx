@@ -3,7 +3,7 @@ import { defineComponent, type PropType, type VNode } from 'vue';
 import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import OverflowList, { type OverflowListItem, type OverflowListOverflowSlotProps } from '..';
 import Tag from '../../tag';
 
@@ -87,7 +87,7 @@ describe('OverflowList（浏览器）', () => {
         await view.rerender({ width: 200 });
         await waitFor(() => expect(screen.getByText('+3')).toBeInTheDocument());
         expect(visibleKeys()).toEqual(['alarm', 'bookmark', 'camera']);
-        const list = view.container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list`) as Element;
+        const list = getElement(`.${BASE_CLASS_PREFIX}-overflow-list`, view.container);
         const plus = screen.getByText('+3').getBoundingClientRect();
         expect(Math.round(plus.top)).toBe(Math.round(screen.getByText('alarm').getBoundingClientRect().top));
         expect(plus.left).toBeGreaterThanOrEqual(list.getBoundingClientRect().left);
@@ -111,7 +111,7 @@ describe('OverflowList（浏览器）', () => {
                 </div>
             ))
         );
-        const list = container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list`) as Element;
+        const list = getElement(`.${BASE_CLASS_PREFIX}-overflow-list`, container);
         await expect.poll(() => getComputedStyle(list).visibility).toBe('visible');
         expect(['alarm', 'bookmark', 'camera'].map((key) => screen.queryByText(key) !== null)).toEqual([true, true, true]);
         expect(screen.queryByText(/^\+\d$/)).toBeNull();
@@ -136,7 +136,7 @@ describe('overflowList', () => {
         const tagTexts = () => Array.from(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-tag`), (tag) => tag.textContent);
         await waitFor(() => expect(tagTexts()).toEqual(['0', '9']));
 
-        const wrapper = container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`, container);
         wrapper.scrollLeft = wrapper.scrollWidth;
         await waitFor(() => expect(tagTexts()[0]).toBe('10'));
     });

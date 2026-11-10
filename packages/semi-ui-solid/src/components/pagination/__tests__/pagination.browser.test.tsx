@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Pagination, { type PaginationProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-page`;
@@ -29,14 +30,14 @@ describe('Pagination（浏览器）', () => {
                 <Pagination {...props} />
             </div>
         ));
-        const el = container.querySelector(selector) as Element;
+        const el = getElement(selector, container);
         await tabTo(el);
         expectThemeFocusRing(el);
     });
 
     it.each<[string, Partial<PaginationProps>, (c: HTMLElement) => Element, number]>([
         ['the omitted pages', { currentPage: 10 }, (c) => c.querySelectorAll('[aria-label="更多"]')[1], 12],
-        ['the small page select', { currentPage: 5, size: 'small', hoverShowPageSelect: true }, (c) => c.querySelector(`.${prefixCls}-item-small`) as Element, 1],
+        ['the small page select', { currentPage: 5, size: 'small', hoverShowPageSelect: true }, (c) => getElement(`.${prefixCls}-item-small`, c), 1],
     ])('通过键盘打开 %s 并跳转到其中一页', async (_, props, getTrigger, firstPage) => {
         const onChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
         const { container } = render(() => <Pagination total={200} onChange={onChange} {...props} />);

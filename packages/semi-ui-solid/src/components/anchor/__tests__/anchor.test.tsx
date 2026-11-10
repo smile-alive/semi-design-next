@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { AnchorAdapter } from '@fibrae/semi-foundation/components/anchor/foundation';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { defined } from '@test/utils/solid';
 import Anchor, { type AnchorProps } from '..';
 import ConfigProvider from '../../config-provider';
 import type { TooltipProps } from '../../tooltip';
@@ -32,7 +33,7 @@ const link = (name: string) => screen.getByRole('link', { name });
 const linkTitles = (container: HTMLElement) => [...container.querySelectorAll(`.${BASE_CLASS_PREFIX}-anchor-link-title`)].map((el) => el.textContent);
 
 // jsdom does not lay out: section positions are stubbed per element, relative to the viewport
-const setTop = (id: string, top: number) => vi.spyOn(document.getElementById(id) as HTMLElement, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, 100));
+const setTop = (id: string, top: number) => vi.spyOn(defined(document.getElementById(id)), 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, 100));
 
 // the scroll handler is throttled (leading call) and the end of a scroll is debounced, both at 100ms
 function scroll(target: Window | Element = window) {
@@ -423,7 +424,7 @@ describe('Anchor', () => {
             setBox(document.getElementById('late-box'));
             setTop('a', -50);
             setTop('b', 40);
-            scroll(document.getElementById('late-box') as HTMLElement);
+            scroll(defined(document.getElementById('late-box')));
             expect(link('a')).toHaveClass(activeCls);
         });
 
@@ -439,7 +440,7 @@ describe('Anchor', () => {
                     </div>
                 </>
             ));
-            const box = document.getElementById('box') as HTMLElement;
+            const box = defined(document.getElementById('box'));
             vi.spyOn(box, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 100, 100, 500));
             setTop('a', 60);
             setTop('b', 120);
@@ -518,8 +519,8 @@ describe('Anchor', () => {
                     <Sections />
                 </>
             ));
-            const one = document.getElementById('one') as HTMLElement;
-            const two = document.getElementById('two') as HTMLElement;
+            const one = defined(document.getElementById('one'));
+            const two = defined(document.getElementById('two'));
             const removeFromOne = vi.spyOn(one, 'removeEventListener');
             setTop('a', -50);
             setTop('b', 40);

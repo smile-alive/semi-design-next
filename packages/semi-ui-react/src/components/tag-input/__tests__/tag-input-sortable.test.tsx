@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { SortableProps } from '@fibrae/semi-ui-react/internal/sortable/index';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
+import { getElement } from '@test/utils/react';
 import TagInput from '..';
 
 // The sortable list loads lazily; this stand-in waits for the test to release it, and shows its ids and a sort end
@@ -30,7 +31,7 @@ vi.mock('@fibrae/semi-ui-react/internal/sortable/index', async () => {
 });
 
 const tagCls = `${BASE_CLASS_PREFIX}-tagInput`;
-const getRoot = () => document.querySelector(`.${tagCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${tagCls}`);
 const tagButton = (value: string) => screen.getByRole('button', { name: zh_CN.Tag.closableTag.replace('${tag}', value) });
 const items = () => [...document.querySelectorAll<HTMLElement>(`.${tagCls}-sortable-list .item`)];
 

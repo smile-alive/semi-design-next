@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import Fixture from './special-trigger.svelte';
 
 type Store = NonNullable<Parameters<typeof Fixture>[1]>['store'];
@@ -42,7 +43,7 @@ describe('Svelte Tooltip 的特殊触发器（浏览器）', () => {
         setup({ props: { loading: true } });
         const button = screen.getByRole('button', { name: 'trigger' });
         expect(document.elementFromPoint(button.getBoundingClientRect().x + 2, button.getBoundingClientRect().y + 2)).toBe(document.querySelector('.wrapper'));
-        await userEvent.hover(document.querySelector('.wrapper') as HTMLElement);
+        await userEvent.hover(getElement('.wrapper'));
         await expect.element(await screen.findByRole('tooltip')).toBeVisible();
     });
 

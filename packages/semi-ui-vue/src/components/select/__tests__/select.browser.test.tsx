@@ -6,7 +6,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Select, { SelectOptGroup, SelectOption, type SelectOptionProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -33,7 +33,7 @@ async function clickAutofocusedSelect() {
     await waitFor(() => expect(getOptionList()).not.toBeNull());
     await userEvent.click(screen.getByRole('combobox'));
 }
-const byCy = (name: string) => document.querySelector(`[data-cy=${name}]`) as HTMLElement;
+const byCy = (name: string) => getElement(`[data-cy=${name}]`);
 
 async function expectEverySelectionAccountedFor(selectedCount: number, restCount?: number) {
     await waitFor(() => {
@@ -46,7 +46,7 @@ async function expectEverySelectionAccountedFor(selectedCount: number, restCount
 
 async function toggle(label: string) {
     if (!getOptionList()) {
-        await userEvent.click(document.querySelector(`.${prefixCls}-arrow`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-arrow`));
     }
     await userEvent.click(getOption(label) as HTMLElement);
 }
@@ -60,9 +60,9 @@ describe('Select（浏览器）', () => {
                 <Select motion={false} optionList={options} style={{ width: '120px' }} />
             </div>
         ));
-        const trigger = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const trigger = getElement(`.${prefixCls}`);
         await userEvent.click(trigger);
-        const popup = (await screen.findByRole('listbox')).closest('[popover]') as HTMLElement;
+        const popup = defined((await screen.findByRole('listbox')).closest<HTMLElement>('[popover]'));
         await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - trigger.getBoundingClientRect().left)).toBeLessThanOrEqual(1));
         screen.getByTestId('box').style.left = '300px';
         // the move is reported on the next rendering update, and headless WebKit on Linux CI has gone ~2s without one
@@ -285,7 +285,7 @@ describe('Select', () => {
                 )}
             </Select>
         ));
-        await userEvent.click(document.getElementById('without-key') as HTMLElement);
+        await userEvent.click(defined(document.getElementById('without-key')));
         expect(document.querySelector(`#without-key .${BASE_CLASS_PREFIX}-input`)).toHaveFocus();
         await userEvent.keyboard('dou');
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-option-keyword`)).toMatchTextContent(/^Dou$/));
@@ -412,7 +412,7 @@ describe('Select', () => {
         const expectActiveInView = async (name: RegExp) => {
             const combobox = screen.getByRole('combobox');
             await waitFor(() => {
-                const active = document.getElementById(combobox.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+                const active = defined(document.getElementById(combobox.getAttribute('aria-activedescendant') ?? ''));
                 expect(active).toMatchTextContent(name);
                 const list = screen.getByRole('listbox').getBoundingClientRect();
                 const row = active.getBoundingClientRect();
@@ -491,7 +491,7 @@ describe('Select', () => {
     describe('虚拟列表的滚动', () => {
         const many = Array.from({ length: 100 }, (_, i) => ({ value: i, label: `option ${i}` }));
         const optionNamed = (name: string) => screen.queryByRole('option', { name });
-        const scroller = () => screen.getByRole('listbox').querySelector<HTMLElement>('[style*="overflow"]') as HTMLElement;
+        const scroller = () => getElement('[style*="overflow"]', screen.getByRole('listbox'));
 
         it('用户滚动容器后，渲染的选项随之变化', async () => {
             mount(() => <Select optionList={many} virtualize={{ itemSize: 36 }} />);
@@ -558,7 +558,7 @@ describe('Select', () => {
     it('鼠标按下清空按钮会清空，焦点留在 combobox 上', async () => {
         mount(() => <Select defaultValue="abc" optionList={options} showClear />);
         await userEvent.hover(screen.getByRole('combobox'));
-        await userEvent.click(document.querySelector(`.${prefixCls}-clear`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-clear`));
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-clear`)).toBeNull());
         expect(screen.getByRole('combobox')).toHaveFocus();
         expect(getOptionList()).toBeNull();
@@ -570,7 +570,7 @@ describe('Select', () => {
         ['可搜索多选', { filter: true, multiple: true }],
     ])('%s：点击选项后焦点留在 combobox 上', async (_name, props) => {
         mount(() => <Select optionList={options} motion={false} {...props} />);
-        await userEvent.click(document.querySelector(`.${prefixCls}`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}`));
         await userEvent.click(getOption('剪映') as HTMLElement);
         await waitFor(() => expect(screen.getByRole('combobox')).toHaveFocus());
         expect(document.querySelector(`.${prefixCls}`)).toHaveClass(`${prefixCls}-focus`);
@@ -634,7 +634,7 @@ describe.each([
     it('从 combobox 按 Shift+Tab 离开 Select 时只发一次 blur，跳过其中的标签', async () => {
         const { onBlur } = renderWithSpies();
         await tabTo(screen.getByRole('combobox'));
-        const root = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const root = getElement(`.${prefixCls}`);
         while (root.contains(document.activeElement)) {
             expect(onBlur).not.toHaveBeenCalled();
             await tab({ shift: true });
@@ -752,9 +752,9 @@ describe('Select 分组', () => {
             { container }
         );
         try {
-            await userEvent.click(shadow.querySelector('[role="combobox"]') as HTMLElement);
+            await userEvent.click(getElement('[role="combobox"]', shadow));
             await waitFor(() => {
-                const box = (shadow.querySelector('[role="listbox"]') as HTMLElement).getBoundingClientRect();
+                const box = getElement('[role="listbox"]', shadow).getBoundingClientRect();
                 const selected = (Array.from(shadow.querySelectorAll('[role="option"]')).find((option) => option.textContent === 'G2-6') as HTMLElement).getBoundingClientRect();
                 expect(selected.top).toBeGreaterThanOrEqual(box.top);
                 expect(selected.bottom).toBeLessThanOrEqual(box.bottom);
@@ -863,7 +863,7 @@ describe('Select 在 ShadowRoot 内的焦点', () => {
 
     it('受控值被清空、聚焦的清空按钮随之移除时，焦点回到 combobox', async () => {
         const { shadow, view } = mountInShadow({ multiple: true, modelValue: ['abc'], optionList: options, showClear: true });
-        const combobox = shadow.querySelector('[role="combobox"]') as HTMLElement;
+        const combobox = getElement('[role="combobox"]', shadow);
         combobox.focus();
         // past the closable tag
         await tab();
@@ -876,7 +876,7 @@ describe('Select 在 ShadowRoot 内的焦点', () => {
 
     it('在面板最后一个可聚焦元素上按 Tab，焦点回到 combobox 并关闭面板', async () => {
         const { shadow } = mountInShadow({ motion: false, optionList: options }, { outerBottomSlot: () => <button type="button">bottom</button> });
-        const combobox = shadow.querySelector('[role="combobox"]') as HTMLElement;
+        const combobox = getElement('[role="combobox"]', shadow);
         combobox.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(shadow.querySelector('[role="listbox"]')).not.toBeNull());

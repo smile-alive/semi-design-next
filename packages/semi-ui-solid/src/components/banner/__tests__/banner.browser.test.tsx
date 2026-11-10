@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Banner from '..';
 
 describe('Banner（浏览器）', () => {
@@ -38,7 +39,7 @@ describe('Banner（浏览器）', () => {
             { container: mount }
         );
         try {
-            const close = shadow.querySelector('button[aria-label]') as HTMLElement;
+            const close = getElement('button[aria-label]', shadow);
             close.focus();
             await userEvent.keyboard('{Enter}');
             await waitFor(() => expect(shadow.activeElement).toHaveTextContent('after'));

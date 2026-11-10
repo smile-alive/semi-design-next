@@ -3,13 +3,14 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { userEvent } from 'vite-plus/test/browser';
 import { openLayer } from '@fibrae/semi-foundation/utils';
 import { tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import { Notification } from '../index';
 import type { NotificationHookApi, NotificationHookOptions } from '../interface';
 import HookHost from './hook-host.svelte';
 
 const prefix = 'semi-notification';
 const noticeCls = `${prefix}-notice`;
-const closeButton = (notice: Element) => notice.querySelector(`.${noticeCls}-icon-close`) as HTMLButtonElement;
+const closeButton = (notice: Element) => getElement<HTMLButtonElement>(`.${noticeCls}-icon-close`, notice);
 const top = (el: HTMLElement) => el.getBoundingClientRect().top;
 const wrapperOf = (notice: HTMLElement) => notice.parentElement as HTMLElement;
 // The enter and leave classes go on animationend; until then a finished slide still holds the wrapper's height

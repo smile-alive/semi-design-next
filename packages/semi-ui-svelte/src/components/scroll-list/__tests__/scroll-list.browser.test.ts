@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import { sleep } from '@test/utils/function';
 import { ScrollItem, type ScrollItemSelectData } from '..';
 import ScrollListControlled from './scroll-list-controlled.svelte';
@@ -17,7 +18,7 @@ describe('scrollList', () => {
         document.body.setAttribute('theme-mode', 'dark');
         onTestFinished(() => document.body.removeAttribute('theme-mode'));
         const { container } = render(ScrollListControlled);
-        expect(getComputedStyle(container.querySelector(`.${prefix}`) as Element).boxShadow).toContain('inset');
+        expect(getComputedStyle(getElement(`.${prefix}`, container)).boxShadow).toContain('inset');
     });
 
     it('normal 与 wheel 列不显示滚动条', () => {
@@ -56,7 +57,7 @@ describe('scrollList', () => {
     ] as const)('%s 列（循环：%s）的 listbox 获得键盘焦点时，列周围显示主题焦点环', async (mode, cycled, columnClass) => {
         const { container } = render(ScrollListControlled, { props: { mode, cycled } });
         await tabTo(screen.getAllByRole('listbox')[0]);
-        expectThemeFocusRing(container.querySelector(`.${prefix}-${columnClass}`) as Element);
+        expectThemeFocusRing(getElement(`.${prefix}-${columnClass}`, container));
     });
 
     describe('wheel 模式的 select', () => {

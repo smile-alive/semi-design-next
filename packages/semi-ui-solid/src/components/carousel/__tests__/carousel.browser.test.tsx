@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Carousel, { type CarouselHandle, type CarouselProps } from '..';
 import Button from '../../button';
 
@@ -124,7 +125,7 @@ describe('Carousel', () => {
             tick(SWITCHING_TIME);
             await expectActive('2');
 
-            await userEvent.hover(container.querySelector(`.${prefixCls}`) as Element);
+            await userEvent.hover(getElement(`.${prefixCls}`, container));
             tick(400);
             await expectActive('2');
             tick(SWITCHING_TIME);
@@ -170,7 +171,7 @@ describe('Carousel', () => {
                     <Slides labels={five} />
                 </Carousel>
             ));
-            const next = container.querySelector(`.${prefixCls}-arrow-next`) as HTMLElement;
+            const next = getElement(`.${prefixCls}-arrow-next`, container);
             await userEvent.click(next);
             await expectActive('2');
             expect(next).toHaveFocus();
@@ -203,7 +204,7 @@ describe('Carousel', () => {
                 <Slides labels={['index0', 'index1', 'index2']} />
             </Carousel>
         ));
-        await userEvent.click(container.querySelector(`.${prefixCls}-arrow-next`) as Element);
+        await userEvent.click(getElement(`.${prefixCls}-arrow-next`, container));
         await expectActive('index1');
         expect(container.querySelector(`.${prefixCls}-content-item-slide-out`)).toHaveTextContent('index0');
         expect(container.querySelector(`.${prefixCls}-content-item-slide-in`)).toHaveTextContent('index1');
@@ -215,7 +216,7 @@ describe('Carousel', () => {
                 <Slides labels={['index0', 'index1', 'index2']} />
             </Carousel>
         ));
-        const next = container.querySelector(`.${prefixCls}-arrow-next`) as HTMLElement;
+        const next = getElement(`.${prefixCls}-arrow-next`, container);
         expect(getComputedStyle(next).opacity).toBe('0');
         await userEvent.keyboard('{Tab}');
         await userEvent.keyboard('{Tab}{Tab}');

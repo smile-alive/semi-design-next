@@ -2,7 +2,7 @@
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Cascader, { type CascaderData } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-cascader`;
@@ -19,7 +19,7 @@ const treeData: CascaderData[] = [
 const grownTreeData: CascaderData[] = [{ ...treeData[0], children: [...(treeData[0].children ?? []), { label: '北海', value: 'Beihai' }] }];
 
 const settle = () => new Promise((resolve) => setTimeout(resolve));
-const getSearchInput = () => document.querySelector(`.${prefixCls}-selection input`) as HTMLInputElement;
+const getSearchInput = () => getElement<HTMLInputElement>(`.${prefixCls}-selection input`);
 const getResults = () => Array.from(document.querySelectorAll(`.${prefixCls}-option-flatten`)).map((row) => row.textContent);
 
 describe('Cascader 的 treeData 变化', () => {

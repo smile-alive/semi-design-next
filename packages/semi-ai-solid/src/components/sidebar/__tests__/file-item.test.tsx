@@ -8,6 +8,7 @@ import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import type { UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import FileContent, { FileItem, type FileItemProps } from '../file';
 
 // tiptap emits `create` on a 0ms timer after the editor is built
@@ -257,7 +258,7 @@ describe('Sidebar.FileItem', () => {
         const { container } = render(() => <FileItem content="<p>text</p>" extensions={[extension]} onContentChange={onContentChange} />);
         await settle();
         editor().commands.selectAll();
-        fireEvent.keyDown(container.querySelector('.ProseMirror') as HTMLElement, event);
+        fireEvent.keyDown(getElement('.ProseMirror', container), event);
         expect(onContentChange).toHaveBeenLastCalledWith(html);
     });
 
@@ -268,7 +269,7 @@ describe('Sidebar.FileItem', () => {
         await settle();
         current().commands.selectAll();
         fireEvent.click(menuButton(container, 'bold'));
-        const editor = container.querySelector('.ProseMirror') as HTMLElement;
+        const editor = getElement('.ProseMirror', container);
         fireEvent.keyDown(editor, { key: 'z', ctrlKey: true });
         expect(onContentChange).toHaveBeenLastCalledWith('<p>text</p>');
         fireEvent.keyDown(editor, { key: 'Z', keyCode: 90, ctrlKey: true, shiftKey: true });
@@ -281,7 +282,7 @@ describe('Sidebar.FileItem', () => {
         const { container } = render(() => <FileItem content="<p>ab</p>" extensions={[extension]} onContentChange={onContentChange} />);
         await settle();
         current().commands.setTextSelection(2);
-        const editor = container.querySelector('.ProseMirror') as HTMLElement;
+        const editor = getElement('.ProseMirror', container);
         fireEvent.keyDown(editor, { key: 'Enter', shiftKey: true });
         expect(onContentChange).toHaveBeenLastCalledWith('<p>a<br>b</p>');
         fireEvent.keyDown(editor, { key: 'Enter' });
@@ -337,7 +338,7 @@ describe('Sidebar.FileItem', () => {
             fireEvent.click(menuButton(container, 'link'));
             const input = await screen.findByPlaceholderText(linkPlaceholder);
             typeLink(input, 'https://semi.design');
-            const wrapper = input.closest('.semi-input-wrapper') as HTMLElement;
+            const wrapper = defined(input.closest<HTMLElement>('.semi-input-wrapper'));
             expect(wrapper.querySelector('.semi-input-clearbtn, .semi-input-prefix, .semi-input-suffix, .semi-input-prepend, .semi-input-append')).toBeNull();
         } finally {
             semiGlobal.config.overrideDefaultProps = {};
@@ -577,7 +578,7 @@ describe('Sidebar.FileItem', () => {
         expect(slot).not.toHaveAttribute('tabindex');
         expect(slot.querySelectorAll('[tabindex="0"]')).toHaveLength(1);
 
-        fireEvent.change(slot.querySelector('input[type="file"]') as HTMLInputElement, {
+        fireEvent.change(getElement<HTMLInputElement>('input[type="file"]', slot), {
             target: { files: [new File(['x'], 'a.png', { type: 'image/png' })] },
         });
         await waitFor(() => expect(slot.querySelector('.semi-sidebar-file-image-slot-uploading')).toBeInTheDocument());
@@ -613,7 +614,7 @@ describe('Sidebar.FileItem', () => {
             expect(el).toHaveTextContent(zh_CN.Sidebar.uploadImgInfo);
             return el as HTMLElement;
         });
-        const slot = text.closest('.tiptap-image-slot') as HTMLElement;
+        const slot = defined(text.closest<HTMLElement>('.tiptap-image-slot'));
         setShown(false);
         expect(editor().isDestroyed).toBe(true);
         expect(slot).toBeEmptyDOMElement();

@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { TabPane, Tabs } from '@fibrae/semi-ui-react';
-import { sleep } from '@test/utils/react';
+import { sleep, getElement } from '@test/utils/react';
 
 // Firefox and Safari ignore scrollIntoView({ container }): drop it here so the probe fails as it does there, and a page
 // scroll caused by the fallback would show up as a changed scrollY.
@@ -29,7 +29,7 @@ describe('Tabs 在不支持 scrollIntoView container 的浏览器中', () => {
         );
         window.scrollTo(0, 0);
         const { container, rerender } = render(renderControlled('tab-0'));
-        const wrapper = container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`, container);
         const tab7 = screen.getByRole('tab', { name: 'Tab-7' });
         await sleep(300);
         const before = wrapper.scrollLeft;

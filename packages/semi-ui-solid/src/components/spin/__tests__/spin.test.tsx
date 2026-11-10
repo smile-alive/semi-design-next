@@ -4,11 +4,12 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Spin, { type SpinProps } from '..';
 import ConfigProvider from '../../config-provider';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-spin`;
-const getSpin = (container: HTMLElement) => container.querySelector(`.${prefixCls}`) as HTMLElement;
+const getSpin = (container: HTMLElement) => getElement(`.${prefixCls}`, container);
 
 describe('Spin', () => {
     afterEach(() => {

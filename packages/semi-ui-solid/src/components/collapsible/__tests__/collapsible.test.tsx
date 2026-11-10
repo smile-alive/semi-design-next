@@ -2,11 +2,12 @@ import { type JSX, createSignal } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Collapsible, { type CollapsibleProps } from '..';
 
 const queryContent = () => screen.queryByText('hello');
-const getWrapper = (container: HTMLElement) => container.querySelector<HTMLElement>('.semi-collapsible-wrapper') as HTMLElement;
-const getInner = (container: HTMLElement) => container.querySelector<HTMLElement>('[x-semi-prop="children"]') as HTMLElement;
+const getWrapper = (container: HTMLElement) => getElement('.semi-collapsible-wrapper', container);
+const getInner = (container: HTMLElement) => getElement('[x-semi-prop="children"]', container);
 const heightVar = '--semi-collapsible-height';
 const openHeight = 'calc-size(auto, size)';
 

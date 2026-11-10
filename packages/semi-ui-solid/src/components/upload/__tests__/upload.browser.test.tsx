@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconPlus } from '@fibrae/semi-icons-solid';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Upload, { type FileItem, type UploadHandle, type UploadProps } from '..';
 import Button from '../../button';
 import { Form, FormUpload } from '../../form';
@@ -16,7 +17,7 @@ function customRequest() {}
 const readme = () => new File(['# Semi Design\n'], 'README.md', { type: 'text/markdown' });
 const cardNames = (root: ParentNode = document) => [...root.querySelectorAll(`.${prefixCls}-file-card-info-name`)].map((el) => el.textContent);
 const fileInputs = () => document.querySelectorAll<HTMLInputElement>('input[type=file]');
-const query = (root: ParentNode, selector: string) => root.querySelector(selector) as HTMLElement;
+const query = (root: ParentNode, selector: string) => getElement(selector, root);
 
 describe('Upload（浏览器）', () => {
     // fix #2448: inside FormUpload the error outline of a failed picture card was hidden, so the card also draws

@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { click, getPanel, getPopup, getYMLists, setupPinned } from './date-picker-dom-utils';
 import SlotsFixture, { type SlotsFixtureStore } from './date-picker-slots-fixture.svelte';
 import { changes, dp, getDay, getInputs, getNavTitle, getRoot, settle, setup, useBaseDate } from './test-utils';
@@ -12,10 +13,10 @@ import { changes, dp, getDay, getInputs, getNavTitle, getRoot, settle, setup, us
 useBaseDate();
 
 const weekRows = (side: string) => getPanel(side).querySelectorAll(`.${dp}-week`);
-const rangeWrapper = (side: 'start' | 'end') => getRoot().querySelector(`.${dp}-range-input-wrapper-${side}`) as HTMLElement;
-const navButton = (side: string, label: string) => getPanel(side).querySelector(`[aria-label="${label}"]`) as HTMLElement;
-const titleButton = () => getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement;
-const backButton = () => getPopup().querySelector(`.${dp}-yearmonth-header button`) as HTMLElement;
+const rangeWrapper = (side: 'start' | 'end') => getElement(`.${dp}-range-input-wrapper-${side}`, getRoot());
+const navButton = (side: string, label: string) => getElement(`[aria-label="${label}"]`, getPanel(side));
+const titleButton = () => getElement(`.${dp}-navigation-month button`, getPanel('left'));
+const backButton = () => getElement(`.${dp}-yearmonth-header button`, getPopup());
 const timeSwitch = (side: string) => navButton(side, zh_CN.DatePicker.switchToTime);
 
 /** The panel focuses its start date input once Popover reports it visible, which would land after a focus set by the test */
@@ -145,7 +146,7 @@ describe('Svelte DatePicker 范围输入框的点击与聚焦', () => {
         const store = createStore<SlotsFixtureStore>({ props: { type: 'dateRange', motion: false }, prefix: true });
         render(SlotsFixture, { props: { store } });
         await settle();
-        await click(getRoot().querySelector(`.${dp}-range-input-prefix`) as HTMLElement);
+        await click(getElement(`.${dp}-range-input-prefix`, getRoot()));
         expect(rangeWrapper('start')).toHaveClass(`${dp}-range-input-wrapper-active`);
         expect(getPopup()).not.toBeNull();
     });

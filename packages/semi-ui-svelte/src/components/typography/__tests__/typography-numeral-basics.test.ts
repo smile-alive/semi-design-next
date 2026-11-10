@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { TypographyCopyableConfig, TypographyNumeralProps, TypographyTitleProps } from '../index';
 import type { TypographyBaseProps } from '../internal';
 import Extras from './extras-fixture.svelte';
@@ -19,7 +20,7 @@ function setup(store: Store) {
     return { state, ...view };
 }
 
-const root = (container: Element) => container.querySelector(`.${prefix}`) as HTMLElement;
+const root = (container: Element) => getElement(`.${prefix}`, container);
 
 afterEach(() => {
     vi.restoreAllMocks();
@@ -67,7 +68,7 @@ describe('Svelte Typography 基础行为', () => {
         const element = root(container);
         expect(element).toHaveClass(`${prefix}-link`);
         expect(element).not.toHaveClass(`${prefix}-danger`);
-        const anchor = element.querySelector(':scope > a') as HTMLElement;
+        const anchor = getElement(':scope > a', element);
         expect(anchor).toHaveAttribute('href', '#target');
         expect(anchor).toHaveAttribute('target', '_blank');
         expect(anchor.querySelector(`:scope > del > strong > code > mark > span.${prefix}-link-text.${prefix}-link-underline`)).toHaveTextContent(/^L$/);
@@ -135,7 +136,7 @@ describe('Svelte Typography 基础行为', () => {
             setup({ kind: 'numeral', text: '1', props: { 'data-x': 'numeral' } }),
             setup({ kind: 'typography', text: 'd', props: { 'data-x': 'typography' } }),
         ];
-        const nodes = views.map((view) => view.container.querySelector<HTMLElement>('[data-x]') as HTMLElement);
+        const nodes = views.map((view) => getElement('[data-x]', view.container));
         expect(nodes.map((node) => [node.tagName, node.dataset.x])).toEqual([
             ['SPAN', 'text'],
             ['H1', 'title'],

@@ -5,7 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSetting } from '@fibrae/semi-icons-vue';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import type { Ellipsis } from '../interface';
 import Paragraph from '../paragraph.vue';
 import Text from '../text.vue';
@@ -13,7 +13,7 @@ import Title from '../title.vue';
 
 const prefix = `${BASE_CLASS_PREFIX}-typography`;
 const longText = 'Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。'.repeat(4);
-const element = (container: Element, selector: string) => container.querySelector(selector) as HTMLElement;
+const element = (container: Element, selector: string) => getElement(selector, container);
 
 // headless Chromium denies clipboard writes without a granted permission
 function mockClipboard() {
@@ -157,7 +157,7 @@ describe('Typography（浏览器）', () => {
         const { container } = render(Paragraph, { props: { copyable: true }, slots: { default: () => '点击复制' } });
         const paragraph = element(container, `.${prefix}`);
         const button = screen.getByRole('button', { name: '复制' });
-        const icon = button.querySelector('svg') as SVGElement;
+        const icon = getElement<SVGElement>('svg', button);
         const rect = (el: Element) => el.getBoundingClientRect().toJSON() as DOMRect;
         const before = { paragraph: rect(paragraph), button: rect(button) };
         const buttonRect = button.getBoundingClientRect();

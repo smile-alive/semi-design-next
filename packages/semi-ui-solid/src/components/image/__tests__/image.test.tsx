@@ -4,13 +4,14 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Image, { ImagePreview, type ImageProps, type PreviewImageProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-image`;
 const src = 'https://example.com/a.jpg';
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const preview = () => $(`div.${prefixCls}-preview`);
-const thumb = (container: HTMLElement) => container.querySelector(`.${prefixCls}-img`) as HTMLImageElement;
+const thumb = (container: HTMLElement) => getElement<HTMLImageElement>(`.${prefixCls}-img`, container);
 
 // Props are spread from a signal, as a consumer does with a store
 function renderImage(initial: ImageProps) {

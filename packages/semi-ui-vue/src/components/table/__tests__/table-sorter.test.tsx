@@ -5,7 +5,7 @@ import { screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { getData, render } from '@test/utils/vue';
+import { getData, render, defined } from '@test/utils/vue';
 import { TableColumn, type ColumnProps, type TableChangeInfo, type TableHeaderCellSlotProps, type TableSortIconSlotProps } from '..';
 import ColumnSlots from './fixtures/column-slots.vue';
 import { P, firstCellTexts, getBodyRows, getFirstCellText, getPageItems, getSorters, mountTable, query, queryAll, type Row } from './table-helpers';
@@ -265,7 +265,7 @@ describe('Table 排序行为基线', () => {
             { title: 'Age', dataIndex: 'age', sorter: (a, b) => a.age - b.age },
         ];
         mountTable({ columns, dataSource: smallData(), pagination: false, onChange });
-        const ageHeader = screen.getByText('Age').closest('th') as HTMLElement;
+        const ageHeader = defined(screen.getByText('Age').closest<HTMLElement>('th'));
         await userEvent.click(ageHeader);
         expect(firstCellTexts()).toEqual(['a', 'b', 'c']);
         expect(onChange).toHaveBeenLastCalledWith(
@@ -288,7 +288,7 @@ describe('Table 排序行为基线', () => {
             { title: 'Age', dataIndex: 'age', sorter: (a, b) => a.age - b.age, sortOrder },
         ];
         const table = mountTable({ columns: columns(false), dataSource: smallData(), pagination: false, onChange });
-        await userEvent.click(screen.getByText('Age').closest('th') as HTMLElement);
+        await userEvent.click(defined(screen.getByText('Age').closest<HTMLElement>('th')));
         expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ sorter: expect.objectContaining({ sortOrder: 'ascend' }) }));
         expect(firstCellTexts()).toEqual(['b', 'a', 'c']);
         await table.update({ props: { columns: columns('descend') } });
@@ -308,7 +308,7 @@ describe('Table 排序行为基线', () => {
         ];
         mountTable({ columns, dataSource: smallData(), pagination: false });
         expect(firstCellTexts()).toEqual(['c', 'b', 'a']);
-        await userEvent.click(screen.getByText('Age').closest('th') as HTMLElement);
+        await userEvent.click(defined(screen.getByText('Age').closest<HTMLElement>('th')));
         expect(getSortStates()).toEqual([null, 'descending']);
         expect(firstCellTexts()).toEqual(['c', 'b', 'a']);
     });
@@ -319,7 +319,7 @@ describe('Table 排序行为基线', () => {
         const columns: ColumnProps[] = [{ title: 'Age', dataIndex: 'age', sorter: (a, b) => a.age - b.age }];
         const table = mountTable({ columns, dataSource: smallData(), pagination: false, onChange: first });
         await table.update({ props: { onChange: second } });
-        await userEvent.click(screen.getByText('Age').closest('th') as HTMLElement);
+        await userEvent.click(defined(screen.getByText('Age').closest<HTMLElement>('th')));
         expect(first).not.toHaveBeenCalled();
         expect(second).toHaveBeenCalledTimes(1);
     });

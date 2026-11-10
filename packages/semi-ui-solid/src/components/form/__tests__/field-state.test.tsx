@@ -1,7 +1,7 @@
 import { For } from 'solid-js';
 import { fireEvent, render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import { type ArrayFieldChildrenProps, type FormApi, ArrayField, Form, FormInput, FormTextArea, withField } from '..';
 
 function changeInput(input: Element, value: string) {
@@ -18,7 +18,7 @@ describe('Form 字段校验竞态', () => {
                 <FormInput field="name" validator={validate} />
             </Form>
         ));
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         changeInput(input, 'a');
         changeInput(input, 'ab');
         await sleep(100);
@@ -50,7 +50,7 @@ describe('Form 字段提交回滚', () => {
         // the DOM reports a listener's error on window instead of throwing it to dispatchEvent
         const onError = vi.fn<(e: ErrorEvent) => void>((e) => e.preventDefault());
         window.addEventListener('error', onError);
-        changeInput(container.querySelector('input') as HTMLInputElement, 'next');
+        changeInput(getElement<HTMLInputElement>('input', container), 'next');
         window.removeEventListener('error', onError);
         expect(onError.mock.calls[0][0].error).toEqual(new Error('rejected'));
         expect(api?.getValue('name')).toBe('init');
@@ -75,7 +75,7 @@ describe('Form 字段提交回滚', () => {
         ));
         const onError = vi.fn<(e: ErrorEvent) => void>((e) => e.preventDefault());
         window.addEventListener('error', onError);
-        changeInput(container.querySelector('textarea') as HTMLTextAreaElement, 'next');
+        changeInput(getElement<HTMLTextAreaElement>('textarea', container), 'next');
         window.removeEventListener('error', onError);
         expect(onError).toHaveBeenCalledOnce();
         expect(api?.getValue('note')).toBe('init');
@@ -137,7 +137,7 @@ describe('Form 校验与挂载次数', () => {
                 <FormInput field="name" validator={validate} />
             </Form>
         ));
-        changeInput(container.querySelector('input') as HTMLInputElement, 'a');
+        changeInput(getElement<HTMLInputElement>('input', container), 'a');
         expect(validate).toHaveBeenCalledTimes(1);
         expect(onErrorChange).toHaveBeenCalledTimes(1);
         expect(api?.getError('name')).toEqual(['err']);
@@ -188,7 +188,7 @@ describe('Form 字段 initValue 拷贝', () => {
             </Form>
         ));
         const readsAfterMount = reads;
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         changeInput(input, 'a');
         changeInput(input, 'ab');
         changeInput(input, 'abc');
@@ -204,7 +204,7 @@ describe('Form 字段 initValue 拷贝', () => {
                 <FormInput field="other" />
             </Form>
         ));
-        changeInput(container.querySelector('input') as HTMLInputElement, 'a');
+        changeInput(getElement<HTMLInputElement>('input', container), 'a');
         latest.obj.name = 'mutated';
         api?.reset();
         expect(api?.getValue('obj')).toEqual({ name: 'init' });

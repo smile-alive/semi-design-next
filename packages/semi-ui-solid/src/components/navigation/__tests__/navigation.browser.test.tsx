@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { defined, getElement } from '@test/utils/solid';
 import Nav, { type ItemKey, type NavItems } from '..';
 import Button from '../../button';
 
@@ -171,7 +172,7 @@ describe('Navigation（浏览器）', () => {
             </Nav>
         ));
         const button = screen.getByRole('button', { name: '首页' });
-        const li = button.closest('li') as HTMLElement;
+        const li = defined(button.closest<HTMLElement>('li'));
         const probe = document.createElement('span');
         probe.style.backgroundColor = 'var(--semi-color-fill-0)';
         li.append(probe);
@@ -190,14 +191,14 @@ describe('Navigation（浏览器）', () => {
             </Nav>
         ));
         const button = screen.getByRole('button', { name: '首页' });
-        const li = button.closest('li') as HTMLElement;
+        const li = defined(button.closest<HTMLElement>('li'));
         expect(button.getBoundingClientRect().toJSON()).toEqual(li.getBoundingClientRect().toJSON());
         const text = screen.getByText('首页').getBoundingClientRect();
         expect(text.left - li.getBoundingClientRect().left).toBe(12);
         expect(text.top - li.getBoundingClientRect().top).toBe(8);
         const disabled = screen.getByRole('button', { name: '关于' });
         expect(getComputedStyle(disabled).cursor).toBe('not-allowed');
-        expect(getComputedStyle(disabled).color).toBe(getComputedStyle(disabled.closest('li') as HTMLElement).color);
+        expect(getComputedStyle(disabled).color).toBe(getComputedStyle(defined(disabled.closest<HTMLElement>('li'))).color);
     });
 
     it('窄导航中头部文字与项文字一同缩小，与收起动画期间一致', () => {
@@ -208,7 +209,7 @@ describe('Navigation（浏览器）', () => {
         ));
         const within = (text: string, box: Element) => expect(screen.getByText(text).getBoundingClientRect().right).toBeLessThanOrEqual(box.getBoundingClientRect().right);
         within('用户管理', screen.getByRole('button', { name: '用户管理' }));
-        within('Semi 运营后台', document.querySelector(`.${prefix}-header`) as Element);
+        within('Semi 运营后台', getElement(`.${prefix}-header`));
     });
 
     it('展开时文字一起淡入，首次渲染时不执行', async () => {
@@ -223,10 +224,10 @@ describe('Navigation（浏览器）', () => {
                 renderItemIcon={({ level }) => (level === 0 ? <span /> : undefined)}
             />
         ));
-        const nav = container.querySelector(`.${prefix}`) as HTMLElement;
+        const nav = getElement(`.${prefix}`, container);
         const fading = () => document.getAnimations().filter((animation) => (animation as CSSTransition).transitionProperty === 'opacity');
         expect(fading()).toEqual([]);
-        const toggleButton = () => container.querySelector<HTMLButtonElement>(`.${prefix}-collapse-btn button`) as HTMLButtonElement;
+        const toggleButton = () => getElement<HTMLButtonElement>(`.${prefix}-collapse-btn button`, container);
         await userEvent.click(toggleButton());
         await waitFor(() => expect(nav).not.toHaveClass(`${prefix}-collapse-animating`));
         // A DOM click keeps the expand and the checks below in one task: the 200ms fades cannot finish before they
@@ -256,7 +257,7 @@ describe('Navigation（浏览器）', () => {
         const navItems = [{ itemKey: 'user', text: '用户管理' }];
         const [collapsed, setCollapsed] = createSignal(false);
         const { container } = render(() => <Nav style={style} isCollapsed={collapsed()} items={navItems} renderItemIcon={() => <span />} />);
-        const nav = container.querySelector(`.${prefix}`) as HTMLElement;
+        const nav = getElement(`.${prefix}`, container);
         setCollapsed(true);
         expect(nav).toHaveClass(`${prefix}-collapsed`);
         await waitFor(() => expect(nav).not.toHaveClass(`${prefix}-collapse-animating`));

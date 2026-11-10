@@ -1,6 +1,7 @@
 import { render } from '@testing-library/svelte';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/dom/common';
 import Descriptions from '../descriptions.svelte';
 
 const data = [
@@ -17,7 +18,7 @@ describe('Svelte Descriptions（浏览器）', () => {
         onTestFinished(() => reset.remove());
 
         const { container } = render(Descriptions, { props: { data } });
-        expect(getComputedStyle(container.querySelector('table') as Element).borderCollapse).toBe('collapse');
+        expect(getComputedStyle(getElement('table', container)).borderCollapse).toBe('collapse');
     });
 
     it('align="left" 在 RTL 下镜像', () => {

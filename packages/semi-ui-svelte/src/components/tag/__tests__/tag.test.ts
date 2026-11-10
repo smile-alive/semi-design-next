@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { TagCloseEvent, TagProps } from '../interface';
 import TagFixture from './tag-fixture.svelte';
 import TagModes from './tag-modes.svelte';
@@ -15,10 +16,10 @@ type Store = { props: TagProps; label?: string; node?: boolean; icons?: boolean 
 function setup(props: TagProps = {}, extra: Omit<Store, 'props'> = {}) {
     const store = createStore<Store>({ props, ...extra });
     const view = render(TagFixture, { props: { store } });
-    return { store, container: view.container, root: view.container.querySelector(`.${prefix}`) as HTMLElement };
+    return { store, container: view.container, root: getElement(`.${prefix}`, view.container) };
 }
 
-const closeIcon = (container: Element) => container.querySelector(`.${prefix}-close`) as HTMLElement;
+const closeIcon = (container: Element) => getElement(`.${prefix}-close`, container);
 
 afterEach(() => {
     semiGlobal.config = {};

@@ -3,6 +3,7 @@ import { fireEvent, render } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import TreeSelect, { type TreeSelectProps } from '..';
 import type { TreeNodeData } from '../../tree';
 
@@ -261,19 +262,19 @@ function renderTreeSelect(initial: Props = {}) {
 }
 
 const getLevelNodes = (level: number) => [...document.querySelectorAll<HTMLElement>(`.${optionCls}.${optionCls}-level-${level}`)];
-const getNode = (key: string) => document.querySelector<HTMLElement>(`[role="treeitem"][data-key="${key}"]`) as HTMLElement;
+const getNode = (key: string) => getElement(`[role="treeitem"][data-key="${key}"]`);
 const getLabel = (node: Element) => node.querySelector(`.${optionCls}-label-text`)?.textContent;
 const isChecked = (node: Element) => node.querySelector(`.${innerCheckedCls}`) !== null;
 const isHalfChecked = (node: Element) => node.querySelector(`.${indeterminateCls}`) !== null;
 const isCollapsed = (node: Element) => node.classList.contains(`${optionCls}-collapsed`);
 const getCheckedCount = () => document.querySelectorAll(`.${innerCheckedCls}`).length;
 const getHighlights = () => document.querySelectorAll(`.${optionCls}-highlight`);
-const getSelection = () => document.querySelector(`.${BASE_CLASS_PREFIX}-tree-select-selection`) as HTMLElement;
+const getSelection = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select-selection`);
 const getTags = () => Array.from(getSelection().querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tag`));
 const getTagTexts = () => getTags().map((tag) => tag.textContent);
-const closeTag = (index: number) => userEvent.click(getTags()[index].querySelector(`.${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+const closeTag = (index: number) => userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag-close`, getTags()[index]));
 // one input event per keyword: userEvent.type would fire onSearch once per character
-const searchInTrigger = (value: string) => fireEvent.input(getSelection().querySelector(`.${BASE_CLASS_PREFIX}-tagInput input`) as HTMLInputElement, { target: { value } });
+const searchInTrigger = (value: string) => fireEvent.input(getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-tagInput input`, getSelection()), { target: { value } });
 
 describe('TreeSelect', () => {
     it('defaultValue 且叶子节点已勾选', () => {
@@ -839,7 +840,7 @@ describe('TreeSelect', () => {
             motion: false,
             keyMaps: defaultKeyMaps,
         });
-        expect(getLabel(document.querySelector(`.${optionCls}-disabled`) as HTMLElement)).toEqual('中国');
+        expect(getLabel(getElement(`.${optionCls}-disabled`))).toEqual('中国');
         const selectedNode = getLevelNodes(3)[0];
         expect(isChecked(selectedNode)).toBe(true);
         expect(getLabel(selectedNode)).toEqual('北京');
@@ -864,7 +865,7 @@ describe('TreeSelect', () => {
             defaultExpandAll: true,
             keyMaps: defaultKeyMaps,
         });
-        expect(getLabel(document.querySelector(`.${optionCls}-disabled`) as HTMLElement)).toEqual('中国');
+        expect(getLabel(getElement(`.${optionCls}-disabled`))).toEqual('中国');
         const selectedNode = getLevelNodes(3)[0];
         expect(isChecked(selectedNode)).toBe(true);
         expect(getLabel(selectedNode)).toEqual('北京');

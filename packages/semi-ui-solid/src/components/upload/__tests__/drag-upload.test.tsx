@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconBolt } from '@fibrae/semi-icons-solid';
+import { getElement } from '@test/utils/solid';
 import Upload, { type UploadProps } from '..';
 
 type UploadCallback<K extends keyof UploadProps> = NonNullable<UploadProps[K]>;
@@ -50,7 +51,7 @@ function renderUpload(props: Partial<UploadProps>) {
     return render(() => <Upload action={action} {...props} draggable />);
 }
 
-const getDragArea = () => document.querySelector(`.${BASE_CLASS_PREFIX}-upload-drag-area`) as HTMLElement;
+const getDragArea = () => getElement(`.${BASE_CLASS_PREFIX}-upload-drag-area`);
 
 function drop(files: File[]) {
     fireEvent.drop(getDragArea(), { dataTransfer: { files, effectAllowed: 'none' } });

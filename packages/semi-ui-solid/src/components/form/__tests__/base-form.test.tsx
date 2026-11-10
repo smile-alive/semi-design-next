@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import { type FormApi, type FormElement, type FormProps, type FormRenderProps, Form, FormInput, FormSelect } from '..';
 import Button from '../../button';
 
@@ -16,7 +16,7 @@ function renderForm(initial: FormProps = {}, content?: () => JSX.Element) {
 
 const fieldCls = `.${BASE_CLASS_PREFIX}-form-field`;
 const labelSelector = `.${BASE_CLASS_PREFIX}-form-field-label`;
-const getInput = (scope = '') => document.querySelector(`${scope} .${BASE_CLASS_PREFIX}-input`) as HTMLInputElement;
+const getInput = (scope = '') => getElement<HTMLInputElement>(`${scope} .${BASE_CLASS_PREFIX}-input`);
 const type = (input: Element, value: string) => fireEvent.input(input, { target: { value } });
 
 const nameInput = () => <FormInput field="name" />;
@@ -176,7 +176,7 @@ describe('Form-baseForm', () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const { container } = renderForm({ onSubmit }, () => <FormInput field="input" />);
         type(getInput(), 'semi');
-        fireEvent.submit(container.querySelector('form') as HTMLFormElement);
+        fireEvent.submit(getElement<HTMLFormElement>('form', container));
         await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmit.mock.calls[0][0]).toEqual({ input: 'semi' });
     });
@@ -434,7 +434,7 @@ describe('Form-baseForm', () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const onSubmitFail = vi.fn<(...args: unknown[]) => void>();
         const { container } = renderForm({ onSubmit, onSubmitFail, validator: () => ({}) }, () => <FormInput field="input" />);
-        fireEvent.submit(container.querySelector('form') as HTMLFormElement);
+        fireEvent.submit(getElement<HTMLFormElement>('form', container));
         await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmitFail).not.toHaveBeenCalled();
     });
@@ -549,8 +549,8 @@ describe('Form-baseForm 行为', () => {
                 <Form stopPropagation={{ submit: true, reset: true }} onSubmit={innerSubmit} />
             </div>
         ));
-        fireEvent.submit(container.querySelector('form') as HTMLFormElement);
-        fireEvent.reset(container.querySelector('form') as HTMLFormElement);
+        fireEvent.submit(getElement<HTMLFormElement>('form', container));
+        fireEvent.reset(getElement<HTMLFormElement>('form', container));
         expect(outerSubmit).not.toHaveBeenCalled();
         expect(outerReset).not.toHaveBeenCalled();
     });
@@ -563,8 +563,8 @@ describe('Form-baseForm 行为', () => {
                 <Form />
             </div>
         ));
-        fireEvent.submit(container.querySelector('form') as HTMLFormElement);
-        fireEvent.reset(container.querySelector('form') as HTMLFormElement);
+        fireEvent.submit(getElement<HTMLFormElement>('form', container));
+        fireEvent.reset(getElement<HTMLFormElement>('form', container));
         expect(outerSubmit).toHaveBeenCalledTimes(1);
         expect(outerReset).toHaveBeenCalledTimes(1);
     });
@@ -585,7 +585,7 @@ describe('Form-baseForm 行为', () => {
             </>
         ));
         await waitFor(() => expect(formApi?.getError('b')).toEqual(['b-err']));
-        type(document.querySelector('[x-field-id="a"] input') as HTMLInputElement, 'x');
+        type(getElement<HTMLInputElement>('[x-field-id="a"] input'), 'x');
         await sleep(10);
         expect(formApi?.getError('a')).toBeUndefined();
         await expect(formApi?.validate(['a'])).rejects.toEqual({ a: ['a-err'], b: ['b-err'] });

@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { SpaceProps } from '../interface';
 import SpaceFixture from './space-fixture.svelte';
 
@@ -11,7 +12,7 @@ const prefixCls = 'semi-space';
 function setup(props: SpaceProps = {}, count = 5) {
     const store = createStore({ props, count });
     const view = render(SpaceFixture, { props: { store } });
-    const space = () => view.container.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+    const space = () => getElement(`.${prefixCls}`, view.container);
     return { store, view, space };
 }
 

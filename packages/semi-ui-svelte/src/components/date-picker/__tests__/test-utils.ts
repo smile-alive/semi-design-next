@@ -4,6 +4,7 @@ import { afterEach, beforeEach, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import Fixture, { type FixtureStore } from './date-picker-fixture.svelte';
 
 export const dp = `${BASE_CLASS_PREFIX}-datepicker`;
@@ -39,14 +40,14 @@ export function useBaseDate() {
     });
 }
 
-export const getRoot = () => document.querySelector(`.${dp}`) as HTMLElement;
+export const getRoot = () => getElement(`.${dp}`);
 export const getInputs = () => Array.from(getRoot().querySelectorAll<HTMLInputElement>('input'));
 export const getInput = () => getInputs()[0];
-export const getTrigger = () => getRoot().querySelector(`.${dp}-input`) as HTMLElement;
+export const getTrigger = () => getElement(`.${dp}-input`, getRoot());
 export const getContainer = () => document.querySelector(`.${dp}-container`);
-export const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
+export const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
 export const getSelectedDays = () => Array.from(document.querySelectorAll(`.${dp}-day[aria-selected="true"]`)).map((day) => day.getAttribute('aria-label'));
-export const getGrid = (side = 'left') => document.querySelector<HTMLElement>(`.${dp}-month-grid-${side} [role="grid"]`) as HTMLElement;
+export const getGrid = (side = 'left') => getElement(`.${dp}-month-grid-${side} [role="grid"]`);
 export const getNavTitle = (side = 'left') => document.querySelector(`.${dp}-month-grid-${side} .${dp}-navigation-month`)?.textContent?.trim();
 export const changes = (store: FixtureStore) => store.log.filter((entry) => entry.startsWith('change'));
 export const opens = (store: FixtureStore) => store.log.filter((entry) => entry.startsWith('open'));

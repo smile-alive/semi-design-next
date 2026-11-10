@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { endLeaveAnimations, render } from '@test/utils/vue';
+import { endLeaveAnimations, render, getElement } from '@test/utils/vue';
 import Rating, { type RatingHandle } from '..';
 import ConfigProvider from '../../config-provider';
 import RatingItem from '../item.vue';
@@ -23,7 +23,7 @@ type OnFocus = (event: FocusEvent) => void;
 const prefixCls = `${BASE_CLASS_PREFIX}-rating`;
 const tooltips = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
-const getList = () => document.querySelector<HTMLUListElement>(`ul.${prefixCls}`) as HTMLUListElement;
+const getList = () => getElement<HTMLUListElement>(`ul.${prefixCls}`);
 const getRadios = () => screen.getAllByRole('radio');
 const getRadio = (name: string) => screen.getByRole('radio', { name });
 const getFullStars = () => document.querySelectorAll(`.${prefixCls}-star-full`);

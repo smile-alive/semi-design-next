@@ -4,6 +4,7 @@ import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconMapPin } from '@fibrae/semi-icons-vue';
+import { getElement } from '@test/utils/vue';
 import type { TreeIconSlotProps, TreeLabelSlotProps, TreeNodeData } from '..';
 import Button from '../../button';
 import { getNode, renderTree as renderBase, spyOn } from './fixtures/data';
@@ -41,7 +42,7 @@ describe('Tree 节点属性', () => {
     it('disable 节点属性', async () => {
         const onChange = spyOn<'change'>();
         renderTree({ treeData: treeDataDisabled, onChange });
-        const node = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-disabled`) as HTMLElement;
+        const node = getElement(`.${BASE_CLASS_PREFIX}-tree-option-disabled`);
         expect(node).toHaveTextContent(/^中国$/);
         expect(node).toHaveAttribute('aria-disabled', 'true');
         await userEvent.click(node);
@@ -52,7 +53,7 @@ describe('Tree 节点属性', () => {
     it('disable 节点属性配合多选', async () => {
         const onChange = spyOn<'change'>();
         renderTree({ treeData: treeDataDisabled, onChange, multiple: true });
-        const node = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-disabled`) as HTMLElement;
+        const node = getElement(`.${BASE_CLASS_PREFIX}-tree-option-disabled`);
         expect(node).toHaveTextContent(/^中国$/);
         await userEvent.click(node);
         expect(onChange).not.toHaveBeenCalled();

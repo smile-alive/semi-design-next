@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import CodeHighlight from '../../code-highlight';
 import { grammar } from '../../code-highlight/__tests__/grammars';
 import Tooltip from '../../tooltip';
@@ -52,7 +52,7 @@ describe('MarkdownRender', () => {
 
         it('表头加粗的 table', async () => {
             const container = await renderTable({ raw: '| Name | **Brand** | Count | **Price** |\n| - | :- | -: | :-: |\n| Book | Semi | 10 | ￥100 |\n| Pen | Semi Design | 20 | ￥200 |' });
-            const thead = container.querySelector(`.${BASE_CLASS_PREFIX}-table-thead`) as HTMLElement;
+            const thead = getElement(`.${BASE_CLASS_PREFIX}-table-thead`, container);
             expect(Array.from(thead.querySelectorAll('strong'), (node) => node.textContent)).toEqual(['Brand', 'Price']);
             expect(bodyRows(container)).toHaveLength(2);
             for (const text of ['Semi Design', 'Semi', '￥100', '￥200']) {
@@ -62,7 +62,7 @@ describe('MarkdownRender', () => {
 
         it('表头加粗且带组件的 table', async () => {
             const container = await renderTable({ format: 'mdx', raw: '| Name | <h1>Brand</h1> | Count | **Price** |\n| - | :- | -: | :-: |\n| Book | Semi | 10 | ￥100 |\n| Pen | Semi Design | 20 | ￥200 |' });
-            const thead = container.querySelector(`.${BASE_CLASS_PREFIX}-table-thead`) as HTMLElement;
+            const thead = getElement(`.${BASE_CLASS_PREFIX}-table-thead`, container);
             expect(thead.querySelector('h1')).toHaveTextContent(/^Brand$/);
             expect(thead.querySelector('strong')).toHaveTextContent(/^Price$/);
             expect(bodyRows(container)).toHaveLength(2);
@@ -219,7 +219,7 @@ describe('MarkdownRender', () => {
     it.each<'md' | 'mdx'>(['md', 'mdx'])('图片块不嵌套在 p 元素中（%s）', async (format) => {
         const { container } = render(() => <MarkdownRender format={format} raw='before ![cat](a.png "cat") after' />);
         await waitFor(() => expect(container.querySelector(`.${BASE_CLASS_PREFIX}-markdownRender-component-image`)).not.toBeNull());
-        const image = container.querySelector(`.${BASE_CLASS_PREFIX}-markdownRender-component-image`) as HTMLElement;
+        const image = getElement(`.${BASE_CLASS_PREFIX}-markdownRender-component-image`, container);
         expect(image.closest('p')).toBeNull();
         const paragraph = image.closest(`.${BASE_CLASS_PREFIX}-markdownRender-component-p`);
         expect(paragraph).toHaveTextContent('before');
@@ -470,10 +470,10 @@ describe('MarkdownRender', () => {
     it('链接内的图片使段落渲染为 div，且图片不可预览', async () => {
         const { container } = render(() => <MarkdownRender format="md" raw="[![cat](a.png)](https://x.test)" />);
         await waitFor(() => expect(container.querySelector(`.${BASE_CLASS_PREFIX}-markdownRender-component-image`)).not.toBeNull());
-        const image = container.querySelector(`.${BASE_CLASS_PREFIX}-markdownRender-component-image`) as HTMLElement;
+        const image = getElement(`.${BASE_CLASS_PREFIX}-markdownRender-component-image`, container);
         expect(image.closest('p')).toBeNull();
-        fireEvent.load(image.querySelector('img') as HTMLImageElement);
-        const link = container.querySelector('a') as HTMLAnchorElement;
+        fireEvent.load(getElement<HTMLImageElement>('img', image));
+        const link = getElement<HTMLAnchorElement>('a', container);
         expect(link.querySelector('[role="button"], [tabindex="0"]')).toBeNull();
     });
 
@@ -515,7 +515,7 @@ describe('MarkdownRender', () => {
     it.each(['md', 'mdx'] as const)('%s 下有语言的代码块不包在 pre 内，无语言的保留 pre，行内代码保留 code 元素', async (format) => {
         const { container } = render(() => <MarkdownRender format={format} raw={'```js\nx\n```\n\n```\nplain\n```\n\nsome `b` text'} />);
         await waitFor(() => expect(container.querySelector(`.${BASE_CLASS_PREFIX}-codeHighlight`)).not.toBeNull());
-        expect((container.querySelector(`.${BASE_CLASS_PREFIX}-codeHighlight`) as HTMLElement).parentElement?.closest('pre')).toBeNull();
+        expect(getElement(`.${BASE_CLASS_PREFIX}-codeHighlight`, container).parentElement?.closest('pre')).toBeNull();
         expect(screen.getByText('plain').closest('pre > code')).not.toBeNull();
         expect(screen.getByText('b').tagName).toBe('CODE');
     });

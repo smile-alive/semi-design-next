@@ -5,21 +5,23 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconHome } from '@fibrae/semi-icons-solid';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import Nav, { type ItemKey, type NavFooterProps, type NavItemProps, type NavProps, type OnSelectedData, type SubNavProps } from '..';
 import type { DropdownProps } from '../../dropdown';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-navigation`;
 const logo = 'https://example.com/webcast_logo.svg';
 
-const getList = () => document.querySelector(`.${prefixCls} .${prefixCls}-list`) as HTMLElement;
+const getList = () => getElement(`.${prefixCls} .${prefixCls}-list`);
 const getOpenSubs = () => document.querySelectorAll(`.${prefixCls}-item-sub .${prefixCls}-sub-open`);
-const getCollapseButton = () => document.querySelector<HTMLButtonElement>(`.${prefixCls}-footer .${prefixCls}-collapse-btn button`) as HTMLButtonElement;
-const getSubTitle = (text: string) => screen.getByText(text).closest<HTMLElement>(`.${prefixCls}-sub-title`) as HTMLElement;
-const getItem = (text: string) => screen.getByText(text).closest(`.${prefixCls}-item`) as HTMLElement;
-const getItemControl = (text: string) => screen.getByText(text).closest<HTMLElement>('a, button') as HTMLElement;
+const getCollapseButton = () => getElement<HTMLButtonElement>(`.${prefixCls}-footer .${prefixCls}-collapse-btn button`);
+const queryCollapseButton = () => document.querySelector(`.${prefixCls}-footer .${prefixCls}-collapse-btn button`);
+const getSubTitle = (text: string) => defined(screen.getByText(text).closest<HTMLElement>(`.${prefixCls}-sub-title`));
+const getItem = (text: string) => defined(screen.getByText(text).closest<HTMLElement>(`.${prefixCls}-item`));
+const getItemControl = (text: string) => defined(screen.getByText(text).closest<HTMLElement>('a, button'));
 const isSelected = (text: string) => getItem(text).classList.contains(`${prefixCls}-item-selected`);
 const isOpen = (text: string) => getSubTitle(text).getAttribute('aria-expanded') === 'true';
-const root = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
+const root = () => getElement(`.${prefixCls}`);
 
 function JsxNav(props: NavProps) {
     return (
@@ -216,13 +218,13 @@ describe('Navigation', () => {
             />
         ));
 
-        await userEvent.click(document.querySelector(`.${prefixCls}-sub-title`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-sub-title`));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onOpenChange).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0].itemKey).toEqual('job');
         expect(onOpenChange.mock.calls[0][0].itemKey).toEqual('job');
 
-        await userEvent.click(document.querySelector(`.${prefixCls}-item-button`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-item-button`));
         expect(onSelect).toHaveBeenCalledTimes(1);
         expect(onSelect.mock.calls[0][0].itemKey).toEqual('user');
 
@@ -248,7 +250,7 @@ describe('Navigation', () => {
         ));
 
         expect(getOpenSubs()).toHaveLength(0);
-        await userEvent.click(document.querySelector(`.${prefixCls}-sub-title`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-sub-title`));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onOpenChange).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0].itemKey).toEqual(2);
@@ -278,7 +280,7 @@ describe('Navigation', () => {
         const title = screen.getByRole('button', { name: '用户管理' });
         expect(title).toHaveClass(`${prefixCls}-sub-title`);
         expect(title).toHaveAttribute('aria-expanded', 'true');
-        const subList = document.getElementById(title.getAttribute('aria-controls') as string) as HTMLElement;
+        const subList = defined(document.getElementById(title.getAttribute('aria-controls') as string));
         expect(subList.tagName).toBe('UL');
         expect(subList).toContainElement(screen.getByRole('button', { name: '用户列表' }));
 
@@ -751,7 +753,7 @@ describe('Navigation 行为', () => {
             </Nav>
         ));
         expect(screen.getByText('custom button')).toBeInTheDocument();
-        expect(getCollapseButton()).toBeNull();
+        expect(queryCollapseButton()).toBeNull();
         await userEvent.click(screen.getByText('custom button'));
         expect(onFooterClick).toHaveBeenCalledTimes(1);
     });
@@ -765,7 +767,7 @@ describe('Navigation 行为', () => {
             </Nav>
         ));
         expect(document.querySelector(`.${prefixCls}-footer`)).toHaveTextContent('版权所有');
-        expect(getCollapseButton()).toBeNull();
+        expect(queryCollapseButton()).toBeNull();
         setContent(false);
         expect(getCollapseButton()).not.toBeNull();
     });
@@ -959,7 +961,7 @@ describe('Navigation 行为', () => {
         ));
         hover(getSubTitle('任务'));
         await waitFor(() => expect(screen.getByText('子任务')).toBeInTheDocument());
-        const wrapper = getSubTitle('子任务').closest('li') as HTMLElement;
+        const wrapper = defined(getSubTitle('子任务').closest<HTMLElement>('li'));
         expect(wrapper).toHaveAttribute('role', 'none');
         expect(screen.getByRole('menu').querySelectorAll('[role^="menuitem"]')).toHaveLength(1);
     });
@@ -1202,7 +1204,7 @@ describe('Navigation 行为', () => {
                     </Nav.Sub>
                 </Nav>
             ));
-            await userEvent.click(document.querySelector(`.${prefixCls}-sub-title`) as HTMLElement);
+            await userEvent.click(getElement(`.${prefixCls}-sub-title`));
             await waitFor(() => expect(document.querySelector('.x')).toHaveClass(`${prefixCls}-popover`));
         });
     });

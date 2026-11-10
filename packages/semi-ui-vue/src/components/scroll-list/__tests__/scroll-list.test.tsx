@@ -5,7 +5,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import ScrollList, { ScrollItem, type ScrollItemHandle, type ScrollItemSelectData, type ScrollListItem } from '..';
 import Demo from './fixtures/demo.vue';
 import TwoWay from './fixtures/two-way.vue';
@@ -328,7 +328,7 @@ describe('ScrollItem 行为', () => {
     it('挂载时列表为空、数据到达后，将选中项居中', async () => {
         mockItemLayout();
         const view = renderItem({ list: [], mode: 'wheel', motion: false, selectedIndex: 0 });
-        const wrapper = view.container.querySelector(`.${prefix}-list-outer`) as Element;
+        const wrapper = getElement(`.${prefix}-list-outer`, view.container);
         await view.rerender({ list: numbers(10), selectedIndex: 4 });
         expect(wrapper.scrollTop).toBe(72);
         await view.rerender({ selectedIndex: 6 });
@@ -350,7 +350,7 @@ describe('ScrollItem 行为', () => {
         mockRects();
         const view = renderItem({ cycled: true, list: numbers(12), motion: false, selectedIndex: 2 });
         await nextTick();
-        const wrapper = view.container.querySelector(`.${prefix}-list-outer`) as Element;
+        const wrapper = getElement(`.${prefix}-list-outer`, view.container);
         expect(wrapper.scrollTop).toBe(432);
 
         await view.rerender({ selectedIndex: 5 });

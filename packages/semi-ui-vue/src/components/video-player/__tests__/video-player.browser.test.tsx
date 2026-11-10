@@ -6,7 +6,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils';
 import { expectThemeFocusRing, silentWavUrl, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, defined } from '@test/utils/vue';
 import VideoPlayer from '..';
 import type { VideoPlayerProps } from '../interface';
 
@@ -60,8 +60,8 @@ describe('VideoPlayer（浏览器）', () => {
         await waitForDuration(container);
         const root = query(container, `.${prefixCls}`);
         const controls = query(container, `.${prefixCls}-controls`);
-        const play = query(container, `.${BASE_CLASS_PREFIX}-icon-play`).closest('button') as HTMLButtonElement;
-        const mirror = query(container, `.${BASE_CLASS_PREFIX}-icon-flip_horizontal`).closest('button') as HTMLButtonElement;
+        const play = defined(query(container, `.${BASE_CLASS_PREFIX}-icon-play`).closest<HTMLButtonElement>('button'));
+        const mirror = defined(query(container, `.${BASE_CLASS_PREFIX}-icon-flip_horizontal`).closest<HTMLButtonElement>('button'));
         query(container, 'video').dispatchEvent(new Event('play'));
 
         await tabTo(play);
@@ -258,14 +258,14 @@ describe('VideoPlayer（浏览器）', () => {
         const { container } = view;
         const video = query<HTMLVideoElement>(container, 'video');
         await waitForDuration(container);
-        await userEvent.click(query(container, `.${BASE_CLASS_PREFIX}-icon-play`).closest('button') as HTMLElement);
+        await userEvent.click(defined(query(container, `.${BASE_CLASS_PREFIX}-icon-play`).closest<HTMLElement>('button')));
         await expect.poll(() => video.paused).toBe(false);
 
         // the load algorithm pauses the element without a pause event
         await view.rerender({ src: silentWavUrl(30) });
         await expect.poll(() => video.paused).toBe(true);
         await expect.poll(() => container.querySelector(`.${BASE_CLASS_PREFIX}-icon-play`)).not.toBeNull();
-        await userEvent.click(query(container, `.${BASE_CLASS_PREFIX}-icon-play`).closest('button') as HTMLElement);
+        await userEvent.click(defined(query(container, `.${BASE_CLASS_PREFIX}-icon-play`).closest<HTMLElement>('button')));
         await expect.poll(() => video.paused).toBe(false);
     });
 
@@ -303,7 +303,7 @@ describe('VideoPlayer（浏览器）', () => {
         expect(status.parentElement).toBe(root);
         expect(status.getBoundingClientRect().height).toBe(0);
 
-        await userEvent.click(query(container, `.${BASE_CLASS_PREFIX}-icon-flip_horizontal`).closest('button') as Element);
+        await userEvent.click(defined(query(container, `.${BASE_CLASS_PREFIX}-icon-flip_horizontal`).closest('button')));
         const notification = await vi.waitFor(() => {
             const el = query(container, `.${prefixCls}-notification`);
             expect(el).not.toBeNull();
@@ -324,7 +324,7 @@ describe('VideoPlayer（浏览器）', () => {
         await waitForDuration(container);
         const root = query(container, `.${prefixCls}`);
         const video = query<HTMLVideoElement>(container, 'video');
-        await userEvent.click(query(container, `.${BASE_CLASS_PREFIX}-icon-maximize`).closest('button') as Element);
+        await userEvent.click(defined(query(container, `.${BASE_CLASS_PREFIX}-icon-maximize`).closest('button')));
         await expect.poll(() => document.fullscreenElement).toBe(root);
         try {
             const trigger = query(container, `.${prefixCls}-controls-popup`);
@@ -351,7 +351,7 @@ describe('VideoPlayer（浏览器）', () => {
         });
         await waitForDuration(container);
         const video = query<HTMLVideoElement>(container, 'video');
-        await userEvent.click(query(container, `.${BASE_CLASS_PREFIX}-icon-play`).closest('button') as Element);
+        await userEvent.click(defined(query(container, `.${BASE_CLASS_PREFIX}-icon-play`).closest('button')));
         await expect.poll(() => video.paused).toBe(false);
         show.value = false;
         await expect.poll(() => video.paused).toBe(true);

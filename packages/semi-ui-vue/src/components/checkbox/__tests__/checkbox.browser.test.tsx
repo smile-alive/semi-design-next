@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, preventBackspaceNavigation, tab } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Checkbox, { CheckboxGroup } from '..';
 import type { CheckboxEvent, CheckboxType } from '../interface';
 import FocusButton from './fixtures/focus-button.vue';
@@ -12,7 +12,7 @@ import FormSubmit from './fixtures/form-submit.vue';
 
 const prefix = `${BASE_CLASS_PREFIX}-checkbox`;
 const outlineOf = (el: Element) => getComputedStyle(el).outlineStyle;
-const display = (el: Element) => el.querySelector(`.${prefix}-inner-display`) as Element;
+const display = (el: Element) => getElement(`.${prefix}-inner-display`, el);
 
 describe('Checkbox（浏览器）', () => {
     it.each(['box', 'text'])('鼠标点击%s后焦点进入勾选框但不显示焦点环', async (part) => {
@@ -78,7 +78,7 @@ describe('Checkbox（浏览器）', () => {
         });
         const displays = container.querySelectorAll(`.${prefix}-inner-display`);
 
-        await userEvent.click(container.querySelector(`.${prefix}`) as Element);
+        await userEvent.click(getElement(`.${prefix}`, container));
         await tab();
         await tab();
         await tab();
@@ -95,7 +95,7 @@ describe('Checkbox（浏览器）', () => {
         });
         const input = screen.getByRole<HTMLInputElement>('checkbox', { name: 'partial' });
         expect(input.matches(':indeterminate')).toBe(true);
-        await userEvent.click(input.closest(`.${prefix}`) as Element);
+        await userEvent.click(defined(input.closest(`.${prefix}`)));
         expect(change).toHaveBeenCalledTimes(1);
         expect(input.matches(':indeterminate')).toBe(true);
         expect(input).toBePartiallyChecked();

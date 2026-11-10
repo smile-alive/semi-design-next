@@ -2,6 +2,7 @@ import { fireEvent } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { changes, clickDay, clickOutside, clickTrigger, dp, getContainer, getDay, getInput, getRoot, getSelectedDays, getTrigger, settle, setup, typeText, useBaseDate } from './test-utils';
 
 useBaseDate();
@@ -103,7 +104,7 @@ describe('Svelte DatePicker dateTime 与 needConfirm', () => {
 
     it('切换到时间面板显示时间列', async () => {
         await setup({ value: new Date(2019, 7, 10, 8, 30, 0), open: true, props: { type: 'dateTime' } });
-        await fireEvent.click(document.querySelector(`[aria-label="${zh_CN.DatePicker.switchToTime}"]`) as HTMLElement);
+        await fireEvent.click(getElement(`[aria-label="${zh_CN.DatePicker.switchToTime}"]`));
         await settle();
         expect(document.querySelector(`.${dp}-tpk`)).not.toBeNull();
         expect(document.querySelectorAll(`.${dp}-tpk .${BASE_CLASS_PREFIX}-scrolllist-item`)).toHaveLength(3);
@@ -132,7 +133,7 @@ describe('Svelte DatePicker snippet 与透传', () => {
 
     it('trigger snippet 的按钮是焦点目标，点击打开面板，选择后显示新值', async () => {
         const { store } = await setup({ trigger: 'button', props: { type: 'date' } });
-        const button = getRoot().querySelector('.custom-trigger') as HTMLElement;
+        const button = getElement('.custom-trigger', getRoot());
         expect(button).toHaveAttribute('data-type', 'date');
         expect(getTrigger()).toHaveAttribute('tabindex', '-1');
         expect(getTrigger()).not.toHaveAttribute('role');

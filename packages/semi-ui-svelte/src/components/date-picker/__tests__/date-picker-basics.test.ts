@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { click, getFooterButtons, getPopups, getPresetButtons, setupPinned, ymd } from './date-picker-dom-utils';
 import SlotsFixture, { type SlotsFixtureStore } from './date-picker-slots-fixture.svelte';
 import { changes, clickOutside, dp, getContainer, getDay, getInput, getRoot, getSelectedDays, getTrigger, opens, settle, setup, typeText, useBaseDate } from './test-utils';
@@ -132,7 +133,7 @@ describe('Svelte DatePicker 值与确认', () => {
 describe('Svelte DatePicker 外观属性', () => {
     it('clear：点击清除按钮触发一次 onClear', async () => {
         const { store } = await setup({ value: baseDate, open: true, props: { autofocus: true, showClear: true } });
-        const clearButton = getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement;
+        const clearButton = getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, getRoot());
         await fireEvent.mouseDown(clearButton, { button: 0 });
         await settle();
         expect(store.log.filter((entry) => entry === 'clear')).toHaveLength(1);

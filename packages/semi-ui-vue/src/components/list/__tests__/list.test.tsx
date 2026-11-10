@@ -6,7 +6,7 @@ import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import List, { ListItem, type Grid, type ListItemSlotProps, type ListProps, type ListSlots } from '..';
 import Avatar from '../../avatar';
 import Button, { ButtonGroup } from '../../button';
@@ -400,7 +400,7 @@ describe('List', () => {
             grid: { gutter: 20, justify: 'center', align: 'middle', span: 8, xs: 24, class: 'col' },
         });
         expect(view.container.querySelector(`.${prefixCls}-items`)).toBeNull();
-        const row = view.container.querySelector(`.${BASE_CLASS_PREFIX}-row`) as HTMLElement;
+        const row = getElement(`.${BASE_CLASS_PREFIX}-row`, view.container);
         expect(row).toHaveClass(`${BASE_CLASS_PREFIX}-row-justify-center`, `${BASE_CLASS_PREFIX}-row-align-middle`);
         expect(row).toHaveStyle({ '--semi-row-gutter-x-md': '20px' });
         const cols = row.children;
@@ -412,7 +412,7 @@ describe('List', () => {
 
     it('grid 保持列表语义：Row 即列表，布局用的 Col 没有自己的 role', () => {
         const view = renderList({ grid: { span: 12 } });
-        const row = view.container.querySelector(`.${BASE_CLASS_PREFIX}-row`) as HTMLElement;
+        const row = getElement(`.${BASE_CLASS_PREFIX}-row`, view.container);
         expect(screen.getByRole('list')).toBe(row);
         for (const col of row.children) {
             expect(col).toHaveAttribute('role', 'none');

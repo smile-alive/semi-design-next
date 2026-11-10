@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { RadioChangeEvent, RadioProps } from '../interface';
 import Radio from '../radio.svelte';
 import Peers from './peers.svelte';
@@ -12,7 +13,7 @@ import RadioModes from './radio-modes.svelte';
 
 const prefix = `${BASE_CLASS_PREFIX}-radio`;
 const getRadio = () => screen.getByRole<HTMLInputElement>('radio');
-const getLabel = () => document.querySelector<HTMLLabelElement>('label') as HTMLLabelElement;
+const getLabel = () => getElement<HTMLLabelElement>('label');
 async function click(el: Element) {
     await fireEvent.click(el);
     flushSync();
@@ -214,8 +215,8 @@ describe('Svelte Radio', () => {
 
     it('extra 带 x-semi-prop，aria-labelledby 与 aria-describedby 指向 addon 与 extra', () => {
         fixture({}, 'Radio with extra', 'Extra information');
-        const extra = document.querySelector(`.${prefix}-extra`) as HTMLElement;
-        const addon = document.querySelector(`.${prefix}-addon`) as HTMLElement;
+        const extra = getElement(`.${prefix}-extra`);
+        const addon = getElement(`.${prefix}-addon`);
         expect(extra).toHaveTextContent(/^Extra information$/);
         expect(extra).toHaveAttribute('x-semi-prop', 'extra');
         expect(addon).toHaveAttribute('x-semi-prop', 'children');
@@ -233,7 +234,7 @@ describe('Svelte Radio', () => {
 
     it('button 类型隐藏 extra，应用 addonClassName 与 addonStyle，选中后带选中类名', async () => {
         fixture({ type: 'button', addonClassName: 'ac', addonStyle: 'color: red' }, 'A', 'more');
-        const addon = document.querySelector(`.${prefix}-addon-buttonRadio`) as HTMLElement;
+        const addon = getElement(`.${prefix}-addon-buttonRadio`);
         expect(addon).toHaveClass('ac');
         expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(document.querySelector(`.${prefix}-extra`)).toBeNull();

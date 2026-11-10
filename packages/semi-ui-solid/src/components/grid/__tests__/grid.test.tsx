@@ -3,6 +3,7 @@ import { render } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import { Col, Row } from '..';
 
 const breakpoints = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;
@@ -69,7 +70,7 @@ describe('Row', () => {
                 <Col />
             </Row>
         ));
-        const row = container.querySelector('.semi-row') as HTMLElement;
+        const row = getElement('.semi-row', container);
         expect(gutterVars(row, 'x')).toEqual({ xs: '0px', sm: '0px', md: '0px', lg: '0px', xl: '0px', xxl: '0px' });
         expect(gutterVars(row, 'y')).toEqual({ xs: '0px', sm: '0px', md: '0px', lg: '0px', xl: '0px', xxl: '0px' });
         expect(container.querySelector('.semi-col')?.getAttribute('style')).toBeNull();
@@ -81,7 +82,7 @@ describe('Row', () => {
                 <Col />
             </Row>
         ));
-        expect(gutterVars(container.querySelector('.semi-row') as HTMLElement, 'x')).toEqual({
+        expect(gutterVars(getElement('.semi-row', container), 'x')).toEqual({
             xs: '4px',
             sm: '0px', // nothing smaller than md to inherit
             md: '16px',
@@ -97,7 +98,7 @@ describe('Row', () => {
                 <Col />
             </Row>
         ));
-        const row = container.querySelector('.semi-row') as HTMLElement;
+        const row = getElement('.semi-row', container);
         expect(gutterVars(row, 'y')).toMatchObject({ xs: '4px', sm: '20px', md: '20px' });
         expect(gutterVars(row, 'x')).toMatchObject({ xs: '8px', sm: '8px' });
     });
@@ -160,7 +161,7 @@ describe('Row', () => {
             </Row>
         ));
         setGutter({ sm: 8, xxl: 40 });
-        expect(gutterVars(container.querySelector('.semi-row') as HTMLElement, 'x')).toMatchObject({ sm: '8px', md: '8px', lg: '8px', xl: '8px', xxl: '40px' });
+        expect(gutterVars(getElement('.semi-row', container), 'x')).toMatchObject({ sm: '8px', md: '8px', lg: '8px', xl: '8px', xxl: '40px' });
     });
 });
 
@@ -171,7 +172,7 @@ describe('Col', () => {
                 <Col class="custom" offset={3} order={2} pull={5} push={4} span={6} />
             </Row>
         ));
-        const col = container.querySelector('.semi-col') as HTMLElement;
+        const col = getElement('.semi-col', container);
         expect(col.className).toBe('semi-col custom');
         expect(colVars(col)).toEqual({ '--semi-col-span': '6', '--semi-col-offset': '3', '--semi-col-push': '4', '--semi-col-pull': '5', '--semi-col-order': '2' });
     });
@@ -182,7 +183,7 @@ describe('Col', () => {
                 <Col offset={0} order={0} pull={0} push={0} span={0} />
             </Row>
         ));
-        expect(colVars(container.querySelector('.semi-col') as HTMLElement)).toEqual({ '--semi-col-span': '0', '--semi-col-offset': '0', '--semi-col-push': '0', '--semi-col-pull': '0', '--semi-col-order': '0', '--semi-col-display': 'none' });
+        expect(colVars(getElement('.semi-col', container))).toEqual({ '--semi-col-span': '0', '--semi-col-offset': '0', '--semi-col-push': '0', '--semi-col-pull': '0', '--semi-col-order': '0', '--semi-col-display': 'none' });
     });
 
     it('没有属性时不写任何变量', () => {
@@ -196,7 +197,7 @@ describe('Col', () => {
                 <Col md={{ span: 12, order: 0, offset: 2, push: 1, pull: 0 }} xs={24} xxl={{ order: 3 }} />
             </Row>
         ));
-        const col = container.querySelector('.semi-col') as HTMLElement;
+        const col = getElement('.semi-col', container);
         expect(colVars(col)).toEqual({
             '--semi-col-span-xs': '24',
             '--semi-col-span-md': '12',
@@ -251,7 +252,7 @@ describe('Col', () => {
                 </Col>
             </Row>
         ));
-        const col = container.querySelector('.semi-col') as HTMLElement;
+        const col = getElement('.semi-col', container);
         expect(col).toHaveAttribute('data-testid', 'col');
         expect(col).toHaveAttribute('id', 'c');
         expect(col).toHaveAttribute('x-semi-prop', 'children');
@@ -261,7 +262,7 @@ describe('Col', () => {
 
     it('在 Row 之外渲染，没有 Row 写入的 gutter 变量，样式里只有 Col 自己的变量', () => {
         const { container } = render(() => <Col span={12}>child</Col>);
-        const col = container.querySelector(`.${BASE_CLASS_PREFIX}-col`) as HTMLElement;
+        const col = getElement(`.${BASE_CLASS_PREFIX}-col`, container);
         expect(colVars(col)).toEqual({ '--semi-col-span': '12' });
         expect(col).toHaveTextContent('child');
     });

@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { defined } from '@test/utils/function';
 import type { AudioPlayerProps } from '../interface';
 import AudioFixture from './audio-fixture.svelte';
 
@@ -356,7 +357,7 @@ describe('Svelte AudioPlayer', () => {
         const { container } = renderPlayer({ audioUrl: tracks });
         const audio = getAudio(container);
         await loadMetadata(audio, { currentTime: 40, playbackRate: 2 });
-        const [prev, next] = [...container.querySelectorAll(icon('restart'))].map((el) => el.closest('button') as HTMLButtonElement);
+        const [prev, next] = [...container.querySelectorAll(icon('restart'))].map((el) => defined(el.closest<HTMLButtonElement>('button')));
         expect(query(container, `.${prefixCls}-info-title`)).toHaveTextContent('Track A');
 
         await click(next);
@@ -382,7 +383,7 @@ describe('Svelte AudioPlayer', () => {
     it('上一首、下一首、后退与前进各占一个 Tab 焦点', async () => {
         const { container } = renderPlayer({ audioUrl: tracks });
         await loadMetadata(getAudio(container));
-        const buttons = [...[...container.querySelectorAll(icon('restart'))].map((el) => el.closest('button') as HTMLButtonElement), closestButton(container, 'backward'), closestButton(container, 'fast_forward')];
+        const buttons = [...[...container.querySelectorAll(icon('restart'))].map((el) => defined(el.closest<HTMLButtonElement>('button'))), closestButton(container, 'backward'), closestButton(container, 'fast_forward')];
         expect(buttons).toHaveLength(4);
         for (const button of buttons) {
             // a wrapper with tabindex="0" around the button would be a second stop
@@ -400,7 +401,7 @@ describe('Svelte AudioPlayer', () => {
 
     it('列表按钮的提示文字从语言包读取', async () => {
         const { container } = renderPlayer({ audioUrl: tracks });
-        const [prev] = [...container.querySelectorAll(icon('restart'))].map((el) => el.closest('button') as HTMLButtonElement);
+        const [prev] = [...container.querySelectorAll(icon('restart'))].map((el) => defined(el.closest<HTMLButtonElement>('button')));
         await hoverOpen(prev);
         await waitFor(() => expect(query(document, '.semi-tooltip-content')).toHaveTextContent('上一首'));
     });
@@ -436,7 +437,7 @@ describe('Svelte AudioPlayer', () => {
         expect(container.querySelector(`.${prefixCls}-control-speed`)).toBeNull();
         await click(closestButton(container, 'refresh'));
         expect(audio.load).toHaveBeenCalledTimes(1);
-        await click(container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement);
+        await click(defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button')));
         expect(container.querySelector(`.${prefixCls}-error`)).toBeNull();
         expect(container.querySelector(`.${prefixCls}-info-time`)).toBeInTheDocument();
     });
@@ -497,7 +498,7 @@ describe('Svelte AudioPlayer', () => {
     it('切歌后再触发 loadedmetadata，仍显示播放中；暂停事件后显示播放', async () => {
         const { container } = renderPlayer({ audioUrl: tracks });
         const audio = getAudio(container);
-        const next = container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement;
+        const next = defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button'));
         await click(next);
         await fire(fireEvent(audio, new Event('play')));
         await loadMetadata(audio);
@@ -547,7 +548,7 @@ describe('Svelte AudioPlayer', () => {
 
     it('audioUrl 列表缩短到当前曲目之外时播放最后一首，空列表不渲染曲目', async () => {
         const { container, update } = renderPlayer({ audioUrl: tracks });
-        const next = container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement;
+        const next = defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button'));
         await click(next);
         await click(next);
         expect(getAudio(container)).toHaveAttribute('src', tracks[2]);
@@ -562,7 +563,7 @@ describe('Svelte AudioPlayer', () => {
 
     it('audioUrl 列表缩短后，下一首、上一首与播完都从被钳制的曲目继续', async () => {
         const { container, update } = renderPlayer({ audioUrl: tracks });
-        const button = (index: number) => container.querySelectorAll(icon('restart'))[index].closest('button') as HTMLButtonElement;
+        const button = (index: number) => defined(container.querySelectorAll(icon('restart'))[index].closest<HTMLButtonElement>('button'));
         await click(button(1));
         await click(button(1));
         update({ audioUrl: tracks.slice(0, 2) });
@@ -589,7 +590,7 @@ describe('Svelte AudioPlayer', () => {
         const { container, update } = renderPlayer({ audioUrl: [] });
         const audio = getAudio(container);
         await fire(fireEvent(audio, new Event('ended')));
-        await click(container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement);
+        await click(defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button')));
         expect(audio.play).not.toHaveBeenCalled();
         // the index stayed a number, so a list that arrives later starts at its first track
         update({ audioUrl: tracks });
@@ -603,7 +604,7 @@ describe('Svelte AudioPlayer', () => {
         // a plain function: a vi.fn reads the promise it returns, which marks the rejection handled
         getAudio(container).play = () => Promise.reject(new DOMException('interrupted by a new load request', 'AbortError'));
         await click(query(container, `.${prefixCls}-control-button-play`));
-        await click(container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement);
+        await click(defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button')));
         await new Promise((resolve) => setTimeout(resolve, 0));
         process.off('unhandledRejection', unhandled);
         expect(unhandled).not.toHaveBeenCalled();

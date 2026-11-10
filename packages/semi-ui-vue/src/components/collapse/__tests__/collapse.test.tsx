@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconCopy, IconMinus, IconPlus } from '@fibrae/semi-icons-vue';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Collapse, { CollapsePanel } from '..';
 import type { CollapseEmits } from '../interface';
 import Model from './fixtures/model.vue';
@@ -303,10 +303,10 @@ describe('Collapse', () => {
     it('motionEnd 是声明的事件，不落到面板根元素', async () => {
         const motionEnd = vi.fn<() => void>();
         const { container } = renderPanels({ defaultActiveKey: '1' }, { panelAttrs: { onMotionEnd: motionEnd } });
-        const item = container.querySelector(`.${prefixCls}-item`) as HTMLElement;
+        const item = getElement(`.${prefixCls}-item`, container);
         expect(item).not.toHaveAttribute('onmotionend');
         expect(item).not.toHaveAttribute('motionend');
-        const wrapper = item.querySelector('.semi-collapsible-wrapper') as HTMLElement;
+        const wrapper = getElement('.semi-collapsible-wrapper', item);
         await userEvent.click(getHeaders()[0]);
         await fireEvent.transitionEnd(wrapper, { propertyName: 'height' });
         expect(motionEnd).toHaveBeenCalledTimes(1);
@@ -378,7 +378,7 @@ describe('Collapse', () => {
         const change = vi.fn<Change>();
         const view = renderPanels({ clickHeaderToExpand: false, onChange: change });
         await view.rerender({ expandIconPosition: 'left' });
-        const icon = view.container.querySelector(`.${prefixCls}-header-icon`) as HTMLElement;
+        const icon = getElement(`.${prefixCls}-header-icon`, view.container);
         await userEvent.click(icon);
         expect(change).toHaveBeenCalledTimes(1);
         expect(change.mock.calls[0][0]).toEqual(['1']);
@@ -387,7 +387,7 @@ describe('Collapse', () => {
     it('expandIconPosition 为 right 时图标位于 extra 之后', () => {
         const { container } = renderPanels({}, { extra: 'more' });
         const row = getRows(container)[0];
-        const right = row.querySelector(`.${prefixCls}-header-right`) as HTMLElement;
+        const right = getElement(`.${prefixCls}-header-right`, row);
         expect(right).toHaveTextContent('more');
         expect(right.lastElementChild).toHaveClass(`${prefixCls}-header-icon`);
         expect(row).not.toHaveClass(`${prefixCls}-header-iconLeft`);
@@ -444,7 +444,7 @@ describe('Collapse', () => {
 
     it('文本标题没有 extra 时仍渲染 header-right 与其中的空 span', () => {
         const { container } = renderPanels();
-        const right = getRows(container)[1].querySelector(`.${prefixCls}-header-right`) as HTMLElement;
+        const right = getElement(`.${prefixCls}-header-right`, getRows(container)[1]);
         expect(right.firstElementChild?.tagName).toBe('SPAN');
         expect(right.firstElementChild).toHaveTextContent('');
         expect(right.firstElementChild?.children).toHaveLength(0);
@@ -453,7 +453,7 @@ describe('Collapse', () => {
 
     it('expandIcon 插槽为空时不显示图标，图标容器仍在', () => {
         const { container } = renderPanels({}, {}, { expandIcon: () => [] });
-        const icon = container.querySelector(`.${prefixCls}-header-icon`) as HTMLElement;
+        const icon = getElement(`.${prefixCls}-header-icon`, container);
         expect(icon).not.toBeNull();
         expect(icon.children).toHaveLength(0);
     });
@@ -465,7 +465,7 @@ describe('Collapse', () => {
         await userEvent.click(getRows(container)[0]);
         expect(change).not.toHaveBeenCalled();
         expectExpanded([false, false, false]);
-        await userEvent.click(container.querySelector(`.${prefixCls}-header-icon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-header-icon`, container));
         expect(change).toHaveBeenLastCalledWith(['1'], expect.any(MouseEvent));
         expectExpanded([true, false, false]);
         await userEvent.click(screen.getByText('This is panel header 2'));

@@ -6,7 +6,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import TreeSelect, { type TreeSelectEmits, type TreeSelectSearchSlotProps, type TreeSelectTriggerSlotProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -108,17 +108,19 @@ function mount(node: () => VNodeChild) {
 }
 const getPopover = () => document.querySelector<HTMLElement>(`.${prefixCls}-popover`);
 const getOptions = () => document.querySelectorAll<HTMLElement>(`.${optionCls}`);
-const getRoot = (root: ParentNode = document) => root.querySelector(`.${prefixCls}`) as HTMLElement;
-const getSelection = (root: ParentNode = document) => root.querySelector(`.${prefixCls}-selection`) as HTMLElement;
+const getRoot = (root: ParentNode = document) => getElement(`.${prefixCls}`, root);
+const getSelection = (root: ParentNode = document) => getElement(`.${prefixCls}-selection`, root);
 async function getOption(label: string) {
     await waitFor(() => expect(getPopover()).not.toBeNull());
-    return within(getPopover() as HTMLElement)
-        .getByText(label)
-        .closest(`.${optionCls}`) as HTMLElement;
+    return defined(
+        within(getPopover() as HTMLElement)
+            .getByText(label)
+            .closest<HTMLElement>(`.${optionCls}`)
+    );
 }
 const clickOption = async (label: string) => userEvent.click(await getOption(label));
 const getTagTexts = (root: ParentNode = document) => [...root.querySelectorAll(`.${BASE_CLASS_PREFIX}-tag-content`)].map((tag) => tag.textContent);
-const expandIconOf = (root: ParentNode) => root.querySelector(`.${BASE_CLASS_PREFIX}-icon-tree_triangle_down`) as HTMLElement;
+const expandIconOf = (root: ParentNode) => getElement(`.${BASE_CLASS_PREFIX}-icon-tree_triangle_down`, root);
 const outside = () => screen.getByRole('button', { name: 'outside' });
 const outsideButton = () => <Button style={{ position: 'fixed', right: 0, bottom: 0 }}>{() => 'outside'}</Button>;
 // Playwright's type() only focuses, but the trigger opens and takes focus on click
@@ -201,7 +203,7 @@ describe('TreeSelect（浏览器）', () => {
         mount(() => <TreeSelect style={{ width: '300px' }} defaultExpandAll treeData={nestedTree} virtualize={{ itemSize: 28, height: 236 }} />);
         await userEvent.click(screen.getByRole('combobox'));
         const first = await screen.findByText('node 0');
-        const list = first.closest(`.${BASE_CLASS_PREFIX}-tree-virtual-list`) as HTMLElement;
+        const list = defined(first.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-virtual-list`));
         list.scrollTop = 28 * 50;
         expect(await screen.findByText('leaf 25')).toBeInTheDocument();
         expect(screen.queryByText('node 0')).toBeNull();
@@ -276,12 +278,12 @@ describe('treeSelect', () => {
         const multiple = screen.getByTestId('multiple');
         const clear = async (root: HTMLElement) => {
             await userEvent.hover(getSelection(root));
-            await userEvent.click(root.querySelector(`.${prefixCls}-clearbtn`) as HTMLElement);
+            await userEvent.click(getElement(`.${prefixCls}-clearbtn`, root));
         };
 
         expect(getTagTexts(multiple)).toEqual(['China', 'Japan']);
-        const japanTag = within(multiple).getByText('Japan').closest(`.${BASE_CLASS_PREFIX}-tag`) as HTMLElement;
-        await userEvent.click(japanTag.querySelector(`.${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        const japanTag = defined(within(multiple).getByText('Japan').closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-tag`));
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag-close`, japanTag));
         expect(getTagTexts(multiple)).toEqual(['China']);
         await clear(multiple);
         expect(getTagTexts(multiple)).toEqual([]);
@@ -451,7 +453,7 @@ describe('treeSelect', () => {
 
     it('多选，checkRelation 为 unRelated，#trigger', async () => {
         renderTagInputTrigger({ checkRelation: 'unRelated' });
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tagInput`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tagInput`));
         await clickOption('北京');
         await clickOption('上海');
         expect(getTagTexts()).toEqual(['北京', '上海']);
@@ -459,7 +461,7 @@ describe('treeSelect', () => {
 
     it('多选，checkRelation 为 related，#trigger', async () => {
         renderTagInputTrigger();
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tagInput`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tagInput`));
         await clickOption('北京');
         await clickOption('上海');
         expect(getTagTexts()).toEqual(['亚洲']);
@@ -548,7 +550,7 @@ describe('treeSelect', () => {
         await tabTo(trigger);
         await userEvent.keyboard('{End}');
         await waitFor(() => {
-            const row = document.getElementById(trigger.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+            const row = defined(document.getElementById(trigger.getAttribute('aria-activedescendant') ?? ''));
             expect(row).toHaveTextContent('node 39');
             expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual((getPopover() as HTMLElement).getBoundingClientRect().bottom + 1);
         });
@@ -565,13 +567,13 @@ describe('treeSelect', () => {
         shadow.append(container);
         const view = render(() => <TreeSelect style={{ width: '300px' }} motion={false} treeData={longTree} />, { container });
         try {
-            const trigger = shadow.querySelector('[role="combobox"]') as HTMLElement;
+            const trigger = getElement('[role="combobox"]', shadow);
             trigger.focus();
             await userEvent.keyboard('{End}');
             await waitFor(() => {
-                const row = shadow.getElementById(trigger.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+                const row = defined(shadow.getElementById(trigger.getAttribute('aria-activedescendant') ?? ''));
                 expect(row).toHaveTextContent('node 39');
-                expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual((shadow.querySelector(`.${prefixCls}-popover`) as HTMLElement).getBoundingClientRect().bottom + 1);
+                expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual(getElement(`.${prefixCls}-popover`, shadow).getBoundingClientRect().bottom + 1);
             });
         } finally {
             view.unmount();
@@ -590,7 +592,7 @@ describe('treeSelect', () => {
         await userEvent.click(getRoot());
         await waitFor(() => expect(getPopover()).not.toBeNull());
         await clickAndType(within(getPopover() as HTMLElement).getByRole('textbox'), '1');
-        await userEvent.click((getPopover() as HTMLElement).querySelector(`.${optionCls}-expand-icon`) as HTMLElement);
+        await userEvent.click(getElement(`.${optionCls}-expand-icon`, getPopover() as HTMLElement));
         expect((getPopover() as HTMLElement).querySelector(`.${optionCls}-label-text`)).toHaveTextContent('Asia');
     });
 
@@ -611,7 +613,7 @@ describe('treeSelect', () => {
         await userEvent.keyboard('{Enter}');
         await screen.findByRole('tree');
         await userEvent.keyboard('{ArrowDown}');
-        const row = () => document.getElementById(trigger.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+        const row = () => defined(document.getElementById(trigger.getAttribute('aria-activedescendant') ?? ''));
         await waitFor(() => expect(row()).toHaveTextContent('亚洲'));
         expectThemeFocusRing(row());
         await userEvent.keyboard('{Enter}');
@@ -641,7 +643,7 @@ describe('treeSelect', () => {
         await waitFor(() => expect(screen.queryByRole('tree')).toBeNull());
         expect(combobox).toHaveAccessibleDescription('亚洲');
         await userEvent.type(combobox, '中');
-        await userEvent.click(document.querySelector(`.${prefixCls}-arrow`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-arrow`));
         expect(combobox).toHaveFocus();
         expect(combobox).toHaveValue('中');
     });
@@ -699,7 +701,7 @@ describe.each([
         ));
         return spies;
     };
-    const getClear = () => document.querySelector(`.${prefixCls}-clearbtn`) as HTMLElement;
+    const getClear = () => getElement(`.${prefixCls}-clearbtn`);
     const tabToClearAndBack = async () => {
         await tabTo(getClear());
         await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
@@ -777,7 +779,7 @@ it('焦点在弹层搜索框时按 Escape 关闭，焦点回到触发器，不�
     mount(() => <TreeSelect style={{ width: '300px' }} filterTreeNode treeData={regionTreeData} {...spies} />);
     await userEvent.click(screen.getByRole('combobox'));
     await waitFor(() => expect(getPopover()).not.toBeNull());
-    const search = (getPopover() as HTMLElement).querySelector('input') as HTMLInputElement;
+    const search = getElement<HTMLInputElement>('input', getPopover() as HTMLElement);
     await userEvent.click(search);
     expect(search).toHaveFocus();
     await userEvent.keyboard('{Escape}');

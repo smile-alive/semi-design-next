@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import Fixture, { type FixtureStore } from './carousel-fixture.svelte';
 
 const prefix = `${BASE_CLASS_PREFIX}-carousel`;
@@ -49,7 +50,7 @@ describe('Svelte Carousel（浏览器）', () => {
 
         it('鼠标点击箭头会使其获得焦点，但不暂停轮播', async () => {
             const { container } = setup({ autoPlay: { interval: 1000, hoverToPause: false } });
-            const next = container.querySelector(`.${prefix}-arrow-next`) as HTMLElement;
+            const next = getElement(`.${prefix}-arrow-next`, container);
             await userEvent.click(next);
             await expectActive('index1');
             expect(next).toHaveFocus();
@@ -60,7 +61,7 @@ describe('Svelte Carousel（浏览器）', () => {
 
     it('仅悬停显示的箭头在键盘聚焦进入轮播时变为可见，非当前幻灯片带 inert 属性', async () => {
         const { container } = setup({ arrowType: 'hover', autoPlay: false });
-        const next = container.querySelector(`.${prefix}-arrow-next`) as HTMLElement;
+        const next = getElement(`.${prefix}-arrow-next`, container);
         expect(getComputedStyle(next).opacity).toBe('0');
         await userEvent.keyboard('{Tab}{Tab}{Tab}');
         expect(next).toHaveFocus();

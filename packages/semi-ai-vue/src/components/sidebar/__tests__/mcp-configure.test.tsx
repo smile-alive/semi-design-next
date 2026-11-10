@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import MCPConfigure, { type MCPConfigureEmits, type MCPConfigureItemSlotProps, type MCPConfigureOption } from '../mcp-configure';
 import MCPModel from './fixtures/mcp-model.vue';
 
@@ -24,7 +24,7 @@ const customOptions: MCPConfigureOption[] = [
 
 const labels = (container: Element) => [...container.querySelectorAll('.semi-sidebar-mcp-configure-content-item-content-label')].map((n) => n.textContent);
 const items = (container: Element) => [...container.querySelectorAll('.semi-sidebar-mcp-configure-content-item')];
-const search = (container: Element) => container.querySelector('.semi-sidebar-mcp-configure-content-search input') as HTMLInputElement;
+const search = (container: Element) => getElement<HTMLInputElement>('.semi-sidebar-mcp-configure-content-search input', container);
 const switchToCustom = () => fireEvent.click(screen.getByRole('radio', { name: text.newMcpAdd }));
 const iconButton = (scope: Element | undefined, icon: string) => scope?.querySelector(`.semi-icon-${icon}`)?.closest('button') as HTMLButtonElement;
 
@@ -172,7 +172,7 @@ describe('MCPConfigure', () => {
         await switchToCustom();
         expect(screen.getByText(text.emptyCustomMcpInfo)).toBeInTheDocument();
         expect(items(container)).toEqual([]);
-        await fireEvent.click(container.querySelector('.semi-sidebar-mcp-configure-content-custom-empty button') as Element);
+        await fireEvent.click(getElement('.semi-sidebar-mcp-configure-content-custom-empty button', container));
         expect(onAddClick).toHaveBeenCalledWith(expect.objectContaining({ type: 'click' }));
     });
 

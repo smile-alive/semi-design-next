@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconMapPin } from '@fibrae/semi-icons-solid';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
-import { mockResizeObserver } from '@test/utils/solid';
+import { mockResizeObserver, getElement } from '@test/utils/solid';
 import Tree, { type DragProps, type OnDragProps, type TreeDataSimpleJson, type TreeNodeData, type TreeProps } from '..';
 import Button from '../../button';
 
@@ -263,9 +263,9 @@ function renderTree(initial: TreeProps = {}) {
 
 const getOptions = () => document.querySelectorAll(`.${optionCls}`);
 const getLevelNodes = (level: number) => document.querySelectorAll(`.${optionCls}.${optionCls}-level-${level}`);
-const getNode = (key: string) => document.querySelector(`[role="treeitem"][data-key="${key}"]`) as HTMLElement;
+const getNode = (key: string) => getElement(`[role="treeitem"][data-key="${key}"]`);
 const getHighlights = () => document.querySelectorAll(`.${optionCls}-highlight`);
-const getExpandIcon = (node: HTMLElement) => node.querySelector(`.${optionCls}-expand-icon`) as HTMLElement;
+const getExpandIcon = (node: HTMLElement) => getElement(`.${optionCls}-expand-icon`, node);
 const getSelected = () => document.querySelectorAll(`.${selectedCls}`);
 const getSearchWrapper = () => document.querySelector(`.${BASE_CLASS_PREFIX}-tree-search-wrapper`);
 const search = (value: string) => fireEvent.input(screen.getByRole('textbox'), { target: { value } });
@@ -654,12 +654,12 @@ describe('Tree', () => {
         search('北');
         await userEvent.click(getExpandIcon(getNode('zhongguo')));
 
-        const motionWrapper = document.querySelector(`.${BASE_CLASS_PREFIX}-collapsible-wrapper`) as HTMLElement;
+        const motionWrapper = getElement(`.${BASE_CLASS_PREFIX}-collapsible-wrapper`);
         expect(motionWrapper).not.toBeNull();
         expect(getNode('zhongguo').nextElementSibling).toBe(motionWrapper);
         const animated = motionWrapper.querySelectorAll('[role="treeitem"]');
         expect(Array.from(animated, (node) => node.getAttribute('data-key'))).toEqual(['beijing']);
-        expect(getNode('shanghai')).toBeNull();
+        expect(document.querySelector('[role="treeitem"][data-key="shanghai"]')).toBeNull();
     });
 
     it('filterTreeNode 为函数', () => {
@@ -1027,7 +1027,7 @@ describe('Tree', () => {
             motion: false,
             keyMaps: defaultKeyMaps,
         });
-        const disabledNode = document.querySelector(`.${optionCls}-disabled`) as HTMLElement;
+        const disabledNode = getElement(`.${optionCls}-disabled`);
         expect(disabledNode.querySelector(`.${optionCls}-label-text`)).toHaveTextContent(/^中国$/);
         const selected = getSelected();
         expect(selected).toHaveLength(1);
@@ -1051,7 +1051,7 @@ describe('Tree', () => {
             defaultExpandAll: true,
             keyMaps: defaultKeyMaps,
         });
-        const disabledNode = document.querySelector(`.${optionCls}-disabled`) as HTMLElement;
+        const disabledNode = getElement(`.${optionCls}-disabled`);
         expect(disabledNode.querySelector(`.${optionCls}-label-text`)).toHaveTextContent(/^中国$/);
         const selected = getSelected();
         expect(selected).toHaveLength(1);
@@ -1102,7 +1102,7 @@ describe('非数字高度的 Tree virtualize', () => {
                 <Tree defaultExpandAll treeData={treeData} virtualize={{ itemSize: 28, height: '100%' }} />
             </div>
         ));
-        const wrapper = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`);
         const parent = wrapper.parentElement as HTMLElement;
         expect(resize.observed()).toEqual([parent]);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-virtual-list`)).toBeNull();

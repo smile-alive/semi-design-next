@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { mockResizeObserver } from '@test/utils/solid';
+import { mockResizeObserver, getElement } from '@test/utils/solid';
 import Tabs, { type OverflowItem, type PlainTab, type TabBarProps, type TabPaneProps, type TabsProps } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
@@ -54,10 +54,10 @@ const tab = (name: string) => screen.getByRole('tab', { name });
 const tabNames = () => screen.queryAllByRole('tab').map((item) => item.textContent);
 const selectedTab = () => screen.queryByRole('tab', { selected: true })?.textContent ?? null;
 const getActiveTab = (container: HTMLElement) => container.querySelector(ACTIVE);
-const getBar = () => document.querySelector(`.${prefix}-bar`) as HTMLElement;
-const getContent = (container: HTMLElement) => container.querySelector(`.${prefix}-content`) as HTMLElement;
-const paneOf = (container: HTMLElement, itemKey: string) => container.querySelector(`[role="tabpanel"][id$="-panel-${itemKey}"]`) as HTMLElement;
-const overlayOf = (container: HTMLElement, itemKey: string) => paneOf(container, itemKey).querySelector(`.${prefix}-pane-motion-overlay`) as HTMLElement;
+const getBar = () => getElement(`.${prefix}-bar`);
+const getContent = (container: HTMLElement) => getElement(`.${prefix}-content`, container);
+const paneOf = (container: HTMLElement, itemKey: string) => getElement(`[role="tabpanel"][id$="-panel-${itemKey}"]`, container);
+const overlayOf = (container: HTMLElement, itemKey: string) => getElement(`.${prefix}-pane-motion-overlay`, paneOf(container, itemKey));
 const animate = (dir: string) => `${prefix}-pane-animate-${dir}Show`;
 const closeButtons = () => screen.queryAllByRole('button', { name: zh_CN.Tabs.close });
 
@@ -743,7 +743,7 @@ describe('Tabs 行为', () => {
                 </button>
             ),
         });
-        const extra = container.querySelector(`.${prefix}-bar-extra`) as HTMLElement;
+        const extra = getElement(`.${prefix}-bar-extra`, container);
         expect(getBar()).toContainElement(extra);
         expect(screen.getByRole('tablist')).not.toContainElement(extra);
         expect(extra).toHaveAttribute('x-semi-prop', 'tabBarExtraContent');
@@ -761,7 +761,7 @@ describe('Tabs 行为', () => {
                 </button>
             ),
         });
-        expect((container.querySelector(`.${prefix}-bar-extra`) as HTMLElement).style.getPropertyValue('float')).toBe('left');
+        expect(getElement(`.${prefix}-bar-extra`, container).style.getPropertyValue('float')).toBe('left');
     });
 
     it.each([false, '', null])('tabBarExtraContent 为 %s 时不渲染容器', (extra) => {
@@ -1311,7 +1311,7 @@ function stubIntersectionObserver() {
 describe('Tabs more 与 collapsible', () => {
     const scrollIntoView = vi.fn<Element['scrollIntoView']>();
     const keyPanes = (keys: string[]): PaneData[] => keys.map((key) => ({ itemKey: key, tab: `tab-${key}` }));
-    const arrow = (container: HTMLElement, pos: string) => container.querySelector(`.${prefix}-bar-arrow-${pos}`) as HTMLElement;
+    const arrow = (container: HTMLElement, pos: string) => getElement(`.${prefix}-bar-arrow-${pos}`, container);
     const tabStops = () => screen.getAllByRole('tab').filter((item) => item.getAttribute('tabindex') === '0');
 
     afterEach(() => {
@@ -1407,7 +1407,7 @@ describe('Tabs more 与 collapsible', () => {
         io.intersect({ 'a-bar': true });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.Tabs.nextTabs }));
         const [item] = await screen.findAllByRole('menuitemcheckbox');
-        const icon = item.querySelector('[data-testid="icon-b"]') as HTMLElement;
+        const icon = getElement('[data-testid="icon-b"]', item);
         expect(icon.parentElement?.tagName).toBe('SPAN');
         expect(icon.parentElement).not.toHaveClass(`${BASE_CLASS_PREFIX}-dropdown-item-icon`);
     });
@@ -1481,7 +1481,7 @@ describe('Tabs more 与 collapsible', () => {
         const onChange = vi.fn<Change>();
         const panes = keyPanes(['k0', 'k1', 'k2', 'k3', 'k4']);
         const { container } = renderTabs({ collapsible: true, onVisibleTabsChange, onChange, visibleTabsStyle: { color: 'red' }, dropdownProps: { end: { trigger: 'click' } } }, panes);
-        const arrowButton = (pos: string) => arrow(container, pos).querySelector('button') as HTMLButtonElement;
+        const arrowButton = (pos: string) => getElement<HTMLButtonElement>('button', arrow(container, pos));
         expect(getBar()).toHaveClass(`${prefix}-bar-collapse`);
         expect(screen.getByRole('tablist')).toBe(container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`));
         expect(screen.getByRole('tablist')).not.toContainElement(arrow(container, 'start'));
@@ -1627,12 +1627,12 @@ describe('Tabs more 与 collapsible', () => {
         ));
         const { container } = renderTabs({ collapsible: true, renderArrow, arrowPosition: 'end', showRestInDropdown: false }, keyPanes(['k0', 'k1', 'k2']));
         io.intersect({ 'k0-bar': true });
-        const list = container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list`) as HTMLElement;
+        const list = getElement(`.${BASE_CLASS_PREFIX}-overflow-list`, container);
         expect(list.firstElementChild).toHaveClass(`${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`);
         expect(container.querySelector('.custom-start')).toHaveTextContent(/^0$/);
         expect(container.querySelector('.custom-end')).toHaveTextContent(/^2$/);
         expect(renderArrow.mock.lastCall?.[1]).toBe('end');
-        await userEvent.click(container.querySelector(`.custom-end .${prefix}-bar-arrow`) as HTMLElement);
+        await userEvent.click(getElement(`.custom-end .${prefix}-bar-arrow`, container));
         expect(screen.queryByRole('menuitemcheckbox')).toBeNull();
         expect(scrollIntoView.mock.contexts.at(-1)).toBe(tab('tab-k1'));
     });
@@ -1694,7 +1694,7 @@ describe('Tabs more 与 collapsible', () => {
         const io = stubIntersectionObserver();
         const { container } = renderTabs({ collapsible: true, dropdownProps: { end: { trigger: 'click', class: 'x' } } }, keyPanes(['k0', 'k1', 'k2', 'k3']));
         io.intersect({ 'k0-bar': true, 'k1-bar': true });
-        await userEvent.click(container.querySelector(`.${prefix}-bar-arrow-end button`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-bar-arrow-end button`, container));
         const popup = (await screen.findAllByRole('menuitemcheckbox'))[0].closest(`.${prefix}-bar-dropdown`);
         expect(popup).toHaveClass('x');
     });

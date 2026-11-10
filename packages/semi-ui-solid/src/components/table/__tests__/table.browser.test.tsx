@@ -4,7 +4,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
-import { getData } from '@test/utils/solid';
+import { getData, getElement } from '@test/utils/solid';
 import Table from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -50,7 +50,7 @@ const fixedBothSideColumns: ColumnProps[] = [
     { title: 'Description', dataIndex: 'description', fixed: 'right', width: 150 },
 ];
 
-const getBody = () => document.querySelector(`.${prefix}-body`) as HTMLElement;
+const getBody = () => getElement(`.${prefix}-body`);
 const getBodyRows = () => document.querySelectorAll(`.${prefix}-tbody .${prefix}-row`);
 const getHeadTitles = () => document.querySelectorAll(`.${prefix}-row-head-title`);
 const getHeadEllipsis = () => document.querySelectorAll(`.${prefix}-row-head-ellipsis`);
@@ -75,7 +75,7 @@ describe('Table（浏览器）', () => {
         ));
         expect(container.querySelector(`.${prefix}-header table`)).toHaveStyle({ tableLayout: 'fixed' });
         const headerCells = [...container.querySelectorAll(`.${prefix}-thead .${prefix}-row-head`)];
-        const bodyCells = [...(container.querySelector(`.${prefix}-tbody .${prefix}-row`) as HTMLElement).children];
+        const bodyCells = [...getElement(`.${prefix}-tbody .${prefix}-row`, container).children];
         expect(headerCells).toHaveLength(columns.length);
         headerCells.forEach((th, i) => {
             const thRect = th.getBoundingClientRect();
@@ -151,7 +151,7 @@ describe('Table（浏览器）', () => {
         const wrapper = container.querySelector(`.${prefix}-wrapper`);
         expect(wrapper).toHaveAttribute('data-column-fixed', 'true');
         expect(wrapper).toHaveStyle({ zIndex: '1' });
-        const rect = (container.querySelector(`.${prefix}-thead .${prefix}-cell-fixed-left`) as HTMLElement).getBoundingClientRect();
+        const rect = getElement(`.${prefix}-thead .${prefix}-cell-fixed-left`, container).getBoundingClientRect();
         expect(rect.top).toBeLessThan(60);
         const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + Math.min(rect.height, 60) / 2);
         expect(hit).toBe(screen.getByTestId('overlay'));
@@ -166,7 +166,7 @@ describe('Table（浏览器）', () => {
         const { container } = render(() => <Table style={{ width: '800px' }} columns={columns} dataSource={getFileData(3)} pagination={false} />);
         const sizeOperate = getHeaderCell(container, 'Size').querySelector(`.${prefix}-operate-wrapper`);
         const ownerCell = getHeaderCell(container, 'Owner');
-        const ownerOperate = ownerCell.querySelector(`.${prefix}-operate-wrapper`) as HTMLElement;
+        const ownerOperate = getElement(`.${prefix}-operate-wrapper`, ownerCell);
         expect(sizeOperate).toHaveStyle({ justifyContent: 'center' });
         expect(ownerOperate).toHaveStyle({ justifyContent: 'flex-end' });
         const ownerCellRect = ownerCell.getBoundingClientRect();
@@ -203,10 +203,10 @@ describe('Table（浏览器）', () => {
                 <Table columns={fixedBothSideColumns} dataSource={getFileData(3)} pagination={false} />
             </div>
         ));
-        const tableContainer = container.querySelector(`.${prefix}-container`) as HTMLElement;
+        const tableContainer = getElement(`.${prefix}-container`, container);
         const body = getBody();
         // [left, right] shadows shown; container queries restyle a frame after the scroll
-        const shadows = () => (['left-last', 'right-first'] as const).map((side) => getComputedStyle(body.querySelector(`.${prefix}-cell-fixed-${side}`) as Element, '::after').display !== 'none');
+        const shadows = () => (['left-last', 'right-first'] as const).map((side) => getComputedStyle(getElement(`.${prefix}-cell-fixed-${side}`, body), '::after').display !== 'none');
 
         await waitFor(() => expect(tableContainer).toHaveAttribute('data-scrollable-right'));
         expect(tableContainer).not.toHaveAttribute('data-scrollable-left');
@@ -270,8 +270,8 @@ describe('Table（浏览器）', () => {
         const min = -(body.scrollWidth - body.clientWidth);
         await waitFor(() => expect(min).toBeLessThan(0));
 
-        const leftLast = () => container.querySelector(`.${prefix}-cell-fixed-left-last`) as HTMLElement;
-        const rightFirst = () => container.querySelector(`.${prefix}-cell-fixed-right-first`) as HTMLElement;
+        const leftLast = () => getElement(`.${prefix}-cell-fixed-left-last`, container);
+        const rightFirst = () => getElement(`.${prefix}-cell-fixed-right-first`, container);
         const hasShadow = (el: HTMLElement) => getComputedStyle(el, '::after').display !== 'none';
 
         await expect.poll(() => hasShadow(rightFirst())).toBe(false);
@@ -296,7 +296,7 @@ describe('Table（浏览器）', () => {
         ));
         const body = getBody();
         await waitFor(() => expect(body.scrollWidth).toBeGreaterThan(body.clientWidth));
-        const tableContainer = container.querySelector(`.${prefix}-container`) as HTMLElement;
+        const tableContainer = getElement(`.${prefix}-container`, container);
         const lastCells = [...container.querySelectorAll<HTMLElement>(`.${prefix}-cell-last`)];
 
         expect(lastCells.length).toBeGreaterThan(0);
@@ -333,7 +333,7 @@ describe('table', () => {
         ];
         const data = ['John Brown', 'Jim Green', 'Joe Black', 'Disabled User'].map((name, i) => ({ key: `${i + 1}`, name, age1: 23, age2: 11, address: 'London No. 1 Lake Park' }));
         render(() => <Table columns={columns} dataSource={data} rowSelection={{ getCheckboxProps: (record) => ({ disabled: record.name === 'Disabled User' }) }} />);
-        await userEvent.click(document.querySelector(`.${prefix}-row-head .${BASE_CLASS_PREFIX}-checkbox-inner-display`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-row-head .${BASE_CLASS_PREFIX}-checkbox-inner-display`));
         await waitFor(() => expect(document.querySelectorAll(`.${BASE_CLASS_PREFIX}-checkbox-checked`)).toHaveLength(4));
     });
 
@@ -423,7 +423,7 @@ describe('table', () => {
             );
         }
         render(() => <Demo />);
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-switch`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-switch`));
         await expect.poll(getBody).toHaveStyle({ maxHeight: '300px' });
     });
 
@@ -534,7 +534,7 @@ describe('table', () => {
         ];
         const data = [3, undefined, 1, 5, undefined, 2].map((size, i) => ({ key: `${i + 1}`, name: `文档${i + 1}`, size }));
         render(() => <Table columns={columns} dataSource={data} />);
-        const sorter = document.querySelector(`.${prefix}-column-sorter`) as HTMLElement;
+        const sorter = getElement(`.${prefix}-column-sorter`);
         for (const first of ['1 KB', '5 KB']) {
             await userEvent.click(sorter);
             await waitFor(() => expect(getBodyRows()[0]).toMatchTextContent(first));
@@ -566,11 +566,11 @@ describe('table', () => {
             { title: '所有者', dataIndex: 'owner' },
         ];
         const { container } = render(() => <Table style={{ width: '600px' }} columns={columns} dataSource={getFileData(3)} pagination={false} scroll={{ x: 900 }} showHeader={false} />);
-        const secondCell = () => (container.querySelector(`.${prefix}-tbody .${prefix}-row`) as HTMLElement).children[1] as HTMLElement;
+        const secondCell = () => getElement(`.${prefix}-tbody .${prefix}-row`, container).children[1] as HTMLElement;
         await waitFor(() => expect(getComputedStyle(secondCell()).left).toBe('200px'));
-        const thead = container.querySelector(`.${prefix}-thead`) as HTMLElement;
+        const thead = getElement(`.${prefix}-thead`, container);
         expect(thead.getBoundingClientRect().height).toBe(0);
-        expect((thead.querySelector('th') as HTMLElement).getBoundingClientRect().width).toBeGreaterThan(0);
+        expect(getElement('th', thead).getBoundingClientRect().width).toBeGreaterThan(0);
     });
 
     it('keepDOM', async () => {
@@ -605,7 +605,7 @@ describe('table', () => {
             </div>
         ));
         const hiddenRows = (name: string) => document.querySelectorAll(`[data-cy=${name}] .${prefix}-row-hidden`);
-        const expandIcon = (name: string) => document.querySelector(`[data-cy=${name}] .${prefix}-expand-icon`) as HTMLElement;
+        const expandIcon = (name: string) => getElement(`[data-cy=${name}] .${prefix}-expand-icon`);
 
         expect(hiddenRows('expand')).toHaveLength(3);
         expect(hiddenRows('tree')).toHaveLength(5);
@@ -650,7 +650,7 @@ describe('table', () => {
             },
         ];
         render(() => <Table columns={columns} dataSource={getFileData(46)} />);
-        const getInput = () => document.querySelector(`.${BASE_CLASS_PREFIX}-dropdown .${BASE_CLASS_PREFIX}-input`) as HTMLInputElement;
+        const getInput = () => getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-dropdown .${BASE_CLASS_PREFIX}-input`);
         const clickButton = (name: string) => userEvent.click(screen.getByRole('button', { name }));
         const waitForClosed = () => waitFor(() => expect(getDropdown()).toBeNull());
         const openFilter = async (index: number) => {
@@ -709,7 +709,7 @@ describe('table', () => {
 
     it('确认模式的筛选页脚按钮靠末端排列，与选项之间有分隔线', async () => {
         render(() => <Table columns={[{ title: 'name', dataIndex: 'name', filterConfirmMode: 'confirm', filters: [{ text: 'a', value: 'a' }], onFilter: (value, record) => record.name === value }]} dataSource={getFileData(3)} pagination={false} />);
-        await userEvent.click(document.querySelector(`.${prefix}-column-filter`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-column-filter`));
         const footer = await waitFor(() => {
             const found = document.querySelector<HTMLElement>(`.${prefix}-column-filter-footer`);
             expect(found).not.toBeNull();
@@ -738,7 +738,7 @@ describe('table', () => {
     // Chrome makes an overflowing scroll container keyboard focusable; that focus must not show the default ring
     it('滚动的表体获得键盘焦点时显示主题焦点环', async () => {
         const { container } = render(() => <Table columns={[{ title: 'name', dataIndex: 'name' }]} dataSource={getFileData(30)} pagination={false} scroll={{ y: 200 }} />);
-        const body = container.querySelector(`.${prefix}-body`) as HTMLElement;
+        const body = getElement(`.${prefix}-body`, container);
         await tabTo(body);
         expectThemeFocusRing(body);
     });
@@ -746,22 +746,22 @@ describe('table', () => {
     // dnd-kit style sortable rows are role=button tabindex=0
     it('为拖拽排序设置为可聚焦的行显示主题焦点环', async () => {
         const { container } = render(() => <Table columns={[{ title: 'name', dataIndex: 'name' }]} dataSource={getFileData(3)} pagination={false} onRow={() => ({ role: 'button', tabIndex: 0 })} />);
-        const row = container.querySelector(`.${prefix}-tbody .${prefix}-row`) as HTMLElement;
+        const row = getElement(`.${prefix}-tbody .${prefix}-row`, container);
         await tabTo(row);
         expectThemeFocusRing(row);
     });
 
     it('列排序器显示主题焦点环', async () => {
         const { container } = render(() => <Table columns={[{ title: 'size', dataIndex: 'size', sorter: (a, b) => a.size - b.size }]} dataSource={getFileData(3)} pagination={false} />);
-        const sorter = container.querySelector(`.${prefix}-column-sorter-wrapper`) as HTMLElement;
+        const sorter = getElement(`.${prefix}-column-sorter-wrapper`, container);
         await tabTo(sorter);
         expectThemeFocusRing(sorter);
     });
 
     it('排序按钮的外观与周围的表头文字一致', () => {
         const { container } = render(() => <Table columns={[{ title: 'size', dataIndex: 'size', sorter: (a, b) => a.size - b.size }]} dataSource={getFileData(3)} pagination={false} />);
-        const button = getComputedStyle(container.querySelector(`.${prefix}-column-sorter-wrapper`) as HTMLElement);
-        const cell = getComputedStyle(container.querySelector('th') as HTMLElement);
+        const button = getComputedStyle(getElement(`.${prefix}-column-sorter-wrapper`, container));
+        const cell = getComputedStyle(getElement('th', container));
         for (const prop of ['color', 'fontFamily', 'fontSize', 'fontWeight', 'lineHeight'] as const) {
             expect(button[prop]).toBe(cell[prop]);
         }
@@ -772,7 +772,7 @@ describe('table', () => {
 
     it('展开按钮显示主题焦点环', async () => {
         const { container } = render(() => <Table columns={[{ title: 'size', dataIndex: 'size' }]} dataSource={getFileData(3)} pagination={false} expandedRowRender={() => 'more'} />);
-        const expand = container.querySelector(`.${prefix}-expand-icon`) as HTMLElement;
+        const expand = getElement(`.${prefix}-expand-icon`, container);
         await tabTo(expand);
         expectThemeFocusRing(expand);
     });
@@ -929,7 +929,7 @@ describe('Table 虚拟化（浏览器）', () => {
         ];
         render(() => <Table style={{ width: '800px' }} columns={columns} dataSource={getData(100)} pagination={false} scroll={{ y: 300, x: 1600 }} virtualized />);
         await waitFor(() => expect(getBodyRows().length).toBeGreaterThan(0));
-        const header = document.querySelector(`.${prefix}-header`) as HTMLElement;
+        const header = getElement(`.${prefix}-header`);
         const body = getBody();
         body.scrollLeft = 300;
         await waitFor(() => expect(header.scrollLeft).toBe(300));
@@ -1036,11 +1036,11 @@ describe('Table 可调整列宽（浏览器）', () => {
                 <Table columns={columns} dataSource={getFileData(3)} pagination={false} resizable rowSelection={{ selectedRowKeys: selectedRowKeys(), onChange: (keys) => setSelectedRowKeys(keys ?? []) }} />
             </div>
         ));
-        const handle = getHeaderCell(container, '名称').querySelector(`.${prefix}-resize-handle`) as Element;
+        const handle = getElement(`.${prefix}-resize-handle`, getHeaderCell(container, '名称'));
         await drag(handle, 100);
         await waitFor(() => expect(getHeaderCell(container, '名称').getBoundingClientRect().width).toBeCloseTo(300, 0));
 
-        await userEvent.click(container.querySelector(`.${prefix}-tbody .${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-tbody .${BASE_CLASS_PREFIX}-checkbox`, container));
         await waitFor(() => expect(container.querySelectorAll(`.${prefix}-tbody .${BASE_CLASS_PREFIX}-checkbox-checked`)).toHaveLength(1));
         expect(getHeaderCell(container, '名称').getBoundingClientRect().width).toBeCloseTo(300, 0);
     });
@@ -1079,7 +1079,7 @@ describe('Table 分组（浏览器）', () => {
             </div>
         ));
         const wrapper = container.firstElementChild as HTMLElement;
-        const section = () => container.querySelector(`.${prefix}-section-inner`) as HTMLElement;
+        const section = () => getElement(`.${prefix}-section-inner`, container);
         await waitFor(() => expect(section().getBoundingClientRect().width).toBeGreaterThan(0));
         await nextFrame();
         const sectionWidth = section().getBoundingClientRect().width;

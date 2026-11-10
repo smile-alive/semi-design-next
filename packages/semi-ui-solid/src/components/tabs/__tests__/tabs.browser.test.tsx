@@ -5,7 +5,7 @@ import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { expectThemeFocusRing, isChromium, tabTo } from '@test/utils/browser';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import Tabs, { type TabsProps } from '..';
 import ConfigProvider from '../../config-provider';
 
@@ -35,9 +35,9 @@ function DocTabs(props: TabsProps & { disabledKeys?: string[] }) {
     );
 }
 
-const activePane = (container: HTMLElement) => container.querySelector(`.${prefix}-pane-active`) as HTMLElement;
-const tabContent = (container: HTMLElement) => container.querySelector(`.${prefix}-content`) as HTMLElement;
-const tabByDataKey = (dataKey: string) => document.querySelector(`[data-tabkey="${dataKey}"]`) as HTMLElement;
+const activePane = (container: HTMLElement) => getElement(`.${prefix}-pane-active`, container);
+const tabContent = (container: HTMLElement) => getElement(`.${prefix}-content`, container);
+const tabByDataKey = (dataKey: string) => getElement(`[data-tabkey="${dataKey}"]`);
 
 function ClosableTabs() {
     const [list, setList] = createSignal([
@@ -173,7 +173,7 @@ describe('Tabs（浏览器）', () => {
                 </TabPane>
             </Tabs>
         ));
-        const tab = container.querySelector(`.${prefix}-tab`) as HTMLElement;
+        const tab = getElement(`.${prefix}-tab`, container);
         await tabTo(tab);
         expectThemeFocusRing(tab);
     });
@@ -193,8 +193,8 @@ describe('Tabs（浏览器）', () => {
                 </div>
             </ConfigProvider>
         ));
-        const bar = (container.querySelector(`.${prefix}-bar`) as HTMLElement).getBoundingClientRect();
-        const extra = (container.querySelector(`.${prefix}-bar-extra`) as HTMLElement).getBoundingClientRect();
+        const bar = getElement(`.${prefix}-bar`, container).getBoundingClientRect();
+        const extra = getElement(`.${prefix}-bar-extra`, container).getBoundingClientRect();
         const gapToInlineEnd = direction === 'rtl' ? extra.left - bar.left : bar.right - extra.right;
         expect(gapToInlineEnd).toBeCloseTo(0, 0);
     });
@@ -202,14 +202,14 @@ describe('Tabs（浏览器）', () => {
     it('面板滑入动画在真实 animationend 后去掉方向 class', async () => {
         const { container } = render(() => <DocTabs />);
         await userEvent.click(screen.getByRole('tab', { name: '帮助' }));
-        const overlay = activePane(container).querySelector(`.${prefix}-pane-motion-overlay`) as HTMLElement;
+        const overlay = getElement(`.${prefix}-pane-motion-overlay`, activePane(container));
         expect(overlay).toHaveClass(`${prefix}-pane-animate-leftShow`);
         await expect.poll(() => overlay.className).not.toContain('animate');
     });
 });
 
-const arrowButton = (container: HTMLElement, pos: string) => container.querySelector(`.${prefix}-bar-arrow-${pos} .${BASE_CLASS_PREFIX}-button`) as HTMLButtonElement;
-const scrollWrapper = (container: HTMLElement) => container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`) as HTMLElement;
+const arrowButton = (container: HTMLElement, pos: string) => getElement<HTMLButtonElement>(`.${prefix}-bar-arrow-${pos} .${BASE_CLASS_PREFIX}-button`, container);
+const scrollWrapper = (container: HTMLElement) => getElement(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`, container);
 
 function isInside(inner: Element, outer: Element) {
     const a = inner.getBoundingClientRect();
@@ -304,7 +304,7 @@ describe('Tabs 折叠（浏览器）', () => {
         await waitFor(() => expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toContain('tab-15'));
         await expectArrows(container, { start: false, end: true });
 
-        (container.querySelector('#wrapper') as HTMLElement).scrollTop = 40;
+        getElement('#wrapper', container).scrollTop = 40;
         await sleep(300);
         await expectArrows(container, { start: false, end: true });
     });
@@ -436,7 +436,7 @@ describe('Tabs 折叠（浏览器）', () => {
         const total = measureAutoTabs();
         for (const delta of [1, 17, 25, 49]) {
             const { container, unmount } = render(() => <AutoTabs width={Math.floor(total - delta)} collapsible="auto" />);
-            const bar = container.querySelector(`.${prefix}-bar`) as HTMLElement;
+            const bar = getElement(`.${prefix}-bar`, container);
             let changes = 0;
             const observer = new MutationObserver(() => changes++);
             observer.observe(bar, { attributes: true, attributeFilter: ['class'] });
@@ -452,7 +452,7 @@ describe('Tabs 折叠（浏览器）', () => {
         for (const delta of [1, 17, 25, 49]) {
             const { container, unmount } = render(() => <AutoTabs width={Math.floor(total - delta)} collapsible="auto" controlled />);
             await sleep(400);
-            const bar = container.querySelector(`.${prefix}-bar`) as HTMLElement;
+            const bar = getElement(`.${prefix}-bar`, container);
             expect(bar.className, `delta=${delta}`).toContain(`${prefix}-bar-collapse`);
             let changes = 0;
             const observer = new MutationObserver(() => changes++);

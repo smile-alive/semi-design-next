@@ -6,7 +6,9 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
+import { defined } from '@test/utils/function';
 import type { TabsProps } from '../interface';
 import TabItemFixture from './tab-item-fixture.svelte';
 import TabsConfig from './tabs-config.svelte';
@@ -65,15 +67,15 @@ function selectedTab() {
     return selected ? textOf(selected) : null;
 }
 const tabStops = () => screen.getAllByRole('tab').filter((item) => item.getAttribute('tabindex') === '0');
-const getBar = () => document.querySelector(`.${prefix}-bar`) as HTMLElement;
-const getRoot = () => document.querySelector(`.${prefix}`) as HTMLElement;
-const getContent = () => document.querySelector(`.${prefix}-content`) as HTMLElement;
-const paneOf = (itemKey: string) => document.querySelector(`[role="tabpanel"][id$="-panel-${itemKey}"]`) as HTMLElement;
-const overlayOf = (itemKey: string) => paneOf(itemKey).querySelector(`.${prefix}-pane-motion-overlay`) as HTMLElement;
+const getBar = () => getElement(`.${prefix}-bar`);
+const getRoot = () => getElement(`.${prefix}`);
+const getContent = () => getElement(`.${prefix}-content`);
+const paneOf = (itemKey: string) => getElement(`[role="tabpanel"][id$="-panel-${itemKey}"]`);
+const overlayOf = (itemKey: string) => getElement(`.${prefix}-pane-motion-overlay`, paneOf(itemKey));
 const overlayClass = (itemKey: string) => overlayOf(itemKey).className;
 const closeButtons = () => screen.queryAllByRole('button', { name: zh_CN.Tabs.close });
-const arrow = (position: string) => document.querySelector(`.${prefix}-bar-arrow-${position}`) as HTMLElement;
-const arrowButton = (position: string) => arrow(position).querySelector('button') as HTMLButtonElement;
+const arrow = (position: string) => getElement(`.${prefix}-bar-arrow-${position}`);
+const arrowButton = (position: string) => getElement<HTMLButtonElement>('button', arrow(position));
 
 const scrollSpy = () => vi.spyOn(Element.prototype, 'scrollIntoView');
 
@@ -301,7 +303,7 @@ describe('Tabs', () => {
             {},
             threePanes.map((pane) => ({ ...pane, closable: true }))
         );
-        await click(tab('B').closest('[role=tab]') as Element);
+        await click(defined(tab('B').closest('[role=tab]')));
         expect(selectedTab()).toBe('B');
         store.panes = threePanes.filter((pane) => pane.itemKey !== 'b');
         flushSync();
@@ -441,7 +443,7 @@ describe('Tabs', () => {
 
     it('extra 位于标签栏中 tablist 之外，浮动到行尾', () => {
         setup({}, threePanes, { snippets: ['extra'] });
-        const extra = document.querySelector(`.${prefix}-bar-extra`) as HTMLElement;
+        const extra = getElement(`.${prefix}-bar-extra`);
         expect(getBar()).toContainElement(extra);
         expect(screen.getByRole('tablist')).not.toContainElement(extra);
         expect(extra).toHaveAttribute('x-semi-prop', 'tabBarExtraContent');
@@ -1010,11 +1012,11 @@ describe('Tabs collapsible', () => {
         const io = stubIntersectionObserver();
         setup({ collapsible: true, arrowPosition: 'end', showRestInDropdown: false }, keyPanes(['k0', 'k1', 'k2']), { snippets: ['arrow'] });
         await io.intersect({ 'k0-bar': true });
-        const list = document.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list`) as HTMLElement;
+        const list = getElement(`.${BASE_CLASS_PREFIX}-overflow-list`);
         expect(list.firstElementChild).toHaveClass(`${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`);
         expect(document.querySelector('.custom-start')).toHaveTextContent(/^0$/);
         expect(document.querySelector('.custom-end')).toHaveTextContent(/^2$/);
-        await click(document.querySelector(`.custom-end .${prefix}-bar-arrow`) as HTMLElement);
+        await click(getElement(`.custom-end .${prefix}-bar-arrow`));
         expect(screen.queryByRole('menuitemcheckbox')).toBeNull();
         expect(scrollIntoView.mock.contexts.at(-1)).toBe(tab('tab-k1'));
     });
@@ -1052,7 +1054,7 @@ describe('Tabs collapsible', () => {
         const wrapper = arrow('end');
         expect(wrapper.querySelector('button')).toBeEnabled();
         expect(wrapper).toHaveAttribute('tabindex', '-1');
-        for (const node of [wrapper, wrapper.querySelector('button') as HTMLElement]) {
+        for (const node of [wrapper, getElement('button', wrapper)]) {
             expect(node).not.toHaveAttribute('aria-describedby');
             expect(node).not.toHaveAttribute('aria-haspopup');
             expect(node).not.toHaveAttribute('aria-expanded');

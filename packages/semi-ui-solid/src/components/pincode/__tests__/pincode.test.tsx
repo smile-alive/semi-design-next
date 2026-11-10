@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import PinCode, { type PinCodeProps } from '..';
 import { LocaleProvider } from '../../locale';
 import Tooltip from '../../tooltip';
@@ -20,7 +21,7 @@ const textFormat = 'text' as unknown as PinCodeProps['format'];
 
 const getInputs = () => screen.getAllByRole<HTMLInputElement>('textbox');
 const getValues = () => getInputs().map((input) => input.value);
-const getWrapper = () => document.querySelector(wrapperSelector) as HTMLElement;
+const getWrapper = () => getElement(wrapperSelector);
 
 describe('PinCode', () => {
     afterEach(() => {

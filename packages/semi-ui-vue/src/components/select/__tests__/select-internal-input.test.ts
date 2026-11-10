@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Select from '..';
 
 describe('全局 Input 默认值不给 Select 内部输入框加清除按钮', () => {
@@ -13,7 +13,7 @@ describe('全局 Input 默认值不给 Select 内部输入框加清除按钮', (
     it('触发器搜索框', async () => {
         semiGlobal.config.overrideDefaultProps = { Input: { showClear: true } };
         const { container } = render(Select, { props: { multiple: true, filter: true, defaultValue: ['a'], optionList: [{ value: 'a', label: 'A' }] } });
-        await userEvent.type(container.querySelector('input') as HTMLInputElement, 'a');
+        await userEvent.type(getElement<HTMLInputElement>('input', container), 'a');
         await new Promise((resolve) => setTimeout(resolve));
         expect(container.querySelector('input')).toHaveValue('a');
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`)).toBeNull();

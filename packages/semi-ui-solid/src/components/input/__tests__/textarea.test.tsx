@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { mockResizeObserver } from '@test/utils/solid';
+import { mockResizeObserver, getElement } from '@test/utils/solid';
 import { type TextAreaChangeEvent, type TextAreaProps, TextArea } from '..';
 
 type Change = NonNullable<TextAreaProps['onChange']>;
@@ -15,8 +15,8 @@ const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 const getValueLength = (str: string) => [...new Intl.Segmenter().segment(str)].length;
 
 const getTextArea = () => screen.getByRole<HTMLTextAreaElement>('textbox');
-const getWrapper = () => document.querySelector(`.${prefixCls}-textarea-wrapper`) as HTMLElement;
-const getCounter = () => document.querySelector(`.${prefixCls}-textarea-counter`) as HTMLElement;
+const getWrapper = () => getElement(`.${prefixCls}-textarea-wrapper`);
+const getCounter = () => getElement(`.${prefixCls}-textarea-counter`);
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
 const type = (value: string, init: InputEventInit = {}) => fireEvent.input(getTextArea(), { target: { value }, ...init });
 

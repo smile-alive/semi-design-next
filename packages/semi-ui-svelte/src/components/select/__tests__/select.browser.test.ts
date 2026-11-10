@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { clickOutside, mouse, tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { SelectOptionProps, SelectProps, SelectValue } from '..';
 import SelectCase from './select-case.svelte';
 
@@ -114,7 +115,7 @@ describe('Svelte Select 浏览器：select-only combobox（APG）', () => {
 describe('Svelte Select 浏览器：可搜索 combobox', () => {
     it('触发器内的搜索框是 combobox，输入后 aria-activedescendant 指向首个匹配项，Enter 选中', async () => {
         const { store } = setup({ filter: true });
-        await userEvent.click(document.querySelector('.semi-select') as HTMLElement);
+        await userEvent.click(getElement('.semi-select'));
         const input = await screen.findByRole('combobox', { name: 'Fruit' });
         expect(input.tagName).toBe('INPUT');
         await waitFor(() => expect(input).toHaveFocus());
@@ -161,7 +162,7 @@ describe('Svelte Select 浏览器：分组', () => {
 
     it('搜索后空组隐藏', async () => {
         setupGrouped({ filter: true });
-        await userEvent.click(document.querySelector('.semi-select') as HTMLElement);
+        await userEvent.click(getElement('.semi-select'));
         await screen.findByRole('listbox');
         await userEvent.keyboard('lee');
         await waitFor(() => expect(screen.getAllByRole('group')).toHaveLength(1));

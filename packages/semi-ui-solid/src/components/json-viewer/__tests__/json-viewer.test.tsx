@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, expectTypeOf, it, vi, type Mock } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { mockResizeObserver, sleep } from '@test/utils/solid';
+import { mockResizeObserver, sleep, getElement } from '@test/utils/solid';
 import JsonViewer, { type JsonViewerElement, type JsonViewerHandle, type JsonViewerProps } from '..';
 import LocaleProvider from '../../locale/locale-provider';
 
@@ -79,13 +79,15 @@ const instances = () => fake.instances as FakeViewer[];
 const live = () => instances().filter((instance) => instance.dispose.mock.calls.length === 0);
 const current = () => instances().at(-1) as FakeViewer;
 const rules = () => current().options.customRenderRule ?? [];
-const trigger = () => document.querySelector(`.${prefixCls}-search-bar-trigger`) as HTMLElement;
-const searchInput = () => document.querySelector(`.${prefixCls}-search-bar input`) as HTMLInputElement;
-const replaceInput = () => document.querySelector(`.${prefixCls}-replace-bar input`) as HTMLInputElement;
+const trigger = () => getElement(`.${prefixCls}-search-bar-trigger`);
+const queryTrigger = () => document.querySelector(`.${prefixCls}-search-bar-trigger`);
+const querySearchInput = () => document.querySelector(`.${prefixCls}-search-bar input`);
+const searchInput = () => getElement<HTMLInputElement>(`.${prefixCls}-search-bar input`);
+const replaceInput = () => getElement<HTMLInputElement>(`.${prefixCls}-replace-bar input`);
 const replaceButtons = () => document.querySelectorAll<HTMLButtonElement>(`.${prefixCls}-replace-bar button`);
 const optionItems = () => document.querySelectorAll(`.${prefixCls}-search-options-item`);
-const closeButton = () => document.querySelector(`.${prefixCls}-search-bar > button:last-child`) as HTMLElement;
-const optionButton = (item: Element) => item.querySelector('button') as HTMLButtonElement;
+const closeButton = () => getElement(`.${prefixCls}-search-bar > button:last-child`);
+const optionButton = (item: Element) => getElement<HTMLButtonElement>('button', item);
 const pointer = (target: EventTarget, type: string, init: PointerEventInit) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...init }));
 function drag(element: Element, pointerType: string) {
     pointer(element, 'pointerdown', { pointerId: 1, pointerType, button: 0, clientX: 0, clientY: 0 });
@@ -301,19 +303,19 @@ describe('JsonViewer', () => {
 
     it('打开与关闭搜索栏', () => {
         render(() => <JsonViewer value="1" />);
-        expect(searchInput()).toBeNull();
+        expect(querySearchInput()).toBeNull();
         fireEvent.click(trigger());
         expect(searchInput()).toBeInTheDocument();
         expect(replaceInput()).toBeInTheDocument();
-        expect(trigger()).toBeNull();
+        expect(queryTrigger()).toBeNull();
         fireEvent.click(closeButton());
-        expect(searchInput()).toBeNull();
+        expect(querySearchInput()).toBeNull();
         expect(trigger()).toBeInTheDocument();
     });
 
     it('showSearch 为 false 时隐藏搜索按钮', () => {
         render(() => <JsonViewer value="1" showSearch={false} />);
-        expect(trigger()).toBeNull();
+        expect(queryTrigger()).toBeNull();
     });
 
     it('输入时实时搜索，使用切换后的选项', () => {
@@ -402,7 +404,7 @@ describe('JsonViewer', () => {
         fireEvent.click(trigger());
         fireEvent.input(searchInput(), { target: { value: 'k' } });
         setShowSearch(false);
-        expect(searchInput()).toBeNull();
+        expect(querySearchInput()).toBeNull();
         current().searchWidget.search.mockClear();
         expect(() => current().emitter.emit('contentChanged', {})).not.toThrow();
         expect(current().searchWidget.search).toHaveBeenCalledWith('k', false, false, false);
@@ -507,7 +509,7 @@ describe('JsonViewer', () => {
         render(() => <JsonViewer value="1" renderSearchButton={renderSearchButton} />);
         expect(renderSearchButton).toHaveBeenCalledTimes(1);
         expect(controls?.showSearchBar).toBe(false);
-        fireEvent.click(document.querySelector('.toggle') as Element);
+        fireEvent.click(getElement('.toggle'));
         expect(controls?.showSearchBar).toBe(true);
         expect(searchInput()).toBeInTheDocument();
         expect(renderSearchButton).toHaveBeenCalledTimes(1);
@@ -583,11 +585,11 @@ describe('JsonViewer', () => {
             expect(trigger()).toHaveFocus();
             fireEvent.click(trigger());
             fireEvent.keyDown(searchInput(), { key: 'Escape' });
-            expect(searchInput()).toBeNull();
+            expect(querySearchInput()).toBeNull();
             expect(trigger()).toHaveFocus();
             fireEvent.click(trigger());
             fireEvent.keyDown(replaceButtons()[1], { key: 'Escape' });
-            expect(searchInput()).toBeNull();
+            expect(querySearchInput()).toBeNull();
             expect(trigger()).toHaveFocus();
         });
 
@@ -632,7 +634,7 @@ describe('JsonViewer', () => {
             const button = trigger();
             drag(button, 'mouse');
             fireEvent.click(button);
-            expect(searchInput()).toBeNull();
+            expect(querySearchInput()).toBeNull();
             await sleep(0);
             button.focus();
             await user.keyboard('{Enter}');
@@ -644,7 +646,7 @@ describe('JsonViewer', () => {
             const button = trigger();
             drag(button, 'touch');
             fireEvent.click(button);
-            expect(searchInput()).toBeNull();
+            expect(querySearchInput()).toBeNull();
             await sleep(0);
             fireEvent.click(button, { detail: 0 });
             expect(searchInput()).toBeInTheDocument();
@@ -676,7 +678,7 @@ describe('JsonViewer', () => {
         try {
             const { container } = render(() => <JsonViewer value="1" />);
             expect(root(container)).toHaveStyle({ width: '321px', height: '400px' });
-            expect(trigger()).toBeNull();
+            expect(queryTrigger()).toBeNull();
             expect(current().options).toEqual({ prefixCls, ariaLabel, readOnly: true, autoWrap: true });
         } finally {
             semiGlobal.config.overrideDefaultProps = {};
@@ -690,7 +692,7 @@ describe('JsonViewer', () => {
             fireEvent.click(trigger());
             await userEvent.type(searchInput(), 'k');
             await userEvent.type(replaceInput(), 'k');
-            const bar = document.querySelector(`.${prefixCls}-search-bar-container`) as Element;
+            const bar = getElement(`.${prefixCls}-search-bar-container`);
             expect(bar.querySelector('.semi-input-clearbtn')).toBeNull();
             expect(bar.querySelector('.semi-input-prefix, .semi-input-suffix, .semi-input-prepend, .semi-input-append')).toBeNull();
         } finally {
@@ -715,7 +717,7 @@ describe('JsonViewer', () => {
         it('开启 autoWrap 时宽度变化会重新布局编辑器', () => {
             const { container, unmount } = render(() => <JsonViewer value="1" />);
             expect(liveObservers()).toHaveLength(1);
-            const viewer = container.querySelector(`.${prefixCls}`) as Element;
+            const viewer = getElement(`.${prefixCls}`, container);
             expect(liveObservers()[0].targets).toContain(viewer);
             const editor = current();
             editor.layout.mockClear();
@@ -735,7 +737,7 @@ describe('JsonViewer', () => {
 
         it('高度变化时重新布局，不清除已测量的行高', () => {
             const { container } = render(() => <JsonViewer value="1" />);
-            const viewer = container.querySelector(`.${prefixCls}`) as Element;
+            const viewer = getElement(`.${prefixCls}`, container);
             const editor = current();
             editor.layout.mockClear();
             resize.fire(viewer, [{ borderBoxSize: [{ inlineSize: 400, blockSize: 800 }] }]);
@@ -745,7 +747,7 @@ describe('JsonViewer', () => {
 
         it('未开启 autoWrap 时只在高度变化时重新布局', () => {
             const { container } = render(() => <JsonViewer value="1" options={{ autoWrap: false }} />);
-            const viewer = container.querySelector(`.${prefixCls}`) as Element;
+            const viewer = getElement(`.${prefixCls}`, container);
             const editor = current();
             editor.layout.mockClear();
             resize.fire(viewer, [{ borderBoxSize: [{ inlineSize: 120, blockSize: 400 }] }]);

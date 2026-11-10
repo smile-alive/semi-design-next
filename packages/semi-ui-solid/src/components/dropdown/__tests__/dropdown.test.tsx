@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal, type OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import Dropdown, { type DropdownMenuItem, type DropdownMenuItemType, type DropdownHandle, type DropdownItemProps, type DropdownProps } from '..';
 import Avatar from '../../avatar';
 import ConfigProvider from '../../config-provider';
@@ -121,7 +121,7 @@ describe('Dropdown', () => {
     it('Dropdown.Item onClick', async () => {
         const onClick = vi.fn<ClickHandler>();
         renderDD({ trigger: 'custom', visible: true }, () => subMenu([{ children: 'A' }, { children: 'B', onClick, class: 'test' }]));
-        const target = document.querySelector('li.test') as HTMLElement;
+        const target = getElement('li.test');
         await userEvent.click(target);
         expect(onClick).toHaveBeenCalledTimes(1);
         const [event] = onClick.mock.calls[0];
@@ -134,7 +134,7 @@ describe('Dropdown', () => {
         const onMouseEnter = vi.fn<ClickHandler>();
         const onMouseLeave = vi.fn<ClickHandler>();
         renderDD({ trigger: 'custom', visible: true }, () => subMenu([{ children: 'A' }, { children: 'B', onMouseEnter, onMouseLeave, class: 'test' }]));
-        const target = document.querySelector('li.test') as HTMLElement;
+        const target = getElement('li.test');
         fireEvent.mouseEnter(target);
         expect(onMouseEnter).toHaveBeenCalledTimes(1);
         expect(onMouseEnter.mock.calls[0][0].type).toBe('mouseenter');
@@ -1357,7 +1357,7 @@ describe('Dropdown 行为', () => {
     ])('spacing 为 %s 时按默认间距 4 打开', async (_, spacing) => {
         // null is not in the type; an untyped caller may still pass it
         renderDD({ spacing: spacing as unknown as number, trigger: 'custom', visible: true });
-        const popup = await waitFor(() => document.querySelector<HTMLElement>(portalSelector) as HTMLElement);
+        const popup = await waitFor(() => getElement(portalSelector));
         // jsdom puts the trigger's box at 0, so a bottom popup's top is the spacing
         expect(popup.style.top).toBe('4px');
     });

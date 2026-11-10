@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { clickOutside, expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Calendar, { type CalendarProps } from '..';
 import Popover from '../../popover';
 import Radio from '../../radio';
@@ -129,7 +130,7 @@ describe('Calendar（浏览器）', () => {
 
         await userEvent.click(screen.getAllByText('还有3项')[0]);
         await waitFor(() => expect(card()).not.toBeNull());
-        await userEvent.click(document.querySelector(`.${prefixCls}-month-event-card-close`) as Element);
+        await userEvent.click(getElement(`.${prefixCls}-month-event-card-close`));
         await waitFor(() => expect(card()).toBeNull());
 
         await userEvent.click(screen.getByText('多日视图'));
@@ -251,14 +252,14 @@ describe('Calendar（浏览器）', () => {
 
     it.each(['week', 'day'] as const)('滚动的 %s 视图获得键盘焦点时显示主题焦点环', async (mode) => {
         const { container } = render(() => <Calendar displayValue={displayValue} height={300} mode={mode} />);
-        const view = container.querySelector(`.${prefixCls}-${mode}`) as HTMLElement;
+        const view = getElement(`.${prefixCls}-${mode}`, container);
         await tabTo(view);
         expectThemeFocusRing(view);
     });
 
     it.each(['week', 'range'] as const)('%s 视图的表头、全天行和时间网格共享列边缘', (mode) => {
         const { container } = render(() => <Calendar displayValue={displayValue} height={300} mode={mode} range={mode === 'range' ? [new Date(2019, 6, 23), new Date(2019, 6, 26)] : []} />);
-        const left = (selector: string) => (container.querySelector(selector) as Element).getBoundingClientRect().left;
+        const left = (selector: string) => getElement(selector, container).getBoundingClientRect().left;
         const gridLeft = left(`.${prefixCls}-grid`);
         expect(left('[role="columnheader"]')).toBe(gridLeft);
         expect(left(`.${prefixCls}-all-day-skeleton > div`)).toBe(gridLeft);
@@ -299,9 +300,9 @@ describe('Calendar（浏览器）', () => {
         }
         const { container } = render(() => <Host />);
         await userEvent.click(screen.getByRole('button', { name: 'show' }));
-        const root = container.querySelector<HTMLElement>(`.${prefixCls}-week`) as HTMLElement;
+        const root = getElement(`.${prefixCls}-week`, container);
         await waitFor(() => {
-            expect(parseFloat((container.querySelector(`.${prefixCls}-event-day`) as HTMLElement).style.top)).toBeGreaterThan(0);
+            expect(parseFloat(getElement(`.${prefixCls}-event-day`, container).style.top)).toBeGreaterThan(0);
             expect(root.scrollTop).toBe(120);
         });
     });

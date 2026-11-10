@@ -1,6 +1,7 @@
 import { type JSX } from 'solid-js';
 import { render } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/solid';
 import { type FormApi, type FormProps, Form, FormInput } from '..';
 
 // Real scrolling instead of a mocked scroll-into-view-if-needed: semi-ui-solid does not depend on that package
@@ -124,7 +125,7 @@ describe('Form 滚动', () => {
                 {spacer()}
             </>
         ));
-        const target = document.querySelector('.semi-form-field') as HTMLElement;
+        const target = getElement('.semi-form-field');
         api().scrollToField(field, toTop);
         expect(Math.abs(topOf(target))).toBeLessThan(2);
         window.scrollTo(0, 0);

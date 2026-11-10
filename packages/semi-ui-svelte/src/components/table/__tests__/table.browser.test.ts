@@ -4,6 +4,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import { getData } from '@test/utils/table/data';
 import type { ColumnProps, RowSelectionProps, TableCellSnippetProps, TableChangeInfo, TableExpandedRowSnippetProps, TableFilterDropdownSnippetProps, TableGroupSectionSnippetProps, TableResizeFn, TableRowAttrs } from '../interface';
 import { P, mountTable, query, queryAll } from './helpers';
@@ -922,7 +923,7 @@ describe('Svelte Table 列功能（浏览器）', () => {
             return {
                 render: () => `<div><input class="${BASE_CLASS_PREFIX}-input" /><button type="button">${labels[0]}</button><button type="button">${labels[1]}</button><button type="button">直接关闭</button></div>`,
                 setup: (node) => {
-                    const input = node.querySelector('input') as HTMLInputElement;
+                    const input = getElement<HTMLInputElement>('input', node);
                     const [confirm, clear, dismiss] = node.querySelectorAll('button');
                     input.value = args().tempFilteredValue?.[0] ?? '';
                     input.addEventListener('input', () => args().onTempFilteredValueChange(input.value ? [input.value] : []));

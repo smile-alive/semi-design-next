@@ -5,6 +5,7 @@ import type { MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mc
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import MCPConfigure, { type MCPConfigureProps } from '../mcp-configure';
 import type { MCPSolidOption } from '../mcp-configure/content';
 
@@ -22,7 +23,7 @@ const customOptions: MCPSolidOption[] = [
 
 const labels = (container: HTMLElement) => [...container.querySelectorAll('.semi-sidebar-mcp-configure-content-item-content-label')].map((n) => n.textContent);
 const items = (container: HTMLElement) => [...container.querySelectorAll<HTMLElement>('.semi-sidebar-mcp-configure-content-item')];
-const search = (container: HTMLElement) => container.querySelector('.semi-sidebar-mcp-configure-content-search input') as HTMLInputElement;
+const search = (container: HTMLElement) => getElement<HTMLInputElement>('.semi-sidebar-mcp-configure-content-search input', container);
 const type = (container: HTMLElement, value: string) => fireEvent.input(search(container), { target: { value } });
 const switchToCustom = () => fireEvent.click(screen.getByText(zh_CN.Sidebar.newMcpAdd, { selector: '.semi-radio *' }));
 const iconButton = (root: Element, icon: string) => root.querySelector(`.semi-icon-${icon}`)?.closest('button') as HTMLButtonElement;
@@ -52,7 +53,7 @@ describe('MCPConfigure', () => {
         try {
             const { container } = render(() => <MCPConfigure options={options} visible />);
             type(container, 'git');
-            const wrapper = search(container).closest('.semi-input-wrapper') as HTMLElement;
+            const wrapper = defined(search(container).closest<HTMLElement>('.semi-input-wrapper'));
             expect(wrapper.querySelector('.semi-input-clearbtn, .semi-input-suffix, .semi-input-prepend, .semi-input-append')).toBeNull();
             expect(wrapper.querySelector('.semi-input-prefix .semi-icon-search')).not.toBeNull();
         } finally {
@@ -161,7 +162,7 @@ describe('MCPConfigure', () => {
         switchToCustom();
         expect(screen.getByText(zh_CN.Sidebar.emptyCustomMcpInfo)).toBeInTheDocument();
         expect(items(container)).toEqual([]);
-        fireEvent.click(container.querySelector('.semi-sidebar-mcp-configure-content-custom-empty button') as HTMLElement);
+        fireEvent.click(getElement('.semi-sidebar-mcp-configure-content-custom-empty button', container));
         expect(onAddClick).toHaveBeenCalledWith(expect.objectContaining({ type: 'click' }));
     });
 
@@ -169,9 +170,9 @@ describe('MCPConfigure', () => {
         const onAddClick = vi.fn<NonNullable<Props['onAddClick']>>();
         const { container } = render(() => <MCPConfigure customOptions={customOptions} options={options} visible onAddClick={onAddClick} />);
         switchToCustom();
-        const bar = container.querySelector('.semi-sidebar-mcp-configure-content-search-container') as HTMLElement;
+        const bar = getElement('.semi-sidebar-mcp-configure-content-search-container', container);
         expect(bar.querySelector('input')).toBeInTheDocument();
-        fireEvent.click(bar.querySelector('button') as HTMLElement);
+        fireEvent.click(getElement('button', bar));
         expect(onAddClick).toHaveBeenCalledTimes(1);
     });
 

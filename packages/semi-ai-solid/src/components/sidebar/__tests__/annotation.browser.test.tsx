@@ -2,6 +2,7 @@ import { render } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { page } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Annotation, { type AnnotationProps } from '../annotation';
 
 const info: AnnotationProps['info'] = [
@@ -48,7 +49,7 @@ describe('SideBar 富文本编辑器', () => {
                 </div>
             </div>
         ));
-        const style = (selector: string) => getComputedStyle(container.querySelector(selector) as Element);
+        const style = (selector: string) => getComputedStyle(getElement(selector, container));
         const bodySize = parseFloat(style('p').fontSize);
         for (const tag of ['h1', 'h2', 'h3']) {
             expect(parseFloat(style(tag).fontSize)).toBeGreaterThan(bodySize);

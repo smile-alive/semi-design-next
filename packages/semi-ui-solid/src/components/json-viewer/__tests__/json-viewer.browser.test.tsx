@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { JsonViewer as Core } from '@fibrae/semi-json-viewer-core';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import JsonViewer from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-json-viewer`;
@@ -186,7 +187,7 @@ describe('JsonViewer', () => {
 
         await userEvent.type(searchInput, 'a');
         const [replaceInput, replaceButton, replaceAllButton] = q(`.${prefixCls}-replace-bar`).children;
-        await userEvent.type(replaceInput.querySelector('input') as HTMLInputElement, 'x');
+        await userEvent.type(getElement<HTMLInputElement>('input', replaceInput), 'x');
         await waitFor(() => expect(searchResultCount()).toBeGreaterThanOrEqual(1));
         const length = searchResultCount();
         await userEvent.click(replaceButton);
@@ -411,8 +412,8 @@ describe('JsonViewer', () => {
         shadow.append(mount);
         const view = render(() => <JsonViewer value={baseStr} height={400} options={{ lineHeight: 20, autoWrap: true, formatOptions: { tabSize: 4 } }} width={700} />, { container: mount });
         try {
-            await userEvent.click(shadow.querySelector(`.${prefixCls}-search-bar-trigger`) as Element);
-            await userEvent.type(shadow.querySelector(`.${prefixCls}-search-bar input`) as Element, 'a');
+            await userEvent.click(getElement(`.${prefixCls}-search-bar-trigger`, shadow));
+            await userEvent.type(getElement(`.${prefixCls}-search-bar input`, shadow), 'a');
             const wholeWord = shadow.querySelector(`.${BASE_CLASS_PREFIX}-icon-whole_word`)?.closest('button') as HTMLButtonElement;
             wholeWord.focus();
             await userEvent.keyboard('{Enter}');

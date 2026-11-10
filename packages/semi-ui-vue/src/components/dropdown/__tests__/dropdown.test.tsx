@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Dropdown, { DropdownDivider, DropdownItem, DropdownMenu, DropdownTitle, type DropdownMenuItem, type DropdownHandle, type DropdownProps } from '..';
 import Tag from '../../tag';
 import AllHover from './fixtures/all-hover.vue';
@@ -40,7 +40,7 @@ const wrapperSelector = '.semi-dropdown-wrapper';
 const portalInner = () => document.querySelector(wrapperSelector);
 const portals = () => document.querySelectorAll(wrapperSelector);
 const item = (name: string) => screen.getByText(name, { selector: '[role^="menuitem"]' });
-const getTag = () => document.querySelector<HTMLElement>('.semi-tag') as HTMLElement;
+const getTag = () => getElement('.semi-tag');
 const keyDown = (target: Element, key: string) => target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
 afterEach(() => {
     semiGlobal.config = {};
@@ -164,7 +164,7 @@ describe('Dropdown', () => {
         const onClick = vi.fn<(event: MouseEvent) => void>();
         renderDD({ trigger: 'custom', visible: true }, { content: menuOf([['A'], ['B', { onClick, class: 'test' }]]) });
         await screen.findByRole('menu');
-        const target = document.querySelector('li.test') as HTMLElement;
+        const target = getElement('li.test');
         await userEvent.click(target);
         expect(onClick).toHaveBeenCalledTimes(1);
         const [event] = onClick.mock.calls[0];
@@ -179,7 +179,7 @@ describe('Dropdown', () => {
         const onMouseleave = vi.fn<(event: MouseEvent) => void>();
         renderDD({ trigger: 'custom', visible: true }, { content: menuOf([['A'], ['B', { onMouseenter, onMouseleave, class: 'test' }]]) });
         await screen.findByRole('menu');
-        const target = document.querySelector('li.test') as HTMLElement;
+        const target = getElement('li.test');
         await fireEvent.mouseEnter(target);
         expect(onMouseenter).toHaveBeenCalledTimes(1);
         expect(onMouseenter.mock.calls[0][0].type).toBe('mouseenter');
@@ -493,7 +493,7 @@ describe('Dropdown 行为', () => {
             },
         });
         // ARIA allows them only on interactive roles; a Tag renders a plain div
-        const tag = screen.getByText('tag trigger').closest('.semi-tag') as HTMLElement;
+        const tag = defined(screen.getByText('tag trigger').closest<HTMLElement>('.semi-tag'));
         expect(tag).not.toHaveAttribute('aria-expanded');
         expect(tag).not.toHaveAttribute('aria-haspopup');
         await userEvent.click(tag);
@@ -985,7 +985,7 @@ describe('Dropdown 行为', () => {
                     ),
                 },
             });
-            const tag = (await screen.findByText('tag parent')).closest<HTMLElement>('.semi-tag') as HTMLElement;
+            const tag = defined((await screen.findByText('tag parent')).closest<HTMLElement>('.semi-tag'));
             tag.focus();
             await userEvent.keyboard('{Enter}');
             expect(onClick).toHaveBeenCalledTimes(1);

@@ -7,6 +7,7 @@ import type { CustomFile } from '@fibrae/semi-foundation/components/upload/found
 import { IconUser } from '@fibrae/semi-icons-solid';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import Upload, {
     type AfterUploadProps,
     type AfterUploadResult,
@@ -50,13 +51,13 @@ function renderUpload(props: Record<string, unknown> & { children?: JSX.Element;
     ));
 }
 
-const getInput = () => document.querySelector(`.${prefixCls}-hidden-input`) as HTMLInputElement;
-const getReplaceInput = () => document.querySelector(`.${prefixCls}-hidden-input-replace`) as HTMLInputElement;
+const getInput = () => getElement<HTMLInputElement>(`.${prefixCls}-hidden-input`);
+const getReplaceInput = () => getElement<HTMLInputElement>(`.${prefixCls}-hidden-input-replace`);
 const getCardNames = () => Array.from(document.querySelectorAll(`.${prefixCls}-file-card-info-name`)).map((node) => node.textContent);
-const getCard = (name: string) => screen.getByText(name).closest(`.${prefixCls}-file-card`) as HTMLElement;
+const getCard = (name: string) => defined(screen.getByText(name).closest<HTMLElement>(`.${prefixCls}-file-card`));
 const getPicCards = () => document.querySelectorAll<HTMLElement>(`.${prefixCls}-picture-file-card`);
-const getDragArea = () => document.querySelector(`.${prefixCls}-drag-area`) as HTMLElement;
-const query = (root: ParentNode, selector: string) => root.querySelector(selector) as HTMLElement;
+const getDragArea = () => getElement(`.${prefixCls}-drag-area`);
+const query = (root: ParentNode, selector: string) => getElement(selector, root);
 
 // user-event's upload() drops files rejected by `accept` and keeps only one file on a non-multiple input,
 // which would hide the component's own accept / limit handling, so the change event is fired directly
@@ -435,7 +436,7 @@ describe('Upload', () => {
         };
         const onChange = vi.fn<UploadCallback<'onChange'>>();
         renderUpload({ defaultFileList: [item], onRemove, onChange });
-        await userEvent.click(document.querySelector(`button.${prefixCls}-file-card-close`) as HTMLElement);
+        await userEvent.click(getElement(`button.${prefixCls}-file-card-close`));
         await waitFor(() => expect(onRemove).toHaveBeenCalledTimes(1));
         expect(lastFileList(onChange)).toEqual([]);
         const [removedFile, fileList, fileItem] = onRemove.mock.calls[0];
@@ -509,7 +510,7 @@ describe('Upload', () => {
         expect(document.querySelector(`.${prefixCls}-file-card-preview img`)).toHaveAttribute('src', objUrl);
 
         await userEvent.click(screen.getByRole('button', { name: 'toggle' }));
-        expect(getInput()).toBeNull();
+        expect(document.querySelector(`.${prefixCls}-hidden-input`)).toBeNull();
         expect(revokeObjectURL).not.toHaveBeenCalled();
 
         await userEvent.click(screen.getByRole('button', { name: 'toggle' }));
@@ -614,7 +615,7 @@ describe('Upload', () => {
         const upload = renderUpload({});
         selectFiles([createFile(10, 'remove.png', 'image/png')]);
         expect(createObjectURL).toHaveBeenCalled();
-        await userEvent.click(document.querySelector(`button.${prefixCls}-file-card-close`) as HTMLElement);
+        await userEvent.click(getElement(`button.${prefixCls}-file-card-close`));
         await waitFor(() => expect(revokeObjectURL).toHaveBeenCalledWith(objUrl));
         upload.unmount();
 
@@ -691,8 +692,8 @@ describe('Upload', () => {
                 <button type="button">outside</button>
             </>
         ));
-        const root = container.querySelector(`.${prefixCls}`) as HTMLElement;
-        const inside = root.querySelector('button') as HTMLElement;
+        const root = getElement(`.${prefixCls}`, container);
+        const inside = getElement('button', root);
         const outside = screen.getByText('outside');
         fireEvent.focusOut(inside, { relatedTarget: root.querySelector('input') ?? root });
         expect(onBlur).not.toHaveBeenCalled();
@@ -1636,7 +1637,7 @@ describe('FileCard', () => {
         const second = 'https://example.com/second.jpg';
         const [url, setUrl] = createSignal(first);
         render(() => <FileCard {...(cardProps as FileCardProps)} preview url={url()} />);
-        fireEvent.error(getCardRoot().querySelector('img') as HTMLElement);
+        fireEvent.error(getElement('img', getCardRoot()));
         expect(getCardRoot().querySelector('img')).toBeNull();
         setUrl(second);
         expect(getCardRoot().querySelector('img')).toHaveAttribute('src', second);
@@ -2256,7 +2257,7 @@ describe('Upload 控件与可访问性', () => {
         ));
         selectFiles([createFile(10, 'a.png')]);
         const dialog = await screen.findByRole('dialog');
-        expect((dialog.closest(`.${BASE_CLASS_PREFIX}-modal`) as HTMLElement).style.width).toBe('800px');
+        expect(defined(dialog.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-modal`)).style.width).toBe('800px');
     });
 
     it('不传 cropModalProps.width 时裁剪弹窗宽 600px', async () => {
@@ -2267,7 +2268,7 @@ describe('Upload 控件与可访问性', () => {
         ));
         selectFiles([createFile(10, 'a.png')]);
         const dialog = await screen.findByRole('dialog');
-        expect((dialog.closest(`.${BASE_CLASS_PREFIX}-modal`) as HTMLElement).style.width).toBe('600px');
+        expect(defined(dialog.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-modal`)).style.width).toBe('600px');
     });
 
     it('children 里禁用的 Button 仍是使用方的控件：添加区域不成为按钮，移除按钮可用，恢复后不变', async () => {
@@ -2378,7 +2379,7 @@ describe('Upload 控件与可访问性', () => {
 
     it('进度圆环的轨道色取自主题变量', () => {
         render(() => <FileCard name="a.png" listType="picture" percent={30} size="1KB" status="uploading" uid="1" url="https://example.com/a.png" onRemove={() => {}} onRetry={() => {}} />);
-        const orbit = document.querySelector(`.${BASE_CLASS_PREFIX}-progress-circle-ring-track`) as SVGElement;
+        const orbit = getElement<SVGElement>(`.${BASE_CLASS_PREFIX}-progress-circle-ring-track`);
         expect(orbit.style.stroke).toBe('var(--semi-color-white)');
     });
 });

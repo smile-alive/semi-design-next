@@ -3,7 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
-import { misplacedAriaRequired } from '@test/utils/dom/common';
+import { misplacedAriaRequired, getElement } from '@test/utils/dom/common';
 import type { FormApi } from '../interface';
 import BareControls from './b-bare-controls.svelte';
 import { renderAnyFields } from './b-helpers';
@@ -292,7 +292,7 @@ const names = Object.keys(cases);
 function renderField(name: string, props: Record<string, unknown> = {}) {
     const { type, props: own } = cases[name];
     const view = renderAnyFields({}, [{ type, props: { field: 'f', ...own, ...props } }]);
-    return { ...view, field: () => view.container.querySelector('.semi-form-field') as HTMLElement };
+    return { ...view, field: () => getElement('.semi-form-field', view.container) };
 }
 
 const shown = (root: Element) =>
@@ -371,7 +371,7 @@ describe('Svelte Form 全部字段', () => {
         const attributes = [...document.querySelectorAll('*')].flatMap((element) => element.getAttributeNames());
         expect(attributes.filter((key) => /^(validate-?status|inset-?label-?id)$/i.test(key))).toEqual([]);
 
-        const group = document.querySelector('.FormCheckboxGroup') as HTMLElement;
+        const group = getElement('.FormCheckboxGroup');
         const checkboxes = within(group).getAllByRole('checkbox');
         expect(checkboxes.length).toBeGreaterThan(0);
         expect(checkboxes.map((control) => control.getAttribute('aria-invalid'))).toEqual(checkboxes.map(() => 'true'));
@@ -394,7 +394,7 @@ describe('Svelte Form 全部字段', () => {
         );
         await settle();
         expect(document.querySelectorAll('[aria-required="true"]').length).toBeGreaterThan(0);
-        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(document.querySelector(`.${name}`) as Element)]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
+        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(getElement(`.${name}`))]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
     });
 
     it('labelPosition="inset" 时，不支持内嵌标签的字段以渲染出的 top label 命名控件', async () => {

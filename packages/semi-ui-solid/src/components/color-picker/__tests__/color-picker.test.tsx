@@ -5,6 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import ColorPicker, { type ColorFormat, type ColorPickerProps, type ColorValue, type HsvaColor, type RgbaColor } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-colorPicker`;
@@ -28,17 +29,17 @@ const saturationBrightness = (s: number, v: number) => zh_CN.ColorPicker.saturat
 const renderColorPicker = (props: ColorPickerProps = {}) => render(() => <ColorPicker {...props} />);
 
 const getPicker = () => document.querySelector<HTMLElement>(`.${prefixCls}`);
-const getArea = () => document.querySelector(`.${prefixCls}-colorChooseArea`) as HTMLElement;
-const getAreaHandle = () => document.querySelector(`.${prefixCls}-colorChooseArea .${prefixCls}-handle`) as HTMLElement;
-const getColorSlider = () => document.querySelector(`.${prefixCls}-colorSlider`) as HTMLElement;
-const getColorSliderHandle = () => document.querySelector(`.${prefixCls}-colorSlider .${prefixCls}-handle`) as HTMLElement;
+const getArea = () => getElement(`.${prefixCls}-colorChooseArea`);
+const getAreaHandle = () => getElement(`.${prefixCls}-colorChooseArea .${prefixCls}-handle`);
+const getColorSlider = () => getElement(`.${prefixCls}-colorSlider`);
+const getColorSliderHandle = () => getElement(`.${prefixCls}-colorSlider .${prefixCls}-handle`);
 const getAlphaSlider = () => document.querySelector<HTMLElement>(`.${prefixCls}-alphaSlider`);
 const getAlphaRange = () => within(getAlphaSlider() as HTMLElement).getByRole('slider');
-const getAlphaHandle = () => document.querySelector(`.${prefixCls}-alphaHandle`) as HTMLElement;
-const getInput = () => document.querySelector(`.${prefixCls}-colorPickerInput input`) as HTMLInputElement;
+const getAlphaHandle = () => getElement(`.${prefixCls}-alphaHandle`);
+const getInput = () => getElement<HTMLInputElement>(`.${prefixCls}-colorPickerInput input`);
 const getAlphaInput = () => document.querySelector<HTMLInputElement>(`.${prefixCls}-colorPickerInputNumber input`);
-const getDemoBlock = () => document.querySelector(`.${prefixCls}-colorDemoBlock`) as HTMLElement;
-const getEyeDropperButton = () => document.querySelector(`.${prefixCls}-dataPart button`) as HTMLElement;
+const getDemoBlock = () => getElement(`.${prefixCls}-colorDemoBlock`);
+const getEyeDropperButton = () => getElement(`.${prefixCls}-dataPart button`);
 const getFormatSelect = () => screen.getByRole('combobox');
 const lastColor = (onChange: ReturnType<typeof vi.fn<OnChange>>) => onChange.mock.calls[onChange.mock.calls.length - 1][0];
 
@@ -384,7 +385,7 @@ describe('ColorPicker', () => {
         renderColorPicker({ usePopover: true, popoverProps: { position: 'bottom', trigger: 'click', class: 'custom-popover' } });
         expect(getPicker()).toBeNull();
 
-        await userEvent.click(document.querySelector(`.${prefixCls}-popover-defaultChildren`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-popover-defaultChildren`));
         await waitFor(() => expect(getPicker()).not.toBeNull());
         expect(document.querySelector(`.${prefixCls}-popover`)).toHaveClass('custom-popover');
     });
@@ -996,7 +997,7 @@ describe('ColorPicker', () => {
         const adornments = { showClear: true, prefix: 'x', insetLabel: 'l', addonBefore: 'b', addonAfter: 'a' };
         semiGlobal.config.overrideDefaultProps = { Input: { ...adornments, suffix: 'y' }, InputNumber: adornments };
         const { container } = renderColorPicker({ alpha: true });
-        const dataPart = container.querySelector(`.${prefixCls}-dataPart`) as HTMLElement;
+        const dataPart = getElement(`.${prefixCls}-dataPart`, container);
         expect(dataPart.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`)).toBeNull();
         expect(dataPart.querySelector(`.${BASE_CLASS_PREFIX}-input-prefix, .${BASE_CLASS_PREFIX}-input-prepend, .${BASE_CLASS_PREFIX}-input-append`)).toBeNull();
         expect(dataPart.querySelectorAll(`.${BASE_CLASS_PREFIX}-input-suffix`)).toHaveLength(1);
@@ -1059,7 +1060,7 @@ describe('ColorPicker', () => {
     it('Popover 内的取色器会改变默认触发色块', async () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ usePopover: true, onChange, defaultValue: defaultColor, popoverProps: { trigger: 'click' } });
-        const trigger = document.querySelector(`.${prefixCls}-popover-defaultChildren`) as HTMLElement;
+        const trigger = getElement(`.${prefixCls}-popover-defaultChildren`);
         expect(trigger).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' });
         await userEvent.click(trigger);
         await waitFor(() => expect(getPicker()).not.toBeNull());

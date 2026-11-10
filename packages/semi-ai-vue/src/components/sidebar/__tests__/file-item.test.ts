@@ -6,7 +6,7 @@ import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import Toast from '@fibrae/semi-ui-vue/toast/index';
 import type { UploadCustomRequestArgs, UploadEmits } from '@fibrae/semi-ui-vue/upload/interface';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Sidebar, { type ImageUploadNodeOptions } from '..';
 
 const { FileItem, FileContent } = Sidebar;
@@ -211,7 +211,7 @@ describe('Sidebar.FileItem', () => {
     ])('%s', async (_name, event, html) => {
         const { container, editor, onContentChange } = await mountEditor();
         editor.commands.selectAll();
-        await fireEvent.keyDown(container.querySelector('.ProseMirror') as Element, event);
+        await fireEvent.keyDown(getElement('.ProseMirror', container), event);
         expect(onContentChange).toHaveBeenLastCalledWith(html);
     });
 
@@ -219,7 +219,7 @@ describe('Sidebar.FileItem', () => {
         const { container, editor, onContentChange } = await mountEditor();
         editor.commands.selectAll();
         await fireEvent.click(menuButton(container, 'bold'));
-        const node = container.querySelector('.ProseMirror') as Element;
+        const node = getElement('.ProseMirror', container);
         await fireEvent.keyDown(node, { key: 'z', ctrlKey: true });
         expect(onContentChange).toHaveBeenLastCalledWith('<p>text</p>');
         await fireEvent.keyDown(node, { key: 'Z', keyCode: 90, ctrlKey: true, shiftKey: true });
@@ -229,7 +229,7 @@ describe('Sidebar.FileItem', () => {
     it('Shift-Enter 插入换行，Enter 拆分段落', async () => {
         const { container, editor, onContentChange } = await mountEditor({ content: '<p>ab</p>' });
         editor.commands.setTextSelection(2);
-        const node = container.querySelector('.ProseMirror') as Element;
+        const node = getElement('.ProseMirror', container);
         await fireEvent.keyDown(node, { key: 'Enter', shiftKey: true });
         expect(onContentChange).toHaveBeenLastCalledWith('<p>a<br>b</p>');
         await fireEvent.keyDown(node, { key: 'Enter' });
@@ -469,7 +469,7 @@ describe('Sidebar.FileItem', () => {
         expect(slot).not.toHaveAttribute('tabindex');
         expect(slot.querySelectorAll('[tabindex="0"]')).toHaveLength(1);
 
-        await fireEvent.change(slot.querySelector('input[type="file"]') as Element, {
+        await fireEvent.change(getElement('input[type="file"]', slot), {
             target: { files: [new File(['x'], 'a.png', { type: 'image/png' })] },
         });
         await waitFor(() => expect(slot.querySelector('.semi-sidebar-file-image-slot-uploading')).toBeInTheDocument());

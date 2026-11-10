@@ -6,6 +6,7 @@ import type { ContentItem, Message } from '@fibrae/semi-ai-foundation/components
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import Modal from '@fibrae/semi-ui-solid/modal/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/solid';
 import AIChatDialogue from '../index';
 
 const prefix = `${BASE_CLASS_PREFIX}-ai-chat-dialogue`;
@@ -82,7 +83,7 @@ describe('AIChatDialogue', () => {
 
         it('流式输出期间焦点留在较早消息的操作按钮上', async () => {
             const { container, update } = renderList(streamingChats(2), 400);
-            const copy = container.querySelector<HTMLElement>(`.${prefix}-wrapper .${prefix}-action button`) as HTMLElement;
+            const copy = getElement(`.${prefix}-wrapper .${prefix}-action button`, container);
             await tabTo(copy);
             await streamLines(container, update, 3, 6);
             expect(copy).toHaveFocus();
@@ -100,7 +101,7 @@ describe('AIChatDialogue', () => {
             const chats = history(10, 20);
             const { container, update } = renderList(chats, 300);
             await waitFor(() => expect(container.textContent).toContain('history 19'));
-            const list = container.querySelector<HTMLElement>(`.${prefix}-list`) as HTMLElement;
+            const list = getElement(`.${prefix}-list`, container);
             list.scrollTop = scrollTo(list);
             await nextFrame();
             const before = topOf(container, 'history 10');
@@ -115,7 +116,7 @@ describe('AIChatDialogue', () => {
             const chats = history(10, 20);
             const { container, update } = renderList(chats, 300);
             await waitFor(() => expect(container.textContent).toContain('history 19'));
-            const list = container.querySelector<HTMLElement>(`.${prefix}-list`) as HTMLElement;
+            const list = getElement(`.${prefix}-list`, container);
             list.scrollTop = 0;
             await nextFrame();
             update([...history(7, 10), ...chats]);
@@ -141,8 +142,8 @@ describe('AIChatDialogue', () => {
             { id: '2', role: 'assistant', content: 'second', status: 'completed' },
         ];
         const { container } = render(() => <AIChatDialogue chats={chats} roleConfig={roleConfig} />);
-        const action = container.querySelector<HTMLElement>(`.${prefix}-action`) as HTMLElement;
-        const copy = action.querySelector<HTMLElement>('button') as HTMLElement;
+        const action = getElement(`.${prefix}-action`, container);
+        const copy = getElement('button', action);
         await tabTo(copy);
         expect(copy).toHaveFocus();
         expect(getComputedStyle(action).opacity).toBe('1');
@@ -185,8 +186,8 @@ describe('AIChatDialogue', () => {
         onTestFinished(() => reset.remove());
         const file = { type: 'input_file', filename: 'report.pdf', file_url: 'https://example.com/r.pdf', size: '1KB' };
         const { container } = render(() => <AIChatDialogue chats={[{ id: '1', role: 'user', status: 'completed', content: [{ type: 'message', content: [file] }] }]} roleConfig={roleConfig} />);
-        const card = container.querySelector<HTMLElement>(`.${prefix}-content-file`) as HTMLElement;
-        const info = card.querySelector(`.${prefix}-content-file-info`) as HTMLElement;
+        const card = getElement(`.${prefix}-content-file`, container);
+        const info = getElement(`.${prefix}-content-file-info`, card);
         expect(info.getBoundingClientRect().bottom).toBeLessThanOrEqual(card.getBoundingClientRect().bottom - parseFloat(getComputedStyle(card).paddingBottom));
         expect(card.offsetWidth).toBe(240);
     });
@@ -246,7 +247,7 @@ describe('AIChatDialogue', () => {
 
     it('步骤标题显示主题焦点环', async () => {
         const { container } = render(() => <AIChatDialogue.Step steps={[{ status: 'completed', summary: 'searched', actions: [{ summary: 'a', description: 'b' }] }]} />);
-        const step = container.querySelector<HTMLElement>(`.${prefix}-step`) as HTMLElement;
+        const step = getElement(`.${prefix}-step`, container);
         await tabTo(step);
         expectThemeFocusRing(step);
     });
@@ -270,7 +271,7 @@ describe('AIChatDialogue', () => {
 
     it('提示项显示主题焦点环', async () => {
         const { container } = render(() => <AIChatDialogue chats={[]} hints={['a hint']} roleConfig={roleConfig} onHintClick={() => {}} />);
-        const hint = container.querySelector<HTMLElement>(`.${prefix}-hint-item`) as HTMLElement;
+        const hint = getElement(`.${prefix}-hint-item`, container);
         await tabTo(hint);
         expectThemeFocusRing(hint);
     });
@@ -297,7 +298,7 @@ describe('AIChatDialogue', () => {
     it('文件卡片聚焦时的引用图标位于卡片右端，与悬停时一致', async () => {
         const quote = await renderQuote(fileContent);
         await tabTo(quote);
-        const card = quote.closest(`.${prefix}-content-file`) as HTMLElement;
+        const card = defined(quote.closest<HTMLElement>(`.${prefix}-content-file`));
         const cardRight = card.getBoundingClientRect().right - parseFloat(getComputedStyle(card).paddingRight);
         expect(quote.getBoundingClientRect().right).toBeCloseTo(cardRight, 0);
     });

@@ -5,6 +5,8 @@ import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import CollapseHost from './collapse-host.svelte';
 import Standalone from './standalone-panel.svelte';
 import Variants from './variants.svelte';
@@ -151,7 +153,7 @@ describe('Svelte Collapse', () => {
     it('expandIconPosition 为 right 时图标位于 extra 之后', () => {
         const { container } = setup({ panel: { extra: 'more' } });
         const row = getRows(container)[0];
-        const right = row.querySelector(`.${prefixCls}-header-right`) as HTMLElement;
+        const right = getElement(`.${prefixCls}-header-right`, row);
         expect(right).toHaveTextContent('more');
         expect(right.lastElementChild).toHaveClass(`${prefixCls}-header-icon`);
         expect(row).not.toHaveClass(`${prefixCls}-header-iconLeft`);
@@ -160,7 +162,7 @@ describe('Svelte Collapse', () => {
     it('clickHeaderToExpand 为 false 时，切换 expandIconPosition 后点击图标仍能切换', async () => {
         const { container, update, store } = setup({ collapse: { clickHeaderToExpand: false } });
         update({ collapse: { clickHeaderToExpand: false, expandIconPosition: 'left' } });
-        await click(container.querySelector(`.${prefixCls}-header-icon`) as HTMLElement);
+        await click(getElement(`.${prefixCls}-header-icon`, container));
         expect(store.log).toEqual(['change 1 click']);
     });
 
@@ -170,7 +172,7 @@ describe('Svelte Collapse', () => {
         await click(getRows(container)[0]);
         expect(store.log).toEqual([]);
         expectExpanded([false, false, false]);
-        await click(container.querySelector(`.${prefixCls}-header-icon`) as HTMLElement);
+        await click(getElement(`.${prefixCls}-header-icon`, container));
         expect(store.log.at(-1)).toBe('change 1 click');
         expectExpanded([true, false, false]);
         await click(screen.getByText('This is panel header 2'));
@@ -237,7 +239,7 @@ describe('Svelte Collapse', () => {
         const [header] = getHeaders();
         expect(header).not.toHaveAttribute('aria-controls');
         await click(header);
-        const region = document.getElementById(header.getAttribute('aria-controls') as string) as HTMLElement;
+        const region = defined(document.getElementById(header.getAttribute('aria-controls') as string));
         expect(region).toHaveClass(`${prefixCls}-content`);
         expect(region).toHaveAttribute('role', 'region');
         expect(region).toHaveAttribute('aria-labelledby', header.id);
@@ -276,10 +278,10 @@ describe('Svelte Collapse', () => {
 
     it('onMotionEnd 在面板的过渡结束时调用，不落到面板根元素', async () => {
         const { container } = render(Variants, { props: { variant: 'motion-end' } });
-        const item = container.querySelector(`.${prefixCls}-item`) as HTMLElement;
+        const item = getElement(`.${prefixCls}-item`, container);
         expect(item).not.toHaveAttribute('onmotionend');
         await click(getHeaders()[0]);
-        await fireEvent.transitionEnd(item.querySelector('.semi-collapsible-wrapper') as HTMLElement, { propertyName: 'height' });
+        await fireEvent.transitionEnd(getElement('.semi-collapsible-wrapper', item), { propertyName: 'height' });
         expect(screen.getByLabelText('ends')).toHaveTextContent('1');
     });
 

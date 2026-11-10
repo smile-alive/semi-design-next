@@ -4,6 +4,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconUser } from '@fibrae/semi-icons-solid';
 import { en_US } from '@fibrae/semi-ui-solid/locale';
+import { getElement } from '@test/utils/solid';
 import Upload, { type UploadProps } from '..';
 import Button from '../../button';
 import { LocaleProvider } from '../../locale';
@@ -26,8 +27,8 @@ function renderUpload(props: Partial<UploadProps> = {}) {
     ));
 }
 
-const getInput = () => document.querySelector(`.${BASE_CLASS_PREFIX}-upload-hidden-input`) as HTMLInputElement;
-const getReplaceInput = () => document.querySelector(`.${BASE_CLASS_PREFIX}-upload-hidden-input-replace`) as HTMLInputElement;
+const getInput = () => getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-upload-hidden-input`);
+const getReplaceInput = () => getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-upload-hidden-input-replace`);
 
 function selectFiles(files: File[], input = getInput()) {
     fireEvent.change(input, { target: { files } });
@@ -63,7 +64,7 @@ describe('Upload 裁剪', () => {
         vi.restoreAllMocks();
     });
 
-    const getCropperImg = () => document.querySelector(`.${BASE_CLASS_PREFIX}-cropper img`) as HTMLImageElement;
+    const getCropperImg = () => getElement<HTMLImageElement>(`.${BASE_CLASS_PREFIX}-cropper img`);
     // jsdom never loads images, and the cropper only hands out a canvas once the image has loaded
     const loadCropperImg = () => fireEvent.load(getCropperImg());
 
@@ -197,7 +198,7 @@ describe('Upload 裁剪', () => {
             defaultFileList: [{ uid: '1', name: 'old.png', status: 'success', size: '1KB', url: 'https://x/old.png' }],
             onAcceptInvalid,
         });
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-upload-file-card-replace`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-upload-file-card-replace`));
         const valueSetter = vi.spyOn(getReplaceInput(), 'value', 'set');
         selectFiles([createFile(100, 'photo.jpg', 'image/jpeg')], getReplaceInput());
         expect(onAcceptInvalid).toHaveBeenCalledTimes(1);
@@ -275,7 +276,7 @@ describe('Upload 裁剪', () => {
     });
 
     it('拖入图片时打开裁剪器，onDrop 收到的事件与普通模式相同', async () => {
-        const dropImage = () => fireEvent.drop(document.querySelector(`.${BASE_CLASS_PREFIX}-upload-drag-area`) as HTMLElement, { dataTransfer: { files: [createFile(100, 'avatar.png', 'image/png')] } });
+        const dropImage = () => fireEvent.drop(getElement(`.${BASE_CLASS_PREFIX}-upload-drag-area`), { dataTransfer: { files: [createFile(100, 'avatar.png', 'image/png')] } });
         const onPlainDrop = vi.fn<UploadCallback<'onDrop'>>();
         const plain = renderUpload({ draggable: true, onDrop: onPlainDrop });
         dropImage();

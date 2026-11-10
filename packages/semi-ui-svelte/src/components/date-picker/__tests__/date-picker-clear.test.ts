@@ -1,17 +1,18 @@
 import { fireEvent } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/dom/common';
 import { changes, dp, getInput, getInputs, getRoot, setup, settle, useBaseDate } from './test-utils';
 
 useBaseDate();
 
 async function clearSingle() {
-    await fireEvent.mouseDown(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement, { button: 0 });
+    await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, getRoot()), { button: 0 });
     await settle();
 }
 
 async function clearRange() {
-    await fireEvent.mouseDown(document.querySelector(`.${dp}-range-input-clearbtn`) as HTMLElement, { button: 0 });
+    await fireEvent.mouseDown(getElement(`.${dp}-range-input-clearbtn`), { button: 0 });
     await settle();
 }
 
@@ -72,7 +73,7 @@ describe('Svelte DatePicker needConfirm 下的清除', () => {
         const { store } = await setup({ mode: 'bind', value: single, open: true, props: { type: 'dateTime', needConfirm: true } });
         await clearSingle();
         expect(store.value).toBeUndefined();
-        await fireEvent.click(document.querySelector(`.${dp}-day[aria-label="2019-08-12"]`) as HTMLElement);
+        await fireEvent.click(getElement(`.${dp}-day[aria-label="2019-08-12"]`));
         await settle();
         await fireEvent.click(document.querySelectorAll<HTMLElement>(`.${dp}-footer button`)[1]);
         await settle();

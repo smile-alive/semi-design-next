@@ -1,6 +1,7 @@
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import type { FormApi } from '../interface';
 import FormFixture, { type FormFixtureStore } from './form-fixture.svelte';
 import { input, settle } from './helpers';
@@ -27,7 +28,7 @@ describe('Svelte Form（ShadowRoot）', () => {
         });
         const view = render(FormFixture, { target: mount, props: { store, onApi: (formApi: FormApi) => (api = formApi) } });
         try {
-            const field = shadow.querySelector('.semi-form-field[x-field-id="b"]') as Element;
+            const field = getElement('.semi-form-field[x-field-id="b"]', shadow);
             await expect(api.validate()).rejects.toBeDefined();
             await settle();
             expectInViewport(field);

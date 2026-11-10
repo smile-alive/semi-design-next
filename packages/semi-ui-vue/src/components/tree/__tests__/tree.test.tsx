@@ -6,11 +6,11 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconMapPin } from '@fibrae/semi-icons-vue';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
-import { mockResizeObserver, render } from '@test/utils/vue';
+import { mockResizeObserver, render, getElement } from '@test/utils/vue';
 import Tree, { type TreeDataSimpleJson, type TreeEmits, type TreeProps } from '..';
 import ConfigProvider from '../../config-provider';
 import AsyncTree from './fixtures/async-tree.vue';
-import { collapsedCls, defaultKeyMaps, getExpandIcon, getHighlights, getLevelNodes, getNode, getOptions, getSearchWrapper, getSelected, optionCls, search, selectedCls, specialTreeData, treeData, treeData2 } from './fixtures/data';
+import { collapsedCls, defaultKeyMaps, getExpandIcon, getHighlights, getLevelNodes, getNode, getOptions, getSearchWrapper, getSelected, optionCls, queryNode, search, selectedCls, specialTreeData, treeData, treeData2 } from './fixtures/data';
 
 const treeData3 = [
     {
@@ -366,7 +366,7 @@ describe('Tree', () => {
         expect(getNode('zhongguo').nextElementSibling).toBe(motionWrapper);
         const animated = motionWrapper?.querySelectorAll('[role="treeitem"]') ?? [];
         expect(Array.from(animated, (node) => node.getAttribute('data-key'))).toEqual(['beijing']);
-        expect(getNode('shanghai')).toBeNull();
+        expect(queryNode('shanghai')).toBeNull();
     });
 
     it('filterTreeNode 为函数', async () => {
@@ -692,7 +692,7 @@ describe('非数字高度的 Tree virtualize', () => {
         const observer = mockResizeObserver();
         renderTree({ defaultExpandAll: true, virtualize: { itemSize: 28, height: '100%' } });
         await nextTick();
-        const wrapper = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`);
         const parent = wrapper.parentElement as HTMLElement;
         expect(observer.observed()).toContain(parent);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-virtual-list`)).toBeNull();

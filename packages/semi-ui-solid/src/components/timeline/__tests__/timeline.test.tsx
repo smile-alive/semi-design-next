@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Timeline, { type Data, type TimelineProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-timeline`;
@@ -31,7 +32,7 @@ describe('Timeline', () => {
     it('Timeline 的 dataSource', () => {
         const { container } = renderTl();
         expect(getItems(container)).toHaveLength(4);
-        const firstItem = container.querySelector(`.${prefixCls}-item .${prefixCls}-item-content`) as HTMLElement;
+        const firstItem = getElement(`.${prefixCls}-item .${prefixCls}-item-content`, container);
         expect(firstItem.textContent).toEqual('第一个节点内容节点辅助说明信息2019-07-14 10:35');
         expect(firstItem.querySelector(`.${prefixCls}-item-content-extra`)).toHaveTextContent(/^节点辅助说明信息$/);
         expect(firstItem.querySelector(`.${prefixCls}-item-content-time`)).toHaveTextContent(/^2019-07-14 10:35$/);
@@ -46,7 +47,7 @@ describe('Timeline', () => {
                 <Timeline.Item time="2019-05-14 18:34">第三个节点内容</Timeline.Item>
             </Timeline>
         ));
-        const firstItem = container.querySelector(`.${prefixCls}-item .${prefixCls}-item-content`) as HTMLElement;
+        const firstItem = getElement(`.${prefixCls}-item .${prefixCls}-item-content`, container);
         expect(firstItem.textContent).toEqual('第一个节点内容2019-07-14 10:35');
     });
 
@@ -124,7 +125,7 @@ describe('Timeline', () => {
                 <Timeline.Item time="2019-06-13 16:17">第二个节点内容</Timeline.Item>
             </Timeline>
         ));
-        const time = container.querySelector(`.${prefixCls}-item-content-time`) as HTMLElement;
+        const time = getElement(`.${prefixCls}-item-content-time`, container);
         expect(time.innerHTML).toEqual('<span>2019-07-14 10:35</span>');
     });
 
@@ -201,7 +202,7 @@ describe('Timeline', () => {
                 <Timeline.Item>a</Timeline.Item>
             </Timeline>
         ));
-        const list = container.querySelector('ul') as HTMLElement;
+        const list = getElement('ul', container);
         expect(getItems(container)).toHaveLength(1);
         expect(list.children).toHaveLength(1);
         expect(list.textContent).not.toContain('text');

@@ -5,7 +5,7 @@ import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import AIChatInput from '../index';
 
 const prefix = 'semi-aiChatInput';
@@ -69,7 +69,7 @@ describe('AIChatInput', () => {
         const scroll = await find(`.${prefix}-scroll-button-right`, container);
         const removeStyle = getComputedStyle(remove);
         const scrollStyle = getComputedStyle(scroll);
-        const scrollIcon = getComputedStyle(scroll.querySelector('svg') as SVGElement);
+        const scrollIcon = getComputedStyle(getElement<SVGElement>('svg', scroll));
         expect(contrast(removeStyle.color, removeStyle.backgroundColor)).toBeGreaterThan(3);
         expect(contrast(scrollIcon.color, scrollStyle.backgroundColor)).toBeGreaterThan(3);
     });
@@ -291,7 +291,7 @@ describe('AIChatInput', () => {
         const placeholderRect = placeholder.getBoundingClientRect();
         expect(placeholderRect.left).toBeGreaterThanOrEqual(slotRect.left);
         await waitFor(() => expect(slot.getBoundingClientRect().right).toBeGreaterThanOrEqual(placeholderRect.right));
-        const paragraph = slot.closest('p') as HTMLElement;
+        const paragraph = defined(slot.closest<HTMLElement>('p'));
         const lineHeight = parseFloat(getComputedStyle(paragraph).lineHeight);
         expect(paragraph.getBoundingClientRect().height).toBeLessThan(slotRect.height + lineHeight);
     });

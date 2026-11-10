@@ -2,6 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import Fixture, { type FixtureStore } from './json-viewer-fixture.svelte';
 
 // The real editor core, unlike json-viewer.test.ts. jsdom has no Worker, blob URLs or idle callbacks: the fake worker
@@ -33,7 +34,7 @@ describe('Svelte JsonViewer 与编辑器内核', () => {
         // b sits in the display: contents wrapper, which sits in the span the editor left for the token
         const span = (await screen.findAllByText('"k1"', { selector: 'b' }))[0].parentElement?.parentElement;
         matching.value = false;
-        await fireEvent.scroll(document.querySelector('.json-viewer-container') as HTMLElement);
+        await fireEvent.scroll(getElement('.json-viewer-container'));
         expect(span).toBeEmptyDOMElement();
     });
 });

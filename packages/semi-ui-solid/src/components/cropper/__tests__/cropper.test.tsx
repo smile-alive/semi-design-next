@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js';
 import { fireEvent, render } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { countLiveListeners, mockResizeObserver } from '@test/utils/solid';
+import { countLiveListeners, mockResizeObserver, getElement } from '@test/utils/solid';
 import Cropper, { type CropperElement, type CropperHandle, type CropperProps } from '..';
 
 const size = { width: 400, height: 300 };
@@ -32,7 +32,7 @@ function observeContainer() {
     return (width: number) => observer.fireLive((target) => ({ target, contentRect: { width, height: size.height } }));
 }
 
-const query = (container: Element, selector: string) => container.querySelector(selector) as HTMLElement;
+const query = (container: Element, selector: string) => getElement(selector, container);
 const getRoot = (container: Element) => query(container, '.semi-cropper');
 const getImg = (container: Element) => query(container, '.semi-cropper-img');
 const getBox = (container: Element) => query(container, '.semi-cropper-box');
@@ -632,7 +632,7 @@ describe('Cropper', () => {
         const node = document.createElement('div');
         document.body.appendChild(node);
         const { unmount } = renderLoaded({ preview: () => node });
-        const previewImg = node.querySelector('img') as HTMLImageElement;
+        const previewImg = getElement<HTMLImageElement>('img', node);
         expect(previewImg).toHaveAttribute('src', src);
         expect(previewImg).toHaveAttribute('alt', '');
         expect(node.style.overflow).toBe('hidden');

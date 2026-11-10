@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerElement, type DatePickerProps, type TriggerRenderProps, type YearAndMonthProps } from '..';
 import ConfigProvider from '../../config-provider';
 import LocaleProvider from '../../locale/locale-provider';
@@ -31,15 +32,15 @@ function renderYearAndMonth(props: Partial<YearAndMonthProps>) {
 }
 
 const getPopup = () => document.querySelector<HTMLElement>(popupSelector);
-const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
+const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
 const getSelectedDays = () => Array.from(document.querySelectorAll(`.${dp}-day-selected`)).map((d) => d.getAttribute('aria-label'));
 const getPresetButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-quick-control button`);
-const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-month-grid-${side}`) as HTMLElement;
+const getPanel = (side: string) => getElement(`.${dp}-month-grid-${side}`);
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
 const getYMSelected = (root: ParentNode = document) => Array.from(root.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((li) => li.textContent);
 const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll('input'));
-const firstInput = (container: HTMLElement) => container.querySelector('input') as HTMLInputElement;
+const firstInput = (container: HTMLElement) => getElement<HTMLInputElement>('input', container);
 const typeIn = (input: Element, value: string) => fireEvent.input(input, { target: { value } });
 // Tooltip reports the panel open (onOpen, where DatePicker moves focus) in a task after the popup mounts;
 // await this before asserting so that focus change cannot land afterwards
@@ -139,7 +140,7 @@ describe('DatePicker 根元素与 ref', () => {
         const onPanelChange = vi.fn<NonNullable<DatePickerProps['onPanelChange']>>();
         const onChange = vi.fn<ChangeHandler>();
         renderDatePicker({ defaultValue: baseDate, defaultOpen: true, motion: false, onChange, onPanelChange });
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         await userEvent.click(within(getYMLists()[0]).getByRole('option', { name: '2020' }));
         expect(onPanelChange).toHaveBeenCalledTimes(1);
         expect(onPanelChange.mock.calls[0][1]).toBe('2020-09-08');
@@ -820,8 +821,8 @@ describe('DatePicker 可访问性', () => {
                 {(t) => <DatePicker disabled {...t()} />}
             </Tooltip>
         ));
-        const span = container.querySelector('.probe') as HTMLElement;
-        const root = container.querySelector(`.${dp}`) as HTMLElement;
+        const span = getElement('.probe', container);
+        const root = getElement(`.${dp}`, container);
         expect(span).toContainElement(root);
         expect(root.style.pointerEvents).toBe('none');
     });

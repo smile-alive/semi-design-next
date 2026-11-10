@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
+import { countLiveListeners, endLeaveAnimations, render, defined } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
 import AudioPlayer from '../audio-player.vue';
 import type { AudioPlayerProps } from '../interface';
@@ -359,7 +359,7 @@ describe('AudioPlayer', () => {
         const { container } = renderPlayer({ audioUrl: tracks });
         const audio = getAudio(container);
         await loadMetadata(audio, { currentTime: 40, playbackRate: 2 });
-        const [prev, next] = [...container.querySelectorAll(icon('restart'))].map((el) => el.closest('button') as HTMLButtonElement);
+        const [prev, next] = [...container.querySelectorAll(icon('restart'))].map((el) => defined(el.closest<HTMLButtonElement>('button')));
         expect(query(container, `.${prefixCls}-info-title`)).toHaveTextContent('Track A');
 
         await fireEvent.click(next);
@@ -384,7 +384,7 @@ describe('AudioPlayer', () => {
     it('上一首、下一首、后退与前进各占一个 Tab 焦点', async () => {
         const { container } = renderPlayer({ audioUrl: tracks });
         await loadMetadata(getAudio(container));
-        const buttons = [...[...container.querySelectorAll(icon('restart'))].map((el) => el.closest('button') as HTMLButtonElement), closestButton(container, 'backward'), closestButton(container, 'fast_forward')];
+        const buttons = [...[...container.querySelectorAll(icon('restart'))].map((el) => defined(el.closest<HTMLButtonElement>('button'))), closestButton(container, 'backward'), closestButton(container, 'fast_forward')];
         expect(buttons).toHaveLength(4);
         for (const button of buttons) {
             // a wrapper with tabindex="0" around the button would be a second stop
@@ -402,7 +402,7 @@ describe('AudioPlayer', () => {
 
     it('列表按钮的提示文字从语言包读取', async () => {
         const { container } = renderPlayer({ audioUrl: tracks });
-        const [prev] = [...container.querySelectorAll(icon('restart'))].map((el) => el.closest('button') as HTMLButtonElement);
+        const [prev] = [...container.querySelectorAll(icon('restart'))].map((el) => defined(el.closest<HTMLButtonElement>('button')));
         await hoverOpen(prev);
         await waitFor(() => expect(query(document, '.semi-tooltip-content')).toHaveTextContent('上一首'));
     });
@@ -438,7 +438,7 @@ describe('AudioPlayer', () => {
         expect(container.querySelector(`.${prefixCls}-control-speed`)).toBeNull();
         await fireEvent.click(closestButton(container, 'refresh'));
         expect(audio.load).toHaveBeenCalledTimes(1);
-        await fireEvent.click(container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement);
+        await fireEvent.click(defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button')));
         expect(container.querySelector(`.${prefixCls}-error`)).toBeNull();
         expect(container.querySelector(`.${prefixCls}-info-time`)).toBeInTheDocument();
     });
@@ -498,7 +498,7 @@ describe('AudioPlayer', () => {
     it('切歌后再触发 loadedmetadata，仍显示播放中；暂停事件后显示播放', async () => {
         const { container } = renderPlayer({ audioUrl: tracks });
         const audio = getAudio(container);
-        const next = container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement;
+        const next = defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button'));
         await fireEvent.click(next);
         await fireEvent(audio, new Event('play'));
         await loadMetadata(audio);
@@ -558,7 +558,7 @@ describe('AudioPlayer', () => {
 
     it('audioUrl 列表缩短到当前曲目之外时播放最后一首，空列表不渲染曲目', async () => {
         const { container, rerender } = renderPlayer({ audioUrl: tracks });
-        const next = container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement;
+        const next = defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button'));
         await fireEvent.click(next);
         await fireEvent.click(next);
         expect(getAudio(container)).toHaveAttribute('src', tracks[2]);
@@ -573,7 +573,7 @@ describe('AudioPlayer', () => {
 
     it('audioUrl 列表缩短后，下一首、上一首与播完都从被钳制的曲目继续', async () => {
         const { container, rerender } = renderPlayer({ audioUrl: tracks });
-        const button = (index: number) => container.querySelectorAll(icon('restart'))[index].closest('button') as HTMLButtonElement;
+        const button = (index: number) => defined(container.querySelectorAll(icon('restart'))[index].closest<HTMLButtonElement>('button'));
         await fireEvent.click(button(1));
         await fireEvent.click(button(1));
         await rerender({ audioUrl: tracks.slice(0, 2) });
@@ -600,7 +600,7 @@ describe('AudioPlayer', () => {
         const { container, rerender } = renderPlayer({ audioUrl: [] });
         const audio = getAudio(container);
         await fireEvent(audio, new Event('ended'));
-        await fireEvent.click(container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement);
+        await fireEvent.click(defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button')));
         expect(audio.play).not.toHaveBeenCalled();
         // the index stayed a number, so a list that arrives later starts at its first track
         await rerender({ audioUrl: tracks });
@@ -614,7 +614,7 @@ describe('AudioPlayer', () => {
         // a plain function: a vi.fn reads the promise it returns, which marks the rejection handled
         getAudio(container).play = () => Promise.reject(new DOMException('interrupted by a new load request', 'AbortError'));
         await fireEvent.click(query(container, `.${prefixCls}-control-button-play`));
-        await fireEvent.click(container.querySelectorAll(icon('restart'))[1].closest('button') as HTMLButtonElement);
+        await fireEvent.click(defined(container.querySelectorAll(icon('restart'))[1].closest<HTMLButtonElement>('button')));
         await new Promise((resolve) => setTimeout(resolve, 0));
         process.off('unhandledRejection', unhandled);
         expect(unhandled).not.toHaveBeenCalled();

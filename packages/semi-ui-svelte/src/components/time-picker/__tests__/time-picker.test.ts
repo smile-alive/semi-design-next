@@ -5,6 +5,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import Fixture, { type FixtureStore } from './time-picker-fixture.svelte';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-timepicker`;
@@ -29,10 +30,12 @@ async function setup({ props, ...init }: SetupInit = {}) {
     return { store, ...result };
 }
 
-const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const getInput = () => document.querySelector<HTMLInputElement>(`.${prefixCls} input`) as HTMLInputElement;
+const getRoot = () => getElement(`.${prefixCls}`);
+const getInput = () => getElement<HTMLInputElement>(`.${prefixCls} input`);
+const queryInput = () => document.querySelector(`.${prefixCls} input`);
+const queryList = (type: string) => document.querySelector(`.${prefixCls}-panel-list-${type}`);
 const getPanels = () => Array.from(document.querySelectorAll<HTMLElement>(`.${scrollListCls}`));
-const getList = (type: string, panel: ParentNode = document) => panel.querySelector<HTMLElement>(`.${prefixCls}-panel-list-${type}`) as HTMLElement;
+const getList = (type: string, panel: ParentNode = document) => getElement(`.${prefixCls}-panel-list-${type}`, panel);
 const getItems = (type: string, panel?: ParentNode) => Array.from(getList(type, panel).querySelectorAll('li'));
 const getSelectedText = (type: string, panel?: ParentNode) => getList(type, panel).querySelector(`.${scrollListCls}-item-sel`)?.textContent?.trim();
 const changes = (store: FixtureStore) => store.log.filter((entry) => entry.startsWith('change'));
@@ -233,19 +236,19 @@ describe('Svelte TimePicker 面板', () => {
     it('format 决定列：HH:mm 无秒列，mm:ss 无小时列，HH 只有小时列', async () => {
         const first = await setup({ open: true, value: '10:23', props: { format: 'HH:mm' } });
         expect(getInput()).toHaveValue('10:23');
-        expect(getList('second')).toBeNull();
+        expect(queryList('second')).toBeNull();
         expect(getRoot()).not.toBeNull();
         first.unmount();
 
         const second = await setup({ open: true, value: '23:15', props: { format: 'mm:ss' } });
-        expect(getList('hour')).toBeNull();
+        expect(queryList('hour')).toBeNull();
         expect(getSelectedText('minute')).toBe('23分');
         expect(getSelectedText('second')).toBe('15秒');
         second.unmount();
 
         await setup({ open: true, value: '10', props: { format: 'HH' } });
         expect(getSelectedText('hour')).toBe('10时');
-        expect(getList('minute')).toBeNull();
+        expect(queryList('minute')).toBeNull();
     });
 
     it('format 变化时重新格式化显示值和面板列', async () => {
@@ -254,7 +257,7 @@ describe('Svelte TimePicker 面板', () => {
         store.props.format = 'HH:mm';
         await settle();
         expect(getInput()).toHaveValue('10:23');
-        expect(getList('second')).toBeNull();
+        expect(queryList('second')).toBeNull();
     });
 
     it('hourStep、minuteStep 和 secondStep', async () => {
@@ -440,7 +443,7 @@ describe('Svelte TimePicker 输入框', () => {
 
     it('点击清除按钮清空，单选上报 undefined', async () => {
         const { store } = await setup({ value: '10:23:15' });
-        await fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         await settle();
         expect(changes(store)).toEqual(['change undefined ""']);
         expect(getInput()).toHaveValue('');
@@ -448,7 +451,7 @@ describe('Svelte TimePicker 输入框', () => {
 
     it('范围清空上报 []', async () => {
         const { store } = await setup({ value: ['10:00:00', '12:00:00'], props: { type: 'timeRange' } });
-        await fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         await settle();
         expect(changes(store)).toEqual(['change  [""]']);
         expect(getInput()).toHaveValue('');
@@ -458,7 +461,7 @@ describe('Svelte TimePicker 输入框', () => {
         const { store } = await setup({ value: '10:23:15', props: { inputReadOnly: true } });
         expect(getInput()).toHaveAttribute('readonly');
         expect(document.querySelector(`.${prefixCls}-input-readonly`)).not.toBeNull();
-        await fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         await settle();
         expect(changes(store)).toHaveLength(1);
     });
@@ -542,7 +545,7 @@ describe('Svelte TimePicker 自定义触发器', () => {
         expect(trigger).toHaveClass('custom-trigger');
         expect(trigger).toHaveAttribute('data-type', 'time');
         expect(trigger).toHaveAttribute('data-value', '10:23:15');
-        expect(getInput()).toBeNull();
+        expect(queryInput()).toBeNull();
         expect(trigger.parentElement).not.toHaveAttribute('role');
         await fireEvent.click(trigger);
         await settle();

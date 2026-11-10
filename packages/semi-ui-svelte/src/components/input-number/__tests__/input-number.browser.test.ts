@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { mouse } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { InputNumberProps } from '../interface';
 import InputNumberFixture from './input-number-fixture.svelte';
 import InputNumberModes from './input-number-modes.svelte';
@@ -12,9 +13,9 @@ import InputNumberModes from './input-number-modes.svelte';
 const prefixCls = `${BASE_CLASS_PREFIX}-input-number`;
 
 const getInput = () => screen.getByRole<HTMLInputElement>('spinbutton');
-const getButton = (direction: 'up' | 'down') => document.querySelector(`.${prefixCls}-button-${direction}`) as HTMLElement;
+const getButton = (direction: 'up' | 'down') => getElement(`.${prefixCls}-button-${direction}`);
 const getButtons = () => document.querySelector(`.${prefixCls}-suffix-btns`);
-const getWrapper = () => document.querySelector(`.${BASE_CLASS_PREFIX}-input-number`) as HTMLElement;
+const getWrapper = () => getElement(`.${BASE_CLASS_PREFIX}-input-number`);
 const thousands = (value: number | string) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const removeThousands = (value: string) => value.replace(/,/g, '');
 
@@ -131,7 +132,7 @@ describe('Svelte InputNumber（浏览器）', () => {
         onTestFinished(() => outside.remove());
         const input = getInput();
         for (const part of ['prefix', 'suffix']) {
-            await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-input-${part}`) as HTMLElement);
+            await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-input-${part}`));
             expect(input).toHaveFocus();
             await userEvent.click(outside);
             expect(input).not.toHaveFocus();

@@ -1,12 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { Modal, Switch, Tooltip } from '@fibrae/semi-ui-react';
+import { defined, getElement } from '@test/utils/react';
 import ConfigProvider from '../index';
 
 function layoutOf(name: string) {
-    const root = screen.getByRole('switch', { name }).closest('.semi-switch') as HTMLElement;
+    const root = defined(screen.getByRole('switch', { name }).closest<HTMLElement>('.semi-switch'));
     const box = root.getBoundingClientRect();
-    const knob = (root.querySelector('.semi-switch-knob') as HTMLElement).getBoundingClientRect();
+    const knob = getElement('.semi-switch-knob', root).getBoundingClientRect();
     return { direction: getComputedStyle(root).direction, knobOnLeft: knob.left - box.left < box.right - knob.right };
 }
 
@@ -46,7 +47,7 @@ describe('弹层方向（浏览器）', () => {
         </>
     );
     const directionsOf = async (name: string) => {
-        const tooltip = (await screen.findByText(`tip-${name}`)).closest('.semi-tooltip-wrapper') as HTMLElement;
+        const tooltip = defined((await screen.findByText(`tip-${name}`)).closest<HTMLElement>('.semi-tooltip-wrapper'));
         const modal = screen.getByRole('dialog', { name: `modal-${name}` });
         return [getComputedStyle(tooltip).direction, getComputedStyle(modal).direction];
     };

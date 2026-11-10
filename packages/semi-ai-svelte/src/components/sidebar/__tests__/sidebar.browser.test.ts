@@ -4,6 +4,7 @@ import { page, userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { AnnotationInfo } from '../annotation/interface';
 import { Annotation, MCPConfigure, Sidebar } from '../index';
 import BindHost, { type BindHostStore } from './bind-host.svelte';
@@ -108,7 +109,7 @@ describe('MCPConfigure 浏览器', () => {
             render(MCPConfigure, { props: { visible: true, motion: false, resizable: false, options }, target });
         }
         const sizes = [wide, narrow].map((target) => {
-            const { width, height } = (target.querySelector('.semi-sidebar-mcp-configure-content-header-count') as Element).getBoundingClientRect();
+            const { width, height } = getElement('.semi-sidebar-mcp-configure-content-header-count', target).getBoundingClientRect();
             return { width, height };
         });
         expect(sizes[1]).toEqual(sizes[0]);
@@ -129,7 +130,7 @@ describe('Sidebar 富文本编辑器 浏览器', () => {
         onTestFinished(() => reset.remove());
 
         const { container } = render(RichTextSample);
-        const style = (selector: string) => getComputedStyle(container.querySelector(selector) as Element);
+        const style = (selector: string) => getComputedStyle(getElement(selector, container));
         const bodySize = parseFloat(style('p').fontSize);
         for (const tag of ['h1', 'h2', 'h3']) {
             expect(parseFloat(style(tag).fontSize)).toBeGreaterThan(bodySize);

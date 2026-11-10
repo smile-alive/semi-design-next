@@ -1,5 +1,6 @@
 import { render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
+import { getElement } from '@test/utils/solid';
 import MarkdownRender from '../index';
 
 describe('MarkdownRender（浏览器）', () => {
@@ -16,7 +17,7 @@ describe('MarkdownRender（浏览器）', () => {
             expect(lists).toHaveLength(2);
             return lists;
         });
-        const ol = container.querySelector('ol') as HTMLOListElement;
+        const ol = getElement<HTMLOListElement>('ol', container);
 
         expect(getComputedStyle(ul).listStyleType).toBe('disc');
         expect(getComputedStyle(nested).listStyleType).not.toBe('none');
@@ -56,9 +57,9 @@ describe('MarkdownRender（浏览器）', () => {
             expect(node).not.toBeNull();
             return node as HTMLElement;
         });
-        const img = image.querySelector('img') as HTMLImageElement;
+        const img = getElement<HTMLImageElement>('img', image);
         img.dispatchEvent(new Event('load'));
-        const link = container.querySelector('a') as HTMLAnchorElement;
+        const link = getElement<HTMLAnchorElement>('a', container);
         expect(link.querySelector('[role="button"], [tabindex="0"]')).toBeNull();
         expect(getComputedStyle(img).cursor).not.toBe('zoom-in');
     });

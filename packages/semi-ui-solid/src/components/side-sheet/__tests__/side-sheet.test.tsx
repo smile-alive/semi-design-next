@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconEyeClosed } from '@fibrae/semi-icons-solid';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import SideSheet, { type SideSheetProps, type SideSheetState } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
@@ -183,7 +184,7 @@ describe('SideSheet', () => {
     });
 
     it('getPopupContainer', () => {
-        const container = () => document.querySelector<HTMLElement>('.sidesheet-container') as HTMLElement;
+        const container = () => getElement('.sidesheet-container');
         const { unmount } = render(() => (
             <div class="sidesheet-container" style={{ height: '320px', overflow: 'hidden', position: 'relative' }}>
                 <SideSheet getPopupContainer={container} visible />
@@ -497,7 +498,7 @@ describe('SideSheet 行为', () => {
     it('渲染到 getPopupContainer 中，且定位为 static', () => {
         render(() => (
             <div class="sidesheet-container">
-                <SideSheet getPopupContainer={() => document.querySelector<HTMLElement>('.sidesheet-container') as HTMLElement} visible />
+                <SideSheet getPopupContainer={() => getElement('.sidesheet-container')} visible />
             </div>
         ));
         expect(getRoot()).toHaveClass(`${prefix}-popup`);

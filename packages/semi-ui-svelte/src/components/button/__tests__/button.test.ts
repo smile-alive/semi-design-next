@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import Button from '../button.svelte';
 import ButtonCase from './button-case.svelte';
 import FormSubmit from './form-submit.svelte';
@@ -99,7 +100,7 @@ describe('Svelte Button', () => {
 
     it('icon 布局时文本 span 带 x-semi-prop，内容 span 不带；无 icon 时内容 span 带', () => {
         const { store, view } = setup({ icon: 'edit', text: 'x' });
-        const content = view.container.querySelector(`.${prefixCls}-content`) as HTMLElement;
+        const content = getElement(`.${prefixCls}-content`, view.container);
         expect(content).not.toHaveAttribute('x-semi-prop');
         expect(content.querySelector('[x-semi-prop="children"]')).toHaveTextContent('x');
         store.icon = undefined;

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi, type Mock } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import Extras from './extras-fixture.svelte';
 import Fixture from './typography-fixture.svelte';
 
@@ -15,7 +16,7 @@ function setup(store: { kind?: 'text' | 'title' | 'paragraph' | 'numeral'; text?
     return { state, ...view };
 }
 
-const root = (container: Element) => container.querySelector(`.${prefix}`) as HTMLElement;
+const root = (container: Element) => getElement(`.${prefix}`, container);
 
 function visibleText(node: Element): string {
     return [...node.childNodes].map((child) => (child.nodeType === Node.TEXT_NODE ? child.textContent : child instanceof HTMLElement && child.hidden ? '' : visibleText(child as Element))).join('');
@@ -124,31 +125,31 @@ describe('Svelte Typography 复制：交互', () => {
 describe('Svelte Typography 复制：内容与外观', () => {
     it('没有内容时复制空字符串', async () => {
         const { container } = setup({ text: '', props: { copyable: true } });
-        await userEvent.click(container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', container));
         await waitFor(() => expect(writeText).toHaveBeenLastCalledWith(''));
     });
 
     it('复制内容为 content 显式 undefined 时取渲染出的文本', async () => {
         const { container } = setup({ text: 'abc', props: { copyable: { content: undefined } } });
-        await userEvent.click(container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', container));
         await waitFor(() => expect(writeText).toHaveBeenLastCalledWith('abc'));
     });
 
     it('条件渲染为假的 {#if} 不进入复制内容，也不进入 JS 截断的文本', async () => {
         mockTextHeight(2);
         const { container } = render(Extras, { props: { mode: 'conditional' } });
-        await userEvent.click(container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', container));
         await waitFor(() => expect(writeText).toHaveBeenLastCalledWith('Bob'));
-        const paragraph = container.querySelector(`.${prefix}-paragraph`) as HTMLElement;
+        const paragraph = getElement(`.${prefix}-paragraph`, container);
         await waitFor(() => expect(visibleText(paragraph)).toBe('abcdefghijklmn...EX'));
     });
 
     it('copyable 复制配置的内容，并显示自定义成功提示与复制提示', async () => {
         const { container } = render(Extras, { props: { mode: 'copyTips' } });
         expect(container.querySelector(`.${prefix}-action-copy`)).not.toHaveAttribute('style');
-        await userEvent.hover(container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.hover(getElement('.semi-icon-copy', container));
         await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent('press'));
-        await userEvent.click(container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', container));
         expect(writeText).toHaveBeenCalledWith('configured');
         await waitFor(() => expect(container.querySelector(`.${prefix}-action-copied`)).toHaveTextContent(/^done$/));
     });
@@ -182,7 +183,7 @@ describe('Svelte Typography 复制：内容与外观', () => {
 
     it('Title 与 Paragraph 同样可复制', async () => {
         const title = setup({ kind: 'title', text: 'Heading', props: { copyable: true } });
-        await userEvent.click(title.container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', title.container));
         await waitFor(() => expect(writeText).toHaveBeenLastCalledWith('Heading'));
     });
 });
@@ -195,7 +196,7 @@ describe('Svelte Typography 复制与省略同时使用', () => {
         await vi.waitFor(() => expect(visibleText(paragraph)).toBe('abcdefghi...EXfalse'));
         await userEvent.click(screen.getByRole('button', { name: 'EX' }));
         expect(visibleText(paragraph)).toBe(`${LETTERS}COfalse`);
-        await userEvent.click(container.querySelector('.copy') as Element);
+        await userEvent.click(getElement('.copy', container));
         await vi.waitFor(() => expect(container.querySelector('.copy')).toHaveTextContent('true'));
         expect(writeText).toHaveBeenCalledTimes(1);
     });

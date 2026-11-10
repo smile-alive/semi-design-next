@@ -4,7 +4,7 @@ import { vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Tree, { type TreeEmits, type TreeHandle, type TreeNodeData } from '../..';
 
 export type Slots = Record<string, (scope: never) => VNodeChild>;
@@ -138,9 +138,11 @@ export const selectedCls = `${optionCls}-selected`;
 
 export const getOptions = () => document.querySelectorAll(`.${optionCls}`);
 export const getLevelNodes = (level: number) => document.querySelectorAll(`.${optionCls}.${optionCls}-level-${level}`);
-export const getNode = (key: string) => document.querySelector(`[role="treeitem"][data-key="${key}"]`) as HTMLElement;
+export const getNode = (key: string) => getElement(`[role="treeitem"][data-key="${key}"]`);
+export const queryNode = (key: string) => document.querySelector(`[role="treeitem"][data-key="${key}"]`);
 export const getHighlights = () => document.querySelectorAll(`.${optionCls}-highlight`);
-export const getExpandIcon = (node: Element) => node.querySelector(`.${optionCls}-expand-icon`) as HTMLElement;
+export const getExpandIcon = (node: Element) => getElement(`.${optionCls}-expand-icon`, node);
+export const queryExpandIcon = (node: Element) => node.querySelector(`.${optionCls}-expand-icon`);
 export const getSelected = () => document.querySelectorAll(`.${selectedCls}`);
 export const getSearchWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-search-wrapper`);
 export const search = (value: string) => fireEvent.update(screen.getByRole('textbox'), value);

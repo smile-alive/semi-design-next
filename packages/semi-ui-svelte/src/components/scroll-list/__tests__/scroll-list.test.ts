@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
-import { sleep } from '@test/utils/function';
+import { sleep, defined } from '@test/utils/function';
 import { ScrollItem, type ScrollItemHandle, type ScrollItemProps, type ScrollItemSelectData, type ScrollListItem } from '..';
 import ScrollItemModes from './scroll-item-modes.svelte';
 import ScrollListFixture from './scroll-list-fixture.svelte';
@@ -269,7 +269,7 @@ describe('ScrollItem 行为', () => {
         store.index = 1;
         flushSync();
         expect(option('b')).toHaveClass(`${prefix}-item-sel`);
-        const wrapper = option('a').closest(`.${prefix}-item`) as Element;
+        const wrapper = defined(option('a').closest(`.${prefix}-item`));
         await waitFor(() => expect(wrapper.scrollTop).toBe(36 - 72));
     });
 
@@ -311,7 +311,7 @@ describe('ScrollItem 行为', () => {
     it('motion 开启时，selectedIndex 变化后滚动带动画', async () => {
         mockItemLayout();
         const { store, option } = setupModes('bind', 0);
-        const wrapper = option('a').closest(`.${prefix}-item`) as Element;
+        const wrapper = defined(option('a').closest(`.${prefix}-item`));
         store.index = 2;
         flushSync();
         await waitFor(() => expect(wrapper.scrollTop).toBe(72 - 72));

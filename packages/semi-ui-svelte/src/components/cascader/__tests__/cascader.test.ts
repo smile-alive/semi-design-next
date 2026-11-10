@@ -3,6 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore, snapshot } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { CascaderChangeValue, CascaderData, CascaderEntity, CascaderProps, CascaderTriggerSnippetProps, CascaderValue } from '..';
 import CascaderCase from './cascader-case.svelte';
 
@@ -71,15 +73,17 @@ function setup(props: Omit<CascaderProps, 'value' | 'treeData'> = {}, { value, m
     return { store, api, ...result };
 }
 
-const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const getSelection = () => document.querySelector(`.${prefixCls}-selection`) as HTMLElement;
+const getRoot = () => getElement(`.${prefixCls}`);
+const getSelection = () => getElement(`.${prefixCls}-selection`);
 const getSelectionText = () => getSelection().textContent?.trim();
-const getInput = () => getRoot().querySelector('input') as HTMLInputElement;
-const getOption = (label: string) => screen.getByText(label, { selector: `.${prefixCls}-option-label > span` }).closest('li') as HTMLElement;
+const getInput = () => getElement<HTMLInputElement>('input', getRoot());
+const queryInput = () => getRoot().querySelector('input');
+const querySelection = () => document.querySelector(`.${prefixCls}-selection`);
+const getOption = (label: string) => defined(screen.getByText(label, { selector: `.${prefixCls}-option-label > span` }).closest<HTMLElement>('li'));
 const getColumnTexts = (index: number) => [...document.querySelectorAll(`.${prefixCls}-option-list`)[index].querySelectorAll('li')].map((li) => li.textContent?.trim());
 const getColumnCount = () => document.querySelectorAll(`.${prefixCls}-option-list`).length;
 const getTagTexts = () => [...document.querySelectorAll(`.${prefixCls}-selection .semi-tag-content`)].map((tag) => tag.textContent?.trim());
-const getCheckbox = (label: string) => getOption(label).querySelector('.semi-checkbox') as HTMLElement;
+const getCheckbox = (label: string) => getElement('.semi-checkbox', getOption(label));
 const isOpen = () => document.querySelector(`.${prefixCls}-option-lists`) !== null || document.querySelector(`.${prefixCls}-popover`) !== null;
 const activeLabel = (host: Element) =>
     document
@@ -142,7 +146,7 @@ describe('Svelte Cascader 渲染', () => {
         setup({ 'aria-label': undefined, insetLabel: createRawSnippet(() => ({ render: () => '<span>地区</span>' })) });
         await settle();
         const root = getRoot();
-        const label = root.querySelector(`.${prefixCls}-inset-label`) as HTMLElement;
+        const label = getElement(`.${prefixCls}-inset-label`, root);
         expect(label.id).not.toBe('');
         expect(root).toHaveAttribute('aria-labelledby', label.id);
         await openDropdown();
@@ -165,7 +169,7 @@ describe('Svelte Cascader 渲染', () => {
     it('dropdownClassName 与 dropdownStyle 落在弹层上', async () => {
         setup({ dropdownClassName: 'my-dropdown', dropdownStyle: 'width: 321px' });
         await openDropdown();
-        const popup = document.querySelector('.my-dropdown') as HTMLElement;
+        const popup = getElement('.my-dropdown');
         expect(popup).toHaveClass(`${prefixCls}-popover`);
         expect(popup).toHaveStyle({ width: '321px' });
     });
@@ -450,7 +454,7 @@ describe('Svelte Cascader 多选', () => {
             }
         );
         expect(getTagTexts()).toEqual(['北美洲']);
-        const close = getSelection().querySelector('.semi-tag-close') as HTMLElement;
+        const close = getElement('.semi-tag-close', getSelection());
         await click(close);
         expect(onChange).toHaveBeenCalledWith([]);
         expect(getTagTexts()).toEqual([]);
@@ -510,7 +514,7 @@ describe('Svelte Cascader 多选', () => {
         }));
         const onChange = vi.fn<(value: CascaderChangeValue) => void>();
         setup({ multiple: true, tag, onChange }, { value: [['North America', 'Canada']] });
-        const button = document.querySelector('.my-tag') as HTMLElement;
+        const button = getElement('.my-tag');
         expect(button).toHaveTextContent('加拿大');
         await click(button);
         expect(onChange).toHaveBeenCalledWith([]);
@@ -566,9 +570,9 @@ describe('Svelte Cascader 搜索', () => {
         const onSearch = vi.fn<(value: string) => void>();
         const onChange = vi.fn<(value: CascaderChangeValue) => void>();
         setup({ filterTreeNode: true, onSearch, onChange });
-        expect(getInput()).toBeNull();
+        expect(queryInput()).toBeNull();
         await openDropdown();
-        expect(getInput()).not.toBeNull();
+        expect(queryInput()).not.toBeNull();
         expect(getRoot()).toHaveClass(`${prefixCls}-filterable`);
         await search('北');
         expect(onSearch).toHaveBeenLastCalledWith('北');
@@ -619,7 +623,7 @@ describe('Svelte Cascader 搜索', () => {
         setup({ filterTreeNode: true, filterItem, onChange });
         await openDropdown();
         await search('加拿');
-        const row = document.querySelector('.my-row') as HTMLElement;
+        const row = getElement('.my-row');
         expect(row).toHaveTextContent('北美洲>加拿大');
         expect(screen.getByRole('option')).toBe(row);
         await click(row);
@@ -636,7 +640,7 @@ describe('Svelte Cascader 搜索', () => {
         await search('上海');
         const options = screen.getAllByRole('option');
         expect(options).toHaveLength(1);
-        await click(options[0].querySelector('.semi-checkbox') as HTMLElement);
+        await click(getElement('.semi-checkbox', options[0]));
         expect(onChange).toHaveBeenCalledWith([['Asia', 'China', 'Shanghai']]);
         expect(getTagTexts()).toEqual(['上海']);
     });
@@ -658,7 +662,7 @@ describe('Svelte Cascader 搜索', () => {
     it('searchPosition 为 custom 时没有触发器输入框，search 方法搜索', async () => {
         const { api } = setup({ filterTreeNode: true, searchPosition: 'custom' });
         await openDropdown();
-        expect(getInput()).toBeNull();
+        expect(queryInput()).toBeNull();
         api().search('上海');
         await settle();
         expect(screen.getAllByRole('option').map((option) => option.textContent?.trim())).toEqual(['亚洲 / 中国 / 上海']);
@@ -908,7 +912,7 @@ describe('Svelte Cascader 键盘与 ARIA', () => {
         const root = screen.getByRole('combobox');
         expect(root).not.toHaveClass(prefixCls);
         expect(root.querySelector('.my-trigger')).not.toBeNull();
-        expect(getSelection()).toBeNull();
+        expect(querySelection()).toBeNull();
         expect(seen.at(-1)).toBe('1-1');
     });
 

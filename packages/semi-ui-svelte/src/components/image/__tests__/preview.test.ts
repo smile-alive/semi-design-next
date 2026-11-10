@@ -5,6 +5,8 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { ImageProps, PreviewProps } from '../interface';
 import ConfigFixture from './config-fixture.svelte';
 import GroupFixture from './group-fixture.svelte';
@@ -133,7 +135,7 @@ describe('Svelte ImagePreview', () => {
 
     it('分组结构：class 与 style 在分组上，previewCls、previewStyle 与 zIndex 在预览上', () => {
         const { container } = renderPreview({ class: 'group-cls', style: 'color: red', previewCls: 'preview-cls', previewStyle: 'color: blue', zIndex: 2000 });
-        const group = container.querySelector(`.${BASE_CLASS_PREFIX}-image-preview-group`) as HTMLElement;
+        const group = getElement(`.${BASE_CLASS_PREFIX}-image-preview-group`, container);
         expect(group).toHaveClass('group-cls');
         expect(group).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getPreview()).toHaveClass('preview-cls');
@@ -676,7 +678,7 @@ describe('Svelte ImagePreview', () => {
 
     it('没有名称时分组没有角色，带 aria-label 时为 group 角色，未声明属性落在分组元素上', () => {
         const first = renderPreview({ 'data-x': '1' } as PreviewProps);
-        const group = first.container.querySelector(`.${BASE_CLASS_PREFIX}-image-preview-group`) as HTMLElement;
+        const group = getElement(`.${BASE_CLASS_PREFIX}-image-preview-group`, first.container);
         expect(group).not.toHaveAttribute('role');
         expect(group).toHaveAttribute('data-x', '1');
         first.unmount();
@@ -713,7 +715,7 @@ describe('Svelte ImagePreview 键盘与屏幕阅读器', () => {
     it('禁用的底部按钮仍可聚焦，报告 aria-disabled 且无操作', async () => {
         const onPrev = vi.fn<(index: number) => void>();
         renderPreview({ onPrev });
-        const prev = footerIcon('chevron_left').closest('button') as HTMLButtonElement;
+        const prev = defined(footerIcon('chevron_left').closest<HTMLButtonElement>('button'));
         expect(prev).toHaveAttribute('aria-disabled', 'true');
         expect(prev).not.toBeDisabled();
         await fire(fireEvent.click(prev));
@@ -789,7 +791,7 @@ describe('Svelte ImagePreview 键盘与屏幕阅读器', () => {
         vi.advanceTimersByTime(1000);
         flushSync();
         expect($(`.${previewCls}-footer`)).toHaveClass(`${previewCls}-hide`);
-        await fire(fireEvent.focusIn(footerIcon('rotate').closest('button') as HTMLElement));
+        await fire(fireEvent.focusIn(defined(footerIcon('rotate').closest<HTMLElement>('button'))));
         expect($(`.${previewCls}-footer`)).not.toHaveClass(`${previewCls}-hide`);
     });
 

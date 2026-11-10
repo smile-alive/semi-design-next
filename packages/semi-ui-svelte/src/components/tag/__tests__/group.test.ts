@@ -2,6 +2,8 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { SplitTagGroupProps, TagCloseEvent, TagGroupItem, TagGroupProps } from '../interface';
 import GroupFixture from './group-fixture.svelte';
 import SplitFixture from './split-fixture.svelte';
@@ -24,7 +26,7 @@ describe('Svelte TagGroup', () => {
             ],
             onTagClose: close,
         });
-        await fireEvent.click(container.querySelector(`.${prefix}-close`) as HTMLElement);
+        await fireEvent.click(getElement(`.${prefix}-close`, container));
         flushSync();
         expect(tags()[0]).toHaveClass(`${prefix}-invisible`);
         expect(tags()[1]).not.toHaveClass(`${prefix}-invisible`);
@@ -35,7 +37,7 @@ describe('Svelte TagGroup', () => {
         const own = vi.fn<(event: TagCloseEvent, tagKey?: string | number) => void>();
         const group = vi.fn<(event: TagCloseEvent, tagKey?: string | number) => void>();
         const { container } = setupGroup({ tagList: [{ children: 'a', closable: true, tagKey: 'k', onClose: own }], onTagClose: group });
-        await fireEvent.click(container.querySelector(`.${prefix}-close`) as HTMLElement);
+        await fireEvent.click(getElement(`.${prefix}-close`, container));
         expect(own).toHaveBeenCalledWith(expect.any(MouseEvent), 'k');
         expect(group).toHaveBeenCalledWith(expect.any(MouseEvent), 'k');
     });
@@ -79,7 +81,7 @@ describe('Svelte TagGroup', () => {
         const enter = vi.fn<(event: MouseEvent) => void>();
         setupGroup({ tagList: [{ children: 'a' }, { children: 'b' }], maxTagCount: 1, restCount: 5, onPlusNMouseEnter: enter });
         expect(screen.queryByText('b')).toBeNull();
-        await fireEvent.mouseEnter(screen.getByText('+5').closest(`.${prefix}`) as HTMLElement);
+        await fireEvent.mouseEnter(defined(screen.getByText('+5').closest<HTMLElement>(`.${prefix}`)));
         expect(enter).toHaveBeenCalledTimes(1);
     });
 

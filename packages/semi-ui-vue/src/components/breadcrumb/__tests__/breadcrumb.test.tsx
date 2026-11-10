@@ -6,7 +6,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { IconArticle, IconHome } from '@fibrae/semi-icons-vue';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { elementType, semiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Breadcrumb, { BreadcrumbItem } from '../index';
 import type { BreadcrumbItemInfo, BreadcrumbItemProps, BreadcrumbMoreSlotProps, BreadcrumbProps, BreadcrumbRouteSlotProps, Route } from '../interface';
 import Keyed from './fixtures/keyed.vue';
@@ -164,7 +164,7 @@ describe('Breadcrumb', () => {
         const route = { path: 'path', href: 'href', name: 'test' };
         const item = vi.fn<(scope: BreadcrumbRouteSlotProps) => VNode[]>(({ route: r, index }) => [<div class="path">{r.path}</div>, <div class="href">{r.href}</div>, <div class="name">{`${r.name}-${index}`}</div>]);
         render(Breadcrumb, { props: { routes: [route] }, slots: { item } });
-        const title = document.querySelector(`.${prefix}-item-title`) as HTMLElement;
+        const title = getElement(`.${prefix}-item-title`);
         expect(title).toHaveClass(`${prefix}-item-title-inline`);
         expect(title.querySelector('.path')).toHaveTextContent(/^path$/);
         expect(title.querySelector('.href')).toHaveTextContent(/^href$/);
@@ -192,12 +192,12 @@ describe('Breadcrumb', () => {
 
     it('activeIndex 指向会被折叠的项时，当前项保持可见，折叠其后的项', async () => {
         getBr({ routes: routesOf(6), activeIndex: 2, moreType: 'popover' });
-        const current = screen.getByText('c').closest(`.${prefix}-item-wrap`) as HTMLElement;
+        const current = defined(screen.getByText('c').closest<HTMLElement>(`.${prefix}-item-wrap`));
         expect(current).toHaveAttribute('aria-current', 'page');
         expect(typographyTexts()).toEqual(['a', 'b', 'c', 'f']);
         expect(list().children[3]).toHaveClass(`${prefix}-collapse`);
-        await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
-        const content = await screen.findByText('d', { selector: '.semi-popover-content *' }).then(() => document.querySelector('.semi-popover-content') as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-item-more .semi-icon-more`));
+        const content = await screen.findByText('d', { selector: '.semi-popover-content *' }).then(() => getElement('.semi-popover-content'));
         expect([...content.querySelectorAll(`.${prefix}-item-wrap`)].map((el) => el.textContent)).toEqual(['d', 'e']);
     });
 
@@ -220,7 +220,7 @@ describe('Breadcrumb', () => {
         const showTooltip = { width: 80, opts: { mouseEnterDelay: 10 } };
         getBr({ showTooltip });
         expect(showTooltip).toEqual({ width: 80, opts: { mouseEnterDelay: 10 } });
-        expect((document.querySelector('.semi-typography') as HTMLElement).style.maxWidth).toBe('80px');
+        expect(getElement('.semi-typography').style.maxWidth).toBe('80px');
     });
 
     it('除非是当前项，否则 href 渲染为 a 标签', () => {
@@ -311,7 +311,7 @@ describe('Breadcrumb', () => {
             },
         });
         expect(nav()).toHaveTextContent(/xplain$/);
-        const span = document.querySelector('.plain') as HTMLElement;
+        const span = getElement('.plain');
         expect(span.getAttributeNames()).toEqual(['class']);
     });
 
@@ -393,7 +393,7 @@ describe('Breadcrumb', () => {
             </span>
         ));
         render(Breadcrumb, { props: { routes: routesOf(5), maxItemCount: 3, onClick }, slots: { more } });
-        const custom = document.querySelector(`.${prefix}-item-more .custom-more`) as HTMLElement;
+        const custom = getElement(`.${prefix}-item-more .custom-more`);
         expect(custom).toHaveTextContent(/^2/);
         expect(document.querySelector(`.${prefix}-item-more .semi-icon-more`)).toBeNull();
         expect(more.mock.calls.at(-1)?.[0].restItems).toHaveLength(2);
@@ -418,8 +418,8 @@ describe('Breadcrumb', () => {
             },
         });
         expect(list().children).toHaveLength(3);
-        await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
-        const content = await screen.findByText('two', { selector: '.semi-popover-content *' }).then(() => document.querySelector('.semi-popover-content') as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-item-more .semi-icon-more`));
+        const content = await screen.findByText('two', { selector: '.semi-popover-content *' }).then(() => getElement('.semi-popover-content'));
         const hidden = content.querySelectorAll(`:scope > ol > .${prefix}-item-wrap`);
         expect([...hidden].map((el) => el.textContent)).toEqual(['two', 'three']);
         // hidden items drop their own separator; the popover joins them with restItem separators
@@ -434,8 +434,8 @@ describe('Breadcrumb', () => {
                 default: () => itemNodes(['one', 'two', 'three', 'four'].map((text): Child => [{ href: 'https://semi.design/' }, text])),
             },
         });
-        await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
-        const link = (await screen.findByText('two', { selector: '.semi-popover-content *' })).closest('a') as HTMLElement;
+        await userEvent.hover(getElement(`.${prefix}-item-more .semi-icon-more`));
+        const link = defined((await screen.findByText('two', { selector: '.semi-popover-content *' })).closest<HTMLElement>('a'));
         expect(link.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }))).toBe(true);
         link.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
         link.addEventListener('click', (e) => e.preventDefault());
@@ -449,7 +449,7 @@ describe('Breadcrumb', () => {
     });
 
     it('showTooltip 设置截断宽度', () => {
-        const width = () => (document.querySelector('.semi-typography') as HTMLElement).style.maxWidth;
+        const width = () => getElement('.semi-typography').style.maxWidth;
         const view = getBr();
         expect(width()).toBe('150px');
         view.unmount();
@@ -513,7 +513,7 @@ describe('Breadcrumb', () => {
 
     it('图标插槽中的原生元素只加 class，不加 size', () => {
         render(BreadcrumbItem, { slots: { default: () => 'semi', icon: () => <img alt="" /> } });
-        const img = document.querySelector('img') as HTMLElement;
+        const img = getElement('img');
         expect(img).toHaveClass(`${prefix}-item-icon`);
         expect(img).not.toHaveAttribute('size');
     });
@@ -592,7 +592,7 @@ describe('Breadcrumb', () => {
         });
         expect(nav()).toHaveAttribute('id', 'bc');
         expect(nav()).toHaveAttribute('title', 'path');
-        const item = document.getElementById('it') as HTMLElement;
+        const item = defined(document.getElementById('it'));
         expect(item).toHaveClass(`${prefix}-item-wrap`, 'mine');
         expect(item).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         await userEvent.click(nav());

@@ -4,13 +4,14 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { isWebKit, tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Slider, { type SliderProps } from '..';
 import ConfigProvider from '../../config-provider';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-slider`;
 type OnChange = NonNullable<SliderProps['onChange']>;
 
-const getRail = () => document.querySelector(`.${prefixCls}-rail`) as HTMLElement;
+const getRail = () => getElement(`.${prefixCls}-rail`);
 const getHandles = () => [...document.querySelectorAll<HTMLElement>(`.${prefixCls}-handle`)];
 const getInputs = () => [...document.querySelectorAll<HTMLInputElement>('input[type="range"]')];
 
@@ -268,7 +269,7 @@ describe('Slider 的真实布局', () => {
     // Safari focuses only text fields on a click, through a label too
     it.skipIf(isWebKit)('点击 label 会聚焦滑块输入框', async () => {
         renderLabelled();
-        await userEvent.click(document.querySelector('label') as HTMLElement);
+        await userEvent.click(getElement('label'));
         expect(getInputs()[0]).toHaveFocus();
     });
 
@@ -281,7 +282,7 @@ describe('Slider 的真实布局', () => {
             </div>
         ));
         const [handle] = getHandles();
-        const input = handle.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', handle);
         expect(getComputedStyle(handle).outlineStyle).toBe('none');
         await userEvent.click(handle);
         expect(input).toHaveFocus();

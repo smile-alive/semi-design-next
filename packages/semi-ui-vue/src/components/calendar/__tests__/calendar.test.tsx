@@ -8,7 +8,7 @@ import type { strings } from '@fibrae/semi-foundation/components/calendar/consta
 import { calcRowHeight } from '@fibrae/semi-foundation/components/calendar/event-util';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { countLiveListeners, endLeaveAnimations, mockResizeObserver, render } from '@test/utils/vue';
+import { countLiveListeners, endLeaveAnimations, mockResizeObserver, render, getElement, defined } from '@test/utils/vue';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import Calendar, { type CalendarEmits, type CalendarEventSlotProps, type CalendarMode, type CalendarProps, type EventObject } from '../index';
 import CachedMonth from './fixtures/cached-month.vue';
@@ -107,14 +107,14 @@ describe('Calendar', () => {
         const onClick = vi.fn<ClickHandler>();
         const week = renderCal({ mode: 'week', onClick });
         expect(onClick).not.toHaveBeenCalled();
-        await userEvent.click(week.container.querySelector(`.${prefixCls}-grid-skeleton-row-line`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-grid-skeleton-row-line`, week.container));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][1]).toEqual(new Date(2019, 7, 4, 0, 0, 0));
         week.unmount();
 
         const onMonthClick = vi.fn<ClickHandler>();
         const month = renderCal({ mode: 'month', onClick: onMonthClick });
-        await userEvent.click(month.container.querySelector(`.${prefixCls}-month-skeleton [role="cell"]`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-month-skeleton [role="cell"]`, month.container));
         expect(onMonthClick).toHaveBeenCalledTimes(1);
         expect(onMonthClick.mock.calls[0][1]).toEqual(new Date(2019, 6, 28));
     });
@@ -316,7 +316,7 @@ describe('Calendar', () => {
         const evts = container.querySelectorAll('.evt');
         expect(evts).toHaveLength(1);
         // 08:32-09:32 sits at 8.5333/24 of the scroll height and spans 1/24 of it (positions are rounded)
-        const item = evts[0].closest<HTMLElement>(`.${prefixCls}-event-day`) as HTMLElement;
+        const item = defined(evts[0].closest<HTMLElement>(`.${prefixCls}-event-day`));
         expect(parseFloat(item.style.top)).toBeCloseTo((8 + 32 / 60) * 20, 0);
         expect(parseFloat(item.style.height)).toBeCloseTo(20, 0);
     });
@@ -371,7 +371,7 @@ describe('Calendar 行为', () => {
         mockLayout();
         const events = [event('all', new Date(2019, 7, 8, 9), undefined, { allDay: true })];
         const { container } = renderCal({ displayValue: today, events, mode: 'day' });
-        const row = container.querySelector(`.${prefixCls}-all-day`) as HTMLElement;
+        const row = getElement(`.${prefixCls}-all-day`, container);
         expect(allDayItems(row).map((item) => item.textContent)).toEqual(['all']);
         expect(dayItems(container)).toHaveLength(0);
     });
@@ -380,7 +380,7 @@ describe('Calendar 行为', () => {
         mockLayout();
         const events = [event('span', new Date(2019, 7, 6), new Date(2019, 7, 8), { allDay: true }), event('overlap', new Date(2019, 7, 7), new Date(2019, 7, 7), { allDay: true })];
         const { container } = renderCal({ displayValue: today, events, mode: 'week' });
-        const row = container.querySelector<HTMLElement>(`.${prefixCls}-all-day`) as HTMLElement;
+        const row = getElement(`.${prefixCls}-all-day`, container);
         const items = allDayItems(row);
         expect(items.map((item) => item.textContent)).toEqual(['span', 'overlap']);
         expect(px(items[0].style.insetInlineStart)).toBeCloseTo((2 / 7) * 100, 0);
@@ -445,7 +445,7 @@ describe('Calendar 行为', () => {
         const headers = container.querySelectorAll(`.${prefixCls}-week-grid-row [role="columnheader"]`);
         expect(headers[0]).toHaveTextContent('5周一');
         expect(headers[6]).toHaveTextContent('11周日');
-        await userEvent.click(container.querySelector(`.${prefixCls}-grid-skeleton-row-line`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-grid-skeleton-row-line`, container));
         expect(onClick.mock.calls[0][1]).toEqual(new Date(2019, 7, 5, 0, 0, 0));
     });
 
@@ -466,7 +466,7 @@ describe('Calendar 行为', () => {
             events: [event('endOnly', undefined, new Date(2019, 7, 6), { allDay: true })],
             mode: 'week',
         });
-        const item = document.querySelector<HTMLElement>(`.${prefixCls}-event-allday`) as HTMLElement;
+        const item = getElement(`.${prefixCls}-event-allday`);
         expect(parseFloat(item.style.insetInlineStart)).toBeCloseTo((2 / 7) * 100, 1);
     });
 
@@ -540,14 +540,14 @@ describe('Calendar 行为', () => {
     it('day 与 range 视图的 click 接收半小时时段', async () => {
         const onClick = vi.fn<ClickHandler>();
         const day = await renderLaidOut({ displayValue: new Date(2019, 7, 8, 15, 20), mode: 'day', onClick });
-        await userEvent.click(day.container.querySelector('[data-time="09:30:00"]') as HTMLElement);
+        await userEvent.click(getElement('[data-time="09:30:00"]', day.container));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0].type).toBe('click');
         expect(onClick.mock.calls[0][1]).toEqual(new Date(2019, 7, 8, 9, 30, 0));
         day.unmount();
 
         const range = await renderLaidOut({ mode: 'range', range: [new Date(2019, 7, 1), new Date(2019, 7, 4)], onClick });
-        await userEvent.click(dayCols(range.container)[1].querySelector('[data-time="18:00:00"]') as HTMLElement);
+        await userEvent.click(getElement('[data-time="18:00:00"]', dayCols(range.container)[1]));
         expect(onClick.mock.calls[1][1]).toEqual(new Date(2019, 7, 2, 18, 0, 0));
     });
 
@@ -804,7 +804,7 @@ describe('Calendar 作为组件', () => {
         expect(rowOf(view.container)).toBe(1);
         await view.rerender({ displayValue, events, mode: 'month', weekStartsOn: 1 });
         expect(rowOf(view.container)).toBe(0);
-        const item = view.container.querySelector<HTMLElement>(`.${prefixCls}-event-month`) as HTMLElement;
+        const item = getElement(`.${prefixCls}-event-month`, view.container);
         expect(px(item.style.insetInlineStart)).toBeCloseTo((6 / 7) * 100, 0);
     });
 
@@ -964,10 +964,10 @@ describe('Calendar（Vue）', () => {
     it('click 只在日期格与时间槽触发，遮住根元素的原生 click', async () => {
         const onClick = vi.fn<ClickHandler>();
         const week = renderCal({ displayValue: today, mode: 'week', onClick });
-        await userEvent.click(week.container.querySelector(`.${prefixCls}-week-tag`) as HTMLElement);
-        await userEvent.click(week.container.querySelector(`.${prefixCls}-all-day-tag`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-week-tag`, week.container));
+        await userEvent.click(getElement(`.${prefixCls}-all-day-tag`, week.container));
         expect(onClick).not.toHaveBeenCalled();
-        await userEvent.click(week.container.querySelector('[data-time="10:00:00"]') as HTMLElement);
+        await userEvent.click(getElement('[data-time="10:00:00"]', week.container));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
         expect(onClick.mock.calls[0][1]).toEqual(new Date(2019, 7, 4, 10, 0, 0));
@@ -975,7 +975,7 @@ describe('Calendar（Vue）', () => {
 
         const onMonthClick = vi.fn<ClickHandler>();
         const month = renderCal({ displayValue: today, mode: 'month', onClick: onMonthClick });
-        await userEvent.click(month.container.querySelector(`.${prefixCls}-month-header [role="columnheader"]`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-month-header [role="columnheader"]`, month.container));
         expect(onMonthClick).not.toHaveBeenCalled();
         await userEvent.click(screen.getByRole('cell', { name: '2019年8月8日' }));
         expect(onMonthClick).toHaveBeenCalledTimes(1);
@@ -1310,7 +1310,7 @@ describe('Calendar（Vue）', () => {
     it('折叠格 tabindex 为 -1，"更多" 按钮是该日唯一的 Tab 停靠点', async () => {
         renderCal({ displayValue: today, events: [event('a', new Date(2019, 7, 8, 9))], mode: 'month' });
         const more = screen.getByRole('button', { name: '还有1项' });
-        const cell = more.closest('[role="cell"]') as HTMLElement;
+        const cell = defined(more.closest<HTMLElement>('[role="cell"]'));
         expect(cell).toHaveAttribute('tabindex', '-1');
         await userEvent.tab();
         expect(more).toHaveFocus();
@@ -1375,7 +1375,7 @@ describe('Calendar（Vue）', () => {
         expect(px(dayItems(container)[0].style.top)).toBe(0);
         root.scrollTop = 0;
         height.mockReturnValue(480);
-        const scroll = container.querySelector(`.${prefixCls}-day-scroll`) as HTMLElement;
+        const scroll = getElement(`.${prefixCls}-day-scroll`, container);
         await observer.fire(scroll, [{}]);
         expect(Math.round(px(dayItems(container)[0].style.top))).toBe(200);
         expect(px((currLine(container) as HTMLElement).style.top)).toBe(240);

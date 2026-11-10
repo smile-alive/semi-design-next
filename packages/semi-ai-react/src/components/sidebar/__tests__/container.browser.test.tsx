@@ -4,6 +4,7 @@ import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { Sidebar } from '@fibrae/semi-ai-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
+import { getElement } from '@test/utils/react';
 
 const { Container } = Sidebar;
 
@@ -27,7 +28,7 @@ describe('Sidebar.Container', () => {
             );
         };
         render(<Host />, { container: mount });
-        const opener = mount.querySelector('button') as HTMLElement;
+        const opener = getElement('button', mount);
         opener.focus();
         await userEvent.keyboard('{Enter}');
         const close = await waitFor(() => {

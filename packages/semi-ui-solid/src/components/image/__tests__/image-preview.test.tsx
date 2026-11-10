@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import Image, { ImagePreview, type ImageProps, type MenuProps, type PreviewProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -33,7 +34,7 @@ function renderGroup(initial: PreviewProps = {}) {
     return { ...result, rerender: (next: PreviewProps) => setProps(next) };
 }
 
-const $ = (selector: string) => document.querySelector<HTMLElement>(selector) as HTMLElement;
+const $ = (selector: string) => getElement(selector);
 const getPreview = () => document.querySelector<HTMLElement>(`div.${previewCls}`);
 const previewImg = () => $(`.${previewCls}-image-img`) as HTMLImageElement;
 const pageInfo = () => document.querySelector(`.${previewCls}-footer-page`)?.textContent;
@@ -657,7 +658,7 @@ describe('ImagePreview', () => {
         const onDownload = vi.fn<(src: string, index: number) => void>();
         const setDownloadName = vi.fn<(src: string) => string>(() => 'x.jpg');
         render(() => <ImagePreview setDownloadName={setDownloadName} src={[]} visible onDownload={onDownload} />);
-        const download = footerIcon('download').closest('button') as HTMLButtonElement;
+        const download = defined(footerIcon('download').closest<HTMLButtonElement>('button'));
         expect(download).toHaveAttribute('aria-disabled', 'true');
         fireEvent.click(download);
         expect(setDownloadName).not.toHaveBeenCalled();

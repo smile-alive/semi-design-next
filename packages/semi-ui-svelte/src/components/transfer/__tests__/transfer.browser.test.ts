@@ -4,6 +4,7 @@ import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { TransferDataItem, TransferValue } from '../interface';
 import Transfer from '../transfer.svelte';
 import TransferBrowser from './transfer-browser.svelte';
@@ -71,7 +72,7 @@ describe('Svelte Transfer（浏览器）', () => {
         render(Transfer, {
             props: { dataSource: data.map((item) => ({ ...item, disabled: true })), style: 'width: 400px; height: 150px' },
         });
-        const list = document.querySelector(`.${prefixCls}-left-list`) as HTMLElement;
+        const list = getElement(`.${prefixCls}-left-list`);
         await tabTo(list);
         expectThemeFocusRing(list);
     });
@@ -79,7 +80,7 @@ describe('Svelte Transfer（浏览器）', () => {
     it('可排序手柄获得键盘焦点时显示主题焦点环', async () => {
         render(Transfer, { props: { value: [2, 4], dataSource: data, draggable: true, style: 'width: 400px; height: 300px' } });
         await waitFor(() => expect(getSortableItems()).toHaveLength(2));
-        const handle = document.querySelector(`.${prefixCls}-right-item-sortable-handle`) as HTMLElement;
+        const handle = getElement(`.${prefixCls}-right-item-sortable-handle`);
         await tabTo(handle);
         expectThemeFocusRing(handle);
     });
@@ -98,7 +99,7 @@ describe('Svelte Transfer（浏览器）', () => {
 
     it('滚动已选虚拟列表后渲染靠后的已选项', async () => {
         render(Transfer, { props: { value: many.map((item) => item.value), dataSource: many, virtualize: { height: 100, itemSize: 30 } } });
-        const list = document.querySelector(`.${prefixCls}-right-virtual-list`) as HTMLElement;
+        const list = getElement(`.${prefixCls}-right-virtual-list`);
         expect(queryRightText('条目 40')).toBeNull();
         list.scrollTop = 30 * 40;
         await waitFor(() => expect(getRightText('条目 40')).toBeInTheDocument());
@@ -114,7 +115,7 @@ describe('Svelte Transfer（浏览器）', () => {
             expect(node?.getBoundingClientRect().height).toBeGreaterThan(0);
             return node as HTMLElement;
         });
-        expect(list.getBoundingClientRect().bottom).toBeLessThanOrEqual((document.querySelector(`.${prefixCls}-right`) as HTMLElement).getBoundingClientRect().bottom + 1);
+        expect(list.getBoundingClientRect().bottom).toBeLessThanOrEqual(getElement(`.${prefixCls}-right`).getBoundingClientRect().bottom + 1);
         expect(getRightText('条目 0')).toBeInTheDocument();
         expect(queryRightText('条目 40')).toBeNull();
     });

@@ -1,5 +1,5 @@
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import type { getData } from '@test/utils/solid';
+import { type getData, getElement } from '@test/utils/solid';
 import Tag from '../../tag';
 import Tooltip from '../../tooltip';
 import Column from '../column';
@@ -13,7 +13,7 @@ export const getExpandedRowKeys = () => queryAll(`.${P}-tbody .${P}-row-expanded
 export const getFirstCellText = () => document.querySelector(`.${P}-tbody .${P}-row .${P}-row-cell`)?.textContent;
 export const getPageItems = () => queryAll(`.${BASE_CLASS_PREFIX}-page .${BASE_CLASS_PREFIX}-page-item`);
 export const getActivePage = () => document.querySelector(`.${BASE_CLASS_PREFIX}-page .${BASE_CLASS_PREFIX}-page-item-active`);
-export const getHeaderSelectionCheckbox = () => document.querySelector<HTMLElement>(`.${P}-thead .${P}-column-selection .${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement;
+export const getHeaderSelectionCheckbox = () => getElement(`.${P}-thead .${P}-column-selection .${BASE_CLASS_PREFIX}-checkbox`);
 export const containsSelector = (el: Element, selector: string) => el.matches(selector) || el.querySelector(selector) !== null;
 export const query = <E extends HTMLElement = HTMLElement>(selector: string) => document.querySelector<E>(selector) as E;
 

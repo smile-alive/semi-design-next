@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Checkbox, { type CheckboxProps } from '..';
 import Tooltip from '../../tooltip';
 
@@ -15,7 +16,7 @@ function renderCb(props: CheckboxProps = {}) {
     return render(() => <Checkbox {...props}>Semi Design</Checkbox>);
 }
 
-const getWrapper = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
+const getWrapper = () => getElement(`.${prefixCls}`);
 const getInput = () => screen.getByRole<HTMLInputElement>('checkbox');
 
 describe('Checkbox', () => {
@@ -46,7 +47,7 @@ describe('Checkbox', () => {
         await userEvent.click(screen.getByRole('button', { name: 'more' }));
         await userEvent.click(screen.getByRole('link', { name: 'extra link' }));
         expect(getInput()).not.toBeChecked();
-        await userEvent.click(document.querySelector(`.${prefixCls}-addon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-addon`));
         expect(getInput()).toBeChecked();
     });
 
@@ -129,7 +130,7 @@ describe('Checkbox', () => {
 
     it('extra 属性', () => {
         renderCb({ extra: 'abcd' });
-        const extra = document.querySelector(`.${prefixCls}-extra`) as HTMLElement;
+        const extra = getElement(`.${prefixCls}-extra`);
         expect(extra).toHaveTextContent(/^abcd$/);
         expect(getInput()).toHaveAttribute('aria-describedby', extra.id);
     });
@@ -243,7 +244,7 @@ describe('Checkbox', () => {
 
     it('点击后聚焦原生 input', async () => {
         renderCb();
-        await userEvent.click(document.querySelector(`.${prefixCls}-addon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-addon`));
         expect(getInput()).toHaveFocus();
     });
 });
@@ -345,7 +346,7 @@ describe('Checkbox 行为基线', () => {
         expect(input).toHaveAttribute('aria-errormessage', 'err');
         expect(input).toHaveAttribute('aria-required', 'true');
         expect(input).not.toHaveAttribute('aria-checked');
-        const addon = document.querySelector(`.${prefixCls}-addon`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon`);
         expect(addon.id).not.toBe('');
         expect(input).toHaveAttribute('aria-labelledby', `outer ${addon.id}`);
         expect(getWrapper()).not.toHaveAttribute('aria-labelledby');
@@ -430,7 +431,7 @@ describe('Checkbox 行为基线', () => {
 
     it('点击时聚焦原生 input', async () => {
         renderCb();
-        await userEvent.click(document.querySelector(`.${prefixCls}-addon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-addon`));
         expect(getInput()).toHaveFocus();
     });
 
@@ -532,7 +533,7 @@ describe('Checkbox 触发器与全局默认值', () => {
                 )}
             </Tooltip>
         ));
-        const wrapper = document.querySelector('.probe') as HTMLElement;
+        const wrapper = getElement('.probe');
         expect(wrapper).toContainElement(getWrapper());
         expect(wrapper).toHaveAttribute('tabindex', '0');
         expect(getWrapper().style.pointerEvents).toBe('none');

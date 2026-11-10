@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Tree, { type RenderFullLabelProps, type TreeHandle, type TreeNodeData, type TreeProps } from '..';
 import ConfigProvider from '../../config-provider';
 import Tooltip from '../../tooltip';
@@ -50,8 +51,10 @@ const optionCls = `${prefix}-option`;
 const collapsedCls = `${optionCls}-collapsed`;
 const selectedCls = `${optionCls}-selected`;
 
-const getNode = (key: string) => document.querySelector<HTMLElement>(`[role="treeitem"][data-key="${key}"]`) as HTMLElement;
-const getExpandIcon = (node: HTMLElement) => node.querySelector<HTMLElement>(`.${optionCls}-expand-icon`) as HTMLElement;
+const getNode = (key: string) => getElement(`[role="treeitem"][data-key="${key}"]`);
+const getExpandIcon = (node: HTMLElement) => getElement(`.${optionCls}-expand-icon`, node);
+const queryNode = (key: string) => document.querySelector(`[role="treeitem"][data-key="${key}"]`);
+const queryExpandIcon = (node: HTMLElement) => node.querySelector(`.${optionCls}-expand-icon`);
 const getVisibleKeys = () => [...document.querySelectorAll('[role="treeitem"]')].map((node) => node.getAttribute('data-key'));
 const isChecked = (key: string) => getNode(key).querySelector(`.${BASE_CLASS_PREFIX}-checkbox-inner-checked`) !== null;
 const isHalfChecked = (key: string) => getNode(key).querySelector(`.${BASE_CLASS_PREFIX}-checkbox-indeterminate`) !== null;
@@ -265,7 +268,7 @@ describe('Tree 行为', () => {
         expect(getNode('yazhou')).toHaveAttribute('aria-checked', 'mixed');
         expect(getNode('yazhou')).not.toHaveAttribute('aria-selected');
         expect(getExpandIcon(getNode('yazhou'))).toHaveAttribute('aria-hidden', 'true');
-        const checkbox = getNode('yazhou').querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement;
+        const checkbox = getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('yazhou'));
         expect(checkbox.closest('[aria-hidden="true"]')).not.toBeNull();
         expect(checkbox.querySelector('input')).toHaveAttribute('tabindex', '-1');
     });
@@ -455,9 +458,9 @@ describe('Tree 行为', () => {
     it('leafOnly 只上报叶子节点的值', async () => {
         const onChange = vi.fn<NonNullable<TreeProps['onChange']>>();
         render(() => <Tree defaultExpandAll leafOnly multiple treeData={treeData} onChange={onChange} />);
-        await userEvent.click(getNode('zhongguo').querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('zhongguo')));
         expect(onChange).toHaveBeenLastCalledWith(['Beijing', 'Shanghai']);
-        await userEvent.click(getNode('riben').querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('riben')));
         expect(onChange).toHaveBeenLastCalledWith(['Beijing', 'Shanghai', 'Dongjing', 'Daban']);
         expect(isChecked('yazhou')).toBe(true);
     });
@@ -496,10 +499,10 @@ describe('Tree 行为', () => {
         handle().search('东京');
         expect(getNode('beimeizhou')).not.toHaveClass(collapsedCls);
         expect(getNode('meiguo')).not.toBeNull();
-        expect(getNode('riben')).toBeNull();
+        expect(queryNode('riben')).toBeNull();
         rerender({ autoExpandParent: true, expandedKeys: ['riben'], filterTreeNode: true, treeData });
         expect(getNode('dongjing')).not.toBeNull();
-        expect(getNode('meiguo')).toBeNull();
+        expect(queryNode('meiguo')).toBeNull();
     });
 
     it('搜索时 treeData 变化，保留搜索过滤', () => {
@@ -555,7 +558,7 @@ describe('Tree 行为', () => {
             { label: 'B', value: 'b', key: 'b' },
         ];
         render(() => <Tree loadData={loadData} loadedKeys={['a']} motion={false} treeData={data} onLoad={onLoad} />);
-        expect(getExpandIcon(getNode('a'))).toBeNull();
+        expect(queryExpandIcon(getNode('a'))).toBeNull();
         await userEvent.click(getExpandIcon(getNode('b')));
         await waitFor(() => expect(onLoad).toHaveBeenCalledTimes(1));
         expect(onLoad).toHaveBeenCalledWith(new Set(['a', 'b']), expect.objectContaining({ key: 'b' }));
@@ -621,7 +624,7 @@ describe('Tree 行为', () => {
         expect(screen.getByTestId('keys')).toHaveTextContent('yazhou,riben');
         await userEvent.click(getExpandIcon(getNode('yazhou')));
         expect(screen.getByTestId('keys')).toHaveTextContent('riben');
-        expect(getNode('riben')).toBeNull();
+        expect(queryNode('riben')).toBeNull();
     });
 });
 
@@ -681,7 +684,7 @@ describe('Tree 审计修复', () => {
         fireEvent.dragEnter(getNode('beimeizhou'));
         fireEvent.drop(getNode('beimeizhou'));
         await wait(600);
-        expect(getNode('meiguo')).toBeNull();
+        expect(queryNode('meiguo')).toBeNull();
         expect(onDragEnter).not.toHaveBeenCalled();
     });
 
@@ -723,7 +726,7 @@ describe('Tree 节点数据与行状态', () => {
     it('keyMaps.children 映射到其他字段时，节点自带的 children 业务字段不让叶子变成分支', () => {
         render(() => <Tree keyMaps={{ children: 'items' }} treeData={[{ key: 'a', label: 'A', value: 'a', children: [{ key: 'x', label: 'X', value: 'x' }] }]} />);
         expect(getNode('a')).not.toHaveAttribute('aria-expanded');
-        expect(getExpandIcon(getNode('a'))).toBeNull();
+        expect(queryExpandIcon(getNode('a'))).toBeNull();
     });
 
     it('单选树 defaultValue={0} 选中值为 0 的节点，受控 value={0} 挂载时展开其祖先', () => {
@@ -755,7 +758,7 @@ describe('Tree 搜索', () => {
         handle.search('北京');
         expect(getNode('beijing')).not.toBeNull();
         await userEvent.click(getExpandIcon(getNode('zhongguo')));
-        expect(getNode('beijing')).toBeNull();
+        expect(queryNode('beijing')).toBeNull();
         expect(getNode('zhongguo')).toHaveAttribute('aria-expanded', 'false');
     });
 
@@ -792,7 +795,7 @@ describe('Tree 拖拽', () => {
         await wait(0);
         fireEvent.dragLeave(getNode('beimeizhou'));
         await wait(450);
-        expect(getNode('meiguo')).toBeNull();
+        expect(queryNode('meiguo')).toBeNull();
     });
 
     it('树外拖入（没有 dragStart）的 drop 不触发 onDrop', () => {
@@ -859,7 +862,7 @@ describe('Tree 焦点', () => {
         expect(screen.getByRole('tree')).toHaveFocus();
         unmount();
         render(() => <Tree multiple treeData={treeData} />);
-        await userEvent.click(document.querySelector('input[type="checkbox"]') as HTMLElement);
+        await userEvent.click(getElement('input[type="checkbox"]'));
         const tree = screen.getByRole('tree');
         expect(tree).toHaveFocus();
         await userEvent.keyboard('{ArrowDown}');

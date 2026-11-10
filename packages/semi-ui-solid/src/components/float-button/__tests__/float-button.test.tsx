@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import FloatButton, { FloatButtonGroup, type FloatButtonElement, type FloatButtonGroupProps, type FloatButtonProps } from '..';
 
 type ClickHandler = (event: MouseEvent) => void;
@@ -24,7 +25,7 @@ describe('FloatButton', () => {
         const { container } = render(() => <FloatButton icon={<i data-testid="icon" />} />);
         const root = container.firstElementChild as HTMLElement;
         expect(root).toHaveClass(prefixCls, `${prefixCls}-round`, `${prefixCls}-default`);
-        const body = root.querySelector(`.${prefixCls}-body`) as HTMLElement;
+        const body = getElement(`.${prefixCls}-body`, root);
         expect(body).toHaveClass(`${prefixCls}-round`, `${prefixCls}-default`);
         expect(body).not.toHaveClass(`${prefixCls}-colorful`);
         expect(body).not.toHaveClass(`${prefixCls}-disabled`);
@@ -56,7 +57,7 @@ describe('FloatButton', () => {
             </div>
         ));
         const [count, dot, plain] = container.querySelectorAll(`.${prefixCls}`);
-        const countBadge = count.querySelector('.semi-badge') as HTMLElement;
+        const countBadge = getElement('.semi-badge', count);
         expect(countBadge.querySelector(`.${prefixCls}-body`)).not.toBeNull();
         expect(countBadge.querySelector('.semi-badge-count')).toHaveTextContent('999+');
         expect(dot.querySelector('.semi-badge-dot')).toHaveClass('semi-badge-danger');
@@ -67,7 +68,7 @@ describe('FloatButton', () => {
     it('badge 可在运行时增减，图标保留', () => {
         const [badge, setBadge] = createSignal<FloatButtonProps['badge']>();
         const { container } = render(() => <FloatButton badge={badge()} icon={<i data-testid="icon" />} />);
-        const root = container.querySelector(`.${prefixCls}`) as HTMLElement;
+        const root = getElement(`.${prefixCls}`, container);
         expect(root.querySelector('.semi-badge')).toBeNull();
 
         setBadge({ count: 3 });
@@ -82,7 +83,7 @@ describe('FloatButton', () => {
     it('调用 onClick 并传入事件', () => {
         const onClick = vi.fn<ClickHandler>();
         const { container } = render(() => <FloatButton onClick={onClick} />);
-        fireEvent.click(container.querySelector(`.${prefixCls}-body`) as Element);
+        fireEvent.click(getElement(`.${prefixCls}-body`, container));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0].type).toBe('click');
     });
@@ -94,7 +95,7 @@ describe('FloatButton', () => {
         expect(root).toHaveAttribute('type', 'button');
         expect(root).not.toBeDisabled();
         expect(root).not.toHaveAttribute('aria-disabled');
-        expect((root.querySelector(`.${prefixCls}-body`) as Element).tagName).toBe('SPAN');
+        expect(getElement(`.${prefixCls}-body`, root).tagName).toBe('SPAN');
     });
 
     it('渲染带 href、target 与 rel 的原生链接', () => {
@@ -132,7 +133,7 @@ describe('FloatButton', () => {
         const root = screen.getByRole('button', { name: 'Edit' });
         expect(root).toBeDisabled();
         expect(root).toHaveAttribute('aria-disabled', 'true');
-        fireEvent.click(root.querySelector(`.${prefixCls}-body`) as Element);
+        fireEvent.click(getElement(`.${prefixCls}-body`, root));
         expect(onClick).not.toHaveBeenCalled();
     });
 
@@ -232,7 +233,7 @@ describe('FloatButtonGroup', () => {
     it('调用 onClick 并传入被点击项的 value 与事件', () => {
         const onClick = vi.fn<GroupClickHandler>();
         const { container } = render(() => <FloatButtonGroup items={items} onClick={onClick} />);
-        fireEvent.click(container.querySelector(`[data-value="search"]`) as Element);
+        fireEvent.click(getElement(`[data-value="search"]`, container));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0]).toBe('search');
         expect(onClick.mock.calls[0][1].type).toBe('click');
@@ -250,7 +251,7 @@ describe('FloatButtonGroup', () => {
         const onClick = vi.fn<GroupClickHandler>();
         const { container } = render(() => <FloatButtonGroup items={items} onClick={onClick} />);
         fireEvent.click(container.firstElementChild as Element);
-        fireEvent.click(container.querySelector('.semi-badge-count') as Element);
+        fireEvent.click(getElement('.semi-badge-count', container));
         expect(onClick).not.toHaveBeenCalled();
     });
 

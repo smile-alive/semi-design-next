@@ -7,6 +7,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerProps } from '..';
 
 type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
@@ -24,11 +25,11 @@ function renderDatePicker(initial: DatePickerProps = {}) {
 }
 
 const getPopup = () => document.querySelector<HTMLElement>(popupSelector);
-const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
+const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
 const getSelectedDays = () => Array.from(document.querySelectorAll(`.${dp}-day-selected`)).map((d) => d.getAttribute('aria-label'));
 const getPresetButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-quick-control button`);
 const getFooterButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-footer .${BASE_CLASS_PREFIX}-button`);
-const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-month-grid-${side}`) as HTMLElement;
+const getPanel = (side: string) => getElement(`.${dp}-month-grid-${side}`);
 const getWeekDays = (side: string, weekIndex: number) => getPanel(side).querySelectorAll(`.${dp}-week`)[weekIndex].querySelectorAll<HTMLElement>(`.${dp}-day`);
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
@@ -52,7 +53,7 @@ describe('DatePicker 属性', () => {
         expect(getPanel('left').querySelector(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`)).toHaveStyle({ visibility: 'hidden' });
         expect(getPanel('right').querySelector(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`)).toHaveStyle({ visibility: 'hidden' });
 
-        await userEvent.click(getPanel('left').querySelector(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`) as HTMLElement);
+        await userEvent.click(getElement(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`, getPanel('left')));
         expect(getNavTitle('left')).toBe('2021年 7月');
         expect(getNavTitle('right')).toBe('2021年 8月');
     });
@@ -170,7 +171,7 @@ describe('DatePicker 属性', () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ motion: false, onChange });
 
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         fireEvent.input(input, { target: { value: '2021-08-15' } });
         expect(onChange).toHaveBeenCalledTimes(1);
         await userEvent.type(input, '{Enter}');

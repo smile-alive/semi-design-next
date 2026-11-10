@@ -6,9 +6,9 @@ import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconMapPin } from '@fibrae/semi-icons-vue';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Tree, { type TreeExpandIconSlotProps, type TreeFullLabelSlotProps, type TreeLabelSlotProps, type TreeNodeData, type TreeProps, type TreeSearchSlotProps, type TreeValue } from '..';
-import { collapsedCls, getExpandIcon, getHighlights, getNode, getSearchWrapper, optionCls, renderTree, renderWith, selectedCls, spyOn, treeData } from './fixtures/data';
+import { collapsedCls, getExpandIcon, getHighlights, getNode, getSearchWrapper, optionCls, queryExpandIcon, queryNode, renderTree, renderWith, selectedCls, spyOn, treeData } from './fixtures/data';
 import Stateful from './fixtures/stateful.vue';
 
 const activeElement = () => document.getElementById(screen.getByRole('tree').getAttribute('aria-activedescendant') ?? '');
@@ -45,7 +45,7 @@ describe('Tree（Vue）', () => {
         expect(getNode('zhongguo')).not.toBeNull();
         await userEvent.click(getExpandIcon(getNode('beimeizhou')));
         expect(handle().expandedKeys).toEqual(['yazhou']);
-        expect(getNode('meiguo')).toBeNull();
+        expect(queryNode('meiguo')).toBeNull();
     });
 
     it('全局默认值：semiDefault、semiGlobalDefault 与函数 prop 都读 semiGlobal.Tree', () => {
@@ -223,7 +223,7 @@ describe('Tree（Vue）', () => {
 
     it('多选时点击复选框的行成为键盘当前行', async () => {
         renderTree({ multiple: true, defaultExpandAll: true });
-        await userEvent.click(getNode('riben').querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('riben')));
         expect(getNode('riben')).toHaveAttribute('aria-checked', 'true');
         expect(activeElement()).toBe(getNode('riben'));
     });
@@ -265,12 +265,12 @@ describe('Tree（Vue）', () => {
         await userEvent.click(getExpandIcon(getNode('a')));
         await waitFor(() => expect(loadedKeys.value).toEqual(['a']));
         await nextTick();
-        expect(getExpandIcon(getNode('a'))).toBeNull();
+        expect(queryExpandIcon(getNode('a'))).toBeNull();
         await userEvent.click(getExpandIcon(getNode('b')));
         await waitFor(() => expect(getNode('b1')).not.toBeNull());
         expect(loadedKeys.value).toEqual(['a', 'b']);
         await userEvent.click(getExpandIcon(getNode('b')));
-        expect(getNode('b1')).toBeNull();
+        expect(queryNode('b1')).toBeNull();
         await userEvent.click(getExpandIcon(getNode('b')));
         expect(getNode('b1')).not.toBeNull();
         expect(loadData).toHaveBeenCalledTimes(2);

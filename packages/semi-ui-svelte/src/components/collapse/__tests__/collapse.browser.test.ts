@@ -2,13 +2,15 @@ import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import Tall from './tall.svelte';
 
 describe('Svelte Collapse（浏览器）', () => {
     // Chrome makes an overflowing scroll container keyboard focusable; that focus must not show the default ring
     it('可滚动内容获得键盘焦点时显示主题焦点环', async () => {
         const { container } = render(Tall);
-        const content = container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-collapse-content`) as HTMLElement;
+        const content = getElement(`.${BASE_CLASS_PREFIX}-collapse-content`, container);
         content.style.cssText = 'max-height: 40px; overflow: auto';
         await tabTo(content);
         expectThemeFocusRing(content);
@@ -19,7 +21,7 @@ describe('Svelte Collapse（浏览器）', () => {
         render(Tall);
         const button = screen.getByRole('button', { name: 'panel' });
         await tabTo(button);
-        expectThemeFocusRing(button.closest(`.${BASE_CLASS_PREFIX}-collapse-header`) as HTMLElement);
+        expectThemeFocusRing(defined(button.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-collapse-header`)));
         expect(getComputedStyle(button).outlineStyle).toBe('none');
     });
 });

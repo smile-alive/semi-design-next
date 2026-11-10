@@ -4,7 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
-import { countLiveListeners } from '@test/utils/dom/common';
+import { countLiveListeners, getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { AnchorClickEvent, AnchorProps } from '../interface';
 import AnchorFixture from './anchor-fixture.svelte';
 import { collapsible, flat, nested, type Fixture } from './fixture-data';
@@ -25,7 +26,7 @@ function setup(props: AnchorProps = {}, extra: Partial<Fixture> = {}) {
 }
 
 // jsdom does not lay out: section positions are stubbed per element, relative to the viewport
-const setTop = (id: string, top: number) => vi.spyOn(document.getElementById(id) as HTMLElement, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, 100));
+const setTop = (id: string, top: number) => vi.spyOn(defined(document.getElementById(id)), 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, 100));
 // the scroll handler is throttled (leading call) and the end of a scroll is debounced, both at 100ms
 function scroll(target: Window | Element = window) {
     target.dispatchEvent(new Event('scroll'));
@@ -212,7 +213,7 @@ describe('Svelte Anchor', () => {
 
     it('title snippet 渲染节点标题，且不输出原生 title', () => {
         setup({ links: flat('a') }, { nodeTitles: true });
-        const title = document.querySelector(`.${prefix}-link-title`) as HTMLElement;
+        const title = getElement(`.${prefix}-link-title`);
         expect(title.querySelector('b')).toHaveTextContent('a');
         expect(title).not.toHaveAttribute('title');
     });
@@ -330,7 +331,7 @@ describe('Svelte Anchor', () => {
 
         it('以 getContainer 返回的容器与 offsetTop 计算位置', () => {
             setup({ links: flat('a', 'b'), getContainer: () => document.getElementById('box'), offsetTop: 30 }, { boxId: 'box', showBox: true });
-            const box = document.getElementById('box') as HTMLElement;
+            const box = defined(document.getElementById('box'));
             vi.spyOn(box, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 100, 100, 500));
             setTop('a', 60);
             setTop('b', 120);
@@ -389,8 +390,8 @@ describe('Svelte Anchor', () => {
         it('getContainer 返回其他元素时迁移监听', () => {
             const byId = (id: string) => () => document.getElementById(id);
             const { store } = setup({ links: flat('a', 'b'), getContainer: byId('one') }, { extraBoxes: true });
-            const one = document.getElementById('one') as HTMLElement;
-            const two = document.getElementById('two') as HTMLElement;
+            const one = defined(document.getElementById('one'));
+            const two = defined(document.getElementById('two'));
             const addToOne = vi.spyOn(one, 'addEventListener');
             const removeFromOne = vi.spyOn(one, 'removeEventListener');
             setTop('a', -50);

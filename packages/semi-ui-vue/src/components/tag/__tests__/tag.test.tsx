@@ -3,7 +3,7 @@ import { fireEvent } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobalKey, SemiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import TagGroup from '../group.vue';
 import type { TagCloseEvent, TagEmits, TagGroupEmits, TagGroupItem, TagGroupProps } from '../interface';
 import SplitTagGroup from '../split-tag-group.vue';
@@ -26,7 +26,7 @@ describe('Tag', () => {
             props: { closable: true, tagKey: 'k', onClose: close },
             slots: { default: () => 'semi' },
         });
-        await fireEvent.click(view.container.querySelector(`.${prefix}-close`) as HTMLElement);
+        await fireEvent.click(getElement(`.${prefix}-close`, view.container));
         expect(close).toHaveBeenCalledWith(expect.any(MouseEvent), 'k');
         expect(view.emitted()['update:visible']).toEqual([[false]]);
         expect(view.getByRole('button')).toHaveClass(`${prefix}-invisible`);
@@ -36,7 +36,7 @@ describe('Tag', () => {
             props: { closable: true, onClose: (event: TagCloseEvent) => event.preventDefault() },
             slots: { default: () => 'semi' },
         });
-        await fireEvent.click(view.container.querySelector(`.${prefix}-close`) as HTMLElement);
+        await fireEvent.click(getElement(`.${prefix}-close`, view.container));
         expect(view.getByRole('button')).not.toHaveClass(`${prefix}-invisible`);
         expect(view.emitted()['update:visible']).toBeUndefined();
     });
@@ -91,7 +91,7 @@ describe('Tag', () => {
         await fireEvent.keyDown(view.getByRole('button'), { key });
         expect(keydown).toHaveBeenCalledTimes(1);
         expect(view.getByRole('button')).toHaveClass(`${prefix}-invisible`);
-        await fireEvent.click(view.container.querySelector(`.${prefix}-close`) as HTMLElement);
+        await fireEvent.click(getElement(`.${prefix}-close`, view.container));
         expect(click).not.toHaveBeenCalled();
         expectTypeOf<TagEmits['close'][0]>().toEqualTypeOf<MouseEvent | KeyboardEvent>();
         expectTypeOf<TagGroupEmits['tagClose'][0]>().toEqualTypeOf<MouseEvent | KeyboardEvent>();
@@ -168,7 +168,7 @@ describe('TagGroup', () => {
                 ],
             },
         });
-        await fireEvent.click(view.container.querySelector(`.${prefix}-close`) as HTMLElement);
+        await fireEvent.click(getElement(`.${prefix}-close`, view.container));
         const tags = view.container.querySelectorAll(`.${prefix}`);
         expect(tags[0]).toHaveClass(`${prefix}-invisible`);
         expect(tags[1]).not.toHaveClass(`${prefix}-invisible`);

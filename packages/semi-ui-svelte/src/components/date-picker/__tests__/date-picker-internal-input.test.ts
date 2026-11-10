@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { dp, getRoot, setup } from './test-utils';
 
 const clearButtonIn = (root: ParentNode) => root.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`);
@@ -19,7 +20,7 @@ describe('Svelte 全局 Input 默认值不给 DatePicker 内部输入框加清�
     it('面板内 insetInput', async () => {
         semiGlobal.config = { overrideDefaultProps: { Input: { showClear: true } } };
         await setup({ value: new Date(2024, 0, 15), open: true, props: { type: 'dateTime', insetInput: true } });
-        const insetInputs = document.querySelector(`.${dp}-inset-input-wrapper`) as HTMLElement;
+        const insetInputs = getElement(`.${dp}-inset-input-wrapper`);
         expect(insetInputs.querySelectorAll('input').length).toBeGreaterThan(0);
         expect(clearButtonIn(insetInputs)).toBeNull();
     });

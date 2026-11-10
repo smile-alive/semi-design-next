@@ -3,11 +3,12 @@ import { fireEvent, render } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import HotKeys, { type HotKeysProps } from '..';
 
 const prefix = `${BASE_CLASS_PREFIX}-hotKeys`;
 
-const rootOf = (container: HTMLElement) => container.querySelector(`.${prefix}`) as HTMLElement;
+const rootOf = (container: HTMLElement) => getElement(`.${prefix}`, container);
 
 const press = (target: Element, init: KeyboardEventInit) => fireEvent.keyDown(target, init);
 

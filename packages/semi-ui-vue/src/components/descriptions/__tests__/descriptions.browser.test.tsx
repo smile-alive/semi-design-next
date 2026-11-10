@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
 import Descriptions from '../index';
 
@@ -27,7 +27,7 @@ describe('Descriptions（浏览器）', () => {
         onTestFinished(() => reset.remove());
 
         const { container } = render(Descriptions, { props: { data } });
-        expect(getComputedStyle(container.querySelector('table') as Element).borderCollapse).toBe('collapse');
+        expect(getComputedStyle(getElement('table', container)).borderCollapse).toBe('collapse');
     });
 
     it('row 模式不改写 value 里使用方自己的表格', () => {
@@ -45,9 +45,9 @@ describe('Descriptions（浏览器）', () => {
                 ],
             },
         });
-        const own = container.querySelector('[data-testid="own"]') as Element;
-        expect(getComputedStyle(own.querySelector('tbody') as Element).display).toBe('table-row-group');
-        expect(getComputedStyle(own.querySelector('tr') as Element).display).toBe('table-row');
-        expect(getComputedStyle(own.querySelector('td') as Element).paddingTop).toBe('1px');
+        const own = getElement('[data-testid="own"]', container);
+        expect(getComputedStyle(getElement('tbody', own)).display).toBe('table-row-group');
+        expect(getComputedStyle(getElement('tr', own)).display).toBe('table-row');
+        expect(getComputedStyle(getElement('td', own)).paddingTop).toBe('1px');
     });
 });

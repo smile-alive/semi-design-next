@@ -5,13 +5,14 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { ImageProps } from '../interface';
 import GroupFixture from './group-fixture.svelte';
 import { $, clickMask, dispatch, fire, footerIcon, getPreview, pressEsc, prefixCls, previewImg, srcList, thumbs } from './helpers';
 import ImageFixture from './image-fixture.svelte';
 
 const src = 'https://example.com/a.jpg';
-const thumb = (container: Element) => container.querySelector(`.${prefixCls}-img`) as HTMLImageElement;
+const thumb = (container: Element) => getElement<HTMLImageElement>(`.${prefixCls}-img`, container);
 const root = (container: Element) => container.firstElementChild as HTMLElement;
 
 function renderImage(props: ImageProps = {}, snippets: string[] = []) {

@@ -1,9 +1,10 @@
 import { afterEach, describe, expect, it } from 'vite-plus/test';
+import { defined } from '@test/utils/function';
 import FocusTrapHandle from '../focus-handle';
 
 function mount(html: string) {
     document.body.innerHTML = html;
-    return document.getElementById('dialog') as HTMLElement;
+    return defined(document.getElementById('dialog'));
 }
 
 afterEach(() => {
@@ -48,7 +49,7 @@ describe('FocusTrapHandle.shouldRestoreFocus', () => {
         document.body.append(host);
         const shadow = host.attachShadow({ mode: 'open' });
         shadow.innerHTML = '<div id="dialog" tabindex="-1"><button id="inside">i</button></div>';
-        const dialog = shadow.getElementById('dialog') as HTMLElement;
+        const dialog = defined(shadow.getElementById('dialog'));
         shadow.getElementById('inside')?.focus();
         expect(FocusTrapHandle.shouldRestoreFocus(dialog, false)).toBe(true);
     });
@@ -61,7 +62,7 @@ describe('FocusTrapHandle.pickInitialFocus', () => {
         <div id="footer"><button id="ok" data-type="primary">ok</button></div>
     </div>`;
     const footer = () => document.getElementById('footer');
-    const pick = (options: Parameters<typeof FocusTrapHandle.pickInitialFocus>[1]) => FocusTrapHandle.pickInitialFocus(document.getElementById('dialog') as HTMLElement, options)?.id;
+    const pick = (options: Parameters<typeof FocusTrapHandle.pickInitialFocus>[1]) => FocusTrapHandle.pickInitialFocus(defined(document.getElementById('dialog')), options)?.id;
 
     it('无任何偏好时取第一个可聚焦元素', () => {
         mount(html);

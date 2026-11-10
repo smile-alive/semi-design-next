@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { dragTo, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import TagInput, { type TagInputProps } from '..';
 import Button from '../../button';
 import Popover from '../../popover';
@@ -162,7 +163,7 @@ describe('tag', () => {
 
     it('expandRestTagsOnClick 为 false 时 +N 指示器可聚焦并显示主题焦点环', async () => {
         const { container } = render(() => <TagInput defaultValue={['抖音', '火山', '西瓜视频']} expandRestTagsOnClick={false} maxTagCount={1} />);
-        const plusN = container.querySelector(`.${tagInputCls}-wrapper-n`) as HTMLElement;
+        const plusN = getElement(`.${tagInputCls}-wrapper-n`, container);
         await tabTo(plusN);
         expectThemeFocusRing(plusN);
     });
@@ -191,7 +192,7 @@ describe('tag', () => {
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(clear()).toBeNull());
         expect(screen.getByRole('textbox')).toHaveFocus();
-        expect((document.querySelector(`.${tagInputCls}-clearBtn-placeholder`) as HTMLElement).getBoundingClientRect().width).toBe(width);
+        expect(getElement(`.${tagInputCls}-clearBtn-placeholder`).getBoundingClientRect().width).toBe(width);
     });
 
     it('悬停时换悬停背景；聚焦或禁用时悬停不改变样式', async () => {
@@ -221,7 +222,7 @@ describe('tag', () => {
         await userEvent.unhover(root);
         expect(look(root)).toEqual(idle);
 
-        await tabTo(root.querySelector('input') as HTMLInputElement);
+        await tabTo(getElement<HTMLInputElement>('input', root));
         const focused = look(root);
         await userEvent.hover(root);
         expect(look(root)).toEqual(focused);
@@ -234,10 +235,10 @@ describe('tag', () => {
 });
 
 describe('TagInput 输入框宽度跟随文字', () => {
-    const getField = () => document.querySelector(`.${tagInputCls}-wrapper-input`) as HTMLElement;
-    const getTag = () => document.querySelector(`.${BASE_CLASS_PREFIX}-tag`) as HTMLElement;
+    const getField = () => getElement(`.${tagInputCls}-wrapper-input`);
+    const getTag = () => getElement(`.${BASE_CLASS_PREFIX}-tag`);
     const rowEnd = () => {
-        const row = document.querySelector(`.${tagInputCls}-wrapper`) as HTMLElement;
+        const row = getElement(`.${tagInputCls}-wrapper`);
         const style = getComputedStyle(row);
         return row.getBoundingClientRect().right - parseFloat(style.paddingRight) - parseFloat(style.borderRightWidth);
     };
@@ -457,7 +458,7 @@ describe('TagInput 输入框与其清空按钮之间的焦点移动保持在内�
     it('ShadowRoot 内受控值被清空、聚焦的清空按钮随之移除时，焦点回到输入框', async () => {
         const [value, setValue] = createSignal(['abc']);
         const shadow = renderInShadow(() => <TagInput value={value()} showClear />);
-        const input = shadow.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', shadow);
         input.focus();
         await tab();
         expect(shadow.activeElement).toBe(shadow.querySelector(`.${tagInputCls}-clearBtn`));
@@ -469,7 +470,7 @@ describe('TagInput 输入框与其清空按钮之间的焦点移动保持在内�
     it('ShadowRoot 内 ref 的 blur 移出输入框的焦点', () => {
         let root!: HTMLDivElement;
         const shadow = renderInShadow(() => <TagInput ref={(node) => (root = node)} defaultValue={['abc']} />);
-        (shadow.querySelector('input') as HTMLInputElement).focus();
+        getElement<HTMLInputElement>('input', shadow).focus();
         root.blur();
         expect(shadow.activeElement).toBeNull();
     });

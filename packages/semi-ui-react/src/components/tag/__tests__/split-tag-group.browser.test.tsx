@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/react';
 import Tag from '../index';
 import SplitTagGroup from '../split-tag-group';
 
@@ -21,7 +22,7 @@ describe('SplitTagGroup 样式', () => {
         expect(getComputedStyle(tags[1]).borderRadius).toBe('0px');
         expect(getComputedStyle(tags[2]).borderTopLeftRadius).toBe('0px');
         expect(getComputedStyle(tags[2]).borderTopRightRadius).toBe(radius);
-        expect(getComputedStyle(document.querySelector('.nested') as HTMLElement).borderTopLeftRadius).not.toBe('0px');
+        expect(getComputedStyle(getElement('.nested')).borderTopLeftRadius).not.toBe('0px');
         view.rerender(
             <SplitTagGroup>
                 <Tag shape={shape}>Only</Tag>

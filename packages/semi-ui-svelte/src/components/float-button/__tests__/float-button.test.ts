@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal, SemiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { FloatButtonGroupItem, FloatButtonGroupProps, FloatButtonProps } from '../interface';
 import DynamicGroup from './dynamic-group.svelte';
 import FloatButtonFixture from './float-button-fixture.svelte';
@@ -98,7 +99,7 @@ describe('Svelte FloatButton', () => {
     it('点击调用 onclick，参数是原生 MouseEvent', async () => {
         const onclick = vi.fn<(event: MouseEvent) => void>();
         const { container } = setup({ onclick });
-        await fireEvent.click(container.querySelector(`.${prefixCls}-body`) as Element);
+        await fireEvent.click(getElement(`.${prefixCls}-body`, container));
         expect(onclick).toHaveBeenCalledTimes(1);
         expect(onclick.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
         expect(onclick.mock.calls[0][0].type).toBe('click');
@@ -145,7 +146,7 @@ describe('Svelte FloatButton', () => {
         const root = screen.getByRole('button', { name: 'Edit' });
         expect(root).toBeDisabled();
         expect(root).toHaveAttribute('aria-disabled', 'true');
-        await fireEvent.click(container.querySelector(`.${prefixCls}-body`) as Element);
+        await fireEvent.click(getElement(`.${prefixCls}-body`, container));
         expect(onclick).not.toHaveBeenCalled();
     });
 
@@ -251,7 +252,7 @@ describe('Svelte FloatButtonGroup', () => {
     it('点击调用 onClick，参数是被点击项的 value 与事件', async () => {
         const onClick = vi.fn<(value: string | undefined, event: MouseEvent) => void>();
         const { container } = setupGroup({ items, onClick });
-        await fireEvent.click(container.querySelector('[data-value="search"]') as Element);
+        await fireEvent.click(getElement('[data-value="search"]', container));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onClick).toHaveBeenCalledWith('search', expect.any(MouseEvent));
     });
@@ -274,7 +275,7 @@ describe('Svelte FloatButtonGroup', () => {
         const onClick = vi.fn<(value: string | undefined, event: MouseEvent) => void>();
         const { container } = setupGroup({ items, onClick });
         await fireEvent.click(firstChild(container));
-        await fireEvent.click(container.querySelector('.semi-badge-count') as Element);
+        await fireEvent.click(getElement('.semi-badge-count', container));
         expect(onClick).not.toHaveBeenCalled();
     });
 

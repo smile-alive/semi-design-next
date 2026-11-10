@@ -10,7 +10,7 @@ import LocaleProvider from '@fibrae/semi-ui-solid/locale/locale-provider';
 import Modal from '@fibrae/semi-ui-solid/modal/index';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { countLiveListeners, endLeaveAnimations, sleep } from '@test/utils/solid';
+import { countLiveListeners, endLeaveAnimations, sleep, getElement } from '@test/utils/solid';
 import { ReferenceWidget } from '../dialogue/content-item/reference';
 import AIChatDialogue, { type AIChatDialogueElement, type AIChatDialogueProps, type DefaultActionNodeObj, type DialogueRenderConfig, type MarkdownRenderProps, type Message, type Metadata } from '../index';
 
@@ -32,7 +32,7 @@ const baseChats: Message[] = [
 ];
 
 const getRoot = (container: HTMLElement) => container.firstElementChild as HTMLElement;
-const getList = (container: HTMLElement) => container.querySelector<HTMLElement>(`.${prefix}-list`) as HTMLElement;
+const getList = (container: HTMLElement) => getElement(`.${prefix}-list`, container);
 const getWrappers = (container: HTMLElement) => [...container.querySelectorAll<HTMLElement>(`.${prefix}-wrapper`)];
 const getActionButton = (wrapper: HTMLElement, icon: string) => wrapper.querySelector(`.${actionCls} .${BASE_CLASS_PREFIX}-icon-${icon}`)?.closest('button') ?? null;
 const focusables = (root: ParentNode) => [...root.querySelectorAll<HTMLElement>('button, input, a, [tabindex="0"]')];
@@ -257,7 +257,7 @@ describe('AIChatDialogue 内容块', () => {
             chats: [{ id: '1', role: 'assistant', status: 'completed', content: [{ type: 'message', content: [{ type: 'output_text', text: 'cited text', annotations }] }] }],
         });
         await waitFor(() => expect(screen.getByText('cited text')).toBeInTheDocument());
-        const annotation = container.querySelector(`.${prefix}-annotation-wrapper`) as HTMLElement;
+        const annotation = getElement(`.${prefix}-annotation-wrapper`, container);
         expect(annotation).toHaveTextContent(`2 ${text.annotationText}`);
         fireEvent.click(annotation);
         expect(onAnnotationClick).toHaveBeenCalledWith([annotations[0], annotations[2]]);
@@ -269,12 +269,12 @@ describe('AIChatDialogue 内容块', () => {
         const onKeyDown = vi.fn<(e: KeyboardEvent) => void>();
         const items = [{ title: 'A', url: 'https://a.example' }];
         const { container } = render(() => <AIChatDialogue.Annotation annotation={items} maxCount={3} onClick={onClick} onKeyDown={onKeyDown} />);
-        fireEvent.keyDown(container.querySelector(`.${prefix}-annotation-wrapper`) as HTMLElement, { key: 'Enter' });
+        fireEvent.keyDown(getElement(`.${prefix}-annotation-wrapper`, container), { key: 'Enter' });
         expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ key: 'Enter' }), items);
         expect(onKeyDown).toHaveBeenCalledWith(expect.objectContaining({ key: 'Enter' }));
-        fireEvent.keyDown(container.querySelector(`.${prefix}-annotation-wrapper`) as HTMLElement, { key: ' ' });
+        fireEvent.keyDown(getElement(`.${prefix}-annotation-wrapper`, container), { key: ' ' });
         expect(onClick).toHaveBeenCalledTimes(2);
-        fireEvent.keyDown(container.querySelector(`.${prefix}-annotation-wrapper`) as HTMLElement, { key: 'a' });
+        fireEvent.keyDown(getElement(`.${prefix}-annotation-wrapper`, container), { key: 'a' });
         expect(onClick).toHaveBeenCalledTimes(2);
         expect(onKeyDown).toHaveBeenCalledTimes(3);
     });
@@ -288,7 +288,7 @@ describe('AIChatDialogue 内容块', () => {
         const { container } = renderDialogue({
             chats: [{ id: '1', role: 'assistant', status: 'completed', content: [{ type: 'reasoning', status: 'completed', summary: [{ type: 'summary_text', text: 'thought' }] }] }],
         });
-        const reasoning = container.querySelector(`.${prefix}-reasoning-wrapper`) as HTMLElement;
+        const reasoning = getElement(`.${prefix}-reasoning-wrapper`, container);
         const toggle = screen.getByRole('button', { name: text.reasoning.completed });
         expect(toggle).toHaveAttribute('aria-expanded', 'false');
         expect(reasoning.querySelector(`.${BASE_CLASS_PREFIX}-icon-chevron_down`)).not.toBeNull();
@@ -304,7 +304,7 @@ describe('AIChatDialogue 内容块', () => {
         const { container } = renderDialogue({
             chats: [{ id: '1', role: 'assistant', status: 'in_progress', content: [{ type: 'reasoning', status: 'in_progress', content: [{ text: 'thinking' }] }] }],
         });
-        const reasoning = container.querySelector(`.${prefix}-reasoning-wrapper`) as HTMLElement;
+        const reasoning = getElement(`.${prefix}-reasoning-wrapper`, container);
         expect(reasoning).toHaveTextContent(text.reasoning.thinking);
         expect(reasoning.querySelector(`.${BASE_CLASS_PREFIX}-icon-chevron_up`)).not.toBeNull();
     });
@@ -337,12 +337,12 @@ describe('AIChatDialogue 内容块', () => {
             onFileClick,
             chats: [{ id: '1', role: 'user', status: 'completed', content: [{ type: 'message', content: [image, file] }] }],
         });
-        const img = container.querySelector(`.${contentCls}-img img`) as HTMLElement;
+        const img = getElement(`.${contentCls}-img img`, container);
         expect(img).toHaveAttribute('src', image.image_url);
         fireEvent.click(img);
         expect(onImageClick).toHaveBeenCalledWith(image);
 
-        const link = container.querySelector(`a.${contentCls}-file`) as HTMLElement;
+        const link = getElement(`a.${contentCls}-file`, container);
         expect(link).toHaveAttribute('href', file.file_url);
         expect(link).toHaveTextContent('report.pdf');
         expect(link.querySelector(`.${contentCls}-file-icon-pdf`)).not.toBeNull();
@@ -350,7 +350,7 @@ describe('AIChatDialogue 内容块', () => {
         expect(onFileClick).toHaveBeenCalledWith(expect.objectContaining({ filename: 'report.pdf' }));
 
         rerender({ chats: [{ id: '1', role: 'user', status: 'completed', content: [{ type: 'message', content: [file] }] }], disabledFileItemClick: true, onFileClick });
-        expect(fireEvent.click(container.querySelector(`a.${contentCls}-file`) as HTMLElement)).toBe(false);
+        expect(fireEvent.click(getElement(`a.${contentCls}-file`, container))).toBe(false);
         expect(onFileClick).toHaveBeenCalledTimes(2);
     });
 
@@ -654,7 +654,7 @@ describe('AIChatDialogue 可访问名称', () => {
 
     it('纯图标操作按钮的名称从语言包读取', () => {
         const { container } = renderDialogue();
-        const [user, assistant] = getWrappers(container).map((w) => within(w.querySelector(`.${actionCls}`) as HTMLElement));
+        const [user, assistant] = getWrappers(container).map((w) => within(getElement(`.${actionCls}`, w)));
         for (const name of [text.copy, text.share, text.edit, text.more]) {
             expect(user.getByRole('button', { name })).toBeInTheDocument();
         }
@@ -1256,7 +1256,7 @@ describe('AIChatDialogue 节点与焦点保持', () => {
         const [first, second] = getWrappers(container);
         const firstControls = focusables(first);
         const reasoning = screen.getByRole('button', { name: text.reasoning.completed });
-        const annotation = second.querySelector(`.${prefix}-annotation-wrapper`) as HTMLElement;
+        const annotation = getElement(`.${prefix}-annotation-wrapper`, second);
         const logo = annotation.querySelector('img[src="https://a.example/logo.png"]');
         expect(logo).not.toBeNull();
         const quote = screen.getAllByRole('button', { name: text.reference })[0];
@@ -1338,7 +1338,7 @@ describe('AIChatDialogue 已修复问题', () => {
         const { container } = renderDialogue({
             chats: [{ id: '1', role: 'assistant', status: 'completed', content: [{ type: 'message', content: [{ type: 'output_text', text: 'x', annotations: [{ type: 'url_citation' }] }] }] }],
         });
-        expect(() => fireEvent.click(container.querySelector(`.${prefix}-annotation-wrapper`) as HTMLElement)).not.toThrow();
+        expect(() => fireEvent.click(getElement(`.${prefix}-annotation-wrapper`, container))).not.toThrow();
     });
 
     it('数组 content 同时带 output_text 时，推理、注释与工具调用都可见', async () => {

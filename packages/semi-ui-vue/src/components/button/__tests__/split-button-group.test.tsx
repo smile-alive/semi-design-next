@@ -2,12 +2,12 @@
 import { shallowRef } from 'vue';
 import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { render, defined } from '@test/utils/vue';
 import Button, { SplitButtonGroup } from '..';
 import ConfigProvider from '../../config-provider';
 import Dropdown, { DropdownItem, DropdownMenu } from '../../dropdown';
 
-const button = (name: string) => screen.getByText(name).closest('button') as HTMLButtonElement;
+const button = (name: string) => defined(screen.getByText(name).closest<HTMLButtonElement>('button'));
 
 function renderGroup(labels: string[]) {
     const current = shallowRef(labels);

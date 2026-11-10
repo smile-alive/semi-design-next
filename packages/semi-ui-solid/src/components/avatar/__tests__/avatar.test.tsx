@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Avatar from '..';
 import Tooltip from '../../tooltip';
 import type { AvatarColor, AvatarProps } from '../interface';
@@ -15,7 +16,7 @@ const avatarPrefix = `${BASE_CLASS_PREFIX}-avatar`;
 const src = 'https://example.com/dy.png';
 
 const getAvatars = () => [...document.querySelectorAll<HTMLElement>(`.${avatarPrefix}`)];
-const getAvatar = () => document.querySelector(`.${avatarPrefix}`) as HTMLElement;
+const getAvatar = () => getElement(`.${avatarPrefix}`);
 
 afterEach(() => {
     semiGlobal.config.overrideDefaultProps = {};
@@ -174,7 +175,7 @@ describe('Avatar', () => {
                 fallback
             </Avatar>
         ));
-        fireEvent.error(container.querySelector('img') as Element);
+        fireEvent.error(getElement('img', container));
         expect(spyOnError).toHaveBeenCalled();
         expect(container.querySelector('img')).toBeNull();
         expect(getAvatar()).not.toHaveClass(`${avatarPrefix}-img`);
@@ -184,14 +185,14 @@ describe('Avatar', () => {
     it('图片每次出错时 onError 调用一次', () => {
         const spyOnError = vi.fn<NonNullable<AvatarProps['onError']>>();
         const { container } = render(() => <Avatar src={src} onError={spyOnError} />);
-        fireEvent.error(container.querySelector('img') as Element);
+        fireEvent.error(getElement('img', container));
         expect(spyOnError).toHaveBeenCalledTimes(1);
     });
 
     it('使用方展开信号对象时，无关属性变化不让出错的图片重新出现', () => {
         const [p, setP] = createSignal<AvatarProps>({ src, alt: 'pic' });
         const { container } = render(() => <Avatar {...p()} />);
-        fireEvent.error(container.querySelector('img') as Element);
+        fireEvent.error(getElement('img', container));
         expect(container.querySelector('img')).toBeNull();
         setP((prev) => ({ ...prev, class: 'other' }));
         expect(container.querySelector('img')).toBeNull();
@@ -264,7 +265,7 @@ describe('Avatar', () => {
 
     it('topSlot 渐变 id 每个实例唯一', () => {
         const { container } = render(() => <TopSlotSvg gradientEnd="blue" gradientStart="red" />);
-        const gradientId = (container.querySelector('linearGradient') as Element).id;
+        const gradientId = getElement('linearGradient', container).id;
         expect(container.querySelector('path')).toHaveAttribute('fill', `url(#${gradientId})`);
 
         const { container: other } = render(() => <TopSlotSvg gradientEnd="blue" gradientStart="red" />);
@@ -295,7 +296,7 @@ describe('Avatar', () => {
                     B
                 </Avatar>
             ));
-            fireEvent.error(container.querySelector('img') as Element);
+            fireEvent.error(getElement('img', container));
             expect(onImgError).toHaveBeenCalledTimes(1);
             expect(container.querySelector('img')).toBeNull();
         });
@@ -320,7 +321,7 @@ describe('Avatar', () => {
                 </Avatar>
             ));
             expect(getAvatar()).not.toHaveClass(`${avatarPrefix}-red`);
-            fireEvent.error(container.querySelector('img') as Element);
+            fireEvent.error(getElement('img', container));
             expect(container.querySelector('img')).toBeNull();
             expect(screen.getByRole('img', { name: 'Bob' })).toHaveTextContent(/^B$/);
             expect(getAvatar()).toHaveClass(`${avatarPrefix}-red`);
@@ -332,14 +333,14 @@ describe('Avatar', () => {
                     <i class="custom-icon" />
                 </Avatar>
             ));
-            fireEvent.error(container.querySelector('img') as Element);
+            fireEvent.error(getElement('img', container));
             expect(getAvatar().querySelector('.custom-icon')).toBeInTheDocument();
             expect(container.querySelector(`.${avatarPrefix}-content`)).toBeNull();
         });
 
         it('onError 返回 false 时保留图片', () => {
             const { container } = render(() => <Avatar src={src} onError={() => false} />);
-            fireEvent.error(container.querySelector('img') as Element);
+            fireEvent.error(getElement('img', container));
             expect(container.querySelector('img')).toHaveAttribute('src', src);
             expect(getAvatar()).toHaveClass(`${avatarPrefix}-img`);
         });
@@ -348,7 +349,7 @@ describe('Avatar', () => {
             const other = `${src}?v=2`;
             const [current, setCurrent] = createSignal(src);
             const { container } = render(() => <Avatar src={current()}>B</Avatar>);
-            fireEvent.error(container.querySelector('img') as Element);
+            fireEvent.error(getElement('img', container));
             expect(container.querySelector('img')).toBeNull();
             setCurrent(other);
             expect(container.querySelector('img')).toHaveAttribute('src', other);
@@ -396,7 +397,7 @@ describe('Avatar', () => {
 
             it('测量图片失败后显示的文字', () => {
                 const { container } = render(() => <Avatar src={src}>Semi</Avatar>);
-                fireEvent.error(container.querySelector('img') as Element);
+                fireEvent.error(getElement('img', container));
                 expect(content()).toHaveStyle({ transform: `scale(${34 / 40})` });
             });
         });
@@ -592,7 +593,7 @@ describe('Avatar', () => {
         it('渲染 bottomSlot', () => {
             const [props, setProps] = createSignal<AvatarProps>({ bottomSlot: { text: 'NEW', shape: 'square', bgColor: 'blue', textColor: 'red', class: 'bottom' }, size: 'small' });
             const { container } = render(() => <Avatar {...props()}>U</Avatar>);
-            const content = container.querySelector('.bottom') as HTMLElement;
+            const content = getElement('.bottom', container);
             expect(content).toHaveClass(`${avatarPrefix}-bottom_slot-shape_square`, `${avatarPrefix}-bottom_slot-shape_square-small`);
             expect(content).toHaveStyle({ color: 'rgb(255, 0, 0)', backgroundColor: 'rgb(0, 0, 255)' });
             expect(content).toHaveTextContent(/^NEW$/);
@@ -688,9 +689,9 @@ describe('Avatar', () => {
                     B
                 </Avatar>
             ));
-            fireEvent.error(container.querySelector('img') as Element);
+            fireEvent.error(getElement('img', container));
             setCurrent(`${src}?v=2`);
-            fireEvent.error(container.querySelector('img') as Element);
+            fireEvent.error(getElement('img', container));
             expect(onError).toHaveBeenCalledTimes(2);
             expect(container.querySelector('img')).toBeNull();
         });

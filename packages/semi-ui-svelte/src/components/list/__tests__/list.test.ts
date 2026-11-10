@@ -5,6 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { List, ListItem, type Grid, type ListItemProps } from '../index';
 import ListDemo from './list-demo.svelte';
 import ListItemState from './list-item-state.svelte';
@@ -290,7 +291,7 @@ describe('List', () => {
     it('grid 将各项包裹在 flex Row 中，每项放在一个 Col 中', () => {
         const view = renderList({ grid: { gutter: 20, justify: 'center', align: 'middle', span: 8, xs: 24, class: 'col' } });
         expect(view.container.querySelector(`.${prefixCls}-items`)).toBeNull();
-        const gridRow = view.container.querySelector(`.${BASE_CLASS_PREFIX}-row`) as HTMLElement;
+        const gridRow = getElement(`.${BASE_CLASS_PREFIX}-row`, view.container);
         expect(gridRow).toHaveClass(`${BASE_CLASS_PREFIX}-row-justify-center`, `${BASE_CLASS_PREFIX}-row-align-middle`);
         expect(gridRow).toHaveStyle({ '--semi-row-gutter-x-md': '20px' });
         const cols = gridRow.children;
@@ -302,7 +303,7 @@ describe('List', () => {
 
     it('grid 保持列表语义：Row 即列表，布局用的 Col 没有自己的 role', () => {
         const view = renderList({ grid: { span: 12 } });
-        const gridRow = view.container.querySelector(`.${BASE_CLASS_PREFIX}-row`) as HTMLElement;
+        const gridRow = getElement(`.${BASE_CLASS_PREFIX}-row`, view.container);
         expect(screen.getByRole('list')).toBe(gridRow);
         for (const col of gridRow.children) {
             expect(col).toHaveAttribute('role', 'none');

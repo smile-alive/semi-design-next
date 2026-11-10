@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import type { AnchorAdapter } from '@fibrae/semi-foundation/components/anchor/foundation';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { elementType, semiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { countLiveListeners, render } from '@test/utils/vue';
+import { countLiveListeners, render, defined, getElement } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider/config-provider.vue';
 import type { TooltipProps } from '../../tooltip/interface';
 import Anchor, { AnchorLink } from '../index';
@@ -29,7 +29,7 @@ const link = (name: string) => screen.getByRole('link', { name });
 const linkTitles = (root: ParentNode = document) => [...root.querySelectorAll(`.${prefix}-link-title`)].map((el) => el.textContent);
 const links = (list: [title: string, href: string][]) => () => list.map(([title, href]) => <AnchorLink title={title} href={href} />);
 // jsdom does not lay out: section positions are stubbed per element, relative to the viewport
-const setTop = (id: string, top: number) => vi.spyOn(document.getElementById(id) as HTMLElement, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, 100));
+const setTop = (id: string, top: number) => vi.spyOn(defined(document.getElementById(id)), 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, 100));
 // the scroll handler is throttled (leading call) and the end of a scroll is debounced, both at 100ms
 async function scroll(target: Window | Element = window) {
     target.dispatchEvent(new Event('scroll'));
@@ -391,7 +391,7 @@ describe('Anchor', () => {
             await view.rerender({ boxId: 'late-box', showBox: true, 'data-show': 'true' });
             setTop('a', -50);
             setTop('b', 40);
-            await scroll(document.getElementById('late-box') as HTMLElement);
+            await scroll(defined(document.getElementById('late-box')));
             expect(link('a')).toHaveClass(activeCls);
         });
 
@@ -402,7 +402,7 @@ describe('Anchor', () => {
             await view.rerender({ showBox: true });
             setTop('a', -50);
             setTop('b', 40);
-            await scroll(document.getElementById('ref-box') as HTMLElement);
+            await scroll(defined(document.getElementById('ref-box')));
             expect(link('a')).toHaveClass(activeCls);
         });
 
@@ -411,7 +411,7 @@ describe('Anchor', () => {
                 props: { boxId: 'box' },
                 attrs: { getContainer: () => document.getElementById('box'), offsetTop: 30 },
             });
-            const box = document.getElementById('box') as HTMLElement;
+            const box = defined(document.getElementById('box'));
             vi.spyOn(box, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 100, 100, 500));
             setTop('a', 60);
             setTop('b', 120);
@@ -490,8 +490,8 @@ describe('Anchor', () => {
         it('getContainer 返回其他元素时迁移监听', async () => {
             const byId = (id: string) => () => document.getElementById(id);
             const view = render(Sections, { props: { extraBoxes: true }, attrs: { getContainer: byId('one') } });
-            const one = document.getElementById('one') as HTMLElement;
-            const two = document.getElementById('two') as HTMLElement;
+            const one = defined(document.getElementById('one'));
+            const two = defined(document.getElementById('two'));
             const addToOne = vi.spyOn(one, 'addEventListener');
             const removeFromOne = vi.spyOn(one, 'removeEventListener');
             setTop('a', -50);
@@ -585,7 +585,7 @@ describe('Anchor', () => {
         expect(screen.queryByRole('link', { name: 'c1' })).toBeNull();
         await click(link('p'));
         expect(link('c1')).toHaveStyle({ paddingInlineStart: '16px' });
-        expect((document.querySelector('.group') as HTMLElement).getAttributeNames()).toEqual(['class']);
+        expect(getElement('.group').getAttributeNames()).toEqual(['class']);
 
         await click(link('c1'));
         expect(linkTitles()).toEqual(['p', 'c1', 'c2', 'q']);

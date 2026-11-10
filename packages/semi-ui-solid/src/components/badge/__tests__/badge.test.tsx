@@ -2,6 +2,7 @@ import { createSignal, type JSX } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Badge, { type BadgeProps } from '..';
 import ConfigProvider from '../../config-provider';
 
@@ -10,8 +11,8 @@ function renderBadge(props: BadgeProps = {}) {
     return render(() => <Badge {...props}>{attached()}</Badge>);
 }
 
-const getRoot = (container: HTMLElement) => container.querySelector('.semi-badge') as HTMLElement;
-const getCount = (container: HTMLElement) => container.querySelector('[x-semi-prop="count"]') as HTMLElement;
+const getRoot = (container: HTMLElement) => getElement('.semi-badge', container);
+const getCount = (container: HTMLElement) => getElement('[x-semi-prop="count"]', container);
 
 describe('Badge', () => {
     afterEach(() => {

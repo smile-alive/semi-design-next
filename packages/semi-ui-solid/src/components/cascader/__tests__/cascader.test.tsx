@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import Cascader, { type CascaderData, type CascaderElement, type CascaderProps, type Entity, type FilterRenderProps, type SimpleValueType, type TriggerRenderProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -140,14 +141,14 @@ function renderCascader(initial: Props = {}) {
     return { ...result, rerender: (next: Props) => setProps(next) };
 }
 
-const getTrigger = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const getSelection = () => document.querySelector(`.${prefixCls}-selection`) as HTMLElement;
+const getTrigger = () => getElement(`.${prefixCls}`);
+const getSelection = () => getElement(`.${prefixCls}-selection`);
 const getSelectionText = () => getSelection().textContent;
-const getSelectionInput = () => getSelection().querySelector('input') as HTMLInputElement;
+const getSelectionInput = () => getElement<HTMLInputElement>('input', getSelection());
 const getLists = () => document.querySelectorAll(`.${prefixCls}-option-list`);
 const getListOptions = (listIndex: number) => getLists()[listIndex].querySelectorAll<HTMLElement>(`li.${prefixCls}-option`);
-const getOption = (label: string) => screen.getByText(label, { selector: `.${prefixCls}-option-label > span` }).closest('li') as HTMLElement;
-const getCheckbox = (label: string) => getOption(label).querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement;
+const getOption = (label: string) => defined(screen.getByText(label, { selector: `.${prefixCls}-option-label > span` }).closest<HTMLElement>('li'));
+const getCheckbox = (label: string) => getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getOption(label));
 const getHighlights = () => document.querySelectorAll(`.${prefixCls}-option-label-highlight`);
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)).map((node) => node.textContent);
 const isDropdownOpen = () => document.querySelector(`.${prefixCls}-option-lists`) !== null;
@@ -247,7 +248,7 @@ describe('Cascader', () => {
 
     // jsdom has no layout: only the CSS wiring is checked, the browser resolves `--semi-tooltip-trigger-width` to the trigger width
     it('空数据时下拉最小宽度跟随触发器', () => {
-        const wrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
+        const wrapper = () => getElement(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
         const { rerender } = renderCascader({ defaultOpen: true, treeData: [] });
         expect(wrapper().style.minWidth).toBe('var(--semi-tooltip-trigger-width)');
         rerender({ defaultOpen: true });
@@ -575,7 +576,7 @@ describe('Cascader', () => {
             placeholder: '请选择所在地区',
         });
         expect(getSelectionText()).toEqual('亚洲 / 中国 / 北京');
-        await userEvent.click(document.querySelector(`.${prefixCls}-clearbtn`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-clearbtn`));
         expect(spyOnClear).toHaveBeenCalledTimes(1);
         expect(getSelectionText()).toEqual('请选择所在地区');
     });
@@ -1038,7 +1039,7 @@ describe('Cascader', () => {
         });
 
         expect(document.querySelector('.custom-trigger')).toHaveTextContent('Custom: 0-0-0');
-        expect(getSelection()).toBeNull();
+        expect(document.querySelector(`.${prefixCls}-selection`)).toBeNull();
     });
     it('handleListScroll', () => {
         const onListScroll = vi.fn<NonNullable<CascaderProps['onListScroll']>>();
@@ -1076,7 +1077,7 @@ describe('Cascader', () => {
             autoMergeValue: false,
         });
 
-        await userEvent.click(document.querySelector(`.${prefixCls}-selection-tag .${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-selection-tag .${BASE_CLASS_PREFIX}-tag-close`));
         expect(onChange).toHaveBeenCalledWith([]);
         expect(getTagTexts()).toEqual([]);
     });
@@ -1108,7 +1109,7 @@ describe('Cascader', () => {
             autoMergeValue: false,
         });
 
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tagInput .${BASE_CLASS_PREFIX}-tag .${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tagInput .${BASE_CLASS_PREFIX}-tag .${BASE_CLASS_PREFIX}-tag-close`));
         expect(onChange).toHaveBeenCalledWith([]);
         expect(getTagTexts()).toEqual([]);
     });
@@ -1168,7 +1169,7 @@ describe('Cascader', () => {
     it('insetLabel 属性', () => {
         renderCascader({ insetLabel: <span class="custom-inset-label">Label</span>, insetLabelId: 'label-id' });
 
-        const label = document.querySelector(`.${prefixCls}-inset-label`) as HTMLElement;
+        const label = getElement(`.${prefixCls}-inset-label`);
         expect(label.querySelector('.custom-inset-label')).toHaveTextContent('Label');
         expect(label).toHaveAttribute('id', 'label-id');
     });
@@ -1553,7 +1554,7 @@ describe('Cascader', () => {
         });
         expect(getTagTexts()).toEqual(['北京', '上海', '中国', '亚洲']);
 
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tagInput .${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tagInput .${BASE_CLASS_PREFIX}-tag-close`));
         expect(onChange).toHaveBeenCalledWith([['Asia', 'China', 'Shanghai']]);
         expect(getTagTexts()).toEqual(['上海']);
     });
@@ -1985,7 +1986,7 @@ describe('Cascader', () => {
 
         await userEvent.type(getSelectionInput(), '北京');
 
-        await userEvent.click(document.querySelector(`.${prefixCls}-option-flatten`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-option-flatten`));
         expect(onChange).toHaveBeenCalledWith(['Asia', 'China', 'Beijing']);
         await expectClosed();
         expect(document.querySelector(`.${prefixCls}-search-wrapper span`)).toHaveTextContent('亚洲 / 中国 / 北京');
@@ -2034,7 +2035,7 @@ describe('Cascader', () => {
 
         await userEvent.type(getSelectionInput(), '子选项1');
 
-        const disabledItem = document.querySelector(`.${prefixCls}-option-flatten`) as HTMLElement;
+        const disabledItem = getElement(`.${prefixCls}-option-flatten`);
         expect(disabledItem).toHaveClass(`${prefixCls}-option-disabled`);
         await userEvent.click(disabledItem);
 
@@ -2384,7 +2385,7 @@ describe('Cascader 行为', () => {
             ],
         });
         expect(getTagTexts()).toEqual(['北京']);
-        const plusN = document.querySelector(`.${prefixCls}-selection-n`) as HTMLElement;
+        const plusN = getElement(`.${prefixCls}-selection-n`);
         expect(plusN).toHaveTextContent('+2');
         fireEvent.mouseEnter(plusN);
         await waitFor(() => expect(document.querySelector(`.${BASE_CLASS_PREFIX}-popover`)).not.toBeNull());
@@ -2548,7 +2549,7 @@ describe('Cascader 行为', () => {
     it('父组件忽略清空时，受控多选仍显示传入的 value', async () => {
         const onChange = vi.fn<NonNullable<CascaderProps<true>['onChange']>>();
         renderCascader({ multiple: true, showClear: true, value: [['North America', 'Canada']], onChange });
-        await userEvent.click(document.querySelector(`.${prefixCls}-clearbtn`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-clearbtn`));
         expect(onChange).toHaveBeenLastCalledWith([]);
         expect(getTagTexts()).toEqual(['加拿大']);
     });
@@ -2971,7 +2972,7 @@ describe('Cascader 审计修复', () => {
             defaultValue: [['North America', 'Canada']],
         });
         expect(getTagTexts()).toEqual(['加拿大']);
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag-close`));
         expect(getTagTexts()).toEqual([]);
         expect(document.querySelector(`.${prefixCls}-clearbtn`)).toBeNull();
     });

@@ -5,6 +5,8 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { DatePickerTriggerRenderProps } from '../interface';
 import ContextFixture, { type ContextFixtureStore } from './date-picker-context-fixture.svelte';
 import { click, getPopup, getPresetButtons, ymd } from './date-picker-dom-utils';
@@ -48,7 +50,7 @@ describe('Svelte DatePicker bind 与受控写法', () => {
 
     it('单选清空写回 undefined，范围清空写回空数组', async () => {
         const single = await setup({ mode: 'bind', value: baseDate });
-        await fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement, { button: 0 });
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`), { button: 0 });
         await settle();
         expect(single.store.value).toBeUndefined();
         expect(getInput()).toHaveValue('');
@@ -126,7 +128,7 @@ describe('Svelte DatePicker snippet', () => {
         const scopes: DatePickerTriggerRenderProps[] = [];
         await renderSnippets({ inputTrigger: true, props: { value: baseDate, placeholder: 'Pick', onChange, onClear } }, (scope) => scopes.push(scope));
         const scope = scopes[scopes.length - 1];
-        expect(scope.value.map(ymd)).toEqual(['2019-09-08']);
+        expect(scope.value.map((date) => ymd(defined(date, 'trigger value')))).toEqual(['2019-09-08']);
         expect(scope.inputValue).toBeNull();
         expect(scope.placeholder).toBe('Pick');
         expect(scope.disabled).toBe(false);
@@ -208,7 +210,7 @@ describe('Svelte DatePicker 默认值与属性', () => {
         const error = vi.spyOn(console, 'error');
         const warn = vi.spyOn(console, 'warn');
         await setup({ value: baseDate, open: true, props: { type: 'dateTimeRange' } });
-        await click(document.querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await click(getElement(`.${dp}-navigation-month button`));
         expect(document.querySelector(`.${dp}-yam`)).not.toBeNull();
         await click(screen.getAllByRole('button', { name: zh_CN.DatePicker.switchToTime })[0]);
         expect(document.querySelector(`.${dp}-tpk`)).not.toBeNull();

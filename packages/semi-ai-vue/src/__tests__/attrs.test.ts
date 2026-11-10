@@ -2,7 +2,7 @@ import type { Component } from 'vue';
 import { fireEvent } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import AIChatDialogue from '../components/ai-chat-dialogue/index';
 import AIChatInput from '../components/ai-chat-input/index';
 import Chat from '../components/chat/index';
@@ -61,7 +61,7 @@ describe('未声明属性落在根元素上', () => {
         const view = render(Annotation.AnnotationContent, {
             attrs: { 'data-probe': '', onClick },
         });
-        await fireEvent.click(view.container.querySelector('[data-probe]') as HTMLElement);
+        await fireEvent.click(getElement('[data-probe]', view.container));
         expect(onClick).not.toHaveBeenCalled();
     });
 });

@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { BasicTreeNodeData } from '@fibrae/semi-foundation/components/tree/foundation';
 import { Button, Tag, TagInput, TreeSelect } from '@fibrae/semi-ui-react';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/react';
 import type { TreeSelectProps } from '../index';
 
 const treeData = [{ label: '亚洲', value: 'Asia', key: '0', children: [{ label: '中国', value: 'China', key: '0-0' }] }];
@@ -766,7 +767,7 @@ it('焦点在弹层搜索框时按 Escape 关闭，焦点回到触发器，不�
     const { container } = render(<TreeSelect style={{ width: 300 }} filterTreeNode treeData={regionTreeData} onBlur={onBlur} onFocus={onFocus} />);
     await userEvent.click(screen.getByRole('combobox'));
     await waitFor(() => expect(getPopover()).not.toBeNull());
-    const search = (getPopover() as HTMLElement).querySelector('input') as HTMLInputElement;
+    const search = getElement<HTMLInputElement>('input', getPopover() as HTMLElement);
     await userEvent.click(search);
     expect(search).toHaveFocus();
     await userEvent.keyboard('{Escape}');

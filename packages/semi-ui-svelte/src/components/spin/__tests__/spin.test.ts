@@ -5,6 +5,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { SpinProps } from '../interface';
 import LocaleFixture from './locale-fixture.svelte';
 import SpinFixture from './spin-fixture.svelte';
@@ -14,7 +15,7 @@ const prefixCls = `${BASE_CLASS_PREFIX}-spin`;
 function setup(props: SpinProps = {}, extra: { content?: boolean; tip?: string; indicator?: boolean; button?: boolean } = {}) {
     const store = createStore({ props, ...extra });
     const view = render(SpinFixture, { props: { store } });
-    const root = () => view.container.querySelector(`.${prefixCls}`) as HTMLElement;
+    const root = () => getElement(`.${prefixCls}`, view.container);
     return { store, root, view };
 }
 

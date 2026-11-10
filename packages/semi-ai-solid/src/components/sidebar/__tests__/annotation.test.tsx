@@ -1,6 +1,7 @@
 import { createEvent, fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
+import { getElement } from '@test/utils/solid';
 import Annotation, { type AnnotationProps } from '../annotation';
 import { type AnnotationItem, VideoItem } from '../annotation/item';
 
@@ -28,7 +29,7 @@ const info: AnnotationProps['info'] = [
     { header: 'Group 2', key: '2', annotations: [{ title: 'Hidden', detail: 'hidden detail' }] },
 ];
 
-const sidebarContainer = (container: HTMLElement) => container.querySelector('.semi-sidebar-container') as HTMLElement;
+const sidebarContainer = (container: HTMLElement) => getElement('.semi-sidebar-container', container);
 
 describe('Annotation', () => {
     afterEach(() => {
@@ -53,14 +54,14 @@ describe('Annotation', () => {
 
     it('渲染当前激活面板中的文本和视频项', () => {
         const { container } = render(() => <Annotation activeKey={['1']} info={info} visible />);
-        const text = container.querySelector('.semi-sidebar-annotation-item-text') as HTMLElement;
+        const text = getElement('.semi-sidebar-annotation-item-text', container);
         expect(text).toHaveTextContent('Text title');
         expect(text.querySelector('.semi-sidebar-annotation-item-text-detail')).toHaveTextContent('Text detail');
         expect(text.querySelector('.semi-sidebar-annotation-item-footer-logo')).toHaveAttribute('src', textItem.logo);
         expect(text.querySelector('.semi-sidebar-annotation-item-footer-text')).toHaveTextContent('Semi');
         expect(text.querySelector('.semi-sidebar-annotation-item-footer-order')).toHaveTextContent('1');
 
-        const video = container.querySelector('.semi-sidebar-annotation-item-video') as HTMLElement;
+        const video = getElement('.semi-sidebar-annotation-item-video', container);
         expect(video.querySelector('.semi-sidebar-annotation-item-video-img')).toHaveAttribute('src', videoItem.img);
         expect(video.querySelector('.semi-sidebar-annotation-item-video-duration')).toHaveTextContent('1:02:05');
         expect(video.querySelector('.semi-sidebar-annotation-item-footer-text')).toHaveTextContent('Video site');
@@ -100,11 +101,11 @@ describe('Annotation', () => {
             event.preventDefault();
             fireEvent(el, event);
         };
-        click(container.querySelector('.semi-sidebar-annotation-item-text') as HTMLElement);
+        click(getElement('.semi-sidebar-annotation-item-text', container));
         expect(onClick).not.toHaveBeenCalled();
         expect(itemOnClick).toHaveBeenLastCalledWith(expect.objectContaining({ type: 'click' }), textItem);
 
-        click(container.querySelector('.semi-sidebar-annotation-item-video') as HTMLElement);
+        click(getElement('.semi-sidebar-annotation-item-video', container));
         expect(onClick).toHaveBeenLastCalledWith(expect.anything(), videoItem);
         expect(open).not.toHaveBeenCalled();
     });

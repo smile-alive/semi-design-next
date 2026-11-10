@@ -12,6 +12,7 @@ import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import ReferenceWidget from '../dialogue/content-item/reference.svelte';
 import type { AIChatDialogueProps, DefaultActionNodeObj, MarkdownRenderProps, Message, Metadata } from '../interface';
 import CustomStrong from './custom-strong.svelte';
@@ -35,7 +36,7 @@ const baseChats: Message[] = [
 
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const getRoot = (container: Element) => container.firstElementChild as HTMLElement;
-const getList = (container: Element) => container.querySelector<HTMLElement>(`.${prefix}-list`) as HTMLElement;
+const getList = (container: Element) => getElement(`.${prefix}-list`, container);
 const getWrappers = (container: Element) => container.querySelectorAll<HTMLElement>(`.${prefix}-wrapper`);
 const getActionButton = (wrapper: Element, icon: string) => wrapper.querySelector(`.${actionCls} .${BASE_CLASS_PREFIX}-icon-${icon}`)?.closest('button') ?? null;
 const click = (el: Element | null) => fireEvent.click(el as Element);
@@ -291,7 +292,7 @@ describe('AIChatDialogue 内容块', () => {
         const onkeydown = vi.fn<(e: KeyboardEvent) => void>(() => order.push('keydown'));
         const items = [{ title: 'A', url: 'https://a.example' }];
         const { container } = render(AIChatDialogue.Annotation, { props: { annotation: items, maxCount: 3, onClick, onkeydown } });
-        await fireEvent.keyDown(container.querySelector(`.${prefix}-annotation-wrapper`) as Element, { key: 'Enter' });
+        await fireEvent.keyDown(getElement(`.${prefix}-annotation-wrapper`, container), { key: 'Enter' });
         expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ key: 'Enter' }), items);
         expect(onkeydown).toHaveBeenCalledWith(expect.objectContaining({ key: 'Enter' }));
         expect(order).toEqual(['click', 'keydown']);
@@ -315,7 +316,7 @@ describe('AIChatDialogue 内容块', () => {
         const { container } = renderDialogue({
             chats: [{ id: '1', role: 'assistant', status: 'completed', content: [{ type: 'reasoning', status: 'completed', summary: [{ type: 'summary_text', text: 'thought' }] }] }],
         });
-        const reasoning = container.querySelector(`.${prefix}-reasoning-wrapper`) as HTMLElement;
+        const reasoning = getElement(`.${prefix}-reasoning-wrapper`, container);
         const toggle = screen.getByRole('button', { name: text.reasoning.completed });
         expect(toggle).toHaveAttribute('aria-expanded', 'false');
         expect(reasoning.querySelector(`.${BASE_CLASS_PREFIX}-icon-chevron_down`)).not.toBeNull();
@@ -331,7 +332,7 @@ describe('AIChatDialogue 内容块', () => {
         const { container } = renderDialogue({
             chats: [{ id: '1', role: 'assistant', status: 'in_progress', content: [{ type: 'reasoning', status: 'in_progress', content: [{ text: 'thinking' }] }] }],
         });
-        const reasoning = container.querySelector(`.${prefix}-reasoning-wrapper`) as HTMLElement;
+        const reasoning = getElement(`.${prefix}-reasoning-wrapper`, container);
         expect(reasoning).toHaveTextContent(text.reasoning.thinking);
         expect(reasoning.querySelector(`.${BASE_CLASS_PREFIX}-icon-chevron_up`)).not.toBeNull();
     });
@@ -415,7 +416,7 @@ describe('AIChatDialogue 内容块', () => {
         await click(img);
         expect(onImageClick).toHaveBeenCalledWith(image);
 
-        const link = container.querySelector(`a.${contentCls}-file`) as HTMLElement;
+        const link = getElement(`a.${contentCls}-file`, container);
         expect(link).toHaveAttribute('href', file.file_url);
         expect(link).toHaveTextContent('report.pdf');
         expect(link.querySelector(`.${contentCls}-file-icon-pdf`)).not.toBeNull();
@@ -426,7 +427,7 @@ describe('AIChatDialogue 内容块', () => {
 
         await rerender({ chats: [{ id: '1', role: 'user', status: 'completed', content: [{ type: 'message', content: [file] }] }], disabledFileItemClick: true });
         const prevented = new MouseEvent('click', { bubbles: true, cancelable: true });
-        (container.querySelector(`a.${contentCls}-file`) as HTMLElement).dispatchEvent(prevented);
+        getElement(`a.${contentCls}-file`, container).dispatchEvent(prevented);
         expect(prevented.defaultPrevented).toBe(true);
         expect(onFileClick).toHaveBeenCalledTimes(2);
     });
@@ -747,7 +748,7 @@ describe('AIChatDialogue 可访问名称', () => {
 
     it('纯图标操作按钮的名称从语言包读取，点赞与点踩用 aria-pressed', () => {
         const { container } = renderDialogue();
-        const [user, assistant] = Array.from(getWrappers(container), (w) => within(w.querySelector(`.${actionCls}`) as HTMLElement));
+        const [user, assistant] = Array.from(getWrappers(container), (w) => within(getElement(`.${actionCls}`, w)));
         for (const name of [text.copy, text.share, text.edit, text.more]) {
             expect(user.getByRole('button', { name })).toBeInTheDocument();
         }
@@ -1269,7 +1270,7 @@ describe('AIChatDialogue 滚动', () => {
         list.dispatchEvent(new Event('scroll'));
         vi.advanceTimersByTime(200);
         flushSync();
-        (container.querySelector(`.${prefix}-backBottom-button`) as HTMLElement).focus();
+        getElement(`.${prefix}-backBottom-button`, container).focus();
         list.scrollTop = 1000;
         list.dispatchEvent(new Event('scroll'));
         vi.advanceTimersByTime(200);

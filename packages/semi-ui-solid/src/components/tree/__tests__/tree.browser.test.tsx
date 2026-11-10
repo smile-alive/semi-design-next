@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/solid';
 import Tree, { type TreeElement, type TreeNodeData, type TreeProps } from '..';
 import Button from '../../button';
 
@@ -56,7 +57,7 @@ describe('tree', () => {
         await waitFor(() => expect(screen.getByText('日本')).toBeInTheDocument());
 
         await userEvent.hover(input);
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         expect(input).toHaveValue('');
         await waitFor(() => expect(screen.queryByText('日本')).toBeNull());
         expect(screen.queryByText('中国')).toBeNull();
@@ -84,7 +85,7 @@ describe('tree', () => {
         }
         render(() => <Demo />);
         expect(screen.queryByText('Child Node')).toBeNull();
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-icon-tree_triangle_down`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-icon-tree_triangle_down`));
         await waitFor(() => expect(screen.getAllByText('Child Node')).toHaveLength(2));
     });
 
@@ -156,7 +157,7 @@ describe('tree', () => {
 describe('Tree 键盘焦点', () => {
     const activeRow = () => {
         const tree = screen.getByRole('tree');
-        return document.getElementById(tree.getAttribute('aria-activedescendant') as string) as HTMLElement;
+        return defined(document.getElementById(tree.getAttribute('aria-activedescendant') as string));
     };
 
     it('树获得键盘焦点时，主题焦点环跟随当前行', async () => {
@@ -198,7 +199,7 @@ describe('Tree 键盘焦点', () => {
 
         setMultiple(true);
         await userEvent.click(screen.getByText('亚洲'));
-        const checkbox = document.querySelector<HTMLInputElement>('input[type="checkbox"]') as HTMLInputElement;
+        const checkbox = getElement<HTMLInputElement>('input[type="checkbox"]');
         checkbox.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(activeRow()).toHaveAttribute('data-key', 'beimeizhou'));
@@ -228,13 +229,13 @@ describe('Tree 键盘焦点', () => {
         shadow.append(mount);
         const view = render(() => <Tree style={{ height: '100px', overflow: 'auto' }} treeData={manyRoots(30)} />, { container: mount });
         try {
-            const tree = shadow.querySelector<HTMLElement>('[role="tree"]') as HTMLElement;
+            const tree = getElement('[role="tree"]', shadow);
             tree.focus();
             await userEvent.keyboard('{End}');
             await waitFor(() => {
-                const row = shadow.getElementById(tree.getAttribute('aria-activedescendant') as string) as HTMLElement;
+                const row = defined(shadow.getElementById(tree.getAttribute('aria-activedescendant') as string));
                 expect(row).toHaveAttribute('data-key', '29');
-                expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual((shadow.querySelector(`.${BASE_CLASS_PREFIX}-tree-wrapper`) as HTMLElement).getBoundingClientRect().bottom + 1);
+                expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual(getElement(`.${BASE_CLASS_PREFIX}-tree-wrapper`, shadow).getBoundingClientRect().bottom + 1);
             });
         } finally {
             view.unmount();

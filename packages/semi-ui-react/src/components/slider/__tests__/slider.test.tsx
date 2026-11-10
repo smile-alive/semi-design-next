@@ -612,9 +612,9 @@ describe('Slider', () => {
 
     it('min 不为 0 且无 value 时，手柄初始位置在 min', () => {
         // init() clamps after mount, so only the state of the first render tells the initial position
-        expect(SliderFoundation.getInitialState({ min: 10, max: 50 }).currentValue).toBe(10);
-        expect(SliderFoundation.getInitialState({ min: 10, max: 50, range: true }).currentValue).toEqual([10, 10]);
-        expect(SliderFoundation.getInitialState({ min: -10, max: 50, value: 0 }).currentValue).toBe(0);
+        expect(SliderFoundation.getInitialState({ min: 10, max: 50, step: 1 }).currentValue).toBe(10);
+        expect(SliderFoundation.getInitialState({ min: 10, max: 50, step: 1, range: true }).currentValue).toEqual([10, 10]);
+        expect(SliderFoundation.getInitialState({ min: -10, max: 50, step: 1, value: 0 }).currentValue).toBe(0);
     });
 
     it('既无 value 也无 defaultValue 时使用范围默认值', () => {

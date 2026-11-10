@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
 import type { LocaleInput } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import InputNumber, { type InputNumberProps } from '..';
 import { LocaleProvider } from '../../locale';
 import Tooltip from '../../tooltip';
@@ -17,9 +18,9 @@ const de: LocaleInput = { code: 'de', currency: 'EUR' };
 
 const getInput = () => screen.getByRole<HTMLInputElement>('spinbutton');
 const getButtons = () => document.querySelector(`.${prefixCls}-number-suffix-btns`);
-const getUpButton = () => document.querySelector(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-up`) as HTMLElement;
-const getDownButton = () => document.querySelector(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-down`) as HTMLElement;
-const getWrapper = () => document.querySelector(`.${prefixCls}-number`) as HTMLElement;
+const getUpButton = () => getElement(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-up`);
+const getDownButton = () => getElement(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-down`);
+const getWrapper = () => getElement(`.${prefixCls}-number`);
 
 const hold = (button: Element, init: PointerEventInit = { button: numbers.MOUSE_BUTTON_LEFT }) => fireEvent.pointerDown(button, init);
 // the button captures the pointer, so the browser fires lostpointercapture on it after pointerup wherever that lands
@@ -1114,7 +1115,7 @@ describe('InputNumber', () => {
     it('清除按钮清空值', () => {
         const onChange = vi.fn<InputNumberCallback<'onChange'>>();
         render(() => <InputNumber defaultValue={100} showClear onChange={onChange} />);
-        const clearBtn = document.querySelector(`.${prefixCls}-clearbtn`) as HTMLElement;
+        const clearBtn = getElement(`.${prefixCls}-clearbtn`);
         expect(clearBtn).not.toBeNull();
         fireEvent.click(clearBtn);
 

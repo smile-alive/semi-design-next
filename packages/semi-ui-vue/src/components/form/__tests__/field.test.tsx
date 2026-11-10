@@ -3,14 +3,14 @@ import { defineComponent, nextTick, ref, type VNodeChild } from 'vue';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import { Form, type FieldHandle, type FormApi } from '..';
 import type { InputHandle } from '../../input';
 import { FormInput, renderForm } from './fixtures/fields';
 
 const inputSelector = `.${BASE_CLASS_PREFIX}-input`;
 const emSelector = `.${BASE_CLASS_PREFIX}-form-field-error-message`;
-const getInputDOM = (scope = '') => document.querySelector(`${scope} ${inputSelector}`) as HTMLInputElement;
+const getInputDOM = (scope = '') => getElement<HTMLInputElement>(`${scope} ${inputSelector}`);
 const getErrorMessage = (scope = '') => document.querySelector(`${scope} ${emSelector}`);
 const input = (props: { field: string } & Record<string, unknown>, slots?: Record<string, () => VNodeChild>) => <FormInput {...props}>{slots}</FormInput>;
 

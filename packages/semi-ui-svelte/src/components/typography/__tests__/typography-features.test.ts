@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import Fixture from './typography-fixture.svelte';
 
 const prefix = 'semi-typography';
@@ -15,7 +16,7 @@ function setup(store: { kind?: 'text' | 'title' | 'paragraph' | 'numeral'; text?
     return { state, ...view };
 }
 
-const root = (container: Element) => container.querySelector(`.${prefix}`) as HTMLElement;
+const root = (container: Element) => getElement(`.${prefix}`, container);
 
 function visibleText(node: Element): string {
     return [...node.childNodes].map((child) => (child.nodeType === Node.TEXT_NODE ? child.textContent : child instanceof HTMLElement && child.hidden ? '' : visibleText(child as Element))).join('');
@@ -69,7 +70,7 @@ describe('Svelte Typography 复制', () => {
         writeText.mockRejectedValue(new Error('denied'));
         const onCopy = vi.fn<(event: MouseEvent, content: string, success: boolean) => void>();
         const { container } = setup({ text: 'Key: code', props: { copyable: { content: 'code', onCopy } } });
-        await fireEvent.click(container.querySelector('.semi-icon-copy') as Element);
+        await fireEvent.click(getElement('.semi-icon-copy', container));
         await vi.waitFor(() => expect(onCopy).toHaveBeenCalledTimes(1));
         expect(onCopy.mock.calls[0].slice(1)).toEqual(['code', false]);
         expect(container.querySelector(`.${prefix}-action-copied`)).toBeNull();
@@ -78,7 +79,7 @@ describe('Svelte Typography 复制', () => {
     it('不带 content 时复制渲染出的文本，不含展开按钮与复制按钮的文字', async () => {
         const { container } = setup({ text: '  Semi Design  ', props: { copyable: true } });
         await vi.waitFor(() => expect(container.querySelector('.semi-icon-copy')).not.toBeNull());
-        await fireEvent.click(container.querySelector('.semi-icon-copy') as Element);
+        await fireEvent.click(getElement('.semi-icon-copy', container));
         await vi.waitFor(() => expect(writeText).toHaveBeenCalledWith('Semi Design'));
     });
 });
@@ -188,7 +189,7 @@ describe('Svelte Typography 省略号', () => {
         await vi.waitFor(() => expect(visibleText(root(container))).toContain('...'));
         await fireEvent.mouseEnter(root(container));
         await vi.waitFor(() => expect(document.querySelector(`.${prefix}-ellipsis-popover`)).not.toBeNull());
-        const popup = document.querySelector(`.${prefix}-ellipsis-popover`) as HTMLElement;
+        const popup = getElement(`.${prefix}-ellipsis-popover`);
         expect(popup).toHaveClass('user-pop');
         expect(popup).toHaveTextContent(LETTERS);
         expect(popup.querySelector('.semi-popover-icon-arrow')).not.toBeNull();

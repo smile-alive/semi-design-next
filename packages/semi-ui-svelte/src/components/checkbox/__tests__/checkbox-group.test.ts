@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import CheckboxGroup from '../checkbox-group.svelte';
 import type { CheckboxGroupProps, CheckboxValue } from '../interface';
 import GroupModes from './group-modes.svelte';
@@ -159,7 +160,7 @@ describe('Svelte CheckboxGroup', () => {
         const { container } = renderOptions({ onChange: change, disabled: true });
         expect(container.querySelectorAll(`.${prefixCls}-disabled`)).toHaveLength(4);
         screen.getAllByRole('checkbox').forEach((el) => expect(el).toBeDisabled());
-        await userEvent.click(container.querySelector(`.${prefixCls}-inner`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-inner`, container));
         expect(change).not.toHaveBeenCalled();
     });
 

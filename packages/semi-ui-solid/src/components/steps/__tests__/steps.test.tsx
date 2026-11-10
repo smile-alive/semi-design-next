@@ -5,6 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Steps, { type BasicStepProps, type FillStepProps, type NavStepProps, type Status, type StepProps, type StepsProps } from '..';
 
 const Step = Steps.Step;
@@ -191,7 +192,7 @@ describe('Steps 基线', () => {
     it.each(types)('%s 忽略在步骤内可聚焦子元素中按下的按键', async (type) => {
         const onChange = vi.fn<(current: number) => void>();
         const { container } = renderSteps({ type, current: 0, onChange }, [{}, { title: <input aria-label="inner" /> }]);
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         input.focus();
         await userEvent.keyboard(' x');
         expect(input).toHaveValue(' x');

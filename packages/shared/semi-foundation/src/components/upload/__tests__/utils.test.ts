@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import { defined } from '@test/utils/function';
 import { ListFocusTracker, containsName, removeUnlessPrevented } from '../utils';
 
 function setup() {
@@ -8,8 +9,8 @@ function setup() {
             <div class="card"><button id="b">b</button></div>
         </div>
         <div id="add" tabindex="0">add</div>`;
-    const list = document.getElementById('list') as HTMLElement;
-    return { list, add: document.getElementById('add') as HTMLElement, a: document.getElementById('a') as HTMLElement, b: document.getElementById('b') as HTMLElement };
+    const list = defined(document.getElementById('list'));
+    return { list, add: defined(document.getElementById('add')), a: defined(document.getElementById('a')), b: defined(document.getElementById('b')) };
 }
 
 afterEach(() => {

@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Collapse, { CollapsePanel } from '..';
 
 describe('Collapse（浏览器）', () => {
@@ -20,7 +20,7 @@ describe('Collapse（浏览器）', () => {
                 )}
             </Collapse>
         ));
-        const content = container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-collapse-content`) as HTMLElement;
+        const content = getElement(`.${BASE_CLASS_PREFIX}-collapse-content`, container);
         content.style.cssText = 'max-height: 40px; overflow: auto';
         await tabTo(content);
         expectThemeFocusRing(content);
@@ -31,7 +31,7 @@ describe('Collapse（浏览器）', () => {
         const view = render(() => <Collapse>{() => <CollapsePanel itemKey="1">{{ header: () => 'panel', default: () => 'content' }}</CollapsePanel>}</Collapse>);
         const button = view.getByRole('button', { name: 'panel' });
         await tabTo(button);
-        expectThemeFocusRing(button.closest(`.${BASE_CLASS_PREFIX}-collapse-header`) as HTMLElement);
+        expectThemeFocusRing(defined(button.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-collapse-header`)));
         expect(getComputedStyle(button).outlineStyle).toBe('none');
     });
 });

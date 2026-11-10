@@ -5,6 +5,8 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { JsonViewer as Core } from '@fibrae/semi-json-viewer-core';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import JsonViewer from '../json-viewer.svelte';
 import RealCustomRender from './real-custom-render.svelte';
 
@@ -270,7 +272,7 @@ describe('Svelte JsonViewer（浏览器）', () => {
         const innerRight = container.getBoundingClientRect().right - parseFloat(style.borderRightWidth) - parseFloat(style.paddingRight);
         expect(close.getBoundingClientRect().right).toBeLessThanOrEqual(innerRight);
         for (const item of document.querySelectorAll(`.${prefixCls}-search-options-item`)) {
-            expect((item.querySelector('button') as HTMLElement).getBoundingClientRect().width).toBe(32);
+            expect(getElement('button', item).getBoundingClientRect().width).toBe(32);
         }
     });
 
@@ -416,9 +418,9 @@ describe('Svelte JsonViewer（浏览器）', () => {
             props: { value: baseStr, height: 400, options: { lineHeight: 20, autoWrap: true, formatOptions: { tabSize: 4 } }, width: 700 },
         });
         try {
-            await userEvent.click(shadow.querySelector(`.${prefixCls}-search-bar-trigger`) as Element);
-            await userEvent.type(shadow.querySelector(`.${prefixCls}-search-bar input`) as Element, 'a');
-            const wholeWord = (shadow.querySelector(`.${BASE_CLASS_PREFIX}-icon-whole_word`) as Element).closest('button') as HTMLButtonElement;
+            await userEvent.click(getElement(`.${prefixCls}-search-bar-trigger`, shadow));
+            await userEvent.type(getElement(`.${prefixCls}-search-bar input`, shadow), 'a');
+            const wholeWord = defined(getElement(`.${BASE_CLASS_PREFIX}-icon-whole_word`, shadow).closest<HTMLButtonElement>('button'));
             wholeWord.focus();
             await userEvent.keyboard('{Enter}');
             await waitFor(() => expect(wholeWord).toHaveAttribute('aria-pressed', 'true'));

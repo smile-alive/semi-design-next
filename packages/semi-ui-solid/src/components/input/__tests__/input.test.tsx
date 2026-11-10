@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSearch } from '@fibrae/semi-icons-solid';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Input, { type InputChangeEvent, type InputGroupProps, type InputInternalProps, type InputMode, type InputProps, InputGroup, TextArea } from '..';
 import Tooltip from '../../tooltip';
 
@@ -16,8 +17,8 @@ const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 
 const getValueLength = (str: string) => [...new Intl.Segmenter().segment(str)].length;
 
-const getInput = () => document.querySelector('input') as HTMLInputElement;
-const getWrapper = () => document.querySelector(`.${prefixCls}-wrapper`) as HTMLElement;
+const getInput = () => getElement<HTMLInputElement>('input');
+const getWrapper = () => getElement(`.${prefixCls}-wrapper`);
 const query = (cls: string) => document.querySelector<HTMLElement>(`.${cls}`);
 const getClearBtn = () => query(`${prefixCls}-clearbtn`);
 const getModeBtn = () => query(`${prefixCls}-modebtn`) as HTMLElement;

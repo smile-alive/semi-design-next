@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, isChromium, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { TabsProps } from '../interface';
 import TabsConfig from './tabs-config.svelte';
 import TabsFixture, { type FixtureStore, type Pane } from './tabs-fixture.svelte';
@@ -34,13 +35,13 @@ function setup(props: TabsProps = {}, panes: Pane[] = docPanes, extra: Extra = {
     return { ...view, store };
 }
 
-const tabByKey = (itemKey: string) => document.querySelector(`[data-tabkey="semiTab${itemKey}"]`) as HTMLElement;
-const getBar = () => document.querySelector(`.${prefix}-bar`) as HTMLElement;
+const tabByKey = (itemKey: string) => getElement(`[data-tabkey="semiTab${itemKey}"]`);
+const getBar = () => getElement(`.${prefix}-bar`);
 const textOf = (element: Element) => element.textContent?.replace(/\s+/g, ' ').trim();
 const tabNames = () => screen.getAllByRole('tab').map(textOf);
-const activePane = () => document.querySelector(`.${prefix}-pane-active`) as HTMLElement;
-const arrowButton = (position: string) => document.querySelector(`.${prefix}-bar-arrow-${position} .${BASE_CLASS_PREFIX}-button`) as HTMLButtonElement;
-const scrollWrapper = () => document.querySelector(`.${overflowPrefix}-scroll-wrapper`) as HTMLElement;
+const activePane = () => getElement(`.${prefix}-pane-active`);
+const arrowButton = (position: string) => getElement<HTMLButtonElement>(`.${prefix}-bar-arrow-${position} .${BASE_CLASS_PREFIX}-button`);
+const scrollWrapper = () => getElement(`.${overflowPrefix}-scroll-wrapper`);
 
 function isInside(inner: Element, outer: Element) {
     const a = inner.getBoundingClientRect();
@@ -124,7 +125,7 @@ describe('Svelte Tabs（浏览器）', () => {
 
     it.each(['line', 'card', 'button', 'slash'] as const)('%s 类型的标签显示主题焦点环', async (type) => {
         setup({ type }, docPanes.slice(0, 2));
-        const tab = document.querySelector(`.${prefix}-tab`) as HTMLElement;
+        const tab = getElement(`.${prefix}-tab`);
         await tabTo(tab);
         expectThemeFocusRing(tab);
     });
@@ -133,7 +134,7 @@ describe('Svelte Tabs（浏览器）', () => {
         const store = createStore<FixtureStore>({ props: { style: 'width: 600px' }, panes: docPanes.slice(0, 2), snippets: ['extra'] });
         render(TabsConfig, { props: { store, direction } });
         const bar = getBar().getBoundingClientRect();
-        const extra = (document.querySelector(`.${prefix}-bar-extra`) as HTMLElement).getBoundingClientRect();
+        const extra = getElement(`.${prefix}-bar-extra`).getBoundingClientRect();
         const gapToInlineEnd = direction === 'rtl' ? extra.left - bar.left : bar.right - extra.right;
         expect(gapToInlineEnd).toBeCloseTo(0, 0);
     });
@@ -141,7 +142,7 @@ describe('Svelte Tabs（浏览器）', () => {
     it('面板滑入动画在真实 animationend 后去掉方向 class', async () => {
         setup();
         await userEvent.click(screen.getByRole('tab', { name: '帮助' }));
-        const overlay = activePane().querySelector(`.${prefix}-pane-motion-overlay`) as HTMLElement;
+        const overlay = getElement(`.${prefix}-pane-motion-overlay`, activePane());
         expect(overlay).toHaveClass(`${prefix}-pane-animate-leftShow`);
         await expect.poll(() => overlay.className).not.toContain('animate');
     });

@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { type IconFill, IconAIEditLevel2, IconEdit } from '@fibrae/semi-icons-solid';
 import { PopupLayerContext } from '@fibrae/semi-ui-solid/base';
 import { semiGlobal, type OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import IconButton from '../../icon-button';
 import Button, { type ButtonProps, type HtmlType, type Theme, type Type, ButtonGroup } from '../index';
 
@@ -107,7 +108,7 @@ describe('Button', () => {
                 x
             </Button>
         ));
-        const content = container.querySelector(`.${prefixCls}-content`) as HTMLElement;
+        const content = getElement(`.${prefixCls}-content`, container);
         expect(content.lastElementChild).toHaveClass(`${prefixCls}-content-right`);
         setPosition('right');
         expect(content.firstElementChild).toHaveClass(`${prefixCls}-content-left`);
@@ -238,7 +239,7 @@ describe('Button', () => {
 
     it('icon 布局时文本 span 带 x-semi-prop，内容 span 不带；无 icon 时内容 span 带', () => {
         const view = render(() => <Button icon={<IconEdit />}>x</Button>);
-        const content = view.container.querySelector(`.${prefixCls}-content`) as HTMLElement;
+        const content = getElement(`.${prefixCls}-content`, view.container);
         expect(content).not.toHaveAttribute('x-semi-prop');
         expect(content.querySelector('[x-semi-prop="children"]')).toHaveTextContent('x');
         view.unmount();

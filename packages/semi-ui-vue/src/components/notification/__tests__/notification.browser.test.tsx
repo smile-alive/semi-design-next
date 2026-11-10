@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { userEvent } from 'vite-plus/test/browser';
 import { openLayer } from '@fibrae/semi-foundation/utils';
 import { tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Notification from '../index';
 import type { NotificationHookApi, NotificationHookOptions } from '../interface';
 import HookHost from './fixtures/hook-host.vue';
@@ -13,7 +13,7 @@ import { reachableKey } from './fixtures/reachable';
 
 const prefix = 'semi-notification';
 const noticeCls = `${prefix}-notice`;
-const closeButton = (notice: Element) => notice.querySelector(`.${noticeCls}-icon-close`) as HTMLButtonElement;
+const closeButton = (notice: Element) => getElement<HTMLButtonElement>(`.${noticeCls}-icon-close`, notice);
 const top = (el: HTMLElement) => el.getBoundingClientRect().top;
 // The list animates each notice's root wrapper, which is also its stack item.
 const wrapperOf = (notice: HTMLElement) => notice.parentElement as HTMLElement;
@@ -33,7 +33,7 @@ function renderHook(reachable?: string) {
     const view = render(HookHost, {
         props: { reachable, onApi: (notification: NotificationHookApi) => (api = notification) },
     });
-    const holder = view.container.querySelector('[data-testid="holder"]') as HTMLElement;
+    const holder = getElement('[data-testid="holder"]', view.container);
     const notices = () => [...holder.querySelectorAll<HTMLElement>(`.${noticeCls}`)];
     const add = (title: string, duration = 0, options: NotificationHookOptions = {}) => api.info({ title, content: title, duration, ...options });
     return { api, add, notices };
@@ -265,7 +265,7 @@ describe('Notification 浏览器', () => {
         }
         await userEvent.click(closeButton(notices()[0]));
         await waitFor(() => expect(notices()).toHaveLength(0));
-        await userEvent.click(closeButton(document.querySelector(`.${noticeCls}`) as HTMLElement));
+        await userEvent.click(closeButton(getElement(`.${noticeCls}`)));
         await waitFor(() => expect(document.querySelectorAll(`.${noticeCls}`)).toHaveLength(0));
     });
 

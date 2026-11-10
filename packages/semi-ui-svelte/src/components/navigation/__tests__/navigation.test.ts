@@ -3,6 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { ItemKey, NavClickData, NavItems, NavOpenChangeData, NavProps, OnSelectedData } from '../interface';
 import NavChildren from './nav-children.svelte';
 import NavFixture from './nav-fixture.svelte';
@@ -23,12 +25,12 @@ const treeItems: NavItems = [
     { itemKey: 'job', text: '任务', items: [{ itemKey: 'query', text: '任务查询' }] },
 ];
 
-const getList = () => document.querySelector(`.${prefix} .${prefix}-list`) as HTMLElement;
-const getSubTitle = (text: string) => screen.getByText(text).closest(`.${prefix}-sub-title`) as HTMLElement;
-const getItem = (text: string) => screen.getByText(text).closest(`.${prefix}-item`) as HTMLElement;
+const getList = () => getElement(`.${prefix} .${prefix}-list`);
+const getSubTitle = (text: string) => defined(screen.getByText(text).closest<HTMLElement>(`.${prefix}-sub-title`));
+const getItem = (text: string) => defined(screen.getByText(text).closest<HTMLElement>(`.${prefix}-item`));
 const isSelected = (text: string) => getItem(text).classList.contains(`${prefix}-item-selected`);
 const isOpen = (text: string) => getSubTitle(text).getAttribute('aria-expanded') === 'true';
-const getCollapseButton = () => document.querySelector(`.${prefix}-footer .${prefix}-collapse-btn button`) as HTMLElement;
+const getCollapseButton = () => getElement(`.${prefix}-footer .${prefix}-collapse-btn button`);
 
 async function click(element: Element) {
     await fireEvent.click(element);
@@ -74,7 +76,7 @@ describe('Svelte Navigation', () => {
         const title = screen.getByRole('button', { name: '用户' });
         expect(title).toHaveClass(`${prefix}-sub-title`);
         expect(title).toHaveAttribute('aria-expanded', 'true');
-        const subList = document.getElementById(title.getAttribute('aria-controls') as string) as HTMLElement;
+        const subList = defined(document.getElementById(title.getAttribute('aria-controls') as string));
         expect(subList.tagName).toBe('UL');
         expect(subList).toContainElement(screen.getByRole('button', { name: '用户列表' }));
         expect(screen.getByRole('button', { name: '用户列表' })).toHaveAttribute('aria-current', 'page');
@@ -233,7 +235,7 @@ describe('Svelte Navigation 行为', () => {
 
     it('折叠按钮切换折叠，折叠时按钮只剩图标并由语言包命名', async () => {
         renderNav({ items: treeItems, footer: { collapseButton: true } });
-        const nav = document.querySelector(`.${prefix}`) as HTMLElement;
+        const nav = getElement(`.${prefix}`);
         expect(nav).not.toHaveClass(`${prefix}-collapsed`);
         expect(getCollapseButton()).toHaveTextContent('收起侧边栏');
         const button = getCollapseButton();
@@ -266,7 +268,7 @@ describe('Svelte Navigation 行为', () => {
 
     it('通过 toggleIconPosition 把展开图标放在左侧', () => {
         renderNav({ items: treeItems, toggleIconPosition: 'left' });
-        const inner = getSubTitle('用户').querySelector(`.${prefix}-item-inner`) as HTMLElement;
+        const inner = getElement(`.${prefix}-item-inner`, getSubTitle('用户'));
         expect(inner.firstElementChild).toHaveClass(`${prefix}-item-icon-toggle-left`);
     });
 });
@@ -391,7 +393,7 @@ describe('Svelte Navigation 受控值（$bindable）', () => {
     });
 
     describe('isCollapsed', () => {
-        const nav = () => document.querySelector(`.${prefix}`) as HTMLElement;
+        const nav = () => getElement(`.${prefix}`);
 
         it('不传：折叠按钮切换，onCollapseChange 收到新值', async () => {
             const store = setup('collapsed', 'uncontrolled');

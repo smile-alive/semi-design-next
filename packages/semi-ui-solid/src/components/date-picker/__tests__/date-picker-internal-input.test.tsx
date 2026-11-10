@@ -2,6 +2,7 @@ import { render } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import DatePicker from '..';
 
 const GLOBAL_INPUT = { showClear: true, prefix: 'mark-prefix', suffix: 'mark-suffix', insetLabel: 'mark-label', addonBefore: 'mark-before', addonAfter: 'mark-after' };
@@ -35,7 +36,7 @@ describe('全局 Input 默认值不给 DatePicker 内部输入框加清除按钮
     it('面板内 insetInput', () => {
         semiGlobal.config.overrideDefaultProps = { Input: GLOBAL_INPUT };
         render(() => <DatePicker type="dateTime" defaultValue={new Date(2024, 0, 15)} defaultOpen insetInput motion={false} />);
-        const insetInputs = document.querySelector(`.${BASE_CLASS_PREFIX}-datepicker-inset-input-wrapper`) as HTMLElement;
+        const insetInputs = getElement(`.${BASE_CLASS_PREFIX}-datepicker-inset-input-wrapper`);
         expect(insetInputs.querySelectorAll('input').length).toBeGreaterThan(0);
         expect(insetInputs.textContent).not.toMatch(/mark-/);
         expect(clearButtonIn(insetInputs)).toBeNull();

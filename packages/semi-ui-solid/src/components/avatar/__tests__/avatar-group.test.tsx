@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Avatar, { AvatarGroup, type AvatarGroupProps } from '..';
 import Tooltip from '../../tooltip';
 
@@ -103,7 +104,7 @@ describe('AvatarGroup', () => {
                 )}
             />
         ));
-        const rest = () => (container.querySelector('.rest') as HTMLElement).textContent;
+        const rest = () => getElement('.rest', container).textContent;
         expect(rest()).toBe('ZLYZ');
 
         setMaxCount(2);

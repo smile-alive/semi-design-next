@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Cascader, { type CascaderData, type CascaderDisplaySlotProps, type CascaderEmits, type CascaderFilterItemSlotProps, type CascaderHandle, type CascaderLabelSlotProps, type CascaderSimpleValue, type CascaderTagSlotProps, type CascaderTriggerSlotProps, type CascaderValue } from '..';
 import ConfigProvider from '../../config-provider';
 import Popover from '../../popover';
@@ -103,14 +103,14 @@ async function act(run: () => unknown) {
     await settle();
 }
 
-const getTrigger = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const getSelection = () => document.querySelector(`.${prefixCls}-selection`) as HTMLElement;
+const getTrigger = () => getElement(`.${prefixCls}`);
+const getSelection = () => getElement(`.${prefixCls}-selection`);
 const getSelectionText = () => getSelection().textContent;
-const getSelectionInput = () => getSelection().querySelector('input') as HTMLInputElement;
+const getSelectionInput = () => getElement<HTMLInputElement>('input', getSelection());
 const getLists = () => document.querySelectorAll<HTMLElement>(`.${prefixCls}-option-list`);
 const getListOptions = (listIndex: number) => getLists()[listIndex].querySelectorAll<HTMLElement>(`li.${prefixCls}-option`);
-const getOption = (label: string) => screen.getByText(label, { selector: `.${prefixCls}-option-label > span` }).closest('li') as HTMLElement;
-const getCheckbox = (label: string) => getOption(label).querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement;
+const getOption = (label: string) => defined(screen.getByText(label, { selector: `.${prefixCls}-option-label > span` }).closest<HTMLElement>('li'));
+const getCheckbox = (label: string) => getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getOption(label));
 const getHighlights = () => document.querySelectorAll(`.${prefixCls}-option-label-highlight`);
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)).map((node) => node.textContent);
 const focus = (element: HTMLElement) => act(() => element.focus());
@@ -249,7 +249,7 @@ describe('Cascader', () => {
 
     // jsdom has no layout: only the CSS wiring is checked, the browser resolves `--semi-tooltip-trigger-width` to the trigger
     it('空数据时下拉最小宽度跟随触发器', async () => {
-        const wrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
+        const wrapper = () => getElement(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
         const { rerender } = await renderCascader({ defaultOpen: true, treeData: [] });
         expect(wrapper().style.minWidth).toBe('var(--semi-tooltip-trigger-width)');
         await rerender({ treeData });
@@ -305,7 +305,7 @@ describe('Cascader', () => {
             (separator: string) =>
             ({ path }: CascaderDisplaySlotProps) =>
                 path.flatMap((node, index) => (index ? [separator, markup(node)] : [markup(node)]));
-        const span = () => getSelection().querySelector('span') as HTMLElement;
+        const span = () => getElement('span', getSelection());
         const { unmount } = await renderCascader({ defaultValue: ['Asia', 'China', 'Shanghai'] }, { display: displayWith(' / ') });
         expect(span().querySelector('strong')?.textContent).toEqual('亚洲');
         expect(span().querySelector('div')?.textContent).toEqual('上海');
@@ -956,7 +956,7 @@ describe('Cascader', () => {
             }
         );
         expect(document.querySelector('.custom-trigger')).toHaveTextContent('Custom: 0-0-0');
-        expect(getSelection()).toBeNull();
+        expect(document.querySelector(`.${prefixCls}-selection`)).toBeNull();
     });
 
     it('listScroll 事件', async () => {
@@ -1117,7 +1117,7 @@ describe('Cascader', () => {
 
     it('#insetLabel 插槽与 insetLabelId', async () => {
         await renderCascader({ insetLabelId: 'label-id' }, { insetLabel: () => <span class="custom-inset-label">Label</span> });
-        const label = document.querySelector(`.${prefixCls}-inset-label`) as HTMLElement;
+        const label = getElement(`.${prefixCls}-inset-label`);
         expect(label.querySelector('.custom-inset-label')).toHaveTextContent('Label');
         expect(label).toHaveAttribute('id', 'label-id');
     });
@@ -2103,7 +2103,7 @@ describe('Cascader 行为', () => {
             ],
         });
         expect(getTagTexts()).toEqual(['北京']);
-        const plusN = document.querySelector(`.${prefixCls}-selection-n`) as HTMLElement;
+        const plusN = getElement(`.${prefixCls}-selection-n`);
         expect(plusN).toHaveTextContent('+2');
         await userEvent.hover(plusN);
         await waitFor(() => expect(document.querySelector(`.${BASE_CLASS_PREFIX}-popover`)).not.toBeNull());

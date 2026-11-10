@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { clickOutside, disableFieldSizing, expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import InputCase from './input-case.svelte';
 import TextAreaCase from './textarea-case.svelte';
 
@@ -18,7 +19,7 @@ const longStr = 'semi design '.repeat(24).trim();
 const styleOf = (el: Element) => getComputedStyle(el);
 const fitsContent = (el: Element) => expect(el.scrollHeight).toBe(el.clientHeight);
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-const lineNumberPanel = () => document.querySelector<HTMLElement>(`.${prefix}-textarea-lineNumber`) as HTMLElement;
+const lineNumberPanel = () => getElement(`.${prefix}-textarea-lineNumber`);
 
 function renderInput(props: NonNullable<InputStore['props']> = {}, slots: InputStore['slots'] = {}) {
     const store = createStore<InputStore>({ props, slots, handle: {} });
@@ -189,9 +190,9 @@ describe('Svelte Input（浏览器）', () => {
             await clickOutside();
             expect(input).not.toHaveFocus();
         };
-        await userEvent.click(document.querySelector(`.${prefix}-prefix`) as Element);
+        await userEvent.click(getElement(`.${prefix}-prefix`));
         await expectFocusThenBlur();
-        await userEvent.click(document.querySelector(`.${prefix}-suffix`) as Element);
+        await userEvent.click(getElement(`.${prefix}-suffix`));
         await expectFocusThenBlur();
         store.handle?.current?.focus();
         await expectFocusThenBlur();

@@ -2,6 +2,7 @@ import { render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/solid';
 import Cropper, { type CropperProps } from '..';
 
 const src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><rect width="800" height="400" fill="teal"/></svg>');
@@ -13,15 +14,15 @@ async function renderLoaded() {
             <div style={{ width: '200px', height: '300px' }} data-testid="outside" />
         </div>
     ));
-    const box = container.querySelector('.semi-cropper-box') as HTMLElement;
+    const box = getElement('.semi-cropper-box', container);
     await waitFor(() => expect(box.style.width).not.toBe('0px'));
-    return { container, box, outside: container.querySelector('[data-testid="outside"]') as HTMLElement };
+    return { container, box, outside: getElement('[data-testid="outside"]', container) };
 }
 
 describe('Cropper（浏览器）', () => {
     it('拖动裁剪框时，指针移出裁剪器后仍持续跟随，松开后结束', async () => {
         const { box, outside } = await renderLoaded();
-        const root = box.closest('.semi-cropper') as HTMLElement;
+        const root = defined(box.closest<HTMLElement>('.semi-cropper'));
         expect(getComputedStyle(root).touchAction).toBe('none');
 
         await userEvent.dragAndDrop(box, outside);
@@ -36,7 +37,7 @@ describe('Cropper（浏览器）', () => {
 
     it('拖动角点可调整裁剪框大小，松开后结束', async () => {
         const { container, box } = await renderLoaded();
-        const corner = container.querySelector('[data-dir="br"]') as HTMLElement;
+        const corner = getElement('[data-dir="br"]', container);
         const before = box.getBoundingClientRect();
 
         await userEvent.dragAndDrop(corner, box, { targetPosition: { x: 10, y: 10 } });
@@ -53,8 +54,8 @@ describe('Cropper（浏览器）', () => {
 // the box lives in the padding box, so its coordinates start at the border's inner edge
 async function renderBordered(props: CropperProps = {}) {
     const { container } = render(() => <Cropper style={{ width: '400px', height: '300px', border: '10px solid teal' }} src={src} {...props} />);
-    const root = container.querySelector('.semi-cropper') as HTMLElement;
-    const box = container.querySelector('.semi-cropper-box') as HTMLElement;
+    const root = getElement('.semi-cropper', container);
+    const box = getElement('.semi-cropper-box', container);
     await waitFor(() => expect(box.style.width).not.toBe('0px'));
     const edges = () => {
         const rect = box.getBoundingClientRect();
@@ -100,7 +101,7 @@ describe('Cropper 根元素带边框', () => {
             const x = dir.includes('l') ? before.left + 40 : dir.includes('r') ? before.right - 40 : (before.left + before.right) / 2;
             const y = dir.includes('t') ? before.top + 40 : dir.includes('b') ? before.bottom - 40 : (before.top + before.bottom) / 2;
 
-            await userEvent.dragAndDrop(container.querySelector(`[data-dir="${dir}"]`) as HTMLElement, root, {
+            await userEvent.dragAndDrop(getElement(`[data-dir="${dir}"]`, container), root, {
                 targetPosition: { x, y },
             });
 

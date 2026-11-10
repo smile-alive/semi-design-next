@@ -3,6 +3,7 @@ import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { defined } from '@test/utils/function';
 import type { AIChatInputProps } from '../interface';
 import InputHost, { type InputHostStore } from './input-host.svelte';
 
@@ -180,7 +181,7 @@ describe('AIChatInput', () => {
         const placeholderRect = placeholder.getBoundingClientRect();
         expect(placeholderRect.left).toBeGreaterThanOrEqual(slotRect.left);
         await waitFor(() => expect(slot.getBoundingClientRect().right).toBeGreaterThanOrEqual(placeholderRect.right));
-        const paragraph = slot.closest('p') as HTMLElement;
+        const paragraph = defined(slot.closest<HTMLElement>('p'));
         const lineHeight = parseFloat(getComputedStyle(paragraph).lineHeight);
         expect(paragraph.getBoundingClientRect().height).toBeLessThan(slotRect.height + lineHeight);
     });

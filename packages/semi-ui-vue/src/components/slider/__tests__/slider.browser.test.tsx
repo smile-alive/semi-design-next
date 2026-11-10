@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { isWebKit, tab } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Slider from '..';
 import ConfigProvider from '../../config-provider';
 import Model from './fixtures/model.vue';
@@ -30,7 +30,7 @@ describe('Slider（浏览器）', () => {
             ),
         });
         (container.firstElementChild as HTMLElement).scrollLeft = 1000;
-        const rail = container.querySelector(`.${prefixCls}-rail`) as HTMLElement;
+        const rail = getElement(`.${prefixCls}-rail`, container);
         const rect = rail.getBoundingClientRect();
         expect(rect.left).toBeLessThan(0);
 
@@ -52,7 +52,7 @@ describe('Slider（浏览器）', () => {
             ),
         });
         (container.firstElementChild as HTMLElement).scrollTop = 1000;
-        const rail = container.querySelector(`.${prefixCls}-rail`) as HTMLElement;
+        const rail = getElement(`.${prefixCls}-rail`, container);
         const rect = rail.getBoundingClientRect();
         expect(rect.top).toBeLessThan(0);
 
@@ -75,7 +75,7 @@ describe('Slider 交互（浏览器）', () => {
         });
         return {
             change,
-            rail: container.querySelector(`.${prefixCls}-rail`) as HTMLElement,
+            rail: getElement(`.${prefixCls}-rail`, container),
             handles: [...container.querySelectorAll<HTMLElement>(`.${prefixCls}-handle`)],
         };
     };
@@ -137,15 +137,15 @@ describe('Slider 交互（浏览器）', () => {
                 </div>
             ),
         });
-        const rail = container.querySelector(`.${prefixCls}-rail`) as HTMLElement;
-        const handle = container.querySelector(`.${prefixCls}-handle`) as HTMLElement;
+        const rail = getElement(`.${prefixCls}-rail`, container);
+        const handle = getElement(`.${prefixCls}-handle`, container);
 
         clickRail(rail, 'right');
         await waitFor(() => expect(handle.style.left).toBe('100%'));
         expect(change).toHaveBeenLastCalledWith(100);
 
         // Drop on the wrapper: the track covers the rail and Playwright refuses targets that are covered
-        const wrapper = container.querySelector(`.${prefixCls}-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefixCls}-wrapper`, container);
         const wrapperRect = wrapper.getBoundingClientRect();
         const railRect = rail.getBoundingClientRect();
         await userEvent.dragAndDrop(handle, wrapper, {
@@ -216,7 +216,7 @@ describe('Slider 交互（浏览器）', () => {
                 </div>
             ),
         });
-        const handle = container.querySelector(`.${prefixCls}-handle`) as HTMLElement;
+        const handle = getElement(`.${prefixCls}-handle`, container);
         const [input, next] = container.querySelectorAll('input[type="range"]');
         await userEvent.click(handle);
         expect(input).toHaveFocus();
@@ -257,7 +257,7 @@ describe('Slider 交互（浏览器）', () => {
             ),
         });
         const input = container.querySelector('input[type="range"]');
-        await userEvent.click(container.querySelector(`.${prefixCls}-handle`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-handle`, container));
         await userEvent.keyboard(increase);
         expect(input).toHaveValue('51');
         await userEvent.keyboard(`${decrease}${decrease}`);
@@ -309,7 +309,7 @@ describe('Slider 交互（浏览器）', () => {
     // Safari focuses only text fields on a click, through a label too
     it.skipIf(isWebKit)('点击 label 会聚焦滑块输入框', async () => {
         const container = renderLabelled();
-        await userEvent.click(container.querySelector('label') as HTMLElement);
+        await userEvent.click(getElement('label', container));
         expect(container.querySelector('input[type="range"]')).toHaveFocus();
     });
 
@@ -323,8 +323,8 @@ describe('Slider 交互（浏览器）', () => {
                 </div>
             ),
         });
-        const handle = container.querySelector(`.${prefixCls}-handle`) as HTMLElement;
-        const input = handle.querySelector('input') as HTMLInputElement;
+        const handle = getElement(`.${prefixCls}-handle`, container);
+        const input = getElement<HTMLInputElement>('input', handle);
         expect(getComputedStyle(handle).outlineStyle).toBe('none');
         await userEvent.click(handle);
         expect(input).toHaveFocus();

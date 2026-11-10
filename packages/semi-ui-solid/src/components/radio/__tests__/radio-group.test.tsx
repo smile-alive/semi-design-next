@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Radio, { RadioGroup, type RadioChangeEvent, type RadioGroupProps } from '..';
 import Popover from '../../popover';
 import type { OptionItem } from '../radio-group';
@@ -273,7 +274,7 @@ describe('RadioGroup', () => {
         expect(one).toHaveAttribute('aria-labelledby', 'a1');
         expect(one).toHaveAttribute('aria-describedby', 'e1');
         expect(document.getElementById('e1')).toHaveTextContent('first');
-        const label = container.querySelector('.opt1') as HTMLElement;
+        const label = getElement('.opt1', container);
         expect(label).toHaveClass(prefixCls);
         expect(label).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(document.getElementById('a1')).toHaveClass('ac1');

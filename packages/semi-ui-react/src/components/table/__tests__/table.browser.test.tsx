@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, ConfigProvider, Input, Space, Switch, Table, Typography } from '@fibrae/semi-ui-react';
 import type { InputHandle } from '@fibrae/semi-ui-react/input';
 import { expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
-import { getData } from '@test/utils/react';
+import { getData, getElement } from '@test/utils/react';
 import type { ColumnProps, Data, GetVirtualizedListRef, ResizeFn, RowSelectionProps } from '../interface';
 const prefix = `${BASE_CLASS_PREFIX}-table`;
 
@@ -358,8 +358,8 @@ describe('Table（浏览器）', () => {
         const min = -(body.scrollWidth - body.clientWidth);
         await waitFor(() => expect(min).toBeLessThan(0));
 
-        const leftLast = () => container.querySelector(`.${prefix}-cell-fixed-left-last`) as HTMLElement;
-        const rightFirst = () => container.querySelector(`.${prefix}-cell-fixed-right-first`) as HTMLElement;
+        const leftLast = () => getElement(`.${prefix}-cell-fixed-left-last`, container);
+        const rightFirst = () => getElement(`.${prefix}-cell-fixed-right-first`, container);
         const hasShadow = (el: HTMLElement) => getComputedStyle(el, '::after').display !== 'none';
 
         await expect.poll(() => hasShadow(rightFirst())).toBe(false);
@@ -384,7 +384,7 @@ describe('Table（浏览器）', () => {
         );
         const body = getBody();
         await waitFor(() => expect(body.scrollWidth).toBeGreaterThan(body.clientWidth));
-        const tableContainer = container.querySelector(`.${prefix}-container`) as HTMLElement;
+        const tableContainer = getElement(`.${prefix}-container`, container);
         const lastCells = [...container.querySelectorAll<HTMLElement>(`.${prefix}-cell-last`)];
 
         expect(lastCells.length).toBeGreaterThan(0);

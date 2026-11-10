@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Popconfirm from '..';
 import Button from '../../button';
 
@@ -45,7 +46,7 @@ describe('Popconfirm（浏览器）', () => {
         const trigger = screen.getByRole('button', { name: '内容聚焦' });
         await userEvent.click(trigger);
         await waitFor(() => expect(document.querySelector(`.${prefix}-body input`)).toHaveFocus());
-        await userEvent.click(document.querySelector(`.${prefix}-header .${BASE_CLASS_PREFIX}-button`) as Element);
+        await userEvent.click(getElement(`.${prefix}-header .${BASE_CLASS_PREFIX}-button`));
         await waitFor(() => expect(trigger).toHaveFocus());
     });
 

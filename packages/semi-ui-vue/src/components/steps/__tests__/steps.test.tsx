@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Steps, { Step, type StepSlots, type StepStatus, type StepsProps } from '../index';
 import Composed from './fixtures/composed.vue';
 import Instance from './fixtures/instance.vue';
@@ -210,7 +210,7 @@ describe('Steps 基线', () => {
     it.each(types)('%s 忽略在步骤内可聚焦子元素中按下的按键', async (type) => {
         const onChange = vi.fn<(current: number) => void>();
         const { container } = renderSteps({ type, current: 0, onChange }, [{}, { slots: { title: () => [<input aria-label="inner" />] } }]);
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         input.focus();
         await userEvent.keyboard(' x');
         expect(input).toHaveValue(' x');

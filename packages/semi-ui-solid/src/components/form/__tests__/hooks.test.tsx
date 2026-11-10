@@ -1,9 +1,10 @@
 import { type JSX, splitProps } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/solid';
 import { type FormApi, Form, FormInput, useFieldApi, useFieldState, useForm, useFormApi, useFormState, withField } from '..';
 
-const getInput = (field: string) => document.querySelector(`[x-field-id="${field}"] input`) as HTMLInputElement;
+const getInput = (field: string) => getElement<HTMLInputElement>(`[x-field-id="${field}"] input`);
 
 describe('Form hooks', () => {
     it('useFormApi 返回 getFormApi 交出的 api', () => {

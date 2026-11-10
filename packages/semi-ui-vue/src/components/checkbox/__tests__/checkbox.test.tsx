@@ -6,7 +6,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Checkbox, { CheckboxGroup } from '..';
 import type { CheckboxEmits, CheckboxEvent, CheckboxHandle } from '../interface';
 import CheckAll from './fixtures/check-all.vue';
@@ -19,7 +19,7 @@ import Propagation from './fixtures/propagation.vue';
 
 type Change = (event: CheckboxEvent) => void;
 const prefixCls = `${BASE_CLASS_PREFIX}-checkbox`;
-const getWrapper = () => document.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+const getWrapper = () => getElement(`.${prefixCls}`);
 const getInput = () => screen.getByRole<HTMLInputElement>('checkbox');
 const label = { default: () => 'Semi Design' };
 // Vue ignores an ancestor listener attached at or after the timestamp of an event coming up from a child, and the
@@ -92,7 +92,7 @@ describe('Checkbox', () => {
 
     it('extra 插槽', () => {
         render(Checkbox, { slots: { ...label, extra: () => 'abcd' } });
-        const extra = document.querySelector(`.${prefixCls}-extra`) as HTMLElement;
+        const extra = getElement(`.${prefixCls}-extra`);
         expect(extra).toHaveTextContent(/^abcd$/);
         expect(extra).toHaveAttribute('x-semi-prop', 'extra');
         expect(getInput()).toHaveAttribute('aria-describedby', extra.id);
@@ -370,7 +370,7 @@ describe('Checkbox', () => {
         expect(input).toHaveAttribute('aria-errormessage', 'err');
         expect(input).toHaveAttribute('aria-required', 'true');
         expect(input).not.toHaveAttribute('aria-checked');
-        const addon = document.querySelector(`.${prefixCls}-addon`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon`);
         expect(addon.id).not.toBe('');
         expect(input).toHaveAttribute('aria-labelledby', `outer ${addon.id}`);
         expect(getWrapper()).not.toHaveAttribute('aria-labelledby');
@@ -458,7 +458,7 @@ describe('Checkbox', () => {
 
     it('点击文字时聚焦原生 input', async () => {
         render(Checkbox, { slots: label });
-        await userEvent.click(document.querySelector(`.${prefixCls}-addon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-addon`));
         expect(getInput()).toHaveFocus();
     });
 
@@ -470,7 +470,7 @@ describe('Checkbox', () => {
         await userEvent.click(screen.getByRole('link', { name: 'extra link' }));
         expect(getInput()).not.toBeChecked();
         expect(change).not.toHaveBeenCalled();
-        await userEvent.click(document.querySelector(`.${prefixCls}-addon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-addon`));
         expect(getInput()).toBeChecked();
         expect(change).toHaveBeenCalledTimes(1);
     });
@@ -491,9 +491,9 @@ describe('Checkbox', () => {
         });
         const container = document.createElement('div');
         container.innerHTML = await renderToString(app);
-        const input = container.querySelector('input') as HTMLInputElement;
-        const addonId = (container.querySelector(`.${prefixCls}-addon`) as HTMLElement).id;
-        const extraId = (container.querySelector(`.${prefixCls}-extra`) as HTMLElement).id;
+        const input = getElement<HTMLInputElement>('input', container);
+        const addonId = getElement(`.${prefixCls}-addon`, container).id;
+        const extraId = getElement(`.${prefixCls}-extra`, container).id;
         expect(addonId).not.toBe('');
         expect(input.getAttribute('aria-labelledby')).toBe(addonId);
         expect(input.getAttribute('aria-describedby')).toBe(extraId);

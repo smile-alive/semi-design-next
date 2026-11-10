@@ -96,7 +96,7 @@ describe('timePicker', () => {
 
     it('自定义触发器', async () => {
         function Demo() {
-            const [time, setTime] = useState(new Date(2022, 3, 17, 10, 24, 18));
+            const [time, setTime] = useState<TimePickerProps['value']>(new Date(2022, 3, 17, 10, 24, 18));
             return <TimePicker value={time} format="HH:mm:ss" scrollItemProps={scrollItemProps} triggerRender={({ placeholder }) => <Button>{time ? 'time' : placeholder}</Button>} onChange={(value) => setTime(value)} />;
         }
         render(
@@ -134,7 +134,7 @@ describe('timePicker', () => {
     it('timezone 与 disabledHours', async () => {
         function Demo() {
             // 00:00 UTC is 10:00 in the picker's +10 time zone, whatever the host zone is
-            const [date, setDate] = useState(new Date('2022-04-17T00:00:00Z'));
+            const [date, setDate] = useState<TimePickerProps['value']>(new Date('2022-04-17T00:00:00Z'));
             return (
                 <ConfigProvider timeZone={10}>
                     <TimePicker value={date} disabledHours={() => [5]} format="HH:mm" scrollItemProps={scrollItemProps} onChange={(value) => setDate(value)} />

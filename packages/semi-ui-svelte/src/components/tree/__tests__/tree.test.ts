@@ -5,6 +5,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 import type { TreeProps } from '../interface';
 import { click, collapsedCls, getExpandIcon, getLevelNodes, getNode, getOptions, getSearchWrapper, getSelected, getTree, optionCls, press, search, selectedCls, spyOn, treeData, treeData2 } from './data';
@@ -34,7 +35,7 @@ const dropNodeData = expect.objectContaining({ key: 'beimeizhou', expanded: fals
 describe('Tree', () => {
     it('class 和 style 落在根元素', () => {
         const { container } = renderTree({ class: 'test', style: 'height: 420px' });
-        const wrapper = container.querySelector(`.${BASE_CLASS_PREFIX}-tree-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tree-wrapper`, container);
         expect(wrapper).toHaveClass('test');
         expect(wrapper).toHaveStyle({ height: '420px' });
     });
@@ -324,7 +325,7 @@ describe('Tree 多选', () => {
 
     it('点击复选框勾选父节点，后代全选', async () => {
         renderTree({ multiple: true, expandAll: true });
-        await click(getNode('yazhou').querySelector('input[type="checkbox"]') as HTMLElement);
+        await click(getElement('input[type="checkbox"]', getNode('yazhou')));
         expect(['yazhou', 'zhongguo', 'beijing', 'shanghai', 'riben', 'dongjing', 'daban'].every((key) => isChecked(getNode(key)))).toBe(true);
     });
 
@@ -512,7 +513,7 @@ describe('Tree 虚拟化（jsdom）', () => {
         try {
             renderTree({ expandAll: true, virtualize: { itemSize: 28, height: '100%' } });
             flushSync();
-            const wrapper = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`) as HTMLElement;
+            const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`);
             const parent = wrapper.parentElement as HTMLElement;
             expect(observer.observed()).toContain(parent);
             expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-virtual-list`)).toBeNull();

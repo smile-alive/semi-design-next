@@ -1,6 +1,6 @@
 /** @jsxImportSource vue */
 import { describe, expect, it } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { Form, type FormApi } from '..';
 import { flush, FormInput } from './fixtures/fields';
 
@@ -34,7 +34,7 @@ describe('Form（ShadowRoot）', () => {
         });
         try {
             const api = formApi as FormApi;
-            const field = shadow.querySelector('.semi-form-field[x-field-id="b"]') as Element;
+            const field = getElement('.semi-form-field[x-field-id="b"]', shadow);
             await expect(api.validate()).rejects.toBeDefined();
             await flush();
             expectInViewport(field);

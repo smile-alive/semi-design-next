@@ -8,7 +8,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import { zh_CN as Locale } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { countLiveListeners } from '@test/utils/solid';
+import { countLiveListeners, getElement } from '@test/utils/solid';
 import TimePicker, { type TimePickerProps, type TimePickerTriggerRenderProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -30,8 +30,8 @@ function renderTimePicker(initial: Props = {}) {
     return { ...result, rerender: (next: Props) => setProps(next) };
 }
 
-const getInput = () => document.querySelector<HTMLInputElement>(`.${prefixCls} input`) as HTMLInputElement;
-const getRoot = () => document.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+const getInput = () => getElement<HTMLInputElement>(`.${prefixCls} input`);
+const getRoot = () => getElement(`.${prefixCls}`);
 const getPanels = () => Array.from(document.querySelectorAll<HTMLElement>(`.${scrollListCls}`));
 const getList = (type: string, panel: ParentNode = document) => panel.querySelector<HTMLElement>(`.${prefixCls}-panel-list-${type}`);
 const getItems = (type: string, panel?: ParentNode) => Array.from((getList(type, panel) as HTMLElement).querySelectorAll('li'));
@@ -74,7 +74,7 @@ describe('TimePicker', () => {
         expect(document.querySelectorAll(`.${scrollListCls}-footer`)).toHaveLength(1);
         expect(getInput()).toHaveValue('10:24:18');
 
-        fireEvent.click((getList('minute') as HTMLElement).querySelector(`.${scrollListCls}-list-outer ul li`) as HTMLElement);
+        fireEvent.click(getElement(`.${scrollListCls}-list-outer ul li`, getList('minute') as HTMLElement));
         await waitFor(() => expect(onChange).toHaveBeenCalledTimes(1));
         const [selectedDate, selectedStr] = onChange.mock.calls[0] as [Date, string];
         expect(hms(selectedDate)).toEqual([10, 0, 18]);
@@ -238,7 +238,7 @@ describe('TimePicker', () => {
         const onChange = vi.fn<DateFirstOnChange>();
         renderTimePicker({ defaultValue: '10:23:15', showClear: true, onChange });
 
-        fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
 
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0]).toEqual([undefined, '']);
@@ -472,7 +472,7 @@ describe('TimePicker', () => {
 
         const customTrigger = screen.getByRole('button', { name: 'Select Time' });
         expect(customTrigger).toHaveClass('custom-trigger');
-        expect(getInput()).toBeNull();
+        expect(document.querySelector(`.${prefixCls} input`)).toBeNull();
         expect(getPanels()).toHaveLength(0);
 
         await userEvent.click(customTrigger);
@@ -661,7 +661,7 @@ describe('TimePicker', () => {
         const onChange = vi.fn<DateFirstOnChange>();
         renderTimePicker({ defaultValue: '10:23:15', inputReadOnly: true, showClear: true, onChange });
 
-        fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(getInput()).toHaveValue('');
     });
@@ -690,7 +690,7 @@ describe('TimePicker', () => {
 
         const [start, end] = getPanels();
         for (const slot of ['header', 'footer']) {
-            expect(within(start.querySelector<HTMLElement>(`.${scrollListCls}-${slot}`) as HTMLElement).getByRole('button', { name: 'now' })).toBeInTheDocument();
+            expect(within(getElement(`.${scrollListCls}-${slot}`, start)).getByRole('button', { name: 'now' })).toBeInTheDocument();
         }
         expect(end.querySelector(`.${scrollListCls}-header`)).toHaveTextContent(/^end header$/);
         expect(end.querySelector(`.${scrollListCls}-footer`)).toHaveTextContent(/^end footer$/);
@@ -1437,7 +1437,7 @@ describe('TimePicker 面板与属性边界', () => {
 
     it('弹层 wrapper 保留 Popover 的前缀', () => {
         renderTimePicker({ defaultValue: '10:23:15', defaultOpen: true });
-        const wrapper = document.querySelector<HTMLElement>('[x-placement]') as HTMLElement;
+        const wrapper = getElement('[x-placement]');
         expect(wrapper).toHaveClass(`${BASE_CLASS_PREFIX}-popover-wrapper`);
         expect(wrapper.querySelector(`.${prefixCls}-panel`)).not.toBeNull();
     });

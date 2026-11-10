@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconPlus } from '@fibrae/semi-icons-vue';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { Form, FormUpload } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-upload`;
@@ -20,7 +20,7 @@ describe('Form 字段（浏览器）', () => {
                 )}
             </Form>
         ));
-        const card = container.querySelector(`.${prefixCls}-picture-file-card-error`) as HTMLElement;
+        const card = getElement(`.${prefixCls}-picture-file-card-error`, container);
         expect(card).not.toBeNull();
         const style = getComputedStyle(card);
         expect(style.borderTopStyle).toBe('solid');

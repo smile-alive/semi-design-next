@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import Fixture, { type FixtureStore } from './date-picker-fixture.svelte';
 import { dp } from './test-utils';
 
@@ -14,7 +15,7 @@ function setup(init: Partial<Omit<FixtureStore, 'props'>> = {}) {
     return store;
 }
 
-const getInput = () => document.querySelector<HTMLInputElement>(`.${dp} input`) as HTMLInputElement;
+const getInput = () => getElement<HTMLInputElement>(`.${dp} input`);
 const changes = (store: FixtureStore) => store.log.filter((entry) => entry.startsWith('change'));
 
 describe('Svelte DatePicker 日历网格键盘关闭面板（浏览器）', () => {

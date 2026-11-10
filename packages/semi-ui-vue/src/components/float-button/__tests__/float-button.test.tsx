@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import FloatButtonGroup from '../float-button-group.vue';
 import FloatButton from '../float-button.vue';
 import type { FloatButtonEmits, FloatButtonGroupEmits, FloatButtonGroupItem, FloatButtonGroupSlots, FloatButtonSlots } from '../interface';
@@ -82,7 +82,7 @@ describe('FloatButton', () => {
 
     it('点击发出 click 事件，载荷是原生 MouseEvent', async () => {
         const view = render(FloatButton);
-        await fireEvent.click(view.container.querySelector(`.${prefixCls}-body`) as Element);
+        await fireEvent.click(getElement(`.${prefixCls}-body`, view.container));
         expect(view.emitted().click).toEqual([[expect.any(MouseEvent)]]);
         expect((view.emitted().click[0] as [MouseEvent])[0].type).toBe('click');
     });
@@ -150,7 +150,7 @@ describe('FloatButton', () => {
         const root = screen.getByRole('button', { name: 'Edit' });
         expect(root).toBeDisabled();
         expect(root).toHaveAttribute('aria-disabled', 'true');
-        await fireEvent.click(root.querySelector(`.${prefixCls}-body`) as Element);
+        await fireEvent.click(getElement(`.${prefixCls}-body`, root));
         expect(view.emitted().click).toBeUndefined();
     });
 
@@ -274,7 +274,7 @@ describe('FloatButtonGroup', () => {
 
     it('点击发出被点击项的 value 与事件', async () => {
         const view = render(FloatButtonGroup, { props: { items } });
-        await fireEvent.click(view.container.querySelector('[data-value="search"]') as Element);
+        await fireEvent.click(getElement('[data-value="search"]', view.container));
         expect(view.emitted().click).toEqual([['search', expect.any(MouseEvent)]]);
     });
 
@@ -293,7 +293,7 @@ describe('FloatButtonGroup', () => {
     it('忽略项以外的点击', async () => {
         const view = render(FloatButtonGroup, { props: { items } });
         await fireEvent.click(firstChild(view.container));
-        await fireEvent.click(view.container.querySelector('.semi-badge-count') as Element);
+        await fireEvent.click(getElement('.semi-badge-count', view.container));
         expect(view.emitted().click).toBeUndefined();
     });
 

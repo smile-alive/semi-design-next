@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, Select } from '@fibrae/semi-ui-react';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/react';
 import type { OptionRenderProps, SelectProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-select`;
@@ -45,9 +46,9 @@ describe('Select（浏览器）', () => {
                 <Select style={{ width: '120px' }} motion={false} optionList={options} />
             </div>
         );
-        const trigger = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const trigger = getElement(`.${prefixCls}`);
         await userEvent.click(trigger);
-        const popup = (await screen.findByRole('listbox')).closest('[popover]') as HTMLElement;
+        const popup = defined((await screen.findByRole('listbox')).closest<HTMLElement>('[popover]'));
         await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - trigger.getBoundingClientRect().left)).toBeLessThanOrEqual(1));
         screen.getByTestId('box').style.left = '300px';
         // the move is reported on the next rendering update, and headless WebKit on Linux CI has gone ~2s without one

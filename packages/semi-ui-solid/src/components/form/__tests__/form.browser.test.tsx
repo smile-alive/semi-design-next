@@ -4,6 +4,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconPlus } from '@fibrae/semi-icons-solid';
+import { getElement } from '@test/utils/solid';
 import { type FormApi, Form, FormInputGroup, FormInput, FormSwitch, FormUpload } from '..';
 import Button from '../../button';
 
@@ -72,7 +73,7 @@ describe('Form', () => {
                 </FormUpload>
             </Form>
         ));
-        const card = container.querySelector(`.${BASE_CLASS_PREFIX}-upload-picture-file-card-error`) as HTMLElement;
+        const card = getElement(`.${BASE_CLASS_PREFIX}-upload-picture-file-card-error`, container);
         expect(card).not.toBeNull();
         const style = getComputedStyle(card);
         expect(style.borderTopStyle).toBe('solid');

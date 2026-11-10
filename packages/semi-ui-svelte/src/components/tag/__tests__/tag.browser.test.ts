@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { TagCloseEvent, TagGroupProps, TagProps } from '../interface';
 import GroupFixture from './group-fixture.svelte';
 import SplitFixture from './split-fixture.svelte';
@@ -61,7 +63,7 @@ describe('Svelte Tag（浏览器）', () => {
     it('点击关闭图标后，焦点留在原位置之外的相邻标签上', async () => {
         const { tags } = setup(closable(['甲', '乙']));
         tags[0].focus();
-        await userEvent.click(tags[0].querySelector('.semi-tag-close') as HTMLElement);
+        await userEvent.click(getElement('.semi-tag-close', tags[0]));
         flushSync();
         expect(tags[0]).toHaveClass('semi-tag-invisible');
         expect(tags[1]).toHaveFocus();
@@ -141,7 +143,7 @@ describe('Svelte TagGroup（浏览器）', () => {
         const close = vi.fn<(event: TagCloseEvent, tagKey?: string | number) => void>();
         const store = createStore(popoverGroup({ onTagClose: close, tagList: ['a', 'b', 'c'].map((children) => ({ children, closable: true })), maxTagCount: 1 }));
         render(GroupFixture, { props: { store } });
-        const plus = screen.getByText('+2').closest('.semi-tag') as HTMLElement;
+        const plus = defined(screen.getByText('+2').closest<HTMLElement>('.semi-tag'));
         expect(plus.parentElement).toHaveClass('semi-tag-group');
         await userEvent.click(plus);
         const popup = await waitFor(() => {
@@ -149,7 +151,7 @@ describe('Svelte TagGroup（浏览器）', () => {
             expect(found).not.toBeNull();
             return found as HTMLElement;
         });
-        await userEvent.click(popup.querySelector('.semi-tag-close') as HTMLElement);
+        await userEvent.click(getElement('.semi-tag-close', popup));
         expect(close).toHaveBeenCalledWith(expect.any(MouseEvent), 'b');
     });
 });
@@ -164,10 +166,10 @@ describe('Svelte SplitTagGroup（浏览器）', () => {
         expect(getComputedStyle(tags[0]).borderTopRightRadius).toBe('0px');
         expect(getComputedStyle(tags[1]).borderRadius).toBe('0px');
         expect(getComputedStyle(tags[2]).borderTopRightRadius).toBe(radius);
-        expect(getComputedStyle(view.container.querySelector('.nested') as HTMLElement).borderTopLeftRadius).not.toBe('0px');
+        expect(getComputedStyle(getElement('.nested', view.container)).borderTopLeftRadius).not.toBe('0px');
         store.count = 1;
         flushSync();
-        const only = view.container.querySelector('.semi-tag') as HTMLElement;
+        const only = getElement('.semi-tag', view.container);
         expect(getComputedStyle(only).borderTopLeftRadius).toBe(radius);
         expect(getComputedStyle(only).borderTopRightRadius).toBe(radius);
     });

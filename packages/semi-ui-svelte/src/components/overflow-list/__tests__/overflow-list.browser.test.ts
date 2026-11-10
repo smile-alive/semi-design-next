@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import type { OverflowListItem } from '..';
 import OverflowListLayout from './overflow-list-layout.svelte';
 
@@ -16,7 +17,7 @@ function setup(variant: 'wide-first' | 'scroll-new' | 'flex' | 'fractional' | 'i
         Object.assign(store, next);
         flushSync();
     };
-    return { ...view, set, list: () => view.container.querySelector(`.${prefixCls}`) as HTMLElement };
+    return { ...view, set, list: () => getElement(`.${prefixCls}`, view.container) };
 }
 
 describe('OverflowList（浏览器）', () => {
@@ -76,7 +77,7 @@ describe('OverflowList（浏览器）', () => {
         await waitFor(() => expect(Number(counts()[1])).toBeGreaterThan(0));
         expect(counts()[0]).toBe('0');
 
-        const wrapper = view.container.querySelector(`.${prefixCls}-scroll-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefixCls}-scroll-wrapper`, view.container);
         wrapper.scrollLeft = wrapper.scrollWidth;
         await waitFor(() => expect(Number(counts()[0])).toBeGreaterThan(0));
         expect(counts()[1]).toBe('0');

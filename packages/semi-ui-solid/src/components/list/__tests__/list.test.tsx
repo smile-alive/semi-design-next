@@ -6,6 +6,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import List from '..';
 import Avatar from '../../avatar';
 import Button, { ButtonGroup } from '../../button';
@@ -26,7 +27,7 @@ function renderList(props: Partial<ListProps<any>> = {}) {
 }
 
 const getItems = (container: HTMLElement) => container.querySelectorAll<HTMLElement>(`.${prefixCls}-item`);
-const query = (container: HTMLElement, selector: string) => container.querySelector(selector) as HTMLElement;
+const query = (container: HTMLElement, selector: string) => getElement(selector, container);
 
 describe('List', () => {
     it('使用 JSX 的 List', () => {

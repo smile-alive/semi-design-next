@@ -7,7 +7,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconHandle } from '@fibrae/semi-icons-vue';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Transfer, {
     type TransferDataItem,
     type TransferEmits,
@@ -65,8 +65,8 @@ const dataWithGroup = [
 
 const renderTransfer = (props: Record<string, unknown> = {}, slots: Slots = {}) => render(Transfer, { props, slots });
 
-const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const getSearchInput = () => document.querySelector(`.${prefixCls}-filter input`) as HTMLInputElement;
+const getRoot = () => getElement(`.${prefixCls}`);
+const getSearchInput = () => getElement<HTMLInputElement>(`.${prefixCls}-filter input`);
 const getLeftList = () => screen.getByRole('list', { name: zh_CN.Transfer.optionList });
 const getSelectedList = () => screen.getByRole('list', { name: zh_CN.Transfer.selectedList });
 const getLeftItem = (label: string) => within(getLeftList()).getByText(label);
@@ -1179,7 +1179,7 @@ describe('Transfer treeList', () => {
         },
     ];
     const leaves = ['Shanghai', 'Chengdu', 'Chongqing', 'Osaka', 'United States', 'Canada'];
-    const getTreeRow = (label: string) => screen.getByText(label).closest('li') as HTMLElement;
+    const getTreeRow = (label: string) => defined(screen.getByText(label).closest<HTMLElement>('li'));
     type HeaderSlot = (props: TransferSourceHeaderSlotProps) => VNode[];
     const lastHeader = (spy: Mock<HeaderSlot>) => spy.mock.lastCall?.[0] as TransferSourceHeaderSlotProps;
 
@@ -1196,7 +1196,7 @@ describe('Transfer treeList', () => {
             onSearch,
         });
 
-        await userEvent.click(document.querySelector(`li.${BASE_CLASS_PREFIX}-tree-option`) as HTMLElement);
+        await userEvent.click(getElement(`li.${BASE_CLASS_PREFIX}-tree-option`));
         await userEvent.type(getSearchInput(), '1');
 
         expect(onChange).toHaveBeenCalledOnce();
@@ -1419,7 +1419,7 @@ describe('Transfer 排序、禁用与 tabindex', () => {
             </>
         ));
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-right-item-sortable-item`)).not.toBeNull());
-        const disabledTransfer = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const disabledTransfer = getElement(`.${prefixCls}`);
         const handles = within(disabledTransfer).getAllByRole('button', { name: zh_CN.Transfer.dragSort });
         expect(handles).toHaveLength(2);
         handles.forEach((handle) => expect(handle).toHaveAttribute('aria-disabled', 'true'));

@@ -5,6 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { IconArticle, IconHome } from '@fibrae/semi-icons-solid';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Breadcrumb, { type BreadcrumbItemInfo, type BreadcrumbItemProps, type BreadcrumbProps, type RouteProps } from '..';
 
 type RouteClick = NonNullable<BreadcrumbProps['onClick']>;
@@ -21,7 +22,7 @@ function getBr({ children, ...props }: BrProps = {}) {
 
 const getItemWraps = (container: HTMLElement) => container.querySelectorAll('.semi-breadcrumb-item-wrap');
 const getSeparatorTexts = (container: HTMLElement) => Array.from(container.querySelectorAll('.semi-breadcrumb-separator')).map((el) => el.textContent);
-const listOf = (container: HTMLElement) => container.querySelector('.semi-breadcrumb-list') as HTMLElement;
+const listOf = (container: HTMLElement) => getElement('.semi-breadcrumb-list', container);
 
 afterEach(() => {
     vi.restoreAllMocks();
@@ -157,7 +158,7 @@ describe('Breadcrumb', () => {
                 </>
             ),
         });
-        const item = container.querySelector('.semi-breadcrumb-item-title') as HTMLElement;
+        const item = getElement('.semi-breadcrumb-item-title', container);
         expect(item.querySelector('.path')).toHaveTextContent(/^path$/);
         expect(item.querySelector('.href')).toHaveTextContent(/^href$/);
         expect(item.querySelector('.name')).toHaveTextContent(/^test$/);
@@ -385,7 +386,7 @@ describe('Breadcrumb', () => {
             </Breadcrumb>
         ));
         expect(listOf(container).children).toHaveLength(3);
-        await userEvent.hover(container.querySelector('.semi-breadcrumb-item-more .semi-icon-more') as Element);
+        await userEvent.hover(getElement('.semi-breadcrumb-item-more .semi-icon-more', container));
         const content = await waitFor(() => {
             const popup = document.querySelector('.semi-popover-content');
             expect(popup).not.toBeNull();
@@ -405,7 +406,7 @@ describe('Breadcrumb', () => {
                 <Breadcrumb.Item href="https://semi.design/">four</Breadcrumb.Item>
             </Breadcrumb>
         ));
-        await userEvent.hover(container.querySelector('.semi-breadcrumb-item-more .semi-icon-more') as Element);
+        await userEvent.hover(getElement('.semi-breadcrumb-item-more .semi-icon-more', container));
         const link = await screen.findByText('two', { selector: '.semi-popover-content a *, .semi-popover-content a' });
         expect(fireEvent.keyDown(link, { key: ' ' })).toBe(true);
         fireEvent.keyDown(link, { key: 'Enter' });
@@ -415,7 +416,7 @@ describe('Breadcrumb', () => {
     });
 
     it('showTooltip 设置截断宽度与 tooltip', () => {
-        const width = (container: HTMLElement) => (container.querySelector('.semi-typography') as HTMLElement).style.maxWidth;
+        const width = (container: HTMLElement) => getElement('.semi-typography', container).style.maxWidth;
         const { container, unmount } = getBr();
         expect(width(container)).toBe('150px');
         unmount();

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { getData } from '@test/utils/solid';
+import { getData, defined, getElement } from '@test/utils/solid';
 import Table from '..';
 import type { ColumnProps, ColumnTitleProps, TableElement, TableProps } from '../interface';
 import { P, getActivePage, getBodyRows, getColumns, getFirstCellText, getHeaderSelectionCheckbox, getPageItems, query, queryAll } from './table-helpers';
@@ -57,7 +57,7 @@ describe('Table 行为基线', () => {
     ];
     const getNames = () => getBodyRows().map((row) => row.querySelector(`.${P}-row-cell`)?.textContent);
     const getSortStates = () => screen.getAllByRole('columnheader').map((th) => th.getAttribute('aria-sort'));
-    const ageHeader = () => screen.getByText('Age').closest('th') as HTMLElement;
+    const ageHeader = () => defined(screen.getByText('Age').closest<HTMLElement>('th'));
     const openFilter = async () => {
         await userEvent.click(query(`.${P}-thead .${P}-column-filter`));
         await waitFor(() => expect(menuShown()).toBeInTheDocument());
@@ -447,7 +447,7 @@ describe('Table 行为基线', () => {
         render(() => <Table childrenRecordName="kids" columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={data} indentSize={30} pagination={false} />);
         expect(screen.queryByText('child')).not.toBeInTheDocument();
         await userEvent.click(query(`.${P}-tbody .${P}-expand-icon`));
-        const childCell = screen.getByText('child').closest('td') as HTMLElement;
+        const childCell = defined(screen.getByText('child').closest<HTMLElement>('td'));
         expect(childCell.querySelector(`.${P}-row-indent`)).toHaveStyle({ paddingInlineStart: '60px' });
     });
 
@@ -455,14 +455,14 @@ describe('Table 行为基线', () => {
         const { container } = render(() => <Table columns={getColumns()} dataSource={getData(3)} pagination={false} scroll={{ x: 1200, y: 300 }} />);
         expect(container.querySelector(`.${P}-wrapper`)).toHaveAttribute('data-column-fixed', 'true');
         expect(container.querySelector(`.${P}-header`)).toBeInTheDocument();
-        const body = container.querySelector(`.${P}-body`) as HTMLElement;
+        const body = getElement(`.${P}-body`, container);
         expect(body).toHaveStyle({ maxHeight: '300px' });
         const heads = queryAll(`.${P}-thead .${P}-row-head`);
         expect(heads[0]).toHaveStyle({ position: 'sticky', left: '0px' });
         expect(heads[heads.length - 1]).toHaveStyle({ position: 'sticky', right: '0px' });
         Object.defineProperty(body, 'scrollLeft', { value: 1200, configurable: true });
         fireEvent.scroll(body);
-        expect((container.querySelector(`.${P}-header`) as HTMLElement).scrollLeft).toBe(1200);
+        expect(getElement(`.${P}-header`, container).scrollLeft).toBe(1200);
     });
 
     it('sticky 表头使用顶部偏移', () => {
@@ -1397,7 +1397,7 @@ describe('Table scrollToFirstRowOnChange 与 pagination.onChange', () => {
         const onPageChange = vi.fn<(currentPage: number, pageSize: number) => void>();
         const onChange = vi.fn<TableChange>();
         const { container } = render(() => <Table columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={getData(25)} pagination={{ pageSize: 10, onChange: onPageChange }} scroll={{ y: 200, scrollToFirstRowOnChange: true }} onChange={onChange} />);
-        const body = container.querySelector(`.${P}-body`) as HTMLElement;
+        const body = getElement(`.${P}-body`, container);
         body.scrollTop = 50;
         await clickPage(2);
         expect(onPageChange).toHaveBeenCalledWith(2, 10);
@@ -1451,7 +1451,7 @@ describe('Table 使用方的 class 与内部类名合并', () => {
 describe('Table 只有选择列固定', () => {
     it('写入表格可视宽度，表格按固定布局', () => {
         const { container } = render(() => <Table columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={[{ key: '1', name: 'Ann' }]} pagination={false} rowSelection={{ fixed: true }} />);
-        expect((container.querySelector(`.${P}-wrapper`) as HTMLElement).style.getPropertyValue('--semi-table-section-width')).not.toBe('');
+        expect(getElement(`.${P}-wrapper`, container).style.getPropertyValue('--semi-table-section-width')).not.toBe('');
         expect(container.querySelector('table')).toHaveClass(`${P}-fixed`);
     });
 });

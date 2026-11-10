@@ -7,7 +7,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSearch } from '@fibrae/semi-icons-vue';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Input, { type InputChangeEvent, type InputHandle, type InputProps } from '..';
 import InTooltip from './fixtures/in-tooltip.vue';
 import Model from './fixtures/model.vue';
@@ -17,9 +17,9 @@ type Change = (value: string, event: InputChangeEvent) => void;
 const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 const getValueLength = (str: string) => [...new Intl.Segmenter().segment(str)].length;
 
-const getInput = () => document.querySelector('input') as HTMLInputElement;
-const getWrapper = () => document.querySelector<HTMLElement>(`.${prefixCls}-wrapper`) as HTMLElement;
-const query = (cls: string) => document.querySelector<HTMLElement>(`.${cls}`) as HTMLElement;
+const getInput = () => getElement<HTMLInputElement>('input');
+const getWrapper = () => getElement(`.${prefixCls}-wrapper`);
+const query = (cls: string) => getElement(`.${cls}`);
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
 const getModeBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-modebtn`);
 // Testing Library's Vue fireEvent resolves to nothing, so read defaultPrevented from a dispatched event
@@ -690,7 +690,7 @@ describe('Input 行为基线', () => {
         render(Input, { slots: { prefix: () => <b>x</b>, suffix: () => [] } });
         expect(query(`${prefixCls}-prefix`)).not.toHaveClass(`${prefixCls}-prefix-text`);
         expect(query(`${prefixCls}-prefix`)).not.toHaveClass(`${prefixCls}-prefix-icon`);
-        expect(query(`${prefixCls}-suffix`)).toBeNull();
+        expect(document.querySelector(`.${prefixCls}-suffix`)).toBeNull();
         expect(getWrapper()).not.toHaveClass(`${prefixCls}-wrapper__with-suffix`);
     });
 

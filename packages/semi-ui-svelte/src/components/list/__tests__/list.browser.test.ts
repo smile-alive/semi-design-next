@@ -1,13 +1,14 @@
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import { getElement } from '@test/utils/dom/common';
 import ListDemo from './list-demo.svelte';
 
 describe('List（浏览器）', () => {
     it('点击行内任意位置会点击该项，额外按钮除外', async () => {
         const onClick = vi.fn<(event: MouseEvent) => void>();
         const { container } = render(ListDemo, { props: { mode: 'rich', dataSource: ['Title'], itemProps: { onClick, style: 'height: 80px' } } });
-        const item = container.querySelector('.semi-list-item') as HTMLElement;
+        const item = getElement('.semi-list-item', container);
         const rect = item.getBoundingClientRect();
         // A blank spot far from the title text still lands on the button, so a pointer there targets the control
         const x = rect.left + rect.width / 2;

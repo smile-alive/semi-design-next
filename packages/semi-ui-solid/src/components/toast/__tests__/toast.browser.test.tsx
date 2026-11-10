@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Toast, { ToastFactory, type ToastHookApi } from '..';
 import Button from '../../button';
 
@@ -56,7 +57,7 @@ describe('Toast', () => {
         vi.useRealTimers();
         await waitFor(() => expect(toasts()).toHaveLength(4));
 
-        await userEvent.click(toasts()[0].querySelector(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`, toasts()[0]));
         await waitFor(() => expect(toasts()).toHaveLength(3));
     });
 
@@ -77,10 +78,10 @@ describe('Toast', () => {
         const firstTop = first.getBoundingClientRect().top;
         const secondTop = second.getBoundingClientRect().top;
 
-        const content = first.querySelector(`.${prefix}-content`) as HTMLElement;
+        const content = getElement(`.${prefix}-content`, first);
         const contentTop = content.getBoundingClientRect().top;
 
-        await userEvent.click(first.querySelector(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`, first));
         const leave = await waitFor(() => {
             const animations = first.getAnimations({ subtree: true });
             expect(animations.some((a) => (a as CSSAnimation).animationName.includes('hide'))).toBe(true);
@@ -106,13 +107,13 @@ describe('Toast', () => {
         const toasts = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-zero-height-wrapper > .${prefix}`)];
         await waitFor(() => expect(toasts()).toHaveLength(2));
         const [first, second] = toasts();
-        await userEvent.hover(second.querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-content`, second));
         const wrappers = toasts().map((t) => t.parentElement as HTMLElement);
         await waitFor(() => expect(wrappers[0].getBoundingClientRect().height).toBeGreaterThan(0));
         for (const el of [...toasts(), ...wrappers]) el.getAnimations({ subtree: true }).forEach((a) => a.finish());
         const firstTop = first.getBoundingClientRect().top;
 
-        await userEvent.click(first.querySelector(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`, first));
         const transition = await waitFor(() => {
             const animation = wrappers[0].getAnimations()[0];
             expect(animation).toBeDefined();
@@ -144,10 +145,10 @@ describe('Toast', () => {
         front.forEach((t) => expect(t).not.toHaveClass(`${prefix}-stack-hidden`));
 
         toasts().forEach((t) => t.getAnimations({ subtree: true }).forEach((a) => a.finish()));
-        await userEvent.hover(front[2].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-content`, front[2]));
         await waitFor(() => expect(expandedStates().every(Boolean)).toBe(true));
         expect(oldest).not.toHaveClass(`${prefix}-stack-hidden`);
-        await userEvent.unhover(front[2].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.unhover(getElement(`.${prefix}-content`, front[2]));
         await waitFor(() => expect(oldest).toHaveClass(`${prefix}-stack-hidden`));
 
         toast.close(ids[0]);
@@ -164,7 +165,7 @@ describe('Toast', () => {
         const wrapper = (toastEl() as HTMLElement).parentElement as HTMLElement;
         expect(wrapper.style.height).toBe('');
         wrapper.getAnimations().forEach((a) => a.finish());
-        const content = (toastEl() as HTMLElement).querySelector<HTMLElement>(`.${prefix}-content`) as HTMLElement;
+        const content = getElement(`.${prefix}-content`, toastEl() as HTMLElement);
         const contentStyle = getComputedStyle(content);
         const marginBoxHeight = content.getBoundingClientRect().height + parseFloat(contentStyle.marginTop) + parseFloat(contentStyle.marginBottom);
         await waitFor(() => expect(wrapper.getBoundingClientRect().height).toBeCloseTo(marginBoxHeight, 0));
@@ -195,7 +196,7 @@ describe('Toast', () => {
         const list = () => document.querySelector<HTMLElement>(`.${prefix}-innerWrapper`);
         await waitFor(() => expect(toasts()).toHaveLength(2));
         toasts().forEach((t) => t.getAnimations({ subtree: true }).forEach((a) => a.finish()));
-        await userEvent.hover(toasts()[1].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-content`, toasts()[1]));
         await waitFor(() => expect(list()).toHaveClass(`${prefix}-innerWrapper-hover`));
 
         toast.close(first);
@@ -217,7 +218,7 @@ describe('Toast', () => {
         const toasts = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}`)];
         await waitFor(() => expect(toasts()).toHaveLength(1));
         toasts().forEach((t) => t.getAnimations({ subtree: true }).forEach((a) => a.finish()));
-        await userEvent.hover(toasts()[0].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-content`, toasts()[0]));
         toast.close(first);
         await waitFor(() => expect(toasts()).toHaveLength(0));
 
@@ -235,12 +236,12 @@ describe('Toast', () => {
         const toasts = () => document.querySelectorAll<HTMLElement>(`.${prefix}`);
         await waitFor(() => expect(toasts()).toHaveLength(2));
         toasts().forEach((t) => t.getAnimations({ subtree: true }).forEach((a) => a.finish()));
-        await userEvent.hover(toasts()[0].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-content`, toasts()[0]));
         toast.info({ content: 'third', duration: 1 });
         // asserting that nothing closes needs a fixed wait longer than the duration
         await new Promise((resolve) => setTimeout(resolve, 1500));
         expect(toasts()).toHaveLength(3);
-        await userEvent.unhover(toasts()[0].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.unhover(getElement(`.${prefix}-content`, toasts()[0]));
         await waitFor(() => expect(toasts()).toHaveLength(0), { timeout: 3000 });
     });
 
@@ -264,7 +265,7 @@ describe('Toast', () => {
             toasts()[0]
                 .getAnimations({ subtree: true })
                 .forEach((a) => a.finish());
-            (shadow.querySelector(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`) as HTMLElement).focus();
+            getElement(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`, shadow).focus();
             api.info({ content: 'second', duration: 0 });
             await waitFor(() => expect(toasts()).toHaveLength(2));
             await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -294,7 +295,7 @@ describe('Toast', () => {
         ['1', '2', '3', '4'].forEach((content) => toast.info({ content, duration: 0, stack: true }));
         const toasts = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-zero-height-wrapper > .${prefix}`)];
         await waitFor(() => expect(toasts()).toHaveLength(4));
-        const behind = toasts()[1].querySelector(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`) as HTMLElement;
+        const behind = getElement(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`, toasts()[1]);
         await tabTo(behind);
         const wrappers = toasts().map((t) => t.parentElement as HTMLElement);
         await waitFor(() => expect(wrappers.every((w) => w.classList.contains(`${prefix}-zero-height-wrapper-expanded`))).toBe(true));

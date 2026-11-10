@@ -7,7 +7,7 @@ import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import type { FileItem, UploadOnChangeProps } from '@fibrae/semi-ui-vue/upload/index';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { mockResizeObserver, render, sleep } from '@test/utils/vue';
+import { mockResizeObserver, render, sleep, getElement } from '@test/utils/vue';
 import Chat from '..';
 import type { ChatActionSlotProps, ChatAvatarSlotProps, ChatContentSlotProps, ChatDefaultActionNodeObj, ChatEmits, ChatFullChatBoxSlotProps, ChatHandle, ChatHintBoxSlotProps, ChatInputAreaSlotProps, ChatMarkdownRenderProps, ChatMessage, ChatProps, ChatTitleSlotProps } from '../interface';
 import EmptySlots from './fixtures/empty-slots.vue';
@@ -35,10 +35,10 @@ const chats: ChatMessage[] = [
 ];
 
 const boxes = (container: Element) => [...container.querySelectorAll<HTMLElement>('.semi-chat-chatBox')];
-const textarea = (container: Element) => container.querySelector('textarea') as HTMLTextAreaElement;
-const sendButton = (container: Element) => container.querySelector('.semi-chat-inputBox-sendButton') as HTMLButtonElement;
+const textarea = (container: Element) => getElement<HTMLTextAreaElement>('textarea', container);
+const sendButton = (container: Element) => getElement<HTMLButtonElement>('.semi-chat-inputBox-sendButton', container);
 const actionButtons = (box: Element) => [...box.querySelectorAll<HTMLElement>('.semi-chat-chatBox-action-btn')];
-const contentArea = (container: Element) => container.querySelector('.semi-chat-container') as HTMLElement;
+const contentArea = (container: Element) => getElement('.semi-chat-container', container);
 const root = (container: Element) => container.firstElementChild as HTMLElement;
 const filesDrag = { dataTransfer: { types: ['Files'] } };
 
@@ -332,7 +332,7 @@ describe('Chat', () => {
 
         it('#roleAvatar 渲染没有图片的头像内容，color 传给 Avatar', async () => {
             const { container } = await renderChat({ roleConfig: { ...roleConfig, assistant: { name: 'Assistant', color: 'red' } } }, { roleAvatar: ({ role }: { role: { name?: string } }) => <b class="initial">{role.name?.[0]}</b> });
-            const avatar = boxes(container)[2].querySelector('.semi-chat-chatBox-avatar') as HTMLElement;
+            const avatar = getElement('.semi-chat-chatBox-avatar', boxes(container)[2]);
             expect(avatar).toHaveClass('semi-avatar-red');
             expect(within(avatar).getByText('A')).toHaveClass('initial');
         });
@@ -387,7 +387,7 @@ describe('Chat', () => {
 
         it('点击输入区域时聚焦 textarea', async () => {
             const { container } = await renderChat();
-            await fireEvent.click(container.querySelector('.semi-chat-inputBox-inner') as Element);
+            await fireEvent.click(getElement('.semi-chat-inputBox-inner', container));
             expect(document.activeElement).toBe(textarea(container));
         });
 
@@ -498,7 +498,7 @@ describe('Chat', () => {
         it('最后一条消息生成中时显示停止按钮', async () => {
             const onStopGenerator = vi.fn<Listener<'stopGenerator'>>();
             const { container, rerender } = mount({ chats: generating, showStopGenerate: true, onStopGenerator });
-            const stop = container.querySelector('.semi-chat-action-stop') as HTMLElement;
+            const stop = getElement('.semi-chat-action-stop', container);
             expect(stop).toHaveTextContent(text.stop);
             await type(container, 'hello');
             expect(sendButton(container)).toBeDisabled();
@@ -513,7 +513,7 @@ describe('Chat', () => {
 
         it('生成结束时，持有焦点的停止按钮把焦点交给输入框', async () => {
             const { container, rerender } = mount({ chats: generating, showStopGenerate: true });
-            (container.querySelector('.semi-chat-action-stop') as HTMLElement).focus();
+            getElement('.semi-chat-action-stop', container).focus();
             await rerender({
                 chats: [...chats.slice(0, 2), { ...generating[2], status: 'complete' }],
                 showStopGenerate: true,
@@ -526,13 +526,13 @@ describe('Chat', () => {
             const onChatsChange = vi.fn<Listener<'chatsChange'>>();
             const onClear = vi.fn<Listener<'clear'>>();
             const { container, rerender } = await renderChat({ showClearContext: true, onChatsChange, onClear });
-            await fireEvent.click(container.querySelector('.semi-chat-inputBox-clearButton') as Element);
+            await fireEvent.click(getElement('.semi-chat-inputBox-clearButton', container));
             expect(onChatsChange).toHaveBeenCalledExactlyOnceWith([...chats, { role: 'divider', id: expect.any(String), createAt: Date.now() }]);
             expect(onClear).toHaveBeenCalledTimes(1);
 
             const cleared = onChatsChange.mock.calls[0][0];
             await rerender({ chats: cleared, showClearContext: true, onChatsChange, onClear });
-            await fireEvent.click(container.querySelector('.semi-chat-inputBox-clearButton') as Element);
+            await fireEvent.click(getElement('.semi-chat-inputBox-clearButton', container));
             expect(onChatsChange).toHaveBeenCalledTimes(1);
             expect(onClear).toHaveBeenCalledTimes(1);
         });
@@ -566,7 +566,7 @@ describe('Chat', () => {
 
         it('未完成的消息隐藏操作按钮', () => {
             const { container } = mount({ chats: [{ role: 'assistant', id: '1', content: 'x', status: 'loading' }] });
-            const action = container.querySelector('.semi-chat-chatBox-action') as HTMLElement;
+            const action = getElement('.semi-chat-chatBox-action', container);
             expect(action).toHaveClass('semi-chat-chatBox-action-hidden');
             expect(actionButtons(action)).toHaveLength(2);
             expect(action.querySelector('.semi-chat-chatBox-action-icon-redo')).not.toBeNull();
@@ -783,7 +783,7 @@ describe('Chat', () => {
 
         it('#uploadTip 给上传按钮加提示，且不多出 Tab 停靠点', async () => {
             const { container } = await renderChat({}, { uploadTip: () => 'tip text' });
-            const upload = container.querySelector('.semi-chat-inputBox-upload') as HTMLElement;
+            const upload = getElement('.semi-chat-inputBox-upload', container);
             const stops = upload.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
             expect([...stops]).toEqual([container.querySelector('.semi-chat-inputBox-uploadButton')]);
             await fireEvent.mouseEnter(stops[0]);
@@ -792,7 +792,7 @@ describe('Chat', () => {
         });
 
         it('uploadProps.disabled 时默认上传按钮暴露禁用状态', async () => {
-            const uploadButton = (container: Element) => container.querySelector('.semi-chat-inputBox-uploadButton') as HTMLElement;
+            const uploadButton = (container: Element) => getElement('.semi-chat-inputBox-uploadButton', container);
             const { container, rerender } = await renderChat({ uploadProps: { disabled: true } });
             expect(uploadButton(container)).toHaveAttribute('aria-disabled', 'true');
             await rerender();
@@ -802,8 +802,8 @@ describe('Chat', () => {
         it('带提示的 #uploadButton 渲染不可聚焦内容时，Upload 的添加区是唯一的 Tab 停靠点', async () => {
             const onOpenFileDialog = vi.fn<() => void>();
             const { container } = await renderChat({ uploadProps: { onOpenFileDialog } }, { uploadTip: () => 'tip text', uploadButton: () => <span data-testid="trigger">pick</span> });
-            const upload = container.querySelector('.semi-chat-inputBox-upload') as HTMLElement;
-            const addArea = upload.querySelector('.semi-upload-add') as HTMLElement;
+            const upload = getElement('.semi-chat-inputBox-upload', container);
+            const addArea = getElement('.semi-upload-add', upload);
             await waitFor(() => expect(addArea).toHaveAttribute('role', 'button'));
             expect([...upload.querySelectorAll('button, [tabindex]:not([tabindex="-1"])')]).toEqual([addArea]);
             expect(screen.getByTestId('trigger').parentElement).toHaveAttribute('data-popupid');
@@ -815,7 +815,7 @@ describe('Chat', () => {
             const { container } = await renderChat({}, { uploadTip: () => 'tip text', uploadButton: () => <button type="button">pick</button> });
             const pick = screen.getByRole('button', { name: 'pick' });
             expect(pick).toHaveAttribute('data-popupid');
-            const upload = container.querySelector('.semi-chat-inputBox-upload') as HTMLElement;
+            const upload = getElement('.semi-chat-inputBox-upload', container);
             expect([...upload.querySelectorAll('button, [tabindex]:not([tabindex="-1"])')]).toEqual([pick]);
         });
 
@@ -825,7 +825,7 @@ describe('Chat', () => {
             ['input', () => <input aria-label="pick" />],
         ])('带提示的 #uploadButton 为%s时，它是唯一的 Tab 停靠点并带 aria-describedby', async (_name, trigger) => {
             const { container } = await renderChat({}, { uploadTip: () => 'tip text', uploadButton: trigger });
-            const upload = container.querySelector('.semi-chat-inputBox-upload') as HTMLElement;
+            const upload = getElement('.semi-chat-inputBox-upload', container);
             const stops = [...upload.querySelectorAll('button, input:not([type="file"]), [tabindex]:not([tabindex="-1"])')];
             const [stop] = stops;
             expect(stops).toEqual([stop]);
@@ -843,7 +843,7 @@ describe('Chat', () => {
                     onSuccess,
                 },
             });
-            await fireEvent.change(container.querySelector('input[type="file"]') as Element, {
+            await fireEvent.change(getElement('input[type="file"]', container), {
                 target: { files: [file()] },
             });
             await waitFor(() => expect(onSuccess).toHaveBeenCalledOnce());
@@ -851,7 +851,7 @@ describe('Chat', () => {
         });
 
         it('只传 uploadTipProps 也给上传按钮加 Tooltip，两者都不传时不加', async () => {
-            const uploadButton = (container: Element) => container.querySelector('.semi-chat-inputBox-uploadButton') as HTMLElement;
+            const uploadButton = (container: Element) => getElement('.semi-chat-inputBox-uploadButton', container);
             const { container, rerender } = await renderChat({ uploadTipProps: { position: 'top' } });
             expect(uploadButton(container)).toHaveAttribute('data-popupid');
             await rerender();
@@ -860,7 +860,7 @@ describe('Chat', () => {
 
         it('挂载后增删 #uploadTip 时，Tooltip 随之出现和消失', async () => {
             const { container } = render(ToggleUploadTip);
-            const uploadButton = () => container.querySelector('.semi-chat-inputBox-uploadButton') as HTMLElement;
+            const uploadButton = () => getElement('.semi-chat-inputBox-uploadButton', container);
             expect(uploadButton()).not.toHaveAttribute('data-popupid');
             await fireEvent.click(screen.getByTestId('toggle'));
             await waitFor(() => expect(uploadButton()).toHaveAttribute('data-popupid'));
@@ -875,7 +875,7 @@ describe('Chat', () => {
                 onInputChange,
                 uploadProps: { uploadTrigger: 'custom', onChange },
             });
-            await fireEvent.change(container.querySelector('input[type="file"]') as Element, {
+            await fireEvent.change(getElement('input[type="file"]', container), {
                 target: { files: [file()] },
             });
             await waitFor(() => expect(attachmentItems(container)).toHaveLength(1));
@@ -886,7 +886,7 @@ describe('Chat', () => {
                 attachment: [expect.objectContaining({ name: 'a.txt' })],
             });
             expect(sendButton(container)).toBeDisabled();
-            await fireEvent.click(container.querySelector('.semi-chat-attachment-clear') as Element);
+            await fireEvent.click(getElement('.semi-chat-attachment-clear', container));
             expect(attachmentItems(container)).toHaveLength(0);
             expect(onInputChange).toHaveBeenLastCalledWith({ inputValue: '', attachment: [] });
         });
@@ -894,12 +894,12 @@ describe('Chat', () => {
         it('移除附件时 uploadProps.onChange 只收到一次移除后的 fileList 与被移除项', async () => {
             const onChange = vi.fn<(change: UploadOnChangeProps) => void>();
             const { container } = await renderChat({ uploadProps: { uploadTrigger: 'custom', onChange } });
-            await fireEvent.change(container.querySelector('input[type="file"]') as Element, {
+            await fireEvent.change(getElement('input[type="file"]', container), {
                 target: { files: [file()] },
             });
             await waitFor(() => expect(attachmentItems(container)).toHaveLength(1));
             onChange.mockClear();
-            await fireEvent.click(container.querySelector('.semi-chat-attachment-clear') as Element);
+            await fireEvent.click(getElement('.semi-chat-attachment-clear', container));
             expect(onChange).toHaveBeenCalledExactlyOnceWith({
                 fileList: [],
                 currentFile: expect.objectContaining({ name: 'a.txt' }),
@@ -909,7 +909,7 @@ describe('Chat', () => {
         it('拖拽经过时显示放置区，放下后上传文件', async () => {
             const { container } = await renderChat({ uploadProps: { uploadTrigger: 'custom' } });
             await fireEvent.dragOver(root(container), filesDrag);
-            const dropArea = container.querySelector('.semi-chat-dropArea') as Element;
+            const dropArea = getElement('.semi-chat-dropArea', container);
             expect(dropArea).toHaveTextContent(text.dropAreaText);
             await fireEvent.drop(dropArea, { dataTransfer: { files: [file()] } });
             expect(container.querySelector('.semi-chat-dropArea')).toBeNull();
@@ -930,7 +930,7 @@ describe('Chat', () => {
             const { container } = mount({ chats: [] });
             await fireEvent.dragOver(root(container), filesDrag);
             vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
-            await fireEvent.dragLeave(container.querySelector('.semi-chat-dropArea') as Element, {
+            await fireEvent.dragLeave(getElement('.semi-chat-dropArea', container), {
                 relatedTarget: document.body,
             });
             vi.advanceTimersByTime(10);
@@ -1123,7 +1123,7 @@ describe('Chat', () => {
             await fireEvent.scroll(area);
             vi.advanceTimersByTime(200);
             await nextTick();
-            const back = container.querySelector('.semi-chat-action-backBottom') as HTMLElement;
+            const back = getElement('.semi-chat-action-backBottom', container);
             expect(back).not.toBeNull();
             expect(back).toHaveAccessibleName(text.backToBottom);
 
@@ -1143,7 +1143,7 @@ describe('Chat', () => {
                 toFake: ['setTimeout', 'clearTimeout', 'requestAnimationFrame', 'cancelAnimationFrame'],
             });
             contentArea(container).scrollTop = 0;
-            await fireEvent.scroll(container.querySelector('.semi-chat-chatBox') as Element);
+            await fireEvent.scroll(getElement('.semi-chat-chatBox', container));
             vi.advanceTimersByTime(200);
             await nextTick();
             expect(container.querySelector('.semi-chat-action-backBottom')).toBeNull();
@@ -1239,7 +1239,7 @@ describe('Chat', () => {
             semiGlobal.config.overrideDefaultProps = { TextArea: { maxCount: 5, showClear: true, showCounter: true, showLineNumber: true } };
             const { container } = await renderChat();
             await fireEvent.update(textarea(container), 'hello');
-            const inputBox = container.querySelector('.semi-chat-inputBox') as HTMLElement;
+            const inputBox = getElement('.semi-chat-inputBox', container);
             expect(inputBox.querySelector('.semi-input-clearbtn, .semi-input-textarea-counter, .semi-input-textarea-lineNumber')).toBeNull();
         });
 
@@ -1490,7 +1490,7 @@ describe('Chat 代码审计修复', () => {
         it('拖拽放下的文件仍成为附件，且不渲染上传按钮', async () => {
             const { container } = await renderChat({ enableUpload: { clickUpload: false }, uploadProps });
             await fireEvent.dragOver(root(container), filesDrag);
-            await fireEvent.drop(container.querySelector('.semi-chat-dropArea') as Element, {
+            await fireEvent.drop(getElement('.semi-chat-dropArea', container), {
                 dataTransfer: { files: [file()] },
             });
             await waitFor(() => expect(attachmentItems(container)).toHaveLength(1));

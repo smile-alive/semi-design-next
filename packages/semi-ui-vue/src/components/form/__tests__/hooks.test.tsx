@@ -2,12 +2,12 @@
 import { defineComponent, nextTick, ref } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { ArrayField, Form, useFieldApi, useFieldState, useForm, useFormApi, useFormState, withField, type FieldHandle, type FormApi } from '..';
 import { useArrayFieldState } from '../composables';
 import { FormInput } from './fixtures/fields';
 
-const getInput = (field: string) => document.querySelector(`[x-field-id="${field}"] input`) as HTMLInputElement;
+const getInput = (field: string) => getElement<HTMLInputElement>(`[x-field-id="${field}"] input`);
 
 describe('Form hooks', () => {
     it('useFormApi 返回 getFormApi 交出的 api', async () => {

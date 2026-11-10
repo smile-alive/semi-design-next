@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { mockResizeObserver, render } from '@test/utils/vue';
+import { mockResizeObserver, render, getElement } from '@test/utils/vue';
 import { TextArea, type TextAreaChangeEvent, type TextAreaHandle, type TextAreaProps } from '..';
 import TextAreaModel from './fixtures/textarea-model.vue';
 
@@ -15,8 +15,8 @@ const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 const getValueLength = (str: string) => [...new Intl.Segmenter().segment(str)].length;
 
 const getTextArea = () => screen.getByRole<HTMLTextAreaElement>('textbox');
-const getWrapper = () => document.querySelector<HTMLElement>(`.${prefixCls}-textarea-wrapper`) as HTMLElement;
-const getCounter = () => document.querySelector<HTMLElement>(`.${prefixCls}-textarea-counter`) as HTMLElement;
+const getWrapper = () => getElement(`.${prefixCls}-textarea-wrapper`);
+const getCounter = () => getElement(`.${prefixCls}-textarea-counter`);
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // Testing Library's Vue fireEvent resolves to nothing, so read defaultPrevented from a dispatched event

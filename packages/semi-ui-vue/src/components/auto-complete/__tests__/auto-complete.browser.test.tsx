@@ -4,14 +4,14 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { clickOutside } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import AutoComplete from '..';
 import Demo from './fixtures/demo.vue';
 
 const getPopover = () => document.querySelector(`.${BASE_CLASS_PREFIX}-popover`);
 const getPopupWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 const getInput = () => screen.getByRole<HTMLInputElement>('combobox');
-const getClearBtn = () => document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement;
+const getClearBtn = () => getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`);
 
 describe('AutoComplete', () => {
     it('加载态面板由内边距和 Spin 撑开，Spin 不溢出面板', async () => {
@@ -23,7 +23,7 @@ describe('AutoComplete', () => {
             expect(el).not.toBeNull();
             return el as HTMLElement;
         });
-        const spin = wrapper.querySelector(`.${BASE_CLASS_PREFIX}-spin`) as HTMLElement;
+        const spin = getElement(`.${BASE_CLASS_PREFIX}-spin`, wrapper);
         const { top, bottom } = wrapper.getBoundingClientRect();
         const style = getComputedStyle(wrapper);
         expect(spin.getBoundingClientRect().bottom).toBeLessThanOrEqual(bottom - parseFloat(style.paddingBottom));
@@ -92,7 +92,7 @@ describe('AutoComplete', () => {
         await userEvent.click(getInput());
         await userEvent.keyboard('1');
         await screen.findByText('1@163.com');
-        const trigger = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-autocomplete`) as HTMLElement;
+        const trigger = getElement(`.${BASE_CLASS_PREFIX}-autocomplete`);
         // offsetWidth ignores the enter animation's scale transform
         expect((getPopupWrapper() as HTMLElement).offsetWidth).toBeGreaterThanOrEqual(trigger.offsetWidth);
     });

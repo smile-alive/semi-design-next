@@ -4,6 +4,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { createStore, snapshot } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { MCPConfigure } from '../index';
 import type { MCPConfigureOption, MCPConfigureProps } from '../mcp-configure/interface';
 import BindHost, { type BindHostStore } from './bind-host.svelte';
@@ -69,7 +70,7 @@ describe('Svelte MCPConfigure', () => {
     it('预设项的按钮是 aria-disabled 而不是 disabled，点击无效且仍可聚焦', async () => {
         const onStatusChange = vi.fn<NonNullable<MCPConfigureProps['onStatusChange']>>();
         setup({ onStatusChange });
-        const preset = [...document.querySelectorAll<HTMLElement>(`.${prefix}-item`)][2].querySelector('button[aria-disabled="true"]') as HTMLButtonElement;
+        const preset = getElement<HTMLButtonElement>('button[aria-disabled="true"]', [...document.querySelectorAll<HTMLElement>(`.${prefix}-item`)][2]);
         expect(preset).not.toBeNull();
         expect(preset).not.toBeDisabled();
         preset.focus();

@@ -1,7 +1,7 @@
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { page } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Annotation, { type AnnotationInfo } from '../annotation';
 import RichTextSample from './fixtures/rich-text-sample.vue';
 
@@ -30,7 +30,7 @@ describe('Sidebar 富文本编辑器', () => {
         onTestFinished(() => reset.remove());
 
         const { container } = render(RichTextSample);
-        const style = (selector: string) => getComputedStyle(container.querySelector(selector) as Element);
+        const style = (selector: string) => getComputedStyle(getElement(selector, container));
         const bodySize = parseFloat(style('p').fontSize);
         for (const tag of ['h1', 'h2', 'h3']) {
             expect(parseFloat(style(tag).fontSize)).toBeGreaterThan(bodySize);

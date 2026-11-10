@@ -5,6 +5,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { TreeSelectHandle, TreeSelectProps, TreeSelectSearchSnippetProps, TreeSelectSelectedItemSnippetProps, TreeSelectTriggerSnippetProps, TreeSelectValue } from '..';
 import type { TreeNodeData } from '../../tree';
 import { click, getClearButton, getPopover, getRoot, getRow, getRowLabels, getRows, getSearchInput, getSelectionText, getTagTexts, getTags, getTriggerInput, keyDown, optionCls, prefixCls, search, settle, treeData, treeDataWithDisabledLeaf, treeDataWithLoad, treePrefixCls } from './data';
@@ -557,7 +558,7 @@ describe('Svelte TreeSelect 搜索', () => {
         }));
         setup({ filterTreeNode: true, search: search_, showFilteredOnly: true });
         await settle();
-        const textarea = document.querySelector<HTMLTextAreaElement>('.my-search') as HTMLTextAreaElement;
+        const textarea = getElement<HTMLTextAreaElement>('.my-search');
         textarea.value = '美国';
         await fireEvent.input(textarea);
         await settle();

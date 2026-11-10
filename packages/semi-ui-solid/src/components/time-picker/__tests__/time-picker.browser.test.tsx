@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import TimePicker, { type TimePickerProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -91,7 +92,7 @@ describe('TimePicker（浏览器）', () => {
         expect(input).not.toHaveValue('');
         await userEvent.click(input);
         await userEvent.hover(input);
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as Element);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         expect(input).toHaveValue('');
     });
 
@@ -183,7 +184,7 @@ describe('TimePicker（浏览器）', () => {
             view.unmount();
             host.remove();
         });
-        const input = shadow.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', shadow);
         input.focus();
         await waitFor(() => expect(shadow.querySelector(`.${prefixCls}-panel`)).not.toBeNull());
         await userEvent.keyboard('{ArrowDown}');

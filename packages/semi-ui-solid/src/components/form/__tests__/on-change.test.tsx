@@ -2,9 +2,10 @@ import { Show, createSignal } from 'solid-js';
 import { fireEvent, render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import { type FormApi, type FormProps, type FormState, Form, FormInput, FormSelect } from '..';
 
-const getInput = () => document.querySelector(`.${BASE_CLASS_PREFIX}-input`) as HTMLInputElement;
+const getInput = () => getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input`);
 
 describe('Form-onChange', () => {
     // Known limitation: mounting a field does not call the Form's onChange

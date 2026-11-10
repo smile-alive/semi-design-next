@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Image, { ImagePreview, type ImagePreviewProps, type ImageProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-image`;
@@ -13,7 +13,7 @@ const src = 'https://example.com/a.jpg';
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const preview = () => $(`div.${prefixCls}-preview`);
 const previewImg = () => $(`.${prefixCls}-preview-image-img`);
-const thumb = (container: Element) => container.querySelector(`.${prefixCls}-img`) as HTMLImageElement;
+const thumb = (container: Element) => getElement<HTMLImageElement>(`.${prefixCls}-img`, container);
 const root = (container: Element) => container.firstElementChild as HTMLElement;
 
 const renderImage = (props: Record<string, unknown> = {}, slots: Record<string, () => unknown> = {}) => render(Image, { props: { src, ...props }, slots });

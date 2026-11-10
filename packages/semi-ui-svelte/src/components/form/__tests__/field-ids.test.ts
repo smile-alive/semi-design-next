@@ -1,6 +1,7 @@
 import { createRawSnippet, flushSync } from 'svelte';
 import { screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import { renderAnyFields, renderGroup } from './b-helpers';
 import { errorSelector, input, renderForm, settle } from './helpers';
 
@@ -13,7 +14,7 @@ function expectReferencesExist(control: Element) {
     }
 }
 
-const firstInput = (container: Element) => container.querySelector('input') as HTMLInputElement;
+const firstInput = (container: Element) => getElement<HTMLInputElement>('input', container);
 const scoped = (field: string) => `[x-field-id="${field}"]`;
 const treeData = [{ label: 'One', value: 'one', key: 'one' }];
 

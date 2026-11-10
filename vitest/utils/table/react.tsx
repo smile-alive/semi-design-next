@@ -4,13 +4,11 @@ import type { getData } from './data';
 
 export * from './data';
 
-const { Column } = Table;
-
 // any rows: the helpers serve tables whose dataSource infers different row types
 type Columns = ComponentProps<typeof Table<any>>['columns'];
 
 export function getColumns() {
-    const columns: Columns = [
+    return [
         {
             title: 'Name',
             dataIndex: 'name',
@@ -39,17 +37,16 @@ export function getColumns() {
             width: 150,
             fixed: 'right',
         },
-    ];
-    return columns;
+    ] satisfies Columns;
 }
 
 export function getJSXColumns() {
     const jsxColumns = (
         <>
-            <Column title="Name" dataIndex="name" width={150} />
-            <Column title="Age" dataIndex="age" width={150} />
-            <Column title="Address" dataIndex="address" />
-            <Column<ReturnType<typeof getData>[number]>
+            <Table.Column title="Name" dataIndex="name" width={150} />
+            <Table.Column title="Age" dataIndex="age" width={150} />
+            <Table.Column title="Address" dataIndex="address" />
+            <Table.Column<ReturnType<typeof getData>[number]>
                 render={(_text, record) => (
                     <Tooltip content={record.description}>
                         <Tag color="green">Show Info</Tag>
@@ -63,7 +60,7 @@ export function getJSXColumns() {
 }
 
 export function getGroupColumns() {
-    const columns: Columns = [
+    return [
         { dataIndex: 'city', title: 'City', width: 400, sorter: (a, b) => (a.city > b.city ? 1 : -1) },
         {
             dataIndex: 'job',
@@ -76,12 +73,11 @@ export function getGroupColumns() {
             onFilter: (value, record) => record.job && record.job.indexOf(value) === 0,
         },
         { dataIndex: 'department', title: 'Department' },
-    ];
-    return columns;
+    ] satisfies Columns;
 }
 
 export function getNestColumns() {
-    const nestColumns: Columns = [
+    return [
         {
             title: 'Base Information',
             fixed: 'left',
@@ -131,6 +127,5 @@ export function getNestColumns() {
             dataIndex: 'address',
             fixed: 'right',
         },
-    ];
-    return nestColumns;
+    ] satisfies Columns;
 }

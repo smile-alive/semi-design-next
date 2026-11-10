@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { format } from 'date-fns';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/dom/common';
 import { dp, settle, setup } from './test-utils';
 
 export async function click(element: Element) {
@@ -16,7 +17,7 @@ export function setupPinned(init: Parameters<typeof setup>[0] = {}) {
 export const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
 export const getPopups = () => document.querySelectorAll<HTMLElement>(`.${dp}[x-type]`);
 export const getPopup = () => getPopups()[0] ?? null;
-export const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-month-grid-${side}`) as HTMLElement;
+export const getPanel = (side: string) => getElement(`.${dp}-month-grid-${side}`);
 export const getWeekDays = (side: string, weekIndex: number) => getPanel(side).querySelectorAll(`.${dp}-week`)[weekIndex].querySelectorAll<HTMLElement>(`.${dp}-day`);
 export const getPresetButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-quick-control button`);
 export const getFooterButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-footer .${BASE_CLASS_PREFIX}-button`);

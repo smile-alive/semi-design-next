@@ -8,6 +8,19 @@ export function endLeaveAnimations() {
     document.querySelectorAll('[class*="-animation-hide"]').forEach((el) => el.dispatchEvent(new Event('webkitAnimationEnd', { bubbles: true })));
 }
 
+/**
+ * `querySelector` for an element the test expects to exist: fails with the selector when nothing matches. The type
+ * argument is unchecked, like `querySelector<E>`; it defaults to HTMLElement because tests mostly read `style`, `focus()`
+ * or `dataset`.
+ */
+export function getElement<K extends keyof HTMLElementTagNameMap>(selector: K, root?: ParentNode): HTMLElementTagNameMap[K];
+export function getElement<E extends Element = HTMLElement>(selector: string, root?: ParentNode): E;
+export function getElement(selector: string, root: ParentNode = document) {
+    const element = root.querySelector(selector);
+    if (!element) throw new Error(`No element matches ${selector}`);
+    return element;
+}
+
 // ARIA 1.2 roles that support aria-required; axe reports it on any other role as aria-allowed-attr
 const ARIA_REQUIRED_ROLES = new Set(['checkbox', 'columnheader', 'combobox', 'gridcell', 'listbox', 'radiogroup', 'rowheader', 'searchbox', 'spinbutton', 'switch', 'textbox', 'tree', 'treegrid']);
 const INPUT_ROLES: Record<string, string> = { checkbox: 'checkbox', radio: 'radio', number: 'spinbutton', range: 'slider', search: 'searchbox', button: 'button', submit: 'button', reset: 'button', file: 'none', hidden: 'none' };

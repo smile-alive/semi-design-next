@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Breadcrumb from '..';
 
 const prefix = `${BASE_CLASS_PREFIX}-breadcrumb`;
@@ -18,7 +19,7 @@ describe('Breadcrumb（浏览器）', () => {
             </Breadcrumb>
         ));
 
-        await userEvent.hover(container.querySelector(`.${prefix}-item-more`) as Element);
+        await userEvent.hover(getElement(`.${prefix}-item-more`, container));
         const hidden = await waitFor(() => {
             const items = document.querySelectorAll(`.${BASE_CLASS_PREFIX}-popover-content > ol > .${prefix}-item-wrap`);
             expect(items).toHaveLength(2);
@@ -38,7 +39,7 @@ describe('Breadcrumb（浏览器）', () => {
                 <Breadcrumb.Item href="https://semi.design/">第三层</Breadcrumb.Item>
             </Breadcrumb>
         ));
-        const el = container.querySelector(selector) as HTMLElement;
+        const el = getElement(selector, container);
         await tabTo(el);
         expectThemeFocusRing(el);
     });
@@ -52,7 +53,7 @@ describe('Breadcrumb（浏览器）', () => {
                 <Breadcrumb.Item href="https://semi.design/">第四层</Breadcrumb.Item>
             </Breadcrumb>
         ));
-        const more = container.querySelector(`.${prefix}-item-more`) as HTMLElement;
+        const more = getElement(`.${prefix}-item-more`, container);
         await tabTo(more);
         await userEvent.keyboard('{Tab}');
         expect(more.contains(document.activeElement)).toBe(false);

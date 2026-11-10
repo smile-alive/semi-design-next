@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { BreadcrumbProps } from '../interface';
 import BreadcrumbFixture from './breadcrumb-fixture.svelte';
 
@@ -20,14 +21,14 @@ describe('Svelte Breadcrumb 浏览器', () => {
         ['more 按钮', { maxItemCount: 2 }, `.${prefix}-item-more`],
     ])('%s 显示主题焦点环', async (_, props, selector) => {
         const view = renderLevels(props, 3, 'https://semi.design/');
-        const el = view.container.querySelector(selector) as HTMLElement;
+        const el = getElement(selector, view.container);
         await tabTo(el);
         expectThemeFocusRing(el);
     });
 
     it('popover moreType：more 按钮是唯一的停靠点，其弹层图标不是另一个停靠点', async () => {
         const view = renderLevels({ maxItemCount: 2, moreType: 'popover' }, 4, 'https://semi.design/');
-        const more = view.container.querySelector(`.${prefix}-item-more`) as HTMLElement;
+        const more = getElement(`.${prefix}-item-more`, view.container);
         await tabTo(more);
         await userEvent.keyboard('{Tab}');
         expect(more.contains(document.activeElement)).toBe(false);
@@ -35,7 +36,7 @@ describe('Svelte Breadcrumb 浏览器', () => {
 
     it('链接内的截断文字不是额外的停靠点', async () => {
         const view = renderLevels({}, 2, 'https://semi.design/');
-        const link = view.container.querySelector(`.${prefix}-item-link`) as HTMLElement;
+        const link = getElement(`.${prefix}-item-link`, view.container);
         await tabTo(link);
         await userEvent.keyboard('{Tab}');
         expect(link.contains(document.activeElement)).toBe(false);

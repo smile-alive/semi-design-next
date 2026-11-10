@@ -1,5 +1,6 @@
 import { fireEvent, render } from '@solidjs/testing-library';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
+import { getElement } from '@test/utils/solid';
 import JsonViewer from '..';
 
 // The real editor core, unlike json-viewer.test.tsx. jsdom has no Worker, blob URLs or idle callbacks: the fake worker
@@ -42,7 +43,7 @@ describe('JsonViewer 与编辑器内核', () => {
         const { container } = render(() => <JsonViewer value='{"a": "k1"}' options={{ readOnly: true, customRenderRule: [{ match: () => matching, render: () => <b>custom</b> }] }} />);
         const span = container.querySelector('b')?.parentElement;
         matching = false;
-        fireEvent.scroll(document.querySelector('.json-viewer-container') as Element);
+        fireEvent.scroll(getElement('.json-viewer-container'));
         expect(span).toBeEmptyDOMElement();
     });
 });

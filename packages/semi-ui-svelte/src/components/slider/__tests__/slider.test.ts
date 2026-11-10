@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { SliderProps } from '../interface';
 import SliderConfig from './slider-config.svelte';
 import SliderFixture from './slider-fixture.svelte';
@@ -52,11 +53,12 @@ const findTooltip = () =>
         expect(getTooltip()).not.toBeNull();
         return getTooltip();
     });
-const getHandle = () => document.querySelector<HTMLElement>(`.${prefix}-handle`) as HTMLElement;
+const getHandle = () => getElement(`.${prefix}-handle`);
 const getHandles = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-handle`)];
 const getInput = () => screen.getByRole<HTMLInputElement>('slider');
 const getInputs = () => screen.getAllByRole<HTMLInputElement>('slider');
-const query = (suffix: string) => document.querySelector<HTMLElement>(`.${prefix}-${suffix}`) as HTMLElement;
+const query = (suffix: string) => getElement(`.${prefix}-${suffix}`);
+const queryOptional = (suffix: string) => document.querySelector(`.${prefix}-${suffix}`);
 const queryAll = (suffix: string) => [...document.querySelectorAll<HTMLElement>(`.${prefix}-${suffix}`)];
 const expectValues = (...values: number[]) => expect(getInputs().map((input) => input.value)).toEqual(values.map(String));
 // A key on a native range changes its value; jsdom runs no such default action, so the input event is fired directly.
@@ -352,7 +354,7 @@ describe('Svelte Slider', () => {
         vertical.unmount();
 
         const horizontal = setup({ value: 30 });
-        const outer = horizontal.container.querySelector(`.${prefix}`) as HTMLElement;
+        const outer = getElement(`.${prefix}`, horizontal.container);
         expect(outer.firstElementChild).toHaveClass(`${prefix}-wrapper`);
     });
 
@@ -421,13 +423,13 @@ describe('Svelte Slider', () => {
 
     it('showMarkLabel 为 false 时不渲染标签，空 marks 不渲染刻度', () => {
         const view = setup({ value: 30, marks: { 20: '20c', 40: '40c' }, showMarkLabel: false });
-        expect(query('marks')).toBeNull();
+        expect(queryOptional('marks')).toBeNull();
         expect(screen.queryByText('20c')).toBeNull();
         expect(queryAll('dot')).toHaveLength(2);
         view.unmount();
         setup({ value: 30, marks: {} });
         expect(queryAll('dot')).toHaveLength(0);
-        expect(query('marks')).toBeNull();
+        expect(queryOptional('marks')).toBeNull();
     });
 
     it('verticalReverse 下的刻度与手柄方向', () => {
@@ -471,10 +473,10 @@ describe('Svelte Slider', () => {
     it('disabled 变化后禁用与恢复，禁用的 slider 忽略拖动、点击和输入', async () => {
         const change = vi.fn<OnChange>();
         const { store } = setup({ value: 30, onChange: change }, SIZED);
-        expect(query('disabled')).toBeNull();
+        expect(queryOptional('disabled')).toBeNull();
         store.props.disabled = true;
         flushSync();
-        expect(query('disabled')).not.toBeNull();
+        expect(queryOptional('disabled')).not.toBeNull();
         expect(getInput()).toBeDisabled();
         await press(getHandle(), { clientX: 0, clientY: 10 });
         expect(getHandle()).not.toHaveClass(`${prefix}-handle-clicked`);
@@ -486,7 +488,7 @@ describe('Svelte Slider', () => {
         expectValues(30);
         store.props.disabled = false;
         flushSync();
-        expect(query('disabled')).toBeNull();
+        expect(queryOptional('disabled')).toBeNull();
         await click(query('rail'), { clientX: 80 });
         expect(change).toHaveBeenCalledWith(80);
     });
@@ -1100,7 +1102,7 @@ describe('Svelte Slider 使用方监听', () => {
         const onBlur = vi.fn<() => void>();
         const store = createStore<{ props: SliderProps }>({ props: { onfocusin, onfocusout, onmouseenter, onmouseleave, onFocus, onBlur } as SliderProps });
         render(SliderFixture, { props: { store } });
-        const wrapper = document.querySelector(`.${prefix}-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefix}-wrapper`);
         await fireEvent.focusIn(wrapper);
         expect(onfocusin).toHaveBeenCalledTimes(1);
         expect(onFocus).toHaveBeenCalledTimes(1);

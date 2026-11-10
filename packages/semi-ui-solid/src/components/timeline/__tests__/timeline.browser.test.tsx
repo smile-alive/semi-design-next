@@ -1,6 +1,7 @@
 import { render } from '@solidjs/testing-library';
 import { describe, it } from 'vite-plus/test';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Timeline from '..';
 
 describe('Timeline（浏览器）', () => {
@@ -13,7 +14,7 @@ describe('Timeline（浏览器）', () => {
                 </Timeline>
             </div>
         ));
-        const content = container.querySelector('[role="button"]') as HTMLElement;
+        const content = getElement('[role="button"]', container);
         await tabTo(content);
         expectThemeFocusRing(content);
     });

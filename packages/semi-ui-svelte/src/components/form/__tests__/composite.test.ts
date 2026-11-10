@@ -1,6 +1,7 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import type { FormApi } from '../interface';
 import CompositeFixture from './composite-fixture.svelte';
 import { errorSelector, prefix, settle, typeInto } from './helpers';
@@ -76,7 +77,7 @@ describe('Svelte Form 组合组件', () => {
             .validate()
             .catch(() => undefined);
         await settle();
-        const error = container.querySelector(errorSelector) as HTMLElement;
+        const error = getElement(errorSelector, container);
         expect(error).toHaveTextContent('城市必填');
         expect(city).toHaveAttribute('aria-invalid', 'true');
         expect(city.getAttribute('aria-errormessage') ?? city.getAttribute('aria-describedby')).toContain(error.id);

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { addDays } from 'date-fns';
 import { describe, expect, it } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { click, getPanel, getPopup, getWeekDays, getYMLists, getYMSelected, ymd } from './date-picker-dom-utils';
 import { changes, dp, getDay, getInputs, getNavTitle, getSelectedDays, settle, setup, useBaseDate } from './test-utils';
 
@@ -11,8 +12,8 @@ useBaseDate();
 const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 const juneToJuly = [new Date(2021, 5, 1), new Date(2021, 6, 15)];
 
-const navButton = (side: string, name: string) => getPanel(side).querySelector(`[aria-label="${name}"]`) as HTMLElement;
-const titleButton = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month button`) as HTMLElement;
+const navButton = (side: string, name: string) => getElement(`[aria-label="${name}"]`, getPanel(side));
+const titleButton = (side: string) => getElement(`.${dp}-navigation-month button`, getPanel(side));
 const panels = (store: { log: string[] }) => store.log.filter((entry) => entry.startsWith('panel'));
 
 describe('Svelte DatePicker 面板导航', () => {
@@ -108,7 +109,7 @@ describe('Svelte DatePicker 年月面板', () => {
         const [yearList, monthList] = getYMLists();
         await click(within(monthList).getByRole('option', { name: '4月' }));
         await click(within(yearList).getByRole('option', { name: '2023' }));
-        await click((getPopup() as HTMLElement).querySelector(`.${dp}-yearmonth-header button`) as HTMLElement);
+        await click(getElement(`.${dp}-yearmonth-header button`, getPopup() as HTMLElement));
         expect(getNavTitle('left')).toBe('2023年 4月');
     });
 
@@ -146,7 +147,7 @@ describe('Svelte DatePicker 年月面板', () => {
         expect(getPanel('left').querySelector(`.${dp}-yam`)).not.toBeNull();
         expect(getPanel('right').querySelector(`.${dp}-yam`)).toBeNull();
         expect(getYMSelected(getPanel('left'))).toEqual(['2021年', '6月']);
-        await click(getPanel('left').querySelector(`.${dp}-yearmonth-header button`) as HTMLElement);
+        await click(getElement(`.${dp}-yearmonth-header button`, getPanel('left')));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'date');
     });
 });

@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { tabTo } from '@test/utils/browser';
+import { defined } from '@test/utils/solid';
 import PinCode from '..';
 
 const digit = (index: number, count = 4) => zh_CN.PinCode.digit.replace('${index}', String(index)).replace('${count}', String(count));
@@ -17,7 +18,7 @@ describe('PinCode（浏览器）', () => {
         document.body.append(probe);
         const focusBorder = getComputedStyle(probe).color;
         probe.remove();
-        expect(getComputedStyle(input(1).closest('.semi-input-wrapper') as HTMLElement).borderColor).toBe(focusBorder);
+        expect(getComputedStyle(defined(input(1).closest<HTMLElement>('.semi-input-wrapper'))).borderColor).toBe(focusBorder);
 
         await userEvent.keyboard('1');
         expect(input(2)).toHaveFocus();

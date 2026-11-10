@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { mockResizeObserver } from '@test/utils/solid';
+import { mockResizeObserver, getElement } from '@test/utils/solid';
 import Select, { type OptionRenderProps, type RenderMultipleSelectedItemFn, type RenderSingleSelectedItemFn, type SelectElement, type SelectProps, type TriggerRenderProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -50,10 +50,11 @@ const getOptionByText = (text: string) => getOptions().find((option) => option.t
 const getFocusedOption = () => document.querySelector(`.${prefixCls}-option-focused`);
 const getSelectionText = () => document.querySelector(`.${prefixCls}-selection-text`);
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)).map((tag) => tag.textContent);
-const getTriggerInput = () => document.querySelector<HTMLInputElement>(`.${prefixCls} input`) as HTMLInputElement;
-const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const getClearIcon = () => document.querySelector(`.${BASE_CLASS_PREFIX}-icon-clear`) as HTMLElement;
-const getWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
+const getTriggerInput = () => getElement<HTMLInputElement>(`.${prefixCls} input`);
+const getRoot = () => getElement(`.${prefixCls}`);
+const getClearIcon = () => getElement(`.${BASE_CLASS_PREFIX}-icon-clear`);
+const queryClearIcon = () => document.querySelector(`.${BASE_CLASS_PREFIX}-icon-clear`);
+const getWrapper = () => getElement(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 const search = (value: string, input: HTMLElement = getTriggerInput()) => fireEvent.input(input, { target: { value } });
 const keyDown = (key: string, init: KeyboardEventInit = {}, target: HTMLElement = getTrigger()) => fireEvent.keyDown(target, { key, ...init });
 const expectClosed = () => waitFor(() => expect(getOptionList()).toBeNull());
@@ -133,12 +134,12 @@ describe('Select', () => {
 
         const { unmount: unmountEmpty } = renderSelect({ showClear: true });
         await userEvent.hover(getTrigger());
-        expect(getClearIcon()).toBeNull();
+        expect(queryClearIcon()).toBeNull();
         unmountEmpty();
 
         renderSelect({ showClear: false, defaultValue: 'semi' });
         await userEvent.hover(getTrigger());
-        expect(getClearIcon()).toBeNull();
+        expect(queryClearIcon()).toBeNull();
     });
 
     it('showArrow = false', () => {
@@ -213,7 +214,7 @@ describe('Select', () => {
     it('multiple 配合 maxTagCount', async () => {
         renderSelect({ multiple: true, defaultValue: ['abc', 'hotsoon'], maxTagCount: 2, defaultOpen: true });
         await userEvent.click(getOptions()[3]);
-        const tagGroup = document.querySelector(`.${BASE_CLASS_PREFIX}-tag-group`) as HTMLElement;
+        const tagGroup = getElement(`.${BASE_CLASS_PREFIX}-tag-group`);
         expect(tagGroup.children).toHaveLength(3);
         expect(tagGroup.children[2]).toHaveTextContent(/^\+1$/);
     });
@@ -417,7 +418,7 @@ describe('Select', () => {
             content: <div class={`item-${opts.index}`}>{`${option.value}-${String(option.extra)}`}</div>,
         });
         renderSelect({ optionList: extraList, renderSelectedItem, defaultValue: ['abc', 'hotsoon'], multiple: true });
-        const items = (document.querySelector(`.${prefixCls}-content-wrapper`) as HTMLElement).children;
+        const items = getElement(`.${prefixCls}-content-wrapper`).children;
         expect(items[0]).toHaveClass('item-0');
         expect(items[0]).toHaveTextContent(/^abc-a1$/);
         expect(items[1]).toHaveClass('item-1');
@@ -791,7 +792,7 @@ describe('Select', () => {
             onChange,
             onDeselect,
         });
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag-close`));
         expect(onDeselect).toHaveBeenCalledWith('abc', expect.objectContaining({ value: 'abc', label: 'Abc' }));
         expect(onChange).toHaveBeenCalledWith(['hotsoon']);
         expect(getTagTexts()).toEqual(['Abc', 'Hotsoon']);
@@ -816,7 +817,7 @@ describe('Select', () => {
 
     it('searchPosition 为 dropdown', () => {
         renderSelect({ filter: true, searchPosition: 'dropdown', defaultOpen: true });
-        const input = document.querySelector<HTMLInputElement>(`.${prefixCls}-dropdown-search-wrapper input`) as HTMLInputElement;
+        const input = getElement<HTMLInputElement>(`.${prefixCls}-dropdown-search-wrapper input`);
         expect(input).not.toBeNull();
         expect(getTrigger()).not.toContainElement(input);
         expect(getRoot().querySelector('input')).toBeNull();
@@ -827,7 +828,7 @@ describe('Select', () => {
     it('searchPosition 为 dropdown 时 inputProps 的 onKeyDown 与 Select 的方向键导航都生效', async () => {
         const onKeyDown = vi.fn<(e: KeyboardEvent) => void>();
         renderSelect({ filter: true, searchPosition: 'dropdown', defaultOpen: true, inputProps: { onKeyDown } });
-        const input = document.querySelector<HTMLInputElement>(`.${prefixCls}-dropdown-search-wrapper input`) as HTMLInputElement;
+        const input = getElement<HTMLInputElement>(`.${prefixCls}-dropdown-search-wrapper input`);
         expect(getFocusedOption()).toHaveTextContent(/^Abc$/);
         input.focus();
         await userEvent.keyboard('{ArrowDown}');
@@ -1152,7 +1153,7 @@ describe('Select', () => {
             defaultValue: 'abc',
         });
         expect(document.querySelector('.custom-arrow')).not.toBeNull();
-        expect(screen.getByRole('button', { name: zh_CN.Select.clear })).toContainElement(document.querySelector('.custom-clear') as HTMLElement);
+        expect(screen.getByRole('button', { name: zh_CN.Select.clear })).toContainElement(getElement('.custom-clear'));
     });
 
     it('arrowIcon 为 null 时不显示箭头图标', () => {
@@ -1187,7 +1188,7 @@ describe('Select', () => {
     it('非受控模式下 removeTag', async () => {
         const onDeselect = vi.fn<NonNullable<SelectProps['onDeselect']>>();
         renderSelect({ multiple: true, defaultValue: ['abc', 'hotsoon'], onDeselect });
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag-close`));
         expect(onDeselect).toHaveBeenCalledTimes(1);
         expect(getTagTexts()).toEqual(['Hotsoon']);
     });
@@ -1500,7 +1501,7 @@ describe('Select 交互', () => {
     it('多选不可搜索时，已选 Tag 上的 Enter 与 Space 不打开下拉、不改值', async () => {
         const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
         renderSelect({ multiple: true, optionList: defaultList, defaultValue: ['hotsoon', 'abc'], onChange });
-        const getTag = () => document.querySelector<HTMLElement>(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag`) as HTMLElement;
+        const getTag = () => getElement(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag`);
         getTag().focus();
         await userEvent.keyboard('{Enter}');
         await userEvent.keyboard(' ');
@@ -2416,7 +2417,7 @@ describe('Select 子节点与边界', () => {
         const key = { 'inner-top': 'innerTopSlot', 'outer-top': 'outerTopSlot', 'outer-bottom': 'outerBottomSlot' }[slot] as string;
         renderSelect({ defaultOpen: true, [key]: <div>Slot</div> });
         expect(getFocusedOption()).not.toBeNull();
-        await userEvent.hover(document.querySelector(`.${prefixCls}-option-list-${slot}-slot`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefixCls}-option-list-${slot}-slot`));
         expect(getFocusedOption()).toBeNull();
     });
 
@@ -2433,12 +2434,12 @@ describe('Select 子节点与边界', () => {
 
     it('选中项变化时 ellipsisTrigger 保持 OverflowList 挂载', async () => {
         renderSelect({ multiple: true, ellipsisTrigger: true, maxTagCount: 2, defaultValue: ['abc', 'hotsoon', 'pipixia'], optionList: defaultList });
-        const overflowList = (document.querySelector(`.${prefixCls}-content-wrapper-collapse`) as HTMLElement).firstElementChild;
+        const overflowList = getElement(`.${prefixCls}-content-wrapper-collapse`).firstElementChild;
         expect(overflowList).not.toBeNull();
         await userEvent.click(getTrigger());
         await userEvent.click(getOptionByText('TopBuzz'));
         expect(getTagTexts()).toEqual(['Abc', 'Hotsoon', '+2']);
-        expect((document.querySelector(`.${prefixCls}-content-wrapper-collapse`) as HTMLElement).firstElementChild).toBe(overflowList);
+        expect(getElement(`.${prefixCls}-content-wrapper-collapse`).firstElementChild).toBe(overflowList);
     });
 
     it('ellipsisTrigger 时 defaultValue 变化不改变显示', () => {
@@ -2584,14 +2585,14 @@ describe('Select 子节点与边界', () => {
     it('打开的列表中按 Tab 关闭列表，焦点仍在组件内时不触发 onBlur', async () => {
         const onBlur = vi.fn<NonNullable<SelectProps['onBlur']>>();
         renderSelect({ defaultOpen: true, filter: true, optionList: defaultList, onBlur });
-        keyDown('Tab', {}, document.querySelector(`.${prefixCls}-option-list-wrapper`) as HTMLElement);
+        keyDown('Tab', {}, getElement(`.${prefixCls}-option-list-wrapper`));
         await expectClosed();
         expect(onBlur).not.toHaveBeenCalled();
     });
 
     it('面板容器上其他键不关闭', () => {
         renderSelect({ defaultOpen: true, filter: true, optionList: defaultList });
-        keyDown(' ', {}, document.querySelector(`.${prefixCls}-option-list-wrapper`) as HTMLElement);
+        keyDown(' ', {}, getElement(`.${prefixCls}-option-list-wrapper`));
         expect(getOptionList()).not.toBeNull();
     });
 
@@ -2924,7 +2925,7 @@ describe('Select 审计修复', () => {
     it('点击标签关闭时 onDeselect 收到选项的完整字段', async () => {
         const onDeselect = vi.fn<NonNullable<SelectProps['onDeselect']>>();
         renderSelect({ multiple: true, defaultValue: ['abc'], optionList: [{ value: 'abc', label: 'Abc', extra: 'x' }], onDeselect });
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag-close`));
         expect(onDeselect).toHaveBeenCalledWith('abc', expect.objectContaining({ extra: 'x' }));
     });
 
@@ -2995,7 +2996,7 @@ describe('Select 审计修复', () => {
         renderSelect({ multiple: true, filter: true, showClear: true, optionList: defaultList, onChange });
         fireEvent.click(getTrigger());
         search('ab');
-        fireEvent.click(document.querySelector(`.${prefixCls}-clear`) as HTMLElement);
+        fireEvent.click(getElement(`.${prefixCls}-clear`));
         expect(getTriggerInput()).toHaveValue('');
         expect(onChange).not.toHaveBeenCalled();
     });
@@ -3092,7 +3093,7 @@ describe('Select 回调参数与禁用、键盘细节', () => {
         renderSelect({ multiple: true, max: 1, defaultValue: ['ghost'], defaultOpen: true, optionList: defaultList, onDeselect, onExceed });
         fireEvent.click(getOptionByText('Abc'));
         expect(onExceed.mock.calls[0][0]).toEqual({ value: 'abc', label: 'Abc' });
-        fireEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        fireEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag-close`));
         expect(onDeselect.mock.calls[0][1]).toEqual({ value: 'ghost', label: 'ghost' });
     });
 
@@ -3327,7 +3328,7 @@ describe('全局 Input 默认值不给 Select 内部输入框加清除按钮与�
             Input: { showClear: true, prefix: 'mark-prefix', suffix: 'mark-suffix', insetLabel: 'mark-label', addonBefore: 'mark-before', addonAfter: 'mark-after' },
         };
         const { container } = render(() => <Select defaultValue={['a']} multiple filter optionList={[{ value: 'a', label: 'A' }]} />);
-        await userEvent.type(container.querySelector('input') as HTMLInputElement, 'a');
+        await userEvent.type(getElement<HTMLInputElement>('input', container), 'a');
         expect(container.querySelector('input')).toHaveValue('a');
         expect(document.body.textContent).not.toMatch(marker);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`)).toBeNull();

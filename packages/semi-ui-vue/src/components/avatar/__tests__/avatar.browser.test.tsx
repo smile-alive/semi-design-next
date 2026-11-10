@@ -3,7 +3,7 @@ import { waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Avatar from '../avatar.vue';
 
 const prefix = 'semi-avatar';
@@ -18,7 +18,7 @@ describe('Avatar 浏览器', () => {
         ['extra-large', '12px'],
     ])('方形描边 %s 的圆角跟随头像', (size, radius) => {
         const view = render(Avatar, { props: { border: true, shape: 'square', size, src: image } });
-        expect(getComputedStyle(view.container.querySelector(`.${prefix}-additionalBorder`) as HTMLElement).borderTopLeftRadius).toBe(radius);
+        expect(getComputedStyle(getElement(`.${prefix}-additionalBorder`, view.container)).borderTopLeftRadius).toBe(radius);
     });
 
     it.each(['image', 'text', 'element'])('%s 内容可点击头像支持键盘和主题焦点环', async (kind) => {
@@ -28,7 +28,7 @@ describe('Avatar 浏览器', () => {
             attrs: { onClick: click },
             slots: kind === 'image' ? {} : { default: () => (kind === 'text' ? 'U' : <b>icon</b>) },
         });
-        const root = view.container.querySelector(`.${prefix}`) as HTMLElement;
+        const root = getElement(`.${prefix}`, view.container);
         const button = view.getByRole('button', { name: 'avatar' });
         await userEvent.click(button);
         expect(button).toHaveFocus();
@@ -44,14 +44,14 @@ describe('Avatar 浏览器', () => {
         const view = render(Avatar, { slots: { default: () => <a href="#top" aria-label="link" /> } });
         await tabTo(view.getByRole('link'));
         expect(view.getByRole('link')).toHaveFocus();
-        expect(getComputedStyle(view.container.querySelector(`.${prefix}`) as HTMLElement).outlineStyle).toBe('none');
+        expect(getComputedStyle(getElement(`.${prefix}`, view.container)).outlineStyle).toBe('none');
     });
 
     it('Tab 进入图片头像后 Enter 激活，Escape 保留焦点与主题焦点环', async () => {
         const click = vi.fn<(event: MouseEvent) => void>();
         const view = render(Avatar, { props: { alt: 'cat', src: image }, attrs: { onClick: click } });
         const button = view.getByRole('button', { name: 'cat' });
-        const root = view.container.querySelector(`.${prefix}`) as HTMLElement;
+        const root = getElement(`.${prefix}`, view.container);
         await tabTo(button);
         expectThemeFocusRing(root);
         await userEvent.keyboard('{Enter}{Escape}{Backspace}');
@@ -64,7 +64,7 @@ describe('Avatar 浏览器', () => {
         const view = render(Avatar, { props: { src: image }, slots: { default: () => 'A very long avatar label' } });
         await view.rerender({ src: 'data:image/png;base64,AAAA' });
         await waitFor(() => expect(view.container.querySelector('img')).toBeNull());
-        const text = view.container.querySelector(`.${prefix}-content`) as HTMLElement;
+        const text = getElement(`.${prefix}-content`, view.container);
         expect(getComputedStyle(text).transform).not.toBe('matrix(1, 0, 0, 1, 0, 0)');
         await view.rerender({ src: image });
         await waitFor(() => expect(view.container.querySelector('img')).not.toBeNull());

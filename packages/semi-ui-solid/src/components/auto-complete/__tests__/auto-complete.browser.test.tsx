@@ -5,11 +5,12 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSearch } from '@fibrae/semi-icons-solid';
 import { clickOutside } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import AutoComplete from '..';
 
 const getPopover = () => document.querySelector(`.${BASE_CLASS_PREFIX}-popover`);
 const getPopupWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
-const getClearBtn = () => document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement;
+const getClearBtn = () => getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`);
 
 function Demo() {
     const [data, setData] = createSignal<string[]>([]);
@@ -26,7 +27,7 @@ describe('AutoComplete', () => {
             expect(el).not.toBeNull();
             return el as HTMLElement;
         });
-        const spin = wrapper.querySelector(`.${BASE_CLASS_PREFIX}-spin`) as HTMLElement;
+        const spin = getElement(`.${BASE_CLASS_PREFIX}-spin`, wrapper);
         const { top, bottom } = wrapper.getBoundingClientRect();
         const style = getComputedStyle(wrapper);
         expect(spin.getBoundingClientRect().bottom).toBeLessThanOrEqual(bottom - parseFloat(style.paddingBottom));
@@ -92,7 +93,7 @@ describe('AutoComplete', () => {
         render(() => <Demo />);
         await userEvent.type(screen.getByRole('combobox'), '1');
         await screen.findByText('1@163.com');
-        const trigger = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-autocomplete`) as HTMLElement;
+        const trigger = getElement(`.${BASE_CLASS_PREFIX}-autocomplete`);
         // offsetWidth ignores the enter animation's scale transform
         expect((getPopupWrapper() as HTMLElement).offsetWidth).toBeGreaterThanOrEqual(trigger.offsetWidth);
     });

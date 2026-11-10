@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Card, { CardGroup } from '..';
 import Avatar from '../../avatar';
 import Rating from '../../rating';
@@ -25,7 +26,7 @@ function queryCard(props: () => CardProps, selectors: string[]) {
     return result;
 }
 
-const query = (container: HTMLElement, selector: string) => container.querySelector(selector) as HTMLElement;
+const query = (container: HTMLElement, selector: string) => getElement(selector, container);
 
 describe('Card', () => {
     it('带 actions 的 Card', () => {

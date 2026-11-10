@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Pagination from '../index';
 import type { PaginationProps } from '../interface';
 
@@ -33,14 +33,14 @@ describe('Pagination（浏览器）', () => {
                 </div>
             ),
         });
-        const el = container.querySelector(selector) as HTMLElement;
+        const el = getElement(selector, container);
         await tabTo(el);
         expectThemeFocusRing(el);
     });
 
     it.each<[string, PaginationProps, (c: Element) => Element, number]>([
         ['the omitted pages', { currentPage: 10 }, (c) => c.querySelectorAll('[aria-label="更多"]')[1], 12],
-        ['the small page select', { currentPage: 5, size: 'small', hoverShowPageSelect: true }, (c) => c.querySelector(`.${prefix}-item-small`) as Element, 1],
+        ['the small page select', { currentPage: 5, size: 'small', hoverShowPageSelect: true }, (c) => getElement(`.${prefix}-item-small`, c), 1],
     ])('通过键盘打开 %s 并跳转到其中一页', async (_, props, getTrigger, firstPage) => {
         const view = render(Pagination, { props: { total: 200, ...props } });
         await tabTo(getTrigger(view.container) as HTMLElement);

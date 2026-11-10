@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { mockMatchMedia, render } from '@test/utils/vue';
+import { mockMatchMedia, render, getElement } from '@test/utils/vue';
 import Carousel, { type CarouselHandle } from '..';
 import Arrows from './fixtures/arrows.vue';
 import ComponentSlides from './fixtures/component-slides.vue';
@@ -19,7 +19,7 @@ type Props = Record<string, unknown>;
 type OnChange = (index: number, preIndex: number) => void;
 
 const query = (container: Element, suffix: string) => container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-carousel-${suffix}`);
-const getRoot = (container: Element) => container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-carousel`) as HTMLElement;
+const getRoot = (container: Element) => getElement(`.${BASE_CLASS_PREFIX}-carousel`, container);
 const getActiveItem = (container: Element) => query(container, 'content-item-active');
 const getIndicatorItems = (container: Element) => container.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-carousel-indicator-item`);
 const activeTitle = (container: Element) => getActiveItem(container)?.textContent;

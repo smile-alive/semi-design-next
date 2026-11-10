@@ -1,6 +1,7 @@
 import { render } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import Progress, { type ProgressProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-progress`;
@@ -18,7 +19,7 @@ function expectColorClose(actual: number[], expected: number[]) {
 
 function ringColor(props: ProgressProps) {
     const { container, unmount } = render(() => <Progress type="circle" {...props} />);
-    const color = toRgba(getComputedStyle(container.querySelector(`.${prefixCls}-circle-ring-inner`) as Element).stroke);
+    const color = toRgba(getComputedStyle(getElement(`.${prefixCls}-circle-ring-inner`, container)).stroke);
     unmount();
     return color;
 }
@@ -26,7 +27,7 @@ function ringColor(props: ProgressProps) {
 describe('Progress stroke 颜色（浏览器）', () => {
     it('Semi 色板名随主题切换变色，不需要重新渲染', () => {
         const { container } = render(() => <Progress percent={50} stroke={[{ percent: 0, color: 'blue' }]} />);
-        const inner = container.querySelector(`.${prefixCls}-track-inner`) as Element;
+        const inner = getElement(`.${prefixCls}-track-inner`, container);
         const color = () => toRgba(getComputedStyle(inner).backgroundColor);
         expect(color()).toEqual([0, 100, 250, 255]);
         document.body.setAttribute('theme-mode', 'dark');

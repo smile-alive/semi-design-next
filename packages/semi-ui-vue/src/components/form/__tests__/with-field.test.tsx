@@ -2,7 +2,7 @@
 import { defineComponent, KeepAlive, nextTick, reactive, ref } from 'vue';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { FormInputGroup, withField, type FormApi } from '..';
 import { FormInput, getInputs, renderForm } from './fixtures/fields';
 import GroupToggle from './fixtures/group-toggle.vue';
@@ -53,7 +53,7 @@ describe('withField Vue 专属行为', () => {
         const { api, container } = renderForm({}, () => <FormPlain field="plain" id="plain" label="Plain" labelPosition="inset" />);
         api().setError('plain', 'bad');
         await nextTick();
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         expect(input).not.toHaveAttribute('validatestatus');
         expect(input).not.toHaveAttribute('insetlabelid');
         expect(container.querySelector('.semi-form-field')).toHaveAttribute('x-label-pos', 'top');

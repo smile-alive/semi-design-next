@@ -6,6 +6,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { JsonViewer } from '@fibrae/semi-json-viewer-core';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Annotation from '../annotation';
 import type { CodeContentProps, CodeItemProps } from '../code';
 import type { ContainerSolidProps, Option, SideBarProps } from '../interface';
@@ -48,7 +49,7 @@ vi.mock('@fibrae/semi-json-viewer-core', () => {
     return { JsonViewer };
 });
 
-const sidebarContainer = (container: HTMLElement) => container.querySelector('.semi-sidebar-container') as HTMLElement;
+const sidebarContainer = (container: HTMLElement) => getElement('.semi-sidebar-container', container);
 const options: Option[] = [
     { name: 'Code', key: 'code' },
     { name: 'File', key: 'file' },
@@ -459,7 +460,7 @@ describe('Sidebar', () => {
     it('详情关闭按钮以 main 模式调用 onBackWard', () => {
         const onBackWard = vi.fn<NonNullable<SideBarProps['onBackWard']>>();
         const { container } = render(() => <Sidebar detailContent={codeDetail} mode="code" visible onBackWard={onBackWard} />);
-        fireEvent.click(container.querySelector('.semi-sidebar-detail-header-left button') as HTMLElement);
+        fireEvent.click(getElement('.semi-sidebar-detail-header-left button', container));
         expect(onBackWard).toHaveBeenCalledWith(expect.objectContaining({ type: 'click' }), 'main');
     });
 
@@ -468,7 +469,7 @@ describe('Sidebar', () => {
         mockClipboard(writeText);
         const onDetailContentCopy = vi.fn<NonNullable<SideBarProps['onDetailContentCopy']>>();
         const { container } = render(() => <Sidebar detailContent={codeDetail} mode="code" visible onDetailContentCopy={onDetailContentCopy} />);
-        fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as HTMLElement);
+        fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         expect(writeText).toHaveBeenCalledWith('const a = 1;');
         await waitFor(() => expect(onDetailContentCopy).toHaveBeenCalledWith(expect.objectContaining({ type: 'click' }), 'const a = 1;', true));
         await waitFor(() => expect(sidebarContainer(container)).toHaveTextContent(zh_CN.Sidebar.copySuccess));
@@ -479,7 +480,7 @@ describe('Sidebar', () => {
         mockClipboard(vi.fn<(text: string) => Promise<void>>(() => Promise.reject(new Error('denied'))));
         const onDetailContentCopy = vi.fn<NonNullable<SideBarProps['onDetailContentCopy']>>();
         const { container } = render(() => <Sidebar detailContent={codeDetail} mode="code" visible onDetailContentCopy={onDetailContentCopy} />);
-        fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as HTMLElement);
+        fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         await waitFor(() => expect(onDetailContentCopy).toHaveBeenCalledWith(expect.anything(), 'const a = 1;', false));
         expect(sidebarContainer(container).querySelector('.semi-toast-wrapper')).toBeNull();
     });
@@ -489,7 +490,7 @@ describe('Sidebar', () => {
         mockClipboard(() => new Promise<void>((done) => (resolve = done)));
         const onDetailContentCopy = vi.fn<NonNullable<SideBarProps['onDetailContentCopy']>>();
         const { container, unmount } = render(() => <Sidebar detailContent={codeDetail} mode="code" visible onDetailContentCopy={onDetailContentCopy} />);
-        fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as HTMLElement);
+        fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         unmount();
         resolve();
         await waitFor(() => expect(onDetailContentCopy).toHaveBeenCalledWith(expect.anything(), 'const a = 1;', true));
@@ -668,14 +669,14 @@ describe('Sidebar 全局默认值、ref 和透传', () => {
     it('隐藏后再显示，复制提示出现在新的容器里，隐藏时旧提示被销毁', async () => {
         mockClipboard(vi.fn<(text: string) => Promise<void>>(() => Promise.resolve()));
         const { container, rerender } = renderWith<SideBarProps>(Sidebar, { detailContent: codeDetail, mode: 'code', visible: true });
-        fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as HTMLElement);
+        fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         await waitFor(() => expect(sidebarContainer(container)).toHaveTextContent(zh_CN.Sidebar.copySuccess));
 
         rerender({ detailContent: codeDetail, mode: 'code', visible: false });
         expect(document.querySelector('.semi-toast-wrapper')).toBeNull();
 
         rerender({ detailContent: codeDetail, mode: 'code', visible: true });
-        fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as HTMLElement);
+        fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         await waitFor(() => expect(sidebarContainer(container)).toHaveTextContent(zh_CN.Sidebar.copySuccess));
     });
 
@@ -687,7 +688,7 @@ describe('Sidebar 全局默认值、ref 和透传', () => {
         fireEvent.click(option);
         expect(container.querySelector('.semi-sidebar-detail-header-left button')).toHaveFocus();
 
-        fireEvent.click(container.querySelector('.semi-sidebar-detail-header-left button') as HTMLElement);
+        fireEvent.click(getElement('.semi-sidebar-detail-header-left button', container));
         expect(screen.getByRole('button', { name: 'Code' })).toHaveFocus();
     });
 

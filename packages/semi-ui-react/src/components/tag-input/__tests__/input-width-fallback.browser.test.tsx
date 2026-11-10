@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { TagInput } from '@fibrae/semi-ui-react';
 import { disableFieldSizing } from '@test/utils/browser';
+import { getElement } from '@test/utils/react';
 
 describe('TagInput 输入框宽度（不支持 field-sizing）', () => {
     it('输入框宽度随内容增长', async () => {
@@ -31,7 +32,7 @@ describe('TagInput 输入框宽度（不支持 field-sizing）', () => {
             </div>
         );
         const input = screen.getByRole<HTMLInputElement>('textbox');
-        const tag = document.querySelector('.semi-tag') as HTMLElement;
+        const tag = getElement('.semi-tag');
         expect(input.getBoundingClientRect().top).toBeLessThan(tag.getBoundingClientRect().bottom);
 
         await userEvent.fill(input, 'W'.repeat(40));

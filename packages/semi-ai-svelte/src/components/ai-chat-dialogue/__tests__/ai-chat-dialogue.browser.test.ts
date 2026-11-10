@@ -8,6 +8,8 @@ import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import ColumnHost, { type ColumnHostStore } from './column-host.svelte';
 
 const prefix = `${BASE_CLASS_PREFIX}-ai-chat-dialogue`;
@@ -34,7 +36,7 @@ const find = <T extends Element = HTMLElement>(container: Element, selector: str
         expect(found).not.toBeNull();
         return found as T;
     });
-const findMore = (container: Element) => find(container, `.${BASE_CLASS_PREFIX}-icon-more_stroked`).then((icon) => icon.closest('button') as HTMLElement);
+const findMore = (container: Element) => find(container, `.${BASE_CLASS_PREFIX}-icon-more_stroked`).then((icon) => defined(icon.closest<HTMLElement>('button')));
 const renderDialogue = (chats: Message[], props: Record<string, unknown> = {}) => render(AIChatDialogue, { props: { chats, roleConfig, ...props } });
 
 function renderInColumn(chats: Message[], height: number) {
@@ -60,7 +62,7 @@ describe('AIChatDialogue 浏览器', () => {
     describe('跟随流式输出', () => {
         const findList = (container: Element) =>
             waitFor(() => {
-                const list = container.querySelector(`.${prefix}-list`) as HTMLElement;
+                const list = getElement(`.${prefix}-list`, container);
                 expect(list.scrollHeight).toBeGreaterThan(list.clientHeight);
                 return list;
             });
@@ -108,7 +110,7 @@ describe('AIChatDialogue 浏览器', () => {
             const chats = history(10, 20);
             const { container, update } = renderInColumn(chats, 300);
             await waitFor(() => expect(container.textContent).toContain('history 19'));
-            const list = container.querySelector(`.${prefix}-list`) as HTMLElement;
+            const list = getElement(`.${prefix}-list`, container);
             list.scrollTop = scrollTo(list);
             await nextFrame();
             const before = topOf(container, 'history 10');
@@ -123,7 +125,7 @@ describe('AIChatDialogue 浏览器', () => {
             const chats = history(10, 20);
             const { container, update } = renderInColumn(chats, 300);
             await waitFor(() => expect(container.textContent).toContain('history 19'));
-            const list = container.querySelector(`.${prefix}-list`) as HTMLElement;
+            const list = getElement(`.${prefix}-list`, container);
             list.scrollTop = 0;
             await nextFrame();
             update([...history(7, 10), ...chats]);
@@ -180,7 +182,7 @@ describe('AIChatDialogue 浏览器', () => {
         const file = { type: 'input_file', filename: 'report.pdf', file_url: 'https://example.com/r.pdf', size: '1KB' };
         const { container } = renderDialogue([{ id: '1', role: 'user', status: 'completed', content: [{ type: 'message', content: [file] }] }]);
         const card = await find(container, `.${prefix}-content-file`);
-        const info = card.querySelector(`.${prefix}-content-file-info`) as HTMLElement;
+        const info = getElement(`.${prefix}-content-file-info`, card);
         expect(info.getBoundingClientRect().bottom).toBeLessThanOrEqual(card.getBoundingClientRect().bottom - parseFloat(getComputedStyle(card).paddingBottom));
         expect(card.offsetWidth).toBe(240);
     });
@@ -251,7 +253,7 @@ describe('AIChatDialogue 浏览器', () => {
             { id: '2', role: 'assistant', content: 'second', status: 'completed' },
         ]);
         const action = await find(container, `.${prefix}-action`);
-        const copy = action.querySelector('button') as HTMLElement;
+        const copy = getElement('button', action);
         await tabTo(copy);
         expect(copy).toHaveFocus();
         expect(getComputedStyle(action).opacity).toBe('1');
@@ -273,7 +275,7 @@ describe('AIChatDialogue 浏览器', () => {
     it('键盘激活回到底部后，焦点交给消息列表而不是落到 body', async () => {
         const { container } = renderInColumn(streamingChats(2), 300);
         const list = await waitFor(() => {
-            const found = container.querySelector(`.${prefix}-list`) as HTMLElement;
+            const found = getElement(`.${prefix}-list`, container);
             expect(found.scrollHeight).toBeGreaterThan(found.clientHeight);
             return found;
         });
@@ -383,7 +385,7 @@ describe('AIChatDialogue 浏览器', () => {
     it('文件卡片聚焦时的引用图标位于卡片右端，与悬停时一致', async () => {
         const quote = await renderQuote(fileContent as Message['content']);
         await tabTo(quote);
-        const card = quote.closest(`.${prefix}-content-file`) as HTMLElement;
+        const card = defined(quote.closest<HTMLElement>(`.${prefix}-content-file`));
         const cardRight = card.getBoundingClientRect().right - parseFloat(getComputedStyle(card).paddingRight);
         expect(quote.getBoundingClientRect().right).toBeCloseTo(cardRight, 0);
     });

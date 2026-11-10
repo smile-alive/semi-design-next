@@ -5,6 +5,8 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { TreeProps } from '../interface';
 import { getNode, optionCls, spyOn, treeData } from './data';
 import TreeHost from './tree-host.svelte';
@@ -31,9 +33,9 @@ describe('Svelte Tree 键盘焦点（浏览器）', () => {
 
     it('指针点击多选树的复选框后，树本身持焦，方向键仍然有效', async () => {
         renderTree({ treeData, multiple: true });
-        await userEvent.click(getNode('yazhou').querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('yazhou')));
         expect(getNode('yazhou')).toHaveAttribute('aria-checked', 'true');
-        (document.querySelector('input[type="checkbox"]') as HTMLInputElement).focus();
+        getElement<HTMLInputElement>('input[type="checkbox"]').focus();
         expect(screen.getByRole('tree')).toHaveFocus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(activeRow()).toHaveAttribute('data-key', 'beimeizhou'));
@@ -56,7 +58,7 @@ describe('Svelte Tree 虚拟滚动（浏览器）', () => {
     it('scrollTo 实例方法将虚拟化树滚动到指定节点', async () => {
         const { handle } = renderTree({ treeData, expandAll: true, virtualize: { itemSize: 30, height: 60 } });
         await waitFor(() => expect(getNode('yazhou')).not.toBeNull());
-        expect(getNode('jianada')).toBeNull();
+        expect(document.querySelector('[role="treeitem"][data-key="jianada"]')).toBeNull();
         handle().scrollTo({ key: 'jianada', align: 'start' });
         await waitFor(() => expect(getNode('jianada')).not.toBeNull());
     });
@@ -71,10 +73,10 @@ describe('Svelte Tree 虚拟滚动（浏览器）', () => {
     it('用户滚动后渲染靠后的节点，指针点击靠后的行选中它且不滚动', async () => {
         renderTree({ treeData: manyRoots, virtualize: { height: 200, width: 300, itemSize: 30 } });
         await waitFor(() => expect(getNode('0')).not.toBeNull());
-        const list = getNode('0').closest(`.${BASE_CLASS_PREFIX}-tree-virtual-list`) as HTMLElement;
+        const list = defined(getNode('0').closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-virtual-list`));
         list.scrollTop = 30 * 80;
         await waitFor(() => expect(getNode('81')).not.toBeNull());
-        expect(getNode('0')).toBeNull();
+        expect(document.querySelector('[role="treeitem"][data-key="0"]')).toBeNull();
         const scrollTop = list.scrollTop;
         await userEvent.click(getNode('81'));
         await waitFor(() => expect(getNode('81')).toHaveAttribute('aria-selected', 'true'));

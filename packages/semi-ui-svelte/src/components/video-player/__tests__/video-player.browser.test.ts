@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, silentWavUrl, tabTo } from '@test/utils/browser';
+import { defined } from '@test/utils/function';
 import VideoPlayer from '../video-player.svelte';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-videoPlayer`;
@@ -10,7 +11,7 @@ const DURATION = 60;
 // A WAV in a video element still loads and plays, and needs no video fixture
 const src = silentWavUrl(DURATION);
 const query = <E extends Element = HTMLElement>(container: Element, selector: string) => container.querySelector<E>(selector) as E;
-const playButton = (container: Element) => query(container, '.semi-icon-play').closest('button') as HTMLButtonElement;
+const playButton = (container: Element) => defined(query(container, '.semi-icon-play').closest<HTMLButtonElement>('button'));
 
 describe('Svelte VideoPlayer（浏览器）', () => {
     it('点击播放按钮真实播放，再点击暂停', async () => {
@@ -19,7 +20,7 @@ describe('Svelte VideoPlayer（浏览器）', () => {
         await expect.poll(() => video.readyState).toBeGreaterThan(0);
         await userEvent.click(playButton(container));
         await expect.poll(() => video.paused).toBe(false);
-        await userEvent.click(query(container, '.semi-icon-pause').closest('button') as HTMLButtonElement);
+        await userEvent.click(defined(query(container, '.semi-icon-pause').closest<HTMLButtonElement>('button')));
         await expect.poll(() => video.paused).toBe(true);
     });
 

@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import Fixture from './snippets-fixture.svelte';
 
 const prefix = 'semi-typography';
@@ -22,7 +23,7 @@ describe('Svelte Typography snippet', () => {
         await vi.waitFor(() => expect(container.querySelector('.test-copy-content')).toHaveTextContent('code'));
         expect(container.querySelector('.test-copied')).toHaveTextContent('false');
         expect(container.querySelector(`.${prefix}-action-btn`)).toBeNull();
-        await fireEvent.click(container.querySelector('.test-copy-button') as Element);
+        await fireEvent.click(getElement('.test-copy-button', container));
         await vi.waitFor(() => expect(container.querySelector('.test-copied')).toHaveTextContent('true'));
     });
 
@@ -40,7 +41,7 @@ describe('Svelte Typography snippet', () => {
         ['label', 'Done'],
     ] as const)('copySuccessTip（%s）在复制成功后替代已复制提示，按钮名为 %s', async (tip, name) => {
         const { container } = render(Fixture, { props: { mode: 'copySuccessTip', tip } });
-        await fireEvent.click(container.querySelector('button') as Element);
+        await fireEvent.click(getElement('button', container));
         await vi.waitFor(() => expect(container.querySelector(`.${prefix}-action-copied`)).not.toBeNull());
         await vi.waitFor(() => expect(screen.getByRole('button', { name })).toBeInTheDocument());
     });

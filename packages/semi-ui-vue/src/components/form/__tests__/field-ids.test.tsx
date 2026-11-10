@@ -2,7 +2,7 @@
 import { nextTick, ref } from 'vue';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { Form, FormCascader, FormDatePicker, FormInputGroup, FormTreeSelect, type FieldError } from '..';
 import { FormInput, FormSelect, renderForm } from './fixtures/fields';
 
@@ -15,7 +15,7 @@ function expectReferencesExist(input: Element) {
     }
 }
 
-const firstInput = (container: Element) => container.querySelector('input') as HTMLInputElement;
+const firstInput = (container: Element) => getElement<HTMLInputElement>('input', container);
 
 describe('Form 字段 id', () => {
     it('两个 Form 有同名字段时，控件 id 不重复，label 各自指向本表单的控件', () => {

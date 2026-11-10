@@ -4,6 +4,7 @@ import { endOfWeek, startOfWeek } from 'date-fns';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { click, getPanel, getPopup, getPresetButtons, getWeekDays, getYMSelected, ymd } from './date-picker-dom-utils';
 import { changes, dp, getContainer, getDay, getInput, getInputs, getNavTitle, getRoot, getSelectedDays, settle, setup, typeText, useBaseDate } from './test-utils';
 
@@ -71,7 +72,7 @@ describe('Svelte DatePicker 面板属性', () => {
 
     it('showClear：有值时带清除按钮，关掉后没有', async () => {
         const { store } = await setup({ value: baseDate });
-        await userEvent.hover(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper`) as HTMLElement);
+        await userEvent.hover(getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`, getRoot()));
         expect(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`)).not.toBeNull();
 
         store.props.showClear = false;
@@ -94,7 +95,7 @@ describe('Svelte DatePicker 面板属性', () => {
         expect(getPanel('left').querySelector(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`)).toHaveStyle({ visibility: 'hidden' });
         expect(getPanel('right').querySelector(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`)).toHaveStyle({ visibility: 'hidden' });
 
-        await click(getPanel('left').querySelector(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`) as HTMLElement);
+        await click(getElement(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`, getPanel('left')));
         expect(getNavTitle('left')).toBe('2021年 7月');
         expect(getNavTitle('right')).toBe('2021年 8月');
     });

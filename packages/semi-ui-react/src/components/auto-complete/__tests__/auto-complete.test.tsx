@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { AutoComplete, ConfigProvider, Form, FormAutoComplete, Popover, Select, Tag } from '@fibrae/semi-ui-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import { semiGlobal } from '@fibrae/semi-ui-react/utils';
-import { countLiveListeners } from '@test/utils/react';
+import { countLiveListeners, getElement } from '@test/utils/react';
 import type { AutoCompleteProps, BaseDataItem } from '../index';
 
 type OptionSelectHandler = (option: { value?: string; label?: string }) => void;
@@ -1744,7 +1744,7 @@ describe('AutoComplete 批 6 修复', () => {
     it('使用方的 onClick 与内部点击处理一起生效', () => {
         const onClick = vi.fn<(e: ReactMouseEvent) => void>();
         const { container } = render(<AutoComplete {...commonProps} data={stringData} onClick={onClick} />);
-        fireEvent.click(container.querySelector(`.${BASE_CLASS_PREFIX}-autocomplete`) as HTMLElement);
+        fireEvent.click(getElement(`.${BASE_CLASS_PREFIX}-autocomplete`, container));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(getInput()).toHaveAttribute('aria-expanded', 'true');
     });

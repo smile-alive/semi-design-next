@@ -3,16 +3,17 @@ import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import type { OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { countLiveListeners } from '@test/utils/dom/common';
+import { countLiveListeners, getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import { defaultResponsiveMap } from '../index';
 import PopupDirection from './popup-direction.svelte';
 import RtlFixture from './rtl-fixture.svelte';
 import Tree, { type TreeStore } from './tree.svelte';
 
 function layoutOf(name: string) {
-    const root = screen.getByRole('switch', { name }).closest('.semi-switch') as HTMLElement;
+    const root = defined(screen.getByRole('switch', { name }).closest<HTMLElement>('.semi-switch'));
     const box = root.getBoundingClientRect();
-    const knob = (root.querySelector('.semi-switch-knob') as HTMLElement).getBoundingClientRect();
+    const knob = getElement('.semi-switch-knob', root).getBoundingClientRect();
     return { direction: getComputedStyle(root).direction, knobOnLeft: knob.left - box.left < box.right - knob.right };
 }
 
@@ -48,7 +49,7 @@ describe('Svelte ConfigProvider（浏览器）', () => {
 
 describe('Svelte ConfigProvider 弹层方向（浏览器）', () => {
     const directionsOf = async (name: string) => {
-        const tooltip = (await screen.findByText(`tip-${name}`)).closest('.semi-tooltip-wrapper') as HTMLElement;
+        const tooltip = defined((await screen.findByText(`tip-${name}`)).closest<HTMLElement>('.semi-tooltip-wrapper'));
         const modal = await screen.findByRole('dialog', { name: `modal-${name}` });
         return [tooltip.getAttribute('dir'), getComputedStyle(tooltip).direction, getComputedStyle(modal).direction];
     };
