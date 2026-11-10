@@ -16,8 +16,8 @@ import ApiType from '#/components/ApiType.astro';
 | defaultValue | Default value. | `ValueType` | - |
 | density | Density of the picker panel, one of `default` and `compact`. | `DensityType` | `"default"` |
 | disabled | Whether the picker is disabled. | `boolean` | - |
-| disabledDate | Decides whether a date is disabled; returning true disables it. options carries the selected rangeStart and rangeEnd of a range and the focused input as rangeInputFocus. When type is year it is called with January 1 of each year, and returning true disables that year. | `DisabledDateType` | <ApiType detail={"() => false"}>Type</ApiType> |
-| disabledTime | Time restriction configuration. Its return value is passed through to the TimePicker. | `DisabledTimeType` | <ApiType detail={"() => ({})"}>Type</ApiType> |
+| disabledDate | Decides whether a date is disabled; returning true disables it. options carries the selected rangeStart and rangeEnd of a range and the focused input as rangeInputFocus. When type is year it is called with January 1 of each year, and returning true disables that year. | `DisabledDateType` | - |
+| disabledTime | Time restriction configuration. Its return value is passed through to the TimePicker. | `DisabledTimeType` | - |
 | disabledTimePicker | Whether time selection is disabled. | `MonthsGridFoundationProps['disabledTimePicker']` | - |
 | dropdownClassName | Class name of the dropdown panel. | `string` | - |
 | dropdownStyle | Inline style of the dropdown panel. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
@@ -68,7 +68,7 @@ import ApiType from '#/components/ApiType.astro';
 | style | Inline style of the root element. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
 | syncSwitchMonth | In range selection, whether the two panels switch months together. | `boolean` | `false` |
 | timePickerOpts | Options for the time panel: `use12Hours`, `hourStep`, `minuteStep`, `secondStep`, `defaultIsAM` and `scrollItemProps`, see [TimePicker API Reference](/en-US/react/input/time-picker#API%20Reference); the panel sets the format, the value and onChange. | `DatePickerTimePickerOpts` | - |
-| timeZone | Time zone in which the value and panel dates are read and shown. A string is an IANA time zone name such as `Asia/Shanghai`; a number is passed as is to utcToZonedTime of date-fns-tz. When not set, the time zone of ConfigProvider is used. | `string \| number` | - |
+| timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get `TZDate`s, and `dateString` and the today mark follow the zone too. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
 | topSlot | Renders an extra area at the top. Takes a ReactNode. | `React.ReactNode` | - |
 | triggerRender | Renders a custom trigger. It receives the trigger props (see the type definitions below) and returns a ReactNode. | <ApiType detail={"(props: TriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
 | type | Type, one of `date`, `dateRange`, `dateTime`, `dateTimeRange`, `month`, `monthRange` and `year`. | `Type` | `"date"` |

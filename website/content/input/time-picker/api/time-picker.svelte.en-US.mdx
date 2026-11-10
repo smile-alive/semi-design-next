@@ -46,7 +46,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | Whether to show the clear button. | `boolean` | `true` |
 | size | Size of the input. | `InputSize` | - |
 | stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
-| timeZone | Time zone; falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
+| timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
 | trigger | Snippet of a custom trigger that replaces the default input; a click anywhere in it opens the panel. Receives value (the unpicked side undefined), inputValue, placeholder, disabled, componentProps and onChange (updates the input text, as typing would). | <ApiType detail={"Snippet\u003c[TimePickerTriggerRenderProps]>"}>Type</ApiType> | - |
 | type | Selection type: time for a single time, timeRange for a range. | `TimePickerType` | `"time"` |
 | use12Hours | Uses the 12-hour clock. | `boolean` | `false` |

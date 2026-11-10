@@ -492,7 +492,8 @@ describe('Svelte TimePicker 输入框', () => {
     });
 
     it('timeZone 变化时按新时区显示同一时刻', async () => {
-        const { store } = await setup({ value: '10:23:15', props: { timeZone: 'Asia/Shanghai' } });
+        // a Date is an instant; a string would stay the same wall time in the new zone
+        const { store } = await setup({ value: new Date('2023-05-22T02:23:15Z'), props: { timeZone: 'Asia/Shanghai' } });
         expect(getInput()).toHaveValue('10:23:15');
         store.props.timeZone = 'America/New_York';
         await settle();
@@ -503,7 +504,7 @@ describe('Svelte TimePicker 输入框', () => {
         const { store } = await setup({ config: { timeZone: 0 }, open: true });
         await clickItem('hour', 7);
         expect(getInput().value.startsWith('07:')).toBe(true);
-        expect(changes(store)[0]).toMatch(/^change 15:00:00 /);
+        expect(changes(store)[0]).toBe('change 07:00:00 "07:00:00"');
     });
 
     it('在 LocaleProvider 内使用其语言包', async () => {

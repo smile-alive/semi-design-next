@@ -1121,7 +1121,8 @@ describe('TimePicker', () => {
             const [value, str] = lastCall<ChangeFn>(onChange);
             strings.push(str as string);
             expect((value as Date).getUTCHours()).toBe(7);
-            expect(strings[0].startsWith('15:')).toBe(true);
+            // the `timeZone` wall time, not the 15:00 of the test zone Asia/Shanghai
+            expect(strings[0].startsWith('07:')).toBe(true);
             expect(getInput().value.startsWith('07:')).toBe(true);
             expect(getSelectedText('hour')).toBe('07时');
         });

@@ -241,7 +241,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
 
     // the first value is applied by getInitialState
     #applyDefaultPickerValue() {
-        const { defaultPickerValue, type, format, dateFnsLocale } = this.getProps();
+        const { defaultPickerValue, type, format, dateFnsLocale, timeZone } = this.getProps();
         if (defaultPickerValue === undefined) {
             return;
         }
@@ -249,6 +249,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             defaultPickerValue,
             format: format || getDefaultFormatTokenByType(type),
             dateFnsLocale,
+            timeZone,
         });
         if (isValidDate(nowDate) && isValidDate(nextDate)) {
             this.#updatePanelDetail(strings.PANEL_TYPE_LEFT, { pickerDate: nowDate });
@@ -611,6 +612,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             defaultPickerValue: props.defaultPickerValue,
             format: props.format || getDefaultFormatTokenByType(props.type),
             dateFnsLocale: props.dateFnsLocale,
+            timeZone: props.timeZone,
         });
         const state: MonthsGridFoundationState = {
             selected: new Set<string>(),

@@ -1,18 +1,19 @@
-import { TZDate } from '@date-fns/tz';
 import { format, isValid, isSameSecond, isEqual as isDateEqual, isDate, startOfDay } from 'date-fns';
 import { isEqual } from 'es-toolkit';
 import type { ValidateStatus } from '../../base/constants';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { isInnerControlActivation } from '../../utils/a11y';
-import { toIANA, utcToZonedTime, zonedTimeToUtc } from '../../utils/date-fns-extra';
+import { zonedTimeToUtc } from '../../utils/date-fns-extra';
 import isValidTimeZone from '../../utils/is-valid-time-zone';
 import type { ArrayElement } from '../../utils/type';
 import warning from '../../utils/warning';
+import { parseReference, toWallTime } from '../../utils/zoned-time';
 import { getDefaultFormatTokenByType } from './_utils/get-default-format-token';
 import getInsetInputFormatToken from './_utils/get-inset-input-format-token';
 import getInsetInputValueFromInsetInputStr from './_utils/get-inset-input-value-from-inset-input-str';
 import type { WeekStartNumber } from './_utils/get-month-table';
-import { isValidDate, isTimestamp } from './_utils/index';
+import { isValidDate } from './_utils/index';
+import parseValue from './_utils/parse-value';
 import { compatibleParse } from './_utils/parser';
 import { isMultiple, isRangeType, isRangeValueComplete, needConfirm } from './_utils/picker-type';
 import toCallbackArgs, { toCallbackDates } from './_utils/to-callback-args';
@@ -245,19 +246,8 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         return needConfirm(this.getProps());
     }
 
-    #parseValue(value: BaseValueType) {
-        const dateFnsLocale = this.adapter.getProp('dateFnsLocale');
-        let dateObj: Date;
-        if (isValidDate(value)) {
-            dateObj = value as Date;
-        } else if (typeof value === 'string') {
-            dateObj = compatibleParse(value, this.getProp('format'), undefined, dateFnsLocale);
-        } else if (isTimestamp(value)) {
-            dateObj = new Date(value);
-        } else {
-            throw new TypeError('value should be valid Date object/timestamp or string');
-        }
-        return dateObj;
+    #parseValue(value: BaseValueType, timeZone?: string | number) {
+        return parseValue(value, { format: this.getProp('format'), dateFnsLocale: this.getProp('dateFnsLocale'), timeZone });
     }
 
     #updateCachedSelectedValueFromInput(input: string) {
@@ -463,13 +453,11 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
 
     // Typed text is a wall time of the target zone and is parsed there: whether it exists must not depend on the system zone
     #getNowInTimeZone() {
-        const timeZone = this.getProp('timeZone');
-        return isValidTimeZone(timeZone) ? new TZDate(Date.now(), toIANA(timeZone)) : new Date();
+        return parseReference(this.getProp('timeZone'));
     }
 
     #toZonedValue(parsed: Date) {
-        const timeZone = this.getProp('timeZone');
-        return isValidTimeZone(timeZone) ? utcToZonedTime(parsed, timeZone) : parsed;
+        return toWallTime(parsed, this.getProp('timeZone'));
     }
 
     #parseMultipleInput(input: string, parse: (part: string) => Array<Date | null>, { needDedupe = false }: { needDedupe?: boolean } = {}) {
@@ -516,10 +504,8 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     }
 
     /**
-     * `value` is either a UTC value (the controlled prop) or a zoned value (state.value, the date picked in the
-     * computer's time zone).
-     * When the time zone changes, pass prevTimeZone to convert the old zoned value into the new zone.
-     * When the value changes, omit prevTimeZone and convert the UTC value to a zoned value.
+     * `value` is either a user value (the prop, a preset) or, with `prevTimeZone`, the wall times held in that zone,
+     * re-zoned into `timeZone` at the same instants.
      */
     protected parseWithTimezone(value: ValueType, timeZone: string | number, prevTimeZone?: string | number) {
         const result: Date[] = [];
@@ -529,12 +515,10 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
                 if (v == null || v === '') {
                     continue;
                 }
-                let parsedV = (v || v === 0) && this.#parseValue(v);
+                // NaN reaches the warning below instead of the parser, which rejects it with a TypeError
+                const parsedV = (v || v === 0) && this.#parseValue(isValidTimeZone(prevTimeZone) ? zonedTimeToUtc(v, prevTimeZone) : v, timeZone);
                 if (parsedV) {
-                    if (isValidTimeZone(prevTimeZone)) {
-                        parsedV = zonedTimeToUtc(parsedV, prevTimeZone);
-                    }
-                    result.push(isValidTimeZone(timeZone) ? utcToZonedTime(parsedV, timeZone) : parsedV);
+                    result.push(parsedV);
                 } else {
                     warning(true, `[Semi DatePicker] value cannot be parsed, value: ${String(v)}`);
                 }
@@ -740,6 +724,11 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         return fn?.(Array.isArray(date) ? dates : dates[0], ...rest) as R;
     }
 
+    /** The held value as a custom trigger gets it: TZDates of `timeZone`, like the callbacks */
+    static getTriggerValue(value: Date[], timeZone?: string | number) {
+        return toCallbackDates(value, timeZone);
+    }
+
     /** Whether a picked date is shown only once the owner passes it back as `value`: a confirm step keeps it unconfirmed instead */
     static isSelectionControlled(props: Pick<DatePickerFoundationProps, 'type' | 'needConfirm' | 'value'>) {
         return !needConfirm(props) && props.value !== undefined;
@@ -809,7 +798,8 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
 
     override handlePropsChange(prev: Partial<DatePickerFoundationProps>) {
         const { value, timeZone, open, disabled } = this.getProps();
-        if (!isEqual(value, prev.value)) {
+        if (!isEqual(value, prev.value) || (timeZone !== prev.timeZone && this.isControlledComponent())) {
+            // a controlled string is a wall time of whichever zone is current, so a new zone reads it again
             this.#syncValue(value, timeZone);
         } else if (timeZone !== prev.timeZone) {
             this.#syncValue(this.getState('value'), timeZone, prev.timeZone);
@@ -1002,7 +992,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         }
 
         if (!parsedResult || !parsedResult.length) {
-            const nowDate = new Date();
+            const nowDate = this.#toZonedValue(new Date());
             const type = this.getProp('type');
             // A year or a month is held as its first day at 00:00, as typing or picking it gives
             const thisMonth = new Date(nowDate.getFullYear(), nowDate.getMonth());

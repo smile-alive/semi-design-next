@@ -68,6 +68,8 @@ export interface DatePickerMonthProps {
     rangeInputFocus: string | boolean;
     focusRecords: FocusRecords;
     labelledby?: string;
+    /** marks today of this zone */
+    timeZone?: string | number;
 }
 
 export interface DatePickerMonthEmits {
@@ -206,6 +208,8 @@ export interface DatePickerDateInputProps {
     insetInputValue?: InsetInputValue | null;
     defaultPickerValue?: DatePickerValueType;
     density?: DatePickerDensity;
+    /** the zone whose current time fills an inset time input */
+    timeZone?: string | number;
 }
 
 export interface DatePickerDateInputEmits {

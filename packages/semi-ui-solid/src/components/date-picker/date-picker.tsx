@@ -559,7 +559,12 @@ export default function DatePicker(rawProps: DatePickerProps) {
         inputRef: keepInput('single'),
     };
 
-    const triggerRenderProps = mergeProps(inputProps, { componentProps }) as TriggerRenderProps;
+    const triggerRenderProps = mergeProps(inputProps, {
+        componentProps,
+        get value() {
+            return DatePickerFoundation.getTriggerValue(state().value, local.timeZone);
+        },
+    }) as TriggerRenderProps;
 
     const setRoot = (node: HTMLDivElement) => {
         root = node;
@@ -601,6 +606,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 rangeInputStartRef={keepInput('insetStart')}
                 rangeSeparator={local.rangeSeparator}
                 rangeSeparatorNode={local.rangeSeparatorNode}
+                timeZone={local.timeZone}
                 handleInsetDateFocus={foundation.handleInsetDateFocus}
                 handleInsetTimeFocus={foundation.handleInsetTimeFocus}
                 onInsetInputChange={foundation.handleInsetInputChange}

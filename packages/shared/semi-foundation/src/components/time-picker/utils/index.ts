@@ -3,7 +3,8 @@ import { zhCN as defaultLocale } from 'date-fns/locale/zh-CN';
 import { escapeRegExp } from 'es-toolkit';
 import { strings } from '../constants';
 
-export function parseToDate(input: string | Date | number, formatToken = strings.DEFAULT_FORMAT, dateFnsLocale = defaultLocale) {
+/** A TZDate `reference` reads a string as a wall time of its zone */
+export function parseToDate(input: string | Date | number, formatToken = strings.DEFAULT_FORMAT, dateFnsLocale = defaultLocale, reference = new Date()) {
     if (input instanceof Date) {
         return input;
     } else if (typeof input === 'number') {
@@ -11,11 +12,7 @@ export function parseToDate(input: string | Date | number, formatToken = strings
     } else if (typeof input === 'string') {
         if (input === '') return undefined;
 
-        let curDate = new Date();
-
-        curDate = parse(input, formatToken, curDate, { locale: dateFnsLocale });
-
-        return curDate;
+        return parse(input, formatToken, reference, { locale: dateFnsLocale });
     } else if (typeof input === 'undefined') {
         return undefined;
     }

@@ -132,6 +132,7 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
                     rangeInputFocus={props.rangeInputFocus ?? false}
                     rangeStart={state().rangeStart}
                     selected={state().selected}
+                    timeZone={props.timeZone}
                     weekStartsOn={props.weekStartsOn}
                     renderDate={props.renderDate}
                     renderFullDate={props.renderFullDate}

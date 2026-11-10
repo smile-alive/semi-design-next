@@ -8,7 +8,7 @@
     import useConfig from '../config-provider/use-config';
     import type { DatePickerMonthEmits, DatePickerMonthProps, DatePickerMonthSlots } from './internal';
 
-    const props = withDefaults(defineProps<DatePickerMonthProps>(), { labelledby: undefined });
+    const props = withDefaults(defineProps<DatePickerMonthProps>(), { labelledby: undefined, timeZone: undefined });
     const emit = defineEmits<DatePickerMonthEmits>();
     const slots = defineSlots<DatePickerMonthSlots>();
 
@@ -17,7 +17,7 @@
     const gridId = useId();
 
     // empty until mounted, so the server render and the hydration pass mark no day as today
-    const today = useToday();
+    const today = useToday(() => props.timeZone);
 
     const { foundation, state } = useFoundation<MonthFoundation, MonthAdapter, MonthFoundationProps, MonthFoundationState>(
         MonthFoundation,

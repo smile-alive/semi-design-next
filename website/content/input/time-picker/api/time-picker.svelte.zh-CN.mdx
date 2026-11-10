@@ -46,7 +46,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | 是否展示清除按钮。 | `boolean` | `true` |
 | size | 输入框的大小。 | `InputSize` | - |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
-| timeZone | 时区，未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | - |
+| timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，字符串为该时区的钟点。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | - |
 | trigger | 自定义触发器的 snippet，替代默认的输入框，点击其中任意位置打开面板。参数含 value（未选的一侧为 undefined）、inputValue、placeholder、disabled、componentProps 与 onChange（更新输入框文本，效果同键入）。 | <ApiType detail={"Snippet\u003c[TimePickerTriggerRenderProps]>"}>Type</ApiType> | - |
 | type | 选择类型，time 为单个时间，timeRange 为时间范围。 | `TimePickerType` | `"time"` |
 | use12Hours | 使用 12 小时制。 | `boolean` | `false` |

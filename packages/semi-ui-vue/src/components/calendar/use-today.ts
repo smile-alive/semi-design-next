@@ -1,17 +1,20 @@
-import { type ShallowRef, onBeforeUnmount, onMounted, shallowRef } from 'vue';
+import { type ComputedRef, type MaybeRefOrGetter, computed, onBeforeUnmount, onMounted, shallowRef, toValue } from 'vue';
 import { startOfDay } from 'date-fns';
 import { getCurrDate } from '@fibrae/semi-foundation/components/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+import { toWallTime } from '@fibrae/semi-foundation/utils/zoned-time';
 
-const snapshot = () => startOfDay(getCurrDate()).getTime();
-
-/** The timestamp of today's local midnight, kept current while mounted; `null` until mounted so the server render and the hydration pass mark no day */
-export default function useToday(): Readonly<ShallowRef<number | null>> {
-    const today = shallowRef<number | null>(null);
+/**
+ * The timestamp of today's midnight, held as a wall time of `timeZone` (local without one), kept current while
+ * mounted; `null` until mounted so the server render and the hydration pass mark no day
+ */
+export default function useToday(timeZone?: MaybeRefOrGetter<string | number | undefined>): ComputedRef<number | null> {
+    // bumped on every check; the computed only notifies when the day it gives changes
+    const checkedAt = shallowRef<number | null>(null);
     let stop: (() => void) | undefined;
 
     const refresh = () => {
-        today.value = snapshot();
+        checkedAt.value = Date.now();
     };
 
     onMounted(() => {
@@ -21,5 +24,5 @@ export default function useToday(): Readonly<ShallowRef<number | null>> {
 
     onBeforeUnmount(() => stop?.());
 
-    return today;
+    return computed(() => (checkedAt.value === null ? null : startOfDay(toWallTime(getCurrDate(), toValue(timeZone))).getTime()));
 }

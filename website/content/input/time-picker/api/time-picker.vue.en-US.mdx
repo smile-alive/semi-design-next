@@ -38,7 +38,7 @@ import ApiType from '#/components/ApiType.astro';
 | popupClassName | Class name of the popup. | `string` | `semiGlobalDefault("TimePicker", "popupClassName")` |
 | popupStyle | Style of the popup. | `StyleValue` | `semiGlobalDefault("TimePicker", "popupStyle")` |
 | stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `semiDefault("TimePicker", "stopPropagation", true)` |
-| timeZone | Time zone; falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | `undefined` |
+| timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | `undefined` |
 | scrollItemProps | Props passed to the columns; only cycled, mode, motion and transform, as on the ScrollItem of ScrollList. | `TimePickerScrollItemProps` | `semiGlobalDefault("TimePicker", "scrollItemProps")` |
 
 **Events**

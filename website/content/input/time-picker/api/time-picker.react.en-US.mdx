@@ -49,7 +49,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size of the input: `large`, `default` or `small`. | `InputSize` | `"default"` |
 | stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
 | style | Style of the root element. | `React.CSSProperties` | `{}` |
-| timeZone | Time zone: a number is the hour offset from UTC, a string is an IANA time zone name; defaults to the `timeZone` of ConfigProvider. | `string \| number` | - |
+| timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
 | triggerRender | Renders a custom trigger. The argument has `disabled`, `placeholder`, `value` (an array of `Date`, the unpicked side `undefined`), `inputValue`, `componentProps` (the props of the TimePicker, without `ref`) and `onChange` (updates the input text, as typing would). | <ApiType detail={"(props: TimePickerTriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
 | type | Selection type: `time` for a single time, `timeRange` for a time range. | `Type` | `"time"` |
 | use12Hours | Uses the 12-hour clock; with `true`, `format` defaults to `a h:mm:ss`. | `boolean` | `false` |

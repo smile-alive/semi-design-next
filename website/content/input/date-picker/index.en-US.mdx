@@ -310,7 +310,7 @@ Pass in `disabledDate` to disable the specified date, pass in `disabledTime` to 
 `disabledDate` and`disabledTime`, the accepted input parameters are the current date, the former returns a `boolean` value, the latter returns an [object](/en-US/react/input/time-picker#API_Reference) It will be directly passed to the `TimePicker` component.
 
 <Notice type="primary" title="Note">
-    <div>When you use timeZone, the Date of the first parameter is the time under the time zone you choose (similar to the first argument of onChange in React and of the change event in Vue)</div>
+    <div>With timeZone set, the first parameter is a `TZDate`, the same as the date the change callbacks get: `getDay()`, `getHours()` and the like read the date and clock of that time zone.</div>
 </Notice>
 
 <Demo id="disabled-date" />

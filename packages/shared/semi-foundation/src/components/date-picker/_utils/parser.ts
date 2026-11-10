@@ -1,15 +1,15 @@
-import { type Locale, isValid, parseISO, parse } from 'date-fns';
+import { type Locale, constructFrom, isValid, parseISO, parse } from 'date-fns';
 
-export function compatibleParse(value: string, formatToken?: string, baseDate?: Date, locale?: Locale): Date | null {
+/** A TZDate `baseDate` reads text without an offset as a wall time of its zone */
+export function compatibleParse(value: string, formatToken?: string, baseDate: Date = new Date(), locale?: Locale): Date | null {
     let result = null;
     if (value) {
         if (formatToken) {
-            baseDate = baseDate || new Date();
             // Callers also pass non-string values and the whole default token map; stringify them as date-fns 2 did
             result = parse(String(value), String(formatToken), baseDate, { locale });
         }
         if (!isValid(result) && typeof value === 'string') {
-            result = parseISO(value);
+            result = parseISO(value, { in: (date) => constructFrom(baseDate, date) });
         }
         if (!isValid(result)) {
             result = new Date(Date.parse(value));

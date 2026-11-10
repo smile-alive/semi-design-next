@@ -507,12 +507,13 @@ describe(`DatePicker`, () => {
     });
 
     it('切换 timeZone 时 inputValue 正确', async () => {
-        const today = set(new Date(), { hours: 22, minutes: 0, seconds: 0 });
         const [originZone, originOffset] = getRandomIANATimeZone();
         const [newZone, newOffset] = getRandomIANATimeZone();
+        // 22:00 today in the original zone: a Date is an instant
+        const pickerValue = zonedTimeToUtc(set(new Date(), { hours: 22, minutes: 0, seconds: 0 }), originZone);
         const zone = ref(originZone);
 
-        const { container } = await renderNode(() => <ConfigProvider timeZone={zone.value}>{() => <DatePicker type="dateTime" defaultOpen defaultPickerValue={today} motion={false} />}</ConfigProvider>);
+        const { container } = await renderNode(() => <ConfigProvider timeZone={zone.value}>{() => <DatePicker type="dateTime" defaultOpen defaultPickerValue={pickerValue} motion={false} />}</ConfigProvider>);
 
         const days = document.querySelectorAll(`.${dp}-day`);
         await userEvent.click(days[6]);
@@ -4410,7 +4411,7 @@ describe(`DatePicker`, () => {
     });
 
     it('monthRange 一年中只有一个月可用', async () => {
-        const disabledDate = (date?: Date) => Boolean(date && date.getFullYear() === 2022 && date.getMonth() > 0);
+        const disabledDate = (date?: Date) => Boolean(date?.getFullYear() === 2022 && date.getMonth() > 0);
         await renderPicker({
             type: 'monthRange',
             defaultValue: ['2022-06', '2022-08'],
@@ -4426,7 +4427,7 @@ describe(`DatePicker`, () => {
     });
 
     it('monthRange 两侧月份都禁用时找到可用月份', async () => {
-        const disabledDate = (date?: Date) => Boolean(date && date.getFullYear() === 2022 && (date.getMonth() === 5 || date.getMonth() === 7));
+        const disabledDate = (date?: Date) => Boolean(date?.getFullYear() === 2022 && (date.getMonth() === 5 || date.getMonth() === 7));
         const onChange = vi.fn<ChangeFn>();
         await renderPicker({
             type: 'monthRange',
@@ -4441,7 +4442,7 @@ describe(`DatePicker`, () => {
     });
 
     it('monthRange 仅对侧月份禁用', async () => {
-        const disabledDate = (date?: Date) => Boolean(date && date.getFullYear() === 2022 && date.getMonth() === 7);
+        const disabledDate = (date?: Date) => Boolean(date?.getFullYear() === 2022 && date.getMonth() === 7);
         const onChange = vi.fn<ChangeFn>();
         await renderPicker({
             type: 'monthRange',
@@ -4456,7 +4457,7 @@ describe(`DatePicker`, () => {
     });
 
     it('monthRange 在当前月份之前查找可用月份', async () => {
-        const disabledDate = (date?: Date) => Boolean(date && date.getFullYear() === 2023 && date.getMonth() >= 5);
+        const disabledDate = (date?: Date) => Boolean(date?.getFullYear() === 2023 && date.getMonth() >= 5);
         const onChange = vi.fn<ChangeFn>();
         await renderPicker({
             type: 'monthRange',

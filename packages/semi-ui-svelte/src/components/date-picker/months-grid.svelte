@@ -153,6 +153,7 @@
                                 rangeInputFocus={props.rangeInputFocus ?? false}
                                 rangeStart={states().rangeStart}
                                 selected={states().selected}
+                                timeZone={props.timeZone}
                                 weekStartsOn={props.weekStartsOn ?? 0}
                             />
                         </div>

@@ -956,7 +956,7 @@ describe('TimePicker', () => {
             expect(getInput().value).toMatch(/^07:\d\d:\d\d ~ $/);
         });
 
-        // onChange formats the UTC instant in the host zone, so a string fed back as value parses to the same instant
+        // the string is the `timeZone` wall time, which a string value is read as
         it('timeZone 下受控字符串值往返后与所选时间一致', () => {
             const onChange = vi.fn<DateFirstOnChange>();
             render(() => <Controlled feedStrings format="HH:mm" timeZone={0} onChange={onChange} />);
@@ -964,7 +964,8 @@ describe('TimePicker', () => {
 
             const [date, str] = lastCall<DateFirstOnChange>(onChange) as [Date, string];
             expect(date.getUTCHours()).toBe(7);
-            expect(str.startsWith('15:')).toBe(true);
+            // the test zone is Asia/Shanghai (UTC+8), whose clock would read 15:00
+            expect(str.startsWith('07:')).toBe(true);
             expect(getInput().value.startsWith('07:')).toBe(true);
             expect(getSelectedText('hour')).toBe('07时');
         });

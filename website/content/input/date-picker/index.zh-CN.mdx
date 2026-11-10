@@ -306,7 +306,7 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 `disabledDate` 和 `disabledTime`，接受的入参都为当前日期，前者返回一个 `boolean` 值，后者返回一个[对象](/zh-CN/react/input/time-picker#API_参考)，将会透传给 `TimePicker` 组件。
 
 <Notice type="primary" title="注意事项">
-    <div>当你使用 timeZone 时，第一个参数为你选择的时区下时间（与值变化时 React 的 onChange、Vue 的 change 事件收到的第一个参数类似）</div>
+    <div>设置 timeZone 时，第一个参数是 `TZDate`，与值变化时回调收到的日期相同：`getDay()`、`getHours()` 等读到的是该时区的日期和钟点。</div>
 </Notice>
 
 <Demo id="disabled-date" />

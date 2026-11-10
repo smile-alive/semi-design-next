@@ -98,8 +98,8 @@
                 "en-US": "Whether to stop click events on the popup from bubbling."
             },
             "timeZone": {
-                "zh-CN": "时区，未设置时依次取 ConfigProvider 的 timeZone、全局默认值。",
-                "en-US": "Time zone; falls back to the timeZone of ConfigProvider, then to the global default."
+                "zh-CN": "时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，字符串为该时区的钟点。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。",
+                "en-US": "Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default."
             },
             "scrollItemProps": {
                 "zh-CN": "传给各列的属性，只支持 cycled、mode、motion、transform，含义同 ScrollList 的 ScrollItem。",

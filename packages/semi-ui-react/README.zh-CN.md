@@ -84,4 +84,4 @@ import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
 
 `pnpm --filter @fibrae/semi-ui-react build` 执行 `vp pack`：`src` 下的 TS/TSX 逐文件输出 ESM 与类型声明到 `dist`，并产出组件 CSS 与整包 `styles.css`、`tailwind.css`。本包的类型检查读取 foundation 已构建的类型，需先构建。
 
-通用命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。组件写法见 [components](../../.agents/references/react/components.md)，修组件缺陷的流程见 [fix-component-bug](../../.agents/skills/fix-component-bug/SKILL.md)，相对上游的变化见 [release-notes](../../docs/release-notes.md)。DatePicker 的时区设计见 [contributing.md](src/components/date-picker/contributing.md)。
+通用命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。组件写法见 [components](../../.agents/references/react/components.md)，修组件缺陷的流程见 [fix-component-bug](../../.agents/skills/fix-component-bug/SKILL.md)，相对上游的变化见 [release-notes](../../docs/release-notes.md)。DatePicker、TimePicker 的时区约定见 [time-zone.md](../shared/semi-foundation/src/components/date-picker/time-zone.md)。

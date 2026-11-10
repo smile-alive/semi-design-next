@@ -62,6 +62,8 @@ export interface MonthProps {
     rangeInputFocus: string | boolean;
     focusRecords: FocusRecords;
     labelledby?: string;
+    /** marks today of this zone */
+    timeZone?: string | number;
     date?: Snippet<[DatePickerDateSnippetProps]>;
     fullDate?: Snippet<[DatePickerFullDateSnippetProps]>;
     onDayClick: (day: MonthDayInfo) => void;
@@ -168,6 +170,8 @@ export interface DateInputProps {
     insetInputValue?: InsetInputValue | null;
     defaultPickerValue?: DatePickerValueType;
     density?: DatePickerDensity;
+    /** the zone whose current time fills an inset time input */
+    timeZone?: string | number;
     controlAttrs?: Record<string, unknown>;
     prefix?: Snippet;
     insetLabel?: Snippet;
