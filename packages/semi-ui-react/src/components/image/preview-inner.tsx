@@ -112,10 +112,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const { locale } = useLocale('Image');
 
     const wrapRef = useRef<HTMLDivElement>(null);
-    const headerRef = useRef<HTMLElement>(null);
-    const footerRef = useRef<HTMLElement>(null);
-    const leftIconRef = useRef<HTMLButtonElement>(null);
-    const rightIconRef = useRef<HTMLButtonElement>(null);
+    const controlsRef = useRef(new Set<HTMLElement>());
 
     const isServerRender = useIsServerRender();
 
@@ -153,7 +150,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
             notifyDownload: (src, index) => base.getProps().onDownload?.(src, index),
             notifyDownloadError: (src) => base.getProps().onDownloadError?.(src),
             getWrap: () => wrapRef.current,
-            isValidTarget: (e) => !(e.target instanceof Node && [headerRef, footerRef, leftIconRef, rightIconRef].some((item) => item.current?.contains(e.target))),
+            isValidTarget: (e) => !(e.target instanceof Node && [...controlsRef.current].some((node) => node.contains(e.target))),
         }),
         context
     );
@@ -194,6 +191,16 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     const handleNext = () => foundation.handleSwitchImage('next');
 
+    const attachControl = (node: HTMLElement | null) => {
+        if (!node) {
+            return undefined;
+        }
+        controlsRef.current.add(node);
+        return () => {
+            controlsRef.current.delete(node);
+        };
+    };
+
     return (
         <Portal style={{ zIndex }} getPopupContainer={getPopupContainer}>
             <div
@@ -210,7 +217,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                 onMouseMove={foundation.handleMouseMove}
                 onMouseUp={(e) => foundation.handleMouseUp(e.nativeEvent)}
             >
-                <Header ref={headerRef} className={clsx(hideViewerCls)} title={title} closable={closable} titleId={titleId} renderCloseIcon={renderCloseIcon} renderHeader={renderHeader} onClose={foundation.handlePreviewClose} />
+                <Header ref={attachControl} className={clsx(hideViewerCls)} title={title} closable={closable} titleId={titleId} renderCloseIcon={renderCloseIcon} renderHeader={renderHeader} onClose={foundation.handlePreviewClose} />
                 <PreviewImage
                     alt={previewContext?.alts?.[currentIndex] ?? alt}
                     crossOrigin={crossOrigin}
@@ -228,17 +235,17 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                     onZoom={foundation.handleZoomImage}
                 />
                 {showPrev && (
-                    <button ref={leftIconRef} type="button" className={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-prev`, hideViewerCls)} aria-label={prevTip ?? locale.prevTip} onClick={handlePrev}>
+                    <button ref={attachControl} type="button" className={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-prev`, hideViewerCls)} aria-label={prevTip ?? locale.prevTip} onClick={handlePrev}>
                         {isValidElement(leftIcon) ? leftIcon : <IconArrowLeft size="large" />}
                     </button>
                 )}
                 {showNext && (
-                    <button ref={rightIconRef} type="button" className={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-next`, hideViewerCls)} aria-label={nextTip ?? locale.nextTip} onClick={handleNext}>
+                    <button ref={attachControl} type="button" className={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-next`, hideViewerCls)} aria-label={nextTip ?? locale.nextTip} onClick={handleNext}>
                         {isValidElement(rightIcon) ? rightIcon : <IconArrowRight size="large" />}
                     </button>
                 )}
                 <Footer
-                    ref={footerRef}
+                    ref={attachControl}
                     className={hideViewerCls}
                     max={toPercent(maxZoom)}
                     min={toPercent(minZoom)}

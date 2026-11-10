@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
@@ -35,7 +35,7 @@ export default function MonthCalendar(props: MonthViewProps) {
     const cardIdPrefix = useId();
     const cardRef = useRef<HTMLDivElement>(null);
     const moreButtonRef = useRef<HTMLButtonElement | null>(null);
-    const [moreButtons] = useState(() => new Map<string, HTMLButtonElement | null>());
+    const moreButtonsRef = useRef(new Map<string, HTMLButtonElement | null>());
     const rootRef = useRef<HTMLDivElement>(null);
     const cellRef = useRef<HTMLDivElement>(null);
 
@@ -92,7 +92,7 @@ export default function MonthCalendar(props: MonthViewProps) {
     // APG dialog: Esc and the close button hand focus back to "more" instead of dropping it with the card
     const closeCardToMore = (e: React.SyntheticEvent | KeyboardEvent, key: string) => {
         foundation.closeCard(e, key);
-        moreButtons.get(key)?.focus();
+        moreButtonsRef.current.get(key)?.focus();
     };
 
     const formatDayString = (date: Date, month: string, dayString: string) => {
@@ -168,7 +168,7 @@ export default function MonthCalendar(props: MonthViewProps) {
                     {formatDayString(date, month, dayString)}
                     <button
                         ref={(node) => {
-                            moreButtons.set(key, node);
+                            moreButtonsRef.current.set(key, node);
                             if (key === openCardKey) {
                                 moreButtonRef.current = node;
                             }

@@ -1,4 +1,4 @@
-import React, { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import clsx from 'clsx';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/date-picker/constants';
@@ -250,7 +250,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
     // only the rendered DOM tells whether a custom trigger has its own focus target.
     // Known limit: re-measured only when triggerRender changes; a stable one that switches between focusable and
     // plain markup needs a MutationObserver
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (typeof props.triggerRender === 'function') {
             setCustomTriggerFocusable(FocusTrapHandle.getFocusableElements(comboboxRef.current).length > 0);
         }

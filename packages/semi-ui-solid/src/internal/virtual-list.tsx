@@ -35,7 +35,6 @@ export interface VirtualListScrollArgs {
 export interface VirtualListProps<T> extends ElementProps<'div', 'children' | 'ref' | 'style' | 'onScroll'> {
     /** Called once with the handle while created, and with undefined on cleanup */
     ref?: (handle?: VirtualListHandle) => void;
-    /** The scroll container element */
     outerRef?: (element: HTMLDivElement) => void;
     /** Viewport height in pixels; the rows in view are computed from it, not measured */
     height: number;

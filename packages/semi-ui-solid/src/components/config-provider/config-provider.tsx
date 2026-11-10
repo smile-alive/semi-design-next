@@ -35,7 +35,7 @@ export default function ConfigProvider(props: ConfigProviderProps) {
             timeZone: inherited().timeZone,
             getPopupContainer: inherited().getPopupContainer,
             responsiveObserve: inherited().responsiveObserve,
-            responsiveMap: stableMap() || defaultResponsiveMap,
+            responsiveMap: stableMap() ?? defaultResponsiveMap,
             screens: screens(),
             onBreakpoint: observer.subscribe,
         }),

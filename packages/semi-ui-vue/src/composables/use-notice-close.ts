@@ -6,7 +6,7 @@ import type { AutoCloseListState } from '@fibrae/semi-foundation/base/auto-close
  * Drives a Toast's or Notice's countdown from its list; an item outside a list keeps its own countdown. A removed item
  * is unmounted at once, so the list reports no removals.
  */
-export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'handleListChange'>, list: ComputedRef<AutoCloseListState> | undefined) {
+export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'handleListChange'>, list?: ComputedRef<AutoCloseListState>) {
     if (!list) return;
 
     // Post flush: the updated duration has reached the props. The foundation tells a changed field from an untouched one

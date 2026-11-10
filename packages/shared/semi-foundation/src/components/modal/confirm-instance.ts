@@ -35,7 +35,6 @@ export default class ConfirmInstance<C extends { visible?: boolean; afterClose?:
         this.#unregister?.();
     }
 
-    /** What `Modal.confirm` and the `useModal` methods return */
     get handle() {
         return { destroy: this.close, update: this.update };
     }

@@ -258,7 +258,7 @@ describe('Table', () => {
                     { text: '名字包含"1"', value: '1' },
                     { text: '名字包含"2"', value: '2' },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
             },
             { title: 'Age', dataIndex: 'age', width: 150, sorter: (a, b) => (a.age - b.age > 0 ? 1 : -1) },
             { title: 'Address', dataIndex: 'address' },
@@ -322,7 +322,7 @@ describe('Table', () => {
                     { text: '名字包含"1"', value: '1' },
                     { text: '名字包含"2"', value: '2' },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
             },
             { title: 'Age', dataIndex: 'age', width: 150, sorter: (a, b) => (a.age - b.age > 0 ? 1 : -1) },
             { title: 'Address', dataIndex: 'address' },
@@ -337,10 +337,10 @@ describe('Table', () => {
                 return checkbox;
             })
         );
-        expect(queryAll(`.${P}-tbody .name-col`)).toHaveLength(data.filter((item) => item.name.indexOf('1') > -1).length);
+        expect(queryAll(`.${P}-tbody .name-col`)).toHaveLength(data.filter((item) => item.name.includes('1')).length);
         const newData = getData(10);
         setDataSource(newData);
-        expect(queryAll(`.${P}-tbody .name-col`)).toHaveLength(newData.filter((item) => item.name.indexOf('1') > -1).length);
+        expect(queryAll(`.${P}-tbody .name-col`)).toHaveLength(newData.filter((item) => item.name.includes('1')).length);
     });
 
     it('自定义筛选面板的 reset 把临时筛选值还原为已生效的值', async () => {
@@ -380,7 +380,7 @@ describe('Table', () => {
                     { text: '名字包含"1"', value: '1' },
                     { text: '名字包含"2"', value: '2' },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
             },
             { title: 'Age', dataIndex: 'age', width: 150, sorter: true },
             { title: 'Address', dataIndex: 'address' },
@@ -691,7 +691,7 @@ describe('Table', () => {
                     { text: '名字包含"1"', value: '1' },
                     { text: '名字包含"2"', value: '2' },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
                 sorter: (a, b) => a.name.length - b.name.length,
                 useFullRender: true,
                 render: (text, _record, _index, options) => (

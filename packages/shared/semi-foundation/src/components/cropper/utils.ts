@@ -4,7 +4,6 @@ interface Rect {
     centerPoint: { x: number; y: number };
 }
 
-/** The largest [width, height] within the given size whose ratio is `aspect` */
 export function fitAspect(width: number, height: number, aspect: number): [number, number] {
     if (width / height > aspect) {
         width = height * aspect;

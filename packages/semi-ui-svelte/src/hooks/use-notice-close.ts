@@ -12,7 +12,7 @@ export type NoticeListState = Required<AutoCloseListState>;
  * The removal is reported because Svelte keeps an outgoing item's effects alive until its outro ends, and the
  * foundation's destroy only runs after that: without it the countdown would fire onClose mid-leave.
  */
-export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'handleListChange'>, list: NoticeListState | undefined) {
+export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'handleListChange'>, list?: NoticeListState) {
     if (!list) return;
 
     const state = () => ({ paused: list.paused, removedItems: list.removedItems, updatedItems: list.updatedItems });

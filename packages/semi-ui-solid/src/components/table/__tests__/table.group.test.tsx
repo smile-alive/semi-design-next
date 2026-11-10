@@ -9,7 +9,7 @@ import { P, getBodyRows, getExpandedRowKeys, getGroupColumns, query, queryAll } 
 
 type Row = Record<string, any>;
 
-const rowKey = (record: Row) => `${record.city && record.city.toLowerCase()}-${record.job && record.job.toLowerCase()}`;
+const rowKey = (record: Row) => `${record.city?.toLowerCase()}-${record.job?.toLowerCase()}`;
 const getSections = () => queryAll(`.${P}-tbody .${P}-row-section`);
 const getOpenSections = () => queryAll(`.${P}-tbody .${P}-row-section.on`);
 

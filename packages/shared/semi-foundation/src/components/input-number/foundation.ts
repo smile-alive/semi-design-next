@@ -368,7 +368,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         const maxPrecLen = this.#getPrecLen(max);
         const curPrecLen = this.#getPrecLen(curNum);
         const stepPrecLen = this.#getPrecLen(step);
-        const scale = Math.pow(10, Math.max(minPrecLen, maxPrecLen, curPrecLen, stepPrecLen));
+        const scale = 10 ** Math.max(minPrecLen, maxPrecLen, curPrecLen, stepPrecLen);
 
         curNum = Math.round(curNum * scale + step * scale) / scale;
         if (typeof min === 'number' && min > curNum) {

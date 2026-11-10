@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import type { Attachment } from 'svelte/attachments';
     import type { HTMLAttributes } from 'svelte/elements';
     import { addAreaControlAttributes, containsControl, containsName } from '@fibrae/semi-foundation/components/upload/utils';
+    import observeMutations from '../../utils/observe-mutations.js';
     import useLocale from '../locale/use-locale.svelte.js';
 
     interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'tabindex'> {
@@ -23,16 +23,13 @@
     let hasControl = $state(false);
     let hasName = $state(true);
 
-    const observe: Attachment<HTMLDivElement> = (node) => {
-        const update = () => {
+    const observe = observeMutations(
+        (node: HTMLDivElement) => {
             hasControl = containsControl(node);
             hasName = containsName(node);
-        };
-        update();
-        const observer = new MutationObserver(update);
-        observer.observe(node, { subtree: true, childList: true, characterData: true, attributeFilter: addAreaControlAttributes });
-        return () => observer.disconnect();
-    };
+        },
+        { subtree: true, childList: true, characterData: true, attributeFilter: addAreaControlAttributes }
+    );
 
     const handleKeydown = (event: KeyboardEvent) => {
         if (hasControl || event.target !== event.currentTarget || (event.key !== 'Enter' && event.key !== ' ')) {

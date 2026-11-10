@@ -19,11 +19,11 @@ const groupColumns = (): ColumnProps[] => [
             { text: 'IOS', value: 'IOS' },
             { text: 'Android', value: 'Android' },
         ],
-        onFilter: (value, record) => record.job && record.job.indexOf(value) === 0,
+        onFilter: (value, record) => record.job?.indexOf(value) === 0,
     },
     { dataIndex: 'department', title: 'Department' },
 ];
-const rowKey = (record: Row) => `${record.city && record.city.toLowerCase()}-${record.job && record.job.toLowerCase()}`;
+const rowKey = (record: Row) => `${record.city?.toLowerCase()}-${record.job?.toLowerCase()}`;
 const jobsIn = { groupSection: ({ groupKey }: { groupKey: string }) => [<strong>{`Jobs in ${groupKey}:`}</strong>] };
 const groupOf = { groupSection: ({ groupKey }: { groupKey: string }) => [<strong>{`group ${groupKey}`}</strong>] };
 const getSections = () => queryAll(`.${P}-row-section`);

@@ -251,7 +251,7 @@ export default function ColumnFilter(props: ColumnFilterProps = {}): React.React
         iconElem = (
             // native button for keyboard access; the name carries the filtered state the `on` class shows by color
             <button type="button" className={finalCls} aria-label={filtered ? tableLocale.filterColumnActive : tableLocale.filterColumn}>
-                {'\u200b' /* ZWSP(zero-width space) */}
+                {'\u200b'}
                 <IconFilter size="default" />
             </button>
         );

@@ -64,7 +64,7 @@ const treeStyle = {
 
 export default function TreeDemo() {
     const renderLabel: TreeProps['renderFullLabel'] = (row) => {
-        const isLeaf = !(row.data.children && row.data.children.length);
+        const isLeaf = !row.data.children?.length;
         const handleClick = isLeaf ? row.onClick : row.onExpand;
         return (
             <li className={row.className} role="treeitem" onClick={handleClick}>

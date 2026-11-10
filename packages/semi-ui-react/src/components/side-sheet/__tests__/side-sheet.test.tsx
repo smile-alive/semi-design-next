@@ -13,8 +13,8 @@ import type { SideSheetReactProps, SideSheetState } from '../index';
 type CancelHandler = NonNullable<SideSheetReactProps['onCancel']>;
 
 function getSideSheet(SideSheetProps?, children?) {
-    let props = SideSheetProps ? SideSheetProps : {};
-    return <SideSheet {...props}>{children ? children : <p>This is content of basic sideSheet</p>}</SideSheet>;
+    let props = SideSheetProps || {};
+    return <SideSheet {...props}>{children || <p>This is content of basic sideSheet</p>}</SideSheet>;
 }
 
 function renderSideSheet(props?, children?) {

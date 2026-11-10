@@ -5,7 +5,6 @@ import type { ColumnProps, TableComponents, TableProps } from './interface.js';
 
 export type ColumnFlags = BaseColumnFlags<ColumnProps>;
 
-// filterDropdown is true when the column has a filterDropdown snippet
 export const columnFlags = (column: ColumnProps, queries?: ColumnProps[]): ColumnFlags => TableFoundation.getColumnFlags(column, queries, column.filterDropdown === true);
 
 export function mergeComponents(components: TableComponents | undefined, virtualized: boolean): MergedTableComponents {

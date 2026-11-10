@@ -61,7 +61,7 @@ export default function Item(props: RatingItemProps) {
 
     const sizeStyle = isCustomSize ? { width: size, height: size, fontSize: size } : {};
     const iconSize = isCustomSize ? 'inherit' : size === 'small' ? 'default' : 'extra-large';
-    const content = character ? character : <IconStar style={{ display: 'block' }} size={iconSize} />;
+    const content = character || <IconStar style={{ display: 'block' }} size={iconSize} />;
     const isEmpty = index === count;
     const starWrapCls = clsx(`${prefixCls}-wrapper`, { [`${prefixCls}-disabled`]: disabled });
 

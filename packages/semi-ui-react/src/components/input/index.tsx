@@ -338,7 +338,7 @@ export default function Input(rawProps: InputProps) {
             />
             {allowClear && (
                 <button ref={setClearButton} type="button" className={`${prefixCls}-clearbtn`} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={foundation.handleClearMouseDown}>
-                    {clearIcon ? clearIcon : <IconClear />}
+                    {clearIcon || <IconClear />}
                 </button>
             )}
             {suffixNode}

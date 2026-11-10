@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useImperativeHandle, useState } from 'react';
+import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/pincode/constants';
 import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
@@ -81,7 +81,7 @@ export default function PinCode(rawProps: PinCodeProps) {
 
     const { locale } = useLocale('PinCode');
 
-    const [inputs] = useState<InputHandle[]>(() => []);
+    const inputsRef = useRef<(InputHandle | null)[]>([]);
 
     const [foundation, state] = useFoundation<Foundation, Adapter, PinCodeProps, PinCodeState>(
         PinCodeFoundation,
@@ -94,9 +94,9 @@ export default function PinCode(rawProps: PinCodeProps) {
             notifyBlur: (e) => base.getProps().onBlur?.(e),
             changeSpecificInputFocusState: (index, focusState) => {
                 if (focusState === 'focus') {
-                    inputs[index]?.focus();
+                    inputsRef.current[index]?.focus();
                 } else {
-                    inputs[index]?.blur();
+                    inputsRef.current[index]?.blur();
                 }
             },
         })
@@ -106,12 +106,12 @@ export default function PinCode(rawProps: PinCodeProps) {
         ref,
         () => ({
             focus: (index) => {
-                inputs[index]?.focus();
-                inputs[index]?.setSelectionRange(1, 1);
+                inputsRef.current[index]?.focus();
+                inputsRef.current[index]?.setSelectionRange(1, 1);
             },
-            blur: (index) => inputs[index]?.blur(),
+            blur: (index) => inputsRef.current[index]?.blur(),
         }),
-        [inputs]
+        []
     );
 
     return (
@@ -120,7 +120,7 @@ export default function PinCode(rawProps: PinCodeProps) {
                 <Input
                     key={`input-${index}`}
                     ref={(handle) => {
-                        inputs[index] = handle;
+                        inputsRef.current[index] = handle;
                     }}
                     id={index === 0 ? id : undefined}
                     aria-describedby={ariaDescribedby}

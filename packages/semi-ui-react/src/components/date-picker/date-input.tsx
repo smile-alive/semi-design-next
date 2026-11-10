@@ -69,7 +69,44 @@ export default function DateInput(rawProps: DateInputProps) {
         rangeSeparator: rawProps.rangeSeparator ?? strings.DEFAULT_SEPARATOR_RANGE,
     };
 
-    const { locale } = props;
+    const {
+        placeholder,
+        type,
+        value,
+        inputValue,
+        inputStyle,
+        disabled,
+        showClear,
+        inputReadOnly,
+        insetLabel,
+        validateStatus,
+        block,
+        prefixCls,
+        multiple,
+        dateFnsLocale,
+        onBlur,
+        onChange,
+        onClear,
+        onFocus,
+        prefix,
+        autofocus,
+        size,
+        inputRef,
+        rangeInputStartRef,
+        rangeInputEndRef,
+        onRangeClear,
+        onRangeEndTabPress,
+        rangeInputFocus,
+        rangeSeparator,
+        rangeSeparatorNode,
+        insetInput,
+        insetInputValue,
+        defaultPickerValue,
+        showClearIgnoreDisabled,
+        locale,
+        format: _format,
+        ...rest
+    } = props;
 
     const rangeStartWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -89,43 +126,32 @@ export default function DateInput(rawProps: DateInputProps) {
         })
     );
 
-    const isRenderMultipleInputs = isSplitRangeInputs(props.type);
+    // read without removing: the single Input still forwards them through rest
+    const {
+        borderless,
+        clearIcon,
+        insetLabelId,
+        density,
+        handleInsetDateFocus,
+        handleInsetTimeFocus,
+        tabIndex,
+        role,
+        'aria-controls': ariaControls,
+        'aria-expanded': ariaExpanded,
+        'aria-haspopup': ariaHaspopup,
+        'aria-describedby': ariaDescribedby,
+        'aria-errormessage': ariaErrormessage,
+        'aria-invalid': ariaInvalid,
+        'aria-required': ariaRequired,
+    } = rest;
+
+    const isRenderMultipleInputs = isSplitRangeInputs(type);
 
     const handleInsetInputChange = (options: InsetInputChangeFoundationProps) => foundation.handleInsetInputChange(options);
 
-    const getRangeInputValue = (rangeStart: string, rangeEnd: string) => `${rangeStart}${props.rangeSeparator}${rangeEnd}`;
+    const getRangeInputValue = (rangeStart: string, rangeEnd: string) => `${rangeStart}${rangeSeparator}${rangeEnd}`;
 
     const renderRangeInput = (text: string, suffix: React.ReactNode, inputCls: string) => {
-        const {
-            placeholder,
-            inputStyle,
-            disabled,
-            inputReadOnly,
-            autofocus,
-            size,
-            rangeInputStartRef,
-            rangeInputEndRef,
-            rangeInputFocus,
-            prefixCls,
-            rangeSeparator,
-            rangeSeparatorNode,
-            borderless,
-            prefix,
-            insetLabel,
-            showClear,
-            clearIcon,
-            showClearIgnoreDisabled,
-            insetLabelId,
-            tabIndex,
-            role,
-            'aria-controls': ariaControls,
-            'aria-expanded': ariaExpanded,
-            'aria-haspopup': ariaHaspopup,
-            'aria-describedby': ariaDescribedby,
-            'aria-errormessage': ariaErrormessage,
-            'aria-invalid': ariaInvalid,
-            'aria-required': ariaRequired,
-        } = props;
         // the label names the group around both inputs, not each input
         const comboboxProps = {
             tabIndex,
@@ -182,7 +208,7 @@ export default function DateInput(rawProps: DateInputProps) {
                         prefix={null}
                         suffix={null}
                         // no onBlur: the blur callback fires when the panel closes
-                        onChange={(rangeStartValue, e) => props.onChange(getRangeInputValue(rangeStartValue, rangeEnd), e)}
+                        onChange={(rangeStartValue, e) => onChange(getRangeInputValue(rangeStartValue, rangeEnd), e)}
                         onEnterPress={(e) => foundation.handleRangeInputEnterPress(e, getRangeInputValue(rangeStart, rangeEnd))}
                         onFocus={(e) => foundation.handleRangeInputFocus(e, 'rangeStart')}
                     />
@@ -212,7 +238,7 @@ export default function DateInput(rawProps: DateInputProps) {
                         size={rangeSize}
                         prefix={null}
                         suffix={null}
-                        onChange={(rangeEndValue, e) => props.onChange(getRangeInputValue(rangeStart, rangeEndValue), e)}
+                        onChange={(rangeEndValue, e) => onChange(getRangeInputValue(rangeStart, rangeEndValue), e)}
                         onEnterPress={(e) => foundation.handleRangeInputEnterPress(e, getRangeInputValue(rangeStart, rangeEnd))}
                         onFocus={(e) => foundation.handleRangeInputFocus(e, 'rangeEnd')}
                         onKeyDown={foundation.handleRangeInputEndKeyPress}
@@ -233,8 +259,6 @@ export default function DateInput(rawProps: DateInputProps) {
     };
 
     const renderInputInset = () => {
-        const { type, handleInsetDateFocus, handleInsetTimeFocus, value, insetInputValue, prefixCls, rangeInputStartRef, rangeInputEndRef, density, insetInput } = props;
-
         const newInsetInputValue = DateInputFoundation.getInsetInputValue(props, { value, insetInputValue });
         const { dateStart, dateEnd, timeStart, timeEnd } = ((insetInput as InsetInputProps | undefined)?.placeholder ?? {}) as InsetInputProps['placeholder'];
         const { datePlaceholder, timePlaceholder } = DateInputFoundation.getInsetInputPlaceholder(props);
@@ -256,43 +280,6 @@ export default function DateInput(rawProps: DateInputProps) {
     };
 
     const renderTriggerInput = () => {
-        const {
-            placeholder,
-            type,
-            value,
-            inputValue,
-            inputStyle,
-            disabled,
-            showClear,
-            inputReadOnly,
-            insetLabel,
-            validateStatus,
-            block,
-            prefixCls,
-            multiple,
-            dateFnsLocale,
-            onBlur,
-            onClear,
-            onFocus,
-            prefix,
-            autofocus,
-            size,
-            inputRef,
-            rangeInputStartRef,
-            rangeInputEndRef,
-            onRangeClear,
-            onRangeEndTabPress,
-            rangeInputFocus,
-            rangeSeparator,
-            rangeSeparatorNode,
-            insetInput,
-            insetInputValue,
-            defaultPickerValue,
-            showClearIgnoreDisabled,
-            locale: _locale,
-            format: _format,
-            ...rest
-        } = props;
         const suffix = type.includes('Time') ? <IconCalendarClock /> : <IconCalendar />;
         const text = DateInputFoundation.getShowText(props);
 
@@ -326,7 +313,7 @@ export default function DateInput(rawProps: DateInputProps) {
                 prefix={prefix ?? null}
                 suffix={suffix}
                 onBlur={onBlur}
-                onChange={props.onChange}
+                onChange={onChange}
                 onClear={onClear}
                 onEnterPress={foundation.handleInputComplete}
                 onFocus={onFocus}
@@ -334,5 +321,5 @@ export default function DateInput(rawProps: DateInputProps) {
         );
     };
 
-    return props.insetInput ? renderInputInset() : renderTriggerInput();
+    return insetInput ? renderInputInset() : renderTriggerInput();
 }

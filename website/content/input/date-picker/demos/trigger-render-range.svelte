@@ -6,7 +6,7 @@
     const formatToken = 'yyyy-MM-dd HH:mm:ss';
     let date = $state<DatePickerValueType | null>(null);
 
-    const onChange = (value: Date | Date[] | undefined) => {
+    const onChange = (value?: Date | Date[]) => {
         console.log(value);
     };
 </script>

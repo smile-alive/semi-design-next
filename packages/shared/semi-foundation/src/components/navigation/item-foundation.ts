@@ -31,7 +31,6 @@ export interface ItemAdapter<P extends ItemProps = ItemProps, S extends object =
      * config plus `level`, otherwise every prop the item was given
      */
     getSelectedItem(): P;
-    /** Replaces the selected keys with this item's key */
     selectSelf(): void;
     getSelectedKeysIsControlled(): boolean;
     notifyGlobalOnSelect(item: SelectedItemProps<P>): void;

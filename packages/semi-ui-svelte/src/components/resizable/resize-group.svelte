@@ -6,6 +6,7 @@
     import '@fibrae/semi-foundation/components/resizable/resizable.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
+    import { observeResize } from '../resize-observer/index.js';
     import { setResizeGroupContext } from './context.js';
     import type { ResizeGroupProps } from './interface.js';
     import { joinStyle } from './style.js';
@@ -48,22 +49,18 @@
         notifyKeyDown: foundation.resizeByKey,
     });
 
-    const observeResize = (node: HTMLDivElement) => {
-        const observer = new ResizeObserver(() => {
-            // a group first mounted inside display:none measures 0: lay out again once it becomes measurable
-            foundation.handleGroupResize();
-            foundation.ensureConstraint();
-        });
-        observer.observe(node);
-        return () => observer.disconnect();
-    };
+    const trackSize = observeResize(() => {
+        // a group first mounted inside display:none measures 0: lay out again once it becomes measurable
+        foundation.handleGroupResize();
+        foundation.ensureConstraint();
+    });
 
     // vw and vh limits change with the window even when the group keeps its size
     $effect(() => on(window, 'resize', () => foundation.ensureConstraint()));
 </script>
 
 <!-- flex-direction follows `direction` even when the caller's style sets it -->
-<div bind:this={group} {...rest} {@attach observeResize} class={[`${prefix}-group`, rest.class]} role={namedRole(rest)} style={joinStyle(rest.style as string | undefined, { flexDirection: direction === 'vertical' ? 'column' : 'row' })}>
+<div bind:this={group} {...rest} {@attach trackSize} class={[`${prefix}-group`, rest.class]} role={namedRole(rest)} style={joinStyle(rest.style as string | undefined, { flexDirection: direction === 'vertical' ? 'column' : 'row' })}>
     {#if states().isResizing}
         <div class={`${prefix}-background`} style={joinStyle(states().backgroundStyle as Record<string, string | undefined>)}></div>
     {/if}

@@ -89,13 +89,13 @@ export default function TreeDemo() {
 
         if (!dropToGap) {
             loop(data, dropKey, (item) => {
-                item.children = item.children || [];
+                item.children ??= [];
                 item.children.push(dragObj);
             });
         } else if (dropPosition === 1 && node.children && node.expanded) {
             // Expanded with children and dropped in the bottom gap: insert at the top
             loop(data, dropKey, (item) => {
-                item.children = item.children || [];
+                item.children ??= [];
                 item.children.unshift(dragObj);
             });
         } else {

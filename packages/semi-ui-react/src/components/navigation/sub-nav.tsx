@@ -119,12 +119,12 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
         if (isInSubNav) {
             toggleIconType = <IconChevronRight />;
         } else {
-            toggleIconType = expandIcon ? expandIcon : <IconChevronDown />;
+            toggleIconType = expandIcon || <IconChevronDown />;
             // no transition in horizontal mode: the list is a dropdown (issue 1198)
         }
     } else {
         withTransition = Boolean(subNavMotion);
-        toggleIconType = expandIcon ? expandIcon : <IconChevronDown />;
+        toggleIconType = expandIcon || <IconChevronDown />;
     }
 
     let titleDiv: React.ReactNode;

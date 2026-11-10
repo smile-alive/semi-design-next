@@ -24,7 +24,7 @@
     const titleStyle = { position: 'absolute', top: '100px', left: '100px' } as const;
     const colorStyle = { color: '#1C1F23' };
 
-    const changeTheme = (value: RadioValue | undefined) => {
+    const changeTheme = (value?: RadioValue) => {
         if (value === 'primary' || value === 'light' || value === 'dark') theme.value = value;
     };
 </script>

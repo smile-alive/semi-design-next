@@ -1283,7 +1283,7 @@ export class PieceTreeBase {
     }
 
     insert(offset: number, value: string, eolNormalized: boolean = false) {
-        this.EOLNormalized = this.EOLNormalized && eolNormalized;
+        this.EOLNormalized &&= eolNormalized;
         this.#lastVisitedLine.lineNumber = 0;
         this.#lastVisitedLine.value = '';
 

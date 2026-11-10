@@ -122,9 +122,6 @@ export interface ColumnProps<RecordType extends Record<string, any> = any> {
     ellipsis?: BaseEllipsis;
     resize?: boolean;
     showSortTip?: boolean;
-    /**
-     * self control whether to update cell for performance reasons
-     */
     shouldCellUpdate?: (props: TableCellProps, prevProps: TableCellProps) => boolean;
 }
 
@@ -252,9 +249,6 @@ export interface RowSelectionProps<RecordType extends Record<string, any>> {
     onCell?: OnCell<RecordType>;
     onHeaderCell?: OnHeaderCell<RecordType>;
     renderCell?: RowSelectionRenderCell<RecordType>;
-    /**
-     * self control whether to update cell for performance reasons
-     */
     shouldCellUpdate?: (props: TableCellProps, prevProps: TableCellProps) => boolean;
 }
 

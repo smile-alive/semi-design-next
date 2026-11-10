@@ -2,7 +2,7 @@
     import * as dateFns from 'date-fns';
     import { DatePicker } from '@fibrae/semi-ui-svelte';
 
-    const handleChange = (date: Date | Date[] | undefined) => {
+    const handleChange = (date?: Date | Date[]) => {
         console.log('date changed', date);
     };
 

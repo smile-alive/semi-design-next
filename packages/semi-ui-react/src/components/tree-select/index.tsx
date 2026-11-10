@@ -732,7 +732,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                 }}
                 onKeyDown={stopButtonActivationKeys}
             >
-                {clearIcon ? clearIcon : <IconClear />}
+                {clearIcon || <IconClear />}
             </button>
         );
     };
@@ -883,7 +883,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         if (emptyContent === null) {
             return null;
         }
-        return <TreeNode empty emptyContent={emptyContent ? emptyContent : treeLocale.emptyText} />;
+        return <TreeNode empty emptyContent={emptyContent || treeLocale.emptyText} />;
     };
 
     const renderTree = () => {

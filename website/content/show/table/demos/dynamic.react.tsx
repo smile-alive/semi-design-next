@@ -122,7 +122,7 @@ const renderFooter = () => <p style={{ margin: 0 }}>This is footer.</p>;
 function mergeColumns(column: ColumnProps, columns: ColumnProps[], keys: (keyof ColumnProps)[] = ['dataIndex']) {
     const nextColumns = [...columns];
     nextColumns.forEach((curColumn, index) => {
-        let isTarget = !!(keys && keys.length);
+        let isTarget = !!keys?.length;
 
         for (const key of keys) {
             if (column[key] !== curColumn[key]) {
@@ -145,7 +145,7 @@ function filterData(filters: ColumnProps[], dataSource: Row[]) {
         const filteredValue = filter.filteredValue;
         const dataIndex = filter.dataIndex;
         if (Array.isArray(filteredValue) && filteredValue.length && dataIndex) {
-            result = result.filter((data) => filteredValue.filter((value) => String(data[dataIndex as keyof Row]).indexOf(value) > -1).length);
+            result = result.filter((data) => filteredValue.filter((value) => String(data[dataIndex as keyof Row]).includes(value)).length);
         }
     });
 
@@ -259,7 +259,7 @@ export default function TableDemo() {
         const currentPage = typeof page === 'number' ? page : (pagination && pagination.currentPage) || 1;
 
         setLoading(true);
-        load(pagination || defaultPagination, currentPage, sorter || getSorterColumn(columns), filters || getFilterColumns(columns));
+        load(pagination || defaultPagination, currentPage, sorter ?? getSorterColumn(columns), filters ?? getFilterColumns(columns));
     };
 
     useEffect(() => {

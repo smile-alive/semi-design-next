@@ -282,7 +282,7 @@ export default class CalendarMonthFoundation extends BaseFoundation<MonthAdapter
         };
     }
 
-    selectDay = (day: MonthDayInfo | undefined) => {
+    selectDay = (day?: MonthDayInfo) => {
         if (day && !CalendarMonthFoundation.getDayStatus(day, { ...this.getProps(), todayText: '' }).isDisabled) {
             this.setState({ keyboardDate: day.fullDate });
             this.adapter.notifyDayClick(day);

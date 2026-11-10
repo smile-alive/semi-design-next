@@ -97,7 +97,7 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
     }
 
     /** A submenu (inside a menu) sits closer to its parent item than a top-level menu to its trigger */
-    static getSpacing(spacing: number | { x: number; y: number } | undefined, menuDepth = 0) {
+    static getSpacing(spacing?: number | { x: number; y: number }, menuDepth = 0) {
         return spacing ?? (menuDepth > 0 ? numbers.NESTED_SPACING : numbers.SPACING);
     }
 

@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useImperativeHandle, useRef, useState } from 'react';
+import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
@@ -120,7 +120,7 @@ export default function Rating(rawProps: RatingProps) {
     const { locale } = useLocale('Rating');
     const context = useConfigContext();
 
-    const [stars] = useState(() => new Map<number, RatingItemHandle>());
+    const starsRef = useRef(new Map<number, RatingItemHandle>());
     const listRef = useRef<HTMLUListElement>(null);
 
     const [foundation, state] = useFoundation<Foundation, Adapter, RatingProps, RatingState>(
@@ -136,9 +136,9 @@ export default function Rating(rawProps: RatingProps) {
                     return;
                 }
                 const index = Math.ceil(starValue) - 1;
-                stars.get(index < 0 ? count : index).starFocus(starValue);
+                starsRef.current.get(index < 0 ? count : index).starFocus(starValue);
             },
-            getStarDOM: (index) => stars.get(index).getDomNode(),
+            getStarDOM: (index) => starsRef.current.get(index).getDomNode(),
             notifyHoverChange: (hoverValue) => base.getProps().onHoverChange?.(hoverValue),
             notifyChange: (value) => base.getProps().onChange?.(value),
             notifyClick: (e, index) => base.getProps().onClick?.(e, index),
@@ -163,9 +163,9 @@ export default function Rating(rawProps: RatingProps) {
             <Item
                 key={ind}
                 ref={(handle) => {
-                    stars.set(ind, handle);
+                    starsRef.current.set(ind, handle);
                     return () => {
-                        stars.delete(ind);
+                        starsRef.current.delete(ind);
                     };
                 }}
                 disabled={disabled}

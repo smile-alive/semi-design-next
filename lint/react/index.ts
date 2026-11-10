@@ -37,6 +37,8 @@ export const react: FrameworkLint = {
                 'react/rule-suppression': 'error',
                 'react/invariant': 'error',
                 ...jsxA11yRules,
+                // React Compiler skips a whole component or hook that contains `||=` or `??=` (react/todo reports it)
+                'logical-assignment-operators': 'off',
             },
         },
         {

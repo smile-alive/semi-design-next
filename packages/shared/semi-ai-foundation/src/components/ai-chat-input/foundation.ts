@@ -174,7 +174,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
     }
 
     /** The `content` of the top slot: the editor JSON in the form `onContentChange` reports, empty before the editor exists */
-    static getTransformedContent(content: RichTextJSON | undefined, transformer?: Map<string, (obj: any) => any>): Content[] {
+    static getTransformedContent(content?: RichTextJSON, transformer?: Map<string, (obj: any) => any>): Content[] {
         return content ? transformJSONResult(content, transformer) : [];
     }
 

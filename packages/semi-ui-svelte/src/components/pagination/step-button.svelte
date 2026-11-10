@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import type { Attachment } from 'svelte/attachments';
     import { cssClasses } from '@fibrae/semi-foundation/components/pagination/constants';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
+    import observeMutations from '../../utils/observe-mutations.js';
     import { type SlotKind, getSlotKind } from '../../utils/slot-kind.js';
 
     interface StepButtonProps {
@@ -23,13 +23,7 @@
     // A snippet exposes nothing to read before it renders, so a lone text names the button from the second frame on;
     // the server HTML and an icon or element keep the locale name. A text node that changes in place (empty to
     // non-empty) mutates characterData, not childList, so the observer watches both.
-    const trackContent: Attachment<HTMLButtonElement> = (button) => {
-        const update = () => (contentKind = getSlotKind(button));
-        update();
-        const observer = new MutationObserver(update);
-        observer.observe(button, { childList: true, characterData: true, subtree: true });
-        return () => observer.disconnect();
-    };
+    const trackContent = observeMutations((button: HTMLButtonElement) => (contentKind = getSlotKind(button)), { childList: true, characterData: true, subtree: true });
 </script>
 
 <button {@attach typeof text === 'function' && trackContent} aria-label={namedByContent ? undefined : label} class={[`${prefix}-item`, `${prefix}-${kind}`, { [`${prefix}-item-disabled`]: disabled }]} {disabled} type="button" x-semi-prop={`${kind}Text`} {onclick}>

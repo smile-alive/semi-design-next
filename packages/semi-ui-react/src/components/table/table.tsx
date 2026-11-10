@@ -44,7 +44,7 @@ const EMPTY_KEY_SET: Set<string | number> = new Set();
 const EMPTY_FLATTEN_DATA: Array<FlattenData | GroupFlattenData> = [];
 
 function resolveColumns(columns: ColumnProps[], children: ReactNode) {
-    return columns ? columns : getColumns(children);
+    return columns || getColumns(children);
 }
 
 function getInitialState<RecordType extends Record<string, any>>(props: FoundationProps<RecordType>): TableBaseState<RecordType> {
@@ -146,7 +146,6 @@ function renderExpandIcon(record: any = {}, isNested = false, groupKey: string |
 }
 
 /**
- * Add sorting, filtering, and rendering functions to columns, and add column event handling
  * A title function gets the sorter and filter nodes only with useFullRender; otherwise its result is the title
  */
 function addFnsInColumn(column: HeaderColumn = {}, queries: ColumnProps[], prefixCls: string, foundation: TableFoundation<any>) {

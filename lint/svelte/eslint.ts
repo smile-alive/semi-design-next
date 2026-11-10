@@ -1,6 +1,7 @@
 import tsParser from '@typescript-eslint/parser';
 import type { Linter } from 'eslint';
 import svelte from 'eslint-plugin-svelte';
+import { templateTernary } from '../template-ternary.ts';
 import { svelteExemptions } from './exemptions.ts';
 
 // .svelte templates, which oxlint cannot parse; `overlappingRules` turns off what oxlint checks in the script.
@@ -15,7 +16,9 @@ export function svelteEslint(overlappingRules: Linter.Config[]): Linter.Config[]
         {
             files: ['**/*.svelte'],
             languageOptions: { parserOptions: { parser: tsParser } },
+            plugins: { semi: { rules: { 'template-ternary': templateTernary } } },
             rules: {
+                'semi/template-ternary': 'error',
                 // Core no-unused-vars counts the parameters of a function type as unused; svelte-check's noUnusedParameters checks them
                 'no-unused-vars': ['error', { ignoreRestSiblings: true, args: 'none', caughtErrors: 'none' }],
                 // Sorts only between spreads (needs the patch in pnpm-workspace.yaml): a spread's position decides what it overrides.

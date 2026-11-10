@@ -42,9 +42,9 @@ export default function ListItem(props: ListItemProps) {
     const main = children(() => local.main);
     const extra = children(() => local.extra);
 
-    const handleClick = () => local.onClick || list().onClick;
+    const handleClick = () => local.onClick ?? list().onClick;
 
-    const handleRightClick = () => local.onRightClick || list().onRightClick;
+    const handleRightClick = () => local.onRightClick ?? list().onRightClick;
 
     const clickable = () => Boolean(handleClick() || handleRightClick());
 

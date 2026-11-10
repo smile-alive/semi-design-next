@@ -67,7 +67,7 @@ const TestAction: Record<string, PanelItem[]> = {
 const FirstLevel = Object.keys(TestAction);
 
 function ReferSlotComponent({ node }: ReactNodeViewProps) {
-    const value = node.attrs.value ? node.attrs.value : '';
+    const value = node.attrs.value || '';
 
     return (
         <NodeViewWrapper className="ai-chat-input-refer-slot-wrapper">
@@ -423,7 +423,7 @@ export default function AIChatInputDemo() {
                     const { type, value, name, key, detail } = item;
                     const icon = refTypeToIconMap.get(type);
                     return (
-                        <div className="item" key={key ? key : index}>
+                        <div className="item" key={key || index}>
                             <span className="item-icon">
                                 {icon && React.cloneElement(icon, { className: 'item-left item-icon' })}
                                 <button
@@ -440,7 +440,7 @@ export default function AIChatInputDemo() {
                                 </button>
                             </span>
                             <span className="item-content">
-                                {name ? name : value}
+                                {name || value}
                                 {type === 'branch' && <span className="detail">{detail}</span>}
                             </span>
                         </div>

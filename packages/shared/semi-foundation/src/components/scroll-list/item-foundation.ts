@@ -28,7 +28,6 @@ export interface ScrollItemBaseProps<I extends Item = Item> {
 export interface ScrollItemRow {
     /** Stable while copies are added around the row, so a host keeps the node and the foundation's cached nodes stay valid */
     key: string;
-    /** The index of the item in `list` */
     index: number;
     /** A repeat of the list that only fills the wheel */
     copy: boolean;
@@ -450,7 +449,6 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         }
     };
 
-    /** Click on an item in normal mode */
     selectIndex = (index: number) => {
         const { type, list } = this.getProps();
         const listNode = this.adapter.getListNode();

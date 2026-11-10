@@ -44,7 +44,7 @@ function TabPane({ ref, className, style, children, itemKey, tabIndex, disabled,
             aria-hidden={active ? 'false' : 'true'}
             aria-labelledby={getTabId(tabsId, itemKey)}
             role="tabpanel"
-            tabIndex={tabIndex ? tabIndex : 0}
+            tabIndex={tabIndex || 0}
             x-semi-prop="children"
         >
             <CSSAnimation startClassName={startClassName} animationState={active ? 'enter' : 'leave'} motion={hasMotion}>
@@ -58,5 +58,4 @@ function TabPane({ ref, className, style, children, itemKey, tabIndex, disabled,
     );
 }
 
-// memo keeps the PureComponent behaviour
 export default Object.assign(memo(TabPane), { elementType: 'Tabs.TabPane' });

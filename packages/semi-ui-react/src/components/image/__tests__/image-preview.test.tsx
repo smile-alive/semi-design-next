@@ -12,7 +12,7 @@ const previewCls = `${prefixCls}-preview`;
 const srcList = ['https://example.com/1.jpg', 'https://example.com/2.jpg', 'https://example.com/3.jpg'];
 
 function getImagePreview(imageProps?) {
-    const props = imageProps ? imageProps : {};
+    const props = imageProps || {};
     const srcList = ['https://example.com/abstract.jpg', 'https://example.com/sky.jpg', 'https://example.com/greenleaf.jpg', 'https://example.com/colorful.jpg'];
     return (
         <ImagePreview {...props}>

@@ -27,7 +27,7 @@
         'aria-label': 'Region',
         ...props,
         ...store.props,
-        onChange: (value: TreeSelectValue | undefined, ...rest: unknown[]) => {
+        onChange: (value?: TreeSelectValue, ...rest: unknown[]) => {
             log(`change ${JSON.stringify(value)}`);
             (props.onChange as ((...args: unknown[]) => void) | undefined)?.(value, ...rest);
         },

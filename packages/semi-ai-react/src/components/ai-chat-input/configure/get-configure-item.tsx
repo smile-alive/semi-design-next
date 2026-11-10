@@ -16,7 +16,6 @@ export interface ConfigureItemOpts<P, VK extends keyof P, CK extends keyof P> {
 
 // the item's own onChange takes that name, so the component's one is not reachable even when it is not the value callback
 export type ConfigureItemProps<P, VK extends keyof P, CK extends keyof P> = Omit<P, VK | CK | 'onChange' | 'className'> & {
-    /** The key of this item in the Configure value */
     field: string;
     initValue?: P[VK];
     onChange?: (value: unknown) => void;

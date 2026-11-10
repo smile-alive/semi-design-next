@@ -6,8 +6,9 @@
     import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
+    import { observeResize } from '../resize-observer/index.js';
     import type { OverflowListItem, OverflowListKey, OverflowListProps } from './interface.js';
-    import { markScrollItem, observeSize } from './observers.js';
+    import { markScrollItem } from './observers.js';
 
     type Foundation = OverflowListFoundation<OverflowListBaseProps>;
     type Adapter = OverflowListAdapter<OverflowListBaseProps>;
@@ -106,12 +107,14 @@
         return OverflowListFoundation.getItemKey(keyOption, entry, index);
     };
 
-    const onContainerResize = (entry: ResizeObserverEntry) => foundation.handleContainerResize(entry.contentRect.width);
+    // The observeResize attachments below keep stable expressions: a new attachment per render would observe again,
+    // report the initial size again, and the measurement would re-render forever
+    const onContainerResize = ([entry]: ResizeObserverEntry[]) => foundation.handleContainerResize(entry.contentRect.width);
 
     // not clientWidth: rounded widths of fractional items (WebKit text) can add up past the rounded container
-    const onItemResize = (entry: ResizeObserverEntry, key: OverflowListKey) => foundation.handleItemResize(key, entry.contentRect.width, view.maxCount);
+    const onItemResize = ([entry]: ResizeObserverEntry[], key: OverflowListKey) => foundation.handleItemResize(key, entry.contentRect.width, view.maxCount);
 
-    const onOverflowResize = (entry: ResizeObserverEntry) => foundation.handleOverflowResize(entry.contentRect.width);
+    const onOverflowResize = ([entry]: ResizeObserverEntry[]) => foundation.handleOverflowResize(entry.contentRect.width);
 
     // Called from an attachment effect: reading the counter there would make the attachment depend on it
     const onScrollElement = () => {
@@ -158,13 +161,13 @@
 
 {#snippet overflowBox()}
     {#if overflow && view.overflow.length}
-        <div {@attach observeSize(onOverflowResize)} class={`${prefix}-overflow`}>
+        <div {@attach observeResize(onOverflowResize)} class={`${prefix}-overflow`}>
             {@render overflow({ items: view.overflow as T[], position: collapseFrom })}
         </div>
     {/if}
 {/snippet}
 
-<div {...rest} {@attach isScroll ? undefined : observeSize(onContainerResize)} class={[prefix, rest.class]} role={namedRole(rest)} style:max-width={isScroll ? undefined : '100%'} style:visibility={isScroll ? undefined : hidden ? 'hidden' : 'visible'}>
+<div {...rest} {@attach isScroll ? undefined : observeResize(onContainerResize)} class={[prefix, rest.class]} role={namedRole(rest)} style:max-width={isScroll ? undefined : '100%'} style:visibility={isScroll ? undefined : hidden ? 'hidden' : 'visible'}>
     {#if isScroll}
         {#if overflowRenderDirection !== 'end'}
             {@render overflow?.({ items: scrollOverflow[0], position: 'start' })}
@@ -192,7 +195,7 @@
         {/if}
         {#each collapseItems as entry (entry.key ?? entry.index)}
             {@const key = entry.key}
-            <div {@attach observeSize((box) => onItemResize(box, key))} class={`${prefix}-item`}>
+            <div {@attach observeResize((entries) => onItemResize(entries, key))} class={`${prefix}-item`}>
                 {@render item?.({ item: entry.item, index: entry.index })}
             </div>
         {/each}

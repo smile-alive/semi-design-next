@@ -85,5 +85,4 @@ function Item({ ref, className, color, children, dot, type = 'default', time = '
     );
 }
 
-// memo keeps the PureComponent behaviour
 export default memo(Item);

@@ -19,7 +19,7 @@ export class JSONCompletion {
     #getCurrentWord(jsonModel: JSONModel, offset: number) {
         let i = offset - 1;
         const text = jsonModel.getValue();
-        while (i >= 0 && ' \t\n\r\v":{[,]}'.indexOf(text.charAt(i)) === -1) {
+        while (i >= 0 && !' \t\n\r\v":{[,]}'.includes(text.charAt(i))) {
             i--;
         }
         return text.substring(i + 1, offset);

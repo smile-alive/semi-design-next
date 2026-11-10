@@ -1,4 +1,4 @@
-import React, { useId, useImperativeHandle, useRef, useState } from 'react';
+import React, { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { strings, numbers, cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
@@ -37,8 +37,6 @@ export type MonthsGridState = MonthsGridFoundationState;
 
 const { isYearOrTime } = MonthsGridFoundation;
 
-type PanelNodes = Record<PanelPart, Record<PanelType, HTMLDivElement | null>>;
-
 export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const props: MonthsGridProps = {
         ...rawProps,
@@ -47,22 +45,35 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         weekStartsOn: rawProps.weekStartsOn ?? numbers.WEEK_START_ON,
     };
 
-    const { type, insetInput } = props;
+    const {
+        type,
+        insetInput,
+        weekStartsOn,
+        disabledDate,
+        locale,
+        renderDate,
+        renderFullDate,
+        density,
+        rangeInputFocus,
+        syncSwitchMonth,
+        multiple,
+        focusRecords,
+        format,
+        hideDisabledOptions,
+        timePickerOpts,
+        dateFnsLocale,
+        yearAndMonthOpts,
+        startYear,
+        endYear,
+        disabledTimePicker,
+        presetPosition,
+        renderQuickControls,
+        renderDateInput,
+    } = props;
 
-    const { weekStartsOn, disabledDate, locale, renderDate, renderFullDate, density, rangeInputFocus, syncSwitchMonth, multiple, focusRecords, format, hideDisabledOptions, timePickerOpts, dateFnsLocale, yearAndMonthOpts, startYear, endYear, disabledTimePicker, presetPosition, renderQuickControls, renderDateInput } =
-        props;
-
-    const [nodes] = useState<PanelNodes>(() => ({ panel: { left: null, right: null }, wrap: { left: null, right: null }, switch: { left: null, right: null } }));
     const titleId = useId();
-
-    // hooks called inside an object literal are memoized as values by the React Compiler and skipped on re-render
-    const leftTimePickerRef = useRef<ComboboxHandle>(null);
-    const rightTimePickerRef = useRef<ComboboxHandle>(null);
-    const leftYamRef = useRef<YearAndMonthHandle>(null);
-    const rightYamRef = useRef<YearAndMonthHandle>(null);
-
-    const timePickerRefs = { left: leftTimePickerRef, right: rightTimePickerRef };
-    const yamRefs = { left: leftYamRef, right: rightYamRef };
+    const nodesRef = useRef<Record<PanelPart, Record<PanelType, HTMLDivElement | null>>>({ panel: { left: null, right: null }, wrap: { left: null, right: null }, switch: { left: null, right: null } });
+    const scrollListsRef = useRef(new Set<ComboboxHandle | YearAndMonthHandle>());
 
     const [foundation, state] = useFoundation<MonthsGridFoundation, MonthsGridAdapter, MonthsGridProps, MonthsGridState>(
         MonthsGridFoundation,
@@ -71,15 +82,15 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         (base) => ({
             notifySelectedChange: (value, options) => base.getProps().onChange?.(value, options),
             notifyPanelChange: (date, dateString) => base.getProps().onPanelChange?.(date, dateString),
-            getPanelNode: (part, panelType) => nodes[part][panelType],
+            getPanelNode: (part, panelType) => nodesRef.current[part][panelType],
             focusPanelTarget: (panelType, target) => {
-                const panel = nodes.panel[panelType];
+                const panel = nodesRef.current.panel[panelType];
                 const node = target === 'yearList' ? panel?.querySelector<HTMLElement>('[role="listbox"]') : (panel?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`);
                 node?.focus();
             },
             reselectScrollLists: () => {
-                for (const handle of [timePickerRefs.left, timePickerRefs.right, yamRefs.left, yamRefs.right]) {
-                    handle.current?.reselect();
+                for (const handle of scrollListsRef.current) {
+                    handle.reselect();
                 }
             },
         })
@@ -89,8 +100,18 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const dateFormat = MonthsGridFoundation.getValidDateFormat(props);
     const { selected, rangeStart, rangeEnd, hoverDay, offsetRangeStart, offsetRangeEnd, monthLeft, monthRight } = state;
 
-    const attach = (part: PanelPart, panelType: PanelType) => (node: HTMLDivElement | null) => {
-        nodes[part][panelType] = node;
+    const attachNode = (part: PanelPart, panelType: PanelType) => (node: HTMLDivElement | null) => {
+        nodesRef.current[part][panelType] = node;
+    };
+
+    const attachScrollList = (handle: ComboboxHandle | YearAndMonthHandle | null) => {
+        if (!handle) {
+            return undefined;
+        }
+        scrollListsRef.current.add(handle);
+        return () => {
+            scrollListsRef.current.delete(handle);
+        };
     };
 
     const renderMonth = (month: Date, panelType: PanelType, detail: PanelState) => {
@@ -98,7 +119,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         const style: React.CSSProperties = isRange && isYearOrTime(detail) ? { visibility: 'hidden', position: 'absolute', pointerEvents: 'none' } : {};
 
         return (
-            <div ref={attach('wrap', panelType)} style={style}>
+            <div ref={attachNode('wrap', panelType)} style={style}>
                 <Navigation
                     density={density}
                     locale={locale}
@@ -145,7 +166,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
                 <Combobox
                     {...optionProps}
                     // the panel's own props come after the spread: an untyped caller cannot replace them
-                    ref={timePickerRefs[panelType]}
+                    ref={attachScrollList}
                     format={format || strings.FORMAT_TIME_PICKER}
                     panelHeader={locale.selectTime}
                     timeStampValue={panelDetail.pickerDate}
@@ -158,7 +179,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const renderYearAndMonth = (panelType: PanelType, { pickerDate }: PanelState) => {
         return (
             <YearAndMonth
-                ref={yamRefs[panelType]}
+                ref={attachScrollList}
                 currentMonth={{ left: pickerDate.getMonth() + 1, right: 0 }}
                 currentYear={{ left: pickerDate.getFullYear(), right: 0 }}
                 density={density}
@@ -184,7 +205,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         const textCls = `${prefixCls}-switch-text`;
 
         return (
-            <div ref={attach('switch', panelType)} className={`${prefixCls}-switch`}>
+            <div ref={attachNode('switch', panelType)} className={`${prefixCls}-switch`}>
                 <button
                     type="button"
                     className={clsx(`${prefixCls}-switch-date`, {
@@ -222,7 +243,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         });
 
         return (
-            <div key={panelType} ref={attach('panel', panelType)} className={monthCls} x-open-type={MonthsGridFoundation.getOpenType(panelDetail)}>
+            <div key={panelType} ref={attachNode('panel', panelType)} className={monthCls} x-open-type={MonthsGridFoundation.getOpenType(panelDetail)}>
                 {isYearPickerOpen && <div className={`${prefixCls}-yam`}>{renderYearAndMonth(panelType, panelDetail)}</div>}
                 {isTimePickerOpen && <div className={`${prefixCls}-tpk`}>{renderTimePicker(panelType, panelDetail)}</div>}
                 {(isRange || !(isYearPickerOpen || isTimePickerOpen)) && panelContent}

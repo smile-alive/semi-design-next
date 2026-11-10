@@ -25,13 +25,13 @@
     const titleStyle = 'position: absolute; top: 100px; left: 100px';
     const colorStyle = 'color: #1C1F23';
 
-    const changeType = (value: RadioValue | undefined) => {
+    const changeType = (value?: RadioValue) => {
         if (value === 'dot' || value === 'line' || value === 'columnar') type = value;
     };
-    const changePosition = (value: RadioValue | undefined) => {
+    const changePosition = (value?: RadioValue) => {
         if (value === 'left' || value === 'center' || value === 'right') position = value;
     };
-    const changeSize = (value: RadioValue | undefined) => {
+    const changeSize = (value?: RadioValue) => {
         if (value === 'small' || value === 'medium') size = value;
     };
 </script>

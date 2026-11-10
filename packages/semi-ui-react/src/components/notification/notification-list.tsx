@@ -1,4 +1,4 @@
-import { type CSSProperties, useLayoutEffect, useState, useSyncExternalStore } from 'react';
+import { type CSSProperties, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 import { getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
 import { cssClasses, getStackItemTransform } from '@fibrae/semi-foundation/components/notification/constants';
@@ -28,12 +28,12 @@ export default function NotificationList({ store }: NotificationListProps) {
 
     // the server snapshot lets useNotification's contextHolder render on the server
     const state = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
-    const [elements] = useState(() => new Map<string, HTMLDivElement>());
+    const elementsRef = useRef(new Map<string, HTMLDivElement>());
     const [hoveredPosition, setHoveredPosition] = useState<string | null>(null);
 
     // focus pauses and opens a list like the pointer, so keyboard users get the same time and no hidden tab stop
     const [focusedPosition, setFocusedPosition] = useState<string | null>(null);
-    const [lists] = useState(() => new Map<string, HTMLDivElement>());
+    const listsRef = useRef(new Map<string, HTMLDivElement>());
 
     // a list unmounting under the pointer never gets mouseleave or blur, so the ref cleanup resets the state
     const [listRefs] = useState(() =>
@@ -41,9 +41,9 @@ export default function NotificationList({ store }: NotificationListProps) {
             noticePositions.map((position) => [
                 position,
                 (element: HTMLDivElement) => {
-                    lists.set(position, element);
+                    listsRef.current.set(position, element);
                     return () => {
-                        lists.delete(position);
+                        listsRef.current.delete(position);
                         setHoveredPosition((current) => (current === position ? null : current));
                         setFocusedPosition((current) => (current === position ? null : current));
                     };
@@ -56,7 +56,7 @@ export default function NotificationList({ store }: NotificationListProps) {
 
     const shownIds = new Set(items.map(({ id }) => id));
 
-    const announcement = useNoticeListEffects(items, updatedItems, elements, cssClasses.NOTICE);
+    const announcement = useNoticeListEffects(items, updatedItems, elementsRef, cssClasses.NOTICE);
 
     const noticesInPosition = groupNoticesByPosition(state, direction);
 
@@ -64,10 +64,10 @@ export default function NotificationList({ store }: NotificationListProps) {
 
     // a notice unmounts on a store change
     useLayoutEffect(() => {
-        if (focusedPosition && hasLostFocus(true, lists.get(focusedPosition))) {
+        if (focusedPosition && hasLostFocus(true, listsRef.current.get(focusedPosition))) {
             setFocusedPosition(null);
         }
-    }, [focusedPosition, lists, state]);
+    }, [focusedPosition, state]);
 
     return (
         <>
@@ -109,23 +109,23 @@ export default function NotificationList({ store }: NotificationListProps) {
                                 <CSSAnimation
                                     startClassName={`${cssClasses.NOTICE}-animation-${isRemoved ? 'hide' : 'show'}_${position}`}
                                     animationState={isRemoved ? 'leave' : 'enter'}
-                                    getElement={() => elements.get(notice.id)}
+                                    getElement={() => elementsRef.current.get(notice.id)}
                                     onAnimationEnd={() => {
                                         // the enter animation ends here too
                                         if (isRemoved) {
                                             store.finishLeave(notice.id);
                                         }
                                     }}
-                                    onAnimationStart={() => pinAnimatedHeight(elements.get(notice.id))}
+                                    onAnimationStart={() => pinAnimatedHeight(elementsRef.current.get(notice.id))}
                                 >
                                     {({ animationClassName, animationEventsNeedBind, isAnimating }) =>
                                         isRemoved && !isAnimating ? null : (
                                             <Notice
                                                 {...notice}
                                                 ref={(element) => {
-                                                    elements.set(notice.id, element);
+                                                    elementsRef.current.set(notice.id, element);
                                                     return () => {
-                                                        elements.delete(notice.id);
+                                                        elementsRef.current.delete(notice.id);
                                                     };
                                                 }}
                                                 className={clsx(notice.className, animationClassName)}

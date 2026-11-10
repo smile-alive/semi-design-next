@@ -61,15 +61,15 @@ export default function streamingResponseToMessage(chunks?: ResponseChunk[], pre
 
     const messagePart = <T extends OutputText | Refusal>(chunk: { output_index: number; content_index: number }, empty: T) => {
         const item = outputAt<OutputMessage>(chunk.output_index);
-        item.content = item.content ?? [];
-        item.content[chunk.content_index] = item.content[chunk.content_index] ?? empty;
+        item.content ??= [];
+        item.content[chunk.content_index] ??= empty;
         return item.content[chunk.content_index] as T;
     };
 
     const reasoningEntry = (outputIndex: number, field: 'summary' | 'content', index: number) => {
         const item = outputAt<Reasoning>(outputIndex);
-        item[field] = item[field] ?? [];
-        item[field][index] = item[field][index] ?? { type: 'reasoning', text: '' };
+        item[field] ??= [];
+        item[field][index] ??= { type: 'reasoning', text: '' };
         return item[field][index];
     };
 
@@ -100,7 +100,7 @@ export default function streamingResponseToMessage(chunks?: ResponseChunk[], pre
             case 'response.content_part.added':
             case 'response.content_part.done': {
                 const item = outputAt<OutputMessage>(chunk.output_index);
-                item.content = item.content ?? [];
+                item.content ??= [];
                 item.content[chunk.content_index] = cloneDeep(chunk.part);
                 break;
             }
@@ -115,7 +115,7 @@ export default function streamingResponseToMessage(chunks?: ResponseChunk[], pre
             }
             case 'response.output_text.annotation.added': {
                 const part = messagePart<OutputText>(chunk, { type: 'output_text', text: '', annotations: [] });
-                part.annotations = part.annotations ?? [];
+                part.annotations ??= [];
                 part.annotations[chunk.annotation_index] = cloneDeep(chunk.annotation);
                 break;
             }
@@ -131,7 +131,7 @@ export default function streamingResponseToMessage(chunks?: ResponseChunk[], pre
             case 'response.reasoning_summary_part.added':
             case 'response.reasoning_summary_part.done': {
                 const item = outputAt<Reasoning>(chunk.output_index);
-                item.summary = item.summary ?? [];
+                item.summary ??= [];
                 item.summary[chunk.summary_index] = cloneDeep(chunk.part);
                 break;
             }

@@ -243,10 +243,10 @@ export function parseJson(jsonModel: JSONModel) {
         if (skipUntilAfter.length + skipUntil.length > 0) {
             let token = scanner.getToken();
             while (token !== Json.SyntaxKind.EOF) {
-                if (skipUntilAfter.indexOf(token) !== -1) {
+                if (skipUntilAfter.includes(token)) {
                     _scanNext();
                     break;
-                } else if (skipUntil.indexOf(token) !== -1) {
+                } else if (skipUntil.includes(token)) {
                     break;
                 }
                 token = _scanNext();
@@ -415,7 +415,7 @@ export function parseJson(jsonModel: JSONModel) {
             } catch (e) {
                 return _error('Invalid number format.', ErrorCode.Undefined, node);
             }
-            node.isInteger = tokenValue.indexOf('.') === -1;
+            node.isInteger = !tokenValue.includes('.');
         }
         return _finalize(node, true);
     };

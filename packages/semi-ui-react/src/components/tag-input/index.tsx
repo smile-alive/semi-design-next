@@ -490,7 +490,7 @@ export default function TagInput(rawProps: TagInputProps) {
                     runtime.input?.focus({ preventScroll });
                 }}
             >
-                {clearIcon ? clearIcon : <IconClear />}
+                {clearIcon || <IconClear />}
             </button>
         ) : (
             // keeps the button's room, so the input does not widen when the value goes

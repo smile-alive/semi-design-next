@@ -23,8 +23,5 @@ export interface ResponsiveConfig {
         (breakpoints: Breakpoint[], callback: OnBreakpointChangeCallback): () => void;
     };
 
-    /**
-     * Current breakpoint screens (read-only)
-     */
     screens?: BreakpointScreens;
 }

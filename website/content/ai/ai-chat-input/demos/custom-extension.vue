@@ -418,7 +418,7 @@
                         </button>
                     </span>
                     <span class="item-content">
-                        {{ item.name ? item.name : item.value }}
+                        {{ item.name || item.value }}
                         <span v-if="item.type === 'branch'" class="detail">{{ item.detail }}</span>
                     </span>
                 </div>

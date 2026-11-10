@@ -8,7 +8,6 @@ export interface ResizeGroupView {
 
 export interface ResizeGroupContext {
     view: ComputedRef<ResizeGroupView>;
-    // both return the unregister function
     registerItem: (item: ResizeGroupItem) => () => void;
     registerHandler: (handler: HTMLDivElement) => () => void;
     notifyResizeStart: (handler: HTMLDivElement, e: PointerEvent) => void;

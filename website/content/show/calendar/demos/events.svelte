@@ -4,7 +4,7 @@
     let mode = $state('week');
     let displayValue = $state(new Date(2019, 6, 23, 8, 32, 0));
 
-    const onChangeDate = (date: Date | Date[] | undefined) => {
+    const onChangeDate = (date?: Date | Date[]) => {
         if (date instanceof Date) displayValue = date;
     };
 

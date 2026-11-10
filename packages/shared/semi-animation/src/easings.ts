@@ -1,4 +1,3 @@
-/** A cubic Bézier curve, the form Motion's `ease` and CSS `cubic-bezier()` take */
 export type CubicBezier = readonly [number, number, number, number];
 export type EasingFunction = (t: number) => number;
 

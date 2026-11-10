@@ -123,7 +123,7 @@ const ReferSlot = Node.create({
             dom.className = 'ai-chat-input-refer-slot-wrapper';
             const slot = document.createElement('span');
             slot.className = 'ai-chat-input-refer-slot';
-            slot.textContent = node.attrs.value ? node.attrs.value : '';
+            slot.textContent = node.attrs.value || '';
             dom.append(slot);
             return {
                 dom,
@@ -131,7 +131,7 @@ const ReferSlot = Node.create({
                     if (updated.type !== node.type) {
                         return false;
                     }
-                    slot.textContent = updated.attrs.value ? updated.attrs.value : '';
+                    slot.textContent = updated.attrs.value || '';
                     return true;
                 },
             };
@@ -474,7 +474,7 @@ export default function AIChatInputDemo() {
                             </button>
                         </span>
                         <span class="item-content">
-                            {item.name ? item.name : item.value}
+                            {item.name || item.value}
                             <Show when={item.type === 'branch'}>
                                 <span class="detail">{item.detail}</span>
                             </Show>

@@ -33,7 +33,7 @@ const hours = Array.from({ length: 12 }, (_itm, index) => {
 const minutes = Array.from({ length: 60 }, (_itm, index) => {
     return {
         value: index,
-        disabled: index % 2 === 1 ? true : false,
+        disabled: index % 2 === 1,
     };
 });
 
