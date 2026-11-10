@@ -1,0 +1,225 @@
+import React, { cloneElement, isValidElement, useMemo, useRef } from 'react';
+import clsx from 'clsx';
+import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/components/breadcrumb/foundation';
+import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
+import warning from '@fibrae/semi-foundation/utils/warning';
+import '@fibrae/semi-foundation/components/breadcrumb/breadcrumb.scss';
+import { IconMore } from '@fibrae/semi-icons-react';
+import type { ElementProps } from '../../base/base';
+import type { BaseProps } from '../../base/base-props';
+import useDefaultProps from '../../base/use-default-props';
+import useFoundation from '../../base/use-foundation';
+import useFocusHandover from '../../hooks/use-focus-handover';
+import useMergedRef from '../../hooks/use-merged-ref';
+import elementTypeOf from '../../utils/element-type';
+import flattenChildren from '../../utils/flatten-children';
+import useLocale from '../locale/use-locale';
+import Popover from '../popover';
+import type { TooltipProps } from '../tooltip';
+import { BreadContext, type BreadContextType } from './context';
+import BreadcrumbItem, { type BreadcrumbItemInfo, type BreadcrumbItemInternalProps, type RouteProps } from './item';
+
+type Foundation = BreadcrumbFoundation<BreadcrumbProps>;
+type Adapter = BreadcrumbAdapter<BreadcrumbProps>;
+
+const clsPrefix = cssClasses.PREFIX;
+
+const InternalBreadcrumbItem = BreadcrumbItem as (props: BreadcrumbItemInternalProps) => React.ReactNode;
+
+export type { RouteProps, BreadcrumbItemProps, BreadcrumbItemInfo } from './item';
+export interface ShowTooltipProps {
+    width?: string | number;
+    ellipsisPos?: 'end' | 'middle';
+    opts?: TooltipProps;
+}
+
+export type MoreType = 'default' | 'popover';
+
+export interface BreadcrumbProps extends BaseProps, ElementProps<'nav', 'onClick'> {
+    routes?: Array<RouteProps | string>;
+    /** Receives the route for `routes`, or `{ name: children, href }` for Breadcrumb.Item children */
+    onClick?: (route: BreadcrumbItemInfo | RouteProps, event: React.MouseEvent) => void;
+    separator?: React.ReactNode;
+    compact?: boolean;
+    style?: React.CSSProperties;
+    renderItem?: (route: RouteProps) => React.ReactNode;
+    className?: string;
+    showTooltip?: boolean | ShowTooltipProps;
+    maxItemCount?: number;
+    autoCollapse?: boolean;
+    renderMore?: (restItem: Array<React.ReactNode>) => React.ReactNode;
+    moreType?: MoreType;
+    'aria-label'?: React.AriaAttributes['aria-label'];
+    activeIndex?: number;
+    /** Attached to the nav */
+    ref?: React.Ref<HTMLElement>;
+}
+
+const defaultProps = {
+    routes: [],
+    separator: '/',
+    compact: true,
+    showTooltip: DEFAULT_TOOLTIP,
+    autoCollapse: true,
+    moreType: 'default',
+    maxItemCount: 4,
+} satisfies Partial<BreadcrumbProps>;
+
+function Breadcrumb(rawProps: BreadcrumbProps) {
+    const props = useDefaultProps('Breadcrumb', rawProps, defaultProps);
+    const { ref, routes, onClick, separator, compact, renderItem, className, showTooltip, maxItemCount, autoCollapse, renderMore, moreType, activeIndex, children, 'aria-label': ariaLabel, ...rest } = props;
+
+    const { locale } = useLocale('Breadcrumb');
+
+    const navRef = useRef<HTMLElement>(null);
+    const listRef = useRef<HTMLOListElement>(null);
+    let template: React.ReactNode[];
+
+    const [foundation, state] = useFoundation<Foundation, Adapter, BreadcrumbProps, BreadcrumbState>(
+        BreadcrumbFoundation,
+        props,
+        () => BreadcrumbFoundation.getInitialState(),
+        () => ({})
+    );
+
+    const mergedRef = useMergedRef(ref, navRef);
+
+    const context = useMemo<BreadContextType>(
+        () => ({
+            onClick: (info, e) => onClick?.(info, e),
+            hasOnClick: Boolean(onClick),
+            showTooltip,
+            compact,
+            separator,
+        }),
+        [onClick, showTooltip, compact, separator]
+    );
+
+    const routeItems = routes?.length > 0 ? BreadcrumbFoundation.genRoutes(routes) : null;
+    const childItems: React.ReactNode[] = routeItems ? [] : flattenChildren(children);
+    const itemLength = routeItems ? routeItems.length : childItems.length;
+    const { start: restStart, end: restEnd } = BreadcrumbFoundation.getCollapseRange(itemLength, maxItemCount, activeIndex);
+
+    // Expanding removes the more button, which held focus: the first item it hid takes over, else the nav itself
+    const handoverFocus = useFocusHandover<HTMLLIElement>(() => {
+        const nav = navRef.current;
+        const target = listRef.current?.children[restStart]?.querySelector<HTMLElement>('a[href], [tabindex]:not([tabindex="-1"])');
+        if (target) {
+            return target;
+        }
+        if (nav) {
+            nav.tabIndex = -1;
+        }
+        return nav;
+    });
+
+    const shouldCollapse = BreadcrumbFoundation.shouldCollapse(autoCollapse, { start: restStart, end: restEnd }, state.isCollapsed);
+    const hasRenderMore = typeof renderMore === 'function';
+    const collapse = { collapsed: shouldCollapse, start: restStart, end: restEnd, hasCustomMore: hasRenderMore, moreType };
+
+    const hasSeparator = (idx: number) => BreadcrumbFoundation.shouldRenderSeparator(idx, itemLength, collapse);
+
+    const isActive = (idx: number) => BreadcrumbFoundation.isActive(idx, itemLength, activeIndex);
+
+    if (routeItems) {
+        template = routeItems.map((route, idx) => (
+            // only the Item props a route may set, and its data-*, so other route fields stay off the DOM
+            <InternalBreadcrumbItem
+                {...getDataAttr(route)}
+                key={route._origin.key || `item-${route.name || route.path}-${idx}`}
+                active={isActive(idx)}
+                href={route.href}
+                noLink={route.noLink}
+                route={route._origin}
+                separator={route.separator}
+                shouldRenderSeparator={hasSeparator(idx)}
+                icon={route.icon}
+                onClick={route.onClick}
+            >
+                {renderItem ? renderItem(route._origin) : route.name}
+            </InternalBreadcrumbItem>
+        ));
+    } else {
+        template = childItems.map((item, idx) => {
+            const isItem = isValidElement<BreadcrumbItemInternalProps>(item) && elementTypeOf(item) === 'Breadcrumb.Item';
+            warning(isValidElement(item) && !isItem, '[Semi Breadcrumb]: Only accepts Breadcrumb.Item as its children');
+            if (!isItem) {
+                // an ol holds only li, so other nodes get one of their own
+                return <li key={isValidElement(item) ? item.key : `node-${idx}`}>{item}</li>;
+            }
+            // flattenChildren already keyed the element from the caller's key
+            return cloneElement(item, {
+                active: isActive(idx),
+                shouldRenderSeparator: hasSeparator(idx),
+            });
+        });
+    }
+
+    if (shouldCollapse) {
+        const restItem = template.slice(restStart, restEnd + 1);
+        let more: React.ReactNode;
+        if (hasRenderMore) {
+            more = renderMore(restItem);
+        } else if (moreType === 'default') {
+            more = <IconMore />;
+        } else if (moreType === 'popover') {
+            more = (
+                <Popover
+                    style={{ padding: 12 }}
+                    content={
+                        <ol className={`${clsPrefix}-list`}>
+                            {restItem.map((item, idx) => (
+                                <React.Fragment key={`restItem-${idx}`}>
+                                    {item}
+                                    {idx !== restItem.length - 1 && (
+                                        <li className={`${clsPrefix}-restItem`} aria-hidden>
+                                            {separator}
+                                        </li>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </ol>
+                    }
+                    showArrow
+                >
+                    {/* the more button around it is the Tab stop and expands every item; Popover would add 0 here */}
+                    <IconMore tabIndex={-1} />
+                </Popover>
+            );
+        }
+        const spread = (
+            <li key={`more-${itemLength}`} ref={handoverFocus} className={`${clsPrefix}-collapse`}>
+                <span className={`${clsPrefix}-item-wrap`}>
+                    <span className={`${clsPrefix}-item ${clsPrefix}-item-more`} aria-label={locale.expand} role="button" tabIndex={0} onClick={foundation.handleExpand} onKeyDown={foundation.handleExpandKeyDown}>
+                        {more}
+                    </span>
+                    <span className={`${clsPrefix}-separator`} x-semi-prop="separator">
+                        {separator}
+                    </span>
+                </span>
+            </li>
+        );
+        template = template.toSpliced(restStart, restEnd - restStart + 1, spread);
+    }
+
+    return (
+        <BreadContext value={context}>
+            <nav
+                {...rest}
+                ref={mergedRef}
+                className={clsx(className, `${clsPrefix}-wrapper`, {
+                    [`${clsPrefix}-wrapper-compact`]: compact,
+                    [`${clsPrefix}-wrapper-loose`]: !compact,
+                })}
+                aria-label={ariaLabel ?? locale.label}
+            >
+                <ol ref={listRef} className={`${clsPrefix}-list`}>
+                    {template}
+                </ol>
+            </nav>
+        </BreadContext>
+    );
+}
+
+export default Breadcrumb;

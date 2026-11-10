@@ -32,7 +32,7 @@ export const vueExemptions: VueExemption[] = [
     },
     // The header is a button only when the step has actions to expand; the rule cannot see the conditional role.
     {
-        files: ['packages/semi-ai-vue/src/components/ai-chat-dialogue/widgets/content-item/dialogue-step.vue'],
+        files: ['packages/semi-ai-vue/src/components/ai-chat-dialogue/dialogue/content-item/dialogue-step.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/no-static-element-interactions'],
     },
@@ -217,7 +217,7 @@ export const vueExemptions: VueExemption[] = [
     },
     // Root opens the preview (role="button" when it can); the dialog div closes on mask click; img mouse events pan.
     {
-        files: ['packages/semi-ui-vue/src/components/image/image.vue', 'packages/semi-ui-vue/src/components/image/preview-inner.vue', 'packages/semi-ui-vue/src/components/image/preview-image.vue'],
+        files: ['packages/semi-ui-vue/src/components/image/image.vue', 'packages/semi-ui-vue/src/components/image/preview/preview-inner.vue', 'packages/semi-ui-vue/src/components/image/preview/preview-image.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/no-static-element-interactions'],
     },
@@ -472,7 +472,7 @@ export const vueExemptions: VueExemption[] = [
     },
     // Input area click only focuses the textarea
     {
-        files: ['packages/semi-ai-vue/src/components/chat/widgets/input-box-layout.vue'],
+        files: ['packages/semi-ai-vue/src/components/chat/input-box-layout.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/click-events-have-key-events', 'vuejs-accessibility/no-static-element-interactions'],
     },
