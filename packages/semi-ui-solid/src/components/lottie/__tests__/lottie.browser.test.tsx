@@ -14,7 +14,7 @@ const loadAnimation = vi.hoisted(() => {
     });
     return vi.fn<typeof animation>(animation);
 });
-vi.mock('lottie-web', () => ({ default: { loadAnimation } }));
+vi.mock('lottie-web/build/player/lottie_light', () => ({ default: { loadAnimation } }));
 
 async function emulateReducedMotion(value: string) {
     await cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] });

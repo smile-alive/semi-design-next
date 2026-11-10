@@ -10,7 +10,9 @@ const loadAnimation = vi.hoisted(() => {
     });
     return vi.fn<typeof animation>(animation);
 });
-vi.mock('lottie-web', () => ({ default: { loadAnimation } }));
+const builds = vi.hoisted(() => ({ light: { name: 'light' }, full: { name: 'full' } }));
+vi.mock('lottie-web/build/player/lottie_light', () => ({ default: { ...builds.light, loadAnimation } }));
+vi.mock('lottie-web', () => ({ default: { ...builds.full, loadAnimation } }));
 
 type Handler = (event: { matches: boolean }) => void;
 
@@ -73,6 +75,33 @@ describe('LottieFoundation', () => {
             loop: true,
             autoplay: true,
             path: 'a.json',
+        });
+    });
+
+    it('svg 渲染器加载 light 构建，canvas 与 html 加载完整构建', async () => {
+        await expect(LottieFoundation.getLottie()).resolves.toMatchObject(builds.light);
+        await expect(LottieFoundation.getLottie('svg')).resolves.toMatchObject(builds.light);
+        await expect(LottieFoundation.getLottie('canvas')).resolves.toMatchObject(builds.full);
+        await expect(LottieFoundation.getLottie('html')).resolves.toMatchObject(builds.full);
+    });
+
+    describe('表达式告警', () => {
+        const animationData = { layers: [{ ks: { o: { a: 0, k: 100, x: 'wiggle(1, 10)' } } }] };
+
+        it('开发环境下 svg 渲染器遇到含表达式的 animationData 时告警', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+            mount({ animationData }, false);
+            await loaded();
+            expect(warn).toHaveBeenCalledTimes(1);
+            expect(warn.mock.calls[0][0]).toMatch(/expressions/);
+        });
+
+        it('不含表达式，或渲染器是 canvas 与 html 时不告警', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+            mount({ animationData: { layers: [{ ks: { p: { x: { a: 0, k: 1 } } } }] } }, false);
+            mount({ animationData, renderer: 'canvas' }, false);
+            await vi.waitFor(() => expect(loadAnimation).toHaveBeenCalledTimes(2));
+            expect(warn).not.toHaveBeenCalled();
         });
     });
 

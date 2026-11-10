@@ -15,7 +15,7 @@ const loadAnimation = vi.hoisted(() => {
     return vi.fn<typeof animation>(animation);
 });
 
-vi.mock('lottie-web', async () => {
+vi.mock('lottie-web/build/player/lottie_light', async () => {
     await gate.promise;
     return { default: { loadAnimation } };
 });
@@ -34,7 +34,7 @@ describe('lottie-web 加载期间的 Lottie', () => {
         expect(kept.container.firstChild).toBeEmptyDOMElement();
 
         gate.open();
-        const lottieModule = (await import('lottie-web')).default;
+        const lottieModule = (await import('lottie-web/build/player/lottie_light')).default;
         await waitFor(() => expect(getAnimationInstance).toHaveBeenCalledTimes(1));
         expect(loadAnimation).toHaveBeenCalledTimes(1);
         expect(loadAnimation.mock.calls[0][0]).toMatchObject({

@@ -99,7 +99,7 @@ Common parameters
 //params
 {
   container: element, // Rendering container, if not passed, Semi Lottie component will automatically configure and generate
-  renderer: 'svg', // Rendering mode, default SVG
+  renderer: 'svg', // Rendering mode, default SVG; SVG uses the light build of lottie-web, which does not support expressions. Set 'canvas' or 'html' for animations that use expressions, which loads the full build
   loop: true, // Whether to open loop, default true
   autoplay: true, // Whether to play automatically, default true, when set to false, you need to manually play through the play method on the animation instance
   path: 'data.json' // URL path of animation JSON file (mutually exclusive with animationData)
@@ -212,9 +212,9 @@ Other native attributes (such as `data-*`, `onClick` and `aria-*`) land on the c
 
 ### Static methods
 
-| Method             | Description                                                                    | Type                    |
-| ------------------ | ------------------------------------------------------------------------------ | ----------------------- |
-| `Lottie.getLottie` | Get the global Lottie asynchronously; `lottie-web` is loaded on the first call | () => Promise\<Lottie\> |
+| Method             | Description                                                                                                                                                | Type                                                          |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `Lottie.getLottie` | Get the global Lottie asynchronously; `lottie-web` is loaded on the first call. The full build is loaded for `canvas` or `html`, the light build otherwise | (renderer?: 'svg' \| 'canvas' \| 'html') => Promise\<Lottie\> |
 
 ## Accessibility
 

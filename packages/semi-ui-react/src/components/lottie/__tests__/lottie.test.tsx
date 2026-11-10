@@ -1,6 +1,5 @@
 import { StrictMode, createRef } from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
-import lottie from 'lottie-web';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import Lottie, { type LottieProps } from '../index';
@@ -15,7 +14,10 @@ const loadAnimation = vi.hoisted(() => {
     });
     return vi.fn<typeof animation>(animation);
 });
-vi.mock('lottie-web', () => ({ default: { loadAnimation } }));
+// the default svg player is the light build; canvas and html load the full one
+const { lottie, fullLottie } = vi.hoisted(() => ({ lottie: { loadAnimation }, fullLottie: { loadAnimation, full: true } }));
+vi.mock('lottie-web/build/player/lottie_light', () => ({ default: lottie }));
+vi.mock('lottie-web', () => ({ default: fullLottie }));
 
 type MediaHandler = (event: { matches: boolean }) => void;
 
@@ -149,6 +151,14 @@ describe('Lottie', () => {
         const result = Lottie.getLottie();
         expect(result).toBeInstanceOf(Promise);
         await expect(result).resolves.toBe(lottie);
+        await expect(Lottie.getLottie('canvas')).resolves.toBe(fullLottie);
+    });
+
+    it('canvas 渲染器通过 getLottie 交出完整构建', async () => {
+        const getLottie = vi.fn<NonNullable<LottieProps['getLottie']>>();
+        render(<Lottie getLottie={getLottie} params={{ renderer: 'canvas' }} />);
+        await loaded();
+        expect(getLottie).toHaveBeenCalledWith(fullLottie);
     });
 
     it('params 深度相等时保留动画，变化时重新加载', async () => {
