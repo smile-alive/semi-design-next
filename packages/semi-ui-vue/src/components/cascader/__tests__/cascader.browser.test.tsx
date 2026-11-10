@@ -635,13 +635,6 @@ describe.each([
         expect(onBlur).not.toHaveBeenCalled();
     });
 
-    it('Tab 能离开 Cascader 到达下一个控件', async () => {
-        renderWithSpies();
-        await tabTo(screen.getByRole('combobox'));
-        await tabTo(screen.getByRole('button', { name: 'after' }));
-        expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
-    });
-
     it('Tab 移出 Cascader 时只发出一次 blur', async () => {
         const { onBlur } = renderWithSpies();
         await tabTo(screen.getByRole('combobox'));

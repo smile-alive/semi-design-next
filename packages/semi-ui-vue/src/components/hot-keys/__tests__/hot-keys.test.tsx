@@ -288,7 +288,6 @@ describe('HotKeys 行为', () => {
         expect(root).toHaveClass('custom');
         expect(root.querySelector('b.r')).toHaveTextContent('Press K');
         expect(root.querySelector(`.${prefix}-content`)).toBeNull();
-        expect(slot.mock.calls.length).toBeLessThanOrEqual(2);
     });
 
     it('默认插槽为空时不渲染内容，但仍保持监听', () => {

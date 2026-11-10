@@ -80,7 +80,7 @@ describe('BreakpointObserver', () => {
         observer.subscribe(vi.fn<OnBreakpointScreensCallback>());
         observer.subscribe(['xs'], vi.fn<OnBreakpointChangeCallback>());
         expect(media.live()).toBe(0);
-        expect(warn.mock.calls.length).toBeLessThanOrEqual(1);
+        expect(warn).toHaveBeenCalledTimes(1);
     });
 
     it('sync 加 commit 在开启 responsiveObserve 后注册，关闭后注销', () => {

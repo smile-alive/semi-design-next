@@ -301,8 +301,7 @@ describe('Svelte Image', () => {
 
 describe('Svelte Image 单图预览的片段', () => {
     it('title、closeIcon、leftIcon、rightIcon、previewMenu 转发给单图预览', async () => {
-        const { container } = renderImage({ preview: { src: srcList, visible: true, previewTitle: 'T' } }, ['title', 'closeIcon', 'leftIcon', 'rightIcon', 'previewMenu']);
-        expect(container).toBeTruthy();
+        renderImage({ preview: { src: srcList, visible: true, previewTitle: 'T' } }, ['title', 'closeIcon', 'leftIcon', 'rightIcon', 'previewMenu']);
         expect($('.custom-title')?.textContent).toBe('0:T');
         expect($('.custom-close')).not.toBeNull();
         expect($('.custom-menu')?.textContent).toContain('1/3');

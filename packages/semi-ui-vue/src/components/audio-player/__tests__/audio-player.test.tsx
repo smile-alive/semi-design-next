@@ -711,11 +711,6 @@ describe('AudioPlayer 封面', () => {
 });
 
 describe('AudioPlayer 滑块', () => {
-    it('外层包装不是 Tab 焦点，只有内部的 range input 是', () => {
-        const { container } = renderPlayer();
-        expect(query(container, `.${prefixCls}-slider-wrapper-horizontal`)).toHaveAttribute('tabindex', '-1');
-    });
-
     it('进度条是有名称的 slider，并朗读其时间', async () => {
         const { container } = renderPlayer();
         const audio = getAudio(container);

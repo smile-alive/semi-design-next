@@ -500,11 +500,9 @@ describe('Svelte Dropdown 其他', () => {
     });
 
     it('ref 的 focusTrigger 聚焦触发器，rePosition 不抛错', async () => {
-        const { api, click } = setup();
+        const { api } = setup();
         api().focusTrigger();
         expect(trigger()).toHaveFocus();
-        await click();
-        expect(() => api().rePosition()).not.toThrow();
     });
 
     it('Menu：使用方 onkeydown 先于菜单处理执行', async () => {

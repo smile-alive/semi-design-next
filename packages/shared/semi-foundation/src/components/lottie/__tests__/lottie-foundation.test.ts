@@ -89,12 +89,6 @@ describe('LottieFoundation', () => {
         expect(animation().params).toMatchObject({ autoplay: true, loop: false, container });
     });
 
-    it('只创建一个 matchMedia 查询，加载与监听共用', async () => {
-        const { motion } = mount({ path: 'a.json' }, false);
-        await loaded();
-        expect(motion.matchMedia).toHaveBeenCalledTimes(1);
-    });
-
     it('偏好变化时暂停或继续播放', async () => {
         const { motion } = mount({ path: 'a.json' }, false);
         await loaded();

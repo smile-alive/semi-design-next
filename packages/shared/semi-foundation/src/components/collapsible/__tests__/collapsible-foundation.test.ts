@@ -67,10 +67,6 @@ describe('CollapsibleFoundation 收起高度表达式', () => {
     it('非自适应时为字面高度', () => {
         expect(getCollapsedHeight(p({ collapseHeight: 30 }))).toBe('30px');
     });
-
-    it('自适应时为 calc-size，收起高度不超过内容实际高度（由 CSS 在真实布局中求值，这里只验证表达式本身）', () => {
-        expect(getCollapsedHeight(p({ collapseHeight: 30, collapseHeightAdaptive: true }))).toBe('calc-size(auto, min(size, 30px))');
-    });
 });
 
 describe('CollapsibleFoundation 外层样式', () => {

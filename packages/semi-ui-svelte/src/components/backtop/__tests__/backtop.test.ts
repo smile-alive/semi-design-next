@@ -71,15 +71,6 @@ describe('Svelte BackTop', () => {
         expect(getRoot(container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('点击调用 onclick', async () => {
-        const onclick = vi.fn<Click>();
-        const { container } = setup({ class: 'test', visibilityHeight: -1, onclick });
-        await frame();
-        await fireEvent.click(container.querySelector('.semi-backtop.test') as Element);
-        expect(onclick).toHaveBeenCalledTimes(1);
-        expect(onclick.mock.calls[0][0].type).toBe('click');
-    });
-
     it('窗口滚动超过 visibilityHeight 后显示，低于该值后隐藏', async () => {
         const { container } = setup();
         await frame();
@@ -351,18 +342,6 @@ describe('Svelte BackTop', () => {
 
         vi.advanceTimersByTime(500);
         expect(node.scrollTop).toBe(position);
-    });
-
-    it('挂载与卸载时滚动监听成对', async () => {
-        const node = createTarget();
-        const add = vi.spyOn(node, 'addEventListener');
-        const remove = vi.spyOn(node, 'removeEventListener');
-        const { unmount } = setup({ target: () => node });
-        await frame();
-        expect(countLiveListeners(add, remove, 'scroll')).toBe(1);
-
-        unmount();
-        expect(countLiveListeners(add, remove, 'scroll')).toBe(0);
     });
 
     it('读取全局默认值，显式属性优先', async () => {

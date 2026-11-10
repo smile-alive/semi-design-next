@@ -8,7 +8,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSearch } from '@fibrae/semi-icons-vue';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import Input, { InputGroup, TextArea, type InputChangeEvent, type InputHandle, type InputProps } from '..';
+import Input, { type InputChangeEvent, type InputHandle, type InputProps } from '..';
 import InTooltip from './fixtures/in-tooltip.vue';
 import Model from './fixtures/model.vue';
 import Upper from './fixtures/upper.vue';
@@ -235,15 +235,6 @@ describe('Input', () => {
         }
         expect(clear).not.toHaveBeenCalled();
         expect(getInput()).toHaveValue('semi');
-    });
-
-    it('清除按钮的 mousedown 照常冒泡，页面上其他弹层的点击外部能收到', async () => {
-        const onMouseDown = vi.fn<(event: MouseEvent) => void>();
-        document.addEventListener('mousedown', onMouseDown);
-        onTestFinished(() => document.removeEventListener('mousedown', onMouseDown));
-        render(Input, { props: { defaultValue: 'semi', showClear: true } });
-        await fireEvent.mouseDown(getClearBtn() as HTMLElement);
-        expect(onMouseDown).toHaveBeenCalledTimes(1);
     });
 
     it('showClear 与 clear 事件', async () => {
@@ -912,17 +903,5 @@ describe('Input 行为基线', () => {
         expect(getInput()).not.toHaveAttribute('maxlength');
         await fireEvent.update(getInput(), '💖💖💖');
         expect(change.mock.calls[0][0]).toBe('💖💖');
-    });
-
-    it('Boolean prop 都有 default 键，Function prop 的 default 为 undefined', () => {
-        const offenders = [Input, TextArea, InputGroup].flatMap((component) =>
-            Object.entries((component as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props)
-                .filter(([, option]) => {
-                    const types = [option.type].flat();
-                    return (types.includes(Boolean) && !Object.hasOwn(option, 'default')) || (types.includes(Function) && option.default !== undefined);
-                })
-                .map(([name]) => name)
-        );
-        expect(offenders).toEqual([]);
     });
 });

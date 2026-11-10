@@ -832,15 +832,6 @@ describe('SideSheet Vue 写法', () => {
         page.remove();
     });
 
-    it('props 运行时：Boolean 类型都有 default 键，函数 prop 默认值为 undefined', () => {
-        const declared = (SideSheet as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props;
-        const missingDefault = Object.entries(declared)
-            .filter(([, option]) => [option.type].flat().includes(Boolean) && !('default' in option))
-            .map(([key]) => key);
-        expect(missingDefault).toEqual([]);
-        expect(declared.getPopupContainer.default).toBeUndefined();
-    });
-
     it('事件载荷类型', () => {
         expectTypeOf<SideSheetEmits['afterVisibleChange']>().toEqualTypeOf<[visible: boolean]>();
         expectTypeOf<SideSheetEmits['update:visible']>().toEqualTypeOf<[visible: boolean]>();

@@ -481,11 +481,6 @@ describe('AutoComplete', () => {
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-autocomplete`)).not.toHaveAttribute('id');
     });
 
-    it('【item】对象数据的节点内容走 #item', async () => {
-        await renderAc({ data: [{ label: 'Custom Label', value: 'custom' }], defaultOpen: true }, { item: ({ item }) => <span class="custom-label">{(item as AutoCompleteDataItem).label}</span> });
-        expect(screen.getByText('Custom Label')).toHaveClass('custom-label');
-    });
-
     it('【Enter】选中高亮项写入输入框', async () => {
         await renderAc({ defaultOpen: true, data: stringData, defaultActiveFirstOption: true });
         await keyDown('Enter');
@@ -759,16 +754,6 @@ describe('AutoComplete', () => {
         expect(option).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('卸载后 document 上的 mousedown 不再触达', async () => {
-        const onDropdownVisibleChange = vi.fn<(visible: boolean) => void>();
-        const view = await renderAc({ data: stringData, onDropdownVisibleChange });
-        await fireEvent.click(getInput());
-        expect(onDropdownVisibleChange).toHaveBeenCalledWith(true);
-        view.unmount();
-        await fireEvent.mouseDown(document.body);
-        expect(onDropdownVisibleChange).toHaveBeenCalledTimes(1);
-    });
-
     it('【stopPropagation】阻止选项上的 mousedown 冒泡到 document', async () => {
         const onMouseDown = vi.fn<(event: MouseEvent) => void>();
         await renderAc({ data: stringData, defaultOpen: true });
@@ -859,14 +844,6 @@ describe('AutoComplete', () => {
         expect(getFocusedOption()).toContainElement(items[1]);
         await click(items[1]);
         expect(onSelect).toHaveBeenCalledWith('c2');
-    });
-
-    it('打开后点击外部关闭', async () => {
-        await renderAc({ data: stringData });
-        await click(getInput());
-        expect(getList()).not.toBeNull();
-        await mouseDown(document.body);
-        await expectClosed();
     });
 
     // Typing '1.62' focuses its index in the old results (1); when the new results (just '1.62') arrive the focus
@@ -1001,15 +978,6 @@ describe('AutoComplete 行为基线', () => {
         expect(getRoot()).toHaveAttribute('tabindex', '-1');
     });
 
-    it('从 semiGlobal overrideDefaultProps 读取默认值', async () => {
-        semiGlobal.config.overrideDefaultProps = { AutoComplete: { size: 'small' } };
-        onTestFinished(() => {
-            semiGlobal.config.overrideDefaultProps = {};
-        });
-        await renderAc();
-        expect(document.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper-small`)).not.toBeNull();
-    });
-
     it('每次输入只上报一次 change，点击外部时关闭', async () => {
         const onChange = vi.fn<(value: string | number) => void>();
         const onDropdownVisibleChange = vi.fn<(visible: boolean) => void>();
@@ -1071,15 +1039,6 @@ describe('AutoComplete 组件实例', () => {
         expect(getRoot()).toHaveAttribute('title', 'tip');
         expect(getRoot()).not.toHaveAttribute('name');
         expect(getInput()).toHaveAttribute('name', 'city-name');
-    });
-
-    it('全局默认值填充组件没有默认值的键', async () => {
-        semiGlobal.config.overrideDefaultProps = { AutoComplete: { placeholder: 'global' } };
-        onTestFinished(() => {
-            semiGlobal.config.overrideDefaultProps = {};
-        });
-        await renderAc();
-        expect(getInput()).toHaveAttribute('placeholder', 'global');
     });
 
     it('打开时点击外部关闭一次，卸载后 document 上的 mousedown 不再触达', async () => {

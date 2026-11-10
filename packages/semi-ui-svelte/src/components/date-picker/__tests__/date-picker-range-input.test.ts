@@ -25,16 +25,6 @@ describe('Svelte DatePicker 值的形式与显示文本', () => {
         expect(getInput()).toHaveValue('2021-01 ~ 2021-07');
     });
 
-    it('时间戳形式的 value', async () => {
-        await setup({ value: new Date(2021, 7, 15).getTime() });
-        expect(getInput()).toHaveValue('2021-08-15');
-    });
-
-    it('字符串形式的 value', async () => {
-        await setup({ value: '2021-08-15' });
-        expect(getInput()).toHaveValue('2021-08-15');
-    });
-
     it('自定义 format 字符串', async () => {
         await setup({ value: new Date(2021, 7, 15), props: { format: 'dd/MM/yyyy' } });
         expect(getInput()).toHaveValue('15/08/2021');

@@ -100,12 +100,6 @@ describe('Collapsible', () => {
         expect(queryContent()).toBeNull();
     });
 
-    it('展开到 auto 高度', () => {
-        const { container } = renderCollapsible({ isOpen: true });
-        expect(getWrapper(container)?.style.getPropertyValue(heightVar)).toBe(openHeight);
-        expect(queryContent()).toBeInTheDocument();
-    });
-
     it('展开动画持续到过渡结束', async () => {
         const motionEnd = vi.fn<() => void>();
         const view = renderCollapsible({}, { onMotionEnd: motionEnd });

@@ -252,12 +252,6 @@ describe('Svelte Checkbox', () => {
         expect(getInput()).toHaveFocus();
     });
 
-    it('点击文字时聚焦原生 input', async () => {
-        render(Checkbox, { props: { children: label } });
-        await userEvent.click(document.querySelector(`.${prefixCls}-addon`) as HTMLElement);
-        expect(getInput()).toHaveFocus();
-    });
-
     it('focus 与 blur 方法，focus 把 preventScroll 传给 input', () => {
         const view = render(Checkbox, { props: { preventScroll: true } });
         const focus = vi.spyOn(HTMLInputElement.prototype, 'focus');

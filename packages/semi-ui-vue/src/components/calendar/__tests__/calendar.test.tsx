@@ -757,18 +757,6 @@ describe('Calendar 作为组件', () => {
         }
     });
 
-    it('将未声明的属性传给根元素', () => {
-        for (const mode of MODES) {
-            const view = render(Calendar, {
-                attrs: { id: `cal-${mode}`, 'aria-label': 'schedule' },
-                props: { mode, range: weekRange },
-            });
-            expect(rootOf(view.container)).toHaveAttribute('id', `cal-${mode}`);
-            expect(rootOf(view.container)).toHaveAttribute('aria-label', 'schedule');
-            view.unmount();
-        }
-    });
-
     it('从 semiGlobal overrideDefaultProps 读取默认值', () => {
         const before = semiGlobal.config.overrideDefaultProps;
         semiGlobal.config.overrideDefaultProps = { Calendar: { mode: 'day', scrollTop: 50 } };

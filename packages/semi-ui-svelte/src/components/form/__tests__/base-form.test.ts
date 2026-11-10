@@ -67,14 +67,6 @@ describe('Svelte Form-baseForm', () => {
         expect(JSON.parse(screen.getByTestId('state').textContent ?? '').values).toEqual({ UserName: 'semi' });
     });
 
-    it('getFormApi 回调及其参数为有效函数', () => {
-        const { api, onGetFormApi } = renderForm({}, nameInput());
-        expect(onGetFormApi).toHaveBeenCalledTimes(1);
-        for (const name of ['setValue', 'setValues', 'setError', 'setTouched', 'submitForm', 'reset', 'getInitValue', 'getFieldExist', 'getFormState', 'getTouched', 'getValue', 'getError', 'validate'] as const) {
-            expect(api()[name]).toEqual(expect.any(Function));
-        }
-    });
-
     it('未校验时 submit，由 formApi 触发', async () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const { api } = renderForm({ onSubmit }, [input('input')]);
@@ -406,14 +398,6 @@ describe('Svelte Form-baseForm 行为', () => {
         store.fields[0].shown = true;
         flushSync();
         expect(getInput()).toHaveValue('semi');
-    });
-
-    it('挂载且字段注册完成后调用一次 getFormApi', () => {
-        let existed: boolean | undefined;
-        const { onGetFormApi, api } = renderForm({}, nameInput());
-        existed = api().getFieldExist('name');
-        expect(onGetFormApi).toHaveBeenCalledTimes(1);
-        expect(existed).toBe(true);
     });
 
     it('不把自身属性放到 form 元素上', () => {

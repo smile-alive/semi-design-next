@@ -590,7 +590,9 @@ describe('Popconfirm', () => {
     it('禁用时 ref.focusTrigger 不做任何操作', () => {
         let handle: PopconfirmHandle | undefined;
         renderPopconfirm({ ref: (instance: PopconfirmHandle) => (handle = instance), disabled: true });
-        expect(() => handle?.focusTrigger()).not.toThrow();
+        expect(handle).toBeDefined();
+        handle?.focusTrigger();
+        expect(screen.getByRole('button', { name: 'Save' })).not.toHaveFocus();
     });
 
     it('丢弃未声明的 data-* 等属性：没有 DOM 节点接收它们', async () => {

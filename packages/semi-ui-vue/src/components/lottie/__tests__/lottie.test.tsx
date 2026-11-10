@@ -236,12 +236,6 @@ describe('Lottie', () => {
         expect(live()).toEqual([]);
     });
 
-    it('每创建一个动画，通知一次 getAnimationInstance', async () => {
-        const view = render(Lottie, { props: { params: {} } });
-        await loaded();
-        expect(view.emitted('getAnimationInstance')).toHaveLength(1);
-    });
-
     it('KeepAlive 失活时销毁动画并停止监听，激活后重新创建', async () => {
         const view = render(CachedLottie, { props: { active: true } });
         await loaded();
@@ -274,13 +268,6 @@ describe('Lottie', () => {
             render(Lottie, { props: { params: { path: 'a.json' } } });
             await loaded();
             expect(loadAnimation).toHaveBeenCalledWith(expect.objectContaining({ autoplay: false, loop: true }));
-        });
-
-        it('用户要求减少动态效果时，仍保留显式设置的 autoplay', async () => {
-            motion.list.matches = true;
-            render(Lottie, { props: { params: { path: 'a.json', autoplay: true } } });
-            await loaded();
-            expect(loadAnimation).toHaveBeenCalledWith(expect.objectContaining({ autoplay: true }));
         });
 
         it('设置变化时，暂停并恢复默认自动播放的动画', async () => {

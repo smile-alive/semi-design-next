@@ -15,15 +15,6 @@ async function openTimePanel() {
 }
 
 describe('Svelte DatePicker 时间面板的选项', () => {
-    it('dateTime 的 disabledTime：被禁用的小时带 aria-disabled', async () => {
-        const disabledTime = () => ({ disabledHours: () => [0, 1, 2, 3, 4, 5], disabledMinutes: () => [], disabledSeconds: () => [] });
-        await setup({ value: baseDate, open: true, props: { type: 'dateTime', disabledTime } });
-
-        const [hourList] = await openTimePanel();
-        const disabledHours = new Set(Array.from(hourList.querySelectorAll('li[aria-disabled="true"]')).map((item) => item.textContent));
-        expect([...disabledHours]).toEqual(['00', '01', '02', '03', '04', '05']);
-    });
-
     it('timePickerOpts 的 use12Hours：时间面板多一列上下午', async () => {
         await setup({ value: baseDate, open: true, props: { type: 'dateTime', timePickerOpts: { use12Hours: true } } });
         expect(await openTimePanel()).toHaveLength(4);

@@ -167,14 +167,13 @@ describe('Svelte MarkdownRender', () => {
         semi.config.overrideDefaultProps = { MarkdownRender: { format: 'md', remarkGfm: false } };
         const context = new Map<unknown, unknown>([[semiGlobalKey, semi]]);
         const table = '| A |\n| - |\n| 1 |';
-        const { container } = setup({ raw: `injected {1 + 1}\n\n${table}` }, context);
+        setup({ raw: `injected {1 + 1}\n\n${table}` }, context);
         setup({ format: 'mdx', raw: `explicit {1 + 1}\n\n${table}`, remarkGfm: true }, context);
         expect(await screen.findByText('injected {1 + 1}')).toBeInTheDocument();
         expect(await screen.findByText('explicit 2')).toBeInTheDocument();
         const [injected, explicit] = document.querySelectorAll(`.${prefix}`);
         expect(injected.querySelector('table')).toBeNull();
         expect(explicit.querySelector('table')).not.toBeNull();
-        expect(container).toBeTruthy();
     });
 
     it.each<[string, MarkdownRenderProps, RegExp]>([
