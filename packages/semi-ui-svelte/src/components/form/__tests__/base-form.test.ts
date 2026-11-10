@@ -189,15 +189,14 @@ describe('Svelte Form-baseForm', () => {
         const { container } = renderForm({ wrapperCol: { span: 20 }, labelCol: { span: 2 } }, fields());
         const fieldsDom = container.querySelectorAll(fieldSelector);
         expect(fieldsDom).toHaveLength(2);
-        expect(container.querySelector('.semi-row > form')).not.toBeNull();
+        expect(container.querySelector('.semi-row')).toBeNull();
         for (const field of fieldsDom) {
-            expect(field.querySelector('.semi-row')).toBeNull();
-            expect(field.querySelector(`.semi-col-20 .${prefix}-field-main`)).not.toBeNull();
             const [labelBox, wrapperCol] = field.children;
+            expect(wrapperCol.querySelector(`.${prefix}-field-main`)).not.toBeNull();
             const labelCol = labelBox.querySelector('.semi-col');
-            expect(labelCol).toHaveClass('semi-col-2');
+            expect(labelCol).toHaveStyle({ '--semi-col-span': '2' });
             expect(labelCol?.querySelector(labelSelector)).not.toBeNull();
-            expect(wrapperCol).toHaveClass('semi-col-20');
+            expect(wrapperCol).toHaveStyle({ '--semi-col-span': '20' });
             expect(wrapperCol.querySelector(labelSelector)).toBeNull();
         }
     });

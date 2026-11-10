@@ -370,19 +370,19 @@ describe('Form-field', () => {
         const field = container.querySelector(`.${BASE_CLASS_PREFIX}-form-field`);
         const row = field.querySelector(`:scope > .${BASE_CLASS_PREFIX}-row`);
         expect(row).not.toBeNull();
-        expect(row.querySelector(`.${BASE_CLASS_PREFIX}-col-6`)).not.toBeNull();
-        expect(row.querySelector(`:scope > .${BASE_CLASS_PREFIX}-col-18`)).not.toBeNull();
+        expect(row.querySelector(`.${BASE_CLASS_PREFIX}-col`)).toHaveStyle({ '--semi-col-span': '6' });
+        expect(row.querySelector(`:scope > .${BASE_CLASS_PREFIX}-col`)).toHaveStyle({ '--semi-col-span': '18' });
     });
 
-    it('Form 同时设置两列时，保留单个表单级 Row', () => {
+    it('Form 同时设置两列时，字段不再套 Row', () => {
         const { container } = render(
             <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
                 <FormInput field="name" label="Name" />
             </Form>
         );
-        expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-row`)).toHaveLength(1);
+        expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-row`)).toHaveLength(0);
         const field = container.querySelector(`.${BASE_CLASS_PREFIX}-form-field`);
-        expect(field.querySelector(`:scope > .${BASE_CLASS_PREFIX}-col-18`)).not.toBeNull();
+        expect(field.querySelector(`:scope > .${BASE_CLASS_PREFIX}-col`)).toHaveStyle({ '--semi-col-span': '18' });
     });
 
     it('ref 传到被包裹的组件', () => {

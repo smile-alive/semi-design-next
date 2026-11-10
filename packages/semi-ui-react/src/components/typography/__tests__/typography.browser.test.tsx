@@ -31,7 +31,7 @@ describe('Typography（浏览器）', () => {
 
     it('mark 的文字色跟随主题 token，不是 UA 的 MarkText', () => {
         const { container } = render(
-            <Text style={{ '--semi-color-text-0': 'rgb(1, 2, 3)' } as React.CSSProperties} mark>
+            <Text style={{ '--semi-color-text-0': 'rgb(1, 2, 3)' }} mark>
                 mark
             </Text>
         );

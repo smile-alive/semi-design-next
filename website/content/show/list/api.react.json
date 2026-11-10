@@ -18,8 +18,8 @@
             },
             "footer": { "zh-CN": "列表底部，渲染在列表内容之后。", "en-US": "List footer, rendered after the list content." },
             "grid": {
-                "zh-CN": "栅格配置：Row 的 `align`、`gutter`、`justify`、`type` 与 Col 的 `span`、`offset`、`order`、`push`、`pull`、响应式断点、`className`、`style`。`className` 与 `style` 落在每项外层的 Col 上。",
-                "en-US": "Grid configuration: `align`, `gutter`, `justify` and `type` of Row, and `span`, `offset`, `order`, `push`, `pull`, the responsive breakpoints, `className` and `style` of Col. `className` and `style` land on the Col around each item."
+                "zh-CN": "栅格配置：Row 的 `align`、`gutter`、`justify` 与 Col 的 `span`、`offset`、`order`、`push`、`pull`、响应式断点、`className`、`style`。`className` 与 `style` 落在每项外层的 Col 上。",
+                "en-US": "Grid configuration: `align`, `gutter` and `justify` of Row, and `span`, `offset`, `order`, `push`, `pull`, the responsive breakpoints, `className` and `style` of Col. `className` and `style` land on the Col around each item."
             },
             "header": { "zh-CN": "列表头部，渲染在列表内容之前。", "en-US": "List header, rendered before the list content." },
             "layout": { "zh-CN": "列表布局，可选 `vertical` 或 `horizontal`。", "en-US": "List layout: `vertical` or `horizontal`." },

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { PinCode } from '@fibrae/semi-ui-react';
+import { ConfigProvider, PinCode } from '@fibrae/semi-ui-react';
 import { tabTo } from '@test/utils/browser';
 
 const digit = (index, count = 4) => zh_CN.PinCode.digit.replace('${index}', String(index)).replace('${count}', String(count));
@@ -29,6 +29,19 @@ describe('PinCode（浏览器）', () => {
         await userEvent.keyboard('{Backspace}');
         expect(input(1)).toHaveFocus();
         expect(input(2)).toHaveValue('');
+    });
+
+    it('RTL 下 ArrowLeft 向后移动，ArrowRight 向前移动', async () => {
+        render(
+            <ConfigProvider direction="rtl">
+                <PinCode aria-label="code" count={4} />
+            </ConfigProvider>
+        );
+        await userEvent.click(input(2));
+        await userEvent.keyboard('{ArrowLeft}');
+        expect(input(3)).toHaveFocus();
+        await userEvent.keyboard('{ArrowRight}{ArrowRight}');
+        expect(input(1)).toHaveFocus();
     });
 
     it('光标在已填字符之前输入时，写入的是新输入的字符', async () => {

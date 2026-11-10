@@ -508,7 +508,7 @@ $module: #{$prefix}-cascader;
             white-space: pre;
 
             &-checkbox {
-                margin-inline: $spacing-cascader_label_checkbox-marginRight;
+                margin-inline-end: $spacing-cascader_label_checkbox-marginRight;
             }
         }
 

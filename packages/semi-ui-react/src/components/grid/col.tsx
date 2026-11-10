@@ -3,7 +3,7 @@
  */
 import type React from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
-import { getColClassName, type ColSize } from '@fibrae/semi-foundation/components/grid/utils';
+import { getColClassName, getColStyle, type ColSize } from '@fibrae/semi-foundation/components/grid/utils';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 
@@ -31,10 +31,10 @@ export interface ColProps extends ElementProps<'div'> {
 export default function Col(rawProps: ColProps) {
     const { ref, span, order, offset, push, pull, className, style, children, xs, sm, md, lg, xl, xxl, ...rest } = useDefaultProps('Col', rawProps, {});
 
-    const classes = getColClassName(cssClasses.PREFIX, { span, order, offset, push, pull, xs, sm, md, lg, xl, xxl }, className);
+    const colStyle = { ...getColStyle({ span, order, offset, push, pull, xs, sm, md, lg, xl, xxl }), ...style };
 
     return (
-        <div {...rest} ref={ref} className={classes} style={style} x-semi-prop="children">
+        <div {...rest} ref={ref} className={getColClassName(cssClasses.PREFIX, className)} style={colStyle} x-semi-prop="children">
             {children}
         </div>
     );

@@ -104,7 +104,7 @@ export default function ListItem(props: ListItemProps) {
     return (
         <Show when={list().grid} fallback={item}>
             {(grid) => (
-                <Col {...omit(grid(), ['gutter', 'justify', 'type', 'align'])} role="none">
+                <Col {...omit(grid(), ['gutter', 'justify', 'align'])} role="none">
                     {item}
                 </Col>
             )}

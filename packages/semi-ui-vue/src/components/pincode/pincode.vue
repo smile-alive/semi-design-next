@@ -9,6 +9,7 @@
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
     import { splitControlAttrs } from '../../utils/control-attrs';
+    import useConfig from '../config-provider/use-config';
     import Input, { type InputChangeEvent, type InputHandle } from '../input';
     import useLocale from '../locale/use-locale';
     import type { PinCodeEmits, PinCodeFormat, PinCodeHandle, PinCodeProps, PinCodeState } from './interface';
@@ -40,6 +41,7 @@
 
     const semi = useSemiGlobal();
     const locale = useLocale('PinCode');
+    const config = useConfig();
 
     // The inputs are the focus targets, so their description and state go to each one; on the root a Tooltip's
     // tabindex would add an extra tab stop. The caller's name stays on the group.
@@ -71,7 +73,7 @@
                 }
             },
         }),
-        { props: { value: () => props.modelValue, format: () => format.value } }
+        { context: () => config.value, props: { value: () => props.modelValue, format: () => format.value } }
     );
 
     // injected by Form: not DOM attributes, and no single cell carries the code's name

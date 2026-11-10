@@ -7,9 +7,7 @@
     import '@fibrae/semi-foundation/components/form/form.scss';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import SlotFragment from '../../base/slot-fragment';
     import useFoundation from '../../base/use-foundation';
-    import Row from '../grid/row.vue';
     import useLocale from '../locale/use-locale';
     import { provideFormContext } from './context';
     import type { AllFormProps, FormApi, FormEmits, FormHandle, FormProps, FormSlots } from './interface';
@@ -17,7 +15,7 @@
 
     type Adapter = BaseFormAdapter<AllFormProps<Values, Output>, Values, SubmitEvent>;
 
-    // the root may be a Row, so attrs are bound to the form element explicitly
+    // attrs are bound to the form element explicitly, after novalidate, so that :novalidate="false" turns it off
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<FormProps<Values, Output> & /* @vue-ignore */ ElementProps<'form', keyof FormProps<Values, Output> | EmitHandlers<FormEmits<Values, Output>>>>(), {
@@ -95,10 +93,8 @@
 </script>
 
 <template>
-    <component :is="props.labelCol && props.wrapperCol ? Row : SlotFragment">
-        <!-- $attrs come after novalidate so that :novalidate="false" turns it off -->
-        <form v-bind="{ novalidate: true, ...$attrs }" :id="formId" ref="form" :class="[prefix, { [`${prefix}-vertical`]: props.layout === 'vertical', [`${prefix}-horizontal`]: props.layout === 'horizontal' }]" :x-form-id="formId" @reset="foundation.handleResetEvent" @submit="foundation.handleSubmitEvent">
-            <slot :formApi="formApi" :formState="formState" :values="values" />
-        </form>
-    </component>
+    <!-- $attrs come after novalidate so that :novalidate="false" turns it off -->
+    <form v-bind="{ novalidate: true, ...$attrs }" :id="formId" ref="form" :class="[prefix, { [`${prefix}-vertical`]: props.layout === 'vertical', [`${prefix}-horizontal`]: props.layout === 'horizontal' }]" :x-form-id="formId" @reset="foundation.handleResetEvent" @submit="foundation.handleSubmitEvent">
+        <slot :formApi="formApi" :formState="formState" :values="values" />
+    </form>
 </template>

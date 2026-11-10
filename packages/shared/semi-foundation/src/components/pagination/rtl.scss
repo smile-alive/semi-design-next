@@ -4,10 +4,6 @@
 
 $module: #{$prefix}-page;
 
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}
-
 .#{$module}-prev:dir(rtl),
 .#{$module}-next:dir(rtl) {
     transform: scaleX(-1);

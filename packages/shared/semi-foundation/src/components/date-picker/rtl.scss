@@ -4,10 +4,6 @@
 
 $module: #{$prefix}-datepicker;
 
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}
-
 .#{$module}-navigation:dir(rtl),
 .#{$module}-yam:dir(rtl) {
     .#{$prefix}-icon-chevron_left,

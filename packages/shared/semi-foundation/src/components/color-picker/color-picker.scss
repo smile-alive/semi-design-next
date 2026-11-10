@@ -91,9 +91,7 @@ $module: #{$prefix}-colorPicker;
             flex-wrap: nowrap;
             width: 100%;
 
-            /* stylelint-disable-next-line property-disallowed-list -- dataPart stays LTR in RTL while this input group
-               turns rtl, so a logical margin would land on the wrong edge */
-            margin-left: $spacing-colorPicker_inputGroup-marginLeft;
+            margin-inline-start: $spacing-colorPicker_inputGroup-marginLeft;
             .#{$module}-colorPickerInput {
                 flex: 1;
             }

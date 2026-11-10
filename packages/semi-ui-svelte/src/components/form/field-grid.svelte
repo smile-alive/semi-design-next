@@ -27,9 +27,9 @@
 {/snippet}
 
 {#snippet columns()}
-    <!-- a top label needs an overflow hidden wrapper, or it lays out horizontally -->
+    <!-- a top label takes a line of its own, or a Row would lay it out beside the wrapper column -->
     {#if labelPosition === 'top'}
-        <div style="overflow: hidden">{@render labelColumn()}</div>
+        <div style="flex-basis: 100%">{@render labelColumn()}</div>
     {:else}
         {@render labelColumn()}
     {/if}

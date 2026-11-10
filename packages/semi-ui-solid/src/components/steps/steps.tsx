@@ -148,7 +148,7 @@ export default function Steps(rawProps: StepsProps) {
         <div {...rest} class={rootClass()} role={namedRole(props)}>
             <Switch
                 fallback={
-                    <Row type="flex" justify="start">
+                    <Row justify="start">
                         <For each={steps()}>
                             {(token, index) => (
                                 <Col style={colStyle()}>

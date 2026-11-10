@@ -10,6 +10,7 @@ import useFoundation from '../../base/use-foundation';
 import { omitFormInjected } from '../../utils/control-attrs';
 import forwardFocus from '../../utils/forward-focus';
 import mergeRefs from '../../utils/merge-refs';
+import useConfig from '../config-provider/use-config';
 import Input, { type InputSize, type ValidateStatus } from '../input';
 import useLocale from '../locale/use-locale';
 import { useSpecialTrigger } from '../tooltip/context';
@@ -67,6 +68,7 @@ export default function PinCode(rawProps: PinCodeProps) {
     ]);
 
     const locale = useLocale('PinCode');
+    const config = useConfig();
 
     const inputs: HTMLInputElement[] = [];
 
@@ -86,7 +88,8 @@ export default function PinCode(rawProps: PinCodeProps) {
                     inputs[index]?.blur();
                 }
             },
-        })
+        }),
+        { context: config }
     );
 
     const registerTrigger = useSpecialTrigger(

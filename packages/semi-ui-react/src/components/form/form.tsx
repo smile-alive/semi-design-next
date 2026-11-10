@@ -10,7 +10,6 @@ import '@fibrae/semi-foundation/components/form/form.scss';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import { cloneDeep } from '../../utils/index';
-import Row from '../grid/row';
 import useLocale from '../locale/use-locale';
 import { FormStateContext, FormApiContext, FieldBridgeContext } from './context';
 import type { BaseFormProps, FormApi } from './interface';
@@ -148,7 +147,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
     return (
         <FieldBridgeContext value={fieldBridge}>
             <FormApiContext value={formApi}>
-                <FormStateContext value={formState}>{wrapperCol && labelCol ? <Row>{formContent}</Row> : formContent}</FormStateContext>
+                <FormStateContext value={formState}>{formContent}</FormStateContext>
             </FormApiContext>
         </FieldBridgeContext>
     );

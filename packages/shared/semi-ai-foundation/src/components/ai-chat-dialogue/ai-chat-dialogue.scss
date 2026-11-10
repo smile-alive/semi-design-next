@@ -64,14 +64,14 @@ $module: #{$prefix}-ai-chat-dialogue;
                     &-no-bubble,
                     &-user,
                     &-custom-renderer {
-                        margin-left: auto;
+                        margin-inline-start: auto;
                     }
 
                     &-inner {
-                        text-align: right;
+                        text-align: end;
 
                         .#{$prefix}-markdownRender {
-                            text-align: left;
+                            text-align: start;
                         }
                     }
                 }
@@ -100,6 +100,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             @include flex-center;
             position: absolute;
             bottom: 10px;
+            // stylelint-disable-next-line property-disallowed-list -- centered with a physical translateX(-50%), so the anchor must be physical too
             left: 50%;
             transform: translateX(-50%);
         }
@@ -146,11 +147,11 @@ $module: #{$prefix}-ai-chat-dialogue;
 
         &-inner {
             width: $width-aiChatDialogue_content_inner;
-            margin-left: auto;
+            margin-inline-start: auto;
         }
 
         &-failed {
-            margin-right: $spacing-aiChatDialogue_content_failed-marginRight;
+            margin-inline-end: $spacing-aiChatDialogue_content_failed-marginRight;
             color: $color-aiChatDialogue_failed;
         }
 
@@ -214,7 +215,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             }
 
             &-text {
-                margin-left: $spacing-aiChatDialogue_loading_text-marginLeft;
+                margin-inline-start: $spacing-aiChatDialogue_loading_text-marginLeft;
                 font-size: $font-aiChatDialogue_loading_text-fontSize;
                 color: $color-aiChatDialogue_loading_text;
             }
@@ -244,7 +245,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             &-list {
                 display: inline-flex;
                 flex-direction: column;
-                margin-right: $spacing-aiChatDialogue_img_list-marginRight;
+                margin-inline-end: $spacing-aiChatDialogue_img_list-marginRight;
 
                 img {
                     width: $width-aiChatDialogue_img_list;
@@ -254,7 +255,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             }
 
             &-last {
-                margin-right: 0;
+                margin-inline-end: 0;
             }
         }
 
@@ -265,8 +266,8 @@ $module: #{$prefix}-ai-chat-dialogue;
             align-items: center;
             width: $width-aiChatDialogue_file;
             padding: $spacing-aiChatDialogue_file-paddingY $spacing-aiChatDialogue_file-paddingX;
+            margin-inline-end: $spacing-aiChatDialogue_file-marginRight;
             margin-top: $spacing-aiChatDialogue_file-marginTop;
-            margin-right: $spacing-aiChatDialogue_file-marginRight;
             vertical-align: top;
 
             text-decoration: none;
@@ -285,7 +286,7 @@ $module: #{$prefix}-ai-chat-dialogue;
                     display: flex;
                     flex-shrink: 0;
                     padding: $spacing-aiChatDialogue_icon_reference-paddingY $spacing-aiChatDialogue_icon_reference-paddingX;
-                    margin-left: auto;
+                    margin-inline-start: auto;
                     color: $color-aiChatDialogue_icon_reference-text;
                     cursor: pointer;
                 }
@@ -296,7 +297,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             }
 
             &-last {
-                margin-right: 0;
+                margin-inline-end: 0;
             }
 
             &-icon {
@@ -348,7 +349,7 @@ $module: #{$prefix}-ai-chat-dialogue;
                 display: flex;
                 flex-shrink: 1;
                 flex-direction: column;
-                text-align: left;
+                text-align: start;
             }
 
             &-title {
@@ -495,7 +496,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             @include flex-center;
             width: $width-aiChatDialogue_step_prefix;
             height: $height-aiChatDialogue_step_prefix;
-            margin-right: $spacing-aiChatDialogue_step_prefix-marginRight;
+            margin-inline-end: $spacing-aiChatDialogue_step_prefix-marginRight;
             color: $color-aiChatDialogue_step_suffix-text;
         }
 
@@ -503,7 +504,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             @include flex-center;
             width: $width-aiChatDialogue_step_suffix;
             height: $height-aiChatDialogue_step_suffix;
-            margin-left: $spacing-aiChatDialogue_step_suffix-marginLeft;
+            margin-inline-start: $spacing-aiChatDialogue_step_suffix-marginLeft;
             color: $color-aiChatDialogue_step_suffix-text;
         }
 
@@ -514,7 +515,7 @@ $module: #{$prefix}-ai-chat-dialogue;
 
         &-line {
             width: $width-aiChatDialogue_step_line;
-            margin-left: $spacing-aiChatDialogue_step_line-marginLeft;
+            margin-inline-start: $spacing-aiChatDialogue_step_line-marginLeft;
             background-color: $color-aiChatDialogue_step-border;
         }
 
@@ -615,7 +616,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             width: fit-content;
             max-width: $width-aiChatDialogue_reference_max;
             padding: $spacing-aiChatDialogue_reference-paddingY $spacing-aiChatDialogue_reference-paddingX;
-            margin-left: auto;
+            margin-inline-start: auto;
             background-color: $color-aiChatDialogue_reference-bg;
             border-radius: $radius-aiChatDialogue_reference;
 
@@ -632,7 +633,7 @@ $module: #{$prefix}-ai-chat-dialogue;
                 @include flex-center;
                 width: $width-aiChatDialogue_reference_icon;
                 height: $height-aiChatDialogue_reference_icon;
-                margin-right: $spacing-aiChatDialogue_reference_icon-marginRight;
+                margin-inline-end: $spacing-aiChatDialogue_reference_icon-marginRight;
                 color: $color-aiChatDialogue_icon-text;
                 border-radius: $radius-aiChatDialogue_reference_icon;
 
@@ -658,7 +659,7 @@ $module: #{$prefix}-ai-chat-dialogue;
             }
 
             &-img {
-                margin-right: $spacing-aiChatDialogue_reference_img-marginRight;
+                margin-inline-end: $spacing-aiChatDialogue_reference_img-marginRight;
             }
 
             &-name {
@@ -720,12 +721,12 @@ $module: #{$prefix}-ai-chat-dialogue;
         display: flex;
         flex-direction: column;
         row-gap: $spacing-aiChatDialogue_hints-rowGap;
+        margin-inline-start: $spacing-aiChatDialogue_hints-marginLeft;
         margin-top: $spacing-aiChatDialogue_hints-marginTop;
         margin-bottom: $spacing-aiChatDialogue_hints-marginBottom;
-        margin-left: $spacing-aiChatDialogue_hints-marginLeft;
 
         &-selecting {
-            margin-left: $spacing-aiChatDialogue_hints_selecting-marginLeft;
+            margin-inline-start: $spacing-aiChatDialogue_hints_selecting-marginLeft;
         }
     }
 

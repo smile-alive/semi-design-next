@@ -94,7 +94,7 @@ Dark for content area, light for spacing
 
 ### Use Flex layout
 
-Set `type="flex"` on Row to define a Flex layout. The `justify` values `start`, `center`, `end`, `space-between` and `space-around` define how the child elements are arranged in the parent node.
+Row is always a Flex container. The `justify` values `start`, `center`, `end`, `space-between` and `space-around` define how the child elements are arranged in the parent node.
 
 <Demo id="flex" />
 
@@ -113,6 +113,8 @@ Change the sorting of elements through `order` of the Col.
 Referring to Bootstrap's responsive design, preset six response sizes:`xs`, `sm`, `md`, `lg`, `Xl`, `xxl`.
 
 `xs` is the base layer without a media query and applies at every screen width; `sm` and above override the smaller breakpoints step by step according to the viewport width.
+
+Col writes `span`, `offset`, `push`, `pull` and `order` as inline CSS variables (`--semi-col-*`), with a single style rule per breakpoint and no generated classes such as `semi-col-6`; a `span` of `0` hides the Col at that breakpoint.
 
 In the object form, `order`, `offset`, `push` and `pull` set to `0` reset the value a smaller breakpoint set, for example `md` set to `{ offset: 0 }`.
 

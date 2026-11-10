@@ -3,10 +3,6 @@
 
 $module: #{$prefix}-chat;
 
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}
-
 .#{$module}-hint-icon:dir(rtl),
 .#{$module}-chatBox-action-icon-redo:dir(rtl) {
     transform: scaleX(-1);

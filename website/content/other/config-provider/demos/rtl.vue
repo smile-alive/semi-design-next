@@ -97,10 +97,10 @@
             </ButtonGroup>
         </div>
         <ConfigProvider :direction="direction">
-            <Row>
+            <div>
                 <h3 :style="titleStyle">Buttons</h3>
-            </Row>
-            <Row :style="rowStyle">
+            </div>
+            <div :style="rowStyle">
                 <Button loading :style="{ marginInlineEnd: '8px' }" theme="solid">加载</Button>
                 <Button :style="{ marginInlineEnd: '8px' }" theme="solid">
                     <template #icon>
@@ -121,10 +121,10 @@
                     <Button>查询</Button>
                     <Button>剪切</Button>
                 </ButtonGroup>
-            </Row>
-            <Row>
+            </div>
+            <div>
                 <h3 :style="titleStyle">Input</h3>
-            </Row>
+            </div>
             <Row :gutter="16" :style="rowStyle">
                 <Col :span="12">
                     <Input aria-label="输入框" placeholder="输入框" />
@@ -198,10 +198,10 @@
                     <Cascader placeholder="级联选择器" :style="{ width: '100%' }" :treeData="treeData" />
                 </Col>
             </Row>
-            <Row>
+            <div>
                 <h3 :style="titleStyle">Navigation</h3>
-            </Row>
-            <Row :style="rowStyle">
+            </div>
+            <div :style="rowStyle">
                 <Breadcrumb>
                     <Breadcrumb.Item>Semi-ui</Breadcrumb.Item>
                     <Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>
@@ -245,11 +245,11 @@
                         <template #description>This is a description</template>
                     </Steps.Step>
                 </Steps>
-            </Row>
-            <Row>
+            </div>
+            <div>
                 <h3 :style="titleStyle">Display</h3>
-            </Row>
-            <Row :style="rowStyle">
+            </div>
+            <div :style="rowStyle">
                 <div :style="{ display: 'flex' }">
                     <div :style="{ padding: '8px' }">
                         <Badge :count="5" theme="solid">
@@ -322,11 +322,11 @@
                         审核失败
                     </Timeline.Item>
                 </Timeline>
-            </Row>
-            <Row>
+            </div>
+            <div>
                 <h3 :style="titleStyle">Feedback</h3>
-            </Row>
-            <Row :style="rowStyle">
+            </div>
+            <div :style="rowStyle">
                 <Button :style="buttonStyle" type="primary" @click="Notification.success(opts())"> 成功信息的通知 </Button>
                 <Button :style="buttonStyle" @click="Notification.info(opts())">提示信息的通知</Button>
                 <Button :style="buttonStyle" type="warning" @click="Notification.warning(opts())"> 警告信息的通知 </Button>
@@ -367,7 +367,7 @@
                         <p>And more texts on the way.</p>
                     </div>
                 </Spin>
-            </Row>
+            </div>
         </ConfigProvider>
     </div>
 </template>

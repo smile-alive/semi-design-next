@@ -104,7 +104,7 @@ function List<T = any>(rawProps: ListProps<T>) {
                     {showEmpty ? (
                         items
                     ) : grid ? (
-                        <Row type="flex" {...pick(grid, ['align', 'gutter', 'justify', 'type'])} {...listRole}>
+                        <Row {...pick(grid, ['align', 'gutter', 'justify'])} {...listRole}>
                             {items}
                             {children}
                         </Row>

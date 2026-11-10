@@ -94,7 +94,7 @@ import { Col, Row } from '@fibrae/semi-ui-solid';
 
 ### Flex 布局
 
-给 Row 设置 `type="flex"` 定义 Flex 布局，`justify` 取不同的值 `start`、`center`、`end`、`space-between`、`space-around`，分别定义子元素在父节点里面的排版方式。
+Row 始终是 Flex 容器，`justify` 取不同的值 `start`、`center`、`end`、`space-between`、`space-around`，分别定义子元素在父节点里面的排版方式。
 
 <Demo id="flex" />
 
@@ -113,6 +113,8 @@ import { Col, Row } from '@fibrae/semi-ui-solid';
 参照 Bootstrap 的 响应式设计，预设六个响应尺寸：`xs`, `sm`, `md`, `lg`, `xl`, `xxl`。
 
 `xs` 是不带媒体查询的基础层，在所有屏幕宽度都生效；`sm` 及以上按视口宽度逐级覆盖更小的断点。
+
+Col 把 `span`、`offset`、`push`、`pull`、`order` 写成内联 CSS 变量（`--semi-col-*`），每个断点只有一条样式规则，不再生成 `semi-col-6` 这类类名；`span` 设为 `0` 时在对应断点隐藏。
 
 对象写法中 `order`、`offset`、`push`、`pull` 设为 `0` 会重置更小断点设置的值，例如 `md` 设为 `{ offset: 0 }`。
 

@@ -5,11 +5,6 @@
 
 $module: #{$prefix}-table;
 
-.#{$module}:dir(rtl),
-.#{$prefix}-spin:dir(rtl) {
-    direction: rtl;
-}
-
 .#{$module}-align-left:dir(rtl) .#{$module}-operate-wrapper {
     justify-content: flex-end;
 }

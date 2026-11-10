@@ -87,17 +87,19 @@ describe('Form-slot', () => {
 
     it('使用 Form 的 labelCol 与 wrapperCol 布局', () => {
         const { container } = renderSlot({ label: 'slot', children: 'content' }, { labelCol: { span: 6 }, wrapperCol: { span: 18 }, labelAlign: 'right' });
-        const label = container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-col-6`);
+        const label = container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-col`);
         expect(label).toHaveClass(`${BASE_CLASS_PREFIX}-form-col-right`);
-        expect(label.parentElement).toHaveStyle({ overflow: 'hidden' });
+        expect(label).toHaveStyle({ '--semi-col-span': '6' });
+        expect(label.parentElement).toHaveStyle({ flexBasis: '100%' });
     });
 
     it('栅格布局下内容列使用 wrapperCol 并带 slot-main 类，noLabel 时不渲染 Label', () => {
         const { container } = renderSlot({ label: 'slot', noLabel: true, children: <span className="slot-child">content</span> }, { labelCol: { span: 6 }, wrapperCol: { span: 18 } });
-        const main = container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-col-18 > .${BASE_CLASS_PREFIX}-form-slot-main`);
+        const main = container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-col > .${BASE_CLASS_PREFIX}-form-slot-main`);
+        expect(main.parentElement).toHaveStyle({ '--semi-col-span': '18' });
         expect(main).toContainElement(container.querySelector('.slot-child'));
         expect(container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-form-field-label`)).toBeNull();
-        expect(container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-col-6`)).not.toBeNull();
+        expect(container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-col`)).toHaveStyle({ '--semi-col-span': '6' });
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-col-undefined`)).toBeNull();
     });
 

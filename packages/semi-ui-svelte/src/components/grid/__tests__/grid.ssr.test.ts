@@ -9,7 +9,8 @@ describe('Svelte Grid 服务端首帧', () => {
         const { body } = render(GridFixture, { props: { store } });
         expect(body).toContain('class="semi-row"');
         expect(body).toContain('--semi-row-gutter-x-md: 16px');
-        expect(body).toContain('semi-col semi-col-6');
+        expect(body).toContain('class="semi-col"');
+        expect(body).toContain('--semi-col-span: 6');
         expect(body).toContain('child');
     });
 });

@@ -1,9 +1,0 @@
-@use 'semi:theme' as *;
-@use 'variables' as *;
-
-$module: #{$prefix}-list;
-
-.#{$module}:dir(rtl),
-.#{$module}-item:dir(rtl) {
-    direction: rtl;
-}

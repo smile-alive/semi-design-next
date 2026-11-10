@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
@@ -26,7 +25,7 @@ describe('Pagination（浏览器）', () => {
     ])('%s 显示主题焦点环', async (_, props, selector) => {
         // the theme is not loaded here: give the focus token a value so the ring color is not invalid at computed time
         const { container } = render(
-            <div style={{ '--semi-color-primary-light-active': 'rgb(1, 2, 3)' } as CSSProperties}>
+            <div style={{ '--semi-color-primary-light-active': 'rgb(1, 2, 3)' }}>
                 <Pagination {...props} />
             </div>
         );

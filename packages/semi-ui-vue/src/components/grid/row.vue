@@ -9,7 +9,6 @@
     import type { RowProps, RowSlots } from './interface';
 
     const props = withDefaults(defineProps<RowProps & /* @vue-ignore */ ElementProps<'div', keyof RowProps>>(), {
-        type: semiGlobalDefault('Row', 'type'),
         align: semiGlobalDefault('Row', 'align'),
         justify: semiGlobalDefault('Row', 'justify'),
         gutter: () => semiDefault('Row', 'gutter', 0),

@@ -30,9 +30,9 @@ export default function FieldGrid(props: FieldGridProps) {
 
     const columns = () => (
         <>
-            {/* without overflow hidden a top label lays out horizontally */}
+            {/* a top label takes a line of its own, or a Row would lay it out beside the wrapper column */}
             <Show when={props.labelPosition === 'top'} fallback={labelColumn()}>
-                <div style={{ overflow: 'hidden' }}>{labelColumn()}</div>
+                <div style={{ 'flex-basis': '100%' }}>{labelColumn()}</div>
             </Show>
             <Col {...props.wrapperCol}>
                 <div class={props.mainClass}>{props.children}</div>

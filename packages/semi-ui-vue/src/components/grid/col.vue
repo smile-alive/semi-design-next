@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
-    import { getColClassName } from '@fibrae/semi-foundation/components/grid/utils';
+    import { getColClassName, getColStyle } from '@fibrae/semi-foundation/components/grid/utils';
     import '@fibrae/semi-foundation/components/grid/grid.scss';
     import type { ElementProps } from '../../base/element-props';
     import { semiGlobalDefault } from '../../base/semi-default';
@@ -23,11 +23,11 @@
 
     defineSlots<ColSlots>();
 
-    const classes = computed(() => getColClassName(cssClasses.PREFIX, props));
+    const colVars = computed(() => getColStyle(props));
 </script>
 
 <template>
-    <div :class="classes" x-semi-prop="children">
+    <div :class="getColClassName(cssClasses.PREFIX)" :style="colVars" x-semi-prop="children">
         <slot />
     </div>
 </template>

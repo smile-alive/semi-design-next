@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { IconBell, IconBytedanceLogo, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-vue';
-    import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Row, Steps, Tag, Timeline, Tooltip, type NavItemConfig } from '@fibrae/semi-ui-vue';
+    import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Steps, Tag, Timeline, Tooltip, type NavItemConfig } from '@fibrae/semi-ui-vue';
 
     const rowStyle = { margin: '16px 10px' };
     const badgeStyle = { width: '42px', height: '42px', borderRadius: '4px', display: 'inline-block' };
@@ -77,7 +77,7 @@
                         padding: '32px',
                     }"
                 >
-                    <Row :style="rowStyle">
+                    <div :style="rowStyle">
                         <Nav
                             aria-label="示例导航"
                             :items="[
@@ -124,8 +124,8 @@
                                 <template #description>This is a description</template>
                             </Steps.Step>
                         </Steps>
-                    </Row>
-                    <Row :style="rowStyle">
+                    </div>
+                    <div :style="rowStyle">
                         <div :style="{ display: 'flex' }">
                             <div :style="{ padding: '8px' }">
                                 <Badge :count="5" theme="solid">
@@ -204,7 +204,7 @@
                                 审核失败
                             </Timeline.Item>
                         </Timeline>
-                    </Row>
+                    </div>
                 </div>
             </Layout.Content>
         </Layout>

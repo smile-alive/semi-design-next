@@ -6,7 +6,6 @@ import type { ColSize } from '@fibrae/semi-foundation/components/grid/utils';
 export type { Breakpoint, ColSize, Gutter };
 
 export interface RowProps {
-    type?: 'flex';
     align?: 'top' | 'middle' | 'bottom';
     justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between';
     /** A pair is [horizontal, vertical] */

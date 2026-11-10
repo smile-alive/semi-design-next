@@ -1,4 +1,3 @@
-@use 'sass:meta';
 @use 'semi:theme' as *;
 @use 'variables' as *;
 @use '../../base/mixin' as *;
@@ -22,7 +21,7 @@ $moduleGroup: #{$prefix}-floatButtonGroup;
 .#{$module} {
     @include native-reset;
     position: fixed;
-    right: $spacing-floatButton-right;
+    inset-inline-end: $spacing-floatButton-right;
     bottom: $spacing-floatButton-bottom;
     z-index: $z-floatButton;
     padding: 0;
@@ -129,7 +128,7 @@ $moduleGroup: #{$prefix}-floatButtonGroup;
 
 .#{$moduleGroup} {
     position: fixed;
-    right: $spacing-floatButton_group-right;
+    inset-inline-end: $spacing-floatButton_group-right;
     bottom: $spacing-floatButton_group-bottom;
     z-index: $z-floatButton_group;
     display: inline-flex;
@@ -197,5 +196,3 @@ $moduleGroup: #{$prefix}-floatButtonGroup;
         }
     }
 }
-
-@include meta.load-css('rtl');

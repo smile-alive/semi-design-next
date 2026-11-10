@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { IconBell, IconBytedanceLogo, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-solid';
-import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Row, Steps, Tag, Timeline, Tooltip } from '@fibrae/semi-ui-solid';
+import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Steps, Tag, Timeline, Tooltip } from '@fibrae/semi-ui-solid';
 
 const rowStyle = { margin: '16px 10px' };
 const badgeStyle = {
@@ -69,7 +69,7 @@ export default function DarkModeDemo() {
                     <Layout.Content class={mode()} style={{ padding: '24px', 'background-color': 'var(--semi-color-bg-1)' }}>
                         <Breadcrumb style={{ 'margin-block-end': '24px' }} routes={['首页', '当这个页面标题很长时需要省略', '上一页', '详情页']} />
                         <div style={{ 'border-radius': '10px', border: '1px solid var(--semi-color-border)', height: '700px', padding: '32px' }}>
-                            <Row style={rowStyle}>
+                            <div style={rowStyle}>
                                 <Nav
                                     aria-label="示例导航"
                                     mode="horizontal"
@@ -99,8 +99,8 @@ export default function DarkModeDemo() {
                                     <Steps.Step title="In Process" description="This is a description" />
                                     <Steps.Step title="Waiting" description="This is a description" />
                                 </Steps>
-                            </Row>
-                            <Row style={rowStyle}>
+                            </div>
+                            <div style={rowStyle}>
                                 <div style={{ display: 'flex' }}>
                                     <div style={{ padding: '8px' }}>
                                         <Badge count={5} theme="solid">
@@ -200,7 +200,7 @@ export default function DarkModeDemo() {
                                         审核失败
                                     </Timeline.Item>
                                 </Timeline>
-                            </Row>
+                            </div>
                         </div>
                     </Layout.Content>
                 </Layout>

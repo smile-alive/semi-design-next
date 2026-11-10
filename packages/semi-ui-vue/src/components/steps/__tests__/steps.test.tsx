@@ -559,10 +559,10 @@ describe('Steps（Vue）', () => {
 
     it('动态切换 type 时根 class 与步骤结构随之变化', async () => {
         const view = renderSteps({ type: 'fill', current: 1 });
-        expect(view.container.querySelector('.semi-row-flex')).not.toBeNull();
+        expect(view.container.querySelector('.semi-row')).not.toBeNull();
         await view.rerender({ type: 'basic', current: 1 });
         expect(view.container.firstChild).toHaveClass(`${PREFIX}-basic`);
-        expect(view.container.querySelector('.semi-row-flex')).toBeNull();
+        expect(view.container.querySelector('.semi-row')).toBeNull();
         expect(getItems(view.container)[0].querySelector(`.${ITEM}-container`)).not.toBeNull();
         await view.rerender({ type: 'nav', current: 1 });
         expect(view.container.firstChild).toHaveClass(`${PREFIX}-nav`);

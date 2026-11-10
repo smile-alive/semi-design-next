@@ -3,7 +3,7 @@ import { Col, Row } from '@fibrae/semi-ui-react';
 export default function GridDemo() {
     return (
         <div className="grid">
-            <Row type="flex">
+            <Row>
                 <Col span={6} order={4}>
                     <div className="col-content">col-4</div>
                 </Col>

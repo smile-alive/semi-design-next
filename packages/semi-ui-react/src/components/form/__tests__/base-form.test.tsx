@@ -331,9 +331,9 @@ describe('Form-baseForm', () => {
         for (const field of fieldsDom) {
             const [labelBox, wrapperCol] = field.children;
             const labelCol = labelBox.querySelector(`.${BASE_CLASS_PREFIX}-col`);
-            expect(labelCol).toHaveClass(`${BASE_CLASS_PREFIX}-col-2`);
+            expect(labelCol).toHaveStyle({ '--semi-col-span': '2' });
             expect(labelCol.querySelector(labelSelector)).not.toBeNull();
-            expect(wrapperCol).toHaveClass(`${BASE_CLASS_PREFIX}-col-20`);
+            expect(wrapperCol).toHaveStyle({ '--semi-col-span': '20' });
             expect(wrapperCol.querySelector(labelSelector)).toBeNull();
         }
     });

@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
 import { crossesFocusBoundary } from '../../utils/a11y';
 
 export interface PinCodeBaseProps {
@@ -17,7 +17,7 @@ export interface PinCodeBaseState {
     currentActiveIndex: number;
 }
 
-export interface PinCodeAdapter<P extends PinCodeBaseProps = PinCodeBaseProps> extends DefaultAdapter<P, PinCodeBaseState> {
+export interface PinCodeAdapter<P extends PinCodeBaseProps = PinCodeBaseProps> extends DefaultAdapter<P, PinCodeBaseState, DirectionContext> {
     notifyValueChange: (values: string[]) => void;
     notifyComplete: (value: string) => void;
     changeSpecificInputFocusState: (index: number, state: 'blur' | 'focus') => void;
@@ -157,11 +157,10 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
         } else if (e.altKey || e.ctrlKey || e.metaKey) {
             // browser shortcuts such as Alt+ArrowLeft (back) keep their default action
             return;
-        } else if (e.key === 'ArrowLeft') {
-            this.adapter.changeSpecificInputFocusState(Math.max(0, index - 1), 'focus');
-            e.preventDefault();
-        } else if (e.key === 'ArrowRight') {
-            this.adapter.changeSpecificInputFocusState(Math.min(lastIndex, index + 1), 'focus');
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            const rtl = this.getContext('direction') === 'rtl';
+            const forward = e.key === (rtl ? 'ArrowLeft' : 'ArrowRight');
+            this.adapter.changeSpecificInputFocusState(forward ? Math.min(lastIndex, index + 1) : Math.max(0, index - 1), 'focus');
             e.preventDefault();
         }
     };

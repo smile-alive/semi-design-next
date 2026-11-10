@@ -4,11 +4,6 @@
 
 $module: #{$prefix}-image;
 
-.#{$module}-preview:dir(rtl),
-.#{$module}-preview-group:dir(rtl) {
-    direction: rtl;
-}
-
 // keeps the base translateY(-50%) that centers the arrows
 .#{$module}-preview-prev:dir(rtl),
 .#{$module}-preview-next:dir(rtl) {
@@ -17,7 +12,6 @@ $module: #{$prefix}-image;
 
 .#{$module}-preview-footer-page:dir(rtl) {
     display: flex;
-    direction: rtl;
 }
 
 .#{$module}-preview-footer:dir(rtl) {

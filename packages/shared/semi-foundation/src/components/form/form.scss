@@ -1,4 +1,3 @@
-@use 'sass:meta';
 @use 'semi:theme' as *;
 @use 'variables' as *;
 
@@ -36,10 +35,6 @@ $rating: #{$prefix}-rating;
 
         .#{$group} {
             padding-inline-end: $spacing-form_field_group_horizontal-paddingRight;
-        }
-
-        .#{$prefix}-row {
-            display: block;
         }
     }
 
@@ -315,5 +310,3 @@ $rating: #{$prefix}-rating;
     // aligns the buttons with the control of the row's last field, not with the field's bottom padding
     padding-block-end: $spacing-form_field_vertical-paddingBottom;
 }
-
-@include meta.load-css('rtl');

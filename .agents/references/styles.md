@@ -65,7 +65,7 @@
 ## 方向与 RTL
 
 - 样式用 CSS 逻辑属性（`margin-inline-start`、`inset-inline-end`、`padding-block` 等）跟随 `direction`。stylelint 在这些组件里禁止 `left`、`right` 物理写法，以及会把左右分开设置的四值简写和多值 `border-radius`。
-- 例外：[decisions](../../docs/decisions.md) 第 2.1 节 L3 列出的 11 个组件（cropper、sidebar、video-player、ai-chat-input、ai-chat-dialogue、chat、code-highlight、resizable、markdown-render、audio-player、float-button）还没定 RTL 方案，保持物理写法。`stylelint.config.ts` 的物理值检查只覆盖 semi-foundation，其中排除 cropper、video-player、code-highlight、resizable、markdown-render、audio-player、float-button；semi-ai-foundation 整体不在检查内。
+- `stylelint.config.ts` 的物理值检查覆盖 semi-foundation 与 semi-ai-foundation 的全部组件样式。
 - 必须用物理值的地方（由 transform 驱动的偏移、物理方位的定位）写 `stylelint-disable` 注释，并用 `-- 原因` 写明原因，stylelint 会检查。
 - 属性顺序按 Recess 分组（定位、盒模型、排版、视觉），块内依次是 `$` 变量、自定义属性、`@mixin`、无块的 `@include`、声明；嵌套规则和 `@media` 不参与排序。`@use` 列表和其后的第一个 `$` 变量之间空一行。顺序不用手排，`pnpm lint:fix` 和提交时的 lint-staged 会自动修正；`@if` 分支里的声明 autofix 不处理，需要手动调整。
 

@@ -41,8 +41,7 @@ $module: #{$prefix}-videoPlayer;
     &-pause {
         @include flex-center;
         position: absolute;
-        top: 0;
-        left: 0;
+        inset: 0;
         width: 100%;
         height: 100%;
         pointer-events: none;
@@ -57,8 +56,7 @@ $module: #{$prefix}-videoPlayer;
     &-error {
         @include flex-center;
         position: absolute;
-        top: 0;
-        left: 0;
+        inset: 0;
         flex-direction: column;
         width: 100%;
         height: 100%;
@@ -90,8 +88,7 @@ $module: #{$prefix}-videoPlayer;
 
     &-poster {
         position: absolute;
-        top: 0;
-        left: 0;
+        inset: 0;
         width: 100%;
         height: 100%;
         pointer-events: none;
@@ -103,8 +100,8 @@ $module: #{$prefix}-videoPlayer;
 
     &-notification {
         position: absolute;
+        inset-inline-start: $spacing-videoPlayer_notification-left;
         bottom: $height-videoPlayer_controls_menu-default + $spacing-videoPlayer_notification-bottom;
-        left: $spacing-videoPlayer_notification-left;
         padding: $spacing-videoPlayer_notification_text-paddingY $spacing-videoPlayer_notification_text-paddingX;
         font-size: $font-videoPlayer_notification-fontSize;
         line-height: $font-videoPlayer_notification-lineHeight;
@@ -122,9 +119,8 @@ $module: #{$prefix}-videoPlayer;
 
     &-controls {
         position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        inset-block-end: 0;
+        inset-inline: 0;
         z-index: 1;
         height: fit-content;
         opacity: 1;
@@ -151,7 +147,7 @@ $module: #{$prefix}-videoPlayer;
             }
 
             &-item {
-                margin-right: $spacing-videoPlayer-controls_item-gap;
+                margin-inline-end: $spacing-videoPlayer-controls_item-gap;
             }
 
             &-button {
@@ -163,7 +159,7 @@ $module: #{$prefix}-videoPlayer;
 
         &-time {
             padding: 0 $spacing-videoPlayer-controls_time-paddingX;
-            margin-right: $spacing-videoPlayer-controls_item-gap;
+            margin-inline-end: $spacing-videoPlayer-controls_item-gap;
             font-size: $font-videoPlayer_controls_time_text-fontSize;
             font-variant-numeric: tabular-nums;
             color: $color-videoPlayer_controls-text;
@@ -281,8 +277,7 @@ $module: #{$prefix}-videoPlayer;
 
         &-slider {
             position: absolute;
-            bottom: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
             border-radius: $radius-videoPlayer_progress_bar;
@@ -302,6 +297,8 @@ $module: #{$prefix}-videoPlayer;
             &-buffered {
                 position: absolute;
                 inset-block-start: $spacing-videoPlayer_progress_bar-centerY;
+                // The foundation positions chapters and the handle by physical `left` percent and reads pointer offset from rect.left
+                // stylelint-disable-next-line property-disallowed-list -- see above
                 left: 0;
                 height: $height-videoPlayer_progress_bar-default;
                 border-radius: $radius-videoPlayer_progress_bar;
@@ -312,7 +309,6 @@ $module: #{$prefix}-videoPlayer;
 
             &-list {
                 width: calc(100% - $spacing-videoPlayer-progress_bar_chapter-marginRight);
-                margin-right: $spacing-videoPlayer-progress_bar_chapter-marginRight;
                 background-color: $color-videoPlayer_progress_bar-bg-unplayed;
             }
 

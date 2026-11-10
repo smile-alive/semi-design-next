@@ -1,4 +1,4 @@
-import { type JSX, Match, Show, Switch, createUniqueId, onCleanup, onMount, splitProps, untrack } from 'solid-js';
+import { type JSX, Match, Switch, createUniqueId, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
@@ -9,7 +9,6 @@ import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/components/form/form.scss';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
-import { Row } from '../grid';
 import useLocale from '../locale/use-locale';
 import { type FormContextValue, FormContext } from './context';
 import type { FormApi, FormElement, FormProps, FormRenderProps, FormState } from './interface';
@@ -145,13 +144,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
     );
 
     // Built before the onMount below, so getFormApi and the useForm api bind with the fields inside registered
-    const view = (
-        <FormContext.Provider value={context}>
-            <Show when={local.labelCol && local.wrapperCol} fallback={formView()}>
-                <Row>{formView()}</Row>
-            </Show>
-        </FormContext.Provider>
-    );
+    const view = <FormContext.Provider value={context}>{formView()}</FormContext.Provider>;
 
     onMount(() => {
         warning(Boolean(local.component && local.render), '[Semi Form] You should not use <Form component> and <Form render> in ths same time; <Form render> will be ignored');

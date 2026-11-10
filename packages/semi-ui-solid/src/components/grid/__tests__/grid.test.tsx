@@ -11,6 +11,14 @@ function gutterVars(row: HTMLElement, axis: 'x' | 'y') {
     return Object.fromEntries(breakpoints.map((bp) => [bp, row.style.getPropertyValue(`--semi-row-gutter-${axis}-${bp}`)]));
 }
 
+function colVars(col: HTMLElement) {
+    return Object.fromEntries(
+        Array.from(col.style)
+            .filter((name) => name.startsWith('--semi-col-'))
+            .map((name) => [name, col.style.getPropertyValue(name)])
+    );
+}
+
 describe('Row', () => {
     afterEach(() => {
         semiGlobal.config.overrideDefaultProps = {};
@@ -33,13 +41,13 @@ describe('Row', () => {
         expect(row).toHaveTextContent('child');
     });
 
-    it('type 为 flex 时使用 flex 类名，替代基础类名', () => {
-        const { container } = render(() => <Row type="flex" align="middle" justify="space-between" />);
-        expect((container.firstChild as HTMLElement).className).toBe('semi-row-flex semi-row-flex-space-between semi-row-flex-middle');
+    it('justify 与 align 在基础类名之外追加对应类名', () => {
+        const { container } = render(() => <Row align="middle" justify="space-between" />);
+        expect((container.firstChild as HTMLElement).className).toBe('semi-row semi-row-justify-space-between semi-row-align-middle');
     });
 
-    it('未设置 type 时忽略 justify 与 align', () => {
-        const { container } = render(() => <Row align="top" justify="center" />);
+    it('不传 justify 与 align 时只有基础类名', () => {
+        const { container } = render(() => <Row />);
         expect((container.firstChild as HTMLElement).className).toBe('semi-row');
     });
 
@@ -119,16 +127,17 @@ describe('Row', () => {
     });
 
     it('读取 semiGlobal overrideDefaultProps，显式属性优先', () => {
-        semiGlobal.config.overrideDefaultProps = { Row: { type: 'flex' }, Col: { span: 6 } };
+        semiGlobal.config.overrideDefaultProps = { Row: { justify: 'center' }, Col: { span: 6 } };
         const { container } = render(() => (
             <Row>
                 <Col />
                 <Col span={12} />
             </Row>
         ));
-        expect(container.firstChild).toHaveClass(`${BASE_CLASS_PREFIX}-row-flex`);
-        expect(container.querySelector(`.${BASE_CLASS_PREFIX}-col-6`)).not.toBeNull();
-        expect(container.querySelector(`.${BASE_CLASS_PREFIX}-col-12`)).not.toBeNull();
+        expect(container.firstChild).toHaveClass(`${BASE_CLASS_PREFIX}-row-justify-center`);
+        const [first, second] = Array.from(container.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-col`));
+        expect(colVars(first)).toEqual({ '--semi-col-span': '6' });
+        expect(colVars(second)).toEqual({ '--semi-col-span': '12' });
     });
 
     it('ref 回调拿到根 div', () => {
@@ -156,42 +165,82 @@ describe('Row', () => {
 });
 
 describe('Col', () => {
-    it('渲染 span、order、offset、push 与 pull 类名', () => {
+    it('span、order、offset、push 与 pull 写成内联 CSS 变量，类名只有基础类名与 class', () => {
         const { container } = render(() => (
             <Row>
                 <Col class="custom" offset={3} order={2} pull={5} push={4} span={6} />
             </Row>
         ));
-        expect((container.querySelector('.semi-col') as HTMLElement).className).toBe('semi-col semi-col-6 semi-col-order-2 semi-col-offset-3 semi-col-push-4 semi-col-pull-5 custom');
+        const col = container.querySelector('.semi-col') as HTMLElement;
+        expect(col.className).toBe('semi-col custom');
+        expect(colVars(col)).toEqual({ '--semi-col-span': '6', '--semi-col-offset': '3', '--semi-col-push': '4', '--semi-col-pull': '5', '--semi-col-order': '2' });
     });
 
-    it('跳过为 0 的 order、offset、push 与 pull，但保留 span 0', () => {
+    it('值为 0 也写入变量；span 为 0 时另写 display 变量隐藏', () => {
         const { container } = render(() => (
             <Row>
                 <Col offset={0} order={0} pull={0} push={0} span={0} />
             </Row>
         ));
-        expect((container.querySelector('.semi-col') as HTMLElement).className).toBe('semi-col semi-col-0');
+        expect(colVars(container.querySelector('.semi-col') as HTMLElement)).toEqual({ '--semi-col-span': '0', '--semi-col-offset': '0', '--semi-col-push': '0', '--semi-col-pull': '0', '--semi-col-order': '0', '--semi-col-display': 'none' });
     });
 
-    it('从数字与对象渲染响应式尺寸类名，并保留 0 值', () => {
+    it('没有属性时不写任何变量', () => {
+        const { container } = render(() => <Col />);
+        expect(colVars(container.firstChild as HTMLElement)).toEqual({});
+    });
+
+    it('响应式尺寸接受数字或对象，变量名带断点后缀，未写的键不输出', () => {
         const { container } = render(() => (
             <Row>
                 <Col md={{ span: 12, order: 0, offset: 2, push: 1, pull: 0 }} xs={24} xxl={{ order: 3 }} />
             </Row>
         ));
         const col = container.querySelector('.semi-col') as HTMLElement;
-        expect(col.className).toBe('semi-col semi-col-xs-24 semi-col-md-12 semi-col-md-order-0 semi-col-md-offset-2 semi-col-md-push-1 semi-col-md-pull-0 semi-col-xxl-order-3');
+        expect(colVars(col)).toEqual({
+            '--semi-col-span-xs': '24',
+            '--semi-col-span-md': '12',
+            '--semi-col-order-md': '0',
+            '--semi-col-offset-md': '2',
+            '--semi-col-push-md': '1',
+            '--semi-col-pull-md': '0',
+            '--semi-col-order-xxl': '3',
+        });
         for (const size of ['xs', 'md', 'xxl']) {
             expect(col).not.toHaveAttribute(size);
         }
     });
 
-    it('类名随 prop 变化', () => {
+    it('任一层的 span 为 0 时，写了 span 的每一层都带 display 变量，后面的非 0 span 重新显示', () => {
+        const { container } = render(() => <Col md={0} sm={8} xs={{ span: 12, order: 1 }} />);
+        expect(colVars(container.firstChild as HTMLElement)).toEqual({
+            '--semi-col-span-xs': '12',
+            '--semi-col-order-xs': '1',
+            '--semi-col-display-xs': 'block',
+            '--semi-col-span-sm': '8',
+            '--semi-col-display-sm': 'block',
+            '--semi-col-span-md': '0',
+            '--semi-col-display-md': 'none',
+        });
+    });
+
+    it('变量随 prop 变化', () => {
         const [span, setSpan] = createSignal(6);
         const { container } = render(() => <Col span={span()} />);
         setSpan(8);
-        expect((container.firstChild as HTMLElement).className).toBe('semi-col semi-col-8');
+        expect(colVars(container.firstChild as HTMLElement)).toEqual({ '--semi-col-span': '8' });
+    });
+
+    it('用户 style 与生成的变量合并，同名时用户的值优先，字符串与对象都可以', () => {
+        const [style, setStyle] = createSignal<string | Record<string, string>>({ '--semi-col-span': '12', color: 'red' });
+        // Solid accepts a string style; the lint rule only allows the object form in JSX literals
+        const { container } = render(() => <Col span={6} {...{ style: style() }} />);
+        const col = container.firstChild as HTMLElement;
+        expect(col.style.getPropertyValue('--semi-col-span')).toBe('12');
+        expect(col.style.color).toBe('red');
+        setStyle('--semi-col-span: 18; color: blue');
+        expect(col.style.getPropertyValue('--semi-col-span')).toBe('18');
+        expect(col.style.color).toBe('blue');
     });
 
     it('未知属性透传到根元素，style 原样转发（padding 完全由继承的 CSS 变量驱动，不在 JS 里计算）', () => {
@@ -210,11 +259,10 @@ describe('Col', () => {
         expect(col).toHaveTextContent('child');
     });
 
-    it('在 Row 之外渲染，没有 Row 写入的 gutter 变量，Col 不设置任何内联样式，与 ant-design 一致', () => {
+    it('在 Row 之外渲染，没有 Row 写入的 gutter 变量，样式里只有 Col 自己的变量', () => {
         const { container } = render(() => <Col span={12}>child</Col>);
         const col = container.querySelector(`.${BASE_CLASS_PREFIX}-col`) as HTMLElement;
-        expect(col).toHaveClass(`${BASE_CLASS_PREFIX}-col-12`);
-        expect(col.getAttribute('style')).toBeNull();
+        expect(colVars(col)).toEqual({ '--semi-col-span': '12' });
         expect(col).toHaveTextContent('child');
     });
 });

@@ -4,10 +4,6 @@
 
 $module: #{$prefix}-tabs;
 
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}
-
 .#{$module}-bar-collapse:dir(rtl) {
     .#{$prefix}-icon-chevron_right,
     .#{$prefix}-icon-chevron_left {

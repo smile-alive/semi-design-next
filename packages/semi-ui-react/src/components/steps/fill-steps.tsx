@@ -65,9 +65,7 @@ export default function Steps({ current = 0, status = 'process', children, initi
 
     return (
         <div {...rest} className={wrapperCls} role={namedRole(rest)}>
-            <Row type="flex" justify="start">
-                {inner}
-            </Row>
+            <Row justify="start">{inner}</Row>
         </div>
     );
 }

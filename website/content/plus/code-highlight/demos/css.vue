@@ -2,8 +2,7 @@
     import { CodeHighlight } from '@fibrae/semi-ui-vue';
 
     const code = `.grid {
-    .semi-row,
-    .semi-row-flex {
+    .semi-row {
         text-align: center;
         .semi-col {
             min-height: 30px;

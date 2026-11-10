@@ -12,7 +12,6 @@ import useDefaultProps from '../../base/use-default-props';
 export type { Breakpoint, Gutter };
 
 export interface RowProps extends ElementProps<'div'> {
-    type?: 'flex';
     align?: 'top' | 'middle' | 'bottom';
     justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between';
     className?: string;
@@ -24,16 +23,16 @@ export interface RowProps extends ElementProps<'div'> {
 }
 
 export default function Row(rawProps: RowProps) {
-    const { ref, type, justify, align, className, style, children, gutter = 0, ...rest } = useDefaultProps('Row', rawProps, {});
+    const { ref, justify, align, className, style, children, gutter = 0, ...rest } = useDefaultProps('Row', rawProps, {});
 
     const [horizontal, vertical] = normalizeGutter(gutter);
-    const classes = getRowClassName(cssClasses.PREFIX, { type, justify, align }, className);
+    const classes = getRowClassName(cssClasses.PREFIX, { justify, align }, className);
 
     const rowStyle = {
         ...gutterStyle('x', horizontal),
         ...gutterStyle('y', vertical),
         ...style,
-    } as React.CSSProperties;
+    };
 
     return (
         <div {...rest} ref={ref} className={classes} style={rowStyle} x-semi-prop="children">

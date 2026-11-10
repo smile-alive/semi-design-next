@@ -35,7 +35,8 @@ $module: #{$prefix}-markdownRender;
         justify-content: center;
         max-width: $width-markdownRender_component_image-maxWidth;
         max-height: $width-markdownRender_component_image-maxHeight;
-        margin: $spacing-markdownRender_component_image-marginTop $spacing-markdownRender_component_image-marginRight $spacing-markdownRender_component_image-marginBottom $spacing-markdownRender_component_image-marginLeft;
+        margin-block: $spacing-markdownRender_component_image-marginTop $spacing-markdownRender_component_image-marginBottom;
+        margin-inline: $spacing-markdownRender_component_image-marginLeft $spacing-markdownRender_component_image-marginRight;
 
         &-alt {
             margin-top: $spacing-markdownRender_component_image_alt-marginTop;

@@ -11,7 +11,7 @@ $module: #{$prefix}-steps;
     }
 
     &-vertical {
-        .#{$prefix}-row-flex {
+        .#{$prefix}-row {
             flex-direction: column;
         }
     }

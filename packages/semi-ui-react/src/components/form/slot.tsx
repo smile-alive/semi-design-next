@@ -91,8 +91,8 @@ export default function FormSlot({ children, label, className, style, error, noL
         );
         content = (
             <>
-                {/* without overflow hidden a top label lays out horizontally */}
-                {labelPosition === 'top' ? <div style={{ overflow: 'hidden' }}>{labelColContent}</div> : labelColContent}
+                {/* a top label takes a line of its own, or a Row would lay it out beside the wrapper column */}
+                {labelPosition === 'top' ? <div style={{ flexBasis: '100%' }}>{labelColContent}</div> : labelColContent}
                 <Col {...wrapperCol}>
                     <div className={mainCls}>
                         {children}

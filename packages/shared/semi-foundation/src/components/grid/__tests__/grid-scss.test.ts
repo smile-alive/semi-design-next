@@ -17,41 +17,55 @@ function compileGrid() {
     }).css;
 }
 
-describe('grid.scss 断点 0 的隐藏规则', () => {
+describe('grid.scss 的 Col 规则', () => {
     let css = '';
     beforeAll(() => {
         css = compileGrid();
     });
 
-    const mediaBlock = (min: number) => {
+    // the text of one breakpoint's layer: the media query for sm and up, whatever precedes the first query for xs
+    const layer = (min?: number) => {
+        if (min === undefined) {
+            return css.slice(0, css.indexOf('@media'));
+        }
         const start = css.indexOf(`@media (min-width: ${min}px)`);
         const next = css.indexOf('@media', start + 1);
         return css.slice(start, next === -1 ? undefined : next);
     };
 
+    it('不生成按跨度编号的类名', () => {
+        expect(css).not.toMatch(/\.semi-col-\d/);
+        expect(css).not.toMatch(/float|clear/);
+    });
+
+    it('Row 始终是 flex', () => {
+        expect(css).toMatch(/\.semi-row \{[^}]*display: flex/);
+    });
+
+    it('xs 是没有媒体查询的基础层，只回退到不带后缀的变量', () => {
+        expect(layer()).toContain('width: calc(var(--semi-col-span-xs, var(--semi-col-span, auto)) / 24 * 100%)');
+    });
+
     it.each([
-        ['sm', 576],
-        ['md', 768],
-        ['lg', 992],
-        ['xl', 1200],
-        ['xxl', 1600],
-    ])('%s 的 0 只写在自己的媒体查询内，且排在同断点 display:block 之后', (bp, min) => {
-        const hidden = new RegExp(`\\.semi-col-${bp}-0\\b[^{}]*\\{\\s*display:\\s*none`);
-        const firstMedia = css.indexOf('@media');
-        expect(css.slice(0, firstMedia)).not.toMatch(hidden);
-        const block = mediaBlock(min);
-        const hiddenAt = block.search(hidden);
-        expect(hiddenAt).toBeGreaterThan(-1);
-        expect(hiddenAt).toBeGreaterThan(block.indexOf(`.semi-col-${bp}-24 {`));
+        ['sm', 576, 'var(--semi-col-span-sm, var(--semi-col-span-xs, var(--semi-col-span, auto)))'],
+        ['md', 768, 'var(--semi-col-span-md, var(--semi-col-span-sm, var(--semi-col-span-xs, var(--semi-col-span, auto))))'],
+        ['xxl', 1600, 'var(--semi-col-span-xxl, var(--semi-col-span-xl, var(--semi-col-span-lg, var(--semi-col-span-md, var(--semi-col-span-sm, var(--semi-col-span-xs, var(--semi-col-span, auto)))))))'],
+    ])('%s 在自己的媒体查询里，按回退链继承更小的断点', (_bp, min, chain) => {
+        expect(layer(min)).toContain(`width: calc(${chain} / 24 * 100%)`);
     });
 
-    it('xs 是基础层，0 排在 xs 的 display:block 之后', () => {
-        const hiddenAt = css.search(/\.semi-col-xs-0\b[^{}]*\{\s*display:\s*none/);
-        expect(hiddenAt).toBeGreaterThan(-1);
-        expect(hiddenAt).toBeGreaterThan(css.indexOf('.semi-col-xs-24 {'));
+    it('display 变量写在同一条回退链里，缺省为 block', () => {
+        expect(layer(768)).toContain('display: var(--semi-col-display-md, var(--semi-col-display-sm, var(--semi-col-display-xs, var(--semi-col-display, block))))');
     });
 
-    it('不带断点的 col-0 仍整体隐藏', () => {
-        expect(css).toMatch(/\.semi-col-0\b[^{}]*\{\s*display:\s*none/);
+    it('push 与 pull 用逻辑属性，offset 用 margin-inline-start', () => {
+        const base = layer();
+        expect(base).toContain('inset-inline-start: calc(var(--semi-col-push-xs, var(--semi-col-push, 0)) / 24 * 100%)');
+        expect(base).toContain('inset-inline-end: calc(var(--semi-col-pull-xs, var(--semi-col-pull, 0)) / 24 * 100%)');
+        expect(base).toContain('margin-inline-start: calc(var(--semi-col-offset-xs, var(--semi-col-offset, 0)) / 24 * 100%)');
+    });
+
+    it('体积保持在预生成类名方案的十分之一以下', () => {
+        expect(css.length).toBeLessThan(10_000);
     });
 });

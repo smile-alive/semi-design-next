@@ -41,9 +41,49 @@ describe('Svelte Grid 浏览器', () => {
         expect(style(col, 'padding-top')).toBe('0px');
     });
 
-    it('数组 gutter [横, 纵] 两个方向各自生效，flex 布局落点一致', () => {
-        const { container } = setup({ type: 'flex', gutter: [16, 24] });
-        const row = q(container, '.semi-row-flex');
+    describe('Col 的栅格布局', () => {
+        // a 480px wide container makes one column 20px
+        const layout = (row: RowProps, col: ColProps) => {
+            const view = setup(row, col);
+            view.container.style.width = '480px';
+            return { rowEl: q(view.container, '.semi-row') as HTMLElement, colEl: q(view.container, '.semi-col') as HTMLElement };
+        };
+
+        it('span、offset、push 与 order 按 24 栅格折算', () => {
+            const { colEl } = layout({}, { offset: 3, order: 2, push: 2, span: 6 });
+            expect(style(colEl, 'width')).toBe('120px');
+            expect(style(colEl, 'margin-inline-start')).toBe('60px');
+            expect(parseFloat(style(colEl, 'inset-inline-start'))).toBeCloseTo(40, 0);
+            expect(style(colEl, 'order')).toBe('2');
+        });
+
+        it('没有 span 的 Col 按内容定宽', () => {
+            const { colEl } = layout({}, {});
+            expect(colEl.offsetWidth).toBeLessThan(120);
+        });
+
+        it('justify 与 align 始终生效', () => {
+            const { rowEl, colEl } = layout({ align: 'middle', justify: 'center' }, { span: 6 });
+            expect(style(rowEl, 'justify-content')).toBe('center');
+            expect(style(rowEl, 'align-items')).toBe('center');
+            expect(colEl.getBoundingClientRect().left - rowEl.getBoundingClientRect().left).toBe(180);
+        });
+
+        it('断点从更小的断点继承，没有设置的断点沿用已生效的值', async () => {
+            const widthAt = async (viewport: number) => {
+                await page.viewport(viewport, 660);
+                return layout({}, { md: 12, xs: 24 }).colEl.offsetWidth;
+            };
+            expect(await widthAt(500)).toBe(480);
+            // sm sets nothing, so it keeps xs
+            expect(await widthAt(700)).toBe(480);
+            expect(await widthAt(1000)).toBe(240);
+        });
+    });
+
+    it('数组 gutter [横, 纵] 两个方向各自生效，Row 的 flex 布局落点一致', () => {
+        const { container } = setup({ gutter: [16, 24] });
+        const row = q(container, '.semi-row');
         const col = q(container, '.semi-col');
         expect(getComputedStyle(row).display).toBe('flex');
         expect(style(row, 'margin-left')).toBe('-8px');

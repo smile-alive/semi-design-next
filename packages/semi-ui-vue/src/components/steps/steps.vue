@@ -67,7 +67,7 @@
 <template>
     <div :class="rootClass" :role="namedRole($attrs)">
         <template v-for="(nodes, group) in [stepNodes()]" :key="group">
-            <Row v-if="props.type === 'fill'" justify="start" type="flex">
+            <Row v-if="props.type === 'fill'" justify="start">
                 <Col v-for="([node, key], index) in nodes" :key="key" :style="props.direction === 'vertical' ? undefined : { width: `${100 / nodes.length}%` }">
                     <StepProvider :index="index" :total="nodes.length">
                         <component :is="node" />

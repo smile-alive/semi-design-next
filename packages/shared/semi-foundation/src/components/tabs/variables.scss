@@ -147,7 +147,7 @@ $spacing-tabs_bar_button_tab-paddingY: $spacing-tight; // 按钮式页签垂直�
 $spacing-tabs_bar_button_tab-paddingX: $spacing-base-tight; // 按钮式页签水平内边距
 
 $radius-tabs_tab_card: var(--semi-border-radius-small) var(--semi-border-radius-small) 0 0; // 卡片式页签四向圆角
-$radius-tabs_tab_card_left: var(--semi-border-radius-small) 0 0 var(--semi-border-radius-small); // 垂直卡片式页签四向圆角
+$radius-tabs_tab_card_left: var(--semi-border-radius-small); // 垂直卡片式页签起始侧两个角的圆角
 $radius-tabs_tab_button: var(--semi-border-radius-small); // 按钮式页签圆角
 
 $font-tabs_bar_large-fontSize: $font-size-regular; // 大号模式 字体大小

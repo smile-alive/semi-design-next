@@ -11,11 +11,7 @@ const InternalTooltip = Tooltip as (props: TooltipInternalProps & { ref?: React.
 
 const prefixCls = cssClasses.PREFIX;
 export type { ArrowProps } from './arrow';
-declare interface ArrowStyle {
-    borderColor?: string;
-    backgroundColor?: string;
-    borderOpacity?: string | number;
-}
+type ArrowStyle = Pick<React.CSSProperties, 'borderColor' | 'backgroundColor'> & { borderOpacity?: string | number };
 
 export interface PopoverHandle {
     /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */

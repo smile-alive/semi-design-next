@@ -552,5 +552,3 @@ $overflowList: #{$prefix}-overflow-list;
     padding-bottom: $spacing-select_dropdown_input_paddingBottom;
     border-bottom: 1px solid $color-select_dropdown_input-border;
 }
-
-@include meta.load-css('rtl');
