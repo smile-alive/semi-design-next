@@ -1,8 +1,7 @@
 import { render, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import type { YearAndMonthProps } from '../internal';
 import YearAndMonth from '../year-and-month.svelte';
 import { click, getPopup, getPresetButtons, getYMLists, getYMSelected } from './date-picker-dom-utils';

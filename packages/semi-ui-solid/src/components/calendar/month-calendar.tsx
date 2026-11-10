@@ -6,6 +6,7 @@ import { type DateObj, toPercent } from '@fibrae/semi-foundation/components/cale
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
 import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import useFoundation from '../../base/use-foundation';
@@ -13,6 +14,7 @@ import useClickOutside from '../../primitives/use-click-outside';
 import useResizeObserver from '../../primitives/use-resize-observer';
 import hasContent from '../../utils/has-content';
 import mergeRefs from '../../utils/merge-refs';
+import useConfig from '../config-provider/use-config';
 import IconButton from '../icon-button';
 import useLocale from '../locale/use-locale';
 import Popover from '../popover';
@@ -33,6 +35,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
     const [local, rest] = splitProps(props, viewPropKeys);
 
     const locale = useLocale('Calendar');
+    const config = useConfig();
 
     const cardIdPrefix = createUniqueId();
     const moreButtons = new Map<string, HTMLButtonElement>();
@@ -72,9 +75,10 @@ export default function MonthCalendar(props: DayCalendarProps) {
 
     // a memo reruns whenever any source it read notifies, so reading the props directly would rebuild the week rows
     const weekStartsOn = createMemo(() => local.weekStartsOn ?? 0);
+    const dateFnsLocale = createMemo(() => getDateFnsLocale(locale().localeCode, config().dateFnsLocale));
 
     // today is applied per cell, so the mount-time today does not rebuild the grid the server rendered
-    const monthlyData = createMemo(() => CalendarFoundation.getMonthlyData(displayValue(), locale().dateFnsLocale, weekStartsOn(), null));
+    const monthlyData = createMemo(() => CalendarFoundation.getMonthlyData(displayValue(), dateFnsLocale(), weekStartsOn(), null));
     const weeks = createMemo(() => Object.values(monthlyData()));
     const parsedEvents = createMemo(() => CalendarFoundation.getParseMonthlyEvents(events(), displayValue(), weekStartsOn()));
 
@@ -145,7 +149,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
                 [`${cssClasses.PREFIX}-weekend`]: local.markWeekend && cell.day.isWeekend,
                 [`${prefixCls}-same`]: cell.day.isSameMonth,
             });
-        const ariaLabel = () => format(cell.day.date, 'PPP', { locale: locale().dateFnsLocale });
+        const ariaLabel = () => format(cell.day.date, 'PPP', { locale: dateFnsLocale() });
         const cellProps = {
             role: 'cell' as const,
             get 'aria-current'() {
@@ -239,7 +243,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
     createEffect(on([monthlyData, parsedEvents, itemLimit, openCardKey], ([monthly, parsed]) => foundation.closeStaleCard(monthly, parsed)));
 
     return (
-        <div aria-label={format(displayValue(), 'LLLL y', { locale: locale().dateFnsLocale })} role="table" {...rest} ref={mergeRefs(local.ref)} class={clsx(prefixCls, local.class)} style={rootStyle(local.style, local.width, local.height)}>
+        <div aria-label={format(displayValue(), 'LLLL y', { locale: dateFnsLocale() })} role="table" {...rest} ref={mergeRefs(local.ref)} class={clsx(prefixCls, local.class)} style={rootStyle(local.style, local.width, local.height)}>
             <div class={`${prefixCls}-sticky-top`} role="rowgroup">
                 <Show when={hasContent(header())}>
                     <div role="row">

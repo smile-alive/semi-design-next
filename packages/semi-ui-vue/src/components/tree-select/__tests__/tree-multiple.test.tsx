@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import TreeSelect, { type TreeSelectEmits } from '..';
 import ConfigProvider from '../../config-provider';

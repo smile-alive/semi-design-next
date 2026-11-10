@@ -5,6 +5,7 @@ import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import type { ElementProps } from '../../base/element-props';
 import { usePopupLayer } from '../../base/popup-layer';
@@ -180,7 +181,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
             return defaulted.placeholder ?? locale().locale.placeholder[defaulted.type];
         },
         get dateFnsLocale() {
-            return locale().dateFnsLocale;
+            return getDateFnsLocale(locale().localeCode, config().dateFnsLocale);
         },
     }) as FoundationProps & typeof defaultProps & { placeholder: string };
 

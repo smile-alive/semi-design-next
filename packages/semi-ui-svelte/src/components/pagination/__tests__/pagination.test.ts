@@ -2,10 +2,8 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { PaginationProps } from '../interface';
 import Pagination from '../pagination.svelte';
@@ -594,8 +592,8 @@ describe('Svelte Pagination prevText、nextText 与语言包', () => {
     });
 
     it('名称随 LocaleProvider 的语言包变化', () => {
-        setup({ currentPage: 10, showQuickJumper: true, showSizeChanger: true, total: 200 }, { locale: ja_JP });
-        const text = ja_JP.Pagination;
+        setup({ currentPage: 10, showQuickJumper: true, showSizeChanger: true, total: 200 }, { locale: en_US });
+        const text = en_US.Pagination;
         expect(screen.getByRole('button', { name: text.prev })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: text.next })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: text.pageN.replace('${page}', '10') })).toBeInTheDocument();

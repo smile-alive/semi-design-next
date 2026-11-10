@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-svelte/locale';
     import type { LocaleComponentName, LocaleResult } from '../interface';
     import Nest, { type Layer } from './nest.svelte';
     import Probe from './probe.svelte';

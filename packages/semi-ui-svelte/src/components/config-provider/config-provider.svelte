@@ -42,6 +42,9 @@
         get locale() {
             return inherited.locale;
         },
+        get dateFnsLocale() {
+            return inherited.dateFnsLocale;
+        },
         get timeZone() {
             return inherited.timeZone;
         },

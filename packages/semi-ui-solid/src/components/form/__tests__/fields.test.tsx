@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { format } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { type FormApi, Form, FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormRadio, FormRadioGroup, FormSwitch, FormTagInput, FormTransfer, FormTreeSelect, FormUpload } from '..';
 
 const leakedAttrs = ['insetlabel', 'insetlabelid', 'validatestatus'];

@@ -1,6 +1,6 @@
 /** @jsxImportSource vue */
 import { expect, it } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { renderOnServer } from '@test/utils/vue.ssr';
 import DatePicker from '..';
 import Month from '../month.vue';

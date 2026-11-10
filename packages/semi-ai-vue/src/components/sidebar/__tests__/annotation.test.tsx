@@ -2,8 +2,7 @@
 import type { VNode } from 'vue';
 import { createEvent, fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import { render } from '@test/utils/vue';
 import Annotation, { type AnnotationEmits, type AnnotationInfo, type AnnotationItem } from '../annotation';
@@ -65,11 +64,11 @@ describe('Annotation', () => {
 
     it('标题跟随语言包', () => {
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: { default: () => <Annotation info={info} visible /> },
         });
-        expect(ja_JP.Sidebar.annotationTitle).not.toBe(zh_CN.Sidebar.annotationTitle);
-        expect(screen.getByText(ja_JP.Sidebar.annotationTitle)).toBeInTheDocument();
+        expect(en_US.Sidebar.annotationTitle).not.toBe(zh_CN.Sidebar.annotationTitle);
+        expect(screen.getByText(en_US.Sidebar.annotationTitle)).toBeInTheDocument();
     });
 
     it('title 属性替换语言包标题，#title 插槽优先', () => {

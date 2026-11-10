@@ -5,10 +5,9 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import type { NoticeInstance } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import { type ConfigProps, createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { IconToutiaoLogo } from '@fibrae/semi-icons-solid';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Notification, { type NoticeProps, type NoticeState, type NotificationHookApi, type NotificationHookOptions } from '..';
 import ConfigProvider from '../../config-provider';

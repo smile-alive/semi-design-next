@@ -12,21 +12,14 @@ import LocaleConsumerSolidApi from './api/locale-consumer.solid.en-US.mdx';
 import LocaleProviderSvelteApi from './api/locale-provider.svelte.en-US.mdx';
 import LocaleConsumerSvelteApi from './api/locale-consumer.svelte.en-US.mdx';
 
-## Languages supported
+## Built-in languages
 
-| Minimum supported version | Language |
-| --- | --- |
-| v0.0.1 | Simplified Chinese: zh_CN |
-| v0.7.0 | English: en_GB, Japanese: ja_JP, Korean: ko_KR |
-| v1.8.0 | Arabic: ar |
-| v1.11.0 | Vietnamese: vi_VN、Russian: ru_RU、Indonesian: id_ID、Malay: ms_MY、Thai: th_TH、Turkish: tr_TR |
-| v1.17.0 | Portuguese: pt_BR |
-| v1.28.0 | Traditional Chinese: zh_TW |
-| v2.2.0 | Spanish: es |
-| v2.15.0 | Italian: it、French：fr、German：de |
-| v2.21.0 | Romanian: ro |
-| v2.29.0 | Swedish: sv_SE、 Polish: pl_PL、Dutch: nl_NL |
-| v2.88.0 | Azerbaijani: az, Bulgarian: bg, Catalan: ca, Czech: cs_CZ, Cebu: ceb_PH, Danish: da, Greek: el_GR, Spanish (Latin America): es_419, Estonian: et, Persian: fa_IR, Filipino: fil_PH, Finnish: fi_FI, French (Canada): fr_CA, Irish: ga, Hebrew: he_IL, Hindi: hi_IN, Croatian: hr, Hungarian: hu_HU, Icelandic: is, Javanese: jv_ID, Kazakh: kk, Khmer: km_KH, Lithuanian: lt, Latvian: lv, Burmese: my_MM, Norwegian: nb, Portuguese: pt, Slovak: sk, Slovenian: sl, Albanian: sq, Swahili: sw, Ukrainian: uk_UA, Urdu: ur, Uzbek: uz |
+| Language           | Export  |
+| ------------------ | ------- |
+| Simplified Chinese | `zh_CN` |
+| English (US)       | `en_US` |
+
+Both packs come from the `/locale` entry of the UI package, for example `import { en_US } from '@fibrae/semi-ui-react/locale'`. For any other language, write your own pack; see [Custom locale packs](#custom-locale-packs).
 
 ## Components supported
 
@@ -40,35 +33,12 @@ Calendar、Cascader、Chat、DatePicker、Form、Image、List、Modal、Navigati
 When you need to switch the language, you can directly switch the locale passed in by the props.
 
 ```jsx
-import React, { useCallback, useMemo, useState } from 'react';
-import zh_CN from '@fibrae/semi-ui-react/locale/source/zh_CN';
-import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
-import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
-import ko_KR from '@fibrae/semi-ui-react/locale/source/ko_KR';
-import ja_JP from '@fibrae/semi-ui-react/locale/source/ja_JP';
-import vi_VN from '@fibrae/semi-ui-react/locale/source/vi_VN';
-import ru_RU from '@fibrae/semi-ui-react/locale/source/ru_RU';
-import id_ID from '@fibrae/semi-ui-react/locale/source/id_ID';
-import ms_MY from '@fibrae/semi-ui-react/locale/source/ms_MY';
-import th_TH from '@fibrae/semi-ui-react/locale/source/th_TH';
-import tr_TR from '@fibrae/semi-ui-react/locale/source/tr_TR';
-import pt_BR from '@fibrae/semi-ui-react/locale/source/pt_BR';
-import zh_TW from '@fibrae/semi-ui-react/locale/source/zh_TW';
-import sv_SE from '@fibrae/semi-ui-react/locale/source/sv_SE';
-import pl_PL from '@fibrae/semi-ui-react/locale/source/pl_PL';
-import nl_NL from '@fibrae/semi-ui-react/locale/source/nl_NL';
-import ar from '@fibrae/semi-ui-react/locale/source/ar';
-import es from '@fibrae/semi-ui-react/locale/source/es';
-import it from '@fibrae/semi-ui-react/locale/source/it';
-import de from '@fibrae/semi-ui-react/locale/source/de';
-import fr from '@fibrae/semi-ui-react/locale/source/fr';
-import ro from '@fibrae/semi-ui-react/locale/source/ro';
-
 import { LocaleProvider } from '@fibrae/semi-ui-react';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 
 () => {
     return (
-        <LocaleProvider locale={en_GB}>
+        <LocaleProvider locale={en_US}>
             {/* eslint-disable-next-line react/jsx-no-undef */}
             <App />
         </LocaleProvider>
@@ -85,12 +55,12 @@ When you need to switch the language, change the value of the `locale` prop.
 
 ```vue
 <script setup lang="ts">
-    import en_GB from '@fibrae/semi-ui-vue/locale/source/en_GB';
     import { LocaleProvider } from '@fibrae/semi-ui-vue';
+    import { en_US } from '@fibrae/semi-ui-vue/locale';
 </script>
 
 <template>
-    <LocaleProvider :locale="en_GB">
+    <LocaleProvider :locale="en_US">
         <App />
     </LocaleProvider>
 </template>
@@ -104,11 +74,11 @@ When you need to switch the language, change the value of the `locale` prop.
 When you need to switch the language, bind `locale` to a value that changes; the subtree updates automatically.
 
 ```jsx
-import en_GB from '@fibrae/semi-ui-solid/locale/source/en_GB';
 import { LocaleProvider } from '@fibrae/semi-ui-solid';
+import { en_US } from '@fibrae/semi-ui-solid/locale';
 
 () => (
-    <LocaleProvider locale={en_GB}>
+    <LocaleProvider locale={en_US}>
         <App />
     </LocaleProvider>
 );
@@ -123,11 +93,11 @@ When you need to switch the language, bind `locale` to state that changes; the s
 
 ```svelte
 <script lang="ts">
-    import en_GB from '@fibrae/semi-ui-svelte/locale/source/en_GB';
     import { LocaleProvider } from '@fibrae/semi-ui-svelte';
+    import { en_US } from '@fibrae/semi-ui-svelte/locale';
 </script>
 
-<LocaleProvider locale={en_GB}>
+<LocaleProvider locale={en_US}>
     <App />
 </LocaleProvider>
 ```
@@ -136,11 +106,27 @@ When you need to switch the language, bind `locale` to state that changes; the s
 
 When `locale` is omitted, LocaleProvider inherits the language of the outer LocaleProvider; without any outer provider, `zh_CN` is used. The `locale` of ConfigProvider takes precedence over LocaleProvider.
 
+### date-fns locale of date components
+
+DatePicker, TimePicker and Calendar format and parse dates with date-fns. Locale packs hold only text, not date-fns locale data: these components pick the built-in zh-CN or en-US by the current locale's `code`, and use enUS for other languages. For another language, import it from `date-fns/locale` and pass it to the `dateFnsLocale` of ConfigProvider, for example `ja` from `date-fns/locale/ja` alongside a Japanese locale pack. Only the imported languages reach the bundle, and server rendering and the first client render use the same locale object.
+
 ## Code example
 
 ### Internationalization
 
 <Demo id="i18n" />
+
+### Custom locale packs
+
+For a language that is not built in, write your own pack after the `Locale` type and pass it to the `locale` of ConfigProvider or LocaleProvider. `locale` is typed `LocaleInput`, exported from the UI package alongside `Locale`: only `code` is required, so write just the components and keys you translate. Every text or `currency` the pack leaves out falls back to `en_US`.
+
+- `code` picks the built-in date-fns locale of the date components, and is the `localeCode` that LocaleConsumer and `useLocale` read.
+- The date-fns locale of the date components goes separately through the `dateFnsLocale` of ConfigProvider; see the previous section.
+- Create the pack object once, at module level or memoized. Components cache the filled-in text per object, so mutating it in place has no effect; pass a new object instead.
+
+The example translates only the page buttons and jump text of Pagination and the placeholder of DatePicker; the total, the page size and the text in the date panel fall back to English.
+
+<Demo id="custom-locale" />
 
 ### Custom Internationalization Component
 
@@ -152,19 +138,19 @@ When your custom component also wants to consume the localeCode in the Semi Loca
 
 <Framework only="vue">
 
-When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use the default scoped slot of LocaleConsumer, which provides `locale`, `localeCode`, `dateFnsLocale` and `currency`. Inside `<script setup>`, call `useLocale(componentName)` instead; it returns a computed with the same four fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
+When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use the default scoped slot of LocaleConsumer, which provides `locale`, `localeCode` and `currency`. Inside `<script setup>`, call `useLocale(componentName)` instead; it returns a computed with the same three fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
 
 </Framework>
 
 <Framework only="solid">
 
-When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use LocaleConsumer. Its child is a function receiving the namespace text (`locale`), `localeCode`, `dateFnsLocale` and `currency`, in that order. Inside a component body, you can also call `useLocale(componentName)`, which returns an accessor; call it to read the same four fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
+When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use LocaleConsumer. Its child is a function receiving the namespace text (`locale`), `localeCode` and `currency`, in that order. Inside a component body, you can also call `useLocale(componentName)`, which returns an accessor; call it to read the same three fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
 
 </Framework>
 
 <Framework only="svelte">
 
-When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use LocaleConsumer. Its `children` snippet receives `{ locale, localeCode, dateFnsLocale, currency }`. During component initialisation, you can also call `useLocale(componentName)`, which returns a getter; call it to read the same four fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
+When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use LocaleConsumer. Its `children` snippet receives `{ locale, localeCode, currency }`. During component initialisation, you can also call `useLocale(componentName)`, which returns a getter; call it to read the same three fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
 
 </Framework>
 
@@ -201,12 +187,11 @@ LocaleConsumer renders no element of its own and does not accept undeclared attr
 
 `useLocale(componentName)` returns a `ComputedRef<LocaleResult>`. `componentName` can be a string, a ref or a getter.
 
-| Field         | Description                                                               | Type                |
-| ------------- | ------------------------------------------------------------------------- | ------------------- |
-| locale        | Text of the namespace named by `componentName`                            | `Locale[K]`         |
-| localeCode    | Language code                                                             | string              |
-| dateFnsLocale | date-fns locale object; date-fns uses its default enUS when it is missing | `Locale` (date-fns) |
-| currency      | ISO 4217 currency code of the language's region                           | string              |
+| Field      | Description                                     | Type        |
+| ---------- | ----------------------------------------------- | ----------- |
+| locale     | Text of the namespace named by `componentName`  | `Locale[K]` |
+| localeCode | Language code                                   | string      |
+| currency   | ISO 4217 currency code of the language's region | string      |
 
 </Framework>
 
@@ -232,12 +217,11 @@ LocaleConsumer renders no element of its own, so `class`, `style`, `ref` and nat
 
 `useLocale(componentName)` returns an `Accessor<LocaleResult>`; call the accessor to read the result. `componentName` can be a string or an accessor that returns a string.
 
-| Field         | Description                                                               | Type                |
-| ------------- | ------------------------------------------------------------------------- | ------------------- |
-| locale        | Text of the namespace named by `componentName`                            | `Locale[K]`         |
-| localeCode    | Language code                                                             | string              |
-| dateFnsLocale | date-fns locale object; date-fns uses its default enUS when it is missing | `Locale` (date-fns) |
-| currency      | ISO 4217 currency code of the language's region                           | string              |
+| Field      | Description                                     | Type        |
+| ---------- | ----------------------------------------------- | ----------- |
+| locale     | Text of the namespace named by `componentName`  | `Locale[K]` |
+| localeCode | Language code                                   | string      |
+| currency   | ISO 4217 currency code of the language's region | string      |
 
 </Framework>
 
@@ -263,11 +247,10 @@ LocaleConsumer renders no element of its own, so `class`, `style` and native att
 
 `useLocale(componentName)` returns a `() => LocaleResult` getter; call it to read the result. `componentName` can be a string or a function that returns a string.
 
-| Field         | Description                                                               | Type                |
-| ------------- | ------------------------------------------------------------------------- | ------------------- |
-| locale        | Text of the namespace named by `componentName`                            | `Locale[K]`         |
-| localeCode    | Language code                                                             | string              |
-| dateFnsLocale | date-fns locale object; date-fns uses its default enUS when it is missing | `Locale` (date-fns) |
-| currency      | ISO 4217 currency code of the language's region                           | string              |
+| Field      | Description                                     | Type        |
+| ---------- | ----------------------------------------------- | ----------- |
+| locale     | Text of the namespace named by `componentName`  | `Locale[K]` |
+| localeCode | Language code                                   | string      |
+| currency   | ISO 4217 currency code of the language's region | string      |
 
 </Framework>

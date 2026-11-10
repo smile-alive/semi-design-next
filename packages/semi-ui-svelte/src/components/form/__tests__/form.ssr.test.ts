@@ -1,8 +1,8 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
 import * as z from 'zod';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import CompositeFixture from './composite-fixture.svelte';
 import FormFixture, { type FieldSpec, type FormFixtureStore } from './form-fixture.svelte';
 import SchemaFixture, { type SchemaFixtureStore } from './schema-fixture.svelte';
@@ -51,6 +51,6 @@ describe('Svelte Form 服务端首帧', () => {
         expect(body).toMatch(/<input[^>]*value="semi"/);
         expect(body).toMatch(/<input[^>]*value="a"/);
         expect(body).toContain('semi-form-field-label-required');
-        expect(body).toContain(ja_JP.Form.addItem);
+        expect(body).toContain(en_US.Form.addItem);
     });
 });

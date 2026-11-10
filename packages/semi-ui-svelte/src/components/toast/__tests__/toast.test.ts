@@ -1,9 +1,8 @@
 import { createRawSnippet, flushSync, type Snippet, tick } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Toast, ToastFactory } from '../index';
 import type { ToastHookApi, ToastHookOptions, ToastProps } from '../interface';
@@ -445,9 +444,9 @@ describe('Toast', () => {
         api.info({ content: 'hook', duration: 0 });
         await show({ content: 'static', duration: 0 });
         const hooked = [...document.querySelectorAll<HTMLElement>(`.${prefix}-info`)].find((el) => el.textContent?.trim() === 'hook') as HTMLElement;
-        expect(hooked).toHaveAttribute('aria-label', ja_JP.Toast.info);
+        expect(hooked).toHaveAttribute('aria-label', en_US.Toast.info);
         expect(hooked).toHaveAttribute('dir', 'rtl');
-        expect(hooked.querySelector('button')).toHaveAccessibleName(ja_JP.Toast.close);
+        expect(hooked.querySelector('button')).toHaveAccessibleName(en_US.Toast.close);
         const staticToast = document.getElementById(Toast.getWrapperId() ?? '')?.querySelector(`.${prefix}-info`);
         expect(staticToast).toHaveTextContent(/^static$/);
         expect(staticToast).toHaveAttribute('aria-label', zh_CN.Toast.info);

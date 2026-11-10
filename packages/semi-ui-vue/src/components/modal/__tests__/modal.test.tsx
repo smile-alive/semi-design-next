@@ -3,8 +3,8 @@ import { KeepAlive, defineComponent, nextTick, shallowRef, type VNode } from 'vu
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { IconEyeClosed } from '@fibrae/semi-icons-vue';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
 import Input from '../../input';

@@ -3,9 +3,8 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/sve
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { FeedbackCheckboxGroupProps, FeedbackProps, FeedbackRadioGroupProps, FeedbackTextAreaProps } from '../interface';
 import ConfigFixture from './config-fixture.svelte';
@@ -137,11 +136,11 @@ describe('Svelte Feedback 渲染', () => {
     });
 
     it('placeholder 与按钮文字跟随语言包', async () => {
-        render(ConfigFixture, { props: { props: { locale: ja_JP } } });
+        render(ConfigFixture, { props: { props: { locale: en_US } } });
         flushSync();
         await placed();
-        expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', ja_JP.Feedback.placeholder);
-        expect(screen.getByRole('button', { name: ja_JP.Feedback.submit })).toBeInTheDocument();
+        expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', en_US.Feedback.placeholder);
+        expect(screen.getByRole('button', { name: en_US.Feedback.submit })).toBeInTheDocument();
     });
 
     it('type 与 mode 切换时内容跟着换', async () => {

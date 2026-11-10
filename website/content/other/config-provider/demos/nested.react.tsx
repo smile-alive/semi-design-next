@@ -1,5 +1,5 @@
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { ConfigProvider, ConfigConsumer } from '@fibrae/semi-ui-react';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 
 function Show({ title }: { title: string }) {
     return (

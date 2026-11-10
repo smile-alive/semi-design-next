@@ -7,14 +7,12 @@
     useLocale('code');
     // @ts-expect-error 'currency' is not a component's strings
     useLocale('currency');
-    // @ts-expect-error 'dateFnsLocale' is not a component's strings
-    useLocale('dateFnsLocale');
     // @ts-expect-error 'Tabel' is not a component name
     useLocale('Tabel');
 </script>
 
 <LocaleConsumer componentName="Table">
-    {#snippet children({ locale, currency, localeCode, dateFnsLocale })}
-        <span>{locale.emptyText} {currency} {localeCode} {dateFnsLocale.code}</span>
+    {#snippet children({ locale, currency, localeCode })}
+        <span>{locale.emptyText} {currency} {localeCode}</span>
     {/snippet}
 </LocaleConsumer>

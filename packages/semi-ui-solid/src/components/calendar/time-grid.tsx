@@ -4,9 +4,11 @@ import { isSameDay } from 'date-fns';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
 import { calcRowHeight, toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import hasContent from '../../utils/has-content';
 import mergeRefs from '../../utils/merge-refs';
+import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
 import ByKey from './by-key';
 import DayCol from './day-col';
@@ -31,6 +33,7 @@ export default function TimeGrid(props: TimeGridProps) {
     const [local, rest] = splitProps(props, [...viewPropKeys, 'labelDate']);
 
     const locale = useLocale('Calendar');
+    const config = useConfig();
 
     const monthId = createUniqueId();
 
@@ -50,7 +53,7 @@ export default function TimeGrid(props: TimeGridProps) {
     const weekStartsOn = createMemo(() => local.weekStartsOn ?? 0);
 
     // today is applied per cell, so the mount-time today does not rebuild the grid the server rendered
-    const data = createMemo(() => CalendarFoundation.getRangeData(range(), locale().dateFnsLocale, weekStartsOn(), null, labelDate()));
+    const data = createMemo(() => CalendarFoundation.getRangeData(range(), getDateFnsLocale(locale().localeCode, config().dateFnsLocale), weekStartsOn(), null, labelDate()));
     const parsedEvents = createMemo(() => CalendarFoundation.getParsedRangeEvents(events()));
     const allDayEvents = createMemo(() => CalendarFoundation.parseRangeAllDayEvents(parsedEvents().allDay, range()));
 

@@ -1,6 +1,6 @@
 import type { Locale } from '#/i18n/locales';
 
-// {count} and {languages} are filled from the docs collection and the locale packs at build time
+// {count} is filled from the docs collection at build time
 const zhCN = {
     title: 'Semi Design Next - 一套组件，四个框架原生可用',
     description: '交互逻辑沉在与框架无关的 Foundation 中，React、Vue、Solid、Svelte 各自以原生写法接入。',
@@ -23,9 +23,8 @@ const zhCN = {
     a11y_brief: '角色与键盘交互按 WAI-ARIA 与 APG 实现，焦点状态始终可见。',
     a11y_button: '通过审批',
     i18n_label: '国际化',
-    i18n_unit: '种语言',
-    i18n_title: '{languages} 种语言，原生 RTL',
-    i18n_brief: '内置文案与可访问名称均来自语言包，从右向左的语言整体镜像。',
+    i18n_title: '内置中英文，原生 RTL',
+    i18n_brief: '内置文案与可访问名称均来自语言包，其他语言只写要翻译的部分，其余回退英文；从右向左的语言整体镜像。',
     theme_label: '主题',
     theme_title: '一套变量，深浅双色',
     theme_brief: '样式基于 --semi-* 变量并置于 @layer semi，不与业务样式争夺优先级。',
@@ -59,9 +58,8 @@ const enUS = {
     a11y_brief: 'Roles and keyboard interactions follow WAI-ARIA and APG. Focus stays visible throughout.',
     a11y_button: 'Approve',
     i18n_label: 'INTERNATIONALIZATION',
-    i18n_unit: 'languages',
-    i18n_title: '{languages} languages, native RTL',
-    i18n_brief: 'Built-in text and accessible names come from locale packs. RTL languages mirror the entire page layout.',
+    i18n_title: 'Chinese and English built in, native RTL',
+    i18n_brief: 'Built-in text and accessible names come from locale packs. Other languages translate only what they need and fall back to English. RTL languages mirror the entire page layout.',
     theme_label: 'THEMING',
     theme_title: 'One token set, light and dark',
     theme_brief: 'Styles use --semi-* variables inside @layer semi, so they never fight your own CSS.',

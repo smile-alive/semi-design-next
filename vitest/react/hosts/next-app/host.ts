@@ -242,8 +242,7 @@ export default function Page() {
 const langDemo = `'use client';
 
 import { ConfigProvider, DatePicker, Table } from '@fibrae/semi-ui-react';
-import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
-import zh_CN from '@fibrae/semi-ui-react/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import Hydrated from './hydrated';
 
 const columns = [{ title: 'Name', dataIndex: 'name' }];

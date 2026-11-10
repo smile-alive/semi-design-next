@@ -6,6 +6,7 @@
     import type { RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
@@ -111,6 +112,7 @@
     const position = computed(() => DatePickerFoundation.getPosition(normalized.value.position, config.value.direction));
     const spacing = computed(() => normalized.value.spacing);
     const timeZone = computed(() => props.timeZone ?? config.value.timeZone ?? readSemiDefault(semi, 'DatePicker', 'timeZone'));
+    const dateFnsLocale = computed(() => getDateFnsLocale(locale.value.localeCode, config.value.dateFnsLocale));
     const confirmNeeded = computed(() => needConfirm({ type: type.value, needConfirm: props.needConfirm }));
     const selectionControlled = computed(() => DatePickerFoundation.isSelectionControlled({ type: type.value, needConfirm: props.needConfirm, value: props.modelValue }));
     const isYearOrMonth = computed(() => isYearOrMonthType(type.value));
@@ -194,7 +196,7 @@
                 endDateOffset: () => props.endDateOffset ?? readSemiDefault(semi, 'DatePicker', 'endDateOffset'),
                 autoFocus: () => props.autofocus,
                 customTrigger: () => Boolean(slots.trigger),
-                dateFnsLocale: () => locale.value.dateFnsLocale,
+                dateFnsLocale: () => dateFnsLocale.value,
             },
         }
     );
@@ -206,7 +208,7 @@
     const confirmDisabled = computed(() => isRangeType(type.value) && !isRangeValueComplete(state.value.cachedSelectedValue));
 
     const insetDateInputProps = computed(() => ({
-        dateFnsLocale: locale.value.dateFnsLocale,
+        dateFnsLocale: dateFnsLocale.value,
         defaultPickerValue: props.defaultPickerValue,
         density: props.density,
         format: props.format,
@@ -351,7 +353,7 @@
                                 v-else
                                 ref="monthsGrid"
                                 :autoSwitchDate="props.autoSwitchDate"
-                                :dateFnsLocale="locale.dateFnsLocale"
+                                :dateFnsLocale="dateFnsLocale"
                                 :defaultPickerValue="props.defaultPickerValue"
                                 :density="props.density"
                                 :disabledDate="disabledDisposeDate"
@@ -433,7 +435,7 @@
                     :aria-label="$attrs['aria-labelledby'] ? undefined : triggerName"
                     :autofocus="state.autofocus"
                     :borderless="isRangeType(type) ? false : props.borderless"
-                    :dateFnsLocale="locale.dateFnsLocale"
+                    :dateFnsLocale="dateFnsLocale"
                     :defaultPickerValue="props.defaultPickerValue"
                     :disabled="inputDisabled"
                     :format="props.format"

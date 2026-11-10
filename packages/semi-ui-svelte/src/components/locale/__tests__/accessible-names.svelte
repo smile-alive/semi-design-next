@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-svelte/locale';
     import { ConfigProvider } from '../../config-provider';
     import Spin from '../../spin/spin.svelte';
     import LocaleProvider from '../locale-provider.svelte';

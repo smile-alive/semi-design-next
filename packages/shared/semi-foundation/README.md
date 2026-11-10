@@ -28,8 +28,7 @@ This package has no root entry. It offers only deep file paths, which map one-to
 ```ts
 import BaseFoundation from '@fibrae/semi-foundation/base/foundation';
 import InputFoundation from '@fibrae/semi-foundation/components/input/foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
 ```
 
@@ -37,35 +36,36 @@ import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
 
 ## Directories
 
-| Directory     | Contents                                                                                                                                                                    |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `components/` | One directory per component, containing `foundation.ts`, `constants.ts` and `*.scss` as needed (`variables.scss`, `mixin.scss`, `rtl.scss` and similar ship only as source) |
-| `base/`       | `BaseFoundation`, common constants and the stateful classes a foundation composes (focus scope, popup lifecycle, modal resources and similar)                               |
-| `utils/`      | Stateless utilities: DOM, date, focus helpers, layer stack and similar                                                                                                      |
-| `theme/`      | The one theme: global tokens, palettes and mixins, loaded by component SCSS through `semi:theme`                                                                            |
-| `locale/`     | Locale packs and the `Locale` type                                                                                                                                          |
+| Directory     | Contents                                                                                                                                                        |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/` | One directory per component, containing `foundation.ts`, `constants.ts` and `*.scss` as needed (`variables.scss`, `mixin.scss` and similar ship only as source) |
+| `base/`       | `BaseFoundation`, common constants and the stateful classes a foundation composes (focus scope, popup lifecycle, modal resources and similar)                   |
+| `utils/`      | Stateless utilities: DOM, date, focus helpers, layer stack and similar                                                                                          |
+| `theme/`      | The one theme: global tokens, palettes and mixins, loaded by component SCSS through `semi:theme`                                                                |
+| `locale/`     | Locale packs, the `Locale` and `LocaleInput` types and the locale resolution shared by every framework                                                          |
 
 ## Locale packs
 
-`src/locale/source/` holds 57 locale packs. Each file default-exports a `Locale`, whose type is in `src/locale/interface.ts`:
+`src/locale/source/` holds the two built-in packs, `zh_CN` and `en_US`. Each file default-exports a `Locale`. `src/locale/index.ts` exports both packs and the `Locale`, `LocaleInput`, `LocaleComponentName` and `LocaleResult` types, and other packages import from `@fibrae/semi-foundation/locale/index`:
 
-- `code`: the language code.
-- `dateFnsLocale`: the date-fns locale object used to format and parse dates.
+- `code`: the language code. Date components pick their date-fns locale by it (`src/utils/date-fns-locale.ts` builds in only zh-CN and en-US; others come from ConfigProvider's `dateFnsLocale`).
 - `currency`: the ISO 4217 currency code, passed by InputNumber to `Intl.NumberFormat`.
 - The other keys are grouped by component and hold built-in text and accessible names. Values with `${name}` are placeholders; do not translate the placeholder itself.
 
-To use a pack, pass it to the UI package's `LocaleProvider`:
+Every UI package exports `zh_CN` and `en_US` from its `locale` entry. Pass one to the UI package's `LocaleProvider` or `ConfigProvider`:
 
 ```tsx
 import { LocaleProvider } from '@fibrae/semi-ui-react';
-import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 
-<LocaleProvider locale={en_GB}>
+<LocaleProvider locale={en_US}>
     <App />
 </LocaleProvider>;
 ```
 
-The Vue package's `LocaleProvider` has the same name and takes `:locale`. For adding text or accessible names and filling in every locale pack, see [locale-text](../../../.agents/skills/locale-text/SKILL.md).
+Both providers also take a custom pack typed `LocaleInput`: only `code` is required, and every text or `currency` it leaves out comes from `en_US`. `src/locale/resolve-locale.ts` fills the gaps once per pack object and reuses the result, so create the pack once (at module level or memoized) and replace it rather than mutating it in place.
+
+The Vue package's `LocaleProvider` has the same name and takes `:locale`. For adding text or accessible names to both built-in packs, see [locale-text](../../../.agents/skills/locale-text/SKILL.md).
 
 ## Related packages
 

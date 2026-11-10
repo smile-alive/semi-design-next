@@ -3,9 +3,7 @@ import { KeepAlive, nextTick, reactive, shallowRef } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { beforeEach, describe, expect, expectTypeOf, it, vi, type Mock } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { mockResizeObserver, render, sleep } from '@test/utils/vue';
 import JsonViewer, { type JsonViewerHandle, type JsonViewerOptions, type JsonViewerProps } from '..';
@@ -510,15 +508,15 @@ describe('JsonViewer', () => {
     });
 
     it('搜索栏、搜索框与替换框的名称来自语言包', async () => {
-        render(() => <LocaleProvider locale={ja_JP}>{() => <JsonViewer modelValue="1" />}</LocaleProvider>);
-        await fireEvent.click(screen.getByRole('button', { name: ja_JP.JsonViewer.search }));
-        for (const name of [ja_JP.JsonViewer.caseSensitive, ja_JP.JsonViewer.regex, ja_JP.JsonViewer.wholeWord]) {
+        render(() => <LocaleProvider locale={en_US}>{() => <JsonViewer modelValue="1" />}</LocaleProvider>);
+        await fireEvent.click(screen.getByRole('button', { name: en_US.JsonViewer.search }));
+        for (const name of [en_US.JsonViewer.caseSensitive, en_US.JsonViewer.regex, en_US.JsonViewer.wholeWord]) {
             expect(screen.getByRole('button', { name })).toBeInTheDocument();
         }
         // jsdom's role table has no implicit role for the search element; the browser test queries the role
-        expect(document.querySelector(`search.${prefixCls}-search-bar-container`)).toHaveAttribute('aria-label', ja_JP.JsonViewer.search);
-        expect(screen.getByRole('textbox', { name: ja_JP.JsonViewer.search })).toBe(searchInput());
-        expect(screen.getByRole('textbox', { name: ja_JP.JsonViewer.replaceWith })).toBe(replaceInput());
+        expect(document.querySelector(`search.${prefixCls}-search-bar-container`)).toHaveAttribute('aria-label', en_US.JsonViewer.search);
+        expect(screen.getByRole('textbox', { name: en_US.JsonViewer.search })).toBe(searchInput());
+        expect(screen.getByRole('textbox', { name: en_US.JsonViewer.replaceWith })).toBe(replaceInput());
     });
 
     it('使用替换输入框的文本进行替换', async () => {

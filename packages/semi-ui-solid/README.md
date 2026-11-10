@@ -26,14 +26,14 @@ Styles and theme tokens load with the components. You do not need to import base
 
 ### Entry points
 
-| Entry                                          | Description                                                                                                                                       |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@fibrae/semi-ui-solid`                        | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
-| `@fibrae/semi-ui-solid/<directory>/index`      | Deep file paths that map one-to-one to the directories under `src/components/`                                                                    |
-| `@fibrae/semi-ui-solid/tokens`                 | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
-| `@fibrae/semi-ui-solid/styles.css`             | The full stylesheet, for loading all component styles at once                                                                                     |
-| `@fibrae/semi-ui-solid/tailwind.css`           | The Tailwind v4 `@theme inline` mapping                                                                                                           |
-| `@fibrae/semi-ui-solid/locale/source/<locale>` | Built-in locale packs, re-exporting `@fibrae/semi-foundation/locale/source/<locale>`                                                              |
+| Entry                                     | Description                                                                                                                                       |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@fibrae/semi-ui-solid`                   | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
+| `@fibrae/semi-ui-solid/locale`            | The built-in locale packs `zh_CN` and `en_US`, and the `Locale` and `LocaleInput` types                                                           |
+| `@fibrae/semi-ui-solid/<directory>/index` | Deep file paths that map one-to-one to the directories under `src/components/`                                                                    |
+| `@fibrae/semi-ui-solid/tokens`            | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
+| `@fibrae/semi-ui-solid/styles.css`        | The full stylesheet, for loading all component styles at once                                                                                     |
+| `@fibrae/semi-ui-solid/tailwind.css`      | The Tailwind v4 `@theme inline` mapping                                                                                                           |
 
 Each entry ships twice: a compiled DOM build under the default condition, and a version that keeps JSX under the `solid` condition. `vite-plugin-solid` (SolidStart, Vike, TanStack Start) and `unplugin-solid` pick the latter through the `solid` condition and recompile it for the target (DOM or server).
 
@@ -47,18 +47,18 @@ Override `--semi-*` CSS variables to change global colors, radii, font sizes and
 
 ### Internationalization
 
-The default locale is `zh_CN`. Pass a locale pack with `LocaleProvider`. `useLocale(componentName)` returns an accessor for that component's text in the current locale:
+The default locale is `zh_CN`. The built-in packs `zh_CN` and `en_US` come from the `locale` entry. Pass a locale pack with `LocaleProvider`. `useLocale(componentName)` returns an accessor for that component's text in the current locale:
 
 ```tsx
 import { LocaleProvider } from '@fibrae/semi-ui-solid';
-import en_GB from '@fibrae/semi-ui-solid/locale/source/en_GB';
+import { en_US } from '@fibrae/semi-ui-solid/locale';
 
-<LocaleProvider locale={en_GB}>
+<LocaleProvider locale={en_US}>
     <App />
 </LocaleProvider>;
 ```
 
-For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
+For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 

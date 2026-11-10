@@ -1,8 +1,8 @@
 import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Sidebar } from '@fibrae/semi-ai-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 
 const { FileItem } = Sidebar;
 

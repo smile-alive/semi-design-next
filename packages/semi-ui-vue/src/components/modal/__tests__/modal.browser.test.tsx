@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import { screen, waitFor, within } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { keyboardClick, tab } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import Button from '../../button';

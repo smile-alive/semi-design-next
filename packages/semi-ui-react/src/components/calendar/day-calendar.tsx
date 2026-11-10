@@ -4,8 +4,10 @@ import { format, startOfDay } from 'date-fns';
 import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
 import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import useMergedRef from '../../hooks/use-merged-ref';
+import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import DayCol from './day-col';
 import useScrollGrid from './hooks/use-scroll-grid';
@@ -16,7 +18,8 @@ import TimeCol from './time-col';
 const prefixCls = `${cssClasses.PREFIX}-day`;
 
 export default function DayCalendar({ ref, className, style, displayValue, range, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest }: DayCalendarProps) {
-    const { locale, dateFnsLocale } = useLocale('Calendar');
+    const { locale, localeCode } = useLocale('Calendar');
+    const { dateFnsLocale: contextDateFnsLocale } = useConfigContext();
 
     const { rootRef, scrollRef, scrollHeight } = useScrollGrid(scrollTop);
     const today = useToday();
@@ -35,7 +38,7 @@ export default function DayCalendar({ ref, className, style, displayValue, range
 
     return (
         <div
-            aria-label={format(displayValue, 'PPP', { locale: dateFnsLocale })}
+            aria-label={format(displayValue, 'PPP', { locale: getDateFnsLocale(localeCode, contextDateFnsLocale) })}
             role="table"
             // the view scrolls and nothing inside it takes focus, so the keyboard can only scroll it through the root
             tabIndex={0}

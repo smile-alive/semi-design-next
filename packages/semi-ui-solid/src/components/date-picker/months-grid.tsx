@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isRangeType, type DayStatusType } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { IconCalendar, IconClock } from '@fibrae/semi-icons-solid';
 import useFoundation from '../../base/use-foundation';
 import Combobox, { type ComboboxHandle, type ComboboxProps } from '../time-picker/combobox';

@@ -5,10 +5,9 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/table/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconStar } from '@fibrae/semi-icons-react';
 import { Tag, Tooltip } from '@fibrae/semi-ui-react';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { endLeaveAnimations, getColumns, getData, getGroupColumns, getGroupData, getJSXColumns, getNestColumns, getNestData, getRandomNumber, getTreeData } from '@test/utils/react';
@@ -4036,13 +4035,13 @@ describe('Table 非元素内容与可访问名称', () => {
             }
         );
         render(
-            <LocaleProvider locale={ja_JP}>
+            <LocaleProvider locale={en_US}>
                 <Table columns={[...nameColumns, { dataIndex: 'size', sorter: true }]} dataSource={rows} pagination={false} />
             </LocaleProvider>
         );
-        expect(await screen.findByRole('group', { name: ja_JP.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
-        expect(screen.getByText(ja_JP.Table.untitledColumn)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: ja_JP.Table.ascend })).toBeInTheDocument();
+        expect(await screen.findByRole('group', { name: en_US.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
+        expect(screen.getByText(en_US.Table.untitledColumn)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Table.ascend })).toBeInTheDocument();
     });
 });
 

@@ -2,9 +2,8 @@
 import { shallowRef } from 'vue';
 import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import { SortableHandle } from '..';
 import List from './fixtures/list.vue';

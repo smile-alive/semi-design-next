@@ -19,6 +19,7 @@ import DatePickerFoundation, {
     type ValueType,
 } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import { isInnerControlKey, namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
 import type { ElementProps } from '../../base/base';
@@ -125,11 +126,11 @@ function hasRangeInputs(type: Type, triggerRender: DatePickerProps['triggerRende
 }
 
 export default function DatePicker(rawProps: DatePickerProps) {
-    const { locale, dateFnsLocale } = useLocale('DatePicker');
-    const { timeZone: contextTimeZone, direction } = useConfigContext();
+    const { locale, localeCode } = useLocale('DatePicker');
+    const { timeZone: contextTimeZone, direction, dateFnsLocale: contextDateFnsLocale } = useConfigContext();
 
     // an explicit undefined falls back like a missing prop: prop, then context, then the global default
-    const defaulted = useDefaultProps('DatePicker', withInputGroup({ ...rawProps, timeZone: rawProps.timeZone ?? contextTimeZone, dateFnsLocale }, useInputGroupInScope()), defaultProps);
+    const defaulted = useDefaultProps('DatePicker', withInputGroup({ ...rawProps, timeZone: rawProps.timeZone ?? contextTimeZone, dateFnsLocale: getDateFnsLocale(localeCode, contextDateFnsLocale) }, useInputGroupInScope()), defaultProps);
     const props = { ...defaulted, ...DatePickerFoundation.normalizeProps(defaulted) };
 
     const {
@@ -146,7 +147,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         bottomSlot,
         className,
         clearIcon,
-        dateFnsLocale: _dateFnsLocale,
+        dateFnsLocale,
         defaultOpen,
         defaultPickerValue,
         defaultValue,

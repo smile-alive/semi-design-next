@@ -2,14 +2,15 @@ import { createRef, StrictMode, useState, type KeyboardEvent } from 'react';
 import { render, screen, fireEvent, waitFor, act, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { format } from 'date-fns';
+import { zhCN } from 'date-fns/locale/zh-CN';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { isTimeFormatLike } from '@fibrae/semi-foundation/components/time-picker/utils/index';
-import Locale from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconClose } from '@fibrae/semi-icons-react';
 import Button from '@fibrae/semi-ui-react/button';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
 import { Form, FormTimePicker } from '@fibrae/semi-ui-react/form';
+import { zh_CN as Locale } from '@fibrae/semi-ui-react/locale';
 import Popover from '@fibrae/semi-ui-react/popover';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations } from '@test/utils/react';
@@ -1751,8 +1752,8 @@ describe('TimePicker 面板与属性边界', () => {
         const withLocale: TimePickerProps = { locale: Locale.TimePicker };
         // @ts-expect-error the locale always comes from the LocaleProvider
         const withCode: TimePickerProps = { localeCode: 'zh-CN' };
-        // @ts-expect-error the locale always comes from the LocaleProvider
-        const withDateFns: TimePickerProps = { dateFnsLocale: Locale.dateFnsLocale };
+        // @ts-expect-error the date-fns locale comes from ConfigProvider
+        const withDateFns: TimePickerProps = { dateFnsLocale: zhCN };
         expect([withLocale, withCode, withDateFns]).toHaveLength(3);
     });
 

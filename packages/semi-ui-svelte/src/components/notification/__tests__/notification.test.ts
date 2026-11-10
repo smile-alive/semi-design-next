@@ -2,8 +2,8 @@ import { createRawSnippet, flushSync, type Snippet, tick } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { type ConfigProps, createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Notification } from '../index';
 import type { NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
@@ -897,12 +897,12 @@ describe('Notification', () => {
             const hookedWrapper = [...document.querySelectorAll(`.${prefix}-wrapper`)].find((el) => el.textContent?.includes('hook')) as HTMLElement;
             const hooked = hookedWrapper.querySelector(`.${noticeCls}`) as HTMLElement;
             expect(hooked).toHaveAttribute('dir', 'rtl');
-            expect(hooked.querySelector('button')).toHaveAccessibleName(ja_JP.Notification.close);
+            expect(hooked.querySelector('button')).toHaveAccessibleName(en_US.Notification.close);
             expect(hookedWrapper.querySelector(`.${prefix}-list`)).toHaveAttribute('x-placement', 'topLeft');
             const staticNotice = document.body.querySelector(`:scope > .${prefix}-wrapper:not([style*="contents"]) .${noticeCls}`) as HTMLElement;
             expect(staticNotice).toHaveTextContent('static');
             expect(staticNotice).not.toHaveAttribute('dir');
-            expect(staticNotice.querySelector('button')).not.toHaveAccessibleName(ja_JP.Notification.close);
+            expect(staticNotice.querySelector('button')).not.toHaveAccessibleName(en_US.Notification.close);
         });
 
         it('snippet 内容可读到调用组件的 context，静态通知读不到', async () => {

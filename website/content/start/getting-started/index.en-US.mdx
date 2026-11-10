@@ -538,7 +538,7 @@ pnpm exec semi-build-scss --prefix my -o app/semi-my.css --min
 import './semi-my.css';
 ```
 
-React Router's RSC mode takes the same plugin: `plugins: [semi(), reactRouterRSC(), rsc()]` (`reactRouterRSC` is `unstable_reactRouterRSC` from `@react-router/dev/vite`, `rsc` comes from `@vitejs/plugin-rsc`). In Server Components, Next.js App Router and React Router's RSC mode can import the flat components and a few sub-component named exports directly (such as `TypographyTitle`; the dot syntax `Typography.Title` is `undefined` in a Server Component). `semiGlobal`, Form's HOC and hooks, and the locale passed to `ConfigProvider` can only be used or imported in `'use client'` files.
+React Router's RSC mode takes the same plugin: `plugins: [semi(), reactRouterRSC(), rsc()]` (`reactRouterRSC` is `unstable_reactRouterRSC` from `@react-router/dev/vite`, `rsc` comes from `@vitejs/plugin-rsc`). In Server Components, Next.js App Router and React Router's RSC mode can import the flat components and a few sub-component named exports directly (such as `TypographyTitle`; the dot syntax `Typography.Title` is `undefined` in a Server Component). `semiGlobal`, Form's HOC and hooks can only be used or imported in `'use client'` files. Locale packs are plain data and `@fibrae/semi-ui-react/locale` is not marked `'use client'`, so a Server Component can import `zh_CN` or `en_US` from it, or use its own pack, and pass it to `ConfigProvider`. A `dateFnsLocale` holds functions and cannot cross the server boundary, so import and pass it in a `'use client'` file.
 
 </Framework>
 
@@ -620,7 +620,7 @@ Components render server HTML through `render` from `svelte/server` and in Svelt
 
 Common conventions:
 
-- Import locales from the `locale/source/` subpath of the UI package (such as `locale/source/en_US`); you do not need to install `@fibrae/semi-foundation` directly.
+- Import the built-in locale packs `zh_CN` and `en_US` from the `/locale` entry of the UI package (such as `import { en_US } from '@fibrae/semi-ui-react/locale'`); you do not need to install `@fibrae/semi-foundation` directly.
 - Set `semiGlobal` only at app startup; use `ConfigProvider` for configuration that changes per request.
 - Overlays that are open by default appear after hydration.
 - CodeHighlight bundles no languages: install `shiki` directly in your app (pnpm does not allow importing undeclared packages) and pass languages from `shiki/langs/*` through `CodeHighlight.register` or `languages`, see [CodeHighlight](/en-US/react/plus/code-highlight).

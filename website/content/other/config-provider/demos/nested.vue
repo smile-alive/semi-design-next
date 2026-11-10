@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import en_US from '@fibrae/semi-foundation/locale/source/en_US';
     import { ConfigConsumer, ConfigProvider } from '@fibrae/semi-ui-vue';
+    import { en_US } from '@fibrae/semi-ui-vue/locale';
 </script>
 
 <template>

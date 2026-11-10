@@ -26,14 +26,14 @@ export function App() {
 
 ### 入口
 
-| 入口                                         | 说明                                                                                 |
-| -------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `@fibrae/semi-ui-react`                      | 全部组件、类型、`LocaleProvider`、`LocaleConsumer`、`BaseFoundation`                 |
-| `@fibrae/semi-ui-react/<目录>/index`         | 逐文件深路径，与 `src/components/` 下的目录一一对应，例如 `button/index`             |
-| `@fibrae/semi-ui-react/tokens`               | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载 |
-| `@fibrae/semi-ui-react/styles.css`           | 整包样式，需要一次性加载全部组件样式时使用                                           |
-| `@fibrae/semi-ui-react/tailwind.css`         | Tailwind v4 的 `@theme inline` 映射                                                  |
-| `@fibrae/semi-ui-react/locale/source/<语言>` | 内置语言包，重导出 `@fibrae/semi-foundation/locale/source/<语言>`                    |
+| 入口                                 | 说明                                                                                                         |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `@fibrae/semi-ui-react`              | 全部组件、类型、`LocaleProvider`、`LocaleConsumer`、`BaseFoundation`                                         |
+| `@fibrae/semi-ui-react/locale`       | 内置语言包 `zh_CN`、`en_US` 与类型 `Locale`、`LocaleInput`；不带 `'use client'`，Server Component 可直接导入 |
+| `@fibrae/semi-ui-react/<目录>/index` | 逐文件深路径，与 `src/components/` 下的目录一一对应，例如 `button/index`                                     |
+| `@fibrae/semi-ui-react/tokens`       | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载                         |
+| `@fibrae/semi-ui-react/styles.css`   | 整包样式，需要一次性加载全部组件样式时使用                                                                   |
+| `@fibrae/semi-ui-react/tailwind.css` | Tailwind v4 的 `@theme inline` 映射                                                                          |
 
 使用整包 `styles.css` 时，需要开启 Semi 构建插件（`@fibrae/semi-vite-plugin`、`@fibrae/semi-webpack-plugin`、`@fibrae/semi-rspack-plugin`）的 `omitCss`，否则组件自带的样式导入会被再打包一份；Next.js 用 `@fibrae/semi-next` 的 `omitCss: true`（默认不开启）。整包样式已含 token，`omitCss` 下 `tokens` 入口和组件样式一起被移除。
 
@@ -47,18 +47,18 @@ export function App() {
 
 ### 多语言
 
-默认语言为 `zh_CN`。用 `LocaleProvider` 传入语言包：
+默认语言为 `zh_CN`。内置语言包 `zh_CN`、`en_US` 从 `locale` 入口导入，用 `LocaleProvider` 传入：
 
 ```tsx
 import { LocaleProvider } from '@fibrae/semi-ui-react';
-import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 
-<LocaleProvider locale={en_GB}>
+<LocaleProvider locale={en_US}>
     <App />
 </LocaleProvider>;
 ```
 
-不传 `locale` 时继承外层。语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
+不传 `locale` 时继承外层。其他语言传入自己的 `LocaleInput` 语言包：`code` 必填，没写的文案回退到 `en_US`。语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
 
 ### 服务端渲染
 

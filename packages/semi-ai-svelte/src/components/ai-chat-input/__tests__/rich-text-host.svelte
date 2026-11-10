@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Editor, Extensions } from '@tiptap/core';
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-svelte/locale';
     import LocaleProvider from '@fibrae/semi-ui-svelte/locale/locale-provider.svelte';
     import type { PlaceholderProps } from '../interface';
     import RichTextInput from '../rich-text-input.svelte';

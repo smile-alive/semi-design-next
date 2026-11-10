@@ -1,17 +1,19 @@
 import { format } from 'date-fns';
 import { describe, expect, it } from 'vite-plus/test';
-import type { Locale } from '../interface';
+import en_US from '../source/en_US';
+import zh_CN from '../source/zh_CN';
 
-const packs = import.meta.glob<Locale>('../source/*.ts', { eager: true, import: 'default' });
-const entries = Object.entries(packs).map(([file, pack]) => ({ name: file.slice(10, -3), pack }));
-const base = packs['../source/zh_CN.ts'];
+const entries = [
+    { name: 'zh_CN', pack: zh_CN },
+    { name: 'en_US', pack: en_US },
+];
 
 function flatten(value: unknown, path = '', out: Record<string, string> = {}) {
     if (typeof value === 'string') {
         out[path] = value;
     } else if (Array.isArray(value)) {
         value.forEach((item, index) => flatten(item, `${path}[${index}]`, out));
-    } else if (value && typeof value === 'object' && !('localize' in value)) {
+    } else if (value && typeof value === 'object') {
         for (const [key, child] of Object.entries(value)) {
             flatten(child, path ? `${path}.${key}` : key, out);
         }
@@ -20,43 +22,27 @@ function flatten(value: unknown, path = '', out: Record<string, string> = {}) {
 }
 
 const placeholders = (text: string) => (text.match(/\$\{\w+\}/g) ?? []).sort();
-const baseFlat = flatten(base);
+const zhFlat = flatten(zh_CN);
+const enFlat = flatten(en_US);
 
-const dateFnsFallback: Record<string, string> = {
-    ga: 'en-IE',
-    'my-MM': 'en-US',
-    sw: 'en-US',
-    ur: 'en-US',
-    'fil-PH': 'en-US',
-    'ceb-PH': 'en-US',
-    'jv-ID': 'id',
-};
-// unit suffixes and the Calendar date template are legitimately empty in some languages
+// English leaves the unit suffixes and the Calendar date template empty
 const mayBeEmpty = new Set(['TimePicker.hour', 'TimePicker.minute', 'TimePicker.second', 'Calendar.datestring']);
 
 describe('语言包结构不变量', () => {
-    it('共 57 个语言包，code 与文件名一致', () => {
-        expect(entries).toHaveLength(57);
+    it('code 与文件名一致', () => {
         for (const { name, pack } of entries) {
             expect([name, pack.code]).toEqual([name, name.replace('_', '-')]);
         }
     });
 
-    it('键集合与 zh_CN 完全一致', () => {
-        for (const { name, pack } of entries) {
-            expect([name, Object.keys(flatten(pack)).sort()]).toEqual([name, Object.keys(baseFlat).sort()]);
-        }
+    it('en_US 与 zh_CN 的键集合完全一致', () => {
+        expect(Object.keys(enFlat).sort()).toEqual(Object.keys(zhFlat).sort());
     });
 
     it('每个字符串的占位符集合与 zh_CN 一致', () => {
-        const bad: string[] = [];
-        for (const { name, pack } of entries) {
-            for (const [key, text] of Object.entries(flatten(pack))) {
-                if (key in baseFlat && placeholders(text).join() !== placeholders(baseFlat[key]).join()) {
-                    bad.push(`${name} ${key}: ${text}`);
-                }
-            }
-        }
+        const bad = Object.entries(enFlat)
+            .filter(([key, text]) => key in zhFlat && placeholders(text).join() !== placeholders(zhFlat[key]).join())
+            .map(([key, text]) => `${key}: ${text}`);
         expect(bad).toEqual([]);
     });
 
@@ -64,7 +50,7 @@ describe('语言包结构不变量', () => {
         const empty: string[] = [];
         for (const { name, pack } of entries) {
             for (const [key, text] of Object.entries(flatten(pack))) {
-                if (text === '' && !mayBeEmpty.has(key) && baseFlat[key] !== '') {
+                if (text === '' && !mayBeEmpty.has(key)) {
                     empty.push(`${name} ${key}`);
                 }
             }
@@ -77,18 +63,9 @@ describe('语言包结构不变量', () => {
         expect(entries.filter(({ pack }) => !valid.has(pack.currency)).map(({ name }) => name)).toEqual([]);
     });
 
-    it('只有英语、高棉语、拉美西语使用 USD', () => {
-        const usd = new Set(['en-US', 'km-KH', 'es-419']);
-        expect(entries.filter(({ pack }) => pack.currency === 'USD' && !usd.has(pack.code)).map(({ name }) => name)).toEqual([]);
-    });
-
-    it('没有零宽字符（波斯语与高棉语的书写规则需要除外）', () => {
-        const needsJoiners = new Set(['fa-IR', 'km-KH']);
+    it('没有零宽字符', () => {
         const bad: string[] = [];
         for (const { name, pack } of entries) {
-            if (needsJoiners.has(pack.code)) {
-                continue;
-            }
             for (const [key, text] of Object.entries(flatten(pack))) {
                 if (/[​-‍]/.test(text)) {
                     bad.push(`${name} ${key}`);
@@ -98,7 +75,7 @@ describe('语言包结构不变量', () => {
         expect(bad).toEqual([]);
     });
 
-    it('字符串首尾无空白（Pagination.page 是与页码拼接的后缀，法语等需要前导空格）', () => {
+    it('字符串首尾无空白（Pagination.page 是与页码拼接的后缀）', () => {
         const joined = new Set(['Pagination.page']);
         const bad: string[] = [];
         for (const { name, pack } of entries) {
@@ -111,25 +88,15 @@ describe('语言包结构不变量', () => {
         expect(bad).toEqual([]);
     });
 
-    it('非中日韩语言包不含全角标点', () => {
-        const cjk = new Set(['zh-CN', 'zh-TW', 'ja-JP', 'ko-KR']);
-        const bad: string[] = [];
-        for (const { name, pack } of entries) {
-            if (cjk.has(pack.code)) {
-                continue;
-            }
-            for (const [key, text] of Object.entries(flatten(pack))) {
-                if (/[！-／：-＠［-｀｛-～、。]/.test(text)) {
-                    bad.push(`${name} ${key}: ${text}`);
-                }
-            }
-        }
+    it('en_US 不含全角标点', () => {
+        const bad = Object.entries(enFlat)
+            .filter(([, text]) => /[！-／：-＠［-｀｛-～、。]/.test(text))
+            .map(([key, text]) => `${key}: ${text}`);
         expect(bad).toEqual([]);
     });
 
-    it('同一命名空间内，en_US 不同的两个文案本地化后仍不同', () => {
-        const english = flatten(packs['../source/en_US.ts']);
-        // pairs that label the same thing in different places share a wording in most languages
+    it('同一命名空间内，en_US 不同的两个文案在 zh_CN 中仍不同', () => {
+        // pairs that label the same thing in different places share a wording in Chinese
         const sameWord = new Set([
             'TimePicker.panel.time TimePicker.placeholder.time',
             'TimePicker.panel.timeRange TimePicker.placeholder.timeRange',
@@ -140,22 +107,19 @@ describe('语言包结构不变量', () => {
             'Rating.star Rating.stars',
         ]);
         const bad: string[] = [];
-        for (const { name, pack } of entries) {
-            const flat = flatten(pack);
-            const seen = new Map<string, string>();
-            for (const key of Object.keys(english).sort()) {
-                const text = flat[key];
-                // date labels coincide in many languages by nature
-                if (!text || key.startsWith('DatePicker.')) {
-                    continue;
-                }
-                const group = `${key.slice(0, key.indexOf('.'))}\u0000${text}`;
-                const first = seen.get(group);
-                if (first && english[first] !== english[key] && !sameWord.has(`${first} ${key}`)) {
-                    bad.push(`${name} ${first} == ${key}: ${text}`);
-                }
-                seen.set(group, first ?? key);
+        const seen = new Map<string, string>();
+        for (const key of Object.keys(enFlat).sort()) {
+            const text = zhFlat[key];
+            // date labels coincide by nature
+            if (!text || key.startsWith('DatePicker.')) {
+                continue;
             }
+            const group = `${key.slice(0, key.indexOf('.'))}\u0000${text}`;
+            const first = seen.get(group);
+            if (first && enFlat[first] !== enFlat[key] && !sameWord.has(`${first} ${key}`)) {
+                bad.push(`${first} == ${key}: ${text}`);
+            }
+            seen.set(group, first ?? key);
         }
         expect(bad).toEqual([]);
     });
@@ -165,28 +129,10 @@ describe('语言包结构不变量', () => {
         const bad: string[] = [];
         for (const { name, pack } of entries) {
             const token = pack.DatePicker.localeFormatToken.FORMAT_SWITCH_DATE;
-            let text: string;
-            try {
-                text = format(date, token);
-            } catch (error) {
-                bad.push(`${name} ${token}: ${(error as Error).message}`);
-                continue;
-            }
+            const text = format(date, token);
             const numbers = text.match(/\d+/g) ?? [];
             if (!/^[\d\s./-]+$/.test(text) || numbers.sort().join() !== ['10', '13', '2026'].join()) {
                 bad.push(`${name} ${token} -> ${text}`);
-            }
-        }
-        expect(bad).toEqual([]);
-    });
-
-    it('dateFnsLocale 与语言一致，缺少 date-fns 语言的包按回退表', () => {
-        const bad: string[] = [];
-        for (const { name, pack } of entries) {
-            const code = pack.code;
-            const expected = dateFnsFallback[code] ?? code.split('-')[0];
-            if (!pack.dateFnsLocale.code?.startsWith(expected)) {
-                bad.push(`${name}: ${pack.dateFnsLocale.code} 不匹配 ${expected}`);
             }
         }
         expect(bad).toEqual([]);

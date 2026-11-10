@@ -2,9 +2,8 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { ImageProps, PreviewProps } from '../interface';
 import ConfigFixture from './config-fixture.svelte';
@@ -668,11 +667,11 @@ describe('Svelte ImagePreview', () => {
     });
 
     it('按钮名称随 ConfigProvider 的语言包', () => {
-        render(ConfigFixture, { props: { props: { locale: ja_JP } } });
+        render(ConfigFixture, { props: { props: { locale: en_US } } });
         flushSync();
-        expect(arrow('next')).toHaveAttribute('aria-label', ja_JP.Image.nextTip);
-        expect(footerIcon('rotate').closest('button')).toHaveAttribute('aria-label', ja_JP.Image.rotateTip);
-        expect(getPreview()).toHaveAttribute('aria-label', ja_JP.Image.preview);
+        expect(arrow('next')).toHaveAttribute('aria-label', en_US.Image.nextTip);
+        expect(footerIcon('rotate').closest('button')).toHaveAttribute('aria-label', en_US.Image.rotateTip);
+        expect(getPreview()).toHaveAttribute('aria-label', en_US.Image.preview);
     });
 
     it('没有名称时分组没有角色，带 aria-label 时为 group 角色，未声明属性落在分组元素上', () => {

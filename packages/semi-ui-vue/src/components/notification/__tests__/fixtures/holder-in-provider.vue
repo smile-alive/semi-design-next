@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
     import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
+    import { en_US } from '@fibrae/semi-ui-vue/locale';
     import Notification from '../../index';
     import type { NotificationHookApi } from '../../interface';
 
@@ -10,7 +10,7 @@
 </script>
 
 <template>
-    <ConfigProvider direction="rtl" :locale="ja_JP">
+    <ConfigProvider direction="rtl" :locale="en_US">
         <div data-testid="holder"><Holder /></div>
     </ConfigProvider>
 </template>

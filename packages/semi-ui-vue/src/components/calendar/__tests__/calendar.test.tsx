@@ -6,9 +6,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import { calcRowHeight } from '@fibrae/semi-foundation/components/calendar/event-util';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, mockResizeObserver, render } from '@test/utils/vue';
 import LocaleProvider from '../../locale/locale-provider.vue';
@@ -1443,17 +1441,17 @@ describe('Calendar（Vue）', () => {
         }
     });
 
-    it('ja_JP 下的关闭按钮、全天与 "更多" 名称', async () => {
-        const inJapanese = (props: CalendarProps) => render(LocaleProvider, { props: { locale: ja_JP }, slots: { default: () => <Calendar {...props} /> } });
-        const week = inJapanese({ displayValue: today, mode: 'week' });
-        expect(screen.getByRole('rowheader')).toHaveTextContent(ja_JP.Calendar.allDay);
+    it('en_US 下的关闭按钮、全天与 "更多" 名称', async () => {
+        const inEnglish = (props: CalendarProps) => render(LocaleProvider, { props: { locale: en_US }, slots: { default: () => <Calendar {...props} /> } });
+        const week = inEnglish({ displayValue: today, mode: 'week' });
+        expect(screen.getByRole('rowheader')).toHaveTextContent(en_US.Calendar.allDay);
         week.unmount();
 
         const events = [event('a', new Date(2019, 7, 8, 9))];
-        inJapanese({ displayValue: today, events, mode: 'month' });
-        const more = screen.getByRole('button', { name: ja_JP.Calendar.remaining.replace('${remained}', '1') });
+        inEnglish({ displayValue: today, events, mode: 'month' });
+        const more = screen.getByRole('button', { name: en_US.Calendar.remaining.replace('${remained}', '1') });
         await userEvent.click(more);
-        await waitFor(() => expect(screen.getByRole('button', { name: ja_JP.Calendar.close })).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('button', { name: en_US.Calendar.close })).toBeInTheDocument());
     });
 
     it('KeepAlive 切走期间卡片离开文档，切回后卡片仍打开，隐藏与显示都不发 close，外部按下能关闭', async () => {

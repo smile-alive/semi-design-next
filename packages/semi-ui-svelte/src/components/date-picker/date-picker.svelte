@@ -16,6 +16,7 @@
     import type { RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
@@ -131,6 +132,7 @@
     const type = $derived(normalized.type);
     const rangeSeparator = $derived(normalized.rangeSeparator);
     const zone = $derived(timeZone ?? config.timeZone ?? defaults('timeZone'));
+    const dateFnsLocale = $derived(getDateFnsLocale(locale().localeCode, config.dateFnsLocale));
     const prefixCls = cssClasses.PREFIX;
     const panelId = `${uid}-panel`;
 
@@ -197,7 +199,7 @@
             return Boolean(trigger);
         },
         get dateFnsLocale() {
-            return locale().dateFnsLocale;
+            return dateFnsLocale;
         },
         get insetInput() {
             return insetInput;
@@ -403,7 +405,7 @@
 {#snippet insetDateInputSnippet()}
     <DateInput
         bind:this={insetDateInput}
-        dateFnsLocale={locale().dateFnsLocale}
+        {dateFnsLocale}
         {defaultPickerValue}
         {density}
         {format}
@@ -455,7 +457,7 @@
                         {autoSwitchDate}
                         bind:this={monthsGrid}
                         {date}
-                        dateFnsLocale={locale().dateFnsLocale}
+                        {dateFnsLocale}
                         dateInput={insetInput ? insetDateInputSnippet : undefined}
                         {defaultPickerValue}
                         {density}
@@ -558,7 +560,7 @@
                             'aria-label': rest['aria-labelledby'] ? undefined : triggerName,
                             role: 'combobox',
                         }}
-                        dateFnsLocale={locale().dateFnsLocale}
+                        {dateFnsLocale}
                         {defaultPickerValue}
                         disabled={inputDisabled}
                         {format}

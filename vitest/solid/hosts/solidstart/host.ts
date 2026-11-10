@@ -112,9 +112,8 @@ export default function App() {
 // Routes importing ui-solid, left out of the variant that installs only ai-solid: pnpm would not resolve the import there
 const uiRoutes: Files = {
     'src/routes/index.tsx': `import { useSearchParams } from '@solidjs/router';
-import en_US from '@fibrae/semi-ui-solid/locale/source/en_US';
-import zh_CN from '@fibrae/semi-ui-solid/locale/source/zh_CN';
 import { Button, ConfigProvider, DatePicker, Form, FormCheckbox, FormInput, FormSelect, Input, Pagination, Table, TabPane, Tabs, Typography } from '@fibrae/semi-ui-solid';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 
 const columns = [
     { title: 'Name', dataIndex: 'name' },

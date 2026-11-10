@@ -348,7 +348,7 @@ Imperative calls (`Modal.success()`, `Toast.info()`, `Notification.info()` and t
 
 ### Nesting
 
-`ConfigProvider` can be nested. The inner one overrides only the props it is given; props it does not pass (`direction`, `locale`, `timeZone`, `getPopupContainer`, `responsiveObserve`, `responsiveMap`) are inherited from the outer one. A prop set to `undefined` counts as not passed; `locale={null}` is explicit, so it clears the outer `locale` and leaves it to the `LocaleProvider` inside, or the default language.
+`ConfigProvider` can be nested. The inner one overrides only the props it is given; props it does not pass (`direction`, `locale`, `dateFnsLocale`, `timeZone`, `getPopupContainer`, `responsiveObserve`, `responsiveMap`) are inherited from the outer one. A prop set to `undefined` counts as not passed; `locale={null}` is explicit, so it clears the outer `locale` and leaves it to the `LocaleProvider` inside, or the default language.
 
 An inner `direction="ltr"` switches a subtree inside an `rtl` ConfigProvider back to left to right, for both the logic and the styles of its components.
 
@@ -378,7 +378,7 @@ An inner `direction="ltr"` switches a subtree inside an `rtl` ConfigProvider bac
 
 ### useConfig
 
-`useConfig(): ComputedRef<ContextValue>` returns the effective configuration, and an empty object without a ConfigProvider. `ContextValue` holds `direction`, `timeZone`, `locale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above).
+`useConfig(): ComputedRef<ContextValue>` returns the effective configuration, and an empty object without a ConfigProvider. `ContextValue` holds `direction`, `timeZone`, `locale`, `dateFnsLocale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above).
 
 </Framework>
 
@@ -396,7 +396,7 @@ ConfigConsumer renders no element either, so undeclared attributes are discarded
 
 ### useConfig
 
-`useConfig(): Accessor<ContextValue>` returns an accessor of the effective configuration; call it to read the value, and it is an empty object without a ConfigProvider. `ContextValue` holds `direction`, `timeZone`, `locale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above).
+`useConfig(): Accessor<ContextValue>` returns an accessor of the effective configuration; call it to read the value, and it is an empty object without a ConfigProvider. `ContextValue` holds `direction`, `timeZone`, `locale`, `dateFnsLocale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above).
 
 </Framework>
 
@@ -414,7 +414,7 @@ ConfigConsumer renders no element either, so undeclared attributes are discarded
 
 ### useConfig
 
-`useConfig(): ContextValue` returns the effective configuration object, an empty object without a ConfigProvider; call it during component initialization. `ContextValue` holds `direction`, `timeZone`, `locale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above). The fields are getters, which return the current value when read.
+`useConfig(): ContextValue` returns the effective configuration object, an empty object without a ConfigProvider; call it during component initialization. `ContextValue` holds `direction`, `timeZone`, `locale`, `dateFnsLocale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above). The fields are getters, which return the current value when read.
 
 </Framework>
 

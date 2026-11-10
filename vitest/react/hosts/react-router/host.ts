@@ -105,7 +105,7 @@ export function SemiPage({ locale }: { locale: ConfigProviderProps['locale'] }) 
 }
 `;
 
-const HOME = `import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
+const HOME = `import { en_US } from '@fibrae/semi-ui-react/locale';
 import { SemiPage } from '../semi-page';
 
 export default function Home() {
@@ -113,8 +113,7 @@ export default function Home() {
 }
 `;
 
-const LANG = `import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
-import zh_CN from '@fibrae/semi-ui-react/locale/source/zh_CN';
+const LANG = `import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import { useLoaderData } from 'react-router';
 import { SemiPage } from '../semi-page';
 
@@ -256,7 +255,7 @@ export default [
 `;
 
 // A route module with a default export is a client component route
-const RSC_CLIENT_DEFAULT = `import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
+const RSC_CLIENT_DEFAULT = `import { en_US } from '@fibrae/semi-ui-react/locale';
 import { SemiPage } from '../../app/semi-page';
 
 export default function ClientDefault() {
@@ -266,7 +265,7 @@ export default function ClientDefault() {
 
 const RSC_SEMI_CLIENT = `'use client';
 
-import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 import { SemiPage } from '../app/semi-page';
 
 export function SemiPageClient() {

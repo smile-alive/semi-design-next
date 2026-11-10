@@ -1,10 +1,9 @@
-import { format, parse } from 'date-fns';
-import { zhCN as defaultLocale } from 'date-fns/locale/zh-CN';
+import { type Locale, format, parse } from 'date-fns';
 import { escapeRegExp } from 'es-toolkit';
 import { strings } from '../constants';
 
 /** A TZDate `reference` reads a string as a wall time of its zone */
-export function parseToDate(input: string | Date | number, formatToken = strings.DEFAULT_FORMAT, dateFnsLocale = defaultLocale, reference = new Date()) {
+export function parseToDate(input: string | Date | number, formatToken = strings.DEFAULT_FORMAT, dateFnsLocale?: Locale, reference = new Date()) {
     if (input instanceof Date) {
         return input;
     } else if (typeof input === 'number') {
@@ -20,7 +19,7 @@ export function parseToDate(input: string | Date | number, formatToken = strings
     return new Date();
 }
 
-export function formatToString(dateOrTimestamp: Date | number, formatToken = strings.DEFAULT_FORMAT, dateFnsLocale = defaultLocale) {
+export function formatToString(dateOrTimestamp: Date | number, formatToken = strings.DEFAULT_FORMAT, dateFnsLocale?: Locale) {
     return format(dateOrTimestamp, formatToken, { locale: dateFnsLocale });
 }
 

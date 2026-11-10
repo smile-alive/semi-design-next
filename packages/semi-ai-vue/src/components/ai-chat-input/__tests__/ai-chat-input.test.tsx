@@ -5,7 +5,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { Extension, Node, type Editor } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import Popover from '@fibrae/semi-ui-vue/popover/index';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';

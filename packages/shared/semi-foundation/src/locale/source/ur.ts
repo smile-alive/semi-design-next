@@ -1,10 +1,7 @@
-// date-fns has no ur locale; enUS is its default, so text tokens never show another language
-import { enUS } from 'date-fns/locale/en-US';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'ur',
-    dateFnsLocale: enUS,
     currency: 'PKR',
     BackTop: {
         backToTop: 'اوپر جائیں',

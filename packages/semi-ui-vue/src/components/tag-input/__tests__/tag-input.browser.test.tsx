@@ -4,7 +4,7 @@ import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { dragTo, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import TagInput, { type TagInputHandle, type TagInputTagSlotProps } from '..';

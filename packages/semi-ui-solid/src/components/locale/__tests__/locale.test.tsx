@@ -1,17 +1,15 @@
 import { type Accessor, createEffect, createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
+import { format } from 'date-fns';
+import { de, enUS, zhCN } from 'date-fns/locale';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN, type Locale, type LocaleInput } from '@fibrae/semi-ui-solid/locale';
+import Calendar from '../../calendar';
 import ConfigProvider from '../../config-provider';
 import { useLocaleContext } from '../context';
 import { type LocaleComponentName, LocaleConsumer, type LocaleConsumerProps, LocaleProvider, type LocaleResult, useLocale } from '../index';
 
 type AnyResult = LocaleResult<Locale[LocaleComponentName]>;
-
-const serialize = (value: AnyResult) => JSON.stringify({ ...value, dateFnsLocale: value.dateFnsLocale?.code });
 
 function Probe(props: { componentName?: LocaleComponentName; onSeen?: (value: AnyResult) => void }) {
     const name = () => props.componentName ?? 'Modal';
@@ -19,22 +17,23 @@ function Probe(props: { componentName?: LocaleComponentName; onSeen?: (value: An
     createEffect(() => props.onSeen?.(result()));
     return (
         <>
-            <span data-testid="hook">{serialize(result())}</span>
-            <LocaleConsumer componentName={name()}>{(locale, localeCode, dateFnsLocale, currency) => <span data-testid="consumer">{serialize({ locale, localeCode, dateFnsLocale, currency })}</span>}</LocaleConsumer>
+            <span data-testid="hook">{JSON.stringify(result())}</span>
+            <LocaleConsumer componentName={name()}>{(locale, localeCode, currency) => <span data-testid="consumer">{JSON.stringify({ locale, localeCode, currency })}</span>}</LocaleConsumer>
         </>
     );
 }
 
-function RawProbe(props: { onSeen: (locale: Locale | null) => void }) {
+function RawProbe(props: { onSeen: (locale: LocaleInput | null) => void }) {
     const locale = useLocaleContext();
     createEffect(() => props.onSeen(locale?.() ?? null));
     return null;
 }
 
 const consumer = () => screen.getByTestId('consumer');
+const ja: LocaleInput = { code: 'ja-JP' };
 
 describe('locale', () => {
-    it('LocaleConsumer 与 useLocale 提供组件片段、code、date-fns 语言与货币', () => {
+    it('LocaleConsumer 与 useLocale 提供组件片段、code 与货币', () => {
         const onSeen = vi.fn<(value: AnyResult) => void>();
         render(() => (
             <LocaleProvider locale={en_US}>
@@ -44,7 +43,6 @@ describe('locale', () => {
         expect(onSeen).toHaveBeenLastCalledWith({
             locale: en_US.Modal,
             localeCode: 'en-US',
-            dateFnsLocale: en_US.dateFnsLocale,
             currency: 'USD',
         });
         expect(screen.getByTestId('hook').textContent).toBe(consumer().textContent);
@@ -56,7 +54,6 @@ describe('locale', () => {
         expect(onSeen).toHaveBeenCalledWith({
             locale: zh_CN.Modal,
             localeCode: 'zh-CN',
-            dateFnsLocale: zh_CN.dateFnsLocale,
             currency: 'CNY',
         });
         expect(screen.getByTestId('hook').textContent).toBe(consumer().textContent);
@@ -67,23 +64,22 @@ describe('locale', () => {
         expectTypeOf<ReturnType<typeof useLocale<'Table'>>>().toEqualTypeOf<Accessor<LocaleResult<Locale['Table']>>>();
         expectTypeOf<'code'>().not.toExtend<LocaleComponentName>();
         expectTypeOf<'currency'>().not.toExtend<LocaleComponentName>();
-        expectTypeOf<'dateFnsLocale'>().not.toExtend<LocaleComponentName>();
         expectTypeOf<'Tabel'>().not.toExtend<LocaleComponentName>();
         const view = render(() => (
             <LocaleConsumer componentName="Table">
-                {(table, localeCode, dateFnsLocale, currency) => (
+                {(table, localeCode, currency) => (
                     <span>
-                        {table.emptyText} {currency} {localeCode} {dateFnsLocale.code}
+                        {table.emptyText} {currency} {localeCode}
                     </span>
                 )}
             </LocaleConsumer>
         ));
-        expect(view.container).toHaveTextContent(`${zh_CN.Table.emptyText} CNY zh-CN ${zh_CN.dateFnsLocale.code}`);
+        expect(view.container).toHaveTextContent(`${zh_CN.Table.emptyText} CNY zh-CN`);
     });
 
     it('ConfigProvider 的 locale 优先于 LocaleProvider', () => {
         render(() => (
-            <LocaleProvider locale={ja_JP}>
+            <LocaleProvider locale={zh_CN}>
                 <ConfigProvider locale={en_US}>
                     <Probe />
                 </ConfigProvider>
@@ -117,7 +113,7 @@ describe('locale', () => {
         render(() => (
             <ConfigProvider locale={en_US}>
                 <ConfigProvider timeZone={8}>
-                    <LocaleProvider locale={ja_JP}>
+                    <LocaleProvider locale={zh_CN}>
                         <Probe />
                     </LocaleProvider>
                 </ConfigProvider>
@@ -128,7 +124,7 @@ describe('locale', () => {
 
     it('locale={null} 的 ConfigProvider 清除继承，允许 LocaleProvider 生效', () => {
         render(() => (
-            <ConfigProvider locale={ja_JP}>
+            <ConfigProvider locale={zh_CN}>
                 <ConfigProvider locale={null}>
                     <LocaleProvider locale={en_US}>
                         <Probe />
@@ -149,21 +145,25 @@ describe('locale', () => {
         expect(consumer()).toHaveTextContent('"currency":"CNY"');
     });
 
-    it('缺少 dateFnsLocale 时保持 undefined 交给 date-fns 默认语言，不借用 zh_CN', () => {
-        const locale = { ...en_US, dateFnsLocale: undefined } as unknown as Locale;
-        const onSeen = vi.fn<(value: AnyResult) => void>();
+    it('日期组件按语言代码取内置的 date-fns 语言，其他语言用 enUS，ConfigProvider 的 dateFnsLocale 优先', () => {
+        const date = new Date(2026, 9, 13);
+        const label = (locale: typeof de) => format(date, 'PPP', { locale });
         render(() => (
-            <LocaleProvider locale={locale}>
-                <Probe onSeen={onSeen} />
-            </LocaleProvider>
+            <>
+                <Calendar displayValue={date} mode="day" />
+                <LocaleProvider locale={ja}>
+                    <Calendar displayValue={date} mode="day" />
+                    <ConfigProvider dateFnsLocale={de}>
+                        <Calendar displayValue={date} mode="day" />
+                    </ConfigProvider>
+                </LocaleProvider>
+            </>
         ));
-        expect(onSeen).toHaveBeenLastCalledWith(expect.objectContaining({ localeCode: 'en-US', dateFnsLocale: undefined }));
-        expect(consumer()).toHaveTextContent('"localeCode":"en-US"');
-        expect(consumer()).not.toHaveTextContent('dateFnsLocale');
+        expect(screen.getAllByRole('table').map((table) => table.getAttribute('aria-label'))).toEqual([label(zhCN), label(enUS), label(de)]);
     });
 
     it('LocaleProvider 缺省、undefined 与 null 都继承，最外层不注入默认语言', () => {
-        const onSeen = vi.fn<(locale: Locale | null) => void>();
+        const onSeen = vi.fn<(locale: LocaleInput | null) => void>();
         render(() => (
             <>
                 <LocaleProvider>
@@ -185,7 +185,7 @@ describe('locale', () => {
     });
 
     it('嵌套不带 locale 时沿用外层语言，父级切换会响应更新', () => {
-        const [locale, setLocale] = createSignal<Locale | undefined>(ja_JP);
+        const [locale, setLocale] = createSignal<LocaleInput | undefined>(ja);
         render(() => (
             <LocaleProvider locale={locale()}>
                 <LocaleProvider>
@@ -205,7 +205,7 @@ describe('locale', () => {
         const [locale, setLocale] = createSignal<Locale | undefined>(en_US);
         render(() => (
             <ConfigProvider locale={locale()}>
-                <LocaleProvider locale={ja_JP}>
+                <LocaleProvider locale={ja}>
                     <Probe />
                 </LocaleProvider>
             </ConfigProvider>

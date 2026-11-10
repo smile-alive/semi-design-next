@@ -1,9 +1,9 @@
 <script lang="ts">
-    import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+    import { en_US } from '@fibrae/semi-ui-svelte/locale';
     import LocaleProvider from '../../locale/locale-provider.svelte';
     import Label from '../label.svelte';
 </script>
 
-<LocaleProvider locale={ja_JP}>
+<LocaleProvider locale={en_US}>
     <Label optional text="name" />
 </LocaleProvider>

@@ -2,7 +2,7 @@ import type React from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { IconChevronRight } from '@fibrae/semi-icons-react';
 import AvatarGroup from '@fibrae/semi-ui-react/avatar/avatar-group';
 import Avatar from '@fibrae/semi-ui-react/avatar/index';

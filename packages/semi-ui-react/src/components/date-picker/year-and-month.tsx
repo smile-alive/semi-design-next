@@ -5,7 +5,7 @@ import { strings } from '@fibrae/semi-foundation/components/date-picker/constant
 import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import YearAndMonthFoundation, { type YearAndMonthAdapter, type YearAndMonthFoundationProps } from '@fibrae/semi-foundation/components/date-picker/year-and-month-foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconChevronLeft } from '@fibrae/semi-icons-react';
 import type { BaseProps } from '../../base/base-props';

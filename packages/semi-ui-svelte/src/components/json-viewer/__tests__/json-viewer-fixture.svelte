@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-svelte/locale';
     import type { JsonViewerProps } from '../interface';
 
     export type Mode = 'plain' | 'custom-render' | 'empty-render' | 'search-button' | 'default-button';

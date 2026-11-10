@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-svelte/locale';
     import type { ChatMessage, ChatProps, ChatRoleConfig } from '../interface';
 
     type Part = 'title' | 'avatar' | 'roleAvatar' | 'content' | 'action' | 'fullChatBox' | 'inputArea' | 'hintBox' | 'divider' | 'uploadButton' | 'uploadTip' | 'topSlot' | 'bottomSlot';

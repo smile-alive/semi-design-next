@@ -5,9 +5,8 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinish
 import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import type { AvatarProps } from '@fibrae/semi-ui-vue/avatar/index';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import Modal from '@fibrae/semi-ui-vue/modal/index';
 import Toast from '@fibrae/semi-ui-vue/toast/index';

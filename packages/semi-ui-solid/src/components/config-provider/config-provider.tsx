@@ -32,6 +32,7 @@ export default function ConfigProvider(props: ConfigProviderProps) {
         (): ContextValue => ({
             direction: inherited().direction,
             locale: inherited().locale,
+            dateFnsLocale: inherited().dateFnsLocale,
             timeZone: inherited().timeZone,
             getPopupContainer: inherited().getPopupContainer,
             responsiveObserve: inherited().responsiveObserve,

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { mockMatchMedia, render } from '@test/utils/vue';
 import Carousel, { type CarouselHandle } from '..';

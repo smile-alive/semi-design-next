@@ -2,7 +2,7 @@ import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
 import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { IconClock } from '@fibrae/semi-icons-react';
 import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';

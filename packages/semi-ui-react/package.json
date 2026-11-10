@@ -20,6 +20,7 @@
         "./package.json": "./package.json",
         "./hooks": "./dist/hooks.js",
         "./tokens": "./dist/tokens.js",
+        "./locale": "./dist/locale.js",
         "./base/*": "./dist/base/*.js",
         "./hooks/*": "./dist/hooks/*.js",
         "./internal/*": "./dist/internal/*.js",

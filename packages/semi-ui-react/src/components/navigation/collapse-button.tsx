@@ -1,6 +1,6 @@
 import React from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { IconSidebar } from '@fibrae/semi-icons-react';
 import Button, { type ButtonProps } from '../button';
 import Tooltip from '../tooltip';

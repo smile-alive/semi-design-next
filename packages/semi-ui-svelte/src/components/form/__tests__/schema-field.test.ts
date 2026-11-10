@@ -2,8 +2,8 @@ import { createRawSnippet } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import FormCheckbox from '../fields/form-checkbox.svelte';
 import FormTextArea from '../fields/form-text-area.svelte';
@@ -28,7 +28,7 @@ function renderSchema(options: SchemaFixtureStore) {
 
 const fieldOf = (path: string) => document.querySelector<HTMLElement>(`.semi-form-field[x-field-id="${path}"]`) as HTMLElement;
 const button = (name: string) => screen.getByRole('button', { name });
-const itemName = (key: 'item' | 'removeItem' | 'moveUpItem' | 'moveDownItem', index: number) => ja_JP.Form[key].replace('${index}', String(index + 1));
+const itemName = (key: 'item' | 'removeItem' | 'moveUpItem' | 'moveDownItem', index: number) => en_US.Form[key].replace('${index}', String(index + 1));
 
 async function click(name: string) {
     await fireEvent.click(button(name));
@@ -85,7 +85,7 @@ describe('Svelte SchemaField', () => {
         expect(fieldOf('tags[0].note')).toBeNull();
     });
 
-    it('数组行的按钮取 ja_JP 可访问名称，按 minItems 与 maxItems 禁用，新增、移动与删除改写值', async () => {
+    it('数组行的按钮取 en_US 可访问名称，按 minItems 与 maxItems 禁用，新增、移动与删除改写值', async () => {
         const schema = z.object({
             items: z
                 .array(z.object({ name: z.string() }))
@@ -97,8 +97,8 @@ describe('Svelte SchemaField', () => {
         expect(button(itemName('moveUpItem', 0))).toBeDisabled();
         expect(button(itemName('moveDownItem', 0))).toBeDisabled();
         expect(button(itemName('removeItem', 0))).toBeDisabled();
-        await click(ja_JP.Form.addItem);
-        expect(button(ja_JP.Form.addItem)).toBeDisabled();
+        await click(en_US.Form.addItem);
+        expect(button(en_US.Form.addItem)).toBeDisabled();
         expect(api().getValue('items')).toEqual([{ name: 'a' }, {}]);
         expect([...container.querySelectorAll('.semi-form-section-text')].map((node) => node.textContent)).toEqual(['items', itemName('item', 0), itemName('item', 1)]);
         await typeInto(fieldOf('items[1].name').querySelector('input') as HTMLInputElement, 'b');
@@ -106,13 +106,13 @@ describe('Svelte SchemaField', () => {
         expect(api().getValue('items')).toEqual([{ name: 'b' }, { name: 'a' }]);
         await click(itemName('removeItem', 1));
         expect(api().getValue('items')).toEqual([{ name: 'b' }]);
-        expect(button(ja_JP.Form.addItem)).toBeEnabled();
+        expect(button(en_US.Form.addItem)).toBeEnabled();
     });
 
     it('minItems 等于 maxItems 时不显示新增与删除按钮', async () => {
         renderSchema({ formProps: { schema: z.object({ pair: z.array(z.string()).length(2) }), initValues: { pair: ['a', 'b'] } } });
         await settle();
-        expect(screen.queryByRole('button', { name: ja_JP.Form.addItem })).toBeNull();
+        expect(screen.queryByRole('button', { name: en_US.Form.addItem })).toBeNull();
         expect(screen.queryByRole('button', { name: itemName('removeItem', 0) })).toBeNull();
         expect(button(itemName('moveDownItem', 0))).toBeEnabled();
         expect(fieldOf('pair[1]').querySelector('.semi-form-field-label')).toHaveTextContent(itemName('item', 1));

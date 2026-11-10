@@ -3,7 +3,7 @@ import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { clickOutside, expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import ColorPicker, { type ColorValue } from '..';

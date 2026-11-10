@@ -3,6 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
     import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
+    import { useConfig } from '../config-provider/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { getCalendarContext } from './context.js';
     import DayCol from './day-col.svelte';
@@ -23,6 +25,7 @@
 
     const calendar = getCalendarContext();
     const locale = useLocale('Calendar');
+    const config = useConfig();
 
     let root = $state<HTMLDivElement>();
     let scroll = $state<HTMLDivElement>();
@@ -41,7 +44,7 @@
 </script>
 
 <!-- aria-label, role and tabindex come before the rest so the caller can replace them -->
-<div aria-label={format(displayValue, 'PPP', { locale: locale().dateFnsLocale })} bind:this={root} role="table" tabindex="0" {...rest} class={[prefixCls, rest.class]} style={rootStyle(rest.style, width, height)}>
+<div aria-label={format(displayValue, 'PPP', { locale: getDateFnsLocale(locale().localeCode, config.dateFnsLocale) })} bind:this={root} role="table" tabindex="0" {...rest} class={[prefixCls, rest.class]} style={rootStyle(rest.style, width, height)}>
     <!-- the view scrolls and nothing inside it takes focus, so the keyboard can only scroll it through the root -->
     <div class={`${prefixCls}-sticky-top`} role="rowgroup">
         {#if header}

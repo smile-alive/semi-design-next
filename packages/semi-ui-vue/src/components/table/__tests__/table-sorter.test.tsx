@@ -3,7 +3,7 @@ import { nextTick, type VNode } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { getData, render } from '@test/utils/vue';
 import { TableColumn, type ColumnProps, type TableChangeInfo, type TableHeaderCellSlotProps, type TableSortIconSlotProps } from '..';

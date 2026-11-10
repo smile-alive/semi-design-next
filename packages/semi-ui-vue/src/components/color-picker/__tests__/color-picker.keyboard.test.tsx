@@ -2,7 +2,7 @@
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import ColorPicker, { type ColorValue } from '..';
 import ConfigProvider from '../../config-provider';

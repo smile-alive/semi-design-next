@@ -1,9 +1,7 @@
-import { th } from 'date-fns/locale/th';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'th-TH',
-    dateFnsLocale: th,
     currency: 'THB',
     BackTop: {
         backToTop: 'กลับขึ้นด้านบน',

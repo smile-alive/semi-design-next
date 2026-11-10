@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { watchEffect } from 'vue';
-    import { format } from 'date-fns';
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { Locale } from '@fibrae/semi-ui-vue/locale';
     import type { LocaleComponentName, LocaleResult } from '../../interface';
     import LocaleConsumer from '../../locale-consumer.vue';
     import useLocale from '../../use-locale';
@@ -18,11 +17,10 @@
 </script>
 
 <template>
-    <span data-testid="hook">{{ JSON.stringify({ ...result, dateFnsLocale: result.dateFnsLocale?.code }) }}</span>
-    <span data-testid="date">{{ format(new Date(2026, 9, 13), 'EEEE', { locale: result.dateFnsLocale }) }}</span>
+    <span data-testid="hook">{{ JSON.stringify(result) }}</span>
     <LocaleConsumer :componentName="componentName">
         <template #default="value">
-            <span data-testid="consumer">{{ JSON.stringify({ ...value, dateFnsLocale: value.dateFnsLocale?.code }) }}</span>
+            <span data-testid="consumer">{{ JSON.stringify(value) }}</span>
         </template>
     </LocaleConsumer>
 </template>

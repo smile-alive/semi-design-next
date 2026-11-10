@@ -1,7 +1,7 @@
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { tabTo } from '@test/utils/browser';
 import PinCode from '..';
 

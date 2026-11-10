@@ -1,8 +1,8 @@
 import { render, screen, within } from '@testing-library/svelte';
 import { addDays, set } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { click, getFooterButtons, getPanel, getYMLists, getYMSelected } from './date-picker-dom-utils';
 import ProviderFixture, { type ProviderFixtureStore } from './date-picker-provider-fixture.svelte';
 import ScenarioFixture, { type ScenarioStore } from './date-picker-scenarios-fixture.svelte';

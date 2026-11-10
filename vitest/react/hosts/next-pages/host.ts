@@ -109,8 +109,8 @@ export default function App({ Component, pageProps }: AppProps) {
 `,
         'pages/index.tsx': `import { useState } from 'react';
 import { Button, Checkbox, ConfigProvider, DatePicker, Form, FormCheckbox, FormInput, FormSelect, Input, Modal, Select, Table, Tabs, Toast, Tooltip, Typography } from '@fibrae/semi-ui-react';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 import { IconHome } from '@fibrae/semi-icons-react';
-import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
 
 const options = [
     { value: 'a', label: 'Option A' },
@@ -196,8 +196,7 @@ export default function AllExports() {
 `,
         'pages/lang.tsx': `import type { GetServerSideProps } from 'next';
 import { Button, ConfigProvider, DatePicker, Modal, Select, Tooltip } from '@fibrae/semi-ui-react';
-import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
-import zh_CN from '@fibrae/semi-ui-react/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 
 type Props = { lang: 'en' | 'zh' };
 

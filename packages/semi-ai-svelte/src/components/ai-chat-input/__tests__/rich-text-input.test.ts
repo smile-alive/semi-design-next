@@ -4,10 +4,8 @@ import type { Editor } from '@tiptap/core';
 import { describe, expect, it } from 'vite-plus/test';
 import { strings } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { handleZeroWidthCharLogic } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/plugins';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US, zh_CN, type Locale } from '@fibrae/semi-ui-svelte/locale';
 import type { PlaceholderProps } from '../interface';
 import RichTextHost from './rich-text-host.svelte';
 

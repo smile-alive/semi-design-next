@@ -1,8 +1,8 @@
 import { render, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import type { AnnotationInfo } from '../annotation/interface';
 import { Annotation, MCPConfigure, Sidebar } from '../index';

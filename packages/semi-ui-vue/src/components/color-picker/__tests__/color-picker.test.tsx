@@ -5,8 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import { en_US } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import ColorPicker from '..';
@@ -1433,10 +1432,10 @@ describe('ColorPicker 的 Vue 用法', () => {
     });
 
     it('弹层对话框名称随语言包切换', async () => {
-        const Host = () => <ConfigProvider locale={ja_JP}>{() => <ColorPicker usePopover />}</ConfigProvider>;
+        const Host = () => <ConfigProvider locale={en_US}>{() => <ColorPicker usePopover />}</ConfigProvider>;
         render(Host);
-        await userEvent.click(screen.getByRole('button', { name: ja_JP.ColorPicker.color }));
-        expect(await screen.findByRole('dialog', { name: ja_JP.ColorPicker.color })).toBeInTheDocument();
+        await userEvent.click(screen.getByRole('button', { name: en_US.ColorPicker.color }));
+        expect(await screen.findByRole('dialog', { name: en_US.ColorPicker.color })).toBeInTheDocument();
     });
 
     it('popoverProps 的 class 与监听器生效，类名不重复', async () => {

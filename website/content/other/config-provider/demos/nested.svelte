@@ -1,6 +1,6 @@
 <script lang="ts">
-    import en_US from '@fibrae/semi-foundation/locale/source/en_US';
     import { ConfigConsumer, ConfigProvider } from '@fibrae/semi-ui-svelte';
+    import { en_US } from '@fibrae/semi-ui-svelte/locale';
 </script>
 
 {#snippet show(title: string)}

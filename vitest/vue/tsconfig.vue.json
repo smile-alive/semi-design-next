@@ -12,6 +12,7 @@
             "@fibrae/semi-ui-vue": ["../../packages/semi-ui-vue/src/index.ts"],
             "@fibrae/semi-ui-vue/composables": ["../../packages/semi-ui-vue/src/composables.ts"],
             "@fibrae/semi-ui-vue/tokens": ["../../packages/semi-ui-vue/src/tokens.ts"],
+            "@fibrae/semi-ui-vue/locale": ["../../packages/semi-ui-vue/src/locale.ts"],
             "@fibrae/semi-ui-vue/base/*": ["../../packages/semi-ui-vue/src/base/*"],
             "@fibrae/semi-ui-vue/composables/*": ["../../packages/semi-ui-vue/src/composables/*"],
             "@fibrae/semi-ui-vue/internal/*": ["../../packages/semi-ui-vue/src/internal/*"],

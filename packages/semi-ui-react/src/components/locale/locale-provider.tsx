@@ -1,11 +1,11 @@
 import type React from 'react';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { LocaleInput } from '@fibrae/semi-foundation/locale/index';
 import { LocaleContext, useLocaleContext } from './context';
 
 export interface LocaleProviderProps {
     children?: React.ReactNode;
     /** omitted or null: inherits the enclosing LocaleProvider's locale; useLocale falls back to zh_CN at the top */
-    locale?: Locale | null;
+    locale?: LocaleInput | null;
 }
 
 export default function LocaleProvider({ children, locale }: LocaleProviderProps) {

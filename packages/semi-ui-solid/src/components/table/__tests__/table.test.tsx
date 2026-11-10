@@ -3,9 +3,8 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconStar } from '@fibrae/semi-icons-solid';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { endLeaveAnimations, getData, getNestData, getRandomNumber, getTreeData } from '@test/utils/solid';
 import Table from '..';
 import LocaleProvider from '../../locale/locale-provider';
@@ -1242,7 +1241,7 @@ describe('Table 可访问名称', () => {
             }
         );
         render(() => (
-            <LocaleProvider locale={ja_JP}>
+            <LocaleProvider locale={en_US}>
                 <Table
                     columns={[
                         { title: 'Name', dataIndex: 'name' },
@@ -1253,8 +1252,8 @@ describe('Table 可访问名称', () => {
                 />
             </LocaleProvider>
         ));
-        expect(await screen.findByRole('group', { name: ja_JP.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
-        expect(screen.getByText(ja_JP.Table.untitledColumn)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: ja_JP.Table.ascend })).toBeInTheDocument();
+        expect(await screen.findByRole('group', { name: en_US.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
+        expect(screen.getByText(en_US.Table.untitledColumn)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Table.ascend })).toBeInTheDocument();
     });
 });

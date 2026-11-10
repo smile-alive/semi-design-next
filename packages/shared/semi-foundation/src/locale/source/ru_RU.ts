@@ -1,9 +1,7 @@
-import { ru } from 'date-fns/locale/ru';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'ru-RU',
-    dateFnsLocale: ru,
     currency: 'RUB',
     BackTop: {
         backToTop: 'Наверх',

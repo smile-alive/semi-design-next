@@ -1,5 +1,5 @@
-import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
 import { Button, ConfigProvider, Modal } from '@fibrae/semi-ui-solid';
+import { en_US } from '@fibrae/semi-ui-solid/locale';
 
 const config = { title: 'This is a success message', content: 'Context consumer' };
 
@@ -7,7 +7,7 @@ export default function ModalDemo() {
     const [modal, contextHolder] = Modal.useModal();
 
     return (
-        <ConfigProvider locale={en_GB}>
+        <ConfigProvider locale={en_US}>
             <div>
                 <Button
                     onClick={() => {

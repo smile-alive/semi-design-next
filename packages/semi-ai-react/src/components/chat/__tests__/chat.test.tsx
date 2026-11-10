@@ -2,7 +2,7 @@ import { createRef, StrictMode, type SubmitEvent, type ReactNode } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import type { Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-react/upload/index';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { mockResizeObserver, sleep } from '@test/utils/react';

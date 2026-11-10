@@ -2,10 +2,9 @@
 // index.astro imports this file, so editors also type-check it in website/tsconfig.json, whose JSX is React's
 import { createSignal, createUniqueId, For, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconArticle, IconClose, IconHistogram, IconHome, IconSearch, IconSetting, IconShoppingBag, IconUserGroup } from '@fibrae/semi-icons-solid';
 import { Avatar, Badge, Breadcrumb, Button, DatePicker, Input, LocaleProvider, Nav, Pagination, RadioGroup, Select, Table, Tag, TextArea, type AvatarColor, type ColumnProps, type TagColor } from '@fibrae/semi-ui-solid';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import type { Locale } from '#/i18n/locales';
 import './app-window.css';
 

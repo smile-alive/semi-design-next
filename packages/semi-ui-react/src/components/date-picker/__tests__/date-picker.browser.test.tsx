@@ -5,8 +5,8 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import scrollListCss from '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss?inline';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { DatePicker, Button } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import type { DatePickerHandle, DatePickerProps } from '../index';
 

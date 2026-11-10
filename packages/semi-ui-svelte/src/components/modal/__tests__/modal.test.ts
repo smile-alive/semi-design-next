@@ -1,8 +1,8 @@
 import { flushSync, tick } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { ModalProps } from '../interface';
 import ConfigFixture from './config-fixture.svelte';
@@ -427,10 +427,10 @@ describe('Svelte Modal', () => {
     });
 
     it('ConfigProvider 的 locale 决定内置文案', () => {
-        render(ConfigFixture, { props: { props: { locale: ja_JP } } });
+        render(ConfigFixture, { props: { props: { locale: en_US } } });
         flushSync();
-        expect(screen.getByRole('button', { name: ja_JP.Modal.close })).not.toBeNull();
-        expect(footerButtons()[1]).toHaveTextContent(ja_JP.Modal.confirm);
+        expect(screen.getByRole('button', { name: en_US.Modal.close })).not.toBeNull();
+        expect(footerButtons()[1]).toHaveTextContent(en_US.Modal.confirm);
     });
 
     it('全局默认值：overrideDefaultProps.Modal 作为未传属性的默认', () => {

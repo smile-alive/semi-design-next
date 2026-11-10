@@ -29,15 +29,15 @@ Styles and theme tokens load with the components. You do not need to import base
 
 ### Entry points
 
-| Entry                                           | Description                                                                                                                                       |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@fibrae/semi-ui-svelte`                        | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
-| `@fibrae/semi-ui-svelte/<directory>/index`      | Deep file paths that map one-to-one to the directories under `src/components/`; component files are `<directory>/<name>.svelte`                   |
-| `@fibrae/semi-ui-svelte/hooks`                  | `useLocale`, `useClickOutside`, `useCopied` and the attachment `observeResize`                                                                    |
-| `@fibrae/semi-ui-svelte/tokens`                 | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
-| `@fibrae/semi-ui-svelte/styles.css`             | The full stylesheet, for loading all component styles at once                                                                                     |
-| `@fibrae/semi-ui-svelte/tailwind.css`           | The Tailwind v4 `@theme inline` mapping                                                                                                           |
-| `@fibrae/semi-ui-svelte/locale/source/<locale>` | Built-in locale packs, re-exporting `@fibrae/semi-foundation/locale/source/<locale>`                                                              |
+| Entry                                      | Description                                                                                                                                       |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@fibrae/semi-ui-svelte`                   | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
+| `@fibrae/semi-ui-svelte/locale`            | The built-in locale packs `zh_CN` and `en_US`, and the `Locale` and `LocaleInput` types                                                           |
+| `@fibrae/semi-ui-svelte/<directory>/index` | Deep file paths that map one-to-one to the directories under `src/components/`; component files are `<directory>/<name>.svelte`                   |
+| `@fibrae/semi-ui-svelte/hooks`             | `useLocale`, `useClickOutside`, `useCopied` and the attachment `observeResize`                                                                    |
+| `@fibrae/semi-ui-svelte/tokens`            | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
+| `@fibrae/semi-ui-svelte/styles.css`        | The full stylesheet, for loading all component styles at once                                                                                     |
+| `@fibrae/semi-ui-svelte/tailwind.css`      | The Tailwind v4 `@theme inline` mapping                                                                                                           |
 
 The package ships `.svelte` source and `.d.ts` files, not compiled output. `exports` carries the `svelte` condition, and `@sveltejs/vite-plugin-svelte` (built into SvelteKit) compiles for the application's target (DOM or server). Tools that neither honor the `svelte` condition nor compile `.svelte` cannot use this package.
 
@@ -51,20 +51,20 @@ Override `--semi-*` CSS variables to change global colors, radii, font sizes and
 
 ### Internationalization
 
-The default locale is `zh_CN`. Pass a locale pack with `LocaleProvider`. Call `useLocale(componentName)` during component initialization. It returns a function, read as `locale().locale.xxx`, that updates when the locale changes:
+The default locale is `zh_CN`. The built-in packs `zh_CN` and `en_US` come from the `locale` entry. Pass a locale pack with `LocaleProvider`. Call `useLocale(componentName)` during component initialization. It returns a function, read as `locale().locale.xxx`, that updates when the locale changes:
 
 ```svelte
 <script lang="ts">
     import { LocaleProvider } from '@fibrae/semi-ui-svelte';
-    import en_GB from '@fibrae/semi-ui-svelte/locale/source/en_GB';
+    import { en_US } from '@fibrae/semi-ui-svelte/locale';
 </script>
 
-<LocaleProvider locale={en_GB}>
+<LocaleProvider locale={en_US}>
     <App />
 </LocaleProvider>
 ```
 
-For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
+For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 
@@ -86,6 +86,6 @@ Component docs are in [website/content](../../website/content). To get started, 
 
 ## Development
 
-`pnpm --filter @fibrae/semi-ui-svelte build` runs `scripts/svelte-package.ts`: `svelte-package` outputs `src` to `dist` (`.svelte` files as they are, `.ts` compiled to `.js` and `.d.ts`). The script changes style imports to the foundation's `.css`, removes `__tests__`, and writes the full `styles.css`, `tailwind.css` and the re-exports under `locale/source/`.
+`pnpm --filter @fibrae/semi-ui-svelte build` runs `scripts/svelte-package.ts`: `svelte-package` outputs `src` to `dist` (`.svelte` files as they are, `.ts` compiled to `.js` and `.d.ts`). The script changes style imports to the foundation's `.css`, removes `__tests__`, and writes the full `styles.css` and `tailwind.css`.
 
 For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root. For how to write components, see [components](../../.agents/references/svelte/components.md). For changes relative to upstream, see [release-notes](../../docs/release-notes.md).

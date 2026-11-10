@@ -32,6 +32,11 @@
             "solid": "./dist/tokens.jsx",
             "default": "./dist/tokens.js"
         },
+        "./locale": {
+            "types": "./dist/locale.d.ts",
+            "solid": "./dist/locale.jsx",
+            "default": "./dist/locale.js"
+        },
         "./base/*": {
             "types": "./dist/base/*.d.ts",
             "solid": "./dist/base/*.jsx",

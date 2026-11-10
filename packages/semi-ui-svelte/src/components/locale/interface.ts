@@ -1,10 +1,10 @@
 import type { Snippet } from 'svelte';
-import type { Locale, LocaleComponentName, LocaleResult } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale, LocaleComponentName, LocaleInput, LocaleResult } from '@fibrae/semi-foundation/locale/index';
 
 export type { LocaleComponentName, LocaleResult };
 
 export interface LocaleProviderProps {
-    locale?: Locale | null;
+    locale?: LocaleInput | null;
     children?: Snippet;
 }
 

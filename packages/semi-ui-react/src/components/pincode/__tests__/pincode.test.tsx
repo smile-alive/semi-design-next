@@ -3,9 +3,9 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { PinCode, Form, FormPinCode, Tooltip } from '@fibrae/semi-ui-react';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
+import { en_US } from '@fibrae/semi-ui-react/locale';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { PinCodeHandle, PinCodeProps } from '../index';
 

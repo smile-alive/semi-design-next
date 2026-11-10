@@ -1,9 +1,7 @@
-import { bg } from 'date-fns/locale/bg';
 import type { Locale } from '../interface';
 
 const local: Locale = {
     code: 'bg',
-    dateFnsLocale: bg,
     currency: 'BGN',
     BackTop: {
         backToTop: 'Към началото',

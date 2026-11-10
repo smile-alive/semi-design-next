@@ -2,9 +2,9 @@ import { StrictMode, createRef, useState, type ReactNode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconHome, IconArticle } from '@fibrae/semi-icons-react';
 import { Breadcrumb } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { BreadcrumbItemInfo, BreadcrumbItemProps, BreadcrumbProps, RouteProps } from '../index';
 

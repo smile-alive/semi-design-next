@@ -29,8 +29,7 @@ const page = `<script setup lang="ts">
     import { useRoute } from 'vue-router';
     import { IconHome } from '@fibrae/semi-icons-vue';
     import { Button, ConfigProvider, DatePicker, Form, FormCheckbox, FormInput, FormSelect, Input, Modal, Select, TabPane, Table, Tabs, Toast, Tooltip, TypographyText, TypographyTitle } from '@fibrae/semi-ui-vue';
-    import en_US from '@fibrae/semi-ui-vue/locale/source/en_US';
-    import zh_CN from '@fibrae/semi-ui-vue/locale/source/zh_CN';
+    import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 
     const route = useRoute();
     const lang = computed(() => (route.query.lang === 'zh' ? 'zh' : 'en'));

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
 import PaginationFoundation, { type PageList, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import '@fibrae/semi-foundation/components/pagination/pagination.scss';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/element-props';

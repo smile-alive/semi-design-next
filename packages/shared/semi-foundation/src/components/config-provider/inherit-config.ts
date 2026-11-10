@@ -1,10 +1,13 @@
-import type { Locale } from '../../locale/interface';
+import type { Locale as DateFnsLocale } from 'date-fns';
+import type { LocaleInput } from '../../locale/interface';
 import type { ResponsiveMap } from './responsive-types';
 
 export interface InheritableConfig {
     direction?: 'ltr' | 'rtl';
     timeZone?: string | number;
-    locale?: Locale | null;
+    locale?: LocaleInput | null;
+    /** date-fns locale of DatePicker, TimePicker and Calendar; omitted: looked up by the locale code (zh-CN, en-US), else enUS */
+    dateFnsLocale?: DateFnsLocale;
     getPopupContainer?: () => HTMLElement;
     responsiveObserve?: boolean;
     responsiveMap?: ResponsiveMap;
@@ -25,6 +28,7 @@ export function inheritConfig(own: InheritableConfig, outer: InheritableConfig):
         direction: pick('direction') ?? 'ltr',
         timeZone: pick('timeZone'),
         locale: pick('locale'),
+        dateFnsLocale: pick('dateFnsLocale'),
         getPopupContainer: pick('getPopupContainer'),
         responsiveObserve: pick('responsiveObserve') ?? false,
         responsiveMap: pick('responsiveMap'),

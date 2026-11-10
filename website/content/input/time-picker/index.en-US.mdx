@@ -96,6 +96,8 @@ The columns in the TimePicker float will follow `format` Change, when omitted `f
 
 NOTE: `format` Follow the date-fns v4 `format` Format. https://date-fns.org/docs/format
 
+Text tokens such as AM and PM use a date-fns locale: the built-in zh-CN or en-US picked by the current locale's `code`, and enUS for other languages. When needed, import another language from `date-fns/locale` and pass it to the `dateFnsLocale` of ConfigProvider; see [Internationalization](/en-US/react/other/locale).
+
 <Demo id="format" />
 
 ### Set Panel Header and Footer

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type RangeInput, type InsetInputChangeProps, type InsetInputChangeFoundationProps, type InsetInputProps } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-react';
 import type { BaseProps } from '../../base/base-props';

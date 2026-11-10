@@ -1,8 +1,7 @@
 import { type JSX, createSignal } from 'solid-js';
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';

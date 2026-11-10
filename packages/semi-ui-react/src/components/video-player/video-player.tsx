@@ -5,7 +5,7 @@ import { cssClasses, DEFAULT_CONTROLS_LIST, DEFAULT_PLAYBACK_RATE, numbers, stri
 import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerState } from '@fibrae/semi-foundation/components/video-player/foundation';
 import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/video-player/video-player.scss';
 import { IconPlay, IconPause, IconVolume1, IconVolume2, IconRestart, IconFlipHorizontal, IconMinimize, IconMaximize, IconMute, IconPlayCircle, IconMiniPlayer } from '@fibrae/semi-icons-react';

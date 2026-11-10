@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import { createEvent, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Annotation } from '@fibrae/semi-ai-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import type { AnnotationProps } from '../annotation';
 import { VideoItem, type AnnotationItem } from '../annotation/item';
 

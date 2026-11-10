@@ -294,6 +294,8 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 - 月视图中折叠事件的「还有 N 项」是按钮，`Enter` 或 `空格` 打开当天的事件卡片，焦点移到卡片的关闭按钮；按 `Esc` 或关闭按钮关闭卡片，焦点回到「还有 N 项」
 - 日期格与时间槽的点击（React 的 `onClick`，Vue 的 `@click`，Svelte 的 `onClick`）只响应指针，没有键盘方式
 
+视图与日期格的可访问名称由 date-fns 按语言格式化：按当前语言的 `code` 取内置的 zh-CN 或 en-US，其他语言使用 enUS，需要时从 `date-fns/locale` 导入后传给 ConfigProvider 的 `dateFnsLocale`，见[国际化](/zh-CN/react/other/locale)。
+
 ## 文案规范
 
 - 当需要显示时间时，12 小时制和 24 小时制都是可以使用的

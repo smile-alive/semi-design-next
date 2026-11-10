@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+    import { zh_CN } from '@fibrae/semi-ui-vue/locale';
     import { Sortable, SortableHandle, type SortEndPayload } from '../..';
 
     const props = withDefaults(defineProps<{ items?: (string | number)[] }>(), { items: () => ['a', 'b', 'c'] });

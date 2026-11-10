@@ -2,8 +2,7 @@
 import { nextTick, type VNode } from 'vue';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
@@ -55,12 +54,12 @@ describe('MCPConfigure', () => {
 
     it('模式切换与标题随语言包切换', () => {
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: { default: () => <MCPConfigure options={options} visible /> },
         });
-        expect(ja_JP.Sidebar.mcpServers).not.toBe(text.mcpServers);
-        expect(screen.getByRole('radio', { name: ja_JP.Sidebar.mcpServers })).toBeInTheDocument();
-        expect(screen.getByRole('radiogroup', { name: ja_JP.Sidebar.mcpConfigure })).toBeInTheDocument();
+        expect(en_US.Sidebar.mcpServers).not.toBe(text.mcpServers);
+        expect(screen.getByRole('radio', { name: en_US.Sidebar.mcpServers })).toBeInTheDocument();
+        expect(screen.getByRole('radiogroup', { name: en_US.Sidebar.mcpConfigure })).toBeInTheDocument();
     });
 
     it('title 和 placeholder 属性替换语言包文案', () => {

@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-    import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+    import { en_US } from '@fibrae/semi-ui-svelte/locale';
     import LocaleProvider from '../../locale/locale-provider.svelte';
     import Form from '../form.svelte';
     import type { FormApi } from '../interface';
@@ -17,7 +17,7 @@
     let { store, onApi }: { store: SchemaFixtureStore; onApi?: (api: FormApi) => void } = $props();
 </script>
 
-<LocaleProvider locale={ja_JP}>
+<LocaleProvider locale={en_US}>
     {#if store.asForm}
         <SchemaForm {...store.formProps} {...store.fieldProps} getFormApi={onApi}>
             <button type="submit">submit</button>

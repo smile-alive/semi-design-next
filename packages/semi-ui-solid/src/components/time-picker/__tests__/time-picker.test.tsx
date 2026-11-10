@@ -2,10 +2,11 @@ import { catchError, createSignal, onMount, untrack } from 'solid-js';
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { format } from 'date-fns';
+import { zhCN } from 'date-fns/locale/zh-CN';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import Locale from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconClose } from '@fibrae/semi-icons-solid';
+import { zh_CN as Locale } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners } from '@test/utils/solid';
 import TimePicker, { type TimePickerProps, type TimePickerTriggerRenderProps } from '..';
@@ -1423,8 +1424,8 @@ describe('TimePicker 面板与属性边界', () => {
         const withLocale: TimePickerProps = { locale: Locale.TimePicker };
         // @ts-expect-error the locale always comes from the LocaleProvider
         const withCode: TimePickerProps = { localeCode: 'zh-CN' };
-        // @ts-expect-error the locale always comes from the LocaleProvider
-        const withDateFns: TimePickerProps = { dateFnsLocale: Locale.dateFnsLocale };
+        // @ts-expect-error the date-fns locale comes from ConfigProvider
+        const withDateFns: TimePickerProps = { dateFnsLocale: zhCN };
         expect([withLocale, withCode, withDateFns]).toHaveLength(3);
     });
 

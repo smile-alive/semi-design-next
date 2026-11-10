@@ -2,8 +2,8 @@ import { flushSync } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { numbers } from '@fibrae/semi-foundation/components/table/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import type { TableProps } from '../interface';
 import { P, click, firstCellTexts, getBodyRows, getColumns, getData, getHeads, mountTable, query, queryAll, rowKeys } from './helpers';
 import TableHost from './table-host.svelte';
@@ -290,12 +290,12 @@ describe('Svelte Table 可访问名称', () => {
                         dataSource: [{ key: '1', name: 'a', age: 1 }],
                         pagination: false,
                     },
-                    locale: ja_JP,
+                    locale: en_US,
                 }),
             },
         });
-        expect(await screen.findByRole('group', { name: ja_JP.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
-        expect(screen.getByText(ja_JP.Table.untitledColumn)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: ja_JP.Table.ascend })).toBeInTheDocument();
+        expect(await screen.findByRole('group', { name: en_US.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
+        expect(screen.getByText(en_US.Table.untitledColumn)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Table.ascend })).toBeInTheDocument();
     });
 });

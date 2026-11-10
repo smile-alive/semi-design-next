@@ -3,8 +3,7 @@ import { fireEvent, render as renderWithLibrary, screen, waitFor } from '@solidj
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, mockResizeObserver } from '@test/utils/solid';
 import Calendar, { type CalendarProps } from '..';

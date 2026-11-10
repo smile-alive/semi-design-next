@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLTdAttributes, HTMLThAttributes } from 'svelte/elements';
 import type { strings } from '@fibrae/semi-foundation/components/table/constants';
 import type { BaseAlign, BaseChangeInfoFilter, BaseChangeInfoSorter, BaseEllipsis, BaseFixed, BaseIncludeGroupRecord, BasePageData, CheckRelation, OnChangeExtra } from '@fibrae/semi-foundation/components/table/foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import type { CheckboxProps } from '../checkbox/interface.js';
 import type { DropdownProps } from '../dropdown/interface.js';
 import type { PaginationProps } from '../pagination/interface.js';

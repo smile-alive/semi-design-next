@@ -3,8 +3,7 @@ import { type ComponentPublicInstance } from 'vue';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import Label from '../label.vue';
@@ -99,10 +98,10 @@ describe('Form Label', () => {
         expect(document.querySelector(`.${prefixCls}-optional-text`)).toHaveTextContent(zh_CN.Form.optional);
         view.unmount();
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: { default: () => <Label optional text="name" /> },
         });
-        expect(document.querySelector(`.${prefixCls}-optional-text`)).toHaveTextContent(ja_JP.Form.optional);
+        expect(document.querySelector(`.${prefixCls}-optional-text`)).toHaveTextContent(en_US.Form.optional);
     });
 
     it('disabled', () => {

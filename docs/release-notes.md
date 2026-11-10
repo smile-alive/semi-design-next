@@ -22,6 +22,7 @@
 - 新增 hooks 入口 `@fibrae/semi-ui-react/hooks` 与 Vue 的组合式函数入口 `@fibrae/semi-ui-vue/composables`，导出 `useLocale`、`useClickOutside`、`useCopied`、`useDidUpdate`、`useEventListener`（及 `getWindow`、`getDocument`、`getBody`）、`useFocusHandover`、`useResizeObserver`，React 另有 `useMergedRef`。Vue 另有 `useMounted`（服务端与 hydration 期间为 `false`，挂载后为 `true`）与 `useRecordFocus(scope, visible)`（在 `visible` 变为 `true` 时记录焦点，首帧可见时在 `onBeforeMount` 记录，服务端不执行）。React 的 `useResizeObserver(target, onResize, { enabled })` 接受 ref、元素或 `null`，为空或 `enabled` 为 false 时不观察。
 - 包入口导出各组件 Props 与辅助类型，重名的加组件前缀（如 `CascaderValue`、`TableSize`）。内部名改为公开名：`ModalReactProps` 为 `ModalProps`，`SideSheetReactProps` 为 `SideSheetProps`，`ToastReactProps` 为 `ToastProps`，`NoticeReactProps` 为 `NoticeProps`，`CollapseReactProps` 为 `CollapseProps`，`ColorPickerReactProps` 为 `ColorPickerProps`，`BaseFormProps` 为 `FormProps`，`BasicLayoutProps` 为 `LayoutProps`。
 - 组件根 DOM 接收未声明属性（F2），如 `id`、`title`、Form 注入的 `name`；没有根 DOM 的包装组件（Popover、Popconfirm、Dropdown、UserGuide）丢弃未声明属性（F11）。Props 类型包含落点元素的原生属性（F6），同名不同签名的保持原 Semi 签名；F11、F12 组件与 Provider 不接受任意 DOM 属性。
+- React：semi-ui-react 扩充 `React.CSSProperties`，接受 `--*` 键（值为 `string | number`），`style={{ '--semi-color-primary': '#f00' }}` 不再需要类型断言。
 - 破坏性：受控判断改看值是否为 `undefined`：`value={undefined}`（及 `checked`、`visible`、`activeKey` 等）与不传相同，按非受控处理，`defaultXxx` 生效；`null` 仍是受控值。受控值变回 `undefined` 时输入类组件清空并转为非受控，Tabs、Collapse、Carousel、UserGuide 从最后的受控值继续。
 - 「是否传入」类属性同样按值判断，写成 `undefined` 与不传相同，隐藏 Modal 的 footer、header 需传 `null`。React 中回调属性传 `null` 按未传处理，内容类属性传 `0` 照常渲染。
 - 对外导出的顶层组件每次渲染读取 `semiGlobal.config.overrideDefaultProps`（F7），Provider、Consumer 与 React 的 Icon 例外；TagGroup、IconButton、Divider、ButtonGroup 等有自己的键，IconButton 不再沿用 `Button`。破坏性：Navigation 的键名为 `Nav`，React 原 `Navigation` 键不再生效。
@@ -91,7 +92,7 @@
 - 破坏性：语言包与 `Locale` 类型移到 semi-foundation：语言包源文件在 `@fibrae/semi-foundation/locale/source/<code>`（`@fibrae/semi-ui-<框架>/locale/source/<code>` 由 UI 包重导出，仍可用），`@fibrae/semi-ui-react/locale/interface` 改为 `@fibrae/semi-foundation/locale/interface`；`LocaleProvider`、`LocaleConsumer` 仍从 `@fibrae/semi-ui-react` 导入。
 - 破坏性（类型）：删除 `Image.loading`、`Image.loadError`、`DatePicker.day`、`Upload.illegalTips`、`Upload.cropOk`、`Upload.cropCancel`、`Table.sortedAscending`、`Table.sortedDescending`、`Table.sortedNone`、`Table.sortRoleDescription`、`Table.deselectRow`、`Table.deselectAllRows`、`Select.selected`、`Select.createItem`、`Tree.toggleCheck`、`Tree.expandItem`、`Tree.collapseItem`、`Avatar.clickable`、`Slider.disabled`；`Upload.cropTitle` 改为必填。
 - 按 `Locale` 声明的自定义语言包需补齐新增键（如 `BackTop`、`Input`、`Notification`、`Sortable` 命名空间），类型会报出缺失项；原来写死英文的可访问名称改读语言包，默认 zh_CN 下为中文，按英文名称查询元素的测试需改为按语言包取值。
-- 修正语言包数据：多个语言的 `currency` 改为合法 ISO 4217 码（`InputNumber currency` 显示随之变化），ur、my_MM、sw、ceb_PH、fil_PH 的 `dateFnsLocale` 改为 enUS、ga 改为 enIE，并修正部分日期格式与文案；zh_CN、zh_TW 的 `DatePicker.fullMonths` 改为「1月」到「12月」。
+- 修正语言包数据：多个语言的 `currency` 改为合法 ISO 4217 码（`InputNumber currency` 显示随之变化），并修正部分日期格式与文案；zh_CN、zh_TW 的 `DatePicker.fullMonths` 改为「1月」到「12月」。
 
 ## 动画
 
@@ -115,6 +116,7 @@
 
 ### ConfigProvider
 
+- 新增 `dateFnsLocale`：DatePicker、TimePicker、Calendar 使用的 date-fns 语言，未传时继承外层，再按语言包的 `code` 取内置语言。
 - `getPopupContainer` 只作用于 Modal、SideSheet、ImagePreview。嵌套时内层只覆盖显式传入的属性，其余继承外层；`locale={null}` 清除继承的语言，不传 `locale` 时不再注入 zh_CN。
 - 数字和 `GMT±HH:MM` 形式的 `timeZone` 按固定 UTC 偏移换算，不再映射为 IANA 时区，格式 token `z` 显示偏移；删除 `IANAOffsetMap` 导出，需要夏令时请传 IANA 名称。
 - Vue：`ConfigConsumer` 使用默认作用域插槽，`useConfig()` 返回 `ComputedRef<ContextValue>`。
@@ -123,8 +125,9 @@
 
 ### LocaleProvider、LocaleConsumer
 
-- 破坏性：LocaleProvider 不传 `locale` 时继承外层语言，不再重置为 zh_CN；最外层不传时 context 值为 `undefined`（Vue、Solid 为 `null`）。语言包缺少 `dateFnsLocale` 时回落 date-fns 默认的 enUS。
-- 破坏性（类型）：LocaleConsumer 的 `componentName` 必填，只接受 `LocaleComponentName`，泛型参数改为组件名（`<LocaleConsumer<Locale['Chat']>>` 改为 `<'Chat'>`）。`useLocale` 不再接受 `'code'`、`'currency'`、`'dateFnsLocale'`，改读返回值的 `localeCode`、`currency`、`dateFnsLocale`。
+- 破坏性：LocaleProvider 不传 `locale` 时继承外层语言，不再重置为 zh_CN；最外层不传时 context 值为 `undefined`（Vue、Solid 为 `null`）。
+- 破坏性：语言包与 `Locale` 类型删除 `dateFnsLocale`，`useLocale` 的返回值与 LocaleConsumer 的回调参数（Vue 的作用域插槽、Svelte 的 snippet 参数）不再提供它；React、Solid 的 LocaleConsumer children 改为 `(componentLocale, localeCode, currency)`。DatePicker、TimePicker、Calendar 按语言包的 `code` 取内置的 zh-CN、en-US date-fns 语言，其他语言回落 enUS（月份、星期、上下午与 Calendar 的可访问名称显示为英文）；需要其他语言时从 `date-fns/locale` 导入并传给 ConfigProvider 的 `dateFnsLocale`。只用文案的组件不再打包 date-fns 语言数据。
+- 破坏性（类型）：LocaleConsumer 的 `componentName` 必填，只接受 `LocaleComponentName`，泛型参数改为组件名（`<LocaleConsumer<Locale['Chat']>>` 改为 `<'Chat'>`）。`useLocale` 不再接受 `'code'`、`'currency'`，改读返回值的 `localeCode`、`currency`。
 - Vue：`LocaleConsumer` 使用默认作用域插槽，`useLocale(name)` 返回 computed。
 - Svelte：`useLocale(name)` 返回函数，读取写成 `locale().locale.xxx`；`LocaleConsumer` 的内容写在 `children` snippet 中。最外层不传 `locale` 时 context 值为 `null`（同 Vue）。
 
@@ -283,6 +286,7 @@
 - 新增：行选择支持 Shift 范围选择。按住 Shift 点击选择框（`clickRow` 时也可点击行，或在选择框上按 Shift+Space），把锚点（上一次不按 Shift 点击的行）到当前行之间的当前页可见行设成锚点的选中状态，跳过禁用行；锚点不变时再次 Shift 点击替换上一段范围，范围外的选择不变。锚点不在当前页或 `checkRelation` 为 `'related'` 时按普通点击处理；范围选择只调用一次 `onChange`，不调用 `onSelect`。Cmd、Ctrl 点击没有单独的行为。
 - `virtualized.itemSize` 为 `null`，或函数返回 `null`、`undefined` 时，按 `size` 预设的默认行高排布，不再告警。
 - 传 `groupBy` 时服务端渲染的首帧已含分组行。
+- 同时传受控 `expandedRowKeys` 与非空 `defaultExpandedRowKeys` 时，首帧（含服务端 HTML）按受控值展开（原来按默认值展开，直到受控值下次变化）。
 - `defaultExpandAllRows`、`expandAllRows`、`defaultExpandAllGroupRows`、`expandAllGroupRows` 与 `rowSelection.defaultSelectedRowKeys`（含 `checkRelation: 'related'` 推出的子孙、父级与半选）在服务端渲染与 hydration 首帧就生效，原来挂载后才展开、选中。
 - 样式：表头背景在 `bg-1` 上叠加 `fill-0`（新增 `$color-table_th-fill-default`），固定表头时为对齐表体滚动条而预留的表头滚动条改为透明，该区域同样铺满灰底，可排序表头悬浮改为 `fill-1`；表头垂直内边距 `$spacing-table_row_head-paddingY` 由 8px 改为 12px，分割线 `$width-table_header_border` 由 2px 改为 1px；固定列的边线只在有内容滚到其下方时显示，阴影由单元格上的 3px 实色 `box-shadow` 改为通高的渐变伪元素（宽 `$width-table_fixed_shadow`，颜色由 `--semi-table-fixed-shadow` 决定，暗色模式取 `$color-table_shadow-bg-dark`），删除 `$shadow-table_left`、`$shadow-table_right`；`bordered` 的右侧外框改由容器的 `border-inline-end` 绘制，位于滚动条外侧，延伸到表格末端的单元格带 `semi-table-cell-last` 并去掉自身右边框，不再出现两条边线；虚拟化表格的固定列也显示阴影；分组行展开收起时不再闪现纵向滚动条。
 - React：`resizable` 在服务端渲染与 hydration 期间输出普通表格，hydration 后再加载列宽拖动。
@@ -409,6 +413,7 @@
 
 ### ColorPicker
 
+- 输入区的间距改为逻辑属性，RTL 下镜像。
 - 破坏性：`usePopover` 时弹层默认 trigger 由 `hover` 改为 `click`（`popoverProps.trigger` 优先）。`alpha` 默认为 true；受控 `value` 为 `null` 是受控的空值，变回 `undefined` 时回到 `defaultValue`。
 - 破坏性（类型）：`@fibrae/semi-ui-react/color-picker` 只导出 `ColorValue`、`ColorFormat`、`HsvaColor`、`RgbaColor`，不再导出 `ColorModel`、`AnyColor`、`ObjectColor` 等；`ColorPickerFoundation` 的静态转换方法删除，改从 `@fibrae/semi-foundation/color-picker/utils/convert` 导入。
 - `ColorPicker.colorStringToValue` 支持 `#rgb`、`#rgba`，无法解析或越界的颜色字符串抛出以 `Semi ColorPicker` 开头的错误（原来得到 NaN、黑色或非法 hex）。选色区与两条滑条可用键盘操作。
@@ -562,6 +567,7 @@
 
 ### Cascader
 
+- 多选选项的 checkbox 只在结束一侧留 8px 间距（原来两侧各 8px，RTL 样式漏到了 LTR），LTR 下 checkbox 起始侧少 8px。
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`dropdownMargin`；不再读取未声明的 `open`（改用 `defaultOpen`）。破坏性（类型）：`CascaderProps` 改为泛型 `CascaderProps<Multiple>`；单选 `displayRender` 参数改为 `ReactNode[]`；`triggerRender` 的 `inputValue` 改为 `ReactNode` 并删除 `onChange`（改用 `onSearch`）；`filterSorter` 参数改为路径数组 `CascaderData[]`；`checkRelation`、`searchPosition` 收窄为字面量联合；`virtualizeInSearch.height` 收紧为 `number`；删除 `mouseEnterDelay`、`mouseLeaveDelay`。
 - 行为变化：`onFocus`、`onBlur` 与 TreeSelect 一致，成对且以整个组件（触发器、其中的搜索框与标签、下拉）为界。焦点从组件外进入时触发一次 `onFocus`（Tab、点击、脚本 `focus()` 都算，原来只有点击或按键打开下拉才触发），组件内移动不重复触发；之后每次 focus 只触发一次 `onBlur`：焦点离开到外部元素、在组件外按下鼠标、单选选中后关闭下拉（让 Form 的 `trigger="blur"` 立即校验）。Esc、多选选中、点击触发器收起下拉时焦点仍在组件内，不再触发 `onBlur`（原来关闭下拉就触发）；`ref.close()` 同样不触发。打开时按 Tab 离开还会关闭下拉（APG combobox 模式）。`onFocus` 的参数可能是 `FocusEvent`，`onBlur` 的参数可能是 `FocusEvent`（Vue 为 `focus`、`blur` 事件）。
 - 行为变化：`filterLeafOnly={false}` 时，受控单选在搜索结果中选中分支后保持选中，与非受控一致（原来受控的 `value` 回写分支路径时被清空）。
@@ -708,6 +714,9 @@
 
 ### Grid
 
+- 破坏性：Row 一律是 flex 布局，删除 `type` 属性（List 的 `grid` 同样不再接受 `type`），`align`、`justify` 始终生效；类名 `semi-row-flex*` 改为 `semi-row`、`semi-row-justify-*`、`semi-row-align-*`，float 与 clearfix 删除。没设 `span` 的 Col 按内容定宽。
+- 破坏性（样式钩子）：Col 的 `span`、`offset`、`push`、`pull`、`order` 改为行内 CSS 变量 `--semi-col-*`，每个断点一组规则，小断点的值向大断点继承；`semi-col-12`、`semi-col-md-6` 等预生成类名删除，手写这些类名不再生效。Grid 的 CSS 由约 74 KB 降到约 8 KB。使用方传给 Col 的 `style` 与生成的变量合并，同名时使用方优先。
+- Form 不再用 Row 包裹 `<form>`；顶部标签的包裹层用 `flex-basis: 100%` 代替 `overflow: hidden`。
 - 破坏性（深路径导入）：`semi-ui-react/grid/row` 不再导出 `RowContext`、`RowContextType`。
 - Row 的 `gutter` 改为 CSS 变量 `--semi-row-gutter-{x,y}-{xs..xxl}` 加媒体查询，不再写入 Row、Col 的行内 style；Col 不在 Row 内时 gutter 为 0 正常渲染；Col 断点层的 `0`（如 `md={0}`）只在命中断点及以上隐藏，`order`、`offset`、`push`、`pull` 设为 0 现在生效。
 - 具名导出 `Row`、`Col`，无 default 导出；Vue：`gutter`、`span`、`xs` 等数字与对象 prop 必须用 `:` 绑定。
@@ -780,6 +789,7 @@
 
 ### Lottie
 
+- 破坏性：默认的 SVG 渲染器改用 lottie-web 的 light 构建（只含 SVG 渲染器、不执行表达式，不需要 CSP `unsafe-eval`）；`params.renderer` 为 `canvas` 或 `html` 时加载完整版。用了表达式的动画在默认渲染器下表达式失效，需要时把 `params.renderer` 设为 `canvas`；开发环境下 `animationData` 含表达式会告警（`params.path` 加载的数据不检查）。`Lottie.getLottie(renderer?)` 新增可选参数，`canvas`、`html` 返回完整版，其余返回 light 版；`getLottie` 回调拿到的对象随渲染器而定，类型不变。
 - 破坏性：`Lottie.getLottie()` 改为异步，返回解析为 lottie-web 的 `Promise`；lottie-web 按需导入，`getLottie`、`getAnimationInstance` 回调在其加载完成后调用；系统开启「减少动态效果」时不自动播放（显式传 `params.autoplay` 则以其为准）。
 - Vue：回调改为 `getAnimationInstance`、`getLottie` 事件；`params` 整体替换才重载，原地修改不重载，大 JSON 用 `shallowRef` 或 `markRaw`；`params.container` 存在时只渲染注释节点。
 - Solid：`params` 深比较后才重新加载，`class`、`style`、`width`、`height` 变化不重载；`params.container` 存在时不渲染任何节点；使用方的 `aria-hidden`、`role` 覆盖默认的装饰性与 image 语义。
@@ -810,6 +820,7 @@
 
 ### Tabs
 
+- 破坏性（主题 token）：`$radius-tabs_tab_card_left` 由四值圆角改为单个半径值，使用处按逻辑角赋值；左侧卡片式页签的圆角在 RTL 下镜像，LTR 不变。
 - 破坏性：删除 `TabPane.isTabPane`，改为声明 `elementType: 'Tabs.TabPane'`；删除 `TabBarProps.closable`；`activeKey` 类型加入 `null`；`onTabClick` 事件参数为 `MouseEvent | KeyboardEvent`；非受控 Tabs 的当前 key 不在新列表中时回落到第一个启用的页签；children 写法只把 `TabPane` 当页签。
 - `activeKey={null}` 是受控空值（不选中任何页签），`undefined` 按非受控；`role="tablist"` 移到只含 Tab 的 `.semi-tabs-bar-tablist`；`Tabs.TabItem` 透传的 `role`、`tabIndex`、`aria-*` 不再覆盖组件值；tab 与 panel 的 `id` 对 `itemKey` 做 URL 编码；新增语言包键 `Tabs.prevTabs`、`Tabs.nextTabs`。
 - 没有选中页签（`activeKey` 为 `null` 或不命中任何页签）时，tablist 中第一个启用的页签作为 Tab 停靠点；按住 Alt、Ctrl 或 Meta 的按键交给浏览器，不再移动焦点或选中页签；选中的页签收进「更多」菜单时，其 `id` 落在 tablist 外的 `hidden` 元素上，面板仍以该页签的标题命名。
@@ -969,6 +980,7 @@
 
 ### AutoComplete、TagInput、Avatar、PinCode
 
+- PinCode：格子间距改为逻辑属性；ConfigProvider 的 `direction` 为 `rtl` 时左右方向键反向（ArrowLeft 移到下一格）。
 - 破坏性：AutoComplete 删除 `getPopupContainer`、`zIndex`、`AutoComplete.Option` 与 `children`（改用 `Select.Option`），删除深路径 `@fibrae/semi-ui-react/auto-complete/option`、`@fibrae/semi-foundation/auto-complete/optionFoundation`；`style.width` 不再复制为下拉最小宽度。
 - 破坏性（类型）：AutoComplete 的 `defaultValue` 收窄为 `string | number`，`onKeyDown` 参数改为 `KeyboardEvent<HTMLDivElement>`，删除 `mouseEnterDelay`、`mouseLeaveDelay`、`tabIndex`；输入框角色改为 combobox（按 textbox 查询的测试需改为 combobox），`id` 落在输入框上。
 - 破坏性（类型）：TagInput 的 `onFocus`、`onBlur` 参数改为 `React.FocusEvent<HTMLDivElement>`，`onInputChange` 第二个参数改为 `React.SyntheticEvent`，`value` 为 `string[] | null`，ref 为 `TagInputHandle { focus, blur }`；`AvatarState.hoverContent` 改为 `hovered: boolean`。

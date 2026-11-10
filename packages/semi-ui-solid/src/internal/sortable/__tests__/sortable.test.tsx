@@ -1,9 +1,8 @@
 import { createSignal } from 'solid-js';
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import ConfigProvider from '@fibrae/semi-ui-solid/config-provider/index';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { type OnSortEnd, Sortable } from '..';
 
 function List(props: { items?: (string | number)[] }) {

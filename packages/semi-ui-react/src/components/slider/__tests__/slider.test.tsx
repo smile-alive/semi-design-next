@@ -4,10 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import SliderFoundation, { type HandleDot } from '@fibrae/semi-foundation/components/slider/foundation';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
 import { Form, FormSlider } from '@fibrae/semi-ui-react/form';
+import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import Slider, { type SliderProps } from '..';
 

@@ -3,8 +3,7 @@ import { render, screen, waitFor, within } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { keyboardClick, tab } from '@test/utils/browser';
 import Modal, { type ModalHookRef, type ModalProps } from '..';
 import Button from '../../button';
@@ -95,7 +94,7 @@ describe('Modal（浏览器）', () => {
     it('useModal', async () => {
         let currentModal: ModalHookRef | undefined;
         render(() => (
-            <ConfigProvider locale={en_GB}>
+            <ConfigProvider locale={en_US}>
                 <UseModalDemo onOpen={(m) => (currentModal = m)} />
             </ConfigProvider>
         ));

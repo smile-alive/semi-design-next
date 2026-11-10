@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { ConfigProvider, PinCode } from '@fibrae/semi-ui-react';
+import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import { tabTo } from '@test/utils/browser';
 
 const digit = (index, count = 4) => zh_CN.PinCode.digit.replace('${index}', String(index)).replace('${count}', String(count));

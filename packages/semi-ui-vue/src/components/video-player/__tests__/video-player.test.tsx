@@ -2,9 +2,7 @@
 import { nextTick } from 'vue';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
@@ -1056,9 +1054,9 @@ describe('VideoPlayer', () => {
     });
 
     it('进度滑块与按钮的名称由语言包提供', () => {
-        render({ render: () => <ConfigProvider locale={ja_JP}>{() => <VideoPlayer src={src} onNext={() => {}} />}</ConfigProvider> });
-        expect(screen.getByRole('slider', { name: ja_JP.VideoPlayer.progress })).toBeInTheDocument();
-        for (const name of ['再生', '次へ', '音量', '鏡像', '全画面', 'ピクチャーインピクチャー']) {
+        render({ render: () => <ConfigProvider locale={en_US}>{() => <VideoPlayer src={src} onNext={() => {}} />}</ConfigProvider> });
+        expect(screen.getByRole('slider', { name: en_US.VideoPlayer.progress })).toBeInTheDocument();
+        for (const name of ['Play', 'Next', 'Volume', 'Mirror', 'Full screen', 'Picture in picture']) {
             expect(screen.getByRole('button', { name })).toBeInTheDocument();
         }
     });

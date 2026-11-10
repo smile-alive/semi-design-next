@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputChangeProps, type InsetInputProps, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-solid';
 import useFoundation from '../../base/use-foundation';
 import useFocusHandover from '../../primitives/use-focus-handover';

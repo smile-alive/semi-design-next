@@ -538,7 +538,7 @@ pnpm exec semi-build-scss --prefix my -o app/semi-my.css --min
 import './semi-my.css';
 ```
 
-React Router 的 RSC 模式同样只加这个插件：`plugins: [semi(), reactRouterRSC(), rsc()]`（`reactRouterRSC` 即 `@react-router/dev/vite` 的 `unstable_reactRouterRSC`，`rsc` 来自 `@vitejs/plugin-rsc`）。Server Component 中，Next.js App Router 与 React Router 的 RSC 模式可以直接导入扁平组件和少数子组件的命名导出（如 `TypographyTitle`，点语法 `Typography.Title` 在 Server Component 中是 `undefined`）。`semiGlobal`、Form 的 HOC 与 hooks，以及传给 `ConfigProvider` 的语言包只能在 `'use client'` 文件中使用或导入。
+React Router 的 RSC 模式同样只加这个插件：`plugins: [semi(), reactRouterRSC(), rsc()]`（`reactRouterRSC` 即 `@react-router/dev/vite` 的 `unstable_reactRouterRSC`，`rsc` 来自 `@vitejs/plugin-rsc`）。Server Component 中，Next.js App Router 与 React Router 的 RSC 模式可以直接导入扁平组件和少数子组件的命名导出（如 `TypographyTitle`，点语法 `Typography.Title` 在 Server Component 中是 `undefined`）。`semiGlobal`、Form 的 HOC 与 hooks 只能在 `'use client'` 文件中使用或导入。语言包是纯数据，`@fibrae/semi-ui-react/locale` 不带 `'use client'`，Server Component 可以从中导入 `zh_CN`、`en_US`，或用自己的语言包，传给 `ConfigProvider`；`dateFnsLocale` 含函数，不能跨服务端边界传递，需在 `'use client'` 文件中导入并传入。
 
 </Framework>
 
@@ -620,7 +620,7 @@ export default defineConfig({
 
 共同约定：
 
-- 语言包从 UI 包的 `locale/source/` 子路径导入（如 `locale/source/en_US`），不需要直接安装 `@fibrae/semi-foundation`。
+- 内置语言包 `zh_CN`、`en_US` 从 UI 包的 `/locale` 入口导入（如 `import { en_US } from '@fibrae/semi-ui-react/locale'`），不需要直接安装 `@fibrae/semi-foundation`。
 - `semiGlobal` 只在应用启动时设置，按请求变化的配置用 `ConfigProvider`。
 - 默认打开的弹层在 hydration 后出现。
 - CodeHighlight 不内置语言：应用要直接安装 `shiki`（pnpm 不允许导入未声明的包），用 `CodeHighlight.register` 或 `languages` 传入 `shiki/langs/*` 的语言，见 [CodeHighlight](/zh-CN/react/plus/code-highlight)。

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Transfer, { type DataItem, type SelectedPanelProps, type SourcePanelProps, type TransferElement, type TransferPaginationProps, type TransferProps } from '..';
 import Tooltip from '../../tooltip';

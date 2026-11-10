@@ -3,7 +3,7 @@ import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-pic
 import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import YearAndMonthFoundation, { type MonthScrollItem, type YearAndMonthAdapter, type YearAndMonthFoundationProps, type YearScrollItem } from '@fibrae/semi-foundation/components/date-picker/year-and-month-foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/index';
 import { IconChevronLeft } from '@fibrae/semi-icons-solid';
 import useFoundation from '../../base/use-foundation';
 import IconButton from '../icon-button';

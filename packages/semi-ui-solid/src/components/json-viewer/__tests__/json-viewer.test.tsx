@@ -2,9 +2,7 @@ import { createContext, createSignal, type JSX, useContext } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, expectTypeOf, it, vi, type Mock } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockResizeObserver, sleep } from '@test/utils/solid';
 import JsonViewer, { type JsonViewerElement, type JsonViewerHandle, type JsonViewerProps } from '..';
@@ -432,15 +430,15 @@ describe('JsonViewer', () => {
 
     it('搜索选项开关的名称来自语言包', () => {
         render(() => (
-            <LocaleProvider locale={ja_JP}>
+            <LocaleProvider locale={en_US}>
                 <JsonViewer value="1" />
             </LocaleProvider>
         ));
-        fireEvent.click(screen.getByRole('button', { name: ja_JP.JsonViewer.search }));
-        for (const name of [ja_JP.JsonViewer.caseSensitive, ja_JP.JsonViewer.regex, ja_JP.JsonViewer.wholeWord]) {
+        fireEvent.click(screen.getByRole('button', { name: en_US.JsonViewer.search }));
+        for (const name of [en_US.JsonViewer.caseSensitive, en_US.JsonViewer.regex, en_US.JsonViewer.wholeWord]) {
             expect(screen.getByRole('button', { name })).toBeInTheDocument();
         }
-        expect(screen.getByRole('textbox', { name: ja_JP.JsonViewer.replaceWith })).toBe(replaceInput());
+        expect(screen.getByRole('textbox', { name: en_US.JsonViewer.replaceWith })).toBe(replaceInput());
     });
 
     it('使用替换输入框的文本进行替换', () => {

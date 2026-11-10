@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { expectThemeFocusRing, isChromium, tabTo } from '@test/utils/browser';
 import { sleep } from '@test/utils/solid';
 import Tabs, { type TabsProps } from '..';

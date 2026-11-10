@@ -3,8 +3,7 @@ import { defineComponent, nextTick, ref, type VNode } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { getData, render } from '@test/utils/vue';
 import Table, { type ColumnProps, type RowSelectionProps, type TableChangeInfo, type TableSelectionCellSlotProps } from '..';
 import LocaleProvider from '../../locale/locale-provider.vue';
@@ -505,7 +504,7 @@ describe('Table 选择 Vue 写法', () => {
 
     it('选择框的名称从语言包读取，getCheckboxProps 的 aria-label 优先', () => {
         render(LocaleProvider, {
-            props: { locale: ja_JP },
+            props: { locale: en_US },
             slots: {
                 default: () => (
                     <Table
@@ -513,15 +512,15 @@ describe('Table 选择 Vue 写法', () => {
                         dataSource={rows}
                         pagination={false}
                         rowSelection={{
-                            getCheckboxProps: (record: Row) => (record.key === '2' ? { 'aria-label': 'Bob を選択' } : {}),
+                            getCheckboxProps: (record: Row) => (record.key === '2' ? { 'aria-label': 'Select Bob' } : {}),
                         }}
                     />
                 ),
             },
         });
-        expect(screen.getByRole('checkbox', { name: ja_JP.Table.selectAllRows })).toBeInTheDocument();
-        expect(screen.getByRole('checkbox', { name: ja_JP.Table.selectRow })).toBeInTheDocument();
-        expect(screen.getByRole('checkbox', { name: 'Bob を選択' })).toBeInTheDocument();
+        expect(screen.getByRole('checkbox', { name: en_US.Table.selectAllRows })).toBeInTheDocument();
+        expect(screen.getByRole('checkbox', { name: en_US.Table.selectRow })).toBeInTheDocument();
+        expect(screen.getByRole('checkbox', { name: 'Select Bob' })).toBeInTheDocument();
     });
 
     it('Table 上的 @change 不被选择框 input 冒泡的原生 change 事件触发', async () => {

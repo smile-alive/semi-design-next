@@ -3,7 +3,7 @@ import { createApp } from 'vue';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import PinCode from '..';

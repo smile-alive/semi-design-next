@@ -1,9 +1,7 @@
 /** @jsxImportSource vue */
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
@@ -688,11 +686,11 @@ describe('AudioPlayer', () => {
         });
 
         it('按钮与滑块的名称随语言包切换', () => {
-            withLocale(ja_JP, { audioUrl: tracks, skipDuration: 10 });
-            for (const name of ['前へ', '次へ', '戻る 10秒', '進む 10秒', '再生', '再読み込み', '音量']) {
+            withLocale(en_US, { audioUrl: tracks, skipDuration: 10 });
+            for (const name of ['Previous', 'Next', 'Backward 10s', 'Forward 10s', 'Play', 'Refresh', 'Volume']) {
                 expect(screen.getByRole('button', { name })).toBeInTheDocument();
             }
-            expect(screen.getByRole('slider', { name: '再生の進行状況' })).toBeInTheDocument();
+            expect(screen.getByRole('slider', { name: 'Playback progress' })).toBeInTheDocument();
         });
 
         it('时长未知时进度样式保持有效', () => {

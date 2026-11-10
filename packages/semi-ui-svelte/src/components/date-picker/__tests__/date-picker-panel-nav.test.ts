@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { addDays } from 'date-fns';
 import { describe, expect, it } from 'vite-plus/test';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { click, getPanel, getPopup, getWeekDays, getYMLists, getYMSelected, ymd } from './date-picker-dom-utils';
 import { changes, dp, getDay, getInputs, getNavTitle, getSelectedDays, settle, setup, useBaseDate } from './test-utils';
 

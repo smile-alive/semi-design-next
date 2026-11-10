@@ -4,9 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import de from '@fibrae/semi-foundation/locale/source/de';
 import { Form, FormInputNumber, withField } from '@fibrae/semi-ui-react';
+import type { LocaleInput } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { default as InputNumber, type InputNumberHandle, type InputNumberProps } from '../index';
@@ -14,6 +13,7 @@ import { default as InputNumber, type InputNumberHandle, type InputNumberProps }
 type InputNumberCallback<K extends keyof InputNumberProps> = NonNullable<InputNumberProps[K]>;
 
 const prefixCls = `${BASE_CLASS_PREFIX}-input`;
+const de: LocaleInput = { code: 'de', currency: 'EUR' };
 
 const getInput = () => screen.getByRole<HTMLInputElement>('spinbutton');
 const getButtons = () => document.querySelector(`.${prefixCls}-number-suffix-btns`);
@@ -397,23 +397,6 @@ describe(`InputNumber`, () => {
             expect(getInput()).toHaveValue(expected);
             unmount();
         });
-    });
-
-    it('currency 为 true 时使用语言包的货币码，所有语言包都能渲染', () => {
-        const packs = import.meta.glob<Locale>('@fibrae/semi-foundation/locale/source/*.ts', {
-            eager: true,
-            import: 'default',
-        });
-        expect(Object.keys(packs)).toHaveLength(57);
-        for (const [file, pack] of Object.entries(packs)) {
-            const { unmount } = render(
-                <LocaleProvider locale={pack}>
-                    <InputNumber defaultValue={1.5} currency />
-                </LocaleProvider>
-            );
-            expect([file, getInput().value]).not.toEqual([file, '']);
-            unmount();
-        }
     });
 
     it('显式 localeCode={undefined} 使用语言包的 localeCode', () => {

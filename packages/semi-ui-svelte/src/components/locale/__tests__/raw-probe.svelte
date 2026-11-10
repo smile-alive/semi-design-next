@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import type { LocaleInput } from '@fibrae/semi-ui-svelte/locale';
     import { getLocaleContext } from '../context';
 
-    let { onSeen }: { onSeen: (locale: Locale | null) => void } = $props();
+    let { onSeen }: { onSeen: (locale: LocaleInput | null) => void } = $props();
 
     const context = getLocaleContext();
 

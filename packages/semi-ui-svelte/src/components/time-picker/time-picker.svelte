@@ -4,6 +4,7 @@
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimePickerFoundation, { type TimePickerAdapter, type TimePickerBaseProps } from '@fibrae/semi-foundation/components/time-picker/foundation';
+    import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
@@ -125,7 +126,7 @@
             return zone;
         },
         get dateFnsLocale() {
-            return locale().dateFnsLocale;
+            return getDateFnsLocale(locale().localeCode, config.dateFnsLocale);
         },
         get disabledHours() {
             return disabledHours;

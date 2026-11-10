@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { dragTo, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
 import TagInput, { type TagInputProps } from '..';
 import Button from '../../button';

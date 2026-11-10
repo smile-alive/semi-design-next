@@ -3,7 +3,7 @@ import { defineComponent, nextTick, shallowRef, type ComponentPublicInstance } f
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Image, { ImagePreview, type ImagePreviewProps, type ImageProps } from '..';

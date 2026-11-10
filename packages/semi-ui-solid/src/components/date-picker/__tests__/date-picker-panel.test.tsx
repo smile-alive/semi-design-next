@@ -4,9 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { format } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import DatePicker, { type DatePickerProps, type YearAndMonthProps } from '..';
 import YearAndMonth from '../year-and-month';
@@ -137,9 +135,9 @@ describe('DatePicker 年月面板', () => {
         expect(within(getYMLists()[1]).getByRole('option', { name: '7月' })).toBeInTheDocument();
     });
 
-    it('YearAndMonth 在 ja_JP 下显示语言包的年后缀和月份名', () => {
-        renderYearAndMonth({ locale: ja_JP.DatePicker });
-        expect(getYMSelected()).toEqual(['2021年', ja_JP.DatePicker.fullMonths[6]]);
+    it('YearAndMonth 在 zh_CN 下显示语言包的年后缀和月份名', () => {
+        renderYearAndMonth({ locale: zh_CN.DatePicker });
+        expect(getYMSelected()).toEqual(['2021年', zh_CN.DatePicker.fullMonths[6]]);
         expect(within(getYMLists()[0]).getByRole('option', { name: '2022' })).toBeInTheDocument();
     });
 

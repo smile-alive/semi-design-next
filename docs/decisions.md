@@ -31,6 +31,7 @@
 | D17 | `packages/` 目录布局与包合并 | 已定（2026-11-08）：第一层只放发布给使用方的组件包 `semi-{ui,ai,icons}-<框架>`；框架无关的运行时依赖放 `packages/shared/`，构建插件与 `semi-scss-compile` 放 `packages/plugins/`；目录名一律等于 npm 包名去掉 `@fibrae/`。插画并入图标包，入口为 `@fibrae/semi-icons-<框架>/illustrations`，不再发布 `@fibrae/semi-illustrations-*`；主题编译核心并入 `@fibrae/semi-scss-compile/core`，由各构建插件打包内联 | 按框架分组（`packages/<框架>/<短名>`）让目录名与包名脱节，分组过碎；全平铺时组件包与工具包混在一起。插画与图标读同一份 `semi-icons-core` 数据、共用渲染组件，分包只增加安装与版本对齐成本 |
 | D18 | 组件目录内部布局 | 已定（2026-11-10）：UI 包与 AI 包的组件目录一律平铺，入口组件、子组件、hook 与工具函数放在同一层，不建 `widgets/` 这类收纳子组件的目录；多个文件合起来组成一个有名字的部分（单独导出的子组件、一块 DOM 区域、一块独立功能）时，用这个部分的名字建子目录（Table 的 `body/`、`table-header/`，Image 的 `preview/`，Form 的 `schema-form/`，Chat 的 `chat-box/`，AIChatInput 的 `configure/`、`extension/`）；没有主组件的同类集合（Svelte Form 的 `fields/`、MarkdownRender 的 `components/`）同样成块，不按文件数硬性拆分，根目录超过约 15 个文件时回头找可拆的块；四个框架的入口组件与子目录主组件都是与所在目录同名的文件（`select/select.tsx`、`table/body/body.vue`），`index` 只做导出；一个组件有两个及以上 hook 时，hook 放进以本框架 hook 目录命名的子目录（React、Svelte 为 `hooks/`，Vue 为 `composables/`，Solid 为 `primitives/`） | 主流组件库多数平铺：Ant Design、Arco、MUI、Mantine、Vuetify、Radix、Ark UI、Kobalte、React Spectrum；Element Plus、Naive UI 把实现整体放进 `src/`，Bits UI 把子组件放进 `components/`，都没有「入口在根、子组件单独一层」的做法。hook 子目录对应 Ant Design、Arco 的 `hooks/` 与 Element Plus 的 `composables/`。同名文件是 Vue 风格指南的推荐，Svelte、Solid 生态也这样写；React 社区常用的 `index.tsx` 改为同名文件，四个框架一致，编辑器标签也能区分。组件逻辑已在 foundation，框架包的组件目录文件不多，平铺即可读 |
 | D19 | 文档站 API 表的来源 | 已定（2026-10-24）：API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生成双语片段 `api/<组件>.<框架>.<语言>.mdx`，页面在对应框架块里导入；缺说明或过时说明在 `check:full` 中报错。Vue 用 vue-component-meta（`gen:vue-api`），React、Solid、Svelte 用 TS compiler API（`gen:react-api`、`gen:solid-api`、`gen:svelte-api`，共用 `website/scripts/ts-api.ts`）；表格不设版本列 | 手写 API 表与实现长期不一致，生成后由检查兜底；本仓库不跟上游发版，原 Semi 的版本号对使用者没有意义。各框架的生成细则见 `.agents/references/<框架>/website.md` |
+| D20 | 日期组件的 date-fns 语言从哪来 | 已定（2026-11-10）：语言包与 `Locale` 接口不含 `dateFnsLocale`。DatePicker、TimePicker、Calendar 先读 ConfigProvider 的 `dateFnsLocale`（逐层继承），再按语言包的 `code` 查内置表，内置表只有 zh-CN、en-US，都没有时用 enUS（`semi-foundation/src/utils/date-fns-locale.ts`）。查表同步、返回模块级单例，服务端与客户端首帧一致 | 原来 57 个语言包各带 date-fns 数据，默认 zh_CN 的日期数据打进所有读语言包的组件。MUI X（`LocalizationProvider` 的 `adapterLocale`）、Element Plus、Arco、Ant Design 都把文案与日期库语言分开配置；内置全部语言会让日期组件始终打包几十 KB 的语言数据，维护者选择只内置两种，其他语言由使用方显式传入 |
 
 方案与预研提出的待决策项：
 
@@ -55,7 +56,7 @@
 | F12 | 对话框类组件（Modal、SideSheet）的属性落点 | 已定（2026-10-09）：`data-*` 等落最外层根元素；`aria-label`、`aria-labelledby`、`aria-describedby` 落 `role="dialog"` 元素（APG 标准）。使用方传的 `role` 未规定：Modal 落到 `role="dialog"` 元素，SideSheet 落到外层容器，React 与 Vue 一致；要统一时两个框架同批修改并在此补上 `role` 的落点 |
 | F13 | 组件能否在 Shadow DOM 内使用 | 已定（2026-10-21）：支持 open ShadowRoot。弹层 Portal 到所在根节点；焦点查询经 `FocusTrapHandle.getActiveElement`、`getDeepActiveElement`，按所在根节点进行；id 查询在组件容器或所在根节点内进行。不提供 Web Component 构建工具，组件样式由应用加入 ShadowRoot |
 | F14 | React 收集子组件时如何处理 Fragment 与子组件识别 | 已定（2026-10-21）：展开 Fragment，与 Vue 的 `slotNodes` 一致；子组件用静态 `elementType` 识别，经 `elementTypeOf` 读取，不设 `isXxx` 标记 |
-| F15 | RTL 方向由什么决定 | 已定（2026-10-21）：由 `dir` 属性决定，样式用 `:dir(rtl)`，挂在组件自己的类上，不写 `.semi-rtl`、`.semi-portal-rtl` 等祖先类和组件级 `-rtl` 类。ConfigProvider 在显式传入的 `direction` 与外层不同时（含最外层）输出带 `dir` 的包裹 div；Portal 根元素、Tooltip 弹层 wrapper、Toast、Notification、Table wrapper、ModalContent 根元素输出 `dir`，方向为 undefined 时不输出、继承祖先；Table、Toast、Notification、ModalContent 根元素上，使用方传入的原生 `dir` 优先（F2）。有 ConfigProvider 而未传 `direction` 时 context 的 `direction` 解析为 `ltr`，见 2.1 L8。依赖方向的 JS 逻辑（键盘方向、默认 position、Table 对齐等）读组件自身的 `direction` 属性或 ConfigProvider 的 `direction`，不读 DOM 上的 `dir` |
+| F15 | RTL 方向由什么决定 | 已定（2026-10-21）：由 `dir` 属性决定，样式用 `:dir(rtl)`，挂在组件自己的类上，不写 `.semi-rtl`、`.semi-portal-rtl` 等祖先类和组件级 `-rtl` 类。ConfigProvider 在显式传入的 `direction` 与外层不同时（含最外层）输出带 `dir` 的包裹 div；Portal 根元素、Tooltip 弹层 wrapper、Toast、Notification、Table wrapper、ModalContent 根元素输出 `dir`，方向为 undefined 时不输出、继承祖先；Table、Toast、Notification、ModalContent 根元素上，使用方传入的原生 `dir` 优先（F2）。有 ConfigProvider 而未传 `direction` 时 context 的 `direction` 解析为 `ltr`（2026-11-10 维护者确认保持，与 Ant Design、Mantine、Arco 一致）。依赖方向的 JS 逻辑（键盘方向、默认 position、Table 对齐等）读组件自身的 `direction` 属性或 ConfigProvider 的 `direction`，不读 DOM 上的 `dir` |
 | F16 | Form 的校验模型 | 已定（2026-11-05）：错误一律为 `string[]`，不支持 ReactNode 与布尔错误；自带规则引擎替换 async-validator，`RuleItem` 为 Semi 自己的类型，默认文案来自语言包 `Form`；字段 `rules` 与 `validator` 互斥（同传时 `validator` 生效并警告），`validator` 接受函数或 Standard Schema；Form `schema` 排除字段的 `rules`、`validator` 与 Form 的 `validator`，有 `schema` 时必填星号只看 `label.required`；`schemaDebounce` 只作用于值变化触发的 schema 校验；`keepState` 默认 true，按字段、ArrayField、Form 的顺序取值，ArrayField 保留整组；值类型区分输入与输出，`onSubmit` 与不带字段的 `validate()` 用输出类型。SchemaField 是 Form 内按 JSON Schema 渲染某个路径的组件，SchemaForm 是 Form 加根 SchemaField 的封装；JSON Schema 显式传入优先，否则由 `schema` 的 Standard JSON Schema 导出；定制只用 `widgets`（按 `format` 或控件种类）与 `renderField`（按路径），不做 uiSchema 与 `x-` 扩展 |
 | F17 | Form 的导出方式 | 已定（2026-11-06）：四个框架一致，只有具名导出：`Form`，字段 `FormInput` 至 `FormPinCode`，部件 `FormSection`、`FormLabel`、`FormErrorMessage`、`FormSlot`、`FormInputGroup`，以及 `ArrayField`、`SchemaField`、`SchemaForm`、`useForm`。`Form` 不挂静态成员，Svelte 也不挂（是 Svelte 复合组件同时提供静态成员这一约定的例外）。理由：用到 Form 不再带上全部字段及其依赖；Server Component 中点语法得到 `undefined`（A18）；具名导出可按需摇树。字段自身的子组件保留点语法（`FormSelect.Option`） |
 
@@ -84,32 +85,9 @@
 
 ## 2. 未完成事项
 
-### 2.1 样式
+### 2.1 TypeScript
 
-| # | 事项 | 现状与建议 |
-| --- | --- | --- |
-| L2 | 各组件 rtl.scss 里挂在 `:dir(rtl)` 上的 `direction: rtl` 是否删除 | ConfigProvider 与弹层根输出 `dir` 后，`direction` 由 `dir` 继承，rtl 的 ConfigProvider 内使用方的内容同样是 RTL，这条声明冗余，可以删除；只含这一条规则的 `rtl.scss`，连同父文件里的 `meta.load-css('rtl')` 一并删除 |
-| L3 | 11 个组件（semi-foundation 的 cropper、video-player、code-highlight、resizable、markdown-render、audio-player、float-button，semi-ai-foundation 的 sidebar、ai-chat-input、ai-chat-dialogue、chat）是否一并改逻辑属性 | 这 11 个组件不在 `stylelint.config.ts` 的物理值检查内，仍是物理写法；其中 chat、ai-chat-dialogue 已有 `:dir(rtl)` 规则，float-button 的 `rtl.scss` 没有规则。改写等于新增 RTL 行为，需先定是否支持。ConfigProvider 输出 `dir` 后，这些组件在 rtl 的 ConfigProvider 内会继承 `direction: rtl`，物理写法下布局是否半镜像未核对渲染结果（UNKNOWN） |
-| L4 | `$radius-tabs_tab_card_left` 等物理多值主题 token 在 RTL 下不镜像 | 需先定 token 语义 |
-| L5 | cascader 多选 checkbox 两侧各 8px（`margin-inline`，旧 rtl.scss 一条规则漏到 LTR 所致） | 为保证 LTR 零差异按现状保留；若只留结束一侧，LTR 会变化 |
-| L6 | pincode、colorPicker 没有 rtl.scss，是否新增并声明 direction | 现保持物理写法；ConfigProvider 输出 `dir` 后，它们在 rtl 下继承 `direction: rtl`，行内与 flex 顺序已反转，物理间距未镜像；是否补逻辑属性待定，pincode 方向键（JS 按物理左右处理）不随方向反向 |
-| L7 | card header 的 RTL 专属 `align-items: flex-end`（`card/rtl.scss`）是否删除 | 疑似误用，现保留 |
-| L8 | ConfigProvider 未传 `direction` 时，context 的 `direction` 解析为 `ltr` 还是保持 undefined | 现状为 A：解析为 `ltr`，弹层与 Table 输出 `dir="ltr"`，页面自设 `dir="rtl"` 时行内组件为 RTL、弹层与 Table 为 LTR。B：保持 undefined，不输出 `dir`、继承祖先，会改变 ContextValue 的公开语义，需改各框架的 ConfigProvider、文档、api.vue.json 和相关用例。建议 A |
-
-### 2.2 依赖
-
-- `lottie-web`：Lottie 已改为首次使用时动态导入（`semi-foundation/src/components/lottie/foundation.ts`），渲染器仍是完整版，轻量入口待评估。
-
-### 2.3 体积
-
-| 组件                                         | 问题                                                                                                                                                          | 做法                                                                     |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Grid                                         | 生成 70 KB CSS，`grid/mixin.scss` 仍保留 float 布局与重复选择器                                                                                               | 只保留 flex 或 CSS grid，列宽用自定义属性                                |
-| DatePicker、TimePicker、Calendar 与 `locale` | `Locale` 接口含 `dateFnsLocale`（`semi-foundation/src/locale/interface.ts`），默认 locale 把 date-fns 语言包带进所有使用 `useLocale`、`LocaleConsumer` 的组件 | `dateFnsLocale` 移到日期组件内部按语言代码查找（自定义 locale 结构变化） |
-
-### 2.4 TypeScript
-
-- 存量清零后在 `tsconfig.base.json` 统一开启 `strictNullChecks` 与 `verbatimModuleSyntax`。`strictNullChecks` 已在 Vue、Solid、Svelte 的组件包、图标包与 `semi-animation`、`semi-icons-core`、`semi-polyfill` 各自的 tsconfig 中开启；semi-ui-react、semi-ai-react、semi-foundation、semi-ai-foundation、semi-json-viewer-core 与 `packages/plugins/` 下的构建插件未开启。`verbatimModuleSyntax` 全仓未开启。
+- `strictNullChecks`：存量清零后在 `tsconfig.base.json` 统一开启，由维护者另行安排。实测开启后约 1680 个错误（semi-foundation 999、semi-ui-react 449、semi-ai-react 87、semi-ai-foundation 75、semi-json-viewer-core 62、semi-rspack 5）。`strictNullChecks` 已在 Vue、Solid、Svelte 的组件包、图标包与 `semi-animation`、`semi-icons-core`、`semi-polyfill` 各自的 tsconfig 中开启；semi-ui-react、semi-ai-react、semi-foundation、semi-ai-foundation、semi-json-viewer-core 与 `packages/plugins/` 下的构建插件未开启。
 
 ## 3. Solid
 
