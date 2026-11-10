@@ -355,6 +355,8 @@ $overflowList: #{$prefix}-overflow-list;
     }
 
     &-create-tips {
+        // the option row breaks anywhere (word-break: break-all); the hint keeps its width and the typed text wraps
+        flex-shrink: 0;
         margin-inline-end: $spacing-select_create_tips-marginRight;
         color: $color-select_create_tips-text;
     }

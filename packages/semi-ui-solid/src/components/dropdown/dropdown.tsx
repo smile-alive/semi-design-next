@@ -12,26 +12,26 @@ import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import callHandler from '../../utils/call-handler';
 import useConfig from '../config-provider/use-config';
-import Tooltip, { type GetTriggerProps, type RenderContentProps, type TooltipHandle, type TooltipProps, type TooltipTriggerProps, type TriggerOwnProps, canCarryPopupState } from '../tooltip';
+import Tooltip, { type GetTriggerProps, type RenderContentProps, type TooltipHandle, type TooltipInternalProps, type TooltipProps, type TooltipTriggerProps, type TriggerOwnProps, canCarryPopupState } from '../tooltip';
 import { DropdownContext, type DropdownContextValue, menuContext, menuItems, useDropdownContext } from './context';
 import DropdownDivider, { type DropdownDividerProps } from './dropdown-divider';
 import DropdownItem, { type DropdownItemProps } from './dropdown-item';
 import DropdownMenu from './dropdown-menu';
 import DropdownTitle, { type DropdownTitleProps } from './dropdown-title';
 
-export interface DropDownMenuItemItem extends Omit<DropdownItemProps, 'children'> {
+export interface DropdownMenuItemType extends Omit<DropdownItemProps, 'children'> {
     node: 'item';
     name?: string;
 }
-export interface DropDownMenuItemDivider extends DropdownDividerProps {
+export interface DropdownMenuItemDividerType extends DropdownDividerProps {
     node: 'divider';
 }
-export interface DropDownMenuItemTitle extends Omit<DropdownTitleProps, 'children'> {
+export interface DropdownMenuItemTitleType extends Omit<DropdownTitleProps, 'children'> {
     node: 'title';
     name?: string;
 }
 
-export type DropDownMenuItem = DropDownMenuItemItem | DropDownMenuItemDivider | DropDownMenuItemTitle;
+export type DropdownMenuItem = DropdownMenuItemType | DropdownMenuItemDividerType | DropdownMenuItemTitleType;
 
 export type DropdownTriggerProps = TooltipTriggerProps & {
     class: string;
@@ -50,7 +50,7 @@ export interface DropdownProps extends Omit<TooltipProps, 'children' | 'content'
     children?: JSX.Element | ((getTriggerProps: GetDropdownTriggerProps) => JSX.Element);
     /** The popup content; takes precedence over `menu` */
     render?: JSX.Element;
-    menu?: DropDownMenuItem[];
+    menu?: DropdownMenuItem[];
     /** On the menu container `.semi-dropdown` */
     contentClassName?: string;
     /** On the menu container `.semi-dropdown`; `class` goes on the popup */
@@ -75,8 +75,11 @@ export interface DropdownHandle {
 type Foundation = DropdownFoundation<DropdownProps>;
 type Adapter = DropdownAdapter<DropdownProps>;
 
+const InternalTooltip = Tooltip as (props: TooltipInternalProps & { ref?: Ref<TooltipHandle> }) => JSX.Element;
+
+const prefixCls = cssClasses.PREFIX;
+
 const defaultProps = {
-    prefixCls: cssClasses.PREFIX,
     motion: true,
     trigger: 'hover',
     position: 'bottom',
@@ -87,8 +90,8 @@ const defaultProps = {
     returnFocusOnClose: true,
 } satisfies Partial<DropdownProps>;
 
-function renderMenuItem(item: DropDownMenuItem) {
-    const { node, name, ...rest } = item as DropDownMenuItem & { name?: string };
+function renderMenuItem(item: DropdownMenuItem) {
+    const { node, name, ...rest } = item as DropdownMenuItem & { name?: string };
     switch (node) {
         case 'title':
             return <DropdownTitle {...(rest as DropdownTitleProps)}>{name}</DropdownTitle>;
@@ -160,7 +163,7 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
                         setTriggerElement(element);
                     },
                     get class() {
-                        return clsx(mine.class, { [`${props.prefixCls}-showing`]: popVisible() });
+                        return clsx(mine.class, { [`${prefixCls}-showing`]: popVisible() });
                     },
                     // null also drops a value the trigger set itself
                     get 'aria-haspopup'() {
@@ -214,8 +217,8 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     const renderMenu = () => {
         const render = children(() => local.render);
         return (
-            <div class={clsx(props.prefixCls, local.contentClassName)} style={local.style}>
-                <div class={`${props.prefixCls}-content`} x-semi-prop="render">
+            <div class={clsx(prefixCls, local.contentClassName)} style={local.style}>
+                <div class={`${prefixCls}-content`} x-semi-prop="render">
                     <Show when={render() == null && local.menu} fallback={render()}>
                         {(menu) => (
                             <DropdownMenu>
@@ -246,9 +249,10 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     }
 
     return (
-        <Tooltip
+        <InternalTooltip
             showArrow={false}
             {...rest}
+            prefixCls={prefixCls}
             ref={(instance: TooltipHandle) => (tooltip = instance)}
             content={renderPopup}
             // the foundation handles Up and Down on the trigger, so focus moves once
@@ -259,6 +263,6 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
             onVisibleChange={foundation.handleVisibleChange}
         >
             {(getTooltipProps: GetTriggerProps) => renderTrigger(getTooltipProps)}
-        </Tooltip>
+        </InternalTooltip>
     );
 }

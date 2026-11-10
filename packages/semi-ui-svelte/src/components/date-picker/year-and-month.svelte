@@ -92,7 +92,6 @@
                 list={panel.years}
                 mode="normal"
                 transform={yearText}
-                type="year"
                 {...props.yearAndMonthOpts}
                 bind:selectedIndex={() => panel.yearIndex, keepIndex}
                 onSelect={(item) => foundation.selectYear(item as ScrollItemSelectData<YearScrollItem>, panel.panelType)}
@@ -104,7 +103,6 @@
                     cycled={props.monthCycled ?? false}
                     list={panel.months}
                     mode="normal"
-                    type="month"
                     {...props.yearAndMonthOpts}
                     bind:selectedIndex={() => panel.monthIndex, keepIndex}
                     onSelect={(item) => foundation.selectMonth(item as ScrollItemSelectData<MonthScrollItem>, panel.panelType)}

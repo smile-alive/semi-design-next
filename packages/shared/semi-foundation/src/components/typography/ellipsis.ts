@@ -63,7 +63,7 @@ export function isPopoverTooltip(showTooltip?: boolean | { type?: string }) {
 export interface ExpandButton {
     text: string;
     /** The aria-expanded value; undefined when activating the button does not toggle, so it is no disclosure */
-    expanded: boolean | undefined;
+    expanded?: boolean;
 }
 
 /** The expand or collapse button of a truncated text; undefined when there is none */
@@ -73,6 +73,15 @@ export function getExpandButton({ isTruncated, expanded }: Pick<EllipsisViewStat
         return undefined;
     }
     return { text, expanded: (expanded ? collapsible : expandable) ? expanded : undefined };
+}
+
+/**
+ * Whether the text is the focus target (tabindex -1): expanding a text that cannot collapse removes its button. Hosts
+ * hand focus over with `handoverFocus` once the button is gone, so focus moves only when the button held it; a button
+ * that stays keeps focus, as in the APG disclosure pattern.
+ */
+export function isExpandFocusTarget(view: Pick<EllipsisViewState, 'isTruncated' | 'expanded'>, opt: Pick<EllipsisConfig<unknown>, 'expandable' | 'collapsible' | 'expandText' | 'collapseText'>) {
+    return view.expanded && getExpandButton(view, opt) === undefined;
 }
 
 /** Whether `node` is, or holds, a focusable item; the copy button is not the tab stop, so it does not count */

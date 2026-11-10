@@ -1,6 +1,6 @@
 import { onMount, untrack } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
-import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
+import { type ContextOf, type DefaultAdapter, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 class Version {
     value = $state(0);
@@ -61,7 +61,7 @@ function createStateMirror<S extends object>(initial: S) {
  * - `connect` and `init` run in `onMount`; `destroy` and `disconnect` run in its teardown, which Svelte runs after
  *   it removed the component's DOM. Svelte has no hook before that removal.
  */
-export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = HostContext<A>>(
+export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = ContextOf<A>>(
     Foundation: (new (adapter: A) => F) & PropReactions,
     props: P,
     initialState: (props: P) => S,

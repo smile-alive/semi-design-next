@@ -56,11 +56,10 @@ describe('Svelte Layout', () => {
         expect(root()).toHaveClass(hasSiderCls);
     });
 
-    it('tagName 与 prefixCls 可替换默认值', () => {
-        const { root, store } = setup({ prefixCls: 'my', tagName: 'div' });
+    it('tagName 可替换默认值', () => {
+        const { root, store } = setup({ tagName: 'div' });
         expect(root().tagName).toBe('DIV');
-        expect(root()).toHaveClass('my');
-        expect(root()).not.toHaveClass(prefixCls);
+        expect(root()).toHaveClass(prefixCls);
         store.props.tagName = 'article';
         flushSync();
         expect(root().tagName).toBe('ARTICLE');

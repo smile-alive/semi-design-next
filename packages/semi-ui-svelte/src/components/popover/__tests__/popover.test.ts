@@ -189,14 +189,14 @@ describe('Svelte Popover', () => {
         expect(dialog.style.top).toBe(position === 'top' ? '190px' : '200px');
     });
 
-    it('class/style 只落弹层，contentClassName 与 prefixCls 落卡片', async () => {
-        const { trigger } = setup({ trigger: 'custom', prefixCls: 'custom-pop', contentClassName: ['card'], class: 'popup', style: 'background-color: red' }, { mode: 'one-way', value: true });
+    it('class/style 只落弹层，contentClassName 落卡片', async () => {
+        const { trigger } = setup({ trigger: 'custom', contentClassName: ['card'], class: 'popup', style: 'background-color: red' }, { mode: 'one-way', value: true });
         await settle();
         const dialog = screen.getByRole('dialog');
-        expect(dialog).toHaveClass('custom-pop-wrapper', 'popup');
+        expect(dialog).toHaveClass('semi-popover-wrapper', 'popup');
         expect(dialog.style.backgroundColor).toBe('red');
-        expect(dialog.querySelector('.custom-pop')).toHaveClass('card');
-        expect(dialog.querySelector('.custom-pop-content')).toHaveTextContent('content');
+        expect(dialog.querySelector('.semi-popover')).toHaveClass('card');
+        expect(dialog.querySelector('.semi-popover-content')).toHaveTextContent('content');
         expect(trigger()).not.toHaveClass('popup');
     });
 

@@ -2,14 +2,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property         | Description                                                                                                     | Type                                                                                           | Default                                                   |
-| ---------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| handler          | Returns the element that starts a drag. Falls back to the dragged element itself when it returns null.          | <ApiType detail={"(() => HTMLElement \u007c null)"}>Type</ApiType>                             | `undefined`                                               |
-| constrainer      | Element that bounds the movement: 'parent' or a function returning it. The element needs relative positioning.  | <ApiType detail={"\"parent\" \u007c (() => HTMLElement \u007c null)"}>Type</ApiType>           | `undefined`                                               |
-| allowInputDrag   | Whether pressing on a native input or textarea starts a drag.                                                   | `boolean`                                                                                      | `semiDefault("DragMove", "allowInputDrag", false)`        |
-| allowMove        | Called when a pointer goes down. Return false to not drag.                                                      | <ApiType detail={"((e: PointerEvent, element: HTMLElement) => boolean)"}>Type</ApiType>        | `undefined`                                               |
-| customMove       | Takes the new position instead of the element's top and left; the component only reports the computed position. | <ApiType detail={"((element: HTMLElement, top: number, left: number) => void)"}>Type</ApiType> | `undefined`                                               |
-| positionStrategy | Positioning strategy. relative keeps the element's place in the layout.                                         | `"absolute" \| "relative"`                                                                     | `semiDefault("DragMove", "positionStrategy", "absolute")` |
+| Property         | Description                                                                                                     | Type                                                                                           | Default      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------ |
+| handler          | Returns the element that starts a drag. Falls back to the dragged element itself when it returns null.          | <ApiType detail={"(() => HTMLElement \u007c null)"}>Type</ApiType>                             | `undefined`  |
+| constrainer      | Element that bounds the movement: 'parent' or a function returning it. The element needs relative positioning.  | <ApiType detail={"\"parent\" \u007c (() => HTMLElement \u007c null)"}>Type</ApiType>           | `undefined`  |
+| allowInputDrag   | Whether pressing on a native input or textarea starts a drag.                                                   | `boolean`                                                                                      | `false`      |
+| allowMove        | Called when a pointer goes down. Return false to not drag.                                                      | <ApiType detail={"((e: PointerEvent, element: HTMLElement) => boolean)"}>Type</ApiType>        | `undefined`  |
+| customMove       | Takes the new position instead of the element's top and left; the component only reports the computed position. | <ApiType detail={"((element: HTMLElement, top: number, left: number) => void)"}>Type</ApiType> | `undefined`  |
+| positionStrategy | Positioning strategy. relative keeps the element's place in the layout.                                         | `"absolute" \| "relative"`                                                                     | `"absolute"` |
 
 **Events**
 

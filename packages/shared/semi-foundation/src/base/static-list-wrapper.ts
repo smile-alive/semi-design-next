@@ -1,3 +1,4 @@
+import { defaultPopupContainer } from '../utils/dom';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '../utils/layer';
 import { createId } from '../utils/uuid';
 
@@ -25,9 +26,19 @@ export default class StaticListWrapper {
         return this.#element?.id || null;
     }
 
-    /** Creates and mounts the wrapper on the first call; the list then reads what was added to its store before it mounted */
+    /**
+     * Creates and mounts the wrapper on the first call; the list then reads what was added to its store before it
+     * mounted. Without `getContainer` every call moves the wrapper into the current fullscreen element or back to body:
+     * nothing outside the fullscreen element is shown. Known limitation: the move restarts the CSS animations of the
+     * toasts already shown and drops focus inside the list; it happens only on the first add after fullscreen starts or ends.
+     */
     ensure(getContainer: (() => HTMLElement) | undefined, mount: (wrapper: HTMLDivElement) => () => void) {
-        if (!this.#element) {
+        if (this.#element) {
+            const container = getContainer ? null : defaultPopupContainer();
+            if (container && this.#element.parentNode !== container) {
+                container.appendChild(this.#element);
+            }
+        } else {
             const wrapper = document.createElement('div');
             wrapper.className = this.#className;
             if (this.#idPrefix) {
@@ -35,7 +46,7 @@ export default class StaticListWrapper {
             }
             // a modal layer must not make the live region inert
             wrapper.setAttribute(KEEP_INTERACTIVE_ATTRIBUTE, '');
-            (getContainer?.() ?? document.body).appendChild(wrapper);
+            (getContainer?.() ?? defaultPopupContainer()).appendChild(wrapper);
             this.#element = wrapper;
             this.#unmount = mount(wrapper);
         }

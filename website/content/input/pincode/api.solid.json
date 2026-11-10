@@ -2,6 +2,10 @@
     "pin-code": {
         "source": "packages/semi-ui-solid/src/components/pincode/pincode.tsx",
         "props": {
+            "autofocus": {
+                "zh-CN": "挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。",
+                "en-US": "Whether to focus the first input on mount. Turn it on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it."
+            },
             "count": { "zh-CN": "验证码位数。", "en-US": "Number of digits." },
             "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when uncontrolled." },
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the input is disabled." },

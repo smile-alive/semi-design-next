@@ -15,4 +15,4 @@ import ApiType from '#/components/ApiType.astro';
 | renderMore | 自定义省略号区域的内容，参数为被折叠的项的数据：routes 写法下是路由对象，children 写法下是各 Breadcrumb.Item 的 props；提供时以它为准。 | <ApiType detail={"(restItems: Array\u003cRouteProps \u007c BreadcrumbItemProps>) => JSX.Element"}>Type</ApiType> | - |
 | routes | 路由信息，由路由对象或字符串组成的数组；不为空时按 routes 渲染，不再渲染 children。 | <ApiType detail={"Array\u003cRouteProps \u007c string>"}>Type</ApiType> | `[]` |
 | separator | 自定义的分隔符，可以是文字或 JSX 元素。 | `JSX.Element` | `"/"` |
-| showTooltip | 是否在标题溢出时展示 Tooltip 及相关配置：width 为截断宽度，数字按 px 计算，传 'auto' 时不截断；ellipsisPos 为截断位置，end 或 middle；opts 为传给 Tooltip 的属性，不含 content。传 false 时不展示 Tooltip。 | `boolean \| showToolTipProps` | `{ width: 150, ellipsisPos: 'end' }` |
+| showTooltip | 是否在标题溢出时展示 Tooltip 及相关配置：width 为截断宽度，数字按 px 计算，传 'auto' 时不截断；ellipsisPos 为截断位置，end 或 middle；opts 为传给 Tooltip 的属性，不含 content。传 false 时不展示 Tooltip。 | `boolean \| ShowTooltipProps` | `{ width: 150, ellipsisPos: 'end' }` |

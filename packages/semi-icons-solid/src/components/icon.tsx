@@ -8,9 +8,9 @@ import '@fibrae/semi-icons-core/styles/icons.scss';
 
 export default function Icon(props: IconProps) {
     const slot = useIconSlot();
-    const merged = mergeProps({ spin: false, prefixCls: BASE_CLASS_PREFIX } as const, props);
-    const [local, rest] = splitProps(merged, ['svg', 'size', 'spin', 'rotate', 'prefixCls', 'type', 'fill', 'class', 'style']);
-    const prefix = () => `${local.prefixCls}-icon`;
+    const merged = mergeProps({ spin: false } as const, props);
+    const [local, rest] = splitProps(merged, ['svg', 'size', 'spin', 'rotate', 'type', 'fill', 'class', 'style']);
+    const prefix = () => `${BASE_CLASS_PREFIX}-icon`;
     const size = () => local.size ?? slot?.size?.() ?? 'default';
     // Decorative unless named (the type is no screen-reader name); a focusable icon stays exposed, since hiding it
     // leaves a silent tab stop and a11y checks flag it so the caller adds an aria-label

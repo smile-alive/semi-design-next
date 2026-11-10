@@ -18,5 +18,5 @@ import ApiType from '#/components/ApiType.astro';
 | renderMore | 自定义省略号区域的内容，参数为被折叠的项，已去掉分隔符；提供时以它为准。 | <ApiType detail={"(restItem: Array\u003cReact.ReactNode>) => React.ReactNode"}>Type</ApiType> | - |
 | routes | 路由信息，由路由对象或字符串组成的数组；不为空时按它渲染各项，不再渲染 children。路由对象的字段见下方 Route。 | <ApiType detail={"Array\u003cRouteProps \u007c string>"}>Type</ApiType> | `[]` |
 | separator | 自定义分隔符，可以是文字或 React 节点。 | `React.ReactNode` | `"/"` |
-| showTooltip | 标题溢出时是否展示 Tooltip 及相关配置：`width` 为截断宽度，数字按 px 计算；`ellipsisPos` 为截断位置，`end` 或 `middle`；`opts` 为传给 Tooltip 的属性，不含 `content`，未设置时为 `{ autoAdjustOverflow: true, position: 'top' }`。传 `false` 时不展示 Tooltip，标题仍按 `width` 截断。 | `boolean \| showToolTipProps` | `{ width: 150, ellipsisPos: 'end' }` |
+| showTooltip | 标题溢出时是否展示 Tooltip 及相关配置：`width` 为截断宽度，数字按 px 计算；`ellipsisPos` 为截断位置，`end` 或 `middle`；`opts` 为传给 Tooltip 的属性，不含 `content`，未设置时为 `{ autoAdjustOverflow: true, position: 'top' }`。传 `false` 时不展示 Tooltip，标题仍按 `width` 截断。 | `boolean \| ShowTooltipProps` | `{ width: 150, ellipsisPos: 'end' }` |
 | style | 根元素 nav 的内联样式。 | `React.CSSProperties` | - |

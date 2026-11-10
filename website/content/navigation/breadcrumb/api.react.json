@@ -1,6 +1,6 @@
 {
     "breadcrumb": {
-        "source": "packages/semi-ui-react/src/components/breadcrumb/index.tsx",
+        "source": "packages/semi-ui-react/src/components/breadcrumb/breadcrumb.tsx",
         "props": {
             "activeIndex": {
                 "zh-CN": "受控的当前项序号，从 0 开始计数；未设置时最后一项为当前项。",
@@ -71,17 +71,13 @@
     "breadcrumb-item": {
         "source": "packages/semi-ui-react/src/components/breadcrumb/item.tsx",
         "props": {
-            "active": {
-                "zh-CN": "是否为当前项，由 `Breadcrumb` 设置，使用方不应传入。",
-                "en-US": "Whether the item is the current one. `Breadcrumb` sets it, and callers should not pass it."
-            },
             "children": {
                 "zh-CN": "标题内容。数字与字符串会被截断并展示 Tooltip，其他节点原样渲染。",
                 "en-US": "Title content. Numbers and strings are truncated with a Tooltip, and other nodes render as they are."
             },
             "className": {
-                "zh-CN": "包裹该项的外层 span 的类名。",
-                "en-US": "Class name of the outer span that wraps the item."
+                "zh-CN": "该项的列表项 li 的类名。",
+                "en-US": "Class name of the li that holds the item."
             },
             "href": {
                 "zh-CN": "链接的目的地，挂载在 a 标签上；当前项不渲染为链接。",
@@ -100,24 +96,16 @@
                 "en-US": "Called on click, with the same parameters as `onClick` of Breadcrumb: the route object of the item with `routes`, or `{ name, href }` with children. The second parameter is the native MouseEvent."
             },
             "ref": {
-                "zh-CN": "包裹该项的外层 span 的引用。",
-                "en-US": "Ref of the outer span that wraps the item."
-            },
-            "route": {
-                "zh-CN": "`Breadcrumb` 按 `routes` 渲染时传入的该项路由对象，作为 `onClick` 的参数；使用方不应传入。",
-                "en-US": "The route object of the item when `Breadcrumb` renders it from `routes`, passed to `onClick`. Callers should not pass it."
+                "zh-CN": "该项的列表项 li 的引用。",
+                "en-US": "Ref of the li that holds the item."
             },
             "separator": {
                 "zh-CN": "该项之后的分隔符，覆盖 `Breadcrumb` 的 `separator`，可以是文字或 React 节点。",
                 "en-US": "Separator after this item. It overrides `separator` of Breadcrumb and can be text or a ReactNode."
             },
-            "shouldRenderSeparator": {
-                "zh-CN": "是否渲染该项之后的分隔符，由 `Breadcrumb` 按位置与折叠状态设置，使用方不应传入；缺省为 true。",
-                "en-US": "Whether the separator after this item renders. `Breadcrumb` sets it by position and collapse state, and callers should not pass it. It defaults to true."
-            },
             "style": {
-                "zh-CN": "包裹该项的外层 span 的内联样式。",
-                "en-US": "Inline style of the outer span that wraps the item."
+                "zh-CN": "该项的列表项 li 的内联样式。",
+                "en-US": "Inline style of the li that holds the item."
             }
         }
     }

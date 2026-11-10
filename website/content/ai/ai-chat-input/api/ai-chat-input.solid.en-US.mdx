@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | generating | Whether a response is being generated. While true, the send button becomes the stop button. | `boolean` | `false` |
 | keepSkillAfterSend | Whether the selected skill is kept after a message is sent. | `boolean` | `false` |
 | onBlur | Called when focus leaves the editor area, with the focusout event. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
-| onConfigureChange | Called when a configure value changes. changedValue is undefined when an item is removed. | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onConfigureChange | Called when a configure value changes. changedValue is undefined when an item is removed. | <ApiType detail={"(value: Setup, changedValue?: Setup) => void"}>Type</ApiType> | - |
 | onContentChange | Called when the input content changes, with the current content. | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
 | onFocus | Called when the editor area gains focus, with the focusin event. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
 | onMessageSend | Called when the send button is clicked, with the references, uploaded files, input content and configure values. | <ApiType detail={"(props: MessageContent) => void"}>Type</ApiType> | - |
@@ -26,7 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | popoverProps | Props of the dropdown layer. The class is merged with the internal class names and the style with the panel width. | `PopoverProps` | - |
 | ref | The root element, an AIChatInputElement that carries the AIChatInputHandle methods. | <ApiType detail={"Ref\u003cAIChatInputElement>"}>Type</ApiType> | - |
 | references | References shown with the input. | `Reference[]` | - |
-| renderActionArea | Customizes the action area at the bottom. menuItem lists, in order, the upload node (a hidden one when showUploadButton is false, which must still render for paste upload) and the send or stop button; class is the class name of the area. | <ApiType detail={"(props: ActionAreaProps) => JSX.Element"}>Type</ApiType> | - |
+| renderActionArea | Customizes the action area at the bottom. menuItem lists, in order, functions that create the upload button (nothing when showUploadButton is false) and the send or stop button; call each where it is inserted. Paste upload works without the upload button. class is the class name of the area. | <ApiType detail={"(props: ActionAreaProps) => JSX.Element"}>Type</ApiType> | - |
 | renderConfigureArea | Customizes the configure area at the bottom; returns the configure items. | <ApiType detail={"() => JSX.Element"}>Type</ApiType> | - |
 | renderReference | Customizes how a single reference is rendered. | <ApiType detail={"(reference: Reference) => JSX.Element"}>Type</ApiType> | - |
 | renderSkillIcon | Renders the icon before each skill in the skill list, called with the skill. | <ApiType detail={"(skill: Skill) => JSX.Element"}>Type</ApiType> | - |

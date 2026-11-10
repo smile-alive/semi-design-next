@@ -30,10 +30,6 @@
                 "zh-CN": "scroll 模式下各项的显示或隐藏状态变化时调用，参数为以 key 为索引的 `Map`。",
                 "en-US": "Called in scroll mode when the visible or hidden state of the items changes, with a `Map` keyed by item key."
             },
-            "overflowRenderDirection": {
-                "zh-CN": "scroll 模式下两侧溢出节点的位置，可选 both、start 或 end；供 Tabs 使用，不面向使用方。",
-                "en-US": "Where scroll mode renders the two overflow nodes: both, start or end. Used by Tabs, not meant for end users."
-            },
             "overflowRenderer": {
                 "zh-CN": "渲染溢出项。collapse 模式下参数为放不下的项，返回一个溢出节点；scroll 模式下参数为 `[start, end]` 两组项，返回两侧各一个节点。",
                 "en-US": "Renders the overflowing items. In collapse mode it receives the items that do not fit and returns one overflow node; in scroll mode it receives `[start, end]`, the items scrolled out before and after the visible ones, and returns one node for each side."

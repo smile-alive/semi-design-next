@@ -30,7 +30,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | 弹出层显示、进场动画开始时调用，每次打开一次，早于 afterOpen，受控与非受控相同；悬停打开后指针已离开而撤回的打开不调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onVisibleChange | 弹出层显示状态变化时调用；visible 受控时只报告用户交互发起的请求，使用方自己改变 visible 不调用。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | 弹出层相对触发元素的位置。 | `Position` | `"top"` |
-| prefixCls | 弹出层类名前缀，设置后弹出层不再带 Tooltip 的样式。 | `string` | `"semi-tooltip"` |
 | preventScroll | 聚焦时是否阻止浏览器滚动到被聚焦元素。 | `boolean` | - |
 | ref | 获取组件实例方法，见下方 Methods。 | <ApiType detail={"Ref\u003cTooltipHandle>"}>Type</ApiType> | - |
 | returnFocusOnClose | 弹出层关闭后焦点是否回到触发元素。 | `boolean` | `false` |

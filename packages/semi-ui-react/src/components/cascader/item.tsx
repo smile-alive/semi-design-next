@@ -1,8 +1,8 @@
-import React, { cloneElement, isValidElement, type ReactNode } from 'react';
+import React, { cloneElement, isValidElement, memo, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
 import CascaderFoundation, { type BasicCascaderData, type BasicEntity, type ShowNextType, type BasicData, type Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
-import { highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
+import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
 import { IconChevronRight, IconTick } from '@fibrae/semi-icons-react';
 import VirtualList, { type VirtualListHandle } from '../../internal/virtual-list';
 import Checkbox, { type CheckboxEvent } from '../checkbox';
@@ -94,6 +94,93 @@ function highlight(searchText: React.ReactNode[], keyword: string, separator: st
     );
 }
 
+function renderIcon(type: 'child' | 'tick' | 'loading' | 'empty', expandIcon?: ReactNode, haveMarginLeft = false) {
+    const finalCls = (style: string) => style + (haveMarginLeft ? ` ${prefixcls}-icon-left` : '');
+    switch (type) {
+        case 'child':
+            return expandIcon || <IconChevronRight className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-expand`)} />;
+        case 'tick':
+            return <IconTick className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-active`)} />;
+        case 'loading':
+            // the option carries the state as aria-busy; the spinner's own name would join the option's name
+            return (
+                <span aria-hidden>
+                    <Spin wrapperClassName={finalCls(`${prefixcls}-spin-icon`)} />
+                </span>
+            );
+        default:
+            return <span className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-empty`)} aria-hidden />;
+    }
+}
+
+function clickItem(e: React.MouseEvent, item: Entity | Data, onItemClick: CascaderItemProps['onItemClick']) {
+    if (item.data.disabled || ('disabled' in item && item.disabled)) {
+        return;
+    }
+    onItemClick(e, item);
+}
+
+function checkItem(e: CheckboxEvent, item: Entity | Data, onItemCheckboxClick: CascaderItemProps['onItemCheckboxClick']) {
+    e.stopPropagation();
+    e.nativeEvent?.stopImmediatePropagation?.();
+    onItemCheckboxClick(item);
+}
+
+type TreeItemAria = ReturnType<typeof CascaderFoundation.getTreeItemState>['aria'];
+
+interface TreeOptionProps extends TreeItemAria, Pick<CascaderItemProps, 'multiple' | 'showNext' | 'expandIcon' | 'onItemClick' | 'onItemHover' | 'onItemCheckboxClick'> {
+    id: string;
+    item: Entity;
+    level: number;
+    posinset: number;
+    setsize: number;
+    expandable: boolean;
+    selected: boolean;
+    loading: boolean;
+    showActive: boolean;
+    showSelected: boolean;
+    focused: boolean;
+    checked: boolean;
+    halfChecked: boolean;
+}
+
+// Every prop is a primitive, the entity or a stable handler: hover and arrow keys re-render only the rows they change
+const TreeOption = memo(function TreeOption({ id, item, level, posinset, setsize, expandable, selected, loading, showActive, showSelected, focused, checked, halfChecked, multiple, showNext, expandIcon, onItemClick, onItemHover, onItemCheckboxClick, ...aria }: TreeOptionProps) {
+    const { label, disabled } = item.data;
+    const className = clsx(prefixcls, {
+        [`${prefixcls}-active`]: showActive,
+        [`${prefixcls}-select`]: showSelected,
+        [`${prefixcls}-disabled`]: disabled,
+        [`${prefixcls}-focused`]: focused,
+    });
+    return (
+        <li
+            id={id}
+            className={className}
+            {...aria}
+            aria-disabled={disabled || undefined}
+            aria-level={level}
+            aria-posinset={posinset}
+            aria-setsize={setsize}
+            role="treeitem"
+            onClick={(e) => clickItem(e, item, onItemClick)}
+            onMouseEnter={(e) => {
+                if (!disabled && showNext === strings.SHOW_NEXT_BY_HOVER) {
+                    onItemHover(e, item);
+                }
+            }}
+        >
+            <span className={`${prefixcls}-label`}>
+                {selected && !multiple && renderIcon('tick')}
+                {!selected && !multiple && renderIcon('empty')}
+                {multiple && <Checkbox className={`${prefixcls}-label-checkbox`} aria-hidden tabIndex={-1} checked={checked} disabled={disabled} indeterminate={halfChecked} onChange={(e: CheckboxEvent) => checkItem(e, item, onItemCheckboxClick)} />}
+                <span>{label}</span>
+            </span>
+            {expandable && renderIcon(loading ? 'loading' : 'child', expandIcon, true)}
+        </li>
+    );
+});
+
 export default function Item({
     activeKeys,
     selectedKeys,
@@ -132,56 +219,6 @@ export default function Item({
         [`${prefixcls}-lists-empty`]: isEmpty,
     });
 
-    const onClick = (e: React.MouseEvent, item: Entity | Data) => {
-        if (item.data.disabled || ('disabled' in item && item.disabled)) {
-            return;
-        }
-        onItemClick(e, item);
-    };
-
-    const onHover = (e: React.MouseEvent, item: Entity) => {
-        if (item.data.disabled) {
-            return;
-        }
-        if (showNext === strings.SHOW_NEXT_BY_HOVER) {
-            onItemHover(e, item);
-        }
-    };
-
-    const onCheckboxChange = (e: CheckboxEvent, item: Entity | Data) => {
-        e.stopPropagation();
-        if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
-            e.nativeEvent.stopImmediatePropagation();
-        }
-        onItemCheckboxClick(item);
-    };
-
-    const renderIcon = (type: string, haveMarginLeft = false) => {
-        const finalCls = (style: string) => {
-            return style + (haveMarginLeft ? ` ${prefixcls}-icon-left` : '');
-        };
-        switch (type) {
-            case 'child':
-                if (expandIcon) {
-                    return expandIcon;
-                }
-                return <IconChevronRight className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-expand`)} />;
-            case 'tick':
-                return <IconTick className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-active`)} />;
-            case 'loading':
-                // the option carries the state as aria-busy; the spinner's own name would join the option's name
-                return (
-                    <span aria-hidden>
-                        <Spin wrapperClassName={finalCls(`${prefixcls}-spin-icon`)} />
-                    </span>
-                );
-            case 'empty':
-                return <span className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-empty`)} aria-hidden />;
-            default:
-                return null;
-        }
-    };
-
     const renderFlattenOptionItem = (item: Data, _index?: number, style?: React.CSSProperties) => {
         const { searchText, key, disabled, pathData } = item;
         const selected = selectedKeys.has(key);
@@ -191,10 +228,8 @@ export default function Item({
             [`${prefixcls}-select`]: selected && !multiple,
             [`${prefixcls}-focused`]: key === keyboardKey,
         });
-        const onItemClickInList = (e: React.MouseEvent) => {
-            onClick(e, item);
-        };
-        const onCheck = (e: CheckboxEvent) => onCheckboxChange(e, item);
+        const onItemClickInList = (e: React.MouseEvent) => clickItem(e, item, onItemClick);
+        const onCheck = (e: CheckboxEvent) => checkItem(e, item, onItemCheckboxClick);
         const optionAria = {
             id: optionId(key),
             role: 'option',
@@ -273,57 +308,41 @@ export default function Item({
      * One list per level of the active path, together one flat tree: aria-level, aria-setsize and aria-posinset carry
      * the hierarchy. Owning the next list as a group (aria-owns) would make it part of the branch's name.
      */
-    const renderItem = (renderData: Array<Entity>, content: Array<React.ReactNode> = []) => {
-        const showChildItem = renderData.find((item) => activeKeys.has(item.key) && item.data.children?.length);
-        const ind = content.length;
-        content.push(
-            <ul key={renderData[0].key} className={`${prefixcls}-list`} role="none" onScroll={(e) => onListScroll(e, ind)}>
-                {renderData.map((item, index) => {
+    const renderTree = (topLevel: Entity[]) =>
+        getColumns(topLevel, activeKeys).map(({ items, level }) => (
+            <ul key={items[0].key} className={`${prefixcls}-list`} role="none" onScroll={(e) => onListScroll(e, level)}>
+                {items.map((item, index) => {
                     const { key } = item;
-                    const { label, disabled } = item.data;
-                    const showExpand = CascaderFoundation.isBranch(item.data, loadData);
-                    const { selected, loading, showActive, showSelected, aria } = CascaderFoundation.getTreeItemState(key, { activeKeys, selectedKeys, loadedKeys, loadingKeys, checkedKeys, halfCheckedKeys }, multiple, showExpand);
-                    const className = clsx(prefixcls, {
-                        [`${prefixcls}-active`]: showActive,
-                        [`${prefixcls}-select`]: showSelected,
-                        [`${prefixcls}-disabled`]: disabled,
-                        [`${prefixcls}-focused`]: key === keyboardKey,
-                    });
+                    const expandable = CascaderFoundation.isBranch(item.data, loadData);
+                    const { selected, loading, showActive, showSelected, aria } = CascaderFoundation.getTreeItemState(key, { activeKeys, selectedKeys, loadedKeys, loadingKeys, checkedKeys, halfCheckedKeys }, multiple, expandable);
                     return (
-                        <li
+                        <TreeOption
                             key={key}
                             id={optionId(key)}
-                            className={className}
                             {...aria}
-                            aria-disabled={disabled || undefined}
-                            aria-level={ind + 1}
-                            aria-posinset={index + 1}
-                            aria-setsize={renderData.length}
-                            role="treeitem"
-                            onClick={(e) => {
-                                onClick(e, item);
-                            }}
-                            onMouseEnter={(e) => {
-                                onHover(e, item);
-                            }}
-                        >
-                            <span className={`${prefixcls}-label`}>
-                                {selected && !multiple && renderIcon('tick')}
-                                {!selected && !multiple && renderIcon('empty')}
-                                {multiple && <Checkbox className={`${prefixcls}-label-checkbox`} aria-hidden tabIndex={-1} checked={checkedKeys.has(item.key)} disabled={disabled} indeterminate={halfCheckedKeys.has(item.key)} onChange={(e: CheckboxEvent) => onCheckboxChange(e, item)} />}
-                                <span>{label}</span>
-                            </span>
-                            {showExpand && renderIcon(loading ? 'loading' : 'child', true)}
-                        </li>
+                            checked={checkedKeys.has(key)}
+                            multiple={multiple}
+                            expandable={expandable}
+                            expandIcon={expandIcon}
+                            focused={key === keyboardKey}
+                            halfChecked={halfCheckedKeys.has(key)}
+                            item={item}
+                            level={level + 1}
+                            loading={loading}
+                            posinset={index + 1}
+                            selected={selected}
+                            setsize={items.length}
+                            showActive={showActive}
+                            showNext={showNext}
+                            showSelected={showSelected}
+                            onItemCheckboxClick={onItemCheckboxClick}
+                            onItemClick={onItemClick}
+                            onItemHover={onItemHover}
+                        />
                     );
                 })}
             </ul>
-        );
-        if (showChildItem) {
-            return renderItem(showChildItem.children, content);
-        }
-        return content;
-    };
+        ));
 
     const renderEmpty = () => {
         if (emptyContent === null) {
@@ -349,7 +368,7 @@ export default function Item({
 
     return (
         <div id={id} className={listsCls} aria-multiselectable={multiple || undefined} role={searchable ? 'listbox' : 'tree'} {...labelProps}>
-            {searchable ? renderFlattenOption(data as Data[]) : renderItem(data as Entity[])}
+            {searchable ? renderFlattenOption(data as Data[]) : renderTree(data as Entity[])}
         </div>
     );
 }

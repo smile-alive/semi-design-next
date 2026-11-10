@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { useFieldApi, useFieldState, useFormApi, useFormState } from '../hooks';
+    import { useFieldApi, useFieldState, useFormApi, useFormState } from '../hooks/index';
 
     const formApi = useFormApi();
     const formState = useFormState();

@@ -2,7 +2,7 @@
     import { untrack } from 'svelte';
     import { SvelteMap } from 'svelte/reactivity';
     import { omit } from 'es-toolkit';
-    import { canCollapseStack, FreshItems, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+    import { FreshItems, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
     import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
     import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import '@fibrae/semi-foundation/components/toast/toast.scss';
@@ -76,9 +76,7 @@
     const leave = (source: 'pointer' | 'focus') => {
         if (source === 'pointer') pointerInside = false;
         else focusInside = false;
-        if (!paused && canCollapseStack(view.stack, innerWrapper)) {
-            stackExpanded = false;
-        }
+        if (!paused) stackExpanded = false;
     };
 
     const handleFocusOut = (event: FocusEvent) => {
@@ -100,7 +98,7 @@
     watch(
         () => view.order,
         () => {
-            // An emptied list has no height, so leave() never collapses it; without this the next batch would start expanded.
+            // An emptied list may fire no mouseleave (the pointer did not move); without this the next batch would start expanded.
             if (!shownItems.length && !view.removedItems.length) stackExpanded = false;
             if (hasLostFocus(focusInside, innerWrapper)) leave('focus');
         }

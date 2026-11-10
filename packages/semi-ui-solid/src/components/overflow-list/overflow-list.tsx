@@ -35,7 +35,6 @@ interface OverflowListCommonProps<T> extends ElementProps<'div', 'children'> {
     wrapperProps?: JSX.HTMLAttributes<HTMLDivElement>;
     itemKey?: Key | ((item: T) => Key);
     onVisibleStateChange?: (visibleState: Map<string, boolean>) => void;
-    overflowRenderDirection?: 'both' | 'start' | 'end'; // used in tabs, not exposed to user
 }
 
 interface OverflowListCollapseProps<T> extends OverflowListCommonProps<T> {
@@ -51,10 +50,17 @@ interface OverflowListScrollProps<T> extends OverflowListCommonProps<T> {
 
 export type OverflowListProps<T = OverflowItem> = OverflowListCollapseProps<T> | OverflowListScrollProps<T>;
 
+/** Props Semi's own components pass, kept out of the public OverflowListProps */
+export type OverflowListInternalProps<T = OverflowItem> = OverflowListProps<T> & {
+    /** Tabs' arrowPosition: where scroll mode puts the two overflow nodes */
+    overflowRenderDirection?: 'both' | 'start' | 'end';
+};
+
 /** The two renderer signatures share one body, so the body reads the union through this loose form */
 type InternalProps = OverflowListCommonProps<OverflowItem> & {
     renderMode?: 'collapse' | 'scroll';
     overflowRenderer?: (overflowItems: any) => any;
+    overflowRenderDirection?: 'both' | 'start' | 'end';
 };
 
 const defaultProps = {
@@ -66,7 +72,7 @@ const defaultProps = {
     threshold: 0.75,
     visibleItemRenderer: () => null,
     overflowRenderDirection: 'both',
-} satisfies Partial<OverflowListProps>;
+} satisfies Partial<InternalProps>;
 
 const shallowEqual = (a: readonly unknown[], b: readonly unknown[]) => a.length === b.length && a.every((value, index) => value === b[index]);
 

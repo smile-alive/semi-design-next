@@ -29,7 +29,7 @@ interface CopyableInnerProps extends CopyableProps {
     onCopiedChange?: () => void;
 }
 
-export function Copyable(props: CopyableInnerProps) {
+export default function Copyable(props: CopyableInnerProps) {
     const locale = useLocale('Typography');
 
     const [copied, copyText] = useCopied(() => props.duration * 1000);
@@ -109,5 +109,3 @@ export function Copyable(props: CopyableInnerProps) {
         </Show>
     );
 }
-
-export default Copyable;

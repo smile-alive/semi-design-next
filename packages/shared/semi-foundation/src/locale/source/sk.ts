@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Vybrať všetky riadky',
         selectRow: 'Vybrať tento riadok',
+        scrollRegion: 'Posúvateľný obsah tabuľky',
+        untitledColumn: 'Stĺpec bez názvu',
         filterColumn: 'Filtrovať údaje podľa tohto stĺpca',
         filterColumnActive: 'Filtrovať údaje podľa tohto stĺpca, filter je aktívny',
         expandRow: 'Rozbaliť tento riadok',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Hľadať',
         replace: 'Nahradiť',
         replaceAll: 'Nahradiť všetko',
+        replaceWith: 'Nahradiť textom',
         caseSensitive: 'Rozlišovať malé a veľké písmená',
         regex: 'Použiť regulárny výraz',
         wholeWord: 'Hľadať celé slová',

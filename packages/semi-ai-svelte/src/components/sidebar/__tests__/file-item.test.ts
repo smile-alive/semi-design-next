@@ -7,7 +7,7 @@ import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
 import type { UploadCustomRequestArgs } from '@fibrae/semi-ui-svelte/upload/interface';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Sidebar } from '../index';
-import type { FileItemProps, ImageUploadNodeOptions } from '../widgets/interface';
+import type { FileItemProps, ImageUploadNodeOptions } from '../interface';
 
 // jsdom has no Worker, so the editor core behind CodeContent's JsonViewer is faked
 vi.mock('@fibrae/semi-json-viewer-core', () => ({

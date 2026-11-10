@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import {
     AIChatDialogue,
     AIChatInput,
@@ -240,38 +240,41 @@ export default function AIComponentDemo() {
         return <div />;
     }, []);
 
-    const customRender: DialogueContentItemRendererMap = {
-        resource: (item) => {
-            return (
-                <button
-                    type="button"
-                    style={{
-                        display: 'flex',
-                        gap: 8,
-                        width: '100%',
-                        backgroundColor: 'var(--semi-color-fill-0)',
-                        border: 'none',
-                        padding: '12px 16px',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '12px',
-                        color: 'inherit',
-                        font: 'inherit',
-                        cursor: 'pointer',
-                    }}
-                    onClick={() => {
-                        changeSideBarContent({
-                            type: 'resource',
-                            value: item,
-                        });
-                    }}
-                >
-                    <IconWord style={{ color: 'var(--semi-color-primary)' }} />
-                    {item.name}
-                </button>
-            );
-        },
-    };
+    const customRender = useMemo<DialogueContentItemRendererMap>(
+        () => ({
+            resource: (item) => {
+                return (
+                    <button
+                        type="button"
+                        style={{
+                            display: 'flex',
+                            gap: 8,
+                            width: '100%',
+                            backgroundColor: 'var(--semi-color-fill-0)',
+                            border: 'none',
+                            padding: '12px 16px',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '12px',
+                            color: 'inherit',
+                            font: 'inherit',
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                            changeSideBarContent({
+                                type: 'resource',
+                                value: item,
+                            });
+                        }}
+                    >
+                        <IconWord style={{ color: 'var(--semi-color-primary)' }} />
+                        {item.name}
+                    </button>
+                );
+            },
+        }),
+        [changeSideBarContent]
+    );
 
     return (
         <div style={{ display: 'flex', columnGap: 10 }}>

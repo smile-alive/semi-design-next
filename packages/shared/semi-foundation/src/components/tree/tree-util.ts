@@ -4,8 +4,7 @@
  */
 
 import { difference, uniq, omit } from 'es-toolkit';
-// compat pick also reads inherited properties (e.g. getters)
-import { get, pick } from 'es-toolkit/compat';
+import { get } from 'es-toolkit/compat';
 import isObject from '../../utils/is-object';
 import { strings } from './constants';
 import type { BasicKeyEntities, BasicTreeNodeData, BasicTreeNodeProps, BasicValue } from './foundation';
@@ -64,7 +63,8 @@ export function flattenTreeData(treeNodeList: any[], expandedKeys: Set<string>, 
             }
 
             const flattenNode: any = {
-                ...pick(treeNode, ['key', 'label', 'value', 'icon', 'disabled', 'isLeaf']),
+                // `in` also reads inherited properties, such as getters of class-based tree data
+                ...Object.fromEntries(['key', 'label', 'value', 'icon', 'disabled', 'isLeaf'].filter((name) => name in treeNode).map((name) => [name, treeNode[name]])),
                 ...otherData,
                 parent,
                 pos,

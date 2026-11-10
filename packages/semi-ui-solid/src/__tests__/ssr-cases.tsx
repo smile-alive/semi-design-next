@@ -175,9 +175,11 @@ const rows = [
 // component to its loaded or fallback state, while a data URL settles before the client modules run and the components
 // only listen once mounted
 const imageSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-// AudioPlayer and VideoPlayer read a loaded source's duration on mount, which the server cannot know, so their sources fail
-const audioSrc = 'data:audio/wav;base64,';
-const videoSrc = 'data:video/mp4;base64,';
+// AudioPlayer and VideoPlayer read the element's duration, error and paused state on mount, which the server cannot know:
+// an empty WAV loads without failing and plays in a video element too, and only its duration (Infinity in Chromium)
+// differs from the server's 0, so the attributes carrying it are mount-time differences
+const audioSrc = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';
+const videoSrc = audioSrc;
 
 const uploadFiles = [{ uid: '1', name: 'semi.png', status: 'success' as const, size: '130KB', url: imageSrc }];
 
@@ -224,7 +226,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         ),
         text: ['Section A', 'Section B'],
     },
-    { name: 'audio-player/默认', covers: ['AudioPlayer'], render: () => <AudioPlayer autoPlay={false} audioUrl={audioSrc} /> },
+    { name: 'audio-player/默认', covers: ['AudioPlayer'], render: () => <AudioPlayer autoPlay={false} audioUrl={audioSrc} />, mountDiff: ['max'] },
     { name: 'auto-complete/默认', covers: ['AutoComplete'], render: () => <AutoComplete data={['semi', 'design']} placeholder="Search" /> },
     { name: 'auto-complete/默认打开', covers: ['AutoComplete'], render: () => <AutoComplete data={['semi', 'design']} defaultOpen />, mountDiff: ['aria-expanded', 'aria-controls', 'aria-activedescendant'] },
     { name: 'avatar/文字', covers: ['Avatar'], render: () => <Avatar>UI</Avatar>, text: ['UI'], mountDiff: ['style'] },
@@ -998,7 +1000,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
                 <ScrollItem aria-label="Hour" mode="wheel" list={[{ value: 1 }, { value: 2 }]} selectedIndex={0} />
             </ScrollList>
         ),
-        // the foundation writes the wheel highlight with classList after mount (docs/component-issues.md, ScrollList)
+        // the wheel highlight is found from layout, so it only appears after mount
         mountDiff: [{ selector: '[role="option"]', classes: ['semi-scrolllist-item-selected'] }],
     },
     {
@@ -1751,5 +1753,5 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         render: () => <UserGuide mode="modal" visible steps={[{ title: 'Guide title', description: 'Guide body' }]} renderCover={() => <img alt="Guide cover" />} renderDescription={() => <b>Guide body</b>} />,
         mountDiff: ['*'],
     },
-    { name: 'video-player/默认', covers: ['VideoPlayer'], render: () => <VideoPlayer src={videoSrc} height={300} /> },
+    { name: 'video-player/默认', covers: ['VideoPlayer'], render: () => <VideoPlayer src={videoSrc} height={300} />, mountDiff: ['aria-valuemax'] },
 ];

@@ -15,7 +15,6 @@ import ApiType from '#/components/ApiType.astro';
 | extraId | Id of the extra node, which aria-describedby points to. Generated when omitted. | `string` | - |
 | mode | When set to advanced, a checked radio can be unchecked by clicking it or pressing Space. Inside a RadioGroup the group's mode applies. | `RadioMode` | `""` |
 | onChange | Called when the checked state changes. The event's `target` is `{ checked, value, name, disabled }`. | <ApiType detail={"(event: RadioChangeEvent) => void"}>Type</ApiType> | - |
-| prefixCls | CSS class name prefix. When omitted it falls back to the enclosing RadioGroup's value, then the global default. | `string` | - |
 | preventScroll | Whether focusing prevents the browser from scrolling the element into view; applies to the focus method. | `boolean` | - |
 | type | Style type: default, button, card or pureCard. Inside a RadioGroup the group's type applies. | `RadioType` | `"default"` |
 | value | The radio's value, which a RadioGroup compares to decide whether it is checked. It is also the native input's value in form submission. | `RadioValue` | - |

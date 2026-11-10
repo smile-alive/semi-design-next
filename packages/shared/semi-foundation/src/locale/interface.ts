@@ -272,6 +272,10 @@ export interface Locale {
         expandColumn: string;
         selectAllRows: string;
         selectRow: string;
+        /** name of the table body while it overflows and takes keyboard focus to scroll */
+        scrollRegion: string;
+        /** visually hidden header text of a column whose title is empty */
+        untitledColumn: string;
     };
     Select: {
         emptyText: string;
@@ -300,7 +304,9 @@ export interface Locale {
         /** name of the button that closes the day card */
         close: string;
         allDay: string;
+        /** hour label template of the time column before noon, `${time}` is the 12-hour number (not the bare "AM" of `TimePicker.AM`) */
         AM: string;
+        /** hour label template of the time column from noon, `${time}` is the 12-hour number (not the bare "PM" of `TimePicker.PM`) */
         PM: string;
         datestring: string;
         remaining: string;
@@ -442,6 +448,8 @@ export interface Locale {
         search: string;
         replace: string;
         replaceAll: string;
+        /** name of the text field holding the replacement text, distinct from the Replace button's `replace` */
+        replaceWith: string;
         /** name of the toggle that makes the search match case */
         caseSensitive: string;
         /** name of the toggle that treats the search text as a regular expression */

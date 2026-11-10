@@ -17,11 +17,17 @@ export interface OptionProps extends BasicOptionProps {
     showTick?: boolean;
     className?: string;
     style?: React.CSSProperties;
+}
+
+/** Set by AutoComplete, kept out of the public OptionProps */
+export interface OptionInternalProps extends OptionProps {
     /** The row aria-activedescendant points at; AutoComplete marks it aria-selected */
     current?: boolean;
 }
 
-function Option({ children, disabled, value, selected, label, empty, emptyContent, onSelect, focused, showTick, className, style, onMouseEnter, prefixCls = cssClasses.PREFIX_OPTION, renderOptionItem, inputValue, semiOptionId, current, ...rest }: OptionProps): React.ReactNode {
+function Option(props: OptionProps): React.ReactNode {
+    const { children, disabled, value, selected, label, empty, emptyContent, onSelect, focused, showTick, className, style, onMouseEnter, prefixCls = cssClasses.PREFIX_OPTION, renderOptionItem, inputValue, semiOptionId, current, ...rest } = props as OptionInternalProps;
+
     const { locale } = useLocale('Select');
 
     const optionClassName = clsx(prefixCls, {

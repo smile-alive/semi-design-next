@@ -4,11 +4,10 @@
     import { getColClassName } from '@fibrae/semi-foundation/components/grid/utils';
     import '@fibrae/semi-foundation/components/grid/grid.scss';
     import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { semiGlobalDefault } from '../../base/semi-default';
     import type { ColProps, ColSlots } from './interface';
 
     const props = withDefaults(defineProps<ColProps & /* @vue-ignore */ ElementProps<'div', keyof ColProps>>(), {
-        prefixCls: () => semiDefault('Col', 'prefixCls', cssClasses.PREFIX),
         span: semiGlobalDefault('Col', 'span'),
         order: semiGlobalDefault('Col', 'order'),
         offset: semiGlobalDefault('Col', 'offset'),
@@ -24,7 +23,7 @@
 
     defineSlots<ColSlots>();
 
-    const classes = computed(() => getColClassName(props.prefixCls, props));
+    const classes = computed(() => getColClassName(cssClasses.PREFIX, props));
 </script>
 
 <template>

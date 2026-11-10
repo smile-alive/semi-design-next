@@ -11,12 +11,14 @@ const stepSizeMapIconSize = {
     default: 'extra-large',
 } as const;
 
-const defaultProps = { prefixCls: css.ITEM, status: 'wait', size: 'default' } satisfies Partial<BasicStepProps>;
+const defaultProps = { status: 'wait', size: 'default' } satisfies Partial<BasicStepProps>;
+
+const prefixCls = css.ITEM;
 
 // An internal item: Steps builds its props, so the global defaults of Step do not apply
 export default function BasicStep(rawProps: BasicStepProps) {
     const props = mergeProps(defaultProps, rawProps);
-    const [local, rest] = splitProps(props, ['active', 'class', 'description', 'done', 'icon', 'onChange', 'onClick', 'onKeyDown', 'prefixCls', 'role', 'size', 'status', 'stepNumber', 'title']);
+    const [local, rest] = splitProps(props, ['active', 'class', 'description', 'done', 'icon', 'onChange', 'onClick', 'onKeyDown', 'role', 'size', 'status', 'stepNumber', 'title']);
 
     const item = createStepItem(local, rest);
     const title = children(() => local.title);
@@ -32,14 +34,14 @@ export default function BasicStep(rawProps: BasicStepProps) {
         <div
             {...rest}
             class={clsx(
-                local.prefixCls,
-                `${local.prefixCls}-${local.status}`,
+                prefixCls,
+                `${prefixCls}-${local.status}`,
                 {
-                    [`${local.prefixCls}-active`]: local.active,
-                    [`${local.prefixCls}-done`]: local.done,
-                    [`${local.prefixCls}-hover`]: item.clickable(),
-                    [`${local.prefixCls}-clickable`]: item.clickable(),
-                    [`${local.prefixCls}-${local.status}-hover`]: item.clickable(),
+                    [`${prefixCls}-active`]: local.active,
+                    [`${prefixCls}-done`]: local.done,
+                    [`${prefixCls}-hover`]: item.clickable(),
+                    [`${prefixCls}-clickable`]: item.clickable(),
+                    [`${prefixCls}-${local.status}-hover`]: item.clickable(),
                 },
                 local.class
             )}
@@ -49,13 +51,13 @@ export default function BasicStep(rawProps: BasicStepProps) {
             onClick={item.onClick}
             onKeyDown={item.onKeyDown}
         >
-            <div class={`${local.prefixCls}-container`}>
-                <div class={`${local.prefixCls}-left`}>
+            <div class={`${prefixCls}-container`}>
+                <div class={`${prefixCls}-left`}>
                     <Show when={!customIcon() || hasContent(icon())}>
                         <span
-                            class={clsx(`${local.prefixCls}-icon`, {
-                                [`${local.prefixCls}-custom-icon`]: customIcon(),
-                                [`${local.prefixCls}-icon-process`]: !customIcon() && local.status === 'process',
+                            class={clsx(`${prefixCls}-icon`, {
+                                [`${prefixCls}-custom-icon`]: customIcon(),
+                                [`${prefixCls}-icon-process`]: !customIcon() && local.status === 'process',
                             })}
                         >
                             <Show when={!customIcon()} fallback={icon()}>
@@ -70,19 +72,19 @@ export default function BasicStep(rawProps: BasicStepProps) {
                                         <IconAlertTriangle size={iconSize()} />
                                     </Match>
                                     <Match when={local.status === 'wait' || local.status === 'process'}>
-                                        <span class={`${local.prefixCls}-number-icon`}>{local.stepNumber}</span>
+                                        <span class={`${prefixCls}-number-icon`}>{local.stepNumber}</span>
                                     </Match>
                                 </Switch>
                             </Show>
                         </span>
                     </Show>
                 </div>
-                <div class={`${local.prefixCls}-content`}>
-                    <div class={`${local.prefixCls}-title`}>
-                        <div class={clsx(`${local.prefixCls}-title-text`, { [`${local.prefixCls}-title-text-empty`]: !hasContent(title()) })}>{title()}</div>
+                <div class={`${prefixCls}-content`}>
+                    <div class={`${prefixCls}-title`}>
+                        <div class={clsx(`${prefixCls}-title-text`, { [`${prefixCls}-title-text-empty`]: !hasContent(title()) })}>{title()}</div>
                     </div>
                     <Show when={hasContent(description())}>
-                        <div class={`${local.prefixCls}-description`}>{description()}</div>
+                        <div class={`${prefixCls}-description`}>{description()}</div>
                     </Show>
                 </div>
             </div>

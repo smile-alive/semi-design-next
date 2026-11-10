@@ -15,11 +15,9 @@ export interface ScrollItemProps<T extends Item = Item> extends ElementProps<'di
     cycled?: boolean;
     list?: T[];
     selectedIndex?: number;
-    onSelect?: (data: T & { type?: string | number; index: number }) => void;
-    transform?: (value: any, text?: string) => string;
+    onSelect?: (data: T & { index: number }) => void;
+    transform?: (value: T['value'], text?: string) => string;
     motion?: boolean;
-    /** Identifies the item to the Semi components that use it; not for end users */
-    type?: string | number;
     ref?: Ref<ScrollItemElement>;
 }
 
@@ -43,7 +41,7 @@ const defaultProps = {
 
 export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemProps<T>) {
     const props = useDefaultProps('ScrollItem', rawProps, defaultProps) as ScrollItemProps<T> & Required<Pick<ScrollItemProps<T>, keyof typeof defaultProps>>;
-    const [local, rest] = splitProps(props, ['mode', 'cycled', 'list', 'selectedIndex', 'onSelect', 'transform', 'class', 'motion', 'type', 'ref', 'aria-label', 'aria-labelledby', 'aria-describedby']);
+    const [local, rest] = splitProps(props, ['mode', 'cycled', 'list', 'selectedIndex', 'onSelect', 'transform', 'class', 'motion', 'ref', 'aria-label', 'aria-labelledby', 'aria-describedby']);
 
     let root!: HTMLDivElement;
     let listbox!: HTMLUListElement;
@@ -83,16 +81,16 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
     // Only the real list carries ids: cycled copies would make the active descendant ambiguous
     const optionId = (index: number) => `${listId}-option-${index}`;
 
-    const renderOption = ({ copy, index }: ScrollItemRow) => {
+    const renderOption = ({ key, copy, index }: ScrollItemRow) => {
         const item = () => local.list[index];
         const selected = () => local.selectedIndex === index;
         const text = () => ItemFoundation.getItemText(item(), selected(), local.transform);
         return (
             <li
                 id={copy ? undefined : optionId(index)}
-                // classList, not class: the foundation adds the highlight class itself, which a rewritten class would drop
                 classList={{
                     [`${prefix}-item-sel`]: selected() && !isWheel(),
+                    [cssClasses.SELECTED]: isWheel() && key === state().highlightedKey,
                     [`${prefix}-item-disabled`]: Boolean(item().disabled),
                 }}
                 aria-disabled={item().disabled}

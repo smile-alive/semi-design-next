@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'בחירת כל השורות',
         selectRow: 'בחירת שורה זו',
+        scrollRegion: 'תוכן טבלה נגלל',
+        untitledColumn: 'עמודה ללא כותרת',
         filterColumn: 'סינון נתונים לפי עמודה זו',
         filterColumnActive: 'סינון נתונים לפי עמודה זו, המסנן פעיל',
         expandRow: 'הרחבת שורה זו',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'חיפוש',
         replace: 'להחליף',
         replaceAll: 'להחליף הכול',
+        replaceWith: 'להחליף ב',
         caseSensitive: 'התאמת רישיות',
         regex: 'שימוש בביטוי רגולרי',
         wholeWord: 'התאמת מילה שלמה',

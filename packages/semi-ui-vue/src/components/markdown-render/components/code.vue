@@ -6,7 +6,8 @@
     import CodeHighlight from '../../code-highlight';
     import codeText from '../code-text';
 
-    defineOptions({ inheritAttrs: false });
+    // pre drops its wrapper around a block from a component with this mark; a replacement that wraps this code sets it too
+    defineOptions({ inheritAttrs: false, elementType: 'MarkdownRender.Code' });
     const slots = defineSlots<{ default?(): VNode[] }>();
     const attrs = useAttrs();
 

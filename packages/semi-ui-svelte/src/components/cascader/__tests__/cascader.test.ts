@@ -1,9 +1,9 @@
 import { createRawSnippet, flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { createStore, snapshot } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
-import type { CascaderChangeValue, CascaderData, CascaderEntity, CascaderProps, CascaderValue } from '..';
+import type { CascaderChangeValue, CascaderData, CascaderEntity, CascaderProps, CascaderTriggerSnippetProps, CascaderValue } from '..';
 import CascaderCase from './cascader-case.svelte';
 
 type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
@@ -900,7 +900,7 @@ describe('Svelte Cascader 键盘与 ARIA', () => {
 
     it('trigger snippet 替换触发器内容并收到位置与回调', async () => {
         const seen: Array<string | Set<string> | undefined> = [];
-        const trigger = createRawSnippet<[{ value: string | Set<string> | undefined; inputValue: string; onClear: (event?: MouseEvent) => void }]>((props) => {
+        const trigger = createRawSnippet<[CascaderTriggerSnippetProps]>((props) => {
             seen.push(props().value);
             return { render: () => `<button class="my-trigger">${props().inputValue}</button>` };
         });
@@ -920,7 +920,7 @@ describe('Svelte Cascader 键盘与 ARIA', () => {
         store.treeData[1].children?.push({ label: '墨西哥', value: 'Mexico' });
         await settle();
         expect(getColumnTexts(1)).toEqual(['美国', '加拿大', '墨西哥']);
-        store.treeData = JSON.parse(JSON.stringify(store.treeData));
+        store.treeData = snapshot(store.treeData);
         await settle();
         expect(getColumnTexts(1)).toEqual(['美国', '加拿大', '墨西哥']);
     });

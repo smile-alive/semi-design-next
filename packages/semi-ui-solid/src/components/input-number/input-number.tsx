@@ -36,7 +36,6 @@ export interface InputNumberProps extends Omit<InputProps, 'ref' | 'value' | 'de
     maximumFractionDigits?: number;
     parser?: (value: string) => string;
     precision?: number;
-    prefixCls?: string;
     pressInterval?: number;
     pressTimeout?: number;
     shiftStep?: number;
@@ -63,12 +62,13 @@ export interface InputNumberState extends BaseInputNumberState {}
 type Foundation = InputNumberFoundation<InputNumberProps, FocusEvent, InputElementEvent<KeyboardEvent>>;
 type Adapter = InputNumberAdapter<InputNumberProps, FocusEvent, InputElementEvent<KeyboardEvent>>;
 
+const prefixCls = cssClasses.PREFIX;
+
 const defaultProps = {
     innerButtons: false,
     keepFocus: false,
     max: Infinity,
     min: -Infinity,
-    prefixCls: cssClasses.PREFIX,
     pressInterval: numbers.DEFAULT_PRESS_TIMEOUT,
     pressTimeout: numbers.DEFAULT_PRESS_TIMEOUT,
     shiftStep: numbers.DEFAULT_SHIFT_STEP,
@@ -135,7 +135,6 @@ export default function InputNumber(rawProps: InputNumberProps) {
         'parser',
         'precision',
         'prefix',
-        'prefixCls',
         'pressInterval',
         'pressTimeout',
         'ref',
@@ -180,15 +179,15 @@ export default function InputNumber(rawProps: InputNumberProps) {
     // a factory: the inner and the outer placement never render at once, and each gets nodes of its own
     const buttons = () => (
         <div
-            class={clsx(`${local.prefixCls}-number-suffix-btns`, {
-                [`${local.prefixCls}-number-suffix-btns-inner`]: local.innerButtons,
-                [`${local.prefixCls}-number-suffix-btns-inner-hover`]: local.innerButtons && state().hovering && !state().focusing,
+            class={clsx(`${prefixCls}-number-suffix-btns`, {
+                [`${prefixCls}-number-suffix-btns-inner`]: local.innerButtons,
+                [`${prefixCls}-number-suffix-btns-inner-hover`]: local.innerButtons && state().hovering && !state().focusing,
             })}
         >
             <span
-                class={clsx(`${local.prefixCls}-number-button`, `${local.prefixCls}-number-button-up`, {
-                    [`${local.prefixCls}-number-button-up-disabled`]: local.disabled,
-                    [`${local.prefixCls}-number-button-up-not-allowed`]: notAllowedUp(),
+                class={clsx(`${prefixCls}-number-button`, `${prefixCls}-number-button-up`, {
+                    [`${prefixCls}-number-button-up-disabled`]: local.disabled,
+                    [`${prefixCls}-number-button-up-not-allowed`]: notAllowedUp(),
                 })}
                 onLostPointerCapture={foundation.handlePressEnd}
                 onMouseDown={foundation.handleStepMouseDown}
@@ -197,9 +196,9 @@ export default function InputNumber(rawProps: InputNumberProps) {
                 <IconChevronUp size="extra-small" />
             </span>
             <span
-                class={clsx(`${local.prefixCls}-number-button`, `${local.prefixCls}-number-button-down`, {
-                    [`${local.prefixCls}-number-button-down-disabled`]: local.disabled,
-                    [`${local.prefixCls}-number-button-down-not-allowed`]: notAllowedDown(),
+                class={clsx(`${prefixCls}-number-button`, `${prefixCls}-number-button-down`, {
+                    [`${prefixCls}-number-button-down-disabled`]: local.disabled,
+                    [`${prefixCls}-number-button-down-not-allowed`]: notAllowedDown(),
                 })}
                 onLostPointerCapture={foundation.handlePressEnd}
                 onMouseDown={foundation.handleStepMouseDown}
@@ -223,7 +222,7 @@ export default function InputNumber(rawProps: InputNumberProps) {
             <div
                 // read once: the provider re-creates its subtree when anything read while creating it changes
                 ref={untrack(() => mergeRefs(setRoot, local.ref))}
-                class={clsx(local.class, `${local.prefixCls}-number`, { [`${local.prefixCls}-number-size-${local.size}`]: local.size })}
+                class={clsx(local.class, `${prefixCls}-number`, { [`${prefixCls}-number-size-${local.size}`]: local.size })}
                 style={local.style}
                 onMouseEnter={foundation.handleInputMouseEnter}
                 onMouseLeave={foundation.handleInputMouseLeave}

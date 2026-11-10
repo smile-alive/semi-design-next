@@ -8,7 +8,11 @@ export default function TabsDemo() {
         <Tabs
             more={{
                 count: 4,
-                render: () => <Button type="tertiary">Click to show More</Button>,
+                render: (getTriggerProps) => (
+                    <Button type="tertiary" {...getTriggerProps()}>
+                        Click to show More
+                    </Button>
+                ),
                 dropdownProps: { trigger: 'click', position: 'bottomRight' },
             }}
             style={{ width: '60%', margin: '20px' }}

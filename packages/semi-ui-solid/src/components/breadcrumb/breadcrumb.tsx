@@ -7,7 +7,7 @@ import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/components/breadcrumb/breadcrumb.scss';
 import { IconMore } from '@fibrae/semi-icons-solid';
-import { isToken } from '../../base/token';
+import { type Token, isToken } from '../../base/token';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useFocusHandover from '../../primitives/use-focus-handover';
@@ -46,6 +46,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
     const localeResult = useLocale('Breadcrumb');
 
     let navElement: HTMLElement | undefined;
+    let listElement: HTMLOListElement | undefined;
 
     const { foundation, state } = useFoundation<Foundation, Adapter, BreadcrumbProps, BreadcrumbState>(
         BreadcrumbFoundation,
@@ -96,13 +97,16 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
         })
     );
 
+    // Only Items count and collapse. Other nodes were already created by resolving the children, so they always stay
+    // inserted: a created node left out of the DOM breaks hydration.
+    const items = createMemo((): unknown[] => routeEntries() ?? childEntries().filter((node) => isToken(node, BREADCRUMB_ITEM)));
+    const range = createMemo(() => BreadcrumbFoundation.getCollapseRange(items().length, local.maxItemCount, local.activeIndex), undefined, { equals: (a, b) => a.start === b.start && a.end === b.end });
+
     const entries = (): unknown[] => routeEntries() ?? childEntries();
 
-    const range = createMemo(() => BreadcrumbFoundation.getCollapseRange(entries().length, local.maxItemCount, local.activeIndex), undefined, { equals: (a, b) => a.start === b.start && a.end === b.end });
-
     // Expanding removes the more button, which held focus: the first item it hid takes over, else the nav itself
-    const handoverFocus = useFocusHandover<HTMLSpanElement>(() => {
-        const target = navElement?.children[range().start]?.querySelector<HTMLElement>('a[href], [tabindex]:not([tabindex="-1"])');
+    const handoverFocus = useFocusHandover<HTMLLIElement>(() => {
+        const target = listElement?.children[entries().indexOf(items()[range().start])]?.querySelector<HTMLElement>('a[href], [tabindex]:not([tabindex="-1"])');
         if (target) {
             return target;
         }
@@ -116,26 +120,29 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
 
     const visible = createMemo((): unknown[] => {
         const all = entries();
-        return shouldCollapse() ? [...all.slice(0, range().start), MORE, ...all.slice(range().end + 1)] : all;
+        if (!shouldCollapse()) {
+            return all;
+        }
+        const { start, end } = range();
+        return all.flatMap((entry) => {
+            const index = items().indexOf(entry);
+            if (index < start || index > end) {
+                return [entry];
+            }
+            return index === start ? [MORE] : [];
+        });
     });
 
     const hasRenderMore = () => typeof local.renderMore === 'function';
 
-    const restEntries = () => entries().slice(range().start, range().end + 1);
+    const restEntries = () => items().slice(range().start, range().end + 1);
 
     // data only: the props of an Item hold its children and icon as getters, read where renderMore shows them
-    const restItems = createMemo(() =>
-        restEntries().map((entry): RouteProps | BreadcrumbItemProps => {
-            if (routeEntries()) {
-                return (entry as RouteEntry)._origin;
-            }
-            return isToken<BreadcrumbItemProps>(entry, BREADCRUMB_ITEM) ? entry.props : { children: entry as JSX.Element };
-        })
-    );
+    const restItems = createMemo(() => restEntries().map((entry): RouteProps | BreadcrumbItemProps => (routeEntries() ? (entry as RouteEntry)._origin : (entry as Token<BreadcrumbItemProps>).props)));
 
-    const hasSeparator = (index: number) => BreadcrumbFoundation.shouldRenderSeparator(index, entries().length, { collapsed: shouldCollapse(), ...range(), hasCustomMore: hasRenderMore(), moreType: local.moreType });
+    const hasSeparator = (index: number) => BreadcrumbFoundation.shouldRenderSeparator(index, items().length, { collapsed: shouldCollapse(), ...range(), hasCustomMore: hasRenderMore(), moreType: local.moreType });
 
-    const isActive = (index: number) => BreadcrumbFoundation.isActive(index, entries().length, local.activeIndex);
+    const isActive = (index: number) => BreadcrumbFoundation.isActive(index, items().length, local.activeIndex);
 
     const routeContent = (route: RouteEntry) => {
         const render = renderItem();
@@ -143,7 +150,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
     };
 
     const renderEntry = (entry: unknown) => {
-        const index = () => entries().indexOf(entry);
+        const index = () => items().indexOf(entry);
         const separator = () => hasSeparator(index());
         if (routeEntries()) {
             const route = entry as RouteEntry;
@@ -157,11 +164,12 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
         if (isToken<BreadcrumbItemProps>(entry, BREADCRUMB_ITEM)) {
             return <ItemView {...entry.props} active={isActive(index())} shouldRenderSeparator={separator()} />;
         }
-        return entry as JSX.Element;
+        // an ol holds only li, so other nodes get one of their own
+        return <li>{entry as JSX.Element}</li>;
     };
 
     const moreArea = () => (
-        <span ref={handoverFocus} class={`${clsPrefix}-collapse`}>
+        <li ref={handoverFocus} class={`${clsPrefix}-collapse`}>
             <span class={`${clsPrefix}-item-wrap`}>
                 <span class={`${clsPrefix}-item ${clsPrefix}-item-more`} aria-label={localeResult().locale.expand} role="button" tabIndex={0} onClick={foundation.handleExpand} onKeyDown={foundation.handleExpandKeyDown}>
                     <Switch fallback={<IconMore />}>
@@ -175,16 +183,20 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
                             <Popover
                                 style={{ padding: '12px' }}
                                 content={
-                                    <For each={restEntries()}>
-                                        {(entry, i) => (
-                                            <>
-                                                {renderEntry(entry)}
-                                                <Show when={i() !== restEntries().length - 1}>
-                                                    <span class={`${clsPrefix}-restItem`}>{local.separator}</span>
-                                                </Show>
-                                            </>
-                                        )}
-                                    </For>
+                                    <ol class={`${clsPrefix}-list`}>
+                                        <For each={restEntries()}>
+                                            {(entry, i) => (
+                                                <>
+                                                    {renderEntry(entry)}
+                                                    <Show when={i() !== restEntries().length - 1}>
+                                                        <li class={`${clsPrefix}-restItem`} aria-hidden="true">
+                                                            {local.separator}
+                                                        </li>
+                                                    </Show>
+                                                </>
+                                            )}
+                                        </For>
+                                    </ol>
                                 }
                                 showArrow
                             >
@@ -198,7 +210,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
                     {local.separator}
                 </span>
             </span>
-        </span>
+        </li>
     );
 
     return (
@@ -213,13 +225,15 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
                 })}
                 aria-label={local['aria-label'] ?? localeResult().locale.label}
             >
-                <For each={visible()}>
-                    {(entry) => (
-                        <Show when={entry !== MORE} fallback={moreArea()}>
-                            {renderEntry(entry)}
-                        </Show>
-                    )}
-                </For>
+                <ol ref={(node) => (listElement = node)} class={`${clsPrefix}-list`}>
+                    <For each={visible()}>
+                        {(entry) => (
+                            <Show when={entry !== MORE} fallback={moreArea()}>
+                                {renderEntry(entry)}
+                            </Show>
+                        )}
+                    </For>
+                </ol>
             </nav>
         </BreadContext.Provider>
     );

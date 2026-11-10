@@ -1,11 +1,11 @@
 import type { JSX } from 'solid-js';
+import type { ElementProps } from '../../base/element-props';
 import { createToken } from '../../base/token';
 
 export const OPTGROUP = 'Select.OptGroup';
 
 /** Other attributes land on the group title, which renders only when `label` has content */
-export interface OptionGroupProps {
-    [key: string]: unknown;
+export interface OptionGroupProps extends ElementProps<'div'> {
     children?: JSX.Element;
     label?: string | number;
     class?: string;

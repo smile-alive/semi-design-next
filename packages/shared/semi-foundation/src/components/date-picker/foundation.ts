@@ -129,7 +129,6 @@ export interface DatePickerFoundationProps extends ElementProps, RenderProps, Ev
     open?: boolean;
     placeholder?: string | string[];
     position?: Position;
-    prefixCls?: string;
     presets?: PresetsType;
     presetPosition?: PresetPosition;
     showClear?: boolean;
@@ -209,9 +208,9 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     // an owner often rebuilds the same dates as a new array or Date on each render, which must not reset the input
     static override readonly propEquals = { value: isEqual };
 
-    #setRangeInputFocus(rangeInputFocus: RangeInput | false) {
+    #setRangeInputFocus(rangeInputFocus: RangeInput | false, moveFocus = true) {
         // the DOM focus comes first: the input's focus handler still has to read the previous rangeInputFocus
-        if (rangeInputFocus) {
+        if (rangeInputFocus && moveFocus) {
             this.adapter.focusRangeInput(rangeInputFocus);
         }
         if (rangeInputFocus !== this.getState('rangeInputFocus')) {
@@ -398,8 +397,10 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         this.#initRangeInputFocus(result);
     }
 
-    // The controlled `open` turned false: clears what an uncontrolled close would
+    // The controlled `open` turned false: clears what an uncontrolled close would. Every host calls handlePropsChange
+    // while the closing panel still holds the focus.
     #handleControlledClose() {
+        this.#returnFocusFromPanel();
         this.#clearFocusRecords();
         if (this.getProp('type') === 'dateTimeRange' && this.getState('rangeInputFocus')) {
             this.#setRangeInputFocus(false);
@@ -416,6 +417,22 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         this.#setRangeInputFocus(false);
         this.#clearInputValue();
         this.adapter.notifyOpenChange(false);
+    }
+
+    // APG date picker dialog: keyboard focus inside the closing panel (the day grid, a time list, the inset inputs)
+    // returns to the input, or to a custom trigger, instead of falling to the body. A click keeps the old behavior,
+    // because returning focus would fire the input's onFocus, which some pages use to reopen the panel.
+    #returnFocusFromPanel() {
+        if (this.adapter.isKeyboardFocusInPanel()) {
+            if (this.getProp('customTrigger')) {
+                this.adapter.setTriggerFocus();
+            } else if (this.getProp('insetInput')) {
+                // the trigger input is disabled while the panel is open, so it takes the focus only once enabled
+                void this.commitState({ triggerDisabled: false }).then(() => this.adapter.setTriggerFocus());
+            } else {
+                this.focus(this.getState('rangeInputFocus') || undefined);
+            }
+        }
     }
 
     #openPanel() {
@@ -828,19 +845,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
 
     /** @param e the mousedown outside that closes the panel, passed on to onBlur */
     closePanel(e?: MouseEvent) {
-        // APG date picker dialog: keyboard focus inside the closing panel (the day grid, a time list) returns to the
-        // input, or to a custom trigger, instead of falling to the body. A click keeps the old behavior, because
-        // returning focus would fire the input's onFocus, which some pages use to reopen the panel.
-        if (this.adapter.isKeyboardFocusInPanel()) {
-            if (this.getProp('customTrigger')) {
-                this.adapter.setTriggerFocus();
-            } else if (this.getProp('insetInput')) {
-                // the trigger input is disabled while the panel is open, so it takes the focus only once enabled
-                void this.commitState({ triggerDisabled: false }).then(() => this.adapter.setTriggerFocus());
-            } else {
-                this.focus(this.getState('rangeInputFocus') || undefined);
-            }
-        }
+        this.#returnFocusFromPanel();
         if (!this.isControlledComponent('open')) {
             this.close(e);
         } else {
@@ -940,7 +945,9 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         }
         const rangeInputFocus = this.adapter.getState('rangeInputFocus');
         if (range) {
-            this.#setRangeInputFocus(range);
+            // A closed inset panel can still be mounted for its exit animation: focusing its range input would pull the
+            // focus from the trigger input into inputs about to unmount. An opening inset panel focuses its own inputs.
+            this.#setRangeInputFocus(range, !(this.getProp('insetInput') && !this.#isPanelShown()));
         }
         // Range types notify only when no range input was focused yet, so moving between the two inputs is silent
 

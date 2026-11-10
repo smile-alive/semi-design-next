@@ -151,6 +151,16 @@
         bridge: untrackMethods(foundation.getFieldBridge()),
     });
 
+    const handleSubmit = (event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }) => {
+        foundation.handleSubmitEvent(event);
+        rest.onsubmit?.(event);
+    };
+
+    const handleReset = (event: Event & { currentTarget: EventTarget & HTMLFormElement }) => {
+        foundation.handleResetEvent(event);
+        rest.onreset?.(event);
+    };
+
     onMount(() => {
         notifyFormApi?.(formApi);
         getFormApiProxyInternals(form)?.bind(formApi);
@@ -164,16 +174,7 @@
 
 {#snippet formView()}
     <!-- rest comes after novalidate, so novalidate={false} turns it off -->
-    <form
-        bind:this={formElement}
-        novalidate
-        {...rest}
-        class={[cssClasses.PREFIX, rest.class, { [`${cssClasses.PREFIX}-vertical`]: layout === 'vertical', [`${cssClasses.PREFIX}-horizontal`]: layout === 'horizontal' }]}
-        id={formId}
-        {...{ 'x-form-id': formId }}
-        onreset={foundation.handleResetEvent}
-        onsubmit={foundation.handleSubmitEvent}
-    >
+    <form bind:this={formElement} novalidate {...rest} class={[cssClasses.PREFIX, rest.class, { [`${cssClasses.PREFIX}-vertical`]: layout === 'vertical', [`${cssClasses.PREFIX}-horizontal`]: layout === 'horizontal' }]} id={formId} {...{ 'x-form-id': formId }} onreset={handleReset} onsubmit={handleSubmit}>
         {@render children?.({ formState, values: formState.values as Values, formApi })}
     </form>
 {/snippet}

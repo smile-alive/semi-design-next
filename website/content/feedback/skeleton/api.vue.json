@@ -27,10 +27,6 @@
     "skeleton-avatar": {
         "source": "packages/semi-ui-vue/src/components/skeleton/avatar.vue",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "type": {
                 "zh-CN": "替换占位块自带的类型，同时决定它的类名；不为 avatar 时 size、shape 不生效。",
                 "en-US": "Replaces the type of the block, which also names its class. Unless it is avatar, size and shape have no effect."
@@ -51,10 +47,6 @@
     "skeleton-image": {
         "source": "packages/semi-ui-vue/src/components/skeleton/image.vue",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "type": {
                 "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
                 "en-US": "Replaces the type of the block, which also names its class."
@@ -67,10 +59,6 @@
     "skeleton-title": {
         "source": "packages/semi-ui-vue/src/components/skeleton/title.vue",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "type": {
                 "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
                 "en-US": "Replaces the type of the block, which also names its class."
@@ -83,10 +71,6 @@
     "skeleton-button": {
         "source": "packages/semi-ui-vue/src/components/skeleton/button.vue",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "type": {
                 "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
                 "en-US": "Replaces the type of the block, which also names its class."
@@ -99,10 +83,6 @@
     "skeleton-paragraph": {
         "source": "packages/semi-ui-vue/src/components/skeleton/paragraph.vue",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "rows": {
                 "zh-CN": "占位段落的行数。",
                 "en-US": "Number of rows in the placeholder paragraph."

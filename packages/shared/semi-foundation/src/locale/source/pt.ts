@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Selecionar todas as linhas',
         selectRow: 'Selecionar esta linha',
+        scrollRegion: 'Conteúdo deslocável da tabela',
+        untitledColumn: 'Coluna sem título',
         filterColumn: 'Filtrar dados por esta coluna',
         filterColumnActive: 'Filtrar dados por esta coluna, filtro ativo',
         expandRow: 'Expandir esta linha',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Pesquisar',
         replace: 'Substituir',
         replaceAll: 'Substituir tudo',
+        replaceWith: 'Substituir por',
         caseSensitive: 'Correspondência de maiúsculas e minúsculas',
         regex: 'Utilizar expressão regular',
         wholeWord: 'Corresponder à palavra inteira',

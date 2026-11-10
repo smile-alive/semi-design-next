@@ -5,7 +5,8 @@ import { cssClasses } from './constants';
 export const byteKB = 1024;
 export const byteMB = 1048576;
 
-export const addAreaControlAttributes = ['disabled', 'aria-disabled', 'href', 'tabindex', 'contenteditable'];
+/** The attributes `containsControl` and `containsName` read, which the add area observes to recheck them */
+export const addAreaObservedAttributes = ['disabled', 'aria-disabled', 'href', 'tabindex', 'contenteditable', 'aria-label', 'aria-labelledby', 'alt'];
 
 // A disabled control still counts, or the area would become a button around it and reopen the blocked dialog
 export function containsControl(node: HTMLElement) {

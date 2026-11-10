@@ -15,7 +15,6 @@ export interface StepProps extends ElementProps<'div', 'title' | 'onChange' | 'c
 
 export interface BasicStepProps extends StepProps {
     active?: boolean;
-    prefixCls?: string;
     stepNumber?: string;
     size?: Size;
     done?: boolean;
@@ -23,7 +22,6 @@ export interface BasicStepProps extends StepProps {
 }
 
 export interface FillStepProps extends StepProps {
-    prefixCls?: string;
     stepNumber?: string;
     active?: boolean;
     onChange?: () => void;
@@ -33,12 +31,10 @@ export interface NavStepProps extends StepProps {
     index?: number;
     active?: boolean;
     total?: number;
-    prefixCls?: string;
     onChange?: () => void;
 }
 
 export interface BasicStepsProps extends ElementProps<'div', 'onChange'> {
-    prefixCls?: string;
     direction?: Direction;
     current?: number;
     initial?: number;
@@ -49,7 +45,6 @@ export interface BasicStepsProps extends ElementProps<'div', 'onChange'> {
 }
 
 export interface FillStepsProps extends ElementProps<'div', 'onChange'> {
-    prefixCls?: string;
     current?: number;
     direction?: Direction;
     initial?: number;
@@ -58,7 +53,6 @@ export interface FillStepsProps extends ElementProps<'div', 'onChange'> {
 }
 
 export interface NavStepsProps extends ElementProps<'div', 'onChange'> {
-    prefixCls?: string;
     current?: number;
     initial?: number;
     size?: Size;

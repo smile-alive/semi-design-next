@@ -12,7 +12,6 @@ export interface RatingProps extends Omit<HTMLAttributes<HTMLUListElement>, 'onb
     disabled?: boolean;
     size?: 'small' | 'default' | number;
     tooltips?: string[];
-    prefixCls?: string;
     preventScroll?: boolean;
     /** Drawn in every star; a string is also the unit that names the star values, a snippet is named by the locale */
     character?: string | Snippet;

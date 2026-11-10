@@ -12,7 +12,6 @@ export interface ColProps extends ElementProps<'div'> {
     offset?: number;
     push?: number;
     pull?: number;
-    prefixCls?: string;
     xs?: number | ColSize;
     sm?: number | ColSize;
     md?: number | ColSize;
@@ -21,14 +20,12 @@ export interface ColProps extends ElementProps<'div'> {
     xxl?: number | ColSize;
 }
 
-const defaultProps = { prefixCls: cssClasses.PREFIX } satisfies Partial<ColProps>;
-
 export default function Col(rawProps: ColProps) {
-    const props = useDefaultProps('Col', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['children', 'class', 'lg', 'md', 'offset', 'order', 'prefixCls', 'pull', 'push', 'sm', 'span', 'xl', 'xs', 'xxl']);
+    const props = useDefaultProps('Col', rawProps, {});
+    const [local, rest] = splitProps(props, ['children', 'class', 'lg', 'md', 'offset', 'order', 'pull', 'push', 'sm', 'span', 'xl', 'xs', 'xxl']);
 
     return (
-        <div {...rest} class={getColClassName(local.prefixCls, local, local.class)} x-semi-prop="children">
+        <div {...rest} class={getColClassName(cssClasses.PREFIX, local, local.class)} x-semi-prop="children">
             {local.children}
         </div>
     );

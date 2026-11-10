@@ -37,10 +37,7 @@ export interface Content {
     [key: string]: any;
 }
 
-export interface LeftMenuChangeProps {
-    [key: string]: any;
-}
-
+/** The configure area's values by field, also sent as `MessageContent.setup` */
 export interface Setup {
     [key: string]: any;
 }

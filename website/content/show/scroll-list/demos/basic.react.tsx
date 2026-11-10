@@ -43,9 +43,9 @@ export default function ScrollListDemo() {
                 </Button>
             }
         >
-            <ScrollItem aria-label="上午或下午" mode="wheel" cycled={false} list={ampms} type={1} selectedIndex={selectIndex1} onSelect={onSelectAP} />
-            <ScrollItem aria-label="小时" mode="wheel" cycled list={hours} type={2} selectedIndex={selectIndex2} onSelect={onSelectHour} />
-            <ScrollItem aria-label="分钟" mode="wheel" cycled list={minutes} type={3} selectedIndex={selectIndex3} onSelect={onSelectMinute} />
+            <ScrollItem aria-label="上午或下午" mode="wheel" cycled={false} list={ampms} selectedIndex={selectIndex1} onSelect={onSelectAP} />
+            <ScrollItem aria-label="小时" mode="wheel" cycled list={hours} selectedIndex={selectIndex2} onSelect={onSelectHour} />
+            <ScrollItem aria-label="分钟" mode="wheel" cycled list={minutes} selectedIndex={selectIndex3} onSelect={onSelectMinute} />
         </ScrollList>
     );
 }

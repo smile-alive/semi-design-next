@@ -123,7 +123,12 @@
                 "en-US": "Form content. The scope provides formState, formApi and values; read them only and change the form through formApi."
             }
         },
-        "exposed": {}
+        "exposed": {
+            "formApi": {
+                "zh-CN": "表单的 formApi，用于读取与修改表单状态、校验与提交。",
+                "en-US": "The formApi of the form, used to read and change its state, validate and submit."
+            }
+        }
     },
     "array-field": {
         "source": "packages/semi-ui-vue/src/components/form/array-field.vue",
@@ -264,8 +269,8 @@
                 "en-US": "The error, a string array rendered after the content. Nothing shows when omitted."
             },
             "label": {
-                "zh-CN": "Label 的文本，或 text、extra、align、width、required、optional 等 Label 配置；label 插槽优先。",
-                "en-US": "The text of the label, or a label configuration such as text, extra, align, width, required and optional. The label slot takes precedence."
+                "zh-CN": "Label 的文本，或 text、extra、align、width、required、optional、id 等 Label 配置；label 插槽优先。",
+                "en-US": "The text of the label, or a label configuration such as text, extra, align, width, required, optional and id. The label slot takes precedence."
             },
             "labelPosition": {
                 "zh-CN": "Label 的位置，默认取自 Form，可选 top 或 left。",
@@ -339,7 +344,7 @@
         "exposed": {}
     },
     "schema-field": {
-        "source": "packages/semi-ui-vue/src/components/form/schema-field.vue",
+        "source": "packages/semi-ui-vue/src/components/form/schema-form/schema-field.vue",
         "props": {
             "field": {
                 "zh-CN": "要渲染的节点路径，默认为根；根对象不包 Section，其他对象渲染为以 title 为标题的 Section。",
@@ -363,7 +368,7 @@
         "exposed": {}
     },
     "schema-form": {
-        "source": "packages/semi-ui-vue/src/components/form/schema-form.vue",
+        "source": "packages/semi-ui-vue/src/components/form/schema-form/schema-form.vue",
         "props": {
             "allowEmpty": { "zh-CN": "同 Form 的 allowEmpty。", "en-US": "The allowEmpty of Form." },
             "autoScrollToError": { "zh-CN": "同 Form 的 autoScrollToError。", "en-US": "The autoScrollToError of Form." },
@@ -412,6 +417,11 @@
                 "en-US": "Content rendered after the fields, such as a submit button. The scope is that of the Form's default slot."
             }
         },
-        "exposed": {}
+        "exposed": {
+            "formApi": {
+                "zh-CN": "表单的 formApi，用于读取与修改表单状态、校验与提交。",
+                "en-US": "The formApi of the form, used to read and change its state, validate and submit."
+            }
+        }
     }
 }

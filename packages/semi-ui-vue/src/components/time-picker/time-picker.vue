@@ -13,8 +13,8 @@
     import { isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
     import { hasSlotContent } from '../../utils/slot-nodes';
     import useConfig from '../config-provider/use-config';
+    import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';
-    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover/popover.vue';
     import { useNestedPopups } from '../tooltip/context';

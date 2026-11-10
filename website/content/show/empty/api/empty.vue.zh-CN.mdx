@@ -2,7 +2,7 @@
 
 | 属性          | 说明                                                                                                    | 类型                         | 默认值                                        |
 | ------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------- |
-| layout        | 布局模式，可选 vertical、horizontal。                                                                   | `"horizontal" \| "vertical"` | `semiDefault("Empty", "layout", "vertical")`  |
+| layout        | 布局模式，可选 vertical、horizontal。                                                                   | `"horizontal" \| "vertical"` | `"vertical"`                                  |
 | imageStyle    | 占位图的样式。                                                                                          | `CSSProperties`              | `semiGlobalDefault("Empty", "imageStyle")`    |
 | title         | 纯文本标题；同时传入 title 插槽时以插槽为准。                                                           | `string`                     | `semiGlobalDefault("Empty", "title")`         |
 | image         | 占位图的 URL，或 `{ id }` 形式的页面内 SVG sprite 符号；空字符串视为没有图片。其他内容使用 image 插槽。 | `string \| EmptySvgNode`     | `semiGlobalDefault("Empty", "image")`         |

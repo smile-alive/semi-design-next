@@ -30,7 +30,6 @@ export type TimeInputProps = Pick<
     | 'insetLabelId'
     | 'placeholder'
     | 'prefix'
-    | 'prefixCls'
     | 'preventScroll'
     | 'showClear'
     | 'size'
@@ -40,6 +39,7 @@ export type TimeInputProps = Pick<
     | 'onFocus'
 > &
     BaseProps & {
+        prefixCls?: string;
         'aria-controls'?: React.AriaAttributes['aria-controls'];
         'aria-expanded'?: React.AriaAttributes['aria-expanded'];
         'aria-haspopup'?: React.AriaAttributes['aria-haspopup'];

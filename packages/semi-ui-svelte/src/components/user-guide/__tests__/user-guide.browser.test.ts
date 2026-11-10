@@ -68,6 +68,28 @@ describe('Svelte UserGuide 弹出模式焦点（浏览器）', () => {
     });
 });
 
+describe('Svelte UserGuide 动态主题（浏览器）', () => {
+    it('同一步内把 theme 改为 primary：卡片仍可见、贴近目标且可访问', async () => {
+        render(Tour, { props: { mask: false, startVisible: true, themeToggle: true } });
+        const card = await screen.findByRole('dialog', { name: 'Step A' });
+        const target = screen.getByRole('button', { name: 'Start' });
+        const wrapper = card.closest<HTMLElement>('[popover]') ?? card;
+        await waitFor(() => expect(Math.abs(wrapper.getBoundingClientRect().top - target.getBoundingClientRect().bottom)).toBeLessThan(80));
+
+        await userEvent.click(screen.getByRole('button', { name: 'Primary' }));
+        await waitFor(() => expect(document.querySelector('.semi-userGuide-popup-content-primary')).not.toBeNull());
+
+        const after = await screen.findByRole('dialog', { name: 'Step A' });
+        const afterWrapper = after.closest<HTMLElement>('[popover]') ?? after;
+        await waitFor(() => {
+            const cardRect = afterWrapper.getBoundingClientRect();
+            expect(cardRect.width).toBeGreaterThan(0);
+            expect(Math.abs(cardRect.top - target.getBoundingClientRect().bottom)).toBeLessThan(80);
+        });
+        expect(after).toBeVisible();
+    });
+});
+
 describe('Svelte UserGuide 弹出模式 ShadowRoot（浏览器）', () => {
     it('焦点在卡片内自定义元素的 ShadowRoot 里时，关闭引导后焦点回到触发元素', async () => {
         render(Tour, { props: { inner: true } });

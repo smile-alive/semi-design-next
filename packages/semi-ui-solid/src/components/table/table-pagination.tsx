@@ -1,16 +1,16 @@
 import { type JSX, Show, createMemo, untrack } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import Pagination from '../pagination';
-import type { RenderPagination, TablePaginationProps as PaginationProps } from './interface';
+import type { RenderPagination, TablePaginationProps } from './interface';
 
-export interface TablePaginationProps {
+export interface TablePaginationPartProps {
     prefixCls?: string;
-    pagination: PaginationProps;
+    pagination: TablePaginationProps;
     info?: JSX.Element;
     renderPagination?: RenderPagination;
 }
 
-export default function TablePagination(props: TablePaginationProps) {
+export default function TablePagination(props: TablePaginationPartProps) {
     const customPagination = createMemo(() => {
         const render = props.renderPagination;
         const pagination = props.pagination;

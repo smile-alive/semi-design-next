@@ -1,14 +1,13 @@
 import React, { useId, useMemo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import type { ElementProps } from '../../base/base';
 import { usePopupLayer } from '../../base/popup-layer';
 import useDefaultProps from '../../base/use-default-props';
 import Label, { type LabelProps } from '../form/label';
 import useLocale from '../locale/use-locale';
 import { InputGroupContext } from './context';
-import type { InputSize } from './index';
+import type { InputSize } from './input';
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -27,8 +26,6 @@ export interface InputGroupProps extends ElementProps<'span'> {
 
 const defaultProps = {
     className: '',
-    onBlur: noop,
-    onFocus: noop,
 } satisfies Partial<InputGroupProps>;
 
 export default function InputGroup(rawProps: InputGroupProps) {

@@ -3,10 +3,11 @@ import { Dynamic, isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
-import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
+import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import type { ElementProps } from '../../base/element-props';
+import useFocusHandover from '../../primitives/use-focus-handover';
 import useResizeObserver from '../../primitives/use-resize-observer';
 import callHandler from '../../utils/call-handler';
 import hasContent from '../../utils/has-content';
@@ -153,6 +154,8 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
     const runtime = new EllipsisRuntime();
     const widths = new WeakMap<Element, number>();
 
+    const handoverFocus = useFocusHandover<HTMLButtonElement>(() => root());
+
     // a memo, so a new ellipsis object does not reconnect the runtime and cancel its pending measurement
     const hasEllipsis = createMemo(() => Boolean(local.ellipsis));
 
@@ -175,7 +178,6 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
     const expandable = createMemo(() => opt().expandable);
     const expandText = createMemo(() => opt().expandText);
     const collapsible = createMemo(() => opt().collapsible);
-    const collapseText = createMemo(() => opt().collapseText);
 
     // read once: an object literal prop is rebuilt on every read
     const copyable = createMemo(() => local.copyable);
@@ -209,7 +211,7 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
     const copyConfig = createMemo(() => getCopyConfig(copyable(), text()));
     const expandButton = createMemo(() => getExpandButton({ isTruncated: isTruncated(), expanded: expanded() }, opt()));
 
-    const noCollapseText = () => !collapsible() && collapseText() === undefined;
+    const focusTarget = () => isExpandFocusTarget({ isTruncated: isTruncated(), expanded: expanded() }, opt());
 
     const update = (patch: Partial<Omit<EllipsisView, 'source'>>) => {
         const previous = view();
@@ -257,12 +259,6 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
         const ellipsis = local.ellipsis;
         if (typeof ellipsis === 'object') {
             ellipsis.onExpand?.(!expanded(), event);
-        }
-        const element = root();
-        // the button disappears once expanded; move focus to the text instead of dropping it to the body
-        if (expandable() && !expanded() && noCollapseText() && element) {
-            element.tabIndex = -1;
-            element.focus();
         }
         if ((expandable() && !expanded()) || (collapsible() && expanded())) {
             update({ expanded: !expanded() });
@@ -366,6 +362,7 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
                     <button
                         ref={(element) => {
                             expandElement = element;
+                            handoverFocus(element);
                             onCleanup(() => (expandElement = undefined));
                         }}
                         type="button"
@@ -409,7 +406,7 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
             ref: untrack(() => mergeRefs<HTMLElement>(local.ref, (element) => setRoot(element))),
             // Tooltip forces tabIndex 0 on its trigger; the text keeps it only when `focusable`
             get tabIndex() {
-                return trigger && !focusable() ? null : local.tabIndex;
+                return trigger && !focusable() ? null : (local.tabIndex ?? (focusTarget() ? -1 : undefined));
             },
             get 'aria-describedby'() {
                 return trigger && describedByLink() ? null : undefined;

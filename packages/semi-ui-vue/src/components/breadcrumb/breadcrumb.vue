@@ -53,6 +53,7 @@
 
     // Expanding removes the more button, which held focus: the first item it hid takes over, else the nav itself
     const root = useTemplateRef('root');
+    const list = useTemplateRef('list');
 
     const { foundation, state } = useFoundation<Foundation, Adapter, BreadcrumbProps, BreadcrumbState>(
         BreadcrumbFoundation,
@@ -99,7 +100,7 @@
 
     const handoverFocus = useFocusHandover(() => {
         const nav = root.value;
-        const target = nav?.children[layout().start]?.querySelector<HTMLElement>('a[href], [tabindex]:not([tabindex="-1"])');
+        const target = list.value?.children[layout().start]?.querySelector<HTMLElement>('a[href], [tabindex]:not([tabindex="-1"])');
         if (target) return target;
         if (nav) nav.tabIndex = -1;
         return nav;
@@ -120,7 +121,7 @@
         separator: route.separator,
     });
 
-    const nodeProps = ({ node, index }: NodeEntry, view: Layout) => (elementType(node) === 'Breadcrumb.Item' ? itemProps(index, view) : {});
+    const isItemNode = (node: VNode) => elementType(node) === 'Breadcrumb.Item';
 
     const routeSlots = ({ route, index }: RouteEntry) => ({
         default: () => (slots.item ? slots.item({ route: route._origin, index }) : (route.name ?? '')),
@@ -129,47 +130,59 @@
 
     // The more slot receives mountable nodes, like React's renderMore(restItem: ReactNode[]), and the popover shows the
     // same nodes; building them is the one place this SFC calls h().
-    const restItems = (view: Layout) => view.rest.map((entry) => (entry.kind === 'route' ? h(BreadcrumbItem, { key: entry.key, ...routeProps(entry, view) }, routeSlots(entry)) : h(entry.node, { key: entry.key, ...nodeProps(entry, view) })));
+    const restItems = (view: Layout) =>
+        view.rest.map((entry) => {
+            if (entry.kind === 'route') return h(BreadcrumbItem, { key: entry.key, ...routeProps(entry, view) }, routeSlots(entry));
+            return isItemNode(entry.node) ? h(entry.node, { key: entry.key, ...itemProps(entry.index, view) }) : h('li', { key: entry.key }, [entry.node]);
+        });
 </script>
 
 <template>
     <nav ref="root" :aria-label="locale.locale.label" :class="[`${prefix}-wrapper`, props.compact ? `${prefix}-wrapper-compact` : `${prefix}-wrapper-loose`]">
-        <template v-for="(view, v) in [layout()]" :key="v">
-            <!-- The key sits on each entry's fragment, so the branches inside cannot replace an item's own key. -->
-            <template v-for="entry in view.items" :key="entry.key">
-                <span v-if="entry.kind === 'more'" :ref="handoverFocus" :class="`${prefix}-collapse`">
-                    <span :class="`${prefix}-item-wrap`">
-                        <span :aria-label="locale.locale.expand" :class="[`${prefix}-item`, `${prefix}-item-more`]" role="button" tabindex="0" @click="foundation.handleExpand" @keydown="foundation.handleExpandKeyDown($event as KeyboardEvent & { currentTarget: Node })">
-                            <slot v-if="$slots.more" name="more" :restItems="restItems(view)" />
-                            <IconMore v-else-if="props.moreType === 'default'" />
-                            <Popover v-else showArrow :style="{ padding: '12px' }">
-                                <!-- the more button around it is the Tab stop and expands every item -->
-                                <IconMore tabindex="-1" />
-                                <template #content>
-                                    <template v-for="(item, i) in restItems(view)" :key="view.rest[i].key">
-                                        <component :is="item" />
-                                        <span v-if="i < view.rest.length - 1" :class="`${prefix}-restItem`">
-                                            <slot name="separator">{{ props.separator }}</slot>
-                                        </span>
+        <ol ref="list" :class="`${prefix}-list`">
+            <template v-for="(view, v) in [layout()]" :key="v">
+                <!-- The key sits on each entry's fragment, so the branches inside cannot replace an item's own key. -->
+                <template v-for="entry in view.items" :key="entry.key">
+                    <li v-if="entry.kind === 'more'" :ref="handoverFocus" :class="`${prefix}-collapse`">
+                        <span :class="`${prefix}-item-wrap`">
+                            <span :aria-label="locale.locale.expand" :class="[`${prefix}-item`, `${prefix}-item-more`]" role="button" tabindex="0" @click="foundation.handleExpand" @keydown="foundation.handleExpandKeyDown($event as KeyboardEvent & { currentTarget: Node })">
+                                <slot v-if="$slots.more" name="more" :restItems="restItems(view)" />
+                                <IconMore v-else-if="props.moreType === 'default'" />
+                                <Popover v-else showArrow :style="{ padding: '12px' }">
+                                    <!-- the more button around it is the Tab stop and expands every item -->
+                                    <IconMore tabindex="-1" />
+                                    <template #content>
+                                        <ol :class="`${prefix}-list`">
+                                            <template v-for="(item, i) in restItems(view)" :key="view.rest[i].key">
+                                                <component :is="item" />
+                                                <li v-if="i < view.rest.length - 1" aria-hidden="true" :class="`${prefix}-restItem`">
+                                                    <slot name="separator">{{ props.separator }}</slot>
+                                                </li>
+                                            </template>
+                                        </ol>
                                     </template>
-                                </template>
-                            </Popover>
+                                </Popover>
+                            </span>
+                            <span :class="`${prefix}-separator`" x-semi-prop="separator">
+                                <slot name="separator">{{ props.separator }}</slot>
+                            </span>
                         </span>
-                        <span :class="`${prefix}-separator`" x-semi-prop="separator">
-                            <slot name="separator">{{ props.separator }}</slot>
-                        </span>
-                    </span>
-                </span>
-                <BreadcrumbItem v-else-if="entry.kind === 'route'" v-bind="routeProps(entry, view)">
-                    <template #default>
-                        <slot :index="entry.index" name="item" :route="entry.route._origin">{{ entry.route.name }}</slot>
-                    </template>
-                    <template v-if="$slots.icon" #icon>
-                        <slot :index="entry.index" name="icon" :route="entry.route._origin" />
-                    </template>
-                </BreadcrumbItem>
-                <component :is="entry.node" v-else v-bind="nodeProps(entry, view)" />
+                    </li>
+                    <BreadcrumbItem v-else-if="entry.kind === 'route'" v-bind="routeProps(entry, view)">
+                        <template #default>
+                            <slot :index="entry.index" name="item" :route="entry.route._origin">{{ entry.route.name }}</slot>
+                        </template>
+                        <template v-if="$slots.icon" #icon>
+                            <slot :index="entry.index" name="icon" :route="entry.route._origin" />
+                        </template>
+                    </BreadcrumbItem>
+                    <component :is="entry.node" v-else-if="isItemNode(entry.node)" v-bind="itemProps(entry.index, view)" />
+                    <!-- an ol holds only li, so other nodes get one of their own -->
+                    <li v-else>
+                        <component :is="entry.node" />
+                    </li>
+                </template>
             </template>
-        </template>
+        </ol>
     </nav>
 </template>

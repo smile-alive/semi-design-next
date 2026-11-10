@@ -351,7 +351,7 @@ Semi 提供了 `#sourcePanel`、`#selectedPanel` 插槽，允许你完全自定�
 ```ts
 interface TransferSourcePanelSlotProps {
     value: Array<string | number>; // 所有选中项的 value
-    loading: boolean | undefined; // 是否加载中
+    loading?: boolean; // 是否加载中
     noMatch: boolean; // 是否没有符合当前搜索值匹配的项
     filterData: Array<Item>; // 匹配当前搜索值的项
     sourceData: Array<Item>; // 所有项
@@ -390,7 +390,7 @@ Semi 提供了 `sourcePanel`、`selectedPanel` snippet，允许你完全自定�
 ```ts
 interface TransferSourcePanelSnippetProps {
     value: Array<string | number>; // 所有选中项的 value
-    loading: boolean | undefined; // 是否加载中
+    loading?: boolean; // 是否加载中
     noMatch: boolean; // 是否没有符合当前搜索值匹配的项
     filterData: Array<Item>; // 匹配当前搜索值的项
     sourceData: Array<Item>; // 所有项
@@ -809,7 +809,7 @@ Tree 自带的搜索框由 `searchRender` 为 `false` 隐藏，由 Transfer 自�
 
 `class`、`style`、`aria-*` 等 attrs 落在 Transfer 根元素上；根元素带 `aria-label` 或 `aria-labelledby` 且未指定 `role` 时为 `role="group"`。搜索框的属性用 `inputProps` 传入，treeList 左侧 Tree 的属性用 `treeProps` 传入。
 
-下文各接口在 `@fibrae/semi-ui-vue` 中导出的类型名为：Item 对应 `TransferDataItem`，GroupItem 对应 `TransferGroupItem`，TreeItem 对应 `TransferTreeItem`，VirtualizeProps 对应 `TransferVirtualize`，PaginationProps 对应 `TransferPagination`。
+下文各接口在 `@fibrae/semi-ui-vue` 中导出的类型名为：Item 对应 `TransferDataItem`，GroupItem 对应 `TransferGroupItem`，TreeItem 对应 `TransferTreeItem`，VirtualizeProps 对应 `TransferVirtualize`，TransferPaginationProps 对应 `TransferPagination`。
 
 ### Item Interface
 
@@ -833,7 +833,7 @@ Tree 自带的搜索框由 `searchRender` 为 `false` 隐藏，由 Transfer 自�
 
 `class`、`style`、`aria-*` 等未声明的属性落在 Transfer 根元素上；根元素带 `aria-label` 或 `aria-labelledby` 且未指定 `role` 时为 `role="group"`。`value` 可以用 `bind:value` 绑定，也可以只传值作为初始选中项，没有 `defaultValue`。搜索框的属性用 `inputProps` 传入，treeList 左侧 Tree 的属性用 `treeProps` 传入。
 
-下文各接口在 `@fibrae/semi-ui-svelte` 中导出的类型名为：Item 对应 `TransferDataItem`，GroupItem 对应 `TransferGroupItem`，TreeItem 对应 `TransferTreeItem`，VirtualizeProps 对应 `TransferVirtualize`，PaginationProps 对应 `TransferPagination`。
+下文各接口在 `@fibrae/semi-ui-svelte` 中导出的类型名为：Item 对应 `TransferDataItem`，GroupItem 对应 `TransferGroupItem`，TreeItem 对应 `TransferTreeItem`，VirtualizeProps 对应 `TransferVirtualize`，TransferPaginationProps 对应 `TransferPagination`。
 
 ### Item Interface
 
@@ -896,7 +896,7 @@ TreeItem 继承 Item 的所有属性
 | width    | 虚拟列表宽度                                                                           | number \| string |        |
 | itemSize | 每行高度（固定）                                                                       | number           |        |
 
-### PaginationProps Interface
+### TransferPaginationProps Interface
 
 | 属性               | 说明                       | 类型                          | 默认值 |
 | ------------------ | -------------------------- | ----------------------------- | ------ |

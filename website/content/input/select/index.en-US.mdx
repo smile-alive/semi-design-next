@@ -924,18 +924,7 @@ The methods are listed in the Methods table after Select Props.
 
 <Framework only="vue">
 
-Select exposes the following methods through a template ref, typed as `SelectHandle`:
-
-| Method | Instructions |
-| --- | --- |
-| open() | Manually open dropdown list |
-| close() | Manually close dropdown list |
-| focus() | Manually focus: a searchable Select focuses the search input and opens the dropdown list, otherwise it focuses the trigger without opening |
-| clearInput() | Manually clear value of the search input |
-| selectAll() | Select every shown, enabled option; multiple mode only |
-| deselectAll() | Manually clear selected options |
-| search(value: string, event?: Event) | Searches as if the value were typed into the search input, and the value is set to the input; without an event, the second parameter of the `search` event is undefined |
-| rePosition() | Recomputes the dropdown position from the trigger's current position at once; the dropdown already follows scrolling, window resizing, trigger moves and size changes of the trigger or list, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame |
+Select exposes methods through a template ref, typed as `SelectHandle`; see the Exposes table of Select above for the list.
 
 ```vue
 <script setup lang="ts">

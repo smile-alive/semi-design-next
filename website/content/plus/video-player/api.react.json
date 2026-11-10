@@ -1,6 +1,6 @@
 {
     "video-player": {
-        "source": "packages/semi-ui-react/src/components/video-player/index.tsx",
+        "source": "packages/semi-ui-react/src/components/video-player/video-player.tsx",
         "props": {
             "autoPlay": { "zh-CN": "是否自动播放。", "en-US": "Whether to play automatically." },
             "captionsSrc": { "zh-CN": "字幕资源地址，传入后默认显示字幕。", "en-US": "Captions source URL; the captions are shown by default once set." },

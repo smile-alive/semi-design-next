@@ -180,7 +180,21 @@
             </button>
         </li>
         <li v-if="view.sizeChangerShown" :class="`${prefix}-switch`">
-            <Select :aria-label="text.pageSizeSelector" clickToHide :disabled="props.disabled" :dropdownClassName="`${prefix}-select-dropdown`" :modelValue="state.pageSize" :optionList="sizeOptions" :position="view.switchPosition" @change="changePageSize" />
+            <!-- changePageSize takes one number: global Select defaults must not make it search, create or object-valued, nor add a clear button -->
+            <Select
+                :allowCreate="false"
+                :aria-label="text.pageSizeSelector"
+                :changeWithObject="false"
+                clickToHide
+                :disabled="props.disabled"
+                :dropdownClassName="`${prefix}-select-dropdown`"
+                :filter="false"
+                :modelValue="state.pageSize"
+                :optionList="sizeOptions"
+                :position="view.switchPosition"
+                :showClear="false"
+                @change="changePageSize"
+            />
         </li>
         <li v-if="props.showQuickJumper" :class="[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: view.quickJumpDisabled }]">
             <span>{{ text.jumpTo }}</span>

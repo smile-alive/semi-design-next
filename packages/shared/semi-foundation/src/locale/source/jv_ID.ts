@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Pilih kabeh baris',
         selectRow: 'Pilih baris iki',
+        scrollRegion: 'Isi tabel sing bisa digulung',
+        untitledColumn: 'Kolom tanpa irah-irahan',
         filterColumn: 'Saring data nganggo kolom iki',
         filterColumnActive: 'Saring data nganggo kolom iki, saringan aktif',
         expandRow: 'Ambakake baris iki',
@@ -375,6 +377,7 @@ const local: Locale = {
         search: 'Tlusuri',
         replace: 'Ganti',
         replaceAll: 'Ganti Kabeh',
+        replaceWith: 'Ganti nganggo',
         caseSensitive: 'Cocogake huruf gedhe/cilik',
         regex: 'Gunakake ekspresi reguler',
         wholeWord: 'Cocogake tembung lengkap',

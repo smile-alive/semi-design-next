@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { AIChatInput, getConfigureItem, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-vue';
+    import { AIChatInput, getConfigureItem, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-vue';
     import { Cascader } from '@fibrae/semi-ui-vue';
 
     const uploadProps = { action: 'https://api.semi.design/upload' };
@@ -23,7 +23,7 @@
         className: 'aiChatInput-cascader-configure',
     });
 
-    const onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+    const onConfigureChange = (value: Setup, changedValue?: Setup) => {
         console.log('onConfigureChange', value, changedValue);
     };
 </script>

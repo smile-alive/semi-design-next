@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import type { CheckboxAttrs, ColumnProps, GetCheckboxProps, GroupByFunction, ResizableProps, RowSelectionOnChange, RowSelectionOnSelect, RowSelectionOnSelectAll, RowSelectionProps, TableGroupBy, TableFilterDropdownItemSlotProps, TablePaginationSlotProps, TableResizeFn, TableSelectionCellSlotProps } from '..';
-import type ResizableHeaderCell from '../resizable-header-cell.vue';
+import type ResizableHeaderCell from '../table-header/resizable-header-cell.vue';
 
 interface Row {
     id: number;

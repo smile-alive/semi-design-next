@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | class | Class name of the root element, merged with the built-in class names. | `string` | - |
 | closable | Whether to show the close button. Passed through to the Modal or SideSheet of the current mode. | `boolean` | - |
 | closeIcon | Icon inside the close button. Passed through to the Modal or SideSheet of the current mode. | `JSX.Element` | - |
-| closeOnEsc | Whether Esc closes the panel, passed through to the Modal or SideSheet of the current mode. In popup mode it must be true for Esc to call onCancel. | `boolean` | - |
+| closeOnEsc | Whether Esc calls onCancel, passed through to the Modal or SideSheet of the current mode; on by default in both modes. | `boolean` | - |
 | footer | Replaces the footer with the default cancel and submit buttons, passed through to the Modal or SideSheet of the current mode. Passing null renders no footer. | `JSX.Element` | - |
 | getPopupContainer | Container the panel is mounted into. Passed through to the Modal or SideSheet of the current mode. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
 | height | Height of the panel, passed through to the SideSheet. Popup mode uses auto by default, and a value you give wins. | `string \| number` | - |

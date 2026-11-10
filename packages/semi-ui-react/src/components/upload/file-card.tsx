@@ -5,7 +5,6 @@ import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/c
 import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
 import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconAlertCircle, IconClose, IconClear, IconFile, IconRefresh } from '@fibrae/semi-icons-react';
 import HydratedImage from '../../internal/hydrated-image';
 import Button from '../button/index';
@@ -58,8 +57,6 @@ export interface FileCardProps extends RenderFileItemProps {
 const defaultProps = {
     listType: strings.FILE_LIST_DEFAULT,
     name: '',
-    onRemove: noop,
-    onRetry: noop,
     preview: false,
     size: '',
     showTooltip: true,
@@ -127,10 +124,10 @@ function PreviewTrigger({ label }: { label: string }) {
     return <button type="button" className={`${prefixCls}-preview-trigger`} aria-label={label} />;
 }
 
-function stopThen(callback: () => void) {
+function stopThen(callback?: () => void) {
     return (e: MouseEvent) => {
         e.stopPropagation();
-        callback();
+        callback?.();
     };
 }
 

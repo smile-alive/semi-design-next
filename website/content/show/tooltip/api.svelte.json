@@ -109,10 +109,6 @@
                 "zh-CN": "聚焦时是否阻止浏览器滚动到被聚焦元素。",
                 "en-US": "Whether focusing an element avoids scrolling it into view."
             },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀，设置后弹出层不再带 Tooltip 的样式。",
-                "en-US": "Class prefix of the popup. A custom value drops the Tooltip styles."
-            },
             "returnFocusOnClose": {
                 "zh-CN": "弹出层关闭后焦点是否回到触发元素。",
                 "en-US": "Whether focus returns to the trigger after the popup closes."
@@ -156,6 +152,10 @@
             "focusTrigger": {
                 "zh-CN": "让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效。",
                 "en-US": "Focuses the trigger element. Only works when returnFocusOnClose is true and trigger is not custom."
+            },
+            "getPopup": {
+                "zh-CN": "返回弹出层元素；弹出层不在文档中时返回 `null`。",
+                "en-US": "Returns the popup element, or `null` while the popup is not in the document."
             },
             "getPopupId": { "zh-CN": "返回弹出层节点的 id。", "en-US": "Returns the id of the popup element." },
             "hide": {

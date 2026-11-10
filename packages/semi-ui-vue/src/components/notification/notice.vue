@@ -2,7 +2,7 @@
     import { computed, isVNode, onBeforeUnmount, onMounted, useId, useTemplateRef, type Component } from 'vue';
     import { isAlertType, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
     import { cssClasses, getStackItemTransform, numbers } from '@fibrae/semi-foundation/components/notification/constants';
-    import NotificationFoundation, { type NoticeAdapter, type NoticePosition, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+    import NotificationFoundation, { type NoticeProps as FoundationNoticeProps, type NoticeAdapter, type NoticePosition, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
@@ -12,9 +12,13 @@
     import IconButton from '../icon-button';
     import useLocale from '../locale/use-locale';
     import { useNoticeListContext } from './context';
-    import type { NoticeProps } from './interface';
+    import type { NotificationNode } from './interface';
 
-    interface NoticeItemProps extends Omit<NoticeProps, 'onClick' | 'onClose' | 'onCloseClick' | 'class' | 'style' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex' | 'getPopupContainer' | 'stack' | 'position'> {
+    // Not derived from NoticeProps: defineProps would turn its native attributes into runtime props.
+    interface NoticeItemProps extends Omit<FoundationNoticeProps, 'title' | 'content' | 'icon' | 'className' | 'style' | 'close' | 'onClick' | 'onClose' | 'onCloseClick' | 'zIndex' | 'getPopupContainer' | 'stack' | 'position'> {
+        title?: NotificationNode;
+        content?: NotificationNode;
+        icon?: NotificationNode;
         placement: NoticePosition;
         stack?: boolean;
         stackExpanded?: boolean;

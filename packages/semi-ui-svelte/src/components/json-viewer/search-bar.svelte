@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import { IconCaseSensitive, IconChevronLeft, IconChevronRight, IconClose, IconRegExp, IconWholeWord } from '@fibrae/semi-icons-svelte';
     import ButtonGroup from '../button/button-group.svelte';
@@ -25,11 +24,7 @@
         { key: 'wholeWord', icon: IconWholeWord },
     ] as const;
 
-    const onSearchInput = (text: string) => {
-        ctx.search(text);
-        // the editor's layout moves focus to its content area while editable
-        searchInput?.focus();
-    };
+    const onSearchInput = (text: string) => ctx.search(text);
 
     // every control closes the bar on Escape; the landmark takes no keyboard handler, and the key goes no further, so a
     // Modal or Tooltip around the viewer keeps its own Escape for itself
@@ -38,13 +33,6 @@
             event.stopPropagation();
             onClose();
         }
-    };
-
-    // search and replace move focus to the editor; restore it so Esc and Tab continue from the keyboard user's position
-    const keepFocus = (run: () => void) => {
-        const active = FocusTrapHandle.getDeepActiveElement();
-        run();
-        active?.focus();
     };
 
     onMount(() => searchInput?.focus());
@@ -56,7 +44,7 @@
         <ul class={`${prefix}-search-options`}>
             {#each searchOptionItems as item (item.key)}
                 <li class={[`${prefix}-search-options-item`, { [`${prefix}-search-options-item-active`]: ctx.searchOptions[item.key] }]}>
-                    <Button aria-label={locale().locale[item.key]} aria-pressed={ctx.searchOptions[item.key]} theme="borderless" type="tertiary" onclick={() => keepFocus(() => ctx.toggleSearchOption(item.key))} onkeydown={closeOnEscape}>
+                    <Button aria-label={locale().locale[item.key]} aria-pressed={ctx.searchOptions[item.key]} theme="borderless" type="tertiary" onclick={() => ctx.toggleSearchOption(item.key)} onkeydown={closeOnEscape}>
                         {#snippet icon()}
                             <item.icon />
                         {/snippet}
@@ -65,12 +53,12 @@
             {/each}
         </ul>
         <ButtonGroup>
-            <Button aria-label={locale().locale.previousMatch} onclick={() => keepFocus(() => ctx.prevSearch())} onkeydown={closeOnEscape}>
+            <Button aria-label={locale().locale.previousMatch} onclick={() => ctx.prevSearch()} onkeydown={closeOnEscape}>
                 {#snippet icon()}
                     <IconChevronLeft />
                 {/snippet}
             </Button>
-            <Button aria-label={locale().locale.nextMatch} onclick={() => keepFocus(() => ctx.nextSearch())} onkeydown={closeOnEscape}>
+            <Button aria-label={locale().locale.nextMatch} onclick={() => ctx.nextSearch()} onkeydown={closeOnEscape}>
                 {#snippet icon()}
                     <IconChevronRight />
                 {/snippet}
@@ -83,11 +71,11 @@
         </Button>
     </div>
     <div class={`${prefix}-replace-bar`}>
-        <Input aria-label={locale().locale.replace} bind:value={() => replaceText, (next) => (replaceText = String(next ?? ''))} class={`${prefix}-replace-bar-input`} onKeyDown={closeOnEscape} placeholder={locale().locale.replace} showClear={false} />
-        <Button disabled={ctx.readOnly} style="width: fit-content" onclick={() => keepFocus(() => ctx.replace(replaceText))} onkeydown={closeOnEscape}>
+        <Input aria-label={locale().locale.replaceWith} bind:value={() => replaceText, (next) => (replaceText = String(next ?? ''))} class={`${prefix}-replace-bar-input`} onKeyDown={closeOnEscape} placeholder={locale().locale.replace} showClear={false} />
+        <Button disabled={ctx.readOnly} style="width: fit-content" onclick={() => ctx.replace(replaceText)} onkeydown={closeOnEscape}>
             {locale().locale.replace}
         </Button>
-        <Button disabled={ctx.readOnly} style="width: fit-content" onclick={() => keepFocus(() => ctx.replaceAll(replaceText))} onkeydown={closeOnEscape}>
+        <Button disabled={ctx.readOnly} style="width: fit-content" onclick={() => ctx.replaceAll(replaceText)} onkeydown={closeOnEscape}>
             {locale().locale.replaceAll}
         </Button>
     </div>

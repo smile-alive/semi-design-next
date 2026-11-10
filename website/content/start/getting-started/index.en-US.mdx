@@ -287,7 +287,7 @@ The webpack plugin also takes `extractCssOptions` (for example to use the `mini-
 Solid projects differ as follows:
 
 - Vite: the dev server needs `@fibrae/semi-vite-plugin` too, as `plugins: [solid(), semi()]`. vite-plugin-solid keeps the Solid packages out of the pre-bundle, so foundation's CommonJS dependencies (such as `style-to-js`) reach the browser unconverted and the page stays blank; the plugin adds them to the pre-bundle.
-- webpack 5 and rspack 2: Semi's webpack and rspack plugins do not process the Solid packages, so the plugin options (`prefixCls`, `cssLayer: false` and `omitCss`) have no effect on them; only the default prefix and layered styles are supported, and neither plugin is used. Compile the app's JSX with `babel-loader` and `babel-preset-solid` (needs `@babel/core` 7); the bundler does not recognise the `solid` export condition and takes the `default` condition, `dist/*.js`, which is already compiled for the DOM. Components import their own styles: webpack needs `css-loader` and `style-loader`, rspack needs `type: 'css'`.
+- webpack 5 and rspack 2: Semi's webpack and rspack plugins are used as for React and Vue, and `prefixCls` takes effect on the Solid packages; without a plugin only the default prefix and layered styles are available. Compile the app's JSX with `babel-loader` and `babel-preset-solid` (needs `@babel/core` 7); the bundler does not recognise the `solid` export condition and takes the `default` condition, `dist/*.js`, which is already compiled for the DOM. Components import their own styles: without a plugin, webpack needs `css-loader` and `style-loader` and rspack needs `type: 'css'`; with a plugin, webpack needs no CSS rule and the rspack rule must also match `.scss`.
 
 </Framework>
 
@@ -295,7 +295,7 @@ Solid projects differ as follows:
 
 Svelte projects differ as follows:
 
-- Vite only: the Svelte packages are compiled by `@sveltejs/vite-plugin-svelte` (built into SvelteKit). `@fibrae/semi-webpack-plugin` and `@fibrae/semi-rspack-plugin` do not process the Svelte packages; do not use them in a Svelte project.
+- Vite only: the Svelte packages are compiled by `@sveltejs/vite-plugin-svelte` (built into SvelteKit). there is no verified Svelte setup for webpack or rspack, so do not use `@fibrae/semi-webpack-plugin` or `@fibrae/semi-rspack-plugin` in a Svelte project.
 - `@fibrae/semi-vite-plugin` applies to `@fibrae/semi-ui-svelte`, `@fibrae/semi-ai-svelte` and `@fibrae/semi-icons-svelte`, and `prefixCls`, `cssLayer` and `omitCss` mean the same, as `plugins: [svelte(), semi()]`; for SvelteKit see [Server-side rendering](#server-side-rendering).
 
 </Framework>

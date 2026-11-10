@@ -1,6 +1,6 @@
 {
     "anchor": {
-        "source": "packages/semi-ui-react/src/components/anchor/index.tsx",
+        "source": "packages/semi-ui-react/src/components/anchor/anchor.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "根导航元素的可访问名称，未设置时使用语言包中的文案。",

@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
-import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
+import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { ElementProps } from '../../base/element-props';
 import type { ColProps } from '../grid';
 import type { LabelProps } from './label';
@@ -112,8 +112,8 @@ interface AllFormProps<Values extends Record<string, any> = any, Output = Values
     schemaDebounce?: number;
     /** Whether unmounted fields keep their value, error and touched state; Fields and ArrayFields without their own follow it */
     keepState?: boolean;
-    /** Initial values of the fields, copied once when the Form is created */
-    initValues?: Values;
+    /** Initial values of the fields, copied once when the Form is created; may leave out any part of the values */
+    initValues?: DeepPartial<Values>;
     /** Also written to `x-form-id`; generated when missing */
     id?: string;
     /** Called once when the Form mounts, to save the formApi reference */

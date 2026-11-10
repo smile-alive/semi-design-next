@@ -2,8 +2,8 @@ import type { ComponentProps } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import useForm from '../hooks/use-form.svelte';
 import type { FormApi } from '../interface';
-import useForm from '../use-form.svelte';
 import HooksFixture from './b-hooks.svelte';
 import { settle, typeInto } from './helpers';
 

@@ -94,7 +94,6 @@ export interface TooltipProps extends TooltipBaseProps {
     motion?: boolean;
     autoAdjustOverflow?: boolean;
     position?: Position;
-    prefixCls?: string;
     spacing?: number | { x: number; y: number };
     showArrow?: boolean | JSX.Element;
     role?: string;
@@ -117,6 +116,12 @@ export interface TooltipProps extends TooltipBaseProps {
     /** Called once per opening after the enter transition, not for an opening closed before it finishes */
     afterOpen?: () => void;
     afterClose?: () => void;
+}
+
+/** Set by Popover and Dropdown, kept out of the public TooltipProps */
+export interface TooltipInternalProps extends TooltipProps {
+    /** Replaces the Tooltip classes of the popup wrapper with the caller's own */
+    prefixCls?: string;
 }
 
 type Foundation = TooltipFoundation<TooltipProps>;
@@ -143,7 +148,7 @@ const defaultProps = {
     disableArrowKeyDown: false,
     keepDOM: false,
     condition: true,
-} satisfies Partial<TooltipProps>;
+} satisfies Partial<TooltipInternalProps>;
 
 const prefix = cssClasses.PREFIX;
 const OWN_KEYS = ['ref', 'tabIndex', 'tabindex', POPUP_ID_ATTRIBUTE, 'aria-describedby', 'aria-expanded', 'aria-haspopup', 'aria-controls'] as const;
@@ -178,7 +183,7 @@ export function PopupContent(props: { content: TooltipProps['content']; renderPr
 }
 
 export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHandle> }) {
-    const props = useDefaultProps('Tooltip', rawProps, defaultProps);
+    const props = useDefaultProps('Tooltip', rawProps as TooltipInternalProps & { ref?: Ref<TooltipHandle> }, defaultProps);
 
     const config = useConfig();
     const outerTriggers = useSpecialTriggers();

@@ -4,6 +4,7 @@
     import { getNextSortOrder } from '@fibrae/semi-foundation/components/table/utils';
     import { IconCaretdown, IconCaretup } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../../base/slot-fragment';
+    import { hasSlotContent } from '../../utils/slot-nodes';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip';
     import { useTableContext } from './context';
@@ -25,8 +26,15 @@
     const table = useTableContext();
     const locale = useLocale('Table');
 
-    // slotted content names the button itself; only a plain string title can stand in as its label
-    const buttonLabel = () => (slots.default || typeof props.column.title !== 'string' ? undefined : props.column.title);
+    // slotted content names the button itself; otherwise a plain string title stands in, and the bare icon of an untitled
+    // column takes the next sort action
+    const buttonLabel = () => {
+        if (hasSlotContent(slots.default)) {
+            return undefined;
+        }
+        const { title } = props.column;
+        return typeof title === 'string' && title ? title : locale.value.locale[getNextSortOrder(props.sortOrder)];
+    };
 
     const icon = () =>
         slotOutput(table.resolveColumnSlot('sortIcon', props.column), {

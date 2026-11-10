@@ -11,12 +11,10 @@ export interface ButtonGroupContext extends Partial<ButtonLooks> {
     hasNext: (button: HTMLElement) => boolean;
 }
 
-const [getEnclosingGroup, setButtonGroupContext] = createContext<ButtonGroupContext>('ButtonGroup', { optional: true });
-
-export { setButtonGroupContext };
+export const [getButtonGroupContext, setButtonGroupContext] = createContext<ButtonGroupContext>('ButtonGroup', { optional: true });
 
 /** The enclosing group, unless a popup layer lies between: the group's context also reaches the popup's content */
-export function getButtonGroupContext() {
-    const group = getEnclosingGroup();
+export function getButtonGroupInScope() {
+    const group = getButtonGroupContext();
     return group?.layer === getPopupLayerContext() ? group : undefined;
 }

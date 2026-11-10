@@ -9,7 +9,7 @@ import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-obj
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { cloneDeep, hasContent } from '../../utils/index';
 import { Col, Row } from '../grid';
-import ErrorMessage from './error-message';
+import ErrorMessage, { type ErrorMessageInternalProps } from './error-message';
 import { useFormState, useFieldBridge, useArrayFieldState } from './hooks';
 import type { FieldProps } from './interface';
 import Label, { type LabelProps } from './label';
@@ -45,6 +45,8 @@ const MemoizedField = memo(
 );
 
 const prefix = cssClasses.PREFIX;
+
+const InternalErrorMessage = ErrorMessage as (props: ErrorMessageInternalProps) => React.ReactNode;
 
 export interface WithFieldOption {
     valueKey?: string;
@@ -299,7 +301,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
                 <div className={`${prefix}-field-main`}>
                     {mergeExtraPos === 'middle' && extraContent}
                     <Control {...newProps} />
-                    {!noErrorMessage && <ErrorMessage error={error} errorMessageId={ids.errorMessage} helpText={helpText} helpTextId={ids.helpText} showValidateIcon={formProps.showValidateIcon} validateStatus={shownStatus} />}
+                    {!noErrorMessage && <InternalErrorMessage error={error} errorMessageId={ids.errorMessage} helpText={helpText} helpTextId={ids.helpText} showValidateIcon={formProps.showValidateIcon} validateStatus={shownStatus} />}
                     {mergeExtraPos === 'bottom' && extraContent}
                 </div>
             );

@@ -249,12 +249,13 @@ export default function Tabs(rawProps: TabsProps) {
                 tabIndex={pane.tabIndex ?? 0}
                 x-semi-prop="children"
             >
-                {/* animationend bubbles, and one from the pane's content must not end the overlay's slide */}
+                {/* animationend bubbles, and one from the pane's content must not end the overlay's slide; several
+                    animations on the overlay end separately, and the slide ends with the last one */}
                 <div
                     class={clsx(cssClasses.TABS_PANE_MOTION_OVERLAY, animating() && paneMotion().startClassName)}
                     x-semi-prop="children"
                     onAnimationEnd={(event) => {
-                        if (event.target === event.currentTarget) {
+                        if (event.target === event.currentTarget && !event.currentTarget.getAnimations().some((animation) => 'animationName' in animation && animation.playState === 'running')) {
                             setAnimating(false);
                         }
                     }}

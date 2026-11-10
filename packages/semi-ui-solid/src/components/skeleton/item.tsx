@@ -5,11 +5,10 @@ import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
 import type { ElementProps } from '../../base/element-props';
 
 export interface BasicProps extends ElementProps<'div'> {
-    prefixCls?: string;
     type?: string;
 }
 
-export interface ParagraphProps extends ElementProps<'ul'>, Pick<BasicProps, 'prefixCls'> {
+export interface ParagraphProps extends ElementProps<'ul'> {
     rows?: number;
 }
 
@@ -22,9 +21,9 @@ export interface AvatarProps extends BasicProps {
 export type GenericProps = AvatarProps;
 
 function Generic(props: GenericProps) {
-    const [local, rest] = splitProps(props, ['class', 'prefixCls', 'shape', 'size', 'type']);
+    const [local, rest] = splitProps(props, ['class', 'shape', 'size', 'type']);
 
-    const prefixCls = () => local.prefixCls ?? cssClasses.PREFIX;
+    const prefixCls = cssClasses.PREFIX;
 
     const type = () => local.type as string;
 
@@ -34,9 +33,9 @@ function Generic(props: GenericProps) {
         <div
             aria-hidden="true"
             {...rest}
-            class={clsx(local.class, `${prefixCls()}-${type()}`, {
-                [`${prefixCls()}-${type()}-${local.size ?? 'medium'}`]: avatar(),
-                [`${prefixCls()}-${type()}-${local.shape ?? 'circle'}`]: avatar(),
+            class={clsx(local.class, `${prefixCls}-${type()}`, {
+                [`${prefixCls}-${type()}-${local.size ?? 'medium'}`]: avatar(),
+                [`${prefixCls}-${type()}-${local.shape ?? 'circle'}`]: avatar(),
             })}
         />
     );
@@ -60,10 +59,10 @@ export function Button(props: BasicProps) {
 }
 
 export function Paragraph(props: ParagraphProps) {
-    const [local, rest] = splitProps(props, ['class', 'prefixCls', 'rows']);
+    const [local, rest] = splitProps(props, ['class', 'rows']);
 
     return (
-        <ul aria-hidden="true" {...rest} class={clsx(local.class, `${local.prefixCls ?? cssClasses.PREFIX}-paragraph`)}>
+        <ul aria-hidden="true" {...rest} class={clsx(local.class, `${cssClasses.PREFIX}-paragraph`)}>
             <Index each={Array.from({ length: local.rows ?? 4 })}>{() => <li />}</Index>
         </ul>
     );

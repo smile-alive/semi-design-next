@@ -1,6 +1,6 @@
 {
     "tree": {
-        "source": "packages/semi-ui-react/src/components/tree/index.tsx",
+        "source": "packages/semi-ui-react/src/components/tree/tree.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "树的可访问名称，设在 `role=\"tree\"` 的元素上；空状态下不渲染该元素。",

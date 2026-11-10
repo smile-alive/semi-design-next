@@ -9,7 +9,6 @@
     import type { RowProps, RowSlots } from './interface';
 
     const props = withDefaults(defineProps<RowProps & /* @vue-ignore */ ElementProps<'div', keyof RowProps>>(), {
-        prefixCls: () => semiDefault('Row', 'prefixCls', cssClasses.PREFIX),
         type: semiGlobalDefault('Row', 'type'),
         align: semiGlobalDefault('Row', 'align'),
         justify: semiGlobalDefault('Row', 'justify'),
@@ -18,7 +17,7 @@
 
     defineSlots<RowSlots>();
 
-    const classes = computed(() => getRowClassName(props.prefixCls, props));
+    const classes = computed(() => getRowClassName(cssClasses.PREFIX, props));
 
     const gutterVars = computed(() => {
         const [horizontal, vertical] = normalizeGutter(props.gutter);

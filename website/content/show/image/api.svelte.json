@@ -68,7 +68,7 @@
         }
     },
     "image-preview": {
-        "source": "packages/semi-ui-svelte/src/components/image/preview.svelte",
+        "source": "packages/semi-ui-svelte/src/components/image/preview/preview.svelte",
         "props": {
             "src": {
                 "zh-CN": "要预览的图片地址列表，决定组内图片及其顺序；包裹的 Image 按自己的 src（或 preview.src）在列表中的位置打开预览，不在列表中的 Image 单独预览。",
@@ -153,8 +153,8 @@
                 "en-US": "Snippet that replaces the content of the title section at the top of the preview, receiving `{ title, index }`. When there is a title, the dialog is named by that section through aria-labelledby, so its name is the text the snippet renders; without a title the name comes from the locale."
             },
             "previewMenu": {
-                "zh-CN": "自定义预览底部操作区的 snippet，参数为 MenuProps，menuItems 是默认各项的 snippet，渲染时一次输出全部默认项。",
-                "en-US": "Snippet for the custom bottom menu, receiving MenuProps; menuItems is a snippet that renders all the default items at once."
+                "zh-CN": "自定义预览底部操作区的 snippet，参数为 MenuProps。menuItems 是渲染默认各项的 snippet，不传参数时渲染全部，传入 start、end 时按 slice 规则只渲染其中一段，可以逐项或按组渲染。",
+                "en-US": "Snippet for the custom bottom menu, receiving MenuProps. menuItems is a snippet that renders the default items: all of them without arguments, or the slice that start and end pick, so they can be rendered one by one or in groups."
             },
             "leftIcon": {
                 "zh-CN": "自定义向左切换图标的 snippet，参数为 `{ index }`。",

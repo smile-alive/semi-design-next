@@ -440,6 +440,7 @@ describe('JsonViewer', () => {
         for (const name of [ja_JP.JsonViewer.caseSensitive, ja_JP.JsonViewer.regex, ja_JP.JsonViewer.wholeWord]) {
             expect(screen.getByRole('button', { name })).toBeInTheDocument();
         }
+        expect(screen.getByRole('textbox', { name: ja_JP.JsonViewer.replaceWith })).toBe(replaceInput());
     });
 
     it('使用替换输入框的文本进行替换', () => {
@@ -566,7 +567,7 @@ describe('JsonViewer', () => {
         // jsdom's role table predates the search element (implicit role search); the browser test queries the role
         expect(document.querySelector(`search.${prefixCls}-search-bar-container`)).toHaveAttribute('aria-label', zh_CN.JsonViewer.search);
         expect(searchInput()).toHaveAttribute('aria-label', zh_CN.JsonViewer.search);
-        expect(replaceInput()).toHaveAttribute('aria-label', zh_CN.JsonViewer.replace);
+        expect(replaceInput()).toHaveAttribute('aria-label', zh_CN.JsonViewer.replaceWith);
     });
 
     describe('焦点', () => {

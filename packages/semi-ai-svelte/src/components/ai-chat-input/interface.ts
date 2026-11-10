@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import type { Node } from '@tiptap/pm/model';
-import type { Attachment, Content, LeftMenuChangeProps, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+import type { Attachment, Content, Setup, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { PopoverProps } from '@fibrae/semi-ui-svelte/popover/index';
 import type { TooltipProps } from '@fibrae/semi-ui-svelte/tooltip/index';
 import type { FileItem, UploadOnChangeProps, UploadProps } from '@fibrae/semi-ui-svelte/upload/index';
@@ -132,7 +132,7 @@ export interface AIChatInputProps extends Omit<HTMLAttributes<HTMLDivElement>, N
     uploadTipProps?: Omit<TooltipProps, 'content' | 'children' | 'child' | 'arrow'>;
     uploadProps?: AIChatInputUploadProps;
     /** `changedValue` is undefined when an item is removed */
-    onConfigureChange?: (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void;
+    onConfigureChange?: (value: Setup, changedValue?: Setup) => void;
     onContentChange?: (contents: Content[]) => void;
     onFocus?: (event: FocusEvent) => void;
     onBlur?: (event: FocusEvent) => void;

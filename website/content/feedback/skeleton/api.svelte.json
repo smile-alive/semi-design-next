@@ -23,10 +23,6 @@
     "skeleton-avatar": {
         "source": "packages/semi-ui-svelte/src/components/skeleton/avatar.svelte",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "shape": {
                 "zh-CN": "占位头像的形状，可选 circle 或 square。",
                 "en-US": "Shape of the avatar placeholder: circle or square."
@@ -44,10 +40,6 @@
     "skeleton-image": {
         "source": "packages/semi-ui-svelte/src/components/skeleton/image.svelte",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "type": {
                 "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
                 "en-US": "Replaces the type of the block, which also names its class."
@@ -57,10 +49,6 @@
     "skeleton-title": {
         "source": "packages/semi-ui-svelte/src/components/skeleton/title.svelte",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "type": {
                 "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
                 "en-US": "Replaces the type of the block, which also names its class."
@@ -70,10 +58,6 @@
     "skeleton-button": {
         "source": "packages/semi-ui-svelte/src/components/skeleton/button.svelte",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "type": {
                 "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
                 "en-US": "Replaces the type of the block, which also names its class."
@@ -83,10 +67,6 @@
     "skeleton-paragraph": {
         "source": "packages/semi-ui-svelte/src/components/skeleton/paragraph.svelte",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 semi-skeleton。",
-                "en-US": "Class name prefix, semi-skeleton by default."
-            },
             "rows": {
                 "zh-CN": "占位段落的行数。",
                 "en-US": "Number of rows in the placeholder paragraph."

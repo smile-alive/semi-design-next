@@ -1,14 +1,14 @@
 import type { AllowedComponentProps, VNode, VNodeProps } from 'vue';
-import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+import type { Setup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 
 export interface ConfigureProps {
     /** The value the items start from; each item's `initValue` is merged on top when it mounts */
-    defaultValue?: LeftMenuChangeProps;
+    defaultValue?: Setup;
 }
 
 export interface ConfigureEmits {
     /** `changedValue` is undefined when an item is removed */
-    change: [value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps];
+    change: [value: Setup, changedValue?: Setup];
 }
 
 export interface ConfigureSlots {
@@ -16,7 +16,7 @@ export interface ConfigureSlots {
 }
 
 export interface ConfigureHandle {
-    getConfigureValue: () => LeftMenuChangeProps;
+    getConfigureValue: () => Setup;
 }
 
 // vue-tsc types a generic SFC's props with a Record<string, unknown> fallback; Omit over an index signature would keep

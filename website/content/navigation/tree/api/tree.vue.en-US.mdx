@@ -11,28 +11,28 @@ import ApiType from '#/components/ApiType.astro';
 | keyMaps | Custom field names for key, label and value in a node. When label is mapped and search is on, set treeNodeFilterProp to one of the keys in treeData or provide filterTreeNode. | `KeyMapProps` | `semiGlobalDefault("Tree", "keyMaps")` |
 | expandedKeys | Expanded nodes, bound with v-model:expandedKeys. Passing it makes expansion fully controlled. | `string[]` | `semiGlobalDefault("Tree", "expandedKeys")` |
 | defaultExpandedKeys | Nodes expanded initially, showing their direct children. | `string[]` | `semiGlobalDefault("Tree", "defaultExpandedKeys")` |
-| defaultExpandAll | Expands every node on mount. Later changes of treeData or treeDataSimpleJson do not affect it; use expandAll for that. | `boolean` | `semiDefault("Tree", "defaultExpandAll", false)` |
-| expandAll | Expands every node, and keeps doing so when the data changes. | `boolean` | `semiDefault("Tree", "expandAll", false)` |
-| autoExpandParent | Whether the parents of the nodes in expandedKeys expand automatically when expandedKeys changes; they always do on mount. When on, a controlled tree collapses a parent only after its expanded children are collapsed. | `boolean` | `semiDefault("Tree", "autoExpandParent", false)` |
-| autoExpandWhenDragEnter | Whether dragging over a collapsed node expands it. | `boolean` | `semiDefault("Tree", "autoExpandWhenDragEnter", true)` |
-| autoMergeValue | When a parent is selected the value leaves out its descendants; applies when leafOnly is false. | `boolean` | `semiDefault("Tree", "autoMergeValue", true)` |
-| blockNode | Shows each node as a whole row, highlighting the row on hover and selection; when off only the label is highlighted. | `boolean` | `semiDefault("Tree", "blockNode", true)` |
-| checkRelation | How the checked states of nodes relate in a multiple tree: related links parents and children, unRelated keeps them independent. | `CheckRelation` | `semiDefault("Tree", "checkRelation", "related")` |
-| directory | Directory mode with built-in folder icons, which the icon slot can replace. | `boolean` | `semiDefault("Tree", "directory", false)` |
-| disabled | Disables the whole tree. A node with disabled: false does not lift it. | `boolean` | `semiDefault("Tree", "disabled", false)` |
-| disableStrictly | Strict disabling: a disabled node cannot change state through the selection of its parent or children. | `boolean` | `semiDefault("Tree", "disableStrictly", false)` |
-| draggable | Whether nodes can be dragged, used together with the drop event. It cannot be combined with virtualize. | `boolean` | `semiDefault("Tree", "draggable", false)` |
-| hideDraggingNode | Hides the drag image of the node being dragged. | `boolean` | `semiDefault("Tree", "hideDraggingNode", false)` |
-| expandAction | How a node expands: false only through the arrow, click on a click, doubleClick on a double click. The keyboard does not use it. | `ExpandAction` | `semiDefault("Tree", "expandAction", false)` |
-| leafOnly | In a multiple tree, the value and the payload of change hold leaf nodes only. | `boolean` | `semiDefault("Tree", "leafOnly", false)` |
+| defaultExpandAll | Expands every node on mount. Later changes of treeData or treeDataSimpleJson do not affect it; use expandAll for that. | `boolean` | `false` |
+| expandAll | Expands every node, and keeps doing so when the data changes. | `boolean` | `false` |
+| autoExpandParent | Whether the parents of the nodes in expandedKeys expand automatically when expandedKeys changes; they always do on mount. When on, a controlled tree collapses a parent only after its expanded children are collapsed. | `boolean` | `false` |
+| autoExpandWhenDragEnter | Whether dragging over a collapsed node expands it. | `boolean` | `true` |
+| autoMergeValue | When a parent is selected the value leaves out its descendants; applies when leafOnly is false. | `boolean` | `true` |
+| blockNode | Shows each node as a whole row, highlighting the row on hover and selection; when off only the label is highlighted. | `boolean` | `true` |
+| checkRelation | How the checked states of nodes relate in a multiple tree: related links parents and children, unRelated keeps them independent. | `CheckRelation` | `"related"` |
+| directory | Directory mode with built-in folder icons, which the icon slot can replace. | `boolean` | `false` |
+| disabled | Disables the whole tree. A node with disabled: false does not lift it. | `boolean` | `false` |
+| disableStrictly | Strict disabling: a disabled node cannot change state through the selection of its parent or children. | `boolean` | `false` |
+| draggable | Whether nodes can be dragged, used together with the drop event. It cannot be combined with virtualize. | `boolean` | `false` |
+| hideDraggingNode | Hides the drag image of the node being dragged. | `boolean` | `false` |
+| expandAction | How a node expands: false only through the arrow, click on a click, doubleClick on a double click. The keyboard does not use it. | `ExpandAction` | `false` |
+| leafOnly | In a multiple tree, the value and the payload of change hold leaf nodes only. | `boolean` | `false` |
 | loadedKeys | Nodes already loaded, used with loadData and bound with v-model:loadedKeys. | `string[]` | `semiGlobalDefault("Tree", "loadedKeys")` |
-| motion | Whether expanding and collapsing are animated; animation is off for a virtualized tree. | `boolean` | `semiDefault("Tree", "motion", true)` |
-| multiple | Whether several nodes can be selected. A parent is checked automatically once all its children are. | `boolean` | `semiDefault("Tree", "multiple", false)` |
-| changeWithObject | A boolean attribute, not an event: when true the payload of change is the node object with value, label and other fields instead of the value; a controlled modelValue and defaultValue must then be objects with a value. | `boolean` | `semiDefault("Tree", "changeWithObject", false)` |
-| showClear | Whether the search box shows a clear button. | `boolean` | `semiDefault("Tree", "showClear", true)` |
-| showFilteredOnly | Shows only the filtered nodes while searching. | `boolean` | `semiDefault("Tree", "showFilteredOnly", false)` |
-| showLine | Shows connecting lines between nodes. | `boolean` | `semiDefault("Tree", "showLine", false)` |
-| treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `semiDefault("Tree", "treeNodeFilterProp", "label")` |
+| motion | Whether expanding and collapsing are animated; animation is off for a virtualized tree. | `boolean` | `true` |
+| multiple | Whether several nodes can be selected. A parent is checked automatically once all its children are. | `boolean` | `false` |
+| changeWithObject | A boolean attribute, not an event: when true the payload of change is the node object with value, label and other fields instead of the value; a controlled modelValue and defaultValue must then be objects with a value. | `boolean` | `false` |
+| showClear | Whether the search box shows a clear button. | `boolean` | `true` |
+| showFilteredOnly | Shows only the filtered nodes while searching. | `boolean` | `false` |
+| showLine | Shows connecting lines between nodes. | `boolean` | `false` |
+| treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `"label"` |
 | labelEllipsis | Whether an overflowing label is truncated; on by default for a virtualized tree. | `boolean` | `semiGlobalDefault("Tree", "labelEllipsis")` |
 | virtualize | List virtualization for many nodes: height, width and itemSize (required). Animation is off once enabled. | `Virtualize` | `semiGlobalDefault("Tree", "virtualize")` |
 | searchClassName | Class of the search box container. | `string` | `semiGlobalDefault("Tree", "searchClassName")` |

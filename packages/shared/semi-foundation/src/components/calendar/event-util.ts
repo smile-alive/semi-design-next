@@ -104,9 +104,9 @@ export interface DateObj {
     month: string;
 }
 
-export type weekStartsOnEnum = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-export function calcRangeData(value: Date, start: Date, rangeLen: number, mode: string, locale: Locale, weekStartsOn: weekStartsOnEnum, today: Date | number | null = getCurrDate()) {
+export function calcRangeData(value: Date, start: Date, rangeLen: number, mode: string, locale: Locale, weekStartsOn: WeekStartsOn, today: Date | number | null = getCurrDate()) {
     return Array.from({ length: rangeLen }, (_, ind) => {
         const dateObj = {} as DateObj;
         const date = addDays(start, ind);
@@ -125,7 +125,7 @@ export function calcRangeData(value: Date, start: Date, rangeLen: number, mode: 
     });
 }
 
-export function calcWeekData(value: Date, monthStart: Date | null, mode = 'week', locale: Locale, weekStartsOn: weekStartsOnEnum, today?: Date | number | null) {
+export function calcWeekData(value: Date, monthStart: Date | null, mode = 'week', locale: Locale, weekStartsOn: WeekStartsOn, today?: Date | number | null) {
     const start = startOfWeek(value, { weekStartsOn });
     const realValue = monthStart || value;
     return calcRangeData(realValue, start, 7, mode, locale, weekStartsOn, today);

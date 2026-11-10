@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Roghnaigh gach sraith',
         selectRow: 'Roghnaigh an tsraith seo',
+        scrollRegion: 'Ábhar inscrollaithe an tábla',
+        untitledColumn: 'Colún gan teideal',
         filterColumn: 'Scag sonraí leis an gcolún seo',
         filterColumnActive: 'Scag sonraí leis an gcolún seo, tá an scagaire i bhfeidhm',
         expandRow: 'Leathnaigh an sraith seo',
@@ -375,6 +377,7 @@ const local: Locale = {
         search: 'Cuardaigh',
         replace: 'Ionadaigh',
         replaceAll: 'Ionadaigh gach ceann',
+        replaceWith: 'Ionadaigh le',
         caseSensitive: 'Meaitseáil cás',
         regex: 'Úsáid slonn rialta',
         wholeWord: 'Meaitseáil focal iomlán',

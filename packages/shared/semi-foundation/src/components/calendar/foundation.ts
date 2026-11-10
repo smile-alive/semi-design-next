@@ -2,9 +2,9 @@ import { type Locale, format, getWeeksInMonth, getWeekOfMonth, isSameMonth, star
 import { countBy } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { numbers } from './constants';
-import { parseEvent, parseAllDayEvent, normalizeEvent, calcWeekData, getCurrDate, collectDailyEvents, round, getPos, convertEventsArrToMap, renderDailyEvent, calcRangeData, filterEvents, parseRangeAllDayEvent, type DailyEventLayout, type weekStartsOnEnum, type DateObj } from './event-util';
+import { parseEvent, parseAllDayEvent, normalizeEvent, calcWeekData, getCurrDate, collectDailyEvents, round, getPos, convertEventsArrToMap, renderDailyEvent, calcRangeData, filterEvents, parseRangeAllDayEvent, type DailyEventLayout, type WeekStartsOn, type DateObj } from './event-util';
 
-export type { DailyEventLayout, weekStartsOnEnum } from './event-util';
+export type { DailyEventLayout, WeekStartsOn } from './event-util';
 
 export interface EventObject {
     [x: string]: any;
@@ -131,12 +131,12 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
     }
 
     /** The week of `value` as a time-grid range; the end is the next week's first day, as in the month view */
-    static getWeekRange(value: Date, weekStartsOn: weekStartsOnEnum) {
+    static getWeekRange(value: Date, weekStartsOn: WeekStartsOn) {
         const start = startOfWeek(value, { weekStartsOn });
         return [start, addDays(endOfWeek(start, { weekStartsOn }), 1)];
     }
 
-    static getRangeData(range: Date[], dateFnsLocale: Locale, weekStartsOn: weekStartsOnEnum, today?: Date | number | null, labelDate: Date = range[0]): RangeData {
+    static getRangeData(range: Date[], dateFnsLocale: Locale, weekStartsOn: WeekStartsOn, today?: Date | number | null, labelDate: Date = range[0]): RangeData {
         const [value, end] = range;
         const len = differenceInCalendarDays(end, value);
         return {
@@ -145,7 +145,7 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
         };
     }
 
-    static getMonthlyData(value: Date, dateFnsLocale: Locale, weekStartsOn: weekStartsOnEnum, today?: Date | number | null) {
+    static getMonthlyData(value: Date, dateFnsLocale: Locale, weekStartsOn: WeekStartsOn, today?: Date | number | null) {
         const monthStart = startOfMonth(value);
         const data: MonthData = {};
         const numberOfWeek = getWeeksInMonth(value, { weekStartsOn });
@@ -187,7 +187,7 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
         return CalendarFoundation.#collectPositioned(CalendarFoundation.#parseRangeEvents(events, range));
     }
 
-    static getParseMonthlyEvents(events: EventObject[], displayValue: Date, weekStartsOn: weekStartsOnEnum) {
+    static getParseMonthlyEvents(events: EventObject[], displayValue: Date, weekStartsOn: WeekStartsOn) {
         const weeks: Record<number, EventObject[]> = {};
         const firstDayOfMonth = startOfMonth(displayValue);
         const lastDayOfMonth = endOfMonth(displayValue);

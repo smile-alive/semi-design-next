@@ -32,7 +32,6 @@ export interface CheckboxGroupProps extends ElementProps<'div', 'onChange' | 'de
     options?: Array<string | CheckboxOptionItem>;
     value?: CheckboxValue[];
     onChange?: (value: CheckboxValue[]) => void;
-    prefixCls?: string;
     direction?: CheckboxDirection;
     type?: CheckboxType;
 }
@@ -49,13 +48,14 @@ const defaultProps = {
     direction: strings.DEFAULT_DIRECTION,
 } satisfies Partial<CheckboxGroupProps>;
 
+const prefix = css.PREFIX;
+
 export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
     const props = useDefaultProps('CheckboxGroup', rawProps, defaultProps);
 
     const [local, rest] = splitProps(omitFormInjected(props), [
         'children',
         'options',
-        'prefixCls',
         'direction',
         'class',
         'type',
@@ -91,8 +91,6 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         })
     );
 
-    const prefix = () => local.prefixCls || css.PREFIX;
-
     const isPureCardType = () => local.type === strings.TYPE_PURECARD;
 
     const isCardType = () => local.type === strings.TYPE_CARD || isPureCardType();
@@ -122,11 +120,11 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
             {...rest}
             class={clsx(
                 {
-                    [prefix()]: true,
-                    [`${prefix()}-wrapper`]: true,
-                    [`${prefix()}-${local.direction}`]: local.direction,
-                    [`${prefix()}-${local.direction}-cardType`]: local.direction && isCardType(),
-                    [`${prefix()}-${local.direction}-pureCardType`]: local.direction && isPureCardType(),
+                    [prefix]: true,
+                    [`${prefix}-wrapper`]: true,
+                    [`${prefix}-${local.direction}`]: local.direction,
+                    [`${prefix}-${local.direction}-cardType`]: local.direction && isCardType(),
+                    [`${prefix}-${local.direction}-pureCardType`]: local.direction && isPureCardType(),
                 },
                 local.class
             )}
@@ -143,7 +141,7 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
                                     return typeof current === 'string' ? { label: current, value: current } : current;
                                 };
                                 return (
-                                    <Checkbox class={item().class} style={item().style} disabled={item().disabled || local.disabled} value={item().value} prefixCls={local.prefixCls} extra={item().extra} onChange={item().onChange}>
+                                    <Checkbox class={item().class} style={item().style} disabled={item().disabled || local.disabled} value={item().value} extra={item().extra} onChange={item().onChange}>
                                         {item().label}
                                     </Checkbox>
                                 );

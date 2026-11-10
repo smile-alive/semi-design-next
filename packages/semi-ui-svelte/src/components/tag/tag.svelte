@@ -55,6 +55,16 @@
         return content === undefined ? undefined : formatLocale(closable ? locale().locale.closableTag : locale().locale.tag, { tag: content });
     });
 
+    const readText = observeMutations(
+        (node: HTMLElement) => {
+            // Svelte's comment anchors and empty text nodes are not content
+            const nodes = [...node.childNodes].filter((child) => child.nodeType !== Node.COMMENT_NODE && child.textContent !== '');
+            isText = nodes.length > 0 && nodes.every((child) => child.nodeType === Node.TEXT_NODE);
+            text = isText ? nodes.map((child) => child.textContent).join('') : undefined;
+        },
+        { childList: true, subtree: true, characterData: true }
+    );
+
     const close = (event: TagCloseEvent) => {
         event.stopPropagation();
         event.stopImmediatePropagation();
@@ -82,16 +92,6 @@
         }
         onkeydown?.(event);
     };
-
-    const readText = observeMutations(
-        (node: HTMLElement) => {
-            // Svelte's comment anchors and empty text nodes are not content
-            const nodes = [...node.childNodes].filter((child) => child.nodeType !== Node.COMMENT_NODE && child.textContent !== '');
-            isText = nodes.length > 0 && nodes.every((child) => child.nodeType === Node.TEXT_NODE);
-            text = isText ? nodes.map((child) => child.textContent).join('') : undefined;
-        },
-        { childList: true, subtree: true, characterData: true }
-    );
 </script>
 
 <div

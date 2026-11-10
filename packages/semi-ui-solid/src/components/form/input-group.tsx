@@ -10,12 +10,14 @@ import '@fibrae/semi-foundation/components/form/form.scss';
 import hasContent from '../../utils/has-content';
 import InputGroup, { type InputGroupProps as BaseInputGroupProps } from '../input/input-group';
 import { type FormInputGroupContextValue, FormInputGroupContext, useFormContext } from './context';
-import ErrorMessage from './error-message';
+import ErrorMessage, { type ErrorMessageInternalProps } from './error-message';
 import FieldGrid from './field-grid';
 import Label, { type LabelProps } from './label';
 import { isLabelConfig } from './utils';
 
 const prefix = cssClasses.PREFIX;
+
+const InternalErrorMessage = ErrorMessage as (props: ErrorMessageInternalProps) => JSX.Element;
 
 export interface InputGroupProps extends Omit<BaseInputGroupProps, 'label' | 'labelPosition'> {
     label?: LabelProps | JSX.Element;
@@ -117,7 +119,7 @@ export default function FormInputGroup(props: InputGroupProps) {
                     </InputGroup>
                     <Show when={extraTextPosition() === 'bottom'}>{extraContent()}</Show>
                     <Show when={groupError().length > 0}>
-                        <ErrorMessage error={groupError()} errorMessageId={ids.errorMessage} isInInputGroup showValidateIcon={formProps()?.showValidateIcon} />
+                        <InternalErrorMessage error={groupError()} errorMessageId={ids.errorMessage} isInInputGroup showValidateIcon={formProps()?.showValidateIcon} />
                     </Show>
                 </FieldGrid>
             </div>

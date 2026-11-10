@@ -339,6 +339,12 @@
                 "en-US": "Content at the bottom of the dropdown, beside the node list."
             }
         },
-        "exposed": {}
+        "exposed": {
+            "search": {
+                "zh-CN": "按输入了该值来搜索，先打开下拉面板，需要同时设置 `filterTreeNode`。在外部自定义搜索框时，可在其值变化时调用。",
+                "en-US": "Searches as if the value were typed, opening the dropdown first. Needs `filterTreeNode`. Call it when the value of a search box you render outside changes."
+            },
+            "close": { "zh-CN": "关闭下拉面板。", "en-US": "Closes the dropdown." }
+        }
     }
 }

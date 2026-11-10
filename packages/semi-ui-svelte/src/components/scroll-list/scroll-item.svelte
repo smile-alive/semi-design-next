@@ -15,7 +15,7 @@
     const defaults = useDefaultProps('ScrollItem');
 
     // No fallback on `selectedIndex`: it is bindable, see Switch
-    let { cycled = defaults('cycled', false), list: listProp = defaults('list') as T[] | undefined, mode = defaults('mode', wheelMode), motion = defaults('motion', true), selectedIndex = $bindable(), transform = defaults('transform'), type = defaults('type'), onSelect, ...rest }: ScrollItemProps<T> = $props();
+    let { cycled = defaults('cycled', false), list: listProp = defaults('list') as T[] | undefined, mode = defaults('mode', wheelMode), motion = defaults('motion', true), selectedIndex = $bindable(), transform = defaults('transform'), onSelect, ...rest }: ScrollItemProps<T> = $props();
 
     const uid = $props.id();
     let root = $state<HTMLDivElement>();
@@ -42,9 +42,6 @@
         },
         get selectedIndex() {
             return current;
-        },
-        get type() {
-            return type;
         },
     };
 
@@ -84,6 +81,7 @@
                 clickable: !isWheel && !item.disabled,
                 class: {
                     [`${prefix}-item-sel`]: selected && !isWheel,
+                    [cssClasses.SELECTED]: isWheel && key === states().highlightedKey,
                     [`${prefix}-item-disabled`]: Boolean(item.disabled),
                 },
                 text: ItemFoundation.getItemText(item, selected, transform),

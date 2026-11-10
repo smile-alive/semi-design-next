@@ -1,7 +1,7 @@
 import confirm, { destroyAll, withType } from './confirm.svelte.js';
+import useModal from './hooks/use-modal.js';
 import type { ModalConfirmProps } from './interface.js';
 import ModalBase from './modal.svelte';
-import useModal from './use-modal.js';
 
 const typed = (type: Parameters<typeof withType>[0]) => (props: ModalConfirmProps) => confirm(withType(type, props));
 

@@ -7,10 +7,10 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { JsonViewer } from '@fibrae/semi-json-viewer-core';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Annotation from '../annotation';
+import type { CodeContentProps, CodeItemProps } from '../code';
 import type { ContainerSolidProps, Option, SideBarProps } from '../interface';
 import MCPConfigure from '../mcp-configure';
 import Sidebar from '../sidebar';
-import type { CodeContentProps, CodeItemProps } from '../widgets/code';
 
 const { Container, CodeContent, CodeItem } = Sidebar;
 

@@ -504,13 +504,6 @@ describe('Checkbox', () => {
         expect(document.querySelector(`.${prefixCls}-extra`)).toHaveClass(`${prefixCls}-cardType_extra_noChildren`);
     });
 
-    it('prefixCls 替换所有类名前缀', () => {
-        render(Checkbox, { props: { prefixCls: 'my-cb' }, slots: label });
-        expect(document.querySelector('.my-cb')).not.toBeNull();
-        expect(document.querySelector('.my-cb-inner-display')).not.toBeNull();
-        expect(document.querySelector('.my-cb-addon')).not.toBeNull();
-    });
-
     it('全局默认值生效且显式 props 优先', () => {
         semiGlobal.config.overrideDefaultProps = { Checkbox: { type: 'card' } };
         const first = render(Checkbox, { slots: label });
@@ -566,8 +559,8 @@ describe('Checkbox', () => {
         expectTypeOf<CheckboxEmits['update:modelValue']>().toEqualTypeOf<[checked: boolean]>();
         expectTypeOf<CheckboxEvent['target']>().toEqualTypeOf<{
             checked: boolean;
-            value: string | number | boolean | undefined;
-            name: string | undefined;
+            value?: string | number | boolean;
+            name?: string;
             disabled: boolean;
         }>();
         expectTypeOf<CheckboxEvent['nativeEvent']>().toEqualTypeOf<MouseEvent>();

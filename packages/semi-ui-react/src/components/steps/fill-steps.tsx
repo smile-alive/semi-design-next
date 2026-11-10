@@ -9,8 +9,9 @@ import flattenChildren from '../../utils/flatten-children';
 import { Row, Col } from '../grid';
 import type { Direction, Status } from './types';
 
+const prefixCls = css.PREFIX;
+
 export interface FillStepsProps extends ElementProps<'div', 'onChange'> {
-    prefixCls?: string;
     className?: string;
     current?: number;
     direction?: Direction;
@@ -24,7 +25,7 @@ export interface FillStepsProps extends ElementProps<'div', 'onChange'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export default function Steps({ current = 0, status = 'process', children, prefixCls = css.PREFIX, initial = 0, direction = 'horizontal', className, onChange, ...rest }: FillStepsProps) {
+export default function Steps({ current = 0, status = 'process', children, initial = 0, direction = 'horizontal', className, onChange, ...rest }: FillStepsProps) {
     const filteredChildren = flattenChildren(children).filter((c) => isValidElement(c)) as Array<ReactElement<any>>;
     const colStyle = direction === 'vertical' ? null : { width: `${100 / filteredChildren.length}%` };
 

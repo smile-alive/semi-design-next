@@ -1,11 +1,11 @@
 **Props**
 
-| Property | Description                                                   | Type         | Default                                    |
-| -------- | ------------------------------------------------------------- | ------------ | ------------------------------------------ |
-| bordered | Whether to show a border. Only takes effect in non-full mode. | `boolean`    | `semiDefault("Banner", "bordered", false)` |
-| fullMode | Whether the banner is in full mode.                           | `boolean`    | `semiDefault("Banner", "fullMode", true)`  |
-| title    | Plain-text title. The title slot wins when both are given.    | `string`     | `undefined`                                |
-| type     | Type: info, success, danger or warning.                       | `BannerType` | `semiDefault("Banner", "type", "info")`    |
+| Property | Description                                                   | Type         | Default     |
+| -------- | ------------------------------------------------------------- | ------------ | ----------- |
+| bordered | Whether to show a border. Only takes effect in non-full mode. | `boolean`    | `false`     |
+| fullMode | Whether the banner is in full mode.                           | `boolean`    | `true`      |
+| title    | Plain-text title. The title slot wins when both are given.    | `string`     | `undefined` |
+| type     | Type: info, success, danger or warning.                       | `BannerType` | `"info"`    |
 
 **Events**
 

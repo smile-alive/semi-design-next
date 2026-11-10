@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabledHours | Returns the hours that cannot be selected. | <ApiType detail={"() => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
 | disabledMinutes | Returns the minutes that cannot be selected for the selected hour. | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
 | disabledSeconds | Returns the seconds that cannot be selected for the selected hour and minute. | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
-| disabledTime | Range mode only: returns the rules of each panel from `value` and `panelType` (`left` or `right`); `value` is an empty array with no value, length 1 with a single time, and `undefined` on the unpicked side. A returned `disabledHours` and the like overrides the top-level prop of the same name, one left out falls back to it, and a function returning `[]` switches off a top-level rule for that panel; ignored in single mode. | <ApiType detail={"( value: Date[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
+| disabledTime | Range mode only: returns the rules of each panel from `value` and `panelType` (`left` or `right`); `value` is an empty array with no value, length 1 with a single time, and `undefined` on the unpicked side. A returned `disabledHours` and the like overrides the top-level prop of the same name, one left out falls back to it, and a function returning `[]` switches off a top-level rule for that panel; ignored in single mode. | <ApiType detail={"( value: (Date \u007c undefined)[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
 | focusOnOpen | Focuses the input and selects its content once mounted, which opens the panel. | `boolean` | `false` |
 | format | Display format, following date-fns format. Defaults to `a h:mm:ss` with `use12Hours`, else `HH:mm:ss`. | `string` | - |
 | hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `false` |
@@ -39,7 +39,6 @@ import ApiType from '#/components/ApiType.astro';
 | popupClassName | Class name of the popup. | `string` | `""` |
 | popupStyle | Style of the popup; an object with camelCase keys. | `React.CSSProperties` | - |
 | position | Popup position. Unset, it is `bottom` for `timeRange` and `bottomLeft` for `time`; `bottomRight` under RTL. | `Position` | - |
-| prefixCls | Prefix of the class names. | `string` | `"semi-timepicker"` |
 | preventScroll | Whether focusing prevents the browser from scrolling the document; passed directly as the `preventScroll` option of `focus()`, for the focus calls inside the component. | `boolean` | - |
 | rangeSeparator | Separator between the two times of a range. | `string` | `" ~ "` |
 | ref | Reference to the component handle; its methods are listed under Methods. | <ApiType detail={"React.Ref\u003cTimePickerHandle>"}>Type</ApiType> | - |

@@ -7,7 +7,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Annotation, MCPConfigure, Sidebar } from '../index';
-import type { SideBarProps } from '../interface';
+import type { SideBarMainContentSnippetProps, SideBarProps } from '../interface';
 import BindHost, { type BindHostStore } from './bind-host.svelte';
 import LocaleHost from './locale-host.svelte';
 
@@ -129,7 +129,7 @@ describe('Svelte Sidebar 主模式', () => {
     });
 
     it('mainContent 收到当前 activeKey', () => {
-        setup({ options, activeKey: 'one', mainContent: createRawSnippet<[{ activeKey: string | undefined }]>((args) => ({ render: () => `<p class="main">${args().activeKey}</p>` })) });
+        setup({ options, activeKey: 'one', mainContent: createRawSnippet<[SideBarMainContentSnippetProps]>((args) => ({ render: () => `<p class="main">${args().activeKey}</p>` })) });
         expect($('.main')).toHaveTextContent('one');
     });
 

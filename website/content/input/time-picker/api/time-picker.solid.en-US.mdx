@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `true` |
+| autofocus | Focuses the input once mounted; passed through to the input's `autofocus`. | `boolean` | - |
 | borderless | Borderless mode. | `boolean` | `false` |
 | class | Class name of the root element. | `string` | - |
 | clearIcon | Custom clear icon; effective when showClear is true. | `JSX.Element` | - |
@@ -14,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabledHours | Returns the hours that cannot be selected. | <ApiType detail={"() => number[]"}>Type</ApiType> | - |
 | disabledMinutes | Returns the minutes that cannot be selected for the selected hour. | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | - |
 | disabledSeconds | Returns the seconds that cannot be selected for the selected hour and minute. | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | - |
-| disabledTime | Range mode only: returns the disabled rules of the left and right panel from the current value and the panel. The unpicked side of value is undefined; a returned disabledHours, disabledMinutes or disabledSeconds overrides the prop of the same name, and one left out falls back to it. Ignored in single mode. | <ApiType detail={"( value: Date[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
+| disabledTime | Range mode only: returns the disabled rules of the left and right panel from the current value and the panel. The unpicked side of value is undefined; a returned disabledHours, disabledMinutes or disabledSeconds overrides the prop of the same name, and one left out falls back to it. Ignored in single mode. | <ApiType detail={"( value: (Date \u007c undefined)[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
 | focusOnOpen | Focuses the input and selects its content once mounted, which opens the panel. | `boolean` | `false` |
 | format | Display format, following date-fns format. Defaults to a h:mm:ss with use12Hours, else HH:mm:ss. | `string` | - |
 | hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `false` |
@@ -40,7 +41,6 @@ import ApiType from '#/components/ApiType.astro';
 | popupStyle | Style of the popup; an object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
 | position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time; bottomRight under RTL. | `Position` | - |
 | prefix | Prefix content of the input. | `JSX.Element` | - |
-| prefixCls | Prefix of the class names. | `string` | `"semi-timepicker"` |
 | preventScroll | Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component. | `boolean` | - |
 | rangeSeparator | Separator between the two times of a range. | `string` | `" ~ "` |
 | ref | Reference to the root element; its focus() and blur() act on the input, and do nothing with a custom trigger. | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |

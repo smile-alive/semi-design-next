@@ -51,7 +51,7 @@ describe('RadioFoundation', () => {
         it('组内的单选框由组的 value、disabled 与外观决定', () => {
             const context = {
                 mode: 'advanced',
-                radioGroup: { value: 'a', disabled: true, isCardRadio: true, buttonSize: 'small', prefixCls: 'g' },
+                radioGroup: { value: 'a', disabled: true, isCardRadio: true, buttonSize: 'small' },
             };
             expect(RadioFoundation.deriveView({ value: 'a', type: 'button' }, { checked: false }, context)).toMatchObject({
                 inGroup: true,
@@ -61,7 +61,6 @@ describe('RadioFoundation', () => {
                 isButtonRadio: false,
                 isCardRadio: true,
                 buttonSize: 'small',
-                prefixCls: 'g',
             });
             expect(RadioFoundation.deriveView({ value: 'b' }, { checked: false }, context).checked).toBe(false);
         });
@@ -93,7 +92,7 @@ describe('RadioFoundation', () => {
 
         it('事件的 target 只有 checked、value、name、disabled，名称与禁用状态取组的决定', () => {
             const context = { radioGroup: { value: 'x', disabled: true, name: 'g' } };
-            const { adapter, foundation } = setup({ value: 'a', prefixCls: 'p' }, context);
+            const { adapter, foundation } = setup({ value: 'a' }, context);
             const e = source();
             foundation.handleChange(true, e);
             const event = adapter.notifyChange.mock.calls[0][0];

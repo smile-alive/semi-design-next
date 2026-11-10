@@ -21,6 +21,7 @@ import ApiType from '#/components/ApiType.astro';
 | onAfterChange | 值变化完成后触发，参数为当前取值；受控值被改回 `undefined` 时不触发。 | <ApiType detail={"(value: SliderProps['value']) => void"}>Type</ApiType> | - |
 | onChange | 值变化时触发，参数为当前取值。 | <ApiType detail={"(value: SliderProps['value']) => void"}>Type</ApiType> | - |
 | onFocus | 任一滑块获得焦点时触发，挂在 `.semi-slider-wrapper` 上。 | <ApiType detail={"React.FocusEventHandler\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| onKeyDown | 手柄 input 上的按键回调，先于滑块处理；在回调中调用 `preventDefault` 可拦截取值键。 | <ApiType detail={"React.KeyboardEventHandler\u003cHTMLInputElement>"}>Type</ApiType> | - |
 | onMouseUp | 拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时触发。 | <ApiType detail={"(e: any) => void"}>Type</ApiType> | - |
 | railStyle | 滑块轨道的样式。 | `React.CSSProperties` | - |
 | range | 是否支持两端同时可滑动。 | `boolean` | `false` |

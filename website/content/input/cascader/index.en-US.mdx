@@ -689,7 +689,7 @@ interface CascaderTriggerSnippetProps {
      *  as in the following example, when "浙江省-杭州市-萧山区" is
      *  selected, the value here is '0-0-1'; a Set<string> in multiple mode
      */
-    value: string | Set<string> | undefined;
+    value?: string | Set<string>;
     /* The search text while open; while a searchable single Cascader is closed, the display text of the selected path */
     inputValue: string;
     /* Placeholder of Cascader */

@@ -525,14 +525,14 @@ import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMe
 function chatCompletionToMessage(chatCompletion: ChatCompletion): Message[];
 
 // 将 Chat Completion API 流式返回数据转换为 Chat Dialogue 中的 Message 格式
-function streamingChatCompletionToMessage(chatCompletionChunks: ChatCompletionChunk[], state?: StreamingChatState): { messages: Message[]; state?: StreamingChatState };
+function streamingChatCompletionToMessage(chatCompletionChunks: ChatCompletionChunk[], state?: StreamingChatState): { messages: Message[]; state: StreamingChatState };
 
 // 将 Response API 返回的数据转换为 Chat Dialogue 中的 Message 格式
 function responseToMessage(response: Response): Message;
 
 // 将 Response API 返回流式数据转换为 Chat Dialogue 中的 Message 格式
-// ResponseChunk 是按 type 区分的 Response 流式事件联合类型；chunks 为空时返回 null
-function streamingResponseToMessage(chunks: ResponseChunk[], prevState?: StreamingResponseState): { message: Message | null; nextState: StreamingResponseState | null } | null;
+// ResponseChunk 是按 type 区分的 Response 流式事件联合类型；messages 含 0 或 1 条消息，收到 response.completed 后 state 为 null
+function streamingResponseToMessage(chunks: ResponseChunk[], prevState?: StreamingResponseState): { messages: Message[]; state: StreamingResponseState | null };
 
 // 将 Chat Input 数据转换为 Chat Dialogue 中的 Message 格式，（同 Response API Input Message 格式）
 // 返回值不含 id，放进 chats 前需要自行补上

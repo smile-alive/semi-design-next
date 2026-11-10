@@ -1,5 +1,5 @@
 import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
-import type { DailyEventLayout, EventObject, weekStartsOnEnum } from '@fibrae/semi-foundation/components/calendar/foundation';
+import type { DailyEventLayout, EventObject, WeekStartsOn } from '@fibrae/semi-foundation/components/calendar/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { ElementProps } from '../../base/base';
 import type { BaseProps } from '../../base/base-props';
@@ -11,7 +11,7 @@ export interface CalendarProps extends ElementProps<'div', 'onClick' | 'children
     events?: EventObject[];
     mode?: ArrayElement<typeof strings.MODE>;
     showCurrTime?: boolean;
-    weekStartsOn?: weekStartsOnEnum;
+    weekStartsOn?: WeekStartsOn;
     scrollTop?: number;
     onClick?: (e: React.MouseEvent, value: Date) => void;
     /** the close button's click, the Esc keydown, or `null` when a mousedown outside closes the card */
@@ -23,7 +23,7 @@ export interface CalendarProps extends ElementProps<'div', 'onClick' | 'children
     width?: number | string;
     height?: number | string;
     renderDateDisplay?: (date: Date) => React.ReactNode;
-    dateGridRender?: (dateString?: string, date?: Date) => React.ReactNode;
+    dateGridRender?: (dateString: string, date: Date) => React.ReactNode;
     allDayEventsRender?: (events: EventObject[]) => React.ReactNode;
     /** Attached to the root div of the current view */
     ref?: React.Ref<HTMLDivElement>;

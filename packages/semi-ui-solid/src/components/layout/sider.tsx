@@ -8,13 +8,12 @@ import type { ElementProps } from '../../base/element-props';
 import { useLayoutContext } from './context';
 
 export interface SiderProps extends ElementProps<'aside'> {
-    prefixCls?: string;
     breakpoint?: Array<keyof ResponsiveMap>;
     onBreakpoint?: (screen: keyof ResponsiveMap, match: boolean) => void;
 }
 
 export default function Sider(props: SiderProps) {
-    const [local, rest] = splitProps(props, ['breakpoint', 'children', 'class', 'onBreakpoint', 'prefixCls']);
+    const [local, rest] = splitProps(props, ['breakpoint', 'children', 'class', 'onBreakpoint']);
 
     const layout = useLayoutContext();
 
@@ -37,8 +36,8 @@ export default function Sider(props: SiderProps) {
     });
 
     return (
-        <aside {...rest} class={clsx(local.class, `${local.prefixCls ?? cssClasses.PREFIX}-sider`)}>
-            <div class={`${local.prefixCls ?? cssClasses.PREFIX}-sider-children`}>{local.children}</div>
+        <aside {...rest} class={clsx(local.class, `${cssClasses.PREFIX}-sider`)}>
+            <div class={`${cssClasses.PREFIX}-sider-children`}>{local.children}</div>
         </aside>
     );
 }

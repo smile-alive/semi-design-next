@@ -11,7 +11,6 @@ export interface RowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'align'> 
     justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between';
     /** A pair is [horizontal, vertical] */
     gutter?: Gutter | [Gutter, Gutter];
-    prefixCls?: string;
 }
 
 export interface ColProps extends HTMLAttributes<HTMLDivElement> {
@@ -20,7 +19,6 @@ export interface ColProps extends HTMLAttributes<HTMLDivElement> {
     offset?: number;
     push?: number;
     pull?: number;
-    prefixCls?: string;
     xs?: number | ColSize;
     sm?: number | ColSize;
     md?: number | ColSize;

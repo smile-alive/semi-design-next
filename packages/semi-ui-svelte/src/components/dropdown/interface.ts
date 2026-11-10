@@ -14,7 +14,7 @@ export type DropdownTriggerProps = Omit<TooltipTriggerProps, 'aria-haspopup' | '
 };
 
 export interface DropdownMenuIconArgs {
-    item: DropDownMenuItemItem;
+    item: DropdownMenuItemType;
     index: number;
 }
 
@@ -32,7 +32,7 @@ export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPo
     menuIcon?: Snippet<[DropdownMenuIconArgs]>;
     /** On the menu container `.semi-dropdown`; `class` goes on the popup `.semi-dropdown-wrapper` */
     contentClassName?: string;
-    menu?: DropDownMenuItem[];
+    menu?: DropdownMenuItem[];
     /**
      * How the items of this menu are selected (a submenu takes its own Dropdown's value); `active` marks the selected
      * items, and only showTick shows a tick:
@@ -66,18 +66,18 @@ export interface DropdownTitleProps extends HTMLAttributes<HTMLLIElement> {}
 export interface DropdownDividerProps extends HTMLAttributes<HTMLLIElement> {}
 
 /** The listeners are the ones Dropdown.Item routes itself: `onclick`, `onmouseenter`, `onmouseleave`, `oncontextmenu` */
-export interface DropDownMenuItemItem extends Omit<DropdownItemProps, 'children' | 'icon'> {
+export interface DropdownMenuItemType extends Omit<DropdownItemProps, 'children' | 'icon'> {
     node: 'item';
     name?: string | number;
 }
 
-export interface DropDownMenuItemDivider extends DropdownDividerProps {
+export interface DropdownMenuItemDividerType extends DropdownDividerProps {
     node: 'divider';
 }
 
-export interface DropDownMenuItemTitle extends Omit<DropdownTitleProps, 'children'> {
+export interface DropdownMenuItemTitleType extends Omit<DropdownTitleProps, 'children'> {
     node: 'title';
     name?: string | number;
 }
 
-export type DropDownMenuItem = DropDownMenuItemItem | DropDownMenuItemDivider | DropDownMenuItemTitle;
+export type DropdownMenuItem = DropdownMenuItemType | DropdownMenuItemDividerType | DropdownMenuItemTitleType;

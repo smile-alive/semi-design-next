@@ -2,30 +2,31 @@ import { throttle } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
 import { strings } from './constants';
 
+/** Each framework narrows `icon` and `desc` to what it renders and passes its option type as the `O` parameter below */
 export interface MCPOption {
-    icon?: any;
+    icon?: unknown;
     label?: string;
     /** Identifies the option in onStatusChange and keys its row, so it must be unique */
     value: string;
-    desc?: any;
+    desc?: unknown;
     active?: boolean;
     disabled?: boolean;
     configure?: boolean;
 }
 
-export interface MCPConfigureContentProps {
+export interface MCPConfigureContentProps<O extends MCPOption = MCPOption> {
     className?: string;
-    options?: MCPOption[];
-    customOptions?: MCPOption[];
-    filter?: (inputValue: string, option: MCPOption) => boolean;
+    options?: O[];
+    customOptions?: O[];
+    filter?: (inputValue: string, option: O) => boolean;
     placeholder?: string;
     style?: any;
-    onStatusChange?: (options: MCPOption[], custom: boolean) => void;
+    onStatusChange?: (options: O[], custom: boolean) => void;
     onSearch?: (inputValue: string, custom: boolean) => void;
     onAddClick?: (e: any) => void;
-    onConfigureClick?: (e: any, option: MCPOption) => void;
-    onEditClick?: (e: any, option: MCPOption) => void;
-    renderItem?: (props: { option: MCPOption; custom: boolean }) => any;
+    onConfigureClick?: (e: any, option: O) => void;
+    onEditClick?: (e: any, option: O) => void;
+    renderItem?: (props: { option: O; custom: boolean }) => any;
 }
 
 export type MCPConfigureMode = 'inner' | 'custom';
@@ -38,15 +39,15 @@ export interface MCPConfigureContentState {
 }
 
 /** E is the host's button click event, which the foundation only passes through */
-export interface MCPConfigureContentAdapter<E = unknown> extends DefaultAdapter<MCPConfigureContentProps, MCPConfigureContentState> {
-    notifyConfigureClick: (e: E, option: MCPOption) => void;
-    notifyEditClick: (e: E, option: MCPOption) => void;
-    notifyStatusChange: (options: MCPOption[], custom: boolean) => void;
+export interface MCPConfigureContentAdapter<E = unknown, O extends MCPOption = MCPOption> extends DefaultAdapter<MCPConfigureContentProps<O>, MCPConfigureContentState> {
+    notifyConfigureClick: (e: E, option: O) => void;
+    notifyEditClick: (e: E, option: O) => void;
+    notifyStatusChange: (options: O[], custom: boolean) => void;
     notifyAddClick: (e: E) => void;
     notifySearch: (inputValue: string, custom: boolean) => void;
 }
 
-export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoundation<MCPConfigureContentAdapter<E>, MCPConfigureContentProps, MCPConfigureContentState> {
+export default class MCPConfigureContentFoundation<E = unknown, O extends MCPOption = MCPOption> extends BaseFoundation<MCPConfigureContentAdapter<E, O>, MCPConfigureContentProps<O>, MCPConfigureContentState> {
     #setQuery(value: string) {
         this.setState({ query: value });
     }
@@ -73,17 +74,17 @@ export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoun
         this.setState({ mode, query: this.getState('inputValue') });
     };
 
-    onConfigureButtonClick = (e: E, option: MCPOption) => {
+    onConfigureButtonClick = (e: E, option: O) => {
         this.adapter.notifyConfigureClick(e, option);
     };
 
-    onEditButtonClick = (e: E, option: MCPOption) => {
+    onEditButtonClick = (e: E, option: O) => {
         this.adapter.notifyEditClick(e, option);
     };
 
-    handleStatusChange = (item: MCPOption, checked: boolean) => {
+    handleStatusChange = (item: O, checked: boolean) => {
         const { options = [], customOptions = [] } = this.getProps();
-        let newOptions = [];
+        let newOptions: O[];
         const mode = this.getState('mode');
         if (mode === strings.MCP_MODE.INNER) {
             newOptions = options.map((option) => (option.value === item.value ? { ...option, active: checked } : option));

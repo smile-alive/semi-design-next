@@ -105,7 +105,6 @@ const defaultProps = {
     autoAdjustOverflow: true,
     stopPropagation: true,
     motion: true,
-    prefixCls: cssClasses.PREFIX,
     presetPosition: 'bottom',
     type: 'date',
     size: 'default',
@@ -186,7 +185,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
         placeholder,
         position: positionProp,
         prefix,
-        prefixCls,
         presetPosition,
         presets,
         preventScroll,
@@ -451,7 +449,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         if (!isConfirmNeeded) {
             return null;
         }
-        return <Footer disabledConfirm={isRangeType(type) && !isRangeValueComplete(cachedSelectedValue)} locale={locale} prefixCls={prefixCls} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />;
+        return <Footer disabledConfirm={isRangeType(type) && !isRangeValueComplete(cachedSelectedValue)} locale={locale} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />;
     };
 
     const panel = (
@@ -521,7 +519,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             <div
                 {...rest}
                 ref={triggerElRef}
-                className={clsx(className, prefixCls)}
+                className={clsx(className, cssClasses.PREFIX)}
                 style={style}
                 aria-labelledby={isRange ? ariaLabelledby : undefined}
                 role={isRange ? (rest.role ?? 'group') : namedRole(rest)}

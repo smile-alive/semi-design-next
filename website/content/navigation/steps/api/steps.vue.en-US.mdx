@@ -2,18 +2,17 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property | Description | Type | Default |
-| --- | --- | --- | --- |
-| type | Steps type: fill, basic or nav. | `StepsType` | `semiDefault("Steps", "type", "fill")` |
-| current | Current step, counting from 0; a child Step can override the state with status. | `number` | `semiDefault("Steps", "current", 0)` |
-| initial | Starting index, counting from 0. | `number` | `semiDefault("Steps", "initial", 0)` |
-| direction | Direction: horizontal or vertical. | `StepsDirection` | `semiDefault("Steps", "direction", "horizontal")` |
-| status | State of the current step: wait, process, finish, error or warning. | `StepStatus` | `semiDefault("Steps", "status", "process")` |
-| size | Size of the basic and nav types: default or small. | `StepsSize` | `semiDefault("Steps", "size", "default")` |
-| hasLine | Whether the basic type shows connecting lines. | `boolean` | `semiDefault("Steps", "hasLine", true)` |
-| prefixCls | Class name prefix of the root element. | `string` | `semiDefault("Steps", "prefixCls", stepsClasses.PREFIX)` |
-| onChange | Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. It is a function prop, bound with @change as usual; passing it makes every Step clickable. | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined` |
-| onUpdate:current | Update function bound by v-model:current, behaving like onChange. | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined` |
+| Property         | Description                                                                                                                                                                                                            | Type                                                           | Default        |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | -------------- |
+| type             | Steps type: fill, basic or nav.                                                                                                                                                                                        | `StepsType`                                                    | `"fill"`       |
+| current          | Current step, counting from 0; a child Step can override the state with status.                                                                                                                                        | `number`                                                       | `0`            |
+| initial          | Starting index, counting from 0.                                                                                                                                                                                       | `number`                                                       | `0`            |
+| direction        | Direction: horizontal or vertical.                                                                                                                                                                                     | `StepsDirection`                                               | `"horizontal"` |
+| status           | State of the current step: wait, process, finish, error or warning.                                                                                                                                                    | `StepStatus`                                                   | `"process"`    |
+| size             | Size of the basic and nav types: default or small.                                                                                                                                                                     | `StepsSize`                                                    | `"default"`    |
+| hasLine          | Whether the basic type shows connecting lines.                                                                                                                                                                         | `boolean`                                                      | `true`         |
+| onChange         | Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. It is a function prop, bound with @change as usual; passing it makes every Step clickable. | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined`    |
+| onUpdate:current | Update function bound by v-model:current, behaving like onChange.                                                                                                                                                      | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined`    |
 
 **Events**
 

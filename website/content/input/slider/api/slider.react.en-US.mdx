@@ -21,6 +21,7 @@ import ApiType from '#/components/ApiType.astro';
 | onAfterChange | Fires after a change is complete, with the current value. Not fired when a controlled value goes back to `undefined`. | <ApiType detail={"(value: SliderProps['value']) => void"}>Type</ApiType> | - |
 | onChange | Fires when the value changes, with the current value. | <ApiType detail={"(value: SliderProps['value']) => void"}>Type</ApiType> | - |
 | onFocus | Fires when either handle gets focus, attached to `.semi-slider-wrapper`. | <ApiType detail={"React.FocusEventHandler\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| onKeyDown | Key handler on the handle's input, called before the slider handles the key. Calling `preventDefault` in it stops the slider from handling a value key. | <ApiType detail={"React.KeyboardEventHandler\u003cHTMLInputElement>"}>Type</ApiType> | - |
 | onMouseUp | Fires when the pointer (mouse, touch or pen) that dragged the handle is released or cancelled, and when a value key is released. | <ApiType detail={"(e: any) => void"}>Type</ApiType> | - |
 | railStyle | Style of the slider rail. | `React.CSSProperties` | - |
 | range | Whether both ends can be dragged. | `boolean` | `false` |

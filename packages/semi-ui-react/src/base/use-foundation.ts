@@ -1,5 +1,5 @@
 import { useInsertionEffect, useLayoutEffect, useState } from 'react';
-import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
+import { type ContextOf, type DefaultAdapter, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 // A plain object rather than refs: render reads only the stable `foundation`, satisfying the Compiler `refs` rule.
 class FoundationHost<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P, S extends object, C> {
@@ -85,7 +85,7 @@ class FoundationHost<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P
  *   not have side effects; the kept instance goes through init -> destroy -> init. Activity runs destroy on hide and
  *   init on show.
  */
-export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P, S extends object, C = HostContext<A>>(
+export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P, S extends object, C = ContextOf<A>>(
     Foundation: (new (adapter: A) => F) & PropReactions,
     props: P,
     initialState: () => S,

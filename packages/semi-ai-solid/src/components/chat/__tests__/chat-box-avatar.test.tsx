@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js';
 import { render } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
-import ChatBoxAvatar from '../widgets/chat-box-avatar';
+import ChatBoxAvatar from '../chat-box/chat-box-avatar';
 
 const hiddenCls = 'semi-chat-chatBox-avatar-hidden';
 

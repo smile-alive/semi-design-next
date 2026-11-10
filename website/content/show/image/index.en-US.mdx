@@ -150,7 +150,7 @@ The preview component ImagePreview can be used alone, through `v-model:visible` 
 
 <Framework only="solid">
 
-The preview component ImagePreview can be used alone, through `visible` and `onVisibleChange` to control whether to preview, `src` to pass in the image that can be previewed, and `previewTitle` (a JSX element) to set the title at the top of the preview
+The preview component ImagePreview can be used alone, through `visible` and `onVisibleChange` to control whether to preview, `src` to pass in the image that can be previewed, and `previewTitle` (a JSX element, or a function returning one that is called once the preview opens) to set the title at the top of the preview
 
 </Framework>
 
@@ -218,7 +218,7 @@ To customize the bottom action area based on the default one, get the default JS
 
 <Framework only="svelte">
 
-To customize the bottom action area based on the default one, render the `menuItems` snippet from the MenuProps: it renders all the default items at once, in the order previous, page counter, next, zoom out, zoom slider, zoom in, original size / fit to page, rotate and download, so custom content can be placed before or after them but not between them. The default items are separated by dividers only when no `previewMenu` is given.
+To customize the bottom action area based on the default one, render the `menuItems` snippet from the MenuProps. The default items come in the order previous, page counter, next, zoom out, zoom slider, zoom in, original size / fit to page, rotate and download. `{@render menu.menuItems()}` renders all of them; with `start` and `end` it renders only the items `Array.prototype.slice` would pick, such as `{@render menu.menuItems(0, 3)}`, so the items can be rendered one by one or in groups with dividers or custom content between them. The component separates the default items with dividers only when no `previewMenu` is given.
 
 </Framework>
 
@@ -416,29 +416,29 @@ The fields are read live: read `menu.disabledPrev` and the other fields directly
 
 <Framework only="svelte">
 
-| Properties      | Instructions                                                                                     | Type                         |
-| --------------- | ------------------------------------------------------------------------------------------------ | ---------------------------- |
-| curPage         | Current image page subscript                                                                     | number                       |
-| disabledPrev    | Whether to disable the left toggle button                                                        | boolean                      |
-| disabledNext    | Whether to disable the right toggle button                                                       | boolean                      |
-| disabledZoomIn  | Whether the zoom is at its maximum (the zoom-in button is disabled)                              | boolean                      |
-| disabledZoomOut | Whether the zoom is at its minimum (the zoom-out button is disabled)                             | boolean                      |
-| disableDownload | Whether to disable the download button                                                           | boolean                      |
-| max             | The maximum zoom of the image (percentage)                                                       | number                       |
-| min             | The minimum zoom of the image (percentage)                                                       | number                       |
-| onDownload      | Call function when the image is downloaded                                                       | () => void                   |
-| onZoomIn        | Call function when the image is zoomed in                                                        | () => void                   |
-| onZoomOut       | Call function when the image is zoomed out                                                       | () => void                   |
-| onRatioClick    | Call function to switch between the original size and fit to page                                | () => void                   |
-| onPrev          | Call function to switch the picture forward                                                      | () => void                   |
-| onNext          | Call function to switch the picture backward                                                     | () => void                   |
-| onRotateLeft    | Call function to rotate the image counterclockwise                                               | () => void                   |
-| onRotateRight   | Call function to rotate the image clockwise                                                      | () => void                   |
-| ratio           | Original size or Fit to page button state                                                        | `"adaptation" \| "realSize"` |
-| step            | Step size of zooming (percentage)                                                                | number                       |
-| totalNum        | The total number of images that can be previewed                                                 | number                       |
-| zoom            | Current zoom of the image (percentage)                                                           | number                       |
-| menuItems       | Snippet that renders all the default bottom operation area items at once, in their default order | Snippet                      |
+| Properties      | Instructions                                                                                                                                          | Type                                      |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| curPage         | Current image page subscript                                                                                                                          | number                                    |
+| disabledPrev    | Whether to disable the left toggle button                                                                                                             | boolean                                   |
+| disabledNext    | Whether to disable the right toggle button                                                                                                            | boolean                                   |
+| disabledZoomIn  | Whether the zoom is at its maximum (the zoom-in button is disabled)                                                                                   | boolean                                   |
+| disabledZoomOut | Whether the zoom is at its minimum (the zoom-out button is disabled)                                                                                  | boolean                                   |
+| disableDownload | Whether to disable the download button                                                                                                                | boolean                                   |
+| max             | The maximum zoom of the image (percentage)                                                                                                            | number                                    |
+| min             | The minimum zoom of the image (percentage)                                                                                                            | number                                    |
+| onDownload      | Call function when the image is downloaded                                                                                                            | () => void                                |
+| onZoomIn        | Call function when the image is zoomed in                                                                                                             | () => void                                |
+| onZoomOut       | Call function when the image is zoomed out                                                                                                            | () => void                                |
+| onRatioClick    | Call function to switch between the original size and fit to page                                                                                     | () => void                                |
+| onPrev          | Call function to switch the picture forward                                                                                                           | () => void                                |
+| onNext          | Call function to switch the picture backward                                                                                                          | () => void                                |
+| onRotateLeft    | Call function to rotate the image counterclockwise                                                                                                    | () => void                                |
+| onRotateRight   | Call function to rotate the image clockwise                                                                                                           | () => void                                |
+| ratio           | Original size or Fit to page button state                                                                                                             | `"adaptation" \| "realSize"`              |
+| step            | Step size of zooming (percentage)                                                                                                                     | number                                    |
+| totalNum        | The total number of images that can be previewed                                                                                                      | number                                    |
+| zoom            | Current zoom of the image (percentage)                                                                                                                | number                                    |
+| menuItems       | Snippet that renders the default bottom operation area items in their default order; `start` and `end` pick a slice of them, all of them when omitted | `Snippet<[start?: number, end?: number]>` |
 
 </Framework>
 

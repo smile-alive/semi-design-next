@@ -1,5 +1,5 @@
 import { type ShallowRef, markRaw, onBeforeUnmount, onMounted, shallowRef, watch } from 'vue';
-import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
+import { type ContextOf, type DefaultAdapter, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 /**
  * Hosts a semi-foundation class in a Vue component (host contract: `semi-foundation/src/base/foundation.ts`).
@@ -12,7 +12,7 @@ import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactio
  *   runtime default), in initial state, getProp, getProps and the `propKeys` comparison alike.
  * - The instance stays markRaw: a reactive proxy cannot access a foundation's native private fields.
  */
-export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = HostContext<A>>(
+export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = ContextOf<A>>(
     Foundation: (new (adapter: A) => F) & PropReactions,
     props: Readonly<Partial<P>>,
     initialState: (props: P) => S,

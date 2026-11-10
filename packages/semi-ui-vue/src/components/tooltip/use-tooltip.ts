@@ -120,7 +120,10 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
                     emit('visibleChange', visible);
                 },
                 registerClickOutsideHandler: (handler) => {
-                    onClickOutside.value = handler;
+                    // opening from a mousedown handler enables the listener in a microtask of that same dispatch, so
+                    // the press would still reach it; that press must not close the popup
+                    const openingPress = window.event;
+                    onClickOutside.value = (event) => event !== openingPress && handler(event);
                 },
                 unregisterClickOutsideHandler: () => {
                     onClickOutside.value = null;

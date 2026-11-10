@@ -11,6 +11,7 @@
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';
+    import { setTooltipPrefixContext } from '../tooltip/context.js';
     import { Tooltip, type RenderContentProps, type TooltipProps, type TooltipTriggerProps } from '../tooltip/index.js';
     import { type DropdownContext, getDropdownContext, menuContext, menuItems } from './context.js';
     import DropdownDivider from './dropdown-divider.svelte';
@@ -18,7 +19,7 @@
     import DropdownMenu from './dropdown-menu.svelte';
     import DropdownPopup from './dropdown-popup.svelte';
     import DropdownTitle from './dropdown-title.svelte';
-    import type { DropDownMenuItem, DropdownProps, DropdownTriggerProps } from './interface.js';
+    import type { DropdownMenuItem, DropdownProps, DropdownTriggerProps } from './interface.js';
 
     type Foundation = DropdownFoundation<DropdownBaseProps>;
     type Adapter = DropdownAdapter<DropdownBaseProps>;
@@ -42,7 +43,6 @@
         autoAdjustOverflow = defaults('autoAdjustOverflow'),
         trigger = defaults('trigger', 'hover'),
         position = defaults('position', 'bottom'),
-        prefixCls = defaults('prefixCls', cssClasses.PREFIX),
         // an interactive menu must not sit inside role="tooltip"
         role = defaults('role', 'presentation'),
         mouseEnterDelay = defaults('mouseEnterDelay'),
@@ -103,6 +103,7 @@
         { context: () => menuContext(parent, config.direction) }
     );
 
+    const prefixCls = cssClasses.PREFIX;
     const popVisible = $derived(visible ?? states().popVisible);
 
     // ARIA allows aria-haspopup and aria-expanded only on a button, a link, a parent item or an element with such a role
@@ -126,7 +127,6 @@
         autoAdjustOverflow,
         trigger,
         position,
-        prefixCls,
         role,
         mouseEnterDelay,
         mouseLeaveDelay,
@@ -177,6 +177,8 @@
 
     const focusTarget = { focus: foundation.handleOpened };
 
+    setTooltipPrefixContext(prefixCls);
+
     // The trigger's own onkeydown goes first: a trigger that clicks itself on Enter (Tag, Avatar) calls preventDefault,
     // which stops the foundation from clicking twice. Svelte delegates onkeydown to the root and runs a listener on the
     // element itself before it, so the listener sits on the document, whose `on` runs after the delegated handlers.
@@ -213,10 +215,10 @@
         };
     };
 
-    const menuKey = (item: DropDownMenuItem, index: number) => `${item.node}${'name' in item ? (item.name ?? '') : ''}${index}`;
+    const menuKey = (item: DropdownMenuItem, index: number) => `${item.node}${'name' in item ? (item.name ?? '') : ''}${index}`;
 
-    const entryProps = (item: DropDownMenuItem) => {
-        const { node: _node, name: _name, ...rest } = item as DropDownMenuItem & { name?: unknown };
+    const entryProps = (item: DropdownMenuItem) => {
+        const { node: _node, name: _name, ...rest } = item as DropdownMenuItem & { name?: unknown };
         return rest;
     };
 

@@ -1,30 +1,5 @@
-import { getPopupTrigger, POPUP_SELECTOR } from '../utils/layer';
+import { popupTriggers } from '../utils/layer';
 import FocusTrapHandle from './focus-handle';
-
-// the element may sit in a shadow root inside the popup (a third-party control), which closest() does not leave
-function closestPopup(element: Element | null) {
-    for (let current = element; current; current = (current.getRootNode() as Partial<ShadowRoot>).host ?? null) {
-        const popup = current.closest(`${POPUP_SELECTOR}[id]`);
-        if (popup) {
-            return popup;
-        }
-    }
-    return null;
-}
-
-/** The triggers of the Tooltip-family popups around `element`, innermost first (D5 markup, see utils/layer) */
-function popupTriggers(element: Element | null) {
-    const triggers: HTMLElement[] = [];
-    for (let popup = closestPopup(element); popup;) {
-        const trigger = getPopupTrigger(popup.id, popup.getRootNode() as ParentNode);
-        if (!trigger) {
-            break;
-        }
-        triggers.push(trigger);
-        popup = closestPopup(trigger);
-    }
-    return triggers;
-}
 
 const canTakeFocus = (element: HTMLElement | null) => element?.isConnected && !element.matches(':disabled') && element.checkVisibility();
 

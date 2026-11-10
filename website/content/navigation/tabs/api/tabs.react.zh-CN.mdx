@@ -11,7 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | collapsible | 是否开启滚动折叠（仅水平模式）。传 `auto` 时在标签溢出或换行时自动折叠，放得下时自动退出。 | `boolean \| 'auto'` | `false` |
 | contentStyle | 内容区域外层的样式对象。 | `CSSProperties` | - |
 | defaultActiveKey | 非受控时初始选中的 itemKey。不传时取第一个启用且有 itemKey 的标签页。 | `string` | - |
-| dropdownProps | 折叠模式下，分别透传给起始侧（`start`）与末尾侧（`end`）箭头下拉菜单的 Dropdown 属性。 | `TabsDropDownProps` | - |
+| dropdownProps | 折叠模式下，分别透传给起始侧（`start`）与末尾侧（`end`）箭头下拉菜单的 Dropdown 属性。 | `TabsDropdownProps` | - |
 | keepDOM | 使用 TabPane 子元素时，是否渲染未激活面板的 DOM。为 `false` 时只渲染当前面板，没有切换动画。 | `boolean` | `true` |
 | lazyRender | 懒渲染：面板被激活过才渲染内容，之后保留。 | `boolean` | `false` |
 | more | 将末尾的一部分标签页收入「更多」下拉菜单。传数字时表示收入菜单的标签数；传对象时 `count` 为标签数，`render` 返回自定义触发器，`dropdownProps` 透传给下拉菜单。 | <ApiType detail={"number \u007c { count: number; render?: () => ReactNode; dropdownProps?: DropdownProps }"}>Type</ApiType> | - |

@@ -109,7 +109,7 @@ export interface TooltipBaseState {
     /** Where the popup mounts, resolved by the adapter's `insertPortal` from the trigger */
     portalTarget: HTMLElement | ShadowRoot | null;
     /** The color scheme class of the area around the trigger, resolved by the adapter's `insertPortal` */
-    colorScheme: string | undefined;
+    colorScheme?: string;
 }
 
 export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> extends BaseFoundation<TooltipAdapter<P>, P, TooltipBaseState> {
@@ -952,6 +952,11 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         this.#open = true;
         this.#openReported = false;
         this.#openedHandled = false;
+        // a reopening during the exit animation ends that showing, so its afterClose is reported now rather than
+        // after the next close; Select and TreeSelect clear the last search in afterClose
+        if (this.getState('transitionState') === 'leave') {
+            this.#lifecycle.ended(() => this.adapter.notifyAfterClose());
+        }
         this.#lifecycle.show();
         this.#clearDelayTimer();
         this.setState({ isInsert: true, transitionState: 'enter', visible: true, ...this.adapter.insertPortal() });

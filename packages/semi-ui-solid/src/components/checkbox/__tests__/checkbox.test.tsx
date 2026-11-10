@@ -252,7 +252,7 @@ describe('Checkbox 行为基线', () => {
     it('onChange 的 target 只有 checked、value、name 与 disabled，nativeEvent 是点击事件', async () => {
         const onChange = vi.fn<Change>();
         render(() => (
-            <Checkbox value="v" name="agree" prefixCls={prefixCls} onChange={onChange} extra="e">
+            <Checkbox value="v" name="agree" onChange={onChange} extra="e">
                 label
             </Checkbox>
         ));

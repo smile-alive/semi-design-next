@@ -91,8 +91,8 @@
                 "en-US": "References shown with the input."
             },
             "renderActionArea": {
-                "zh-CN": "自定义底部的操作区域。参数 menuItem 依次为上传节点（showUploadButton 为 false 时是隐藏的上传节点，仍需渲染才能粘贴上传）与发送或停止按钮，class 为操作区域的类名。",
-                "en-US": "Customizes the action area at the bottom. menuItem lists, in order, the upload node (a hidden one when showUploadButton is false, which must still render for paste upload) and the send or stop button; class is the class name of the area."
+                "zh-CN": "自定义底部的操作区域。参数 menuItem 依次为创建上传按钮（showUploadButton 为 false 时不渲染）与发送或停止按钮的函数，在插入处调用；不渲染上传按钮也能粘贴上传。class 为操作区域的类名。",
+                "en-US": "Customizes the action area at the bottom. menuItem lists, in order, functions that create the upload button (nothing when showUploadButton is false) and the send or stop button; call each where it is inserted. Paste upload works without the upload button. class is the class name of the area."
             },
             "renderConfigureArea": {
                 "zh-CN": "自定义底部的配置区域，返回配置项（Configure 的子项）。",
@@ -341,10 +341,6 @@
                 "zh-CN": "聚焦时是否阻止浏览器滚动到被聚焦元素，默认 false。",
                 "en-US": "Whether focusing an element avoids scrolling it into view. Defaults to false."
             },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀，默认 semi-dropdown。",
-                "en-US": "Class prefix of the popup, semi-dropdown by default."
-            },
             "returnFocusOnClose": {
                 "zh-CN": "菜单关闭后焦点是否回到触发元素，默认 true。",
                 "en-US": "Whether focus returns to the trigger after the menu closes. Defaults to true."
@@ -352,6 +348,10 @@
             "role": {
                 "zh-CN": "包裹菜单的弹层容器的 ARIA role，默认 presentation，菜单本身的 role 为 menu。",
                 "en-US": "ARIA role of the popup container around the menu, presentation by default. The menu itself has role menu."
+            },
+            "aria-describedby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-describedby。",
+                "en-US": "aria-describedby of the popup when its role is dialog."
             },
             "aria-label": {
                 "zh-CN": "弹出层 role 为 dialog 时的 aria-label。",

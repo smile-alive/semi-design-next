@@ -4,9 +4,9 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| mode | 展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式落到对应的 SideSheet 或 Modal 上。 | `FeedbackMode` | `semiDefault("Feedback", "mode", "popup")` |
-| type | 反馈内容的类型。custom 时内容写在默认插槽中。 | `FeedbackType` | `semiDefault("Feedback", "type", "emoji")` |
-| visible | 是否显示，配合 v-model:visible 使用。 | `boolean` | `semiDefault("Feedback", "visible", false)` |
+| mode | 展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式落到对应的 SideSheet 或 Modal 上。 | `FeedbackMode` | `"popup"` |
+| type | 反馈内容的类型。custom 时内容写在默认插槽中。 | `FeedbackType` | `"emoji"` |
+| visible | 是否显示，配合 v-model:visible 使用。 | `boolean` | `false` |
 | title | 纯文本标题，同时作为对话框的可访问名称；同时给出 title 插槽时以插槽为准。 | `string` | `semiGlobalDefault("Feedback", "title")` |
 | textAreaProps | type 为 text 与 emoji 时多行输入框的属性，不含 modelValue（值由 Feedback 管理）；其中的 onChange 在 Feedback 处理后调用。 | `FeedbackTextAreaProps` | `semiGlobalDefault("Feedback", "textAreaProps")` |
 | radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackRadioGroupProps` | `semiGlobalDefault("Feedback", "radioGroupProps")` |

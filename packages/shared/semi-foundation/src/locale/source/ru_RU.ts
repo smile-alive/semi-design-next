@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Выбрать все строки',
         selectRow: 'Выбрать эту строку',
+        scrollRegion: 'Прокручиваемое содержимое таблицы',
+        untitledColumn: 'Столбец без заголовка',
         filterColumn: 'Фильтровать данные по этому столбцу',
         filterColumnActive: 'Фильтровать данные по этому столбцу, фильтр применён',
         expandRow: 'Развернуть эту строку',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Поиск',
         replace: 'Заменить',
         replaceAll: 'Заменить все',
+        replaceWith: 'Заменить на',
         caseSensitive: 'Учитывать регистр',
         regex: 'Использовать регулярное выражение',
         wholeWord: 'Слово целиком',

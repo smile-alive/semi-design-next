@@ -4,7 +4,7 @@ import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
 import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { readGlobalDefaults } from '../../utils/semi-global';
-import type { ToastOptions } from './index';
+import type { ToastOptions } from './static-api';
 import ToastList from './toast-list';
 
 /** The id is generated, and a hook's toasts render where its holder is, so the layer options do not apply */

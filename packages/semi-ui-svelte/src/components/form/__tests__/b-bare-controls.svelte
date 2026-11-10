@@ -1,8 +1,8 @@
 <script lang="ts">
-    import FormCheckboxGroup from '../form-checkbox-group.svelte';
-    import FormCheckbox from '../form-checkbox.svelte';
-    import FormRadioGroup from '../form-radio-group.svelte';
-    import FormRadio from '../form-radio.svelte';
+    import FormCheckboxGroup from '../fields/form-checkbox-group.svelte';
+    import FormCheckbox from '../fields/form-checkbox.svelte';
+    import FormRadioGroup from '../fields/form-radio-group.svelte';
+    import FormRadio from '../fields/form-radio.svelte';
     import Form from '../form.svelte';
     import type { FormApi } from '../interface';
 
@@ -14,6 +14,6 @@
         <FormCheckbox class="own" data-testid="a" id="own-checkbox" value="a">A</FormCheckbox>
     </FormCheckboxGroup>
     <FormRadioGroup field="pick">
-        <FormRadio id="own-radio" name="own-name" value="r">R</FormRadio>
+        <FormRadio id="own-radio" value="r">R</FormRadio>
     </FormRadioGroup>
 </Form>

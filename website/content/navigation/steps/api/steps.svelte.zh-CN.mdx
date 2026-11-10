@@ -11,7 +11,6 @@ import ApiType from '#/components/ApiType.astro';
 | hasLine | basic 类型是否显示连接线。 | `boolean` | `true` |
 | initial | 起始序号，从 0 开始计数。 | `number` | `0` |
 | onChange | 点击或键盘选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有步骤变为可点击。 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
-| prefixCls | 根元素的类名前缀。 | `string` | `"semi-steps"` |
 | size | basic 与 nav 类型的尺寸，可选 default、small。 | `StepsSize` | `"default"` |
 | status | 当前步骤的状态，可选 wait、process、finish、error、warning。 | `StepStatus` | `"process"` |
 | title | 每个步骤标题的 snippet，参数 `{ item, index }`；缺省时显示 `item.title`。 | <ApiType detail={"Snippet\u003c[StepSnippetProps]>"}>Type</ApiType> | - |

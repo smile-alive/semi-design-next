@@ -104,7 +104,8 @@ $module: #{$prefix}-table;
         }
     }
 
-    &-column-expand-title {
+    &-column-expand-title,
+    &-column-untitled {
         position: absolute;
         width: 1px;
         height: 1px;

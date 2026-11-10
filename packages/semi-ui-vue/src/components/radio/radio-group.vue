@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends RadioValue = RadioValue">
     import { computed, nextTick, useId } from 'vue';
     import { radioGroupClasses, strings } from '@fibrae/semi-foundation/components/radio/constants';
     import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
@@ -19,7 +19,7 @@
 
     defineOptions({ inheritAttrs: false });
 
-    const props = withDefaults(defineProps<RadioGroupProps & /* @vue-ignore */ ElementProps<'div', keyof RadioGroupProps | EmitHandlers<RadioGroupEmits>>>(), {
+    const props = withDefaults(defineProps<RadioGroupProps<T> & /* @vue-ignore */ ElementProps<'div', keyof RadioGroupProps | EmitHandlers<RadioGroupEmits>>>(), {
         modelValue: undefined,
         defaultValue: semiGlobalDefault('RadioGroup', 'defaultValue'),
         disabled: () => semiDefault('RadioGroup', 'disabled', false),
@@ -29,10 +29,9 @@
         mode: () => semiDefault('RadioGroup', 'mode', ''),
         type: () => semiDefault('RadioGroup', 'type', 'default'),
         buttonSize: () => semiDefault('RadioGroup', 'buttonSize', 'middle'),
-        prefixCls: semiGlobalDefault('RadioGroup', 'prefixCls'),
     });
 
-    const emit = defineEmits<RadioGroupEmits>();
+    const emit = defineEmits<RadioGroupEmits<T>>();
     defineSlots<RadioGroupSlots>();
 
     // one name per group keeps arrow keys and form submission inside the group
@@ -48,7 +47,7 @@
         (view) => RadioGroupFoundation.getInitialState(view),
         () => ({
             notifyChange: (event) => {
-                emit('update:modelValue', event.target.value as RadioValue | undefined);
+                emit('update:modelValue', event.target.value as T | undefined);
                 emit('change', event as RadioChangeEvent);
             },
             notifyBlur: (event) => emit('blur', event),
@@ -59,7 +58,7 @@
     const isButtonRadio = computed(() => props.type === strings.TYPE_BUTTON);
     const isPureCardRadio = computed(() => props.type === strings.TYPE_PURECARD);
     const isCardRadio = computed(() => props.type === strings.TYPE_CARD || isPureCardRadio.value);
-    const prefix = computed(() => props.prefixCls || radioGroupClasses.PREFIX);
+    const prefix = radioGroupClasses.PREFIX;
     const items = computed<RadioOptionItem[]>(() => (props.options ?? []).map((option) => (typeof option === 'string' ? { label: option, value: option } : option)));
 
     provideRadioGroupContext({
@@ -67,7 +66,6 @@
             value: RadioGroupFoundation.deriveValue({ value: props.modelValue }, state.value),
             disabled: Boolean(props.disabled),
             name: props.name || generatedName,
-            prefixCls: props.prefixCls,
             isButtonRadio: isButtonRadio.value,
             isCardRadio: isCardRadio.value,
             isPureCardRadio: isPureCardRadio.value,

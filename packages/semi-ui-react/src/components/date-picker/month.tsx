@@ -7,7 +7,7 @@ import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFounda
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';
-import useToday from '../calendar/use-today';
+import useToday from '../calendar/hooks/use-today';
 import { useConfigContext } from '../config-provider/context';
 
 const prefixCls = cssClasses.PREFIX;

@@ -645,6 +645,25 @@ describe('Typography 行为基线', () => {
         expect(fits.container.querySelector(`.${prefix}-ellipsis-expand`)).toBeNull();
     });
 
+    it('JS 省略截断时插槽中的原生元素被压成纯文本，未截断时保留', async () => {
+        mockTextHeight(2);
+        const view = render(Paragraph, {
+            props: { ellipsis: { expandable: true } },
+            attrs: { style: lineHeight },
+            slots: { default: () => [LETTERS, <b>element</b>] },
+        });
+        await waitFor(() => expect(root(view.container)).toHaveTextContent(/\.\.\./));
+        expect(root(view.container).querySelector('b')).toBeNull();
+
+        const fits = render(Paragraph, {
+            props: { ellipsis: { expandable: true } },
+            attrs: { style: lineHeight },
+            slots: { default: () => [<b>ok</b>] },
+        });
+        await waitFor(() => expect(root(fits.container)).toHaveTextContent(/^ok$/));
+        expect(root(fits.container).querySelector('b')).not.toBeNull();
+    });
+
     it('JS 省略只在插槽含组件节点时警告，多段文本、数字与元素不警告', async () => {
         mockTextHeight(2);
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -1496,15 +1515,20 @@ describe('Typography Vue', () => {
         expect(view.container.querySelector('.custom-icon')).toBeNull();
     });
 
-    it('Numeral 经透传带上 ellipsis 时，不渲染 ellipsisContent 插槽', async () => {
+    it('Numeral 不接受经透传带上的 ellipsis', async () => {
         mockSingleRowOverflow(200);
         const view = render(Numeral, {
             attrs: { ellipsis: { showTooltip: true }, style: { width: '100px' } },
             slots: { default: () => '12345', ellipsisContent: () => <i>custom content</i> },
         });
-        await waitFor(() => expect(root(view.container)).toHaveAttribute('tabindex', '0'));
+        // an ellipsis measures on the next frame; 50ms covers it
+        await sleep(50);
+        expect(root(view.container)).not.toHaveClass(`${prefix}-ellipsis`);
+        expect(root(view.container)).not.toHaveAttribute('tabindex');
+        expect(root(view.container)).not.toHaveAttribute('ellipsis');
         await userEvent.hover(root(view.container));
-        await waitFor(() => expect(document.querySelector('.semi-tooltip-content')).toHaveTextContent('12345'));
+        await sleep(50);
+        expect(document.querySelector('.semi-tooltip-content')).toBeNull();
         expect(screen.queryByText('custom content')).toBeNull();
     });
 });

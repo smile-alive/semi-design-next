@@ -174,7 +174,22 @@
         <slot v-if="$slots.content" :content="contentNode()" name="content" />
         <component :is="contentNode()" v-else />
     </Modal>
-    <SideSheet v-else ref="sheet" canVerticalSetWidth :class="[prefix, `${prefix}-${props.type}`]" :disableScroll="false" height="auto" :mask="false" placement="bottom" :title="props.title" :visible="props.visible" v-bind="definedAttrs()" @afterVisibleChange="onAfterVisibleChange" @cancel="foundation.handleCancel">
+    <SideSheet
+        v-else
+        ref="sheet"
+        canVerticalSetWidth
+        :class="[prefix, `${prefix}-${props.type}`]"
+        closeOnEsc
+        :disableScroll="false"
+        height="auto"
+        :mask="false"
+        placement="bottom"
+        :title="props.title"
+        :visible="props.visible"
+        v-bind="definedAttrs()"
+        @afterVisibleChange="onAfterVisibleChange"
+        @cancel="foundation.handleCancel"
+    >
         <!-- forwarded only when given: a given #title replaces SideSheet's title prop -->
         <template v-if="$slots.title" #title>
             <slot name="title" />

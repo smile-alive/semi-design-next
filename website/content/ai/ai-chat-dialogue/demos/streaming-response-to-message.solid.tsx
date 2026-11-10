@@ -63,15 +63,12 @@ export default function AIChatDialogueDemo() {
             const currentIndices = FIXED_SHUFFLED_INDICES.slice(0, length);
             const currentChunks = currentIndices.map((index) => REASONING_CHUNKS[index]);
 
-            const result = streamingResponseToMessage(currentChunks, state);
+            const { messages: responseMessages, state: nextState } = streamingResponseToMessage(currentChunks, state);
 
             batch(() => {
-                if (result) {
-                    const { message: responseMessage, nextState } = result;
-                    if (responseMessage) {
-                        setMessages([responseMessage]);
-                        setCurrentState(nextState ?? undefined);
-                    }
+                if (responseMessages.length) {
+                    setMessages(responseMessages);
+                    setCurrentState(nextState ?? undefined);
                 }
                 setCurrentLength(length + 1);
             });

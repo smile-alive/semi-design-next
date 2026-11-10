@@ -513,8 +513,8 @@ describe('AudioPlayer', () => {
 
     it('列表按钮的标签从语言包读取', async () => {
         const { container } = render(<AudioPlayer audioUrl={tracks} />);
-        const [prev] = [...container.querySelectorAll(icon('restart'))].map((el) => el.closest('span'));
-        hoverOpen(prev.parentElement);
+        const [prev] = [...container.querySelectorAll(icon('restart'))].map((el) => el.closest('button'));
+        hoverOpen(prev);
         await waitFor(() => expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-content`)).toHaveTextContent('上一首'));
     });
 

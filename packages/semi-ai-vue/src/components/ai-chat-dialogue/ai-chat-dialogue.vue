@@ -13,9 +13,9 @@
     import { useFocusHandover, useLocale } from '@fibrae/semi-ui-vue/composables';
     import { handOnSlots } from '@fibrae/semi-ui-vue/utils/hand-on';
     import { provideAIChatDialogueContext } from './context';
+    import DialogueHint from './dialogue/dialogue-hint.vue';
+    import Dialogue from './dialogue/dialogue.vue';
     import type { AIChatDialogueEmits, AIChatDialogueHandle, AIChatDialogueProps, AIChatDialogueSlots } from './interface';
-    import DialogueHint from './widgets/dialogue-hint.vue';
-    import Dialogue from './widgets/dialogue.vue';
 
     type Foundation = DialogueFoundation<AIChatDialogueProps>;
     type Adapter = DialogueAdapter<AIChatDialogueProps>;
@@ -127,7 +127,7 @@
     <div :class="prefix" :role="namedRole(attrs)">
         <div ref="list" :aria-busy="streaming" :aria-label="locale.locale.messages" :class="`${prefix}-list`" role="log" tabindex="-1" @scroll="foundation.containerScroll">
             <component :is="dialogueNode(chat, index)" v-for="(chat, index) in chats" :key="chat.id" />
-            <DialogueHint v-if="hints.length > 0" :class="props.hintCls" :hints="hints" :selecting="props.selecting" :style="props.hintStyle" @hintClick="foundation.onHintClick">
+            <DialogueHint v-if="hints.length > 0" :class="props.hintCls" :hints="hints" :selecting="props.selecting" :style="props.hintStyle" @hintClick="foundation.handleHintClick">
                 <template v-if="$slots.hintBox" #hintBox="slotProps">
                     <slot name="hintBox" v-bind="slotProps" />
                 </template>

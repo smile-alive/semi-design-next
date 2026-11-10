@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Piliin ang lahat ng row',
         selectRow: 'Piliin ang row na ito',
+        scrollRegion: 'Nai-scroll na nilalaman ng talahanayan',
+        untitledColumn: 'Column na walang pamagat',
         filterColumn: 'I-filter ang data gamit ang column na ito',
         filterColumnActive: 'I-filter ang data gamit ang column na ito, aktibo ang filter',
         expandRow: 'I-expand ang row na ito',
@@ -375,6 +377,7 @@ const local: Locale = {
         search: 'Maghanap',
         replace: 'Palitan',
         replaceAll: 'Palitan Lahat',
+        replaceWith: 'Palitan ng',
         caseSensitive: 'Itugma ang malaki at maliit na titik',
         regex: 'Gumamit ng regular expression',
         wholeWord: 'Itugma ang buong salita',

@@ -262,15 +262,6 @@ describe('Svelte RadioGroup', () => {
         expect(getRadio('A')).toHaveAttribute('name', 'g');
     });
 
-    it('group 的 prefixCls 作用于各 radio 的根，且优先于 Radio 的全局默认值', () => {
-        semiGlobal.config.overrideDefaultProps = { Radio: { prefixCls: 'gx' } };
-        renderChildren({ prefixCls: 'my-group' });
-        expect(screen.getByRole('radiogroup')).toHaveClass('my-group', 'my-group-wrapper');
-        const labels = document.querySelectorAll('label.my-group');
-        expect(labels).toHaveLength(3);
-        expect(document.querySelector('label.gx')).toBeNull();
-    });
-
     it('全局默认值生效，显式 props 优先', () => {
         semiGlobal.config.overrideDefaultProps = { RadioGroup: { type: 'button', buttonSize: 'small' } };
         const first = renderChildren();

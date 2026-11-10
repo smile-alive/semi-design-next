@@ -29,7 +29,7 @@ describe('Breadcrumb', () => {
         const view = renderLevels({ maxItemCount: 2, moreType: 'popover' }, 4);
         await userEvent.hover(view.container.querySelector(`.${prefix}-item-more`) as HTMLElement);
         const hidden = await waitFor(() => {
-            const items = document.querySelectorAll(`.semi-popover-content > .${prefix}-item-wrap`);
+            const items = document.querySelectorAll(`.semi-popover-content > ol > .${prefix}-item-wrap`);
             expect(items).toHaveLength(2);
             return items;
         });

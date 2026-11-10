@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { nextTick, toRaw, type VNode } from 'vue';
 import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/vue';
+import { screen, within } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconArticle, IconHome } from '@fibrae/semi-icons-vue';
@@ -34,13 +34,14 @@ function getBr(props: BreadcrumbProps = {}, children: Child[] = defaultChildren)
 }
 
 const nav = () => screen.getByRole('navigation');
+const list = () => within(nav()).getByRole('list');
 const getItemWraps = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-item-wrap`)];
 const getSeparatorTexts = () => [...document.querySelectorAll(`.${prefix}-separator`)].map((el) => el.textContent);
 const typographyTexts = () => [...document.querySelectorAll('.semi-typography')].map((el) => el.textContent);
 // the item element is the wrap's first element; Vue fragments add empty text anchors around children
 const itemOf = (wrap: Element) => wrap.firstElementChild as HTMLElement;
 const routesOf = (count: number) => 'abcdefghij'.slice(0, count).split('');
-const visibleRow = () => [...nav().children].map((el) => (el.classList.contains(`${prefix}-collapse`) ? 'more' : el.querySelector('.semi-typography')?.textContent));
+const visibleRow = () => [...list().children].map((el) => (el.classList.contains(`${prefix}-collapse`) ? 'more' : el.querySelector('.semi-typography')?.textContent));
 
 afterEach(() => {
     semiGlobal.config = {};
@@ -80,7 +81,7 @@ describe('Breadcrumb', () => {
             [{}, 'by'],
             [{}, 'douyin'],
         ]);
-        expect(nav().children).toHaveLength(4);
+        expect(list().children).toHaveLength(4);
         expect(typographyTexts()).toEqual(['semi', 'by', 'douyin']);
         expect(document.querySelector(`.${prefix}-collapse .semi-icon-more`)).not.toBeNull();
     });
@@ -195,7 +196,7 @@ describe('Breadcrumb', () => {
         const current = screen.getByText('c').closest(`.${prefix}-item-wrap`) as HTMLElement;
         expect(current).toHaveAttribute('aria-current', 'page');
         expect(typographyTexts()).toEqual(['a', 'b', 'c', 'f']);
-        expect(nav().children[3]).toHaveClass(`${prefix}-collapse`);
+        expect(list().children[3]).toHaveClass(`${prefix}-collapse`);
         await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
         const content = await screen.findByText('d', { selector: '.semi-popover-content *' }).then(() => document.querySelector('.semi-popover-content') as HTMLElement);
         expect([...content.querySelectorAll(`.${prefix}-item-wrap`)].map((el) => el.textContent)).toEqual(['d', 'e']);
@@ -330,8 +331,8 @@ describe('Breadcrumb', () => {
 
     it('routes 超过 maxItemCount 时折叠', () => {
         getBr({ routes: routesOf(6) });
-        expect(nav().children).toHaveLength(5);
-        expect(nav().children[1]).toHaveClass(`${prefix}-collapse`);
+        expect(list().children).toHaveLength(5);
+        expect(list().children[1]).toHaveClass(`${prefix}-collapse`);
         expect(typographyTexts()).toEqual(['a', 'd', 'e', 'f']);
     });
 
@@ -417,10 +418,10 @@ describe('Breadcrumb', () => {
                     ]),
             },
         });
-        expect(nav().children).toHaveLength(3);
+        expect(list().children).toHaveLength(3);
         await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
         const content = await screen.findByText('two', { selector: '.semi-popover-content *' }).then(() => document.querySelector('.semi-popover-content') as HTMLElement);
-        const hidden = content.querySelectorAll(`:scope > .${prefix}-item-wrap`);
+        const hidden = content.querySelectorAll(`:scope > ol > .${prefix}-item-wrap`);
         expect([...hidden].map((el) => el.textContent)).toEqual(['two', 'three']);
         // hidden items drop their own separator; the popover joins them with restItem separators
         expect([...content.querySelectorAll(`.${prefix}-restItem`)].map((el) => el.textContent)).toEqual(['>']);
@@ -550,7 +551,7 @@ describe('Breadcrumb', () => {
     it('从 semiGlobal overrideDefaultProps 读取默认值，显式 prop 优先', () => {
         semiGlobal.config.overrideDefaultProps = { Breadcrumb: { separator: '>', maxItemCount: 2 } };
         const view = getBr({ routes: routesOf(4) });
-        expect(nav().children).toHaveLength(3);
+        expect(list().children).toHaveLength(3);
         expect(getSeparatorTexts()).toEqual(['>', '>']);
         view.unmount();
         getBr({ routes: routesOf(4), separator: '|', maxItemCount: 5 });

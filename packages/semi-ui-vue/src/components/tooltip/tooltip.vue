@@ -5,7 +5,7 @@
     import PopupLayerProvider from '../../base/popup-layer-provider.vue';
     import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
     import slotNodes from '../../utils/slot-nodes';
-    import { provideTooltipDescription } from './context';
+    import { provideTooltipDescription, provideTooltipPrefixContext, useTooltipPrefixContext } from './context';
     import type { TooltipEmits, TooltipHandle, TooltipProps, TooltipSlots } from './interface';
     import TooltipTrigger from './tooltip-trigger.vue';
     import TriangleArrow from './triangle-arrow.vue';
@@ -19,7 +19,6 @@
         arrowPointAtCenter: () => semiDefault('Tooltip', 'arrowPointAtCenter', true),
         trigger: () => semiDefault('Tooltip', 'trigger', 'hover'),
         position: () => semiDefault('Tooltip', 'position', 'top'),
-        prefixCls: () => semiDefault('Tooltip', 'prefixCls', cssClasses.PREFIX),
         role: () => semiDefault('Tooltip', 'role', 'tooltip'),
         mouseEnterDelay: () => semiDefault('Tooltip', 'mouseEnterDelay', numbers.MOUSE_ENTER_DELAY),
         mouseLeaveDelay: () => semiDefault('Tooltip', 'mouseLeaveDelay', numbers.MOUSE_LEAVE_DELAY),
@@ -48,14 +47,18 @@
     const emit = defineEmits<TooltipEmits>();
     defineSlots<TooltipSlots>();
 
+    const prefixContext = useTooltipPrefixContext();
+
     const container = useTemplateRef('container');
 
     const { foundation, state, context, popupId, contentShown, active, contentSlotProps, setTriggerElement, handle } = useTooltip(props, emit, container);
 
+    const prefixCls = prefixContext ?? cssClasses.PREFIX;
     const vertical = computed(() => props.position.startsWith('left') || props.position.startsWith('right'));
 
     // The content is teleported but injects through this component, under an outer trigger whose id must not reach it.
     provideTooltipDescription(computed(() => undefined));
+    provideTooltipPrefixContext(undefined);
 
     const arrowStyle = (style: unknown): CSSProperties => {
         const normalized = normalizeStyle([style]) as CSSProperties & { 'background-color'?: string };
@@ -97,12 +100,12 @@
             :class="[
                 $attrs.class,
                 state.colorScheme,
-                `${props.prefixCls}-wrapper`,
+                `${prefixCls}-wrapper`,
                 {
-                    [`${props.prefixCls}-wrapper-show`]: state.visible,
-                    [`${props.prefixCls}-with-arrow`]: props.showArrow,
-                    [`${props.prefixCls}-point-at-center`]: props.showArrow && props.arrowPointAtCenter,
-                    [`${props.prefixCls}-no-motion`]: !props.motion,
+                    [`${prefixCls}-wrapper-show`]: state.visible,
+                    [`${prefixCls}-with-arrow`]: props.showArrow,
+                    [`${prefixCls}-point-at-center`]: props.showArrow && props.arrowPointAtCenter,
+                    [`${prefixCls}-no-motion`]: !props.motion,
                 },
             ]"
             :dir="context.direction"
@@ -122,7 +125,7 @@
                 </PopupLayerProvider>
             </div>
             <slot v-if="props.showArrow" name="arrow">
-                <TriangleArrow :class="`${props.prefixCls}-icon-arrow`" :style="arrowStyle($attrs.style)" :vertical="vertical" />
+                <TriangleArrow :class="`${prefixCls}-icon-arrow`" :style="arrowStyle($attrs.style)" :vertical="vertical" />
             </slot>
         </div>
     </Teleport>

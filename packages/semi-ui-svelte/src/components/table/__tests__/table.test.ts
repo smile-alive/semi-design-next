@@ -1,8 +1,12 @@
 import { flushSync } from 'svelte';
+import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { numbers } from '@fibrae/semi-foundation/components/table/constants';
+import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { TableProps } from '../interface';
 import { P, click, firstCellTexts, getBodyRows, getColumns, getData, getHeads, mountTable, query, queryAll, rowKeys } from './helpers';
+import TableHost from './table-host.svelte';
 
 describe('Svelte Table 基本渲染', () => {
     it('按 columns 与 dataSource 渲染表头与行', () => {
@@ -253,5 +257,45 @@ describe('Svelte Table 虚拟化行高', () => {
         mountTable(virtualProps({ dataSource: rows(10), virtualized: { itemSize } }));
         expect(topOf('2')).toBe(`${numbers.DEFAULT_VIRTUALIZED_ROW_HEIGHT * 2}px`);
         expect(warn.mock.calls.flat().filter((message) => String(message).includes('`itemSize`'))).toHaveLength(0);
+    });
+});
+
+describe('Svelte Table 可访问名称', () => {
+    it('滚动表体、无标题列与只有图标的排序按钮的名称跟随语言包', async () => {
+        // the body overflows its box, as the observer reports on observe()
+        vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
+        vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(300);
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                #callback: () => void;
+                constructor(callback: () => void) {
+                    this.#callback = callback;
+                }
+                observe() {
+                    this.#callback();
+                }
+                unobserve() {}
+                disconnect() {}
+            }
+        );
+        render(TableHost, {
+            props: {
+                store: createStore({
+                    props: {
+                        columns: [
+                            { title: 'Name', dataIndex: 'name' },
+                            { dataIndex: 'age', sorter: true },
+                        ],
+                        dataSource: [{ key: '1', name: 'a', age: 1 }],
+                        pagination: false,
+                    },
+                    locale: ja_JP,
+                }),
+            },
+        });
+        expect(await screen.findByRole('group', { name: ja_JP.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
+        expect(screen.getByText(ja_JP.Table.untitledColumn)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: ja_JP.Table.ascend })).toBeInTheDocument();
     });
 });

@@ -3,9 +3,11 @@
     import '@fibrae/semi-foundation/components/layout/layout.scss';
     import type { LayoutBasicProps } from './interface.js';
 
-    let { prefixCls = cssClasses.PREFIX, tagName = 'footer', type = 'footer', children, ...rest }: LayoutBasicProps = $props();
+    let { tagName = 'footer', children, ...rest }: LayoutBasicProps = $props();
+
+    const prefixCls = cssClasses.PREFIX;
 </script>
 
-<svelte:element this={tagName} {...rest} class={[rest.class, `${prefixCls}-${type}`]}>
+<svelte:element this={tagName} {...rest} class={[rest.class, `${prefixCls}-footer`]}>
     {@render children?.()}
 </svelte:element>

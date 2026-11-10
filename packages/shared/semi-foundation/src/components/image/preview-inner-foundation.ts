@@ -28,7 +28,7 @@ export interface PreviewInnerAdapter<P extends PreviewInnerBaseProps = PreviewIn
     notifyDownloadError: (src: string) => void;
     /** The `role="dialog"` element: it goes on the overlay stack and takes focus */
     getWrap: () => HTMLElement | null | undefined;
-    isValidTarget: (e: any) => boolean;
+    isOutsideControls: (e: any) => boolean;
 }
 
 function isEditable(target: any) {
@@ -54,7 +54,7 @@ export interface PreviewInnerBaseProps {
 }
 
 export interface PreviewInnerState {
-    viewerVisible: boolean;
+    controlsVisible: boolean;
     zoom: number;
     /** the wheel event that set `zoom`, which the image centers the zoom on; undefined for other zoom changes */
     zoomEvent?: WheelEvent;
@@ -93,23 +93,23 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         return PreviewInnerFoundation.getCurrentIndex(this.getProps(), this.getStates());
     }
 
-    #handleViewVisibleChange = () => {
-        const { viewerVisible } = this.getStates();
-        if (viewerVisible) {
+    #hideControls = () => {
+        const { controlsVisible } = this.getStates();
+        if (controlsVisible) {
             this.setState({
-                viewerVisible: false,
+                controlsVisible: false,
             });
             this.#clearTimer();
         }
     };
 
     #mouseMoveHandler: ThrottledFunction<(e: unknown) => void> = throttle((e: unknown) => {
-        const { viewerVisible } = this.getStates();
-        const isValidTarget = this.adapter.isValidTarget(e);
-        if (isValidTarget) {
-            if (!viewerVisible) {
+        const { controlsVisible } = this.getStates();
+        const isOutsideControls = this.adapter.isOutsideControls(e);
+        if (isOutsideControls) {
+            if (!controlsVisible) {
                 this.setState({
-                    viewerVisible: true,
+                    controlsVisible: true,
                 });
             }
             this.updateTimer();
@@ -205,7 +205,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
             zoom: 0.1,
             currentIndex,
             rotation: 0,
-            viewerVisible: true,
+            controlsVisible: true,
             preloadAfterVisibleChange: true,
             ratio: 'adaptation',
             ratioIndex: props.currentIndex ?? currentIndex,
@@ -259,7 +259,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         }
         this.#release();
         this.setState({
-            viewerVisible: true,
+            controlsVisible: true,
             rotation: 0,
             preloadAfterVisibleChange: true,
             ratio: 'adaptation',
@@ -303,12 +303,12 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
 
     // hidden operations stay focusable, so keyboard activity shows them
     handleKeyboardActivity = (e: unknown) => {
-        if (!this.getState('viewerVisible')) {
+        if (!this.getState('controlsVisible')) {
             this.setState({
-                viewerVisible: true,
+                controlsVisible: true,
             });
         }
-        if (this.adapter.isValidTarget(e)) {
+        if (this.adapter.isOutsideControls(e)) {
             this.updateTimer();
         } else {
             this.#clearTimer();
@@ -320,7 +320,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         this.#clearTimer();
         // a timer on a hidden preview would hide the operations on its next show
         if (visible) {
-            this.#timer = setTimeout(this.#handleViewVisibleChange, viewerVisibleDelay);
+            this.#timer = setTimeout(this.#hideControls, viewerVisibleDelay);
         }
     };
 
@@ -336,7 +336,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         }
         const { maskClosable } = this.getProps();
         // the close button closes on click, and its mouseup must not close through the mask first
-        let couldClose = this.adapter.isValidTarget(e);
+        let couldClose = this.adapter.isOutsideControls(e);
         const { clientX, clientY } = e;
         const { x, y } = this.#startMouseDown;
         if (Math.abs(clientX - x) > 5 || Math.abs(y - clientY) > 5) {

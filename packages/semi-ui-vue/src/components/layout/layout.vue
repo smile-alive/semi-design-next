@@ -11,7 +11,6 @@
     import type { LayoutProps, LayoutSlots } from './interface';
 
     const props = withDefaults(defineProps<LayoutProps & /* @vue-ignore */ ElementProps<'section', keyof LayoutProps>>(), {
-        prefixCls: () => semiDefault('Layout', 'prefixCls', cssClasses.PREFIX),
         tagName: () => semiDefault('Layout', 'tagName', 'section'),
         hasSider: semiGlobalDefault('Layout', 'hasSider'),
     });
@@ -36,7 +35,7 @@
 </script>
 
 <template>
-    <component :is="nativeTag(props.tagName)" :class="[props.prefixCls, { [`${props.prefixCls}-has-sider`]: hasSider() }]">
+    <component :is="nativeTag(props.tagName)" :class="[cssClasses.PREFIX, { [`${cssClasses.PREFIX}-has-sider`]: hasSider() }]">
         <slot />
     </component>
 </template>

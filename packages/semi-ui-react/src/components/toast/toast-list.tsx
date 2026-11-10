@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { canCollapseStack, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
+import { getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
 import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
@@ -24,7 +24,7 @@ export default function ToastList({ store }: ToastListProps) {
     const depths = getStackDepths(items.map(({ id }) => id).reverse(), new Set(shown.map(({ id }) => id)));
     const listState = { paused: hovered || focused, removedItems, updatedItems };
 
-    // An emptied list has no height, so leaving it never collapses the stack; without this the next batch would start expanded.
+    // An emptied list may fire no mouseleave (the pointer did not move); without this the next batch would start expanded.
     if (stackExpanded && items.length === 0) {
         setStackExpanded(false);
     }
@@ -40,7 +40,7 @@ export default function ToastList({ store }: ToastListProps) {
 
     const leave = (setSource: (value: boolean) => void, otherSource: boolean) => {
         setSource(false);
-        if (!otherSource && canCollapseStack(stack, innerWrapper.current)) {
+        if (!otherSource) {
             setStackExpanded(false);
         }
     };
@@ -48,12 +48,9 @@ export default function ToastList({ store }: ToastListProps) {
     // an item unmounts when the list's order changes
     useLayoutEffect(() => {
         if (hasLostFocus(focused, innerWrapper.current)) {
-            setFocused(false);
-            if (!hovered && canCollapseStack(stack, innerWrapper.current)) {
-                setStackExpanded(false);
-            }
+            leave(setFocused, hovered);
         }
-    }, [focused, hovered, stack, order]);
+    }, [focused, hovered, order]);
 
     return (
         <>

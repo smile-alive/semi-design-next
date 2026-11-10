@@ -4,9 +4,9 @@
     import SkeletonItem from './skeleton-item.vue';
 
     // A static subcomponent: it reads no global defaults. An explicit undefined type must not erase the built-in one.
-    const props = withDefaults(defineProps<SkeletonBasicProps & /* @vue-ignore */ ElementProps<'div', keyof SkeletonBasicProps>>(), { prefixCls: undefined, type: undefined });
+    const props = withDefaults(defineProps<SkeletonBasicProps & /* @vue-ignore */ ElementProps<'div', keyof SkeletonBasicProps>>(), { type: undefined });
 </script>
 
 <template>
-    <SkeletonItem :prefixCls="props.prefixCls" :type="props.type ?? 'button'" />
+    <SkeletonItem :type="props.type ?? 'button'" />
 </template>

@@ -404,4 +404,51 @@ describe('Tabs（浏览器）', () => {
             view.unmount();
         }
     });
+
+    it('collapsible="auto" 在临界宽度附近逐像素缩放时，每个宽度下折叠状态至多切换一次且随后不再有 DOM 变动', async () => {
+        const keys = ['a', 'b', 'c', 'd', 'e'];
+        const tabs = (width: number, collapsible?: 'auto') => (
+            <Tabs type="card" style={{ width: `${width}px` }} collapsible={collapsible}>
+                {() => keys.map((key) => pane(key, `tab-title-${key}`, () => key))}
+            </Tabs>
+        );
+        const probe = render(() => tabs(2000));
+        const nodes = [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tabs-tab`)];
+        const total = Math.floor(nodes[nodes.length - 1].getBoundingClientRect().right - nodes[0].getBoundingClientRect().left);
+        probe.unmount();
+
+        const view = render(() => tabs(total + 6, 'auto'));
+        const root = view.container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tabs`) as HTMLElement;
+        const collapsed = () => root.querySelector(`.${BASE_CLASS_PREFIX}-tabs-bar-overflow-list`) !== null;
+        const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+        let mutations = 0;
+        const observer = new MutationObserver((records) => {
+            mutations += records.length;
+        });
+        observer.observe(root, { attributes: true, childList: true, subtree: true });
+
+        const widths = [...Array.from({ length: 80 }, (_, i) => total + 6 - i), ...Array.from({ length: 80 }, (_, i) => total - 73 + i)];
+        const flips: string[] = [];
+        let previous = collapsed();
+        for (const width of widths) {
+            root.style.width = `${width}px`;
+            const states: boolean[] = [];
+            let quiet = 0;
+            for (let frame = 0; frame < 6; frame++) {
+                const before = mutations;
+                await nextFrame();
+                states.push(collapsed());
+                quiet = mutations === before ? quiet + 1 : 0;
+            }
+            const stepFlips = states.filter((state, i) => state !== (i === 0 ? previous : states[i - 1])).length;
+            if (stepFlips > 0) {
+                flips.push(`${width}px:${stepFlips}`);
+            }
+            previous = states[states.length - 1];
+            expect(stepFlips, `width=${width}`).toBeLessThanOrEqual(1);
+            expect(quiet, `width=${width} 最后三帧仍有 DOM 变动`).toBeGreaterThanOrEqual(3);
+        }
+        observer.disconnect();
+        expect(flips.length, `折叠状态切换位置：${flips.join(' ')}`).toBeLessThanOrEqual(2);
+    }, 60_000);
 });

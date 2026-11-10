@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import semiGlobal, { type OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils/semi-global';
 import { sleep } from '@test/utils/solid';
-import Dropdown, { type DropDownMenuItem, type DropDownMenuItemItem, type DropdownHandle, type DropdownItemProps, type DropdownProps } from '..';
+import Dropdown, { type DropdownMenuItem, type DropdownMenuItemType, type DropdownHandle, type DropdownItemProps, type DropdownProps } from '..';
 import Avatar from '../../avatar';
 import ConfigProvider from '../../config-provider';
 
@@ -164,7 +164,7 @@ describe('Dropdown', () => {
     });
 
     it('Dropdown 数组菜单', () => {
-        const menu: DropDownMenuItem[] = [
+        const menu: DropdownMenuItem[] = [
             { node: 'title', name: '分组1' },
             { node: 'item', name: 'primary1', type: 'primary', onClick: () => {} },
             { node: 'item', name: 'secondary', type: 'secondary' },
@@ -177,13 +177,13 @@ describe('Dropdown', () => {
         const [items, setItems] = createSignal(menu);
         render(() => <Dropdown menu={items()} trigger="custom" visible />);
         expect(document.querySelector('.semi-dropdown-menu')?.children).toHaveLength(menu.length);
-        const menu2: DropDownMenuItem[] = [
+        const menu2: DropdownMenuItem[] = [
             { node: 'title', name: '分组1' },
             { node: 'item', name: 'secondary', type: 'secondary' },
             { node: 'divider' },
             { node: 'title', name: '分组2' },
             // an unknown node kind must be skipped at runtime
-            { node: 'invalid node', name: '分组2' } as unknown as DropDownMenuItem,
+            { node: 'invalid node', name: '分组2' } as unknown as DropdownMenuItem,
         ];
         setItems(menu2);
         expect(document.querySelector('.semi-dropdown-menu')?.children).toHaveLength(menu2.length - 1);
@@ -196,7 +196,7 @@ describe('Dropdown 行为', () => {
     });
 
     it('菜单渲染标题、选项与分隔线', () => {
-        const menu: DropDownMenuItem[] = [
+        const menu: DropdownMenuItem[] = [
             { node: 'title', name: 'Group' },
             { node: 'item', name: 'A', active: true },
             { node: 'item', name: 'B', disabled: true },
@@ -1331,7 +1331,7 @@ describe('Dropdown 行为', () => {
 
     it('menu 项的类型不含 children', () => {
         // the label comes from name; children would be overwritten
-        expectTypeOf<DropDownMenuItemItem>().not.toHaveProperty('children');
+        expectTypeOf<DropdownMenuItemType>().not.toHaveProperty('children');
     });
 
     it('默认不显示箭头，传入 showArrow 时显示', () => {

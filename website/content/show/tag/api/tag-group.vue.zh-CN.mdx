@@ -1,14 +1,14 @@
 **Props**
 
-| 属性         | 说明                                                                       | 类型                              | 默认值                                             |
-| ------------ | -------------------------------------------------------------------------- | --------------------------------- | -------------------------------------------------- |
-| tagList      | 标签配置数组，每项为 Tag 的属性，children 为 string 或 number 的标签文字。 | `TagGroupItem[]`                  | `undefined`                                        |
-| maxTagCount  | 最多显示的标签数，超出的部分显示为 +N。                                    | `number`                          | `semiGlobalDefault("TagGroup", "maxTagCount")`     |
-| restCount    | +N 中显示的数量，缺省为超出 maxTagCount 的标签数。                         | `number`                          | `semiGlobalDefault("TagGroup", "restCount")`       |
-| size         | 组内标签的尺寸。                                                           | `"default" \| "large" \| "small"` | `semiDefault("TagGroup", "size", "default")`       |
-| showPopover  | 悬停在 +N 上时，是否通过 Popover 显示剩余标签。                            | `boolean`                         | `semiGlobalDefault("TagGroup", "showPopover")`     |
-| popoverProps | 传给 Popover 的属性，可设置 position、trigger 等。                         | `PopoverProps`                    | `semiGlobalDefault("TagGroup", "popoverProps")`    |
-| avatarShape  | 组内头像标签的头像形状。                                                   | `AvatarShape`                     | `semiDefault("TagGroup", "avatarShape", "square")` |
+| 属性         | 说明                                                                       | 类型                              | 默认值                                          |
+| ------------ | -------------------------------------------------------------------------- | --------------------------------- | ----------------------------------------------- |
+| tagList      | 标签配置数组，每项为 Tag 的属性，children 为 string 或 number 的标签文字。 | `TagGroupItem[]`                  | `undefined`                                     |
+| maxTagCount  | 最多显示的标签数，超出的部分显示为 +N。                                    | `number`                          | `semiGlobalDefault("TagGroup", "maxTagCount")`  |
+| restCount    | +N 中显示的数量，缺省为超出 maxTagCount 的标签数。                         | `number`                          | `semiGlobalDefault("TagGroup", "restCount")`    |
+| size         | 组内标签的尺寸。                                                           | `"default" \| "large" \| "small"` | `"default"`                                     |
+| showPopover  | 悬停在 +N 上时，是否通过 Popover 显示剩余标签。                            | `boolean`                         | `semiGlobalDefault("TagGroup", "showPopover")`  |
+| popoverProps | 传给 Popover 的属性，可设置 position、trigger 等。                         | `PopoverProps`                    | `semiGlobalDefault("TagGroup", "popoverProps")` |
+| avatarShape  | 组内头像标签的头像形状。                                                   | `AvatarShape`                     | `"square"`                                      |
 
 **Events**
 

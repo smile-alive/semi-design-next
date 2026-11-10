@@ -229,7 +229,24 @@ export default function Pagination(rawProps: PaginationProps) {
                 <StepButton disabled={disabledState().nextDisabled || local.disabled} kind="next" label={text().next} text={local.nextText} onClick={foundation.goNext} />
                 <Show when={view().sizeChangerShown}>
                     <li class={`${prefixCls}-switch`}>
-                        <Select<number> dropdownClassName={`${prefixCls}-select-dropdown`} aria-label={text().pageSizeSelector} disabled={local.disabled} value={state().pageSize} clickToHide position={view().switchPosition} onChange={(newPageSize) => newPageSize !== undefined && foundation.changePageSize(newPageSize)}>
+                        <Select<number, false>
+                            dropdownClassName={`${prefixCls}-select-dropdown`}
+                            aria-label={text().pageSizeSelector}
+                            disabled={local.disabled}
+                            value={state().pageSize}
+                            clickToHide
+                            position={view().switchPosition}
+                            // changePageSize takes one number: global Select defaults must not make it search, create, multiple or object-valued, nor add a clear button or adornments
+                            allowCreate={false}
+                            filter={false}
+                            insetLabel={null}
+                            multiple={false}
+                            onChangeWithObject={false}
+                            prefix={null}
+                            showClear={false}
+                            suffix={null}
+                            onChange={(newPageSize) => newPageSize !== undefined && foundation.changePageSize(newPageSize)}
+                        >
                             <For each={pageSizeOpts()}>
                                 {(option) => (
                                     <Select.Option value={option}>

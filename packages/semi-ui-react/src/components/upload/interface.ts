@@ -24,7 +24,7 @@ export interface OnChangeProps {
     currentFile?: FileItem | null;
 }
 
-export interface customRequestArgs {
+export interface UploadCustomRequestArgs {
     fileName: string;
     data: Record<string, any>;
     file: FileItem;

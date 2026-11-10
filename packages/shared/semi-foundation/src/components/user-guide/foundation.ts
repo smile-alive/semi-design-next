@@ -1,6 +1,7 @@
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import ModalResources from '../../base/modal-resources';
 import { coversPage } from '../../utils/dom';
+import warning from '../../utils/warning';
 import { numbers } from './constants';
 
 /** What the guide reads around it: ConfigProvider's popup container, which the guide's own prop overrides */
@@ -55,7 +56,10 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
     // Only a step change scrolls, so a user scroll is followed, not fought
     #measure(scrollIntoView: boolean) {
         const { steps, spotlightPadding } = this.getProps();
-        const next = UserGuideFoundation.measure(steps[this.#getCurrent()], spotlightPadding, scrollIntoView);
+        const current = this.#getCurrent();
+        const next = UserGuideFoundation.measure(steps[current], spotlightPadding, scrollIntoView);
+        // only on the step change, not every frame
+        warning(scrollIntoView && Boolean(steps[current]) && !next, `[Semi UserGuide] the target of step ${current} resolved to null; the step stays hidden until its target exists`);
         if (!UserGuideFoundation.isSameRect(this.getState('spotlightRect'), next)) {
             this.setState({ spotlightRect: next });
             this.#sync();

@@ -617,9 +617,9 @@ type RenderFullLabelProps = {
         loading: boolean;
     };
     /* 该节点是否符合筛选条件 */
-    filtered: boolean | undefined;
+    filtered?: boolean;
     /* 当前搜索框输入值 */
-    searchWord: string | undefined;
+    searchWord?: string;
     /* 点击回调 */
     onClick: (e: MouseEvent) => void;
     /* 多选点击回调 */

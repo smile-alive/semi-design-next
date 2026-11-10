@@ -18,13 +18,14 @@
         status = defaults('status', 'process'),
         size = defaults('size', 'default'),
         hasLine = defaults('hasLine', true),
-        prefixCls = defaults('prefixCls', stepsClasses.PREFIX),
         dataSource = defaults('dataSource', []),
         onChange = defaults('onChange'),
         title,
         description,
         ...rest
     }: StepsProps = $props();
+
+    const prefixCls = stepsClasses.PREFIX;
 
     const rootClass = $derived.by(() => {
         const sized = { [`${prefixCls}-${size}`]: size !== 'default' };
@@ -53,9 +54,6 @@
         },
         get status() {
             return status;
-        },
-        get prefixCls() {
-            return prefixCls;
         },
         get clickable() {
             return Boolean(onChange);

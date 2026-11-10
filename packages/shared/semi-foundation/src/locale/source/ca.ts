@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Selecciona totes les files',
         selectRow: 'Selecciona aquesta fila',
+        scrollRegion: 'Contingut desplaçable de la taula',
+        untitledColumn: 'Columna sense títol',
         filterColumn: 'Filtra les dades amb aquesta columna',
         filterColumnActive: 'Filtra les dades amb aquesta columna, filtre actiu',
         expandRow: 'Amplia aquesta fila',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Cerca',
         replace: 'Substitueix',
         replaceAll: 'Substitueix-ho tot',
+        replaceWith: 'Substitueix per',
         caseSensitive: 'Distingeix majúscules i minúscules',
         regex: 'Utilitza una expressió regular',
         wholeWord: 'Coincideix amb la paraula sencera',

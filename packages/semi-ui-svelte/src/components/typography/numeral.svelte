@@ -9,4 +9,5 @@
     const format = $derived((value: string) => new FormatNumeral(value, rule, precision, truncate, parser).format());
 </script>
 
-<TypographyBase {...props} component={props.component ?? 'span'} {format} />
+<!-- Numeral declares no ellipsis: one passed through the rest props must not truncate a formatted number -->
+<TypographyBase {...props} component={props.component ?? 'span'} ellipsis={false} {format} />

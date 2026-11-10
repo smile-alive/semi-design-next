@@ -3,6 +3,10 @@ import { FIELD_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constan
 import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
 import type { CommonFieldProps, FieldLabel } from './interface.js';
 
+export type FieldPath = string | (() => string);
+
+export const readPath = (field: FieldPath) => (typeof field === 'function' ? field() : field);
+
 const fieldOnlyKeys = new Set<string>([...FIELD_PROP_KEYS, 'error', 'fieldLabel', 'labelExtra'] satisfies (keyof CommonFieldProps)[]);
 
 export function omitFieldProps(props: Record<string, unknown>) {

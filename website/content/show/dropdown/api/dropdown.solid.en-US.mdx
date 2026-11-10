@@ -21,7 +21,7 @@ import ApiType from '#/components/ApiType.astro';
 | disableFocusListener | Whether keyboard focus is ignored when trigger is hover. Defaults to false. | `boolean` | - |
 | guardFocus | Whether Tab cycles inside the popup while focus is in it. Defaults to false. | `boolean` | - |
 | keepDOM | Whether the menu's DOM is kept instead of destroyed when it closes. Defaults to false. | `boolean` | - |
-| menu | Configures the menu from data: objects whose node is item, title or divider, see DropdownMenuItem below. render takes precedence when it is provided. | `DropDownMenuItem[]` | - |
+| menu | Configures the menu from data: objects whose node is item, title or divider, see DropdownMenuItem below. render takes precedence when it is provided. | `DropdownMenuItem[]` | - |
 | motion | Whether the popup plays its enter and leave animations. | `boolean` | `true` |
 | mouseEnterDelay | Milliseconds before the menu shows after the pointer enters the trigger. Defaults to 50. Applies to the hover and focus triggers. | `number` | - |
 | mouseLeaveDelay | Milliseconds before the menu hides after the pointer leaves the popup. Applies to the hover and focus triggers. | `number` | `100` |
@@ -30,7 +30,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | Called once per opening when the menu is shown and its enter animation starts, before afterOpen. An opening withdrawn because the pointer already left does not call it. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onVisibleChange | Called when the visibility of the menu changes. With a controlled visible it reports only requests from user interaction, not changes the caller makes to visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight. See the Tooltip positions for more. | `Position` | `"bottom"` |
-| prefixCls | Class prefix of the popup. | `string` | `"semi-dropdown"` |
 | preventScroll | Whether focusing an element avoids scrolling it into view. Defaults to false. | `boolean` | - |
 | ref | Receives the DropdownHandle once, when the component is created. | <ApiType detail={"Ref\u003cDropdownHandle>"}>Type</ApiType> | - |
 | render | Content of the popup, made of Dropdown.Menu with Dropdown.Item, Dropdown.Title and Dropdown.Divider. It takes precedence over menu when provided. | `JSX.Element` | - |

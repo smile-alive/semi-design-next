@@ -10,16 +10,17 @@ import { LayoutContext, type LayoutContextValue } from './context';
 import Sider from './sider';
 
 export interface LayoutProps extends ElementProps<'section'> {
-    prefixCls?: string;
     hasSider?: boolean;
     tagName?: keyof HTMLElementTagNameMap;
 }
 
-const defaultProps = { prefixCls: cssClasses.PREFIX, tagName: 'section' } satisfies Partial<LayoutProps>;
+const defaultProps = { tagName: 'section' } satisfies Partial<LayoutProps>;
+
+const prefixCls = cssClasses.PREFIX;
 
 function Layout(rawProps: LayoutProps) {
     const props = useDefaultProps('Layout', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['children', 'class', 'hasSider', 'prefixCls', 'tagName']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'hasSider', 'tagName']);
 
     const [siderCount, setSiderCount] = createSignal(0);
 
@@ -30,7 +31,7 @@ function Layout(rawProps: LayoutProps) {
 
     return (
         <LayoutContext.Provider value={context}>
-            <LayoutRoot {...rest} class={local.class} hasSider={local.hasSider} prefixCls={local.prefixCls} tagName={local.tagName} siderCount={siderCount}>
+            <LayoutRoot {...rest} class={local.class} hasSider={local.hasSider} tagName={local.tagName} siderCount={siderCount}>
                 {local.children}
             </LayoutRoot>
         </LayoutContext.Provider>
@@ -41,12 +42,12 @@ function Layout(rawProps: LayoutProps) {
 // the root's attributes before its children unless the children are resolved first. It is a separate component so
 // the Siders are created under the provider.
 function LayoutRoot(props: LayoutProps & { siderCount: () => number }) {
-    const [local, rest] = splitProps(props, ['children', 'class', 'hasSider', 'prefixCls', 'siderCount', 'tagName']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'hasSider', 'siderCount', 'tagName']);
 
     const resolved = children(() => local.children);
 
     return (
-        <Dynamic component={local.tagName} {...rest} class={clsx(local.class, local.prefixCls, { [`${local.prefixCls}-has-sider`]: local.hasSider === true || local.siderCount() > 0 })}>
+        <Dynamic component={local.tagName} {...rest} class={clsx(local.class, prefixCls, { [`${prefixCls}-has-sider`]: local.hasSider === true || local.siderCount() > 0 })}>
             {resolved()}
         </Dynamic>
     );

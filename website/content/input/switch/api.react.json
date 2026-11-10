@@ -1,6 +1,6 @@
 {
     "switch": {
-        "source": "packages/semi-ui-react/src/components/switch/index.tsx",
+        "source": "packages/semi-ui-react/src/components/switch/switch.tsx",
         "props": {
             "checked": {
                 "zh-CN": "选中状态。不为 `undefined` 时为受控：显示由该值决定，点击只触发 onChange，需在回调中更新该值。变回 `undefined` 后取消选中并转为非受控。",

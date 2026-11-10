@@ -1,7 +1,7 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import type { Node } from '@tiptap/pm/model';
-import type { Attachment, Content, LeftMenuChangeProps, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+import type { Attachment, Content, Setup, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { PopoverProps } from '@fibrae/semi-ui-vue/popover/index';
 import type { TooltipProps } from '@fibrae/semi-ui-vue/tooltip/index';
 import type { UploadEmits, UploadOnChangeProps, UploadProps } from '@fibrae/semi-ui-vue/upload/index';
@@ -76,7 +76,7 @@ export interface AIChatInputProps {
 export interface AIChatInputEmits {
     blur: [event: FocusEvent];
     /** `changedValue` is undefined when an item is removed */
-    configureChange: [value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps];
+    configureChange: [value: Setup, changedValue?: Setup];
     contentChange: [contents: Content[]];
     focus: [event: FocusEvent];
     messageSend: [message: MessageContent];

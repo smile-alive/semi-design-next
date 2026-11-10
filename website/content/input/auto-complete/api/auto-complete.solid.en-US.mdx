@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether the dropdown flips automatically when it would be clipped. | `boolean` | - |
 | autofocus | Whether the input is focused after mount. | `boolean` | `false` |
 | clearIcon | Custom clear icon, effective when showClear is true. | `JSX.Element` | - |
-| data | Data source of the candidates: an array of strings, numbers or objects. An object item's `value` is the picked value and its `label` is the row text (provide it; markup goes through `renderItem`). Other fields are kept as they are and reach the `renderItem` argument. Pass a new array to update the list. | `T[]` | `[]` |
+| data | Data source of the candidates: an array of strings, numbers or objects. An object item's `value` is the picked value and its `label` is the row text (`value` when `label` is missing; markup goes through `renderItem`). Other fields are kept as they are and reach the `renderItem` argument. Pass a new array to update the list. | `T[]` | `[]` |
 | defaultActiveFirstOption | Whether the first candidate is highlighted when the panel opens, so that Enter picks it directly. | `boolean` | `false` |
 | defaultOpen | Whether the dropdown panel is open on mount. | `boolean` | - |
 | defaultValue | Initial value of the input when uncontrolled, read on mount only. | `string \| number` | - |

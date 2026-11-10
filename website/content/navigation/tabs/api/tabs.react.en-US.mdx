@@ -11,7 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). `auto` collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| 'auto'` | `false` |
 | contentStyle | Style of the outer content area. | `CSSProperties` | - |
 | defaultActiveKey | The itemKey selected initially when uncontrolled. Omitted, the first enabled tab with an itemKey is selected. | `string` | - |
-| dropdownProps | In collapsible mode, the Dropdown props passed to the start-side (`start`) and end-side (`end`) arrow menus. | `TabsDropDownProps` | - |
+| dropdownProps | In collapsible mode, the Dropdown props passed to the start-side (`start`) and end-side (`end`) arrow menus. | `TabsDropdownProps` | - |
 | keepDOM | With TabPane children, whether to render the DOM of inactive panels. When `false`, only the active panel is rendered and panels switch without motion. | `boolean` | `true` |
 | lazyRender | Lazy rendering: a panel renders its content only after it has been active, and keeps it afterwards. | `boolean` | `false` |
 | more | Moves the last tabs into a More dropdown. A number is the count of tabs moved; an object sets `count` to that number, `render` returns a custom trigger and `dropdownProps` is passed to the dropdown. | <ApiType detail={"number \u007c { count: number; render?: () => ReactNode; dropdownProps?: DropdownProps }"}>Type</ApiType> | - |

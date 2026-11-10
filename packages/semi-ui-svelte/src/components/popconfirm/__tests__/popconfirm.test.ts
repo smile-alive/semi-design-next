@@ -75,12 +75,13 @@ describe('Svelte Popconfirm', () => {
         expect(changes(store)).toEqual(['change true']);
     });
 
-    it('disabled 时不渲染卡片与触发属性，翻转后可打开', async () => {
+    it('disabled 时不渲染卡片，翻转后触发元素不重建且可打开', async () => {
         const store = setup({ disabled: true });
         expect(card()).toBe(null);
-        expect(save()).not.toHaveAttribute('data-popupid');
+        const trigger = save();
         store.props = { ...store.props, disabled: false };
         flushSync();
+        expect(save()).toBe(trigger);
         await userEvent.click(save());
         expect(await screen.findByRole('dialog')).toBeInTheDocument();
     });

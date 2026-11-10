@@ -264,21 +264,9 @@
                 "zh-CN": "错误信息，字符串数组，多条以逗号连接显示。有错误时不显示 helpText；`['']` 表示校验失败但没有文本，不渲染内容；空数组与空值视为没有错误。",
                 "en-US": "The error, a string array whose messages are joined with commas. helpText is hidden while there is an error; `['']` means failed without text and renders nothing; an empty array or empty value means no error."
             },
-            "errorMessageId": {
-                "zh-CN": "错误文本元素的 id，供 aria-errormessage 引用。",
-                "en-US": "The id of the error text element, referenced by aria-errormessage."
-            },
             "helpText": {
                 "zh-CN": "提示信息，与错误信息共用同一区块，两者都有时显示错误信息。",
                 "en-US": "The help text. It shares the block with the error, and the error is shown when both are set."
-            },
-            "helpTextId": {
-                "zh-CN": "提示文本元素的 id，供 aria-describedby 引用。",
-                "en-US": "The id of the help text element, referenced by aria-describedby."
-            },
-            "isInInputGroup": {
-                "zh-CN": "是否位于 InputGroup 中；为 true 且 showValidateIcon 为 true 时，不论 validateStatus 都显示错误图标。",
-                "en-US": "Whether it is inside an InputGroup. When it and showValidateIcon are true, the error icon shows whatever validateStatus is."
             },
             "showValidateIcon": {
                 "zh-CN": "是否显示 validateStatus 对应的图标。",
@@ -291,7 +279,7 @@
         }
     },
     "schema-field": {
-        "source": "packages/semi-ui-solid/src/components/form/schema-field.tsx",
+        "source": "packages/semi-ui-solid/src/components/form/schema-form/schema-field.tsx",
         "props": {
             "field": {
                 "zh-CN": "要渲染的节点路径，默认为根；根对象不包 Section，其他对象渲染为以 title 为标题的 Section。",
@@ -312,7 +300,7 @@
         }
     },
     "schema-form": {
-        "source": "packages/semi-ui-solid/src/components/form/schema-form.tsx",
+        "source": "packages/semi-ui-solid/src/components/form/schema-form/schema-form.tsx",
         "props": {
             "allowEmpty": {
                 "zh-CN": "值变为空的字段是否在 values 中保留 key。Form 与字段任一设置为 true 即生效。",

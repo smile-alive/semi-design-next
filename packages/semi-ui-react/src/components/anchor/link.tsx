@@ -1,7 +1,8 @@
 import type React from 'react';
-import { useLayoutEffect } from 'react';
+import { Children, isValidElement, useLayoutEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
+import AnchorFoundation, { type AnchorNode } from '@fibrae/semi-foundation/components/anchor/foundation';
 import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
 import type { ElementProps } from '../../base/base';
 import Typography from '../typography/index';
@@ -20,13 +21,24 @@ export interface LinkProps extends ElementProps<'div', 'title'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
+// Collapsed links are not mounted and cannot register: the links nested in the element tree stand in for them
+function normalizeChildren(children: React.ReactNode): AnchorNode[] {
+    return Children.toArray(children).flatMap((child) => {
+        if (!isValidElement<{ href?: string; children?: React.ReactNode }>(child)) {
+            return [];
+        }
+        return [{ href: child.props.href, children: normalizeChildren(child.props.children) }];
+    });
+}
+
 export default function Link({ ref, href = '#', title = '', className, children, style, disabled = false, ...rest }: LinkProps) {
     const context = useAnchorContext('Anchor.Link');
 
     let titleNode = title;
 
-    const { activeLink, showTooltip, position, size, childMap, autoCollapse, onClick, addLink, removeLink, level } = context;
+    const { activeLink, showTooltip, position, size, childMap, autoCollapse, onClick, addLink, removeLink, level, parentHref } = context;
     const active = activeLink === href;
+    const nestedLinks = useMemo(() => AnchorFoundation.getChildMap([{ href, children: normalizeChildren(children) }])[href], [href, children]);
 
     const handleClick = (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
         if (!disabled) {
@@ -36,9 +48,9 @@ export default function Link({ ref, href = '#', title = '', className, children,
 
     // layout phase: Anchor's mount work reads the registered links
     useLayoutEffect(() => {
-        addLink(href);
+        addLink(href, parentHref);
         return () => removeLink(href);
-    }, [addLink, removeLink, href]);
+    }, [addLink, removeLink, href, parentHref]);
 
     if (showTooltip) {
         const tooltip = typeof showTooltip === 'object' ? showTooltip : {};
@@ -61,7 +73,7 @@ export default function Link({ ref, href = '#', title = '', className, children,
         );
     }
 
-    const expanded = !autoCollapse || active || childMap[href]?.has(activeLink);
+    const expanded = !autoCollapse || active || nestedLinks.has(activeLink) || childMap[href]?.has(activeLink);
 
     return (
         <div {...rest} ref={ref} className={clsx(`${prefixCls}-link`, className)} style={style} role="listitem">
@@ -88,7 +100,7 @@ export default function Link({ ref, href = '#', title = '', className, children,
                 {titleNode}
             </div>
             {expanded && (
-                <AnchorContext value={{ ...context, level: level + 1 }}>
+                <AnchorContext value={{ ...context, level: level + 1, parentHref: href }}>
                     <div role="list">{children}</div>
                 </AnchorContext>
             )}

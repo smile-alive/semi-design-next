@@ -6,10 +6,6 @@
                 "zh-CN": "图像描述，同时作为可预览缩略图的读屏名称。",
                 "en-US": "Image description, also the accessible name of a previewable thumbnail."
             },
-            "children": {
-                "zh-CN": "组件不渲染该属性，设置后无效。",
-                "en-US": "Not rendered by the component, so setting it has no effect."
-            },
             "className": {
                 "zh-CN": "缩略图根元素的类名。",
                 "en-US": "Class name of the thumbnail root element."
@@ -69,7 +65,7 @@
         }
     },
     "image-preview": {
-        "source": "packages/semi-ui-react/src/components/image/preview.tsx",
+        "source": "packages/semi-ui-react/src/components/image/preview/preview.tsx",
         "props": {
             "adaptiveTip": {
                 "zh-CN": "适应页面操作按钮的提示；未设置时取语言包的文案。",

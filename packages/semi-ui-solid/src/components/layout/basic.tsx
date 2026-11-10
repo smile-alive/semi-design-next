@@ -6,25 +6,23 @@ import '@fibrae/semi-foundation/components/layout/layout.scss';
 import type { ElementProps } from '../../base/element-props';
 
 export interface BasicProps extends ElementProps<'section'> {
-    prefixCls?: string;
     tagName?: keyof HTMLElementTagNameMap;
-    type?: string;
 }
 
-function Basic(props: BasicProps) {
-    const [local, rest] = splitProps(props, ['class', 'prefixCls', 'tagName', 'type']);
+function Basic(props: BasicProps & { type: string }) {
+    const [local, rest] = splitProps(props, ['class', 'tagName', 'type']);
 
-    return <Dynamic component={local.tagName} {...rest} class={clsx(local.class, `${local.prefixCls ?? cssClasses.PREFIX}-${local.type}`)} />;
+    return <Dynamic component={local.tagName} {...rest} class={clsx(local.class, `${cssClasses.PREFIX}-${local.type}`)} />;
 }
 
 export function Header(props: BasicProps) {
-    return <Basic {...props} type={props.type ?? 'header'} tagName={props.tagName ?? 'header'} />;
+    return <Basic {...props} type="header" tagName={props.tagName ?? 'header'} />;
 }
 
 export function Footer(props: BasicProps) {
-    return <Basic {...props} type={props.type ?? 'footer'} tagName={props.tagName ?? 'footer'} />;
+    return <Basic {...props} type="footer" tagName={props.tagName ?? 'footer'} />;
 }
 
 export function Content(props: BasicProps) {
-    return <Basic {...props} type={props.type ?? 'content'} tagName={props.tagName ?? 'main'} />;
+    return <Basic {...props} type="content" tagName={props.tagName ?? 'main'} />;
 }

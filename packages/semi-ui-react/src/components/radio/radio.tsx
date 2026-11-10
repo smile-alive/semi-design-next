@@ -29,7 +29,6 @@ export interface RadioProps extends ElementProps<'label', 'onChange'> {
     defaultChecked?: boolean;
     value?: string | number | boolean;
     disabled?: boolean;
-    prefixCls?: string;
     displayMode?: RadioDisplayMode;
     onChange?: (e: RadioChangeEvent) => void;
     mode?: RadioMode;
@@ -73,7 +72,6 @@ export default function Radio(rawProps: RadioProps) {
         name,
         autoFocus,
         disabled: disabledProp,
-        prefixCls: prefixClsProp,
         mode: modeProp,
         type,
         value,
@@ -114,11 +112,11 @@ export default function Radio(rawProps: RadioProps) {
     );
 
     const radioGroup = context?.radioGroup;
-    const { checked, disabled, isButtonRadio, isCardRadio, isPureCardRadio, buttonSize, prefixCls } = RadioFoundation.deriveView(props, state, context);
+    const { checked, disabled, isButtonRadio, isCardRadio, isPureCardRadio, buttonSize } = RadioFoundation.deriveView(props, state, context);
     const isButtonRadioComponent = !radioGroup && isButtonRadio;
     const addonId = addonIdProp || `addon-${generatedId}`;
     const extraId = extraIdProp || `extra-${generatedId}`;
-    const prefix = prefixCls || css.PREFIX;
+    const prefix = css.PREFIX;
 
     const wrapper = clsx(prefix, {
         [`${prefix}-disabled`]: disabled,
@@ -188,7 +186,7 @@ export default function Radio(rawProps: RadioProps) {
             <RadioInner
                 ref={inputRef}
                 id={id}
-                name={name ?? radioGroup?.name}
+                name={radioGroup?.name ?? name}
                 aria-describedby={ariaDescribedby}
                 aria-errormessage={ariaErrormessage}
                 aria-invalid={ariaInvalid}
@@ -203,7 +201,6 @@ export default function Radio(rawProps: RadioProps) {
                 extraId={hasExtra ? extraId : undefined}
                 isButtonRadio={isButtonRadio}
                 isPureCardRadio={isPureCardRadio}
-                prefixCls={prefixClsProp}
                 onChange={(e) => foundation.handleChange(e.target.checked, e)}
                 onClick={foundation.handleClick}
                 onKeyUp={foundation.handleKeyUp}

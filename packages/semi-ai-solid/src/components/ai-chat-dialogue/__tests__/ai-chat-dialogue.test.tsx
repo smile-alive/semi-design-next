@@ -13,8 +13,8 @@ import Modal from '@fibrae/semi-ui-solid/modal/index';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, sleep } from '@test/utils/solid';
+import { ReferenceWidget } from '../dialogue/content-item/reference';
 import AIChatDialogue, { type AIChatDialogueElement, type AIChatDialogueProps, type DefaultActionNodeObj, type DialogueRenderConfig, type MarkdownRenderProps, type Message, type Metadata } from '../index';
-import { ReferenceWidget } from '../widgets/content-item/reference';
 
 type Props = AIChatDialogueProps;
 const prefix = `${BASE_CLASS_PREFIX}-ai-chat-dialogue`;

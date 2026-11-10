@@ -12,7 +12,7 @@
     import { useConfig } from '../config-provider/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Popover } from '../popover/index.js';
-    import type { FocusTarget, RenderContentProps, TooltipTriggerProps } from '../tooltip/index.js';
+    import type { FocusTarget, RenderContentProps } from '../tooltip/index.js';
     import type { PopconfirmButtonProps, PopconfirmProps } from './interface.js';
 
     type Foundation = PopconfirmFoundation<PopconfirmBaseProps>;
@@ -37,7 +37,6 @@
         okButtonProps = defaults('okButtonProps'),
         okText = defaults('okText'),
         okType = defaults('okType', 'primary'),
-        prefixCls = defaults('prefixCls', cssClasses.PREFIX),
         showCloseIcon = defaults('showCloseIcon', true),
         // a confirmation is a dialog whatever opens it, hover and focus included, unlike a plain Popover (F12)
         role = defaults('role', 'dialog'),
@@ -86,6 +85,7 @@
     let tooltipFocus: ((target: FocusTarget) => void) | undefined;
     let contentFocus: FocusTarget | undefined;
 
+    const prefixCls = cssClasses.PREFIX;
     const titleId = `${uid}-title`;
     const contentId = `${titleId}-content`;
 
@@ -94,9 +94,6 @@
             contentFocus = target;
         },
     };
-
-    // A disabled Popconfirm renders the trigger alone; a spread of no props leaves the user's element as written
-    const noTriggerProps = {} as TooltipTriggerProps;
 
     const foundationProps: PopconfirmBaseProps = {
         get cancelButtonProps() {
@@ -252,48 +249,42 @@
     </div>
 {/snippet}
 
-{#if disabled}
-    {#if child}
-        {@render child({ props: noTriggerProps })}
-    {:else}
-        {@render children?.()}
-    {/if}
-{:else}
-    <Popover
-        {afterClose}
-        {afterOpen}
-        aria-describedby={describedBy}
-        aria-label={ariaLabel}
-        aria-labelledby={labelledBy}
-        {arrowPointAtCenter}
-        {arrowStyle}
-        {autoAdjustOverflow}
-        bind:this={popover}
-        bind:visible={() => popoverVisible, (next) => foundation.handleVisibleChange(Boolean(next))}
-        {child}
-        {children}
-        class={cssClasses.POPOVER}
-        {clickToHide}
-        {closeOnEsc}
-        {condition}
-        content={card}
-        {contentClassName}
-        {disableArrowKeyDown}
-        {disableFocusListener}
-        {guardFocus}
-        {keepDOM}
-        {motion}
-        {mouseEnterDelay}
-        {mouseLeaveDelay}
-        {onClickOutSide}
-        {onEscKeyDown}
-        {onOpen}
-        position={popoverPosition}
-        {returnFocusOnClose}
-        {role}
-        {showArrow}
-        {spacing}
-        {stopPropagation}
-        {trigger}
-    />
-{/if}
+<!-- the Popover stays mounted while disabled so toggling it never remounts the trigger; a custom trigger with
+     `visible` false is a Popover that cannot open -->
+<Popover
+    {afterClose}
+    {afterOpen}
+    aria-describedby={describedBy}
+    aria-label={ariaLabel}
+    aria-labelledby={labelledBy}
+    {arrowPointAtCenter}
+    {arrowStyle}
+    {autoAdjustOverflow}
+    bind:this={popover}
+    bind:visible={() => !disabled && popoverVisible, (next) => foundation.handleVisibleChange(Boolean(next))}
+    {child}
+    {children}
+    class={cssClasses.POPOVER}
+    {clickToHide}
+    {closeOnEsc}
+    {condition}
+    content={card}
+    {contentClassName}
+    {disableArrowKeyDown}
+    {disableFocusListener}
+    {guardFocus}
+    {keepDOM}
+    {motion}
+    {mouseEnterDelay}
+    {mouseLeaveDelay}
+    {onClickOutSide}
+    {onEscKeyDown}
+    {onOpen}
+    position={popoverPosition}
+    {returnFocusOnClose}
+    {role}
+    {showArrow}
+    {spacing}
+    {stopPropagation}
+    trigger={disabled ? 'custom' : trigger}
+/>

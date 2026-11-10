@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Markera alla rader',
         selectRow: 'Markera den här raden',
+        scrollRegion: 'Rullningsbart tabellinnehåll',
+        untitledColumn: 'Kolumn utan rubrik',
         filterColumn: 'Filtrera data med den här kolumnen',
         filterColumnActive: 'Filtrera data med den här kolumnen, filtret är aktivt',
         expandRow: 'Expandera den här raden',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Sök',
         replace: 'Ersätt',
         replaceAll: 'Ersätt alla',
+        replaceWith: 'Ersätt med',
         caseSensitive: 'Matcha gemener och versaler',
         regex: 'Använd reguljärt uttryck',
         wholeWord: 'Matcha hela ord',

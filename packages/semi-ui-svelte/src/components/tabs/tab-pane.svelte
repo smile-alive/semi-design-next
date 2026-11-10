@@ -22,9 +22,10 @@
     // The overlay stays mounted, so the class is toggled by hand: on when a pane activates with motion, off at its end
     let animating = $state(untrack(() => hasMotion));
 
-    // animation events bubble, and one from the pane's content must not end the overlay's slide
-    const handleAnimationEnd = (event: AnimationEvent) => {
-        if (event.target === event.currentTarget) {
+    // Animation events bubble, and one from the pane's content must not end the overlay's slide. Several animations on
+    // the overlay end separately; the slide ends with the last one.
+    const handleAnimationEnd = (event: AnimationEvent & { currentTarget: HTMLDivElement }) => {
+        if (event.target === event.currentTarget && !event.currentTarget.getAnimations().some((animation) => 'animationName' in animation && animation.playState === 'running')) {
             animating = false;
         }
     };

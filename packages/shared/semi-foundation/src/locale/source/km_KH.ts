@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'ជ្រើសរើសគ្រប់ជួរដេក',
         selectRow: 'ជ្រើសរើសជួរដេកនេះ',
+        scrollRegion: 'មាតិកាតារាងដែលអាចរំកិលបាន',
+        untitledColumn: 'ជួរឈរគ្មានចំណងជើង',
         filterColumn: 'ត្រងទិន្នន័យតាមជួរឈរនេះ',
         filterColumnActive: 'ត្រងទិន្នន័យតាមជួរឈរនេះ តម្រងកំពុងប្រើ',
         expandRow: 'ពង្រីកជួរដេកនេះ',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'ស្វែងរក',
         replace: 'ជំនួស',
         replaceAll: 'ជំនួសទាំងអស់',
+        replaceWith: 'ជំនួសដោយ',
         caseSensitive: 'ផ្គូផ្គងអក្សរធំ និងអក្សរតូច',
         regex: 'ប្រើកន្សោមធម្មតា',
         wholeWord: 'ផ្គូផ្គងពាក្យទាំងមូល',

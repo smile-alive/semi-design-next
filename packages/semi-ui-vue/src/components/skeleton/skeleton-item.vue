@@ -10,13 +10,12 @@
 
     // The shared block behind Avatar, Image, Title and Button: a template cannot yield one component per default type.
     const props = withDefaults(defineProps<SkeletonItemProps>(), {
-        prefixCls: cssClasses.PREFIX,
         size: 'medium',
         shape: 'circle',
     });
 
     const itemClass = computed(() => {
-        const base = `${props.prefixCls}-${props.type}`;
+        const base = `${cssClasses.PREFIX}-${props.type}`;
         const avatar = props.type.toUpperCase() === 'AVATAR';
         return [base, { [`${base}-${props.size}`]: avatar, [`${base}-${props.shape}`]: avatar }];
     });

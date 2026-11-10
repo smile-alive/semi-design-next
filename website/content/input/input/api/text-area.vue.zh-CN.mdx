@@ -7,22 +7,22 @@ import ApiType from '#/components/ApiType.astro';
 | modelValue | 文本内容，用于 v-model。 | `string` | `undefined` |
 | modelModifiers | v-model 修饰符 trim、number 与 lazy，由 Vue 在使用对应修饰符时传入。lazy 时输入过程中不更新绑定值，原生 change（失焦）时才发出 update:modelValue；change 事件仍在每次输入时触发。 | `InputModelModifiers` | `undefined` |
 | defaultValue | 非受控时的初始内容。 | `string` | `semiGlobalDefault("TextArea", "defaultValue")` |
-| autosize | 高度是否随内容自适应，可传 `{ minRows, maxRows }` 限制行数。 | `boolean \| AutosizeRow` | `semiDefault("TextArea", "autosize", false)` |
-| borderless | 无边框模式。 | `boolean` | `semiDefault("TextArea", "borderless", false)` |
-| rows | 默认行数。 | `number` | `semiDefault("TextArea", "rows", 4)` |
-| cols | 默认列数。 | `number` | `semiDefault("TextArea", "cols", 20)` |
+| autosize | 高度是否随内容自适应，可传 `{ minRows, maxRows }` 限制行数。 | `boolean \| AutosizeRow` | `false` |
+| borderless | 无边框模式。 | `boolean` | `false` |
+| rows | 默认行数。 | `number` | `4` |
+| cols | 默认列数。 | `number` | `20` |
 | placeholder | 输入框为空时显示的提示文字。 | `string` | `semiGlobalDefault("TextArea", "placeholder")` |
 | maxCount | 字数上限，设置后显示字数统计；超出时计数器标红，不截断输入。 | `number` | `semiGlobalDefault("TextArea", "maxCount")` |
-| showCounter | 是否显示字数统计；设置 maxCount 时总是显示。 | `boolean` | `semiDefault("TextArea", "showCounter", false)` |
-| showClear | 有内容且悬停或焦点位于组件内时展示清除按钮。 | `boolean` | `semiDefault("TextArea", "showClear", false)` |
+| showCounter | 是否显示字数统计；设置 maxCount 时总是显示。 | `boolean` | `false` |
+| showClear | 有内容且悬停或焦点位于组件内时展示清除按钮。 | `boolean` | `false` |
 | disabled | 是否禁用。 | `boolean` | `undefined` |
 | readonly | 是否只读。 | `boolean` | `semiGlobalDefault("TextArea", "readonly")` |
 | autofocus | 挂载时自动获取焦点。 | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
 | validateStatus | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TextArea", "validateStatus")` |
-| composition | 是否开启输入法模式，开启后输入法组合期间不触发 change，组合结束后触发一次。 | `boolean` | `semiDefault("TextArea", "composition", false)` |
+| composition | 是否开启输入法模式，开启后输入法组合期间不触发 change，组合结束后触发一次。 | `boolean` | `false` |
 | disabledEnterStartNewLine | 内部属性，供 Chat 使用：Enter 不换行，Shift + Enter 换行。 | `boolean` | `semiGlobalDefault("TextArea", "disabledEnterStartNewLine")` |
-| showLineNumber | 是否展示行号。 | `boolean` | `semiDefault("TextArea", "showLineNumber", false)` |
-| lineNumberStart | 行号起始值。 | `number` | `semiDefault("TextArea", "lineNumberStart", 1)` |
+| showLineNumber | 是否展示行号。 | `boolean` | `false` |
+| lineNumberStart | 行号起始值。 | `number` | `1` |
 | lineNumberClassName | 行号区域的类名。 | `string` | `semiGlobalDefault("TextArea", "lineNumberClassName")` |
 | lineNumberStyle | 行号区域的样式，数字需带单位。 | `StyleValue` | `semiGlobalDefault("TextArea", "lineNumberStyle")` |
 | textareaStyle | 内部 textarea 元素的样式，可设置高度等，数字需带单位。 | `StyleValue` | `semiGlobalDefault("TextArea", "textareaStyle")` |

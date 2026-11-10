@@ -7,7 +7,9 @@
     import type { RowProps } from './interface.js';
 
     const defaults = useDefaultProps('Row');
-    let { prefixCls = defaults('prefixCls', cssClasses.PREFIX), type = defaults('type'), align = defaults('align'), justify = defaults('justify'), gutter = defaults('gutter', 0), children, ...rest }: RowProps = $props();
+    let { type = defaults('type'), align = defaults('align'), justify = defaults('justify'), gutter = defaults('gutter', 0), children, ...rest }: RowProps = $props();
+
+    const prefixCls = cssClasses.PREFIX;
 
     // The user's style goes last so it can override a gutter variable
     const style = $derived.by(() => {

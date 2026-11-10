@@ -11,8 +11,8 @@
     import LocaleProvider from '../../locale/locale-provider.svelte';
     import Form from '../form.svelte';
     import type { FormApi } from '../interface';
-    import SchemaField from '../schema-field.svelte';
-    import SchemaForm from '../schema-form.svelte';
+    import SchemaField from '../schema-form/schema-field.svelte';
+    import SchemaForm from '../schema-form/schema-form.svelte';
 
     let { store, onApi }: { store: SchemaFixtureStore; onApi?: (api: FormApi) => void } = $props();
 </script>

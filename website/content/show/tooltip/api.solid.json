@@ -24,10 +24,6 @@
                 "zh-CN": "弹出层相对触发元素的位置。",
                 "en-US": "Position of the popup relative to the trigger element."
             },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀，设置后弹出层不再带 Tooltip 的样式。",
-                "en-US": "Class prefix of the popup. A custom value drops the Tooltip styles."
-            },
             "spacing": {
                 "zh-CN": "弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。",
                 "en-US": "Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances."

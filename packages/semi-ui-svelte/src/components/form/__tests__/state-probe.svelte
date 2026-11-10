@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { useFieldState, useFormState } from '../hooks';
+    import { useFieldState, useFormState } from '../hooks/index';
 
     let { field = 'name' }: { field?: string } = $props();
 

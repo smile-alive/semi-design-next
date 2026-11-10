@@ -187,7 +187,7 @@ write(
         "import type * as Ai from '@fibrae/semi-ai-react';",
         "import type { ButtonProps } from '@fibrae/semi-ui-react/button/index';",
         "import type { ColumnProps } from '@fibrae/semi-ui-react/table/interface';",
-        "import type { useForm } from '@fibrae/semi-ui-react/form/hooks';",
+        "import type { useForm } from '@fibrae/semi-ui-react/form/hooks/index';",
         "import type * as Foundation from '@fibrae/semi-foundation/components/transfer/foundation';",
         "import type * as TableFoundation from '@fibrae/semi-foundation/components/table/foundation';",
         "import type * as EnUS from '@fibrae/semi-foundation/locale/source/en_US';",

@@ -1578,7 +1578,7 @@ export interface BaseOnCellReturnObject {
     className?: string;
     onClick?: (e: any) => void;
 }
-export type BaseOnFilter<RecordType> = (filteredValue: any, record: RecordType) => boolean;
+export type BaseOnFilter<RecordType> = (value: any, record: RecordType) => boolean;
 
 export type BaseOnFilterDropdownVisibleChange = (visible?: boolean) => void;
 
@@ -1595,7 +1595,7 @@ export interface ColumnFlags<Q extends { filteredValue?: unknown }> {
     needsTitle: boolean;
     clickToSort: boolean;
     showSortTip: boolean;
-    query: Q | undefined;
+    query?: Q;
     sortOrder: BaseSortOrder;
     filteredValue: Q['filteredValue'];
 }

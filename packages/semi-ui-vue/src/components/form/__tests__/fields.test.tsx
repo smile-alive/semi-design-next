@@ -446,7 +446,7 @@ describe('Form 字段', () => {
         expect(api().getValues()).toEqual({ group: ['a'], pick: 'r' });
     });
 
-    it('FormCheckbox、FormRadio 无 field 时，id 与 name 落到控件上', async () => {
+    it('FormCheckbox、FormRadio 无 field 时，id 落到控件上', async () => {
         renderForm({}, () => (
             <>
                 <FormCheckboxGroup field="group">
@@ -458,7 +458,7 @@ describe('Form 字段', () => {
                 </FormCheckboxGroup>
                 <FormRadioGroup field="pick">
                     {() => (
-                        <FormRadio value="r" id="own-radio" name="own-name">
+                        <FormRadio value="r" id="own-radio">
                             {() => 'R'}
                         </FormRadio>
                     )}
@@ -468,7 +468,6 @@ describe('Form 字段', () => {
         await settle();
         expect(screen.getByRole('checkbox', { name: 'A' })).toHaveAttribute('id', 'own-checkbox');
         expect(screen.getByRole('radio', { name: 'R' })).toHaveAttribute('id', 'own-radio');
-        expect(screen.getByRole('radio', { name: 'R' })).toHaveAttribute('name', 'own-name');
     });
 
     it.each(names)('%s 的 @change 末参是最新的表单值', async (name) => {

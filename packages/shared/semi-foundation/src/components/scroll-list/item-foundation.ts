@@ -2,7 +2,7 @@ import { debounce } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { getListTargetIndex, Typeahead } from '../../utils/a11y';
 import { isHTMLElement } from '../../utils/dom';
-import { cssClasses, numbers } from './constants';
+import { numbers } from './constants';
 import animatedScrollTo from './scroll-to';
 
 const msPerFrame = 1000 / 60;
@@ -22,7 +22,6 @@ export interface ScrollItemBaseProps<I extends Item = Item> {
     mode?: string;
     motion?: boolean;
     selectedIndex?: number;
-    type?: string | number;
 }
 
 export interface ScrollItemRow {
@@ -36,6 +35,8 @@ export interface ScrollItemRow {
 export interface ScrollItemBaseState {
     prependCount: number;
     appendCount: number;
+    /** Key of the wheel row under the selector, which hosts render with `cssClasses.SELECTED` */
+    highlightedKey: string | null;
 }
 
 export interface ScrollItemAdapter<I extends Item = Item, P extends ScrollItemBaseProps<I> = ScrollItemBaseProps<I>> extends DefaultAdapter<P, ScrollItemBaseState> {
@@ -45,7 +46,7 @@ export interface ScrollItemAdapter<I extends Item = Item, P extends ScrollItemBa
     getScrollNode: () => HTMLElement | null;
     /** The band that marks the selected row in wheel mode */
     getSelectorNode: () => HTMLElement | null;
-    notifySelectItem: (data: I & { type?: string | number; index: number }) => void;
+    notifySelectItem: (data: I & { index: number }) => void;
 }
 
 export default class ItemFoundation<I extends Item = Item, P extends ScrollItemBaseProps<I> = ScrollItemBaseProps<I>> extends BaseFoundation<ScrollItemAdapter<I, P>, P, ScrollItemBaseState> {
@@ -114,19 +115,20 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         return refNode;
     }
 
-    // Known limit: the class is set outside the host's render, so a re-render rewriting className drops it until the
-    // next scroll; upgrade by making the highlighted row state.
+    #highlight(node: Element | null) {
+        const key = ItemFoundation.getRows(this.getProps(), this.getStates())[this.#indexOf(node)]?.key;
+        if (key !== undefined && key !== this.getState('highlightedKey')) {
+            this.setState({ highlightedKey: key });
+        }
+    }
+
     #highlightNearestNode() {
         if (this.getProps().mode !== wheelMode) {
             return;
         }
-        const listNode = this.adapter.getListNode();
         const node = this.#getNearestNodeInfo().nearestNode || this.#selectedNode;
-        if (isHTMLElement(node) && isHTMLElement(listNode)) {
-            for (const child of Array.from(listNode.children)) {
-                child.classList.remove(cssClasses.SELECTED);
-            }
-            node.classList.add(cssClasses.SELECTED);
+        if (isHTMLElement(node)) {
+            this.#highlight(node);
         }
     }
 
@@ -210,7 +212,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     }
 
     #selectNode(node: HTMLElement) {
-        const { type, list: data, selectedIndex } = this.getProps();
+        const { list: data, selectedIndex } = this.getProps();
         const listNode = this.adapter.getListNode();
         if (isHTMLElement(node) && isHTMLElement(listNode)) {
             const indexInList = Array.from(listNode.children).findIndex((ele) => ele === node);
@@ -227,7 +229,6 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
                 this.adapter.notifySelectItem({
                     ...item,
                     value: item.value,
-                    type,
                     index: indexInData,
                 });
             }
@@ -263,10 +264,10 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
             wrapper.scrollTop -= copies * copyHeight;
             this.#selectedNode = moved(this.#selectedNode);
             this.#willSelectNode = moved(this.#willSelectNode);
-            const highlighted = listNode.querySelector(`.${cssClasses.SELECTED}`);
-            if (highlighted) {
-                highlighted.classList.remove(cssClasses.SELECTED);
-                moved(highlighted).classList.add(cssClasses.SELECTED);
+            const highlightedKey = this.getState('highlightedKey');
+            const highlighted = highlightedKey === null ? -1 : ItemFoundation.getRows(this.getProps(), this.getStates()).findIndex((row) => row.key === highlightedKey);
+            if (highlighted > -1) {
+                this.#highlight(moved(children[highlighted]));
             }
         }
     }
@@ -366,14 +367,14 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     }
 
     static getInitialState(): ScrollItemBaseState {
-        return { prependCount: 0, appendCount: 0 };
+        return { prependCount: 0, appendCount: 0, highlightedKey: null };
     }
 
     /**
      * The rows of the listbox in DOM order: the copies of a cycled wheel before the list itself (nearest copy last) and
      * after it. The scroll positioning counts rows by this order, so every host renders exactly these rows.
      */
-    static getRows({ list, mode }: Pick<ScrollItemBaseProps, 'list' | 'mode'>, { prependCount, appendCount }: ScrollItemBaseState): ScrollItemRow[] {
+    static getRows({ list, mode }: Pick<ScrollItemBaseProps, 'list' | 'mode'>, { prependCount, appendCount }: Pick<ScrollItemBaseState, 'prependCount' | 'appendCount'>): ScrollItemRow[] {
         const rows = (name: string) => list.map((_item, index): ScrollItemRow => ({ key: `${name}${index}`, index, copy: name !== '' }));
         if (mode !== wheelMode) {
             return rows('');
@@ -427,7 +428,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
      * APG single-select listbox keyboard, selection follows focus; the column scrolls once `selectedIndex` returns
      */
     handleKeyDown = (event: KeyboardEvent) => {
-        const { list, selectedIndex, cycled, type } = this.getProps();
+        const { list, selectedIndex, cycled } = this.getProps();
         let target = getListTargetIndex(event.key, selectedIndex, list.length, (index) => Boolean(list[index].disabled), {
             loop: cycled,
         });
@@ -445,12 +446,12 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         event.preventDefault();
         this.#select.cancel();
         if (target !== selectedIndex) {
-            this.adapter.notifySelectItem({ ...list[target], type, index: target });
+            this.adapter.notifySelectItem({ ...list[target], index: target });
         }
     };
 
     selectIndex = (index: number) => {
-        const { type, list } = this.getProps();
+        const { list } = this.getProps();
         const listNode = this.adapter.getListNode();
         if (index > -1 && Array.isArray(list) && list.length && isHTMLElement(listNode)) {
             const indexInData = index % list.length;
@@ -461,7 +462,6 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
             this.adapter.notifySelectItem({
                 ...item,
                 value: item.value,
-                type,
                 index: indexInData,
             });
         }

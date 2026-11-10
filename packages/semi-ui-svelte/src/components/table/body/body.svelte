@@ -2,13 +2,31 @@
     import { type Snippet, untrack } from 'svelte';
     import { numbers } from '@fibrae/semi-foundation/components/table/constants';
     import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
-    import { arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize, type ExpandBtnShouldInRowProps, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
+    import {
+        arrayAdd,
+        buildRecordsByKey,
+        expandBtnShouldInRow,
+        flattenBodyRows,
+        getColumnsMinWidth,
+        getRecordKey,
+        getRowSpanHoverKeys,
+        isDisabled,
+        isExpanded,
+        isSelected,
+        resolveVirtualizedItemSize,
+        type ExpandBtnShouldInRowProps,
+        type FlattenData,
+        type GroupFlattenData,
+    } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import VirtualList, { type VirtualListAlign } from '../../../internal/virtual-list.svelte';
+    import useLocale from '../../locale/use-locale.svelte.js';
+    import { observeResize } from '../../resize-observer/index.js';
     import ColGroup from '../col-group.svelte';
     import { getTableContext } from '../context.js';
     import type { ColumnProps, TableVirtualizedScrollArgs } from '../interface.js';
-    import TableHeader from '../table-header.svelte';
+    import TableHeader from '../table-header/table-header.svelte';
+    import { joinStyles } from '../utils.js';
     import BaseRow from './base-row.svelte';
     import ExpandedRow from './expanded-row.svelte';
     import SectionRow from './section-row.svelte';
@@ -31,11 +49,15 @@
     let { columns, dataSource, groups, expandedRowKeys, pageDisabledRowKeysSet, virtualizedData, includeHeader, tableAttrs, emptyContent, onScroll }: BodyProps = $props();
 
     const table = getTableContext('Table body');
+    const locale = useLocale('Table');
 
     let bodyElement = $state<HTMLDivElement>();
     let listElement = $state<HTMLElement>();
     let list = $state<ReturnType<typeof VirtualList>>();
     let hoveredRowKey = $state<BaseRowKeyType | null>(null);
+
+    // whether the body overflows, so it takes keyboard focus to scroll; known after mount
+    let overflows = $state(false);
     let highlighted = $state<Set<string>>(new Set());
     let lastScrollTop = 0;
     let frame = 0;
@@ -84,6 +106,10 @@
         const rowWidth = arrayAdd(cellWidths, 0, columns.length);
         return { rowWidth, height: virtualizedData.length ? y : 0 };
     });
+
+    // a scrolling body must be keyboard reachable even without a focusable cell
+    const scrollable = $derived(Boolean(table.scroll?.y) || overflows);
+    const minWidth = $derived(getColumnsMinWidth(table.flattenedColumns));
 
     const groupRecords = (group: Set<BaseRowKeyType>) => [...group].flatMap((key) => recordsByKey.get(key) ?? []);
 
@@ -142,6 +168,13 @@
         return () => {
             listElement = undefined;
         };
+    };
+
+    // a scroll.y body scrolls anyway
+    const measureOverflow = () => {
+        if (bodyElement && !table.scroll?.y) {
+            overflows = bodyElement.scrollWidth > bodyElement.clientWidth || bodyElement.scrollHeight > bodyElement.clientHeight;
+        }
     };
 
     // the list rebuilds its offsets only when the row count changes; a sort can move a section or expanded row to another index
@@ -221,10 +254,28 @@
         </VirtualList>
     {/if}
 {:else}
-    <!-- overflow is auto rather than scroll: with only scroll.y no horizontal scrollbar shows; a focusable scroller lets the keyboard scroll it -->
-    <div bind:this={bodyElement} class="{table.prefixCls}-body" style:max-height={toCssLength(table.scroll?.y)} style:overflow={table.anyColumnFixed && dataSource.length ? 'auto' : undefined} tabindex={table.scroll?.y ? 0 : undefined} onmouseleave={() => (highlighted = new Set())} onscroll={table.handleBodyScroll}>
-        <!-- a table, not a grid: the cells have no arrow-key navigation; with a separate header the container is the table -->
-        <svelte:element this={table.components.body.outer} {...tableAttrs} class={[table.prefixCls, { [`${table.prefixCls}-fixed`]: table.tableLayout === 'fixed' }]} role={table.splitTable ? 'none' : 'table'} style={table.scroll?.x != null ? `width: ${toCssLength(table.scroll.x)}` : undefined}>
+    <!-- overflow is auto rather than scroll: with only scroll.y no horizontal scrollbar shows; a focusable scroller lets the keyboard scroll it; a group between the role="table" container and the rows of a split table would break the table -->
+    <div
+        {@attach observeResize(measureOverflow)}
+        aria-label={scrollable && !table.splitTable ? locale().locale.scrollRegion : undefined}
+        bind:this={bodyElement}
+        class="{table.prefixCls}-body"
+        role={scrollable && !table.splitTable ? 'group' : undefined}
+        style:max-height={toCssLength(table.scroll?.y)}
+        style:overflow={table.anyColumnFixed && dataSource.length ? 'auto' : undefined}
+        tabindex={scrollable ? 0 : undefined}
+        onmouseleave={() => (highlighted = new Set())}
+        onscroll={table.handleBodyScroll}
+    >
+        <!-- a table, not a grid: the cells have no arrow-key navigation; with a separate header the container is the table; the table is observed too, as new columns or rows can overflow the body without resizing it -->
+        <svelte:element
+            this={table.components.body.outer}
+            {...tableAttrs}
+            {@attach observeResize(measureOverflow)}
+            class={[table.prefixCls, { [`${table.prefixCls}-fixed`]: table.tableLayout === 'fixed' }]}
+            role={table.splitTable ? 'none' : 'table'}
+            style={joinStyles(table.scroll?.x != null && `width: ${toCssLength(table.scroll.x)}`, minWidth !== undefined && `min-width: ${toCssLength(minWidth)}`)}
+        >
             <ColGroup col={table.components.body.colgroup.col} {columns} prefixCls={table.prefixCls} wrapper={table.components.body.colgroup.wrapper} />
             <!-- without a header the fixed columns still need its measured widths for their offsets -->
             {#if includeHeader && (table.showHeader || table.anyColumnFixed)}

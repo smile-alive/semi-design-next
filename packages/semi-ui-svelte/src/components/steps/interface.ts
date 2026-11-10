@@ -36,7 +36,6 @@ export interface StepsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
     status?: StepStatus;
     size?: StepsSize;
     hasLine?: boolean;
-    prefixCls?: string;
     dataSource?: StepData[];
     /** Not bindable: whether it is set decides if the steps are buttons, and Svelte cannot tell a `bind:` from a plain prop */
     onChange?: (current: number) => void;

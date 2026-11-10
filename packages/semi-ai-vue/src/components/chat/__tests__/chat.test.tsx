@@ -371,7 +371,7 @@ describe('Chat', () => {
             const onMessageSend = vi.fn<Listener<'messageSend'>>();
             const { container } = await renderChat({ onMessageSend, sendHotKey });
             await type(container, 'hello');
-            await fireEvent.keyDown(textarea(container), { key: 'Enter', keyCode: 13, shiftKey });
+            await fireEvent.keyDown(textarea(container), { key: 'Enter', shiftKey });
             expect(onMessageSend).toHaveBeenCalledTimes(times);
         });
 
@@ -1400,9 +1400,7 @@ describe('Chat', () => {
             expect(writeText).toHaveBeenCalledTimes(1);
         });
 
-        it('复制 rehype 插件拆成元素的代码文本', async () => {
-            const writeText = vi.fn<(value: string) => Promise<void>>(() => Promise.resolve());
-            mockClipboard(writeText);
+        it('rehype 插件拆成元素的代码不显示语言栏，代码留在 pre 内', async () => {
             type HastNode = { type: string; tagName?: string; properties?: object; children?: HastNode[] };
             const wrapCodeText = () => {
                 const wrap = (node: HastNode) => {
@@ -1414,12 +1412,8 @@ describe('Chat', () => {
                 return wrap;
             };
             const { container } = mount({ chats: codeChats, markdownRenderProps: { rehypePlugins: [wrapCodeText] } as never });
-            const button = await waitFor(() => {
-                expect(copyButton(container)).not.toBeNull();
-                return copyButton(container) as HTMLElement;
-            });
-            await fireEvent.click(button);
-            expect(writeText).toHaveBeenCalledWith('const a = 1;\n');
+            await waitFor(() => expect(container.querySelector('pre > code > span')).not.toBeNull());
+            expect(copyButton(container)).toBeNull();
         });
     });
 });

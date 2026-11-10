@@ -98,10 +98,6 @@
                 "zh-CN": "聚焦时是否阻止浏览器滚动到被聚焦元素，默认 false。",
                 "en-US": "Whether focusing an element avoids scrolling it into view. Defaults to false."
             },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀。",
-                "en-US": "Class prefix of the popup."
-            },
             "render": {
                 "zh-CN": "弹出层的内容，由 `Dropdown.Menu` 及 `Dropdown.Item`、`Dropdown.Title`、`Dropdown.Divider` 构成。传入时优先于 `menu`。",
                 "en-US": "Content of the popup, made of Dropdown.Menu with Dropdown.Item, Dropdown.Title and Dropdown.Divider. It takes precedence over menu when provided."

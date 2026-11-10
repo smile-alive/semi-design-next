@@ -547,6 +547,7 @@ describe('Popconfirm', () => {
         await fireEvent.click(screen.getByRole('button', { name: 'focus' }));
         expect(screen.getByRole('button', { name: 'Save' })).toHaveFocus();
         await view.rerender({ disabled: true });
+        screen.getByRole('button', { name: 'focus' }).focus();
         await fireEvent.click(screen.getByRole('button', { name: 'focus' }));
         expect(screen.getByRole('button', { name: 'Save' })).not.toHaveFocus();
     });

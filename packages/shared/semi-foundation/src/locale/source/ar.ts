@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'تحديد كل الصفوف',
         selectRow: 'تحديد هذا الصف',
+        scrollRegion: 'محتوى الجدول القابل للتمرير',
+        untitledColumn: 'عمود بلا عنوان',
         filterColumn: 'تصفية البيانات بهذا العمود',
         filterColumnActive: 'تصفية البيانات بهذا العمود، التصفية مفعلة',
         expandRow: 'توسيع هذا الصف',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'بحث',
         replace: 'استبدل',
         replaceAll: 'استبدل الكل',
+        replaceWith: 'استبدل بـ',
         caseSensitive: 'مطابقة حالة الأحرف',
         regex: 'استخدام التعبير النمطي',
         wholeWord: 'مطابقة الكلمة بأكملها',

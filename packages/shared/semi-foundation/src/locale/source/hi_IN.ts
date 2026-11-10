@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'सभी पंक्तियाँ चुनें',
         selectRow: 'यह पंक्ति चुनें',
+        scrollRegion: 'स्क्रॉल करने योग्य तालिका सामग्री',
+        untitledColumn: 'बिना शीर्षक वाला कॉलम',
         filterColumn: 'इस कॉलम से डेटा फ़िल्टर करें',
         filterColumnActive: 'इस कॉलम से डेटा फ़िल्टर करें, फ़िल्टर सक्रिय है',
         expandRow: 'इस पंक्ति को बड़ा करें',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'खोजें',
         replace: 'बदलें',
         replaceAll: 'सभी को बदलें',
+        replaceWith: 'इससे बदलें',
         caseSensitive: 'अक्षर-भेद मिलाएँ',
         regex: 'रेगुलर एक्सप्रेशन का उपयोग करें',
         wholeWord: 'पूरा शब्द मिलाएँ',

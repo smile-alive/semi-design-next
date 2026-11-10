@@ -2,7 +2,7 @@ import type { Component, ComponentProps, Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLFieldsetAttributes, HTMLFormAttributes, HTMLLabelAttributes } from 'svelte/elements';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import type { FieldError } from '@fibrae/semi-foundation/components/form/errors';
-import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
+import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 import type { RuleItem } from '@fibrae/semi-foundation/components/form/rules';
 import type { ColProps } from '../grid/interface.js';
@@ -35,6 +35,8 @@ export interface LabelProps extends Omit<HTMLLabelAttributes, 'children'> {
 
 /** A label configured by data; nodes go in the `fieldLabel` and `labelExtra` snippets */
 export interface FieldLabel {
+    /** The id of the label element, which the control's aria-labelledby references; generated when missing */
+    id?: string;
     text?: string | number;
     align?: string;
     disabled?: boolean;
@@ -52,9 +54,9 @@ export interface FormRenderProps<Values extends Record<string, any> = any, Outpu
 export type FormProps<Values extends Record<string, any> = any, Output = Values> = AllFormProps<Values, Output> & ExclusiveFormValidation;
 
 /** What the Form reads: global defaults can fill both exclusive sources, so the exclusion applies only to what callers pass */
-export interface AllFormProps<Values extends Record<string, any> = any, Output = Values> extends Omit<HTMLFormAttributes, 'children' | 'onchange' | 'onsubmit' | 'onreset'> {
-    /** Initial values of the fields, copied once when the Form is created */
-    initValues?: Values;
+export interface AllFormProps<Values extends Record<string, any> = any, Output = Values> extends Omit<HTMLFormAttributes, 'children' | 'onchange'> {
+    /** Initial values of the fields, copied once when the Form is created; may leave out any part of the values */
+    initValues?: DeepPartial<Values>;
     layout?: 'horizontal' | 'vertical';
     labelPosition?: 'top' | 'left' | 'inset';
     labelWidth?: number | string;

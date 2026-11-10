@@ -54,6 +54,35 @@ describe('Resizable', () => {
     });
 });
 
+describe('ResizeGroup 内边距', () => {
+    it('min 比较的是项的 border-box 尺寸：真实指针拖到最小值，容器收窄后仍停在同一最小值', async () => {
+        const { container } = render(() => (
+            <div style={{ display: 'flex' }}>
+                <div style={{ width: '300px', height: '20px' }} data-testid="outside" />
+                <div style={{ width: '810px', height: '500px' }} data-testid="host">
+                    <ResizeGroup direction="horizontal">
+                        <ResizeItem style={{ 'padding-left': '16px', 'padding-right': '16px' }} min="200px">
+                            item 0
+                        </ResizeItem>
+                        <ResizeHandler />
+                        <ResizeItem>item 1</ResizeItem>
+                    </ResizeGroup>
+                </div>
+            </div>
+        ));
+        const [first, second] = container.querySelectorAll<HTMLElement>('.semi-resizable-item');
+        const handler = find(container, '.semi-resizable-handler');
+
+        await userEvent.dragAndDrop(handler, find(container, '[data-testid="outside"]'), { force: true });
+        expect(first.offsetWidth).toBeCloseTo(200, 0);
+
+        find(container, '[data-testid="host"]').style.width = '410px';
+        window.dispatchEvent(new Event('resize'));
+        await expect.poll(() => second.offsetWidth).toBeCloseTo(200, 0);
+        expect(first.offsetWidth).toBeCloseTo(200, 0);
+    });
+});
+
 describe('Resizable 边界', () => {
     const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
 

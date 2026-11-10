@@ -1,9 +1,9 @@
-import { type Accessor, Index, type JSX, type Ref, Show, children, createEffect, createMemo, mergeProps, on, onCleanup, splitProps } from 'solid-js';
+import { type Accessor, Index, type JSX, type Ref, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
 import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
 import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/components/upload/upload.scss';
 import { IconUpload } from '@fibrae/semi-icons-solid';
@@ -23,7 +23,7 @@ import type { ShowTooltip } from '../typography/interface';
 import AddArea from './add-area';
 import { type AddAreaContextValue, AddAreaContext } from './context';
 import FileCard from './file-card';
-import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, CropProps, CustomError, FileItem, OnChangeProps, PromptPositionType, RenderFileItemProps, RenderFileListTitleProps, RenderPictureCloseProps, UploadCropModalProps, UploadListType, customRequestArgs } from './interface';
+import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, CropProps, CustomError, FileItem, OnChangeProps, PromptPositionType, RenderFileItemProps, RenderFileListTitleProps, RenderPictureCloseProps, UploadCropModalProps, UploadCustomRequestArgs, UploadListType } from './interface';
 
 export interface UploadHandle {
     /** Adds files at `index`, or at the end without one */
@@ -44,7 +44,7 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
     beforeRemove?: (file: FileItem, fileList: Array<FileItem>) => boolean | Promise<boolean>;
     capture?: boolean | 'user' | 'environment';
     children?: JSX.Element;
-    customRequest?: (object: customRequestArgs) => void;
+    customRequest?: (object: UploadCustomRequestArgs) => void;
     data?: Record<string, any> | ((file: File) => Record<string, unknown>);
     defaultFileList?: Array<FileItem>;
     directory?: boolean;
@@ -227,8 +227,8 @@ export default function Upload(rawProps: UploadProps) {
         'beforeCrop',
         'onCropError',
         'cropModalProps',
-        // role="group" does not support aria-required, and a tabIndex on the root (a Tooltip around the Upload injects
-        // one) would add a Tab stop beside the add button, so it goes to the add button instead
+        // role="group" does not support aria-required, nor does role="button", so it becomes a description of the add
+        // button; a tabIndex on the root (a Tooltip around the Upload injects one) would add a Tab stop beside it
         'aria-required',
         'tabIndex',
         'onBlur',
@@ -236,6 +236,7 @@ export default function Upload(rawProps: UploadProps) {
     ]);
 
     const locale = useLocale('Upload');
+    const formLocale = useLocale('Form');
 
     let root!: HTMLDivElement;
     let input: HTMLInputElement | undefined;
@@ -243,6 +244,8 @@ export default function Upload(rawProps: UploadProps) {
     let addArea: HTMLDivElement | undefined;
     let cropper: CropperHandle | undefined;
     const listFocus = new ListFocusTracker();
+    const requiredId = createUniqueId();
+    const [addAreaHasControl, setAddAreaHasControl] = createSignal(false);
 
     const { foundation, state } = useFoundation<Foundation, Adapter, UploadProps, UploadState>(
         UploadFoundation,
@@ -308,6 +311,8 @@ export default function Upload(rawProps: UploadProps) {
     const cropConfig = () => (typeof local.crop === 'object' ? local.crop : {});
 
     const dragLegal = () => state().dragAreaStatus === strings.DRAG_AREA_LEGAL;
+
+    const addDescribedby = () => (local['aria-required'] === true || local['aria-required'] === 'true' ? requiredId : undefined);
 
     // capture works by presence, so `true` is the empty attribute and `false` none
     const captureAttr = () => (local.capture === true ? '' : local.capture || undefined) as JSX.InputHTMLAttributes<HTMLInputElement>['capture'];
@@ -433,10 +438,12 @@ export default function Upload(rawProps: UploadProps) {
                 [`${dragAreaCls}-legal`]: local.draggable && dragLegal(),
             })}
             style={{ height: toCssLength(local.picHeight), width: toCssLength(local.picWidth) }}
+            describedby={addDescribedby()}
             disabled={local.disabled}
             label={locale().locale.upload}
             tabIndex={local.tabIndex}
             x-semi-prop="children"
+            onControlChange={setAddAreaHasControl}
             onOpen={openFileDialog}
         >
             {local.children}
@@ -481,9 +488,11 @@ export default function Upload(rawProps: UploadProps) {
                     [`${dragAreaCls}-legal`]: dragLegal(),
                     [`${dragAreaCls}-custom`]: hasContent(content()),
                 })}
+                describedby={addDescribedby()}
                 disabled={local.disabled}
                 label={locale().locale.upload}
                 tabIndex={local.tabIndex}
+                onControlChange={setAddAreaHasControl}
                 onOpen={openFileDialog}
             >
                 <Show when={hasContent(content())} fallback={dragPrompt()}>
@@ -548,9 +557,16 @@ export default function Upload(rawProps: UploadProps) {
                 local.class
             )}
             role={namedRole(rest)}
+            aria-describedby={joinIds(rest['aria-describedby'], addAreaHasControl() && addDescribedby())}
             x-prompt-pos={local.promptPosition}
             onFocusOut={handleFocusOut}
         >
+            {/* describes the add area as the button; the content's own control is out of reach, so the root group takes it then */}
+            <Show when={addDescribedby()}>
+                <span id={requiredId} hidden>
+                    {formLocale().locale.required}
+                </span>
+            </Show>
             <input
                 ref={(node) => (input = node)}
                 type="file"
@@ -568,7 +584,7 @@ export default function Upload(rawProps: UploadProps) {
                 <Show
                     when={local.draggable}
                     fallback={
-                        <AddArea ref={(node) => (addArea = node)} class={`${prefixCls}-add`} disabled={local.disabled} label={locale().locale.upload} tabIndex={local.tabIndex} onOpen={openFileDialog}>
+                        <AddArea ref={(node) => (addArea = node)} class={`${prefixCls}-add`} describedby={addDescribedby()} disabled={local.disabled} label={locale().locale.upload} tabIndex={local.tabIndex} onControlChange={setAddAreaHasControl} onOpen={openFileDialog}>
                             {local.children}
                         </AddArea>
                     }

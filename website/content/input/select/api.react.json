@@ -1,6 +1,6 @@
 {
     "select": {
-        "source": "packages/semi-ui-react/src/components/select/index.tsx",
+        "source": "packages/semi-ui-react/src/components/select/select.tsx",
         "props": {
             "allowCreate": {
                 "zh-CN": "是否允许创建下拉列表中不存在的条目，需配合 `filter` 使用。创建时触发 `onCreate`，创建项的内容可用 `renderCreateItem` 自定义。",
@@ -348,10 +348,6 @@
             "className": {
                 "zh-CN": "选项的类名。",
                 "en-US": "Class name of the option."
-            },
-            "current": {
-                "zh-CN": "内部属性，由 AutoComplete 设置，标记该选项为当前项（`aria-selected`）。Select 的使用者无需设置。",
-                "en-US": "Internal prop set by AutoComplete to mark the option as the current one (`aria-selected`). Select users do not need to set it."
             },
             "disabled": {
                 "zh-CN": "是否禁用该选项。",

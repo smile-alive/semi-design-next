@@ -76,7 +76,7 @@ export { default as Dropdown } from './components/dropdown';
 export { default as DropdownMenu } from './components/dropdown/dropdown-menu';
 export { default as DropdownItem } from './components/dropdown/dropdown-item';
 export { default as DropdownDivider } from './components/dropdown/dropdown-divider';
-export type { DropdownProps, DropdownHandle, DropDownMenuItem, DropdownMenuProps, DropdownItemProps, DropdownDividerProps, DropdownTitleProps, DropdownTriggerProps, GetDropdownTriggerProps } from './components/dropdown';
+export type { DropdownProps, DropdownHandle, DropdownMenuItem, DropdownMenuProps, DropdownItemProps, DropdownDividerProps, DropdownTitleProps, DropdownTriggerProps, GetDropdownTriggerProps } from './components/dropdown';
 export { default as Empty } from './components/empty';
 export type { EmptyProps } from './components/empty';
 export { default as Feedback } from './components/feedback';
@@ -351,6 +351,7 @@ export type {
     TransferProps,
     TransferHandle,
     TransferElement,
+    TransferPaginationProps,
     Type as TransferType,
     OnSortEnd as TransferOnSortEnd,
     SelectedPanelProps as TransferSelectedPanelProps,
@@ -412,7 +413,7 @@ export type {
     BeforeUploadProps,
     AfterUploadProps,
     OnChangeProps as UploadOnChangeProps,
-    customRequestArgs as UploadCustomRequestArgs,
+    UploadCustomRequestArgs,
     CustomError as UploadCustomError,
     RenderFileItemProps,
     RenderPictureCloseProps,

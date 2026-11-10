@@ -6,16 +6,14 @@
     import type { LayoutBasicProps, LayoutSlots } from './interface';
 
     const props = withDefaults(defineProps<LayoutBasicProps & /* @vue-ignore */ ElementProps<'section', keyof LayoutBasicProps>>(), {
-        prefixCls: cssClasses.PREFIX,
         tagName: 'footer',
-        type: 'footer',
     });
 
     defineSlots<LayoutSlots>();
 </script>
 
 <template>
-    <component :is="nativeTag(props.tagName)" :class="`${props.prefixCls}-${props.type}`">
+    <component :is="nativeTag(props.tagName)" :class="`${cssClasses.PREFIX}-footer`">
         <slot />
     </component>
 </template>

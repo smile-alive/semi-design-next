@@ -22,8 +22,8 @@
     import { hasSlotContent } from '../../utils/slot-nodes';
     import useConfig from '../config-provider/use-config';
     import Input, { type InputHandle } from '../input';
+    import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';
-    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import OverflowList from '../overflow-list';
     import Popover from '../popover';
@@ -32,10 +32,11 @@
     import Tag, { TagGroup, type TagCloseEvent } from '../tag';
     import { useNestedPopups } from '../tooltip/context';
     import { TypographyText } from '../typography';
+    import { provideOptionPrefixContext } from './context';
     import type { BasicSelectValue, SelectChangeValue, SelectCreateItemSlotProps, SelectEmits, SelectHandle, SelectOptionItemSlotProps, SelectOptionProps, SelectProps, SelectSelectedItemSlotProps, SelectSlots, SelectTriggerSlotProps } from './interface';
     import SelectOptGroup from './option-group.vue';
     import SelectOption from './option.vue';
-    import type { GroupRecord, OptionData, OptionRecord } from './utils';
+    import { slotsByValue, type GroupRecord, type OptionRecord } from './utils';
 
     type FoundationProps = SelectBaseProps & { preventScroll?: boolean };
     type Foundation = SelectFoundation<FoundationProps, SelectBaseState, Event>;
@@ -103,19 +104,18 @@
         () => ({
             focusInput: () => triggerInput.value?.focus({ preventScroll: props.preventScroll }),
             focusDropdownInput: () => dropdownInput.value?.focus({ preventScroll: props.preventScroll }),
-            notifyMaxLimit: (option) => emit('exceed', plain(option)),
-            notifyDeselect: (value, option) => emit('deselect', value as string | number, plain(option)),
+            notifyMaxLimit: (option) => emit('exceed', option as SelectOptionProps),
+            notifyDeselect: (value, option) => emit('deselect', value as string | number, option as SelectOptionProps),
             getOptionsFromChildren: () => props.optionRecords as BaseOptionRecord[],
             notifyChange: (value) => {
-                const object = (option: string | BasicOptionProps) => (typeof option === 'object' ? plain(option) : option);
-                const payload = (props.changeWithObject ? (Array.isArray(value) ? value.map(object) : value && object(value)) : value) as SelectChangeValue<T, Multiple>;
+                const payload = value as SelectChangeValue<T, Multiple>;
                 emit('update:modelValue', payload);
                 emit('change', payload);
             },
-            notifySelect: (value, option) => emit('select', value as string | number, plain(option)),
+            notifySelect: (value, option) => emit('select', value as string | number, option as SelectOptionProps),
             notifyDropdownVisibleChange: (visible) => emit('dropdownVisibleChange', visible),
             notifySearch: (inputValue, event) => emit('search', inputValue, event),
-            notifyCreate: (option) => emit('create', plain(option)),
+            notifyCreate: (option) => emit('create', option as SelectOptionProps),
             // mouseenter and mouseleave reach the root as native listeners through the attrs
             notifyMouseEnter: () => undefined,
             notifyMouseLeave: () => undefined,
@@ -143,9 +143,11 @@
     const filterable = computed(() => Boolean(filter.value));
     const position = computed(() => SelectFoundation.getPosition(props.position, config.value.direction));
     const searchInTrigger = computed(() => props.searchPosition === strings.SEARCH_POSITION_TRIGGER);
+    const selectedSlots = computed(() => slotsByValue(props.optionRecords));
 
     // the Inputs inside are parts of this control, not members of the group
     provideInputGroupContext(undefined);
+    provideOptionPrefixContext(undefined);
 
     // A ref in inputProps would replace the Select's own vnode ref, so the Select sets both
     const setInputRef = (own: ShallowRef<InputHandle | null>) => (input: unknown) => {
@@ -164,14 +166,10 @@
     // a function in the record compares by presence: markup labels live only in an option's slot
     const sameOptions = (a: OptionRecord[], b: OptionRecord[]) => isEqualWith(a, b, (x, y) => (typeof x === 'function' && typeof y === 'function' ? true : undefined));
 
-    const plain = ({ _slot, ...rest }: BasicOptionProps | SelectOptionProps) => {
-        return rest as SelectOptionProps;
-    };
-
     const selectId = () => props.id || generatedId;
 
     const visibleOptions = computed(() => SelectFoundation.getVisibleOptions(state.value.options as OptionRecord[]));
-    const selectedItems = computed((): OptionData[] => [...state.value.selections.values()]);
+    const selectedItems = computed((): SelectOptionProps[] => [...state.value.selections.values()]);
     const tagFold = computed(() => SelectFoundation.getTagFold(props, state.value, selectedItems.value.length));
     const clearable = computed(() => SelectFoundation.isClearable({ showClear: props.showClear, disabled: looks.disabled }, state.value));
     const optionRuns = computed(() => getOptionRuns(visibleOptions.value));
@@ -348,19 +346,19 @@
     // the record's index, not the visible index: a row that filtering moves up keeps its node
     const rowKey = ({ data, childKey, index }: OptionRecord) => String(data.key ?? childKey ?? `${data.label}${data.value}${index}`);
 
-    const hasTitle = (group?: GroupRecord): group is GroupRecord => Boolean(group && (group._labelSlot || group.label || group.label === 0));
+    const hasTitle = (group?: GroupRecord): group is GroupRecord => Boolean(group && (group.labelSlot || group.label || group.label === 0));
 
-    const groupTitleId = (group: GroupRecord, first: number) => (group.id as string | undefined) ?? `${selectId()}-group-${first}`;
+    const groupTitleId = (group: GroupRecord, first: number) => (group.attrs.id as string | undefined) ?? `${selectId()}-group-${first}`;
 
     const groupWrapperAttrs = (group: GroupRecord | undefined, first: number) => (hasTitle(group) ? { 'aria-labelledby': groupTitleId(group, first), class: `${prefix}-group-wrapper`, role: 'group' } : {});
 
-    const groupTitleProps = ({ key: _key, _labelSlot, ...rest }: GroupRecord) => rest;
-
     const emptyHidden = () => Boolean(slots.emptyContent) && !hasSlotContent(slots.emptyContent);
 
-    const singleItem = () => selectedItems.value[0] as OptionData | undefined;
+    const singleItem = () => selectedItems.value[0] as SelectOptionProps | undefined;
 
-    const hasSingleContent = (option?: OptionData): option is OptionData => Boolean(option && (slots.selectedItem || option._slot || option.label || option.label === 0));
+    const selectedSlot = (option: SelectOptionProps) => selectedSlots.value.get(option.value);
+
+    const hasSingleContent = (option?: SelectOptionProps): option is SelectOptionProps => Boolean(option && (slots.selectedItem || selectedSlot(option) || option.label || option.label === 0));
 
     const singleTextClass = (shown: boolean) => {
         const searching = state.value.showInput && searchInTrigger.value;
@@ -374,7 +372,7 @@
         ];
     };
 
-    const removeTag = (option: OptionData, event?: TagCloseEvent) => {
+    const removeTag = (option: SelectOptionProps, event?: TagCloseEvent) => {
         // keeps the Tag from hiding itself in controlled mode
         event?.preventDefault();
         // as with the clear button, a tag going while it has the focus hands the focus to the combobox
@@ -385,7 +383,7 @@
         foundation.removeTag(option as BasicOptionProps);
     };
 
-    const selectedItemProps = (option: OptionData, index: number): SelectSelectedItemSlotProps => ({
+    const selectedItemProps = (option: SelectOptionProps, index: number): SelectSelectedItemSlotProps => ({
         option,
         index,
         disabled: Boolean(option.disabled || looks.disabled),
@@ -398,7 +396,7 @@
     const collapsedTags = () => selectedItems.value.slice(0, tagFold.value.limit);
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
-    const handleOverflow = (items: OptionData[]) => foundation.updateOverflowItemCount(Math.max(items.length - 1, 0));
+    const handleOverflow = (items: SelectOptionProps[]) => foundation.updateOverflowItemCount(Math.max(items.length - 1, 0));
 
     const groupTags = () => selectedItems.value.slice(0, tagFold.value.shownCount);
 
@@ -411,7 +409,7 @@
     });
 
     const triggerSlotProps = (): SelectTriggerSlotProps => ({
-        value: selectedItems.value.map(plain),
+        value: selectedItems.value,
         inputValue: state.value.inputValue,
         placeholder: props.placeholder,
         disabled: looks.disabled,
@@ -470,6 +468,7 @@
         trigger="custom"
         :visible="state.isOpen"
         @afterClose="foundation.handlePopoverClose"
+        @escKeyDown="foundation.handleEscKeyDown"
         @open="foundation.scrollToSelection"
     >
         <div :id="selectId()" ref="trigger" v-bind="rootAttrs()" :class="rootClass(kinds())" :tabindex="looks.disabled || inputIsCombobox() ? -1 : 0" @click="foundation.handleClick" @focusin="foundation.handleFocusIn" @focusout="foundation.handleFocusOut" @keydown="handleKeyDown">
@@ -508,7 +507,7 @@
                                     <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
                                     <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
                                         <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
-                                        <component :is="item._slot" v-else-if="item._slot" />
+                                        <component :is="selectedSlot(item)" v-else-if="selectedSlot(item)" />
                                         <template v-else>{{ item.label }}</template>
                                     </Tag>
                                 </template>
@@ -519,7 +518,7 @@
                                         <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
                                         <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
                                             <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
-                                            <component :is="item._slot" v-else-if="item._slot" />
+                                            <component :is="selectedSlot(item)" v-else-if="selectedSlot(item)" />
                                             <template v-else>{{ item.label }}</template>
                                         </Tag>
                                     </template>
@@ -539,7 +538,7 @@
                                                     }"
                                                     size="small"
                                                 >
-                                                    <component :is="item._slot" v-if="item._slot" />
+                                                    <component :is="selectedSlot(item)" v-if="selectedSlot(item)" />
                                                     <template v-else>{{ item.label }}</template>
                                                 </TypographyText>
                                             </Tag>
@@ -554,7 +553,7 @@
                                                 <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
                                                 <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
                                                     <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
-                                                    <component :is="item._slot" v-else-if="item._slot" />
+                                                    <component :is="selectedSlot(item)" v-else-if="selectedSlot(item)" />
                                                     <template v-else>{{ item.label }}</template>
                                                 </Tag>
                                             </template>
@@ -577,7 +576,7 @@
                                         <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
                                         <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :tabindex="-1" @close="removeTag(item, $event)">
                                             <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
-                                            <component :is="item._slot" v-else-if="item._slot" />
+                                            <component :is="selectedSlot(item)" v-else-if="selectedSlot(item)" />
                                             <template v-else>{{ item.label }}</template>
                                         </Tag>
                                     </template>
@@ -592,7 +591,7 @@
                             <span :id="selectionTextId" :class="singleTextClass(hasSingleContent(option))" x-semi-prop="placeholder">
                                 <template v-if="hasSingleContent(option)">
                                     <slot v-if="$slots.selectedItem" :disabled="looks.disabled" :index="0" name="selectedItem" :onClose="() => foundation.handleClearClick()" :option="option" />
-                                    <component :is="option._slot" v-else-if="option._slot" />
+                                    <component :is="selectedSlot(option)" v-else-if="selectedSlot(option)" />
                                     <template v-else>{{ option.label }}</template>
                                 </template>
                                 <template v-else>{{ props.placeholder }}</template>
@@ -678,7 +677,7 @@
                                         <span :class="`${prefix}-create-tips`">{{ locale.locale.createText }}</span
                                         >{{ option.data.value }}
                                     </template>
-                                    <component :is="option.data._slot" v-else-if="option.data._slot" />
+                                    <component :is="option.slot" v-else-if="option.slot" />
                                     <template v-else>{{ option.data.label }}</template>
                                 </SelectOption>
                             </template>
@@ -686,9 +685,9 @@
                     </VirtualList>
                     <template v-for="run in optionRuns" v-else :key="run.group?.key ?? `.${run.first}`">
                         <component :is="hasTitle(run.group) ? 'div' : SlotFragment" v-bind="groupWrapperAttrs(run.group, run.first)">
-                            <SelectOptGroup v-if="hasTitle(run.group)" v-bind="groupTitleProps(run.group)" :id="groupTitleId(run.group, run.first)">
-                                <template v-if="run.group._labelSlot" #label>
-                                    <component :is="run.group._labelSlot" />
+                            <SelectOptGroup v-if="hasTitle(run.group)" v-bind="run.group.attrs" :id="groupTitleId(run.group, run.first)">
+                                <template v-if="run.group.labelSlot" #label>
+                                    <component :is="run.group.labelSlot" />
                                 </template>
                             </SelectOptGroup>
                             <template v-for="{ option, index } in run.rows" :key="rowKey(option)">
@@ -701,7 +700,7 @@
                                         <span :class="`${prefix}-create-tips`">{{ locale.locale.createText }}</span
                                         >{{ option.data.value }}
                                     </template>
-                                    <component :is="option.data._slot" v-else-if="option.data._slot" />
+                                    <component :is="option.slot" v-else-if="option.slot" />
                                     <template v-else>{{ option.data.label }}</template>
                                 </SelectOption>
                             </template>

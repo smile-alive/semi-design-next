@@ -8,8 +8,8 @@
     import useFoundation from '../../base/use-foundation';
     import { isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
     import Input, { type InputHandle } from '../input';
+    import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';
-    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import type { InputNumberEmits, InputNumberHandle, InputNumberProps, InputNumberSlots, InputNumberState } from './interface';
     import StepButtons from './step-buttons.vue';

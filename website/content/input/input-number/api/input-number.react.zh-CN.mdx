@@ -46,14 +46,12 @@ import ApiType from '#/components/ApiType.astro';
 | onInput | 原生 `input` 的 `input` 事件回调，经透传交给输入框。 | <ApiType detail={"(e: React.InputEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | - |
 | onKeyDown | 按下键盘按键时的回调，事件为输入框上的 `keydown`。 | <ApiType detail={"React.KeyboardEventHandler\u003cHTMLInputElement>"}>Type</ApiType> | - |
 | onKeyUp | 松开键盘按键时的回调，事件为输入框上的 `keyup`。 | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | - |
-| onlyBorder | 内部属性，指定外框的边框宽度（像素），由其他组件设置，使用方一般不需要传入。 | `number` | - |
 | onNumberChange | 数字变化时的回调，第一个参数为数字，第二个参数的含义同 `onChange`。 | <ApiType detail={"(value: number, e: InputNumberChangeEvent) => void"}>Type</ApiType> | - |
 | onUpClick | 点击增大按钮时的回调，参数为步进后的值与 `pointerdown` 事件。长按连续步进时每步都触发，事件为按下时的那一个。 | <ApiType detail={"(value: string, e: React.PointerEvent\u003cHTMLSpanElement>) => void"}>Type</ApiType> | - |
 | parser | 指定从 `formatter` 的展示文本转换回数字串的方式，与 `formatter` 搭配使用。 | <ApiType detail={"(value: string) => string"}>Type</ApiType> | - |
 | placeholder | 占位文本。 | `string \| number` | - |
 | precision | 数值精度，即保留的小数位数。 | `number` | - |
 | prefix | 前缀内容，显示在输入框内部的左侧。 | `React.ReactNode` | - |
-| prefixCls | 组件样式类名的前缀，根元素类名为前缀加 `-number`，默认前缀为 `semi-input`，根元素类名即 `semi-input-number`。 | `string` | `"semi-input"` |
 | pressInterval | 长按步进按钮时，连续触发的间隔，单位毫秒。 | `number` | `250` |
 | pressTimeout | 长按步进按钮时，开始连续触发前的延迟，单位毫秒。 | `number` | `250` |
 | preventScroll | 聚焦时是否阻止浏览器滚动文档以显示输入框，作用于组件内的聚焦，包括句柄 `focus()` 未传 `preventScroll` 时的默认值。 | `boolean` | - |
@@ -62,7 +60,6 @@ import ApiType from '#/components/ApiType.astro';
 | scientificNotation | 启用科学计数法显示：失焦时显示科学计数法，聚焦时显示完整数字。可传入 `{ threshold }` 配置阈值，默认 15 位有效数字。不支持货币模式。 | `boolean \| ScientificNotationConfig` | - |
 | shiftStep | 按住 Shift 时每次改变的步长，可以为小数。 | `number` | `10` |
 | showClear | 是否显示清除按钮。 | `boolean` | - |
-| showClearIgnoreDisabled | 内部属性，由 DatePicker 设置，使用方一般不需要传入。 | `boolean` | - |
 | showCurrencySymbol | 是否显示货币符号、代码或名称，仅货币模式下生效。 | `boolean` | `true` |
 | size | 输入框大小，可选 `default`、`small`、`large`。所在 `InputGroup` 设置了 `size` 时以其为准。 | `'default' \| 'large' \| 'small'` | `"default"` |
 | step | 每次改变的步长，可以为小数。 | `number` | `1` |

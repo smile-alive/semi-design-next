@@ -4,9 +4,9 @@
 | -------------- | --------------------------------------------------------------------------------- | --------- | ----------------------------------------------- |
 | modelValue     | 是否选中，配合 v-model 使用；传入后由该值决定显示，只传不回写时点击仅触发通知。   | `boolean` | `undefined`                                     |
 | defaultChecked | 非受控时的初始选中状态。                                                          | `boolean` | `semiGlobalDefault("Switch", "defaultChecked")` |
-| disabled       | 是否禁用。                                                                        | `boolean` | `semiDefault("Switch", "disabled", false)`      |
-| loading        | 是否处于加载中；加载中 input 仍可聚焦并带 aria-disabled，切换被忽略且不发出事件。 | `boolean` | `semiDefault("Switch", "loading", false)`       |
-| size           | 开关尺寸，可选 large、default 或 small。                                          | `Size`    | `semiDefault("Switch", "size", "default")`      |
+| disabled       | 是否禁用。                                                                        | `boolean` | `false`                                         |
+| loading        | 是否处于加载中；加载中 input 仍可聚焦并带 aria-disabled，切换被忽略且不发出事件。 | `boolean` | `false`                                         |
+| size           | 开关尺寸，可选 large、default 或 small。                                          | `Size`    | `"default"`                                     |
 
 **Events**
 

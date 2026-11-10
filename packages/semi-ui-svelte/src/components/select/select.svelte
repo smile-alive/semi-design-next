@@ -845,6 +845,7 @@
     content={panel}
     disableArrowKeyDown
     {motion}
+    onEscKeyDown={foundation.handleEscKeyDown}
     onOpen={foundation.scrollToSelection}
     position={resolvedPosition}
     role="presentation"

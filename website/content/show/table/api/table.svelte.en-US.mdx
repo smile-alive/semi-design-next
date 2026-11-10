@@ -52,7 +52,6 @@ import ApiType from '#/components/ApiType.astro';
 | onScroll | Called when the vertical offset of a virtualized body changes, with scrollOffset. A horizontal scroll does not call it. | <ApiType detail={"(args: TableVirtualizedScrollArgs) => void"}>Type</ApiType> | - |
 | pagination | The pagination configuration. Pass false to turn pagination off. | `boolean \| TablePaginationProps` | `true` |
 | paginationContent | Replaces the pagination info and the Pagination. The pagination argument can be spread on a Pagination as is. It is named apart from the pagination prop, which shares the namespace. | <ApiType detail={"Snippet\u003c[TablePaginationSnippetProps]>"}>Type</ApiType> | - |
-| prefixCls | The prefix of the class names. | `string` | `"semi-table"` |
 | resizable | Whether columns can be resized; a resizable column needs a width. An object configures onResize, onResizeStart, onResizeStop and handlerClassName. | <ApiType detail={"boolean \u007c ResizableProps\u003cR>"}>Type</ApiType> | `false` |
 | rowExpandable | Tells whether a row can be expanded. A row that returns false has no expand button. | <ApiType detail={"TableRowExpandable\u003cR>"}>Type</ApiType> | - |
 | rowKey | The row key: a record field name, or a function that returns a string or a number. | <ApiType detail={"TableRowKey\u003cR>"}>Type</ApiType> | `"key"` |
@@ -72,6 +71,6 @@ import ApiType from '#/components/ApiType.astro';
 
 | Method             | Description                                                                      | Type                                                                                                                |
 | ------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| getCurrentPageData | Returns a deep copy of the data of the current page, with dataSource and groups. | <ApiType detail={"() => Pick\u003cBasePageData\u003cAnyRecord>, \"dataSource\" \u007c \"groups\">"}>Type</ApiType>  |
+| getCurrentPageData | Returns a deep copy of the data of the current page, with dataSource and groups. | <ApiType detail={"() => ReturnType\u003cTableHandle['getCurrentPageData']>"}>Type</ApiType>                         |
 | scrollTo           | Scrolls a virtualized table to a vertical offset, in pixels.                     | <ApiType detail={"(offset: number) => void"}>Type</ApiType>                                                         |
 | scrollToItem       | Scrolls a virtualized table to a row. The second argument is the alignment.      | <ApiType detail={"(index: number, align?: Parameters\u003cTableHandle['scrollToItem']>[1]) => void"}>Type</ApiType> |

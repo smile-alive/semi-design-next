@@ -763,6 +763,14 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             restTagsPopoverProps={local.restTagsPopoverProps}
             showRestTagsPopover={local.showRestTagsPopover}
             size={local.size}
+            // the trigger draws its own clear button and adornments, and its search text only becomes a search: global
+            // TagInput defaults must not add them, drag handles or add-on-blur tags
+            addOnBlur={false}
+            draggable={false}
+            insetLabel={null}
+            prefix={null}
+            showClear={false}
+            suffix={null}
             renderTagItem={(key, index) => <SelectionTag nodeKey={key} index={index} />}
             onInputChange={(value) => handleInputChange(value)}
             onRemove={foundation.handleTagRemoveByKey}
@@ -929,6 +937,7 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={view.isOpen}
+            onEscKeyDown={foundation.close}
             onOpen={foundation.handlePopoverOpen}
         >
             {(getTriggerProps) => (

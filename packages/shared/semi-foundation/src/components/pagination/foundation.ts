@@ -18,7 +18,7 @@ export interface PageRange {
     count: number;
 }
 
-export interface AdapterPageList {
+export interface PageListView {
     pageList: PageRenderText[];
     restLeftRange: PageRange;
     restRightRange: PageRange;
@@ -50,8 +50,7 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         return Boolean(showSizeChanger && size !== 'small' && hideOnSinglePage);
     }
 
-    // undefined means page 1: an uncontrolled pager restarts when its total or pageSize prop changes
-    #updatePage(targetPageIndex = 1, pageSize?: number) {
+    #updatePage(targetPageIndex: number, pageSize?: number) {
         const { currentPage, pageSize: currentPageSize } = this.getStates();
         const newPageSize = pageSize ?? currentPageSize;
         if (targetPageIndex !== currentPage) {
@@ -125,7 +124,7 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         return { prevDisabled: false, nextDisabled: currentPage === totalPageNum };
     }
 
-    static getPageList(currentPage: number, total: number, pageSize: number): AdapterPageList {
+    static getPageList(currentPage: number, total: number, pageSize: number): PageListView {
         /**
          * Truncation (t total pages, c current page), always 7 slots once t>7:
          * c<4: ellipsis at 4th; c=4: at 6th; 4<c<t-3: at 2nd and 6th; t-3<=c<=t: at 2nd, then the last 5 pages.
@@ -234,13 +233,15 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
     override handlePropsChange(prev: Partial<P>) {
         const { currentPage, total, pageSize } = this.getProps();
         this.#warnSizeChangerConflict(!PaginationFoundation.#hasSizeChangerConflict(prev) && PaginationFoundation.#hasSizeChangerConflict(this.getProps()));
+        // an uncontrolled pager restarts at page 1 when its total or pageSize prop changes
+        const targetPage = currentPage ?? 1;
         if (prev.currentPage !== currentPage || prev.total !== total) {
-            this.#updatePage(currentPage);
+            this.#updatePage(targetPage);
         }
         // only the pageSize prop may overwrite the page size: a total change must not revert the size changer's choice,
         // and a prop echoing that choice must not reset the page
         if (prev.pageSize !== pageSize && pageSize !== this.getState('pageSize')) {
-            this.#updatePage(currentPage, pageSize);
+            this.#updatePage(targetPage, pageSize);
         }
     }
 

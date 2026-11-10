@@ -23,8 +23,17 @@
     const table = getTableContext('Table sorter');
     const locale = useLocale('Table');
 
-    // a title snippet names the button itself; only a plain string title can stand in as its label
-    const buttonLabel = $derived(table.parts.headerCell || typeof column.title !== 'string' ? undefined : column.title);
+    // a title snippet names the button itself; otherwise a plain string title stands in, and the bare icon (a
+    // useFullRender sorter, or an untitled column) takes the next sort action
+    const buttonLabel = $derived.by(() => {
+        if (children && table.parts.headerCell) {
+            return undefined;
+        }
+        if (typeof column.title === 'string' && column.title) {
+            return column.title;
+        }
+        return children ? undefined : locale().locale[getNextSortOrder(sortOrder)];
+    });
 
     const handleClick = () => {
         if (sortsOnClick) {

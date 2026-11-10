@@ -9,8 +9,9 @@ import { useLayoutContext } from './context';
 
 export type { ResponsiveMap };
 
+const prefixCls = cssClasses.PREFIX;
+
 export interface SiderProps extends ElementProps<'aside'> {
-    prefixCls?: string;
     style?: CSSProperties;
     className?: string;
     children?: React.ReactNode;
@@ -22,7 +23,7 @@ export interface SiderProps extends ElementProps<'aside'> {
     ref?: React.Ref<HTMLElement>;
 }
 
-function Sider({ ref, prefixCls = cssClasses.PREFIX, className, children, breakpoint, onBreakpoint, ...rest }: SiderProps) {
+function Sider({ ref, className, children, breakpoint, onBreakpoint, ...rest }: SiderProps) {
     const { siderHook } = useLayoutContext();
 
     const id = useId();

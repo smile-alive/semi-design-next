@@ -9,7 +9,7 @@
     import type { LayoutSlots, ResponsiveMap, SiderEmits, SiderProps } from './interface';
 
     defineOptions({ elementType: 'Layout.Sider' });
-    const props = withDefaults(defineProps<SiderProps & /* @vue-ignore */ ElementProps<'aside', keyof SiderProps | EmitHandlers<SiderEmits>>>(), { prefixCls: cssClasses.PREFIX, breakpoint: undefined });
+    const props = withDefaults(defineProps<SiderProps & /* @vue-ignore */ ElementProps<'aside', keyof SiderProps | EmitHandlers<SiderEmits>>>(), { breakpoint: undefined });
     const emit = defineEmits<SiderEmits>();
     defineSlots<LayoutSlots>();
 
@@ -39,8 +39,8 @@
 </script>
 
 <template>
-    <aside :class="`${props.prefixCls}-sider`">
-        <div :class="`${props.prefixCls}-sider-children`">
+    <aside :class="`${cssClasses.PREFIX}-sider`">
+        <div :class="`${cssClasses.PREFIX}-sider-children`">
             <slot />
         </div>
     </aside>

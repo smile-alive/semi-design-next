@@ -8,16 +8,16 @@ import ApiType from '#/components/ApiType.astro';
 | action | Upload URL. Required. | `string` | - |
 | addOnPasting | Whether files in the clipboard are added to the file list on paste, without extra permission. | `boolean` | - |
 | afterUpload | Hook after an upload completes without error. The returned object updates the file status, validate message, name and preview URL. Async results are not supported. | <ApiType detail={"(object: AfterUploadProps) => AfterUploadResult"}>Type</ApiType> | - |
-| beforeClear | Called before the list is cleared. Returning `false`, or a Promise that resolves to `false` or rejects, blocks the clear. | <ApiType detail={"(fileList: Array\u003cFileItem>) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | <ApiType detail={"() => true"}>Type</ApiType> |
+| beforeClear | Called before the list is cleared. Returning `false`, or a Promise that resolves to `false` or rejects, blocks the clear. | <ApiType detail={"(fileList: Array\u003cFileItem>) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | - |
 | beforeCrop | Called once with the first selected image before the crop modal opens; the result decides cropping for the whole batch. Return `false` to upload without cropping. May return a Promise. | <ApiType detail={"(file: File, fileList: File[]) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | - |
-| beforeRemove | Called before a file is removed. Returning `false`, or a Promise that resolves to `false` or rejects, blocks the removal. | <ApiType detail={"(file: FileItem, fileList: Array\u003cFileItem>) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | <ApiType detail={"() => true"}>Type</ApiType> |
+| beforeRemove | Called before a file is removed. Returning `false`, or a Promise that resolves to `false` or rejects, blocks the removal. | <ApiType detail={"(file: FileItem, fileList: Array\u003cFileItem>) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | - |
 | beforeUpload | Hook before a file is uploaded. The returned object updates the file status and decides whether to upload. A boolean means pass or fail; for a Promise, resolve passes and reject fails. | <ApiType detail={"(object: BeforeUploadProps) => BeforeUploadObjectResult \u007c Promise\u003cBeforeUploadObjectResult> \u007c boolean"}>Type</ApiType> | - |
 | capture | How media is captured: `user` or `environment`. `true` renders the attribute with an empty value, `false` omits it. | `boolean \| 'environment' \| 'user'` | - |
 | children | Trigger content. In draggable mode it replaces the whole default drag area content. | `ReactNode` | - |
 | className | Class name of the root element. | `string` | - |
 | crop | Enables image cropping. `true` uses the defaults, an object configures the cropper. Selecting, dragging, pasting and replacing all crop. | `boolean \| CropProps` | - |
 | cropModalProps | Props of the crop Modal. visible, title, okText, cancelText, onOk and onCancel belong to Upload; width defaults to 600. | `UploadCropModalProps` | - |
-| customRequest | Replaces the built-in XMLHttpRequest. It must call the onProgress, onError and onSuccess it receives to update the state. | <ApiType detail={"(object: customRequestArgs) => void"}>Type</ApiType> | - |
+| customRequest | Replaces the built-in XMLHttpRequest. It must call the onProgress, onError and onSuccess it receives to update the state. | <ApiType detail={"(object: UploadCustomRequestArgs) => void"}>Type</ApiType> | - |
 | data | Extra parameters sent with the upload, or a function that returns them for a file. | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, unknown>)"}>Type</ApiType> | - |
 | defaultFileList | Initial list of uploaded files, uncontrolled. The `uid` of every item is required and must be unique. | <ApiType detail={"Array\u003cFileItem>"}>Type</ApiType> | `[]` |
 | directory | Whether to upload a folder. | `boolean` | - |

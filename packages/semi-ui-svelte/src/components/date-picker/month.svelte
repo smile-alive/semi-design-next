@@ -5,7 +5,7 @@
     import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
     import useFoundation from '../../base/use-foundation.svelte.js';
     import watch from '../../hooks/watch.svelte.js';
-    import useToday from '../calendar/use-today.svelte.js';
+    import useToday from '../calendar/hooks/use-today.svelte.js';
     import { useConfig } from '../config-provider/index.js';
     import type { MonthProps } from './internal.js';
 

@@ -414,7 +414,7 @@ describe(`Tooltip`, () => {
 
     it('弹层内容读到新的弹层层级，触发器仍读到外层层级', async () => {
         const outer = Symbol('outer');
-        const onLayer = vi.fn<(name: string, layer: symbol | undefined) => void>();
+        const onLayer = vi.fn<(name: string, layer?: symbol) => void>();
         function LayerProbe({ name }: { name: string }) {
             const layer = usePopupLayer();
             useEffect(() => onLayer(name, layer), [name, layer]);
@@ -430,7 +430,7 @@ describe(`Tooltip`, () => {
             </PopupLayerContext>
         );
         await screen.findByText('content');
-        const layers = new Map(onLayer.mock.calls);
+        const layers = new Map(onLayer.mock.calls.map(([name, layer]) => [name, layer] as const));
         expect(layers.get('trigger')).toBe(outer);
         expect(typeof layers.get('content')).toBe('symbol');
         expect(layers.get('content')).not.toBe(outer);

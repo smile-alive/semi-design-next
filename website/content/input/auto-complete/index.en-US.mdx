@@ -115,7 +115,7 @@ Monitor user input through `onSearch`, pass input suggestions through `data`, an
 
 <Framework only="react">
 
-When you need to customize the rendering of candidates, data can be passed in an array of objects (each Object must contain two keys, label and value, value is the value selected by the candidate, and label is the content displayed by the candidate) The rendering of candidates can be customized through renderItem
+When you need to customize the rendering of candidates, data can be passed in an array of objects (each Object contains two keys, label and value; value is the value selected by the candidate, and label is the content displayed by the candidate, which falls back to value when missing) The rendering of candidates can be customized through renderItem
 
 </Framework>
 
@@ -128,7 +128,7 @@ The content of a candidate can be customized through the `#item="{ item, index }
 
 <Framework only="solid">
 
-When you need to customize the rendering of candidates, data can be passed in an array of objects (each Object must contain `label` and `value` keys; value is the value picked by the candidate, and label is the text the candidate displays). Render each candidate through `renderItem`, which returns JSX.
+When you need to customize the rendering of candidates, data can be passed in an array of objects (each Object contains `label` and `value` keys; value is the value picked by the candidate, and label is the text the candidate displays, which falls back to value when missing). Render each candidate through `renderItem`, which returns JSX.
 
 </Framework>
 
@@ -225,11 +225,7 @@ Object items of `data`:
 
 Other fields are kept as they are and show up in `item` of the `#item` slot and in the payload of `@select` (when `selectWithObject` is set). Fields starting with `data-` land on the candidate row. A string or number item reaches `renderSelectedItem` as `{ value, label }`.
 
-AutoComplete exposes the following members through a template ref, typed as `AutoCompleteHandle`:
-
-| Member        | Description                                                                             | Type                     |
-| ------------- | --------------------------------------------------------------------------------------- | ------------------------ |
-| nativeElement | Read-only. The root div that wraps the input or the custom trigger, `null` before mount | `HTMLDivElement \| null` |
+The template ref of AutoComplete is typed as `AutoCompleteHandle`; see the Exposes table above for its members.
 
 </Framework>
 
@@ -241,13 +237,13 @@ AutoComplete exposes the following members through a template ref, typed as `Aut
 
 Object items of `data`:
 
-| Field    | Description                                                      | Type                          |
-| -------- | ---------------------------------------------------------------- | ----------------------------- |
-| value    | The value after picking                                          | `string \| number`            |
-| label    | The row text; must be provided, markup goes through `renderItem` | `string \| number`            |
-| disabled | Whether the candidate is disabled                                | `boolean`                     |
-| class    | Class of the candidate row                                       | `string`                      |
-| style    | Style of the candidate row                                       | `JSX.CSSProperties \| string` |
+| Field    | Description                                                           | Type                          |
+| -------- | --------------------------------------------------------------------- | ----------------------------- |
+| value    | The value after picking                                               | `string \| number`            |
+| label    | The row text, falling back to value; markup goes through `renderItem` | `string \| number`            |
+| disabled | Whether the candidate is disabled                                     | `boolean`                     |
+| class    | Class of the candidate row                                            | `string`                      |
+| style    | Style of the candidate row                                            | `JSX.CSSProperties \| string` |
 
 Other fields are kept as they are and show up in the `renderItem` argument; with `onSelectWithObject` set, the object that `onSelect` receives keeps them too. Fields starting with `data-` land on the candidate row. A string or number item reaches `renderSelectedItem` as `{ value, label }`.
 

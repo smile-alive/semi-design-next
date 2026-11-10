@@ -22,7 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | - |
 | guardFocus | Whether Tab cycles inside the popup while focus is in it. | `boolean` | - |
 | keepDOM | Whether the popup content stays mounted while closed. | `boolean` | - |
-| menu | Configures the menu from data, see DropdownMenuItem below. content wins when it is provided. | `DropDownMenuItem[]` | - |
+| menu | Configures the menu from data, see DropdownMenuItem below. content wins when it is provided. | `DropdownMenuItem[]` | - |
 | menuIcon | Icon of each item entry of menu, with `{ item, index }` as its argument. The icon container is always rendered and is empty when the snippet outputs nothing. | <ApiType detail={"Snippet\u003c[DropdownMenuIconArgs]>"}>Type</ApiType> | - |
 | motion | Whether the popup is animated. | `boolean` | `true` |
 | mouseEnterDelay | Milliseconds before the menu shows after the pointer enters the trigger. Applies to the hover and focus triggers. | `number` | - |
@@ -32,7 +32,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | Called once per opening when the menu is shown, as its enter animation starts, before afterOpen, controlled or not; not called for a hover open withdrawn because the pointer already left. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onVisibleChange | Called when the visibility of the menu changes; with a controlled visible it reports only requests from user interaction, not changes the parent makes to visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; see the Tooltip positions for more. | `Position` | `"bottom"` |
-| prefixCls | Class prefix of the popup. A custom value drops the Dropdown styles. | `string` | `"semi-dropdown"` |
 | preventScroll | Whether focusing an element avoids scrolling it into view. | `boolean` | - |
 | returnFocusOnClose | Whether focus returns to the trigger after the menu closes. | `boolean` | `true` |
 | role | ARIA role of the popup container around the menu. The menu itself has role menu. | `string` | `"presentation"` |

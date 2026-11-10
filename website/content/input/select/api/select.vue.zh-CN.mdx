@@ -9,41 +9,41 @@ import ApiType from '#/components/ApiType.astro';
 | multiple | 是否多选。它决定 change 与 update:modelValue 的载荷类型：多选为数组，单选为单个值或 undefined。全局默认值不能设置它。 | `Multiple` | `undefined` |
 | optionList | 以数组形式传入选项，每项须带 value 与 label（label 为字符串或数字），其余字段随选项记录一起回传。数组非空时优先于默认插槽；不支持分组。 | `SelectOptionProps[]` | `semiGlobalDefault("Select", "optionList")` |
 | filter | 是否可搜索。传入 true 时开启搜索，默认策略为选项 label（含所在分组的标题）包含输入值；传入函数时接收输入值与选项，返回 true 表示命中。 | <ApiType detail={"boolean \u007c ((inputValue: string, option: SelectOptionProps) => boolean)"}>Type</ApiType> | `undefined` |
-| remote | 是否开启远程搜索。开启后输入内容变化时不再在本地筛选，由使用方根据 search 事件更新 optionList。 | `boolean` | `semiDefault("Select", "remote", false)` |
-| allowCreate | 是否允许创建下拉列表中不存在的条目，需配合 filter 使用。创建时触发 create 事件，条目的渲染可用 createItem 插槽定制。 | `boolean` | `semiDefault("Select", "allowCreate", false)` |
-| autoClearSearchValue | 多选并开启搜索时，选中选项后是否自动清空搜索关键字。 | `boolean` | `semiDefault("Select", "autoClearSearchValue", true)` |
-| autofocus | 挂载后是否自动聚焦。 | `boolean` | `semiDefault("Select", "autofocus", false)` |
-| defaultOpen | 是否默认展开下拉列表。 | `boolean` | `semiDefault("Select", "defaultOpen", false)` |
-| clickToHide | 下拉列表已展开时，点击选择框是否收起它。 | `boolean` | `semiDefault("Select", "clickToHide", false)` |
-| defaultActiveFirstOption | 没有选中值时，打开下拉列表是否默认高亮第一个未禁用的选项（按 Enter 可直接选中）。已有选中值时总是高亮第一个已选的选项。 | `boolean` | `semiDefault("Select", "defaultActiveFirstOption", true)` |
-| changeWithObject | 布尔属性而不是事件：设为 true 时，change、update:modelValue 与 modelValue、defaultValue 使用选项对象，对象须含 value 与 label。 | `boolean` | `semiDefault("Select", "changeWithObject", false)` |
+| remote | 是否开启远程搜索。开启后输入内容变化时不再在本地筛选，由使用方根据 search 事件更新 optionList。 | `boolean` | `false` |
+| allowCreate | 是否允许创建下拉列表中不存在的条目，需配合 filter 使用。创建时触发 create 事件，条目的渲染可用 createItem 插槽定制。 | `boolean` | `false` |
+| autoClearSearchValue | 多选并开启搜索时，选中选项后是否自动清空搜索关键字。 | `boolean` | `true` |
+| autofocus | 挂载后是否自动聚焦。 | `boolean` | `false` |
+| defaultOpen | 是否默认展开下拉列表。 | `boolean` | `false` |
+| clickToHide | 下拉列表已展开时，点击选择框是否收起它。 | `boolean` | `false` |
+| defaultActiveFirstOption | 没有选中值时，打开下拉列表是否默认高亮第一个未禁用的选项（按 Enter 可直接选中）。已有选中值时总是高亮第一个已选的选项。 | `boolean` | `true` |
+| changeWithObject | 布尔属性而不是事件：设为 true 时，change、update:modelValue 与 modelValue、defaultValue 使用选项对象，对象须含 value 与 label。 | `boolean` | `false` |
 | max | 最多可选几项，仅多选时生效；超出后无法继续选中并触发 exceed 事件。 | `number` | `semiGlobalDefault("Select", "max")` |
 | maxTagCount | 多选时最多显示的标签数，超出的部分以 +N 显示。 | `number` | `semiGlobalDefault("Select", "maxTagCount")` |
-| maxHeight | 下拉列表的最大高度，数字按像素处理，字符串原样使用。虚拟列表的 height 大于默认值时，需同时设置为相同的值，避免出现双滚动条。 | `string \| number` | `semiDefault("Select", "maxHeight", numbers.LIST_HEIGHT)` |
-| showRestTagsPopover | 超出 maxTagCount 后，hover 到 +N 时是否用 Popover 显示剩余的标签。 | `boolean` | `semiDefault("Select", "showRestTagsPopover", false)` |
+| maxHeight | 下拉列表的最大高度，数字按像素处理，字符串原样使用。虚拟列表的 height 大于默认值时，需同时设置为相同的值，避免出现双滚动条。 | `string \| number` | `numbers.LIST_HEIGHT` |
+| showRestTagsPopover | 超出 maxTagCount 后，hover 到 +N 时是否用 Popover 显示剩余的标签。 | `boolean` | `false` |
 | restTagsPopoverProps | 显示剩余标签的 Popover 的配置，可设置 position、trigger 等。 | `PopoverProps` | `semiGlobalDefault("Select", "restTagsPopoverProps")` |
-| expandRestTagsOnClick | 多选并设置 maxTagCount 时，下拉列表展开期间是否显示全部标签。 | `boolean` | `semiDefault("Select", "expandRestTagsOnClick", false)` |
-| ellipsisTrigger | 多选并设置 maxTagCount 时，宽度不足是否截断最后一个标签的内容。开启后有一定性能损耗，不建议在大表单中使用。 | `boolean` | `semiDefault("Select", "ellipsisTrigger", false)` |
+| expandRestTagsOnClick | 多选并设置 maxTagCount 时，下拉列表展开期间是否显示全部标签。 | `boolean` | `false` |
+| ellipsisTrigger | 多选并设置 maxTagCount 时，宽度不足是否截断最后一个标签的内容。开启后有一定性能损耗，不建议在大表单中使用。 | `boolean` | `false` |
 | size | 大小，可选 small、default、large。 | `Size` | `undefined` |
 | disabled | 是否禁用。 | `boolean` | `undefined` |
-| borderless | 是否使用无边框样式。 | `boolean` | `semiDefault("Select", "borderless", false)` |
+| borderless | 是否使用无边框样式。 | `boolean` | `false` |
 | validateStatus | 校验状态，可选 default、warning、error，只影响背景色等样式。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Select", "validateStatus")` |
 | placeholder | 选择框中没有选中值时显示的占位文字。 | `string` | `semiGlobalDefault("Select", "placeholder")` |
 | searchPlaceholder | 搜索框在下拉列表中（searchPosition 为 dropdown）时，搜索框的占位文字。 | `string` | `semiGlobalDefault("Select", "searchPlaceholder")` |
-| searchPosition | 开启搜索时搜索框的位置：trigger 在选择框内，dropdown 在下拉列表顶部。trigger 时点击选择框的清除按钮同时清空搜索文本，dropdown 时只清空已选项。 | `"dropdown" \| "trigger"` | `semiDefault("Select", "searchPosition", "trigger")` |
-| loading | 下拉列表是否显示加载动画。 | `boolean` | `semiDefault("Select", "loading", false)` |
-| showArrow | 是否显示右侧下拉箭头。 | `boolean` | `semiDefault("Select", "showArrow", true)` |
-| showClear | 是否显示清除按钮。有已选值或搜索文本且未禁用时，清除按钮出现在选择框内。 | `boolean` | `semiDefault("Select", "showClear", false)` |
+| searchPosition | 开启搜索时搜索框的位置：trigger 在选择框内，dropdown 在下拉列表顶部。trigger 时点击选择框的清除按钮同时清空搜索文本，dropdown 时只清空已选项。 | `"dropdown" \| "trigger"` | `"trigger"` |
+| loading | 下拉列表是否显示加载动画。 | `boolean` | `false` |
+| showArrow | 是否显示右侧下拉箭头。 | `boolean` | `true` |
+| showClear | 是否显示清除按钮。有已选值或搜索文本且未禁用时，清除按钮出现在选择框内。 | `boolean` | `false` |
 | insetLabelId | insetLabel 元素的 id，combobox 的 aria-labelledby 指向它。未传时由组件生成。 | `string` | `undefined` |
 | inputProps | 开启搜索时，搜索框 Input 的额外属性，监听器用 Vue 的写法如 onFocus。不要传 modelValue、defaultValue 与 onChange，否则会覆盖 Select 自身的状态与搜索处理。 | `SelectInputProps` | `semiGlobalDefault("Select", "inputProps")` |
 | dropdownClassName | 下拉弹出层的 class。 | `string` | `semiGlobalDefault("Select", "dropdownClassName")` |
 | dropdownStyle | 下拉弹出层的样式，例如设置 width。根元素上的 style 不会传给弹出层。 | `StyleValue` | `semiGlobalDefault("Select", "dropdownStyle")` |
-| dropdownMatchSelectWidth | 下拉弹出层的最小宽度是否等于选择框。 | `boolean` | `semiDefault("Select", "dropdownMatchSelectWidth", true)` |
+| dropdownMatchSelectWidth | 下拉弹出层的最小宽度是否等于选择框。 | `boolean` | `true` |
 | position | 弹出层展开的位置，可选值同 Tooltip 的 position。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Select", "position")` |
 | spacing | 弹出层与选择框的距离，单位为像素。 | `number \| { x: number; y: number; }` | `semiGlobalDefault("Select", "spacing")` |
-| motion | 弹出层是否使用动画。 | `boolean` | `semiDefault("Select", "motion", true)` |
-| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("Select", "autoAdjustOverflow", true)` |
-| stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `semiDefault("Select", "stopPropagation", true)` |
+| motion | 弹出层是否使用动画。 | `boolean` | `true` |
+| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
 | virtualize | 开启列表虚拟化，用于选项很多时优化性能。itemSize 为每行高度，必传；height 默认 270，width 默认 100%。 | `SelectVirtualize` | `semiGlobalDefault("Select", "virtualize")` |
 | preventScroll | 聚焦时是否阻止浏览器滚动到该元素，作用于组件内部的 focus 调用。 | `boolean` | `semiGlobalDefault("Select", "preventScroll")` |
 | id | 触发器的 id，选项的 id 由它派生。未传时由组件生成，不读取全局默认值。 | `string` | `undefined` |
@@ -89,6 +89,13 @@ import ApiType from '#/components/ApiType.astro';
 
 **Exposes**
 
-| 名称 | 说明 | 类型 |
-| ---- | ---- | ---- |
-| 无   |      |      |
+| 名称        | 说明                                                                                                                                                                                   | 类型                                                                                       |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| close       | 关闭下拉列表。                                                                                                                                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                              |
+| open        | 展开下拉列表。                                                                                                                                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                              |
+| focus       | 聚焦选择框。可搜索时聚焦搜索框并展开下拉列表；不可搜索时只聚焦触发器，不展开下拉列表。                                                                                                 | <ApiType detail={"() => void"}>Type</ApiType>                                              |
+| clearInput  | 清空搜索框的值。                                                                                                                                                                       | <ApiType detail={"() => void"}>Type</ApiType>                                              |
+| selectAll   | 选中所有可见且未禁用的选项，仅多选时有效。                                                                                                                                             | <ApiType detail={"() => void"}>Type</ApiType>                                              |
+| deselectAll | 清空所有已选项。                                                                                                                                                                       | <ApiType detail={"() => void"}>Type</ApiType>                                              |
+| search      | 按输入了该值来搜索，该值会被置给搜索框。不传事件时，`search` 事件的第二个参数为 `undefined`。                                                                                          | <ApiType detail={"(value: string, event?: Event \u007c undefined) => void"}>Type</ApiType> |
+| rePosition  | 按触发器当前位置立即重新计算下拉层位置。下拉层已随滚动、窗口尺寸变化、触发器移动以及触发器或列表的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。 | <ApiType detail={"() => void"}>Type</ApiType>                                              |

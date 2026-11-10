@@ -19,7 +19,7 @@ type Adapter = ToastAdapter<ToastInstance>;
 
 const prefixCls = cssClasses.PREFIX;
 
-export interface ToastReactProps extends ToastInstance, ElementProps<'div', 'content' | 'style' | 'className' | 'id' | 'onAnimationEnd' | 'onAnimationStart' | 'children' | 'dangerouslySetInnerHTML'> {
+export interface ToastItemProps extends ToastInstance, ElementProps<'div', 'content' | 'style' | 'className' | 'id' | 'onAnimationEnd' | 'onAnimationStart' | 'children' | 'dangerouslySetInnerHTML'> {
     style?: CSSProperties;
     icon?: React.ReactNode;
     content: React.ReactNode;
@@ -46,7 +46,7 @@ const defaultProps = {
     stack: false,
     stackExpanded: false,
     theme: 'normal',
-} satisfies Partial<ToastReactProps>;
+} satisfies Partial<ToastItemProps>;
 
 const typeIcons: Record<string, React.ReactElement<any>> = {
     warning: <IconAlertTriangle />,
@@ -55,7 +55,7 @@ const typeIcons: Record<string, React.ReactElement<any>> = {
     error: <IconAlertCircle />,
 };
 
-export default function Toast(rawProps: ToastReactProps) {
+export default function Toast(rawProps: ToastItemProps) {
     const props = useDefaultProps('Toast', rawProps, defaultProps);
     const { ref, id, motion, top, bottom, left, right, zIndex, getPopupContainer, duration, onClose, close, content, type, theme, textMaxWidth, showClose, icon, direction: propDirection, stack, stackExpanded, positionInList, listState, className, style, onAnimationStart, onAnimationEnd, ...rest } = props;
 

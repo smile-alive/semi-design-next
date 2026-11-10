@@ -7,14 +7,18 @@ const separator = '-';
 export default function BreadcrumbDemo() {
     const renderMore = (restItems: ReactNode[]) => {
         const content = (
-            <>
+            <ol style={{ display: 'flex', flexWrap: 'wrap', padding: 0, margin: 0, listStyle: 'none' }}>
                 {restItems.map((item: ReactNode, idx: number) => (
                     <React.Fragment key={`restItem-${idx}`}>
                         {item}
-                        {idx !== restItems.length - 1 && <span style={{ color: 'var(--semi-color-text-2)', marginInlineEnd: '6px' }}>{separator}</span>}
+                        {idx !== restItems.length - 1 && (
+                            <li aria-hidden="true" style={{ color: 'var(--semi-color-text-2)', marginInlineEnd: '6px' }}>
+                                {separator}
+                            </li>
+                        )}
                     </React.Fragment>
                 ))}
-            </>
+            </ol>
         );
         return (
             <Popover content={content} style={{ padding: 12 }} showArrow>

@@ -39,10 +39,11 @@ describe('Form-errorMessage', () => {
     });
 
     it('showValidateIcon 显示 validateStatus 对应的图标，helpText 使用帮助 id', () => {
-        const { container, rerender } = render(<ErrorMessage error={['bad']} errorMessageId="em" helpTextId="ht" showValidateIcon validateStatus="warning" />);
+        const internal = { errorMessageId: 'em', helpTextId: 'ht' };
+        const { container, rerender } = render(<ErrorMessage {...internal} error={['bad']} showValidateIcon validateStatus="warning" />);
         expect(container.querySelector('.semi-icon-alert_triangle')).not.toBeNull();
         expect(container.querySelector('#em')).toHaveTextContent('bad');
-        rerender(<ErrorMessage errorMessageId="em" helpText="help" helpTextId="ht" showValidateIcon />);
+        rerender(<ErrorMessage {...internal} helpText="help" showValidateIcon />);
         expect(container.querySelector('#ht')).toHaveTextContent('help');
         expect(container.querySelector('.semi-form-field-validate-status-icon')).toBeNull();
     });

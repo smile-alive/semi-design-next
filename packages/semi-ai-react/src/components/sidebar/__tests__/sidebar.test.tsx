@@ -7,8 +7,8 @@ import { Annotation, MCPConfigure, Sidebar } from '@fibrae/semi-ai-react';
 import { IconCode, IconFile } from '@fibrae/semi-icons-react';
 import { JsonViewer } from '@fibrae/semi-json-viewer-core';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import type { CodeItemProps } from '../code';
 import type { Option, SideBarProps } from '../interface';
-import type { CodeItemProps } from '../widgets/code';
 
 const { Container, CodeContent, CodeItem } = Sidebar;
 

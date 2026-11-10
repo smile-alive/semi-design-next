@@ -274,14 +274,10 @@
                     const currentIndices = FIXED_SHUFFLED_INDICES.slice(0, currentLength);
                     const currentChunks = currentIndices.map((index) => REASONING_CHUNKS[index]);
 
-                    const result = streamingResponseToMessage(currentChunks, currentState);
-
-                    if (result) {
-                        const { message: responseMessage, nextState } = result;
-                        if (responseMessage) {
-                            messages.value = [responseMessage];
-                            currentState = nextState;
-                        }
+                    const { messages: responseMessages, state: nextState } = streamingResponseToMessage(currentChunks, currentState);
+                    if (responseMessages.length) {
+                        messages.value = responseMessages;
+                        currentState = nextState ?? undefined;
                     }
                 }
                 currentLength += 1;

@@ -7,43 +7,43 @@ import ApiType from '#/components/ApiType.astro';
 | modelValue | 当前选中的条目，用 v-model 绑定。传入后即为受控组件，传入 undefined 回到非受控并清空选中项；只在整体替换时识别变化，就地修改受控数组不会生效。单选时是节点或节点路径，多选时可以是路径数组。 | <ApiType detail={"ByMultiple\u003cMultiple, CascaderSimpleValue \u007c CascaderSimpleValue[], CascaderValue>"}>Type</ApiType> | `undefined` |
 | defaultValue | 指定默认选中的条目，只在挂载时读取。 | <ApiType detail={"ByMultiple\u003cMultiple, CascaderSimpleValue \u007c CascaderSimpleValue[], CascaderValue>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "defaultValue")` |
 | multiple | 是否多选。modelValue、defaultValue、change 与 select 的类型随它变化；它没有全局默认值。 | `Multiple` | `undefined` |
-| treeData | 节点数据，label 只接受文本，节点内容用 label 插槽。原地修改响应式数据也会被识别，内容相同的新数组不会重置展开和选中状态。 | `CascaderData[]` | `semiDefault("Cascader", "treeData", [])` |
+| treeData | 节点数据，label 只接受文本，节点内容用 label 插槽。原地修改响应式数据也会被识别，内容相同的新数组不会重置展开和选中状态。 | `CascaderData[]` | `[]` |
 | keyMaps | 自定义节点中 value、label、children、disabled、isLeaf 的字段名。 | `KeyMapProps` | `semiGlobalDefault("Cascader", "keyMaps")` |
-| changeOnSelect | 单选时是否允许选择非叶子节点。 | `boolean` | `semiDefault("Cascader", "changeOnSelect", false)` |
-| autoMergeValue | 多选时，某个父节点被选中后，值不再包含它的子孙节点。挂载后修改不会生效；与 leafOnly 同时开启时，后者优先。 | `boolean` | `semiDefault("Cascader", "autoMergeValue", true)` |
-| leafOnly | 多选时，值与展示的标签只包含叶子节点。挂载后修改不会生效。 | `boolean` | `semiDefault("Cascader", "leafOnly", false)` |
-| checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `"related" \| "unRelated"` | `semiDefault("Cascader", "checkRelation", strings.RELATED)` |
-| disableStrictly | 是否严格禁用。开启后，禁用的节点不会因父级或子级的选中状态变化而改变。 | `boolean` | `semiDefault("Cascader", "disableStrictly", false)` |
+| changeOnSelect | 单选时是否允许选择非叶子节点。 | `boolean` | `false` |
+| autoMergeValue | 多选时，某个父节点被选中后，值不再包含它的子孙节点。挂载后修改不会生效；与 leafOnly 同时开启时，后者优先。 | `boolean` | `true` |
+| leafOnly | 多选时，值与展示的标签只包含叶子节点。挂载后修改不会生效。 | `boolean` | `false` |
+| checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `"related" \| "unRelated"` | `strings.RELATED` |
+| disableStrictly | 是否严格禁用。开启后，禁用的节点不会因父级或子级的选中状态变化而改变。 | `boolean` | `false` |
 | max | 多选时选中数量的上限，超出时触发 exceed 事件。 | `number` | `semiGlobalDefault("Cascader", "max")` |
 | maxTagCount | 多选时标签的最大展示数量，超出的部分以 +N 展示。 | `number` | `semiGlobalDefault("Cascader", "maxTagCount")` |
-| showRestTagsPopover | 超出 maxTagCount 后，悬停 +N 时是否用 Popover 展示剩余标签。 | `boolean` | `semiDefault("Cascader", "showRestTagsPopover", false)` |
+| showRestTagsPopover | 超出 maxTagCount 后，悬停 +N 时是否用 Popover 展示剩余标签。 | `boolean` | `false` |
 | restTagsPopoverProps | 剩余标签 Popover 的配置，可设置 position、trigger 等，参见 Popover。 | `PopoverProps` | `semiGlobalDefault("Cascader", "restTagsPopoverProps")` |
-| enableLeafClick | 多选时，点击叶子节点所在的选项是否触发勾选。 | `boolean` | `semiDefault("Cascader", "enableLeafClick", false)` |
-| clickToSelect | 多选时，点击任意节点即触发选中，常与 showNext 为 hover 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `semiDefault("Cascader", "clickToSelect", false)` |
-| showNext | 展开子菜单的时机：click 为点击，hover 为悬停。 | `"click" \| "hover"` | `semiDefault("Cascader", "showNext", strings.SHOW_NEXT_BY_CLICK)` |
+| enableLeafClick | 多选时，点击叶子节点所在的选项是否触发勾选。 | `boolean` | `false` |
+| clickToSelect | 多选时，点击任意节点即触发选中，常与 showNext 为 hover 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `false` |
+| showNext | 展开子菜单的时机：click 为点击，hover 为悬停。 | `"click" \| "hover"` | `strings.SHOW_NEXT_BY_CLICK` |
 | loadData | 异步加载数据，参数为从根到当前节点的路径，需要返回 Promise；reject 后节点不再显示加载态，可以再次展开重试。不能与搜索同时使用。保留为函数 prop，因为需要读取返回的 Promise。 | <ApiType detail={"((selectOptions: CascaderData[]) => Promise\u003cvoid>)"}>Type</ApiType> | `undefined` |
 | filterTreeNode | 是否开启搜索：true 时按 treeNodeFilterProp 对应的属性值匹配输入，不区分大小写；也可以传入自定义的匹配函数。保留为函数 prop，因为需要读取返回值。 | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: CascaderData \u007c undefined) => boolean)"}>Type</ApiType> | `undefined` |
 | filterSorter | 对筛选后的结果排序，参数为两条结果路径（从根节点到匹配节点的节点数组）与输入内容。保留为函数 prop，因为需要读取返回值。 | <ApiType detail={"((first: CascaderData[], second: CascaderData[], inputValue: string) => number)"}>Type</ApiType> | `undefined` |
-| filterLeafOnly | 搜索结果是否只展示叶子节点的路径。 | `boolean` | `semiDefault("Cascader", "filterLeafOnly", true)` |
-| treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `semiDefault("Cascader", "treeNodeFilterProp", "label")` |
-| remote | 是否开启远程搜索。开启后输入不再做本地过滤，只触发 search 事件，由使用方异步更新 treeData。 | `boolean` | `semiDefault("Cascader", "remote", false)` |
-| displayProp | 回填选项和标签显示的节点属性，默认 label。 | `string` | `semiDefault("Cascader", "displayProp", "label")` |
-| separator | 分隔符，用于搜索结果和单选回填到触发器的路径。 | `string` | `semiDefault("Cascader", "separator", " / ")` |
-| changeWithObject | 是否让 change 事件携带每个节点的数据而不是它的 value。开启后受控的 modelValue 与 defaultValue 也要传节点数据，并含有 value。这是布尔属性，不是事件，不要写成 @changeWithObject。 | `boolean` | `semiDefault("Cascader", "changeWithObject", false)` |
+| filterLeafOnly | 搜索结果是否只展示叶子节点的路径。 | `boolean` | `true` |
+| treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `"label"` |
+| remote | 是否开启远程搜索。开启后输入不再做本地过滤，只触发 search 事件，由使用方异步更新 treeData。 | `boolean` | `false` |
+| displayProp | 回填选项和标签显示的节点属性，默认 label。 | `string` | `"label"` |
+| separator | 分隔符，用于搜索结果和单选回填到触发器的路径。 | `string` | `" / "` |
+| changeWithObject | 是否让 change 事件携带每个节点的数据而不是它的 value。开启后受控的 modelValue 与 defaultValue 也要传节点数据，并含有 value。这是布尔属性，不是事件，不要写成 @changeWithObject。 | `boolean` | `false` |
 | placeholder | 选择框的占位文字。 | `string` | `semiGlobalDefault("Cascader", "placeholder")` |
 | searchPlaceholder | 搜索框的占位文字，不传时使用 placeholder。 | `string` | `semiGlobalDefault("Cascader", "searchPlaceholder")` |
-| searchPosition | 搜索框的位置：trigger 在触发器内，custom 由使用方自定义，此时用 search 方法传入搜索词。 | `"custom" \| "trigger"` | <ApiType detail={"semiDefault(\"Cascader\", \"searchPosition\", strings.SEARCH_POSITION_TRIGGER)"}>Type</ApiType> |
+| searchPosition | 搜索框的位置：trigger 在触发器内，custom 由使用方自定义，此时用 search 方法传入搜索词。 | `"custom" \| "trigger"` | `strings.SEARCH_POSITION_TRIGGER` |
 | disabled | 是否禁用。禁用后不可 Tab 到达。 | `boolean` | `undefined` |
 | size | 选择框的尺寸。 | `Size` | `undefined` |
-| borderless | 是否使用无边框模式。 | `boolean` | `semiDefault("Cascader", "borderless", false)` |
+| borderless | 是否使用无边框模式。 | `boolean` | `false` |
 | validateStatus | 触发器的校验状态，只影响样式。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Cascader", "validateStatus")` |
 | insetLabelId | insetLabel 内容的 id，用于关联 combobox 的名称；不传时在使用 insetLabel 插槽时由组件生成。 | `string` | `undefined` |
-| showClear | 是否展示清除按钮。 | `boolean` | `semiDefault("Cascader", "showClear", false)` |
-| defaultOpen | 是否在挂载时展开下拉。 | `boolean` | `semiDefault("Cascader", "defaultOpen", false)` |
-| motion | 是否开启下拉的弹出动画。 | `boolean` | `semiDefault("Cascader", "motion", true)` |
+| showClear | 是否展示清除按钮。 | `boolean` | `false` |
+| defaultOpen | 是否在挂载时展开下拉。 | `boolean` | `false` |
+| motion | 是否开启下拉的弹出动画。 | `boolean` | `true` |
 | autoAdjustOverflow | 下拉被边缘遮挡时是否自动调整展开方向。 | `boolean` | `semiGlobalDefault("Cascader", "autoAdjustOverflow")` |
 | position | 下拉的展开方向，默认 bottomLeft，RTL 下为 bottomRight。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Cascader", "position")` |
-| stopPropagation | 是否阻止下拉上的点击事件冒泡。 | `string \| boolean` | `semiDefault("Cascader", "stopPropagation", true)` |
+| stopPropagation | 是否阻止下拉上的点击事件冒泡。 | `string \| boolean` | `true` |
 | dropdownClassName | 下拉的 class。 | `string` | `semiGlobalDefault("Cascader", "dropdownClassName")` |
 | dropdownStyle | 下拉的样式。 | `StyleValue` | `semiGlobalDefault("Cascader", "dropdownStyle")` |
 | preventScroll | 组件内的 focus 是否阻止浏览器滚动文档以显示获得焦点的元素。 | `boolean` | `semiGlobalDefault("Cascader", "preventScroll")` |
@@ -87,6 +87,10 @@ import ApiType from '#/components/ApiType.astro';
 
 **Exposes**
 
-| 名称 | 说明 | 类型 |
-| ---- | ---- | ---- |
-| 无   |      |      |
+| 名称   | 说明                                                                                                     | 类型                                                       |
+| ------ | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| open   | 展开下拉列表。                                                                                           | <ApiType detail={"() => void"}>Type</ApiType>              |
+| close  | 关闭下拉列表。                                                                                           | <ApiType detail={"() => void"}>Type</ApiType>              |
+| focus  | 聚焦组合框（搜索框或触发器），不展开下拉。                                                               | <ApiType detail={"() => void"}>Type</ApiType>              |
+| blur   | 使组合框失焦。                                                                                           | <ApiType detail={"() => void"}>Type</ApiType>              |
+| search | 按传入的文本搜索，需同时设置 `filterTreeNode`；`searchPosition` 为 `custom` 时由使用方自定义展示搜索框。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

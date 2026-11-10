@@ -1,10 +1,13 @@
 <script setup lang="ts">
-    import { computed } from 'vue';
+    import { computed, useAttrs } from 'vue';
     import FormatNumeral from '@fibrae/semi-foundation/components/typography/format-numeral';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import slotNodes from '../../utils/slot-nodes';
     import TypographyBase from './base.vue';
     import type { TypographyNumeralEmits, TypographyNumeralProps, TypographyNumeralSlots } from './interface';
+
+    // Fallthrough attrs would override a prop set in the template, so they are forwarded by hand (see binding).
+    defineOptions({ inheritAttrs: false });
 
     // A static subcomponent: it reads no global defaults, as in React.
     const props = withDefaults(defineProps<TypographyNumeralProps & /* @vue-ignore */ ElementProps<'span', keyof TypographyNumeralProps | EmitHandlers<TypographyNumeralEmits>>>(), {
@@ -27,6 +30,7 @@
 
     const emit = defineEmits<TypographyNumeralEmits>();
     const slots = defineSlots<TypographyNumeralSlots>();
+    const attrs = useAttrs();
 
     const baseProps = computed(() => {
         const { parser, precision, rule, truncate, ...rest } = props;
@@ -37,13 +41,15 @@
         };
     });
 
-    // default becomes the nodes prop; an `ellipsis` attr falls through to TypographyBase, which would then render the
-    // ellipsis slots Numeral does not declare
-    const passedSlots = () => Object.keys(slots).filter((name) => name !== 'default' && name !== 'ellipsisContent' && name !== 'ellipsisTooltip');
+    // Numeral declares no ellipsis: one passed as an attr must not truncate a formatted number
+    const binding = () => ({ ...attrs, ...baseProps.value, ellipsis: false });
+
+    // default becomes the nodes prop
+    const passedSlots = () => Object.keys(slots).filter((name) => name !== 'default');
 </script>
 
 <template>
-    <TypographyBase v-bind="baseProps" :nodes="slotNodes($slots.default?.() ?? [])" @copy="(...args) => emit('copy', ...args)">
+    <TypographyBase v-bind="binding()" :nodes="slotNodes($slots.default?.() ?? [])" @copy="(...args) => emit('copy', ...args)">
         <template v-for="name in passedSlots()" #[name]="scope">
             <slot :name="name as keyof TypographyNumeralSlots" v-bind="scope" />
         </template>

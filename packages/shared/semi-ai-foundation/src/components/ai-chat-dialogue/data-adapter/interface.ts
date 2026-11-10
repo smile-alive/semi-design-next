@@ -58,10 +58,10 @@ export type ChatCompletionToolCalls = ChatCompletionToolCall | ChatCompletionCus
 
 interface ChatCompletionAnnotation {
     type?: string;
-    url_citation?: URLCitation;
+    url_citation?: WireURLCitation;
 }
 
-interface URLCitation {
+interface WireURLCitation {
     end_index?: number;
     start_index?: number;
     title?: string;
@@ -344,7 +344,7 @@ export interface CodeInterpreterCall {
     type?: string;
 }
 
-export interface ImageGenerationCall {
+export interface WireImageGenerationCall {
     id?: string;
     result?: string;
     status?: string;

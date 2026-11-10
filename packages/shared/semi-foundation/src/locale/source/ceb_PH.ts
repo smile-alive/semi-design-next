@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Pilia ang tanang laray',
         selectRow: 'Pilia kini nga laray',
+        scrollRegion: 'Ma-scroll nga sulod sa talaan',
+        untitledColumn: 'Kolum nga walay titulo',
         filterColumn: 'I-filter ang data gamit kini nga kolum',
         filterColumnActive: 'I-filter ang data gamit kini nga kolum, aktibo ang filter',
         expandRow: 'Padak-on kini nga laray',
@@ -375,6 +377,7 @@ const local: Locale = {
         search: 'Pangitaa',
         replace: 'Pulihan',
         replaceAll: 'Pulihan Tanan',
+        replaceWith: 'Pulihan sa',
         caseSensitive: 'Itugma ang gamay ug dagko nga letra',
         regex: 'Gamita ang regular expression',
         wholeWord: 'Itugma ang tibuok nga pulong',

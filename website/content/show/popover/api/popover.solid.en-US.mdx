@@ -31,7 +31,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | Called once per opening when the popup is shown and its enter transition starts, before `afterOpen`. | `TooltipProps['onOpen']` | - |
 | onVisibleChange | Called when the popup shows or hides. With a controlled `visible` it only reports requests from user interaction; changing `visible` yourself does not call it. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | Position of the popup relative to the trigger, in twelve directions. | `Position` | `"bottom"` |
-| prefixCls | Class prefix of the popup. A custom value drops the Popover styles. | `string` | `"semi-popover"` |
 | ref | Receives the Popover handle with the methods listed under Methods. | <ApiType detail={"Ref\u003cPopoverHandle>"}>Type</ApiType> | - |
 | returnFocusOnClose | Whether focus returns to the trigger after Esc closes the popup. | `TooltipProps['returnFocusOnClose']` | `true` |
 | role | ARIA role of the popup. Omitted, it is dialog for the click, contextMenu and custom triggers and tooltip for the rest; pass presentation when the popup only belongs to another control, such as a combobox list. | `string` | - |

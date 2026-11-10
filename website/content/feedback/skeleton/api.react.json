@@ -1,6 +1,6 @@
 {
     "skeleton": {
-        "source": "packages/semi-ui-react/src/components/skeleton/index.tsx",
+        "source": "packages/semi-ui-react/src/components/skeleton/skeleton.tsx",
         "props": {
             "active": {
                 "zh-CN": "是否展示动画效果。",
@@ -39,10 +39,6 @@
                 "zh-CN": "占位头像的类名。",
                 "en-US": "Class name of the avatar placeholder."
             },
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
-                "en-US": "Class name prefix, `semi-skeleton` by default."
-            },
             "ref": {
                 "zh-CN": "占位头像的引用。",
                 "en-US": "Reference to the avatar placeholder."
@@ -72,10 +68,6 @@
                 "zh-CN": "占位图像的类名。",
                 "en-US": "Class name of the image placeholder."
             },
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
-                "en-US": "Class name prefix, `semi-skeleton` by default."
-            },
             "ref": {
                 "zh-CN": "占位图像的引用。",
                 "en-US": "Reference to the image placeholder."
@@ -96,10 +88,6 @@
             "className": {
                 "zh-CN": "占位标题的类名。",
                 "en-US": "Class name of the title placeholder."
-            },
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
-                "en-US": "Class name prefix, `semi-skeleton` by default."
             },
             "ref": {
                 "zh-CN": "占位标题的引用。",
@@ -122,10 +110,6 @@
                 "zh-CN": "占位按钮的类名。",
                 "en-US": "Class name of the button placeholder."
             },
-            "prefixCls": {
-                "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
-                "en-US": "Class name prefix, `semi-skeleton` by default."
-            },
             "ref": {
                 "zh-CN": "占位按钮的引用。",
                 "en-US": "Reference to the button placeholder."
@@ -143,10 +127,6 @@
     "skeleton-paragraph": {
         "source": "packages/semi-ui-react/src/components/skeleton/item.tsx#Paragraph",
         "props": {
-            "prefixCls": {
-                "zh-CN": "类名前缀。",
-                "en-US": "Class name prefix."
-            },
             "ref": {
                 "zh-CN": "占位段落根元素 `ul` 的引用。",
                 "en-US": "Reference to the root `ul` element of the paragraph placeholder."

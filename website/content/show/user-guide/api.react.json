@@ -1,11 +1,7 @@
 {
     "user-guide": {
-        "source": "packages/semi-ui-react/src/components/user-guide/index.tsx",
+        "source": "packages/semi-ui-react/src/components/user-guide/user-guide.tsx",
         "props": {
-            "children": {
-                "zh-CN": "组件不渲染 children，传入的内容会被忽略。",
-                "en-US": "UserGuide does not render children; anything passed is ignored."
-            },
             "className": {
                 "zh-CN": "自定义类名。popup 模式下落在气泡卡片上，modal 模式下落在弹窗的外层元素上。",
                 "en-US": "Custom class name. In popup mode it lands on the popover card; in modal mode it lands on the outer element of the dialog."

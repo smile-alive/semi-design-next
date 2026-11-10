@@ -88,6 +88,7 @@ export default function Spin(rawProps: SpinProps) {
     - 对象字面量里的 getter。
 - Compiler 的 infer 模式不把 `use()` 算作 hook 调用：只调用 `use(Context)` 的自定义 hook 会被整个跳过。hook 里还有需要记忆化的计算时改用 `useContext`；只读 context 的 hook（`base/create-context.ts`）没有可记忆化的内容，跳过无影响，照常用 `use()`。组件里另有其他 hook 时，`use()` 照常用。
 - 以 `Ref` 结尾的变量会被当作 ref；把对象的方法直接作为 `ref` 传入也会被推断为 ref，要用 `useCallback` 包一层。DOM 节点、组件句柄和只在 effect 里比较的值放进 `useRef`，在事件回调、ref 回调、effect 或 adapter 方法里读写 `.current`。按 key 查找或整体遍历的一组节点、句柄放进同一个 ref 的对象、Map 或 Set，由 ref 回调写入（如 `months-grid.tsx` 的 `nodesRef`、`toast-list.tsx` 的 `elementsRef`），不拆成每个一个 `useRef`。只有两种情况放进 `useState(() => new Runtime())` 创建的对象：读这些值的函数会在渲染期传进调用（用户的 render prop、`renderXxx()` 内构造的回调），Compiler 对 ref 报 `Cannot access refs during render`；或者多个可变对象（定时器、观察器与相关操作）带有自己的逻辑。
+- 组件内的闭包读取 state 里 DOM 节点的属性（`bodyElement.clientHeight`）时，Compiler 会把这些成员读取当作记忆化依赖放到渲染期执行，节点还是 `null` 时渲染直接抛错；测试与库构建不经过 Compiler，只有文档站会报。把读取写成模块级函数，组件内只传节点（`table/body/body.tsx` 的 `elementOverflows`）。
 - `MutationObserver` 回调里改 class 前，先判断 `classList.contains`：`classList.add` 即使 class 已存在也会写属性，再次触发观察器。
 - 虚拟列表一律用 `internal/virtual-list.tsx` 的 `VirtualList`，组件不直接调用 `@tanstack/react-virtual` 的 `useVirtualizer`：Compiler 会整个放弃编译调用它的函数，oxlint 报 `react/incompatible-library`。只有 `virtual-list.tsx` 带 `'use no memo'` 与 `lint/react/exemptions.ts` 的豁免条目。
 

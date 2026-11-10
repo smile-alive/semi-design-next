@@ -3,7 +3,7 @@
     import { resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
     import useDefaultProps from '../../base/use-default-props.js';
     import Button from '../button/button.svelte';
-    import { getButtonGroupContext } from '../button/context.js';
+    import { getButtonGroupInScope } from '../button/context.js';
     import { getInputGroupInScope } from '../input/context.js';
     import type { IconButtonProps } from './interface.js';
 
@@ -24,8 +24,7 @@
         ...rest
     }: IconButtonProps = $props();
 
-    const group = getButtonGroupContext();
-
+    const group = getButtonGroupInScope();
     const inputGroup = getInputGroupInScope();
 
     // Resolved here so the inner Button reads the IconButton global key, never its own.

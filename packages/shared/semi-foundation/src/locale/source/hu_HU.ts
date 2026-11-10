@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Összes sor kijelölése',
         selectRow: 'Sor kijelölése',
+        scrollRegion: 'Görgethető táblázattartalom',
+        untitledColumn: 'Cím nélküli oszlop',
         filterColumn: 'Adatok szűrése ezen oszlop alapján',
         filterColumnActive: 'Adatok szűrése ezen oszlop alapján, a szűrő aktív',
         expandRow: 'Sor kibővítése',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Keresés',
         replace: 'Csere',
         replaceAll: 'Összes cseréje',
+        replaceWith: 'Csere erre',
         caseSensitive: 'Kis- és nagybetűk megkülönböztetése',
         regex: 'Reguláris kifejezés használata',
         wholeWord: 'Teljes szavas egyezés',

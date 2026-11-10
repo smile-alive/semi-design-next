@@ -4523,14 +4523,14 @@ describe('TreeSelect 在 InputGroup 内', () => {
         }
     });
 
-    it('触发器内的搜索框不受组影响', () => {
+    it('触发器内的搜索框取 TreeSelect 解析出的值，不直接读组', () => {
         render(() => (
             <InputGroup size="large" disabled>
                 <TreeSelect motion={false} disabled={false} filterTreeNode searchPosition="trigger" treeData={treeData} />
             </InputGroup>
         ));
         expect(getTriggerInput()).not.toBeDisabled();
-        expect(getTriggerInput().closest(`.${BASE_CLASS_PREFIX}-input-wrapper`)).not.toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper-large`);
+        expect(getTriggerInput().closest(`.${BASE_CLASS_PREFIX}-input-wrapper`)).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper-large`);
     });
 });
 

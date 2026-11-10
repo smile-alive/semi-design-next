@@ -7,7 +7,7 @@ import { Sidebar } from '@fibrae/semi-ai-react';
 import { Toast } from '@fibrae/semi-ui-react';
 import type { UploadProps } from '@fibrae/semi-ui-react/upload/index';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
-import type { FileItemProps } from '../widgets/file';
+import type { FileItemProps } from '../file';
 
 const { FileItem, FileContent } = Sidebar;
 

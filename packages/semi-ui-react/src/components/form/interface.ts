@@ -1,11 +1,11 @@
 import type * as React from 'react';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { BaseFormApi as FormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldValidator, FormState, AllErrors, FieldPath, FieldValidateTriggerType, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
+import type { BaseFormApi as FormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldValidator, FormState, AllErrors, FieldPath, FieldValidateTriggerType, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { CheckboxProps } from '../checkbox/index';
 import type { RadioProps } from '../radio/index';
 import type { BasicSelectValue, SelectProps } from '../select/index';
+import type useForm from './hooks/use-form';
 import type { LabelProps } from './label';
-import type useForm from './use-form';
 
 export type { BaseFormApi as FormApi, FieldError, FieldErrorInput, FieldValidator, FormState, FormValidator, RuleItem, RuleType } from '@fibrae/semi-foundation/components/form/interface';
 export type { WithFieldOption } from './with-field';
@@ -79,9 +79,11 @@ export type FieldProps<P> = Omit<P & CommonFieldProps, keyof CommonexcludeType |
     ExclusiveFieldValidation &
     // the field injects `onChange`; a caller's own handler is still accepted
     { [K in Extract<keyof P, 'onChange'>]?: WithLatestValues<P[K]> } & React.RefAttributes<any>;
-export type FormSelectProps<T = BasicSelectValue, Multiple extends boolean | undefined = boolean> = Omit<SelectProps<T, Multiple> & CommonFieldProps, keyof CommonexcludeType> & ExclusiveFieldValidation;
-export type FormCheckboxProps = Omit<CommonFieldProps & CheckboxProps, keyof RadioCheckboxExcludeProps> & RCIncludeType & ExclusiveFieldValidation;
-export type FormRadioProps = Omit<CommonFieldProps & RadioProps, keyof RadioCheckboxExcludeProps> & RCIncludeType & ExclusiveFieldValidation;
+export type FormSelectProps<T = BasicSelectValue, Multiple extends boolean | undefined = boolean> = FieldProps<SelectProps<T, Multiple>>;
+// A Checkbox or Radio without `field` is the bare control, as inside its group, so its handler gets only the event
+type OptionalLatestValues<F> = F extends (e: infer E) => infer R ? (e: E, padding?: undefined, latestValues?: Record<string, any>) => R : F;
+export type FormCheckboxProps = Omit<CommonFieldProps & CheckboxProps, keyof RadioCheckboxExcludeProps | 'onChange'> & RCIncludeType & ExclusiveFieldValidation & { onChange?: OptionalLatestValues<CheckboxProps['onChange']> };
+export type FormRadioProps = Omit<CommonFieldProps & RadioProps, keyof RadioCheckboxExcludeProps | 'onChange'> & RCIncludeType & ExclusiveFieldValidation & { onChange?: OptionalLatestValues<RadioProps['onChange']> };
 
 export interface FormFCChild<K extends Record<string, any> = any, O = K> {
     formState: FormState<K>;
@@ -115,7 +117,8 @@ export interface AllFormProps<Values extends Record<string, any> = any, Output =
     schemaDebounce?: number;
     /** The default `keepState` of the fields and ArrayFields */
     keepState?: boolean;
-    initValues?: Values;
+    /** May leave out any part of the values */
+    initValues?: DeepPartial<Values>;
     id?: string;
     /** Called once when the Form mounts, to save the formApi reference */
     getFormApi?: (formApi: FormApi<Values, Output>) => void;

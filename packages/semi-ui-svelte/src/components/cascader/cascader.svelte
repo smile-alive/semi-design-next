@@ -573,14 +573,17 @@
                 {/if}
             </div>
         {:else if triggerSearch}
+            <!-- the trigger draws its own clear button and its search text only becomes a search: global TagInput defaults must not add a clear button, drag handles or add-on-blur tags -->
             <TagInput
                 bind:inputValue={() => view.inputValue, () => {}}
                 bind:this={tagInput}
                 bind:value={() => [...realKeys], () => {}}
                 {...comboboxAttrs}
+                addOnBlur={false}
                 aria-autocomplete="list"
                 class={`${cls}-tagInput-wrapper`}
                 {disabled}
+                draggable={false}
                 expandRestTagsOnClick={false}
                 {maxTagCount}
                 onInputChange={foundation.handleInputChange}
@@ -588,6 +591,7 @@
                 placeholder={inputPlaceholder}
                 {preventScroll}
                 {restTagsPopoverProps}
+                showClear={false}
                 {showRestTagsPopover}
                 {size}
                 tag={tagInputTag}
@@ -736,6 +740,7 @@
     child={triggerNode}
     content={panel}
     {motion}
+    onEscKeyDown={foundation.close}
     onOpen={foundation.handlePopoverOpen}
     position={resolvedPosition}
     role="presentation"

@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+import type { Setup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ButtonProps } from '@fibrae/semi-ui-svelte/button/index';
 import type { DropdownProps } from '@fibrae/semi-ui-svelte/dropdown/index';
 import type { RadioGroupProps, RadioValue } from '@fibrae/semi-ui-svelte/radio/index';
@@ -7,14 +7,14 @@ import type { SelectProps, SelectValue } from '@fibrae/semi-ui-svelte/select/ind
 
 export interface ConfigureProps {
     /** The value the items start from; each item's `initValue` is merged on top when it mounts */
-    defaultValue?: LeftMenuChangeProps;
+    defaultValue?: Setup;
     /** `changedValue` is undefined when an item is removed */
-    onChange?: (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void;
+    onChange?: (value: Setup, changedValue?: Setup) => void;
     children?: Snippet;
 }
 
 export interface ConfigureHandle {
-    getConfigureValue: () => LeftMenuChangeProps;
+    getConfigureValue: () => Setup;
 }
 
 /** What every item declares itself; the rest goes to the wrapped component */

@@ -52,6 +52,8 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
     // unregisters its own children
     #items = new Set<ResizeGroupItem>();
     #handlers = new Set<HTMLDivElement>();
+    // an element, not the index in state: a handle may already be detached when it unregisters, and detached nodes have no document order
+    #draggingHandler: HTMLDivElement | null = null;
     static override readonly propKeys = ['direction'];
 
     /** Items and handlers are indexed by DOM order, which a child inserted later would otherwise change */
@@ -332,6 +334,11 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
     registerHandler = (handler: HTMLDivElement) => {
         this.#handlers.add(handler);
         return () => {
+            // lostpointercapture of a removed handle goes to the document, so its drag would never end
+            if (handler === this.#draggingHandler) {
+                this.#draggingHandler = null;
+                this.setState({ isResizing: false, curHandler: null });
+            }
             this.#handlers.delete(handler);
         };
     };
@@ -372,6 +379,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             return;
         }
         const states = this.getStates();
+        this.#draggingHandler = handler;
         this.setState({
             isResizing: true,
             originalPosition: this.#measure(handlerIndex, e.clientX, e.clientY),
@@ -400,6 +408,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             return;
         }
         this.#notifyResizeEnd(curHandler, e);
+        this.#draggingHandler = null;
         this.setState({
             isResizing: false,
             curHandler: null,

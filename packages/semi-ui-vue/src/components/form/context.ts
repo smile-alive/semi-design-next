@@ -26,3 +26,11 @@ export interface FormInputGroupContextValue {
 export const [provideFormContext, useFormContext] = createContext<FormContextValue>('Form', { optional: true });
 export const [provideArrayFieldContext, useArrayFieldContext] = createContext<ComputedRef<ArrayFieldContextValue>>('ArrayField', { optional: true });
 export const [provideFormInputGroupContext, useFormInputGroupContext] = createContext<FormInputGroupContextValue>('FormInputGroup', { optional: true });
+
+export function requireFormContext(caller: string) {
+    const context = useFormContext();
+    if (!context) {
+        throw new Error(`[Semi Form] ${caller} must be called inside <Form>`);
+    }
+    return context;
+}

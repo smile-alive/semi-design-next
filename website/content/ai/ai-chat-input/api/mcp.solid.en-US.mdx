@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | afterClose | Called after the menu has closed and its leave animation has ended. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | afterOpen | Called after the menu has opened and its enter animation has ended, or right after opening when there is no enter animation. An opening closed before the enter animation ends does not call it. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| aria-describedby | aria-describedby of the popup when its role is dialog. | `string` | - |
 | aria-label | aria-label of the popup when its role is dialog. | `string` | - |
 | aria-labelledby | aria-labelledby of the popup when its role is dialog. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Takes effect only when showArrow is true. | `boolean` | - |
@@ -20,7 +21,7 @@ import ApiType from '#/components/ApiType.astro';
 | disableFocusListener | Whether keyboard focus is ignored when trigger is hover. Defaults to false. | `boolean` | - |
 | guardFocus | Whether Tab cycles inside the popup while focus is in it. Defaults to false. | `boolean` | - |
 | keepDOM | Whether the menu's DOM is kept instead of destroyed when it closes. Defaults to false. | `boolean` | - |
-| menu | Configures the menu from data: objects whose node is item, title or divider, see DropdownMenuItem below. render takes precedence when it is provided. | `DropDownMenuItem[]` | - |
+| menu | Configures the menu from data: objects whose node is item, title or divider, see DropdownMenuItem below. render takes precedence when it is provided. | `DropdownMenuItem[]` | - |
 | motion | Whether the popup plays its enter and leave animations. Defaults to true. | `boolean` | - |
 | mouseEnterDelay | Milliseconds before the menu shows after the pointer enters the trigger. Defaults to 50. Applies to the hover and focus triggers. | `number` | - |
 | mouseLeaveDelay | Milliseconds before the menu hides after the pointer leaves the popup. Defaults to 100. Applies to the hover and focus triggers. | `number` | - |
@@ -32,7 +33,6 @@ import ApiType from '#/components/ApiType.astro';
 | onVisibleChange | Called when the visibility of the menu changes. With a controlled visible it reports only requests from user interaction, not changes the caller makes to visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | options | MCP option list. Options hold data only; their icons come from renderOptionIcon. | `McpOption[]` | `[]` |
 | position | Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; the default is bottom. See the Tooltip positions for more. | `Position` | - |
-| prefixCls | Class prefix of the popup, semi-dropdown by default. | `string` | - |
 | preventScroll | Whether focusing an element avoids scrolling it into view. Defaults to false. | `boolean` | - |
 | renderOptionIcon | Renders the icon of each built-in menu item, called with the option. | <ApiType detail={"(option: McpOption) => JSX.Element"}>Type</ApiType> | - |
 | returnFocusOnClose | Whether focus returns to the trigger after the menu closes. Defaults to true. | `boolean` | - |

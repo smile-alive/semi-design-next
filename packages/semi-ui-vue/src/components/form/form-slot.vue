@@ -30,7 +30,7 @@
     const id = useId();
 
     const prefix = cssClasses.PREFIX;
-    const labelId = getFieldIds(id).label;
+    const labelId = computed(() => (isLabelConfig(props.label) && props.label.id) || getFieldIds(id).label);
     const formProps = computed<AllFormProps>(() => form?.formProps.value ?? {});
     const labelPosition = computed(() => props.labelPosition || formProps.value.labelPosition || 'top');
     const labelConfig = computed(() => (isLabelConfig(props.label) ? props.label : { text: props.label }));
@@ -45,7 +45,7 @@
     const labelShown = () => !props.noLabel && ((labelConfig.value.text != null && labelConfig.value.text !== '') || hasSlotContent(slots.label));
 
     const rootAria = () => {
-        const labelledby = joinIds(attrs['aria-labelledby'], labelShown() && labelId);
+        const labelledby = joinIds(attrs['aria-labelledby'], labelShown() && labelId.value);
         return { role: namedRole({ ...attrs, 'aria-labelledby': labelledby }), 'aria-labelledby': labelledby };
     };
 </script>

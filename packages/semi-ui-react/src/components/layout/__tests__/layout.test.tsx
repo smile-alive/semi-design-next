@@ -13,12 +13,12 @@ const hasSiderCls = `${prefixCls}-has-sider`;
 const media = { xs: '(max-width: 575px)', md: '(min-width: 768px)', lg: '(min-width: 992px)' };
 
 describe('layout', () => {
-    it('显式传入 undefined 的 tagName、type 不覆盖内置值', () => {
+    it('显式传入 undefined 的 tagName 不覆盖内置值', () => {
         const { container } = render(
             <>
-                <Layout.Header type={undefined} tagName={undefined} />
-                <Layout.Footer type={undefined} tagName={undefined} />
-                <Layout.Content type={undefined} tagName={undefined} />
+                <Layout.Header tagName={undefined} />
+                <Layout.Footer tagName={undefined} />
+                <Layout.Content tagName={undefined} />
             </>
         );
         expect(Array.from(container.children, (el) => `${el.tagName} ${el.className}`)).toEqual([`HEADER ${prefixCls}-header`, `FOOTER ${prefixCls}-footer`, `MAIN ${prefixCls}-content`]);
@@ -92,20 +92,17 @@ describe('layout', () => {
         expect(aside.firstChild.textContent).toBe('menu');
     });
 
-    it('tagName、type 与 prefixCls 可替换默认值', () => {
+    it('tagName 可替换默认值', () => {
         const { container } = render(
-            <Layout prefixCls="my" tagName="div">
-                <Layout.Header type="top" tagName="nav" />
-                <Layout.Content prefixCls="x" />
+            <Layout tagName="div">
+                <Layout.Header tagName="nav" />
             </Layout>
         );
         const root = container.firstChild as HTMLElement;
         expect(root.tagName).toBe('DIV');
-        expect(root).toHaveClass('my');
-        expect(root).not.toHaveClass(prefixCls);
+        expect(root).toHaveClass(prefixCls);
         expect((root.firstChild as HTMLElement).tagName).toBe('NAV');
-        expect(root.firstChild).toHaveClass(`${prefixCls}-top`);
-        expect(root.lastChild).toHaveClass('x-content');
+        expect(root.firstChild).toHaveClass(`${prefixCls}-header`);
     });
 
     it('只强制添加 sider 类名：hasSider 为 false 时，Sider 子元素仍保留该类名', () => {

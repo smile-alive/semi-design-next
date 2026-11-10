@@ -2,12 +2,12 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property    | Description                                                 | Type                     | Default                                              |
-| ----------- | ----------------------------------------------------------- | ------------------------ | ---------------------------------------------------- |
-| shape       | Shape of the avatars in the group.                          | `AvatarShape`            | `semiDefault("AvatarGroup", "shape", "circle")`      |
-| size        | Size of the avatars in the group.                           | `string`                 | `semiDefault("AvatarGroup", "size", "medium")`       |
-| overlapFrom | Avatar overlap direction: start or end.                     | `AvatarGroupOverlapFrom` | `semiDefault("AvatarGroup", "overlapFrom", "start")` |
-| maxCount    | Maximum number of visible avatars; overflow is shown as +N. | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")`       |
+| Property    | Description                                                 | Type                     | Default                                        |
+| ----------- | ----------------------------------------------------------- | ------------------------ | ---------------------------------------------- |
+| shape       | Shape of the avatars in the group.                          | `AvatarShape`            | `"circle"`                                     |
+| size        | Size of the avatars in the group.                           | `string`                 | `"medium"`                                     |
+| overlapFrom | Avatar overlap direction: start or end.                     | `AvatarGroupOverlapFrom` | `"start"`                                      |
+| maxCount    | Maximum number of visible avatars; overflow is shown as +N. | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")` |
 
 **Events**
 

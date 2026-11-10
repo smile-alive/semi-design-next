@@ -388,7 +388,7 @@ describe('Chat 输入框', () => {
         const onMessageSend = vi.fn<Listener<'onMessageSend'>>();
         const { container } = renderChat({ onMessageSend, sendHotKey });
         await type(container, 'hello');
-        await fireEvent.keyDown(textarea(container), { key: 'Enter', keyCode: 13, shiftKey });
+        await fireEvent.keyDown(textarea(container), { key: 'Enter', shiftKey });
         expect(onMessageSend).toHaveBeenCalledTimes(times);
     });
 

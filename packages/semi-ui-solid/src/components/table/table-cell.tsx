@@ -6,7 +6,7 @@ import { get } from 'es-toolkit/compat';
 import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import mergeStyles from '../../utils/merge-styles';
-import { TableSelection } from './column-selection';
+import ColumnSelection from './column-selection';
 import { useTableContext } from './context';
 import { TableExpandIcon } from './custom-expand-icon';
 import type { ColumnProps, RenderOptions, TableComponent } from './interface';
@@ -64,7 +64,7 @@ export default function TableCell(props: TableCellProps) {
 
     const indentNode = () => <span class={`${prefixCls()}-row-indent indent-level-${indent()}`} style={{ 'padding-inline-start': `${(table.props.indentSize ?? 0) * indent()}px` }} />;
 
-    const selectionNode = () => <TableSelection record={props.record} />;
+    const selectionNode = () => <ColumnSelection record={props.record} />;
 
     // the options are live: a render function reading them in its JSX follows the row without being called again. The
     // parts are render functions, so one the column leaves out is never created
@@ -131,7 +131,7 @@ export default function TableCell(props: TableCellProps) {
             return untrack(() => render(text, record, index, renderOptions));
         }
         if (isSelectionColumn(col)) {
-            return untrack(() => <TableSelection index={index} record={record} />);
+            return untrack(() => <ColumnSelection index={index} record={record} />);
         }
         if (isExpandedColumn(col)) {
             return table.hasExpandIcon() && table.rowExpandable(record) ? untrack(() => <TableExpandIcon record={record} />) : null;

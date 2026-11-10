@@ -260,6 +260,15 @@ describe('Svelte 表单状态与校验结果类型', () => {
         expectTypeOf(inferValues({ schema })).toEqualTypeOf<{ name: string }>();
     });
 
+    it('有 schema 时 initValues 可以只给一部分，没有 schema 时 Values 从 initValues 推断', () => {
+        const schema = z.object({ name: z.string(), profile: z.object({ age: z.number(), city: z.string() }) });
+        const inferValues = <Values extends Record<string, any>>(_props: FormProps<Values>) => ({}) as Values;
+        expectTypeOf(inferValues({ schema, initValues: { profile: { age: 1 } } })).toEqualTypeOf<z.input<typeof schema>>();
+        // @ts-expect-error initValues still follow the schema's value types
+        inferValues({ schema, initValues: { profile: { age: '1' } } });
+        expectTypeOf(inferValues({ initValues: { name: 'a', profile: { age: 1 } } })).toEqualTypeOf<{ name: string; profile: { age: number } }>();
+    });
+
     it('schema 的输入要与 values 一致', () => {
         type Schema = NonNullable<FormProps<{ name: string }>['schema']>;
         const valid = z.object({ name: z.string() });

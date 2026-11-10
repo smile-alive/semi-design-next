@@ -14,12 +14,14 @@ import mergeRefs from '../../utils/merge-refs';
 import Button from '../button';
 import Dropdown, { type GetDropdownTriggerProps } from '../dropdown';
 import useLocale from '../locale/use-locale';
-import OverflowList from '../overflow-list';
+import OverflowList, { type OverflowListInternalProps } from '../overflow-list';
 import { TabsContext, useTabsContext } from './context';
 import type { OverflowItem, TabBarProps } from './interface';
 import TabItem from './tab-item';
 
 type Side = 'start' | 'end';
+
+const InternalOverflowList = OverflowList as (props: OverflowListInternalProps<{ key: string; itemKey: string }>) => JSX.Element;
 
 export default function TabBar(props: TabBarProps) {
     const [local, rest] = splitProps(props, [
@@ -235,11 +237,10 @@ export default function TabBar(props: TabBarProps) {
         );
     };
 
-    // more.render replaces the trigger and, like other non-function Dropdown children, is wrapped in Dropdown's span
+    // children() calls zero-parameter functions with no argument, so the wrapper keeps the parameter Dropdown looks for
     const moreTrigger = () => {
-        const render = moreOptions()?.render;
-        if (render) {
-            return render();
+        if (moreOptions()?.render) {
+            return (getTriggerProps: GetDropdownTriggerProps) => moreOptions()?.render?.(getTriggerProps);
         }
         return (getTriggerProps: GetDropdownTriggerProps) => (
             <button
@@ -334,7 +335,7 @@ export default function TabBar(props: TabBarProps) {
                         </>
                     }
                 >
-                    <OverflowList<{ key: string; itemKey: string }>
+                    <InternalOverflowList
                         class={`${cssClasses.TABS_BAR}-overflow-list`}
                         wrapperStyle={local.visibleTabsStyle}
                         items={overflowKeys()}

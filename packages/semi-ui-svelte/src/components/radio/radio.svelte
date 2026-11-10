@@ -28,7 +28,6 @@
         addonClassName = defaults('addonClassName'),
         addonId,
         extraId,
-        prefixCls,
         preventScroll = defaults('preventScroll'),
         onChange,
         children,
@@ -64,9 +63,6 @@
         get name() {
             return rest.name ?? undefined;
         },
-        get prefixCls() {
-            return prefixCls;
-        },
         get type() {
             return type;
         },
@@ -75,12 +71,10 @@
         },
     };
 
-    // Not a `$props()` fallback: a RadioGroup's prefixCls must rank above the global default
-    const globalPrefixCls = defaults('prefixCls');
+    const prefix = radioClasses.PREFIX;
 
     // The radio role supports neither aria-invalid, aria-errormessage nor aria-required (they belong on the radiogroup)
     const UNSUPPORTED_ARIA = ['aria-invalid', 'aria-errormessage', 'aria-required'];
-    const innerPrefix = $derived(prefixCls ?? globalPrefixCls ?? radioClasses.PREFIX);
     const addonDomId = $derived(addonId || `addon-${uid}`);
     const extraDomId = $derived(extraId || `extra-${uid}`);
     const attrs = $derived(splitControlAttrs(rest, isNativeInputKey));
@@ -95,7 +89,7 @@
     });
 
     const labelledby = $derived(joinIds(rest['aria-labelledby'], children ? addonDomId : undefined));
-    const inputName = $derived(rest.name ?? group?.name);
+    const inputName = $derived(group?.name ?? rest.name);
 
     const groupView = () => (group ? { mode: group.mode, radioGroup: group } : null);
 
@@ -116,8 +110,7 @@
         { context: groupView }
     );
 
-    const view = $derived(RadioFoundation.deriveView({ ...foundationProps, prefixCls: prefixCls ?? group?.prefixCls ?? globalPrefixCls }, states(), groupView()));
-    const prefix = $derived(view.prefixCls || radioClasses.PREFIX);
+    const view = $derived(RadioFoundation.deriveView(foundationProps, states(), groupView()));
     const hasExtra = $derived(Boolean(extra) && !view.isButtonRadio);
     const describedby = $derived(joinIds(rest['aria-describedby'], hasExtra ? extraDomId : undefined, rest['aria-invalid'] ? rest['aria-errormessage'] : undefined));
 
@@ -198,16 +191,16 @@
 >
     <span
         class={[
-            `${innerPrefix}-inner`,
+            `${prefix}-inner`,
             {
-                [`${innerPrefix}-inner-checked`]: view.checked,
-                [`${innerPrefix}-inner-buttonRadio`]: view.isButtonRadio,
-                [`${innerPrefix}-inner-pureCardRadio`]: view.isPureCardRadio,
+                [`${prefix}-inner-checked`]: view.checked,
+                [`${prefix}-inner-buttonRadio`]: view.isButtonRadio,
+                [`${prefix}-inner-pureCardRadio`]: view.isPureCardRadio,
             },
         ]}
     >
         <input bind:this={input} {...controlAttrs} aria-describedby={describedby} aria-labelledby={labelledby} checked={view.checked} disabled={view.disabled} name={inputName} type="radio" value={value === undefined ? undefined : String(value)} onchange={handleChange} onclick={handleClick} onkeyup={handleKeyUp} />
-        <span class={{ [`${innerPrefix}-inner-display`]: !view.isButtonRadio }}>
+        <span class={{ [`${prefix}-inner-display`]: !view.isButtonRadio }}>
             {#if view.checked}
                 <IconRadio />
             {/if}

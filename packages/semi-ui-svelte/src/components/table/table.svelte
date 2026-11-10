@@ -20,8 +20,8 @@
     import Spin from '../spin/spin.svelte';
     import Body from './body/body.svelte';
     import { setTableContext, type RowEventName, type TableContextValue, type TableFoundationProps, type TableState } from './context.js';
-    import HeadTable from './head-table.svelte';
     import type { ColumnProps, TableChangeInfo, TableHandle, TablePaginationProps, TableProps, TableRowKey, TableVirtualizedProps } from './interface.js';
+    import HeadTable from './table-header/head-table.svelte';
     import TablePagination from './table-pagination.svelte';
     import { buildColumns, expandColumn, joinStyles, mergeComponents, selectionColumn } from './utils.js';
 
@@ -57,7 +57,6 @@
         keepDOM = defaults('keepDOM', false),
         loading = defaults('loading', false),
         pagination = defaults('pagination', true),
-        prefixCls = defaults('prefixCls', cssClasses.PREFIX),
         resizable = defaults('resizable', false),
         rowExpandable = defaults('rowExpandable'),
         rowKey = defaults('rowKey', 'key'),
@@ -163,6 +162,7 @@
         return initial === undefined ? pagination : { ...base, defaultCurrentPage: initial };
     });
 
+    const prefixCls = cssClasses.PREFIX;
     const innerColumns = $derived([expandColumn(hideExpandedColumn, expandCellFixed, prefixCls), selectionColumn(mergedSelection, prefixCls)]);
     const showExpandIcon = $derived(expandIcon !== false);
     const fixedHeader = $derived(Boolean(scroll?.y) || Boolean(sticky));

@@ -264,7 +264,7 @@ describe('TimePicker', () => {
 
     it('triggerRender 收到具名的 TimePickerTriggerRenderProps', () => {
         expectTypeOf<Parameters<NonNullable<TimePickerProps['triggerRender']>>>().toEqualTypeOf<[props: TimePickerTriggerRenderProps]>();
-        expectTypeOf<TimePickerTriggerRenderProps['value']>().toEqualTypeOf<Date[]>();
+        expectTypeOf<TimePickerTriggerRenderProps['value']>().toEqualTypeOf<(Date | undefined)[]>();
         expectTypeOf<TimePickerTriggerRenderProps['onChange']>().toEqualTypeOf<(inputValue: string) => void>();
     });
 

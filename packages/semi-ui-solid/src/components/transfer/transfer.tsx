@@ -17,14 +17,28 @@ import mergeRefs from '../../utils/merge-refs';
 import mergeStyles from '../../utils/merge-styles';
 import Button from '../button';
 import Checkbox from '../checkbox';
-import Input from '../input';
+import Input, { type InputProps } from '../input';
 import useLocale from '../locale/use-locale';
 import Pagination from '../pagination';
 import Spin from '../spin';
 import { useSpecialTrigger } from '../tooltip/context';
 import Tree, { type TreeHandle, type TreeNodeData, type TreeProps } from '../tree';
 import AutoSizer from '../tree/auto-sizer';
-import { type DataItem, type RenderSelectedItemProps, type ResolvedDataItem, type SelectedHeaderProps, type SelectedPanelProps, type SourceHeaderProps, type SourcePanelProps, TRANSFER_OWNED_TREE_PROPS, type TransferHandle, type TransferProps, type TransferState, type Type } from './interface';
+import {
+    type DataItem,
+    type RenderSelectedItemProps,
+    type ResolvedDataItem,
+    type SelectedHeaderProps,
+    type SelectedPanelProps,
+    type SourceHeaderProps,
+    type SourcePanelProps,
+    TRANSFER_OWNED_INPUT_PROPS,
+    TRANSFER_OWNED_TREE_PROPS,
+    type TransferHandle,
+    type TransferProps,
+    type TransferState,
+    type Type,
+} from './interface';
 
 // dnd-kit is only needed once a draggable Transfer has a selection
 const Sortable = lazy(() => import('../../internal/sortable').then((module) => ({ default: module.Sortable })));
@@ -121,6 +135,7 @@ export default function Transfer(rawProps: TransferProps) {
     // the group indexes are stable across search and paging, so a group row keeps its DOM
     const groupIndexes = createMemo(() => view().groups.map((group) => group.index));
     const treeRest = createMemo(() => omit((local.treeProps ?? {}) as TreeProps, TRANSFER_OWNED_TREE_PROPS));
+    const inputRest = createMemo(() => omit((local.inputProps ?? {}) as InputProps, TRANSFER_OWNED_INPUT_PROPS));
 
     const selectedItems = () => view().selectedItems;
 
@@ -376,7 +391,7 @@ export default function Transfer(rawProps: TransferProps) {
                 <section class={`${prefixCls}-left`}>
                     <Show when={local.filter !== false}>
                         <search class={`${prefixCls}-filter`} aria-label={locale().locale.filter}>
-                            <Input tabIndex={local.tabIndex} disabled={local.disabled} placeholder={locale().locale.placeholder} value={state().inputValue} addonAfter={null} addonBefore={null} insetLabel={null} showClear prefix={<IconSearch />} suffix={null} onChange={sourcePanelProps.onSearch} {...local.inputProps} />
+                            <Input tabIndex={local.tabIndex} disabled={local.disabled} placeholder={locale().locale.placeholder} value={state().inputValue} addonAfter={null} addonBefore={null} insetLabel={null} showClear prefix={<IconSearch />} suffix={null} onChange={sourcePanelProps.onSearch} {...inputRest()} />
                         </search>
                     </Show>
                     <SourceContent />

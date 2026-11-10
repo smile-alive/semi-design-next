@@ -1,6 +1,6 @@
 {
     "list": {
-        "source": "packages/semi-ui-react/src/components/list/index.tsx",
+        "source": "packages/semi-ui-react/src/components/list/list.tsx",
         "props": {
             "bordered": { "zh-CN": "是否显示边框。", "en-US": "Whether to show a border." },
             "children": {

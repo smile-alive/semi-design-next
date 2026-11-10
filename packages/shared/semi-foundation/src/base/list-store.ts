@@ -163,11 +163,6 @@ export function getStackDepths(ids: readonly string[], shown: ReadonlySet<string
     return depths;
 }
 
-/** Whether the pointer and focus leaving `list` collapse its stack; an empty list has no height and stays as it is */
-export function canCollapseStack(stack: number, list?: Element | null) {
-    return stack > 0 && Boolean(list?.getBoundingClientRect().height);
-}
-
 /** The focus was inside `list` but its item unmounted, which fires no reliable blur and would keep the list paused */
 export function hasLostFocus(focusInside: boolean, list?: Element | null) {
     return focusInside && !list?.contains(FocusTrapHandle.getActiveElement(list));

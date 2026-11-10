@@ -1,11 +1,11 @@
-import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+import type { Setup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import { createContext } from '@fibrae/semi-ui-svelte/base/create-context';
 
 /** `view` is read through a getter, so the items follow the input's values */
 export interface ConfigureContextValue {
-    readonly view: LeftMenuChangeProps;
+    readonly view: Setup;
     /** `init` registers an item's initial value without reporting a change */
-    onChange: (changed: LeftMenuChangeProps, init?: boolean) => void;
+    onChange: (changed: Setup, init?: boolean) => void;
     onRemove: (field: string) => void;
 }
 

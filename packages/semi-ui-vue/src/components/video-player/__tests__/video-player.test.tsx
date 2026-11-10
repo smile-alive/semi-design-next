@@ -654,7 +654,7 @@ describe('VideoPlayer', () => {
     it('时间为 0 时进度圆点在起点', async () => {
         const { container } = renderPlayer();
         await loadDuration(getVideo(container), 3);
-        expect(query(container, `.${prefixCls}-progress-handle`).style.left).toBe('calc(0% - 8px)');
+        expect(query(container, `.${prefixCls}-progress-handle`).style.left).toBe('0%');
     });
 
     it('显示错误遮罩并播报', async () => {

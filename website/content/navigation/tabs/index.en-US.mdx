@@ -115,7 +115,7 @@ Advanced configuration is also supported, passing the object to `more`, and it c
 
 - `count`: Represents the number of Tabs in the income drop-down menu
 - `render`: Customize the rendering function of Trigger. The returned ReactNode will be rendered as the Trigger of the drop-down menu.
-- `dropdownProps`: Incoming DropDown Props will be transparently transmitted to the drop-down menu. If you need to customize the drop-down menu, use the render method in dropdownProps
+- `dropdownProps`: Incoming Dropdown Props will be transparently transmitted to the drop-down menu. If you need to customize the drop-down menu, use the render method in dropdownProps
 
 </Framework>
 
@@ -135,7 +135,7 @@ Customize the "More" trigger with the `#more` slot, and the content of the drop-
 Advanced configuration is also supported, passing the object to `more`, and it can be passed in
 
 - `count`: Represents the number of Tabs in the income drop-down menu
-- `render`: Customize the rendering function of the trigger. The returned JSX will be rendered as the trigger of the drop-down menu.
+- `render`: Customize the rendering function of the trigger. It receives `getTriggerProps`; spread `getTriggerProps()` onto your own trigger element, and the returned JSX becomes the trigger of the drop-down menu.
 - `dropdownProps`: Dropdown props, passed through to the drop-down menu
 
 </Framework>

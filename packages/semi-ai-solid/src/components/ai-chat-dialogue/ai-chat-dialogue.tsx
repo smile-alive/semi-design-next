@@ -14,9 +14,9 @@ import Button from '@fibrae/semi-ui-solid/button/index';
 import { useFocusHandover, useLocale } from '@fibrae/semi-ui-solid/primitives';
 import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
 import { AIChatDialogueContext, type AIChatDialogueContextValue } from './context';
+import Dialogue from './dialogue/dialogue';
+import Hint from './dialogue/dialogue-hint';
 import type { AIChatDialogueHandle, AIChatDialogueProps } from './interface';
-import Dialogue from './widgets/dialogue';
-import Hint from './widgets/dialogue-hint';
 
 type Foundation = DialogueFoundation<AIChatDialogueProps>;
 type Adapter = DialogueAdapter<AIChatDialogueProps>;
@@ -179,7 +179,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
                         }}
                     </For>
                     <Show when={hints().length > 0}>
-                        <Hint class={local.hintCls} style={local.hintStyle} hints={hints()} selecting={local.selecting} renderHintBox={local.renderHintBox} onHintClick={foundation.onHintClick} />
+                        <Hint class={local.hintCls} style={local.hintStyle} hints={hints()} selecting={local.selecting} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
                     </Show>
                 </AIChatDialogueContext.Provider>
             </div>

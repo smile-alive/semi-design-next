@@ -37,7 +37,6 @@ export interface CheckboxGroupProps extends ElementProps<'div', 'onChange' | 'de
     value?: CheckboxValue[];
     onChange?: (value: CheckboxValue[]) => void;
     children?: React.ReactNode;
-    prefixCls?: string;
     direction?: CheckboxDirection;
     style?: React.CSSProperties;
     className?: string;
@@ -63,7 +62,6 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         ref,
         children,
         options,
-        prefixCls,
         direction,
         className,
         type,
@@ -111,7 +109,7 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
 
     const isPureCardType = type === strings.TYPE_PURECARD;
     const isCardType = type === strings.TYPE_CARD || isPureCardType;
-    const prefix = prefixCls || css.PREFIX;
+    const prefix = css.PREFIX;
 
     const prefixClsDisplay = clsx(
         {
@@ -127,11 +125,11 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
     if (options) {
         inner = options.map((option, index) =>
             typeof option === 'string' ? (
-                <Checkbox key={index} disabled={disabled} value={option} prefixCls={prefixCls}>
+                <Checkbox key={index} disabled={disabled} value={option}>
                     {option}
                 </Checkbox>
             ) : (
-                <Checkbox key={index} className={option.className} style={option.style} disabled={option.disabled || disabled} value={option.value} prefixCls={prefixCls} extra={option.extra} onChange={option.onChange}>
+                <Checkbox key={index} className={option.className} style={option.style} disabled={option.disabled || disabled} value={option.value} extra={option.extra} onChange={option.onChange}>
                     {option.label}
                 </Checkbox>
             )

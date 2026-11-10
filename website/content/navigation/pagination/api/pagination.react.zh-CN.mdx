@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | onChange | 页码或每页条数变化时的回调，参数为页码与每页条数。 | <ApiType detail={"(currentPage: number, pageSize: number) => void"}>Type</ApiType> | - |
 | onPageChange | 页码变化时的回调，参数为新的页码。 | <ApiType detail={"(currentPage: number) => void"}>Type</ApiType> | - |
 | onPageSizeChange | 每页条数变化时的回调，参数为新的每页条数。 | <ApiType detail={"(newPageSize: number) => void"}>Type</ApiType> | - |
-| pageSize | 每页条数，未传时取 `pageSizeOpts` 的第一项。非严格受控：每页条数选择器的选择保留在组件内部，只有该属性变为与当前不同的值时才会覆盖它，并回到第 1 页（受控时回到 `currentPage`）；在 `onChange` 中回写该属性不会重置页码。 | `number` | `null` |
+| pageSize | 每页条数，未传时取 `pageSizeOpts` 的第一项。非严格受控：每页条数选择器的选择保留在组件内部，只有该属性变为与当前不同的值时才会覆盖它，并回到第 1 页（受控时回到 `currentPage`）；在 `onChange` 中回写该属性不会重置页码。 | `number` | - |
 | pageSizeOpts | 每页条数选择器的可选值；当前每页条数不在其中时按大小插入选项。 | <ApiType detail={"Array\u003cnumber>"}>Type</ApiType> | `[10, 20, 40, 100]` |
 | popoverPosition | 省略页码浮层与每页条数下拉的位置。未传时每页条数下拉为 `bottomLeft`（RTL 下 `bottomRight`），省略页码浮层使用 Popover 的默认位置 `bottom`；`size` 为 `small` 时不使用。 | `PopoverPosition` | - |
 | preventPageChangeOnPageSizeChange | 切换每页条数时保持当前页码不变且不触发 `onPageChange`，新的页码由使用方在 `onPageSizeChange` 中决定。 | `boolean` | `false` |

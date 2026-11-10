@@ -401,6 +401,7 @@
         preventScroll,
         autofocus: searchAutoFocus,
         disabled,
+        size,
         'aria-autocomplete': 'list',
         'aria-controls': treeId,
         'aria-describedby': joinIds(rest['aria-describedby'], view.inputValue ? undefined : singleSearchTextId),
@@ -718,14 +719,17 @@
     {/if}
     <div class={`${cls}-selection`}>
         {#if triggerSearch && multiple}
+            <!-- the trigger draws its own clear button and its search text only becomes a search: global TagInput defaults must not add a clear button, drag handles or add-on-blur tags -->
             <TagInput
                 bind:inputValue={() => view.inputValue, () => undefined}
                 bind:this={tagInput}
                 bind:value={() => selectionKeys, () => undefined}
                 {...comboboxAttrs}
+                addOnBlur={false}
                 aria-autocomplete="list"
                 autofocus={searchAutoFocus}
                 {disabled}
+                draggable={false}
                 expandRestTagsOnClick={false}
                 {maxTagCount}
                 onInputChange={foundation.search}
@@ -733,6 +737,7 @@
                 {placeholder}
                 {preventScroll}
                 {restTagsPopoverProps}
+                showClear={false}
                 {showRestTagsPopover}
                 {size}
                 tag={tagInputTag}
@@ -896,6 +901,7 @@
     content={panel}
     disableArrowKeyDown
     {motion}
+    onEscKeyDown={foundation.close}
     onOpen={handleOpen}
     position={position ?? (config.direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
     role="presentation"

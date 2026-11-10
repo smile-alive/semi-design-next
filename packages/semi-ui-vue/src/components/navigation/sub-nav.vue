@@ -132,8 +132,6 @@
         return {
             ...control,
             ...own,
-            // Dropdown only treats a native-tag component as a menu button when it carries a popup role
-            role: isPopup.value ? 'button' : undefined,
             type: 'button',
             // the list is unmounted while closed, so an id reference to it only exists when it is open
             'aria-controls': !isPopup.value && isOpen.value ? subListId : undefined,

@@ -1,5 +1,5 @@
 import { flushSync } from 'svelte';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
@@ -20,11 +20,12 @@ function setup(props: BreadcrumbProps = {}, extra: Omit<Store, 'props'> = {}) {
 }
 
 const nav = () => screen.getByRole('navigation');
+const list = () => within(nav()).getByRole('list');
 const getItemWraps = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-item-wrap`)];
 const getSeparatorTexts = () => [...document.querySelectorAll(`.${prefix}-separator`)].map((el) => el.textContent);
 const typographyTexts = () => [...document.querySelectorAll('.semi-typography')].map((el) => el.textContent);
 const itemOf = (wrap: Element) => wrap.firstElementChild as HTMLElement;
-const visibleRow = () => [...nav().children].map((el) => (el.classList.contains(`${prefix}-collapse`) ? 'more' : el.querySelector('.semi-typography')?.textContent));
+const visibleRow = () => [...list().children].map((el) => (el.classList.contains(`${prefix}-collapse`) ? 'more' : el.querySelector('.semi-typography')?.textContent));
 const expandButton = () => screen.getByRole('button', { name: zh_CN.Breadcrumb.expand });
 
 afterEach(() => {
@@ -89,8 +90,8 @@ describe('Svelte Breadcrumb', () => {
 
     it('routes 超过 maxItemCount 时折叠', () => {
         setup({ routes: routesOf(6) });
-        expect(nav().children).toHaveLength(5);
-        expect(nav().children[1]).toHaveClass(`${prefix}-collapse`);
+        expect(list().children).toHaveLength(5);
+        expect(list().children[1]).toHaveClass(`${prefix}-collapse`);
         expect(typographyTexts()).toEqual(['a', 'd', 'e', 'f']);
         expect(document.querySelector(`.${prefix}-collapse .semi-icon-more`)).not.toBeNull();
     });
@@ -99,7 +100,7 @@ describe('Svelte Breadcrumb', () => {
         setup({ routes: routesOf(6), activeIndex: 2, moreType: 'popover' });
         expect(screen.getByText('c').closest(`.${prefix}-item-wrap`)).toHaveAttribute('aria-current', 'page');
         expect(typographyTexts()).toEqual(['a', 'b', 'c', 'f']);
-        expect(nav().children[3]).toHaveClass(`${prefix}-collapse`);
+        expect(list().children[3]).toHaveClass(`${prefix}-collapse`);
     });
 
     // n items, maxItemCount m, r = n - m hidden by default at [1, r]. A current item k inside it hides the larger of
@@ -171,10 +172,10 @@ describe('Svelte Breadcrumb', () => {
 
     it('moreType 为 popover 时在气泡中显示被隐藏的项，以 restItem 分隔', async () => {
         setup({ routes: ['one', 'two', 'three', 'four'], maxItemCount: 2, moreType: 'popover', separator: '>' });
-        expect(nav().children).toHaveLength(3);
+        expect(list().children).toHaveLength(3);
         await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
         const content = await screen.findByText('two', { selector: '.semi-popover-content *' }).then(() => document.querySelector('.semi-popover-content') as HTMLElement);
-        const hidden = content.querySelectorAll(`:scope > .${prefix}-item-wrap`);
+        const hidden = content.querySelectorAll(`:scope > ol > .${prefix}-item-wrap`);
         expect([...hidden].map((el) => el.textContent)).toEqual(['two', 'three']);
         expect([...content.querySelectorAll(`.${prefix}-restItem`)].map((el) => el.textContent)).toEqual(['>']);
     });
@@ -335,7 +336,7 @@ describe('Svelte Breadcrumb', () => {
     it('从 semiGlobal overrideDefaultProps 读取默认值，显式 prop 优先', () => {
         semiGlobal.config.overrideDefaultProps = { Breadcrumb: { separator: '>', maxItemCount: 2 } };
         const { view } = setup({ routes: routesOf(4) });
-        expect(nav().children).toHaveLength(3);
+        expect(list().children).toHaveLength(3);
         expect(getSeparatorTexts()).toEqual(['>', '>']);
         view.unmount();
         setup({ routes: routesOf(4), separator: '|', maxItemCount: 5 });

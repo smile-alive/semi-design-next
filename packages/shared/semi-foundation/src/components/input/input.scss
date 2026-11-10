@@ -710,20 +710,6 @@ $module: #{$prefix}-input;
     }
 }
 
-.#{$module}-only_border {
-    background: transparent;
-    border-color: $color_input-default-border-only_border-default;
-
-    &:hover {
-        background: transparent;
-        border-color: $color_input-default-border-only_border-hover;
-    }
-
-    &:focus-within {
-        background: transparent;
-    }
-}
-
 .#{$module}-borderless {
     &:not(:focus-within):not(:hover) {
         background-color: transparent;

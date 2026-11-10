@@ -9,7 +9,7 @@ export interface StreamingChatState {
     previousResult?: Message[];
 }
 
-export default function streamingChatCompletionToMessage(chatCompletionChunks: ChatCompletionChunk[], state?: StreamingChatState): { messages: Message[]; state?: StreamingChatState } {
+export default function streamingChatCompletionToMessage(chatCompletionChunks: ChatCompletionChunk[], state?: StreamingChatState): { messages: Message[]; state: StreamingChatState } {
     const groupedChunks = groupByIndex(chatCompletionChunks);
     // New object: the caller's state must not be written to
     const processedCountByIndex = { ...state?.processedCountByIndex };

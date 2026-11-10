@@ -27,6 +27,11 @@ function renderModal(modalProps?, children?) {
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const getButtons = () => document.querySelectorAll(`.${BASE_CLASS_PREFIX}-button`);
 
+// jsdom runs no animation; report one so the dialog waits for the animationend the tests dispatch
+beforeEach(() => {
+    vi.spyOn(Element.prototype, 'getAnimations').mockReturnValue([{ animationName: 'show' } as CSSAnimation]);
+});
+
 describe('modal', () => {
     beforeEach(() => {
         vi.useRealTimers();

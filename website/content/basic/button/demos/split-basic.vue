@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { reactive } from 'vue';
     import { IconTreeTriangleDown } from '@fibrae/semi-icons-vue';
-    import { Button, Dropdown, SplitButtonGroup, type DropDownMenuItem } from '@fibrae/semi-ui-vue';
+    import { Button, Dropdown, SplitButtonGroup, type DropdownMenuItem } from '@fibrae/semi-ui-vue';
 
-    const menu: DropDownMenuItem[] = [
+    const menu: DropdownMenuItem[] = [
         { node: 'item', name: '编辑项目', onClick: () => console.log('编辑项目点击') },
         { node: 'item', name: '重置项目' },
         { node: 'divider' },

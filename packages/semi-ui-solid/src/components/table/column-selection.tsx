@@ -6,7 +6,7 @@ import Checkbox, { type CheckboxEvent, type CheckboxProps } from '../checkbox';
 import useLocale from '../locale/use-locale';
 import { useTableContext } from './context';
 
-export interface TableSelectionCellProps {
+interface SelectionCellProps {
     getCheckboxProps?: () => CheckboxProps;
     onChange?: (checked: boolean, e: CheckboxEvent) => void;
     onKeyUp?: (e: KeyboardEvent) => void;
@@ -18,7 +18,7 @@ export interface TableSelectionCellProps {
     'aria-label'?: string;
 }
 
-export default function TableSelectionCell(props: TableSelectionCellProps) {
+function SelectionCell(props: SelectionCellProps) {
     const prefixCls = () => props.prefixCls ?? cssClasses.PREFIX;
 
     return (
@@ -28,7 +28,7 @@ export default function TableSelectionCell(props: TableSelectionCellProps) {
     );
 }
 
-export function TableSelection(props: { record?: Record<string, any>; inHeader?: boolean; index?: number }) {
+export default function ColumnSelection(props: { record?: Record<string, any>; inHeader?: boolean; index?: number }) {
     const table = useTableContext('Table.Selection');
     const locale = useLocale('Table');
 
@@ -59,9 +59,9 @@ export function TableSelection(props: { record?: Record<string, any>; inHeader?:
 
     const originNode = () =>
         props.inHeader ? (
-            <TableSelectionCell aria-label={locale().locale.selectAllRows} disabled={disabled()} indeterminate={indeterminate()} selected={selected()} onChange={selectAll} />
+            <SelectionCell aria-label={locale().locale.selectAllRows} disabled={disabled()} indeterminate={indeterminate()} selected={selected()} onChange={selectAll} />
         ) : (
-            <TableSelectionCell aria-label={locale().locale.selectRow} getCheckboxProps={getCheckboxProps} indeterminate={indeterminate()} selected={selected()} onChange={selectRow} onKeyUp={table.foundation.handleSelectionKeyUp} />
+            <SelectionCell aria-label={locale().locale.selectRow} getCheckboxProps={getCheckboxProps} indeterminate={indeterminate()} selected={selected()} onChange={selectRow} onKeyUp={table.foundation.handleSelectionKeyUp} />
         );
 
     // renderCell is called once with live fields, so what it reads in its JSX follows the selection

@@ -399,16 +399,15 @@ describe('Radio', () => {
         expect(document.querySelector(`.${prefixCls}-isCardRadioGroup_content`)).not.toBeNull();
     });
 
-    it('class、style、prefixCls 与 data-* 作用于根 label', () => {
+    it('class、style 与 data-* 作用于根 label', () => {
         render(Radio, {
-            props: { prefixCls: 'my-radio' },
             attrs: { class: 'c', style: { color: 'red' }, 'data-test': 'x' },
             slots: { default: () => 'A' },
         });
-        expect(getLabel()).toHaveClass('c', 'my-radio');
+        expect(getLabel()).toHaveClass('c', prefixCls);
         expect(getLabel()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getLabel()).toHaveAttribute('data-test', 'x');
-        expect(document.querySelector('.my-radio-inner')).not.toBeNull();
+        expect(document.querySelector(`.${prefixCls}-inner`)).not.toBeNull();
     });
 
     it('未声明的属性和 click 监听落在根 label', async () => {
@@ -513,8 +512,8 @@ describe('Radio', () => {
         expectTypeOf<RadioEmits['update:modelValue']>().toEqualTypeOf<[checked: boolean]>();
         expectTypeOf<RadioChangeEvent['target']>().toEqualTypeOf<{
             checked: boolean;
-            value: string | number | boolean | undefined;
-            name: string | undefined;
+            value?: string | number | boolean;
+            name?: string;
             disabled: boolean;
         }>();
     });

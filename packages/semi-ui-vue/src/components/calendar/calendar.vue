@@ -6,12 +6,12 @@
     import '@fibrae/semi-foundation/components/calendar/calendar.scss';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import useToday from './composables/use-today';
     import { provideCalendarContext } from './context';
     import DayCalendar from './day-calendar.vue';
     import type { CalendarEmits, CalendarProps, CalendarSlots } from './interface';
     import MonthCalendar from './month-calendar.vue';
     import TimeGrid from './time-grid.vue';
-    import useToday from './use-today';
 
     defineOptions({ name: 'Calendar' });
 

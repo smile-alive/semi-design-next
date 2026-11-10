@@ -27,10 +27,6 @@
                 "zh-CN": "弹出菜单相对触发元素的位置，常用 bottom、bottomLeft、bottomRight，更多见 Tooltip 的位置。",
                 "en-US": "Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; see the Tooltip positions for more."
             },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀，设置后弹出层不再带 Dropdown 的样式。",
-                "en-US": "Class prefix of the popup. A custom value drops the Dropdown styles."
-            },
             "spacing": {
                 "zh-CN": "弹出层与触发元素的距离，单位为像素；缺省时顶层菜单为 4，嵌套的子菜单为 2。",
                 "en-US": "Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu."

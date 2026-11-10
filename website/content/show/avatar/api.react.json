@@ -1,6 +1,6 @@
 {
     "avatar": {
-        "source": "packages/semi-ui-react/src/components/avatar/index.tsx",
+        "source": "packages/semi-ui-react/src/components/avatar/avatar.tsx",
         "props": {
             "alt": {
                 "zh-CN": "图片的替代文本；文字头像上它是可访问名称，未设置时使用头像的文字内容。",

@@ -27,7 +27,6 @@
                 "zh-CN": "是否显示步骤间的连接线；仅用于 basic 类型。",
                 "en-US": "Whether to show the line between steps; basic type only."
             },
-            "prefixCls": { "zh-CN": "根元素的类名前缀。", "en-US": "Class name prefix of the root element." },
             "onChange": {
                 "zh-CN": "点击或按 Enter、空格选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有 Step 变为可点击。",
                 "en-US": "Called when a step is selected by click or by Enter or Space, with its number (initial plus index); not called for the current step. Passing it makes every Step clickable."

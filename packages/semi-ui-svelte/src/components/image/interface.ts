@@ -72,8 +72,11 @@ export interface MenuProps {
     disabledZoomIn: boolean;
     disabledZoomOut: boolean;
     disableDownload: boolean;
-    /** Renders the default footer items in order: prev, page, next, zoom out, slider, zoom in, ratio, rotate, download */
-    menuItems: Snippet;
+    /**
+     * Renders the default footer items in order: prev, page, next, zoom out, slider, zoom in, ratio, rotate, download.
+     * `start` and `end` pick the items like `Array.prototype.slice`, so one item or a group renders where it is placed.
+     */
+    menuItems: Snippet<[start?: number, end?: number]>;
     onDownload: () => void;
     onNext: () => void;
     onPrev: () => void;
@@ -85,7 +88,7 @@ export interface MenuProps {
 }
 
 export interface ImagePreviewTitleSnippetProps {
-    title: string | undefined;
+    title?: string;
     index: number;
 }
 

@@ -10,7 +10,7 @@ import flattenChildren from '../../utils/flatten-children';
 import { Col } from '../grid/index';
 import InputGroup, { type InputGroupProps as BacisInputGroupProps } from '../input/input-group';
 import { useFieldBridgeContext } from './context';
-import ErrorMessage from './error-message';
+import ErrorMessage, { type ErrorMessageInternalProps } from './error-message';
 import { useFormState } from './hooks';
 import type { FormState } from './interface';
 import Label, { type LabelProps } from './label';
@@ -29,6 +29,8 @@ export interface InputGroupProps extends Omit<BacisInputGroupProps, 'label'> {
 
 const prefix = cssClasses.PREFIX;
 
+const InternalErrorMessage = ErrorMessage as (props: ErrorMessageInternalProps) => React.ReactNode;
+
 function GroupError(props: GroupErrorProps) {
     const { fieldSet } = props;
 
@@ -43,7 +45,7 @@ function GroupError(props: GroupErrorProps) {
         return null;
     }
 
-    return <ErrorMessage error={error} errorMessageId={props.errorMessageId} isInInputGroup={props.isInInputGroup} showValidateIcon={props.showValidateIcon} />;
+    return <InternalErrorMessage error={error} errorMessageId={props.errorMessageId} isInInputGroup={props.isInInputGroup} showValidateIcon={props.showValidateIcon} />;
 }
 
 export default function FormInputGroup(props: InputGroupProps) {

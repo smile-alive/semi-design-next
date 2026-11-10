@@ -274,7 +274,7 @@ describe('RadioGroup', () => {
         absent();
     });
 
-    it('Radio 的 name 优先于 group 的 name', () => {
+    it('组内 Radio 一律用 group 的 name', () => {
         render(
             <RadioGroup name="g">
                 <Radio name="own" value="A">
@@ -283,7 +283,7 @@ describe('RadioGroup', () => {
                 <Radio value="B">B</Radio>
             </RadioGroup>
         );
-        expect(getRadio('A')).toHaveAttribute('name', 'own');
+        expect(getRadio('A')).toHaveAttribute('name', 'g');
         expect(getRadio('B')).toHaveAttribute('name', 'g');
     });
 
@@ -476,12 +476,6 @@ describe('RadioGroup', () => {
         const cards = c2.querySelectorAll(`.${prefixCls}-cardRadioGroup`);
         expect(cards[2]).toHaveClass(`${prefixCls}-cardRadioGroup_checked`);
         expect(c2.querySelector(`.${BASE_CLASS_PREFIX}-radioGroup-vertical-card`)).not.toBeNull();
-    });
-
-    it('group 的 prefixCls 作用于各 radio', () => {
-        const { container } = render(createRadioGroup({ prefixCls: 'my-group' }));
-        expect(container.firstChild).toHaveClass('my-group', 'my-group-wrapper');
-        expect(container.querySelectorAll('label.my-group')).toHaveLength(3);
     });
 
     it('group 的 id、aria-* 与 data-* 作用于根元素', () => {

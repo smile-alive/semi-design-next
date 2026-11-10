@@ -91,7 +91,7 @@ export interface VirtualizeProps {
     itemSize: number;
 }
 
-export interface PaginationProps {
+export interface TransferPaginationProps {
     currentPage?: number;
     defaultCurrentPage?: number;
     pageSize?: number;
@@ -132,6 +132,7 @@ export type TransferElement = HTMLDivElement & TransferHandle;
 // Transfer owns the Tree's value and data; its flat item map reads the fixed field names, so keyMaps and the other
 // data shapes would make a check throw
 export const TRANSFER_OWNED_TREE_PROPS = ['value', 'ref', 'onChange', 'keyMaps', 'treeData', 'treeDataSimpleJson', 'onChangeWithObject'] as const;
+export const TRANSFER_OWNED_INPUT_PROPS = ['value', 'onChange'] as const;
 
 export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onChange' | 'onSelect' | 'onBlur' | 'ref'> {
     disabled?: boolean;
@@ -140,7 +141,7 @@ export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onC
     /** Read once, when the Transfer is created */
     defaultValue?: Array<string | number>;
     value?: Array<string | number>;
-    inputProps?: InputProps;
+    inputProps?: Omit<InputProps, (typeof TRANSFER_OWNED_INPUT_PROPS)[number]>;
     type?: Type;
     emptyContent?: EmptyContent;
     draggable?: boolean;
@@ -148,7 +149,7 @@ export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onC
     showPath?: boolean;
     loading?: boolean;
     virtualize?: VirtualizeProps;
-    pagination?: PaginationProps;
+    pagination?: TransferPaginationProps;
     onChange?: (values: Array<string | number>, items: Array<DataItem>) => void;
     onSelect?: (item: DataItem) => void;
     onDeselect?: (item: DataItem) => void;

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-svelte';
     import { IconForward, IconMoreStroked } from '@fibrae/semi-icons-svelte';
-    import { Button, Dropdown, type DropDownMenuItem } from '@fibrae/semi-ui-svelte';
+    import { Button, Dropdown, type DropdownMenuItem } from '@fibrae/semi-ui-svelte';
 
     const roleInfo = {
         user: {
@@ -21,7 +21,7 @@
     const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px';
 
     const uploadProps = { action: 'https://api.semi.design/upload' };
-    const menu: DropDownMenuItem[] = [{ node: 'item', name: '分享' }];
+    const menu: DropdownMenuItem[] = [{ node: 'item', name: '分享' }];
 
     let id = 0;
     const getId = () => `id-${id++}`;

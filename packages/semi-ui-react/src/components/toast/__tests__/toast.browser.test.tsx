@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { Button, Toast, ToastFactory } from '@fibrae/semi-ui-react';
+import { tabTo } from '@test/utils/browser';
 
 const prefix = `${BASE_CLASS_PREFIX}-toast`;
 const ReachableContext = createContext<string>(undefined);
@@ -323,5 +324,21 @@ describe('Toast', () => {
             view.unmount();
             host.remove();
         }
+    });
+
+    it('Tab 到收起堆叠后层的关闭按钮时堆叠已展开，按钮未被前层遮住', async () => {
+        const toast = ToastFactory.create();
+        onTestFinished(() => toast.destroyAll());
+        ['1', '2', '3', '4'].forEach((content) => toast.info({ content, duration: 0, stack: true }));
+        const toasts = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-zero-height-wrapper > .${prefix}`)];
+        await waitFor(() => expect(toasts()).toHaveLength(4));
+        const behind = toasts()[1].querySelector<HTMLElement>(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`);
+        await tabTo(behind);
+        const wrappers = toasts().map((t) => t.parentElement);
+        await waitFor(() => expect(wrappers.every((w) => w.classList.contains(`${prefix}-zero-height-wrapper-expanded`))).toBe(true));
+        wrappers.forEach((el) => el.getAnimations({ subtree: true }).forEach((a) => a.finish()));
+        const rect = behind.getBoundingClientRect();
+        const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        expect(behind.contains(hit)).toBe(true);
     });
 });

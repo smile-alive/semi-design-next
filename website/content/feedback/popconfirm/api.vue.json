@@ -106,10 +106,6 @@
                 "zh-CN": "箭头是否指向触发元素中心，需要同时开启 showArrow。",
                 "en-US": "Whether the arrow points at the center of the trigger. Requires showArrow."
             },
-            "prefixCls": {
-                "zh-CN": "确认卡片的类名前缀。",
-                "en-US": "Class prefix of the confirmation card."
-            },
             "closeOnEsc": {
                 "zh-CN": "弹出层打开期间按 Esc 是否关闭确认框；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。",
                 "en-US": "Whether Esc closes the open card. With trigger custom it only emits escKeyDown and the caller decides whether to close."

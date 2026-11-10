@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    import { computed, onUpdated, useAttrs, useTemplateRef, type InputHTMLAttributes } from 'vue';
+    import { computed, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
     import { omit } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation, { type UploadAdapter, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
     import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconUpload } from '@fibrae/semi-icons-vue';
@@ -83,6 +83,7 @@
 
     const semi = useSemiGlobal();
     const i18n = useLocale('Upload');
+    const formI18n = useLocale('Form');
 
     const input = useTemplateRef('input');
     const replaceInput = useTemplateRef('replaceInput');
@@ -92,10 +93,12 @@
     const root = useTemplateRef('root');
     const fileListRoot = useTemplateRef('fileListRoot');
     const listFocus = new ListFocusTracker();
+    const addAreaHasControl = shallowRef(false);
+    const requiredId = useId();
 
-    // role="group" supports no aria-required, and the tabindex a Tooltip around the Upload injects would add a Tab stop
-    // beside the add button, so it goes to the add button instead. blur does not bubble, so a form's blur handler is
-    // called from focusout instead.
+    // role="group" supports no aria-required, nor does role="button", so it becomes a description of the add button;
+    // the tabindex a Tooltip around the Upload injects would add a Tab stop beside the add button, so it goes there
+    // instead. blur does not bubble, so a form's blur handler is called from focusout instead.
     const DROPPED_ATTRS = new Set(['aria-required', 'tabindex', 'tabIndex', 'onBlur']);
 
     const prefix = cssClasses.PREFIX;
@@ -104,6 +107,7 @@
     const cropConfig = computed((): UploadCropProps => (typeof props.crop === 'object' ? props.crop : {}));
     const pictureListAttrs = computed(() => (isPicture.value ? { class: `${prefix}-picture-list`, role: 'list', 'aria-label': i18n.value.locale.pictureList } : {}));
     const addTabindex = computed(() => (attrs.tabindex ?? attrs.tabIndex) as number | string | undefined);
+    const addDescribedby = computed(() => (attrs['aria-required'] === true || attrs['aria-required'] === 'true' ? requiredId : undefined));
 
     const fnProp = <K extends FnKey>(key: K) => (props[key] ?? readSemiDefault(semi, 'Upload', key)) as UploadProps[K];
 
@@ -209,6 +213,9 @@
         style: { height: toCssLength(props.picHeight), width: toCssLength(props.picWidth) },
         'x-semi-prop': 'children',
         tabindex: addTabindex.value,
+        describedby: addDescribedby.value,
+        hasControl: addAreaHasControl.value,
+        'onUpdate:hasControl': (value: boolean) => (addAreaHasControl.value = value),
         ...(props.draggable ? dragListeners : {}),
     });
 
@@ -251,6 +258,7 @@
     <div
         ref="root"
         v-bind="rootAttrs($attrs)"
+        :aria-describedby="joinIds($attrs['aria-describedby'], addAreaHasControl && addDescribedby)"
         :class="[
             prefix,
             {
@@ -266,6 +274,8 @@
         :x-prompt-pos="props.promptPosition"
         @focusout="handleFocusout"
     >
+        <!-- describes the add area as the button; a slotted control is out of reach, so the root group takes it then -->
+        <span v-if="addDescribedby" :id="requiredId" hidden>{{ formI18n.locale.required }}</span>
         <input
             ref="input"
             :accept="props.accept"
@@ -283,6 +293,7 @@
         <template v-if="!isPicture">
             <AddArea
                 v-if="props.draggable"
+                v-model:hasControl="addAreaHasControl"
                 :class="[
                     dragArea,
                     {
@@ -290,6 +301,7 @@
                         [`${dragArea}-custom`]: $slots.default,
                     },
                 ]"
+                :describedby="addDescribedby"
                 :disabled="props.disabled"
                 :tabindex="addTabindex"
                 v-bind="dragListeners"
@@ -316,7 +328,7 @@
                     </div>
                 </slot>
             </AddArea>
-            <AddArea v-else :class="`${prefix}-add`" :disabled="props.disabled" :tabindex="addTabindex" @open="openFileDialog">
+            <AddArea v-else v-model:hasControl="addAreaHasControl" :class="`${prefix}-add`" :describedby="addDescribedby" :disabled="props.disabled" :tabindex="addTabindex" @open="openFileDialog">
                 <slot />
             </AddArea>
         </template>
@@ -345,11 +357,13 @@
                 </AddArea>
                 <!-- a list owns only items: the add button sits beside it, display: contents keeps one row -->
                 <component :is="isPicture ? 'div' : SlotFragment" v-if="shownFiles.length" v-bind="pictureListAttrs">
-                    <template v-for="(file, index) in shownFiles" :key="file.uid || `${file.name}${index}`">
-                        <template v-if="$slots.fileItem">
+                    <template v-if="$slots.fileItem">
+                        <template v-for="(file, index) in shownFiles" :key="file.uid || `${file.name}${index}`">
                             <component :is="node" v-for="[node, key] in fileItemNodes(file, index)" :key="key" />
                         </template>
-                        <FileCard v-else v-bind="cardProps(file, index)">
+                    </template>
+                    <template v-else>
+                        <FileCard v-for="(file, index) in shownFiles" :key="file.uid || `${file.name}${index}`" v-bind="cardProps(file, index)">
                             <template v-if="$slots.previewFile" #previewFile="p">
                                 <slot name="previewFile" v-bind="p" />
                             </template>

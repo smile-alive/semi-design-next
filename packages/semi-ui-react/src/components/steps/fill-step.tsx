@@ -13,7 +13,6 @@ export interface FillStepProps extends ElementProps<'div', 'title' | 'onChange' 
     title?: React.ReactNode;
     className?: string;
     style?: React.CSSProperties;
-    prefixCls?: string;
     stepNumber?: string;
     active?: boolean;
     onChange?: () => void;
@@ -25,7 +24,9 @@ export interface FillStepProps extends ElementProps<'div', 'title' | 'onChange' 
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export default function FillStep({ ref, role, prefixCls = css.ITEM, className = '', title, description, status = 'wait', active = false, style, onClick, icon, onChange, stepNumber, onKeyDown, ...rest }: FillStepProps) {
+const prefixCls = css.ITEM;
+
+export default function FillStep({ ref, role, className = '', title, description, status = 'wait', active = false, style, onClick, icon, onChange, stepNumber, onKeyDown, ...rest }: FillStepProps) {
     const item = useStepItem({ role, onChange, onClick, onKeyDown }, rest);
 
     const renderIcon = () => {

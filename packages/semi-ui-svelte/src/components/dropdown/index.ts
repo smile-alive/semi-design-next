@@ -15,4 +15,4 @@ export { default as DropdownDivider } from './dropdown-divider.svelte';
 export { default as DropdownItem } from './dropdown-item.svelte';
 export { default as DropdownMenu } from './dropdown-menu.svelte';
 export { default as DropdownTitle } from './dropdown-title.svelte';
-export type { DropDownMenuItem, DropDownMenuItemDivider, DropDownMenuItemItem, DropDownMenuItemTitle, DropdownDividerProps, DropdownHandle, DropdownItemProps, DropdownMenuIconArgs, DropdownMenuProps, DropdownProps, DropdownTitleProps, DropdownTriggerProps } from './interface.js';
+export type { DropdownMenuItem, DropdownMenuItemDividerType, DropdownMenuItemTitleType, DropdownMenuItemType, DropdownDividerProps, DropdownHandle, DropdownItemProps, DropdownMenuIconArgs, DropdownMenuProps, DropdownProps, DropdownTitleProps, DropdownTriggerProps } from './interface.js';

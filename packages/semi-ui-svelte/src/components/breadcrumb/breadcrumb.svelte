@@ -37,7 +37,8 @@
     const locale = useLocale('Breadcrumb');
 
     let root = $state<HTMLElement>();
-    let moreArea = $state<HTMLSpanElement>();
+    let list = $state<HTMLOListElement>();
+    let moreArea = $state<HTMLLIElement>();
 
     const prefix = cssClasses.PREFIX;
 
@@ -59,7 +60,7 @@
                     return undefined;
                 }
                 return () => {
-                    const target = root?.children[range.start]?.querySelector<HTMLElement>('a[href], [tabindex]:not([tabindex="-1"])');
+                    const target = list?.children[range.start]?.querySelector<HTMLElement>('a[href], [tabindex]:not([tabindex="-1"])');
                     if (!target && root) {
                         root.tabIndex = -1;
                     }
@@ -125,37 +126,41 @@
 {/snippet}
 
 <nav {...rest} aria-label={rest['aria-label'] ?? locale().locale.label} bind:this={root} class={[`${prefix}-wrapper`, compact ? `${prefix}-wrapper-compact` : `${prefix}-wrapper-loose`, rest.class]}>
-    {#each before as entry (entry.key)}
-        <BreadcrumbItem {...itemProps(entry)} />
-    {/each}
-    {#if collapsed}
-        <span bind:this={moreArea} class={`${prefix}-collapse`}>
-            <span class={`${prefix}-item-wrap`}>
-                <span aria-label={locale().locale.expand} class={`${prefix}-item ${prefix}-item-more`} role="button" tabindex="0" onclick={foundation.handleExpand} onkeydown={foundation.handleExpandKeyDown}>
-                    {#if more}
-                        {@render more({ restItems: hidden.map(({ route, index }) => ({ route, index })) })}
-                    {:else if moreType === 'default'}
-                        <IconMore />
-                    {:else}
-                        <Popover showArrow style="padding: 12px">
-                            <!-- the more button around it is the Tab stop and expands every item -->
-                            {#snippet child({ props })}<IconMore {...props} tabindex={-1} />{/snippet}
-                            {#snippet content()}
-                                {#each hidden as entry, i (entry.key)}
-                                    <BreadcrumbItem {...itemProps(entry)} />
-                                    {#if i < hidden.length - 1}
-                                        <span class={`${prefix}-restItem`}>{@render separatorContent()}</span>
-                                    {/if}
-                                {/each}
-                            {/snippet}
-                        </Popover>
-                    {/if}
+    <ol bind:this={list} class={`${prefix}-list`}>
+        {#each before as entry (entry.key)}
+            <BreadcrumbItem {...itemProps(entry)} />
+        {/each}
+        {#if collapsed}
+            <li bind:this={moreArea} class={`${prefix}-collapse`}>
+                <span class={`${prefix}-item-wrap`}>
+                    <span aria-label={locale().locale.expand} class={`${prefix}-item ${prefix}-item-more`} role="button" tabindex="0" onclick={foundation.handleExpand} onkeydown={foundation.handleExpandKeyDown}>
+                        {#if more}
+                            {@render more({ restItems: hidden.map(({ route, index }) => ({ route, index })) })}
+                        {:else if moreType === 'default'}
+                            <IconMore />
+                        {:else}
+                            <Popover showArrow style="padding: 12px">
+                                <!-- the more button around it is the Tab stop and expands every item -->
+                                {#snippet child({ props })}<IconMore {...props} tabindex={-1} />{/snippet}
+                                {#snippet content()}
+                                    <ol class={`${prefix}-list`}>
+                                        {#each hidden as entry, i (entry.key)}
+                                            <BreadcrumbItem {...itemProps(entry)} />
+                                            {#if i < hidden.length - 1}
+                                                <li aria-hidden="true" class={`${prefix}-restItem`}>{@render separatorContent()}</li>
+                                            {/if}
+                                        {/each}
+                                    </ol>
+                                {/snippet}
+                            </Popover>
+                        {/if}
+                    </span>
+                    <span class={`${prefix}-separator`} x-semi-prop="separator">{@render separatorContent()}</span>
                 </span>
-                <span class={`${prefix}-separator`} x-semi-prop="separator">{@render separatorContent()}</span>
-            </span>
-        </span>
-    {/if}
-    {#each after as entry (entry.key)}
-        <BreadcrumbItem {...itemProps(entry)} />
-    {/each}
+            </li>
+        {/if}
+        {#each after as entry (entry.key)}
+            <BreadcrumbItem {...itemProps(entry)} />
+        {/each}
+    </ol>
 </nav>

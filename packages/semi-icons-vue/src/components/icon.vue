@@ -1,15 +1,15 @@
 <script setup lang="ts">
-    import { computed, useAttrs } from 'vue';
+    import { useAttrs } from 'vue';
     import { BASE_CLASS_PREFIX } from '../env';
     import type { IconProps, IconSlots } from './interface';
     import '@fibrae/semi-icons-core/styles/icons.scss';
 
     defineOptions({ name: 'Icon', inheritAttrs: false, elementType: 'Icon' });
-    const props = withDefaults(defineProps<IconProps>(), { size: 'default', spin: false, prefixCls: BASE_CLASS_PREFIX });
+    withDefaults(defineProps<IconProps>(), { size: 'default', spin: false });
     defineSlots<IconSlots>();
 
     const attrs = useAttrs();
-    const prefix = computed(() => `${props.prefixCls}-icon`);
+    const prefix = `${BASE_CLASS_PREFIX}-icon`;
     // attrs are not reactive, so the check runs during render.
     const exposed = () => Boolean(attrs['aria-label'] || attrs['aria-labelledby']) || Number(attrs.tabindex) >= 0;
 </script>

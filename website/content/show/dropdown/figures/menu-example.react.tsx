@@ -1,7 +1,7 @@
-import { Dropdown, type DropDownMenuItem } from '@fibrae/semi-ui-react';
+import { Dropdown, type DropdownMenuItem } from '@fibrae/semi-ui-react';
 
 interface MenuExampleProps {
-    menu: DropDownMenuItem[];
+    menu: DropdownMenuItem[];
 }
 
 export default function MenuExample({ menu }: MenuExampleProps) {

@@ -74,8 +74,6 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
      */
     onResize?: (data: { height: number; width?: number }) => void;
     getValueLength?: (value: string) => number;
-    /** Internal, used by Chat: Enter does not start a new line, Shift+Enter does */
-    disabledEnterStartNewLine?: boolean;
     showLineNumber?: boolean;
     lineNumberStart?: number;
     lineNumberClassName?: string;
@@ -89,6 +87,12 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
     resize?: 'none' | 'both' | 'horizontal' | 'vertical' | 'block' | 'inline';
     /** Other HTML attributes go to the native textarea, className and style to the wrapper */
     ref?: React.Ref<TextAreaHandle>;
+}
+
+/** Props Semi's own components pass, kept out of the public TextAreaProps */
+export interface TextAreaInternalProps extends TextAreaProps {
+    /** Chat: Enter does not start a new line, Shift+Enter does */
+    disabledEnterStartNewLine?: boolean;
 }
 
 export interface TextAreaState extends TextAreaBaseState {}
@@ -165,7 +169,7 @@ export default function TextArea(rawProps: TextAreaProps) {
         insetLabel,
         insetLabelId,
         ...rest
-    } = props as TextAreaProps & { insetLabel?: unknown; insetLabelId?: unknown };
+    } = props as TextAreaInternalProps & { insetLabel?: unknown; insetLabelId?: unknown };
 
     const { locale } = useLocale('Input');
 

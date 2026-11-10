@@ -43,10 +43,12 @@ $module: #{$prefix}-progress;
         }
 
         .#{$module}-line-text {
+            flex-shrink: 0;
             min-width: $width-progress_line_text;
             margin-inline-start: $spacing-progress_line_text-marginLeft;
             font-weight: $font-progress_line_text-fontWeight;
             color: $color-progress_line_text-text;
+            white-space: nowrap;
         }
     }
 

@@ -212,7 +212,22 @@
         </li>
         {#if view.sizeChangerShown}
             <li class={`${prefix}-switch`}>
-                <Select aria-label={text.pageSizeSelector} clickToHide {disabled} dropdownClassName={`${prefix}-select-dropdown`} onChange={changePageSize} optionList={sizeOptions} position={view.switchPosition} value={states().pageSize} />
+                <!-- changePageSize takes one number: global Select defaults must not make it search, create, multiple or object-valued, nor add a clear button -->
+                <Select
+                    allowCreate={false}
+                    aria-label={text.pageSizeSelector}
+                    clickToHide
+                    {disabled}
+                    dropdownClassName={`${prefix}-select-dropdown`}
+                    filter={false}
+                    multiple={false}
+                    onChange={changePageSize}
+                    onChangeWithObject={false}
+                    optionList={sizeOptions}
+                    position={view.switchPosition}
+                    showClear={false}
+                    value={states().pageSize}
+                />
             </li>
         {/if}
         {#if showQuickJumper}

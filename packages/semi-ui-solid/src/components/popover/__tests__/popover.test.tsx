@@ -141,17 +141,17 @@ describe('Popover', () => {
         expect(document.querySelector(arrowSelector)).toBeNull();
     });
 
-    it('content 为函数时接收 initialFocusRef；contentClassName 与 prefixCls 作用于卡片', () => {
+    it('content 为函数时接收 initialFocusRef；contentClassName 作用于卡片', () => {
         const content = vi.fn<RenderContent>(({ initialFocusRef }) => <input ref={initialFocusRef} aria-label="inner" />);
         render(() => (
-            <Popover contentClassName="my-card" content={content} prefixCls="my-pop" trigger="custom" visible>
+            <Popover contentClassName="my-card" content={content} trigger="custom" visible>
                 {(t) => <span {...t()}>fn trigger</span>}
             </Popover>
         ));
         expect(content).toHaveBeenCalledWith({ initialFocusRef: expect.any(Function) });
         const card = screen.getByRole('textbox', { name: 'inner' }).parentElement?.parentElement;
-        expect(card).toHaveClass('my-pop', 'my-card');
-        expect(screen.getByRole('textbox', { name: 'inner' }).parentElement).toHaveClass('my-pop-content');
+        expect(card).toHaveClass(`${BASE_CLASS_PREFIX}-popover`, 'my-card');
+        expect(screen.getByRole('textbox', { name: 'inner' }).parentElement).toHaveClass(`${BASE_CLASS_PREFIX}-popover-content`);
     });
 
     it('编译为访问器的 JSX content（For、返回 Show 的组件）在弹层打开时随数据更新，已有行不重建', () => {

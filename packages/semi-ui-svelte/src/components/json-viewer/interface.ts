@@ -1,7 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type JsonViewerFoundation from '@fibrae/semi-foundation/components/json-viewer/foundation';
-import type { JsonViewerOptions as CoreOptions, SearchOptions, TokenRenderType } from '@fibrae/semi-foundation/components/json-viewer/foundation';
+import type { FindMatch, JsonViewerOptions as CoreOptions, SearchOptions, TokenRenderType } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 
 export type JsonViewerSearchOptions = SearchOptions;
 
@@ -57,7 +56,7 @@ export interface JsonViewerHandle {
     getValue: () => string;
     format: () => void;
     search: (searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => void;
-    getSearchResults: () => ReturnType<JsonViewerFoundation['getSearchResults']>;
+    getSearchResults: () => FindMatch[] | null | undefined;
     prevSearch: (step?: number) => void;
     nextSearch: (step?: number) => void;
     replace: (replaceText: string) => void;

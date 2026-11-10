@@ -12,6 +12,10 @@ export const [provideTooltipPopupsContext, useTooltipPopupsContext] = createCont
 // (Typography's ellipsis text) reads the popup id here; undefined while the popup is not in the document.
 export const [provideTooltipDescription, useTooltipDescription] = createContext<ComputedRef<string | undefined>>('TooltipDescription', { optional: true });
 
+// Popover and Dropdown name the class prefix of the popup wrapper of the Tooltip they render. The Tooltip resets it for
+// its subtree so a Tooltip inside the popup or trigger keeps the default prefix.
+export const [provideTooltipPrefixContext, useTooltipPrefixContext] = createContext<string | undefined>('TooltipPrefix', { optional: true });
+
 /**
  * The popups of the Tooltips rendered inside the caller, for `useClickOutside` to count as inside: they are teleported
  * out of its DOM, and Vue events do not bubble through the component tree as React portal events do.

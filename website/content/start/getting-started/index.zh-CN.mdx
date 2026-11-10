@@ -287,7 +287,7 @@ webpack 插件另有 `extractCssOptions`（如改用 `mini-css-extract-plugin` �
 Solid 项目的构建配置有以下区别：
 
 - Vite：开发服务器也需要 `@fibrae/semi-vite-plugin`，写成 `plugins: [solid(), semi()]`。vite-plugin-solid 把 Solid 包排除在预构建之外，foundation 的 CommonJS 依赖（如 `style-to-js`）原样进入浏览器，页面白屏，插件会把它们加入预构建。
-- webpack 5、rspack 2：Semi 的 webpack、rspack 插件不处理 Solid 包，所以插件的选项（`prefixCls`、`cssLayer: false`、`omitCss`）对 Solid 包不起作用，只支持默认前缀与分层样式，不使用这两个插件。应用的 JSX 用 `babel-loader` 加 `babel-preset-solid` 编译（需要 `@babel/core` 7）；打包器不识别 `solid` 导出条件，取到 `default` 条件下已为 DOM 编译的 `dist/*.js`。样式由组件各自导入：webpack 用 `css-loader` 加 `style-loader`，rspack 用 `type: 'css'`。
+- webpack 5、rspack 2：Semi 的 webpack、rspack 插件的用法与 React、Vue 相同，`prefixCls` 对 Solid 包生效；不用插件时只有默认前缀与分层样式。应用的 JSX 用 `babel-loader` 加 `babel-preset-solid` 编译（需要 `@babel/core` 7）；打包器不识别 `solid` 导出条件，取到 `default` 条件下已为 DOM 编译的 `dist/*.js`。样式由组件各自导入：不用插件时 webpack 用 `css-loader` 加 `style-loader`，rspack 用 `type: 'css'`；用插件时 webpack 不需要这条 CSS 规则，rspack 的规则要同时匹配 `.scss`。
 
 </Framework>
 
@@ -295,7 +295,7 @@ Solid 项目的构建配置有以下区别：
 
 Svelte 项目的构建配置有以下区别：
 
-- 只有 Vite 路线：Svelte 包由 `@sveltejs/vite-plugin-svelte`（SvelteKit 已内置）编译。`@fibrae/semi-webpack-plugin`、`@fibrae/semi-rspack-plugin` 不处理 Svelte 包，不要用于 Svelte 项目。
+- 只有 Vite 路线：Svelte 包由 `@sveltejs/vite-plugin-svelte`（SvelteKit 已内置）编译。webpack、rspack 没有经过验证的 Svelte 用法，`@fibrae/semi-webpack-plugin`、`@fibrae/semi-rspack-plugin` 不要用于 Svelte 项目。
 - `@fibrae/semi-vite-plugin` 对 `@fibrae/semi-ui-svelte`、`@fibrae/semi-ai-svelte` 与 `@fibrae/semi-icons-svelte` 生效，`prefixCls`、`cssLayer`、`omitCss` 的含义不变，写成 `plugins: [svelte(), semi()]`；SvelteKit 见[服务端渲染](#服务端渲染)。
 
 </Framework>

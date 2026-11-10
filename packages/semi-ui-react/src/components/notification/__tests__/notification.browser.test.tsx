@@ -144,17 +144,19 @@ describe('Notification', () => {
         });
 
         it('指针在列表上时暂停其中所有通知的计时，期间新来的通知同样暂停', async () => {
+            // the countdowns start at mount; on real timers a slow hover round trip lets them fire first
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
             render(<Demo />);
-            // 1s leaves room for the Playwright hover round trip before the first timers would fire
             await add('a', 1);
             await add('b', 1);
-            await waitFor(() => expect(notices()).toHaveLength(2));
+            // no waitFor while setTimeout is faked: React Testing Library's waitFor waits on it
+            expect(notices()).toHaveLength(2);
             notices().forEach((n) => n.getAnimations().forEach((a) => a.finish()));
             await userEvent.hover(notices()[0]);
             await add('c', 1);
-            // asserting that nothing closes needs a fixed wait longer than the duration
-            await new Promise((resolve) => setTimeout(resolve, 1500));
+            vi.advanceTimersByTime(1000);
             expect(notices()).toHaveLength(3);
+            vi.useRealTimers();
             await userEvent.unhover(notices()[0]);
             await waitFor(() => expect(notices()).toHaveLength(0), { timeout: 3000 });
         });

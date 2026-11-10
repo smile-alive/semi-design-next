@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { applyColumnResize, findColumn, getColumnResizeChange, getExpandColumn, getResizableColumns, getSelectionColumn } from '@fibrae/semi-foundation/components/table/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import type { TableProps, ColumnProps, RowSelectionProps } from './interface';
-import ResizableHeaderCell from './resizable-header-cell';
-import Table from './table';
+import NormalTable from './normal-table';
+import ResizableHeaderCell from './table-header/resizable-header-cell';
 
 const childrenColumnName = 'children';
 
@@ -95,8 +95,8 @@ export default function ResizableTable(props: TableProps) {
     }, [jsxColumnsOnly]);
 
     if (jsxColumnsOnly) {
-        return <Table {...restProps} components={propComponents} />;
+        return <NormalTable {...restProps} components={propComponents} />;
     }
 
-    return <Table {...restProps} columns={finalColumns} components={components} />;
+    return <NormalTable {...restProps} columns={finalColumns} components={components} />;
 }

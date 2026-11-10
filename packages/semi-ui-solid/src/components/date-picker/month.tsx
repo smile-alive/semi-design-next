@@ -6,7 +6,7 @@ import type { DayStatusType } from '@fibrae/semi-foundation/components/date-pick
 import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import useFoundation from '../../base/use-foundation';
-import useToday from '../calendar/use-today';
+import useToday from '../calendar/primitives/use-today';
 import useConfig from '../config-provider/use-config';
 
 const prefixCls = cssClasses.PREFIX;

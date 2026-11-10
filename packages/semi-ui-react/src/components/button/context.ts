@@ -2,7 +2,7 @@ import { inheritGroupLooks } from '@fibrae/semi-foundation/components/button/uti
 import { createContext } from '../../base/create-context';
 import { usePopupLayer } from '../../base/popup-layer';
 import { useInputGroupInScope } from '../input/context';
-import type { ButtonProps } from './button';
+import type { ButtonProps } from './base-button';
 
 export type ButtonGroupLooks = Pick<ButtonProps, 'disabled' | 'size' | 'type' | 'theme' | 'colorful'>;
 

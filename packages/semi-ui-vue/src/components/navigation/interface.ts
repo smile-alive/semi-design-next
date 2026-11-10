@@ -37,7 +37,7 @@ export type SubDropdownProps = DropdownProps & {
 
 export interface NavItemProps {
     disabled?: boolean;
-    indent?: boolean | number;
+    indent?: boolean;
     /** Or'ed with the collapsed state of the Nav */
     isCollapsed?: boolean;
     itemKey?: ItemKey;
@@ -70,7 +70,7 @@ export interface SubNavProps {
     dropdownProps?: SubDropdownProps;
     /** Wins over the style in dropdownProps */
     dropdownStyle?: StyleValue;
-    indent?: boolean | number;
+    indent?: boolean;
     itemKey?: ItemKey;
     level?: number;
     /** Applies when dropdownProps is not given */
@@ -122,7 +122,7 @@ export interface NavItemConfig extends EntryAttributes {
     disabled?: boolean;
     dropdownProps?: SubDropdownProps;
     dropdownStyle?: EntryAttributes['style'];
-    indent?: boolean | number;
+    indent?: boolean;
     itemKey?: ItemKey;
     items?: (string | NavItemConfig)[];
     link?: string;

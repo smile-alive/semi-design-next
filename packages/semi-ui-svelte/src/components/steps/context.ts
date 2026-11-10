@@ -8,7 +8,6 @@ export interface StepsContextValue {
     current: number;
     initial: number;
     status: StepStatus;
-    prefixCls: string;
     /** True when the parent set onChange, which makes every step clickable */
     clickable: boolean;
     title?: Snippet<[StepSnippetProps]>;

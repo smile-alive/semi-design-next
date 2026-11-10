@@ -1,6 +1,7 @@
 import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { HookApi } from '@fibrae/semi-foundation/base/hook-api';
 import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+import type { ElementProps } from '../../base/element-props';
 
 export type { ConfigProps, ConfigProps as ToastConfigProps, Directions, ToastState, ToastTheme, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
@@ -8,19 +9,27 @@ export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/com
 /** A text, a VNode, or a function rendered as a functional component (it may inject) */
 export type ToastNode = string | VNode | (() => VNodeChild);
 
-export interface ToastProps extends Omit<FoundationToastProps, 'content' | 'icon' | 'className' | 'style' | 'close'> {
+/** Undeclared options land on the toast element as attrs (F2, F6) */
+export interface ToastProps extends Omit<FoundationToastProps, 'content' | 'icon' | 'className' | 'style' | 'close'>, ElementProps<'div', 'id' | 'class' | 'style' | 'innerHTML'> {
     id?: string;
     content: ToastNode;
     icon?: ToastNode;
     motion?: boolean;
     class?: HTMLAttributes['class'];
     style?: StyleValue;
-    [attribute: `data-${string}` | `aria-${string}`]: string | number | boolean | undefined;
+    // an options object gets excess property checks, which only JSX skips for hyphenated names
+    [attribute: `data-${string}`]: string | number | boolean | undefined;
 }
 
-/** Props of the single toast the list renders; list-level options are stripped before they reach it */
-export interface ToastItemProps extends Omit<ToastProps, 'content' | 'stack' | 'onClose' | 'class' | 'style' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex' | 'getPopupContainer'> {
+/**
+ * Props of the single toast the list renders; list-level options are stripped before they reach it. Not derived from
+ * ToastProps: defineProps would turn its native attributes into runtime props.
+ */
+export interface ToastItemProps extends Omit<FoundationToastProps, 'content' | 'icon' | 'className' | 'style' | 'close' | 'stack' | 'onClose' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex' | 'getPopupContainer'> {
+    id?: string;
     content?: ToastNode;
+    icon?: ToastNode;
+    motion?: boolean;
     stack?: boolean;
     stackExpanded?: boolean;
     positionInList?: { index: number; length: number };

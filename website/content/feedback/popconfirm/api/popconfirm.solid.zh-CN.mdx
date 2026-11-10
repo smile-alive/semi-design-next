@@ -42,7 +42,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | 确认框显示、进场动画开始时调用，每次打开一次，早于 `afterOpen`，受控与非受控相同；悬停打开后指针已离开而撤回的打开不调用。 | `TooltipProps['onOpen']` | - |
 | onVisibleChange | 显示状态请求变化时调用，参数是请求的显示状态。`visible` 受控时只报告用户交互发起的请求，使用方自己改变 `visible` 不触发。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | 弹出方向，缺省为 `bottomLeft`（RTL 下为 `bottomRight`）。 | `Position` | - |
-| prefixCls | 确认卡片的类名前缀，缺省为 `semi-popconfirm`。 | `string` | `"semi-popconfirm"` |
 | ref | 接收句柄的回调，句柄只有 `focusTrigger` 方法；组件创建时调用一次。 | <ApiType detail={"Ref\u003cPopconfirmHandle>"}>Type</ApiType> | - |
 | returnFocusOnClose | 关闭后焦点是否回到触发元素，缺省为 `true`；`trigger` 为 `custom` 时不生效，受控的 `visible` 照常生效。 | `TooltipProps['returnFocusOnClose']` | - |
 | role | 弹出层的 ARIA role，缺省为 `dialog`，与 `trigger` 无关。 | `string` | `"dialog"` |

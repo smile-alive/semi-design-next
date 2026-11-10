@@ -20,7 +20,7 @@ describe('Breadcrumb（浏览器）', () => {
 
         await userEvent.hover(container.querySelector(`.${prefix}-item-more`) as Element);
         const hidden = await waitFor(() => {
-            const items = document.querySelectorAll(`.${BASE_CLASS_PREFIX}-popover-content > .${prefix}-item-wrap`);
+            const items = document.querySelectorAll(`.${BASE_CLASS_PREFIX}-popover-content > ol > .${prefix}-item-wrap`);
             expect(items).toHaveLength(2);
             return items;
         });

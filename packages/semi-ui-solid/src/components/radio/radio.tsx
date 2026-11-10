@@ -25,7 +25,6 @@ export interface RadioProps extends ElementProps<'label', 'onChange' | 'onFocus'
     defaultChecked?: boolean;
     value?: string | number | boolean;
     disabled?: boolean;
-    prefixCls?: string;
     displayMode?: RadioDisplayMode;
     onChange?: (event: RadioChangeEvent) => void;
     mode?: RadioMode;
@@ -35,7 +34,7 @@ export interface RadioProps extends ElementProps<'label', 'onChange' | 'onFocus'
     type?: RadioType;
     addonId?: string;
     extraId?: string;
-    /** Attached to the native input; inside a group it overrides the group's name */
+    /** Attached to the native input; inside a group the group's name wins */
     name?: string;
     /** Passed to `focus()` of the root element, which focuses the native input */
     preventScroll?: boolean;
@@ -62,9 +61,11 @@ const defaultProps = {
     type: 'default',
 } satisfies Partial<RadioProps>;
 
+const prefix = css.PREFIX;
+
 export default function Radio(rawProps: RadioProps) {
     const props = useDefaultProps('Radio', rawProps, defaultProps);
-    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'value', 'disabled', 'prefixCls', 'displayMode', 'onChange', 'onClick', 'mode', 'addonStyle', 'addonClassName', 'type', 'addonId', 'extraId', 'preventScroll']);
+    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'value', 'disabled', 'displayMode', 'onChange', 'onClick', 'mode', 'addonStyle', 'addonClassName', 'type', 'addonId', 'extraId', 'preventScroll']);
 
     // The root is a label, so what names, identifies and focuses the radio belongs on the native input
     const [control, rest] = splitControlAttrs(attrs, isNativeInputKey);
@@ -100,10 +101,6 @@ export default function Radio(rawProps: RadioProps) {
 
     // a button radio is only its label, so its extra is not created either
     const extra = children(() => (view().isButtonRadio ? undefined : local.extra));
-
-    const prefix = () => view().prefixCls || css.PREFIX;
-
-    const innerPrefix = () => local.prefixCls || css.PREFIX;
 
     const addonId = () => local.addonId || `addon-${uid}`;
 
@@ -168,32 +165,32 @@ export default function Radio(rawProps: RadioProps) {
         <label
             {...rest}
             ref={mergeRefs(local.ref, setup)}
-            class={clsx(prefix(), local.class, {
-                [`${prefix()}-disabled`]: view().disabled,
-                [`${prefix()}-checked`]: view().checked,
-                [`${prefix()}-${local.displayMode}`]: Boolean(local.displayMode),
-                [`${prefix()}-buttonRadioComponent`]: !view().inGroup && view().isButtonRadio,
-                [`${prefix()}-buttonRadioGroup`]: view().isButtonRadio,
-                [`${prefix()}-buttonRadioGroup-${view().buttonSize}`]: view().isButtonRadio && view().buttonSize,
-                [`${prefix()}-cardRadioGroup`]: view().isCardRadio,
-                [`${prefix()}-cardRadioGroup_disabled`]: view().disabled && view().isCardRadio,
-                [`${prefix()}-cardRadioGroup_checked`]: view().isCardRadio && view().checked && !view().disabled,
-                [`${prefix()}-cardRadioGroup_checked_disabled`]: view().isCardRadio && view().checked && view().disabled,
+            class={clsx(prefix, local.class, {
+                [`${prefix}-disabled`]: view().disabled,
+                [`${prefix}-checked`]: view().checked,
+                [`${prefix}-${local.displayMode}`]: Boolean(local.displayMode),
+                [`${prefix}-buttonRadioComponent`]: !view().inGroup && view().isButtonRadio,
+                [`${prefix}-buttonRadioGroup`]: view().isButtonRadio,
+                [`${prefix}-buttonRadioGroup-${view().buttonSize}`]: view().isButtonRadio && view().buttonSize,
+                [`${prefix}-cardRadioGroup`]: view().isCardRadio,
+                [`${prefix}-cardRadioGroup_disabled`]: view().disabled && view().isCardRadio,
+                [`${prefix}-cardRadioGroup_checked`]: view().isCardRadio && view().checked && !view().disabled,
+                [`${prefix}-cardRadioGroup_checked_disabled`]: view().isCardRadio && view().checked && view().disabled,
             })}
             onClick={handleLabelClick}
         >
             <span
-                class={clsx(`${innerPrefix()}-inner`, {
-                    [`${innerPrefix()}-inner-checked`]: view().checked,
-                    [`${innerPrefix()}-inner-buttonRadio`]: view().isButtonRadio,
-                    [`${innerPrefix()}-inner-pureCardRadio`]: view().isPureCardRadio,
+                class={clsx(`${prefix}-inner`, {
+                    [`${prefix}-inner-checked`]: view().checked,
+                    [`${prefix}-inner-buttonRadio`]: view().isButtonRadio,
+                    [`${prefix}-inner-pureCardRadio`]: view().isPureCardRadio,
                 })}
             >
                 <input
                     {...inputAttrs}
                     ref={(node) => (input = node)}
                     type="radio"
-                    name={control.name ?? group?.view().radioGroup?.name}
+                    name={group?.view().radioGroup?.name ?? control.name}
                     aria-describedby={joinIds(control['aria-describedby'], hasExtra() ? extraId() : undefined, unsupported['aria-invalid'] ? unsupported['aria-errormessage'] : undefined)}
                     aria-labelledby={joinIds(control['aria-labelledby'], hasChildren() ? addonId() : undefined)}
                     checked={view().checked}
@@ -203,24 +200,24 @@ export default function Radio(rawProps: RadioProps) {
                     onClick={handleClick}
                     onKeyUp={handleKeyUp}
                 />
-                <span class={clsx({ [`${innerPrefix()}-inner-display`]: !view().isButtonRadio })}>
+                <span class={clsx({ [`${prefix}-inner-display`]: !view().isButtonRadio })}>
                     <Show when={view().checked}>
                         <IconRadio />
                     </Show>
                 </span>
             </span>
             <Show when={hasChildren() || hasExtra()}>
-                <div class={clsx(`${prefix()}-content`, { [`${prefix()}-isCardRadioGroup_content`]: view().isCardRadio })}>
+                <div class={clsx(`${prefix}-content`, { [`${prefix}-isCardRadioGroup_content`]: view().isCardRadio })}>
                     <Show when={hasChildren()}>
                         <span
                             id={addonId()}
                             class={clsx(
                                 {
-                                    [`${prefix()}-addon`]: !view().isButtonRadio,
-                                    [`${prefix()}-addon-buttonRadio`]: view().isButtonRadio,
-                                    [`${prefix()}-addon-buttonRadio-checked`]: view().isButtonRadio && view().checked,
-                                    [`${prefix()}-addon-buttonRadio-disabled`]: view().isButtonRadio && view().disabled,
-                                    [`${prefix()}-addon-buttonRadio-${view().buttonSize}`]: view().isButtonRadio && view().buttonSize,
+                                    [`${prefix}-addon`]: !view().isButtonRadio,
+                                    [`${prefix}-addon-buttonRadio`]: view().isButtonRadio,
+                                    [`${prefix}-addon-buttonRadio-checked`]: view().isButtonRadio && view().checked,
+                                    [`${prefix}-addon-buttonRadio-disabled`]: view().isButtonRadio && view().disabled,
+                                    [`${prefix}-addon-buttonRadio-${view().buttonSize}`]: view().isButtonRadio && view().buttonSize,
                                 },
                                 local.addonClassName
                             )}
@@ -231,7 +228,7 @@ export default function Radio(rawProps: RadioProps) {
                         </span>
                     </Show>
                     <Show when={hasExtra()}>
-                        <div id={extraId()} class={`${prefix()}-extra`} x-semi-prop="extra">
+                        <div id={extraId()} class={`${prefix}-extra`} x-semi-prop="extra">
                             {extra()}
                         </div>
                     </Show>

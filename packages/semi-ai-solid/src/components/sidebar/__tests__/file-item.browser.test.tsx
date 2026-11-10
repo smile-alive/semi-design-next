@@ -2,7 +2,7 @@ import { render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { FileItem } from '../widgets/file';
+import { FileItem } from '../file';
 
 describe('Sidebar.FileItem', () => {
     it('Tab 遍历工具栏时每个停靠点都是按钮，标题与链接下拉没有额外的空停靠点', async () => {

@@ -25,7 +25,7 @@ import ApiType from '#/components/ApiType.astro';
 | ellipsisTrigger | 同时设置 `maxTagCount` 且为多选时，是否对溢出的标签做自适应处理，宽度不足时截断最后一个标签的内容。开启后有一定性能损耗，大表单场景不推荐使用。 | `boolean` | `false` |
 | emptyContent | 无结果时展示的内容。未设置时展示语言包中的空状态文案；设为 `null` 时下拉列表不展示任何内容。 | `React.ReactNode` | - |
 | expandRestTagsOnClick | 同时设置 `maxTagCount` 且为多选时，下拉列表展开期间是否展示全部剩余标签。 | `boolean` | `false` |
-| filter | 是否可搜索。传入 `true` 时按选项的 `label` 是否包含输入值筛选；传入函数时，函数接收输入值与选项对象，返回 `true` 表示保留该选项。 | <ApiType detail={"boolean \u007c ((inpueValue: string, option: OptionProps) => boolean)"}>Type</ApiType> | `false` |
+| filter | 是否可搜索。传入 `true` 时按选项的 `label` 是否包含输入值筛选；传入函数时，函数接收输入值与选项对象，返回 `true` 表示保留该选项。 | <ApiType detail={"boolean \u007c ((inputValue: string, option: OptionProps) => boolean)"}>Type</ApiType> | `false` |
 | id | 触发器的 id，选项的 id 由它派生。未传时由组件生成。 | `string` | - |
 | innerBottomSlot | 渲染在下拉列表内部底部的自定义内容，随选项列表滚动，滚动到底部时展示。 | `React.ReactNode` | - |
 | innerTopSlot | 渲染在下拉列表内部顶部的自定义内容，随选项列表滚动，滚动到顶部时展示。 | `React.ReactNode` | - |
@@ -62,7 +62,7 @@ import ApiType from '#/components/ApiType.astro';
 | ref | 指向 `SelectHandle` 句柄，通过它调用下方 Methods 中的方法。 | <ApiType detail={"React.Ref\u003cSelectHandle>"}>Type</ApiType> | - |
 | remote | 是否为远程搜索。为 `true` 时输入内容变化后不再对当前选项做本地筛选，需由外部通过更新 `optionList` 提供结果。 | `boolean` | `false` |
 | renderCreateItem | `allowCreate` 为 `true` 时，自定义创建条目的内容，参数为 `(inputValue, isFocus, style)`，返回 ReactNode。未设置时展示语言包中的「创建」加输入内容。与虚拟化结合使用时，须把 `style` 用在自定义节点上。 | <ApiType detail={"(inputValue: OptionProps['value'], focus: boolean, style?: React.CSSProperties) => React.ReactNode"}>Type</ApiType> | - |
-| renderOptionItem | 完全接管下拉列表中候选项的渲染。参数包括 `id`、`value`、`label`、`selected`、`focused`、`disabled`、`inputValue`、`className`、`style`、`onClick` 与 `onMouseEnter`。`style`、`className`、`onClick` 与 `onMouseEnter` 须用在包装元素上，`id` 须与 `role="option"`、`aria-selected`、`aria-disabled` 一起写在包装元素上。 | <ApiType detail={"(props: optionRenderProps) => React.ReactNode"}>Type</ApiType> | - |
+| renderOptionItem | 完全接管下拉列表中候选项的渲染。参数包括 `id`、`value`、`label`、`selected`、`focused`、`disabled`、`inputValue`、`className`、`style`、`onClick` 与 `onMouseEnter`。`style`、`className`、`onClick` 与 `onMouseEnter` 须用在包装元素上，`id` 须与 `role="option"`、`aria-selected`、`aria-disabled` 一起写在包装元素上。 | <ApiType detail={"(props: OptionRenderProps) => React.ReactNode"}>Type</ApiType> | - |
 | renderSelectedItem | 自定义选择框中已选项标签的渲染。单选时入参为选项对象，返回 ReactNode；多选时入参为选项对象与 `{ index, disabled, onClose }`，返回 `{ isRenderInTag, content }`，`isRenderInTag` 为 `true` 时，`content` 会包在带背景色与关闭按钮的标签中。 | <ApiType detail={"ByMultiple\u003cMultiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>"}>Type</ApiType> | - |
 | restTagsPopoverProps | `showRestTagsPopover` 开启时，超出标签的 Popover 配置，可设置 `position`、`trigger` 等，参考 Popover 组件。 | `PopoverProps` | `{}` |
 | searchPlaceholder | 搜索框位于下拉列表中（`searchPosition` 为 `dropdown`）时，搜索框的占位文字。 | `string` | - |
@@ -78,7 +78,7 @@ import ApiType from '#/components/ApiType.astro';
 | triggerRender | 自定义选择框的触发器。入参包括 `value`、`inputValue`、`onSearch`、`onRemove`、`onClear`、`disabled`、`placeholder` 与 `componentProps`。若想保留搜索能力又不自行渲染输入框，可同时把 `searchPosition` 设为 `dropdown`。 | <ApiType detail={"(props: TriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
 | validateStatus | 校验状态，可选 `warning`、`error`、`default`，仅影响背景色等样式。未设置时为 `default`。 | `ValidateStatus` | - |
 | value | 当前选中的值。传入后 Select 为受控组件，需配合 `onChange` 使用。多选时为数组。 | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | - |
-| virtualize | 开启列表虚拟化，用于大量选项时优化性能。包含 `height`（默认 270）、`width`（默认 `100%`）与 `itemSize`（每行选项的高度，必传）。 | `virtualListProps` | - |
+| virtualize | 开启列表虚拟化，用于大量选项时优化性能。包含 `height`（默认 270）、`width`（默认 `100%`）与 `itemSize`（每行选项的高度，必传）。 | `VirtualizeProps` | - |
 
 **Methods**
 

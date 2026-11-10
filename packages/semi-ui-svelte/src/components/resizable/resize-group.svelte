@@ -36,6 +36,12 @@
         })
     );
 
+    const trackSize = observeResize(() => {
+        // a group first mounted inside display:none measures 0: lay out again once it becomes measurable
+        foundation.handleGroupResize();
+        foundation.ensureConstraint();
+    });
+
     // a handler that left the group (unmounted mid-drag) can still send events: the foundation ignores those
     setResizeGroupContext({
         get direction() {
@@ -47,12 +53,6 @@
         notifyResizing: foundation.onResizing,
         notifyResizeEnd: foundation.onResizeEnd,
         notifyKeyDown: foundation.resizeByKey,
-    });
-
-    const trackSize = observeResize(() => {
-        // a group first mounted inside display:none measures 0: lay out again once it becomes measurable
-        foundation.handleGroupResize();
-        foundation.ensureConstraint();
     });
 
     // vw and vh limits change with the window even when the group keeps its size

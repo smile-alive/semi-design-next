@@ -2,13 +2,13 @@
 
 | Property           | Description                                                                                     | Type                    | Default                                                |
 | ------------------ | ----------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------ |
-| autoEscape         | Whether to escape regular expression characters in searchWords.                                 | `boolean`               | `semiDefault("Highlight", "autoEscape", true)`         |
-| caseSensitive      | Whether matching is case sensitive.                                                             | `boolean`               | `semiDefault("Highlight", "caseSensitive", false)`     |
-| sourceString       | Source text.                                                                                    | `string`                | `semiDefault("Highlight", "sourceString", "")`         |
-| searchWords        | Text to highlight: a string, a string array, or an array of objects with text, class and style. | `string \| SearchWords` | `semiDefault("Highlight", "searchWords", [])`          |
+| autoEscape         | Whether to escape regular expression characters in searchWords.                                 | `boolean`               | `true`                                                 |
+| caseSensitive      | Whether matching is case sensitive.                                                             | `boolean`               | `false`                                                |
+| sourceString       | Source text.                                                                                    | `string`                | `""`                                                   |
+| searchWords        | Text to highlight: a string, a string array, or an array of objects with text, class and style. | `string \| SearchWords` | `[]`                                                   |
 | highlightStyle     | Inline style of the highlight tag. Vue adds no px to numbers, so write lengths as strings.      | `CSSProperties`         | `semiGlobalDefault("Highlight", "highlightStyle")`     |
 | highlightClassName | Class name of the highlight tag.                                                                | `string`                | `semiGlobalDefault("Highlight", "highlightClassName")` |
-| component          | Tag name of the highlight element.                                                              | `string`                | `semiDefault("Highlight", "component", "mark")`        |
+| component          | Tag name of the highlight element.                                                              | `string`                | `"mark"`                                               |
 
 **Events**
 

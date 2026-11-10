@@ -34,7 +34,6 @@ export interface RatingProps extends ElementProps<'ul', 'defaultValue' | 'onChan
     count?: number;
     allowHalf?: boolean;
     allowClear?: boolean;
-    prefixCls?: string;
     onChange?: (value: number) => void;
     /** `undefined` when the pointer leaves the stars or a click clears the value */
     onHoverChange?: (value?: number) => void;
@@ -62,7 +61,6 @@ const defaultProps = {
     count: 5,
     allowHalf: false,
     allowClear: true,
-    prefixCls: cssClasses.PREFIX,
     size: 'default',
 } satisfies Partial<RatingProps>;
 
@@ -81,7 +79,6 @@ export default function Rating(rawProps: RatingProps) {
         'count',
         'allowHalf',
         'allowClear',
-        'prefixCls',
         'onChange',
         'onHoverChange',
         'character',
@@ -185,7 +182,7 @@ export default function Rating(rawProps: RatingProps) {
         <ul
             {...rest}
             ref={mergeRefs(setup, local.ref)}
-            class={clsx(props.prefixCls, { [`${props.prefixCls}-disabled`]: props.disabled }, local.class)}
+            class={clsx(cssClasses.PREFIX, { [`${cssClasses.PREFIX}-disabled`]: props.disabled }, local.class)}
             aria-label={ariaLabel()}
             role="radiogroup"
             tabIndex={-1}
@@ -221,7 +218,7 @@ export default function Rating(rawProps: RatingProps) {
                             displayValue={state().hoverValue === undefined ? value() : state().hoverValue}
                             firstTabStop={index === 0 && !onRadio()}
                             index={index}
-                            prefixCls={`${props.prefixCls}-star`}
+                            prefixCls={`${cssClasses.PREFIX}-star`}
                             size={index === props.count ? 0 : props.size}
                             unitOf={unitOf}
                             onClick={foundation.handleClick}

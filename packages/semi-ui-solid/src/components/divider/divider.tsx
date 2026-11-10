@@ -51,18 +51,18 @@ export default function Divider(rawProps: DividerProps) {
             aria-orientation={!hasText() && local.layout === 'vertical' ? 'vertical' : undefined}
             role={hasText() ? undefined : 'separator'}
             {...rest}
-            class={clsx(`${prefixCls}-divider`, local.class, {
-                [`${prefixCls}-divider-horizontal`]: local.layout === 'horizontal',
-                [`${prefixCls}-divider-vertical`]: local.layout === 'vertical',
-                [`${prefixCls}-divider-dashed`]: Boolean(local.dashed),
-                [`${prefixCls}-divider-with-text`]: hasText(),
-                [`${prefixCls}-divider-with-text-${local.align}`]: hasText(),
+            class={clsx(prefixCls, local.class, {
+                [`${prefixCls}-horizontal`]: local.layout === 'horizontal',
+                [`${prefixCls}-vertical`]: local.layout === 'vertical',
+                [`${prefixCls}-dashed`]: Boolean(local.dashed),
+                [`${prefixCls}-with-text`]: hasText(),
+                [`${prefixCls}-with-text-${local.align}`]: hasText(),
             })}
             style={style()}
         >
             <Show when={hasText()}>
                 <Show when={isTextOnly()} fallback={nodes()}>
-                    <span class={`${prefixCls}-divider_inner-text`} x-semi-prop="children">
+                    <span class={`${prefixCls}_inner-text`} x-semi-prop="children">
                         {nodes()}
                     </span>
                 </Show>

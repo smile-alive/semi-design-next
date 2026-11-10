@@ -17,7 +17,7 @@ import ScrollItem, { type ScrollItemHandle, type ScrollItemProps } from '../scro
 const prefixCls = `${BASE_CLASS_PREFIX}-datepicker`;
 
 /** Spread after the panel's own props, so the ones it fills in are left out to keep them from being overridden */
-export type YearAndMonthOpts = Partial<Omit<ScrollItemProps<any>, 'list' | 'onSelect' | 'selectedIndex' | 'type'>>;
+export type YearAndMonthOpts = Partial<Omit<ScrollItemProps<any>, 'list' | 'onSelect' | 'selectedIndex'>>;
 
 export interface YearAndMonthProps extends YearAndMonthFoundationProps, BaseProps {
     yearAndMonthOpts?: YearAndMonthOpts;
@@ -62,7 +62,6 @@ export default function YearAndMonth({ ref, ...rawProps }: YearAndMonthProps) {
             <ScrollList>
                 <ScrollItem
                     ref={yearRef}
-                    type="year"
                     aria-label={locale.year}
                     cycled={yearCycled}
                     list={yearList}
@@ -72,9 +71,7 @@ export default function YearAndMonth({ ref, ...rawProps }: YearAndMonthProps) {
                     onSelect={(item) => foundation.selectYear(item, panelType)}
                     {...yearAndMonthOpts}
                 />
-                {type !== 'year' && (
-                    <ScrollItem ref={monthRef} type="month" aria-label={locale.month} cycled={monthCycled} list={monthList} mode="normal" selectedIndex={monthList.findIndex((item) => item.month === currentMonth[panelType])} onSelect={(item) => foundation.selectMonth(item, panelType)} {...yearAndMonthOpts} />
-                )}
+                {type !== 'year' && <ScrollItem ref={monthRef} aria-label={locale.month} cycled={monthCycled} list={monthList} mode="normal" selectedIndex={monthList.findIndex((item) => item.month === currentMonth[panelType])} onSelect={(item) => foundation.selectMonth(item, panelType)} {...yearAndMonthOpts} />}
             </ScrollList>
         );
     };

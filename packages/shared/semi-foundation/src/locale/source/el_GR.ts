@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Επιλογή όλων των γραμμών',
         selectRow: 'Επιλογή αυτής της γραμμής',
+        scrollRegion: 'Κυλιόμενο περιεχόμενο πίνακα',
+        untitledColumn: 'Στήλη χωρίς τίτλο',
         filterColumn: 'Φιλτράρισμα δεδομένων με αυτή τη στήλη',
         filterColumnActive: 'Φιλτράρισμα δεδομένων με αυτή τη στήλη, το φίλτρο είναι ενεργό',
         expandRow: 'Ανάπτυξη αυτής της γραμμής',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Αναζήτηση',
         replace: 'Αντικατάσταση',
         replaceAll: 'Αντικατάσταση όλων',
+        replaceWith: 'Αντικατάσταση με',
         caseSensitive: 'Διάκριση πεζών-κεφαλαίων',
         regex: 'Χρήση κανονικής έκφρασης',
         wholeWord: 'Αντιστοίχιση ολόκληρης λέξης',

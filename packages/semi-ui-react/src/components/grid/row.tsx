@@ -19,18 +19,15 @@ export interface RowProps extends ElementProps<'div'> {
     style?: React.CSSProperties;
     children?: React.ReactNode;
     gutter?: Gutter | [Gutter, Gutter];
-    prefixCls?: string;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;
 }
 
-const defaultProps = { prefixCls: cssClasses.PREFIX } satisfies Partial<RowProps>;
-
 export default function Row(rawProps: RowProps) {
-    const { ref, prefixCls, type, justify, align, className, style, children, gutter = 0, ...rest } = useDefaultProps('Row', rawProps, defaultProps);
+    const { ref, type, justify, align, className, style, children, gutter = 0, ...rest } = useDefaultProps('Row', rawProps, {});
 
     const [horizontal, vertical] = normalizeGutter(gutter);
-    const classes = getRowClassName(prefixCls, { type, justify, align }, className);
+    const classes = getRowClassName(cssClasses.PREFIX, { type, justify, align }, className);
 
     const rowStyle = {
         ...gutterStyle('x', horizontal),

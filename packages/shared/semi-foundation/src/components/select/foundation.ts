@@ -6,6 +6,7 @@ import { crossesFocusBoundary, getEnabledStepIndex, getListTargetIndex, handlePr
 import { centerInScroller } from '../../utils/dom';
 import EventEmitter from '../../utils/event';
 import { ENTER_KEY, isComposing } from '../../utils/key-code';
+import { containsWithPopups } from '../../utils/layer';
 import warning from '../../utils/warning';
 import { cssClasses, strings } from './constants';
 import type { BasicOptionProps, OptionRecord } from './option-foundation';
@@ -90,6 +91,7 @@ type PropValue = LabelValue | Record<string, any>;
 export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProps, S extends SelectBaseState = SelectBaseState, LE = unknown> extends BaseFoundation<SelectAdapter<P, S, LE>, P, S> {
     // isFocus cannot tell whether onBlur is owed: a Tab into the trigger leaves it unset (clicked style)
     #blurPending = false;
+    #popupFocusTrigger: Element | null = null;
     #hiddenByWidth = 0;
     readonly #typeahead = new Typeahead();
     // close() defers clearing the search to the end of the leave animation, which the host reports as popoverClose
@@ -596,6 +598,27 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         }
     }
 
+    // A Vue Teleport or a Svelte popover does not pass the popup's focusout to the trigger, as a React or Solid portal
+    // does, so the document reports focus leaving the popup
+    #watchPopupFocus(trigger: Element) {
+        this.#popupFocusTrigger = trigger;
+        // adding the same listener again is a no-op
+        trigger.ownerDocument.addEventListener('focusout', this.#handlePopupFocusOut, { signal: this.signal });
+    }
+
+    #handlePopupFocusOut = (e: FocusEvent) => {
+        const trigger = this.#popupFocusTrigger;
+        if (!trigger || (containsWithPopups(trigger, e.relatedTarget) && !trigger.contains(e.relatedTarget as Node))) {
+            return;
+        }
+        this.#popupFocusTrigger = null;
+        trigger.ownerDocument.removeEventListener('focusout', this.#handlePopupFocusOut);
+        // focus back in the trigger, or leaving from it, is the trigger's own focusout to handle
+        if (!trigger.contains(e.target as Node) && !trigger.contains(e.relatedTarget as Node)) {
+            this.#handleTriggerBlur(e);
+        }
+    };
+
     // tabbing into the search input skips the trigger's focus handling
     #handleInputFocus(e: unknown) {
         this.#notifyFocus(e);
@@ -827,8 +850,6 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     };
 
     open = (_acInput?: string, originalOptions?: OptionRecord[]) => {
-        // Reopening during the leave animation cancels its afterClose, so the work close() deferred to it runs now
-        this.#events.emit('popoverClose');
         const isFilterable = this.#isFilterable();
         let options = originalOptions || this.getState('options');
         if (isFilterable) {
@@ -975,13 +996,14 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     // searchPosition='dropdown' binds to the dropdown input, since the popup is not a DOM child of the trigger
     handleKeyDown = (event: SelectKeyEvent) => {
         const { loading, filter, multiple, disabled, searchPosition } = this.getProps();
-        const { isOpen } = this.getStates();
+        const { isOpen, showInput } = this.getStates();
 
         if (loading || disabled || isComposing(event) || isInnerControlKey(event)) {
             return;
         }
-        // a search input owns characters, Space, Home and End
-        const editing = isTextEditor(event.target) || (filter && searchPosition === strings.SEARCH_POSITION_TRIGGER);
+        // a search input owns characters, Space, Home and End; a closed single select shows no input, so it keeps the
+        // APG select-only keys
+        const editing = isTextEditor(event.target) || (filter && searchPosition === strings.SEARCH_POSITION_TRIGGER && showInput);
         if (!editing && this.#handleSelectOnlyKeyDown(event)) {
             return;
         }
@@ -1077,9 +1099,15 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         if (e.target && e.target === this.adapter.getTriggerInput()) {
             this.#handleInputBlur();
         }
-        if (crossesFocusBoundary(e)) {
-            this.#handleTriggerBlur(e);
+        if (!crossesFocusBoundary(e)) {
+            return;
         }
+        // focus moving into the rest-tags popover stays in the Select
+        if (e.currentTarget instanceof Element && containsWithPopups(e.currentTarget, e.relatedTarget)) {
+            this.#watchPopupFocus(e.currentTarget);
+            return;
+        }
+        this.#handleTriggerBlur(e);
     };
 
     selectAll = () => {
@@ -1153,6 +1181,14 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     handlePopoverClose = () => {
         this.#events.emit('popoverClose');
+    };
+
+    // Escape the overlay stack hands to the dropdown when no key handler of the select claimed it (focus elsewhere)
+    handleEscKeyDown = (event: KeyboardEvent) => {
+        // loading blocks the keys
+        if (!this.getProp('loading')) {
+            this.close({ event });
+        }
     };
 
     handleSlotMouseEnter = () => {

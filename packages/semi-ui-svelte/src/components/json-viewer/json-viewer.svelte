@@ -2,7 +2,7 @@
     import { tick } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
-    import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
+    import JsonViewerFoundation, { type FindMatch, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
     import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
@@ -142,7 +142,7 @@
         foundation.search(searchText, caseSensitive, wholeWord, regex);
     }
 
-    export function getSearchResults(): ReturnType<JsonViewerFoundation['getSearchResults']> {
+    export function getSearchResults(): FindMatch[] | null | undefined {
         return foundation.getSearchResults();
     }
 

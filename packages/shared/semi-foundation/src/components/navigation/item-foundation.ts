@@ -7,7 +7,7 @@ export interface ItemProps {
     itemKey?: any;
     icon?: any;
     toggleIcon?: unknown;
-    indent?: boolean | number;
+    indent?: boolean;
     isCollapsed?: boolean;
     isSubNav?: boolean;
     link?: string;
@@ -52,7 +52,7 @@ export function copySelectedItem<T>(item: T, isElement: (value: unknown) => bool
 }
 
 /** Blank icon slots that indent an item `level` lists deep: each nesting level adds one */
-export function countPlaceholderIcons({ mode, limitIndent, isCollapsed, hasIcon, indent, level }: { mode?: string; limitIndent?: boolean; isCollapsed?: boolean; hasIcon: boolean; indent: boolean | number; level: number }) {
+export function countPlaceholderIcons({ mode, limitIndent, isCollapsed, hasIcon, indent, level }: { mode?: string; limitIndent?: boolean; isCollapsed?: boolean; hasIcon: boolean; indent: boolean; level: number }) {
     if (mode !== strings.MODE_VERTICAL || limitIndent || isCollapsed) {
         return 0;
     }

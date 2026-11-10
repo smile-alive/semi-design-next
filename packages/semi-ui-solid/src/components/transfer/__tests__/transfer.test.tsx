@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
-import Transfer, { type DataItem, type PaginationProps, type SelectedPanelProps, type SourcePanelProps, type TransferElement, type TransferProps } from '..';
+import Transfer, { type DataItem, type SelectedPanelProps, type SourcePanelProps, type TransferElement, type TransferPaginationProps, type TransferProps } from '..';
 import Tooltip from '../../tooltip';
 
 // mock.lastCall is undefined until the first call; fail loudly instead of asserting on nothing
@@ -916,7 +916,7 @@ describe('Transfer 行为', () => {
     });
 
     it('左侧列表分页，上报页码变化，搜索时回到第 1 页', async () => {
-        const onPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
+        const onPageChange = vi.fn<NonNullable<TransferPaginationProps['onPageChange']>>();
         render(() => <Transfer dataSource={many} pagination={{ pageSize: 2, onPageChange }} />);
         expect(getLeftItemTexts()).toEqual(['item0', 'item1']);
         await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
@@ -927,7 +927,7 @@ describe('Transfer 行为', () => {
     });
 
     it('跟随受控的分页 currentPage', async () => {
-        const onPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
+        const onPageChange = vi.fn<NonNullable<TransferPaginationProps['onPageChange']>>();
         const { setProps } = renderWith({ dataSource: many, pagination: { pageSize: 2, currentPage: 3, onPageChange } });
         expect(getLeftItemTexts()).toEqual(['item4']);
         await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.prev }));
@@ -949,7 +949,7 @@ describe('Transfer 行为', () => {
     });
 
     it('受控页码越界时搜索回到第 1 页并上报 onPageChange(1)', async () => {
-        const onPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
+        const onPageChange = vi.fn<NonNullable<TransferPaginationProps['onPageChange']>>();
         render(() => <Transfer dataSource={many} pagination={{ pageSize: 2, currentPage: 3, onPageChange }} />);
         await userEvent.type(getSearchInput(), 'item4');
         expect(getLeftItemTexts()).toEqual(['item4']);
@@ -957,7 +957,7 @@ describe('Transfer 行为', () => {
     });
 
     it('非受控搜索重置页码时上报一次 onPageChange(1)', async () => {
-        const onPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
+        const onPageChange = vi.fn<NonNullable<TransferPaginationProps['onPageChange']>>();
         render(() => <Transfer dataSource={many} pagination={{ pageSize: 2, onPageChange }} />);
         await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
         onPageChange.mockClear();

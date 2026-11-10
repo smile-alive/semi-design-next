@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, defineAsyncComponent, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
@@ -36,7 +35,6 @@
         keepDOM: semiGlobalDefault('Table', 'keepDOM'),
         loading: () => semiDefault('Table', 'loading', false),
         pagination: () => semiDefault('Table', 'pagination', true),
-        prefixCls: () => semiDefault('Table', 'prefixCls', cssClasses.PREFIX),
         resizable: () => semiDefault('Table', 'resizable', false) as NonNullable<TableProps<R>['resizable']>,
         rowExpandable: undefined,
         rowKey: undefined,

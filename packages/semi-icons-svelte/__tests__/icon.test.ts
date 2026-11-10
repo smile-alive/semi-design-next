@@ -87,9 +87,8 @@ describe('semi-icons-svelte', () => {
         const icon = container.querySelector<HTMLElement>('.semi-icon');
         expect(icon).toHaveClass('semi-icon-large', 'semi-icon-spinning', 'semi-icon-alarm', 'mine');
         expect(icon?.style.transform).toBe('rotate(90deg)');
-        await view.rerender({ style: 'transform: scale(2)', prefixCls: 'custom' });
+        await view.rerender({ style: 'transform: scale(2)' });
         expect(icon?.style.transform).toBe('scale(2)');
-        expect(icon).toHaveClass('custom-icon');
     });
 
     it('size 为 inherit 时不加尺寸 class', () => {

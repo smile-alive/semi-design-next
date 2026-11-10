@@ -1,10 +1,10 @@
-// compat merge accepts an undefined source and deep-merges component maps while keeping memo/forwardRef objects as is
-import { merge } from 'es-toolkit/compat';
+import { isPlainObject, mergeWith } from 'es-toolkit';
 import { getDefaultComponents } from '@fibrae/semi-foundation/components/table/utils';
 import type { TableComponents, Virtualized } from './interface';
 
+// A user component replaces the default tag as is: the default merge would copy memo/forwardRef objects, which are plain objects
 export function mergeComponents(components: TableComponents, virtualized: Virtualized) {
-    return merge(getDefaultComponents(Boolean(virtualized)), components);
+    return mergeWith(getDefaultComponents(Boolean(virtualized)), components ?? {}, (target, source) => (isPlainObject(target) ? undefined : source));
 }
 
 export { cloneDeep } from '../../utils';

@@ -17,10 +17,10 @@
     const uid = $props.id();
 
     const prefix = cssClasses.PREFIX;
-    const labelId = getFieldIds(uid).label;
     const formProps = $derived<AllFormProps>(form?.formProps ?? {});
     const shownLabelPosition = $derived(labelPosition || formProps.labelPosition || 'top');
     const labelConfig = $derived(isLabelConfig(label) ? label : { text: label });
+    const labelId = $derived((isLabelConfig(label) && label.id) || getFieldIds(uid).label);
 
     // a rendered label names the slot, so the slot becomes a group its content belongs to
     const labelShown = $derived(!noLabel && ((labelConfig.text != null && labelConfig.text !== '') || Boolean(fieldLabel)));

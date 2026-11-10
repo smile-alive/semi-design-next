@@ -16,7 +16,6 @@ $module: #{$prefix}-button;
     }
 
     &.#{$module}-loading {
-        pointer-events: none;
         cursor: not-allowed;
 
         .#{$module}-content {

@@ -7,7 +7,7 @@
 | dropdownStyle    | 弹层的样式，优先于 `dropdownProps` 中的 `style`。                                                                      | `JSX.CSSProperties \| string` | -      |
 | expandIcon       | 展开收起箭头图标。                                                                                                     | `JSX.Element`                 | -      |
 | icon             | 子导航图标。                                                                                                           | `JSX.Element`                 | -      |
-| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。                                                                       | `boolean \| number`           | -      |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。                                                                       | `boolean`                     | -      |
 | itemKey          | 子导航的唯一标识，`openKeys` 与 `selectedKeys` 通过它匹配子导航。                                                      | `ItemKey`                     | -      |
 | level            | 当前项所在的嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 Nav.Sub 需要自己传入。 | `number`                      | -      |
 | subDropdownProps | 弹层 Dropdown 的参数，未传 `dropdownProps` 时使用。                                                                    | `DropdownProps`               | -      |

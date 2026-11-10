@@ -39,14 +39,12 @@ import ApiType from '#/components/ApiType.astro';
 | onEnterPress | Called when the Enter key is pressed. | <ApiType detail={"(e: InputElementEvent\u003cKeyboardEvent>) => void"}>Type</ApiType> | - |
 | onFocus | Called when focus enters the input; the event is the `focusin` of the wrapper. | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | - |
 | onKeyDown | Called when a key is pressed in the input; the event is its `keydown`. | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, KeyboardEvent>"}>Type</ApiType> | - |
-| onlyBorder | Internal prop giving the border width of the wrapper in pixels, set by other components; callers normally do not pass it. | `number` | - |
 | onNumberChange | Called when the number changes; the first argument is the number, and the second is as in `onChange`. | <ApiType detail={"(value: number, e: InputNumberChangeEvent) => void"}>Type</ApiType> | - |
 | onUpClick | Called when the increase button is clicked, with the stepped value and the `pointerdown` event. While held, it is called on every step with the event that began the press. | <ApiType detail={"(value: string, e: PointerEvent) => void"}>Type</ApiType> | - |
 | parser | Converts the text from `formatter` back to a number string; used together with `formatter`. | <ApiType detail={"(value: string) => string"}>Type</ApiType> | - |
 | placeholder | Placeholder text. | `string \| number` | - |
 | precision | Numerical precision, the number of fraction digits kept. | `number` | - |
 | prefix | Prefix content, shown inside the input on the left. | `JSX.Element` | - |
-| prefixCls | Class name prefix of the component; the root class is the prefix plus `-number`, `semi-input-number` by default. | `string` | `"semi-input"` |
 | pressInterval | Interval in milliseconds between repeats while a step button is held. | `number` | `250` |
 | pressTimeout | Delay in milliseconds before repeating starts while a step button is held. | `number` | `250` |
 | preventScroll | Whether focusing stops the browser from scrolling the document to the input; applies to focusing inside the component. | `boolean` | - |
@@ -55,7 +53,6 @@ import ApiType from '#/components/ApiType.astro';
 | scientificNotation | Shows scientific notation when blurred and the full number when focused. Pass `{ threshold }` to configure the threshold, 15 significant digits by default. Not supported in currency mode. | `boolean \| ScientificNotationConfig` | - |
 | shiftStep | Step of each change while Shift is held; may be a decimal. | `number` | `10` |
 | showClear | Whether to show the clear button. | `boolean` | - |
-| showClearIgnoreDisabled | Internal prop set by DatePicker; callers normally do not pass it. | `boolean` | - |
 | showCurrencySymbol | Whether to show the currency symbol, code or name; only in currency mode. | `boolean` | `true` |
 | size | Input size: `default`, `small` or `large`. The `size` of the enclosing `InputGroup` takes precedence when it is set. | `InputSize` | - |
 | step | Step of each change; may be a decimal. | `number` | `1` |

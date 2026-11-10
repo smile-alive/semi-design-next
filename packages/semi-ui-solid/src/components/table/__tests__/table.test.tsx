@@ -3,9 +3,12 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconStar } from '@fibrae/semi-icons-solid';
 import { endLeaveAnimations, getData, getNestData, getRandomNumber, getTreeData } from '@test/utils/solid';
 import Table from '..';
+import LocaleProvider from '../../locale/locale-provider';
 import Tag from '../../tag';
 import Tooltip from '../../tooltip';
 import type { ColumnProps, TableHandle, TableProps } from '../interface';
@@ -804,7 +807,7 @@ describe('Table', () => {
             </Table>
         ));
         const headerCells = queryAll(`.${P}-thead .${P}-row-head`);
-        expect(headerCells.map((cell) => cell.textContent)).toEqual(columns.map((column) => column.title ?? ''));
+        expect(headerCells.map((cell) => cell.textContent)).toEqual(columns.map((column) => column.title ?? zh_CN.Table.untitledColumn));
         warn.mockRestore();
     });
 
@@ -1216,5 +1219,42 @@ describe('Table 最后一列', () => {
         ];
         render(() => <Table columns={columns} dataSource={dataSource} pagination={false} />);
         expect(queryAll(`.${P}-cell-last`).map((cell) => cell.textContent)).toEqual(['C', 'b1', 'c2']);
+    });
+});
+
+describe('Table 可访问名称', () => {
+    it('滚动表体、无标题列与只有图标的排序按钮的名称跟随语言包', async () => {
+        // the body overflows its box, as the observer reports on observe()
+        vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
+        vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(300);
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                #callback: () => void;
+                constructor(callback: () => void) {
+                    this.#callback = callback;
+                }
+                observe() {
+                    this.#callback();
+                }
+                unobserve() {}
+                disconnect() {}
+            }
+        );
+        render(() => (
+            <LocaleProvider locale={ja_JP}>
+                <Table
+                    columns={[
+                        { title: 'Name', dataIndex: 'name' },
+                        { dataIndex: 'age', sorter: true },
+                    ]}
+                    dataSource={[{ key: '1', name: 'a', age: 1 }]}
+                    pagination={false}
+                />
+            </LocaleProvider>
+        ));
+        expect(await screen.findByRole('group', { name: ja_JP.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
+        expect(screen.getByText(ja_JP.Table.untitledColumn)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: ja_JP.Table.ascend })).toBeInTheDocument();
     });
 });

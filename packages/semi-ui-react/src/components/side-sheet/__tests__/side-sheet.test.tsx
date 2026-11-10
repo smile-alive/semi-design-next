@@ -25,6 +25,11 @@ function renderSideSheet(props?, children?) {
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const getInner = () => $(`.${BASE_CLASS_PREFIX}-sidesheet-inner`);
 
+// jsdom runs no animation; report one so the sheet waits for the animationend the tests dispatch
+beforeEach(() => {
+    vi.spyOn(Element.prototype, 'getAnimations').mockReturnValue([{ animationName: 'show' } as CSSAnimation]);
+});
+
 describe('SideSheet', () => {
     it('className / style / maskStyle / bodyStyle / headerStyle / zIndex', () => {
         renderSideSheet({

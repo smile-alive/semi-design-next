@@ -2,11 +2,11 @@
     import AnchorLink from '../../anchor-link.vue';
     import Anchor from '../../anchor.vue';
 
-    withDefaults(defineProps<{ autoCollapse?: boolean }>(), { autoCollapse: false });
+    withDefaults(defineProps<{ autoCollapse?: boolean; getContainer?: () => HTMLElement | null }>(), { autoCollapse: false, getContainer: undefined });
 </script>
 
 <template>
-    <Anchor :autoCollapse="autoCollapse">
+    <Anchor :autoCollapse="autoCollapse" :getContainer="getContainer">
         <AnchorLink href="#Semi Design" title="1. Semi Design">
             <AnchorLink href="#组件" title="1.1 组件">
                 <AnchorLink href="#头像" title="1.1.1 Avatar" />

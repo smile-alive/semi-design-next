@@ -11,7 +11,6 @@ export interface RadioContextValue {
         value?: string | number | boolean;
         isButtonRadio?: boolean;
         disabled?: boolean;
-        prefixCls?: string;
         name?: string;
         onChange?: (e: RadioChangeEvent) => void;
         buttonSize?: RadioGroupButtonSize;

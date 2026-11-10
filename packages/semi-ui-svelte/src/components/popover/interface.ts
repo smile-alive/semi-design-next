@@ -46,7 +46,6 @@ export interface PopoverProps {
     stopPropagation?: boolean | string;
     arrowStyle?: ArrowStyle;
     arrowPointAtCenter?: boolean;
-    prefixCls?: string;
     closeOnEsc?: boolean;
     guardFocus?: boolean;
     returnFocusOnClose?: boolean;

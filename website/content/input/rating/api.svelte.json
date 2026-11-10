@@ -32,7 +32,6 @@
                 "zh-CN": "仅在方向键使值移动时的回调。",
                 "en-US": "Called only for an arrow key that moved the value."
             },
-            "prefixCls": { "zh-CN": "组件的样式类名前缀。", "en-US": "Class name prefix of the component." },
             "preventScroll": {
                 "zh-CN": "指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的聚焦。",
                 "en-US": "Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component."

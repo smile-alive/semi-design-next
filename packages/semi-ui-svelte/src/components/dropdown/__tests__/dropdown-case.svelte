@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Dropdown, DropdownItem, DropdownMenu, type DropdownProps, type DropDownMenuItem, type DropdownTriggerProps } from '..';
+    import { Dropdown, DropdownItem, DropdownMenu, type DropdownProps, type DropdownMenuItem, type DropdownTriggerProps } from '..';
 
     type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
     type TriggerKind = 'button' | 'text' | 'role' | 'plain' | 'self-click';
@@ -13,7 +13,7 @@
         trigger: TriggerKind;
         content: ContentKind;
         entries: Entry[];
-        menu: DropDownMenuItem[];
+        menu: DropdownMenuItem[];
         icons: boolean;
     }
 

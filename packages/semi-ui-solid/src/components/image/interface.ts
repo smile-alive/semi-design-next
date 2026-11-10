@@ -32,7 +32,8 @@ export type ImagePreviewProps = Omit<PreviewProps, 'lazyLoad' | 'lazyLoadMargin'
 export interface PreviewProps extends ElementProps<'div', 'onChange'> {
     visible?: boolean;
     src?: string | string[];
-    previewTitle?: JSX.Element;
+    /** A function is called once the preview opens; JSX written into an inline `preview` object is created with it, unrendered, and breaks hydration */
+    previewTitle?: JSX.Element | (() => JSX.Element);
     currentIndex?: number;
     defaultCurrentIndex?: number;
     defaultVisible?: boolean;
@@ -175,7 +176,7 @@ export interface PreviewImageProps {
 }
 
 export interface GroupImage extends PreviewGroupImage {
-    title?: JSX.Element;
+    title?: PreviewProps['previewTitle'];
 }
 
 export interface PreviewState {

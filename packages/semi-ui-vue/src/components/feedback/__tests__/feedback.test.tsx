@@ -184,7 +184,7 @@ describe('Feedback', () => {
 
         it('radio：垂直分组上报所选值', async () => {
             const onValueChange = vi.fn<(...args: unknown[]) => void>();
-            const onChange = vi.fn<(event: { target: { value: unknown } }) => void>();
+            const onChange = vi.fn<(event: { target: { value?: unknown } }) => void>();
             await renderFeedback({
                 type: 'radio',
                 radioGroupProps: { options, onChange },

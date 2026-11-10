@@ -96,7 +96,6 @@
                         mode="normal"
                         :selectedIndex="panel.yearIndex"
                         :transform="yearText"
-                        type="year"
                         v-bind="props.yearAndMonthOpts"
                         @select="foundation.selectYear($event as ScrollItemSelectData<YearScrollItem>, panel.panelType)"
                     />
@@ -108,7 +107,6 @@
                         :list="panel.months"
                         mode="normal"
                         :selectedIndex="panel.monthIndex"
-                        type="month"
                         v-bind="props.yearAndMonthOpts"
                         @select="foundation.selectMonth($event as ScrollItemSelectData<MonthScrollItem>, panel.panelType)"
                     />

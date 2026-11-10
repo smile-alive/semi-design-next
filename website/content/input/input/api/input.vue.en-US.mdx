@@ -8,21 +8,21 @@ import ApiType from '#/components/ApiType.astro';
 | modelModifiers | The trim, number and lazy v-model modifiers, passed by Vue for the matching v-model modifier. With lazy, typing does not update the bound value; update:modelValue is emitted on the native change (blur or Enter). The change event still fires on every input. | `InputModelModifiers` | `undefined` |
 | defaultValue | Initial content when the input is uncontrolled. | `string \| number` | `semiGlobalDefault("Input", "defaultValue")` |
 | size | Input size: large, default or small. | `Size` | `undefined` |
-| type | The type of the native input. | `string` | `semiDefault("Input", "type", "text")` |
+| type | The type of the native input. | `string` | `"text"` |
 | mode | Input mode; password shows a button that reveals or hides the text. | `"password"` | `semiGlobalDefault("Input", "mode")` |
 | disabled | Whether the input is disabled. | `boolean` | `undefined` |
-| readonly | Whether the input is read-only. | `boolean` | `semiDefault("Input", "readonly", false)` |
-| borderless | Borderless mode. | `boolean` | `semiDefault("Input", "borderless", false)` |
-| showClear | Shows a clear button when the input has content and the pointer or focus is inside the component. | `boolean` | `semiDefault("Input", "showClear", false)` |
-| hideSuffix | Hides the suffix while the clear button is shown; by default the two sit side by side. | `boolean` | `semiDefault("Input", "hideSuffix", false)` |
+| readonly | Whether the input is read-only. | `boolean` | `false` |
+| borderless | Borderless mode. | `boolean` | `false` |
+| showClear | Shows a clear button when the input has content and the pointer or focus is inside the component. | `boolean` | `false` |
+| hideSuffix | Hides the suffix while the clear button is shown; by default the two sit side by side. | `boolean` | `false` |
 | showClearIgnoreDisabled | Internal property used by DatePicker: the clear button stays available while disabled. | `boolean` | `semiGlobalDefault("Input", "showClearIgnoreDisabled")` |
-| composition | Whether to enable IME mode; change does not fire during a composition and fires once after it ends. | `boolean` | `semiDefault("Input", "composition", false)` |
+| composition | Whether to enable IME mode; change does not fire during a composition and fires once after it ends. | `boolean` | `false` |
 | preventScroll | Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component. | `boolean` | `semiGlobalDefault("Input", "preventScroll")` |
 | autofocus | Focuses the input on mount, using preventScroll; a disabled input is not focused. | `boolean` | `semiGlobalDefault("Input", "autofocus")` |
 | maxlength | Maximum length. With getValueLength the length is measured and truncated by it; otherwise the native attribute applies. | `number` | `undefined` |
 | minlength | Minimum length. With getValueLength it is converted accordingly; otherwise the native attribute applies. | `number` | `undefined` |
 | placeholder | Hint text shown while the input is empty. | `string \| number` | `semiGlobalDefault("Input", "placeholder")` |
-| validateStatus | Validation status: default, error or warning; error outputs aria-invalid. | `"default" \| "error" \| "success" \| "warning"` | `semiDefault("Input", "validateStatus", "default")` |
+| validateStatus | Validation status: default, error or warning; error outputs aria-invalid. | `"default" \| "error" \| "success" \| "warning"` | `"default"` |
 | inputStyle | Style of the native input element; numbers need a unit. | `StyleValue` | `semiGlobalDefault("Input", "inputStyle")` |
 | insetLabelId | The id of the element around the insetLabel slot, for aria-labelledby to point at. | `string` | `undefined` |
 | getValueLength | Custom string length calculation, used with maxlength and minlength. | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |

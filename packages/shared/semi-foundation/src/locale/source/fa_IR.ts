@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'انتخاب همه ردیف‌ها',
         selectRow: 'انتخاب این ردیف',
+        scrollRegion: 'محتوای قابل پیمایش جدول',
+        untitledColumn: 'ستون بدون عنوان',
         filterColumn: 'فیلتر داده‌ها با این ستون',
         filterColumnActive: 'فیلتر داده‌ها با این ستون، فیلتر فعال است',
         expandRow: 'باز کردن این ردیف',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'جست‌وجو',
         replace: 'جایگزین کردن',
         replaceAll: 'جایگزین کردن همه',
+        replaceWith: 'جایگزین کردن با',
         caseSensitive: 'تطبیق حروف بزرگ و کوچک',
         regex: 'استفاده از عبارت منظم',
         wholeWord: 'تطبیق کل کلمه',

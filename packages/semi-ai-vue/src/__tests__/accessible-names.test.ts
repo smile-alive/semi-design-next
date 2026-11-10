@@ -7,7 +7,7 @@ import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import { render } from '@test/utils/vue';
 import AIChatDialogue from '../components/ai-chat-dialogue/index';
 import AIChatInput from '../components/ai-chat-input/index';
-import ChatAttachment from '../components/chat/widgets/attachment.vue';
+import ChatAttachment from '../components/chat/attachment.vue';
 import Sidebar from '../components/sidebar/index';
 
 // Every name below is asserted against the Japanese pack, a locale that is neither the zh_CN default nor English

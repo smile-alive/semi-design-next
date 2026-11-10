@@ -12,7 +12,7 @@ import ScrollList, { ScrollItem, type ScrollItemHandle, type ScrollItemProps } f
 const prefixCls = cssClasses.PREFIX;
 
 /** Spread after the panel's own props, so the ones it fills in are left out to keep them from being overridden */
-export type YearAndMonthOpts = Partial<Omit<ScrollItemProps, 'list' | 'onSelect' | 'selectedIndex' | 'type' | 'ref'>>;
+export type YearAndMonthOpts = Partial<Omit<ScrollItemProps, 'list' | 'onSelect' | 'selectedIndex' | 'ref'>>;
 
 export interface YearAndMonthProps extends Omit<YearAndMonthFoundationProps, 'locale'> {
     yearAndMonthOpts?: YearAndMonthOpts;
@@ -73,7 +73,6 @@ export default function YearAndMonth(rawProps: YearAndMonthProps) {
             <ScrollList>
                 <ScrollItem
                     ref={register}
-                    type="year"
                     aria-label={props.locale.year}
                     cycled={props.yearCycled}
                     list={yearList()}
@@ -86,7 +85,6 @@ export default function YearAndMonth(rawProps: YearAndMonthProps) {
                 <Show when={props.type !== 'year'}>
                     <ScrollItem
                         ref={register}
-                        type="month"
                         aria-label={props.locale.month}
                         cycled={props.monthCycled}
                         list={monthList()}

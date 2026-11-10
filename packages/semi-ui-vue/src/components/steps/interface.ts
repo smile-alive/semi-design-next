@@ -18,7 +18,6 @@ export interface StepsProps {
     status?: StepStatus;
     size?: StepsSize;
     hasLine?: boolean;
-    prefixCls?: string;
     /**
      * A function prop rather than an emit: whether a listener is bound decides if the steps are buttons, and a
      * component cannot see the listeners of its declared emits.

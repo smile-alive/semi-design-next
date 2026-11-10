@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { IconToken } from '@fibrae/semi-icons-vue/lab';
-    import { Button, Dropdown, type DropDownMenuItem } from '@fibrae/semi-ui-vue';
+    import { Button, Dropdown, type DropdownMenuItem } from '@fibrae/semi-ui-vue';
 
-    const menu: DropDownMenuItem[] = [
+    const menu: DropdownMenuItem[] = [
         { node: 'title', name: '分组1' },
         { node: 'item', name: 'primary1', type: 'primary', onClick: () => console.log('click primary') },
         { node: 'item', name: 'secondary', type: 'secondary' },

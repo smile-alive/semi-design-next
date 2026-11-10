@@ -30,6 +30,7 @@
 | D16 | 分支模型与历史形态 | 已定（2026-11-04）：历史一条直线。`release` 是唯一集成分支，PR 只允许 Rebase and merge；`main` 只是最后一次发版的指针，由 Release 工作流在发布后 fast-forward 推送，不接收 PR；版本 PR 开到 `release`。`main`、`release` 的规则集都要求线性历史 | 原先 `release` 与 `main` 互相 merge，每次发版留下两个 merge commit，历史图无法阅读；rebase 合并会改写哈希，两个分支来回 rebase 必然冲突，所以 `main` 不能再有自己的提交。正式文档站只随发版更新，发版之间上线文档要手动 fast-forward `main`（CONTRIBUTING「发布」） |
 | D17 | `packages/` 目录布局与包合并 | 已定（2026-11-08）：第一层只放发布给使用方的组件包 `semi-{ui,ai,icons}-<框架>`；框架无关的运行时依赖放 `packages/shared/`，构建插件与 `semi-scss-compile` 放 `packages/plugins/`；目录名一律等于 npm 包名去掉 `@fibrae/`。插画并入图标包，入口为 `@fibrae/semi-icons-<框架>/illustrations`，不再发布 `@fibrae/semi-illustrations-*`；主题编译核心并入 `@fibrae/semi-scss-compile/core`，由各构建插件打包内联 | 按框架分组（`packages/<框架>/<短名>`）让目录名与包名脱节，分组过碎；全平铺时组件包与工具包混在一起。插画与图标读同一份 `semi-icons-core` 数据、共用渲染组件，分包只增加安装与版本对齐成本 |
 | D18 | 组件目录内部布局 | 已定（2026-11-10）：UI 包与 AI 包的组件目录一律平铺，入口组件、子组件、hook 与工具函数放在同一层，不建 `widgets/` 这类收纳子组件的目录；多个文件合起来组成一个有名字的部分（单独导出的子组件、一块 DOM 区域、一块独立功能）时，用这个部分的名字建子目录（Table 的 `body/`、`table-header/`，Image 的 `preview/`，Form 的 `schema-form/`，Chat 的 `chat-box/`，AIChatInput 的 `configure/`、`extension/`）；没有主组件的同类集合（Svelte Form 的 `fields/`、MarkdownRender 的 `components/`）同样成块，不按文件数硬性拆分，根目录超过约 15 个文件时回头找可拆的块；四个框架的入口组件与子目录主组件都是与所在目录同名的文件（`select/select.tsx`、`table/body/body.vue`），`index` 只做导出；一个组件有两个及以上 hook 时，hook 放进以本框架 hook 目录命名的子目录（React、Svelte 为 `hooks/`，Vue 为 `composables/`，Solid 为 `primitives/`） | 主流组件库多数平铺：Ant Design、Arco、MUI、Mantine、Vuetify、Radix、Ark UI、Kobalte、React Spectrum；Element Plus、Naive UI 把实现整体放进 `src/`，Bits UI 把子组件放进 `components/`，都没有「入口在根、子组件单独一层」的做法。hook 子目录对应 Ant Design、Arco 的 `hooks/` 与 Element Plus 的 `composables/`。同名文件是 Vue 风格指南的推荐，Svelte、Solid 生态也这样写；React 社区常用的 `index.tsx` 改为同名文件，四个框架一致，编辑器标签也能区分。组件逻辑已在 foundation，框架包的组件目录文件不多，平铺即可读 |
+| D19 | 文档站 API 表的来源 | 已定（2026-10-24）：API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生成双语片段 `api/<组件>.<框架>.<语言>.mdx`，页面在对应框架块里导入；缺说明或过时说明在 `check:full` 中报错。Vue 用 vue-component-meta（`gen:vue-api`），React、Solid、Svelte 用 TS compiler API（`gen:react-api`、`gen:solid-api`、`gen:svelte-api`，共用 `website/scripts/ts-api.ts`）；表格不设版本列 | 手写 API 表与实现长期不一致，生成后由检查兜底；本仓库不跟上游发版，原 Semi 的版本号对使用者没有意义。各框架的生成细则见 `.agents/references/<框架>/website.md` |
 
 方案与预研提出的待决策项：
 
@@ -106,10 +107,9 @@
 | Grid                                         | 生成 70 KB CSS，`grid/mixin.scss` 仍保留 float 布局与重复选择器                                                                                               | 只保留 flex 或 CSS grid，列宽用自定义属性                                |
 | DatePicker、TimePicker、Calendar 与 `locale` | `Locale` 接口含 `dateFnsLocale`（`semi-foundation/src/locale/interface.ts`），默认 locale 把 date-fns 语言包带进所有使用 `useLocale`、`LocaleConsumer` 的组件 | `dateFnsLocale` 移到日期组件内部按语言代码查找（自定义 locale 结构变化） |
 
-### 2.4 TypeScript 与 API 表
+### 2.4 TypeScript
 
-- 存量清零后统一开启 `strictNullChecks` 与 `verbatimModuleSyntax`（`tsconfig.base.json` 目前都未开启）。
-- API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生成双语片段 `api/<组件>.<框架>.<语言>.mdx`，页面在对应框架块里导入片段；缺说明或过时说明在 `check:full` 中报错。Vue 用 vue-component-meta（`gen:vue-api`）。React 用 TS compiler API（`gen:react-api`，2026-10-24 定），与其他用 TS compiler API 的框架共用 `website/scripts/ts-api.ts`；表格不设版本列，本仓库不跟上游发版，原 Semi 的版本号对使用者没有意义。Solid、Svelte 同样用 TS compiler API（`gen:solid-api`、`gen:svelte-api`）。
+- 存量清零后在 `tsconfig.base.json` 统一开启 `strictNullChecks` 与 `verbatimModuleSyntax`。`strictNullChecks` 已在 Vue、Solid、Svelte 的组件包、图标包与 `semi-animation`、`semi-icons-core`、`semi-polyfill` 各自的 tsconfig 中开启；semi-ui-react、semi-ai-react、semi-foundation、semi-ai-foundation、semi-json-viewer-core 与 `packages/plugins/` 下的构建插件未开启。`verbatimModuleSyntax` 全仓未开启。
 
 ## 3. Solid
 

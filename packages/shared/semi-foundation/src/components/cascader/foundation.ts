@@ -292,6 +292,8 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         const { changeOnSelect, onChangeWithObject, keyMaps, loadData, multiple } = props;
         const { activeKeys, loadingKeys, loadedKeys, keyEntities: keyEntityState, selectedKeys: selectedKeysState } = state;
         const filterable = Boolean(props.filterTreeNode);
+        // filterLeafOnly=false lets a search result pick a branch, so a controlled value echoing it back stays selected
+        const branchSelectable = changeOnSelect || (filterable && props.filterLeafOnly === false);
         // The treeData update a load causes keeps the selection and the open columns. It may land before the load
         // settles (the key is still loading) or after it (the loaded key has just gained children), so both count
         const isLoading = (key: string) => loadingKeys.has(key) || (loadedKeys.has(key) && !keyEntityState[key]?.children && Boolean(keyEntities[key]?.children));
@@ -307,13 +309,13 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             /**
              * Selected even when disabled
              */
-            if (changeOnSelect || CascaderFoundation.#isLeafData(selectedItem.data, loadData)) {
+            if (branchSelectable || CascaderFoundation.#isLeafData(selectedItem.data, loadData)) {
                 updateStates.selectedKeys = new Set([selectedKey]);
                 if (!loadingActive) {
                     updateStates.activeKeys = new Set(selectedItem.path);
                 }
                 /**
-                 * A path ending at a branch selects nothing without changeOnSelect (a selected leaf that treeData turns
+                 * A path ending at a branch selects nothing unless branches are selectable (a selected leaf that treeData turns
                  * into a branch, a controlled value pointing at a branch). Cleared only while something is selected:
                  * clearing again would empty the search text and activeKeys on each treeData update of a remote
                  * search or loadData

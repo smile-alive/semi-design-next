@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import ImagePreview from '../../preview.vue';
+    import ImagePreview from '../../preview/preview.vue';
 
     const props = withDefaults(defineProps<{ active: boolean; src: string[]; visible?: boolean }>(), { visible: true });
 </script>

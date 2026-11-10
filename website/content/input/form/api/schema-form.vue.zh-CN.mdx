@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | jsonSchema | 要渲染的 JSON Schema，优先于从 `schema` 导出的 JSON Schema。Form 的事件原样传给内部的 Form。 | `JsonSchema` | `semiGlobalDefault("SchemaForm", "jsonSchema")` |
 | widgets | 同 SchemaField 的 widgets。 | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "widgets")` |
 | renderField | 同 SchemaField 的 renderField。 | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
-| initValues | 同 Form 的 initValues。 | `Values` | `undefined` |
+| initValues | 同 Form 的 initValues。 | <ApiType detail={"DeepPartial\u003cValues>"}>Type</ApiType> | `undefined` |
 | layout | 同 Form 的 layout。 | `"horizontal" \| "vertical"` | `undefined` |
 | labelPosition | 同 Form 的 labelPosition。 | `"inset" \| "left" \| "top"` | `undefined` |
 | labelWidth | 同 Form 的 labelWidth。 | `string \| number` | `undefined` |
@@ -43,6 +43,6 @@ import ApiType from '#/components/ApiType.astro';
 
 **Exposes**
 
-| 名称 | 说明 | 类型 |
-| ---- | ---- | ---- |
-| 无   |      |      |
+| 名称    | 说明                                                 | 类型                                                            |
+| ------- | ---------------------------------------------------- | --------------------------------------------------------------- |
+| formApi | 表单的 formApi，用于读取与修改表单状态、校验与提交。 | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> |

@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | class | 根元素的类名，与内置类名合并。 | `string` | - |
 | closable | 是否显示关闭按钮，透传给当前模式的 Modal 或 SideSheet。 | `boolean` | - |
 | closeIcon | 关闭按钮中的图标，透传给当前模式的 Modal 或 SideSheet。 | `JSX.Element` | - |
-| closeOnEsc | 按 Esc 是否关闭弹层，透传给当前模式的 Modal 或 SideSheet。popup 模式需设为 true 才会在按 Esc 时触发 onCancel。 | `boolean` | - |
+| closeOnEsc | 按 Esc 是否触发 onCancel，透传给当前模式的 Modal 或 SideSheet；两种模式默认都开启。 | `boolean` | - |
 | footer | 替换默认的取消、提交按钮所在的页脚，透传给当前模式的 Modal 或 SideSheet。传入 null 时不渲染页脚。 | `JSX.Element` | - |
 | getPopupContainer | 弹层挂载的容器，透传给当前模式的 Modal 或 SideSheet。 | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
 | height | 弹层高度，透传给 SideSheet。popup 模式内置为 auto，给出后以使用方的值为准。 | `string \| number` | - |

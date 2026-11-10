@@ -1,14 +1,14 @@
 <script lang="ts">
     import Image from '../image.svelte';
-    import type { ImageProps, MenuProps, PreviewProps } from '../interface';
-    import ImagePreview from '../preview.svelte';
+    import type { ImagePreviewTitleSnippetProps, ImageProps, MenuProps, PreviewProps } from '../interface';
+    import ImagePreview from '../preview/preview.svelte';
 
     let { store }: { store: { props: PreviewProps; images: ImageProps[]; snippets: string[] } } = $props();
 
     const on = (name: string) => store.snippets.includes(name);
 </script>
 
-{#snippet title({ title: text, index }: { title: string | undefined; index: number })}<b class="custom-title">{index}:{text}</b>{/snippet}
+{#snippet title({ title: text, index }: ImagePreviewTitleSnippetProps)}<b class="custom-title">{index}:{text}</b>{/snippet}
 {#snippet closeIcon()}<i class="custom-close">x</i>{/snippet}
 {#snippet leftIcon({ index }: { index: number })}<i class="custom-left">L{index}</i>{/snippet}
 {#snippet rightIcon({ index }: { index: number })}<i class="custom-right">R{index}</i>{/snippet}

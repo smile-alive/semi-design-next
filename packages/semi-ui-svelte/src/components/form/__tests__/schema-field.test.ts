@@ -5,10 +5,10 @@ import * as z from 'zod';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
-import FormCheckbox from '../form-checkbox.svelte';
-import FormTextArea from '../form-text-area.svelte';
+import FormCheckbox from '../fields/form-checkbox.svelte';
+import FormTextArea from '../fields/form-text-area.svelte';
 import type { FormApi, SchemaFieldRenderProps } from '../interface';
-import SchemaField from '../schema-field.svelte';
+import SchemaField from '../schema-form/schema-field.svelte';
 import { settle, typeInto } from './helpers';
 import SchemaFixture, { type SchemaFixtureStore } from './schema-fixture.svelte';
 

@@ -145,12 +145,11 @@ describe('Popover', () => {
         expect(popup.style.top).toBe(position === 'top' ? '190px' : '200px');
     });
 
-    it('class/style 只落弹层，contentClassName 与 prefixCls 落卡片，其余 attrs 丢弃', async () => {
+    it('class/style 只落弹层，contentClassName 落卡片，其余 attrs 丢弃', async () => {
         render(Popover, {
             props: {
                 trigger: 'custom',
                 visible: true,
-                prefixCls: 'custom-pop',
                 contentClassName: ['card'],
                 ariaLabel: 'Details',
             },
@@ -158,10 +157,10 @@ describe('Popover', () => {
             slots: { default: () => <button>trigger</button>, content: () => 'content' },
         });
         const popup = await screen.findByRole('dialog');
-        expect(popup).toHaveClass('custom-pop-wrapper', 'popup');
+        expect(popup).toHaveClass('semi-popover-wrapper', 'popup');
         expect(popup.style.backgroundColor).toBe('red');
-        expect(popup.querySelector('.custom-pop')).toHaveClass('card');
-        expect(popup.querySelector('.custom-pop-content')).toHaveTextContent('content');
+        expect(popup.querySelector('.semi-popover')).toHaveClass('card');
+        expect(popup.querySelector('.semi-popover-content')).toHaveTextContent('content');
         expect(document.querySelector('[data-unknown]')).toBeNull();
         expect(screen.getByRole('button')).not.toHaveClass('popup');
     });

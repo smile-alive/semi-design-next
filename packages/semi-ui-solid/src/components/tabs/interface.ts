@@ -1,6 +1,6 @@
 import type { Component, JSX } from 'solid-js';
 import type { ElementProps } from '../../base/element-props';
-import type { DropdownProps } from '../dropdown';
+import type { DropdownProps, GetDropdownTriggerProps } from '../dropdown';
 
 export type TabType = 'line' | 'card' | 'button' | 'slash';
 export type TabSize = 'small' | 'medium' | 'large';
@@ -28,7 +28,8 @@ export interface TabsDropdownProps {
     end?: DropdownProps;
 }
 
-export type TabsMore = number | { count: number; render?: () => JSX.Element; dropdownProps?: DropdownProps };
+/** `render` spreads `getTriggerProps()` onto its own trigger element, as Dropdown's function children do */
+export type TabsMore = number | { count: number; render?: (getTriggerProps: GetDropdownTriggerProps) => JSX.Element; dropdownProps?: DropdownProps };
 
 export interface TabBarProps extends ElementProps<'div'> {
     activeKey?: string | null;

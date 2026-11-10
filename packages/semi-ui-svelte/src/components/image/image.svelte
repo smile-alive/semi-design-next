@@ -14,7 +14,7 @@
     import { SkeletonImage } from '../skeleton/index.js';
     import { getPreviewContext } from './context.js';
     import type { ImageProps } from './interface.js';
-    import PreviewInner from './preview-inner.svelte';
+    import PreviewInner from './preview/preview-inner.svelte';
 
     type Foundation = ImageFoundation<ImageProps>;
     type Adapter = ImageAdapter<ImageProps>;

@@ -356,17 +356,17 @@ describe('Radio', () => {
         expect(container.querySelector(`.${prefixCls}-isCardRadioGroup_content`)).not.toBeNull();
     });
 
-    it('class、style、prefixCls 与 data-* 作用于根 label', () => {
+    it('class、style 与 data-* 作用于根 label', () => {
         const { container } = render(() => (
-            <Radio class="c" style={{ color: 'red' }} data-test="x" prefixCls="my-radio">
+            <Radio class="c" style={{ color: 'red' }} data-test="x">
                 A
             </Radio>
         ));
         const label = container.querySelector('label') as HTMLLabelElement;
-        expect(label).toHaveClass('c', 'my-radio');
+        expect(label).toHaveClass('c', prefixCls);
         expect(label).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(label).toHaveAttribute('data-test', 'x');
-        expect(container.querySelector('.my-radio-inner')).not.toBeNull();
+        expect(container.querySelector(`.${prefixCls}-inner`)).not.toBeNull();
     });
 
     it('读取 semiGlobal overrideDefaultProps 中的默认值', () => {

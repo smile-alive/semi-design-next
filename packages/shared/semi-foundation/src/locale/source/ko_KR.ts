@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: '모든 행 선택',
         selectRow: '이 행 선택',
+        scrollRegion: '스크롤 가능한 표 내용',
+        untitledColumn: '제목 없는 열',
         filterColumn: '이 열로 데이터 필터링',
         filterColumnActive: '이 열로 데이터 필터링, 필터 적용됨',
         expandRow: '이 행 확장',
@@ -375,6 +377,7 @@ const local: Locale = {
         search: '검색',
         replace: '교체',
         replaceAll: '모두 교체',
+        replaceWith: '교체할 내용',
         caseSensitive: '대/소문자 구분',
         regex: '정규식 사용',
         wholeWord: '단어 단위로 일치',

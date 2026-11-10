@@ -39,6 +39,43 @@ export function getPopupTrigger(id: string, root: ParentNode): HTMLElement | nul
     return root.querySelector<HTMLElement>(popupTriggerSelector(id));
 }
 
+// the element may sit in a shadow root inside the popup (a third-party control), which closest() does not leave
+function closestPopup(element: Element | null) {
+    for (let current = element; current; current = (current.getRootNode() as Partial<ShadowRoot>).host ?? null) {
+        const popup = current.closest(`${POPUP_SELECTOR}[id]`);
+        if (popup) {
+            return popup;
+        }
+    }
+    return null;
+}
+
+/** The triggers of the Tooltip-family popups around `element`, innermost first */
+export function popupTriggers(element: Element | null) {
+    const triggers: HTMLElement[] = [];
+    for (let popup = closestPopup(element); popup;) {
+        const trigger = getPopupTrigger(popup.id, popup.getRootNode() as ParentNode);
+        if (!trigger) {
+            break;
+        }
+        triggers.push(trigger);
+        popup = closestPopup(trigger);
+    }
+    return triggers;
+}
+
+/** Whether `node` is in `container` or in a popup opened from inside it (a portaled popup is no DOM descendant) */
+export function containsWithPopups(container: Node, node: EventTarget | null) {
+    if (!(node instanceof Node)) {
+        return false;
+    }
+    if (container.contains(node)) {
+        return true;
+    }
+    const element = node instanceof Element ? node : node.parentElement;
+    return popupTriggers(element).some((trigger) => container.contains(trigger));
+}
+
 /** Marks a top-layer popover a modal layer covers; the popup styles hide it until the modal layer closes */
 const COVERED_ATTRIBUTE = 'data-semi-covered';
 

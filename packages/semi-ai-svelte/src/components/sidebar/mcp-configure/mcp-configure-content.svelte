@@ -15,8 +15,8 @@
     import Tooltip from '@fibrae/semi-ui-svelte/tooltip/tooltip.svelte';
     import type { MCPConfigureContentProps, MCPConfigureOption } from './interface.js';
 
-    type Foundation = MCPConfigureContentFoundation<MouseEvent>;
-    type Adapter = MCPConfigureContentAdapter<MouseEvent>;
+    type Foundation = MCPConfigureContentFoundation<MouseEvent, MCPConfigureOption>;
+    type Adapter = MCPConfigureContentAdapter<MouseEvent, MCPConfigureOption>;
 
     // No fallback on the bindables: a bound `undefined` would throw with one
     let { options = $bindable(), customOptions = $bindable(), filter, placeholder, onStatusChange, onSearch, onAddClick, onConfigureClick, onEditClick, icon, desc, item }: MCPConfigureContentProps = $props();
@@ -27,7 +27,7 @@
     const customList = $derived(customOptions ?? []);
 
     // $bindable needs destructuring, so the foundation reads the props through getters
-    const foundationProps: FoundationProps = {
+    const foundationProps: FoundationProps<MCPConfigureOption> = {
         get options() {
             return innerList;
         },
@@ -39,15 +39,14 @@
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, MCPConfigureContentState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps<MCPConfigureOption>, MCPConfigureContentState>(
         MCPConfigureContentFoundation,
         foundationProps,
         () => MCPConfigureContentFoundation.getInitialState(),
         () => ({
-            notifyConfigureClick: (event, option) => onConfigureClick?.(event, option as MCPConfigureOption),
-            notifyEditClick: (event, option) => onEditClick?.(event, option as MCPConfigureOption),
-            notifyStatusChange: (switched, custom) => {
-                const list = switched as MCPConfigureOption[];
+            notifyConfigureClick: (event, option) => onConfigureClick?.(event, option),
+            notifyEditClick: (event, option) => onEditClick?.(event, option),
+            notifyStatusChange: (list, custom) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 if (custom) {
                     customOptions = list;
@@ -122,20 +121,20 @@
     <div class={`${contentCls}-item-container`}>
         {#each showOptions as option, index (option.value)}
             {#if item}
-                {@render item({ custom: isCustom, index, item: option as MCPConfigureOption })}
+                {@render item({ custom: isCustom, index, item: option })}
             {:else}
                 <div class={`${contentCls}-item`}>
                     {#if !icon && option.icon}
                         <img alt="" class={`${contentCls}-item-sign`} src={option.icon} />
                     {:else}
                         <div class={`${contentCls}-item-sign`}>
-                            {@render icon?.({ custom: isCustom, index, item: option as MCPConfigureOption })}
+                            {@render icon?.({ custom: isCustom, index, item: option })}
                         </div>
                     {/if}
                     <div class={`${contentCls}-item-content`}>
                         <div class={`${contentCls}-item-content-label`}>{option.label}</div>
                         <div class={`${contentCls}-item-content-desc`}>
-                            {#if desc}{@render desc({ custom: isCustom, index, item: option as MCPConfigureOption })}{:else}{option.desc}{/if}
+                            {#if desc}{@render desc({ custom: isCustom, index, item: option })}{:else}{option.desc}{/if}
                         </div>
                     </div>
                     {#if option.configure}

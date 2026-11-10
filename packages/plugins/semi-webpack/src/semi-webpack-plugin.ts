@@ -22,8 +22,8 @@ export interface SemiWebpackPluginOptions {
     overrideStylesheetLoaders?: (loaders: any[]) => any[];
 }
 
-const SEMI_DIST_JS_RE = /@fibrae\/semi-(ui-react|ui-vue|ai-react|ai-vue|icons-react|icons-vue)\/dist\/.+\.js$/;
-const SEMI_DIST_SCSS_RE = /@fibrae\/semi-(ui-react|ui-vue|ai-react|ai-vue|icons-core|icons-vue|foundation|ai-foundation)\/dist\/.+\.scss$/;
+const SEMI_DIST_JS_RE = /@fibrae\/semi-(ui-react|ui-vue|ui-solid|ui-svelte|ai-react|ai-vue|ai-solid|ai-svelte|icons-react|icons-vue|icons-solid|icons-svelte)\/dist\/.+\.js$/;
+const SEMI_DIST_SCSS_RE = /@fibrae\/semi-(ui-react|ui-vue|ui-solid|ui-svelte|ai-react|ai-vue|ai-solid|ai-svelte|icons-core|icons-vue|icons-solid|icons-svelte|foundation|ai-foundation)\/dist\/.+\.scss$/;
 
 export default class SemiWebpackPlugin {
     options: SemiWebpackPluginOptions;

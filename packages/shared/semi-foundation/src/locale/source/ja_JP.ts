@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'すべての行を選択',
         selectRow: 'この行を選択',
+        scrollRegion: 'スクロール可能な表の内容',
+        untitledColumn: 'タイトルなしの列',
         filterColumn: 'この列でデータを絞り込む',
         filterColumnActive: 'この列でデータを絞り込む、絞り込み適用中',
         expandRow: 'この行を展開',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: '検索',
         replace: '置換',
         replaceAll: 'すべて置換',
+        replaceWith: '置換後の文字列',
         caseSensitive: '大文字と小文字を区別',
         regex: '正規表現を使用',
         wholeWord: '単語単位で検索',

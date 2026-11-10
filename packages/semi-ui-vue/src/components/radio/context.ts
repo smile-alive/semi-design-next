@@ -6,7 +6,6 @@ export interface RadioGroupContextView {
     value?: RadioValue;
     disabled: boolean;
     name: string;
-    prefixCls?: string;
     isButtonRadio: boolean;
     isCardRadio: boolean;
     isPureCardRadio: boolean;

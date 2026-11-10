@@ -12,21 +12,21 @@ import ApiType from '#/components/ApiType.astro';
 | maxLength | 单个标签的最大长度。 | `number` | `semiGlobalDefault("TagInput", "maxLength")` |
 | max | 允许的标签最大数量。 | `number` | `semiGlobalDefault("TagInput", "max")` |
 | maxTagCount | 标签的最大展示数量，超出后以 +N 形式展示。 | `number` | `semiGlobalDefault("TagInput", "maxTagCount")` |
-| showRestTagsPopover | 超过 maxTagCount 后，hover 到 +N 时是否通过 Popover 显示剩余标签。 | `boolean` | `semiDefault("TagInput", "showRestTagsPopover", true)` |
+| showRestTagsPopover | 超过 maxTagCount 后，hover 到 +N 时是否通过 Popover 显示剩余标签。 | `boolean` | `true` |
 | restTagsPopoverProps | +N 浮层的 Popover 属性，不含 content。 | `PopoverProps` | `semiGlobalDefault("TagInput", "restTagsPopoverProps")` |
-| showContentTooltip | 标签文字被截断时，hover 标签是否通过浮层显示全部内容；传对象时可指定浮层类型与透传给浮层的属性。 | `boolean \| ShowTooltip` | `semiDefault("TagInput", "showContentTooltip", true)` |
-| allowDuplicates | 是否允许添加相同的标签。 | `boolean` | `semiDefault("TagInput", "allowDuplicates", true)` |
-| addOnBlur | 焦点离开组件时，是否将输入框内容自动创建为标签。 | `boolean` | `semiDefault("TagInput", "addOnBlur", false)` |
-| draggable | 是否开启拖拽排序。 | `boolean` | `semiDefault("TagInput", "draggable", false)` |
-| expandRestTagsOnClick | 不可拖拽时，焦点进入组件（点击、Tab 或 focus 方法）后是否展开被折叠的标签。 | `boolean` | `semiDefault("TagInput", "expandRestTagsOnClick", true)` |
+| showContentTooltip | 标签文字被截断时，hover 标签是否通过浮层显示全部内容；传对象时可指定浮层类型与透传给浮层的属性。 | `boolean \| ShowTooltip` | `true` |
+| allowDuplicates | 是否允许添加相同的标签。 | `boolean` | `true` |
+| addOnBlur | 焦点离开组件时，是否将输入框内容自动创建为标签。 | `boolean` | `false` |
+| draggable | 是否开启拖拽排序。 | `boolean` | `false` |
+| expandRestTagsOnClick | 不可拖拽时，焦点进入组件（点击、Tab 或 focus 方法）后是否展开被折叠的标签。 | `boolean` | `true` |
 | placeholder | 没有标签时输入框的占位文字。 | `string` | `semiGlobalDefault("TagInput", "placeholder")` |
 | insetLabelId | 内嵌标签容器的 id，供 aria-labelledby 引用。 | `string` | `undefined` |
-| separator | 批量输入时的分隔符，可传多个；传 null 不拆分。 | `string \| string[] \| null` | `semiDefault("TagInput", "separator", ",")` |
-| showClear | 是否显示一键清除所有标签和输入内容的按钮。 | `boolean` | `semiDefault("TagInput", "showClear", false)` |
+| separator | 批量输入时的分隔符，可传多个；传 null 不拆分。 | `string \| string[] \| null` | `","` |
+| showClear | 是否显示一键清除所有标签和输入内容的按钮。 | `boolean` | `false` |
 | size | 尺寸，可选 small、default、large。 | `Size` | `undefined` |
 | split | 自定义分隔符处理函数，返回拆分后的字符串数组。 | <ApiType detail={"((originString: string, separators: string \u007c string[] \u007c null) => string[])"}>Type</ApiType> | `undefined` |
-| validateStatus | 校验状态，仅影响样式；error 时输入框带 aria-invalid。 | `TagInputValidateStatus` | `semiDefault("TagInput", "validateStatus", "default")` |
-| autofocus | 挂载时是否自动聚焦输入框并激活组件，禁用时不生效。 | `boolean` | `semiDefault("TagInput", "autofocus", false)` |
+| validateStatus | 校验状态，仅影响样式；error 时输入框带 aria-invalid。 | `TagInputValidateStatus` | `"default"` |
+| autofocus | 挂载时是否自动聚焦输入框并激活组件，禁用时不生效。 | `boolean` | `false` |
 | preventScroll | 组件内 focus 方法是否阻止浏览器滚动到新聚焦的元素。 | `boolean` | `semiGlobalDefault("TagInput", "preventScroll")` |
 
 **Events**

@@ -169,7 +169,7 @@ describe('ChatFoundation 文件后缀', () => {
             notifyChatsChange,
             notifyMessageSend: () => {},
         } as unknown as ChatAdapter);
-        foundation.onMessageSend('', [{ name: 'IMG_0001.JPG', url: 'https://semi.design/a.jpg' }]);
+        foundation.sendMessage('', [{ name: 'IMG_0001.JPG', url: 'https://semi.design/a.jpg' }]);
         expect(notifyChatsChange.mock.calls[0][0].at(-1).content).toEqual([{ type: 'image_url', image_url: { url: 'https://semi.design/a.jpg' } }]);
     });
 });
@@ -264,7 +264,7 @@ describe('ChatFoundation 自动滚动', () => {
         const { element, foundation, addFirst } = create();
         scrollTo(foundation, element, 400);
         scrollTo(foundation, element, 100);
-        foundation.onHintClick('hint');
+        foundation.handleHintClick('hint');
         addFirst();
         expect(element.scrollTop).toBe(500);
     });

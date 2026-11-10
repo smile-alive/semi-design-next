@@ -11,7 +11,7 @@
     import SpinIcon from '../spin/icon.svelte';
     import type { TriggerBinding } from '../tooltip/context.js';
     import useTrigger from '../tooltip/use-trigger.svelte.js';
-    import { getButtonGroupContext } from './context.js';
+    import { getButtonGroupInScope } from './context.js';
     import type { ButtonProps } from './interface.js';
 
     const defaults = useDefaultProps('Button');
@@ -35,10 +35,9 @@
         ...rest
     }: ButtonProps = $props();
 
-    const group = getButtonGroupContext();
-
     let root = $state<HTMLButtonElement>();
 
+    const group = getButtonGroupInScope();
     const inputGroup = getInputGroupInScope();
 
     // Told by an enclosing Tooltip whose span wraps this button: a loading button keeps the popup's description and
@@ -77,7 +76,7 @@
     const line = $derived(group && root && group.hasNext(root) ? groupLineClass(prefix, looks) : undefined);
 
     // A loading button stays focusable, so its click is stopped in the capture phase, before the consumer's own capture
-    // listener and the delegated onclick; preventDefault blocks form submit, which pointer-events cannot do for Enter or Space.
+    // listener and the delegated onclick; preventDefault blocks form submit.
     const guardLoadingClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) => {
         if (loading) {
             event.preventDefault();

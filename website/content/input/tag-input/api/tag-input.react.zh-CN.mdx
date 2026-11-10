@@ -43,7 +43,7 @@ import ApiType from '#/components/ApiType.astro';
 | split | 自定义分隔符处理函数，参数为原始字符串与 `separator`，返回拆分后的字符串数组。 | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
 | style | 根元素的样式。 | `React.CSSProperties` | - |
 | suffix | 输入框后缀，文字或图标会自动带上左右间隔；自定义节点的左右间隔为 0，可在节点中自行设置。 | `React.ReactNode` | - |
-| validateStatus | 校验状态，仅影响样式；为 `error` 时输入框带 `aria-invalid`。 | `ValidateStatus` | `"default"` |
+| validateStatus | 校验状态，仅影响样式；为 `error` 时输入框带 `aria-invalid`。 | `TagInputValidateStatus` | `"default"` |
 | value | 当前标签，配合 `onChange` 实现受控；`undefined` 时按非受控处理，`null` 表示受控且没有标签。 | `string[] \| null` | - |
 
 **Methods**

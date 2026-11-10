@@ -1,6 +1,19 @@
 import { svelte as sveltePlugin } from '@sveltejs/vite-plugin-svelte';
+import type { TestProjectInlineConfiguration } from 'vite-plus';
 import { semiInlineJsonWorker, semiStubStyles } from '../../vite.semi.ts';
-import { browserBase, browserStyles, jsdomBase, nodeBase, ssrTestFiles, testFiles, type TestFramework } from '../framework.ts';
+import { browserBase, browserStyles, compatBrowserProjects, jsdomBase, nodeBase, ssrTestFiles, testFiles, type TestFramework } from '../framework.ts';
+
+function browserProject(): TestProjectInlineConfiguration {
+    return {
+        extends: true,
+        css: browserStyles,
+        plugins: [sveltePlugin(), semiInlineJsonWorker],
+        // pre-bundled, @dnd-kit/svelte would bring its own copy of the svelte runtime and its effects would be orphaned;
+        // @dnd-kit/dom is excluded with it so both load the same @preact/signals-core, otherwise DragOverlay never sees the drag source
+        optimizeDeps: { exclude: ['@dnd-kit/svelte', '@dnd-kit/dom'] },
+        test: { ...browserBase(), name: 'svelte-browser', include: testFiles('svelte', true), exclude: ['**/node_modules/**', '**/*.hydration.browser.test.*'], setupFiles: ['./vitest/browser.setup.ts', './vitest/svelte/svelte.setup.ts'] },
+    };
+}
 
 export const svelte: TestFramework = {
     projects: [
@@ -16,15 +29,8 @@ export const svelte: TestFramework = {
             plugins: [sveltePlugin(), semiStubStyles],
             test: { ...nodeBase, name: 'svelte-ssr', server: { deps: { inline: [/@dnd-kit\/svelte/] } }, include: ssrTestFiles('svelte') },
         },
-        {
-            extends: true,
-            css: browserStyles,
-            plugins: [sveltePlugin(), semiInlineJsonWorker],
-            // pre-bundled, @dnd-kit/svelte would bring its own copy of the svelte runtime and its effects would be orphaned;
-            // @dnd-kit/dom is excluded with it so both load the same @preact/signals-core, otherwise DragOverlay never sees the drag source
-            optimizeDeps: { exclude: ['@dnd-kit/svelte', '@dnd-kit/dom'] },
-            test: { ...browserBase(), name: 'svelte-browser', include: testFiles('svelte', true), exclude: ['**/node_modules/**', '**/*.hydration.browser.test.*'], setupFiles: ['./vitest/browser.setup.ts', './vitest/svelte/svelte.setup.ts'] },
-        },
+        browserProject(),
+        ...compatBrowserProjects('svelte', browserProject),
         {
             extends: true,
             plugins: [sveltePlugin()],

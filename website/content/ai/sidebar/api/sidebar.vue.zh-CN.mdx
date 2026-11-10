@@ -4,11 +4,11 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| mode | 展示模式：main 为主视图，code 与 file 使用内置详情，其他字符串通过 detailContent 插槽自行渲染。 | `string` | `semiDefault("Sidebar", "mode", strings.MODE.MAIN)` |
+| mode | 展示模式：main 为主视图，code 与 file 使用内置详情，其他字符串通过 detailContent 插槽自行渲染。 | `string` | `strings.MODE.MAIN` |
 | activeKey | 主视图中当前选中的选项 key，配合 v-model:activeKey 使用。 | `string` | `semiGlobalDefault("Sidebar", "activeKey")` |
 | options | 主视图顶部的选项按钮，每项包含 name 与 key；图标使用 optionIcon 插槽。 | `SideBarOption[]` | `semiGlobalDefault("Sidebar", "options")` |
 | detailContent | code 与 file 模式显示的条目，为 CodeItem 或 FileItem 的属性加 key；key 变化时重新挂载该条目。file 模式下其中的 editable 与 imgUploadProps 不生效，由 fileEditable 与 imgUploadProps 决定。 | `SideBarDetailContent` | `semiGlobalDefault("Sidebar", "detailContent")` |
-| fileEditable | file 模式的富文本是否可编辑。 | `boolean` | `semiDefault("Sidebar", "fileEditable", true)` |
+| fileEditable | file 模式的富文本是否可编辑。 | `boolean` | `true` |
 | imgUploadProps | file 模式的图片上传配置，编辑器创建时读取，之后变化不生效。 | `ImageUploadNodeOptions` | `semiGlobalDefault("Sidebar", "imgUploadProps")` |
 | visible | 是否显示，配合 v-model:visible 使用。 | `boolean` | `semiGlobalDefault("Sidebar", "visible")` |
 | title | 主视图的纯文本标题；传入 title 插槽时以插槽为准。详情视图使用内置的详情头部。 | `string` | `semiGlobalDefault("Sidebar", "title")` |

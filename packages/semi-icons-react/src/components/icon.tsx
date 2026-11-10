@@ -10,12 +10,13 @@ export interface IconProps extends DetailedHTMLProps<React.HTMLAttributes<HTMLSp
     size?: IconSize;
     spin?: boolean;
     rotate?: number;
-    prefixCls?: string;
     type?: string;
     fill?: string | string[];
 }
 
-function Icon({ svg, spin = false, rotate, style, className, prefixCls = BASE_CLASS_PREFIX, type, size = 'default', fill, ...props }: IconProps) {
+const prefixCls = BASE_CLASS_PREFIX;
+
+function Icon({ svg, spin = false, rotate, style, className, type, size = 'default', fill, ...props }: IconProps) {
     const classes = clsx(
         `${prefixCls}-icon`,
         {

@@ -208,17 +208,17 @@ describe('Col', () => {
 describe('Row 与 Col 作为函数组件', () => {
     it('读取 semiGlobal overrideDefaultProps，显式属性优先', () => {
         const before = semiGlobal.config.overrideDefaultProps;
-        semiGlobal.config.overrideDefaultProps = { Row: { prefixCls: 'g' }, Col: { prefixCls: 'g' } };
+        semiGlobal.config.overrideDefaultProps = { Row: { type: 'flex' }, Col: { span: 6 } };
         try {
             const { container } = render(
                 <Row>
                     <Col />
-                    <Col prefixCls="own" />
+                    <Col span={12} />
                 </Row>
             );
-            expect(container.firstChild).toHaveClass('g-row');
-            expect(container.querySelector('.g-col')).not.toBeNull();
-            expect(container.querySelector('.own-col')).not.toBeNull();
+            expect(container.firstChild).toHaveClass(`${BASE_CLASS_PREFIX}-row-flex`);
+            expect(container.querySelector(`.${BASE_CLASS_PREFIX}-col-6`)).not.toBeNull();
+            expect(container.querySelector(`.${BASE_CLASS_PREFIX}-col-12`)).not.toBeNull();
         } finally {
             semiGlobal.config.overrideDefaultProps = before;
         }

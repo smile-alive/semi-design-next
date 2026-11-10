@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { computed, type ComponentPublicInstance } from 'vue';
+    import { usePopupLayer } from '../../base/popup-layer';
     import type { KeyedNode } from '../../utils/slot-nodes';
+    import { useButtonGroupContext } from '../button/context';
     import { provideTooltipDescription } from './context';
     import type { TooltipProps } from './interface';
     import bindTrigger from './trigger';
@@ -18,6 +20,11 @@
 
     const emit = defineEmits<{ element: [element: Element | null] }>();
 
+    const buttonGroup = useButtonGroupContext();
+
+    // buttons in a popup opened from the group do not inherit it, as in use-button.ts
+    const layer = usePopupLayer();
+
     let reference: Element | ComponentPublicInstance | null = null;
 
     const binding = computed(() =>
@@ -26,7 +33,8 @@
             props.options,
             props.popupId,
             { visible: props.visible, inserted: props.inserted },
-            props.keydown
+            props.keydown,
+            buttonGroup && buttonGroup.value.layer === layer ? buttonGroup.value.disabled : undefined
         )
     );
 

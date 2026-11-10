@@ -2,6 +2,7 @@ import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { HookApi } from '@fibrae/semi-foundation/base/hook-api';
 import type { NoticeProps as FoundationNoticeProps } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+import type { ElementProps } from '../../base/element-props';
 
 export type { ConfigProps as NotificationConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 export type { NoticePosition, NoticeTheme, NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
@@ -9,7 +10,8 @@ export type { NoticePosition, NoticeTheme, NoticeType } from '@fibrae/semi-found
 /** Same shape as ToastNode: a text, a VNode, or a function rendered as a functional component (it may inject) */
 export type NotificationNode = string | VNode | (() => VNodeChild);
 
-export interface NoticeProps extends Omit<FoundationNoticeProps, 'title' | 'content' | 'icon' | 'className' | 'style' | 'close' | 'onClick'> {
+/** Undeclared options land on the notice element as attrs (F2, F6) */
+export interface NoticeProps extends Omit<FoundationNoticeProps, 'title' | 'content' | 'icon' | 'className' | 'style' | 'close' | 'onClick'>, ElementProps<'div', 'id' | 'title' | 'class' | 'style' | 'innerHTML' | 'onClick'> {
     title?: NotificationNode;
     content?: NotificationNode;
     icon?: NotificationNode;

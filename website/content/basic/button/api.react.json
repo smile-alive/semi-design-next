@@ -1,6 +1,6 @@
 {
     "button": {
-        "source": "packages/semi-ui-react/src/components/button/button.tsx",
+        "source": "packages/semi-ui-react/src/components/button/base-button.tsx",
         "props": {
             "aria-label": { "zh-CN": "按钮的可访问名称，只有图标没有文字的按钮需要设置。", "en-US": "Accessible name of the button, needed when it shows only an icon." },
             "block": { "zh-CN": "将按钮设置为块级按钮。", "en-US": "Renders the button as a block-level button." },
@@ -31,7 +31,6 @@
             "onMouseDown": { "zh-CN": "鼠标按下时调用。", "en-US": "Called when the mouse button is pressed on the button." },
             "onMouseEnter": { "zh-CN": "鼠标移入时调用。", "en-US": "Called when the pointer enters the button." },
             "onMouseLeave": { "zh-CN": "鼠标移出时调用。", "en-US": "Called when the pointer leaves the button." },
-            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
             "ref": { "zh-CN": "原生 button 元素的引用。", "en-US": "Reference to the native button element." },
             "size": {
                 "zh-CN": "按钮尺寸，可选 `large`、`default` 或 `small`。未设置时使用所在 ButtonGroup 的值，不在组内时为 `default`。",

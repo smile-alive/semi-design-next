@@ -16,6 +16,7 @@ import { useSpecialTrigger } from '../tooltip/context';
 
 /** `class`, `style`, `ref` and other attributes go to the role="group" wrapper; the aria states, `id` and `tabindex` to the inputs */
 export interface PinCodeProps extends Omit<PinCodeBaseProps, 'autoFocus'>, ElementProps<'div', 'defaultValue' | 'onChange' | 'onFocus' | 'onBlur'> {
+    autofocus?: boolean;
     size?: InputSize;
     validateStatus?: ValidateStatus;
     /** Fires as focus enters the code from outside; moving between its inputs does not fire it */

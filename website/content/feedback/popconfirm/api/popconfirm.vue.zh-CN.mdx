@@ -6,34 +6,33 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | cancelButtonProps | 取消按钮的属性，autoFocus 为 true 时打开后聚焦该按钮，class、style 落在按钮上。 | `PopconfirmButtonProps` | `semiGlobalDefault("Popconfirm", "cancelButtonProps")` |
 | cancelText | 取消按钮文字，缺省取语言包 Popconfirm.cancel。 | `string` | `semiGlobalDefault("Popconfirm", "cancelText")` |
-| cancelType | 取消按钮类型。 | `Type` | `semiDefault("Popconfirm", "cancelType", "tertiary")` |
+| cancelType | 取消按钮类型。 | `Type` | `"tertiary"` |
 | defaultVisible | 非受控时初始是否展示。 | `boolean` | `semiGlobalDefault("Popconfirm", "defaultVisible")` |
-| disabled | 是否禁用；禁用时只渲染触发元素，不弹出确认框。 | `boolean` | `semiDefault("Popconfirm", "disabled", false)` |
+| disabled | 是否禁用；禁用时只渲染触发元素，不弹出确认框。 | `boolean` | `false` |
 | okButtonProps | 确认按钮的属性，autoFocus 为 true 时打开后聚焦该按钮，class、style 落在按钮上。 | `PopconfirmButtonProps` | `semiGlobalDefault("Popconfirm", "okButtonProps")` |
 | okText | 确认按钮文字，缺省取语言包 Popconfirm.confirm（zh_CN 为「确定」）。 | `string` | `semiGlobalDefault("Popconfirm", "okText")` |
-| okType | 确认按钮类型。 | `Type` | `semiDefault("Popconfirm", "okType", "primary")` |
-| showCloseIcon | 是否显示右上角关闭按钮。 | `boolean` | `semiDefault("Popconfirm", "showCloseIcon", true)` |
+| okType | 确认按钮类型。 | `Type` | `"primary"` |
+| showCloseIcon | 是否显示右上角关闭按钮。 | `boolean` | `true` |
 | title | 纯文本标题，同时作为对话框的可访问名称；同时传入 #title 插槽时以插槽为准。声明为 prop，不会作为原生 title 属性落到元素上。 | `string` | `undefined` |
 | onCancel | 点击取消按钮或关闭按钮的回调；返回 Promise 时按钮保持加载，落定后才关闭，reject 时保留确认框；保留为函数 prop 以读取返回值。 | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
 | onConfirm | 点击确认按钮的回调；返回 Promise 时按钮保持加载，落定后才关闭，reject 时保留确认框；保留为函数 prop 以读取返回值。 | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
 | ariaLabel | 对话框的 aria-label，传入后优先于标题。 | `string` | `semiGlobalDefault("Popconfirm", "ariaLabel")` |
 | ariaLabelledby | 对话框的 aria-labelledby，缺省指向标题，没有标题时指向内容。 | `string` | `semiGlobalDefault("Popconfirm", "ariaLabelledby")` |
 | ariaDescribedby | 对话框的 aria-describedby，缺省在同时有标题和内容时指向内容。 | `string` | `semiGlobalDefault("Popconfirm", "ariaDescribedby")` |
-| role | 弹出层的 ARIA role，缺省为 dialog。 | `string` | `semiDefault("Popconfirm", "role", "dialog")` |
+| role | 弹出层的 ARIA role，缺省为 dialog。 | `string` | `"dialog"` |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `semiGlobalDefault("Popconfirm", "autoAdjustOverflow")` |
 | visible | 是否展示，配合 v-model:visible 使用；传入后由该值决定显示，trigger 保持原值，触发器事件仍然生效。 | `boolean` | `semiGlobalDefault("Popconfirm", "visible")` |
 | position | 弹出方向，缺省为 bottomLeft（RTL 下为 bottomRight）。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Popconfirm", "position")` |
 | motion | 是否展示弹出动画。 | `boolean` | `semiGlobalDefault("Popconfirm", "motion")` |
 | mouseEnterDelay | 指针移入后延迟显示的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | `semiGlobalDefault("Popconfirm", "mouseEnterDelay")` |
 | mouseLeaveDelay | 指针移出后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | `semiGlobalDefault("Popconfirm", "mouseLeaveDelay")` |
-| trigger | 触发展示的时机，可选 hover、focus、click、contextMenu 或 custom。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `semiDefault("Popconfirm", "trigger", "click")` |
+| trigger | 触发展示的时机，可选 hover、focus、click、contextMenu 或 custom。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `"click"` |
 | contentClassName | 内容容器的类名。 | `string \| unknown[]` | `semiGlobalDefault("Popconfirm", "contentClassName")` |
 | showArrow | 是否显示箭头三角形。 | `boolean` | `semiGlobalDefault("Popconfirm", "showArrow")` |
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number; }` | `semiGlobalDefault("Popconfirm", "spacing")` |
-| stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡；确认卡片内的 click 始终不冒泡。 | `string \| boolean` | `semiDefault("Popconfirm", "stopPropagation", true)` |
+| stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡；确认卡片内的 click 始终不冒泡。 | `string \| boolean` | `true` |
 | arrowStyle | 箭头的边框色、背景色与边框透明度。 | `ArrowStyle` | `semiGlobalDefault("Popconfirm", "arrowStyle")` |
 | arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 showArrow。 | `boolean` | `semiGlobalDefault("Popconfirm", "arrowPointAtCenter")` |
-| prefixCls | 确认卡片的类名前缀。 | `string` | `semiDefault("Popconfirm", "prefixCls", cssClasses.PREFIX)` |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭确认框；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。 | `boolean` | `semiGlobalDefault("Popconfirm", "closeOnEsc")` |
 | guardFocus | 焦点位于确认框内时，Tab 是否在其中循环。 | `boolean` | `semiGlobalDefault("Popconfirm", "guardFocus")` |
 | returnFocusOnClose | 关闭后焦点是否回到触发元素；受控的 visible 也照常生效，trigger 为 custom 时不生效。 | `boolean` | `semiGlobalDefault("Popconfirm", "returnFocusOnClose")` |

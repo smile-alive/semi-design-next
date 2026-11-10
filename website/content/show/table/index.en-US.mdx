@@ -854,7 +854,7 @@ interface TableFilterDropdownSlotProps {
     /** The configuration of the current column */
     column: ColumnProps;
     /** Filter configuration items, `undefined` when the column has no `filters` */
-    filters: TableFilter[] | undefined;
+    filters?: TableFilter[];
     /** Temporary filter value, the applied filter value when nothing is stored */
     tempFilteredValue: any[] | undefined;
     /** Set temporary filter value */
@@ -913,7 +913,7 @@ interface TableFilterDropdownSnippetProps {
     /** The configuration of the current column */
     column: ColumnProps;
     /** Filter configuration items, `undefined` when the column has no `filters` */
-    filters: TableFilter[] | undefined;
+    filters?: TableFilter[];
     /** Temporary filter value, the applied filter value when nothing is stored */
     tempFilteredValue: any[] | undefined;
     /** Set temporary filter value */
@@ -1867,7 +1867,7 @@ interface TablePaginationProps extends PaginationProps {
 type VirtualizedItemSizeFn = (index?: number, row?: { sectionRow?: boolean; expandedRow?: boolean }) => number;
 type VirtualizedOnScrollArgs = {
     scrollDirection?: 'forward' | 'backward';
-    scrollOffset?: number;
+    scrollOffset: number;
     scrollUpdateWasRequested?: boolean;
 };
 type VirtualizedOnScroll = (object: VirtualizedOnScrollArgs) => void;
@@ -2165,7 +2165,7 @@ A column accepts only the properties below, and a misspelled property name is a 
 | useFullRender | Whether to completely customize the rendering, see [Fully custom rendering](#fully-custom-rendering) for usage details, enabling this feature will cause a certain performance loss | boolean | false |
 | width | Column width | string \| number |  |
 | onCell | Set cell properties | (record: RecordType, rowIndex: number) => object |  |
-| onFilter | Determine the running function of the filter in local mode. **An independent dataIndex must be set for the filter column, and an independent key must be set for each data item in the dataSource** | (filteredValue: any, record: RecordType) => boolean |  |
+| onFilter | Determine the running function of the filter in local mode. **An independent dataIndex must be set for the filter column, and an independent key must be set for each data item in the dataSource** | (value: any, record: RecordType) => boolean |  |
 | onFilterDropdownVisibleChange | A callback when a custom filter menu is visible | (visible: boolean) => void |  |
 | onHeaderCell | Set the head cell property; `index` is the index of the header row | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
 
@@ -2240,7 +2240,7 @@ type Filter = {
 | useFullRender | Whether to completely customize the rendering, see [Fully custom rendering](#fully-custom-rendering) for usage details, enabling this feature will cause a certain performance loss | boolean | false |
 | width | Column width | string \| number |  |
 | onCell | Set cell properties; `colspan` and `rowspan` in the returned object are lowercase | (record: RecordType, rowIndex: number) => object |  |
-| onFilter | Determine the running function of the filter in local mode. **An independent dataIndex must be set for the filter column, and an independent key must be set for each data item in the dataSource** | (filteredValue: any, record: RecordType) => boolean |  |
+| onFilter | Determine the running function of the filter in local mode. **An independent dataIndex must be set for the filter column, and an independent key must be set for each data item in the dataSource** | (value: any, record: RecordType) => boolean |  |
 | onFilterDropdownVisibleChange | A callback when a custom filter menu is visible | (visible: boolean) => void |  |
 | onHeaderCell | Set the head cell property; `index` is the index of the header row | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
 
@@ -2452,11 +2452,7 @@ The methods exposed by Table can be accessed through the component ref, typed as
 </template>
 ```
 
-| Parameters                  | Instructions                                                                                                                                                                                     |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| getCurrentPageData()        | Returns the data object of the current page: \{ dataSource: RecordType[], groups: Map\<string \| number, Set\<string \| number\>\> \}, keyed by group key with the set of row keys in that group |
-| scrollTo(offset)            | Scrolls a virtualized table to the given pixel offset                                                                                                                                            |
-| scrollToItem(index, align?) | Scrolls a virtualized table to the given row, `align` is 'auto' \| 'smart' \| 'center' \| 'start' \| 'end'                                                                                       |
+See the Exposes table in the Table API for the methods.
 
 </Framework>
 

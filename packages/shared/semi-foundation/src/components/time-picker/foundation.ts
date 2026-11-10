@@ -4,7 +4,7 @@ import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { zonedTimeToUtc } from '../../utils/date-fns-extra';
 import isValidTimeZone from '../../utils/is-valid-time-zone';
 import { fromWallTime, parseReference, toWallTime } from '../../utils/zoned-time';
-import ComboboxFoundation from './combox-foundation';
+import { getColumns } from './combobox-options';
 import { cssClasses, strings, type PanelType } from './constants';
 import { formatToString, parseToDate, hourIsDisabled, minuteIsDisabled, secondIsDisabled, transformToArray, isTimeFormatLike } from './utils';
 
@@ -32,7 +32,8 @@ export interface TimePickerBaseProps {
     disabledHours?: () => number[];
     disabledMinutes?: (selectedHour: number) => number[];
     disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
-    disabledTime?: (value: Date[], panelType: PanelType) => DisabledTimeFns;
+    /** The unpicked side of a range is undefined */
+    disabledTime?: (value: (Date | undefined)[], panelType: PanelType) => DisabledTimeFns;
     format?: string;
     open?: boolean;
     rangeSeparator?: string;
@@ -203,7 +204,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
      * range-only: it gives the left and right panel their own rules, and each callback it leaves out falls back to the
      * top-level prop.
      */
-    static getDisabledTimeFns({ disabledHours, disabledMinutes, disabledSeconds, disabledTime, timeZone }: TimePickerBaseProps, dates: Date[], panelType: PanelType, isRange: boolean): DisabledTimeFns {
+    static getDisabledTimeFns({ disabledHours, disabledMinutes, disabledSeconds, disabledTime, timeZone }: TimePickerBaseProps, dates: (Date | undefined)[], panelType: PanelType, isRange: boolean): DisabledTimeFns {
         const panel =
             (typeof disabledTime === 'function' &&
                 isRange &&
@@ -222,7 +223,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
     /** The class names of the panel: it is narrow while a time column is missing, and its width follows the column count */
     static getPanelClassNames(props: { prefixCls: string; format?: string; use12Hours?: boolean; type?: string }) {
         const { prefixCls, use12Hours, type } = props;
-        const { showHour, showMinute, showSecond } = ComboboxFoundation.getColumns(TimePickerFoundation.getValidFormat(props));
+        const { showHour, showMinute, showSecond } = getColumns(TimePickerFoundation.getValidFormat(props));
         const columnCount = [showHour, showMinute, showSecond, use12Hours].filter(Boolean).length;
         const classNames = [`${prefixCls}-panel`];
         if (!(showHour && showMinute && showSecond) && !use12Hours) {

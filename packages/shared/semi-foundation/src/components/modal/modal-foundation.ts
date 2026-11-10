@@ -72,8 +72,8 @@ export interface ModalProps {
     footerFill?: boolean;
 }
 export interface ModalState {
-    onOKReturnPromiseStatus: 'pending' | 'fulfilled' | 'rejected' | undefined;
-    onCancelReturnPromiseStatus: 'pending' | 'fulfilled' | 'rejected' | undefined;
+    onOKReturnPromiseStatus?: 'pending' | 'fulfilled' | 'rejected';
+    onCancelReturnPromiseStatus?: 'pending' | 'fulfilled' | 'rejected';
 }
 
 export default class ModalFoundation<P extends ModalProps = ModalProps, CE extends ModalButtonEvent = ModalButtonEvent, OE extends ModalButtonEvent = ModalButtonEvent> extends BaseFoundation<ModalAdapter<P, CE, OE>, P, ModalState> {

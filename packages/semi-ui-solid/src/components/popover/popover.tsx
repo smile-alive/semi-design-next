@@ -3,7 +3,7 @@ import clsx, { type ClassValue } from 'clsx';
 import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
 import '@fibrae/semi-foundation/components/popover/popover.scss';
 import useDefaultProps from '../../base/use-default-props';
-import Tooltip, { PopupContent, type Position, type RenderContentProps, type TooltipHandle, type TooltipProps, type Trigger } from '../tooltip';
+import Tooltip, { PopupContent, type Position, type RenderContentProps, type TooltipHandle, type TooltipInternalProps, type TooltipProps, type Trigger } from '../tooltip';
 import Arrow, { type ArrowStyle } from './arrow';
 
 export interface PopoverHandle {
@@ -46,7 +46,6 @@ export interface PopoverProps {
     stopPropagation?: boolean | string;
     arrowStyle?: ArrowStyle;
     arrowPointAtCenter?: boolean;
-    prefixCls?: string;
     closeOnEsc?: TooltipProps['closeOnEsc'];
     guardFocus?: TooltipProps['guardFocus'];
     returnFocusOnClose?: TooltipProps['returnFocusOnClose'];
@@ -72,15 +71,18 @@ const defaultProps = {
     motion: true,
     trigger: 'hover',
     position: 'bottom',
-    prefixCls: cssClasses.PREFIX,
     closeOnEsc: true,
     returnFocusOnClose: true,
     guardFocus: true,
 } satisfies Partial<PopoverProps>;
 
+const InternalTooltip = Tooltip as (props: TooltipInternalProps & { ref?: Ref<TooltipHandle> }) => JSX.Element;
+
+const prefixCls = cssClasses.PREFIX;
+
 export default function Popover(rawProps: PopoverProps & { ref?: Ref<PopoverHandle> }) {
     const props = useDefaultProps('Popover', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['arrowStyle', 'children', 'class', 'content', 'contentClassName', 'position', 'prefixCls', 'ref', 'role', 'showArrow', 'spacing', 'style', 'trigger']);
+    const [local, rest] = splitProps(props, ['arrowStyle', 'children', 'class', 'content', 'contentClassName', 'position', 'ref', 'role', 'showArrow', 'spacing', 'style', 'trigger']);
 
     let tooltip: TooltipHandle | undefined;
 
@@ -93,8 +95,8 @@ export default function Popover(rawProps: PopoverProps & { ref?: Ref<PopoverHand
     const arrow = () => (local.showArrow ? <Arrow arrowStyle={local.arrowStyle} popStyle={typeof local.style === 'object' ? local.style : undefined} position={local.position} /> : false);
 
     const renderPopCard = (renderProps: RenderContentProps) => (
-        <div class={clsx(local.prefixCls, local.contentClassName)}>
-            <div class={`${local.prefixCls}-content`}>
+        <div class={clsx(prefixCls, local.contentClassName)}>
+            <div class={`${prefixCls}-content`}>
                 <PopupContent content={local.content} renderProps={renderProps} />
             </div>
         </div>
@@ -106,8 +108,8 @@ export default function Popover(rawProps: PopoverProps & { ref?: Ref<PopoverHand
     }
 
     return (
-        <Tooltip {...(rest as TooltipProps)} ref={(instance) => (tooltip = instance)} class={local.class} style={local.style} role={role()} content={renderPopCard} position={local.position} prefixCls={local.prefixCls} showArrow={arrow()} spacing={spacing()} trigger={local.trigger}>
+        <InternalTooltip {...(rest as TooltipProps)} ref={(instance) => (tooltip = instance)} class={local.class} style={local.style} role={role()} content={renderPopCard} position={local.position} prefixCls={prefixCls} showArrow={arrow()} spacing={spacing()} trigger={local.trigger}>
             {local.children}
-        </Tooltip>
+        </InternalTooltip>
     );
 }

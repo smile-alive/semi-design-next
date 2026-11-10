@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ComboboxFoundation, { type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+    import { applyItem, getOptions, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
     import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import useLocale from '../locale/use-locale.svelte.js';
     import { ScrollItem, type ScrollItemHandle, type ScrollItemSelectData, ScrollList } from '../scroll-list/index.js';
@@ -14,7 +14,7 @@
     let minute = $state<ScrollItemHandle>();
     let second = $state<ScrollItemHandle>();
 
-    const options = $derived(ComboboxFoundation.getOptions({ timeStampValue, format, use12Hours, defaultIsAM, hideDisabledOptions, hourStep, minuteStep, secondStep, disabledHours, disabledMinutes, disabledSeconds }));
+    const options = $derived(getOptions({ timeStampValue, format, use12Hours, defaultIsAM, hideDisabledOptions, hourStep, minuteStep, secondStep, disabledHours, disabledMinutes, disabledSeconds }));
     const ampmOptions = $derived(options.ampm.list.map(({ value }) => ({ value, text: locale().locale[value] })));
     const mode = $derived(scrollItemProps?.mode ?? 'normal');
 
@@ -27,7 +27,7 @@
     };
 
     const pick = (type: ColumnType, item: ScrollItemSelectData) => {
-        onChange?.({ timeStampValue: Number(ComboboxFoundation.applyItem(timeStampValue as TimeStamp, type, String(item.value), use12Hours, options.isAM)) });
+        onChange?.({ timeStampValue: Number(applyItem(timeStampValue as TimeStamp, type, String(item.value), use12Hours, options.isAM)) });
     };
 
     // The selected index follows the value only: a selection is reported through onSelect, and a value its owner
@@ -43,15 +43,15 @@
 
 <ScrollList footer={panelFooter} header={panelHeader}>
     {#if use12Hours}
-        <ScrollItem bind:this={ampm} {...scrollItemProps} aria-label={locale().locale.ampmList} bind:selectedIndex={() => options.ampm.selectedIndex, keepIndex} class={columnClass('ampm')} list={ampmOptions} {mode} onSelect={(item) => pick('ampm', item)} type="ampm" />
+        <ScrollItem bind:this={ampm} {...scrollItemProps} aria-label={locale().locale.ampmList} bind:selectedIndex={() => options.ampm.selectedIndex, keepIndex} class={columnClass('ampm')} list={ampmOptions} {mode} onSelect={(item) => pick('ampm', item)} />
     {/if}
     {#if options.showHour}
-        <ScrollItem bind:this={hour} transform={withUnit('hour')} {...scrollItemProps} aria-label={locale().locale.hourList} bind:selectedIndex={() => options.hour.selectedIndex, keepIndex} class={columnClass('hour')} list={options.hour.list} {mode} onSelect={(item) => pick('hour', item)} type="hour" />
+        <ScrollItem bind:this={hour} transform={withUnit('hour')} {...scrollItemProps} aria-label={locale().locale.hourList} bind:selectedIndex={() => options.hour.selectedIndex, keepIndex} class={columnClass('hour')} list={options.hour.list} {mode} onSelect={(item) => pick('hour', item)} />
     {/if}
     {#if options.showMinute}
-        <ScrollItem bind:this={minute} transform={withUnit('minute')} {...scrollItemProps} aria-label={locale().locale.minuteList} bind:selectedIndex={() => options.minute.selectedIndex, keepIndex} class={columnClass('minute')} list={options.minute.list} {mode} onSelect={(item) => pick('minute', item)} type="minute" />
+        <ScrollItem bind:this={minute} transform={withUnit('minute')} {...scrollItemProps} aria-label={locale().locale.minuteList} bind:selectedIndex={() => options.minute.selectedIndex, keepIndex} class={columnClass('minute')} list={options.minute.list} {mode} onSelect={(item) => pick('minute', item)} />
     {/if}
     {#if options.showSecond}
-        <ScrollItem bind:this={second} transform={withUnit('second')} {...scrollItemProps} aria-label={locale().locale.secondList} bind:selectedIndex={() => options.second.selectedIndex, keepIndex} class={columnClass('second')} list={options.second.list} {mode} onSelect={(item) => pick('second', item)} type="second" />
+        <ScrollItem bind:this={second} transform={withUnit('second')} {...scrollItemProps} aria-label={locale().locale.secondList} bind:selectedIndex={() => options.second.selectedIndex, keepIndex} class={columnClass('second')} list={options.second.list} {mode} onSelect={(item) => pick('second', item)} />
     {/if}
 </ScrollList>

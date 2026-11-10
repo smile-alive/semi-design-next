@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | immediatelyRender | Passed to the tiptap editor as its immediatelyRender option. When false, the editor is created after mount, which works with server rendering; when true, it is created during the first render, for client-only rendering. | `boolean` | `false` |
 | keepSkillAfterSend | Whether the selected skill is kept after a message is sent. | `boolean` | `false` |
 | onBlur | Called when focus leaves the editor area, with the focus event. | <ApiType detail={"(event: React.FocusEvent) => void"}>Type</ApiType> | - |
-| onConfigureChange | Called when a configure value changes. changedValue is undefined when an item is removed. | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onConfigureChange | Called when a configure value changes. changedValue is undefined when an item is removed. | <ApiType detail={"(value: Setup, changedValue?: Setup) => void"}>Type</ApiType> | - |
 | onContentChange | Called when the input content changes, with the current content. | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
 | onFocus | Called when the editor area gains focus, with the focus event. | <ApiType detail={"(event: React.FocusEvent) => void"}>Type</ApiType> | - |
 | onMessageSend | Called when a message is sent, by the send button or the send shortcut, with the references, uploaded files, input content and configure values. | <ApiType detail={"(props: MessageContent) => void"}>Type</ApiType> | - |

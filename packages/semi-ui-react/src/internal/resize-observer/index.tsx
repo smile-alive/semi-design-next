@@ -67,8 +67,9 @@ class ObserverRuntime {
         const observer = new ResizeObserver(onEntries);
         this.#observe = observer.observe.bind(observer);
         this.#unobserve = observer.unobserve.bind(observer);
-        // React calls observe/unobserve per first-level DOM child; recording them finds the children.
-        // Only the first child (and its parent) is actually observed.
+        // Contract (not in the react.dev docs, locked by the insert, remove and replace cases in the tests): React calls
+        // observe/unobserve per first-level DOM child, also for children added or removed later. Only the first child
+        // (and its parent) is actually observed.
         observer.observe = (target: Element) => {
             this.#children.add(target);
             this.#update();

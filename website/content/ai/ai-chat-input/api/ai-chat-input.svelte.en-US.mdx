@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | generating | Whether a response is being generated. While true, the send button becomes the stop button. | `boolean` | `false` |
 | keepSkillAfterSend | Whether the selected skill is kept after a message is sent. | `boolean` | `false` |
 | onBlur | Called when the rich text input loses focus. It shadows the native onblur on the root element. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
-| onConfigureChange | Called when the configure area changes, with the whole value and the changed value; the second argument is undefined when an item is removed. | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onConfigureChange | Called when the configure area changes, with the whole value and the changed value; the second argument is undefined when an item is removed. | <ApiType detail={"(value: Setup, changedValue?: Setup) => void"}>Type</ApiType> | - |
 | onContentChange | Called when the input content changes, with the current content items. | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
 | onFocus | Called when the rich text input gets focus. It shadows the native onfocus on the root element. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
 | onMessageSend | Called when the send button is clicked, with the references, attachments, input contents and configure values. | <ApiType detail={"(message: MessageContent) => void"}>Type</ApiType> | - |

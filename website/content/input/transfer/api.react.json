@@ -1,6 +1,6 @@
 {
     "transfer": {
-        "source": "packages/semi-ui-react/src/components/transfer/index.tsx",
+        "source": "packages/semi-ui-react/src/components/transfer/transfer.tsx",
         "props": {
             "className": {
                 "zh-CN": "根元素的类名。",

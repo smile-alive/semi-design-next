@@ -9,11 +9,11 @@ import Button from '@fibrae/semi-ui-solid/button/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { ToastFactory } from '@fibrae/semi-ui-solid/toast/index';
 import hasContent from '@fibrae/semi-ui-solid/utils/has-content';
+import CodeContent, { CodeItem, type CodeItemProps } from './code';
 import Container from './container';
+import FileContent, { FileItem, type FileItemProps } from './file';
 import type { SideBarProps } from './interface';
-import CodeContent, { CodeItem, type CodeItemProps } from './widgets/code';
-import FileContent, { FileItem, type FileItemProps } from './widgets/file';
-import Options from './widgets/options';
+import Options from './options';
 
 const prefixCls = cssClasses.SIDEBAR;
 

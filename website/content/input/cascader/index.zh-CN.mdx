@@ -673,7 +673,7 @@ interface CascaderTriggerSnippetProps {
      * 已选中的 node 在 treeData 中的层级位置，如下例子，
      * 当选中浙江省-杭州市-萧山区时，此处 value 为 '0-0-1'；多选时为 Set<string>
      */
-    value: string | Set<string> | undefined;
+    value?: string | Set<string>;
     /* 展开时为搜索词；可搜索的单选收起时为已选路径的展示文本 */
     inputValue: string;
     /* Placeholder */

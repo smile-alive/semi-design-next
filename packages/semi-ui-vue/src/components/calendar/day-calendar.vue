@@ -6,11 +6,11 @@
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import { hasSlotContent } from '../../utils/slot-nodes';
     import useLocale from '../locale/use-locale';
+    import useScrollGrid from './composables/use-scroll-grid';
     import { useCalendarContext } from './context';
     import DayCol from './day-col.vue';
     import type { CalendarSlots, EventObject } from './interface';
     import TimeCol from './time-col.vue';
-    import useScrollGrid from './use-scroll-grid';
 
     const props = defineProps<{
         displayValue: Date;

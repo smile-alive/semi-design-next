@@ -1,6 +1,6 @@
 <script lang="ts">
-    import FormInput from '../form-input.svelte';
-    import FormSelect from '../form-select.svelte';
+    import FormInput from '../fields/form-input.svelte';
+    import FormSelect from '../fields/form-select.svelte';
     import Form from '../form.svelte';
 
     export const getInput = () => input;

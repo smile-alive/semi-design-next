@@ -9,7 +9,7 @@ import { cssClasses } from './constants';
 import { type FieldError, hasErrors, isErrorLeaf, normalizeFieldError, normalizeFormErrors } from './errors';
 import type FieldStore from './field-store';
 import { getFormApiProxyInternals } from './form-api-proxy';
-import type { BaseFormAdapter, FormState, FormFoundationState, CallOpts, FieldRegistration, ComponentProps, setValuesConfig, ArrayFieldRegistration, ValidateOptions, ChangeFieldValueOptions, FieldSnapshot, StandardSchema, StandardSchemaIssue, StandardSchemaResult } from './interface';
+import type { BaseFormAdapter, FormState, FormFoundationState, CallOpts, FieldRegistration, ComponentProps, SetValuesConfig, ArrayFieldRegistration, ValidateOptions, ChangeFieldValueOptions, FieldSnapshot, StandardSchema, StandardSchemaIssue, StandardSchemaResult } from './interface';
 import { validateRules } from './rules';
 import { isValid, nextUpdateKey, pickFormProps, schemaIssuePath, validationSchema } from './utils';
 
@@ -1368,7 +1368,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             getInitValues: () => this.getInitValues(),
             getTouched: (field?: string) => this.#getTouched(field),
             getError: (field?: string) => this.#getError(field),
-            setValues: (values: any, opts?: setValuesConfig) => this.#setValues(values, opts ?? { isOverride: false }),
+            setValues: (values: any, opts?: SetValuesConfig) => this.#setValues(values, opts ?? { isOverride: false }),
             submitForm: () => this.submit(),
             getFieldExist: (field: string) => this.#getFieldExist(field),
             scrollToField: (field: string, scrollOpts?: ScrollIntoViewOptions) => this.#scrollToField(field, scrollOpts),

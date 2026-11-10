@@ -4,9 +4,9 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| mode | Display mode: popup is a non-modal panel at the bottom without a mask (SideSheet); modal is a modal dialog (Modal). Attributes Feedback does not declare go to the SideSheet or Modal of the current mode. | `FeedbackMode` | `semiDefault("Feedback", "mode", "popup")` |
-| type | Type of the feedback content. For custom, the content goes in the default slot. | `FeedbackType` | `semiDefault("Feedback", "type", "emoji")` |
-| visible | Whether the feedback is shown. Use it with v-model:visible. | `boolean` | `semiDefault("Feedback", "visible", false)` |
+| mode | Display mode: popup is a non-modal panel at the bottom without a mask (SideSheet); modal is a modal dialog (Modal). Attributes Feedback does not declare go to the SideSheet or Modal of the current mode. | `FeedbackMode` | `"popup"` |
+| type | Type of the feedback content. For custom, the content goes in the default slot. | `FeedbackType` | `"emoji"` |
+| visible | Whether the feedback is shown. Use it with v-model:visible. | `boolean` | `false` |
 | title | Plain-text title that also names the dialog. The title slot wins when both are given. | `string` | `semiGlobalDefault("Feedback", "title")` |
 | textAreaProps | Props of the multi-line input for the text and emoji types, without modelValue (Feedback owns the value); its onChange is called after Feedback handles the change. | `FeedbackTextAreaProps` | `semiGlobalDefault("Feedback", "textAreaProps")` |
 | radioGroupProps | Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label. | `FeedbackRadioGroupProps` | `semiGlobalDefault("Feedback", "radioGroupProps")` |

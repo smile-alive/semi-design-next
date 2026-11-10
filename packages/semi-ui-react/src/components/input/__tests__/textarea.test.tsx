@@ -453,7 +453,8 @@ describe('TextArea', () => {
 
     it('disabledEnterStartNewLine 阻止 Enter 但不阻止 Shift+Enter', () => {
         const onEnterPress = vi.fn<NonNullable<TextAreaProps['onEnterPress']>>();
-        render(<TextArea disabledEnterStartNewLine onEnterPress={onEnterPress} />);
+        const internal = { disabledEnterStartNewLine: true };
+        render(<TextArea {...internal} onEnterPress={onEnterPress} />);
         expect(fireEvent.keyDown(getTextArea(), { key: 'Enter' })).toBe(false);
         expect(fireEvent.keyDown(getTextArea(), { key: 'Enter', shiftKey: true })).toBe(true);
         expect(onEnterPress).toHaveBeenCalledTimes(2);

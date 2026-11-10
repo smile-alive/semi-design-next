@@ -228,5 +228,5 @@ export interface NodeListProps {
     itemKey?: (node: FlattenNode) => PropertyKey;
     /** A search hit while expandedKeys is controlled: the rows render without the animated group */
     searchTargetIsDeep?: boolean;
-    children: Snippet<[{ node: FlattenNode; style: string | undefined }]>;
+    children: Snippet<[{ node: FlattenNode; style?: string }]>;
 }

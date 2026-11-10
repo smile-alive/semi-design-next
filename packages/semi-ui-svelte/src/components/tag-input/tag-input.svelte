@@ -22,8 +22,8 @@
     import type { RestTagsPopoverProps, TagInputProps } from './interface.js';
     import TagItem from './tag-item.svelte';
 
-    type Foundation = TagInputFoundation<TagInputBaseProps, Event>;
-    type Adapter = TagInputAdapter<TagInputBaseProps, Event>;
+    type Foundation = TagInputFoundation<TagInputBaseProps, Event, KeyboardEvent, FocusEvent>;
+    type Adapter = TagInputAdapter<TagInputBaseProps, Event, KeyboardEvent, FocusEvent>;
 
     const defaults = useDefaultProps('TagInput');
 

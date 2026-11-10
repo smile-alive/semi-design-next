@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Zgjidh të gjitha rreshtat',
         selectRow: 'Zgjidh këtë rresht',
+        scrollRegion: 'Përmbajtje e tabelës që lëviz',
+        untitledColumn: 'Kolonë pa titull',
         filterColumn: 'Filtro të dhënat me këtë kolonë',
         filterColumnActive: 'Filtro të dhënat me këtë kolonë, filtri është aktiv',
         expandRow: 'Zgjero këtë rresht',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Kërko',
         replace: 'Zëvendëso',
         replaceAll: 'Zëvendëso të gjitha',
+        replaceWith: 'Zëvendëso me',
         caseSensitive: 'Përputh shkronjat e mëdha dhe të vogla',
         regex: 'Përdor shprehje të rregullt',
         wholeWord: 'Përputh fjalën e plotë',

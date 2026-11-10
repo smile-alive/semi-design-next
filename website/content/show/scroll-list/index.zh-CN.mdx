@@ -167,21 +167,13 @@ import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
 
 <Framework only="vue">
 
-通过 ScrollItem 的模板 ref 调用，用于在容器尺寸变化等场景下重新对齐选中项
+通过 ScrollItem 的模板 ref 调用，签名见上方 ScrollItem 的 Exposes 表。
 
 </Framework>
 
 <Framework only="solid">
 
 通过 ScrollItem 的 `ref` 调用，用于在容器尺寸变化等场景下重新对齐选中项
-
-</Framework>
-
-<Framework only="vue">
-
-| 名称                                                     | 说明                                                                                                                        |
-| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| scrollToIndex(selectedIndex?: number, duration?: number) | 将列表滚动到当前选中项。`selectedIndex` 暂不生效，目标始终是最近一次选中的项；`duration` 为滚动动画时长，单位毫秒，默认 120 |
 
 </Framework>
 

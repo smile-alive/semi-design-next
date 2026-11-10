@@ -5,12 +5,11 @@ export { default as FormErrorMessage } from './error-message.vue';
 export { default as FormSection } from './section.vue';
 export { default as FormSlot } from './form-slot.vue';
 export { default as FormInputGroup } from './input-group.vue';
-export { default as SchemaField } from './schema-field.vue';
-export { default as SchemaForm } from './schema-form.vue';
+export { default as SchemaField } from './schema-form/schema-field.vue';
+export { default as SchemaForm } from './schema-form/schema-form.vue';
 
 export { default as withField } from './with-field';
-export { default as useForm } from './use-form';
-export { useFieldApi, useFieldState, useFormApi, useFormState } from './hooks';
+export { useFieldApi, useFieldState, useForm, useFormApi, useFormState } from './composables';
 
 export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormPinCode, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTransfer, FormTreeSelect, FormUpload } from './field';
 export type { FormCheckboxProps, FormRadioProps, FormSelectProps } from './field';

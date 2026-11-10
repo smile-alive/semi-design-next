@@ -115,48 +115,6 @@ export class JSONCompletion {
         }
     }
 
-    #addFillerValueCompletions(types: { [type: string]: boolean }, separatorAfter: string, collector: CompletionsCollector) {
-        if (types['object']) {
-            collector.add({
-                kind: this.#getSuggestionKind('object'),
-                label: '{}',
-                insertText: this.#getInsertTextForGuessedValue({}, separatorAfter),
-                insertTextFormat: InsertTextFormat.Snippet,
-                detail: 'New object',
-                documentation: '',
-            });
-        }
-        if (types['array']) {
-            collector.add({
-                kind: this.#getSuggestionKind('array'),
-                label: '[]',
-                insertText: this.#getInsertTextForGuessedValue([], separatorAfter),
-                insertTextFormat: InsertTextFormat.Snippet,
-                detail: 'New array',
-                documentation: '',
-            });
-        }
-    }
-
-    #getInsertTextForGuessedValue(value: any, separatorAfter: string) {
-        switch (typeof value) {
-            case 'object':
-                if (value === null) {
-                    return '${1:null}' + separatorAfter;
-                }
-                return this.#getInsertTextForValue(value, separatorAfter);
-            case 'string':
-                let snippetValue = JSON.stringify(value);
-                snippetValue = snippetValue.slice(1, snippetValue.length - 1);
-                snippetValue = this.#getInsertTextForPlainText(snippetValue);
-                return '"${1:' + snippetValue + '}"' + separatorAfter;
-            case 'number':
-            case 'boolean':
-                return '${1:' + JSON.stringify(value) + '}' + separatorAfter;
-        }
-        return this.#getInsertTextForValue(value, separatorAfter);
-    }
-
     #getSuggestionKind(type: string): CompletionItemKind {
         if (Array.isArray(type)) {
             const array = type;
@@ -372,19 +330,10 @@ export class JSONCompletion {
                     collector.setAsIncomplete();
                 }
             }
-            const types: { [type: string]: boolean } = {};
-
             this.#getSchemaLessValueCompletions(doc, node, offset, jsonModel, collector);
 
             return Promise.all(collectionPromises).then(() => {
-                if (collector.getNumberOfProposals() === 0) {
-                    let offsetForSeparator = offset;
-                    if (node && (node.type === 'string' || node.type === 'number' || node.type === 'boolean' || node.type === 'null')) {
-                        offsetForSeparator = node.offset + node.length;
-                    }
-                    const separatorAfter = this.#evaluateSeparatorAfter(jsonModel, offsetForSeparator);
-                    this.#addFillerValueCompletions(types, separatorAfter, collector);
-                } else if (this.#options?.staticCompletions) {
+                if (collector.getNumberOfProposals() > 0 && this.#options?.staticCompletions) {
                     this.#options.staticCompletions.forEach((item) => {
                         collector.add({
                             label: item.label,

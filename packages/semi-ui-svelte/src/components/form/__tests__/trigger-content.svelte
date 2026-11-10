@@ -3,12 +3,12 @@
 </script>
 
 <script lang="ts">
-    import FormAutoComplete from '../form-auto-complete.svelte';
-    import FormCascader from '../form-cascader.svelte';
-    import FormDatePicker from '../form-date-picker.svelte';
-    import FormSelect from '../form-select.svelte';
-    import FormTimePicker from '../form-time-picker.svelte';
-    import FormTreeSelect from '../form-tree-select.svelte';
+    import FormAutoComplete from '../fields/form-auto-complete.svelte';
+    import FormCascader from '../fields/form-cascader.svelte';
+    import FormDatePicker from '../fields/form-date-picker.svelte';
+    import FormSelect from '../fields/form-select.svelte';
+    import FormTimePicker from '../fields/form-time-picker.svelte';
+    import FormTreeSelect from '../fields/form-tree-select.svelte';
     import Form from '../form.svelte';
 
     let { type, labelPosition }: { type: TriggerContentField; labelPosition?: 'top' | 'left' | 'inset' } = $props();

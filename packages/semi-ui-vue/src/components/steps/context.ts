@@ -8,7 +8,6 @@ export interface StepsView {
     current: number;
     initial: number;
     status: StepStatus;
-    prefixCls: string;
     /** True when the parent bound onChange or onUpdate:current, which makes every step clickable */
     clickable: boolean;
 }

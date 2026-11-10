@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | form | The formApi returned by useForm, to control the form from outside the Form. | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | - |
 | getFormApi | Called once the Form has mounted, with the formApi, to keep a reference to it. | <ApiType detail={"(formApi: FormApi\u003cValues, Output>) => void"}>Type</ApiType> | - |
 | id | The id of the form element, also written to x-form-id; generated when omitted. | `string` | - |
-| initValues | Initial values of the form, copied once when the Form is created. | `Values` | - |
+| initValues | Initial values of the form, copied once when the Form is created. | <ApiType detail={"DeepPartial\u003cValues>"}>Type</ApiType> | - |
 | keepState | Whether an unmounted field keeps its value, error and touched state, restored by path when it mounts again. Fields and ArrayFields without their own setting use this value. | `boolean` | `true` |
 | labelAlign | Label text alignment applied to every field. The same prop on a field takes precedence. | `'left' \| 'right'` | - |
 | labelCol | Label grid layout applied to every field, with the span, offset and other props of Col; set it together with wrapperCol. | `ColProps` | - |

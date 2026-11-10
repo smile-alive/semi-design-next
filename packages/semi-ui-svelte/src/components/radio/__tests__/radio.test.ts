@@ -192,11 +192,11 @@ describe('Svelte Radio', () => {
         expect(getLabel()).not.toHaveAttribute('name');
     });
 
-    it('class、style、prefixCls 作用于根 label', () => {
-        render(Radio, { props: { prefixCls: 'my-radio', class: 'c', style: 'color: red' } });
-        expect(getLabel()).toHaveClass('c', 'my-radio');
+    it('class、style 作用于根 label', () => {
+        render(Radio, { props: { class: 'c', style: 'color: red' } });
+        expect(getLabel()).toHaveClass('c', prefix);
         expect(getLabel()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(document.querySelector('.my-radio-inner')).not.toBeNull();
+        expect(document.querySelector(`.${prefix}-inner`)).not.toBeNull();
     });
 
     it('不输出 aria-invalid、aria-errormessage、aria-required，无效时错误信息进入描述', () => {

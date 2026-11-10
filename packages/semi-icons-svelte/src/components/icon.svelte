@@ -8,7 +8,6 @@
         size?: IconSize;
         spin?: boolean;
         rotate?: number;
-        prefixCls?: string;
         type?: string;
         fill?: string | string[];
         children?: Snippet<[{ fill?: string | string[] }]>;
@@ -19,9 +18,9 @@
     import { BASE_CLASS_PREFIX } from '../env.js';
     import '@fibrae/semi-icons-core/styles/icons.scss';
 
-    let { size = 'default', spin = false, rotate, prefixCls = BASE_CLASS_PREFIX, type, fill, children, ...rest }: IconProps = $props();
+    let { size = 'default', spin = false, rotate, type, fill, children, ...rest }: IconProps = $props();
 
-    const prefix = $derived(`${prefixCls}-icon`);
+    const prefix = `${BASE_CLASS_PREFIX}-icon`;
     const exposed = $derived(Boolean(rest['aria-label'] || rest['aria-labelledby']) || Number(rest.tabindex) >= 0);
     // The user's style comes last so it can override the rotation
     const style = $derived([Number.isSafeInteger(rotate) ? `transform: rotate(${rotate}deg)` : undefined, rest.style].filter(Boolean).join(';') || undefined);

@@ -16,8 +16,8 @@ import Button from '../icon-button';
 import useLocale from '../locale/use-locale';
 import Popover from '../popover';
 import type { RenderContentProps } from '../tooltip';
+import useToday from './hooks/use-today';
 import type { CalendarProps, MonthCalendarProps } from './interface';
-import useToday from './use-today';
 
 type Foundation = CalendarMonthFoundation<MonthViewProps>;
 type Adapter = CalendarMonthAdapter<MonthViewProps>;

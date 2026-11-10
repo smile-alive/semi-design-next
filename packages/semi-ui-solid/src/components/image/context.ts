@@ -1,10 +1,10 @@
-import type { Accessor, JSX } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import { createContext } from '../../base/create-context';
-import type { GroupImage } from './interface';
+import type { GroupImage, PreviewProps } from './interface';
 
 export interface PreviewGroupView {
     lazyLoad: boolean;
-    titles: JSX.Element[];
+    titles: PreviewProps['previewTitle'][];
     alts: (string | undefined)[];
     setDownloadName?: (src: string) => string;
 }

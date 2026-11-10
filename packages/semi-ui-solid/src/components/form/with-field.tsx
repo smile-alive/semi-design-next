@@ -12,13 +12,15 @@ import useWatch from '../../primitives/use-watch';
 import hasContent from '../../utils/has-content';
 import isMarkup from '../../utils/is-markup';
 import { type FormContextValue, useArrayFieldContext, useFormContext, useFormInputGroupContext } from './context';
-import ErrorMessage from './error-message';
+import ErrorMessage, { type ErrorMessageInternalProps } from './error-message';
 import FieldGrid from './field-grid';
 import type { CommonFieldProps, FieldProps } from './interface';
 import Label, { type LabelProps } from './label';
 import { cloneDeep, invoke } from './utils';
 
 const prefix = cssClasses.PREFIX;
+
+const InternalErrorMessage = ErrorMessage as (props: ErrorMessageInternalProps) => JSX.Element;
 
 export interface WithFieldOption {
     valueKey?: string;
@@ -337,7 +339,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                         <Show when={merged().extraTextPosition === 'middle'}>{extraContent()}</Show>
                         {control()}
                         <Show when={!local.noErrorMessage}>
-                            <ErrorMessage error={snapshot().error} errorMessageId={view().ids.errorMessage} helpText={helpText()} helpTextId={view().ids.helpText} showValidateIcon={form.formProps.showValidateIcon} validateStatus={view().shownStatus} />
+                            <InternalErrorMessage error={snapshot().error} errorMessageId={view().ids.errorMessage} helpText={helpText()} helpTextId={view().ids.helpText} showValidateIcon={form.formProps.showValidateIcon} validateStatus={view().shownStatus} />
                         </Show>
                         <Show when={merged().extraTextPosition === 'bottom'}>{extraContent()}</Show>
                     </FieldGrid>

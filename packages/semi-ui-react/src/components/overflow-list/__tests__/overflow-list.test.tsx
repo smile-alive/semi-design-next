@@ -4,7 +4,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { mockResizeObserver } from '@test/utils/react';
-import OverflowList, { type OverflowItem, type OverflowListProps } from '../index';
+import OverflowList, { type OverflowItem, type OverflowListInternalProps, type OverflowListProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-overflow-list`;
 const keys = ['alarm', 'bookmark', 'camera', 'duration', 'edit', 'folder'];
@@ -417,11 +417,12 @@ describe('OverflowList', () => {
         expect(overflowRenderer.mock.lastCall[0]).toEqual([[], []]);
     });
 
-    it.each<[NonNullable<OverflowListProps['overflowRenderDirection']>, string[]]>([
+    it.each<[NonNullable<OverflowListInternalProps['overflowRenderDirection']>, string[]]>([
         ['start', ['overflow-0', 'overflow-1', 'wrapper']],
         ['end', ['wrapper', 'overflow-0', 'overflow-1']],
     ])('scroll: overflowRenderDirection 为 %s 时，两个 overflow 节点都放在该侧', (direction, order) => {
-        const { container } = render(<OverflowList items={items} overflowRenderDirection={direction} overflowRenderer={() => [<span key="start">overflow-0</span>, <span key="end">overflow-1</span>]} visibleItemRenderer={(item) => <div key={item.key}>{item.key}</div>} renderMode="scroll" />);
+        const internal = { overflowRenderDirection: direction };
+        const { container } = render(<OverflowList items={items} {...internal} overflowRenderer={() => [<span key="start">overflow-0</span>, <span key="end">overflow-1</span>]} visibleItemRenderer={(item) => <div key={item.key}>{item.key}</div>} renderMode="scroll" />);
         expect([...getList(container).children].map((child) => (child.classList.contains(`${prefixCls}-scroll-wrapper`) ? 'wrapper' : child.textContent))).toEqual(order);
     });
 

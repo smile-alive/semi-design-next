@@ -15,7 +15,6 @@ export interface CheckboxInnerProps {
     indeterminate?: boolean;
     checked?: boolean;
     disabled?: boolean;
-    prefixCls?: string;
     id?: string;
     name?: string;
     value?: string;
@@ -34,7 +33,6 @@ export default function CheckboxInner({
     indeterminate,
     checked,
     disabled,
-    prefixCls,
     id,
     name,
     value,
@@ -51,7 +49,7 @@ export default function CheckboxInner({
 }: CheckboxInnerProps) {
     const nativeRef = useRef<HTMLInputElement>(null);
 
-    const prefix = prefixCls || css.PREFIX;
+    const prefix = css.PREFIX;
 
     const wrapper = clsx({
         [`${prefix}-inner`]: true,

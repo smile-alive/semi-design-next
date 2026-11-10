@@ -660,7 +660,7 @@ describe('VideoPlayer', () => {
     it('时间为 0 时进度圆点在起点', () => {
         const { container } = render(<VideoPlayer src={src} />);
         loadDuration(container.querySelector('video'), 3);
-        expect(container.querySelector<HTMLElement>(`.${prefixCls}-progress-handle`).style.left).toBe('calc(0% - 8px)');
+        expect(container.querySelector<HTMLElement>(`.${prefixCls}-progress-handle`).style.left).toBe('0%');
     });
 
     it('显示错误遮罩', () => {
