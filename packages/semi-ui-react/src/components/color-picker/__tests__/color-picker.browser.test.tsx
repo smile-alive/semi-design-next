@@ -1,4 +1,4 @@
-import type { ComponentProps, CSSProperties } from 'react';
+import type { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
@@ -40,7 +40,7 @@ describe('ColorPicker（浏览器）', () => {
     it('默认触发器显示主题焦点环', async () => {
         // the theme is not loaded: define the focus token so the ring color is valid
         const { container } = render(
-            <div style={{ '--semi-color-primary-light-active': 'rgb(1, 2, 3)' } as CSSProperties}>
+            <div style={{ '--semi-color-primary-light-active': 'rgb(1, 2, 3)' }}>
                 <ColorPicker defaultValue={ColorPicker.colorStringToValue('#3370ff')} usePopover />
             </div>
         );

@@ -40,6 +40,62 @@ describe('Grid 浏览器', () => {
         });
     });
 
+    describe('Col 的栅格布局', () => {
+        // a 480px wide Row makes one column 20px
+        const renderCols = (cols: () => unknown, props: RowProps = {}) => {
+            const { container } = render(() => (
+                <div style={{ width: '480px' }}>
+                    <Row {...props}>{cols}</Row>
+                </div>
+            ));
+            return Array.from(container.querySelectorAll<HTMLElement>('.semi-col'));
+        };
+
+        it('span、offset、push 与 order 按 24 栅格折算', () => {
+            const [col] = renderCols(() => (
+                <Col offset={3} order={2} push={2} span={6}>
+                    {() => 'col'}
+                </Col>
+            ));
+            const computed = getComputedStyle(col);
+            expect(computed.width).toBe('120px');
+            expect(computed.marginInlineStart).toBe('60px');
+            expect(parseFloat(computed.insetInlineStart)).toBeCloseTo(40, 0);
+            expect(computed.order).toBe('2');
+        });
+
+        it('没有 span 的 Col 按内容定宽，与 span 的 Col 并排', () => {
+            const cols = renderCols(() => (
+                <>
+                    <Col>{() => 'auto'}</Col>
+                    <Col span={6}>{() => 'span'}</Col>
+                </>
+            ));
+            expect(cols[0].offsetWidth).toBeLessThan(120);
+            expect(cols[1].offsetTop).toBe(cols[0].offsetTop);
+        });
+
+        it('justify 与 align 始终生效', () => {
+            const [col] = renderCols(() => <Col span={6}>{() => 'col'}</Col>, { align: 'middle', justify: 'center' });
+            const row = col.parentElement as HTMLElement;
+            expect(getComputedStyle(row).justifyContent).toBe('center');
+            expect(getComputedStyle(row).alignItems).toBe('center');
+            expect(col.getBoundingClientRect().left - row.getBoundingClientRect().left).toBe(180);
+        });
+
+        it('断点从更小的断点继承，没有设置的断点沿用已生效的值', async () => {
+            const widthAt = async (viewport: number) => {
+                await page.viewport(viewport, 660);
+                const [col] = renderCols(() => <Col md={12} xs={24} />);
+                return col.offsetWidth;
+            };
+            expect(await widthAt(500)).toBe(480);
+            // sm sets nothing, so it keeps xs
+            expect(await widthAt(700)).toBe(480);
+            expect(await widthAt(1000)).toBe(240);
+        });
+    });
+
     // the browser project's 1000px viewport is the lg breakpoint, so lg overrides what xs set
     it('在更大断点处设置的 0 值 order、offset、push 和 pull 会重置较小断点的值', () => {
         const view = render(() => (
@@ -98,9 +154,9 @@ describe('Grid 浏览器', () => {
             expect(paddingTop(col)).toBe('0px');
         });
 
-        it('flex 布局下 gutter 的落点与普通布局一致（margin，而非 row-gap）', () => {
-            const { container } = renderRow({ type: 'flex', gutter: [16, 24] });
-            const row = q(container, '.semi-row-flex');
+        it('Row 是 flex 布局，gutter 落在 margin 与 padding，而非 row-gap', () => {
+            const { container } = renderRow({ gutter: [16, 24] });
+            const row = q(container, '.semi-row');
             const col = q(container, '.semi-col');
             expect(getComputedStyle(row).display).toBe('flex');
             expect(marginLeft(row)).toBe('-8px');

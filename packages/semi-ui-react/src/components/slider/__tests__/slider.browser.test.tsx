@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react';
+import { useState } from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
@@ -294,7 +294,7 @@ describe('slider', () => {
     it('键盘聚焦时在可见手柄上绘制焦点环，指针按下不绘制', async () => {
         // the theme is not loaded: give the focus token a value so the outline stays valid
         const { container } = render(
-            <div style={{ width: 800, '--semi-color-primary-light-active': 'rgb(1, 2, 3)' } as CSSProperties}>
+            <div style={{ width: 800, '--semi-color-primary-light-active': 'rgb(1, 2, 3)' }}>
                 <Slider />
                 <Slider />
             </div>

@@ -7,7 +7,7 @@
     import type { RowProps } from './interface.js';
 
     const defaults = useDefaultProps('Row');
-    let { type = defaults('type'), align = defaults('align'), justify = defaults('justify'), gutter = defaults('gutter', 0), children, ...rest }: RowProps = $props();
+    let { align = defaults('align'), justify = defaults('justify'), gutter = defaults('gutter', 0), children, ...rest }: RowProps = $props();
 
     const prefixCls = cssClasses.PREFIX;
 
@@ -19,6 +19,6 @@
     });
 </script>
 
-<div {...rest} class={[getRowClassName(prefixCls, { type, justify, align }), rest.class]} {style} x-semi-prop="children">
+<div {...rest} class={[getRowClassName(prefixCls, { justify, align }), rest.class]} {style} x-semi-prop="children">
     {@render children?.()}
 </div>

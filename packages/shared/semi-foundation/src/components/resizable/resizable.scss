@@ -11,6 +11,7 @@ $module: #{$prefix}-resizable;
         flex-shrink: 0;
     }
 
+    /* stylelint-disable property-disallowed-list -- Direction names and the drag deltas are physical (right = clientX grows the width), so handlers stay on their named side in RTL */
     &-resizableHandler {
         @mixin row-resize-base {
             top: 0;
@@ -93,6 +94,8 @@ $module: #{$prefix}-resizable;
             cursor: nw-resize;
         }
     }
+
+    /* stylelint-enable property-disallowed-list */
 
     &-group {
         position: relative;

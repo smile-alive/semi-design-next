@@ -72,10 +72,10 @@ export default function ConfigProviderDemo() {
                 </ButtonGroup>
             </div>
             <ConfigProvider direction={direction}>
-                <Row>
+                <div>
                     <h3 style={titleStyle}>Buttons</h3>
-                </Row>
-                <Row style={rowStyle}>
+                </div>
+                <div style={rowStyle}>
                     <Button loading theme="solid" style={{ marginInlineEnd: 8 }}>
                         加载
                     </Button>
@@ -92,10 +92,10 @@ export default function ConfigProviderDemo() {
                         <Button>查询</Button>
                         <Button>剪切</Button>
                     </ButtonGroup>
-                </Row>
-                <Row>
+                </div>
+                <div>
                     <h3 style={titleStyle}>Input</h3>
-                </Row>
+                </div>
                 <Row style={rowStyle} gutter={16}>
                     <Col span={12}>
                         <Input aria-label="输入框" placeholder="输入框" />
@@ -189,10 +189,10 @@ export default function ConfigProviderDemo() {
                         <Cascader style={{ width: '100%' }} treeData={treeData} placeholder="级联选择器" />
                     </Col>
                 </Row>
-                <Row>
+                <div>
                     <h3 style={titleStyle}>Navigation</h3>
-                </Row>
-                <Row style={rowStyle}>
+                </div>
+                <div style={rowStyle}>
                     <Breadcrumb>
                         <Breadcrumb.Item>Semi-ui</Breadcrumb.Item>
                         <Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>
@@ -226,11 +226,11 @@ export default function ConfigProviderDemo() {
                         <Steps.Step title="In Process" description="This is a description" />
                         <Steps.Step title="Waiting" description="This is a description" />
                     </Steps>
-                </Row>
-                <Row>
+                </div>
+                <div>
                     <h3 style={titleStyle}>Display</h3>
-                </Row>
-                <Row style={rowStyle}>
+                </div>
+                <div style={rowStyle}>
                     <div style={{ display: 'flex' }}>
                         <div style={{ padding: 8 }}>
                             <Badge count={5} theme="solid">
@@ -330,11 +330,11 @@ export default function ConfigProviderDemo() {
                             审核失败
                         </Timeline.Item>
                     </Timeline>
-                </Row>
-                <Row>
+                </div>
+                <div>
                     <h3 style={titleStyle}>Feedback</h3>
-                </Row>
-                <Row style={rowStyle}>
+                </div>
+                <div style={rowStyle}>
                     <Button type="primary" onClick={() => Notification.success(opts)} style={buttonStyle}>
                         成功信息的通知
                     </Button>
@@ -390,7 +390,7 @@ export default function ConfigProviderDemo() {
                             <p>And more texts on the way.</p>
                         </div>
                     </Spin>
-                </Row>
+                </div>
             </ConfigProvider>
         </div>
     );

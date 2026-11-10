@@ -41,7 +41,7 @@ export function resolveGutterByBreakpoint(gutter?: Gutter) {
 }
 
 // every breakpoint is written, even as 0px, so a nested Row does not inherit the outer Row's gutter
-export function gutterStyle(axis: 'x' | 'y', gutter?: Gutter): Record<string, string> {
+export function gutterStyle(axis: 'x' | 'y', gutter?: Gutter): Record<`--${string}`, string> {
     const resolved = resolveGutterByBreakpoint(gutter);
     return Object.fromEntries(breakpoints.map((bp) => [gutterVarName(axis, bp), `${resolved[bp]}px`]));
 }

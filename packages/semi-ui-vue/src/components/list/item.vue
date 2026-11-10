@@ -16,7 +16,7 @@
     const colProps = computed((): Record<string, unknown> | undefined => {
         const grid = list?.value.grid;
         if (!grid) return undefined;
-        const { gutter, justify, type, align, ...rest } = grid;
+        const { gutter, justify, align, ...rest } = grid;
         return { ...rest, role: 'none' };
     });
 

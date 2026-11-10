@@ -22,7 +22,7 @@
     const attrs = $derived(clickable ? splitControlAttrs(rest, (key) => key === 'tabindex' || isAriaKey(key)) : { root: rest, control: {} });
 
     // Grid's own class and style go to the Col; the Row-level props went to the Row
-    const colProps = $derived(list?.grid && omit(list.grid, ['gutter', 'justify', 'type', 'align']));
+    const colProps = $derived(list?.grid && omit(list.grid, ['gutter', 'justify', 'align']));
 
     const handleLiClick = (event: MouseEvent & { currentTarget: HTMLLIElement }) => {
         if (!handleClick) {

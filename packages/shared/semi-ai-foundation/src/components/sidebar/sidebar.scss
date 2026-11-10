@@ -32,12 +32,13 @@ $module: #{$prefix}-sidebar;
         flex-direction: column;
         height: 100%;
         overflow: hidden;
-        border-left: $width-sidebar_container-borderLeft solid $color-sidebar_container-borderLeft;
+        border-inline-start: $width-sidebar_container-borderLeft solid $color-sidebar_container-borderLeft;
 
         &-header {
             display: flex;
             align-items: center;
-            padding: $spacing-sidebar_container_header-paddingY $spacing-sidebar_container_header-paddingRight $spacing-sidebar_container_header-paddingY $spacing-sidebar_container_header-paddingLeft;
+            padding-block: $spacing-sidebar_container_header-paddingY;
+            padding-inline: $spacing-sidebar_container_header-paddingLeft $spacing-sidebar_container_header-paddingRight;
             border-bottom: $width-sidebar_container_header_borderBottom solid $color-sidebar_container_header-borderBottom;
 
             &-title {
@@ -140,7 +141,7 @@ $module: #{$prefix}-sidebar;
                 flex-shrink: 0;
                 width: $width-sidebar_mcp_item_sign;
                 height: $width-sidebar_mcp_item_sign;
-                margin-right: $spacing-sidebar_mcp_item_sign-marginRight;
+                margin-inline-end: $spacing-sidebar_mcp_item_sign-marginRight;
 
                 .#{$prefix}-icon {
                     font-size: $font-sidebar_mcp_item_sign_icon-fontSize;
@@ -151,7 +152,7 @@ $module: #{$prefix}-sidebar;
                 flex: 1;
                 justify-content: center;
                 min-width: 0;
-                margin-right: $spacing-sidebar_mcp_item_content-marginRight;
+                margin-inline-end: $spacing-sidebar_mcp_item_content-marginRight;
 
                 &-label {
                     @include font-size-regular;
@@ -173,7 +174,7 @@ $module: #{$prefix}-sidebar;
                 flex-shrink: 0;
 
                 &-configure {
-                    margin-right: $spacing-sidebar_mcp_item_button_configure-marginRight;
+                    margin-inline-end: $spacing-sidebar_mcp_item_button_configure-marginRight;
                 }
 
                 &.#{$prefix}-button.#{$prefix}-button-with-icon-only {
@@ -289,7 +290,8 @@ $module: #{$prefix}-sidebar;
                     display: flex;
                     flex-direction: column;
                     row-gap: $spacing-sidebar_annotation_content-gap;
-                    padding: $spacing-sidebar_annotation_video_content-paddingTop $spacing-sidebar_annotation_video_content-paddingRight $spacing-sidebar_annotation_video_content-paddingBottom $spacing-sidebar_annotation_video_content-paddingLeft;
+                    padding-block: $spacing-sidebar_annotation_video_content-paddingTop $spacing-sidebar_annotation_video_content-paddingBottom;
+                    padding-inline: $spacing-sidebar_annotation_video_content-paddingLeft $spacing-sidebar_annotation_video_content-paddingRight;
                 }
 
                 .#{$module}-annotation-item-title {
@@ -310,8 +312,8 @@ $module: #{$prefix}-sidebar;
 
                 &-play {
                     position: absolute;
+                    inset-inline-end: $spacing-sidebar_annotation_video_play-right;
                     top: $spacing-sidebar_annotation_video_play-top;
-                    right: $spacing-sidebar_annotation_video_play-right;
                     width: $width-sidebar_annotation_video_play;
                     height: $width-sidebar_annotation_video_play;
                     color: var(--semi-color-bg-0);
@@ -330,7 +332,7 @@ $module: #{$prefix}-sidebar;
                 &-duration {
                     @include font-size-small;
                     position: absolute;
-                    right: $spacing-sidebar_annotation_video_duration-right;
+                    inset-inline-end: $spacing-sidebar_annotation_video_duration-right;
                     bottom: $spacing-sidebar_annotation_video_duration-bottom;
                     padding: $spacing-sidebar_annotation_video_duration-paddingY $spacing-sidebar_annotation_video_duration-paddingX;
                     color: $color-sidebar_annotation_video_duration-text;
@@ -389,7 +391,7 @@ $module: #{$prefix}-sidebar;
             gap: $spacing-sidebar_collapse_header_content_gap;
             align-items: center;
             width: 100%;
-            padding-right: $spacing-sidebar_collapse_header_content_paddingRight;
+            padding-inline-end: $spacing-sidebar_collapse_header_content_paddingRight;
 
             .#{$prefix}-icon {
                 color: var(--semi-color-text-1);
@@ -436,7 +438,7 @@ $module: #{$prefix}-sidebar;
 
         &-button {
             .#{$prefix}-button-content-right {
-                margin-left: $spacing-sidebar_options_button-marginLeft;
+                margin-inline-start: $spacing-sidebar_options_button-marginLeft;
             }
         }
 
@@ -514,7 +516,7 @@ $module: #{$prefix}-sidebar;
             }
 
             p.is-editor-empty:first-child::before {
-                float: left;
+                float: inline-start;
                 height: 0;
                 color: $color-sidebar_file_placeholder-text;
                 pointer-events: none;
@@ -580,9 +582,9 @@ $module: #{$prefix}-sidebar;
             }
 
             blockquote {
-                padding-left: $spacing-sidebar_file_blockquote-paddingLeft;
+                padding-inline-start: $spacing-sidebar_file_blockquote-paddingLeft;
                 margin: $spacing-sidebar_file_blockquote-marginY $spacing-sidebar_file_blockquote-marginX;
-                border-left: $width-sidebar_file_blockquote-borderLeft solid $color-sidebar_file_blockquote-borderLeft;
+                border-inline-start: $width-sidebar_file_blockquote-borderLeft solid $color-sidebar_file_blockquote-borderLeft;
             }
 
             &:focus {

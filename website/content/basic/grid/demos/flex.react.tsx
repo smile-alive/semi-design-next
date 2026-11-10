@@ -4,7 +4,7 @@ export default function GridDemo() {
     return (
         <div className="grid">
             <p>sub-element align left</p>
-            <Row type="flex" justify="start">
+            <Row justify="start">
                 <Col span={4}>
                     <div className="col-content">col-4</div>
                 </Col>
@@ -20,7 +20,7 @@ export default function GridDemo() {
             </Row>
 
             <p>sub-element align center</p>
-            <Row type="flex" justify="center">
+            <Row justify="center">
                 <Col span={4}>
                     <div className="col-content">col-4</div>
                 </Col>
@@ -36,7 +36,7 @@ export default function GridDemo() {
             </Row>
 
             <p>sub-element align right</p>
-            <Row type="flex" justify="end">
+            <Row justify="end">
                 <Col span={4}>
                     <div className="col-content">col-4</div>
                 </Col>
@@ -52,7 +52,7 @@ export default function GridDemo() {
             </Row>
 
             <p>sub-element monospaced arrangement</p>
-            <Row type="flex" justify="space-between">
+            <Row justify="space-between">
                 <Col span={4}>
                     <div className="col-content">col-4</div>
                 </Col>
@@ -68,7 +68,7 @@ export default function GridDemo() {
             </Row>
 
             <p>sub-element align full</p>
-            <Row type="flex" justify="space-around">
+            <Row justify="space-around">
                 <Col span={4}>
                     <div className="col-content">col-4</div>
                 </Col>

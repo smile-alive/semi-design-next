@@ -7,33 +7,31 @@ $module: #{$prefix}-pincode;
     &-wrapper {
         display: flex;
 
-        /* stylelint-disable property-disallowed-list -- the row stays LTR in RTL
-           while each input wrapper turns rtl, so a logical margin would land on the wrong edge */
         .#{$prefix}-input-wrapper {
             &-small {
                 width: $width-pinCode_input_small;
-                margin-right: $spacing-pinCode_small-marginRight;
+                margin-inline-end: $spacing-pinCode_small-marginRight;
 
                 &:last-child {
-                    margin-right: 0;
+                    margin-inline-end: 0;
                 }
             }
 
             &-default {
                 width: $width-pinCode_input_default;
-                margin-right: $spacing-pinCode_default-marginRight;
+                margin-inline-end: $spacing-pinCode_default-marginRight;
 
                 &:last-child {
-                    margin-right: 0;
+                    margin-inline-end: 0;
                 }
             }
 
             &-large {
                 width: $width-pinCode_input_large;
-                margin-right: $spacing-pinCode_large-marginRight;
+                margin-inline-end: $spacing-pinCode_large-marginRight;
 
                 &:last-child {
-                    margin-right: 0;
+                    margin-inline-end: 0;
                 }
             }
 
@@ -42,6 +40,5 @@ $module: #{$prefix}-pincode;
                 text-align: center;
             }
         }
-        // stylelint-enable property-disallowed-list
     }
 }

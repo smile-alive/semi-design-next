@@ -5,7 +5,7 @@
 <template>
     <div class="grid grid-flex">
         <p>Align Top</p>
-        <Row align="top" justify="center" type="flex">
+        <Row align="top" justify="center">
             <Col :span="4">
                 <div class="col-content">col-4</div>
             </Col>
@@ -21,7 +21,7 @@
         </Row>
 
         <p>Align Center</p>
-        <Row align="middle" justify="space-around" type="flex">
+        <Row align="middle" justify="space-around">
             <Col :span="4">
                 <div class="col-content">col-4</div>
             </Col>
@@ -37,7 +37,7 @@
         </Row>
 
         <p>Align Bottom</p>
-        <Row align="bottom" justify="space-between" type="flex">
+        <Row align="bottom" justify="space-between">
             <Col :span="4">
                 <div class="col-content">col-4</div>
             </Col>

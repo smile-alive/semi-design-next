@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'svelte/elements';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { ColProps, RowProps } from '../grid/interface.js';
 
-export interface Grid extends Pick<RowProps, 'align' | 'gutter' | 'justify' | 'type'>, Pick<ColProps, 'span' | 'offset' | 'order' | 'push' | 'pull' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'class' | 'style'> {}
+export interface Grid extends Pick<RowProps, 'align' | 'gutter' | 'justify'>, Pick<ColProps, 'span' | 'offset' | 'order' | 'push' | 'pull' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'class' | 'style'> {}
 
 export interface ListItemSnippetProps<T> {
     item: T;

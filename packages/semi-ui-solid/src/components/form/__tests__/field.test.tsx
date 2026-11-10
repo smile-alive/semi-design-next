@@ -326,29 +326,30 @@ describe('Form-field', () => {
         const field = container.querySelector(`.${BASE_CLASS_PREFIX}-form-field`);
         const row = field?.querySelector(`:scope > .${BASE_CLASS_PREFIX}-row`);
         expect(row).not.toBeNull();
-        expect(row?.querySelector(`.${BASE_CLASS_PREFIX}-col-6`)).not.toBeNull();
-        expect(row?.querySelector(`:scope > .${BASE_CLASS_PREFIX}-col-18`)).not.toBeNull();
+        expect(row?.querySelector(`.${BASE_CLASS_PREFIX}-col`)).toHaveStyle({ '--semi-col-span': '6' });
+        expect(row?.querySelector(`:scope > .${BASE_CLASS_PREFIX}-col`)).toHaveStyle({ '--semi-col-span': '18' });
     });
 
-    it('Form 同时设置两列时，保留单个表单级 Row', () => {
+    it('Form 同时设置两列时，字段不再套 Row', () => {
         const { container } = render(() => (
             <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
                 <FormInput field="name" label="Name" />
             </Form>
         ));
-        expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-row`)).toHaveLength(1);
+        expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-row`)).toHaveLength(0);
         const field = container.querySelector(`.${BASE_CLASS_PREFIX}-form-field`);
-        expect(field?.querySelector(`:scope > .${BASE_CLASS_PREFIX}-col-18`)).not.toBeNull();
+        expect(field?.querySelector(`:scope > .${BASE_CLASS_PREFIX}-col`)).toHaveStyle({ '--semi-col-span': '18' });
     });
 
-    it('labelPosition 为 top 且分两列时，标签列包在 overflow hidden 的容器中', () => {
+    it('labelPosition 为 top 且分两列时，标签列包在 flex-basis 为 100% 的容器中', () => {
         const { container } = render(() => (
             <Form labelPosition="top" labelAlign="right" labelCol={{ span: 6, class: 'own-col' }} wrapperCol={{ span: 18 }}>
                 <FormInput field="name" label="Name" />
             </Form>
         ));
-        const labelCol = container.querySelector(`.${BASE_CLASS_PREFIX}-col-6`);
-        expect(labelCol?.parentElement).toHaveStyle({ overflow: 'hidden' });
+        const labelCol = container.querySelector(`.${BASE_CLASS_PREFIX}-col`);
+        expect(labelCol).toHaveStyle({ '--semi-col-span': '6' });
+        expect(labelCol?.parentElement).toHaveStyle({ 'flex-basis': '100%' });
         expect(labelCol).toHaveClass('own-col', `${BASE_CLASS_PREFIX}-form-col-right`);
     });
 

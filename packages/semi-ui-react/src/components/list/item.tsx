@@ -90,7 +90,7 @@ function ListItem({ ref, header, main, className, extra, children, align = 'flex
         return content;
     }
 
-    const { gutter, justify, type, align: rowAlign, ...colProps } = grid;
+    const { gutter, justify, align: rowAlign, ...colProps } = grid;
 
     return (
         <Col {...colProps} {...noRole}>

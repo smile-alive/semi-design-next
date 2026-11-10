@@ -110,8 +110,9 @@ describe('List', () => {
 
     it('grid 的 List', () => {
         const view = renderList({ grid: { gutter: 18, span: 6 } });
-        const cols = view.container.querySelectorAll(`.${BASE_CLASS_PREFIX}-col-6`);
+        const cols = view.container.querySelectorAll(`.${BASE_CLASS_PREFIX}-col`);
         expect(cols).toHaveLength(4);
+        expect(cols[0]).toHaveStyle({ '--semi-col-span': '6' });
         expect(cols[0].parentElement).toHaveStyle({ '--semi-row-gutter-x-xs': '18px' });
     });
 
@@ -399,18 +400,19 @@ describe('List', () => {
             grid: { gutter: 20, justify: 'center', align: 'middle', span: 8, xs: 24, class: 'col' },
         });
         expect(view.container.querySelector(`.${prefixCls}-items`)).toBeNull();
-        const row = view.container.querySelector(`.${BASE_CLASS_PREFIX}-row-flex`) as HTMLElement;
-        expect(row).toHaveClass(`${BASE_CLASS_PREFIX}-row-flex-center`, `${BASE_CLASS_PREFIX}-row-flex-middle`);
+        const row = view.container.querySelector(`.${BASE_CLASS_PREFIX}-row`) as HTMLElement;
+        expect(row).toHaveClass(`${BASE_CLASS_PREFIX}-row-justify-center`, `${BASE_CLASS_PREFIX}-row-align-middle`);
         expect(row).toHaveStyle({ '--semi-row-gutter-x-md': '20px' });
         const cols = row.children;
         expect(cols).toHaveLength(4);
-        expect(cols[0]).toHaveClass(`${BASE_CLASS_PREFIX}-col`, `${BASE_CLASS_PREFIX}-col-8`, `${BASE_CLASS_PREFIX}-col-xs-24`, 'col');
+        expect(cols[0]).toHaveClass(`${BASE_CLASS_PREFIX}-col`, 'col');
+        expect(cols[0]).toHaveStyle({ '--semi-col-span': '8', '--semi-col-span-xs': '24' });
         expect(cols[0].firstElementChild).toHaveClass(`${prefixCls}-item`);
     });
 
     it('grid 保持列表语义：Row 即列表，布局用的 Col 没有自己的 role', () => {
         const view = renderList({ grid: { span: 12 } });
-        const row = view.container.querySelector(`.${BASE_CLASS_PREFIX}-row-flex`) as HTMLElement;
+        const row = view.container.querySelector(`.${BASE_CLASS_PREFIX}-row`) as HTMLElement;
         expect(screen.getByRole('list')).toBe(row);
         for (const col of row.children) {
             expect(col).toHaveAttribute('role', 'none');
@@ -418,9 +420,9 @@ describe('List', () => {
         expect(screen.getAllByRole('listitem')).toHaveLength(dataSource.length);
     });
 
-    it('不传 Row 属性时，grid 仍使用 flex Row 布局', () => {
+    it('不传 Row 属性时，grid 仍使用 Row 布局', () => {
         const view = renderList({ grid: {} });
-        expect(view.container.querySelector(`.${BASE_CLASS_PREFIX}-row-flex`)?.children).toHaveLength(4);
+        expect(view.container.querySelector(`.${BASE_CLASS_PREFIX}-row`)?.children).toHaveLength(4);
     });
 
     it('只有 header 或 main 时才渲染项的主体，align 设置其类名', () => {

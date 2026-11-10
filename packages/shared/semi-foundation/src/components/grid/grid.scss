@@ -1,101 +1,74 @@
-@use 'sass:meta';
+@use 'sass:list';
 @use 'semi:theme' as *;
 @use 'variables' as *;
 @use 'mixin' as *;
 
 $module: #{$prefix};
 
-.#{$module}-row {
-    @include make-row();
-    box-sizing: border-box;
-    display: block;
-}
+// xs is the base layer without a media query: every width gets it, and sm and up override the smaller ones in turn
+$breakpoints: (
+    'xs': null,
+    'sm': $width-grid_screen-sm-min,
+    'md': $width-grid_screen-md-min,
+    'lg': $width-grid_screen-lg-min,
+    'xl': $width-grid_screen-xl-min,
+    'xxl': $width-grid_screen-xxl-min,
+);
 
-.#{$module}-row-flex {
+.#{$module}-row {
+    position: relative;
     display: flex;
     flex-flow: row wrap;
-
-    &::before,
-    &::after {
-        display: flex;
-    }
 }
 
-.#{$module}-col-0 {
-    display: none;
-}
-
-.#{$module}-row-flex-start {
+.#{$module}-row-justify-start {
     justify-content: flex-start;
 }
 
-.#{$module}-row-flex-center {
+.#{$module}-row-justify-center {
     justify-content: center;
 }
 
-.#{$module}-row-flex-end {
+.#{$module}-row-justify-end {
     justify-content: flex-end;
 }
 
-.#{$module}-row-flex-space-between {
+.#{$module}-row-justify-space-between {
     justify-content: space-between;
 }
 
-.#{$module}-row-flex-space-around {
+.#{$module}-row-justify-space-around {
     justify-content: space-around;
 }
 
-.#{$module}-row-flex-top {
+.#{$module}-row-align-top {
     align-items: flex-start;
 }
 
-.#{$module}-row-flex-middle {
+.#{$module}-row-align-middle {
     align-items: center;
 }
 
-.#{$module}-row-flex-bottom {
+.#{$module}-row-align-bottom {
     align-items: flex-end;
 }
 
 .#{$module}-col {
     position: relative;
+    flex: 0 0 auto;
+    max-width: 100%;
 }
 
-@include make-grid-columns($module);
-@include make-grid($module);
+$chain: ('');
 
-@include make-grid($module, -xs);
-@include make-hidden($module, -xs);
-@include make-gutter($module, -xs);
+@each $name, $min in $breakpoints {
+    $chain: list.append($chain, '-#{$name}');
 
-@media (min-width: $width-grid_screen-sm-min) {
-    @include make-grid($module, -sm);
-    @include make-hidden($module, -sm);
-    @include make-gutter($module, -sm);
+    @if $min {
+        @media (min-width: $min) {
+            @include make-layer($module, $chain);
+        }
+    } @else {
+        @include make-layer($module, $chain);
+    }
 }
-
-@media (min-width: $width-grid_screen-md-min) {
-    @include make-grid($module, -md);
-    @include make-hidden($module, -md);
-    @include make-gutter($module, -md);
-}
-
-@media (min-width: $width-grid_screen-lg-min) {
-    @include make-grid($module, -lg);
-    @include make-hidden($module, -lg);
-    @include make-gutter($module, -lg);
-}
-
-@media (min-width: $width-grid_screen-xl-min) {
-    @include make-grid($module, -xl);
-    @include make-hidden($module, -xl);
-    @include make-gutter($module, -xl);
-}
-
-@media (min-width: $width-grid_screen-xxl-min) {
-    @include make-grid($module, -xxl);
-    @include make-hidden($module, -xxl);
-    @include make-gutter($module, -xxl);
-}
-
-@include meta.load-css('rtl');

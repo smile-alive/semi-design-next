@@ -1,4 +1,3 @@
-@use 'sass:meta';
 @use 'semi:theme' as *;
 @use 'variables' as *;
 @use 'animation' as *;
@@ -453,5 +452,3 @@ $inner-width: $width-icon-medium;
         border-radius: $radius-radio_buttonRadio;
     }
 }
-
-@include meta.load-css('rtl');

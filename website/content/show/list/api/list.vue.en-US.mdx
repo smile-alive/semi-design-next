@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | bordered | Whether to show a border. | `boolean` | `false` |
 | dataSource | Data source of the list; each entry is rendered through the item slot. | `T[]` | `semiGlobalDefault("List", "dataSource")` |
-| grid | Grid configuration: align, gutter, justify and type of Row, and span, offset, order, push, pull, the responsive breakpoints, class and style of Col. class and style land on the Col around each item. | `Grid` | `semiGlobalDefault("List", "grid")` |
+| grid | Grid configuration: align, gutter and justify of Row, and span, offset, order, push, pull, the responsive breakpoints, class and style of Col. class and style land on the Col around each item. | `Grid` | `semiGlobalDefault("List", "grid")` |
 | layout | List layout: vertical or horizontal. | `"horizontal" \| "vertical"` | `"vertical"` |
 | loading | Whether the list is loading; a Spin is shown when true. | `boolean` | `false` |
 | size | List size: small, default or large. | `Size` | `"default"` |

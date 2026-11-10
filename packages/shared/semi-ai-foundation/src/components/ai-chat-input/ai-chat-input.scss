@@ -54,7 +54,7 @@ $module: #{$prefix}-aiChatInput;
     &-reference-icon {
         width: $width-aiChatInput_reference_icon;
         height: $width-aiChatInput_reference_icon;
-        margin-right: $spacing-aiChatInput_reference_icon-marginRight;
+        margin-inline-end: $spacing-aiChatInput_reference_icon-marginRight;
         border-radius: $radius-aiChatInput_reference_icon;
     }
 
@@ -144,7 +144,7 @@ $module: #{$prefix}-aiChatInput;
         &-img {
             width: $width-aiChatInput_reference_icon;
             height: $width-aiChatInput_reference_icon;
-            margin-right: $spacing-aiChatInput_reference_icon-marginRight;
+            margin-inline-end: $spacing-aiChatInput_reference_icon-marginRight;
         }
 
         &-name {
@@ -390,8 +390,8 @@ $module: #{$prefix}-aiChatInput;
             @include flex-center;
 
             position: absolute;
+            inset-inline-end: 0;
             top: 0;
-            right: 0;
             box-sizing: border-box;
             width: $width-aiChatInput_attachment_delete;
             height: $width-aiChatInput_attachment_delete;
@@ -412,6 +412,7 @@ $module: #{$prefix}-aiChatInput;
         &-progress.#{$prefix}-progress-circle {
             position: absolute;
             top: 50%;
+            // stylelint-disable-next-line property-disallowed-list -- centered with a physical translate(-50%, -50%), so the anchor must be physical too
             left: 50%;
             transform: translate(-50%, -50%);
         }
@@ -470,6 +471,9 @@ $module: #{$prefix}-aiChatInput;
         transform: rotate(180deg);
     }
 
+    // The scroller scrolls by physical scrollLeft and the buttons are named by the physical direction they scroll
+
+    /* stylelint-disable property-disallowed-list -- see above */
     &-scroll-button.#{$module}-scroll-button-left {
         left: $spacing-aiChatInput_attachment_scroll_button_offsetX;
     }
@@ -477,6 +481,8 @@ $module: #{$prefix}-aiChatInput;
     &-scroll-button.#{$module}-scroll-button-right {
         right: $spacing-aiChatInput_attachment_scroll_button_offsetX;
     }
+
+    /* stylelint-enable property-disallowed-list */
 
     &-editor-content {
         flex: 1 1 0%;
@@ -546,7 +552,7 @@ $module: #{$prefix}-aiChatInput;
             }
 
             p.is-editor-empty:first-child::before {
-                float: left;
+                float: inline-start;
                 height: 0;
                 color: var(--semi-color-text-2);
                 pointer-events: none;
@@ -561,7 +567,7 @@ $module: #{$prefix}-aiChatInput;
             p.has-skill-slot.is-editor-empty:first-child::after {
                 display: inline;
                 height: 0;
-                margin-left: $spacing-aiChatInput_skill_item-columnGap;
+                margin-inline-start: $spacing-aiChatInput_skill_item-columnGap;
                 color: var(--semi-color-text-2);
                 pointer-events: none;
                 content: attr(data-placeholder);
@@ -599,8 +605,8 @@ $module: #{$prefix}-aiChatInput;
 
                 .input-slot-placeholder {
                     position: absolute;
+                    inset-inline-start: $spacing-aiChatInput_rich_text-input_slot-paddingX;
                     top: $spacing-aiChatInput_rich_text-input_slot-paddingY;
-                    left: $spacing-aiChatInput_rich_text-input_slot-paddingX;
                     z-index: $z-aiChatInput_rich_text-input_slot_placeholder;
                     color: $color-aiChatInput_rich_text-input_slot_placeholder;
                     white-space: pre;
@@ -621,7 +627,7 @@ $module: #{$prefix}-aiChatInput;
                 border-radius: $radius-aiChatInput_rich_text-select_slot;
 
                 &:first-child {
-                    margin-left: 0;
+                    margin-inline-start: 0;
                 }
 
                 &-wrapper {
@@ -630,7 +636,7 @@ $module: #{$prefix}-aiChatInput;
                 }
 
                 .#{$prefix}-select-selection {
-                    margin-left: $spacing-aiChatInput_rich_text-select_selection-marginLeft;
+                    margin-inline-start: $spacing-aiChatInput_rich_text-select_selection-marginLeft;
                     font-weight: 700;
                     color: $color-aiChatInput_rich_text-select_selection-text;
                 }
@@ -682,8 +688,8 @@ $module: #{$prefix}-aiChatInput;
                     @include flex-center;
 
                     position: absolute;
+                    inset-inline-end: $spacing-aiChatInput_rich_text-skill_slot-right;
                     top: $spacing-aiChatInput_rich_text-skill_slot-top;
-                    right: $spacing-aiChatInput_rich_text-skill_slot-right;
                     box-sizing: border-box;
                     width: $width-aiChatInput_rich_text-select_slot_delete;
                     height: $width-aiChatInput_rich_text-select_slot_delete;

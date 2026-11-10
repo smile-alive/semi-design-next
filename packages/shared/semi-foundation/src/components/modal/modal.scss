@@ -1,4 +1,3 @@
-@use 'sass:meta';
 @use 'semi:theme' as *;
 @use 'variables' as *;
 @use 'animation' as *;
@@ -281,5 +280,3 @@ $module: #{$prefix}-modal;
         opacity: $animation_opacity-modal_mask-close;
     }
 }
-
-@include meta.load-css('rtl');

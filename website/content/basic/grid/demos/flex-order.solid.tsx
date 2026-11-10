@@ -3,7 +3,7 @@ import { Col, Row } from '@fibrae/semi-ui-solid';
 export default function GridDemo() {
     return (
         <div class="grid">
-            <Row type="flex">
+            <Row>
                 <Col span={6} order={4}>
                     <div class="col-content">col-4</div>
                 </Col>

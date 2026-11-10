@@ -12,13 +12,21 @@ function gutterVars(row: HTMLElement, axis: 'x' | 'y') {
     return Object.fromEntries(breakpoints.map((bp) => [bp, row.style.getPropertyValue(`--semi-row-gutter-${axis}-${bp}`)]));
 }
 
+function colVars(col: HTMLElement) {
+    return Object.fromEntries(
+        Array.from(col.style)
+            .filter((name) => name.startsWith('--semi-col-'))
+            .map((name) => [name, col.style.getPropertyValue(name)])
+    );
+}
+
 const zeros = { xs: '0px', sm: '0px', md: '0px', lg: '0px', xl: '0px', xxl: '0px' };
 
 function setup(row: RowProps = {}, col: ColProps = {}, nested?: RowProps) {
     const store = createStore({ row, col, nested });
     const view = render(GridFixture, { props: { store } });
-    const rowEl = () => view.container.querySelector('.semi-row, .semi-row-flex, [class*="-row"]') as HTMLElement;
-    const colEl = () => view.container.querySelector('[class*="-col"]') as HTMLElement;
+    const rowEl = () => view.container.querySelector('.semi-row') as HTMLElement;
+    const colEl = () => view.container.querySelector('.semi-col') as HTMLElement;
     return { store, view, rowEl, colEl };
 }
 
@@ -39,13 +47,13 @@ describe('Svelte Row', () => {
         expect(rowEl()).toHaveTextContent('child');
     });
 
-    it('type 为 flex 时使用 flex 类名，替代基础类名', () => {
-        const { rowEl } = setup({ type: 'flex', align: 'middle', justify: 'space-between' });
-        expect(rowEl().className).toBe('semi-row-flex semi-row-flex-space-between semi-row-flex-middle');
+    it('justify 与 align 在基础类名之外追加对应类名', () => {
+        const { rowEl } = setup({ align: 'middle', justify: 'space-between' });
+        expect(rowEl().className).toBe('semi-row semi-row-justify-space-between semi-row-align-middle');
     });
 
-    it('未设置 type 时忽略 justify 与 align', () => {
-        const { rowEl } = setup({ align: 'top', justify: 'center' });
+    it('不传 justify 与 align 时只有基础类名', () => {
+        const { rowEl } = setup();
         expect(rowEl().className).toBe('semi-row');
     });
 
@@ -123,22 +131,55 @@ describe('Svelte Row', () => {
 });
 
 describe('Svelte Col', () => {
-    it('渲染 span、order、offset、push 与 pull 类名', () => {
+    it('span、order、offset、push 与 pull 写成内联 CSS 变量，类名只有基础类名与 class', () => {
         const { colEl } = setup({}, { class: 'custom', offset: 3, order: 2, pull: 5, push: 4, span: 6 });
-        expect(colEl().className).toBe('semi-col semi-col-6 semi-col-order-2 semi-col-offset-3 semi-col-push-4 semi-col-pull-5 custom');
+        expect(colEl().className).toBe('semi-col custom');
+        expect(colVars(colEl())).toEqual({ '--semi-col-span': '6', '--semi-col-offset': '3', '--semi-col-push': '4', '--semi-col-pull': '5', '--semi-col-order': '2' });
     });
 
-    it('跳过为 0 的 order、offset、push 与 pull，但保留 span 0', () => {
+    it('值为 0 也写入变量；span 为 0 时另写 display 变量隐藏', () => {
         const { colEl } = setup({}, { offset: 0, order: 0, pull: 0, push: 0, span: 0 });
-        expect(colEl().className).toBe('semi-col semi-col-0');
+        expect(colVars(colEl())).toEqual({ '--semi-col-span': '0', '--semi-col-offset': '0', '--semi-col-push': '0', '--semi-col-pull': '0', '--semi-col-order': '0', '--semi-col-display': 'none' });
     });
 
-    it('从数字与对象渲染响应式尺寸类名，并保留 0 值', () => {
+    it('没有属性时不写任何变量', () => {
+        const { colEl } = setup();
+        expect(colVars(colEl())).toEqual({});
+    });
+
+    it('响应式尺寸接受数字或对象，变量名带断点后缀，未写的键不输出', () => {
         const { colEl } = setup({}, { md: { span: 12, order: 0, offset: 2, push: 1, pull: 0 }, xs: 24, xxl: { order: 3 } });
-        expect(colEl().className).toBe('semi-col semi-col-xs-24 semi-col-md-12 semi-col-md-order-0 semi-col-md-offset-2 semi-col-md-push-1 semi-col-md-pull-0 semi-col-xxl-order-3');
+        expect(colVars(colEl())).toEqual({
+            '--semi-col-span-xs': '24',
+            '--semi-col-span-md': '12',
+            '--semi-col-order-md': '0',
+            '--semi-col-offset-md': '2',
+            '--semi-col-push-md': '1',
+            '--semi-col-pull-md': '0',
+            '--semi-col-order-xxl': '3',
+        });
         for (const size of ['xs', 'md', 'xxl']) {
             expect(colEl()).not.toHaveAttribute(size);
         }
+    });
+
+    it('任一层的 span 为 0 时，写了 span 的每一层都带 display 变量，后面的非 0 span 重新显示', () => {
+        const { colEl } = setup({}, { md: 0, sm: 8, xs: { span: 12, order: 1 } });
+        expect(colVars(colEl())).toEqual({
+            '--semi-col-span-xs': '12',
+            '--semi-col-order-xs': '1',
+            '--semi-col-display-xs': 'block',
+            '--semi-col-span-sm': '8',
+            '--semi-col-display-sm': 'block',
+            '--semi-col-span-md': '0',
+            '--semi-col-display-md': 'none',
+        });
+    });
+
+    it('用户 style 与生成的变量合并，同名时用户的值优先', () => {
+        const { colEl } = setup({}, { span: 6, style: '--semi-col-span: 12; color: red' });
+        expect(colEl().style.getPropertyValue('--semi-col-span')).toBe('12');
+        expect(colEl().style.color).toBe('red');
     });
 
     it('未声明属性透传到根元素，style 原样转发', () => {
@@ -150,20 +191,20 @@ describe('Svelte Col', () => {
         expect(colEl()).toHaveTextContent('child');
     });
 
-    it('span 等 prop 变化后类名响应式更新', () => {
+    it('span 等 prop 变化后变量响应式更新', () => {
         const { store, colEl } = setup({}, { span: 6 });
         store.col.span = 8;
         store.col.xs = { offset: 1 };
         flushSync();
-        expect(colEl().className).toBe('semi-col semi-col-8 semi-col-xs-offset-1');
+        expect(colVars(colEl())).toEqual({ '--semi-col-span': '8', '--semi-col-offset-xs': '1' });
     });
 
     it('读取全局默认值，显式属性优先', () => {
         semiGlobal.config.overrideDefaultProps = { Col: { span: 4 } };
         const { colEl, store } = setup();
-        expect(colEl()).toHaveClass('semi-col-4');
+        expect(colVars(colEl())).toEqual({ '--semi-col-span': '4' });
         store.col.span = 6;
         flushSync();
-        expect(colEl()).toHaveClass('semi-col-6');
+        expect(colVars(colEl())).toEqual({ '--semi-col-span': '6' });
     });
 });

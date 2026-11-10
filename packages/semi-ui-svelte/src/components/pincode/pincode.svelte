@@ -7,6 +7,7 @@
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
     import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { getConfigContext } from '../config-provider/context.js';
     import { Input, type InputChangeEvent } from '../input/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { PinCodeProps, PinCodeState } from './interface.js';
@@ -20,6 +21,7 @@
     let { value = $bindable(), count = defaults('count', 6), format = defaults('format', 'number'), autofocus = defaults('autofocus', false), disabled = defaults('disabled'), size = defaults('size'), validateStatus = defaults('validateStatus'), onChange, onComplete, onFocus, onBlur, ...rest }: PinCodeProps = $props();
 
     const locale = useLocale('PinCode');
+    const config = getConfigContext();
 
     let inputs = $state<(ReturnType<typeof Input> | undefined)[]>([]);
 
@@ -66,7 +68,8 @@
                     inputs[index]?.blur();
                 }
             },
-        })
+        }),
+        { context: () => config }
     );
 
     const attrs = $derived(splitControlAttrs(rest, (key) => cellKeys.has(key)));

@@ -313,7 +313,8 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             );
             const withColContent = (
                 <>
-                    {mergeLabelPos === 'top' ? <div style={{ overflow: 'hidden' }}>{labelColContent}</div> : labelColContent}
+                    {/* a top label takes a line of its own, or the Row would lay it out beside the wrapper column */}
+                    {mergeLabelPos === 'top' ? <div style={{ flexBasis: '100%' }}>{labelColContent}</div> : labelColContent}
                     <Col {...mergeWrapperCol}>{fieldMainContent}</Col>
                 </>
             );

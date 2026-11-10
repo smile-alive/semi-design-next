@@ -4,10 +4,6 @@
 
 $module: #{$prefix}-switch;
 
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}
-
 .#{$module}-checked:dir(rtl) {
     .#{$module}-knob {
         transform: translateX(-$spacing-switch_checked-translateX);

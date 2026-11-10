@@ -4,7 +4,7 @@ export default function GridDemo() {
     return (
         <div class="grid grid-flex">
             <p>Align Top</p>
-            <Row type="flex" justify="center" align="top">
+            <Row justify="center" align="top">
                 <Col span={4}>
                     <div class="col-content">col-4</div>
                 </Col>
@@ -20,7 +20,7 @@ export default function GridDemo() {
             </Row>
 
             <p>Align Center</p>
-            <Row type="flex" justify="space-around" align="middle">
+            <Row justify="space-around" align="middle">
                 <Col span={4}>
                     <div class="col-content">col-4</div>
                 </Col>
@@ -36,7 +36,7 @@ export default function GridDemo() {
             </Row>
 
             <p>Align Bottom</p>
-            <Row type="flex" justify="space-between" align="bottom">
+            <Row justify="space-between" align="bottom">
                 <Col span={4}>
                     <div class="col-content">col-4</div>
                 </Col>

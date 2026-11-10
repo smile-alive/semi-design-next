@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IconSemiLogo, IconCamera, IconBell, IconHelpCircle, IconBytedanceLogo, IconHome, IconHistogram, IconLive, IconSetting, IconEdit, IconList } from '@fibrae/semi-icons-react';
-import { Layout, Nav, Button, Breadcrumb, Avatar, Steps, Pagination, Row, Badge, Tag, Rating, Tooltip, Timeline, Popover } from '@fibrae/semi-ui-react';
+import { Layout, Nav, Button, Breadcrumb, Avatar, Steps, Pagination, Badge, Tag, Rating, Tooltip, Timeline, Popover } from '@fibrae/semi-ui-react';
 
 const rowStyle = { margin: '16px 10px' };
 const badgeStyle = {
@@ -111,7 +111,7 @@ export default function DarkModeDemo() {
                                 padding: '32px',
                             }}
                         >
-                            <Row style={rowStyle}>
+                            <div style={rowStyle}>
                                 <Nav
                                     aria-label="示例导航"
                                     mode="horizontal"
@@ -141,8 +141,8 @@ export default function DarkModeDemo() {
                                     <Steps.Step title="In Process" description="This is a description" />
                                     <Steps.Step title="Waiting" description="This is a description" />
                                 </Steps>
-                            </Row>
-                            <Row style={rowStyle}>
+                            </div>
+                            <div style={rowStyle}>
                                 <div style={{ display: 'flex' }}>
                                     <div style={{ padding: '8px' }}>
                                         <Badge count={5} theme="solid">
@@ -248,7 +248,7 @@ export default function DarkModeDemo() {
                                         审核失败
                                     </Timeline.Item>
                                 </Timeline>
-                            </Row>
+                            </div>
                         </div>
                     </Layout.Content>
                 </Layout>

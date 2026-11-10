@@ -3,10 +3,6 @@
 
 $module: #{$prefix}-progress;
 
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}
-
 .#{$module}-circle-ring-inner:dir(rtl) {
     transform: rotate(-90deg);
     transform-origin: 50% 50%;

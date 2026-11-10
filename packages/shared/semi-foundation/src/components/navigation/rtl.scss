@@ -5,10 +5,6 @@
 
 $module: #{$prefix}-navigation;
 
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}
-
 // the collapse animation names the physical side that padding-inline-start resolves to
 .#{$module}:dir(rtl),
 .#{$module}-collapsed:dir(rtl),

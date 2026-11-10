@@ -74,7 +74,7 @@
 
 <div {...rest} class={[rootClass, rest.class]} role={namedRole(rest)}>
     {#if type === 'fill'}
-        <Row justify="start" type="flex">
+        <Row justify="start">
             {#each dataSource as item, index (index)}
                 <Col style={direction === 'vertical' ? undefined : `width: ${100 / dataSource.length}%`}>
                     <Step {index} {item} total={dataSource.length} />

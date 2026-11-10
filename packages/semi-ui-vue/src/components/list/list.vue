@@ -88,7 +88,7 @@
                 </div>
                 <div v-else :class="`${prefixCls}-empty`">{{ locale.locale.emptyText }}</div>
             </template>
-            <Row v-else-if="props.grid" :align="props.grid.align" :gutter="props.grid.gutter" :justify="props.grid.justify" role="list" type="flex">
+            <Row v-else-if="props.grid" :align="props.grid.align" :gutter="props.grid.gutter" :justify="props.grid.justify" role="list">
                 <component :is="node" v-for="[node, key] in renderedItems()" :key="key" />
                 <slot />
             </Row>

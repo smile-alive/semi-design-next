@@ -47,8 +47,8 @@ export default {
             customSyntax: 'postcss-html',
         },
         {
-            // Physical left/right is an RTL regression here; excluded ones and semi-ai-foundation await decision L3
-            files: ['packages/shared/semi-foundation/src/components/!(cropper|video-player|code-highlight|resizable|markdown-render|audio-player|float-button)/*.scss', 'packages/shared/semi-foundation/src/!(components)/*.scss'],
+            // Physical left/right is an RTL regression here
+            files: ['packages/shared/semi-foundation/src/components/*/*.scss', 'packages/shared/semi-foundation/src/!(components)/*.scss', 'packages/shared/semi-ai-foundation/src/components/*/*.scss'],
             rules: {
                 'property-disallowed-list': [/^(margin|padding|border)-(left|right)(-|$)/, /^border-(top|bottom)-(left|right)-radius$/, /^(left|right)$/],
                 'declaration-property-value-disallowed-list': {

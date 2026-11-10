@@ -487,7 +487,8 @@ $ignoreIcon: '.#{$prefix}-icon-checkbox_tick, .#{$prefix}-icon-radio, .#{$prefix
             .#{$module}-tab {
                 border: $width-tabs_bar_card-border solid transparent;
                 border-inline-end: none;
-                border-radius: $radius-tabs_tab_card_left;
+                border-start-start-radius: $radius-tabs_tab_card_left;
+                border-end-start-radius: $radius-tabs_tab_card_left;
 
                 &:hover {
                     border-inline-end: none;
@@ -839,7 +840,8 @@ $ignoreIcon: '.#{$prefix}-icon-checkbox_tick, .#{$prefix}-icon-radio, .#{$prefix
             &.#{$module}-tab {
                 border: $width-tabs_bar_card-border solid transparent;
                 border-inline-end: none;
-                border-radius: $radius-tabs_tab_card_left;
+                border-start-start-radius: $radius-tabs_tab_card_left;
+                border-end-start-radius: $radius-tabs_tab_card_left;
 
                 &:hover {
                     border-inline-end: none;

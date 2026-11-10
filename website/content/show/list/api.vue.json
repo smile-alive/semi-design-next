@@ -8,8 +8,8 @@
                 "en-US": "Data source of the list; each entry is rendered through the item slot."
             },
             "grid": {
-                "zh-CN": "栅格配置：Row 的 align、gutter、justify、type 与 Col 的 span、offset、order、push、pull、响应式断点、class、style，class 与 style 落在每项外层的 Col 上。",
-                "en-US": "Grid configuration: align, gutter, justify and type of Row, and span, offset, order, push, pull, the responsive breakpoints, class and style of Col. class and style land on the Col around each item."
+                "zh-CN": "栅格配置：Row 的 align、gutter、justify 与 Col 的 span、offset、order、push、pull、响应式断点、class、style，class 与 style 落在每项外层的 Col 上。",
+                "en-US": "Grid configuration: align, gutter and justify of Row, and span, offset, order, push, pull, the responsive breakpoints, class and style of Col. class and style land on the Col around each item."
             },
             "layout": {
                 "zh-CN": "列表布局，可选 vertical 或 horizontal。",

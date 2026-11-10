@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconBell, IconBytedanceLogo, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-svelte';
-    import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Row, Steps, Tag, Timeline, Tooltip, type StepData, type TimelineData } from '@fibrae/semi-ui-svelte';
+    import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Steps, Tag, Timeline, Tooltip, type StepData, type TimelineData } from '@fibrae/semi-ui-svelte';
 
     const rowStyle = 'margin: 16px 10px';
     const badgeStyle = 'width: 42px; height: 42px; border-radius: 4px; display: inline-block';
@@ -85,7 +85,7 @@
         <Layout.Content class={mode} style="padding: 24px; background-color: var(--semi-color-bg-1)">
             <Breadcrumb routes={['首页', '当这个页面标题很长时需要省略', '上一页', '详情页']} style="margin-block-end: 24px" />
             <div style="border-radius: 10px; border: 1px solid var(--semi-color-border); height: 700px; padding: 32px">
-                <Row style={rowStyle}>
+                <div style={rowStyle}>
                     <Nav
                         aria-label="示例导航"
                         items={[
@@ -107,8 +107,8 @@
                     <Steps current={1} dataSource={steps('This is a description.')} />
                     <br />
                     <Steps current={1} dataSource={steps('This is a description')} status="error" />
-                </Row>
-                <Row style={rowStyle}>
+                </div>
+                <div style={rowStyle}>
                     <div style="display: flex">
                         <div style="padding: 8px">
                             <Badge count={5} theme="solid">
@@ -166,7 +166,7 @@
                     </div>
                     <br />
                     <Timeline dataSource={timeline} />
-                </Row>
+                </div>
             </div>
         </Layout.Content>
     </Layout>

@@ -1,9 +1,0 @@
-@use 'semi:theme' as *;
-@use 'variables' as *;
-
-$module: #{$prefix}-tree-select;
-
-.#{$module}:dir(rtl),
-.#{$module}-popover:dir(rtl) {
-    direction: rtl;
-}

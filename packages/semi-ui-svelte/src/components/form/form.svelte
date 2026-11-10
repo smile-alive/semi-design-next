@@ -7,7 +7,6 @@
     import '@fibrae/semi-foundation/components/form/form.scss';
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
-    import Row from '../grid/row.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import { setFormContext } from './context.js';
     import type { AllFormProps, FormApi, FormProps } from './interface.js';
@@ -172,15 +171,7 @@
     }
 </script>
 
-{#snippet formView()}
-    <!-- rest comes after novalidate, so novalidate={false} turns it off -->
-    <form bind:this={formElement} novalidate {...rest} class={[cssClasses.PREFIX, rest.class, { [`${cssClasses.PREFIX}-vertical`]: layout === 'vertical', [`${cssClasses.PREFIX}-horizontal`]: layout === 'horizontal' }]} id={formId} {...{ 'x-form-id': formId }} onreset={handleReset} onsubmit={handleSubmit}>
-        {@render children?.({ formState, values: formState.values as Values, formApi })}
-    </form>
-{/snippet}
-
-{#if labelCol && wrapperCol}
-    <Row>{@render formView()}</Row>
-{:else}
-    {@render formView()}
-{/if}
+<!-- rest comes after novalidate, so novalidate={false} turns it off -->
+<form bind:this={formElement} novalidate {...rest} class={[cssClasses.PREFIX, rest.class, { [`${cssClasses.PREFIX}-vertical`]: layout === 'vertical', [`${cssClasses.PREFIX}-horizontal`]: layout === 'horizontal' }]} id={formId} {...{ 'x-form-id': formId }} onreset={handleReset} onsubmit={handleSubmit}>
+    {@render children?.({ formState, values: formState.values as Values, formApi })}
+</form>

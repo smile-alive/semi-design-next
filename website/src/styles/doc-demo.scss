@@ -1,6 +1,5 @@
 .grid {
-    .semi-row,
-    .semi-row-flex {
+    .semi-row {
         text-align: center;
 
         .semi-col {
@@ -22,7 +21,7 @@
 }
 
 .grid-flex {
-    .semi-row-flex {
+    .semi-row {
         height: 50px;
         background: var(--semi-color-fill-0);
     }

@@ -1,4 +1,3 @@
-@use 'sass:meta';
 @use 'semi:theme' as *;
 @use 'variables' as *;
 @use 'mixin' as *;
@@ -355,5 +354,3 @@ $types: 'ghost', 'solid', 'light';
         }
     }
 }
-
-@include meta.load-css('rtl');

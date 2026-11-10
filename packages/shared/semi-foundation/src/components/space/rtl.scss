@@ -1,8 +1,0 @@
-@use 'semi:theme' as *;
-@use 'variables' as *;
-
-$module: #{$prefix}-space;
-
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}

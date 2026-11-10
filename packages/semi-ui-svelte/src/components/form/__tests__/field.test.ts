@@ -289,8 +289,8 @@ describe('Svelte Form 字段：标签与布局', () => {
         const { container } = renderForm({}, [input('name', { label: 'Name', labelCol: { span: 6 }, wrapperCol: { span: 18 } })]);
         const row = container.querySelector(`${fieldSelector} > .semi-row`);
         expect(row).not.toBeNull();
-        expect(row?.querySelector('.semi-col-6')).not.toBeNull();
-        expect(row?.querySelector(':scope > .semi-col-18')).not.toBeNull();
+        expect(row?.querySelector('.semi-col')).toHaveStyle({ '--semi-col-span': '6' });
+        expect(row?.querySelector(':scope > .semi-col')).toHaveStyle({ '--semi-col-span': '18' });
     });
 
     it('field 支持点号与下标路径，label 默认取路径原文', () => {

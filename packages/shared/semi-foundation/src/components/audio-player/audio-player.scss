@@ -130,7 +130,7 @@ $module: #{$prefix}-audio-player;
         display: flex;
         gap: $gap-audio-player-small;
         align-items: center;
-        margin-left: 4px;
+        margin-inline-start: 4px;
         color: var(--semi-color-danger);
         white-space: nowrap;
     }
@@ -261,6 +261,8 @@ $module: #{$prefix}-audio-player;
     }
 
     &-progress-horizontal {
+        // audio-slider.tsx places the dot by inline `left` percent and the foundation reads pointer offset from rect.left
+        // stylelint-disable-next-line property-disallowed-list -- physical track origin, see above
         left: 0;
     }
 

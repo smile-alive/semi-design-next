@@ -67,7 +67,7 @@
                 <div class={`${prefixCls}-empty`}>{locale().locale.emptyText}</div>
             {/if}
         {:else if grid}
-            <Row align={grid.align} gutter={grid.gutter} justify={grid.justify} role="list" type="flex">
+            <Row align={grid.align} gutter={grid.gutter} justify={grid.justify} role="list">
                 {@render items()}
             </Row>
         {:else}

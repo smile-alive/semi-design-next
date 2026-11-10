@@ -331,13 +331,12 @@ describe('Form-baseForm', () => {
         for (const field of fieldsDom) {
             const [labelBox, wrapperCol] = field.children;
             const labelCol = labelBox.querySelector(`.${BASE_CLASS_PREFIX}-col`);
-            expect(labelCol).toHaveClass(`${BASE_CLASS_PREFIX}-col-2`);
+            expect(labelCol).toHaveStyle({ '--semi-col-span': '2' });
             expect(labelCol?.querySelector(labelSelector)).not.toBeNull();
-            expect(wrapperCol).toHaveClass(`${BASE_CLASS_PREFIX}-col-20`);
+            expect(wrapperCol).toHaveStyle({ '--semi-col-span': '20' });
             expect(wrapperCol.querySelector(labelSelector)).toBeNull();
         }
-        // the Form sets both cols, so it wraps the form in one Row and the fields add none
-        expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-row`)).toHaveLength(1);
+        expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-row`)).toHaveLength(0);
     });
 
     it('自动移除空 key', () => {

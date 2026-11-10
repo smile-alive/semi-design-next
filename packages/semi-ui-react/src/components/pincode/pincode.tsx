@@ -8,6 +8,7 @@ import '@fibrae/semi-foundation/components/pincode/pincode.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
+import { useConfigContext } from '../config-provider/context';
 import Input, { type InputProps, type InputHandle } from '../input';
 import useLocale from '../locale/use-locale';
 
@@ -80,6 +81,7 @@ export default function PinCode(rawProps: PinCodeProps) {
         };
 
     const { locale } = useLocale('PinCode');
+    const context = useConfigContext();
 
     const inputsRef = useRef<(InputHandle | null)[]>([]);
 
@@ -99,7 +101,8 @@ export default function PinCode(rawProps: PinCodeProps) {
                     inputsRef.current[index]?.blur();
                 }
             },
-        })
+        }),
+        context
     );
 
     useImperativeHandle(

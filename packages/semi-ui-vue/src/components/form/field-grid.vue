@@ -32,8 +32,8 @@
         </div>
     </template>
     <component :is="props.row ? Row : SlotFragment" v-else>
-        <!-- a top label needs an overflow hidden wrapper, or it lays out horizontally -->
-        <component :is="props.labelPosition === 'top' ? 'div' : SlotFragment" :style="props.labelPosition === 'top' ? { overflow: 'hidden' } : undefined">
+        <!-- a top label takes a line of its own, or a Row would lay it out beside the wrapper column -->
+        <component :is="props.labelPosition === 'top' ? 'div' : SlotFragment" :style="props.labelPosition === 'top' ? { flexBasis: '100%' } : undefined">
             <Col v-bind="props.labelCol" :class="{ [`${prefix}-col-${props.labelAlign}`]: props.labelAlign }">
                 <slot name="label" />
             </Col>

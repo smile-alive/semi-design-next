@@ -3,10 +3,6 @@
 
 $module: #{$prefix}-popconfirm;
 
-.#{$module}:dir(rtl) {
-    direction: rtl;
-}
-
 .#{$prefix}-popover-with-arrow:dir(rtl) .#{$module}-inner {
     padding: $spacing-popconfirm_popover_with_arrow_inner_rtl-padding;
 }
