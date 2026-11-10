@@ -31,7 +31,7 @@ pnpm site:dev
 
 ## 目录结构
 
-`packages/` 第一层只放各框架的组件包，目录名是 npm 包名去掉 `@fibrae/`；框架无关的运行时依赖放 `packages/shared/`，构建工具放 `packages/plugins/`（D17）。
+`packages/` 第一层只放各框架的组件包，目录名是 npm 包名去掉 `@fibrae/`；框架无关的运行时依赖放 `packages/shared/`，构建工具放 `packages/plugins/`。
 
 | 路径 | 说明 |
 | --- | --- |
@@ -129,9 +129,8 @@ pnpm site:stop
 
 | 文件                                                         | 内容                                                          |
 | ------------------------------------------------------------ | ------------------------------------------------------------- |
-| [docs/decisions.md](docs/decisions.md)                       | 已定决策与未完成事项                                          |
+| [docs/decisions.md](docs/decisions.md)                       | 已定决策、待办、组件的已知限制与保持原样的决定                |
 | [docs/release-notes.md](docs/release-notes.md)               | 相对原 Semi 的破坏性变化与行为变化                            |
-| [docs/component-issues.md](docs/component-issues.md)         | 未结问题、已知限制与保持原样的决定                            |
 | [.agents/references/styles.md](.agents/references/styles.md) | 组件 SCSS 写法、Sass 模块与 `semi:` importer、主题 token 协议 |
 
 ## 提交 PR

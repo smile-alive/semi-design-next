@@ -207,7 +207,7 @@ const svg = () => (
 );
 
 // Attributes Tooltip-family triggers gain after mount: the open state of a default-open layer, and the pointer-events
-// a special trigger gets inside its wrapper span (docs/component-issues.md, Tooltip)
+// a special trigger gets inside its wrapper span (docs/decisions.md, Tooltip)
 const triggerMountDiff: MountDiff[] = ['aria-expanded', 'aria-controls', 'aria-describedby', { selector: '.semi-tooltip-trigger-wrapper > *', attrs: ['style'] }];
 
 const carouselMountDiff: MountDiff[] = [{ selector: '.semi-carousel-content > *', attrs: ['class', 'style', 'id', 'role', 'aria-labelledby', 'inert'] }];
@@ -786,7 +786,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
     { name: 'input/readonly', covers: ['Input'], render: () => <Input readonly defaultValue="Locked" />, html: ['readonly', 'value="Locked"'] },
     { name: 'input-number/默认', covers: ['InputNumber'], render: () => <InputNumber defaultValue={3} />, html: ['value="3"'] },
     // The editor is created on mount and fills the container the server left empty; attribute lists cannot describe a
-    // subtree (docs/component-issues.md, JsonViewer)
+    // subtree (docs/decisions.md, JsonViewer)
     { name: 'json-viewer/默认', covers: ['JsonViewer'], render: () => <JsonViewer height={120} width={400} value={'{"name":"Semi"}'} />, mountDiff: ['*'] },
     {
         name: 'json-viewer/renderSearchButton 插入默认按钮',
@@ -894,7 +894,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         name: 'overflow-list/默认',
         covers: ['OverflowList'],
         render: () => <OverflowList items={[{ key: 'a' }, { key: 'b' }]} visibleItemRenderer={(item) => <Tag>{item.key}</Tag>} overflowRenderer={(items) => <Tag>+{items.length}</Tag>} />,
-        // hidden until measured (docs/component-issues.md, OverflowList)
+        // hidden until measured (docs/decisions.md, OverflowList)
         mountDiff: [{ selector: '.semi-overflow-list', attrs: ['style'] }],
     },
     { name: 'pagination/默认', covers: ['Pagination'], render: () => <Pagination total={80} />, text: ['1'] },

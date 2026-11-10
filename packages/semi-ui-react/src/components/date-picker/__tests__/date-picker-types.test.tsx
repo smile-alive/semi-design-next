@@ -5,15 +5,37 @@ import type { DatePickerProps, MonthsGridProps, TriggerRenderProps } from '../in
 
 describe('DatePicker 回调类型与运行时入参一致', () => {
     it('onChange 的参数固定为 (date, dateString)，没有 onChangeWithDateFirst', () => {
-        const props: DatePickerProps = {
-            onChange: (date, dateString) => {
-                expectTypeOf(date).toEqualTypeOf<Date | Date[]>();
-                expectTypeOf(dateString).toEqualTypeOf<string | string[]>();
-            },
-        };
         // @ts-expect-error onChangeWithDateFirst is removed; the order is always (date, dateString)
         const reordered: DatePickerProps = { onChangeWithDateFirst: false };
-        expect([typeof props.onChange, reordered.type]).toEqual(['function', undefined]);
+        expect(reordered.type).toBeUndefined();
+    });
+
+    it('onChange 按 type 与 multiple 收到单个值或数组', () => {
+        const single: DatePickerProps = {
+            type: 'dateTime',
+            onChange: (date, dateString) => {
+                expectTypeOf(date).toEqualTypeOf<Date>();
+                expectTypeOf(dateString).toEqualTypeOf<string>();
+            },
+        };
+        const range: DatePickerProps = {
+            type: 'dateRange',
+            onChange: (date, dateString) => {
+                expectTypeOf(date).toEqualTypeOf<Date[]>();
+                expectTypeOf(dateString).toEqualTypeOf<string[]>();
+            },
+        };
+        const multiple: DatePickerProps = {
+            type: 'date',
+            multiple: true,
+            onChange: (date, dateString) => {
+                expectTypeOf(date).toEqualTypeOf<Date[]>();
+                expectTypeOf(dateString).toEqualTypeOf<string[]>();
+            },
+        };
+        // @ts-expect-error a range onChange gets arrays
+        const wrongRange: DatePickerProps = { type: 'monthRange', onChange: (date: Date) => date };
+        expect([single, range, multiple, wrongRange]).toHaveLength(4);
     });
 
     it('timePickerOpts 只接受 Combobox 的数据属性，不接受会覆盖面板内部值的 onChange、format、timeStampValue', () => {

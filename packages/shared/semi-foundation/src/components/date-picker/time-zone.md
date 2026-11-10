@@ -50,7 +50,7 @@
 ## 夏令时
 
 - 目标时区里重复的钟点取较早的时刻；目标时区跳过的钟点向后移一个间隔（02:30 变成 03:30），输入框不接受这类钟点。
-- 系统时区跳过、目标时区有效的钟点，`utcToZonedTime` 返回 `TZDate`，getter 读到的是目标时区的钟点。这类钟点与一小时后的钟点 `getTime` 相同，面板时间列表里选不到，只能输入。已知限制见 `docs/component-issues.md` 的 DatePicker 章节，升级条件是内部表示整体改为目标时区的 `TZDate`。
+- 系统时区跳过、目标时区有效的钟点，`utcToZonedTime` 返回 `TZDate`，getter 读到的是目标时区的钟点。这类钟点与一小时后的钟点 `getTime` 相同，面板时间列表里选不到，只能输入。已知限制见 `docs/decisions.md` 的 DatePicker 章节，升级条件是内部表示整体改为目标时区的 `TZDate`。
 
 ## 服务端渲染
 

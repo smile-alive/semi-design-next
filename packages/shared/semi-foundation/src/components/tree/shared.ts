@@ -567,7 +567,7 @@ export function deriveSearchingState(
 }
 
 /** Compares key/value/children only: a label that is a ReactNode is a new object on every render */
-function isTreeDataStructureEqual(prevTreeData: any[], nextTreeData: any[], keyMaps?: KeyMapProps) {
+function isTreeDataStructureEqual(prevTreeData: BasicTreeNodeData[], nextTreeData: BasicTreeNodeData[], keyMaps?: KeyMapProps) {
     if (prevTreeData === nextTreeData) {
         return true;
     }
@@ -577,7 +577,7 @@ function isTreeDataStructureEqual(prevTreeData: any[], nextTreeData: any[], keyM
     const realKeyName = keyMaps?.key ?? 'key';
     const realValueName = keyMaps?.value ?? 'value';
     const realChildrenName = keyMaps?.children ?? 'children';
-    const compareNodes = (nodesA: any[], nodesB: any[]): boolean =>
+    const compareNodes = (nodesA: BasicTreeNodeData[], nodesB: BasicTreeNodeData[]): boolean =>
         nodesA.length === nodesB.length &&
         nodesA.every((nodeA, i) => {
             const nodeB = nodesB[i];

@@ -2,7 +2,7 @@
     import type { DatePickerProps } from '../interface';
 
     export interface SlotsFixtureStore {
-        props: Omit<DatePickerProps, 'prefix' | 'insetLabel'>;
+        props: DatePickerProps;
         prefix?: boolean;
         insetLabel?: boolean;
     }

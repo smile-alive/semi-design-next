@@ -254,7 +254,7 @@ describe('DatePicker（浏览器）', () => {
         it('insetInput + 触发输入框禁用', async () => {
             const disabledClass = `${BASE_CLASS_PREFIX}-input-wrapper-disabled`;
             for (const type of ['date', 'dateTime', 'dateRange', 'dateTimeRange', 'month'] as const) {
-                const { container, inputs, unmount } = renderPicker({ ...insetProps, type });
+                const { container, inputs, unmount } = renderPicker({ ...insetProps, type } as DatePickerProps);
                 await userEvent.click(inputs[0]);
                 await waitFor(() => expect(container.querySelector(`.${disabledClass}`)).not.toBeNull());
                 await clickOutside();
@@ -809,7 +809,7 @@ describe('DatePicker（浏览器）', () => {
 
 describe('DatePicker（浏览器）日历网格键盘焦点', () => {
     it('用键盘清空单个输入框后焦点回到输入框，且不打开面板', async () => {
-        const onChange = vi.fn<NonNullable<DatePickerProps['onChange']>>();
+        const onChange = vi.fn<(date: Date, dateString: string) => void>();
         const { container } = render(() => <DatePicker defaultValue={new Date(2019, 8, 11)} motion={false} onChange={onChange} />);
         const input = getElement<HTMLInputElement>('input', container);
         await tabTo(input);
@@ -1007,14 +1007,14 @@ describe('DatePicker（浏览器）年月选择器的焦点', () => {
     const getTitle = () => getElement(`.${dp}-navigation-month button`, getPanel('left'));
 
     it.each(cases)('$type 用键盘从月份标题进入年月选择器，焦点落在年份列表', async ({ type, defaultValue }) => {
-        render(() => <DatePicker type={type} defaultValue={defaultValue} defaultOpen motion={false} />);
+        render(() => <DatePicker {...({ type, defaultValue, defaultOpen: true, motion: false } as DatePickerProps)} />);
         await tabTo(getTitle());
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(document.activeElement).toBe(getPanel('left').querySelector('[role="listbox"]')));
     });
 
     it.each(cases)('$type 用键盘从年月选择器返回，焦点回到月份标题', async ({ type, defaultValue }) => {
-        render(() => <DatePicker type={type} defaultValue={defaultValue} defaultOpen motion={false} />);
+        render(() => <DatePicker {...({ type, defaultValue, defaultOpen: true, motion: false } as DatePickerProps)} />);
         const titleId = getTitle().id;
         await userEvent.click(getTitle());
         const back = await within(getPanel('left')).findByRole('button', { name: zh_CN.DatePicker.selectDate });

@@ -52,7 +52,7 @@
     // Vue's StyleValue (inputStyle) is wider than the foundation's Record<string, any>, so the props type does not match.
     const { foundation } = useFoundation<DateInputFoundation, DateInputAdapter, DateInputFoundationProps, Record<string, never>>(
         DateInputFoundation,
-        props as unknown as Readonly<Partial<DateInputFoundationProps>>,
+        props as Readonly<Partial<DateInputFoundationProps>>,
         () => ({}),
         () => ({
             notifyEnter: (value) => emit('enterPress', value),

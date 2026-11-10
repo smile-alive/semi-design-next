@@ -32,7 +32,7 @@ import { countLiveListeners } from '@test/utils/react';
 import DatePicker, { type DatePickerHandle, type DatePickerProps, type DisabledDateType, type PresetType, type TriggerRenderProps, type YearAndMonthProps } from '../index';
 import * as yearAndMonthModule from '../year-and-month';
 
-type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
+type ChangeHandler = (date: Date | Date[], dateString: string | string[]) => void;
 
 const baseYear = 2019;
 const baseDay = 8;

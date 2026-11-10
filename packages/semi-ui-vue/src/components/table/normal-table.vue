@@ -106,9 +106,9 @@
     // the foundation only tests whether it is a function; the content comes from the #expandedRow slot
     const expandedRowRender = () => null;
 
-    const toFoundationColumns = (columns: ColumnProps[]) => columns as unknown as FoundationColumn[];
+    const toFoundationColumns = (columns: ColumnProps[]) => columns as FoundationColumn[];
 
-    const fromFoundationColumns = (columns?: FoundationColumn[]) => (columns ?? []) as unknown as ColumnProps[];
+    const fromFoundationColumns = (columns?: FoundationColumn[]) => (columns ?? []) as ColumnProps[];
 
     const getRowSelection = () => (typeof props.rowSelection === 'object' ? (props.rowSelection as RowSelectionProps<R>) : undefined);
 

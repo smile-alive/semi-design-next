@@ -357,7 +357,7 @@ export const reactExemptions: Exemption[] = [
         files: ['packages/semi-ui-react/src/components/table/body/body.tsx'],
         off: ['jsx-a11y/no-noninteractive-tabindex'],
     },
-    // Pointer-only resize handle, no role (keyboard resizing is out of scope, see the Table section of docs/component-issues.md); click stops sorting
+    // Pointer-only resize handle, no role (keyboard resizing is out of scope, see the Table section of docs/decisions.md); click stops sorting
     {
         files: ['packages/semi-ui-react/src/components/table/table-header/resizable-header-cell.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],

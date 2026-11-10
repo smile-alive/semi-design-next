@@ -47,7 +47,7 @@ export type TriggerRenderProps = {
     componentProps?: DatePickerFoundationProps;
 };
 
-export interface DatePickerProps extends Omit<DatePickerFoundationProps, 'dateFnsLocale' | 'customTrigger'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus'> {
+interface DatePickerCommonProps extends Omit<DatePickerFoundationProps, 'dateFnsLocale' | 'customTrigger' | 'type' | 'multiple'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus'> {
     clearIcon?: React.ReactNode;
     timePickerOpts?: DatePickerTimePickerOpts;
     bottomSlot?: React.ReactNode;
@@ -79,11 +79,21 @@ export interface DatePickerProps extends Omit<DatePickerFoundationProps, 'dateFn
     onClickOutSide?: (e: MouseEvent) => void;
     leftSlot?: React.ReactNode;
     yearAndMonthOpts?: YearAndMonthOpts;
-    /** Gets arrays in range and multiple mode */
-    onChange?: (date: Date | Date[], dateString: string | string[]) => void;
     /** on the root div */
     ref?: React.Ref<DatePickerHandle>;
 }
+
+// Known limitation: without strictNullChecks an omitted `type` or `multiple` cannot narrow the union, so an inline `onChange` there gets `any` parameters.
+export type DatePickerProps = DatePickerCommonProps &
+    (
+        | { type?: 'date'; multiple?: false; onChange?: (date: Date, dateString: string) => void }
+        | { type?: 'dateTime' | 'month' | 'year'; multiple?: boolean; onChange?: (date: Date, dateString: string) => void }
+        | { type?: 'date'; multiple: true; onChange?: (date: Date[], dateString: string[]) => void }
+        | { type: 'dateRange' | 'dateTimeRange' | 'monthRange'; multiple?: boolean; onChange?: (date: Date[], dateString: string[]) => void }
+    );
+
+// onChange is a method so the narrowed callbacks of DatePickerProps stay assignable (bivariant parameters)
+type DatePickerInnerProps = DatePickerCommonProps & { type?: Type; multiple?: boolean; onChange?(date: Date | Date[], dateString: string | string[]): void };
 
 export interface DatePickerHandle {
     open: () => void;
@@ -252,7 +262,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         }
     }, [props.triggerRender]);
 
-    const [foundation, state] = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerProps, DatePickerState>(
+    const [foundation, state] = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerInnerProps, DatePickerState>(
         DatePickerFoundation,
         foundationProps,
         () => DatePickerFoundation.getInitialState(foundationProps),

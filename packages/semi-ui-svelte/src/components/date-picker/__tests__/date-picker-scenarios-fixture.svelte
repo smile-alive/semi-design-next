@@ -12,10 +12,11 @@
 <script lang="ts">
     import { Tabs } from '../../tabs';
     import DatePicker from '../date-picker.svelte';
+    import type { DatePickerHandle } from '../interface';
 
     let { store }: { store: ScenarioStore } = $props();
 
-    let docPicker = $state<DatePicker>();
+    let docPicker = $state<DatePickerHandle>();
 
     const tabList = [
         { itemKey: '1', tab: 'doc' },

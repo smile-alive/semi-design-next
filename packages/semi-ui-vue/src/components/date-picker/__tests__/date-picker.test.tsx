@@ -25,6 +25,7 @@ import type { DatePickerYearAndMonthEmits } from '../internal';
 import YearAndMonth from '../year-and-month.vue';
 import Model from './fixtures/model.vue';
 import OpenModel from './fixtures/open-model.vue';
+import Typed from './fixtures/typed.vue';
 
 type ChangeFn = (...args: DatePickerEmits['change']) => void;
 type EmitFn<K extends keyof DatePickerEmits> = (...args: DatePickerEmits[K]) => void;
@@ -41,7 +42,7 @@ const dp = `${BASE_CLASS_PREFIX}-datepicker`;
 
 const settle = () => new Promise((resolve) => setTimeout(resolve));
 async function renderPicker(props: Record<string, unknown> = {}, slots: Slots = {}) {
-    const view = render(DatePicker, { props, slots: slots as never });
+    const view = render(DatePicker, { props: props as never, slots: slots as never });
     await settle();
     return {
         ...view,
@@ -6073,8 +6074,21 @@ describe('DatePicker Vue 写法', () => {
         expect(onBlur).not.toHaveBeenCalled();
     });
 
+    it('模板中由 type 与 multiple 推断 change 的参数（fixtures/typed.vue 由 vue-tsc 检查）', () => {
+        expect(Typed).toBeDefined();
+    });
+
     it('类型：change 载荷、type 与 timePickerOpts 的取值范围', () => {
-        expectTypeOf<DatePickerEmits['change']>().toEqualTypeOf<[date: Date | Date[] | undefined, dateString: string | string[]]>();
+        type Single = [date: Date | undefined, dateString: string | undefined];
+        type Many = [date: Date[], dateString: string[]];
+        expectTypeOf<DatePickerEmits['change']>().toEqualTypeOf<Single | Many>();
+        expectTypeOf<DatePickerEmits<'year'>['change']>().toEqualTypeOf<Single>();
+        expectTypeOf<DatePickerEmits<'year', true>['change']>().toEqualTypeOf<Single>();
+        expectTypeOf<DatePickerEmits<'date', true>['change']>().toEqualTypeOf<Many>();
+        expectTypeOf<DatePickerEmits<undefined, true>['change']>().toEqualTypeOf<Many>();
+        expectTypeOf<DatePickerEmits<'date', boolean>['change']>().toEqualTypeOf<Single | Many>();
+        expectTypeOf<DatePickerEmits<'dateTimeRange'>['change']>().toEqualTypeOf<Many>();
+        expectTypeOf<DatePickerEmits<'monthRange', false>['change']>().toEqualTypeOf<Many>();
         expectTypeOf<Extract<DatePickerType, 'year'>>().toEqualTypeOf<'year'>();
         expectTypeOf<DatePickerTimePickerOpts>().not.toHaveProperty('format');
         expectTypeOf<DatePickerTimePickerOpts>().not.toHaveProperty('timeStampValue');

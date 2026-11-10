@@ -60,8 +60,7 @@ export const baseOverrides: OxlintOverride[] = [
     { files: ['**/*.ts', '**/*.tsx'], rules: typescriptRules },
     {
         // Both rules tell `null` from `undefined` and falsy values only under strictNullChecks, which D11 turns on per
-        // package: list each package that turns it on, and move the rules into typescriptRules once tsconfig.base.json
-        // does. Options keep only rewrites with the same result: `||` and `&&` on a primitive or `any` also act on '', 0
+        // package: list each package that turns it on. Options keep only rewrites with the same result: `||` and `&&` on a primitive or `any` also act on '', 0
         // and false; `x !== undefined ? x : y` keeps a `null` that `??` would replace; inside `Boolean()` `||` reads as
         // the truth test it is
         files: ['packages/semi-{ui,ai,icons}-{vue,solid,svelte}/src/**', 'packages/semi-icons-react/src/**', 'packages/shared/semi-{animation,icons-core,polyfill}/src/**', 'packages/plugins/semi-scss-compile/src/**', 'website/**'],

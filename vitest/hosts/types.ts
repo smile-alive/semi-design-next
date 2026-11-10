@@ -75,7 +75,7 @@ export interface Variant {
 export interface ExpectedFailure {
     // Full check id, `<variant>/<step>[/<page>][/<check>]`
     check: string;
-    // Heading of the docs/component-issues.md section that records the issue, such as `Tooltip（及 Popover、Dropdown）`
+    // Heading of the docs/decisions.md component section that records the issue, such as `Tooltip（及 Popover、Dropdown）`
     issue: string;
     // Text the failure message or the step's log must contain. Without it a failure whose cause changed (another
     // issue surfacing behind the recorded one) would still be filed under this entry

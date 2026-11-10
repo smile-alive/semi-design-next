@@ -853,7 +853,7 @@ describe('DatePicker', () => {
 
 describe('日历网格键盘焦点', () => {
     it('用键盘清空单个输入框后焦点回到输入框，且不打开面板', async () => {
-        const onChange = vi.fn<NonNullable<DatePickerProps['onChange']>>();
+        const onChange = vi.fn<(date: Date | Date[], dateString: string | string[]) => void>();
         const { container } = render(<DatePicker defaultValue={new Date(2019, 8, 11)} motion={false} onChange={onChange} />);
         const input = container.querySelector('input');
         await tabTo(input);
@@ -1045,21 +1045,21 @@ describe('触发器键盘访问', () => {
 });
 
 describe('年月选择器的焦点', () => {
-    const cases = [
-        { type: 'date' as const, defaultValue: new Date(2030, 4, 10) },
-        { type: 'dateRange' as const, defaultValue: [new Date(2030, 4, 10), new Date(2030, 7, 12)] },
+    const cases: { type: string; props: DatePickerProps }[] = [
+        { type: 'date', props: { type: 'date', defaultValue: new Date(2030, 4, 10) } },
+        { type: 'dateRange', props: { type: 'dateRange', defaultValue: [new Date(2030, 4, 10), new Date(2030, 7, 12)] } },
     ];
     const getTitle = () => getPanel('left').querySelector<HTMLElement>(`.${dp}-navigation-month button`);
 
-    it.each(cases)('$type 用键盘从月份标题进入年月选择器，焦点落在年份列表', async ({ type, defaultValue }) => {
-        render(<DatePicker type={type} defaultValue={defaultValue} defaultOpen motion={false} />);
+    it.each(cases)('$type 用键盘从月份标题进入年月选择器，焦点落在年份列表', async ({ props }) => {
+        render(<DatePicker {...props} defaultOpen motion={false} />);
         await tabTo(getTitle());
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(document.activeElement).toBe(getPanel('left').querySelector('[role="listbox"]')));
     });
 
-    it.each(cases)('$type 用键盘从年月选择器返回，焦点回到月份标题', async ({ type, defaultValue }) => {
-        render(<DatePicker type={type} defaultValue={defaultValue} defaultOpen motion={false} />);
+    it.each(cases)('$type 用键盘从年月选择器返回，焦点回到月份标题', async ({ props }) => {
+        render(<DatePicker {...props} defaultOpen motion={false} />);
         const titleId = getTitle().id;
         await userEvent.click(getTitle());
         const back = await within(getPanel('left')).findByRole('button', { name: zh_CN.DatePicker.selectDate });

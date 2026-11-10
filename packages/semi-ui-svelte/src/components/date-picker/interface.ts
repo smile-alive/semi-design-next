@@ -50,17 +50,13 @@ export interface DatePickerFullDateSnippetProps extends DatePickerDateSnippetPro
 // aria-invalid, aria-required, aria-errormessage, tabindex) goes to the input that gets the focus.
 type NativeRootKeys = 'children' | 'prefix' | 'placeholder' | 'onchange' | 'onfocus' | 'onblur';
 
-export interface DatePickerProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeRootKeys> {
+interface DatePickerCommonProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeRootKeys> {
     /** Bindable. `null` is a controlled empty value; only `undefined` leaves the picker uncontrolled */
     value?: DatePickerValueType | null;
     open?: boolean;
-    /** A format without time tokens turns dateTime into date and dateTimeRange into dateRange */
-    type?: DatePickerType;
     format?: string;
     /** The month the panel shows while there is no value */
     defaultPickerValue?: DatePickerValueType;
-    /** Only for the date type */
-    multiple?: boolean;
     max?: number;
     /** Only for dateTime and dateTimeRange */
     needConfirm?: boolean;
@@ -108,8 +104,6 @@ export interface DatePickerProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     stopPropagation?: boolean | string;
     dropdownClassName?: string;
     dropdownStyle?: string;
-    /** `undefined` (single) or `[]` (range and multiple) when cleared */
-    onChange?: (date: Date | Date[] | undefined, dateString: string | string[]) => void;
     onOpenChange?: (open: boolean) => void;
     /**
      * focusin of an input, or the click or key press on the trigger that focused the range start; `rangeType` is set
@@ -139,6 +133,20 @@ export interface DatePickerProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     /** How the separator between the range inputs is shown; `rangeSeparator` is the string prop that parses the text */
     rangeSeparatorNode?: Snippet;
 }
+
+export type DatePickerProps<T extends DatePickerType = DatePickerType, M extends boolean = boolean> = DatePickerCommonProps & {
+    /** A format without time tokens turns dateTime into date and dateTimeRange into dateRange */
+    type?: T;
+    /** Only for the date type */
+    multiple?: M;
+    onChange?: T extends 'dateRange' | 'dateTimeRange' | 'monthRange'
+        ? (date: Date[], dateString: string[]) => void
+        : T extends 'date'
+          ? M extends true
+              ? (date: Date[], dateString: string[]) => void
+              : (date: Date | undefined, dateString: string | undefined) => void
+          : (date: Date | undefined, dateString: string | undefined) => void;
+};
 
 /** What `trigger` receives; `onChange` sets the input text as typing would, `onEnterPress` commits it */
 export interface DatePickerTriggerRenderProps {

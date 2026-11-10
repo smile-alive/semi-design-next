@@ -6,7 +6,7 @@ import { addClass, removeClass } from '../../utils/index';
 import { cssClasses, strings, numbers } from './constants';
 import type { BaseEllipsis, BaseHeadWidth, BaseRowKeyType } from './foundation';
 
-export function getColumnKey(column: any, keyPropNames: any[]) {
+export function getColumnKey(column: Record<string, any>, keyPropNames: string[]) {
     keyPropNames = Array.isArray(keyPropNames) ? keyPropNames : ['key', 'dataIndex'];
     let key = null;
     for (const propName of keyPropNames) {
@@ -21,7 +21,7 @@ export function getColumnKey(column: any, keyPropNames: any[]) {
 }
 
 /** Sums arr over [beginIndex, endIndex) */
-export function arrayAdd(arr: any[] = [], beginIndex = 0, endIndex?: number) {
+export function arrayAdd(arr: number[] = [], beginIndex = 0, endIndex?: number) {
     beginIndex = beginIndex < 0 || typeof beginIndex !== 'number' ? 0 : beginIndex;
     endIndex = endIndex > arr.length || typeof endIndex !== 'number' ? arr.length : endIndex;
 
@@ -593,7 +593,7 @@ export interface FlattenDataProps {
     childrenRecordName?: string;
     expandedRowRender?: (...args: any[]) => any;
     expandedRowKeys?: (string | number)[];
-    groups?: Map<any, Set<any>>;
+    groups?: Map<BaseRowKeyType, Set<BaseRowKeyType>>;
     /** Whether a record gets an expanded row; every record does when absent */
     rowExpandable?: (record: any) => boolean;
 }
@@ -645,7 +645,7 @@ export interface GroupFlattenData {
     key: number | string;
     level: number;
     sectionRow: boolean;
-    group: Set<any>;
+    group: Set<BaseRowKeyType>;
     groupKey: number | string;
     expanded: boolean;
 }

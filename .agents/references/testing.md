@@ -98,7 +98,7 @@
 
 ### 预期失败清单
 
-- `expectedFailures` 登记已知的失败：`check` 是完整检查 id，`issue` 是 `docs/component-issues.md` 中登记该问题的小节标题（如 `Tooltip（及 Popover、Dropdown）`；没有登记的失败先登记再写清单），`evidence` 是失败信息或步骤日志必须包含的文本。
+- `expectedFailures` 登记已知的失败：`check` 是完整检查 id，`issue` 是 `docs/decisions.md` 中登记该问题的组件小节标题（如 `Tooltip（及 Popover、Dropdown）`；没有登记的失败先登记再写清单），`evidence` 是失败信息或步骤日志必须包含的文本。
 - 清单内的检查失败且 `evidence` 匹配，报「预期失败」，不计入失败；`evidence` 不匹配（换了原因）仍报 FAIL，不会被归到这条下面。
 - 清单内的检查通过，报「清单过期」并以非 0 退出，迫使清单随修复清空；指向不存在的检查同样报「清单过期」。
 - 条目由修复方在修复后自己删除；删条目后用 `pnpm test:hosts <宿主> --full` 确认没有新的失败。
@@ -109,6 +109,28 @@
 - 需要网络或预热的 pnpm store，先 `pnpm build`。
 - `pnpm test:hosts [宿主...] [--full] [--keep]`：默认每个宿主只跑第一个变体，`--full` 跑全部变体；只传宿主名则只跑这些宿主。有 FAIL、「清单过期」或「环境」时退出码为 1。
 - `--keep`：全部通过时也保留临时目录（失败时本来就保留），并打印临时目录、各变体的 app 目录和 dev 命令。手动起 dev：进入 app 目录，把 `node_modules/.bin` 放进 `PATH`，执行打印出的命令，`{port}` 换成空闲端口。用完用 `trash` 删除临时目录。
+
+## strictNullChecks 探针
+
+存量包不开启 strictNullChecks（见 [decisions](../../docs/decisions.md)「仓库与工程」）。想查空值 bug 时手动跑一次探针，不提交配置，不进 `pnpm check`：
+
+1. 写 `tmp/strict-probe/tsconfig.json`，继承 foundation 的配置，只多开 `strictNullChecks`、`noEmit`：
+
+    ```json
+    {
+        "extends": "../../packages/shared/semi-foundation/tsconfig.json",
+        "compilerOptions": {
+            "rootDir": "../../packages/shared/semi-foundation/src",
+            "noEmit": true,
+            "strictNullChecks": true
+        },
+        "include": ["../../packages/shared/semi-foundation/src/**/*.ts"],
+        "exclude": ["../../packages/shared/semi-foundation/src/**/__tests__/**"]
+    }
+    ```
+
+2. 运行 `pnpm exec tsc -p tmp/strict-probe/tsconfig.json`。foundation 约有 1000 个错误，只看来自 `null` 的：TS18047、TS2531，以及消息里含 `null` 的 TS2345、TS2322，筛完约 120 个。
+3. 逐个判断：能指出实际触发场景（用户输入、解析失败、外部 API 返回 `null`）才算 bug，按 [fix-component-bug](../skills/fix-component-bug/SKILL.md) 修复；其余多是既定事实，忽略，不为过检查加判空或 `??`。
 
 ## 并行会话的端口
 

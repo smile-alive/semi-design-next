@@ -133,7 +133,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         html: ['custom-full'],
     },
     // The editor is created on mount and fills the container the server left empty; attribute lists cannot describe a
-    // subtree (docs/component-issues.md, AIChatInput)
+    // subtree (docs/decisions.md, AIChatInput)
     { name: 'ai-chat-input/默认', covers: ['AIChatInput'], render: () => <AIChatInput placeholder="Ask anything" />, mountDiff: ['*'] },
     {
         name: 'ai-chat-input/renderUploadButton 插入默认按钮',

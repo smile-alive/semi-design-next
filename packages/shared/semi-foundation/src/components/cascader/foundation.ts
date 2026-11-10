@@ -817,7 +817,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         }
     }
 
-    protected getItemPropPath(selectedKey: string, prop: string | any[], keyEntities?: BasicEntities) {
+    protected getItemPropPath(selectedKey: string, prop: string | unknown[], keyEntities?: BasicEntities) {
         return CascaderFoundation.getItemPropPath(selectedKey, prop, keyEntities || this.getState('keyEntities'));
     }
 
@@ -1001,7 +1001,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return shown ? keyboardKey : null;
     }
 
-    static getItemPropPath(selectedKey: string, prop: string | any[], keyEntities: BasicEntities) {
+    static getItemPropPath(selectedKey: string, prop: string | unknown[], keyEntities: BasicEntities) {
         const selectedItem = keyEntities[selectedKey];
         let path = [];
         if (!selectedItem) {

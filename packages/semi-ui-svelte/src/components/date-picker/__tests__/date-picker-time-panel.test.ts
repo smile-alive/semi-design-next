@@ -9,7 +9,7 @@ import { changes, dp, getDay, getInputs, settle, setup, useBaseDate } from './te
 
 useBaseDate();
 
-type OnChange = NonNullable<DatePickerProps['onChange']>;
+type OnChange = (date: Date | undefined, dateString: string | undefined) => void;
 
 const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 const rangeValue = [new Date(2021, 5, 1, 10, 0), new Date(2021, 5, 15, 18, 0)];

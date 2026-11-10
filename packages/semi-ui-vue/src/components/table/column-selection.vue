@@ -50,9 +50,9 @@
         return rowSelection.value?.checkRelation === 'related' && halfCheckedRowKeysSet.has(recordKey.value);
     });
 
-    const selectAll = (checked: boolean, event: Event) => table.foundation.handleSelectAllRow(checked, event);
+    const selectAll = (checked: boolean, event: Event | CheckboxEvent) => table.foundation.handleSelectAllRow(checked, event);
 
-    const selectRow = (checked: boolean, event: Event) => table.foundation.handleSelectRow(recordKey.value, checked, event);
+    const selectRow = (checked: boolean, event: Event | CheckboxEvent) => table.foundation.handleSelectRow(recordKey.value, checked, event);
 
     /** The default checkbox, built once: the `#selectionCell` slot gets it as originNode and it is the fallback */
     const cellView = (selection: StateRowSelection): { originNode: VNode; output: KeyedNode[] | null } => {
@@ -65,7 +65,7 @@
                 indeterminate: indeterminate.value,
                 modelValue: selected.value,
                 onKeyup: table.foundation.handleSelectionKeyUp,
-                onChange: (event: CheckboxEvent) => (props.inHeader ? selectAll : selectRow)(event.target.checked, event as unknown as Event),
+                onChange: (event: CheckboxEvent) => (props.inHeader ? selectAll : selectRow)(event.target.checked, event),
                 ...(props.inHeader ? {} : selection.getCheckboxProps?.(props.record as AnyRecord)),
             }),
         ]);

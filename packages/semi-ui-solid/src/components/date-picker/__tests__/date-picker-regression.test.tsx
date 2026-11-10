@@ -11,7 +11,7 @@ import DatePicker, { type DatePickerElement, type DatePickerProps, type Disabled
 import ConfigProvider from '../../config-provider';
 import Tabs from '../../tabs';
 
-type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
+type ChangeHandler = (date: Date | Date[], dateString: string | string[]) => void;
 
 const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 

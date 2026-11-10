@@ -88,7 +88,7 @@
 
     const setStar = (index: number, el: Element | ComponentPublicInstance | null) => {
         if (el) {
-            stars.set(index, el as unknown as RatingItemHandle);
+            stars.set(index, el as ComponentPublicInstance & RatingItemHandle);
         } else {
             stars.delete(index);
         }

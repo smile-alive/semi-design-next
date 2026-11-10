@@ -1,7 +1,7 @@
 import { get } from 'es-toolkit/compat';
 import { getPosition } from '../tree/tree-util';
 import { strings, VALUE_SPLIT } from './constants';
-import type { BasicCascaderData } from './foundation';
+import type { BasicCascaderData, BasicEntities, BasicEntity } from './foundation';
 
 export interface KeyMapProps {
     value?: string;
@@ -70,13 +70,13 @@ export function highlightParts<T>(searchText: T[], keyword: string, separator: s
     return parts;
 }
 
-function traverseDataNodes(treeNodes: any, callback: (data: any) => void, keyMaps?: KeyMapProps) {
+function traverseDataNodes(treeNodes: BasicCascaderData[], callback: (data: BasicEntity) => void, keyMaps?: KeyMapProps) {
     const realValueName = keyMaps?.value ?? 'value';
     const realChildrenName = keyMaps?.children ?? 'children';
 
-    const processNode = (node: any, ind?: any, parent?: any) => {
+    const processNode = (node: BasicCascaderData, ind?: number, parent?: BasicEntity) => {
         const children = node ? node[realChildrenName] : treeNodes;
-        let item: any = null;
+        let item: BasicEntity = null;
         if (node) {
             const nodeValue = node[realValueName];
             const key = parent ? `${parent.key}${VALUE_SPLIT}${nodeValue}` : `${nodeValue}`;
@@ -110,7 +110,7 @@ function traverseDataNodes(treeNodes: any, callback: (data: any) => void, keyMap
         }
 
         if (children) {
-            children.forEach((subNode: any, subIndex: any) => {
+            children.forEach((subNode: BasicCascaderData, subIndex: number) => {
                 processNode(subNode, subIndex, item);
             });
         }
@@ -148,11 +148,11 @@ export function getKeyByPos(pos: string, treeData: BasicCascaderData[], keyMaps?
 }
 
 export function convertDataToEntities(dataNodes: BasicCascaderData[], keyMaps?: KeyMapProps) {
-    const keyEntities: any = {};
+    const keyEntities: BasicEntities = {};
 
     traverseDataNodes(
         dataNodes,
-        (data: any) => {
+        (data) => {
             const { key, parentKey } = data;
             const entity = { ...data };
 
