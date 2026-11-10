@@ -1,7 +1,7 @@
 import { IconToken } from '@fibrae/semi-icons-solid/lab';
-import { Button, Dropdown, type DropDownMenuItem } from '@fibrae/semi-ui-solid';
+import { Button, Dropdown, type DropdownMenuItem } from '@fibrae/semi-ui-solid';
 
-const menu: DropDownMenuItem[] = [
+const menu: DropdownMenuItem[] = [
     { node: 'title', name: '分组1' },
     { node: 'item', name: 'primary1', type: 'primary', onClick: () => console.log('click primary') },
     { node: 'item', name: 'secondary', type: 'secondary' },

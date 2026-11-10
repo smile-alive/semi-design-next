@@ -9,41 +9,41 @@ import ApiType from '#/components/ApiType.astro';
 | multiple | Whether multiple options can be selected. It decides the payload type of change and update:modelValue: an array in multiple mode, a single value or undefined otherwise. The global defaults cannot set it. | `Multiple` | `undefined` |
 | optionList | Options as an array. Each item needs value and label (a string or number); other fields travel with the option record. A non-empty array takes precedence over the default slot; groups are not supported. | `SelectOptionProps[]` | `semiGlobalDefault("Select", "optionList")` |
 | filter | Whether the Select is searchable. true turns search on with the default strategy, which matches options whose label (or group title) contains the input; a function receives the input value and the option and returns true for a match. | <ApiType detail={"boolean \u007c ((inputValue: string, option: SelectOptionProps) => boolean)"}>Type</ApiType> | `undefined` |
-| remote | Whether search is remote. When on, typing does not filter locally; update optionList from the search event instead. | `boolean` | `semiDefault("Select", "remote", false)` |
-| allowCreate | Whether items missing from the list can be created; use it together with filter. The create event fires on creation, and the createItem slot customizes the row. | `boolean` | `semiDefault("Select", "allowCreate", false)` |
-| autoClearSearchValue | In a searchable multiple Select, whether the search keyword is cleared after an option is selected. | `boolean` | `semiDefault("Select", "autoClearSearchValue", true)` |
-| autofocus | Whether the Select takes focus after mounting. | `boolean` | `semiDefault("Select", "autofocus", false)` |
-| defaultOpen | Whether the dropdown is open when mounted. | `boolean` | `semiDefault("Select", "defaultOpen", false)` |
-| clickToHide | Whether clicking the select box closes an open dropdown. | `boolean` | `semiDefault("Select", "clickToHide", false)` |
-| defaultActiveFirstOption | Whether opening the dropdown highlights the first enabled option when nothing is selected (press Enter to select it). With a selected value, the first selected option is always highlighted. | `boolean` | `semiDefault("Select", "defaultActiveFirstOption", true)` |
-| changeWithObject | A boolean attribute, not an event: when true, change, update:modelValue, modelValue and defaultValue use option objects, which must contain value and label. | `boolean` | `semiDefault("Select", "changeWithObject", false)` |
+| remote | Whether search is remote. When on, typing does not filter locally; update optionList from the search event instead. | `boolean` | `false` |
+| allowCreate | Whether items missing from the list can be created; use it together with filter. The create event fires on creation, and the createItem slot customizes the row. | `boolean` | `false` |
+| autoClearSearchValue | In a searchable multiple Select, whether the search keyword is cleared after an option is selected. | `boolean` | `true` |
+| autofocus | Whether the Select takes focus after mounting. | `boolean` | `false` |
+| defaultOpen | Whether the dropdown is open when mounted. | `boolean` | `false` |
+| clickToHide | Whether clicking the select box closes an open dropdown. | `boolean` | `false` |
+| defaultActiveFirstOption | Whether opening the dropdown highlights the first enabled option when nothing is selected (press Enter to select it). With a selected value, the first selected option is always highlighted. | `boolean` | `true` |
+| changeWithObject | A boolean attribute, not an event: when true, change, update:modelValue, modelValue and defaultValue use option objects, which must contain value and label. | `boolean` | `false` |
 | max | The maximum number of selected options, in multiple mode only; beyond it nothing more can be selected and the exceed event fires. | `number` | `semiGlobalDefault("Select", "max")` |
 | maxTagCount | In multiple mode, the most tags shown; the rest collapse into +N. | `number` | `semiGlobalDefault("Select", "maxTagCount")` |
-| maxHeight | The maximum height of the option list; a number is in pixels, a string is used as is. When the virtual list height exceeds the default, set this to the same value to avoid a double scrollbar. | `string \| number` | `semiDefault("Select", "maxHeight", numbers.LIST_HEIGHT)` |
-| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `semiDefault("Select", "showRestTagsPopover", false)` |
+| maxHeight | The maximum height of the option list; a number is in pixels, a string is used as is. When the virtual list height exceeds the default, set this to the same value to avoid a double scrollbar. | `string \| number` | `numbers.LIST_HEIGHT` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `false` |
 | restTagsPopoverProps | Configuration of the Popover that shows the remaining tags, such as position and trigger. | `PopoverProps` | `semiGlobalDefault("Select", "restTagsPopoverProps")` |
-| expandRestTagsOnClick | In multiple mode with maxTagCount, whether all tags are shown while the dropdown is open. | `boolean` | `semiDefault("Select", "expandRestTagsOnClick", false)` |
-| ellipsisTrigger | In multiple mode with maxTagCount, whether the last tag is truncated when the width is short. It costs some performance, so avoid it in large forms. | `boolean` | `semiDefault("Select", "ellipsisTrigger", false)` |
+| expandRestTagsOnClick | In multiple mode with maxTagCount, whether all tags are shown while the dropdown is open. | `boolean` | `false` |
+| ellipsisTrigger | In multiple mode with maxTagCount, whether the last tag is truncated when the width is short. It costs some performance, so avoid it in large forms. | `boolean` | `false` |
 | size | Size: small, default or large. | `Size` | `undefined` |
 | disabled | Whether the Select is disabled. | `boolean` | `undefined` |
-| borderless | Whether the Select has no border. | `boolean` | `semiDefault("Select", "borderless", false)` |
+| borderless | Whether the Select has no border. | `boolean` | `false` |
 | validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Select", "validateStatus")` |
 | placeholder | Placeholder text shown while nothing is selected. | `string` | `semiGlobalDefault("Select", "placeholder")` |
 | searchPlaceholder | Placeholder of the search input when it sits in the dropdown (searchPosition is dropdown). | `string` | `semiGlobalDefault("Select", "searchPlaceholder")` |
-| searchPosition | Where the search input sits when search is on: trigger puts it in the select box, dropdown at the top of the list. With trigger the clear button also clears the search text; with dropdown it clears the selection only. | `"dropdown" \| "trigger"` | `semiDefault("Select", "searchPosition", "trigger")` |
-| loading | Whether the dropdown shows a loading indicator. | `boolean` | `semiDefault("Select", "loading", false)` |
-| showArrow | Whether the dropdown arrow is shown. | `boolean` | `semiDefault("Select", "showArrow", true)` |
-| showClear | Whether the clear button is shown. It appears in the select box when there is a selection or search text and the Select is enabled. | `boolean` | `semiDefault("Select", "showClear", false)` |
+| searchPosition | Where the search input sits when search is on: trigger puts it in the select box, dropdown at the top of the list. With trigger the clear button also clears the search text; with dropdown it clears the selection only. | `"dropdown" \| "trigger"` | `"trigger"` |
+| loading | Whether the dropdown shows a loading indicator. | `boolean` | `false` |
+| showArrow | Whether the dropdown arrow is shown. | `boolean` | `true` |
+| showClear | Whether the clear button is shown. It appears in the select box when there is a selection or search text and the Select is enabled. | `boolean` | `false` |
 | insetLabelId | The id of the insetLabel element, which the combobox's aria-labelledby points at. The component generates one when omitted. | `string` | `undefined` |
 | inputProps | Extra props of the search Input when search is on; listeners use Vue keys such as onFocus. Do not pass modelValue, defaultValue or onChange, which would override the Select's own state and search handling. | `SelectInputProps` | `semiGlobalDefault("Select", "inputProps")` |
 | dropdownClassName | Class of the dropdown popup. | `string` | `semiGlobalDefault("Select", "dropdownClassName")` |
 | dropdownStyle | Style of the dropdown popup, for example width. The style on the root element does not reach the popup. | `StyleValue` | `semiGlobalDefault("Select", "dropdownStyle")` |
-| dropdownMatchSelectWidth | Whether the minimum width of the popup equals the select box. | `boolean` | `semiDefault("Select", "dropdownMatchSelectWidth", true)` |
+| dropdownMatchSelectWidth | Whether the minimum width of the popup equals the select box. | `boolean` | `true` |
 | position | Where the popup opens; the values are those of the Tooltip position. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Select", "position")` |
 | spacing | The distance between the popup and the select box, in pixels. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Select", "spacing")` |
-| motion | Whether the popup is animated. | `boolean` | `semiDefault("Select", "motion", true)` |
-| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `semiDefault("Select", "autoAdjustOverflow", true)` |
-| stopPropagation | Whether click events inside the popup stop propagating. | `boolean` | `semiDefault("Select", "stopPropagation", true)` |
+| motion | Whether the popup is animated. | `boolean` | `true` |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
+| stopPropagation | Whether click events inside the popup stop propagating. | `boolean` | `true` |
 | virtualize | Turns on list virtualization for many options. itemSize is the height of every row and is required; height defaults to 270 and width to 100%. | `SelectVirtualize` | `semiGlobalDefault("Select", "virtualize")` |
 | preventScroll | Whether focusing prevents the browser from scrolling the element into view; applies to the component's own focus calls. | `boolean` | `semiGlobalDefault("Select", "preventScroll")` |
 | id | The id of the trigger, from which the option ids derive. The component generates one when omitted; it does not read the global defaults. | `string` | `undefined` |
@@ -90,5 +90,12 @@ import ApiType from '#/components/ApiType.astro';
 **Exposes**
 
 | Name | Description | Type |
-| ---- | ----------- | ---- |
-| None |             |      |
+| --- | --- | --- |
+| close | Closes the dropdown. | <ApiType detail={"() => void"}>Type</ApiType> |
+| open | Opens the dropdown. | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | Focuses the trigger, or the search input when the Select is searchable. The dropdown opens only when the Select is searchable. | <ApiType detail={"() => void"}>Type</ApiType> |
+| clearInput | Clears the value of the search input. | <ApiType detail={"() => void"}>Type</ApiType> |
+| selectAll | Selects every visible, enabled option. Effective in multiple mode only. | <ApiType detail={"() => void"}>Type</ApiType> |
+| deselectAll | Clears all selected options. | <ApiType detail={"() => void"}>Type</ApiType> |
+| search | Searches as if the value had been typed, and sets it into the search input. Without an event, the second argument of the `search` event is `undefined`. | <ApiType detail={"(value: string, event?: Event \u007c undefined) => void"}>Type</ApiType> |
+| rePosition | Recomputes the dropdown position from the trigger's current position at once. The dropdown already follows scrolling, window resizing, trigger moves and size changes of the trigger or list, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame. | <ApiType detail={"() => void"}>Type</ApiType> |

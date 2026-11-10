@@ -3,7 +3,7 @@ import type { BreadcrumbItemInfo as BaseBreadcrumbItemInfo, Route } from '@fibra
 import type { ElementProps } from '../../base/element-props';
 import type { TooltipProps } from '../tooltip';
 
-export interface showToolTipProps {
+export interface ShowTooltipProps {
     width?: string | number;
     ellipsisPos?: 'end' | 'middle';
     opts?: TooltipProps;
@@ -22,7 +22,7 @@ export interface RouteProps extends Omit<Route, 'icon' | 'name' | 'separator'> {
     onClick?: (item: BreadcrumbItemInfo | RouteProps, e: MouseEvent) => void;
 }
 
-export interface BreadcrumbItemProps extends ElementProps<'span', 'onClick'> {
+export interface BreadcrumbItemProps extends ElementProps<'li', 'onClick'> {
     icon?: JSX.Element;
     href?: string;
     separator?: JSX.Element;
@@ -45,7 +45,7 @@ export interface BreadcrumbProps extends ElementProps<'nav', 'onClick'> {
     renderItem?: (route: RouteProps) => JSX.Element;
     /** The icon of an item of `routes`; `index` counts all items, including the collapsed ones */
     renderIcon?: (route: RouteProps, index: number) => JSX.Element;
-    showTooltip?: boolean | showToolTipProps;
+    showTooltip?: boolean | ShowTooltipProps;
     maxItemCount?: number;
     autoCollapse?: boolean;
     /** Customizes the content of the ellipsis area; receives the hidden routes, or the props of the hidden Breadcrumb.Item children */

@@ -17,7 +17,7 @@
 
     const slots = defineSlots<DividerSlots>();
 
-    const prefixCls = `${cssClasses.PREFIX}-divider`;
+    const prefixCls = cssClasses.PREFIX;
 
     const marginStyle = computed((): StyleValue => {
         if (props.margin === undefined) return {};

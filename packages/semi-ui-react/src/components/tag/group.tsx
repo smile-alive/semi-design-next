@@ -5,8 +5,8 @@ import { cssClasses, strings } from '@fibrae/semi-foundation/components/tag/cons
 import { getTagListKeys } from '@fibrae/semi-foundation/components/tag/tag-key';
 import useDefaultProps from '../../base/use-default-props';
 import Popover from '../popover/index';
-import Tag from './index';
 import type { TagProps, TagGroupProps, TagSize } from './interface';
+import Tag from './tag';
 
 const prefixCls = cssClasses.PREFIX;
 

@@ -21,7 +21,6 @@ import ApiType from '#/components/ApiType.astro';
 | onFocus | Called when focus enters the whole rating; moving between stars does not call it. | <ApiType detail={"(e: React.FocusEvent) => void"}>Type</ApiType> | - |
 | onHoverChange | Called when the hovered value changes; receives `undefined` when the pointer leaves or a click clears the value. | <ApiType detail={"(value?: number) => void"}>Type</ApiType> | - |
 | onKeyDown | Called for an arrow key that moves the value; other keys do not call it. | <ApiType detail={"(e: React.KeyboardEvent) => void"}>Type</ApiType> | - |
-| prefixCls | Class name prefix of the component. | `string` | `"semi-rating"` |
 | preventScroll | Whether to keep the browser from scrolling the document to show a star focused inside the component, including focus from `autoFocus` and `focus()`. | `boolean` | - |
 | ref | Handle of the component, exposing the `focus()` and `blur()` methods. | <ApiType detail={"React.Ref\u003cRatingHandle>"}>Type</ApiType> | - |
 | size | Size: `default` or `small`, or a number for a custom size. | `'default' \| 'small' \| number` | `"default"` |

@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Chọn tất cả hàng',
         selectRow: 'Chọn hàng này',
+        scrollRegion: 'Nội dung bảng có thể cuộn',
+        untitledColumn: 'Cột không có tiêu đề',
         filterColumn: 'Lọc dữ liệu theo cột này',
         filterColumnActive: 'Lọc dữ liệu theo cột này, bộ lọc đang áp dụng',
         expandRow: 'Mở rộng hàng này',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Tìm kiếm',
         replace: 'Thay thế',
         replaceAll: 'Thay thế tất cả',
+        replaceWith: 'Thay thế bằng',
         caseSensitive: 'Phân biệt chữ hoa chữ thường',
         regex: 'Dùng biểu thức chính quy',
         wholeWord: 'Khớp toàn bộ từ',

@@ -29,4 +29,4 @@ export type {
 } from './interface';
 export type { ConfigureProps, ConfigureEmits, ConfigureSlots, ConfigureHandle, ConfigureItemOpts, ConfigureItemProps, McpProps, McpEmits, McpSlots, McpOption, McpOptionIconSlotProps } from './configure/interface';
 // From the declaring module: the d.ts bundler drops a type re-exported through another module's re-export
-export type { Attachment, BaseSkill, Content, LeftMenuChangeProps, MessageContent, Reference, RichTextJSON, Setup, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+export type { Attachment, BaseSkill, Content, MessageContent, Reference, RichTextJSON, Setup, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';

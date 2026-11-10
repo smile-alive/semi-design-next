@@ -133,7 +133,8 @@ const enum ScanError {
     InvalidCharacter = 6,
 }
 
-const enum SyntaxKind {
+// jsonc-parser declares its SyntaxKind as an ambient const enum, which verbatimModuleSyntax cannot import
+export const enum SyntaxKind {
     OpenBraceToken = 1,
     CloseBraceToken = 2,
     OpenBracketToken = 3,

@@ -326,13 +326,6 @@ describe('Svelte Checkbox', () => {
         expect(document.querySelector(`.${prefixCls}-extra`)).toHaveClass(`${prefixCls}-cardType_extra_noChildren`);
     });
 
-    it('prefixCls 替换所有类名前缀', () => {
-        render(Checkbox, { props: { prefixCls: 'my-cb', children: label } });
-        expect(document.querySelector('.my-cb')).not.toBeNull();
-        expect(document.querySelector('.my-cb-inner-display')).not.toBeNull();
-        expect(document.querySelector('.my-cb-addon')).not.toBeNull();
-    });
-
     it('全局默认值生效，显式 props 优先，addonId 与 extraId 不受全局默认值影响', () => {
         // the global type leaves out per-instance ids; the cast stands for an untyped app that sets them anyway
         semiGlobal.config.overrideDefaultProps = { Checkbox: { type: 'card', addonId: 'addon-global' } } as object;

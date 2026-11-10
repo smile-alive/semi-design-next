@@ -54,6 +54,8 @@ export interface TreeSelectSearchSnippetProps extends TreeSearchSnippetProps {
     /** The trigger search box: `searchAutoFocus` */
     autofocus?: boolean;
     disabled?: boolean;
+    /** The trigger search box: the TreeSelect's resolved size */
+    size?: TreeSelectSize;
     role?: 'combobox';
     'aria-activedescendant'?: string;
     'aria-autocomplete': 'list';

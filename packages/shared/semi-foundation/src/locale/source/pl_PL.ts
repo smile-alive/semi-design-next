@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Zaznacz wszystkie wiersze',
         selectRow: 'Zaznacz ten wiersz',
+        scrollRegion: 'Przewijana zawartość tabeli',
+        untitledColumn: 'Kolumna bez tytułu',
         filterColumn: 'Filtruj dane według tej kolumny',
         filterColumnActive: 'Filtruj dane według tej kolumny, filtr aktywny',
         expandRow: 'Rozwiń ten wiersz',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Szukaj',
         replace: 'Zastąp',
         replaceAll: 'Zastąp wszystko',
+        replaceWith: 'Zastąp przez',
         caseSensitive: 'Uwzględnij wielkość liter',
         regex: 'Użyj wyrażenia regularnego',
         wholeWord: 'Dopasuj całe słowa',

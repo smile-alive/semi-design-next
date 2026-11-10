@@ -177,7 +177,7 @@ Semi 所有关于时区的配置都收敛在 ConfigProvider 中，详细使用�
 
 <TimePickerReactApi />
 
-未声明的原生属性（如 `title`、`data-*`、`aria-label`、`onKeyDown`）落在内部输入框上，其中 `prefix` 作为输入框的前缀内容显示；使用 `triggerRender` 自定义触发器时，这些属性不落在任何元素上，可通过 `componentProps` 取用。
+未声明的原生属性（如 `title`、`data-*`、`aria-label`、`onKeyDown`）落在内部输入框上，其中 `prefix` 作为输入框的前缀内容显示；使用 `triggerRender` 自定义触发器时，这些属性落在根元素上，也可通过 `componentProps` 取用。触发器内没有可聚焦元素时根元素是 `role="button"` 的焦点目标，`aria-label` 为它命名；否则传 `aria-label` 或 `aria-labelledby` 时根元素的 role 为 `group`。
 
 使用自定义触发器时，`focus()` 与 `blur()` 作用于触发器中的第一个 `input`，没有 `input` 时无效。
 
@@ -197,7 +197,7 @@ Semi 所有关于时区的配置都收敛在 ConfigProvider 中，详细使用�
 
 <TimePickerSolidApi />
 
-`class`、`style` 与 `ref` 落在根元素上，其余未声明的属性（`id`、`title`、`aria-*`、`data-*`、原生事件等）落在内部输入框上；使用 `triggerRender` 自定义触发器时，这些属性不落在任何元素上。`ref` 指向根元素，其 `focus()` 与 `blur()` 作用于输入框，使用自定义触发器时无效。
+`class`、`style` 与 `ref` 落在根元素上，其余未声明的属性（`id`、`title`、`aria-*`、`data-*`、原生事件等）落在内部输入框上；使用 `triggerRender` 自定义触发器时，全部落在根元素上，传 `aria-label` 或 `aria-labelledby` 时根元素的 role 为 `group`。`ref` 指向根元素，其 `focus()` 与 `blur()` 作用于输入框，使用自定义触发器时无效。
 
 </Framework>
 
@@ -205,7 +205,7 @@ Semi 所有关于时区的配置都收敛在 ConfigProvider 中，详细使用�
 
 <TimePickerSvelteApi />
 
-未声明的属性中，`class`、`style` 落在根元素上，其余（`id`、`title`、`aria-*`、`data-*`、原生事件等）落在内部输入框上；使用 `trigger` 自定义触发器时，这些属性不落在任何元素上，可通过 `componentProps` 取用。
+未声明的属性中，`class`、`style` 落在根元素上，其余（`id`、`title`、`aria-*`、`data-*`、原生事件等）落在内部输入框上；使用 `trigger` 自定义触发器时，全部落在根元素上，传 `aria-label` 或 `aria-labelledby` 时根元素的 role 为 `group`，也可通过 `componentProps` 取用。
 
 通过组件实例调用 `focus()`、`blur()`，使用自定义触发器时无效。
 

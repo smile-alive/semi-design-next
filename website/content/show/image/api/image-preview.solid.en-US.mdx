@@ -39,7 +39,7 @@ import ApiType from '#/components/ApiType.astro';
 | preLoadGap | Step size of preloading. | `number` | - |
 | previewCls | Custom class name of the preview layer. | `string` | - |
 | previewStyle | Custom style of the preview layer, as a style object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
-| previewTitle | Title at the top of the preview, also the accessible name of the preview dialog; the preview.previewTitle of an image in a group takes precedence. | `JSX.Element` | - |
+| previewTitle | Title at the top of the preview, also the accessible name of the preview dialog; the preview.previewTitle of an image in a group takes precedence. A function is called only once the preview opens; write a JSX title in the preview object of an Image as a function, or its node is created while the preview is closed and breaks hydration after server rendering. | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | - |
 | prevTip | Tip of the previous-image button, also its accessible name; without it the locale text is used. | `string` | - |
 | renderCloseIcon | Custom close icon: a JSX element, or a function that returns one. | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | - |
 | renderHeader | Renders the top area of the preview; it receives the current title and returns a JSX element. | <ApiType detail={"(title: JSX.Element) => JSX.Element"}>Type</ApiType> | - |

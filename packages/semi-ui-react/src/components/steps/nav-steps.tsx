@@ -7,8 +7,9 @@ import type { ElementProps } from '../../base/base';
 import flattenChildren from '../../utils/flatten-children';
 import type { Size } from './types';
 
+const prefixCls = css.PREFIX;
+
 export interface NavStepsProps extends ElementProps<'div', 'onChange'> {
-    prefixCls?: string;
     className?: string;
     style?: React.CSSProperties;
     current?: number;
@@ -21,7 +22,7 @@ export interface NavStepsProps extends ElementProps<'div', 'onChange'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export default function Steps({ size = 'default', current = 0, initial = 0, children, prefixCls = css.PREFIX, className, onChange, ...rest }: NavStepsProps) {
+export default function Steps({ size = 'default', current = 0, initial = 0, children, className, onChange, ...rest }: NavStepsProps) {
     const filteredChildren = flattenChildren(children).filter((c) => isValidElement(c)) as Array<ReactElement<any>>;
     const total = filteredChildren.length;
 

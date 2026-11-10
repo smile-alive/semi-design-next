@@ -211,7 +211,7 @@ describe('Svelte Feedback type', () => {
 
     it('radio：垂直分组上报所选值', async () => {
         const onValueChange = vi.fn<(value: unknown) => void>();
-        const onChange = vi.fn<(event: { target: { value: unknown } }) => void>();
+        const onChange = vi.fn<(event: { target: { value?: unknown } }) => void>();
         await setup({ type: 'radio', radioGroupProps: { options, onChange }, onValueChange });
         expect($(`.${prefix}-radio-container .${BASE_CLASS_PREFIX}-radioGroup-vertical`)).not.toBeNull();
         await click(screen.getByRole('radio', { name: 'B' }));
@@ -302,7 +302,7 @@ describe('Svelte Feedback type', () => {
 
     it('radioGroupProps.value 不盖过 Feedback 的值', async () => {
         const onValueChange = vi.fn<(value: unknown) => void>();
-        const onChange = vi.fn<(event: { target: { value: unknown } }) => void>();
+        const onChange = vi.fn<(event: { target: { value?: unknown } }) => void>();
         const radioGroupProps: FeedbackRadioGroupProps = {
             options,
             // @ts-expect-error value is omitted from the type; the runtime must still let Feedback's own value win

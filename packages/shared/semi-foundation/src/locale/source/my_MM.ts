@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'အတန်းအားလုံး ရွေးမည်',
         selectRow: 'ဤအတန်းကို ရွေးမည်',
+        scrollRegion: 'လှိမ့်ကြည့်နိုင်သော ဇယားအကြောင်းအရာ',
+        untitledColumn: 'ခေါင်းစဉ်မရှိသော ကော်လံ',
         filterColumn: 'ဤကော်လံဖြင့် ဒေတာစစ်ထုတ်ရန်',
         filterColumnActive: 'ဤကော်လံဖြင့် ဒေတာစစ်ထုတ်ရန်၊ စစ်ထုတ်မှု အသက်ဝင်နေသည်',
         expandRow: 'ဤအတန်းကို ချဲ့ရန်',
@@ -375,6 +377,7 @@ const local: Locale = {
         search: 'ရှာဖွေပါ',
         replace: 'အစားထိုးမည်',
         replaceAll: 'အားလုံးကို အစားထိုးမည်',
+        replaceWith: 'အစားထိုးမည့်စာသား',
         caseSensitive: 'စာလုံးအကြီးအသေး ကိုက်ညီစေရန်',
         regex: 'ပုံမှန်ဖော်ပြချက် (regex) အသုံးပြုရန်',
         wholeWord: 'စကားလုံးတစ်ခုလုံး ကိုက်ညီစေရန်',

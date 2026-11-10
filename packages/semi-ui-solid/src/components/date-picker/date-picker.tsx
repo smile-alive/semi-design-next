@@ -140,7 +140,6 @@ const defaultProps = {
     autoAdjustOverflow: true,
     stopPropagation: true,
     motion: true,
-    prefixCls: cssClasses.PREFIX,
     presetPosition: 'bottom',
     type: 'date',
     size: 'default',
@@ -260,7 +259,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
         'placeholder',
         'position',
         'prefix',
-        'prefixCls',
         'presetPosition',
         'presets',
         'preventScroll',
@@ -687,7 +685,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const renderFooter = () => (
         <Show when={isConfirmNeeded()}>
-            <Footer disabledConfirm={isRangeType(local.type) && !isRangeValueComplete(state().cachedSelectedValue)} locale={locale().locale} prefixCls={local.prefixCls} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />
+            <Footer disabledConfirm={isRangeType(local.type) && !isRangeValueComplete(state().cachedSelectedValue)} locale={locale().locale} prefixCls={cssClasses.PREFIX} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />
         </Show>
     );
 
@@ -753,7 +751,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 {...rest}
                 // setRoot runs first and adds the handle methods, so the consumer gets a DatePickerElement
                 ref={untrack(() => mergeRefs<HTMLDivElement>(setRoot, local.ref as Ref<HTMLDivElement> | undefined))}
-                class={clsx(local.class, local.prefixCls)}
+                class={clsx(local.class, cssClasses.PREFIX)}
                 style={local.style}
                 aria-labelledby={isRange() ? local['aria-labelledby'] : undefined}
                 role={isRange() ? (rest.role ?? 'group') : namedRole({ role: rest.role, 'aria-label': rest['aria-label'] })}

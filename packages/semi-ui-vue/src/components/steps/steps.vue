@@ -19,7 +19,6 @@
         status: () => semiDefault('Steps', 'status', 'process'),
         size: () => semiDefault('Steps', 'size', 'default'),
         hasLine: () => semiDefault('Steps', 'hasLine', true),
-        prefixCls: () => semiDefault('Steps', 'prefixCls', stepsClasses.PREFIX),
         onChange: undefined,
         'onUpdate:current': undefined,
     });
@@ -32,7 +31,7 @@
     const onUpdateCurrent = computed(() => props['onUpdate:current'] ?? readSemiDefault(semi, 'Steps', 'onUpdate:current'));
 
     const rootClass = computed(() => {
-        const prefixCls = props.prefixCls;
+        const prefixCls = stepsClasses.PREFIX;
         const sized = { [`${prefixCls}-${props.size}`]: props.size !== 'default' };
         switch (props.type) {
             case 'basic':
@@ -51,7 +50,6 @@
             current: props.current,
             initial: props.initial,
             status: props.status,
-            prefixCls: props.prefixCls,
             clickable: Boolean(onChange.value || onUpdateCurrent.value),
         })),
         change(stepNumber) {

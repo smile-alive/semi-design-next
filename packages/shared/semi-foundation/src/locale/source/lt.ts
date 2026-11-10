@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Pasirinkti visas eilutes',
         selectRow: 'Pasirinkti šią eilutę',
+        scrollRegion: 'Slenkamas lentelės turinys',
+        untitledColumn: 'Stulpelis be pavadinimo',
         filterColumn: 'Filtruoti duomenis pagal šį stulpelį',
         filterColumnActive: 'Filtruoti duomenis pagal šį stulpelį, filtras taikomas',
         expandRow: 'Išskleisti šią eilutę',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Ieškoti',
         replace: 'Pakeisti',
         replaceAll: 'Pakeisti viską',
+        replaceWith: 'Pakeisti į',
         caseSensitive: 'Skirti didžiąsias ir mažąsias raides',
         regex: 'Naudoti reguliarųjį reiškinį',
         wholeWord: 'Atitikti visą žodį',

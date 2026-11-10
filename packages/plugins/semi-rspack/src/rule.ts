@@ -4,7 +4,7 @@ import type { SemiWebpackPluginOptions } from './types';
 
 export function createSourceSuffixLoaderRule(_opts?: SemiWebpackPluginOptions) {
     return {
-        test: /@fibrae(\/|\\)+semi-(ui-react|ui-vue|ai-react|ai-vue|icons-react|icons-vue)(\/|\\)+.+\.js$/,
+        test: /@fibrae(\/|\\)+semi-(ui-react|ui-vue|ui-solid|ui-svelte|ai-react|ai-vue|ai-solid|ai-svelte|icons-react|icons-vue|icons-solid|icons-svelte)(\/|\\)+.+\.js$/,
         use: [{ loader: SOURCE_SUFFIX_LOADER }],
     };
 }
@@ -15,7 +15,7 @@ export function createThemeLoaderRule(opts?: SemiWebpackPluginOptions) {
         cssLayer: opts.cssLayer,
     };
     return {
-        test: /@fibrae(\/|\\)+semi-(ui-react|ui-vue|ai-react|ai-vue|icons-core|icons-vue|foundation|ai-foundation)(\/|\\)+dist(\/|\\)+.+\.scss$/,
+        test: /@fibrae(\/|\\)+semi-(ui-react|ui-vue|ui-solid|ui-svelte|ai-react|ai-vue|ai-solid|ai-svelte|icons-core|icons-vue|icons-solid|icons-svelte|foundation|ai-foundation)(\/|\\)+dist(\/|\\)+.+\.scss$/,
         use: [{ loader: SCSS_LOADER, options }],
     };
 }
@@ -23,7 +23,7 @@ export function createThemeLoaderRule(opts?: SemiWebpackPluginOptions) {
 export function createOmitCssLoaderRule(_opts?: SemiWebpackPluginOptions) {
     return {
         // CSS imports live in each component's JS, not in env.js
-        test: /@fibrae(\/|\\)+semi-(ui-react|ui-vue|ai-react|ai-vue|icons-react|icons-vue)(\/|\\)+dist(\/|\\)+.+\.js$/,
+        test: /@fibrae(\/|\\)+semi-(ui-react|ui-vue|ui-solid|ui-svelte|ai-react|ai-vue|ai-solid|ai-svelte|icons-react|icons-vue|icons-solid|icons-svelte)(\/|\\)+dist(\/|\\)+.+\.js$/,
         use: [{ loader: OMIT_CSS_LOADER }],
     };
 }

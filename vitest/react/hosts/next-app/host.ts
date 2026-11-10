@@ -451,11 +451,5 @@ export default {
         // an app with the other variants
         variant('rsc', { files: { 'app/rsc/page.jsx': rscPageSource }, webpack: true, pages: [rscPage] }),
     ],
-    expectedFailures: [
-        // Dev only, prod passes: the Server Component's <Button> reaches the browser's Tooltip as a lazy RSC element, which
-        // isValidElement() rejects, so the client wraps it in a span the server did not render. The runner keeps only the
-        // first 400 characters of a console message, which end before React's markup diff, so the evidence is the generic
-        // message; the page has one Tooltip, the only known cause
-        { check: 'rsc/dev/rsc/console', issue: 'Tooltip（及 Popover、Dropdown）', evidence: "Hydration failed because the server rendered HTML didn't match the client" },
-    ],
+    expectedFailures: [],
 } satisfies Host;

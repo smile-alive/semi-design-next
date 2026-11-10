@@ -4,6 +4,7 @@ import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/co
 import { getNextSortOrder } from '@fibrae/semi-foundation/components/table/utils';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconCaretup, IconCaretdown } from '@fibrae/semi-icons-react';
+import { hasContent } from '../../utils';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';
 import type { SortIcon, SortOrder } from './interface';
@@ -52,7 +53,8 @@ function ColumnSorter({ prefixCls = cssClasses.PREFIX, onClick = noop, sortOrder
     };
 
     const sorter = (
-        <button type="button" className={`${prefixCls}-column-sorter-wrapper`} onClick={onClick}>
+        // a useFullRender title function leaves the button only the icon; the next sort action then names it
+        <button type="button" className={`${prefixCls}-column-sorter-wrapper`} aria-label={hasContent(title) ? undefined : locale[getNextSortOrder(sortOrder)]} onClick={onClick}>
             {title}
             {renderSortIcon()}
         </button>

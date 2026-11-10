@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Selectează toate rândurile',
         selectRow: 'Selectează acest rând',
+        scrollRegion: 'Conținut derulabil al tabelului',
+        untitledColumn: 'Coloană fără titlu',
         filterColumn: 'Filtrează datele după această coloană',
         filterColumnActive: 'Filtrează datele după această coloană, filtru activ',
         expandRow: 'Extinde acest rând',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Căutare',
         replace: 'Înlocuiește',
         replaceAll: 'Înlocuiește toate',
+        replaceWith: 'Înlocuiește cu',
         caseSensitive: 'Potrivire majuscule/minuscule',
         regex: 'Utilizează expresie regulată',
         wholeWord: 'Potrivire cuvânt întreg',

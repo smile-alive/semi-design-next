@@ -18,10 +18,11 @@
     import slotKind from '../../utils/slot-kind';
     import useConfig from '../config-provider/use-config';
     import Input from '../input';
+    import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';
     import { keepsTypedValue } from '../input/model-modifiers';
-    import useGroupLooks from '../input/use-group-looks';
     import Popover from '../popover';
+    import { provideOptionPrefixContext } from '../select/context';
     import SelectOption from '../select/option.vue';
     import Spin from '../spin';
     import { useNestedPopups } from '../tooltip/context';
@@ -119,6 +120,7 @@
 
     // the Input inside is part of this control, not a member of the group
     provideInputGroupContext(undefined);
+    provideOptionPrefixContext(cssClasses.PREFIX_OPTION);
 
     // Typing re-renders the Input (the list opens and filters), which would write a trimmed or numbered model back over
     // the typed text, so the typed text stays while it normalises to the model.
@@ -232,6 +234,7 @@
         :style="props.dropdownMatchSelectWidth ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined"
         trigger="custom"
         :visible="state.visible"
+        @escKeyDown="foundation.handleEscKeyDown"
     >
         <div
             ref="root"
@@ -307,7 +310,6 @@
                         :disabled="option.disabled"
                         :focused="index === state.focusIndex"
                         :label="option.label ?? option.value"
-                        :prefixCls="cssClasses.PREFIX_OPTION"
                         :semiOptionId="optionId(index)"
                         :showTick="false"
                         :value="option.value"

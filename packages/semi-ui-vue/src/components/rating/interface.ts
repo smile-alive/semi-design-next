@@ -11,7 +11,6 @@ export interface RatingProps {
     disabled?: boolean;
     size?: 'small' | 'default' | number;
     tooltips?: string[];
-    prefixCls?: string;
     autofocus?: boolean;
     preventScroll?: boolean;
     /** Names the radiogroup; without it the name summarizes the value */

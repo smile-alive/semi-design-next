@@ -5,13 +5,13 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | modelValue | Array of the values of the selected items, bound with v-model. Passing it makes the component controlled and its order is the order on the right; undefined returns to uncontrolled. | `TransferValue` | `undefined` |
-| defaultValue | The values selected initially, read once on mount. | `TransferValue` | `semiDefault("Transfer", "defaultValue", [])` |
-| dataSource | Data source: an array of items for list, an array of groups for groupList, or tree data with children for treeList. The tree of a treeList only updates when a new array is passed, changes made in place are not seen. | `TransferDataSource` | `semiDefault("Transfer", "dataSource", [])` |
-| type | Transfer type: list, groupList or treeList. | `TransferType` | `semiDefault("Transfer", "type", "list")` |
+| defaultValue | The values selected initially, read once on mount. | `TransferValue` | `[]` |
+| dataSource | Data source: an array of items for list, an array of groups for groupList, or tree data with children for treeList. The tree of a treeList only updates when a new array is passed, changes made in place are not seen. | `TransferDataSource` | `[]` |
+| type | Transfer type: list, groupList or treeList. | `TransferType` | `"list"` |
 | disabled | Whether the whole transfer is disabled. | `boolean` | `semiGlobalDefault("Transfer", "disabled")` |
 | draggable | Enables drag sorting of the selected items on the right. After a sort, update:modelValue and change carry the new order. | `boolean` | `semiGlobalDefault("Transfer", "draggable")` |
 | loading | Whether the options on the left are loading. | `boolean` | `semiGlobalDefault("Transfer", "loading")` |
-| showPath | treeList only: whether the selected items on the right show their path from the root. | `boolean` | `semiDefault("Transfer", "showPath", false)` |
+| showPath | treeList only: whether the selected items on the right show their path from the root. | `boolean` | `false` |
 | filter | Filtering logic. false hides the search box; a function replaces the default case-insensitive label match and returns true to keep an item. For a custom search in treeList, set it to true and pass the matching function as filterTreeNode in treeProps. | <ApiType detail={"boolean \u007c ((searchValue: string, item: TransferDataItem) => boolean)"}>Type</ApiType> | `undefined` |
 | inputProps | Props passed to the search Input, see Input for the options. Transfer owns its value and change; to search from outside, call the search method. | `TransferInputProps` | `semiGlobalDefault("Transfer", "inputProps")` |
 | treeProps | treeList only: props passed to the Tree on the left, overriding the defaults multiple, disableStrictly, leafOnly, filterTreeNode and defaultExpandAll. Transfer decides the selection, the tree data and the Tree ref, so modelValue, defaultValue, keyMaps, treeData, treeDataSimpleJson, changeWithObject, change listeners and ref are ignored; of the Tree slots only label is forwarded. | `TransferTreeProps` | `semiGlobalDefault("Transfer", "treeProps")` |

@@ -1,6 +1,6 @@
 {
     "table": {
-        "source": "packages/semi-ui-solid/src/components/table/index.tsx",
+        "source": "packages/semi-ui-solid/src/components/table/table.tsx",
         "props": {
             "bordered": { "zh-CN": "是否展示外边框和列边框。", "en-US": "Whether to show the outer border and the column borders." },
             "children": {
@@ -93,7 +93,6 @@
                 "zh-CN": "分页配置，传 `false` 关闭分页。",
                 "en-US": "The pagination configuration. Pass `false` to turn pagination off."
             },
-            "prefixCls": { "zh-CN": "样式名前缀。", "en-US": "The prefix of the class names." },
             "ref": {
                 "zh-CN": "根元素，带有 `getCurrentPageData` 方法，见下方方法。",
                 "en-US": "The root element, which carries the `getCurrentPageData` method below."

@@ -7,7 +7,7 @@ import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
 import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
 import useFoundation from '../../base/use-foundation';
 import Tooltip from '../tooltip';
-import type { AudioPlayerTheme } from './index';
+import type { AudioPlayerTheme } from './audio-player';
 
 interface FoundationProps extends SeekBaseProps {
     onChange?: (value: number) => void;

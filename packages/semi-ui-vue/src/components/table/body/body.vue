@@ -2,17 +2,33 @@
     import { computed, shallowRef, useTemplateRef, watch, type StyleValue } from 'vue';
     import { numbers } from '@fibrae/semi-foundation/components/table/constants';
     import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
-    import { arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize, type ExpandBtnShouldInRowProps, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
+    import {
+        arrayAdd,
+        buildRecordsByKey,
+        expandBtnShouldInRow,
+        flattenBodyRows,
+        getColumnsMinWidth,
+        getRecordKey,
+        getRowSpanHoverKeys,
+        isDisabled,
+        isExpanded,
+        isSelected,
+        resolveVirtualizedItemSize,
+        type ExpandBtnShouldInRowProps,
+        type FlattenData,
+        type GroupFlattenData,
+    } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import useEventListener from '../../../composables/use-event-listener';
     import useRaf from '../../../composables/use-raf';
     import useResizeObserver from '../../../composables/use-resize-observer';
     import VirtualList, { type VirtualListAlign, type VirtualListScrollArgs } from '../../../internal/virtual-list.vue';
+    import useLocale from '../../locale/use-locale';
     import ColGroup from '../col-group.vue';
     import { useTableContext } from '../context';
     import type { ColumnProps } from '../interface';
-    import TableHeader from '../table-header.vue';
+    import TableHeader from '../table-header/table-header.vue';
     import { toElement } from '../utils';
     import BaseRow from './base-row.vue';
     import ExpandedRow from './expanded-row.vue';
@@ -35,8 +51,15 @@
     defineSlots<{ empty?(): unknown }>();
 
     const table = useTableContext();
+    const locale = useLocale('Table');
 
     const bodyRef = useTemplateRef('body');
+
+    // <component :is> renders the configured body table, a component or a tag, so vue-tsc cannot infer the ref.
+    const tableRef = useTemplateRef<unknown>('bodyTable');
+
+    // whether the body overflows, so it takes keyboard focus to scroll; known after mount
+    const overflows = shallowRef(false);
 
     // A function ref, not a string ref: under the one-item v-for Vue collects a string ref into an array and pushes into
     // it in place when the list remounts (virtualized off and on), so the watch sources below would never see the new list
@@ -167,6 +190,16 @@
         return `${item.sectionRow ? 'section' : item.expandedRow ? 'expanded' : 'base'}:${item.key}`;
     };
 
+    const measureOverflow = () => {
+        const node = bodyRef.value;
+        if (node) {
+            overflows.value = node.scrollWidth > node.clientWidth || node.scrollHeight > node.clientHeight;
+        }
+    };
+
+    // a scrolling body must be keyboard reachable even without a focusable cell
+    const scrollable = () => Boolean(table.view.value.scroll?.y) || overflows.value;
+
     useResizeObserver(
         () => (table.view.value.scroll?.y ? bodyElement() : null),
         () =>
@@ -177,6 +210,11 @@
                 }
             })
     );
+
+    // a scroll.y body scrolls anyway; the table is observed too, as new columns or rows can overflow the body without
+    // resizing it
+    useResizeObserver(() => (table.view.value.scroll?.y ? null : bodyRef.value), measureOverflow);
+    useResizeObserver(() => (table.view.value.scroll?.y ? null : toElement(tableRef.value)), measureOverflow);
 
     // The virtual list's scroll event is the vertical offset only; the horizontal offset syncs the header from the
     // scroll container's own event
@@ -235,18 +273,20 @@
             </VirtualList>
         </template>
     </template>
-    <!-- overflow is auto rather than scroll: with only scroll.y no horizontal scrollbar shows -->
+    <!-- overflow is auto rather than scroll: with only scroll.y no horizontal scrollbar shows; a group between the role="table" container and the rows of a split table would break the table -->
     <div
         v-else
         ref="body"
+        :aria-label="scrollable() && !table.view.value.splitTable ? locale.locale.scrollRegion : undefined"
         :class="`${table.view.value.prefixCls}-body`"
+        :role="scrollable() && !table.view.value.splitTable ? 'group' : undefined"
         :style="{ maxHeight: toCssLength(table.view.value.scroll?.y), overflow: table.view.value.anyColumnFixed && props.dataSource.length ? 'auto' : undefined }"
-        :tabindex="table.view.value.scroll?.y ? 0 : undefined"
+        :tabindex="scrollable() ? 0 : undefined"
         @mouseleave="highlighted = new Set()"
         @scroll="table.handleBodyScroll"
     >
         <!-- a table, not a grid: the cells have no arrow-key navigation; with a separate header the container is the table -->
-        <component :is="table.view.value.components.body.outer" :class="outerClass" :role="table.view.value.splitTable ? 'none' : 'table'" :style="{ width: toCssLength(table.view.value.scroll?.x) }" v-bind="props.tableAttrs">
+        <component :is="table.view.value.components.body.outer" ref="bodyTable" :class="outerClass" :role="table.view.value.splitTable ? 'none' : 'table'" :style="{ width: toCssLength(table.view.value.scroll?.x), minWidth: toCssLength(getColumnsMinWidth(table.view.value.flattenedColumns)) }" v-bind="props.tableAttrs">
             <ColGroup :col="table.view.value.components.body.colgroup.col" :columns="props.columns" :prefixCls="table.view.value.prefixCls" :wrapper="table.view.value.components.body.colgroup.wrapper" />
             <!-- without a header the fixed columns still need its measured widths for their offsets -->
             <TableHeader v-if="props.includeHeader && (table.view.value.showHeader || table.view.value.anyColumnFixed)" :columns="props.columns" :hidden="!table.view.value.showHeader" />

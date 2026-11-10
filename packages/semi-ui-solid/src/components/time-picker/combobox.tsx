@@ -1,6 +1,6 @@
 import { type JSX, type Ref, Show, createMemo, onCleanup, untrack } from 'solid-js';
 import { pick } from 'es-toolkit';
-import ComboboxFoundation, { type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+import { applyItem, getOptions, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
 import useLocale from '../locale/use-locale';
 import ScrollList, { ScrollItem, type ScrollItemHandle, type ScrollItemProps } from '../scroll-list';
 
@@ -44,7 +44,7 @@ export default function Combobox(props: ComboboxProps) {
 
     // the half day follows the value, so a value changed by typing, by props or by the time zone cannot leave it stale
     // picked, not spread: reading the slot props would create their nodes
-    const options = createMemo(() => ComboboxFoundation.getOptions(pick(props, ['timeStampValue', 'format', 'use12Hours', 'defaultIsAM', 'hideDisabledOptions', 'hourStep', 'minuteStep', 'secondStep', 'disabledHours', 'disabledMinutes', 'disabledSeconds'])));
+    const options = createMemo(() => getOptions(pick(props, ['timeStampValue', 'format', 'use12Hours', 'defaultIsAM', 'hideDisabledOptions', 'hourStep', 'minuteStep', 'secondStep', 'disabledHours', 'disabledMinutes', 'disabledSeconds'])));
 
     const ampmOptions = (): AMPMOptionItem[] => options().ampm.list.map(({ value }) => ({ value, text: locale().locale[value] }));
 
@@ -58,14 +58,14 @@ export default function Combobox(props: ComboboxProps) {
 
     const select = (type: ColumnType) => (item: { value: string }) =>
         props.onChange?.({
-            timeStampValue: Number(ComboboxFoundation.applyItem(props.timeStampValue as TimeStamp, type, item.value, Boolean(props.use12Hours), options().isAM)),
+            timeStampValue: Number(applyItem(props.timeStampValue as TimeStamp, type, item.value, Boolean(props.use12Hours), options().isAM)),
         });
 
     // accessors, not values: the column is created once and its props stay live
     const column = (type: ColumnType, data: () => { name: string; list: ScrollItemProps['list']; selectedIndex: number }, transform?: (text: string) => string) => {
         // runs in the Show that holds the column, so reselect never reaches a removed column
         onCleanup(() => delete columns[type]);
-        return <ScrollItem ref={(handle) => (columns[type] = handle)} type={type} class={listCls(type)} aria-label={data().name} list={data().list} mode="normal" selectedIndex={data().selectedIndex} transform={transform} onSelect={select(type)} {...itemProps()} />;
+        return <ScrollItem ref={(handle) => (columns[type] = handle)} class={listCls(type)} aria-label={data().name} list={data().list} mode="normal" selectedIndex={data().selectedIndex} transform={transform} onSelect={select(type)} {...itemProps()} />;
     };
 
     // delivered once while created, like an element ref

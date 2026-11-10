@@ -21,8 +21,8 @@ import { useCheckboxGroupContext } from './context';
 
 export type CheckboxEventTarget = {
     checked: boolean;
-    value: CheckboxValue | undefined;
-    name: string | undefined;
+    value?: CheckboxValue;
+    name?: string;
     disabled: boolean;
 };
 
@@ -42,7 +42,6 @@ export interface CheckboxProps extends ElementProps<'span', 'onChange' | 'onFocu
     value?: CheckboxValue;
     extra?: JSX.Element;
     onChange?: (event: CheckboxEvent) => any;
-    prefixCls?: string;
     addonId?: string;
     extraId?: string;
     type?: CheckboxType;
@@ -66,9 +65,11 @@ const defaultProps = {
     type: 'default',
 } satisfies Partial<CheckboxProps>;
 
+const prefix = css.PREFIX;
+
 export default function Checkbox(rawProps: CheckboxProps) {
     const props = useDefaultProps('Checkbox', rawProps, defaultProps);
-    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'disabled', 'indeterminate', 'value', 'onChange', 'onClick', 'prefixCls', 'addonId', 'extraId', 'type', 'preventScroll', 'x-semi-children-alias']);
+    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'disabled', 'indeterminate', 'value', 'onChange', 'onClick', 'addonId', 'extraId', 'type', 'preventScroll', 'x-semi-children-alias']);
 
     // The root is a span, so what names, identifies and focuses the checkbox belongs on the native input
     const [control, rest] = splitControlAttrs(attrs, isNativeInputKey);
@@ -128,8 +129,6 @@ export default function Checkbox(rawProps: CheckboxProps) {
     // the native flag is what assistive tech reads as "mixed"; it is a DOM property, not an attribute
     const showMixed = () => Boolean(local.indeterminate && !checked());
 
-    const prefix = () => local.prefixCls || css.PREFIX;
-
     const addonId = () => local.addonId || `addon-${uid}`;
 
     const extraId = () => local.extraId || `extra-${uid}`;
@@ -168,23 +167,23 @@ export default function Checkbox(rawProps: CheckboxProps) {
         <span
             {...rest}
             ref={mergeRefs(local.ref, setup)}
-            class={clsx(prefix(), local.class, {
-                [`${prefix()}-disabled`]: disabled(),
-                [`${prefix()}-indeterminate`]: local.indeterminate,
-                [`${prefix()}-checked`]: checked(),
-                [`${prefix()}-unChecked`]: !checked(),
-                [`${prefix()}-cardType`]: isCardType(),
-                [`${prefix()}-cardType_disabled`]: disabled() && isCardType(),
-                [`${prefix()}-cardType_enable`]: !(disabled() && isCardType()),
-                [`${prefix()}-cardType_checked`]: isCardType() && checked() && !disabled(),
-                [`${prefix()}-cardType_checked_disabled`]: isCardType() && checked() && disabled(),
+            class={clsx(prefix, local.class, {
+                [`${prefix}-disabled`]: disabled(),
+                [`${prefix}-indeterminate`]: local.indeterminate,
+                [`${prefix}-checked`]: checked(),
+                [`${prefix}-unChecked`]: !checked(),
+                [`${prefix}-cardType`]: isCardType(),
+                [`${prefix}-cardType_disabled`]: disabled() && isCardType(),
+                [`${prefix}-cardType_enable`]: !(disabled() && isCardType()),
+                [`${prefix}-cardType_checked`]: isCardType() && checked() && !disabled(),
+                [`${prefix}-cardType_checked_disabled`]: isCardType() && checked() && disabled(),
             })}
             onClick={handleClick}
         >
             <span
-                class={clsx(`${prefix()}-inner`, {
-                    [`${prefix()}-inner-checked`]: checked(),
-                    [`${prefix()}-inner-pureCardType`]: isPureCardType(),
+                class={clsx(`${prefix}-inner`, {
+                    [`${prefix}-inner-checked`]: checked(),
+                    [`${prefix}-inner-pureCardType`]: isPureCardType(),
                 })}
             >
                 <input
@@ -201,7 +200,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
                     disabled={disabled()}
                     value={local.value === undefined ? undefined : String(local.value)}
                 />
-                <span class={`${prefix()}-inner-display`}>
+                <span class={`${prefix}-inner-display`}>
                     <Switch>
                         <Match when={checked()}>
                             <IconCheckboxTick />
@@ -213,17 +212,17 @@ export default function Checkbox(rawProps: CheckboxProps) {
                 </span>
             </span>
             <Show when={hasChildren() || hasExtra()}>
-                <div class={`${prefix()}-content`}>
+                <div class={`${prefix}-content`}>
                     <Show when={hasChildren()}>
-                        <span id={addonId()} class={`${prefix()}-addon`} x-semi-prop={local['x-semi-children-alias'] || 'children'}>
+                        <span id={addonId()} class={`${prefix}-addon`} x-semi-prop={local['x-semi-children-alias'] || 'children'}>
                             {content()}
                         </span>
                     </Show>
                     <Show when={hasExtra()}>
                         <div
                             id={extraId()}
-                            class={clsx(`${prefix()}-extra`, {
-                                [`${prefix()}-cardType_extra_noChildren`]: isCardType() && !hasChildren(),
+                            class={clsx(`${prefix}-extra`, {
+                                [`${prefix}-cardType_extra_noChildren`]: isCardType() && !hasChildren(),
                             })}
                             x-semi-prop="extra"
                         >

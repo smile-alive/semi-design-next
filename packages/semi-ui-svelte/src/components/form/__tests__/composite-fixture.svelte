@@ -1,13 +1,13 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import ArrayField from '../array-field.svelte';
-    import FormInput from '../form-input.svelte';
+    import FormInput from '../fields/form-input.svelte';
     import Form from '../form.svelte';
+    import useForm from '../hooks/use-form.svelte';
     import InputGroup from '../input-group.svelte';
     import type { FormApi } from '../interface';
     import Section from '../section.svelte';
     import Slot from '../slot.svelte';
-    import useForm from '../use-form.svelte';
     import HooksProbe from './hooks-probe.svelte';
 
     let { kind, initValues, onApi, onExternal }: { kind: 'array' | 'arrayFromForm' | 'group' | 'hooks' | 'layout' | 'useForm'; initValues?: Record<string, unknown>; onApi?: (api: FormApi) => void; onExternal?: (external: ReturnType<typeof useForm>) => void } = $props();

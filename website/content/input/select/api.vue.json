@@ -286,7 +286,25 @@
                 "en-US": "Replaces the content of the trigger. The parameters hold the selected options as value, inputValue, placeholder, disabled, componentProps, and the onSearch, onClear and onRemove methods. When onClear is bound to a control inside the trigger, pass the click event so that click does not reopen the dropdown. To keep searching, set filter together with searchPosition as dropdown."
             }
         },
-        "exposed": {}
+        "exposed": {
+            "open": { "zh-CN": "展开下拉列表。", "en-US": "Opens the dropdown." },
+            "close": { "zh-CN": "关闭下拉列表。", "en-US": "Closes the dropdown." },
+            "focus": {
+                "zh-CN": "聚焦选择框。可搜索时聚焦搜索框并展开下拉列表；不可搜索时只聚焦触发器，不展开下拉列表。",
+                "en-US": "Focuses the trigger, or the search input when the Select is searchable. The dropdown opens only when the Select is searchable."
+            },
+            "clearInput": { "zh-CN": "清空搜索框的值。", "en-US": "Clears the value of the search input." },
+            "selectAll": { "zh-CN": "选中所有可见且未禁用的选项，仅多选时有效。", "en-US": "Selects every visible, enabled option. Effective in multiple mode only." },
+            "deselectAll": { "zh-CN": "清空所有已选项。", "en-US": "Clears all selected options." },
+            "search": {
+                "zh-CN": "按输入了该值来搜索，该值会被置给搜索框。不传事件时，`search` 事件的第二个参数为 `undefined`。",
+                "en-US": "Searches as if the value had been typed, and sets it into the search input. Without an event, the second argument of the `search` event is `undefined`."
+            },
+            "rePosition": {
+                "zh-CN": "按触发器当前位置立即重新计算下拉层位置。下拉层已随滚动、窗口尺寸变化、触发器移动以及触发器或列表的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。",
+                "en-US": "Recomputes the dropdown position from the trigger's current position at once. The dropdown already follows scrolling, window resizing, trigger moves and size changes of the trigger or list, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame."
+            }
+        }
     },
     "select-option": {
         "source": "packages/semi-ui-vue/src/components/select/option.vue",
@@ -327,10 +345,6 @@
             "semiOptionId": {
                 "zh-CN": "供 Select 内部使用，选项行的 id，使用方不需要设置。",
                 "en-US": "Used by Select internally as the id of the option row; callers do not set it."
-            },
-            "prefixCls": {
-                "zh-CN": "供 Select 与 AutoComplete 内部使用，选项行的 CSS 类名前缀，使用方不需要设置。",
-                "en-US": "Used by Select and AutoComplete internally as the CSS class prefix of the option row; callers do not set it."
             }
         },
         "events": {

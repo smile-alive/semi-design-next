@@ -598,7 +598,7 @@ type DatePickerTriggerSlotProps = {
     disabled: boolean;
     size: InputSize;
     inputReadOnly: boolean;
-    rangeInputFocus: DatePickerRangeInput | false | undefined;
+    rangeInputFocus?: DatePickerRangeInput | false;
     type: DatePickerType;
     format?: string;
     multiple: boolean;
@@ -626,7 +626,7 @@ interface DatePickerTriggerRenderProps {
     disabled: boolean;
     size: InputSize;
     inputReadOnly: boolean;
-    rangeInputFocus: DatePickerRangeInput | false | undefined;
+    rangeInputFocus?: DatePickerRangeInput | false;
     type: DatePickerType;
     format?: string;
     multiple: boolean;

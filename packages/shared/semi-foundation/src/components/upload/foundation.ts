@@ -477,7 +477,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
     #handleProgress({ e, fileInstance }: { e?: ProgressEvent; fileInstance: File }) {
         const newFileList = this.#getLatestFileList().slice();
         let percent = 0;
-        if (e.total > 0) {
+        if (e?.total > 0) {
             percent = Number(((e.loaded / e.total) * 100 * numbers.PROGRESS_COEFFICIENT).toFixed(0)) || 0;
         }
         const index = this.#getFileIndex(fileInstance, newFileList);

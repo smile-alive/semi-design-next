@@ -15,8 +15,8 @@
                 "en-US": "Custom clear icon, effective when showClear is true."
             },
             "data": {
-                "zh-CN": "候选项的数据源，可以是字符串、数字或对象的数组。对象项的 `value` 是选中值，`label` 是候选行的文本（须提供，标记内容经 `renderItem` 渲染），其余字段原样保留，出现在 `renderItem` 的参数里。需替换为新数组才会更新列表。",
-                "en-US": "Data source of the candidates: an array of strings, numbers or objects. An object item's `value` is the picked value and its `label` is the row text (provide it; markup goes through `renderItem`). Other fields are kept as they are and reach the `renderItem` argument. Pass a new array to update the list."
+                "zh-CN": "候选项的数据源，可以是字符串、数字或对象的数组。对象项的 `value` 是选中值，`label` 是候选行的文本（缺省时显示 `value`，标记内容经 `renderItem` 渲染），其余字段原样保留，出现在 `renderItem` 的参数里。需替换为新数组才会更新列表。",
+                "en-US": "Data source of the candidates: an array of strings, numbers or objects. An object item's `value` is the picked value and its `label` is the row text (`value` when `label` is missing; markup goes through `renderItem`). Other fields are kept as they are and reach the `renderItem` argument. Pass a new array to update the list."
             },
             "defaultActiveFirstOption": {
                 "zh-CN": "面板打开后是否默认高亮第一个候选项，此时按 Enter 可直接选中。",

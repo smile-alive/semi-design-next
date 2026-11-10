@@ -1,4 +1,4 @@
-import type { VNode } from 'vue';
+import type { ComponentPublicInstance, VNode } from 'vue';
 import type { ExclusiveFieldValidation } from '@fibrae/semi-foundation/components/form/interface';
 import type { ElementProps, EmitHandlers, EmitProps } from '../../base/element-props';
 import AutoComplete, { type AutoCompleteEmits, type AutoCompleteHandle, type AutoCompleteItems, type AutoCompleteProps, type AutoCompleteSlots } from '../auto-complete';
@@ -8,7 +8,7 @@ import DatePicker from '../date-picker';
 import Input, { TextArea } from '../input';
 import InputNumber from '../input-number';
 import PinCode from '../pincode';
-import Radio, { RadioGroup } from '../radio';
+import Radio, { type RadioGroupEmits, type RadioGroupProps, type RadioGroupSlots, type RadioValue, RadioGroup } from '../radio';
 import Rating from '../rating';
 import Select, { type BasicSelectValue, type SelectEmits, type SelectHandle, type SelectOptGroup, type SelectOption, type SelectProps, type SelectSlots } from '../select';
 import Slider from '../slider';
@@ -54,6 +54,10 @@ type FormAutoCompleteProps<T extends AutoCompleteItems> = FieldProps<CallSitePro
 
 type FormAutoCompleteComponent = <T extends AutoCompleteItems = AutoCompleteItems>(props: FormAutoCompleteProps<T>, ctx?: GenericFieldContext<AutoCompleteSlots<T>>) => GenericFieldNode<FormAutoCompleteProps<T>, AutoCompleteSlots<T>, AutoCompleteHandle>;
 
+type FormRadioGroupProps<T extends RadioValue> = FieldProps<CallSiteProps<RadioGroupProps<T>, RadioGroupEmits<T>>>;
+
+type FormRadioGroupComponent = <T extends RadioValue = RadioValue>(props: FormRadioGroupProps<T>, ctx?: GenericFieldContext<RadioGroupSlots>) => GenericFieldNode<FormRadioGroupProps<T>, RadioGroupSlots, ComponentPublicInstance>;
+
 type OptionalLatestValues<P> = P extends { onChange?: (event: infer E, latestValues: infer L) => infer R } ? (event: E, latestValues?: L) => R : never;
 
 type FieldPropsOf<C> = InstanceType<FieldComponent<C>>['$props'];
@@ -78,7 +82,7 @@ export const FormCheckbox: OptionalFieldComponent<typeof Checkbox> = withField(C
     valuePath: 'target.checked',
     shouldInject: false,
 });
-export const FormRadioGroup: FieldComponent<typeof RadioGroup> = withField(RadioGroup, { valuePath: 'target.value' });
+export const FormRadioGroup = withField(RadioGroup, { valuePath: 'target.value' }) as unknown as FormRadioGroupComponent;
 export const FormRadio: OptionalFieldComponent<typeof Radio> = withField(Radio, {
     valuePath: 'target.checked',
     shouldInject: false,

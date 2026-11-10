@@ -21,7 +21,7 @@ export type NavLinkOptions = HTMLAnchorAttributes;
 
 export interface NavItemProps extends Omit<HTMLAttributes<HTMLLIElement>, 'children'> {
     disabled?: boolean;
-    indent?: boolean | number;
+    indent?: boolean;
     /** Or'ed with the collapsed state of the Nav */
     isCollapsed?: boolean;
     itemKey?: ItemKey;
@@ -64,7 +64,7 @@ export interface SubNavProps extends Omit<HTMLAttributes<HTMLLIElement>, 'childr
     dropdownProps?: SubDropdownProps;
     /** Wins over the style in dropdownProps */
     dropdownStyle?: string;
-    indent?: boolean | number;
+    indent?: boolean;
     itemKey?: ItemKey;
     level?: number;
     /** Applies when dropdownProps is not given */
@@ -104,7 +104,7 @@ export interface NavItemConfig extends EntryAttributes {
     disabled?: boolean;
     dropdownProps?: SubDropdownProps;
     dropdownStyle?: string;
-    indent?: boolean | number;
+    indent?: boolean;
     isCollapsed?: boolean;
     itemKey?: ItemKey;
     items?: (string | NavItemConfig)[];

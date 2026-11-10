@@ -1,13 +1,13 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+    import type { Setup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
     import { setConfigureContext } from './context.js';
     import type { ConfigureHandle, ConfigureProps } from './interface.js';
 
     let { defaultValue, onChange, children }: ConfigureProps = $props();
 
     // Items register in one mount pass, each merging onto the value the previous one wrote
-    let value = $state.raw<LeftMenuChangeProps>(untrack(() => ({ ...defaultValue })));
+    let value = $state.raw<Setup>(untrack(() => ({ ...defaultValue })));
 
     setConfigureContext({
         get view() {

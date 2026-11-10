@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { useFieldApi, useFieldState, useFormApi, useFormState } from '../hooks';
+    import { useFieldApi, useFieldState, useFormApi, useFormState } from '../hooks/index';
 
     let { store, onProbe }: { store: { field: string }; onProbe?: (probe: { formApi: ReturnType<typeof useFormApi>; fieldApi: ReturnType<typeof useFieldApi>; formState: ReturnType<typeof useFormState> }) => void } = $props();
 

@@ -3,7 +3,7 @@ import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { type CheckboxEvent, type CheckboxProps, Checkbox } from '../checkbox';
 
-export interface TableSelectionCellProps {
+export interface ColumnSelectionProps {
     getCheckboxProps?: () => CheckboxProps;
     onChange?: (checked: boolean, e: CheckboxEvent) => void;
     onKeyUp?: React.KeyboardEventHandler<HTMLSpanElement>;
@@ -15,7 +15,7 @@ export interface TableSelectionCellProps {
     'aria-label'?: React.AriaAttributes['aria-label'];
 }
 
-export default function TableSelectionCell(props: TableSelectionCellProps) {
+export default function ColumnSelection(props: ColumnSelectionProps) {
     const { selected, getCheckboxProps, indeterminate, disabled = false, prefixCls = cssClasses.PREFIX, className, onChange = noop, onKeyUp } = props;
 
     let checkboxProps: CheckboxProps = {

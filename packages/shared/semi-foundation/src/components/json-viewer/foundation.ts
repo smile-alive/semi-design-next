@@ -1,11 +1,8 @@
 import { isEqual, omitBy } from 'es-toolkit';
-import { type JsonViewerOptions, type CustomRenderRule, type TokenRenderType, JsonViewer } from '@fibrae/semi-json-viewer-core';
+import { type JsonViewerOptions, type CustomRenderRule, type FindMatch, type TokenRenderType, JsonViewer } from '@fibrae/semi-json-viewer-core';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
 import { cssClasses } from './constants';
-export type { JsonViewerOptions, CustomRenderRule, TokenRenderType };
-
-// the core exports no FindMatch type
-type SearchResults = NonNullable<ReturnType<JsonViewer['getSearchWidget']>['searchResults']>;
+export type { JsonViewerOptions, CustomRenderRule, FindMatch, TokenRenderType };
 
 export interface SearchOptions {
     caseSensitive: boolean;
@@ -222,7 +219,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
     };
 
     /** `null` when nothing was searched (or the bar was closed), `undefined` while there is no editor */
-    getSearchResults = (): SearchResults | null | undefined => {
+    getSearchResults = (): FindMatch[] | null | undefined => {
         return this.#jsonViewer?.getSearchWidget().searchResults;
     };
 }

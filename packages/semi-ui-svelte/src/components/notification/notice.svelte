@@ -98,6 +98,8 @@
 
     const handleAnimationEnd = (event: AnimationEvent) => {
         if (event.target !== event.currentTarget) return;
+        // several animations on one element end separately; the run ends with the last one
+        if (outer?.getAnimations().some((animation) => 'animationName' in animation && animation.playState === 'running')) return;
         if (!leaving) {
             entered = true;
         } else if (!event.animationName || /Hide|collapse/.test(event.animationName)) {

@@ -5,7 +5,7 @@
     import type { ElementProps } from '../../base/element-props';
     import type { SkeletonParagraphProps } from './interface';
 
-    const props = withDefaults(defineProps<SkeletonParagraphProps & /* @vue-ignore */ ElementProps<'ul', keyof SkeletonParagraphProps>>(), { prefixCls: cssClasses.PREFIX, rows: 4 });
+    const props = withDefaults(defineProps<SkeletonParagraphProps & /* @vue-ignore */ ElementProps<'ul', keyof SkeletonParagraphProps>>(), { rows: 4 });
 
     // Array.from rounds a fractional count and yields no rows for NaN or a negative number, where a numeric v-for
     // would throw a RangeError.
@@ -13,7 +13,7 @@
 </script>
 
 <template>
-    <ul aria-hidden="true" :class="`${props.prefixCls}-paragraph`">
+    <ul aria-hidden="true" :class="`${cssClasses.PREFIX}-paragraph`">
         <li v-for="row in rows" :key="row" />
     </ul>
 </template>

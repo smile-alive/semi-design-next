@@ -320,6 +320,7 @@ $colors: 'amber', 'blue', 'cyan', 'green', 'grey', 'indigo', 'light-blue', 'ligh
             @include flex-center;
             padding: $spacing-avatar-bottom_slot_square-paddingY $spacing-avatar-bottom_slot_square-paddingX;
             font-weight: $font-weight-bold;
+            white-space: nowrap;
             background: $color-avatar-bottom_slot_bg;
             border-color: $color-avatar-bottom_slot_square-border;
             border-style: solid;

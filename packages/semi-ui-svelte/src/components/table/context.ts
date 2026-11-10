@@ -16,7 +16,7 @@ export interface MergedTableComponents {
 
 export type TableParts = Readonly<
     Pick<TableProps, 'cell' | 'headerCell' | 'expandedRow' | 'groupSection' | 'sortIcon' | 'filterIcon' | 'filterDropdown' | 'filterDropdownItem' | 'selectionCell' | 'paginationContent' | 'onRow' | 'onHeaderRow' | 'onGroupedRow' | 'groupSectionColumn'> & {
-        expandIcon: Snippet<[TableExpandIconSnippetProps]> | undefined;
+        expandIcon?: Snippet<[TableExpandIconSnippetProps]>;
     }
 >;
 

@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'সব সারি নির্বাচন করুন',
         selectRow: 'এই সারি নির্বাচন করুন',
+        scrollRegion: 'স্ক্রোলযোগ্য টেবিলের বিষয়বস্তু',
+        untitledColumn: 'শিরোনামহীন কলাম',
         filterColumn: 'এই কলাম দিয়ে ডেটা ফিল্টার করুন',
         filterColumnActive: 'এই কলাম দিয়ে ডেটা ফিল্টার করুন, ফিল্টার সক্রিয়',
         expandRow: 'এই সারি প্রসারিত করুন',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'অনুসন্ধান করুন',
         replace: 'প্রতিস্থাপন করুন',
         replaceAll: 'সব প্রতিস্থাপন করুন',
+        replaceWith: 'এটি দিয়ে প্রতিস্থাপন করুন',
         caseSensitive: 'বড় ও ছোট হাতের অক্ষর মিলিয়ে দেখুন',
         regex: 'রেগুলার এক্সপ্রেশন ব্যবহার করুন',
         wholeWord: 'সম্পূর্ণ শব্দ মিলিয়ে দেখুন',

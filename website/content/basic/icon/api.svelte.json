@@ -10,10 +10,6 @@
                 "zh-CN": "双色、多色图标的填充颜色，支持字符串或字符串数组。",
                 "en-US": "Fill colors for bicolor and multicolor icons, as a string or an array of strings."
             },
-            "prefixCls": {
-                "zh-CN": "CSS 类名前缀，可由构建插件改写。",
-                "en-US": "CSS class prefix; build plugins can replace it."
-            },
             "rotate": {
                 "zh-CN": "旋转角度，使用整数（单位为度）。",
                 "en-US": "Rotation angle in integer degrees."

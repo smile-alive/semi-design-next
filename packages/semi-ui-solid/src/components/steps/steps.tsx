@@ -27,14 +27,15 @@ const defaultProps = {
     direction: 'horizontal',
     status: 'process',
     hasLine: true,
-    prefixCls: css.PREFIX,
 } satisfies Partial<AllStepsProps>;
+
+const prefixCls = css.PREFIX;
 
 const isStep = (node: unknown): node is Token<StepProps> => isToken<StepProps>(node, STEP);
 
 export default function Steps(rawProps: StepsProps) {
     const props = useDefaultProps('Steps', rawProps as AllStepsProps, defaultProps);
-    const [local, rest] = splitProps(props, ['children', 'class', 'current', 'direction', 'hasLine', 'initial', 'onChange', 'prefixCls', 'size', 'status', 'type']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'current', 'direction', 'hasLine', 'initial', 'onChange', 'size', 'status', 'type']);
 
     const resolved = children(() => local.children);
 
@@ -45,7 +46,7 @@ export default function Steps(rawProps: StepsProps) {
     const steps = createMemo(() => nodes().flatMap((node) => (isStep(node) ? [node] : [])));
 
     const rootClass = () => {
-        const { prefixCls, direction, size } = local;
+        const { direction, size } = local;
         const sized = { [`${prefixCls}-${size}`]: size !== 'default' };
         switch (local.type) {
             case 'basic':
@@ -69,7 +70,7 @@ export default function Steps(rawProps: StepsProps) {
             state,
             number: () => `${stepNumber() + 1}`,
             onChange: () => (local.onChange ? change : undefined),
-            nextErrorClass: () => (state().nextError ? clsx(token.props.class, `${local.prefixCls}-next-error`) : undefined),
+            nextErrorClass: () => (state().nextError ? clsx(token.props.class, `${prefixCls}-next-error`) : undefined),
         };
     };
 

@@ -6,7 +6,6 @@ export interface IconProps {
     size?: IconSize;
     spin?: boolean;
     rotate?: number;
-    prefixCls?: string;
     type?: string;
     fill?: string | string[];
 }

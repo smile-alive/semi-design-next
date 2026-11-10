@@ -30,7 +30,7 @@ interface Point {
     y: number;
 }
 
-export interface ImageData {
+export interface NaturalImage {
     originalWidth: number;
     originalHeight: number;
     scale: number;
@@ -62,7 +62,7 @@ export interface CropperState {
 }
 
 export default class CropperFoundation extends BaseFoundation<CropperAdapter<CropperFoundationProps>, CropperFoundationProps, CropperState> {
-    #imgData = {} as ImageData;
+    #naturalImage = {} as NaturalImage;
     #containerData = {} as ContainerData;
     #resizeDir: CornerDir | '' = '';
     #cropperBoxMoveStart: Point = null;
@@ -99,7 +99,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
                 y: imgData.centerPoint.y * ratio,
             },
         };
-        this.#imgData.scale *= ratio;
+        this.#naturalImage.scale *= ratio;
         return newImgData;
     }
 
@@ -154,7 +154,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
     }
 
     #layoutImage() {
-        const { originalWidth: naturalWidth, originalHeight: naturalHeight } = this.#imgData;
+        const { originalWidth: naturalWidth, originalHeight: naturalHeight } = this.#naturalImage;
         const { width: containerWidth, height: containerHeight } = this.#containerData;
         let scale = 1;
         let imgWidth: number;
@@ -168,7 +168,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             imgWidth = naturalWidth * scale;
             imgHeight = containerHeight;
         }
-        this.#imgData.scale = scale;
+        this.#naturalImage.scale = scale;
         // a replacement image keeps the current zoom, which #syncRotateAndZoom would not re-apply
         const { zoom } = this.getStates();
         const newImgDataState: ImageDataState = {
@@ -820,8 +820,8 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         }
         const { naturalWidth, naturalHeight } = target;
         this.#containerData = this.#readContainerSize();
-        this.#imgData.originalWidth = naturalWidth;
-        this.#imgData.originalHeight = naturalHeight;
+        this.#naturalImage.originalWidth = naturalWidth;
+        this.#naturalImage.originalHeight = naturalHeight;
         // the preview img is built first so the layout writes below size it
         this.#renderPreview();
         this.#layoutImage();
@@ -963,19 +963,19 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         const angle = (rotate * Math.PI) / 180;
         const sine = Math.abs(Math.sin(angle));
         const cosine = Math.abs(Math.cos(angle));
-        const imgWidth = this.#imgData.originalWidth;
-        const imgHeight = this.#imgData.originalHeight;
+        const imgWidth = this.#naturalImage.originalWidth;
+        const imgHeight = this.#naturalImage.originalHeight;
         const containerWidth = imgWidth * cosine + imgHeight * sine;
         const containerHeight = imgHeight * cosine + imgWidth * sine;
 
         // when the crop area does not intersect the bounding box, the result is a blank image
-        const cropperContainerWidth = containerWidth * zoom * this.#imgData.scale;
-        const cropperContainerHeight = containerHeight * zoom * this.#imgData.scale;
+        const cropperContainerWidth = containerWidth * zoom * this.#naturalImage.scale;
+        const cropperContainerHeight = containerHeight * zoom * this.#naturalImage.scale;
         const cropperContainerTop = imgData.centerPoint.y - cropperContainerHeight / 2;
         const cropperContainerLeft = imgData.centerPoint.x - cropperContainerWidth / 2;
         const cropperBoxLeft = cropperBox.centerPoint.x - cropperBox.width / 2;
         const cropperBoxTop = cropperBox.centerPoint.y - cropperBox.height / 2;
-        const realZoom = zoom * this.#imgData.scale;
+        const realZoom = zoom * this.#naturalImage.scale;
 
         const relativeCropLeft = (cropperBoxLeft - cropperContainerLeft) / realZoom;
         const relativeCropTop = (cropperBoxTop - cropperContainerTop) / realZoom;

@@ -1,6 +1,6 @@
 import { expect, it } from 'vite-plus/test';
 import { renderServer } from '@test/solid/ssr.solid';
-import { Copyable } from '../copyable';
+import Copyable from '../copyable';
 import type { CopyableConfig } from '../interface';
 import Numeral from '../numeral';
 

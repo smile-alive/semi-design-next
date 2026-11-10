@@ -4,13 +4,13 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| color | Preset background color of the avatar. | `AvatarColor` | `semiDefault("Avatar", "color", "grey")` |
+| color | Preset background color of the avatar. | `AvatarColor` | `"grey"` |
 | shape | Avatar shape: circle or square. | `AvatarShape` | `undefined` |
 | size | Avatar size, as a preset name or a valid CSS size. | `string` | `undefined` |
 | src | Image source URL. | `string` | `semiGlobalDefault("Avatar", "src")` |
 | srcSet | Responsive image sources. | `string` | `semiGlobalDefault("Avatar", "srcSet")` |
 | alt | Alternative text for the avatar image or text. | `string` | `semiGlobalDefault("Avatar", "alt")` |
-| gap | Space in pixels between the text and either side of the avatar. | `number` | `semiDefault("Avatar", "gap", 3)` |
+| gap | Space in pixels between the text and either side of the avatar. | `number` | `3` |
 | imgAttr | Native attributes applied to the inner img element. | `ImgHTMLAttributes` | `semiGlobalDefault("Avatar", "imgAttr")` |
 | topSlot | Gradient, text color, class and style of the top badge; use the topSlotText slot for its content. | `AvatarTopSlot` | `semiGlobalDefault("Avatar", "topSlot")` |
 | bottomSlot | Shape, background color, text color, class and style of the bottom badge; use the bottomSlotText slot for its content. | `AvatarBottomSlot` | `semiGlobalDefault("Avatar", "bottomSlot")` |

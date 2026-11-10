@@ -11,10 +11,11 @@
     import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
     import slotKind from '../../utils/slot-kind';
     import useLocale from '../locale/use-locale';
+    import useGroupLooks from './composables/use-group-looks';
+    import useTextEntry from './composables/use-text-entry';
+    import { provideInputGroupContext } from './context';
     import type { InputEmits, InputHandle, InputProps, InputSlots, InputState } from './interface';
     import { defersUpdate } from './model-modifiers';
-    import useGroupLooks from './use-group-looks';
-    import useTextEntry from './use-text-entry';
 
     interface FoundationProps extends InputProps {
         value?: string | number;
@@ -71,6 +72,9 @@
 
     const prefix = cssClasses.PREFIX;
     const getLength = computed(() => props.getValueLength ?? readSemiDefault(semi, 'Input', 'getValueLength'));
+
+    // controls in the addons and adornments (a Button in the suffix) are not members of the group
+    provideInputGroupContext(undefined);
 
     const focusInput = () => inputEl.value?.focus({ preventScroll: props.preventScroll });
 

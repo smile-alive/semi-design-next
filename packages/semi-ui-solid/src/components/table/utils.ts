@@ -1,6 +1,5 @@
 import { isServer } from 'solid-js/web';
-// compat merge accepts an undefined source and deep-merges the component maps, keeping component functions as they are
-import { merge } from 'es-toolkit/compat';
+import { merge } from 'es-toolkit';
 import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
 import { getDefaultComponents } from '@fibrae/semi-foundation/components/table/utils';
 import isMarkup from '../../utils/is-markup';
@@ -19,7 +18,8 @@ export interface MergedTableComponents {
 }
 
 export function mergeComponents(components: TableComponents | undefined, virtualized: boolean): MergedTableComponents {
-    return merge(getDefaultComponents(virtualized), components);
+    // The framework-agnostic defaults are typed as plain strings; they are intrinsic tag names
+    return merge(getDefaultComponents(virtualized), components ?? {}) as MergedTableComponents;
 }
 
 /** Deep clone that keeps functions and DOM nodes (JSX a column or record holds) as they are; the server has no DOM nodes */

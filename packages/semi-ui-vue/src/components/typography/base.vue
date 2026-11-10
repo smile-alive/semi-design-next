@@ -3,7 +3,8 @@
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
-    import { canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
+    import { canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
+    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
     import { hasClickListener } from '../../utils/control-attrs';
@@ -103,9 +104,7 @@
     }));
 
     const expandButton = computed(() => getExpandButton(view.value, opt.value));
-
-    // an expanded text that cannot collapse lost its button, so the text takes its focus
-    const focusTarget = computed(() => view.value.expanded && expandButton.value === undefined);
+    const focusTarget = computed(() => isExpandFocusTarget(view.value, opt.value));
 
     const ellipsisClass = computed(() => {
         if (!hasEllipsis.value) return [];
@@ -176,12 +175,12 @@
     const toggle = (e: MouseEvent) => {
         const { expanded } = view.value;
         emit('expand', !expanded, e);
-        const { expandable, collapsible, collapseText } = opt.value;
+        const { expandable, collapsible } = opt.value;
         if (!((expandable && !expanded) || (collapsible && expanded))) return;
+        const button = e.currentTarget as HTMLElement;
+        const held = button === FocusTrapHandle.getActiveElement(button);
         update({ expanded: !expanded });
-        if (!expanded && collapseText === undefined && e.currentTarget === FocusTrapHandle.getActiveElement(e.currentTarget as Element)) {
-            void nextTick(() => content.value?.root?.focus());
-        }
+        if (held) void nextTick(() => handoverFocus(button, content.value?.root));
     };
 
     const activateLink = (e: KeyboardEvent) => {
@@ -248,7 +247,8 @@
             nodes: nodes.value,
             format: props.format,
             hasEllipsis: hasEllipsis.value,
-            showFull: view.value.expanded || !view.value.isTruncated,
+            // an uncut text keeps its own nodes, so the first frame of a truncation does not flatten elements into text
+            showFull: view.value.expanded || !view.value.isTruncated || view.value.ellipsisContent === text.value.text,
             ellipsisText: view.value.ellipsisContent,
             suffix: hasEllipsis.value ? opt.value.suffix : '',
             decorations: tags,

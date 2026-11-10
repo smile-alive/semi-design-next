@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { AIChatInput, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-svelte';
+    import { AIChatInput, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-svelte';
     import { Cascader } from '@fibrae/semi-ui-svelte';
 
     const uploadProps = { action: 'https://api.semi.design/upload' };
@@ -19,7 +19,7 @@
         },
     ];
 
-    const onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+    const onConfigureChange = (value: Setup, changedValue?: Setup) => {
         console.log('onConfigureChange', value, changedValue);
     };
 </script>

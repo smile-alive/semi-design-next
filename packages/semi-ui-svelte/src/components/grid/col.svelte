@@ -6,23 +6,9 @@
     import type { ColProps } from './interface.js';
 
     const defaults = useDefaultProps('Col');
+    let { span = defaults('span'), order = defaults('order'), offset = defaults('offset'), push = defaults('push'), pull = defaults('pull'), xs = defaults('xs'), sm = defaults('sm'), md = defaults('md'), lg = defaults('lg'), xl = defaults('xl'), xxl = defaults('xxl'), children, ...rest }: ColProps = $props();
 
-    let {
-        prefixCls = defaults('prefixCls', cssClasses.PREFIX),
-        span = defaults('span'),
-        order = defaults('order'),
-        offset = defaults('offset'),
-        push = defaults('push'),
-        pull = defaults('pull'),
-        xs = defaults('xs'),
-        sm = defaults('sm'),
-        md = defaults('md'),
-        lg = defaults('lg'),
-        xl = defaults('xl'),
-        xxl = defaults('xxl'),
-        children,
-        ...rest
-    }: ColProps = $props();
+    const prefixCls = cssClasses.PREFIX;
 </script>
 
 <div {...rest} class={[getColClassName(prefixCls, { span, order, offset, push, pull, xs, sm, md, lg, xl, xxl }), rest.class]} x-semi-prop="children">

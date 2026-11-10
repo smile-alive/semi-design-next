@@ -1,6 +1,6 @@
 {
     "steps": {
-        "source": "packages/semi-ui-react/src/components/steps/index.tsx",
+        "source": "packages/semi-ui-react/src/components/steps/steps.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "步骤条的可访问名称，传入后根元素带 `role=\"group\"`。",
@@ -31,7 +31,6 @@
                 "zh-CN": "选择步骤时调用，参数为该步骤的序号（`initial` 加索引）；点击当前步骤不调用。传入后所有步骤变为可点击。",
                 "en-US": "Called when a step is selected, with its number (`initial` plus index); not called for the current step. Passing it makes every step clickable."
             },
-            "prefixCls": { "zh-CN": "类名前缀，内部用于生成样式类名。", "en-US": "Class name prefix, used internally to generate style class names." },
             "ref": { "zh-CN": "根元素（`div`）的引用。", "en-US": "Reference to the root element (`div`)." },
             "size": {
                 "zh-CN": "尺寸，可选 `small` 或 `default`，未设置时为 `default`。用于 `basic` 与 `nav` 类型。",

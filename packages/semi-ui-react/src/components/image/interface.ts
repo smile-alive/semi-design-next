@@ -6,7 +6,7 @@ import type { BaseProps } from '../../base/base-props';
 
 export type { RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 
-export interface ImageProps extends BaseProps, React.ImgHTMLAttributes<HTMLImageElement> {
+export interface ImageProps extends Omit<BaseProps, 'children'>, Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'children'> {
     /** Attached to the img, where undeclared attributes land too */
     ref?: React.Ref<HTMLImageElement>;
     src?: string;
@@ -18,7 +18,6 @@ export interface ImageProps extends BaseProps, React.ImgHTMLAttributes<HTMLImage
     preview?: boolean | ImagePreviewProps;
     onClick?: (event: any) => void;
     crossOrigin?: 'anonymous' | 'use-credentials';
-    children?: ReactNode;
     setDownloadName?: (src: string) => string;
     imgStyle?: React.CSSProperties;
     imgCls?: string;

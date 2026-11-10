@@ -19,8 +19,8 @@
     import slotNodes, { hasSlotContent, type KeyedNode } from '../../utils/slot-nodes';
     import useConfig from '../config-provider/use-config';
     import Input from '../input';
+    import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';
-    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover';
     import Tag, { TagGroup, type TagCloseEvent } from '../tag';
@@ -351,6 +351,7 @@
             showClear: false,
             autofocus: props.searchAutoFocus,
             disabled: looks.disabled,
+            size: looks.size,
             onFocus: foundation.handleInputTriggerFocus,
             onBlur: foundation.handleInputTriggerBlur,
         };
@@ -578,6 +579,7 @@
         trigger="custom"
         :visible="view.isOpen"
         @afterClose="foundation.handleAfterClose"
+        @escKeyDown="foundation.close"
         @open="handleOpen"
     >
         <template v-for="(parts, p) in [triggerParts()]" :key="p">
@@ -605,13 +607,16 @@
                         <slot v-else name="insetLabel" />
                     </div>
                     <div :class="`${prefix}-selection`">
+                        <!-- the trigger draws its own clear button and its search text only becomes a search: global TagInput defaults must not add a clear button, drag handles or add-on-blur tags -->
                         <TagInput
                             v-if="triggerSearch && multiple"
                             ref="tagInput"
                             v-bind="comboboxAttrs()"
+                            :addOnBlur="false"
                             aria-autocomplete="list"
                             :autofocus="props.searchAutoFocus"
                             :disabled="looks.disabled"
+                            :draggable="false"
                             :expandRestTagsOnClick="false"
                             :inputValue="view.inputValue"
                             :maxTagCount="props.maxTagCount"
@@ -619,6 +624,7 @@
                             :placeholder="props.placeholder"
                             :preventScroll="props.preventScroll"
                             :restTagsPopoverProps="props.restTagsPopoverProps"
+                            :showClear="false"
                             :showRestTagsPopover="props.showRestTagsPopover"
                             :size="looks.size"
                             @inputChange="search($event)"

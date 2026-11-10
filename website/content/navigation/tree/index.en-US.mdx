@@ -619,9 +619,9 @@ type RenderFullLabelProps = {
         loading: boolean;
     };
     /* Whether the node meets the search conditions */
-    filtered: boolean | undefined;
+    filtered?: boolean;
     /* Current search box input */
-    searchWord: string | undefined;
+    searchWord?: string;
     /* Click the callback of the entire row to control the expansion behavior and selection */
     onClick: (e: MouseEvent) => void;
     /* Multi-select click callback */

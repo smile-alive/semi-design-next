@@ -254,7 +254,7 @@ describe('syncPopup', () => {
         expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
     });
 
-    it('离场中重新打开：旧的离场作废，不报告 afterClose', async () => {
+    it('离场中重新打开：旧的离场作废，重新打开时报告一次 afterClose', async () => {
         const { foundation, adapter, commit, animate } = createFoundation();
         foundation.show();
         commit();
@@ -262,10 +262,11 @@ describe('syncPopup', () => {
         const finish = animate();
         commit();
         foundation.show();
+        expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
         commit();
         await finish();
         expect(adapter.hidePopover).not.toHaveBeenCalled();
-        expect(adapter.notifyAfterClose).not.toHaveBeenCalled();
+        expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
         // the reopening is an opening of its own
         expect(adapter.notifyAfterOpen).toHaveBeenCalledTimes(2);
     });

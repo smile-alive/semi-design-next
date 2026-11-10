@@ -31,7 +31,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | 弹出层显示、进场动画开始时调用，每次打开一次，早于 `afterOpen`；悬停打开后指针已离开而撤回的打开不调用。 | `TooltipProps['onOpen']` | - |
 | onVisibleChange | 弹出层显示或隐藏时的回调；`visible` 受控时只报告用户交互发起的请求，使用方自己改变 `visible` 不触发。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | 弹出层相对触发元素的位置，可选 `top`、`topLeft`、`topRight`、`left`、`leftTop`、`leftBottom`、`right`、`rightTop`、`rightBottom`、`bottom`、`bottomLeft` 或 `bottomRight`。 | `Position` | `"bottom"` |
-| prefixCls | 弹出层类名前缀，设置后弹出层不再带 Popover 的样式。 | `string` | `"semi-popover"` |
 | ref | 接收 Popover 实例的方法，见下方 Methods。 | <ApiType detail={"React.Ref\u003cPopoverHandle>"}>Type</ApiType> | - |
 | returnFocusOnClose | 按 Esc 关闭弹出层后焦点是否回到触发元素。 | `TooltipProps['returnFocusOnClose']` | `true` |
 | role | 弹出层的 role。不传时 trigger 为 click、contextMenu、custom 是 dialog，其余是 tooltip；弹出层只是另一个控件的附属（如 combobox 的下拉）时传 presentation。 | `string` | - |

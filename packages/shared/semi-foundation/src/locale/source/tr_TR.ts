@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Tüm satırları seç',
         selectRow: 'Bu satırı seç',
+        scrollRegion: 'Kaydırılabilir tablo içeriği',
+        untitledColumn: 'Başlıksız sütun',
         filterColumn: 'Verileri bu sütuna göre filtrele',
         filterColumnActive: 'Verileri bu sütuna göre filtrele, filtre etkin',
         expandRow: 'Bu satırı genişlet',
@@ -373,6 +375,7 @@ const local: Locale = {
         search: 'Ara',
         replace: 'Değiştir',
         replaceAll: 'Tümünü değiştir',
+        replaceWith: 'Şununla değiştir',
         caseSensitive: 'Büyük/küçük harf eşleştir',
         regex: 'Normal ifade kullan',
         wholeWord: 'Tam sözcüğü eşleştir',

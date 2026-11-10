@@ -78,9 +78,8 @@ describe('semi-icons-vue', () => {
         const icon = container.querySelector<HTMLElement>('.semi-icon');
         expect(icon).toHaveClass('semi-icon-large', 'semi-icon-spinning');
         expect(icon?.style.transform).toBe('rotate(90deg)');
-        await view.rerender({ style: { transform: 'scale(2)' }, prefixCls: 'custom' });
+        await view.rerender({ style: { transform: 'scale(2)' } });
         expect(icon?.style.transform).toBe('scale(2)');
-        expect(icon).toHaveClass('custom-icon');
     });
 
     it('内置与自定义图标的组件 ref 暴露根 span，保留 elementType', () => {

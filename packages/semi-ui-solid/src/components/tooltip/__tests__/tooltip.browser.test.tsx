@@ -783,4 +783,16 @@ describe('Tooltip 全屏（浏览器）', () => {
         await userEvent.click(button);
         expect(onClick).toHaveBeenCalledTimes(1);
     });
+
+    it('非函数 children 含可聚焦元素时，首个 requestAnimationFrame 内只有一个 Tab 停靠点', async () => {
+        const firstFrame = new Promise<string[]>((resolve) => requestAnimationFrame(() => resolve(Array.from(document.querySelectorAll<HTMLElement>('[tabindex]')).map((el) => `${el.tagName}:${el.getAttribute('tabindex')}`))));
+        render(() => (
+            <Tooltip content="tip">
+                <button type="button">inner</button>
+            </Tooltip>
+        ));
+        expect((await firstFrame).filter((entry) => entry.endsWith(':0'))).toEqual([]);
+        const span = document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`) as HTMLElement;
+        expect(span).toHaveAttribute('tabindex', '-1');
+    });
 });

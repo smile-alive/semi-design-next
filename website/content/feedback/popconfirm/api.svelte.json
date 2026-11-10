@@ -145,10 +145,6 @@
                 "zh-CN": "弹出层相对触发元素的位置，共十二个方向。",
                 "en-US": "Position of the popup relative to the trigger element, in twelve directions."
             },
-            "prefixCls": {
-                "zh-CN": "确认卡片的类名前缀。",
-                "en-US": "Class prefix of the confirmation card."
-            },
             "returnFocusOnClose": {
                 "zh-CN": "关闭后焦点是否回到触发元素；受控的 visible 也照常生效，trigger 为 custom 时不生效。",
                 "en-US": "Whether focus returns to the trigger after closing. It also works with a controlled visible, and has no effect with trigger custom."

@@ -39,8 +39,9 @@ function formatNode(node: React.ReactNode, format: (value: string) => string): R
 function Numeral({ rule = 'text', precision = 0, truncate = 'round', parser, children, ...rest }: NumeralProps) {
     const format = (value: string) => new FormatNumeral(value, rule, precision, truncate, parser).format();
 
+    // Numeral declares no ellipsis: one passed through rest must not truncate a formatted number
     return (
-        <Base {...rest} component={rest.component ?? 'span'}>
+        <Base {...rest} component={rest.component ?? 'span'} ellipsis={false}>
             {formatNode(children, format)}
         </Base>
     );

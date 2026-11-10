@@ -29,7 +29,6 @@
         okButtonProps: semiGlobalDefault('Popconfirm', 'okButtonProps'),
         okText: semiGlobalDefault('Popconfirm', 'okText'),
         okType: () => semiDefault('Popconfirm', 'okType', 'primary'),
-        prefixCls: () => semiDefault('Popconfirm', 'prefixCls', cssClasses.PREFIX),
         showCloseIcon: () => semiDefault('Popconfirm', 'showCloseIcon', true),
         // a confirmation is a dialog whatever opens it, hover and focus included, unlike a plain Popover (F12)
         role: () => semiDefault('Popconfirm', 'role', 'dialog'),
@@ -126,6 +125,7 @@
         stopPropagation: props.stopPropagation,
     }));
 
+    const prefixCls = cssClasses.PREFIX;
     const titleId = `${useId()}-title`;
     const contentId = `${titleId}-content`;
     const popoverVisible = computed(() => (props.visible !== undefined ? props.visible : state.value.visible));
@@ -186,15 +186,15 @@
 </script>
 
 <template>
-    <slot v-if="props.disabled" />
+    <!-- the Popover stays mounted while disabled so toggling it never remounts the trigger; a custom trigger with
+         `visible` false is a Popover that cannot open -->
     <Popover
-        v-else
         ref="popover"
         v-bind="{ ...forwarded, ...dialogNames() }"
         :class="cssClasses.POPOVER"
         :position="popoverPosition"
-        :trigger="props.trigger"
-        :visible="popoverVisible"
+        :trigger="props.disabled ? 'custom' : props.trigger"
+        :visible="!props.disabled && popoverVisible"
         @afterClose="(...args) => emit('afterClose', ...args)"
         @afterOpen="emit('afterOpen')"
         @clickOutSide="(...args) => emit('clickOutSide', ...args)"
@@ -205,30 +205,30 @@
         <slot />
         <template #content="slotProps">
             <!-- Keeps clicks inside the card from click listeners on the document, whatever stopPropagation says. -->
-            <div :class="[props.prefixCls, $attrs.class]" :style="$attrs.style as CSSProperties" @click.stop @vue:before-mount="bindTooltipFocus(slotProps.initialFocusRef)">
-                <div :class="`${props.prefixCls}-inner`">
+            <div :class="[prefixCls, $attrs.class]" :style="$attrs.style as CSSProperties" @click.stop @vue:before-mount="bindTooltipFocus(slotProps.initialFocusRef)">
+                <div :class="`${prefixCls}-inner`">
                     <template v-for="(part, i) in [{ icon: !$slots.icon || hasSlotContent($slots.icon), title: hasTitle(), content: hasContent() }]" :key="i">
-                        <div :class="`${props.prefixCls}-header`">
-                            <i v-if="part.icon" :class="`${props.prefixCls}-header-icon`" x-semi-prop="icon">
+                        <div :class="`${prefixCls}-header`">
+                            <i v-if="part.icon" :class="`${prefixCls}-header-icon`" x-semi-prop="icon">
                                 <slot v-if="$slots.icon" name="icon" />
                                 <IconAlertTriangle v-else size="extra-large" />
                             </i>
-                            <div :class="`${props.prefixCls}-header-body`">
-                                <div v-if="part.title" :id="titleId" :class="`${props.prefixCls}-header-title`" x-semi-prop="title">
+                            <div :class="`${prefixCls}-header-body`">
+                                <div v-if="part.title" :id="titleId" :class="`${prefixCls}-header-title`" x-semi-prop="title">
                                     <slot name="title">{{ props.title }}</slot>
                                 </div>
                             </div>
-                            <Button v-if="props.showCloseIcon" :aria-label="i18n.locale.close" :class="`${props.prefixCls}-btn-close`" size="small" theme="borderless" :type="props.cancelType" @click="foundation.handleCancel">
+                            <Button v-if="props.showCloseIcon" :aria-label="i18n.locale.close" :class="`${prefixCls}-btn-close`" size="small" theme="borderless" :type="props.cancelType" @click="foundation.handleCancel">
                                 <template #icon>
                                     <IconClose />
                                 </template>
                             </Button>
                         </div>
-                        <div v-if="part.content" :id="contentId" :class="[`${props.prefixCls}-body`, { [`${props.prefixCls}-body-withIcon`]: part.icon }]" x-semi-prop="content">
+                        <div v-if="part.content" :id="contentId" :class="[`${prefixCls}-body`, { [`${prefixCls}-body-withIcon`]: part.icon }]" x-semi-prop="content">
                             <slot name="content" v-bind="contentSlotProps" />
                         </div>
                     </template>
-                    <div ref="footer" :class="`${props.prefixCls}-footer`">
+                    <div ref="footer" :class="`${prefixCls}-footer`">
                         <Button v-bind="cancelProps" @click="foundation.handleCancel">
                             {{ props.cancelText || i18n.locale.cancel }}
                         </Button>

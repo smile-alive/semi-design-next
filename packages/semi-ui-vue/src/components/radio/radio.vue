@@ -6,7 +6,7 @@
     import '@fibrae/semi-foundation/components/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
+    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
     import { hasAutofocus, vAutofocus } from '../../utils/autofocus';
     import { isNativeInputKey, splitControlAttrs } from '../../utils/control-attrs';
@@ -37,8 +37,6 @@
         addonClassName: semiGlobalDefault('Radio', 'addonClassName'),
         addonId: undefined,
         extraId: undefined,
-        // Literal undefined: the group's prefixCls must rank above the global default, so the fallback is in `view`.
-        prefixCls: undefined,
         preventScroll: semiGlobalDefault('Radio', 'preventScroll'),
     });
 
@@ -47,7 +45,6 @@
     const attrs = useAttrs();
 
     const group = useRadioGroupContext();
-    const semi = useSemiGlobal();
 
     const inputRef = useTemplateRef('input');
     const uid = useId();
@@ -71,8 +68,7 @@
         }
     );
 
-    const ownPrefixCls = computed(() => props.prefixCls ?? readSemiDefault(semi, 'Radio', 'prefixCls'));
-    const innerPrefix = computed(() => ownPrefixCls.value || radioClasses.PREFIX);
+    const prefix = radioClasses.PREFIX;
     const addonId = computed(() => props.addonId || `addon-${uid}`);
     const extraId = computed(() => props.extraId || `extra-${uid}`);
 
@@ -82,7 +78,6 @@
                 checked: props.modelValue,
                 disabled: props.disabled,
                 mode: props.mode,
-                prefixCls: props.prefixCls ?? group?.view.value.prefixCls ?? readSemiDefault(semi, 'Radio', 'prefixCls'),
                 type: props.type,
                 value: props.value,
             },
@@ -90,8 +85,6 @@
             group ? { mode: group.view.value.mode, radioGroup: group.view.value } : null
         )
     );
-
-    const prefix = computed(() => view.value.prefixCls || radioClasses.PREFIX);
 
     // The radio role supports neither aria-invalid, aria-errormessage nor aria-required (they belong on the radiogroup).
     const controlAttrs = (a: Record<string, unknown>) => Object.fromEntries(Object.entries(splitControlAttrs(a, isNativeInputKey).control).filter(([key]) => !UNSUPPORTED_ARIA.has(key)));
@@ -102,7 +95,7 @@
 
     const describedby = (a: Record<string, unknown>) => joinIds(a['aria-describedby'], hasExtra() ? extraId.value : undefined, a['aria-invalid'] ? a['aria-errormessage'] : undefined);
 
-    const inputName = () => (attrs.name as string | undefined) ?? group?.view.value.name;
+    const inputName = () => group?.view.value.name ?? (attrs.name as string | undefined);
 
     // The browser repeats a click on the label text as a click on the input, so the owner's onClick is forwarded for the
     // input's click only. shortcut: listeners with .once, .capture or .passive modifiers keep the label-level call;
@@ -186,11 +179,11 @@
     >
         <span
             :class="[
-                `${innerPrefix}-inner`,
+                `${prefix}-inner`,
                 {
-                    [`${innerPrefix}-inner-checked`]: view.checked,
-                    [`${innerPrefix}-inner-buttonRadio`]: view.isButtonRadio,
-                    [`${innerPrefix}-inner-pureCardRadio`]: view.isPureCardRadio,
+                    [`${prefix}-inner-checked`]: view.checked,
+                    [`${prefix}-inner-buttonRadio`]: view.isButtonRadio,
+                    [`${prefix}-inner-pureCardRadio`]: view.isPureCardRadio,
                 },
             ]"
         >
@@ -209,7 +202,7 @@
                 @click="handleClick"
                 @keyup="handleKeyUp"
             />
-            <span :class="{ [`${innerPrefix}-inner-display`]: !view.isButtonRadio }">
+            <span :class="{ [`${prefix}-inner-display`]: !view.isButtonRadio }">
                 <IconRadio v-if="view.checked" />
             </span>
         </span>

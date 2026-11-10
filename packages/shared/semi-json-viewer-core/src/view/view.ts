@@ -42,7 +42,7 @@ export class View {
     #errorWidget: ErrorWidget;
     #tokenizationJsonModelPart: TokenizationJsonModelPart;
     #scalingCellSizeAndPositionManager: ScalingCellSizeAndPositionManager;
-    #customRenderRule: CustomRenderRule[];
+    #customRenderRule: CustomRenderRule[] | null;
     #measuredHeights: { [index: number]: number } = {};
     #emitter: Emitter<GlobalEvents> = getEmitter();
     #lineHeight: number;
@@ -490,7 +490,11 @@ export class View {
         this.updateVisibleRange(visibleRange.start + 1, visibleRange.stop + 1);
 
         if (!this.#options?.readOnly) {
-            this.#selectionModel.toViewPosition();
+            // placing the DOM selection inside the editable content focuses it, so searching, replacing or scrolling
+            // from elsewhere would steal focus
+            if ((this.#contentDom.getRootNode() as Document | ShadowRoot).activeElement === this.#contentDom) {
+                this.#selectionModel.toViewPosition();
+            }
             this.#completeWidget.show();
         }
         const totalSize = this.#scalingCellSizeAndPositionManager.getTotalSize();

@@ -7,6 +7,7 @@ import { cssClasses, numbers } from '@fibrae/semi-foundation/components/notifica
 import NotificationFoundation, { type NoticeAdapter, type NoticeProps, type NoticeState } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-react';
+import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import { hasContent, isSemiIcon } from '../../utils';
@@ -18,10 +19,10 @@ type Foundation = NotificationFoundation<NoticeProps>;
 type Adapter = NoticeAdapter<NoticeProps>;
 
 /**
- * Options of one notification, also the props of a Notice. The list sets `close`, `listState`, `ref` and the animation
- * handlers.
+ * Options of one notification, also the props of a Notice; undeclared options land on the notice element (F2, F6). The
+ * list sets `close`, `listState`, `ref` and the animation handlers.
  */
-export interface NoticeReactProps extends NoticeProps {
+export interface NoticeReactProps extends NoticeProps, ElementProps<'div', 'title' | 'content' | 'style' | 'className' | 'id' | 'children' | 'dangerouslySetInnerHTML'> {
     style?: React.CSSProperties;
     title?: React.ReactNode;
     content?: React.ReactNode;

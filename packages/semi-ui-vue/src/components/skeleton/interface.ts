@@ -11,7 +11,6 @@ export interface SkeletonSlots {
 }
 
 export interface SkeletonBasicProps {
-    prefixCls?: string;
     /** Replaces the kit's own type, which also names its class */
     type?: string;
 }
@@ -22,6 +21,5 @@ export interface SkeletonAvatarProps extends SkeletonBasicProps {
 }
 
 export interface SkeletonParagraphProps {
-    prefixCls?: string;
     rows?: number;
 }

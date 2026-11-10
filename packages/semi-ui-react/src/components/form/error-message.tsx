@@ -17,14 +17,20 @@ export interface ErrorMessageProps extends ElementProps<'div'> {
     showValidateIcon?: boolean;
     validateStatus?: string;
     helpText?: React.ReactNode;
-    isInInputGroup?: boolean;
-    errorMessageId?: string;
-    helpTextId?: string;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;
 }
 
-function ErrorMessage({ error, className, style, validateStatus, helpText, showValidateIcon, isInInputGroup, errorMessageId, helpTextId, ref, ...rest }: ErrorMessageProps) {
+/** Set by Form fields and InputGroup, kept out of the public ErrorMessageProps */
+export interface ErrorMessageInternalProps extends ErrorMessageProps {
+    isInInputGroup?: boolean;
+    errorMessageId?: string;
+    helpTextId?: string;
+}
+
+function ErrorMessage(props: ErrorMessageProps) {
+    const { error, className, style, validateStatus, helpText, showValidateIcon, isInInputGroup, errorMessageId, helpTextId, ref, ...rest } = props as ErrorMessageInternalProps;
+
     const messages = errorMessages(error);
     const failed = Boolean(error?.length);
 

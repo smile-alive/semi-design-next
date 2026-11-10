@@ -5,7 +5,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import Dropdown, { DropdownDivider, DropdownItem, DropdownMenu, DropdownTitle, type DropDownMenuItem, type DropdownHandle, type DropdownProps } from '..';
+import Dropdown, { DropdownDivider, DropdownItem, DropdownMenu, DropdownTitle, type DropdownMenuItem, type DropdownHandle, type DropdownProps } from '..';
 import Tag from '../../tag';
 import AllHover from './fixtures/all-hover.vue';
 import Handle from './fixtures/handle.vue';
@@ -219,7 +219,7 @@ describe('Dropdown', () => {
     });
 
     it('Dropdown 数组菜单：未知 node 跳过，未声明字段不报错', async () => {
-        const menu: DropDownMenuItem[] = [
+        const menu: DropdownMenuItem[] = [
             { node: 'title', name: '分组1' },
             { node: 'item', name: 'primary1', type: 'primary', onClick: () => {} },
             { node: 'item', name: 'secondary', type: 'secondary' },
@@ -232,7 +232,7 @@ describe('Dropdown', () => {
         const view = render(Dropdown, { props: { menu, trigger: 'custom', visible: true, motion: false } });
         await screen.findByRole('menu');
         expect(screen.getByRole('menu').children).toHaveLength(menu.length);
-        const menu2 = [{ node: 'title', name: '分组1', iconType: 'menu' }, { node: 'item', name: 'secondary', type: 'secondary' }, { node: 'divider' }, { node: 'title', name: '分组2' }, { node: 'invalid node', name: '分组2' }] as unknown as DropDownMenuItem[];
+        const menu2 = [{ node: 'title', name: '分组1', iconType: 'menu' }, { node: 'item', name: 'secondary', type: 'secondary' }, { node: 'divider' }, { node: 'title', name: '分组2' }, { node: 'invalid node', name: '分组2' }] as unknown as DropdownMenuItem[];
         await view.rerender({ menu: menu2 });
         expect(screen.getByRole('menu').children).toHaveLength(menu2.length - 1);
     });
@@ -252,14 +252,14 @@ describe('Dropdown', () => {
 
 describe('Dropdown 行为', () => {
     it('菜单渲染标题、选项与分隔线，#menuIcon 给数据项渲染图标', async () => {
-        const menu: DropDownMenuItem[] = [
+        const menu: DropdownMenuItem[] = [
             { node: 'title', name: 'Group' },
             { node: 'item', name: 'A', active: true },
             { node: 'item', name: 'B', disabled: true },
             { node: 'divider', class: 'custom-divider', style: { margin: '3px' } },
             { node: 'item', name: 'C', type: 'danger' },
         ];
-        const menuIcon = vi.fn<(props: { item: DropDownMenuItem; index: number }) => VNode[]>(({ item: entry }) => ('name' in entry && entry.name === 'C' ? [<span data-testid="icon" />] : []));
+        const menuIcon = vi.fn<(props: { item: DropdownMenuItem; index: number }) => VNode[]>(({ item: entry }) => ('name' in entry && entry.name === 'C' ? [<span data-testid="icon" />] : []));
         render(Dropdown, {
             props: { menu, motion: false, trigger: 'custom', visible: true },
             slots: { default: () => <button>menu trigger</button>, menuIcon },
@@ -293,7 +293,7 @@ describe('Dropdown 行为', () => {
         ['多节点', () => ['first', <span>second</span>], 'firstsecond'],
         ['空插槽', () => [], ''],
     ])('#content 优先于 menu：%s', async (_, content, text) => {
-        const menu: DropDownMenuItem[] = [{ node: 'item', name: 'from menu' }];
+        const menu: DropdownMenuItem[] = [{ node: 'item', name: 'from menu' }];
         render(Dropdown, {
             props: { menu, motion: false, trigger: 'custom', visible: true },
             slots: { default: () => <button>precedence trigger</button>, content },

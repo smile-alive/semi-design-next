@@ -1459,6 +1459,22 @@ describe('Tabs more 与 collapsible', () => {
         expect(screen.queryByRole('button', { name: zh_CN.Tabs.more })).toBeNull();
     });
 
+    it('more.render：getTriggerProps 落在使用方的触发元素上，不再套可聚焦的 span', () => {
+        renderTabs({
+            more: {
+                count: 1,
+                render: (getTriggerProps) => (
+                    <button type="button" {...getTriggerProps()}>
+                        Show more
+                    </button>
+                ),
+            },
+        });
+        const trigger = screen.getByRole('button', { name: 'Show more' });
+        expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
+        expect(trigger.parentElement?.closest('[tabindex]')).toBeNull();
+    });
+
     it('collapsible：隐藏的标签进入箭头下拉菜单，选中后滚动到可见区域', async () => {
         mockScroll();
         const io = stubIntersectionObserver();

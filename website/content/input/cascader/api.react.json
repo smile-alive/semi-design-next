@@ -1,6 +1,6 @@
 {
     "cascader": {
-        "source": "packages/semi-ui-react/src/components/cascader/index.tsx",
+        "source": "packages/semi-ui-react/src/components/cascader/cascader.tsx",
         "props": {
             "arrowIcon": {
                 "zh-CN": "自定义右侧下拉箭头，传入 `null` 时不显示箭头。`showClear` 开启且有选中值时，悬停优先显示清除按钮。",
@@ -33,10 +33,6 @@
             "className": {
                 "zh-CN": "选择框根元素（触发器）的类名。",
                 "en-US": "Class name of the trigger, which is the root element."
-            },
-            "children": {
-                "zh-CN": "类型上保留的 children，组件不渲染它。",
-                "en-US": "Declared in the type for children, but the component does not render it."
             },
             "clearIcon": {
                 "zh-CN": "自定义清除按钮的图标，`showClear` 为 true 时有效。",

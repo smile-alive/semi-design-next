@@ -49,7 +49,8 @@
         {#if props.alpha}
             <InputNumber aria-label={locale().locale.alpha} bind:value={() => Math.round(props.currentColor.rgba.a * 100), () => {}} class={`${cssClasses.PREFIX}-colorPickerInputNumber`} hideButtons max={100} min={0} onNumberChange={foundation.handleAlphaInputChange} showClear={false} suffix={percentSuffix} />
         {/if}
-        <Select aria-label={locale().locale.format} bind:value={() => states().format, () => {}} class={`${cssClasses.PREFIX}-formatSelect`} onSelect={handleSelectFormat} optionList={FORMAT_OPTIONS} size="small" />
+        <!-- a fixed list of three formats: global Select defaults must not make it search, create or multiple, nor add a clear button -->
+        <Select allowCreate={false} aria-label={locale().locale.format} bind:value={() => states().format, () => {}} class={`${cssClasses.PREFIX}-formatSelect`} filter={false} multiple={false} onSelect={handleSelectFormat} optionList={FORMAT_OPTIONS} showClear={false} size="small" />
     </InputGroup>
     {#if props.eyeDropper}
         <Button aria-label={locale().locale.eyeDropper} icon={eyeDropperIcon} size="small" theme="light" type="tertiary" onclick={foundation.handlePickValueWithStraw} />

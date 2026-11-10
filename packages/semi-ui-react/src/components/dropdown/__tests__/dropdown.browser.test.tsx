@@ -9,7 +9,7 @@ import { sleep } from '@test/utils/react';
 const item = (name) => screen.getByText(name, { selector: '[role="menuitem"]' });
 const portals = () => document.querySelectorAll('.semi-dropdown-wrapper');
 
-function HoverNested({ onDeep }: { onDeep?: () => void }) {
+function HoverNested({ onDeep, onParent }: { onDeep?: () => void; onParent?: () => void }) {
     return (
         <Dropdown
             render={
@@ -24,7 +24,7 @@ function HoverNested({ onDeep }: { onDeep?: () => void }) {
                             </Dropdown.Menu>
                         }
                     >
-                        <Dropdown.Item>Parent</Dropdown.Item>
+                        <Dropdown.Item onClick={onParent}>Parent</Dropdown.Item>
                     </Dropdown>
                     <Dropdown.Item>Omega</Dropdown.Item>
                 </Dropdown.Menu>
@@ -130,6 +130,21 @@ describe('Dropdown 键盘操作（浏览器）', () => {
         await userEvent.keyboard('{Escape}');
         await waitFor(() => expect(portals()).toHaveLength(0));
         expect(button).toHaveFocus();
+    });
+
+    it('悬停子菜单：父级选项上按 Enter 打开子菜单并聚焦第一项，不触发父级选项的 onClick', async () => {
+        const onParent = vi.fn<() => void>();
+        render(<HoverNested onParent={onParent} />);
+        const button = screen.getByRole('button', { name: 'hover nested' });
+        button.focus();
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(item('Alpha')).toHaveFocus());
+        await userEvent.keyboard('{ArrowDown}');
+        expect(item('Parent')).toHaveFocus();
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(item('Deep one')).toHaveFocus());
+        expect(item('Parent')).toHaveAttribute('aria-expanded', 'true');
+        expect(onParent).not.toHaveBeenCalled();
     });
 
     it('通过聚焦触发器打开的悬停菜单，在焦点进入悬停子菜单期间保持打开', async () => {

@@ -11,28 +11,28 @@ import ApiType from '#/components/ApiType.astro';
 | keyMaps | 自定义节点中 key、label、value 的字段名。映射了 label 且开启搜索时，需把 treeNodeFilterProp 设为 treeData 的键之一，或自定义 filterTreeNode。 | `KeyMapProps` | `semiGlobalDefault("Tree", "keyMaps")` |
 | expandedKeys | 展开的节点，用 v-model:expandedKeys 绑定。传入后展开状态完全受控。 | `string[]` | `semiGlobalDefault("Tree", "expandedKeys")` |
 | defaultExpandedKeys | 默认展开的节点，显示其直接子级。 | `string[]` | `semiGlobalDefault("Tree", "defaultExpandedKeys")` |
-| defaultExpandAll | 初始化时展开所有节点。之后 treeData 或 treeDataSimpleJson 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `semiDefault("Tree", "defaultExpandAll", false)` |
-| expandAll | 展开所有节点，数据变化后仍然生效。 | `boolean` | `semiDefault("Tree", "expandAll", false)` |
-| autoExpandParent | expandedKeys 变化时是否自动展开其中节点的父节点；挂载时总会展开。开启后，展开受控时要先收起所有已展开的子节点才能收起父节点。 | `boolean` | `semiDefault("Tree", "autoExpandParent", false)` |
-| autoExpandWhenDragEnter | 拖拽到收起的节点上时是否自动展开该节点。 | `boolean` | `semiDefault("Tree", "autoExpandWhenDragEnter", true)` |
-| autoMergeValue | 父节点被选中时，值不再包含它的子孙节点；leafOnly 为 false 时生效。 | `boolean` | `semiDefault("Tree", "autoMergeValue", true)` |
-| blockNode | 节点显示为整行，悬浮和选中高亮整行；关闭时只高亮节点的 label。 | `boolean` | `semiDefault("Tree", "blockNode", true)` |
-| checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `semiDefault("Tree", "checkRelation", "related")` |
-| directory | 目录树模式，自带目录图标，可用 icon 插槽覆盖。 | `boolean` | `semiDefault("Tree", "directory", false)` |
-| disabled | 禁用整棵树。节点数据中的 disabled: false 不会解除禁用。 | `boolean` | `semiDefault("Tree", "disabled", false)` |
-| disableStrictly | 严格禁用：禁用的节点不能通过父级或子级的选中关系改变状态。 | `boolean` | `semiDefault("Tree", "disableStrictly", false)` |
-| draggable | 是否允许拖拽节点，配合 drop 事件使用。不能与 virtualize 同时使用。 | `boolean` | `semiDefault("Tree", "draggable", false)` |
-| hideDraggingNode | 拖拽时隐藏被拖拽节点的拖拽图像。 | `boolean` | `semiDefault("Tree", "hideDraggingNode", false)` |
-| expandAction | 展开逻辑：false 仅点击展开箭头时展开，click 单击节点展开，doubleClick 双击节点展开。键盘不触发该逻辑。 | `ExpandAction` | `semiDefault("Tree", "expandAction", false)` |
-| leafOnly | 多选时，值和 change 事件的载荷只包含叶子节点。 | `boolean` | `semiDefault("Tree", "leafOnly", false)` |
+| defaultExpandAll | 初始化时展开所有节点。之后 treeData 或 treeDataSimpleJson 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `false` |
+| expandAll | 展开所有节点，数据变化后仍然生效。 | `boolean` | `false` |
+| autoExpandParent | expandedKeys 变化时是否自动展开其中节点的父节点；挂载时总会展开。开启后，展开受控时要先收起所有已展开的子节点才能收起父节点。 | `boolean` | `false` |
+| autoExpandWhenDragEnter | 拖拽到收起的节点上时是否自动展开该节点。 | `boolean` | `true` |
+| autoMergeValue | 父节点被选中时，值不再包含它的子孙节点；leafOnly 为 false 时生效。 | `boolean` | `true` |
+| blockNode | 节点显示为整行，悬浮和选中高亮整行；关闭时只高亮节点的 label。 | `boolean` | `true` |
+| checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `"related"` |
+| directory | 目录树模式，自带目录图标，可用 icon 插槽覆盖。 | `boolean` | `false` |
+| disabled | 禁用整棵树。节点数据中的 disabled: false 不会解除禁用。 | `boolean` | `false` |
+| disableStrictly | 严格禁用：禁用的节点不能通过父级或子级的选中关系改变状态。 | `boolean` | `false` |
+| draggable | 是否允许拖拽节点，配合 drop 事件使用。不能与 virtualize 同时使用。 | `boolean` | `false` |
+| hideDraggingNode | 拖拽时隐藏被拖拽节点的拖拽图像。 | `boolean` | `false` |
+| expandAction | 展开逻辑：false 仅点击展开箭头时展开，click 单击节点展开，doubleClick 双击节点展开。键盘不触发该逻辑。 | `ExpandAction` | `false` |
+| leafOnly | 多选时，值和 change 事件的载荷只包含叶子节点。 | `boolean` | `false` |
 | loadedKeys | 已加载的节点，配合 loadData 使用，用 v-model:loadedKeys 绑定。 | `string[]` | `semiGlobalDefault("Tree", "loadedKeys")` |
-| motion | 是否开启展开收起的动画；虚拟化时动画关闭。 | `boolean` | `semiDefault("Tree", "motion", true)` |
-| multiple | 是否多选。多选时所有子项都被选择会自动勾选其父项。 | `boolean` | `semiDefault("Tree", "multiple", false)` |
-| changeWithObject | 布尔属性而不是事件：设为 true 时，change 的载荷由 value 变为包含 value、label 及其他属性的节点对象；受控时 modelValue 与 defaultValue 也要传对象，且必须含 value。 | `boolean` | `semiDefault("Tree", "changeWithObject", false)` |
-| showClear | 搜索框是否显示清除按钮。 | `boolean` | `semiDefault("Tree", "showClear", true)` |
-| showFilteredOnly | 搜索时只展示过滤后的结果。 | `boolean` | `semiDefault("Tree", "showFilteredOnly", false)` |
-| showLine | 显示节点之间的连接线。 | `boolean` | `semiDefault("Tree", "showLine", false)` |
-| treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `semiDefault("Tree", "treeNodeFilterProp", "label")` |
+| motion | 是否开启展开收起的动画；虚拟化时动画关闭。 | `boolean` | `true` |
+| multiple | 是否多选。多选时所有子项都被选择会自动勾选其父项。 | `boolean` | `false` |
+| changeWithObject | 布尔属性而不是事件：设为 true 时，change 的载荷由 value 变为包含 value、label 及其他属性的节点对象；受控时 modelValue 与 defaultValue 也要传对象，且必须含 value。 | `boolean` | `false` |
+| showClear | 搜索框是否显示清除按钮。 | `boolean` | `true` |
+| showFilteredOnly | 搜索时只展示过滤后的结果。 | `boolean` | `false` |
+| showLine | 显示节点之间的连接线。 | `boolean` | `false` |
+| treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `"label"` |
 | labelEllipsis | label 超出时是否省略；虚拟化时默认开启。 | `boolean` | `semiGlobalDefault("Tree", "labelEllipsis")` |
 | virtualize | 列表虚拟化，用于大量节点：height、width、itemSize（必传）。开启后动画关闭。 | `Virtualize` | `semiGlobalDefault("Tree", "virtualize")` |
 | searchClassName | 搜索框容器的类名。 | `string` | `semiGlobalDefault("Tree", "searchClassName")` |

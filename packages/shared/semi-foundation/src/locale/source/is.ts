@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Velja allar raðir',
         selectRow: 'Velja þessa röð',
+        scrollRegion: 'Skrunanlegt efni töflu',
+        untitledColumn: 'Dálkur án titils',
         filterColumn: 'Sía gögn eftir þessum dálki',
         filterColumnActive: 'Sía gögn eftir þessum dálki, sía er virk',
         expandRow: 'Stækka þessa röð',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Leita',
         replace: 'Skipta út',
         replaceAll: 'Skipta öllu út',
+        replaceWith: 'Skipta út fyrir',
         caseSensitive: 'Greina á milli há- og lágstafa',
         regex: 'Nota reglulega segð',
         wholeWord: 'Samsvara heilu orði',

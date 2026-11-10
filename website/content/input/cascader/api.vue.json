@@ -287,6 +287,18 @@
                 "en-US": "Extra content at the bottom of the dropdown."
             }
         },
-        "exposed": {}
+        "exposed": {
+            "open": { "zh-CN": "展开下拉列表。", "en-US": "Opens the dropdown." },
+            "close": { "zh-CN": "关闭下拉列表。", "en-US": "Closes the dropdown." },
+            "focus": {
+                "zh-CN": "聚焦组合框（搜索框或触发器），不展开下拉。",
+                "en-US": "Focuses the combobox, which is the search input or the trigger, without opening the dropdown."
+            },
+            "blur": { "zh-CN": "使组合框失焦。", "en-US": "Removes focus from the combobox." },
+            "search": {
+                "zh-CN": "按传入的文本搜索，需同时设置 `filterTreeNode`；`searchPosition` 为 `custom` 时由使用方自定义展示搜索框。",
+                "en-US": "Searches as if the text were typed; needs `filterTreeNode`, and with `searchPosition` set to `custom` the caller draws the search input."
+            }
+        }
     }
 }

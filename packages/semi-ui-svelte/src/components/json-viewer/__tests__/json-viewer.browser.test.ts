@@ -301,7 +301,7 @@ describe('Svelte JsonViewer（浏览器）', () => {
                 await waitFor(() => expect(document.querySelector('search')).toBeNull());
             }
             await userEvent.click(trigger());
-            await userEvent.click(page.getByRole('textbox', { name: zh_CN.JsonViewer.replace }));
+            await userEvent.click(page.getByRole('textbox', { name: zh_CN.JsonViewer.replaceWith }));
             await userEvent.keyboard('{Escape}');
             await waitFor(() => expect(document.querySelector('search')).toBeNull());
             expect(outer.mock.calls.filter(([event]) => event.key === 'Escape')).toHaveLength(0);

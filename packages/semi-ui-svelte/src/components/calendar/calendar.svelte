@@ -6,10 +6,10 @@
     import useDefaultProps from '../../base/use-default-props.js';
     import { setCalendarContext } from './context.js';
     import DayCalendar from './day-calendar.svelte';
+    import useToday from './hooks/use-today.svelte.js';
     import type { CalendarProps, EventObject } from './interface.js';
     import MonthCalendar from './month-calendar.svelte';
     import TimeGrid from './time-grid.svelte';
-    import useToday from './use-today.svelte.js';
 
     const defaults = useDefaultProps('Calendar');
 

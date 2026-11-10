@@ -13,14 +13,13 @@ export interface CheckboxProps {
     type?: CheckboxType;
     addonId?: string;
     extraId?: string;
-    prefixCls?: string;
     preventScroll?: boolean;
 }
 
 export type CheckboxEventTarget = {
     checked: boolean;
-    value: CheckboxValue | undefined;
-    name: string | undefined;
+    value?: CheckboxValue;
+    name?: string;
     disabled: boolean;
 };
 
@@ -63,7 +62,6 @@ export interface CheckboxGroupProps {
     options?: Array<string | CheckboxOptionItem>;
     direction?: CheckboxDirection;
     type?: CheckboxType;
-    prefixCls?: string;
 }
 
 export interface CheckboxGroupOptionSlotProps {

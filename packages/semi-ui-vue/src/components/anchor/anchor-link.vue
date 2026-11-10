@@ -33,7 +33,7 @@
         return { ...config, opts: position ? { ...config.opts, position } : { ...config.opts } };
     });
 
-    provideAnchorContext({ ...parent, level: level + 1 });
+    provideAnchorContext({ ...parent, level: level + 1, parentHref: () => props.href });
 
     /**
      * The links below the given slot nodes. Collapsed branches are not mounted, so whether a branch holds the active link
@@ -55,7 +55,10 @@
         });
     };
 
-    const expanded = (nodes: VNode[]) => !view.value.autoCollapse || active.value || Boolean(AnchorFoundation.getChildMap([{ href: props.href, children: linkTree(slotNodes(nodes)) }])[props.href]?.has(view.value.activeLink));
+    const expanded = (nodes: VNode[]) => {
+        const { autoCollapse, activeLink, childMap } = view.value;
+        return !autoCollapse || active.value || Boolean(childMap[props.href]?.has(activeLink)) || Boolean(AnchorFoundation.getChildMap([{ href: props.href, children: linkTree(slotNodes(nodes)) }])[props.href]?.has(activeLink));
+    };
 
     const handleClick = (e: AnchorClickEvent) => {
         if (!props.disabled) {
@@ -75,13 +78,13 @@
         () => props.href,
         (next, prev) => {
             parent.removeLink(prev);
-            parent.addLink(next);
+            parent.addLink(next, parent.parentHref());
         }
     );
 
     // Scroll highlighting reads the mounted links from the foundation state; children mount first, so Anchor's init
-    // already sees them.
-    onMounted(() => parent.addLink(props.href));
+    // already sees them. The parent registers the nesting that the slot walk above cannot see through other components.
+    onMounted(() => parent.addLink(props.href, parent.parentHref()));
     onBeforeUnmount(() => parent.removeLink(props.href));
 </script>
 

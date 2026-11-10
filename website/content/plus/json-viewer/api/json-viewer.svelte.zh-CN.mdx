@@ -19,7 +19,7 @@ import ApiType from '#/components/ApiType.astro';
 | 方法             | 说明                                                                 | 类型                                                                                                                           |
 | ---------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | format           | 按 formatOptions 格式化当前内容。                                    | <ApiType detail={"() => void"}>Type</ApiType>                                                                                  |
-| getSearchResults | 获取当前搜索结果。                                                   | <ApiType detail={"() => ReturnType\u003cJsonViewerFoundation['getSearchResults']>"}>Type</ApiType>                             |
+| getSearchResults | 获取当前搜索结果。                                                   | <ApiType detail={"() => FindMatch[] \u007c null \u007c undefined"}>Type</ApiType>                                              |
 | getStyle         | 返回当前的 width 与 height。                                         | <ApiType detail={"() => { width: string \u007c number; height: string \u007c number; }"}>Type</ApiType>                        |
 | getValue         | 获取编辑器当前文本。                                                 | <ApiType detail={"() => string"}>Type</ApiType>                                                                                |
 | nextSearch       | 跳转到下一个搜索结果，可选步长。                                     | <ApiType detail={"(step?: number) => void"}>Type</ApiType>                                                                     |

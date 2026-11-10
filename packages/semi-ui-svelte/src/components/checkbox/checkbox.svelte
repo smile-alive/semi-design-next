@@ -17,23 +17,7 @@
     const defaults = useDefaultProps('Checkbox');
 
     // No fallback on `checked`: a bound `undefined` (form reset) would throw with one
-    let {
-        checked = $bindable(),
-        value,
-        disabled = defaults('disabled', false),
-        indeterminate = defaults('indeterminate', false),
-        type = defaults('type', 'default'),
-        addonId,
-        extraId,
-        prefixCls = defaults('prefixCls'),
-        preventScroll = defaults('preventScroll'),
-        name,
-        onChange,
-        onclick,
-        children,
-        extra,
-        ...rest
-    }: CheckboxProps = $props();
+    let { checked = $bindable(), value, disabled = defaults('disabled', false), indeterminate = defaults('indeterminate', false), type = defaults('type', 'default'), addonId, extraId, preventScroll = defaults('preventScroll'), name, onChange, onclick, children, extra, ...rest }: CheckboxProps = $props();
 
     const group = getCheckboxGroupContext();
 
@@ -86,7 +70,7 @@
     );
 
     const view = $derived(CheckboxFoundation.deriveView({ checked, disabled, name: name ?? undefined, type, value, 'aria-invalid': rest['aria-invalid'] ?? undefined, 'aria-errormessage': rest['aria-errormessage'] ?? undefined }, states(), group?.view));
-    const prefix = $derived(prefixCls || checkboxClasses.PREFIX);
+    const prefix = checkboxClasses.PREFIX;
     const addonDomId = $derived(addonId || `addon-${uid}`);
     const extraDomId = $derived(extraId || `extra-${uid}`);
     const inputName = $derived(view.name || undefined);

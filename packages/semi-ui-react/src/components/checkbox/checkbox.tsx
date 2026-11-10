@@ -61,7 +61,6 @@ export default function Checkbox(rawProps: CheckboxProps) {
     const {
         disabled: disabledProp,
         style,
-        prefixCls,
         className,
         indeterminate,
         children,
@@ -113,7 +112,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
     );
 
     const { checked, disabled, name, isCardType, isPureCardType, ariaInvalid, ariaErrormessage } = CheckboxFoundation.deriveView({ checked: checkedProp, disabled: disabledProp, name: nameProp, type, value, 'aria-invalid': ariaInvalidProp, 'aria-errormessage': ariaErrormessageProp }, state, context.checkboxGroup);
-    const prefix = prefixCls || css.PREFIX;
+    const prefix = css.PREFIX;
 
     const wrapper = clsx(prefix, className, {
         [`${prefix}-disabled`]: disabled,
@@ -181,7 +180,6 @@ export default function Checkbox(rawProps: CheckboxProps) {
                 extraId={hasExtra ? extraId : undefined}
                 indeterminate={indeterminate}
                 isPureCardType={isPureCardType}
-                prefixCls={prefixCls}
             />
             {(hasChildren || hasExtra) && (
                 <div className={`${prefix}-content`}>

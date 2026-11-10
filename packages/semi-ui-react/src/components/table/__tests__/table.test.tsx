@@ -5,9 +5,11 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/table/constants';
+import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconStar } from '@fibrae/semi-icons-react';
 import { Tag, Tooltip } from '@fibrae/semi-ui-react';
+import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { endLeaveAnimations, getColumns, getData, getGroupColumns, getGroupData, getJSXColumns, getNestColumns, getNestData, getRandomNumber, getTreeData } from '@test/utils/react';
 import { baseRowPropKeys } from '../body/base-row';
@@ -1484,7 +1486,7 @@ describe(`Table`, () => {
             </Table>
         );
         const headerCells = queryAll(`.${BASE_CLASS_PREFIX}-table-thead .${BASE_CLASS_PREFIX}-table-row-head`);
-        expect(headerCells.map((cell) => cell.textContent)).toEqual(columns.map((column) => column.title ?? ''));
+        expect(headerCells.map((cell) => cell.textContent)).toEqual(columns.map((column) => column.title ?? zh_CN.Table.untitledColumn));
     });
     it('表头 colSpan', async () => {
         const columns = [
@@ -4013,6 +4015,34 @@ describe('Table 非元素内容与可访问名称', () => {
         render(<Table title={0} columns={nameColumns} dataSource={rows} footer={() => 42} />);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-table-title`)).toHaveTextContent('0');
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-table-footer`)).toHaveTextContent('42');
+    });
+
+    it('滚动表体、无标题列与只有图标的排序按钮的名称跟随语言包', async () => {
+        // the body overflows its box, as the observer reports on observe()
+        vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
+        vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(300);
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                #callback: () => void;
+                constructor(callback: () => void) {
+                    this.#callback = callback;
+                }
+                observe() {
+                    this.#callback();
+                }
+                unobserve() {}
+                disconnect() {}
+            }
+        );
+        render(
+            <LocaleProvider locale={ja_JP}>
+                <Table columns={[...nameColumns, { dataIndex: 'size', sorter: true }]} dataSource={rows} pagination={false} />
+            </LocaleProvider>
+        );
+        expect(await screen.findByRole('group', { name: ja_JP.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
+        expect(screen.getByText(ja_JP.Table.untitledColumn)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: ja_JP.Table.ascend })).toBeInTheDocument();
     });
 });
 

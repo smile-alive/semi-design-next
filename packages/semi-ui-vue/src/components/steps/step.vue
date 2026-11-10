@@ -67,7 +67,7 @@
                 [`${prefixCls}-${view.status}-hover`]: item.clickable(),
                 [`${prefixCls}-${view.status}-active`]: item.clickable(),
                 [`${prefixCls}-clickable`]: item.clickable(),
-                [`${view.prefixCls}-next-error`]: view.nextError,
+                [`${stepsClasses.PREFIX}-next-error`]: view.nextError,
             },
         ]"
         :role="item.role()"
@@ -113,7 +113,7 @@
                 [`${prefixCls}-hover`]: item.clickable(),
                 [`${prefixCls}-clickable`]: item.clickable(),
                 [`${prefixCls}-${view.status}-hover`]: item.clickable(),
-                [`${view.prefixCls}-next-error`]: view.nextError,
+                [`${stepsClasses.PREFIX}-next-error`]: view.nextError,
             },
         ]"
         :role="item.role()"

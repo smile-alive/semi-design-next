@@ -1,6 +1,6 @@
 {
     "collapse": {
-        "source": "packages/semi-ui-react/src/components/collapse/index.tsx",
+        "source": "packages/semi-ui-react/src/components/collapse/collapse.tsx",
         "props": {
             "accordion": { "zh-CN": "手风琴模式，每次只展开一个面板。", "en-US": "Accordion mode, only one panel is expanded at a time." },
             "activeKey": {

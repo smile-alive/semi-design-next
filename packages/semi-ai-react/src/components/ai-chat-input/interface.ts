@@ -1,6 +1,6 @@
 import type { ReactNode, ClipboardEvent as ReactClipboardEvent } from 'react';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
-import type { BaseSkill, Reference, Suggestion, Attachment, Content, LeftMenuChangeProps, MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+import type { BaseSkill, Reference, Suggestion, Attachment, Content, MessageContent, Setup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
 import type { PopoverProps } from '@fibrae/semi-ui-react/popover/index';
 import type { TooltipProps } from '@fibrae/semi-ui-react/tooltip/index';
@@ -66,7 +66,7 @@ export interface AIChatInputProps extends ElementProps<'div'> {
     generating?: boolean;
     renderConfigureArea?: () => ReactNode;
     /** `changedValue` is undefined when an item is removed */
-    onConfigureChange?: (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void;
+    onConfigureChange?: (value: Setup, changedValue?: Setup) => void;
     renderActionArea?: (props: ActionAreaProps) => ReactNode;
     suggestions?: Suggestion[];
     renderSuggestionItem?: (props: RenderSuggestionItemProps) => ReactNode;

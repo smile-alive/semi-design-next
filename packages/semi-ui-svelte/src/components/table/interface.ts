@@ -307,7 +307,6 @@ export interface TableProps<R extends AnyRecord = AnyRecord> extends Omit<HTMLAt
     keepDOM?: boolean;
     loading?: boolean;
     pagination?: boolean | TablePaginationProps;
-    prefixCls?: string;
     resizable?: boolean | ResizableProps<R>;
     rowExpandable?: TableRowExpandable<R>;
     rowKey?: TableRowKey<R>;

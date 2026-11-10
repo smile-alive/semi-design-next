@@ -29,7 +29,6 @@
         disabled = defaults('disabled', false),
         size = defaults('size', 'default'),
         tooltips = defaults('tooltips'),
-        prefixCls = defaults('prefixCls', cssClasses.PREFIX),
         autofocus = defaults('autofocus'),
         preventScroll = defaults('preventScroll'),
         character = defaults('character'),
@@ -51,6 +50,8 @@
     // A wrapping Tooltip gives its trigger tabindex 0, which cannot be told apart from a caller's: the radios hold the one
     // roving Tab stop. A radiogroup has no control to carry a name.
     const DROPPED_ATTRS = new Set(['tabindex', 'name']);
+
+    const prefixCls = cssClasses.PREFIX;
 
     const foundationProps: RatingBaseProps = {
         get value() {

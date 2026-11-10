@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: '全選所有列',
         selectRow: '選取此列',
+        scrollRegion: '可捲動的表格內容',
+        untitledColumn: '無標題欄',
         filterColumn: '篩選此欄資料',
         filterColumnActive: '篩選此欄資料，篩選已生效',
         expandRow: '展開此列',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: '搜尋',
         replace: '替換',
         replaceAll: '全部替換',
+        replaceWith: '替換為',
         caseSensitive: '區分大小寫',
         regex: '使用正規表示式',
         wholeWord: '全字相符',

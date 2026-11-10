@@ -26,8 +26,8 @@ import {
     FormTreeSelect,
 } from '../field';
 import type { InputGroupProps } from '../group';
+import type useForm from '../hooks/use-form';
 import type { BaseFormProps } from '../interface';
-import type useForm from '../use-form';
 import withField from '../with-field';
 
 type PropsOf<C> = C extends React.ComponentType<infer P> ? P : never;

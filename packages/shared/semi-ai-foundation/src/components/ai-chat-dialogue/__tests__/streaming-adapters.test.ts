@@ -21,23 +21,25 @@ const textOf = (message) => message.content[0].content[0].text;
 describe('streamingResponseToMessage 纯度', () => {
     it('使用相同 prevState 连续调用两次结果相同', () => {
         const first = streamingResponseToMessage(responseChunks.slice(0, 3), null);
-        const a = streamingResponseToMessage(responseChunks, first.nextState);
-        const b = streamingResponseToMessage(responseChunks, first.nextState);
-        expect(textOf(a.message)).toBe('Hello');
-        expect(textOf(b.message)).toBe('Hello');
+        const a = streamingResponseToMessage(responseChunks, first.state);
+        const b = streamingResponseToMessage(responseChunks, first.state);
+        expect(textOf(a.messages[0])).toBe('Hello');
+        expect(textOf(b.messages[0])).toBe('Hello');
     });
 
     it('不修改更早一次调用返回的消息', () => {
         const first = streamingResponseToMessage(responseChunks.slice(0, 3), null);
-        streamingResponseToMessage(responseChunks, first.nextState);
-        expect(textOf(first.message)).toBe('Hel');
+        streamingResponseToMessage(responseChunks, first.state);
+        expect(textOf(first.messages[0])).toBe('Hel');
     });
 });
 
 describe('streamingResponseToMessage response.completed', () => {
     it('output 为单个条目时 content 归一化为数组', () => {
         const item = { type: 'message', content: [] };
-        const { message } = streamingResponseToMessage([{ type: 'response.completed', response: { id: 'r1', output: item } }]);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([{ type: 'response.completed', response: { id: 'r1', output: item } }]);
         expect(message.content).toEqual([item]);
     });
 });
@@ -48,13 +50,17 @@ describe('streamingResponseToMessage 生命周期状态', () => {
         ['response.failed', 'failed'],
         ['response.incomplete', 'incomplete'],
     ] as const)('%s 事件把状态写为 %s，并保留已收到的文本', (type, status) => {
-        const { message } = streamingResponseToMessage([...responseChunks, { type, response: { id: 'r1' } }]);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([...responseChunks, { type, response: { id: 'r1' } }]);
         expect(message.status).toBe(status);
         expect(textOf(message)).toBe('Hello');
     });
 
     it('response.failed 的错误写入 error', () => {
-        const { message } = streamingResponseToMessage([
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([
             { type: 'response.created', response: { id: 'r1' } },
             { type: 'response.failed', response: { id: 'r1', error: { code: 'server_error', message: 'boom' } } },
         ]);
@@ -62,7 +68,9 @@ describe('streamingResponseToMessage 生命周期状态', () => {
     });
 
     it('error 事件把状态写为 failed，同时保留 error', () => {
-        const { message } = streamingResponseToMessage([...responseChunks, { type: 'error', code: 'rate_limit', message: 'slow down' }]);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([...responseChunks, { type: 'error', code: 'rate_limit', message: 'slow down' }]);
         expect(message.status).toBe('failed');
         expect((message as { error?: unknown }).error).toEqual({ code: 'rate_limit', message: 'slow down' });
         expect(textOf(message)).toBe('Hello');
@@ -104,18 +112,24 @@ describe('streamingResponseToMessage 无 sequence_number 的块', () => {
     });
 
     it('同一批的多个无序号块按到达顺序全部应用', () => {
-        const { message } = streamingResponseToMessage([added, part, delta('A'), delta('B')], null);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([added, part, delta('A'), delta('B')], null);
         expect(textOf(message)).toBe('AB');
     });
 
     it('无序号块与序号块交错时保持到达顺序', () => {
-        const { message } = streamingResponseToMessage([added, part, delta('X'), delta('Y', 2), delta('Z', 3)], null);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([added, part, delta('X'), delta('Y', 2), delta('Z', 3)], null);
         expect(textOf(message)).toBe('XYZ');
     });
 
     it('整个流都没有序号时按到达顺序处理', () => {
         const bare = (chunk: ResponseChunk): ResponseChunk => ({ ...chunk, sequence_number: undefined });
-        const { message } = streamingResponseToMessage([bare(added), bare(part), delta('Hi')], null);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([bare(added), bare(part), delta('Hi')], null);
         expect(textOf(message)).toBe('Hi');
     });
 
@@ -126,16 +140,16 @@ describe('streamingResponseToMessage 无 sequence_number 的块', () => {
         const texts = [];
         for (let i = 0; i < 3; i++) {
             const result = streamingResponseToMessage(all, state);
-            state = result.nextState;
-            texts.push(textOf(result.message));
+            state = result.state;
+            texts.push(textOf(result.messages[0]));
         }
         expect(texts).toEqual(['N', 'N', 'N']);
     });
 
     it('只传新块的调用方式同样累加', () => {
         const first = streamingResponseToMessage([added, part, delta('N')], null);
-        const second = streamingResponseToMessage([delta('M')], first.nextState);
-        expect(textOf(second.message)).toBe('NM');
+        const second = streamingResponseToMessage([delta('M')], first.state);
+        expect(textOf(second.messages[0])).toBe('NM');
     });
 
     it('流式中途的 output_text 是 message 项内已收到的文本', () => {
@@ -145,7 +159,9 @@ describe('streamingResponseToMessage 无 sequence_number 的块', () => {
             output_index: 1,
             item: { type: 'reasoning', summary: [{ type: 'summary_text', text: 'think' }] },
         };
-        const { message } = streamingResponseToMessage([added, part, reasoning, delta('Hi', 3)], null);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([added, part, reasoning, delta('Hi', 3)], null);
         expect(message.output_text).toBe('Hi');
     });
 });
@@ -162,22 +178,29 @@ describe('streamingResponseToMessage 缺块与未知事件', () => {
     const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => textDelta(from + i));
 
     it('缺块后到达的块不超过 MAX_GAP 时继续等待缺失的块', () => {
-        const { message } = streamingResponseToMessage([...head, ...range(3, 12)], null);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([...head, ...range(3, 12)], null);
         expect(textOf(message)).toBe('');
     });
 
     it('缺块后到达的块超过 MAX_GAP 时跳过缺失的块，继续输出后面的块', () => {
-        const { message, nextState } = streamingResponseToMessage([...head, ...range(3, 13)], null);
+        const {
+            messages: [message],
+            state,
+        } = streamingResponseToMessage([...head, ...range(3, 13)], null);
         expect(textOf(message)).toBe('345678910111213');
-        const late = streamingResponseToMessage([textDelta(2), textDelta(14)], nextState);
-        expect(textOf(late.message)).toBe('34567891011121314');
-        expect(late.nextState.buffer.size).toBe(0);
-        expect(late.nextState.processedSeq.has(2)).toBe(true);
+        const late = streamingResponseToMessage([textDelta(2), textDelta(14)], state);
+        expect(textOf(late.messages[0])).toBe('34567891011121314');
+        expect(late.state.buffer.size).toBe(0);
+        expect(late.state.processedSeq.has(2)).toBe(true);
     });
 
     it('未知 type 的块不抛错，也不影响其他块', () => {
         const unknown = JSON.parse('{"type":"response.future_event","sequence_number":2,"output_index":0}');
-        const { message } = streamingResponseToMessage([...head, unknown, textDelta(3)], null);
+        const {
+            messages: [message],
+        } = streamingResponseToMessage([...head, unknown, textDelta(3)], null);
         expect(textOf(message)).toBe('3');
     });
 

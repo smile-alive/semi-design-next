@@ -4,11 +4,11 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| mode | Display mode: main is the main view, code and file use the built-in details, and any other string is rendered by the detailContent slot. | `string` | `semiDefault("Sidebar", "mode", strings.MODE.MAIN)` |
+| mode | Display mode: main is the main view, code and file use the built-in details, and any other string is rendered by the detailContent slot. | `string` | `strings.MODE.MAIN` |
 | activeKey | Key of the selected option in the main view; bind it with v-model:activeKey. | `string` | `semiGlobalDefault("Sidebar", "activeKey")` |
 | options | Option buttons at the top of the main view, each with a name and a key; icons use the optionIcon slot. | `SideBarOption[]` | `semiGlobalDefault("Sidebar", "options")` |
 | detailContent | The item shown in code and file modes: the CodeItem or FileItem props plus a key; a new key remounts it. In file mode its editable and imgUploadProps have no effect, as fileEditable and imgUploadProps decide them. | `SideBarDetailContent` | `semiGlobalDefault("Sidebar", "detailContent")` |
-| fileEditable | Whether the rich text in file mode is editable. | `boolean` | `semiDefault("Sidebar", "fileEditable", true)` |
+| fileEditable | Whether the rich text in file mode is editable. | `boolean` | `true` |
 | imgUploadProps | Image upload options of file mode, read when the editor is created; later changes have no effect. | `ImageUploadNodeOptions` | `semiGlobalDefault("Sidebar", "imgUploadProps")` |
 | visible | Whether it is shown; bind it with v-model:visible. | `boolean` | `semiGlobalDefault("Sidebar", "visible")` |
 | title | Plain-text title of the main view; the title slot takes precedence. Detail views use the detail header. | `string` | `semiGlobalDefault("Sidebar", "title")` |

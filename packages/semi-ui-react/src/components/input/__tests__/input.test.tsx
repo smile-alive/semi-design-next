@@ -538,14 +538,6 @@ describe('Input', () => {
         expect(onKeyPress).toHaveBeenCalledTimes(1);
     });
 
-    it('onlyBorder 属性', () => {
-        render(<Input style={{ color: 'red' }} onlyBorder={1} />);
-        expect(getWrapper()).toHaveClass(`${prefixCls}-only_border`);
-        // jsdom's computed style does not resolve the border-width shorthand, so read the inline style
-        expect(getWrapper().style.borderWidth).toBe('1px');
-        expect(getWrapper()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-    });
-
     it('清除按钮随值渲染，输入框随之带 sibling-clearbtn 类', () => {
         const { rerender } = render(<Input value="test" showClear />);
         expect(getClearBtn()).not.toBeNull();
@@ -782,20 +774,22 @@ describe('Input 行为基线', () => {
     });
 
     it('清除按钮有值才渲染，禁用时不渲染，showClearIgnoreDisabled 时仍渲染', () => {
+        const internal = { showClearIgnoreDisabled: true };
         const { rerender } = render(<Input value="" showClear />);
         expect(getClearBtn()).toBeNull();
         rerender(<Input disabled value="semi" showClear />);
         expect(getClearBtn()).toBeNull();
-        rerender(<Input disabled value="semi" showClear showClearIgnoreDisabled />);
+        rerender(<Input disabled value="semi" showClear {...internal} />);
         expect(getClearBtn()).not.toBeNull();
         rerender(<Input value="semi" showClear />);
         expect(getClearBtn()).not.toBeNull();
     });
 
     it('只读时不渲染清除按钮，showClearIgnoreDisabled 也不例外', () => {
+        const internal = { showClearIgnoreDisabled: true };
         const { rerender } = render(<Input defaultValue="semi" readonly showClear />);
         expect(getClearBtn()).toBeNull();
-        rerender(<Input defaultValue="semi" disabled readonly showClear showClearIgnoreDisabled />);
+        rerender(<Input defaultValue="semi" disabled readonly showClear {...internal} />);
         expect(getClearBtn()).toBeNull();
     });
 

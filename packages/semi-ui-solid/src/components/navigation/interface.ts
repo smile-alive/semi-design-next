@@ -17,7 +17,7 @@ export interface NavItemProps extends ElementProps<'li', 'onClick' | 'children' 
     forwardRef?: (ele: HTMLLIElement) => void;
     icon?: JSX.Element;
     /** Keeps a blank icon slot in front of the text when there is no icon; a number counts only as truthy */
-    indent?: boolean | number;
+    indent?: boolean;
     isCollapsed?: boolean;
     itemKey?: ItemKey;
     /** Nesting depth for the indentation of `limitIndent={false}`; items from `items` get it automatically, Nav.Item children must pass it */
@@ -38,7 +38,7 @@ export interface SubNavProps extends ElementProps<'li', 'onClick'> {
     disabled?: boolean;
     dropdownStyle?: JSX.CSSProperties | string;
     icon?: JSX.Element;
-    indent?: boolean | number;
+    indent?: boolean;
     itemKey?: ItemKey;
     level?: number;
     text?: JSX.Element;

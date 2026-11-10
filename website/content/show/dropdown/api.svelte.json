@@ -108,10 +108,6 @@
                 "zh-CN": "弹出菜单相对触发元素的位置，常用 bottom、bottomLeft、bottomRight，更多见 Tooltip 的位置。",
                 "en-US": "Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; see the Tooltip positions for more."
             },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀，设置后弹出层不再带 Dropdown 的样式。",
-                "en-US": "Class prefix of the popup. A custom value drops the Dropdown styles."
-            },
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动到被聚焦元素。",
                 "en-US": "Whether focusing an element avoids scrolling it into view."

@@ -30,7 +30,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | Called once per opening when the popup is shown, as its enter animation starts, before `afterOpen`, controlled or not; not called for a hover open withdrawn because the pointer already left. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onVisibleChange | Called with whether the popup is shown when its visibility changes. With a controlled `visible` it reports only requests from user interaction, not changes the caller makes to `visible`. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | Position of the popup relative to the trigger: `top`, `topLeft`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`, `bottom`, `bottomLeft` or `bottomRight`. | `Position` | `"top"` |
-| prefixCls | Class name prefix of the popup wrapper. A custom value drops the Tooltip styles. | `string` | `"semi-tooltip"` |
 | preventScroll | Whether focusing the element that `initialFocusRef` points at, when the popup opens, avoids scrolling it into view. | `boolean` | - |
 | ref | Handle of the component; its methods are listed under Methods below. | <ApiType detail={"React.Ref\u003cTooltipHandle>"}>Type</ApiType> | - |
 | returnFocusOnClose | Whether focus returns to the trigger after the popup closes. Has no effect with `trigger` set to `custom`. | `boolean` | `false` |

@@ -21,7 +21,7 @@ import ApiType from '#/components/ApiType.astro';
 | disableFocusListener | trigger 为 hover 时，是否不响应键盘聚焦打开菜单，默认 false。 | `boolean` | - |
 | guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环，默认 false。 | `boolean` | - |
 | keepDOM | 关闭时是否保留菜单的 DOM 而不销毁，默认 false。 | `boolean` | - |
-| menu | 通过数据快速配置菜单，数据项为 `node` 为 `item`、`title` 或 `divider` 的对象，见下方 DropdownMenuItem；提供 render 时以 render 为准。 | `DropDownMenuItem[]` | - |
+| menu | 通过数据快速配置菜单，数据项为 `node` 为 `item`、`title` 或 `divider` 的对象，见下方 DropdownMenuItem；提供 render 时以 render 为准。 | `DropdownMenuItem[]` | - |
 | motion | 是否展示弹出层的进出场动画。 | `boolean` | `true` |
 | mouseEnterDelay | 指针移入触发元素后延迟显示的毫秒数，默认 50，仅 trigger 为 hover 或 focus 时生效。 | `number` | - |
 | mouseLeaveDelay | 指针移出弹出层后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | `100` |
@@ -30,7 +30,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | 菜单显示、进场动画开始时调用，每次打开调用一次，早于 afterOpen；悬停打开后指针已离开而撤回的打开不调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onVisibleChange | 菜单显示状态变化时调用。visible 受控时只报告用户交互发起的请求，使用方自己改变 visible 不调用。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | 弹出菜单相对触发元素的位置，常用 bottom、bottomLeft、bottomRight，更多见 Tooltip 的位置。 | `Position` | `"bottom"` |
-| prefixCls | 弹出层类名前缀。 | `string` | `"semi-dropdown"` |
 | preventScroll | 聚焦时是否阻止浏览器滚动到被聚焦元素，默认 false。 | `boolean` | - |
 | ref | 接收 DropdownHandle，组件创建时调用一次。 | <ApiType detail={"Ref\u003cDropdownHandle>"}>Type</ApiType> | - |
 | render | 弹出层的内容，由 `Dropdown.Menu` 及 `Dropdown.Item`、`Dropdown.Title`、`Dropdown.Divider` 构成。传入时优先于 `menu`。 | `JSX.Element` | - |

@@ -3,8 +3,9 @@
     import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
     import type { SkeletonAvatarProps } from './interface.js';
 
-    let { prefixCls = cssClasses.PREFIX, type, size = 'medium', shape = 'circle', ...rest }: SkeletonAvatarProps & { type: string } = $props();
+    let { type, size = 'medium', shape = 'circle', ...rest }: SkeletonAvatarProps & { type: string } = $props();
 
+    const prefixCls = cssClasses.PREFIX;
     const base = $derived(`${prefixCls}-${type}`);
     const avatar = $derived(type.toUpperCase() === 'AVATAR');
 </script>

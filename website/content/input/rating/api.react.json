@@ -1,6 +1,6 @@
 {
     "rating": {
-        "source": "packages/semi-ui-react/src/components/rating/index.tsx",
+        "source": "packages/semi-ui-react/src/components/rating/rating.tsx",
         "props": {
             "aria-invalid": { "zh-CN": "是否校验失败，设置在根元素的 `aria-invalid` 上。", "en-US": "Whether validation failed, set as `aria-invalid` on the root element." },
             "aria-required": { "zh-CN": "是否必填，设置在根元素的 `aria-required` 上。", "en-US": "Whether a value is required, set as `aria-required` on the root element." },
@@ -34,7 +34,6 @@
                 "en-US": "Called when the hovered value changes; receives `undefined` when the pointer leaves or a click clears the value."
             },
             "onKeyDown": { "zh-CN": "方向键使值移动时的回调，其他按键不触发。", "en-US": "Called for an arrow key that moves the value; other keys do not call it." },
-            "prefixCls": { "zh-CN": "组件的样式类名前缀。", "en-US": "Class name prefix of the component." },
             "preventScroll": {
                 "zh-CN": "聚焦组件内的星（包括 `autoFocus` 与 `focus()`）时，是否阻止浏览器滚动文档以显示新聚焦的星。",
                 "en-US": "Whether to keep the browser from scrolling the document to show a star focused inside the component, including focus from `autoFocus` and `focus()`."

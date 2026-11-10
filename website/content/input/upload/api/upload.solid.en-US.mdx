@@ -16,7 +16,7 @@ import ApiType from '#/components/ApiType.astro';
 | children | Trigger content. In draggable mode it replaces the whole default drag area content. | `JSX.Element` | - |
 | crop | Enables image cropping. true uses the defaults, an object configures the cropper. Selecting, dragging, pasting and replacing all crop. | `boolean \| CropProps` | - |
 | cropModalProps | Props of the crop Modal. visible, title, okText, cancelText, onOk and onCancel belong to Upload; width defaults to 600. | `UploadCropModalProps` | - |
-| customRequest | Replaces the built-in XMLHttpRequest. It must call the onProgress, onError and onSuccess it receives to update the state. | <ApiType detail={"(object: customRequestArgs) => void"}>Type</ApiType> | - |
+| customRequest | Replaces the built-in XMLHttpRequest. It must call the onProgress, onError and onSuccess it receives to update the state. | <ApiType detail={"(object: UploadCustomRequestArgs) => void"}>Type</ApiType> | - |
 | data | Extra parameters sent with the upload, or a function that returns them for a file. | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, unknown>)"}>Type</ApiType> | - |
 | defaultFileList | Initial list of uploaded files, uncontrolled. The uid of every item is required and must be unique. | <ApiType detail={"Array\u003cFileItem>"}>Type</ApiType> | `[]` |
 | directory | Whether to upload a folder. | `boolean` | - |

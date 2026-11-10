@@ -462,7 +462,7 @@ Input 与 TextArea 的 ref 是外层容器 `div`，不是命令式句柄。`focu
 
 - Input 可被获取焦点，键盘用户可以使用 Tab 及 Shift + Tab 切换焦点
 - 密码显隐按钮是原生 `button`，名称随状态读语言包中的「显示密码」「隐藏密码」，可以被聚焦，聚焦后使用 Enter 或者空格键切换，切换后焦点回到输入框
-- `showClear` 开启、有内容且未禁用（或设置了 `showClearIgnoreDisabled`）时，清除按钮是原生 `button`，名称为语言包中的「清空输入」。Input 在 hover 或焦点位于其内时显示它，TextArea（不可编辑时不显示）在 hover 或焦点位于其内时显示它。从输入框按 Tab 移到清除按钮，Enter 或空格键清空，清空后焦点回到输入框；鼠标点击清除按钮时焦点留在原处
+- `showClear` 开启、有内容且未禁用（DatePicker `insetInput` 的输入框禁用时也显示）时，清除按钮是原生 `button`，名称为语言包中的「清空输入」。Input 在 hover 或焦点位于其内时显示它，TextArea（不可编辑时不显示）在 hover 或焦点位于其内时显示它。从输入框按 Tab 移到清除按钮，Enter 或空格键清空，清空后焦点回到输入框；鼠标点击清除按钮时焦点留在原处
 
 ## 设计变量
 

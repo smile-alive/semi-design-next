@@ -1,6 +1,6 @@
 {
     "dropdown": {
-        "source": "packages/semi-ui-react/src/components/dropdown/index.tsx",
+        "source": "packages/semi-ui-react/src/components/dropdown/dropdown.tsx",
         "props": {
             "afterClose": {
                 "zh-CN": "菜单关闭且离场动画结束后调用。",
@@ -62,10 +62,6 @@
                 "zh-CN": "下拉菜单容器 `.semi-dropdown` 的类名。",
                 "en-US": "Class name of the menu container `.semi-dropdown`."
             },
-            "disableArrowKeyDown": {
-                "zh-CN": "由 Dropdown 固定为 `true`，方向键由 Dropdown 自行处理，传入的值无效。",
-                "en-US": "Dropdown always sets this to `true` and handles the arrow keys itself, so a value passed here has no effect."
-            },
             "disableFocusListener": {
                 "zh-CN": "`trigger` 为 `hover` 时，是否不响应键盘聚焦打开菜单，默认 `false`。",
                 "en-US": "Whether keyboard focus is ignored when `trigger` is `hover`. Defaults to `false`."
@@ -117,10 +113,6 @@
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动到被聚焦元素，默认 `false`。",
                 "en-US": "Whether focusing an element avoids scrolling it into view. Defaults to `false`."
-            },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀。",
-                "en-US": "Class prefix of the popup."
             },
             "ref": {
                 "zh-CN": "挂载时接收 `DropdownHandle`，卸载时为 `null`。",

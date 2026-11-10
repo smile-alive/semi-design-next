@@ -8,7 +8,7 @@
 </script>
 
 <script lang="ts">
-    import FormInput from '../form-input.svelte';
+    import FormInput from '../fields/form-input.svelte';
     import Form from '../form.svelte';
     import InputGroup from '../input-group.svelte';
 

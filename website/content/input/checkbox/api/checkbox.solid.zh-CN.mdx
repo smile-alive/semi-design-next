@@ -15,7 +15,6 @@ import ApiType from '#/components/ApiType.astro';
 | onBlur         | 原生 input 失去焦点时触发。                                                   | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | -           |
 | onChange       | 选中状态变化时触发，参数的 `target` 为 `{ checked, value, name, disabled }`。 | <ApiType detail={"(event: CheckboxEvent) => any"}>Type</ApiType>                            | -           |
 | onFocus        | 原生 input 获得焦点时触发。                                                   | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | -           |
-| prefixCls      | CSS 类名前缀。                                                                | `string`                                                                                    | -           |
 | preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                         | `boolean`                                                                                   | -           |
 | type           | 样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。 | `CheckboxType`                                                                              | `"default"` |
 | value          | 该 Checkbox 在 CheckboxGroup 中代表的值；不设置时它不属于任何分组。           | `CheckboxValue`                                                                             | -           |

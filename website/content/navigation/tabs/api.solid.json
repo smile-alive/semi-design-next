@@ -39,8 +39,8 @@
                 "en-US": "Lazy rendering: a panel renders its content only after it has been active, and keeps it afterwards."
             },
             "more": {
-                "zh-CN": "将末尾的一部分标签页收入「更多」下拉菜单。传数字表示收入菜单的标签数；传对象时 count 为标签数，render 返回自定义的触发器，dropdownProps 透传给下拉菜单。",
-                "en-US": "Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, count is that number, render returns a custom trigger and dropdownProps is passed to the dropdown."
+                "zh-CN": "将末尾的一部分标签页收入「更多」下拉菜单。传数字表示收入菜单的标签数；传对象时 count 为标签数，render 接收 getTriggerProps 并返回自定义的触发器（把 getTriggerProps() 展开到触发元素上），dropdownProps 透传给下拉菜单。",
+                "en-US": "Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, count is that number, render receives getTriggerProps and returns a custom trigger with getTriggerProps() spread onto it, and dropdownProps is passed to the dropdown."
             },
             "onChange": {
                 "zh-CN": "切换标签页时触发，参数为新激活的 itemKey。",

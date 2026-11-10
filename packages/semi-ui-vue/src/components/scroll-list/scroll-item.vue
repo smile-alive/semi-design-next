@@ -23,7 +23,6 @@
         motion: () => semiDefault('ScrollItem', 'motion', true),
         selectedIndex: semiGlobalDefault('ScrollItem', 'selectedIndex'),
         transform: undefined,
-        type: semiGlobalDefault('ScrollItem', 'type'),
     });
 
     const emit = defineEmits<ScrollItemEmits<T>>();
@@ -92,6 +91,7 @@
                 clickable: !isWheel.value && !item.disabled,
                 class: {
                     [`${prefix}-item-sel`]: selected && !isWheel.value,
+                    [cssClasses.SELECTED]: isWheel.value && key === state.value.highlightedKey,
                     [`${prefix}-item-disabled`]: Boolean(item.disabled),
                 },
                 text: ItemFoundation.getItemText(item, selected, transform.value),

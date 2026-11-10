@@ -1527,7 +1527,7 @@ describe('Cascader', () => {
                 ['North America', 'United States'],
             ],
         });
-        await fireEvent.keyDown(getSelectionInput(), { key: 'Backspace', keyCode: 8 });
+        await fireEvent.keyDown(getSelectionInput(), { key: 'Backspace' });
         await settle();
         expect(onChange).toHaveBeenCalledWith([['Asia', 'China', 'Beijing']]);
         expect(getTagTexts()).toEqual(['北京']);

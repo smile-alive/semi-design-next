@@ -1,6 +1,6 @@
 <script lang="ts">
     import ArrayField from '../array-field.svelte';
-    import FormInput from '../form-input.svelte';
+    import FormInput from '../fields/form-input.svelte';
     import Form from '../form.svelte';
     import type { FormApi } from '../interface';
 

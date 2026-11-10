@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSearch } from '@fibrae/semi-icons-solid';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
-import Input, { type InputChangeEvent, type InputGroupProps, type InputMode, type InputProps, InputGroup, TextArea } from '..';
+import Input, { type InputChangeEvent, type InputGroupProps, type InputInternalProps, type InputMode, type InputProps, InputGroup, TextArea } from '..';
 import Tooltip from '../../tooltip';
 
 type Change = NonNullable<InputProps['onChange']>;
@@ -444,23 +444,6 @@ describe('Input', () => {
         expect(onKeyPress).toHaveBeenCalledTimes(1);
     });
 
-    it('onlyBorder 属性，对象与字符串 style 都保留', () => {
-        const stringStyled: InputProps = { style: 'color: blue', onlyBorder: 2 };
-        render(() => (
-            <>
-                <Input style={{ color: 'red' }} onlyBorder={1} />
-                <Input {...stringStyled} />
-            </>
-        ));
-        const [objectStyle, stringStyle] = document.querySelectorAll<HTMLElement>(`.${prefixCls}-wrapper`);
-        expect(objectStyle).toHaveClass(`${prefixCls}-only_border`);
-        // jsdom's computed style does not resolve the border-width shorthand, so read the inline style
-        expect(objectStyle.style.borderWidth).toBe('1px');
-        expect(objectStyle).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(stringStyle.style.borderWidth).toBe('2px');
-        expect(stringStyle).toHaveStyle({ color: 'rgb(0, 0, 255)' });
-    });
-
     it('清除按钮随值渲染，输入框随之带 sibling-clearbtn 类', () => {
         const [value, setValue] = createSignal('test');
         render(() => <Input value={value()} showClear />);
@@ -602,7 +585,7 @@ describe('Input 行为基线', () => {
     });
 
     it('清除按钮有值才渲染，禁用时不渲染，showClearIgnoreDisabled 时仍渲染', () => {
-        const [props, setProps] = createSignal<InputProps>({ value: '' });
+        const [props, setProps] = createSignal<InputInternalProps>({ value: '' });
         render(() => <Input showClear {...props()} />);
         expect(getClearBtn()).toBeNull();
         setProps({ disabled: true, value: 'semi' });
@@ -614,10 +597,11 @@ describe('Input 行为基线', () => {
     });
 
     it('只读时不渲染清除按钮，showClearIgnoreDisabled 也不例外', () => {
+        const internal = { showClearIgnoreDisabled: true };
         render(() => (
             <>
                 <Input defaultValue="semi" readonly showClear />
-                <Input defaultValue="semi" disabled readonly showClear showClearIgnoreDisabled />
+                <Input defaultValue="semi" disabled readonly showClear {...internal} />
             </>
         ));
         expect(getClearBtn()).toBeNull();

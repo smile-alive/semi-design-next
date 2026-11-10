@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
 import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
@@ -9,6 +9,8 @@ import type { TabPaneProps } from './interface';
 
 function TabPane({ ref, className, style, children, itemKey, tabIndex, disabled, icon, tab, closable, ...rest }: TabPaneProps) {
     const { activeKey, lazyRender, panes, tabPaneMotion: motion, tabPosition, prevActiveKey, forceDisableMotion, tabsId } = useTabsContext();
+
+    const overlayRef = useRef<HTMLDivElement>(null);
 
     const active = activeKey === itemKey;
 
@@ -47,9 +49,9 @@ function TabPane({ ref, className, style, children, itemKey, tabIndex, disabled,
             tabIndex={tabIndex || 0}
             x-semi-prop="children"
         >
-            <CSSAnimation startClassName={startClassName} animationState={active ? 'enter' : 'leave'} motion={hasMotion}>
+            <CSSAnimation startClassName={startClassName} animationState={active ? 'enter' : 'leave'} getElement={() => overlayRef.current} motion={hasMotion}>
                 {({ animationClassName, animationEventsNeedBind }) => (
-                    <div className={clsx(cssClasses.TABS_PANE_MOTION_OVERLAY, animationClassName)} x-semi-prop="children" {...animationEventsNeedBind}>
+                    <div ref={overlayRef} className={clsx(cssClasses.TABS_PANE_MOTION_OVERLAY, animationClassName)} x-semi-prop="children" {...animationEventsNeedBind}>
                         {shouldRender && children}
                     </div>
                 )}

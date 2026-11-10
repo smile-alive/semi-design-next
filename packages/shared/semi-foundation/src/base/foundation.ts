@@ -22,10 +22,6 @@ export interface DefaultAdapter<P = Record<string, any>, S = Record<string, any>
 /** The context type an adapter declares; `unknown` for a foundation that does not read context */
 export type ContextOf<T> = T extends DefaultAdapter<any, any, infer C> ? C : never;
 
-// shortcut: a foundation that declares no context (unknown) reads it untyped; drop the any once every foundation declares its context.
-// The keyof check tells an undeclared context from a declared one: `unknown extends X` also holds for weak and nullable declared types when strictNullChecks is off.
-export type HostContext<A> = unknown extends ContextOf<A> ? ([keyof ContextOf<A>] extends [never] ? any : ContextOf<A>) : ContextOf<A>;
-
 export interface DirectionContext {
     direction?: 'ltr' | 'rtl';
 }

@@ -96,6 +96,9 @@
     // replace the search handle
     const treeBindings = computed(() => omit((props.treeProps ?? {}) as Record<string, unknown>, ['modelValue', 'defaultValue', 'onChange', 'onUpdate:modelValue', 'ref', 'keyMaps', 'treeData', 'treeDataSimpleJson', 'changeWithObject']));
 
+    // the index signature of TransferInputProps still lets these through, and a v-bind modelValue would take over the search box
+    const inputBindings = computed(() => omit((props.inputProps ?? {}) as Record<string, unknown>, ['modelValue', 'defaultValue']));
+
     // the root is not a focus target: a tabindex (one injected by a wrapping Tooltip included) goes to the search box;
     // role="group" does not support aria-required
     const splitAttrs = (attrs: Record<string, unknown>) => splitControlAttrs(omit(attrs, ['aria-required']), (key) => key === 'tabindex' || key === 'tabIndex');
@@ -173,7 +176,7 @@
         <slot v-if="$slots.sourcePanel" name="sourcePanel" v-bind="sourcePanelProps()" />
         <section v-else :class="`${prefixCls}-left`">
             <SearchLandmark v-if="filter !== false" :aria-label="locale.locale.filter" :class="`${prefixCls}-filter`">
-                <Input :disabled="props.disabled" :modelValue="state.inputValue" :placeholder="locale.locale.placeholder" showClear v-bind="{ ...splitAttrs($attrs).control, ...props.inputProps }" @change="onInputChange">
+                <Input :disabled="props.disabled" :modelValue="state.inputValue" :placeholder="locale.locale.placeholder" showClear v-bind="{ ...splitAttrs($attrs).control, ...inputBindings }" @change="onInputChange">
                     <template #prefix>
                         <IconSearch />
                     </template>

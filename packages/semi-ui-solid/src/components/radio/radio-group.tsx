@@ -40,7 +40,6 @@ export interface RadioGroupProps extends ElementProps<'div', 'onChange' | 'defau
     mode?: RadioMode;
     type?: RadioType;
     buttonSize?: RadioGroupButtonSize;
-    prefixCls?: string;
 }
 
 export type RadioGroupState = RadioGroupBaseState;
@@ -55,6 +54,8 @@ const defaultProps = {
     type: strings.TYPE_DEFAULT,
     buttonSize: 'middle',
 } satisfies Partial<RadioGroupProps>;
+
+const prefix = css.PREFIX;
 
 // Direct text children are dropped, as React's Children.map did
 function Items(props: { children?: JSX.Element }) {
@@ -72,7 +73,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         'renderLabel',
         'renderExtra',
         'mode',
-        'prefixCls',
         'class',
         'direction',
         'type',
@@ -108,8 +108,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
 
     const isDefaultRadio = () => local.type === strings.TYPE_DEFAULT;
 
-    const prefix = () => local.prefixCls || css.PREFIX;
-
     const isButtonRadio = () => local.type === strings.TYPE_BUTTON;
 
     const isPureCardRadio = () => local.type === strings.TYPE_PURECARD;
@@ -126,7 +124,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
             isCardRadio: isCardRadio(),
             isPureCardRadio: isPureCardRadio(),
             buttonSize: local.buttonSize,
-            prefixCls: local.prefixCls,
         },
     }));
 
@@ -149,12 +146,12 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         <div
             {...rest}
             class={clsx(local.class, {
-                [prefix()]: true,
-                [`${prefix()}-wrapper`]: true,
-                [`${prefix()}-${local.direction}`]: local.direction && !isButtonRadio(),
-                [`${prefix()}-${local.direction}-default`]: local.direction && isDefaultRadio(),
-                [`${prefix()}-${local.direction}-card`]: local.direction && isCardRadio(),
-                [`${prefix()}-buttonRadio`]: isButtonRadio(),
+                [prefix]: true,
+                [`${prefix}-wrapper`]: true,
+                [`${prefix}-${local.direction}`]: local.direction && !isButtonRadio(),
+                [`${prefix}-${local.direction}-default`]: local.direction && isDefaultRadio(),
+                [`${prefix}-${local.direction}-card`]: local.direction && isCardRadio(),
+                [`${prefix}-buttonRadio`]: isButtonRadio(),
             })}
             role="radiogroup"
             onFocusOut={handleFocusOut}

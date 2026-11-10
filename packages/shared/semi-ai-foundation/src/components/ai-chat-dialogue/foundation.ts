@@ -125,7 +125,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         this.notifyChats(newChats);
     };
 
-    onHintClick = (hint: string) => {
+    handleHintClick = (hint: string) => {
         const newMessage = {
             role: strings.ROLE.USER,
             id: createId(),

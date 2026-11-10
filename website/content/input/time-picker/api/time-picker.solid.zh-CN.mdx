@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| autofocus | 挂载后将焦点交给输入框，透传给输入框的 `autofocus`。 | `boolean` | - |
 | borderless | 无边框模式。 | `boolean` | `false` |
 | class | 根元素的类名。 | `string` | - |
 | clearIcon | 自定义清除图标，showClear 为 true 时有效。 | `JSX.Element` | - |
@@ -14,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabledHours | 返回禁止选择的小时。 | <ApiType detail={"() => number[]"}>Type</ApiType> | - |
 | disabledMinutes | 按所选小时返回禁止选择的分钟。 | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | - |
 | disabledSeconds | 按所选小时和分钟返回禁止选择的秒。 | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | - |
-| disabledTime | 仅范围模式生效：按当前值与面板位置返回左右面板各自的禁用规则。value 中未选的一侧为 undefined；返回值中的 disabledHours、disabledMinutes、disabledSeconds 覆盖顶层的同名属性，未返回的回退到顶层。单选模式下忽略。 | <ApiType detail={"( value: Date[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
+| disabledTime | 仅范围模式生效：按当前值与面板位置返回左右面板各自的禁用规则。value 中未选的一侧为 undefined；返回值中的 disabledHours、disabledMinutes、disabledSeconds 覆盖顶层的同名属性，未返回的回退到顶层。单选模式下忽略。 | <ApiType detail={"( value: (Date \u007c undefined)[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
 | focusOnOpen | 挂载后让输入框获得焦点并选中内容，同时打开面板。 | `boolean` | `false` |
 | format | 展示的时间格式，遵循 date-fns 的 format；use12Hours 为 true 时默认为 a h:mm:ss，否则为 HH:mm:ss。 | `string` | - |
 | hideDisabledOptions | 隐藏禁止选择的选项。 | `boolean` | `false` |
@@ -40,7 +41,6 @@ import ApiType from '#/components/ApiType.astro';
 | popupStyle | 弹出层的样式，接受对象（键用 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
 | position | 浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft；RTL 方向下默认为 bottomRight。 | `Position` | - |
 | prefix | 输入框的前缀内容。 | `JSX.Element` | - |
-| prefixCls | 样式类名的前缀。 | `string` | `"semi-timepicker"` |
 | preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 调用。 | `boolean` | - |
 | rangeSeparator | 时间范围的分隔符。 | `string` | `" ~ "` |
 | ref | 根元素的引用；其 focus() 与 blur() 作用于输入框，使用自定义触发器时无效。 | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |

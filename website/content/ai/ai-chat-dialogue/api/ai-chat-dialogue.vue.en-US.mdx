@@ -4,19 +4,19 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| align | Conversation layout: leftRight or leftAlign. | `"leftAlign" \| "leftRight"` | `semiDefault("AIChatDialogue", "align", "leftRight")` |
+| align | Conversation layout: leftRight or leftAlign. | `"leftAlign" \| "leftRight"` | `"leftRight"` |
 | chats | Controlled list of conversation messages; bind it with v-model:chats. | `Message[]` | `semiGlobalDefault("AIChatDialogue", "chats")` |
-| disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `semiDefault("AIChatDialogue", "disabledFileItemClick", false)` |
-| escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `semiDefault("AIChatDialogue", "escapeHtml", true)` |
+| disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `false` |
+| escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `true` |
 | hintCls | Class name of the outermost hint area element. | `string` | `semiGlobalDefault("AIChatDialogue", "hintCls")` |
 | hints | Hint texts. Clicking a hint turns it into a new user message and emits hintClick. | `string[]` | `semiGlobalDefault("AIChatDialogue", "hints")` |
 | hintStyle | Style of the outermost hint area element. | `StyleValue` | `semiGlobalDefault("AIChatDialogue", "hintStyle")` |
-| selecting | Whether multi-select mode is on. | `boolean` | `semiDefault("AIChatDialogue", "selecting", false)` |
+| selecting | Whether multi-select mode is on. | `boolean` | `false` |
 | markdownRenderProps | Props passed to the MarkdownRender of each message. raw is decided by the message and cannot be passed; components are merged with the built-in ones, and a component with the same name (such as code) replaces the built-in one. | `MarkdownRenderProps` | `semiGlobalDefault("AIChatDialogue", "markdownRenderProps")` |
-| mode | Conversation mode: bubble, noBubble or userBubble. | `"bubble" \| "noBubble" \| "userBubble"` | `semiDefault("AIChatDialogue", "mode", "bubble")` |
+| mode | Conversation mode: bubble, noBubble or userBubble. | `"bubble" \| "noBubble" \| "userBubble"` | `"bubble"` |
 | roleConfig | Name, avatar and avatar color of each role (user, assistant, system and so on). Required, and not read from the global defaults. | `RoleConfig` | `undefined` |
-| showReset | Whether to show the reset action. | `boolean` | `semiDefault("AIChatDialogue", "showReset", true)` |
-| showReference | Whether to show the reference icon on text or file messages. Only user messages are affected. | `boolean` | `semiDefault("AIChatDialogue", "showReference", false)` |
+| showReset | Whether to show the reset action. | `boolean` | `true` |
+| showReference | Whether to show the reference icon on text or file messages. Only user messages are affected. | `boolean` | `false` |
 
 **Events**
 

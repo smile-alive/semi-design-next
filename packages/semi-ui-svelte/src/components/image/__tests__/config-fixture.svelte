@@ -1,7 +1,7 @@
 <script lang="ts">
     import ConfigProvider from '../../config-provider/config-provider.svelte';
     import type { ConfigProviderProps } from '../../config-provider/interface';
-    import ImagePreview from '../preview.svelte';
+    import ImagePreview from '../preview/preview.svelte';
     import { srcList } from './helpers';
 
     // `container` puts the popup container on ConfigProvider; `own` adds a getPopupContainer on the preview that wins over it

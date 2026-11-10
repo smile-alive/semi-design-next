@@ -7,7 +7,7 @@ import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';
 import { fitNavIcon } from '../navigation/nav-icon';
 import Typography, { type ShowTooltip } from '../typography';
-import { useBreadContext } from './context';
+import { type BreadContextType, useBreadContext } from './context';
 
 type Foundation = BreadcrumbItemFoundation<BreadcrumbItemProps, React.MouseEvent>;
 type Adapter = BreadcrumbItemAdapter<BreadcrumbItemProps, React.MouseEvent>;
@@ -22,27 +22,31 @@ export interface BreadcrumbItemInfo extends BaseBreadcrumbItemInfo {
 export interface RouteProps extends Route {
     icon?: React.ReactNode;
 }
-export interface BreadcrumbItemProps extends BaseProps, ElementProps<'span', 'onClick'> {
+export interface BreadcrumbItemProps extends BaseProps, ElementProps<'li', 'onClick'> {
     onClick?: (item: BreadcrumbItemInfo | RouteProps, e: React.MouseEvent) => void;
     icon?: React.ReactNode;
     href?: string;
     separator?: React.ReactNode;
     noLink?: boolean;
+    /** Attached to the item's li */
+    ref?: React.Ref<HTMLLIElement>;
+}
+
+/** Set by Breadcrumb, kept out of the public BreadcrumbItemProps */
+export interface BreadcrumbItemInternalProps extends BreadcrumbItemProps {
     active?: boolean;
     shouldRenderSeparator?: boolean;
     route?: RouteProps;
-    /** Attached to the item's wrapper span */
-    ref?: React.Ref<HTMLSpanElement>;
 }
 
 function BreadcrumbItem(props: BreadcrumbItemProps) {
-    const { ref, onClick, icon, href, separator, noLink, active, shouldRenderSeparator = true, route, children, className, ...rest } = props;
+    const { ref, onClick, icon, href, separator, noLink, active, shouldRenderSeparator = true, route, children, className, ...rest } = props as BreadcrumbItemInternalProps;
 
     const context = useBreadContext();
 
     let inner: React.ReactNode;
 
-    const [foundation] = useFoundation<Foundation, Adapter, BreadcrumbItemProps, object>(
+    const [foundation] = useFoundation<Foundation, Adapter, BreadcrumbItemProps, object, BreadContextType>(
         BreadcrumbItemFoundation,
         props,
         () => ({}),
@@ -112,10 +116,10 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
         );
 
     return (
-        <span {...rest} ref={ref} className={clsx(`${clsPrefix}-item-wrap`, className)} aria-current={active ? 'page' : undefined}>
+        <li {...rest} ref={ref} className={clsx(`${clsPrefix}-item-wrap`, className)} aria-current={active ? 'page' : undefined}>
             {item}
             {shouldRenderSeparator && (separator || <span className={`${clsPrefix}-separator`}>{context.separator}</span>)}
-        </span>
+        </li>
     );
 }
 

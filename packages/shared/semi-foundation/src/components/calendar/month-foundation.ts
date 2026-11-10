@@ -3,7 +3,7 @@ import CalendarFoundation, { type MonthData, type MonthlyEvent } from './foundat
 
 export interface CalendarMonthBaseState {
     /** The key of the open "more" card; at most one card is open */
-    openCardKey: string | undefined;
+    openCardKey?: string;
     /** How many event rows a day cell shows; 0 until the host reports a row height after mount */
     itemLimit: number;
 }

@@ -6,7 +6,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Button, Form, SchemaField, SchemaForm } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { FormApi } from '../interface';
-import type { JsonSchema } from '../schema-field';
+import type { JsonSchema } from '../schema-form/schema-field';
 
 const text = zh_CN.Form;
 const nth = (template: string, index: number) => template.replace('${index}', String(index));

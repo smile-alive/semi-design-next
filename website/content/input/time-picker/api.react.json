@@ -108,7 +108,6 @@
                 "zh-CN": "浮层位置。未设置时，`type` 为 `timeRange` 取 `bottom`，为 `time` 取 `bottomLeft`；RTL 方向下取 `bottomRight`。",
                 "en-US": "Popup position. Unset, it is `bottom` for `timeRange` and `bottomLeft` for `time`; `bottomRight` under RTL."
             },
-            "prefixCls": { "zh-CN": "样式类名的前缀。", "en-US": "Prefix of the class names." },
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动文档，直接作为 `focus()` 的 `preventScroll` 选项，作用于组件内部的聚焦调用。",
                 "en-US": "Whether focusing prevents the browser from scrolling the document; passed directly as the `preventScroll` option of `focus()`, for the focus calls inside the component."

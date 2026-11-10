@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
-import { Dropdown, type DropdownProps, type DropDownMenuItem } from '..';
+import { Dropdown, type DropdownProps, type DropdownMenuItem } from '..';
 import DisabledParent from './disabled-parent.svelte';
 import DropdownCase from './dropdown-case.svelte';
 import MenuCase from './menu-case.svelte';
@@ -64,7 +64,7 @@ describe('Svelte Dropdown 渲染', () => {
     });
 
     it('menu 数据渲染标题、选项与分隔线，menuIcon 给数据项渲染图标', async () => {
-        const menu: DropDownMenuItem[] = [
+        const menu: DropdownMenuItem[] = [
             { node: 'title', name: 'Group' },
             { node: 'item', name: 'A', active: true },
             { node: 'item', name: 'B', disabled: true },

@@ -23,7 +23,7 @@ peer 依赖：`svelte` ^5.57.0。`@fibrae/semi-icons-core` 是普通依赖，随
 ```
 
 - 样式随组件引入，不需要单独引入。
-- 单个图标没有自己的 props，所有属性透传给 `Icon`。`Icon` 的 props：`size`（`inherit`、`extra-small`、`small`、`default`、`large`、`extra-large`，默认 `default`）、`spin`、`rotate`、`prefixCls`、`type`、`fill`（`string` 或 `string[]`）；`style` 只接受字符串。
+- 单个图标没有自己的 props，所有属性透传给 `Icon`。`Icon` 的 props：`size`（`inherit`、`extra-small`、`small`、`default`、`large`、`extra-large`，默认 `default`）、`spin`、`rotate`、`type`、`fill`（`string` 或 `string[]`）；`style` 只接受字符串。
 - 多色图标的 `fill` 按顺序给各部分上色；其他图标把 `fill` 传给根 `svg`。
 - 图标默认是装饰性的（`aria-hidden`）。传 `aria-label`、`aria-labelledby` 或 `tabindex >= 0` 时改为 `role="img"` 且不隐藏。
 - 自定义图标：默认导出的 `Icon` 用 `children` snippet 渲染自己的 `svg`，snippet 参数带上 `fill`。不支持 React 版的 `elementType` 与 ref。

@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "packages/semi-ui-react/src/components/input/index.tsx",
+        "source": "packages/semi-ui-react/src/components/input/input.tsx",
         "props": {
             "aria-label": { "zh-CN": "原生 input 的 `aria-label`。", "en-US": "`aria-label` of the native input." },
             "aria-describedby": { "zh-CN": "原生 input 的 `aria-describedby`。", "en-US": "`aria-describedby` of the native input." },
@@ -78,10 +78,6 @@
             "onInput": { "zh-CN": "原生 `input` 事件的回调。", "en-US": "Called on the native `input` event." },
             "onKeyDown": { "zh-CN": "keydown 回调，参数为原生事件。", "en-US": "Called on keydown with the native event." },
             "onKeyUp": { "zh-CN": "keyup 回调，参数为原生事件。", "en-US": "Called on keyup with the native event." },
-            "onlyBorder": {
-                "zh-CN": "外层 wrapper 的边框宽度，单位 px；`style` 中的同名值会覆盖它。",
-                "en-US": "Border width of the wrapper, in px; a `borderWidth` in `style` overrides it."
-            },
             "placeholder": { "zh-CN": "输入框为空时显示的提示文字。", "en-US": "Hint text shown while the input is empty." },
             "prefix": {
                 "zh-CN": "前缀标签，可以是文本、Semi 图标或任意 `ReactNode`。",
@@ -102,10 +98,6 @@
             "showClear": {
                 "zh-CN": "输入框有内容且悬停或焦点位于组件内时展示清除按钮。",
                 "en-US": "Shows a clear button when the input has content and the pointer or focus is inside the component."
-            },
-            "showClearIgnoreDisabled": {
-                "zh-CN": "内部属性，供 DatePicker 使用：禁用时仍可清除。",
-                "en-US": "Internal prop used by DatePicker: the clear button stays available while disabled."
             },
             "size": {
                 "zh-CN": "输入框大小，可选 `large`、`default` 或 `small`。在 InputGroup 中未设置时取组的 `size`。",
@@ -163,10 +155,6 @@
             },
             "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when the textarea is uncontrolled." },
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the textarea is disabled." },
-            "disabledEnterStartNewLine": {
-                "zh-CN": "内部属性，供 Chat 使用：Enter 不换行，Shift + Enter 换行。",
-                "en-US": "Internal prop used by Chat: Enter does not start a new line, Shift + Enter does."
-            },
             "getValueLength": {
                 "zh-CN": "自定义计算字符串长度，搭配 `maxLength`、`minLength` 与 `maxCount` 使用。",
                 "en-US": "Custom string length calculation, used with `maxLength`, `minLength` and `maxCount`."

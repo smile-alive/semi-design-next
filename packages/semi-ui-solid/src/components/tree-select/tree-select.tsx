@@ -823,6 +823,9 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         get disabled() {
             return isDropdownPositionSearch() ? undefined : local.disabled;
         },
+        get size() {
+            return isDropdownPositionSearch() ? undefined : local.size;
+        },
         get onFocus() {
             return isDropdownPositionSearch() ? undefined : handleSearchFocus;
         },
@@ -864,6 +867,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                             prefix={isDropdownPositionSearch() ? <IconSearch /> : null}
                             autofocus={isDropdownPositionSearch() ? undefined : local.searchAutoFocus}
                             disabled={isDropdownPositionSearch() ? undefined : local.disabled}
+                            size={isDropdownPositionSearch() ? undefined : local.size}
                             onFocus={handleSearchFocus}
                             onBlur={handleSearchBlur}
                             onChange={(value) => search(value)}
@@ -893,6 +897,14 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             restTagsPopoverProps={local.restTagsPopoverProps}
             showRestTagsPopover={local.showRestTagsPopover}
             size={local.size}
+            // the trigger draws its own clear button and adornments, and its search text only becomes a search: global
+            // TagInput defaults must not add them, drag handles or add-on-blur tags
+            addOnBlur={false}
+            draggable={false}
+            insetLabel={null}
+            prefix={null}
+            showClear={false}
+            suffix={null}
             renderTagItem={(key, index) => <TagItem itemKey={key} index={index} />}
             onInputChange={(value) => search(value)}
             onRemove={(key) => removeTag(key)}
@@ -1136,6 +1148,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={state().isOpen}
+            onEscKeyDown={foundation.close}
             onOpen={handleOpen}
         >
             {(getTriggerProps) => (

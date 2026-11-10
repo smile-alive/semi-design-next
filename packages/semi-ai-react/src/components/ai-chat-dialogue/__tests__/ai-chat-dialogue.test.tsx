@@ -13,9 +13,9 @@ import type { AvatarProps } from '@fibrae/semi-ui-react/avatar/index';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, sleep } from '@test/utils/react';
+import { ReferenceWidget } from '../dialogue/content-item/reference';
+import DialogueAvatar from '../dialogue/dialogue-avatar';
 import type { AIChatDialogueHandle, AIChatDialogueProps, DefaultActionNodeObj, DialogueRenderConfig, MarkdownRenderProps, Message, Metadata } from '../interface';
-import { ReferenceWidget } from '../widgets/content-item/reference';
-import DialogueAvatar from '../widgets/dialogue-avatar';
 
 type Props = AIChatDialogueProps;
 const prefix = `${BASE_CLASS_PREFIX}-ai-chat-dialogue`;

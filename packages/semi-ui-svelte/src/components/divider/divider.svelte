@@ -8,7 +8,7 @@
     const defaults = useDefaultProps('Divider');
     let { layout = defaults('layout', 'horizontal'), align = defaults('align', 'center'), dashed = defaults('dashed'), margin = defaults('margin'), children, ...rest }: DividerProps = $props();
 
-    const prefixCls = `${cssClasses.PREFIX}-divider`;
+    const prefixCls = cssClasses.PREFIX;
 
     // A snippet cannot be inspected, so passing children is what makes a horizontal divider carry text
     const withText = $derived(Boolean(children) && layout === 'horizontal');

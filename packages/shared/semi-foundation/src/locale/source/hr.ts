@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Odaberi sve retke',
         selectRow: 'Odaberi ovaj redak',
+        scrollRegion: 'Pomični sadržaj tablice',
+        untitledColumn: 'Stupac bez naslova',
         filterColumn: 'Filtriraj podatke prema ovom stupcu',
         filterColumnActive: 'Filtriraj podatke prema ovom stupcu, filtar je aktivan',
         expandRow: 'Proširi ovaj redak',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Pretraži',
         replace: 'Zamijeni',
         replaceAll: 'Zamijeni sve',
+        replaceWith: 'Zamijeni s',
         caseSensitive: 'Razlikuj velika i mala slova',
         regex: 'Koristi regularni izraz',
         wholeWord: 'Samo cijele riječi',

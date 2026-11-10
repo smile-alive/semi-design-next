@@ -4,12 +4,14 @@ import type { Locale as DateFnsLocale } from 'date-fns';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import type { ElementProps } from '../../base/element-props';
 import { usePopupLayer } from '../../base/popup-layer';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useClickOutside from '../../primitives/use-click-outside';
+import callHandler from '../../utils/call-handler';
 import { omitFormInjected } from '../../utils/control-attrs';
 import { focusElement } from '../../utils/forward-focus';
 import mergeRefs from '../../utils/merge-refs';
@@ -28,9 +30,10 @@ export type BaseValueType = string | number | Date | undefined;
 
 export type Type = 'time' | 'timeRange';
 
-/** Undeclared props (data-*, aria-*, id, name, autofocus, Input props) go to the native input */
+/** Undeclared props (data-*, aria-*, id, name, autofocus, Input props) go to the native input, or to the root element with `triggerRender` */
 interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 'value' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'prefix' | 'placeholder' | 'ref'> {
     autoAdjustOverflow?: boolean;
+    autofocus?: boolean;
     borderless?: boolean;
     /** On the root element */
     class?: string;
@@ -46,7 +49,7 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
      * mode this prop is ignored (the top-level disabledHours / disabledMinutes / disabledSeconds props are used instead).
      */
     disabledTime?: (
-        value: Date[],
+        value: (Date | undefined)[],
         panelType: PanelType
     ) => {
         disabledHours?: () => number[];
@@ -76,7 +79,6 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     popupStyle?: JSX.CSSProperties | string;
     position?: Position;
     prefix?: JSX.Element;
-    prefixCls?: string;
     preventScroll?: boolean;
     rangeSeparator?: string;
     scrollItemProps?: Pick<ScrollItemProps, 'cycled' | 'mode' | 'motion' | 'transform'>;
@@ -106,7 +108,8 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
 export interface TimePickerTriggerRenderProps {
     disabled: boolean;
     placeholder: string;
-    value: Date[];
+    /** The unpicked side of a range is undefined */
+    value: (Date | undefined)[];
     inputValue: string;
     componentProps: Omit<TimePickerProps, 'ref'>;
     onChange: (inputValue: string) => void;
@@ -131,7 +134,6 @@ const defaultProps = {
     borderless: false,
     showClear: true,
     rangeSeparator: strings.DEFAULT_RANGE_SEPARATOR,
-    prefixCls: cssClasses.PREFIX,
     inputReadOnly: false,
     stopPropagation: true,
     hideDisabledOptions: false,
@@ -141,6 +143,8 @@ const defaultProps = {
     type: strings.DEFAULT_TYPE as Type,
     motion: true,
 } satisfies Partial<TimePickerProps>;
+
+const prefixCls = cssClasses.PREFIX;
 
 const rangeSlot = (slot: JSX.Element, index: number) => (Array.isArray(slot) ? slot[index] : slot);
 
@@ -215,7 +219,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
         'popupStyle',
         'position',
         'prefix',
-        'prefixCls',
         'preventScroll',
         'rangeSeparator',
         'ref',
@@ -297,7 +300,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
 
     const position = () => TimePickerFoundation.getPosition(props, config().direction);
 
-    const popupClassName = () => clsx(TimePickerFoundation.getPanelClassNames(props), local.popupClassName);
+    const popupClassName = () => clsx(TimePickerFoundation.getPanelClassNames({ ...props, prefixCls }), local.popupClassName);
 
     const isTriggerButton = () => !customTriggerFocusable();
 
@@ -329,6 +332,9 @@ export default function TimePicker(rawProps: TimePickerProps) {
         },
     };
 
+    // F2: a custom trigger leaves no input to take the undeclared props, so they land on the root
+    const rootAttrs = () => (local.triggerRender ? rest : {}) as JSX.HTMLAttributes<HTMLDivElement>;
+
     // reads the slot getters once each: every read creates the nodes again
     const headerOf = (index: number) => (isRange() ? (local.panels?.[index] ?? rangeSlot(local.panelHeader ?? [locale().locale.begin, locale().locale.end], index)) : local.panelHeader);
 
@@ -347,7 +353,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
         <div ref={setPanel} id={panelId} class={clsx({ [cssClasses.RANGE_PANEL_LISTS]: isRange() })} onMouseDown={markPressInside}>
             <For each={isRange() ? [0, 1] : [0]}>
                 {(index) => {
-                    // ComboboxFoundation, hideDisabledOptions included, works on the resolved functions
+                    // getOptions, hideDisabledOptions included, works on the resolved functions
                     const disabledFns = createMemo(() => TimePickerFoundation.getDisabledTimeFns(props, state().value, index === 1 ? 'right' : 'left', isRange()));
                     return (
                         <Combobox
@@ -362,7 +368,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
                             minuteStep={local.minuteStep}
                             panelFooter={footerOf(index)}
                             panelHeader={headerOf(index)}
-                            prefixCls={`${local.prefixCls}-panel`}
+                            prefixCls={`${prefixCls}-panel`}
                             scrollItemProps={local.scrollItemProps}
                             secondStep={local.secondStep}
                             timeStampValue={state().value[index]}
@@ -394,7 +400,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
             invalid={state().invalid}
             placeholder={local.placeholder || locale().locale.placeholder[local.type]}
             prefix={local.prefix}
-            prefixCls={local.prefixCls}
+            prefixCls={prefixCls}
             preventScroll={local.preventScroll}
             showClear={local.disabled ? false : local.showClear}
             size={local.size}
@@ -419,7 +425,17 @@ export default function TimePicker(rawProps: TimePickerProps) {
     return (
         // the inputs and any prefix or trigger content belong to the TimePicker, not to an enclosing InputGroup
         <InputGroupContext.Provider value={undefined}>
-            <div ref={untrack(() => mergeRefs(setRoot, local.ref))} class={clsx(local.prefixCls, local.class)} style={local.style} onMouseDown={markPressInside}>
+            <div
+                role={namedRole(rootAttrs())}
+                {...rootAttrs()}
+                ref={untrack(() => mergeRefs(setRoot, local.ref))}
+                class={clsx(prefixCls, local.class)}
+                style={local.style}
+                onMouseDown={(e) => {
+                    callHandler(rootAttrs().onMouseDown, e);
+                    markPressInside(e);
+                }}
+            >
                 <Popover
                     contentClassName={popupClassName()}
                     style={local.popupStyle}
@@ -440,7 +456,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
                             keyed
                             fallback={
                                 // the input is the Tab stop; Tooltip would add 0 here
-                                <span {...getTriggerProps({ class: `${local.prefixCls}-header`, tabIndex: -1 })}>{renderInput()}</span>
+                                <span {...getTriggerProps({ class: `${prefixCls}-header`, tabIndex: -1 })}>{renderInput()}</span>
                             }
                         >
                             {(render) => <div {...(getTriggerProps(customTriggerOwn) as JSX.HTMLAttributes<HTMLDivElement>)}>{render(triggerRenderProps)}</div>}

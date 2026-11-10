@@ -11,7 +11,8 @@ import GroupModel from './fixtures/group-model.vue';
 import PopoverFixture from './fixtures/in-popover.vue';
 
 type Change = (event: RadioChangeEvent) => void;
-type GroupInput = RadioGroupProps & { onChange?: Change; 'onUpdate:modelValue'?: (value?: RadioValue) => void };
+// Pick turns the interface into a mapped type, which the generic SFC's Record<string, unknown> props accept
+type GroupInput = Pick<RadioGroupProps, keyof RadioGroupProps> & { onChange?: Change; 'onUpdate:modelValue'?: (value?: RadioValue) => void };
 const prefixCls = `${BASE_CLASS_PREFIX}-radio`;
 const groupCls = `${BASE_CLASS_PREFIX}-radioGroup`;
 const getRadio = (name: string) => screen.getByRole<HTMLInputElement>('radio', { name });
@@ -242,7 +243,7 @@ describe('RadioGroup', () => {
         absent();
     });
 
-    it('Radio 的 name 优先于 group 的 name', () => {
+    it('组内 Radio 一律用 group 的 name', () => {
         render(RadioGroup, {
             props: { name: 'g' },
             slots: {
@@ -256,7 +257,7 @@ describe('RadioGroup', () => {
                 ),
             },
         });
-        expect(getRadio('A')).toHaveAttribute('name', 'own');
+        expect(getRadio('A')).toHaveAttribute('name', 'g');
         expect(getRadio('B')).toHaveAttribute('name', 'g');
     });
 
@@ -507,12 +508,6 @@ describe('RadioGroup', () => {
         expect(document.querySelector(`.${groupCls}-vertical-card`)).not.toBeNull();
     });
 
-    it('group 的 prefixCls 作用于各 radio 的根', () => {
-        const { container } = renderChildren({ prefixCls: 'my-group' });
-        expect(container.firstElementChild).toHaveClass('my-group', 'my-group-wrapper');
-        expect(container.querySelectorAll('label.my-group')).toHaveLength(3);
-    });
-
     it('group 的 id、aria-*、data-*、class 与 style 作用于根元素', () => {
         const { container } = renderChildren(
             {},
@@ -585,14 +580,6 @@ describe('RadioGroup', () => {
         render(RadioGroup, { slots: { default: abc }, global: { provide: { [semiGlobalKey as symbol]: semi } } });
         expect(getRadio('B')).toBeChecked();
         expect(getRadio('A')).toBeDisabled();
-    });
-
-    it('分组的 prefixCls 优先于 Radio 的全局默认值', () => {
-        semiGlobal.config.overrideDefaultProps = { Radio: { prefixCls: 'gx' } };
-        render(RadioGroup, { props: { prefixCls: 'g' }, slots: { default: abc } });
-        const label = getRadio('A').closest('label');
-        expect(label).toHaveClass('g');
-        expect(label).not.toHaveClass('gx');
     });
 
     it('根元素是组件的 $el：未声明的属性与 click 监听落在 radiogroup', async () => {

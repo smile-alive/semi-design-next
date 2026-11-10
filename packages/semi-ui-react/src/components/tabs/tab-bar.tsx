@@ -1,7 +1,5 @@
 import { type CSSProperties, type ReactElement, type ReactNode, isValidElement, useRef } from 'react';
 import clsx from 'clsx';
-// compat pick also copies inherited properties of user-provided tabList items
-import { pick } from 'es-toolkit/compat';
 import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/components/tabs/constants';
 import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
 import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
@@ -12,7 +10,7 @@ import ReactResizeObserver from '../../internal/resize-observer';
 import Button from '../button';
 import Dropdown, { type DropdownProps } from '../dropdown';
 import useLocale from '../locale/use-locale';
-import OverflowList from '../overflow-list';
+import OverflowList, { type OverflowListInternalProps } from '../overflow-list';
 import { TabsContext, useTabsContext } from './context';
 import { getTabId } from './ids';
 import type { TabBarProps, PlainTab } from './interface';
@@ -22,6 +20,8 @@ export interface OverflowItem extends PlainTab {
     key: string;
     active: boolean;
 }
+
+const InternalOverflowList = OverflowList as (props: OverflowListInternalProps<OverflowItem>) => ReactElement;
 
 export default function TabBar(props: TabBarProps) {
     const {
@@ -92,7 +92,21 @@ export default function TabBar(props: TabBarProps) {
     };
 
     const renderTabItem = (panel: PlainTab): ReactElement => (
-        <TabItem {...pick(panel, ['disabled', 'icon', 'itemKey', 'tab', 'closable'])} key={getBarItemKey(panel.itemKey)} type={type} deleteTabItem={deleteTabItem} selected={panel.itemKey === activeKey} size={size} tabPosition={tabPosition} handleKeyDown={handleKeyDown} onClick={onTabClick} />
+        <TabItem
+            key={getBarItemKey(panel.itemKey)}
+            type={type}
+            disabled={panel.disabled}
+            closable={panel.closable}
+            deleteTabItem={deleteTabItem}
+            itemKey={panel.itemKey}
+            selected={panel.itemKey === activeKey}
+            size={size}
+            tab={panel.tab}
+            tabPosition={tabPosition}
+            icon={panel.icon}
+            handleKeyDown={handleKeyDown}
+            onClick={onTabClick}
+        />
     );
 
     // A tablist may own only tabs, so the arrows, the more trigger and the extra content stay outside it. The wrapper
@@ -173,7 +187,7 @@ export default function TabBar(props: TabBarProps) {
             ...item,
         }));
         return (
-            <OverflowList<OverflowItem>
+            <InternalOverflowList
                 className={`${cssClasses.TABS_BAR}-overflow-list`}
                 wrapperStyle={visibleTabsStyle}
                 items={renderedList}

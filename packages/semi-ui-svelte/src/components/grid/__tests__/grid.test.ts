@@ -110,9 +110,8 @@ describe('Svelte Row', () => {
     });
 
     it('读取全局默认值，显式属性优先；undefined 回落到全局值', () => {
-        semiGlobal.config.overrideDefaultProps = { Row: { gutter: 16, prefixCls: 'g' } };
+        semiGlobal.config.overrideDefaultProps = { Row: { gutter: 16 } };
         const { rowEl, store } = setup();
-        expect(rowEl()).toHaveClass('g-row');
         expect(gutterVars(rowEl(), 'x').md).toBe('16px');
         store.row.gutter = 0;
         flushSync();
@@ -120,12 +119,6 @@ describe('Svelte Row', () => {
         store.row.gutter = undefined;
         flushSync();
         expect(gutterVars(rowEl(), 'x').md).toBe('16px');
-    });
-
-    it('prefixCls 局部覆盖对 Row 与 Col 分别生效', () => {
-        const { view } = setup({ prefixCls: 'a' }, { prefixCls: 'b' });
-        expect(view.container.querySelector('.a-row')).not.toBeNull();
-        expect(view.container.querySelector('.b-col')).not.toBeNull();
     });
 });
 
@@ -166,11 +159,11 @@ describe('Svelte Col', () => {
     });
 
     it('读取全局默认值，显式属性优先', () => {
-        semiGlobal.config.overrideDefaultProps = { Col: { prefixCls: 'g', span: 4 } };
+        semiGlobal.config.overrideDefaultProps = { Col: { span: 4 } };
         const { colEl, store } = setup();
-        expect(colEl()).toHaveClass('g-col', 'g-col-4');
-        store.col.prefixCls = 'own';
+        expect(colEl()).toHaveClass('semi-col-4');
+        store.col.span = 6;
         flushSync();
-        expect(colEl()).toHaveClass('own-col');
+        expect(colEl()).toHaveClass('semi-col-6');
     });
 });

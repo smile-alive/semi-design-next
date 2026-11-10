@@ -1,7 +1,7 @@
 import type { JSX, Ref } from 'solid-js';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import type { Node } from '@tiptap/pm/model';
-import type { Attachment, Content, LeftMenuChangeProps, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+import type { Attachment, Content, MessageContent, Reference, Setup, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
 import type { PopoverProps } from '@fibrae/semi-ui-solid/popover/index';
 import type { TooltipProps } from '@fibrae/semi-ui-solid/tooltip/index';
@@ -70,7 +70,7 @@ export interface AIChatInputProps extends ElementProps<'div', 'onFocus' | 'onBlu
     generating?: boolean;
     renderConfigureArea?: () => JSX.Element;
     /** `changedValue` is undefined when an item is removed */
-    onConfigureChange?: (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void;
+    onConfigureChange?: (value: Setup, changedValue?: Setup) => void;
     renderActionArea?: (props: ActionAreaProps) => JSX.Element;
     suggestions?: Suggestion[];
     renderSuggestionItem?: (props: RenderSuggestionItemProps) => JSX.Element;
@@ -142,8 +142,11 @@ export interface Skill {
 }
 
 export interface ActionAreaProps {
-    /** In order: the upload button, then the send or stop button */
-    menuItem: JSX.Element[];
+    /**
+     * In order: the upload button (nothing when showUploadButton is false), then the send or stop button. Each call
+     * creates the node, so call each one at most once and only where it is inserted
+     */
+    menuItem: (() => JSX.Element)[];
     class: string;
 }
 

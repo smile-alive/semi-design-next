@@ -5,12 +5,14 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/table/constants';
+import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import type { VirtualListScrollArgs } from '@fibrae/semi-ui-vue/internal/virtual-list.vue';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { getData, getNestData, getRandomNumber, render } from '@test/utils/vue';
 import Table, { TableColumn, type ColumnProps, type TableCellSlotProps, type TableHandle, type TableHeaderCellSlotProps, type TableRowAttrs, type TableTitleSlotProps } from '..';
 import { Col } from '../../grid';
+import LocaleProvider from '../../locale/locale-provider.vue';
 import AsyncData from './fixtures/async-data.vue';
 import KeyedColumns from './fixtures/keyed-columns.vue';
 import ShorthandColumns from './fixtures/shorthand-columns.vue';
@@ -383,7 +385,7 @@ describe('Table', () => {
     it('对象 columns 与 children', () => {
         const columns = getColumns();
         mountTable({ columns, dataSource: data }, { default: () => [<TableColumn key="age" title="Age" dataIndex="age" />] });
-        expect(headTexts()).toEqual(columns.map((column) => column.title ?? ''));
+        expect(headTexts()).toEqual(columns.map((column) => column.title ?? zh_CN.Table.untitledColumn));
     });
 
     it('columns 为空数组时忽略 children，并给出开发警告', () => {
@@ -637,7 +639,7 @@ describe('Table 行为基线', () => {
     it('props 的默认值声明在对外的 Table 上，文档生成从这里读取', () => {
         const declared = (Table as unknown as { props: Record<string, { default?: unknown }> }).props;
         const withDefault = Object.keys(declared).filter((name) => 'default' in declared[name]);
-        expect(withDefault).toEqual(expect.arrayContaining(['bordered', 'childrenRecordName', 'dataSource', 'indentSize', 'pagination', 'prefixCls', 'showHeader', 'size']));
+        expect(withDefault).toEqual(expect.arrayContaining(['bordered', 'childrenRecordName', 'dataSource', 'indentSize', 'pagination', 'showHeader', 'size']));
     });
 
     it('通过 components 渲染自定义 body 行', () => {
@@ -1453,5 +1455,45 @@ describe('Table 最后一列', () => {
         ];
         mountTable({ columns, dataSource, pagination: false });
         expect(queryAll(`.${P}-cell-last`).map((cell) => cell.textContent)).toEqual(['C', 'b1', 'c2']);
+    });
+});
+
+describe('Table 可访问名称', () => {
+    it('滚动表体、无标题列与只有图标的排序按钮的名称跟随语言包', async () => {
+        // the body overflows its box, as the observer reports on observe()
+        vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
+        vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(300);
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                #callback: () => void;
+                constructor(callback: () => void) {
+                    this.#callback = callback;
+                }
+                observe() {
+                    this.#callback();
+                }
+                unobserve() {}
+                disconnect() {}
+            }
+        );
+        render(LocaleProvider, {
+            props: { locale: ja_JP },
+            slots: {
+                default: () => (
+                    <Table
+                        columns={[
+                            { title: 'Name', dataIndex: 'name' },
+                            { dataIndex: 'age', sorter: true },
+                        ]}
+                        dataSource={[{ key: '1', name: 'a', age: 1 }]}
+                        pagination={false}
+                    />
+                ),
+            },
+        });
+        expect(await screen.findByRole('group', { name: ja_JP.Table.scrollRegion })).toHaveAttribute('tabindex', '0');
+        expect(screen.getByText(ja_JP.Table.untitledColumn)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: ja_JP.Table.ascend })).toBeInTheDocument();
     });
 });

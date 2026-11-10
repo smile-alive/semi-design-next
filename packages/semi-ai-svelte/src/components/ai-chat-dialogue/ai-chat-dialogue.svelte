@@ -19,9 +19,9 @@
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { setAIChatDialogueContext } from './context.js';
+    import DialogueHint from './dialogue/dialogue-hint.svelte';
+    import Dialogue from './dialogue/dialogue.svelte';
     import type { AIChatDialogueProps } from './interface.js';
-    import DialogueHint from './widgets/dialogue-hint.svelte';
-    import Dialogue from './widgets/dialogue.svelte';
 
     type Foundation = DialogueFoundation<DialogueBaseProps>;
     type Adapter = DialogueAdapter<DialogueBaseProps>;
@@ -203,7 +203,7 @@
             <Dialogue isLastChat={index === currentChats.length - 1} isSelected={states().selectedIds.has(chat.id)} message={chat} role={roleConfig[chat.role]} />
         {/each}
         {#if currentHints.length > 0}
-            <DialogueHint class={hintCls} {hintBox} hints={currentHints} onHintClick={foundation.onHintClick} {selecting} style={hintStyle} />
+            <DialogueHint class={hintCls} {hintBox} hints={currentHints} onHintClick={foundation.handleHintClick} {selecting} style={hintStyle} />
         {/if}
     </div>
     {#if states().backBottomVisible}

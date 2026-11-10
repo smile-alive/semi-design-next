@@ -89,7 +89,6 @@ export type {
     Content as AIChatInputContent,
     Reference as AIChatInputReference,
     Attachment as AIChatInputAttachment,
-    LeftMenuChangeProps as AIChatInputLeftMenuChangeProps,
     Suggestion as AIChatInputSuggestion,
     Setup as AIChatInputSetup,
     RichTextJSON as AIChatInputRichTextJSON,
@@ -107,5 +106,20 @@ export type { AnnotationProps, AnnotationEmits, AnnotationSlots, AnnotationItem,
 
 export { default as Sidebar } from './components/sidebar/index';
 export type { SidebarContainerHandle } from './components/sidebar/index';
-export type { SideBarProps, SideBarEmits, SideBarSlots, SideBarOption, SideBarDetailContent, SideBarOptionSlotProps, SideBarOptionItemSlotProps, SideBarMainContentSlotProps, SideBarDetailHeaderSlotProps, SideBarDetailContentSlotProps } from './components/sidebar/interface';
-export type { CodeItemProps, CodeItemSlots, FileItemProps, FileItemEmits, ImageUploadNodeOptions } from './components/sidebar/widgets/interface';
+export type {
+    SideBarProps,
+    SideBarEmits,
+    SideBarSlots,
+    SideBarOption,
+    SideBarDetailContent,
+    SideBarOptionSlotProps,
+    SideBarOptionItemSlotProps,
+    SideBarMainContentSlotProps,
+    SideBarDetailHeaderSlotProps,
+    SideBarDetailContentSlotProps,
+    CodeItemProps,
+    CodeItemSlots,
+    FileItemProps,
+    FileItemEmits,
+    ImageUploadNodeOptions,
+} from './components/sidebar/interface';

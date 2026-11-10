@@ -1,6 +1,6 @@
 {
     "feedback": {
-        "source": "packages/semi-ui-react/src/components/feedback/index.tsx",
+        "source": "packages/semi-ui-react/src/components/feedback/feedback.tsx",
         "props": {
             "afterClose": {
                 "zh-CN": "弹层完全关闭后的回调，两种模式都会调用。",

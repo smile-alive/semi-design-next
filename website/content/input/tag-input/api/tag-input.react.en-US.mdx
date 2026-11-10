@@ -43,7 +43,7 @@ import ApiType from '#/components/ApiType.astro';
 | split | Custom split function that receives the raw string and `separator`, and returns the split strings. | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
 | style | Style of the root element. | `React.CSSProperties` | - |
 | suffix | Suffix of the input; text or an icon gets side spacing automatically, while a custom node gets none and can set its own. | `React.ReactNode` | - |
-| validateStatus | Validation status, which only affects styling; `error` also sets `aria-invalid` on the input. | `ValidateStatus` | `"default"` |
+| validateStatus | Validation status, which only affects styling; `error` also sets `aria-invalid` on the input. | `TagInputValidateStatus` | `"default"` |
 | value | Current tags, pair it with `onChange` for a controlled list; `undefined` means uncontrolled, `null` means controlled with no tags. | `string[] \| null` | - |
 
 **Methods**

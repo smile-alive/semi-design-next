@@ -378,11 +378,6 @@ describe('Image', () => {
         expect(ref.current).toBe(thumb(container));
     });
 
-    it('忽略 children，不渲染进 void 的 img 中', () => {
-        const { container } = render(<Image src={src}>child</Image>);
-        expect(thumb(container)).toBeEmptyDOMElement();
-    });
-
     it('读取 semiGlobal overrideDefaultProps，分组内同样生效', () => {
         semiGlobal.config.overrideDefaultProps = { Image: { preview: false } };
         const { container } = render(<Image src={src} />);

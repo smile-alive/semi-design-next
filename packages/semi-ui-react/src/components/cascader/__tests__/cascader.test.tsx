@@ -1660,7 +1660,7 @@ describe('Cascader', () => {
             ],
         });
 
-        fireEvent.keyDown(getSelectionInput(), { key: 'Backspace', keyCode: 8 });
+        fireEvent.keyDown(getSelectionInput(), { key: 'Backspace' });
         expect(onChange).toHaveBeenCalledWith([['Asia', 'China', 'Beijing']]);
         expect(getTagTexts()).toEqual(['北京']);
     });

@@ -21,13 +21,10 @@ export interface ScrollItemProps<T extends ScrollListItem = ScrollListItem> exte
     selectedIndex?: number;
     /** Formats the selected item's text, which is undefined for an item without one; an item's own `transform` wins */
     transform?: (value: T['value'], text?: string) => string;
-    /** Identifies the column to the Semi components that use it (TimePicker, DatePicker); not for end users */
-    type?: string | number;
     onSelect?: (data: ScrollItemSelectData<T>) => void;
 }
 
 export type ScrollItemSelectData<T extends ScrollListItem = ScrollListItem> = T & {
-    type?: string | number;
     index: number;
 };
 

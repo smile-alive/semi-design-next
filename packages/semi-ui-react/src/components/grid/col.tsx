@@ -16,7 +16,6 @@ export interface ColProps extends ElementProps<'div'> {
     push?: number;
     pull?: number;
     className?: string;
-    prefixCls?: string;
     style?: React.CSSProperties;
     children?: React.ReactNode;
     xs?: number | ColSize;
@@ -29,12 +28,10 @@ export interface ColProps extends ElementProps<'div'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-const defaultProps = { prefixCls: cssClasses.PREFIX } satisfies Partial<ColProps>;
-
 export default function Col(rawProps: ColProps) {
-    const { ref, prefixCls, span, order, offset, push, pull, className, style, children, xs, sm, md, lg, xl, xxl, ...rest } = useDefaultProps('Col', rawProps, defaultProps);
+    const { ref, span, order, offset, push, pull, className, style, children, xs, sm, md, lg, xl, xxl, ...rest } = useDefaultProps('Col', rawProps, {});
 
-    const classes = getColClassName(prefixCls, { span, order, offset, push, pull, xs, sm, md, lg, xl, xxl }, className);
+    const classes = getColClassName(cssClasses.PREFIX, { span, order, offset, push, pull, xs, sm, md, lg, xl, xxl }, className);
 
     return (
         <div {...rest} ref={ref} className={classes} style={style} x-semi-prop="children">

@@ -7,6 +7,7 @@ import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import type { TagCloseEvent, TagGroupProps, TagProps } from '../interface';
 import GroupFixture from './group-fixture.svelte';
 import SplitFixture from './split-fixture.svelte';
+import PopoverInModal from './tag-popover-in-modal.svelte';
 import TagsFixture from './tags-fixture.svelte';
 
 type Item = { label: string; props?: TagProps };
@@ -99,6 +100,18 @@ describe('Svelte Tag（浏览器）', () => {
         await userEvent.keyboard(' ');
         expect(click).toHaveBeenCalledTimes(1);
         expect(screen.getByRole('button')).toHaveFocus();
+    });
+
+    it('Modal 内作为 Popover 触发器的可点击标签，Escape 只关闭浮层，焦点回到标签且 Modal 保持打开', async () => {
+        render(PopoverInModal);
+        const tag = await screen.findByRole('button', { name: /李白/ });
+        tag.focus();
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(screen.getByText('浮层内容')).toBeVisible());
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByText('浮层内容')).toBeNull());
+        expect(tag).toHaveFocus();
+        expect(screen.getByRole('dialog', { name: '对话框' })).toBeVisible();
     });
 });
 

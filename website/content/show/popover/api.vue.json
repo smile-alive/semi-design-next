@@ -64,10 +64,6 @@
                 "zh-CN": "箭头是否指向触发元素中心，需要同时开启 showArrow。",
                 "en-US": "Whether the arrow points at the center of the trigger. Requires showArrow."
             },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀，设置后弹出层不再带 Popover 的样式。",
-                "en-US": "Class prefix of the popup. A custom value drops the Popover styles."
-            },
             "closeOnEsc": {
                 "zh-CN": "弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。",
                 "en-US": "Whether Esc closes the open popup. With trigger custom it only emits escKeyDown and the caller decides whether to close."
@@ -145,6 +141,10 @@
             "focusTrigger": {
                 "zh-CN": "让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效。",
                 "en-US": "Focuses the trigger element. Only works when returnFocusOnClose is true and trigger is not custom."
+            },
+            "getPopup": {
+                "zh-CN": "返回弹出层元素；弹出层不在文档中时返回 `null`。",
+                "en-US": "Returns the popup element, or `null` while the popup is not in the document."
             },
             "rePosition": {
                 "zh-CN": "按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。",

@@ -4,9 +4,9 @@
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------------------------------------------- |
 | modelValue     | Whether the switch is on, used with v-model. When given, this value decides; without a write-back, a click only notifies.                    | `boolean` | `undefined`                                     |
 | defaultChecked | Initial state when uncontrolled.                                                                                                             | `boolean` | `semiGlobalDefault("Switch", "defaultChecked")` |
-| disabled       | Whether the switch is disabled.                                                                                                              | `boolean` | `semiDefault("Switch", "disabled", false)`      |
-| loading        | Whether the switch is loading. While loading, the input stays focusable with aria-disabled, and toggles are ignored without emitting events. | `boolean` | `semiDefault("Switch", "loading", false)`       |
-| size           | Switch size: large, default or small.                                                                                                        | `Size`    | `semiDefault("Switch", "size", "default")`      |
+| disabled       | Whether the switch is disabled.                                                                                                              | `boolean` | `false`                                         |
+| loading        | Whether the switch is loading. While loading, the input stays focusable with aria-disabled, and toggles are ignored without emitting events. | `boolean` | `false`                                         |
+| size           | Switch size: large, default or small.                                                                                                        | `Size`    | `"default"`                                     |
 
 **Events**
 

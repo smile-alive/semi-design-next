@@ -61,7 +61,7 @@
         }
     },
     "image-preview": {
-        "source": "packages/semi-ui-solid/src/components/image/preview.tsx",
+        "source": "packages/semi-ui-solid/src/components/image/preview/preview.tsx",
         "props": {
             "adaptiveTip": {
                 "zh-CN": "适应页面操作按钮的提示。",
@@ -204,8 +204,8 @@
                 "en-US": "Custom style of the preview layer, as a style object (kebab-case keys) or a string."
             },
             "previewTitle": {
-                "zh-CN": "预览顶部标题，同时作为预览对话框的读屏名称；组内图片的 preview.previewTitle 优先。",
-                "en-US": "Title at the top of the preview, also the accessible name of the preview dialog; the preview.previewTitle of an image in a group takes precedence."
+                "zh-CN": "预览顶部标题，同时作为预览对话框的读屏名称；组内图片的 preview.previewTitle 优先。传函数时在预览打开后才调用；Image 的 preview 对象里的 JSX 标题写成函数，否则未打开预览时也会创建节点，服务端渲染下 hydration 出错。",
+                "en-US": "Title at the top of the preview, also the accessible name of the preview dialog; the preview.previewTitle of an image in a group takes precedence. A function is called only once the preview opens; write a JSX title in the preview object of an Image as a function, or its node is created while the preview is closed and breaks hydration after server rendering."
             },
             "prevTip": {
                 "zh-CN": "上一张操作按钮的提示，同时作为读屏名称；未设置时取语言包的文案。",

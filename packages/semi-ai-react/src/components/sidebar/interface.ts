@@ -1,9 +1,9 @@
 import React, { type CSSProperties, type ReactNode } from 'react';
 import type { ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
 import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
-import type { CodeItemProps } from './widgets/code';
-import type { FileItemProps } from './widgets/file';
-import type { ImageUploadNodeOptions } from './widgets/image-slot';
+import type { CodeItemProps } from './code';
+import type { FileItemProps } from './file';
+import type { ImageUploadNodeOptions } from './image-slot';
 
 export interface SideBarCollapseProps extends ElementProps<'div', 'onChange'> {
     style?: React.CSSProperties;

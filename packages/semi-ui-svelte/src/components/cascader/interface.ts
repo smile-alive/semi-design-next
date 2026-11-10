@@ -81,7 +81,7 @@ export interface CascaderFilterItemSnippetProps {
 
 export interface CascaderTriggerSnippetProps {
     /** The position in treeData (such as `0-0-1`) of the selected node, or in multiple mode of each checked node */
-    value: string | Set<string> | undefined;
+    value?: string | Set<string>;
     inputValue: string;
     placeholder?: string;
     disabled: boolean;

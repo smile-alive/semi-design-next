@@ -16,6 +16,10 @@ export interface ErrorMessageProps extends ElementProps<'div'> {
     showValidateIcon?: boolean;
     validateStatus?: string;
     helpText?: JSX.Element;
+}
+
+/** Set by Form fields and InputGroup, kept out of the public ErrorMessageProps */
+export interface ErrorMessageInternalProps extends ErrorMessageProps {
     isInInputGroup?: boolean;
     /** The id of the error text, the target of the control's aria-errormessage */
     errorMessageId?: string;
@@ -24,7 +28,7 @@ export interface ErrorMessageProps extends ElementProps<'div'> {
 }
 
 export default function ErrorMessage(props: ErrorMessageProps) {
-    const [local, rest] = splitProps(props, ['class', 'error', 'errorMessageId', 'helpText', 'helpTextId', 'isInInputGroup', 'showValidateIcon', 'validateStatus']);
+    const [local, rest] = splitProps(props as ErrorMessageInternalProps, ['class', 'error', 'errorMessageId', 'helpText', 'helpTextId', 'isInInputGroup', 'showValidateIcon', 'validateStatus']);
 
     // An error replaces the help text, and so does `['']` ("failed, hide the text": helpText would look like success).
     // The help text is not created then: nodes that are not inserted cannot be hydrated.

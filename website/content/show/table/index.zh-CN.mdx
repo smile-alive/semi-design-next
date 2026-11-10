@@ -860,7 +860,7 @@ interface TableFilterDropdownSlotProps {
     /** 当前列的配置 */
     column: ColumnProps;
     /** 筛选器配置项，列没有 `filters` 时为 `undefined` */
-    filters: TableFilter[] | undefined;
+    filters?: TableFilter[];
     /** 临时筛选值，没有暂存值时为已生效的筛选值 */
     tempFilteredValue: any[] | undefined;
     /** 设置临时筛选值 */
@@ -919,7 +919,7 @@ interface TableFilterDropdownSnippetProps {
     /** 当前列的配置 */
     column: ColumnProps;
     /** 筛选器配置项，列没有 `filters` 时为 `undefined` */
-    filters: TableFilter[] | undefined;
+    filters?: TableFilter[];
     /** 临时筛选值，没有暂存值时为已生效的筛选值 */
     tempFilteredValue: any[] | undefined;
     /** 设置临时筛选值 */
@@ -1863,7 +1863,7 @@ interface TablePaginationProps extends PaginationProps {
 type VirtualizedItemSizeFn = (index?: number, row?: { sectionRow?: boolean; expandedRow?: boolean }) => number;
 type VirtualizedOnScrollArgs = {
     scrollDirection?: 'forward' | 'backward';
-    scrollOffset?: number;
+    scrollOffset: number;
     scrollUpdateWasRequested?: boolean;
 };
 type VirtualizedOnScroll = (object: VirtualizedOnScrollArgs) => void;
@@ -2167,7 +2167,7 @@ import { Table } from '@fibrae/semi-ui-react';
 | useFullRender | 是否完全自定义渲染，用法详见[完全自定义渲染](#完全自定义渲染)，开启此功能会造成一定的性能损耗 | boolean | false |
 | width | 列宽度 | string \| number |  |
 | onCell | 设置单元格属性 | (record: RecordType, rowIndex: number) => object |  |
-| onFilter | 本地模式下，确定筛选的运行函数。**必须给筛选列设置一个独立的 dataIndex，必须为 dataSource 里面的每条数据项设置独立的 key** | (filteredValue: any, record: RecordType) => boolean |  |
+| onFilter | 本地模式下，确定筛选的运行函数。**必须给筛选列设置一个独立的 dataIndex，必须为 dataSource 里面的每条数据项设置独立的 key** | (value: any, record: RecordType) => boolean |  |
 | onFilterDropdownVisibleChange | 自定义筛选菜单可见变化时回调 | (visible: boolean) => void |  |
 | onHeaderCell | 设置头部单元格属性，`index` 为表头行的序号 | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
 
@@ -2240,7 +2240,7 @@ type Filter = {
 | useFullRender | 是否完全自定义渲染，用法详见[完全自定义渲染](#完全自定义渲染)，开启此功能会造成一定的性能损耗 | boolean | false |
 | width | 列宽度 | string \| number |  |
 | onCell | 设置单元格属性，返回的 `colspan`、`rowspan` 为小写 | (record: RecordType, rowIndex: number) => object |  |
-| onFilter | 本地模式下，确定筛选的运行函数。**必须给筛选列设置一个独立的 dataIndex，必须为 dataSource 里面的每条数据项设置独立的 key** | (filteredValue: any, record: RecordType) => boolean |  |
+| onFilter | 本地模式下，确定筛选的运行函数。**必须给筛选列设置一个独立的 dataIndex，必须为 dataSource 里面的每条数据项设置独立的 key** | (value: any, record: RecordType) => boolean |  |
 | onFilterDropdownVisibleChange | 自定义筛选菜单可见变化时回调 | (visible: boolean) => void |  |
 | onHeaderCell | 设置头部单元格属性，`index` 为表头行的序号 | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
 
@@ -2456,11 +2456,7 @@ function Demo() {
 </template>
 ```
 
-| 名称                        | 描述                                                                                                                                                    |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| getCurrentPageData()        | 返回当前页的数据对象：\{ dataSource: RecordType[], groups: Map\<string \| number, Set\<string \| number\>\> \}，groups 的键是分组键，值是该组的行键集合 |
-| scrollTo(offset)            | 虚拟化表格滚动到指定的像素偏移                                                                                                                          |
-| scrollToItem(index, align?) | 虚拟化表格滚动到指定的行，`align` 为 'auto' \| 'smart' \| 'center' \| 'start' \| 'end'                                                                  |
+方法列表见 Table API 中的 Exposes 表。
 
 </Framework>
 

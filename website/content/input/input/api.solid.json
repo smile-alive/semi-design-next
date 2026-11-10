@@ -86,10 +86,6 @@
                 "zh-CN": "输入框获得焦点时的回调。监听在外层容器上，组件内部的焦点移动不会再次触发。",
                 "en-US": "Called when the input gets focus. It listens on the wrapper, so focus moving inside the component does not fire it again."
             },
-            "onlyBorder": {
-                "zh-CN": "外层容器的边框宽度，单位 px。",
-                "en-US": "The border width of the wrapper, in px."
-            },
             "placeholder": {
                 "zh-CN": "输入框为空时显示的提示文字。",
                 "en-US": "Hint text shown while the input is empty."
@@ -113,10 +109,6 @@
             "showClear": {
                 "zh-CN": "有内容且悬停或焦点位于组件内时展示清除按钮。",
                 "en-US": "Shows a clear button when the input has content and the pointer or focus is inside the component."
-            },
-            "showClearIgnoreDisabled": {
-                "zh-CN": "内部属性，供 DatePicker 使用：禁用时仍可清除。",
-                "en-US": "Internal property used by DatePicker: the clear button stays available while disabled."
             },
             "size": {
                 "zh-CN": "输入框大小，可选 large、default、small。在 InputGroup 中未设置时取组的 size。",
@@ -166,10 +158,6 @@
             "disabled": {
                 "zh-CN": "是否禁用。",
                 "en-US": "Whether the text area is disabled."
-            },
-            "disabledEnterStartNewLine": {
-                "zh-CN": "内部属性，供 Chat 使用：Enter 不换行，Shift + Enter 换行。",
-                "en-US": "Internal property used by Chat: Enter does not start a new line, Shift + Enter does."
             },
             "getValueLength": {
                 "zh-CN": "自定义计算字符串长度，搭配 maxLength、minLength、maxCount 使用。",

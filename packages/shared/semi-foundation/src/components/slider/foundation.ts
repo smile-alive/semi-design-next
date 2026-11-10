@@ -91,6 +91,7 @@ const clampValue = (value: number | number[], min: number, max: number) => (Arra
 
 export default class SliderFoundation<P extends SliderProps = SliderProps> extends BaseFoundation<SliderAdapter<P>, P, SliderState> {
     #dragOffset = 0;
+    #keyBlocked = false;
     #dragController: AbortController | null = null;
     #pointerId: number;
     static override readonly propKeys = ['value'];
@@ -602,7 +603,11 @@ export default class SliderFoundation<P extends SliderProps = SliderProps> exten
      * towards max increases; the cross-axis arrow follows Up and Right.
      */
     handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'defaultPrevented' | 'stopPropagation' | 'preventDefault' | KeyModifiers>, pos: 'min' | 'max') => {
-        if (event.defaultPrevented || !VALUE_KEYS.includes(event.key) || hasModifier(event)) {
+        if (!VALUE_KEYS.includes(event.key) || hasModifier(event)) {
+            return;
+        }
+        this.#keyBlocked = event.defaultPrevented;
+        if (event.defaultPrevented) {
             return;
         }
         event.stopPropagation();
@@ -625,12 +630,13 @@ export default class SliderFoundation<P extends SliderProps = SliderProps> exten
     };
 
     /**
-     * Releasing a value key ends the change, like releasing the mouse
+     * Releasing a value key ends the change, like releasing the mouse, unless the consumer prevented its keydown
      */
     handleKeyUp = (event: Pick<KeyboardEvent, 'key' | KeyModifiers | 'stopPropagation' | 'preventDefault'>) => {
-        if (VALUE_KEYS.includes(event.key) && !hasModifier(event)) {
+        if (VALUE_KEYS.includes(event.key) && !hasModifier(event) && !this.#keyBlocked) {
             this.#onHandleUp(event);
         }
+        this.#keyBlocked = false;
     };
 
     onFocus = (e: { target: Element }, pos: 'min' | 'max') => {

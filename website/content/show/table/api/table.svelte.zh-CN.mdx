@@ -52,7 +52,6 @@ import ApiType from '#/components/ApiType.astro';
 | onScroll | 虚拟化表体的纵向偏移变化时调用，参数为 scrollOffset，横向滚动不触发。 | <ApiType detail={"(args: TableVirtualizedScrollArgs) => void"}>Type</ApiType> | - |
 | pagination | 分页配置，传 false 关闭分页。 | `boolean \| TablePaginationProps` | `true` |
 | paginationContent | 替换分页信息与分页器，参数 pagination 可直接展开给 Pagination；与 pagination 属性同名空间，所以单独命名。 | <ApiType detail={"Snippet\u003c[TablePaginationSnippetProps]>"}>Type</ApiType> | - |
-| prefixCls | 样式名前缀。 | `string` | `"semi-table"` |
 | resizable | 是否开启列宽伸缩，需要伸缩的列必须提供 width。传入对象时可配置 onResize、onResizeStart、onResizeStop 与 handlerClassName。 | <ApiType detail={"boolean \u007c ResizableProps\u003cR>"}>Type</ApiType> | `false` |
 | rowExpandable | 判断某一行是否可展开，返回 false 时不渲染该行的展开按钮。 | <ApiType detail={"TableRowExpandable\u003cR>"}>Type</ApiType> | - |
 | rowKey | 行 key 的取值：数据项的字段名，或返回字符串、数字的函数。 | <ApiType detail={"TableRowKey\u003cR>"}>Type</ApiType> | `"key"` |
@@ -72,6 +71,6 @@ import ApiType from '#/components/ApiType.astro';
 
 | 方法               | 说明                                              | 类型                                                                                                                |
 | ------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| getCurrentPageData | 返回当前页数据的深拷贝，含 dataSource 与 groups。 | <ApiType detail={"() => Pick\u003cBasePageData\u003cAnyRecord>, \"dataSource\" \u007c \"groups\">"}>Type</ApiType>  |
+| getCurrentPageData | 返回当前页数据的深拷贝，含 dataSource 与 groups。 | <ApiType detail={"() => ReturnType\u003cTableHandle['getCurrentPageData']>"}>Type</ApiType>                         |
 | scrollTo           | 虚拟化表格滚动到指定纵向偏移，参数为像素。        | <ApiType detail={"(offset: number) => void"}>Type</ApiType>                                                         |
 | scrollToItem       | 虚拟化表格滚动到指定行，第二个参数为对齐方式。    | <ApiType detail={"(index: number, align?: Parameters\u003cTableHandle['scrollToItem']>[1]) => void"}>Type</ApiType> |

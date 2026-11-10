@@ -518,7 +518,7 @@ describe('JsonViewer', () => {
         // jsdom's role table has no implicit role for the search element; the browser test queries the role
         expect(document.querySelector(`search.${prefixCls}-search-bar-container`)).toHaveAttribute('aria-label', ja_JP.JsonViewer.search);
         expect(screen.getByRole('textbox', { name: ja_JP.JsonViewer.search })).toBe(searchInput());
-        expect(screen.getByRole('textbox', { name: ja_JP.JsonViewer.replace })).toBe(replaceInput());
+        expect(screen.getByRole('textbox', { name: ja_JP.JsonViewer.replaceWith })).toBe(replaceInput());
     });
 
     it('使用替换输入框的文本进行替换', async () => {

@@ -1,7 +1,7 @@
 import React, { StrictMode, createRef, useState } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
+import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { ConfigProvider, TabPane, Tabs } from '@fibrae/semi-ui-react';
@@ -30,6 +30,11 @@ function getTabs(tabProps?: TabsProps, tabPaneProps: TabPaneProps[] = defaultTab
 
 const getActiveTab = (container) => container.querySelector(ACTIVE);
 const getBar = () => document.querySelector(`.${BASE_CLASS_PREFIX}-tabs-bar`);
+
+// jsdom runs no animation; report one so a pane keeps its slide class until the animationend the tests dispatch
+beforeEach(() => {
+    vi.spyOn(Element.prototype, 'getAnimations').mockReturnValue([{ animationName: 'show' } as CSSAnimation]);
+});
 
 describe('Tabs', () => {
     it('基础渲染 tabs', () => {

@@ -19,12 +19,12 @@ const media = { xs: '(max-width: 575px)', md: '(min-width: 768px)', lg: '(min-wi
 const breakpointHandler = () => vi.fn<(screen: string, matches: boolean) => void>();
 
 describe('Layout', () => {
-    it('显式传入 undefined 的 tagName、type 不覆盖内置值', () => {
+    it('显式传入 undefined 的 tagName 不覆盖内置值', () => {
         const view = render(() => (
             <>
-                <Layout.Header type={undefined} tagName={undefined} />
-                <Layout.Footer type={undefined} tagName={undefined} />
-                <Layout.Content type={undefined} tagName={undefined} />
+                <Layout.Header tagName={undefined} />
+                <Layout.Footer tagName={undefined} />
+                <Layout.Content tagName={undefined} />
             </>
         ));
         expect(Array.from(view.container.children, (el) => `${el.tagName} ${el.className}`)).toEqual([`HEADER ${prefixCls}-header`, `FOOTER ${prefixCls}-footer`, `MAIN ${prefixCls}-content`]);
@@ -82,25 +82,24 @@ describe('Layout', () => {
         expect(aside.firstChild?.textContent).toBe('menu');
     });
 
-    it('tagName、type 与 prefixCls 可替换默认值', () => {
+    it('tagName 可替换默认值', () => {
         const view = render(Layout, {
-            props: { prefixCls: 'my', tagName: 'div' },
+            props: { tagName: 'div' },
             slots: {
                 default: () => (
                     <>
-                        <Layout.Header type="top" tagName="nav" />
-                        <Layout.Content prefixCls="x" />
+                        <Layout.Header tagName="nav" />
+                        <Layout.Content tagName="div" />
                     </>
                 ),
             },
         });
         const root = view.container.firstChild as HTMLElement;
         expect(root.tagName).toBe('DIV');
-        expect(root).toHaveClass('my');
-        expect(root).not.toHaveClass(prefixCls);
         expect(root.firstElementChild?.tagName).toBe('NAV');
-        expect(root.firstElementChild).toHaveClass(`${prefixCls}-top`);
-        expect(root.lastElementChild).toHaveClass('x-content');
+        expect(root.firstElementChild).toHaveClass(`${prefixCls}-header`);
+        expect(root.lastElementChild?.tagName).toBe('DIV');
+        expect(root.lastElementChild).toHaveClass(`${prefixCls}-content`);
     });
 
     it('只强制添加 sider 类名：hasSider 为 false 时，Sider 子元素仍保留该类名', async () => {

@@ -4,7 +4,7 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation, { type UploadAdapter, type UploadBaseProps, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
     import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconUpload } from '@fibrae/semi-icons-svelte';
@@ -105,12 +105,15 @@
     }: UploadProps = $props();
 
     const locale = useLocale('Upload');
+    const formLocale = useLocale('Form');
 
+    const uid = $props.id();
     let input = $state<HTMLInputElement>();
     let replaceInput = $state<HTMLInputElement>();
     let cropper = $state<ReturnType<typeof Cropper>>();
     let root = $state<HTMLDivElement>();
     let fileListRoot = $state<HTMLDivElement>();
+    let addAreaHasControl = $state(false);
     const listFocus = new ListFocusTracker();
 
     // $bindable needs destructuring, so the foundation reads the props through getters
@@ -230,10 +233,12 @@
     const shownFiles = $derived(fileList ?? states().fileList);
     const showAdd = $derived(limit === undefined || limit > shownFiles.length);
 
-    // role="group" supports no aria-required, and a tabindex a Tooltip around the Upload injects would add a Tab stop
-    // beside the add button, so it goes to the add button instead; blur does not bubble, so it is called from focusout
+    // role="group" supports no aria-required, nor does role="button", so it becomes a description of the add button; a
+    // tabindex a Tooltip around the Upload injects would add a Tab stop beside the add button, so it goes there instead;
+    // blur does not bubble, so it is called from focusout
     const rootRest = $derived(omit(rest, ['aria-required', 'tabindex', 'onblur']));
     const addTabindex = $derived(rest.tabindex ?? undefined);
+    const addDescribedby = $derived(rest['aria-required'] === true || rest['aria-required'] === 'true' ? `${uid}-required` : undefined);
 
     // `capture` works by presence, and Svelte writes `false` on a non-boolean attribute as the string "false"
     const captureAttr = $derived((capture === true ? '' : capture || undefined) as 'user' | 'environment' | undefined);
@@ -312,6 +317,7 @@
 
 {#snippet pictureAdd()}
     <AddArea
+        bind:hasControl={addAreaHasControl}
         class={[
             `${prefix}-add`,
             `${prefix}-picture-add`,
@@ -320,6 +326,7 @@
                 [`${dragArea}-legal`]: draggable && states().dragAreaStatus === strings.DRAG_AREA_LEGAL,
             },
         ]}
+        describedby={addDescribedby}
         {disabled}
         style={pictureAddStyle}
         tabindex={addTabindex}
@@ -344,6 +351,7 @@
 <div
     bind:this={root}
     {...rootRest}
+    aria-describedby={joinIds(rest['aria-describedby'], addAreaHasControl && addDescribedby)}
     class={[
         prefix,
         rest.class,
@@ -360,12 +368,17 @@
     {...{ 'x-prompt-pos': promptPosition }}
     onfocusout={handleFocusout}
 >
+    <!-- describes the add area as the button; a slotted control is out of reach, so the root group takes it then -->
+    {#if addDescribedby}
+        <span hidden id={addDescribedby}>{formLocale().locale.required}</span>
+    {/if}
     <input {accept} autocomplete="off" bind:this={input} capture={captureAttr} class={`${prefix}-hidden-input`} {...directory ? { directory: 'directory', webkitdirectory: true } : {}} {multiple} tabindex="-1" type="file" onchange={(event) => foundation.addFiles(event.currentTarget.files ?? [])} />
     <input {accept} autocomplete="off" bind:this={replaceInput} class={`${prefix}-hidden-input-replace`} multiple={false} tabindex="-1" type="file" onchange={(event) => foundation.handleReplaceChange(event.currentTarget.files ?? [])} />
 
     {#if !isPicture}
         {#if draggable}
             <AddArea
+                bind:hasControl={addAreaHasControl}
                 class={[
                     dragArea,
                     {
@@ -373,6 +386,7 @@
                         [`${dragArea}-custom`]: children,
                     },
                 ]}
+                describedby={addDescribedby}
                 {disabled}
                 tabindex={addTabindex}
                 {...dragListeners}
@@ -408,7 +422,7 @@
                 {/if}
             </AddArea>
         {:else}
-            <AddArea class={`${prefix}-add`} {disabled} onOpen={openFileDialog} tabindex={addTabindex}>
+            <AddArea bind:hasControl={addAreaHasControl} class={`${prefix}-add`} describedby={addDescribedby} {disabled} onOpen={openFileDialog} tabindex={addTabindex}>
                 {@render children?.()}
             </AddArea>
         {/if}

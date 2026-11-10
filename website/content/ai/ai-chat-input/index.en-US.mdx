@@ -429,11 +429,11 @@ interface AIChatInputActionAreaSlotProps {
 
 <Framework only="solid">
 
-The lower right corner is the action area. Use `renderActionArea` to customize buttons (e.g. for deleting or other operations). `menuItem` holds the upload node (a hidden Upload when `showUploadButton` is `false`; it must still be rendered for pasted files to upload) and the send or stop button, in that order.
+The lower right corner is the action area. Use `renderActionArea` to customize buttons (e.g. for deleting or other operations). `menuItem` holds functions that create the upload button (nothing when `showUploadButton` is `false`) and the send or stop button, in that order; call each where it is inserted. Paste upload works without the upload button.
 
 ```ts
 interface ActionAreaProps {
-    menuItem: JSX.Element[];
+    menuItem: (() => JSX.Element)[];
     class: string;
 }
 ```
@@ -611,7 +611,7 @@ Because templates can be displayed in a variety of ways, we don't provide a defa
 
 ```ts
 interface AIChatInputTemplateSlotProps {
-    skill: Skill | undefined;
+    skill?: Skill;
     // called when a template is clicked, which replaces the input content with the template content
     onTemplateClick: (content: string) => void;
 }
@@ -662,7 +662,7 @@ Because templates can be displayed in a variety of ways, we don't provide a defa
 
 ```ts
 interface AIChatInputTemplateSnippetProps {
-    skill: Skill | undefined;
+    skill?: Skill;
     // called when a template is clicked, which replaces the input content with the template content
     onTemplateClick: (content: string) => void;
 }

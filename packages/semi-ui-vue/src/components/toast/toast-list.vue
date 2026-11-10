@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
     import { omit } from 'es-toolkit';
-    import { canCollapseStack, FreshItems, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+    import { FreshItems, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
     import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
     import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
@@ -57,9 +57,7 @@
 
     const leave = (source: keyof typeof sources) => {
         sources[source].value = false;
-        if (!paused.value && canCollapseStack(snapshot.value.stack, innerWrapper.value)) {
-            stackExpanded.value = false;
-        }
+        if (!paused.value) stackExpanded.value = false;
     };
 
     const onFocusOut = (event: FocusEvent) => {
@@ -69,7 +67,7 @@
     // A removed focused toast fires no reliable focusout, which would keep every countdown paused. Checked after the
     // leave, since the leaving element keeps the focus until TransitionGroup removes it.
     const onAfterLeave = () => {
-        // An emptied list has no height, so leave() never collapses it; without this the next batch would start expanded.
+        // An emptied list may fire no mouseleave (the pointer did not move); without this the next batch would start expanded.
         if (!list.value.length) stackExpanded.value = false;
         if (hasLostFocus(focusInside.value, innerWrapper.value)) leave('focus');
     };

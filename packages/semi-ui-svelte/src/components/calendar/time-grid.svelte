@@ -5,11 +5,11 @@
     import useLocale from '../locale/use-locale.svelte.js';
     import { getCalendarContext } from './context.js';
     import DayCol from './day-col.svelte';
+    import useScrollGrid from './hooks/use-scroll-grid.svelte.js';
     import type { CalendarProps, CalendarViewProps, WeekStartsOn } from './interface.js';
     import { rootStyle } from './root-style.js';
     import TimeCol from './time-col.svelte';
     import { withKeys } from './unique-keys.js';
-    import useScrollGrid from './use-scroll-grid.svelte.js';
 
     interface Props extends CalendarViewProps, Pick<CalendarProps, 'dateDisplay' | 'timeDisplay' | 'allDayEvents'> {
         range: Date[];

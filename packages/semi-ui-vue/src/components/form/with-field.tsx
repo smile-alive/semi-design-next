@@ -7,9 +7,9 @@ import warning from '@fibrae/semi-foundation/utils/warning';
 import { handOn } from '../../utils/hand-on';
 import { hasSlotContent } from '../../utils/slot-nodes';
 import type { ValidateStatus } from '../input/interface';
+import useField from './composables/use-field';
 import FieldLayout from './field-layout.vue';
 import type { CommonFieldProps, FieldComponent, FieldHandle, FieldLabel, WithFieldOptions } from './interface';
-import useField from './use-field';
 
 const prefix = cssClasses.PREFIX;
 const shellSlots = new Set(['fieldLabel', 'labelExtra', 'helpText', 'extraText', 'error']);

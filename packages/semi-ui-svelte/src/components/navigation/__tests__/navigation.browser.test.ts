@@ -138,7 +138,8 @@ describe('Svelte Navigation 折叠态与弹出子菜单（浏览器）', () => {
         expect(user).toHaveAttribute('aria-haspopup', 'menu');
         await userEvent.click(user);
         await waitFor(() => expect(menus()).toHaveLength(1));
-        // a pointer opens the popup without moving focus; the arrow keys enter the menu
+        // a pointer opens the popup without moving focus (WebKit does not focus a clicked li); the arrow keys enter the menu
+        user.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(popupItem('用户列表!')).toHaveFocus());
         await userEvent.keyboard('{ArrowDown}');

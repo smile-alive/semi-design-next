@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Dropdown, Tag, TagGroup } from '@fibrae/semi-ui-react';
+import { Dropdown, Modal, Popover, Tag, TagGroup } from '@fibrae/semi-ui-react';
 import type { TagProps } from '../index';
 
 const prefix = `${BASE_CLASS_PREFIX}-tag`;
@@ -152,5 +152,23 @@ describe('Tag', () => {
         await userEvent.keyboard('{Escape}');
         await waitFor(() => expect(screen.queryByRole('menuitem')).toBeNull());
         expect(tag).toHaveFocus();
+    });
+
+    it('Modal 内作为 Popover 触发器的可点击标签，Escape 只关闭浮层，焦点回到标签且 Modal 保持打开', async () => {
+        render(
+            <Modal title="对话框" motion={false} visible>
+                <Popover content={<div>浮层内容</div>} motion={false} trigger="click">
+                    <Tag onClick={() => {}}>李白</Tag>
+                </Popover>
+            </Modal>
+        );
+        const tag = await screen.findByRole('button', { name: /李白/ });
+        tag.focus();
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(screen.getByText('浮层内容')).toBeVisible());
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByText('浮层内容')).toBeNull());
+        expect(tag).toHaveFocus();
+        expect(screen.getByRole('dialog', { name: '对话框' })).toBeVisible();
     });
 });

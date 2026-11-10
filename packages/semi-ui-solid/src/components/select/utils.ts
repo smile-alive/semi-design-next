@@ -11,12 +11,15 @@ export interface GroupRecord {
     label?: string | number;
 }
 
-export interface OptionData extends OptionProps {
-    /** Reads the Option's children where they render, so each place creates its own nodes */
-    _slot?: () => JSX.Element;
+export interface OptionRecord extends BaseOptionRecord<OptionProps, GroupRecord> {
+    /** Reads the Option's children where they render, so each place creates its own nodes; kept off `data`, which reaches the user */
+    slot?: () => JSX.Element;
 }
 
-export type OptionRecord = BaseOptionRecord<OptionData, GroupRecord>;
+/** The slot of each option by value, for the selection, which holds the options' data */
+export function slotsByValue(options: readonly OptionRecord[]) {
+    return new Map(options.flatMap((option) => (option.slot ? [[option.data.value, option.slot] as const] : [])));
+}
 
 function resolve(node: unknown): unknown[] {
     if (typeof node === 'function' && node.length === 0) {
@@ -40,8 +43,11 @@ function copyProps(props: object, skip: string[]) {
 function readOption(props: OptionProps, index: number, key: string, group?: GroupRecord) {
     // children are JSX: reading them creates nodes, so only the places that insert them read them, and `in` checks
     // the key without calling the getter
-    const data = { ...copyProps(props, ['children', 'label']), label: props.label || props.value, _slot: 'children' in props ? () => props.children : undefined };
-    return toOptionRecord(data, index, group, key) as OptionRecord;
+    const record = toOptionRecord({ ...copyProps(props, ['children', 'label']), label: props.label || props.value }, index, group, key) as OptionRecord;
+    if ('children' in props) {
+        record.slot = () => props.children;
+    }
+    return record;
 }
 
 /**
@@ -71,8 +77,4 @@ export function readOptions(nodes: unknown[], optionList?: OptionProps[]) {
         }
     });
     return options;
-}
-
-export function plain({ _slot, ...rest }: OptionData): OptionProps {
-    return rest;
 }

@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Vali kõik read',
         selectRow: 'Vali see rida',
+        scrollRegion: 'Keritav tabeli sisu',
+        untitledColumn: 'Pealkirjata veerg',
         filterColumn: 'Filtreeri selle veeru andmeid',
         filterColumnActive: 'Filtreeri selle veeru andmeid, filter on aktiivne',
         expandRow: 'Laienda see rida',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Otsi',
         replace: 'Asenda',
         replaceAll: 'Asenda kõik',
+        replaceWith: 'Asendustekst',
         caseSensitive: 'Tõstutundlik',
         regex: 'Kasuta regulaaravaldist',
         wholeWord: 'Sobita terve sõna',

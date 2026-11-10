@@ -56,7 +56,9 @@ export default function ButtonGroup(rawProps: ButtonGroupProps) {
 
     const parent = outer?.layer === layer ? outer : undefined;
     const inputGroup = inputGroupContext?.layer === layer ? inputGroupContext : undefined;
-    const view = createMemo(() => inheritGroupLooks(local, parent ? parent.view() : inputGroup?.view()));
+
+    // The group's global defaults come after an enclosing group, so the raw props meet the enclosing group first
+    const view = createMemo(() => inheritGroupLooks(inheritGroupLooks(rawProps, parent ? parent.view() : inputGroup?.view()), local));
     const context: ButtonGroupContextValue = { view, layer, buttons: new WeakMap() };
 
     return (

@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | dropdownProps | In collapsible mode, the Dropdown props passed to the start-side (start) and end-side (end) arrow menus. | `TabsDropdownProps` | - |
 | keepDOM | With TabPane children, whether to render the DOM of inactive panels. When false only the active panel is rendered, without motion. | `boolean` | `true` |
 | lazyRender | Lazy rendering: a panel renders its content only after it has been active, and keeps it afterwards. | `boolean` | `false` |
-| more | Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, count is that number, render returns a custom trigger and dropdownProps is passed to the dropdown. | `TabsMore` | - |
+| more | Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, count is that number, render receives getTriggerProps and returns a custom trigger with getTriggerProps() spread onto it, and dropdownProps is passed to the dropdown. | `TabsMore` | - |
 | onChange | Called when the active tab changes, with the itemKey of the new active tab. | <ApiType detail={"(activeKey: string) => void"}>Type</ApiType> | - |
 | onTabClick | Called when a tab is clicked or activated with Enter or Space; the event is a KeyboardEvent for keyboard activation. | <ApiType detail={"(activeKey: string, event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
 | onTabClose | Called when a tab is closed, with the itemKey of the closed tab. The caller removes the tab. | <ApiType detail={"(tabKey: string) => void"}>Type</ApiType> | - |

@@ -11,6 +11,7 @@
         "noUnusedParameters": true,
         "noImplicitThis": false,
         "strictNullChecks": false,
+        "verbatimModuleSyntax": true,
         "skipLibCheck": true
     }
 }

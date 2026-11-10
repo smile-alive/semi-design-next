@@ -8,7 +8,7 @@
     import type { VirtualListAlign } from '../../internal/virtual-list.vue';
     import type { ColumnProps, ResizableProps, RowSelectionProps, TableComponents, TableEmits, TableHandle, TableProps, TableSlots } from './interface';
     import NormalTable from './normal-table.vue';
-    import ResizableHeaderCell from './resizable-header-cell.vue';
+    import ResizableHeaderCell from './table-header/resizable-header-cell.vue';
 
     type ColumnKey = string | number;
     type ResizeOverride = Partial<ColumnProps>;

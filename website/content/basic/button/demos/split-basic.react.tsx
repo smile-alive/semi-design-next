@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { IconTreeTriangleDown } from '@fibrae/semi-icons-react';
-import { SplitButtonGroup, Dropdown, Button, type DropDownMenuItem } from '@fibrae/semi-ui-react';
+import { SplitButtonGroup, Dropdown, Button, type DropdownMenuItem } from '@fibrae/semi-ui-react';
 
-const menu: DropDownMenuItem[] = [
+const menu: DropdownMenuItem[] = [
     { node: 'item', name: '编辑项目', onClick: () => console.log('编辑项目点击') },
     { node: 'item', name: '重置项目' },
     { node: 'divider' },

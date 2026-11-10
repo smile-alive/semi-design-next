@@ -200,6 +200,7 @@
     <SideSheet
         bind:this={sheetRef}
         canVerticalSetWidth
+        closeOnEsc
         disableScroll={false}
         height="auto"
         mask={false}

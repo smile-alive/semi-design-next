@@ -4,7 +4,7 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
     import useFoundation from '../../base/use-foundation';
-    import useToday from '../calendar/use-today';
+    import useToday from '../calendar/composables/use-today';
     import useConfig from '../config-provider/use-config';
     import type { DatePickerMonthEmits, DatePickerMonthProps, DatePickerMonthSlots } from './internal';
 

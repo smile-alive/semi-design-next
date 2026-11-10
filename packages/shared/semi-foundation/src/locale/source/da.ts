@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Vælg alle rækker',
         selectRow: 'Vælg denne række',
+        scrollRegion: 'Rulbart tabelindhold',
+        untitledColumn: 'Kolonne uden titel',
         filterColumn: 'Filtrer data med denne kolonne',
         filterColumnActive: 'Filtrer data med denne kolonne, filteret er aktivt',
         expandRow: 'Udvid denne række',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Søg',
         replace: 'Erstat',
         replaceAll: 'Erstat alle',
+        replaceWith: 'Erstat med',
         caseSensitive: 'Skeln mellem store og små bogstaver',
         regex: 'Brug regulært udtryk',
         wholeWord: 'Match hele ord',

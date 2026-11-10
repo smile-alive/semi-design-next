@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+    import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
     import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
     import ItemFoundation, { type ItemAdapter, type ItemKey, type ItemProps, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
@@ -18,7 +19,7 @@
         isInSubNav: boolean;
         level: number;
         disabled?: boolean;
-        indent?: boolean | number;
+        indent?: boolean;
         isCollapsed?: boolean;
         itemKey?: ItemKey;
         link?: string;
@@ -46,6 +47,7 @@
 
     const prefix = cssClasses.PREFIX;
     const itemPrefix = `${prefix}-item`;
+    const dropdownItemPrefix = `${dropdownClasses.PREFIX}-item`;
     const collapsed = $derived(Boolean(ownCollapsed) || ctx.isCollapsed);
     const horizontal = $derived(ctx.mode === strings.MODE_HORIZONTAL);
     const popup = $derived(isInSubNav && (collapsed || horizontal));
@@ -193,7 +195,12 @@
     {/if}
 {/snippet}
 
-{#if popup}
+{#if popup && isSubNav}
+    <!-- A nested sub inside a popup is a list item that holds the menuitem (its title), not a menuitem itself: two nested menuitems would both be found by the menu's arrow keys -->
+    <li {...rest} class={[rest.class, itemPrefix, stateClasses, dropdownItemPrefix, { [`${itemPrefix}-selected`]: selected, [`${dropdownItemPrefix}-disabled`]: disabled, [`${dropdownItemPrefix}-active`]: selected }]} role="none">
+        {@render inner()}
+    </li>
+{:else if popup}
     <DropdownItem {...rest} active={selected} aria-current={selected && !isSubNav ? 'page' : undefined} class={[rest.class, itemPrefix, stateClasses, { [`${itemPrefix}-selected`]: selected }]} disabled={disabled ?? false} onclick={handlePopupClick}>
         {@render inner()}
     </DropdownItem>

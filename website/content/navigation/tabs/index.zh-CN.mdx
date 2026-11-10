@@ -116,7 +116,7 @@ Svelte 没有 `TabPane`，标签页只通过 `tabList` 传入。`tabList` 的数
 
 - `count`: 表示收入下拉菜单的 Tab 数量
 - `render`: 自定义 Trigger 的渲染函数，返回的 ReactNode 会被渲染为下拉菜单的 Trigger
-- `dropdownProps`: 传入 DropDown Props，会被透传到下拉菜单，如果需要自定义下拉菜单，使用 dropdownProps 中的 render 方法
+- `dropdownProps`: 传入 Dropdown Props，会被透传到下拉菜单，如果需要自定义下拉菜单，使用 dropdownProps 中的 render 方法
 
 </Framework>
 
@@ -136,7 +136,7 @@ Svelte 没有 `TabPane`，标签页只通过 `tabList` 传入。`tabList` 的数
 也支持高级配置，向 `more` 传入对象，内可传入
 
 - `count`: 表示收入下拉菜单的 Tab 数量
-- `render`: 自定义触发器的渲染函数，返回的 JSX 会被渲染为下拉菜单的触发器
+- `render`: 自定义触发器的渲染函数，参数是 `getTriggerProps`，把 `getTriggerProps()` 的返回值展开到自己的触发元素上，返回的 JSX 作为下拉菜单的触发器
 - `dropdownProps`: 传入 Dropdown 属性，会被透传到下拉菜单
 
 </Framework>

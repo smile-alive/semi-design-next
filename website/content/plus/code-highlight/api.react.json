@@ -1,6 +1,6 @@
 {
     "code-highlight": {
-        "source": "packages/semi-ui-react/src/components/code-highlight/index.tsx",
+        "source": "packages/semi-ui-react/src/components/code-highlight/code-highlight.tsx",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "code": {

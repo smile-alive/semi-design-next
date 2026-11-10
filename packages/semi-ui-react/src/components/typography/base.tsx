@@ -3,9 +3,10 @@ import { Children, cloneElement, createElement, isValidElement, useEffectEvent, 
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
-import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
+import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import type { BaseProps } from '../../base/base-props';
+import useFocusHandover from '../../hooks/use-focus-handover';
 import useMergedRef from '../../hooks/use-merged-ref';
 import ReactResizeObserver, { ObserverProperty } from '../../internal/resize-observer';
 import { isSemiIcon } from '../../utils';
@@ -194,7 +195,10 @@ export default function Base({
     const [insideWidgetItem, setInsideWidgetItem] = useState(false);
     let view = storedView;
 
+    const handoverFocus = useFocusHandover<HTMLButtonElement>(() => wrapperRef.current);
+
     const mergedRef = useMergedRef(ref, wrapperRef);
+    const mergedExpandRef = useMergedRef(expandRef, handoverFocus);
     const synced = syncChildren(storedView, children, ellipsis);
 
     if (synced !== storedView) {
@@ -207,13 +211,13 @@ export default function Base({
     const realSize = size === 'inherit' ? contextSize : size;
     const hasEllipsis = Boolean(ellipsis);
     const opt = getEllipsisOpt(ellipsis, locale.expand, locale.collapse);
-    const { rows, pos, suffix, expandable, expandText, collapsible, collapseText } = opt;
+    const { rows, pos, suffix, expandable, expandText, collapsible } = opt;
     const onExpand = typeof ellipsis === 'object' ? ellipsis.onExpand : undefined;
     const cssEllipsis = hasEllipsis && canUseCSSEllipsis(opt, copyable);
     const hasTooltip = Boolean(opt.showTooltip);
     const hasCopyable = Boolean(copyable);
-    const noCollapseText = !collapsible && collapseText === undefined;
     const expandButton = getExpandButton(view, opt);
+    const focusTarget = isExpandFocusTarget(view, opt);
 
     const update = (patch: Partial<EllipsisView>) => setView((prev) => ((Object.keys(patch) as Array<keyof EllipsisView>).every((key) => Object.is(prev[key], patch[key])) ? prev : { ...prev, ...patch }));
 
@@ -252,11 +256,6 @@ export default function Base({
 
     const toggleOverflow = (e: React.MouseEvent<HTMLButtonElement>) => {
         onExpand?.(!view.expanded, e);
-        // the button disappears once expanded; move focus to the text instead of dropping it to the body
-        if (expandable && !view.expanded && noCollapseText && wrapperRef.current) {
-            wrapperRef.current.tabIndex = -1;
-            wrapperRef.current.focus();
-        }
         if ((expandable && !view.expanded) || (collapsible && view.expanded)) {
             update({ expanded: !view.expanded });
         }
@@ -280,7 +279,7 @@ export default function Base({
 
     if (expandButton) {
         expandNode = (
-            <button key="expand" ref={expandRef} type="button" className={`${prefixCls}-ellipsis-expand`} aria-expanded={expandButton.expanded} onClick={toggleOverflow}>
+            <button key="expand" ref={mergedExpandRef} type="button" className={`${prefixCls}-ellipsis-expand`} aria-expanded={expandButton.expanded} onClick={toggleOverflow}>
                 {expandButton.text}
             </button>
         );
@@ -357,7 +356,7 @@ export default function Base({
         component,
         className: wrapperCls,
         style: { ...textStyle, ...ellipsisStyle },
-        tabIndex,
+        tabIndex: tabIndex ?? (focusTarget ? -1 : undefined),
         children: (
             <>
                 {textNode}

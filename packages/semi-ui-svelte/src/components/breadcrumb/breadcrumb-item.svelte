@@ -57,7 +57,7 @@
     {/if}
 {/snippet}
 
-<span {...rest} aria-current={active ? 'page' : undefined} class={`${prefix}-item-wrap`}>
+<li {...rest} aria-current={active ? 'page' : undefined} class={`${prefix}-item-wrap`}>
     {#if isLink}
         <a class={itemClass} href={route.href} onclick={handleClick}>{@render inner()}</a>
     {:else}
@@ -73,4 +73,4 @@
             </span>
         {/if}
     {/if}
-</span>
+</li>

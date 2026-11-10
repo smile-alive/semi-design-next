@@ -1,6 +1,6 @@
 {
     "divider": {
-        "source": "packages/semi-ui-react/src/components/divider/index.tsx",
+        "source": "packages/semi-ui-react/src/components/divider/divider.tsx",
         "props": {
             "align": {
                 "zh-CN": "带内容时内容的对齐方式，可选 `left`、`center` 或 `right`。",

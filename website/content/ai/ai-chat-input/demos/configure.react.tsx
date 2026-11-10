@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { AIChatInput, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-react';
+import { AIChatInput, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-react';
 import { IconBookOpenStroked, IconFeishuLogo, IconGit, IconFigma } from '@fibrae/semi-icons-react';
 
 const uploadProps = { action: 'https://api.semi.design/upload' };
@@ -42,7 +42,7 @@ export default function AIChatInputDemo() {
         [onConfigureButtonClick]
     );
 
-    const onConfigureChange = useCallback((value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+    const onConfigureChange = useCallback((value: Setup, changedValue?: Setup) => {
         console.log('onConfigureChange', value, changedValue);
     }, []);
 

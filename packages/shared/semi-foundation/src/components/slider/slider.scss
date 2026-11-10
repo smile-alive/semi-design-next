@@ -142,6 +142,7 @@ $module: #{$prefix}-slider;
         display: inline-block;
         color: $color-slider_mark-text-default;
         text-align: center;
+        white-space: nowrap;
         cursor: pointer;
         transform: translate(-50%, 0);
     }
@@ -160,6 +161,7 @@ $module: #{$prefix}-slider;
         display: inline-block;
         color: $color-slider_mark-text-default;
         text-align: center;
+        white-space: nowrap;
         cursor: pointer;
         transform: translate(-50%, 0) rotate(-180deg);
     }

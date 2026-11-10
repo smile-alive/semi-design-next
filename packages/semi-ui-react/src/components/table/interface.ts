@@ -41,7 +41,6 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     keepDOM?: boolean;
     loading?: boolean;
     pagination?: TablePagination;
-    prefixCls?: string;
     renderGroupSection?: RenderGroupSection;
     renderPagination?: RenderPagination;
     resizable?: Resizable<RecordType>;
@@ -137,7 +136,7 @@ export interface Filter extends BaseFilter {
 }
 export type Fixed = BaseFixed;
 export type OnCell<RecordType> = (record?: RecordType, rowIndex?: number) => OnCellReturnObject;
-export type OnFilter<RecordType> = (filteredValue: any, record: RecordType) => boolean;
+export type OnFilter<RecordType> = (value: any, record: RecordType) => boolean;
 export type OnFilterDropdownVisibleChange = (visible?: boolean) => void;
 export type OnHeaderCell<RecordType extends Record<string, any>> = (column?: ColumnProps<RecordType>, columnIndex?: number, index?: number) => OnHeaderCellReturnObject;
 export type ColumnRender<RecordType> = (text: any, record: RecordType, index: number, options: RenderOptions) => ColumnRenderReturnType;
@@ -339,7 +338,7 @@ export type CheckRelation = 'related' | 'unRelated';
 
 export type VirtualizedOnScrollArgs = {
     scrollDirection?: 'forward' | 'backward';
-    scrollOffset?: number;
+    scrollOffset: number;
     scrollUpdateWasRequested?: boolean;
 };
 

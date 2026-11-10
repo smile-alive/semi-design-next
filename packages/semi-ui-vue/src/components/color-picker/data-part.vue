@@ -52,7 +52,8 @@
                     <span :class="`${cssClasses.PREFIX}-inputNumberSuffix`">%</span>
                 </template>
             </InputNumber>
-            <Select :aria-label="i18n.locale.format" :class="`${cssClasses.PREFIX}-formatSelect`" :modelValue="state.format" :optionList="FORMAT_OPTIONS" size="small" @select="onSelectFormat" />
+            <!-- a fixed list of three formats: global Select defaults must not make it search or create, nor add a clear button -->
+            <Select :allowCreate="false" :aria-label="i18n.locale.format" :class="`${cssClasses.PREFIX}-formatSelect`" :filter="false" :modelValue="state.format" :optionList="FORMAT_OPTIONS" :showClear="false" size="small" @select="onSelectFormat" />
         </InputGroup>
         <Button v-if="props.eyeDropper" :aria-label="i18n.locale.eyeDropper" size="small" theme="light" type="tertiary" @click="foundation.handlePickValueWithStraw">
             <template #icon>

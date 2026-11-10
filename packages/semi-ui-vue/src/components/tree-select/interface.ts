@@ -158,6 +158,8 @@ export interface TreeSelectSearchSlotProps extends TreeSearchSlotProps {
     preventScroll?: boolean;
     autofocus?: boolean;
     disabled?: boolean;
+    /** The trigger's resolved size; the dropdown search box keeps the Input default */
+    size?: TreeSelectSize;
     role?: 'combobox';
     'aria-activedescendant'?: string;
     'aria-autocomplete': 'list';

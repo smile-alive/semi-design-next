@@ -19,11 +19,10 @@ import ApiType from '#/components/ApiType.astro';
 | condition | 是否允许触发显示，默认 `true`；仅显式设为 `false` 时，hover、click、focus 等触发行为不生效，`trigger` 为 `custom` 时仍按 `visible` 显示。由 `true` 变为 `false` 时立即关闭已显示的菜单。 | `boolean` | - |
 | content | 由 Dropdown 固定为菜单内容，传入的值无效；菜单内容请使用 `render` 或 `menu`。 | `React.ReactNode \| RenderContent` | - |
 | contentClassName | 下拉菜单容器 `.semi-dropdown` 的类名。 | `string \| any[]` | - |
-| disableArrowKeyDown | 由 Dropdown 固定为 `true`，方向键由 Dropdown 自行处理，传入的值无效。 | `boolean` | - |
 | disableFocusListener | `trigger` 为 `hover` 时，是否不响应键盘聚焦打开菜单，默认 `false`。 | `boolean` | - |
 | guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环，默认 `false`。 | `boolean` | - |
 | keepDOM | 关闭时是否保留菜单的 DOM 而不销毁，默认 `false`。 | `boolean` | - |
-| menu | 通过数据快速配置菜单，数据项为 `node` 为 `item`、`title` 或 `divider` 的对象，见下方 DropdownMenuItem；提供 `render` 时以 `render` 为准。 | `DropDownMenuItem[]` | - |
+| menu | 通过数据快速配置菜单，数据项为 `node` 为 `item`、`title` 或 `divider` 的对象，见下方 DropdownMenuItem；提供 `render` 时以 `render` 为准。 | `DropdownMenuItem[]` | - |
 | motion | 是否展示弹出层的进出场动画。 | `boolean` | `true` |
 | mouseEnterDelay | 指针移入触发元素后延迟显示的毫秒数，默认 `50`，仅 `trigger` 为 `hover` 或 `focus` 时生效。 | `number` | - |
 | mouseLeaveDelay | 指针移出弹出层后延迟隐藏的毫秒数，仅 `trigger` 为 `hover` 或 `focus` 时生效。 | `number` | `100` |
@@ -32,7 +31,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | 菜单显示、进场动画开始时调用，每次打开调用一次，早于 `afterOpen`；悬停打开后指针已离开而撤回的打开不调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onVisibleChange | 菜单显示状态变化时调用，参数为 `visible`。`visible` 受控时只报告用户交互发起的请求，使用方自己改变 `visible` 不调用。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | 弹出菜单相对触发元素的位置，常用 `bottom`、`bottomLeft`、`bottomRight`，更多见 Tooltip 的位置。 | `Position` | `"bottom"` |
-| prefixCls | 弹出层类名前缀。 | `string` | `"semi-dropdown"` |
 | preventScroll | 聚焦时是否阻止浏览器滚动到被聚焦元素，默认 `false`。 | `boolean` | - |
 | ref | 挂载时接收 `DropdownHandle`，卸载时为 `null`。 | <ApiType detail={"React.Ref\u003cDropdownHandle>"}>Type</ApiType> | - |
 | render | 弹出层的内容，由 `Dropdown.Menu` 及 `Dropdown.Item`、`Dropdown.Title`、`Dropdown.Divider` 构成。传入时优先于 `menu`。 | `React.ReactNode` | - |

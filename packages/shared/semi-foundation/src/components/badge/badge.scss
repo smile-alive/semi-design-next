@@ -28,6 +28,7 @@ $module: #{$prefix}-badge;
         font-weight: $font-weight-regular;
         color: $color-badge_default-text-default;
         text-align: center;
+        white-space: nowrap;
         background-color: $color-badge_default-bg-default;
         border: $width-badge-border $color-badge_default-border-default solid;
         border-radius: $height-badge_count * 0.5;

@@ -8,7 +8,11 @@
 <ImagePreview src={srcList}>
     {#snippet previewMenu(menu)}
         <div style="display: flex; background-color: rgba(0, 0, 0, 0.75); align-items: center; padding: 5px 16px; border-radius: 4px">
-            {@render menu.menuItems()}
+            {@render menu.menuItems(0, 3)}
+            <Divider layout="vertical" />
+            {@render menu.menuItems(3, 7)}
+            <Divider layout="vertical" />
+            {@render menu.menuItems(7)}
             <Divider layout="vertical" />
             <Tooltip>
                 {#snippet content()}

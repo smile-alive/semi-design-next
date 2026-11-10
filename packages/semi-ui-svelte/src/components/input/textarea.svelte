@@ -120,6 +120,12 @@
             .join(';') || undefined
     );
 
+    const trackLineLayout = observeResize((entries) => {
+        // contentRect does not include borders; align with textarea.clientHeight
+        const { width, height } = entries[entries.length - 1].contentRect;
+        lineLayout = { width, height };
+    });
+
     const focusTextarea = () => {
         textarea?.focus();
     };
@@ -157,6 +163,8 @@
     const invalid = $derived((validateStatus === 'error' || exceeds ? 'true' : attrs.control['aria-invalid']) as boolean | 'true' | 'false' | 'grammar' | 'spelling' | undefined);
 
     const throttledResize = throttle((entries: Parameters<typeof foundation.handleResize>[0]) => foundation.handleResize(entries), 10);
+
+    const trackSize = observeResize((entries) => throttledResize(entries));
 
     // a parent that rejects the typed text leaves `shown` as it was, so Svelte never patches the textarea back
     const restoreShownText = async () => {
@@ -210,14 +218,6 @@
         if (!allowClear && clearButton && clearButton === FocusTrapHandle.getActiveElement(clearButton)) {
             focusTextarea();
         }
-    });
-
-    const trackSize = observeResize((entries) => throttledResize(entries));
-
-    const trackLineLayout = observeResize((entries) => {
-        // contentRect does not include borders; align with textarea.clientHeight
-        const { width, height } = entries[entries.length - 1].contentRect;
-        lineLayout = { width, height };
     });
 
     $effect(() => {

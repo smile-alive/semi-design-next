@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { shallowRef } from 'vue';
     import Button from '@fibrae/semi-ui-vue/button/index';
-    import ImagePreview from '../../preview.vue';
+    import ImagePreview from '../../preview/preview.vue';
 
     const props = defineProps<{ src: string[] }>();
     const visible = shallowRef(false);

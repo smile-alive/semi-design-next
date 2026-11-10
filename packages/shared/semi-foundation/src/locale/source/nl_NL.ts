@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Alle rijen selecteren',
         selectRow: 'Deze rij selecteren',
+        scrollRegion: 'Schuifbare tabelinhoud',
+        untitledColumn: 'Kolom zonder titel',
         filterColumn: 'Gegevens filteren op deze kolom',
         filterColumnActive: 'Gegevens filteren op deze kolom, filter actief',
         expandRow: 'Deze rij uitvouwen',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Zoeken',
         replace: 'Vervangen',
         replaceAll: 'Alle vervangen',
+        replaceWith: 'Vervangen door',
         caseSensitive: 'Hoofdlettergevoelig',
         regex: 'Reguliere expressie gebruiken',
         wholeWord: 'Alleen hele woorden',

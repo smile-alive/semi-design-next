@@ -9,7 +9,7 @@ import { ConfigProvider, Form, FormSelect, Popover, Select, Tag } from '@fibrae/
 import type { InputChangeEvent, InputHandle } from '@fibrae/semi-ui-react/input';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { mockResizeObserver } from '@test/utils/react';
-import type { optionRenderProps, RenderMultipleSelectedItemFn, RenderSingleSelectedItemFn, SelectHandle, SelectProps, TriggerRenderProps } from '../index';
+import type { OptionRenderProps, RenderMultipleSelectedItemFn, RenderSingleSelectedItemFn, SelectHandle, SelectProps, TriggerRenderProps } from '../index';
 
 const Option = Select.Option;
 const prefixCls = `${BASE_CLASS_PREFIX}-select`;
@@ -2561,7 +2561,7 @@ describe('Select', () => {
         });
 
         it('创建选项与自定义选项都有 id，触发器可以指向它们', async () => {
-            const renderOptionItem = ({ id, label, onClick, onMouseEnter, selected, style }: optionRenderProps) => (
+            const renderOptionItem = ({ id, label, onClick, onMouseEnter, selected, style }: OptionRenderProps) => (
                 <div id={id} style={style} aria-selected={selected} role="option" onClick={onClick} onMouseEnter={onMouseEnter}>
                     {label}
                 </div>
@@ -3483,7 +3483,7 @@ describe('Select 行为基线', () => {
                     <Option value="b">B</Option>
                 </Select.OptGroup>,
             ],
-            renderOptionItem: (props: optionRenderProps) => {
+            renderOptionItem: (props: OptionRenderProps) => {
                 record(props);
                 return (
                     <div id={props.id} aria-selected={props.selected} role="option" onClick={props.onClick}>

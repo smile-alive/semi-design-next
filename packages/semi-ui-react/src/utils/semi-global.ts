@@ -30,8 +30,8 @@ import type { FloatButtonGroupProps } from '../components/float-button/float-but
 import type { FloatButtonProps } from '../components/float-button/interface';
 import type { ArrayFieldProps } from '../components/form/array-field';
 import type { BaseFormProps } from '../components/form/interface';
-import type { SchemaFieldProps } from '../components/form/schema-field';
-import type { SchemaFormProps } from '../components/form/schema-form';
+import type { SchemaFieldProps } from '../components/form/schema-form/schema-field';
+import type { SchemaFormProps } from '../components/form/schema-form/schema-form';
 import type { ColProps } from '../components/grid/col';
 import type { RowProps } from '../components/grid/row';
 import type { HighlightProps } from '../components/highlight';

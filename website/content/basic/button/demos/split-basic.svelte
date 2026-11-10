@@ -1,8 +1,8 @@
 <script lang="ts">
     import { IconTreeTriangleDown } from '@fibrae/semi-icons-svelte';
-    import { Button, Dropdown, SplitButtonGroup, type DropDownMenuItem } from '@fibrae/semi-ui-svelte';
+    import { Button, Dropdown, SplitButtonGroup, type DropdownMenuItem } from '@fibrae/semi-ui-svelte';
 
-    const menu: DropDownMenuItem[] = [
+    const menu: DropdownMenuItem[] = [
         { node: 'item', name: '编辑项目', onclick: () => console.log('编辑项目点击') },
         { node: 'item', name: '重置项目' },
         { node: 'divider' },

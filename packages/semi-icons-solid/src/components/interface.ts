@@ -14,7 +14,6 @@ export interface IconProps extends JSX.HTMLAttributes<HTMLSpanElement> {
     size?: IconSize;
     spin?: boolean;
     rotate?: number;
-    prefixCls?: string;
     type?: string;
     fill?: IconFill;
 }

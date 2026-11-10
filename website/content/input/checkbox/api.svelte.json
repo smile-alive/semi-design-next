@@ -39,7 +39,6 @@
                 "zh-CN": "点击根元素时的回调，在切换之前调用。",
                 "en-US": "Called when the root element is clicked, before the toggle."
             },
-            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。",
                 "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the focus method."
@@ -98,7 +97,6 @@
                 "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style }`，其中 `style` 为字符串。",
                 "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style }`, where `style` is a string."
             },
-            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
             "type": {
                 "zh-CN": "组内所有 Checkbox 的样式类型，可选 default、card、pureCard。",
                 "en-US": "Style type of every Checkbox in the group: default, card or pureCard."

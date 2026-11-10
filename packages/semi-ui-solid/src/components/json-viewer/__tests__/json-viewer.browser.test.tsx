@@ -321,7 +321,7 @@ describe('JsonViewer', () => {
                 await waitFor(() => expect(document.querySelector('search')).toBeNull());
             }
             await userEvent.click(trigger());
-            await userEvent.click(page.getByRole('textbox', { name: zh_CN.JsonViewer.replace }));
+            await userEvent.click(page.getByRole('textbox', { name: zh_CN.JsonViewer.replaceWith }));
             await userEvent.keyboard('{Escape}');
             await waitFor(() => expect(document.querySelector('search')).toBeNull());
             const escapes = outer.mock.calls.filter(([event]) => event.key === 'Escape');

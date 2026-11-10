@@ -1,4 +1,4 @@
-import { type ComponentProps, type JSX, Show, createSignal, onMount } from 'solid-js';
+import { type ComponentProps, For, type JSX, Show, createSignal, onMount } from 'solid-js';
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import { type Editor, Extension, Node } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
@@ -7,7 +7,7 @@ import Popover from '@fibrae/semi-ui-solid/popover/index';
 import type { UploadHandle, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners } from '@test/utils/solid';
-import AIChatInput, { getConfigureItem, type AIChatInputElement, type AIChatInputHandle, type AIChatInputProps, type Attachment, type LeftMenuChangeProps } from '../index';
+import AIChatInput, { getConfigureItem, type AIChatInputElement, type AIChatInputHandle, type AIChatInputProps, type Attachment, type Setup } from '../index';
 
 type Props = AIChatInputProps;
 const { Configure } = AIChatInput;
@@ -539,7 +539,11 @@ describe('AIChatInput', () => {
         });
 
         it('renderActionArea 收到上传与发送节点', async () => {
-            const renderActionArea = vi.fn<NonNullable<Props['renderActionArea']>>((area) => <div class={`${area.class} mine`}>{area.menuItem}</div>);
+            const renderActionArea = vi.fn<NonNullable<Props['renderActionArea']>>((area) => (
+                <div class={`${area.class} mine`}>
+                    <For each={area.menuItem}>{(item) => item()}</For>
+                </div>
+            ));
             const { container } = await setup({ renderActionArea });
             expect(renderActionArea.mock.calls[0][0].menuItem).toHaveLength(2);
             expect(container.querySelector(`.${prefix}-footer-action.mine .semi-upload`)).not.toBeNull();
@@ -1326,7 +1330,7 @@ describe('AIChatInput Configure 类型', () => {
     it('类型：onConfigureChange 的 changedValue 可为 undefined（移除配置项时）', () => {
         type ChangedValue = Parameters<NonNullable<Props['onConfigureChange']>>[1];
         expectTypeOf<undefined>().toExtend<ChangedValue>();
-        expectTypeOf<LeftMenuChangeProps>().toExtend<ChangedValue>();
+        expectTypeOf<Setup>().toExtend<ChangedValue>();
     });
 
     it('类型：不声明从未触发的 onSuggestClick 与 onTemplateVisibleChange', () => {

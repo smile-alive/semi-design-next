@@ -21,7 +21,7 @@ import type {
     TableComponents,
     VirtualizedProps,
 } from '../interface';
-import type { ResizableHeaderCellProps } from '../resizable-header-cell';
+import type { ResizableHeaderCellProps } from '../table-header/resizable-header-cell';
 
 interface Row {
     id: number;

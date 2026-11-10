@@ -12,7 +12,6 @@ export interface NavStepProps extends ElementProps<'div', 'title' | 'onChange' |
     index?: number;
     active?: boolean;
     total?: number;
-    prefixCls?: string;
     onChange?: () => void;
     onClick?: React.MouseEventHandler<HTMLDivElement>;
     onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
@@ -22,7 +21,9 @@ export interface NavStepProps extends ElementProps<'div', 'title' | 'onChange' |
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export default function NavStep({ ref, role, prefixCls = css.ITEM, className = '', title, style, active = false, index, total, onClick, onKeyDown, onChange, ...rest }: NavStepProps) {
+const prefixCls = css.ITEM;
+
+export default function NavStep({ ref, role, className = '', title, style, active = false, index, total, onClick, onKeyDown, onChange, ...rest }: NavStepProps) {
     const item = useStepItem({ role, onChange, onClick, onKeyDown }, rest);
 
     const classString = clsx(

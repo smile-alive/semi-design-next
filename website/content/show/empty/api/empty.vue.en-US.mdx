@@ -2,7 +2,7 @@
 
 | Property      | Description                                                                                                                                   | Type                         | Default                                       |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------- |
-| layout        | Layout mode: vertical or horizontal.                                                                                                          | `"horizontal" \| "vertical"` | `semiDefault("Empty", "layout", "vertical")`  |
+| layout        | Layout mode: vertical or horizontal.                                                                                                          | `"horizontal" \| "vertical"` | `"vertical"`                                  |
 | imageStyle    | Style of the placeholder image.                                                                                                               | `CSSProperties`              | `semiGlobalDefault("Empty", "imageStyle")`    |
 | title         | Plain-text title. The title slot wins when both are given.                                                                                    | `string`                     | `semiGlobalDefault("Empty", "title")`         |
 | image         | Placeholder image URL, or an in-page SVG sprite symbol as `{ id }`. An empty string counts as no image. Use the image slot for other content. | `string \| EmptySvgNode`     | `semiGlobalDefault("Empty", "image")`         |

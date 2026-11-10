@@ -34,7 +34,6 @@
         type: () => semiDefault('Checkbox', 'type', 'default'),
         addonId: undefined,
         extraId: undefined,
-        prefixCls: semiGlobalDefault('Checkbox', 'prefixCls'),
         preventScroll: semiGlobalDefault('Checkbox', 'preventScroll'),
     });
 
@@ -65,7 +64,7 @@
         }
     );
 
-    const prefix = computed(() => props.prefixCls || checkboxClasses.PREFIX);
+    const prefix = checkboxClasses.PREFIX;
     const addonId = computed(() => props.addonId || `addon-${uid}`);
     const extraId = computed(() => props.extraId || `extra-${uid}`);
 

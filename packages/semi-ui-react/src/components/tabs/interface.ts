@@ -2,7 +2,6 @@ import type React from 'react';
 import type { CSSProperties, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import type { ElementProps } from '../../base/base';
 import type { DropdownProps } from '../dropdown';
-import type { OverflowListProps } from '../overflow-list';
 import type TabBar from './tab-bar';
 import type { OverflowItem } from './tab-bar';
 
@@ -18,7 +17,7 @@ export interface PlainTab {
     closable?: boolean;
 }
 
-interface TabsDropDownProps {
+interface TabsDropdownProps {
     start?: DropdownProps;
     end?: DropdownProps;
 }
@@ -52,7 +51,7 @@ export interface TabsProps extends ElementProps<'div', 'onChange'> {
     visibleTabsStyle?: TabBarProps['visibleTabsStyle'];
     arrowPosition?: TabBarProps['arrowPosition'];
     renderArrow?: TabBarProps['renderArrow'];
-    dropdownProps?: TabsDropDownProps;
+    dropdownProps?: TabsDropdownProps;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;
 }
@@ -79,9 +78,9 @@ export interface TabBarProps extends ElementProps<'div'> {
     more?: TabsProps['more'];
     onVisibleTabsChange?: (visibleState: Map<string, boolean>) => void;
     visibleTabsStyle?: CSSProperties;
-    arrowPosition?: OverflowListProps['overflowRenderDirection'];
+    arrowPosition?: 'both' | 'start' | 'end';
     renderArrow?: (items: OverflowItem[], pos: 'start' | 'end', handleArrowClick: () => void, defaultNode: ReactNode) => ReactNode;
-    dropdownProps?: TabsDropDownProps;
+    dropdownProps?: TabsDropdownProps;
     /** Attached to the bar element, merged with the internal ref */
     ref?: React.Ref<HTMLDivElement>;
 }

@@ -37,7 +37,6 @@
         disabled: () => semiDefault('Rating', 'disabled', false),
         size: () => semiDefault('Rating', 'size', 'default'),
         tooltips: semiGlobalDefault('Rating', 'tooltips'),
-        prefixCls: () => semiDefault('Rating', 'prefixCls', cssClasses.PREFIX),
         autofocus: semiGlobalDefault('Rating', 'autofocus'),
         preventScroll: semiGlobalDefault('Rating', 'preventScroll'),
         ariaLabel: semiGlobalDefault('Rating', 'ariaLabel'),
@@ -149,7 +148,7 @@
 </script>
 
 <template>
-    <ul ref="list" v-bind="rootAttrs($attrs)" :aria-label="groupLabel(customUnit())" :class="[props.prefixCls, { [`${props.prefixCls}-disabled`]: props.disabled }]" role="radiogroup" tabindex="-1" @focusin="onFocusin" @focusout="onFocusout" @keydown="onKeydown" @mouseleave="foundation.handleMouseLeave">
+    <ul ref="list" v-bind="rootAttrs($attrs)" :aria-label="groupLabel(customUnit())" :class="[cssClasses.PREFIX, { [`${cssClasses.PREFIX}-disabled`]: props.disabled }]" role="radiogroup" tabindex="-1" @focusin="onFocusin" @focusout="onFocusout" @keydown="onKeydown" @mouseleave="foundation.handleMouseLeave">
         <!--
             mouseleave ignores disabled: a hover that began before the rating was disabled must still end.
             Item hands Tooltip's aria-describedby to its radios and drops the injected tabindex. customUnit() runs once
@@ -166,7 +165,7 @@
                 :displayValue="state.hoverValue === undefined ? value : state.hoverValue"
                 :firstTabStop="index === 0 && !onRadio"
                 :index="index"
-                :prefixCls="`${props.prefixCls}-star`"
+                :prefixCls="`${cssClasses.PREFIX}-star`"
                 :preventScroll="props.preventScroll"
                 :size="index === props.count ? 0 : props.size"
                 :unit="customUnit()"

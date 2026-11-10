@@ -1,6 +1,6 @@
 import { createEffect, createMemo, createSignal, For, on, onCleanup, onMount, type Setter, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { canCollapseStack, FreshItems, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+import { FreshItems, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
 import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
@@ -48,7 +48,7 @@ export default function ToastList(props: ToastListProps) {
 
     const leave = (setSource: Setter<boolean>) => {
         setSource(false);
-        if (!paused() && canCollapseStack(state().stack, innerWrapper)) {
+        if (!paused()) {
             setStackExpanded(false);
         }
     };
@@ -102,7 +102,7 @@ export default function ToastList(props: ToastListProps) {
         on(
             ids,
             (current) => {
-                // An emptied list has no height, so leave() never collapses it; without this the next batch would start expanded.
+                // An emptied list may fire no mouseleave (the pointer did not move); without this the next batch would start expanded.
                 if (!current.length) {
                     setStackExpanded(false);
                 }

@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Барлық жолдарды таңдау',
         selectRow: 'Осы жолды таңдау',
+        scrollRegion: 'Айналдырылатын кесте мазмұны',
+        untitledColumn: 'Тақырыпсыз баған',
         filterColumn: 'Деректерді осы баған бойынша сүзу',
         filterColumnActive: 'Деректерді осы баған бойынша сүзу, сүзгі қосулы',
         expandRow: 'Осы жолды жаю',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Іздеу',
         replace: 'Ауыстыру',
         replaceAll: 'Барлығын ауыстыру',
+        replaceWith: 'Ауыстыратын мәтін',
         caseSensitive: 'Регистрді ескеру',
         regex: 'Тұрақты өрнекті пайдалану',
         wholeWord: 'Тек толық сөздер',

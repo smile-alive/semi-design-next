@@ -11,7 +11,6 @@ export interface RowProps {
     justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between';
     /** A pair is [horizontal, vertical] */
     gutter?: Gutter | [Gutter, Gutter];
-    prefixCls?: string;
 }
 
 export interface RowSlots {
@@ -24,7 +23,6 @@ export interface ColProps {
     offset?: number;
     push?: number;
     pull?: number;
-    prefixCls?: string;
     xs?: number | ColSize;
     sm?: number | ColSize;
     md?: number | ColSize;

@@ -48,9 +48,9 @@ export interface MCPConfigureContentSolidProps extends Omit<MCPConfigureContentP
 export default function MCPConfigureContent(props: MCPConfigureContentSolidProps) {
     const locale = useLocale('Sidebar');
 
-    const { foundation, state } = useFoundation<MCPConfigureContentFoundation<MouseEvent>, MCPConfigureContentAdapter<MouseEvent>, MCPConfigureContentProps, MCPConfigureContentState>(
+    const { foundation, state } = useFoundation<MCPConfigureContentFoundation<MouseEvent, MCPSolidOption>, MCPConfigureContentAdapter<MouseEvent, MCPSolidOption>, MCPConfigureContentProps<MCPSolidOption>, MCPConfigureContentState>(
         MCPConfigureContentFoundation,
-        props as MCPConfigureContentProps,
+        props as MCPConfigureContentProps<MCPSolidOption>,
         () => MCPConfigureContentFoundation.getInitialState(),
         () => ({
             notifyConfigureClick: (e, option) => props.onConfigureClick?.(e, option),

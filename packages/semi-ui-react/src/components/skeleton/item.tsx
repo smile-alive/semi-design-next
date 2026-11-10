@@ -5,8 +5,9 @@ import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constant
 import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
 import type { ElementProps } from '../../base/base';
 
+const prefixCls = cssClasses.PREFIX;
+
 export interface BasicProps extends ElementProps<'div'> {
-    prefixCls?: string;
     className?: string;
     style?: CSSProperties;
     type?: string;
@@ -14,7 +15,7 @@ export interface BasicProps extends ElementProps<'div'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export interface ParagraphProps extends ElementProps<'ul'>, Pick<BasicProps, 'prefixCls'> {
+export interface ParagraphProps extends ElementProps<'ul'> {
     rows?: number;
     /** Attached to the root ul */
     ref?: React.Ref<HTMLUListElement>;
@@ -28,7 +29,7 @@ export interface AvatarProps extends BasicProps {
 
 export type GenericProps = AvatarProps;
 
-function Generic({ prefixCls = cssClasses.PREFIX, className, type, size = 'medium', shape = 'circle', ...others }: GenericProps) {
+function Generic({ className, type, size = 'medium', shape = 'circle', ...others }: GenericProps) {
     const avatar = type.toUpperCase() === 'AVATAR';
 
     const classString = clsx(className, `${prefixCls}-${type}`, {
@@ -56,7 +57,7 @@ export function Button(props: BasicProps) {
     return <Generic {...props} type={props.type ?? 'button'} />;
 }
 
-export const Paragraph = memo(function Paragraph({ prefixCls = cssClasses.PREFIX, className, rows = 4, ...rest }: ParagraphProps) {
+export const Paragraph = memo(function Paragraph({ className, rows = 4, ...rest }: ParagraphProps) {
     return (
         <ul aria-hidden="true" {...rest} className={clsx(className, `${prefixCls}-paragraph`)}>
             {Array.from({ length: rows }, (_, i) => (

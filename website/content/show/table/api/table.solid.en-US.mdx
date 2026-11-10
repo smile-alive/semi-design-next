@@ -42,7 +42,6 @@ import ApiType from '#/components/ApiType.astro';
 | onRowMouseEnter | Called when the mouse enters a data row, before the `onMouseEnter` returned by `onRow`; both run. | <ApiType detail={"(record: RecordType, e: MouseEvent) => void"}>Type</ApiType> | - |
 | onRowMouseLeave | Called when the mouse leaves a data row, before the `onMouseLeave` returned by `onRow`; both run. | <ApiType detail={"(record: RecordType, e: MouseEvent) => void"}>Type</ApiType> | - |
 | pagination | The pagination configuration. Pass `false` to turn pagination off. | `TablePagination` | `true` |
-| prefixCls | The prefix of the class names. | `string` | `"semi-table"` |
 | ref | The root element, which carries the `getCurrentPageData` method below. | <ApiType detail={"Ref\u003cTableElement\u003cRecordType>>"}>Type</ApiType> | - |
 | renderGroupSection | Renders the content of a group row. An element is the content of the single cell of the group row; an object `{ children, ...column }` gives the content in `children` and the other fields as the configuration of that column. | `RenderGroupSection` | - |
 | renderPagination | Renders a custom pager from the pagination configuration, and returns an element. | `RenderPagination` | - |

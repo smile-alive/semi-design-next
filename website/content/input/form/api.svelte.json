@@ -148,7 +148,7 @@
         }
     },
     "schema-form": {
-        "source": "packages/semi-ui-svelte/src/components/form/schema-form.svelte",
+        "source": "packages/semi-ui-svelte/src/components/form/schema-form/schema-form.svelte",
         "props": {
             "jsonSchema": {
                 "zh-CN": "要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的结果；两者都没有时不渲染字段，开发模式下警告。",
@@ -287,7 +287,7 @@
         }
     },
     "schema-field": {
-        "source": "packages/semi-ui-svelte/src/components/form/schema-field.svelte",
+        "source": "packages/semi-ui-svelte/src/components/form/schema-form/schema-field.svelte",
         "props": {
             "field": {
                 "zh-CN": "要渲染的子树路径，默认为根。",
@@ -402,8 +402,8 @@
         "source": "packages/semi-ui-svelte/src/components/form/slot.svelte",
         "props": {
             "label": {
-                "zh-CN": "Label 的文本，或 text、align、width、required、optional 等 Label 配置；`fieldLabel` snippet 优先。",
-                "en-US": "The Label text, or a Label configuration such as text, align, width, required and optional; the `fieldLabel` snippet takes precedence."
+                "zh-CN": "Label 的文本，或 text、align、width、required、optional、id 等 Label 配置；`fieldLabel` snippet 优先。",
+                "en-US": "The Label text, or a Label configuration such as text, align, width, required, optional and id; the `fieldLabel` snippet takes precedence."
             },
             "labelPosition": {
                 "zh-CN": "Label 的位置，默认取自 Form，可选 top 或 left。",

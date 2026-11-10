@@ -103,8 +103,7 @@ export function renderButton(name: 'Button' | 'IconButton', rawProps: ButtonProp
     };
 
     // A loading button stays focusable, so its click is stopped in the capture phase, ahead of Solid's delegated
-    // handlers and the consumer's native listeners; preventDefault blocks form submit, which pointer-events
-    // cannot do for Enter or Space. Solid's delegation skips a disabled button's own handler but not its
+    // handlers and the consumer's native listeners; preventDefault blocks form submit. Solid's delegation skips a disabled button's own handler but not its
     // ancestors', so a click on the content of a disabled button stops here too.
     const guardClick = (event: MouseEvent) => {
         if (local.loading || looks().disabled) {

@@ -4,15 +4,15 @@
 | -------------- | ------------------------------------------------------------------------------ | ------------------ | ------------------------------------------------- |
 | displayValue   | 展示日期，未传时为当前日期并在午夜更新。                                       | `Date`             | `semiGlobalDefault("Calendar", "displayValue")`   |
 | range          | range 模式下展示的日期范围，左闭右开；range 模式必传。                         | `Date[]`           | `semiGlobalDefault("Calendar", "range")`          |
-| events         | 渲染的事件，格式见 Event Object。                                              | `EventObject[]`    | `semiDefault("Calendar", "events", [])`           |
-| mode           | 视图模式，可选 day、week、month、range，变化后立即切换视图。                   | `CalendarMode`     | `semiDefault("Calendar", "mode", "week")`         |
-| showCurrTime   | 日、周、多日视图下显示当前时间的红线。                                         | `boolean`          | `semiDefault("Calendar", "showCurrTime", true)`   |
-| weekStartsOn   | 以周几作为每周第一天，0 代表周日，1 代表周一，以此类推；对月视图、周视图生效。 | `WeekStartsOn`     | `semiDefault("Calendar", "weekStartsOn", 0)`      |
-| scrollTop      | 日、周、多日视图下展示内容的默认滚动高度。                                     | `number`           | `semiDefault("Calendar", "scrollTop", 400)`       |
-| markWeekend    | 以灰色区分周末列和工作日。                                                     | `boolean`          | `semiDefault("Calendar", "markWeekend", false)`   |
+| events         | 渲染的事件，格式见 Event Object。                                              | `EventObject[]`    | `[]`                                              |
+| mode           | 视图模式，可选 day、week、month、range，变化后立即切换视图。                   | `CalendarMode`     | `"week"`                                          |
+| showCurrTime   | 日、周、多日视图下显示当前时间的红线。                                         | `boolean`          | `true`                                            |
+| weekStartsOn   | 以周几作为每周第一天，0 代表周日，1 代表周一，以此类推；对月视图、周视图生效。 | `WeekStartsOn`     | `0`                                               |
+| scrollTop      | 日、周、多日视图下展示内容的默认滚动高度。                                     | `number`           | `400`                                             |
+| markWeekend    | 以灰色区分周末列和工作日。                                                     | `boolean`          | `false`                                           |
 | minEventHeight | 日视图、多日视图以及周视图下事件的最小高度，单位为像素。                       | `number`           | `semiGlobalDefault("Calendar", "minEventHeight")` |
 | width          | 日历宽度，数字按像素处理。                                                     | `string \| number` | `semiGlobalDefault("Calendar", "width")`          |
-| height         | 日历高度，数字按像素处理。                                                     | `string \| number` | `semiDefault("Calendar", "height", 600)`          |
+| height         | 日历高度，数字按像素处理。                                                     | `string \| number` | `600`                                             |
 
 **Events**
 

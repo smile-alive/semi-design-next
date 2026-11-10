@@ -18,7 +18,7 @@
     // A static subcomponent: it reads no global defaults, as in React.
     defineOptions({ name: 'BreadcrumbItem', elementType: 'Breadcrumb.Item' });
 
-    const props = withDefaults(defineProps<BreadcrumbItemProps & /* @vue-ignore */ ElementProps<'span', keyof BreadcrumbItemProps>>(), {
+    const props = withDefaults(defineProps<BreadcrumbItemProps & /* @vue-ignore */ ElementProps<'li', keyof BreadcrumbItemProps>>(), {
         active: undefined,
         href: undefined,
         noLink: undefined,
@@ -67,7 +67,7 @@
 </script>
 
 <template>
-    <span :aria-current="props.active ? 'page' : undefined" :class="`${prefix}-item-wrap`">
+    <li :aria-current="props.active ? 'page' : undefined" :class="`${prefix}-item-wrap`">
         <template v-for="(nodes, n) in [titleNodes($slots.default?.() ?? [])]" :key="n">
             <component
                 :is="isLink ? 'a' : 'span'"
@@ -105,5 +105,5 @@
                 </template>
             </span>
         </template>
-    </span>
+    </li>
 </template>

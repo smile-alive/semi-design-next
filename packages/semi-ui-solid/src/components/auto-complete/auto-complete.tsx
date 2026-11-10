@@ -477,7 +477,7 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
                                 onMouseEnter={() => foundation.handleOptionMouseEnter(index())}
                                 onSelect={() => foundation.handleSelect(option, index())}
                             >
-                                <Show when={local.renderItem} keyed fallback={option.label as BaseDataItem['label']}>
+                                <Show when={local.renderItem} keyed fallback={(option.label ?? option.value) as BaseDataItem['label']}>
                                     {(render) => render(option._source as T)}
                                 </Show>
                             </OptionView>
@@ -504,6 +504,7 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={state().visible}
+            onEscKeyDown={foundation.handleEscKeyDown}
         >
             {(getTriggerProps) => (
                 <div

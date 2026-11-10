@@ -43,10 +43,6 @@
                 "zh-CN": "选中状态变化时的回调，参数的 `target` 为 `{ checked, value, name, disabled }`。",
                 "en-US": "Called when the checked state changes. The event's `target` is `{ checked, value, name, disabled }`."
             },
-            "prefixCls": {
-                "zh-CN": "CSS 类名前缀，未设置时依次取所在 RadioGroup 的值与全局默认值。",
-                "en-US": "CSS class name prefix. When omitted it falls back to the enclosing RadioGroup's value, then the global default."
-            },
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。",
                 "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the focus method."
@@ -109,7 +105,6 @@
                 "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClass, extraId }`，其中 `style`、`addonStyle` 为字符串。",
                 "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClass, extraId }`, where `style` and `addonStyle` are strings."
             },
-            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
             "type": {
                 "zh-CN": "组内所有 Radio 的样式类型，可选 default、button、card、pureCard。",
                 "en-US": "Style type of every Radio in the group: default, button, card or pureCard."

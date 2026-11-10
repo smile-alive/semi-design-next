@@ -1,4 +1,4 @@
-import { createRef, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
@@ -6,7 +6,6 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Button, Popover, TagInput, type TagInputHandle } from '@fibrae/semi-ui-react';
 import { dragTo, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
-
 const tagInputCls = `${BASE_CLASS_PREFIX}-tagInput`;
 const getHandles = () => document.querySelectorAll(`.${tagInputCls}-drag-handler`);
 
@@ -89,6 +88,42 @@ describe('TagInput（浏览器）', () => {
         expect(onBlur).not.toHaveBeenCalled();
         await userEvent.keyboard(' ');
         await waitFor(() => expect(onChange).toHaveBeenCalledWith(['def', 'abc', 'ghi']));
+    });
+
+    it('拖拽中途 Sortable 被卸载后，TagInput 失焦仍结束激活', async () => {
+        const onBlur = vi.fn<(event: unknown) => void>();
+        let clearAll = () => {};
+        function Demo() {
+            const [value, setValue] = useState(['abc', 'def', 'ghi']);
+            const [draggable, setDraggable] = useState(true);
+            useEffect(() => {
+                clearAll = () => {
+                    setValue([]);
+                    setDraggable(false);
+                };
+            }, []);
+            return (
+                <>
+                    <TagInput value={value} draggable={draggable} onBlur={onBlur} onChange={setValue} />
+                    <Button>after</Button>
+                </>
+            );
+        }
+        render(<Demo />);
+        await userEvent.click(screen.getByRole('textbox'));
+        await waitFor(() => expect(getHandles()).toHaveLength(3));
+        screen.getAllByRole('button', { name: zh_CN.TagInput.dragSort })[0].focus();
+        await userEvent.keyboard(' ');
+        await waitFor(() => expect(document.querySelector(`.${tagInputCls}-drag-item-move`)).not.toBeNull());
+
+        clearAll();
+        await waitFor(() => expect(getHandles()).toHaveLength(0));
+        await waitFor(() => expect(document.querySelector(`.${tagInputCls}-drag-item-move`)).toBeNull());
+        onBlur.mockClear();
+
+        await userEvent.click(screen.getByRole('textbox'));
+        await userEvent.click(screen.getByRole('button', { name: 'after' }));
+        await waitFor(() => expect(onBlur).toHaveBeenCalled());
     });
 
     it('受控 value 下父组件不接受排序时，标签顺序回到原序', async () => {

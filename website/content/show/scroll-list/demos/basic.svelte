@@ -23,9 +23,9 @@
 </script>
 
 <ScrollList header="无限滚动列表" style="border: unset; box-shadow: unset">
-    <ScrollItem aria-label="上午或下午" bind:selectedIndex={selectIndex1} cycled={false} list={ampms} mode="wheel" type={1} />
-    <ScrollItem aria-label="小时" bind:selectedIndex={selectIndex2} cycled list={hours} mode="wheel" onSelect={onSelectHour} type={2} />
-    <ScrollItem aria-label="分钟" bind:selectedIndex={selectIndex3} cycled list={minutes} mode="wheel" onSelect={onSelectMinute} type={3} />
+    <ScrollItem aria-label="上午或下午" bind:selectedIndex={selectIndex1} cycled={false} list={ampms} mode="wheel" />
+    <ScrollItem aria-label="小时" bind:selectedIndex={selectIndex2} cycled list={hours} mode="wheel" onSelect={onSelectHour} />
+    <ScrollItem aria-label="分钟" bind:selectedIndex={selectIndex3} cycled list={minutes} mode="wheel" onSelect={onSelectMinute} />
     {#snippet footer()}
         <Button size="small" type="primary" onclick={handleClose}>Ok</Button>
     {/snippet}

@@ -305,6 +305,17 @@ export function getCellWidths(headWidths?: BaseHeadWidth[][], columns?: { key?: 
 }
 
 /**
+ * The min-width of the table when every leaf column declares a number width: WebKit shrinks an auto-layout table to
+ * its container and scales the columns down, where Chrome and Firefox widen it and scroll
+ */
+export function getColumnsMinWidth(leafColumns: { width?: unknown }[]): number | undefined {
+    if (!leafColumns.length || !leafColumns.every((column) => typeof column.width === 'number')) {
+        return undefined;
+    }
+    return leafColumns.reduce((sum, column) => sum + (column.width as number), 0);
+}
+
+/**
  * A merged header leaves no th for a column whose span is 0, so the th elements pair only with the columns in `renderedKeys`;
  * the others keep their configured width, or 0.
  */

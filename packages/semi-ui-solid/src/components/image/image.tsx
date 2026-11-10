@@ -15,7 +15,7 @@ import useLocale from '../locale/use-locale';
 import Skeleton from '../skeleton';
 import { usePreviewContext } from './context';
 import type { ImageProps } from './interface';
-import PreviewInner from './preview-inner';
+import PreviewInner from './preview/preview-inner';
 
 type Foundation = ImageFoundation<ImageProps>;
 type Adapter = ImageAdapter<ImageProps>;

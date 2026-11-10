@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 import { pick as pickKeys } from 'es-toolkit';
-import ComboboxFoundation, { type formatOption, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+import { applyItem, getOptions, type formatOption, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
 import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
 import type { BaseProps } from '../../base/base-props';
 import useLocale from '../locale/use-locale';
@@ -9,8 +9,9 @@ import ScrollList from '../scroll-list/index';
 import ScrollItem, { type ScrollItemHandle } from '../scroll-list/scroll-item';
 import type { TimePickerProps } from './time-picker';
 
-export type ComboboxProps = Pick<TimePickerProps, 'format' | 'prefixCls' | 'disabledHours' | 'disabledMinutes' | 'disabledSeconds' | 'hideDisabledOptions' | 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'scrollItemProps' | 'panelFooter' | 'panelHeader'> &
+export type ComboboxProps = Pick<TimePickerProps, 'format' | 'disabledHours' | 'disabledMinutes' | 'disabledSeconds' | 'hideDisabledOptions' | 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'scrollItemProps' | 'panelFooter' | 'panelHeader'> &
     BaseProps & {
+        prefixCls?: string;
         onChange?: (value: { timeStampValue: number }) => void;
         /** The half day the AM/PM and hour columns show while there is no value; defaults to AM */
         defaultIsAM?: boolean;
@@ -39,7 +40,7 @@ export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORM
     let ampmSelect: React.ReactNode = null;
 
     // the half day follows the value, so a value changed by typing, by props or by the time zone cannot leave it stale
-    const { showHour, showMinute, showSecond, isAM, ampm, hour, minute, second } = ComboboxFoundation.getOptions({
+    const { showHour, showMinute, showSecond, isAM, ampm, hour, minute, second } = getOptions({
         timeStampValue,
         format,
         use12Hours,
@@ -58,7 +59,7 @@ export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORM
 
     const pick = (type: ColumnType) => (item: { value: string }) =>
         onChange?.({
-            timeStampValue: Number(ComboboxFoundation.applyItem(timeStampValue, type, item.value, use12Hours, isAM)),
+            timeStampValue: Number(applyItem(timeStampValue, type, item.value, use12Hours, isAM)),
         });
 
     // DatePicker passes no prefixCls, and its time columns take their width from their own panel
@@ -78,25 +79,25 @@ export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORM
 
     if (use12Hours) {
         const AMPMOptions: AMPMOptionItem[] = ampm.list.map(({ value }) => ({ value, text: locale[value] }));
-        ampmSelect = <ScrollItem<AMPMOptionItem> ref={ampmRef} type="ampm" className={listCls('ampm')} aria-label={locale.ampmList} list={AMPMOptions} mode="normal" selectedIndex={ampm.selectedIndex} onSelect={pick('ampm')} {...itemProps} />;
+        ampmSelect = <ScrollItem<AMPMOptionItem> ref={ampmRef} className={listCls('ampm')} aria-label={locale.ampmList} list={AMPMOptions} mode="normal" selectedIndex={ampm.selectedIndex} onSelect={pick('ampm')} {...itemProps} />;
     }
 
     let hourSelect: React.ReactNode = null;
 
     if (showHour) {
-        hourSelect = <ScrollItem<FormatOptionReturn> ref={hourRef} type="hour" className={listCls('hour')} aria-label={locale.hourList} list={hour.list} mode="normal" selectedIndex={hour.selectedIndex} transform={(text: string) => text + locale.hour} onSelect={pick('hour')} {...itemProps} />;
+        hourSelect = <ScrollItem<FormatOptionReturn> ref={hourRef} className={listCls('hour')} aria-label={locale.hourList} list={hour.list} mode="normal" selectedIndex={hour.selectedIndex} transform={(text: string) => text + locale.hour} onSelect={pick('hour')} {...itemProps} />;
     }
 
     let minuteSelect: React.ReactNode = null;
 
     if (showMinute) {
-        minuteSelect = <ScrollItem<FormatOptionReturn> ref={minuteRef} type="minute" className={listCls('minute')} aria-label={locale.minuteList} list={minute.list} mode="normal" selectedIndex={minute.selectedIndex} transform={(min: string) => min + locale.minute} onSelect={pick('minute')} {...itemProps} />;
+        minuteSelect = <ScrollItem<FormatOptionReturn> ref={minuteRef} className={listCls('minute')} aria-label={locale.minuteList} list={minute.list} mode="normal" selectedIndex={minute.selectedIndex} transform={(min: string) => min + locale.minute} onSelect={pick('minute')} {...itemProps} />;
     }
 
     let secondSelect: React.ReactNode = null;
 
     if (showSecond) {
-        secondSelect = <ScrollItem<FormatOptionReturn> ref={secondRef} type="second" className={listCls('second')} aria-label={locale.secondList} list={second.list} mode="normal" selectedIndex={second.selectedIndex} transform={(sec: string) => sec + locale.second} onSelect={pick('second')} {...itemProps} />;
+        secondSelect = <ScrollItem<FormatOptionReturn> ref={secondRef} className={listCls('second')} aria-label={locale.secondList} list={second.list} mode="normal" selectedIndex={second.selectedIndex} transform={(sec: string) => sec + locale.second} onSelect={pick('second')} {...itemProps} />;
     }
 
     return (

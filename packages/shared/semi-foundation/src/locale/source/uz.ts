@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Barcha qatorlarni tanlash',
         selectRow: 'Bu qatorni tanlash',
+        scrollRegion: 'Aylantiriladigan jadval mazmuni',
+        untitledColumn: 'Sarlavhasiz ustun',
         filterColumn: 'Maʼlumotlarni shu ustun boʻyicha filtrlash',
         filterColumnActive: 'Maʼlumotlarni shu ustun boʻyicha filtrlash, filtr faol',
         expandRow: 'Bu qatorni kengaytirish',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Qidirish',
         replace: 'Almashtirish',
         replaceAll: 'Barchasini almashtirish',
+        replaceWith: 'Almashtirish matni',
         caseSensitive: 'Katta-kichik harfni farqlash',
         regex: 'Muntazam ifodadan foydalanish',
         wholeWord: 'Toʻliq soʻzni moslash',

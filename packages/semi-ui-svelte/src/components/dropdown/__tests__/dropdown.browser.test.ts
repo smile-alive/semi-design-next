@@ -226,6 +226,15 @@ describe('Svelte Dropdown 子菜单键盘操作（浏览器）', () => {
         expect(item('Parent')).toHaveFocus();
     });
 
+    it('悬停子菜单：父级选项上按 Enter 打开子菜单并聚焦第一项，不触发父级选项的 onclick', async () => {
+        const { store, button } = setupNested({ innerTrigger: 'hover' });
+        await openOuterAndFocusParent(button);
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(item('Inner one')).toHaveFocus());
+        expect(item('Parent')).toHaveAttribute('aria-expanded', 'true');
+        expect(store.log).not.toContain('parent click');
+    });
+
     it('Escape 先关闭子菜单，再关闭包含父级选项的菜单并把焦点还给触发器', async () => {
         const { button } = setupNested({ innerTrigger: 'click' });
         await openOuterAndFocusParent(button);

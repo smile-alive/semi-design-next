@@ -81,6 +81,12 @@ $module: #{$prefix}-sidebar;
         }
     }
 
+    @keyframes #{$module}-gapcursor-blink {
+        to {
+            visibility: hidden;
+        }
+    }
+
     &-animation-content_show {
         animation: #{$module}-slideShow_right $animation_duration_sidebar_inner-show $animation_function_sidebar_inner-show $animation_delay_sidebar_inner-show;
         animation-fill-mode: forwards;
@@ -444,8 +450,64 @@ $module: #{$prefix}-sidebar;
 
     &-file {
         .tiptap {
+            // ProseMirror base rules (from @tiptap/core's injected style, which the Svelte editor disables)
+            position: relative;
             font-size: $font-sidebar_file-fontSize;
+            font-feature-settings: 'liga' 0;
+            font-variant-ligatures: none;
             line-height: $font-sidebar_file-lineHeight;
+            word-wrap: break-word;
+            white-space: break-spaces;
+
+            [contenteditable='false'] {
+                white-space: normal;
+            }
+
+            [contenteditable='false'] [contenteditable='true'] {
+                white-space: pre-wrap;
+            }
+
+            /* stylelint-disable declaration-no-important -- must survive page-level img styles on prosemirror-view's
+               trailing hack image */
+            .ProseMirror-separator {
+                display: inline !important;
+                width: 0 !important;
+                height: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+            }
+
+            /* stylelint-enable declaration-no-important */
+
+            &.ProseMirror-hideselection *::selection {
+                background: transparent;
+            }
+
+            &.ProseMirror-hideselection * {
+                caret-color: transparent;
+            }
+
+            // the file editor's extensions include Gapcursor; Dropcursor styles its element inline and needs no rule
+            .ProseMirror-gapcursor {
+                position: absolute;
+                display: none;
+                margin: 0;
+                pointer-events: none;
+            }
+
+            .ProseMirror-gapcursor::after {
+                position: absolute;
+                top: -2px;
+                display: block;
+                width: 20px;
+                content: '';
+                border-top: 1px solid var(--semi-color-text-0);
+                animation: #{$module}-gapcursor-blink 1.1s steps(2, start) infinite;
+            }
+
+            &.ProseMirror-focused .ProseMirror-gapcursor {
+                display: block;
+            }
 
             ::selection {
                 background: $color-sidebar_file_selection-bg;
@@ -532,6 +594,7 @@ $module: #{$prefix}-sidebar;
                 overflow: auto;
                 font-size: $font-sidebar_file_pre-fontSize;
                 line-height: $font-sidebar_file_pre-lineHeight;
+                white-space: pre-wrap;
                 background-color: $color-sidebar_file_pre_bg;
                 border: $width-sidebar_file_pre-border solid $color-sidebar_file_pre-border;
                 border-radius: $radius-sidebar_file_pre;

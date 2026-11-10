@@ -156,6 +156,7 @@ export default function Feedback(rawProps: FeedbackProps) {
                 <SideSheet
                     class={rootClass()}
                     canVerticalSetWidth
+                    closeOnEsc
                     disableScroll={false}
                     footer={
                         <div class={`${prefixCls}-footer`}>

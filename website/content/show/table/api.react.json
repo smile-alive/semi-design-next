@@ -1,6 +1,6 @@
 {
     "table": {
-        "source": "packages/semi-ui-react/src/components/table/index.tsx",
+        "source": "packages/semi-ui-react/src/components/table/table.tsx",
         "props": {
             "bordered": { "zh-CN": "是否展示外边框和列边框。", "en-US": "Whether to show the outer border and the column borders." },
             "children": {
@@ -95,7 +95,6 @@
                 "zh-CN": "分页配置，传 `false` 关闭分页。",
                 "en-US": "The pagination configuration. Pass `false` to turn pagination off."
             },
-            "prefixCls": { "zh-CN": "样式名前缀。", "en-US": "The prefix of the class names." },
             "renderGroupSection": {
                 "zh-CN": "渲染分组行的内容。返回元素时作为分组行唯一一列的内容；返回 `{ children, ...列配置 }` 对象时，`children` 是内容，其余字段作为该列的配置。",
                 "en-US": "Renders the content of a group row. An element is the content of the single cell of the group row; an object `{ children, ...column }` gives the content in `children` and the other fields as the configuration of that column."

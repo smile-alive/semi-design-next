@@ -453,7 +453,7 @@ The ref of Input and TextArea is the outer wrapper `div`, not an imperative hand
 
 - Input can be focused, keyboard users can use Tab and Shift + Tab to switch focus
 - The password visibility toggle is a native `button` named by the locale's "Show password" or "Hidden password" for its state; it can be focused and toggled with Enter or Space, after which the focus goes back to the input
-- With `showClear`, a value, and no `disabled` (or with `showClearIgnoreDisabled`), the clear button is a native `button` named "Clear input" from the locale. Input shows it on hover or while focus is inside; TextArea does the same unless it is not editable. From the input, Tab moves to the clear button; Enter or Space clears and the focus goes back to the input. A mouse click on the clear button leaves the focus where it is
+- With `showClear`, a value, and no `disabled` (the input of a DatePicker with `insetInput` shows it while disabled too), the clear button is a native `button` named "Clear input" from the locale. Input shows it on hover or while focus is inside; TextArea does the same unless it is not editable. From the input, Tab moves to the clear button; Enter or Space clears and the focus goes back to the input. A mouse click on the clear button leaves the focus where it is
 
 ## Design Tokens
 

@@ -32,7 +32,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | 弹出层显示、进场动画开始时的回调，每次打开一次，早于 afterOpen，受控与非受控相同；悬停打开后指针已离开而撤回的打开不调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onVisibleChange | 弹出层显示状态变化时的回调；visible 受控时只报告用户交互发起的请求，父级自己改变 visible 不调用。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | 弹出层相对触发元素的位置。 | `Position` | `"top"` |
-| prefixCls | 弹出层类名前缀，设置后弹出层不再带 Tooltip 的样式。 | `string` | `"semi-tooltip"` |
 | preventScroll | 聚焦时是否阻止浏览器滚动到被聚焦元素。 | `boolean` | - |
 | returnFocusOnClose | 弹出层关闭后焦点是否回到触发元素。 | `boolean` | `false` |
 | role | 弹出层的 ARIA role。 | `string` | `"tooltip"` |
@@ -48,9 +47,10 @@ import ApiType from '#/components/ApiType.astro';
 
 **Methods**
 
-| 方法         | 说明                                                                                                                                                                                     | 类型                                            |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| focusTrigger | 让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效。                                                                                                      | <ApiType detail={"() => void"}>Type</ApiType>   |
-| getPopupId   | 返回弹出层节点的 id。                                                                                                                                                                    | <ApiType detail={"() => string"}>Type</ApiType> |
-| hide         | 关闭弹出层；visible 受控时只调用 onVisibleChange，由使用方回写。                                                                                                                         | <ApiType detail={"() => void"}>Type</ApiType>   |
-| rePosition   | 按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。 | <ApiType detail={"() => void"}>Type</ApiType>   |
+| 方法         | 说明                                                                                                                                                                                     | 类型                                                                |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| focusTrigger | 让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效。                                                                                                      | <ApiType detail={"() => void"}>Type</ApiType>                       |
+| getPopup     | 返回弹出层元素；弹出层不在文档中时返回 `null`。                                                                                                                                          | <ApiType detail={"() => HTMLDivElement \u007c null"}>Type</ApiType> |
+| getPopupId   | 返回弹出层节点的 id。                                                                                                                                                                    | <ApiType detail={"() => string"}>Type</ApiType>                     |
+| hide         | 关闭弹出层；visible 受控时只调用 onVisibleChange，由使用方回写。                                                                                                                         | <ApiType detail={"() => void"}>Type</ApiType>                       |
+| rePosition   | 按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。 | <ApiType detail={"() => void"}>Type</ApiType>                       |

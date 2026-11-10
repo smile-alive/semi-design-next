@@ -5,11 +5,11 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | modelValue | Text of the editor, used with v-model. A value different from the editor's current content re-creates the editor; echoing the current content back keeps the caret. Without it the editor starts empty. | `string` | `undefined` |
-| width | Width. A number is taken as px; a string is used as is. | `string \| number` | `semiDefault("JsonViewer", "width", 400)` |
-| height | Height. A number is taken as px; a string is used as is. | `string \| number` | `semiDefault("JsonViewer", "height", 400)` |
-| showSearch | Whether to show the search button. | `boolean` | `semiDefault("JsonViewer", "showSearch", true)` |
+| width | Width. A number is taken as px; a string is used as is. | `string \| number` | `400` |
+| height | Height. A number is taken as px; a string is used as is. | `string \| number` | `400` |
+| showSearch | Whether to show the search button. | `boolean` | `true` |
 | options | Editor options; see JsonViewerOptions for the fields. The defaults of ariaLabel, readOnly and autoWrap merge per key, so passing some fields keeps the defaults of the others. A deep change re-creates the editor; mutating a nested object such as formatOptions or customRenderRule in place goes unnoticed, so replace it with a new object. | `JsonViewerOptions` | `semiGlobalDefault("JsonViewer", "options")` |
-| limitSearchButtonBounds | Whether to limit the search button drag bounds within the component container. | `boolean` | `semiDefault("JsonViewer", "limitSearchButtonBounds", false)` |
+| limitSearchButtonBounds | Whether to limit the search button drag bounds within the component container. | `boolean` | `false` |
 
 **Events**
 

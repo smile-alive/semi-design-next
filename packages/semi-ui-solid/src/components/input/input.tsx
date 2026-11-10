@@ -1,4 +1,4 @@
-import { type JSX, type Ref, Show, children, createRenderEffect, createUniqueId, mergeProps, splitProps } from 'solid-js';
+import { type JSX, type Ref, Show, children, createRenderEffect, createUniqueId, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
@@ -8,7 +8,6 @@ import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/input/input.scss';
 import { IconClear, IconEyeClosedSolid, IconEyeOpened } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/element-props';
-import { usePopupLayer } from '../../base/popup-layer';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useFocusHandover from '../../primitives/use-focus-handover';
@@ -16,10 +15,10 @@ import callHandler from '../../utils/call-handler';
 import forwardFocus from '../../utils/forward-focus';
 import { createIconSlot } from '../../utils/icon-slot';
 import mergeRefs from '../../utils/merge-refs';
-import mergeStyles from '../../utils/merge-styles';
 import useLocale from '../locale/use-locale';
 import { useSpecialTrigger } from '../tooltip/context';
-import { useInputGroupContext } from './context';
+import type { InputGroupContextValue } from './context';
+import InputGroupBoundary from './group-boundary';
 import useControlledInput from './use-controlled-input';
 
 // Solid types `attr:` only for the names a project declares; the input writes `value` as an attribute below
@@ -77,15 +76,17 @@ export interface InputProps extends ElementProps<'input', 'onChange' | 'prefix' 
     maxLength?: number;
     minLength?: number;
     preventScroll?: boolean;
-    /** internal prop, DatePicker use it */
-    showClearIgnoreDisabled?: boolean;
-    /** The wrapper's border width in px */
-    onlyBorder?: number;
     /** When enabled, onChange fires once after an IME composition ends, not during it */
     composition?: boolean;
     /** The wrapper div; other attributes go to the native input, `class` and `style` to the wrapper */
     ref?: Ref<HTMLDivElement>;
     inputRef?: (element: HTMLInputElement) => void;
+}
+
+/** Props Semi's own components pass, kept out of the public InputProps */
+export interface InputInternalProps extends InputProps {
+    /** DatePicker's insetInput: the clear button stays on a disabled input */
+    showClearIgnoreDisabled?: boolean;
 }
 
 export interface InputState {
@@ -109,18 +110,22 @@ const defaultProps = {
     composition: false,
 } satisfies Partial<InputProps>;
 
-export default function Input(rawProps: InputProps) {
+// The boundary keeps controls in the addons and adornments (a Button in the suffix) out of the group
+export default function Input(props: InputProps) {
+    return <InputGroupBoundary>{(inGroup) => <InputControl {...props} inGroup={inGroup} />}</InputGroupBoundary>;
+}
+
+function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextValue }) {
+    const [own, rawProps] = splitProps(all, ['inGroup']);
     const defaulted = useDefaultProps('Input', rawProps, defaultProps);
 
-    const group = useInputGroupContext();
-    const layer = usePopupLayer();
     const locale = useLocale('Input');
 
     const generatedId = createUniqueId();
     let input: HTMLInputElement | undefined;
     let clearButton: HTMLButtonElement | undefined;
 
-    const inGroup = group?.layer === layer ? group : undefined;
+    const inGroup = untrack(() => own.inGroup);
 
     // read from rawProps: the defaulted ones already hold the global value, which would hide the group's
     const props = mergeProps(defaulted, {
@@ -163,7 +168,6 @@ export default function Input(rawProps: InputProps) {
         'onInput',
         'onKeyDown',
         'onKeyUp',
-        'onlyBorder',
         'placeholder',
         'prefix',
         'preventScroll',
@@ -250,13 +254,6 @@ export default function Input(rawProps: InputProps) {
             ariaLabelledby: rest['aria-labelledby'],
         });
 
-    const wrapperStyle = (): JSX.CSSProperties | string | undefined => {
-        if (local.onlyBorder === undefined) {
-            return local.style;
-        }
-        return mergeStyles({ 'border-width': `${local.onlyBorder}px` }, local.style);
-    };
-
     const handleInput = (e: InputElementEvent<InputEvent>) => {
         foundation.handleInput(e);
         controlled.handleInput(e);
@@ -305,9 +302,8 @@ export default function Input(rawProps: InputProps) {
                 [`${wrapper}-hidden`]: local.type === 'hidden',
                 [`${wrapper}-${local.size}`]: Boolean(local.size),
                 [`${prefixCls}-borderless`]: local.borderless,
-                [`${prefixCls}-only_border`]: local.onlyBorder != null,
             })}
-            style={wrapperStyle()}
+            style={local.style}
             onClick={foundation.handleClick}
             onFocusIn={controlled.handleFocusIn}
             onFocusOut={controlled.handleFocusOut}

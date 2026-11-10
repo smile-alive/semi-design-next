@@ -1,3 +1,4 @@
+import { For } from 'solid-js';
 import { AIChatInput, type AIChatInputActionAreaProps as ActionAreaProps } from '@fibrae/semi-ai-solid';
 import { IconDeleteStroked } from '@fibrae/semi-icons-solid';
 import { Button, Divider } from '@fibrae/semi-ui-solid';
@@ -11,7 +12,7 @@ const renderActionArea = (actionArea: ActionAreaProps) => (
             <Button aria-label="清空内容" type="tertiary" style={{ 'border-radius': '50%' }} icon={<IconDeleteStroked />} />
             <Divider layout="vertical" style={{ 'margin-inline-start': '8px' }} />
         </div>
-        {actionArea.menuItem}
+        <For each={actionArea.menuItem}>{(item) => item()}</For>
     </div>
 );
 

@@ -10,8 +10,8 @@ export type RadioDirection = 'horizontal' | 'vertical';
 
 export type RadioChangeEventTarget = {
     checked: boolean;
-    value: RadioValue | undefined;
-    name: string | undefined;
+    value?: RadioValue;
+    name?: string;
     disabled: boolean;
 };
 
@@ -34,7 +34,6 @@ export interface RadioProps extends Omit<HTMLAttributes<HTMLLabelElement>, 'onch
     addonClassName?: string;
     addonId?: string;
     extraId?: string;
-    prefixCls?: string;
     preventScroll?: boolean;
     onChange?: (event: RadioChangeEvent) => void;
     /** Not rendered for type="button". */
@@ -68,7 +67,6 @@ export interface RadioGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'o
     mode?: RadioMode;
     type?: RadioType;
     buttonSize?: RadioGroupButtonSize;
-    prefixCls?: string;
     /** `target.value` is `undefined` when mode="advanced" unchecks the selected radio. */
     onChange?: (event: RadioChangeEvent) => void;
     onBlur?: (event: FocusEvent) => void;

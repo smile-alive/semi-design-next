@@ -7,8 +7,8 @@ export type CheckboxDirection = 'horizontal' | 'vertical';
 
 export type CheckboxEventTarget = {
     checked: boolean;
-    value: CheckboxValue | undefined;
-    name: string | undefined;
+    value?: CheckboxValue;
+    name?: string;
     disabled: boolean;
 };
 
@@ -28,7 +28,6 @@ export interface CheckboxProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'on
     type?: CheckboxType;
     addonId?: string;
     extraId?: string;
-    prefixCls?: string;
     preventScroll?: boolean;
     onChange?: (event: CheckboxEvent) => void;
     extra?: Snippet;
@@ -55,7 +54,6 @@ export interface CheckboxGroupProps extends Omit<HTMLAttributes<HTMLDivElement>,
     options?: Array<string | CheckboxOptionItem>;
     direction?: CheckboxDirection;
     type?: CheckboxType;
-    prefixCls?: string;
     onChange?: (value: CheckboxValue[]) => void;
     /** Fires when focus leaves the whole group, not between its boxes */
     onBlur?: (event: FocusEvent) => void;

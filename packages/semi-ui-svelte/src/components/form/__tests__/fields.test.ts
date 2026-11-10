@@ -410,7 +410,7 @@ describe('Svelte Form 全部字段', () => {
         expect(screen.getByRole('group', { name: 'Code' })).toBeInTheDocument();
     });
 
-    it('FormCheckbox、FormRadio 无 field 时透明：属性与子内容同普通组件，id 与 name 落到控件上，值经所在的组写入表单', async () => {
+    it('FormCheckbox、FormRadio 无 field 时透明：属性与子内容同普通组件，id 落到控件上，值经所在的组写入表单', async () => {
         let api: FormApi | undefined;
         render(BareControls, { props: { onApi: (formApi: FormApi) => (api = formApi) } });
         await settle();
@@ -419,7 +419,6 @@ describe('Svelte Form 全部字段', () => {
         expect(document.querySelector('.own')).not.toBeNull();
         expect(screen.getByRole('checkbox', { name: 'A' })).toHaveAttribute('id', 'own-checkbox');
         expect(screen.getByRole('radio', { name: 'R' })).toHaveAttribute('id', 'own-radio');
-        expect(screen.getByRole('radio', { name: 'R' })).toHaveAttribute('name', 'own-name');
         await click(screen.getByRole('checkbox', { name: 'A' }));
         await click(screen.getByRole('radio', { name: 'R' }));
         expect(api?.getValues()).toEqual({ group: ['a'], pick: 'r' });

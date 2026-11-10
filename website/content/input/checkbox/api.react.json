@@ -66,10 +66,6 @@
                 "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 `focus()` 方法。",
                 "en-US": "Whether focusing prevents the browser from scrolling the element into view. Applies to the `focus()` method."
             },
-            "prefixCls": {
-                "zh-CN": "CSS 类名前缀。",
-                "en-US": "CSS class name prefix."
-            },
             "ref": {
                 "zh-CN": "句柄，提供 `focus()` 与 `blur()` 方法。",
                 "en-US": "Handle that provides the `focus()` and `blur()` methods."
@@ -140,10 +136,6 @@
             "options": {
                 "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, style, className, onChange }`；`label` 与 `extra` 可传入 `ReactNode`。",
                 "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, style, className, onChange }`; `label` and `extra` accept `ReactNode`."
-            },
-            "prefixCls": {
-                "zh-CN": "CSS 类名前缀。",
-                "en-US": "CSS class name prefix."
             },
             "ref": {
                 "zh-CN": "根元素（`role=\"group\"`）的引用。",

@@ -3,6 +3,7 @@
     import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
     import '@fibrae/semi-foundation/components/popover/popover.scss';
     import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { provideTooltipPrefixContext } from '../tooltip/context';
     import type { TooltipProps } from '../tooltip/interface';
     import Tooltip from '../tooltip/tooltip.vue';
     import Arrow from './arrow.vue';
@@ -16,7 +17,6 @@
         motion: () => semiDefault('Popover', 'motion', true),
         trigger: () => semiDefault('Popover', 'trigger', 'hover'),
         position: () => semiDefault('Popover', 'position', 'bottom'),
-        prefixCls: () => semiDefault('Popover', 'prefixCls', cssClasses.PREFIX),
         closeOnEsc: () => semiDefault('Popover', 'closeOnEsc', true),
         returnFocusOnClose: () => semiDefault('Popover', 'returnFocusOnClose', true),
         guardFocus: () => semiDefault('Popover', 'guardFocus', true),
@@ -54,6 +54,8 @@
         };
     });
 
+    provideTooltipPrefixContext(cssClasses.PREFIX);
+
     const popupStyle = (style: unknown): CSSProperties => {
         const normalized = normalizeStyle([style]) as CSSProperties;
         return {
@@ -81,8 +83,8 @@
     >
         <slot />
         <template #content="slotProps">
-            <div :class="[props.prefixCls, props.contentClassName]">
-                <div :class="`${props.prefixCls}-content`">
+            <div :class="[cssClasses.PREFIX, props.contentClassName]">
+                <div :class="`${cssClasses.PREFIX}-content`">
                     <slot name="content" v-bind="slotProps" />
                 </div>
             </div>

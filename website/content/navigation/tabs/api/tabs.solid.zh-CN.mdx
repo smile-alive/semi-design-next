@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | dropdownProps | 折叠模式下，分别透传给起始侧（start）与末尾侧（end）箭头下拉菜单的 Dropdown 属性。 | `TabsDropdownProps` | - |
 | keepDOM | 使用 TabPane 子元素时，是否渲染未激活面板的 DOM。为 false 时只渲染当前面板，没有切换动画。 | `boolean` | `true` |
 | lazyRender | 懒渲染，面板被激活过才渲染内容，之后保留。 | `boolean` | `false` |
-| more | 将末尾的一部分标签页收入「更多」下拉菜单。传数字表示收入菜单的标签数；传对象时 count 为标签数，render 返回自定义的触发器，dropdownProps 透传给下拉菜单。 | `TabsMore` | - |
+| more | 将末尾的一部分标签页收入「更多」下拉菜单。传数字表示收入菜单的标签数；传对象时 count 为标签数，render 接收 getTriggerProps 并返回自定义的触发器（把 getTriggerProps() 展开到触发元素上），dropdownProps 透传给下拉菜单。 | `TabsMore` | - |
 | onChange | 切换标签页时触发，参数为新激活的 itemKey。 | <ApiType detail={"(activeKey: string) => void"}>Type</ApiType> | - |
 | onTabClick | 单击，或用 Enter、Space 激活标签页时触发；用键盘激活时事件是 KeyboardEvent。 | <ApiType detail={"(activeKey: string, event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
 | onTabClose | 关闭标签页时触发，参数为被关闭标签页的 itemKey。标签页的移除由使用方完成。 | <ApiType detail={"(tabKey: string) => void"}>Type</ApiType> | - |

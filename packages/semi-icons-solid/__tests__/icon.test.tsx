@@ -89,15 +89,12 @@ describe('semi-icons-solid', () => {
 
     it('渲染 size、spin、rotate，使用方 style 覆盖旋转，class 追加在后', () => {
         const [style, setStyle] = createSignal<JSX.CSSProperties>();
-        const [prefixCls, setPrefixCls] = createSignal<string>();
-        const { container } = render(() => <IconAlarm size="large" spin rotate={90} style={style()} prefixCls={prefixCls()} class="extra" />);
+        const { container } = render(() => <IconAlarm size="large" spin rotate={90} style={style()} class="extra" />);
         const icon = container.querySelector<HTMLElement>('span');
         expect(icon).toHaveClass('semi-icon', 'semi-icon-large', 'semi-icon-spinning', 'semi-icon-alarm', 'extra');
         expect(icon?.style.transform).toBe('rotate(90deg)');
         setStyle({ transform: 'scale(2)' });
-        setPrefixCls('custom');
         expect(icon?.style.transform).toBe('scale(2)');
-        expect(icon).toHaveClass('custom-icon', 'custom-icon-large');
     });
 
     it('size 为 inherit 时不加尺寸类名', () => {

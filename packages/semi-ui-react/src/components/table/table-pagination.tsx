@@ -1,16 +1,16 @@
 import { memo } from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import Pagination from '../pagination';
-import type { RenderPagination, TablePaginationProps as PaginationProps } from './interface';
+import type { RenderPagination, TablePaginationProps } from './interface';
 
-export interface TablePaginationProps {
+export interface TablePaginationPartProps {
     prefixCls?: string;
-    pagination?: PaginationProps;
+    pagination?: TablePaginationProps;
     info?: React.ReactNode;
     renderPagination?: RenderPagination;
 }
 
-function TablePagination({ pagination, prefixCls = cssClasses.PREFIX, info, renderPagination }: TablePaginationProps) {
+function TablePagination({ pagination, prefixCls = cssClasses.PREFIX, info, renderPagination }: TablePaginationPartProps) {
     const total = pagination?.total;
 
     // Table-only keys: Pagination puts unknown props on its root element

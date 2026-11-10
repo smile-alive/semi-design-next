@@ -333,6 +333,7 @@
     content={panel}
     disableArrowKeyDown
     {motion}
+    onEscKeyDown={foundation.handleEscKeyDown}
     position={resolvedPosition}
     role="presentation"
     {stopPropagation}

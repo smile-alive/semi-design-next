@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { tab } from '@test/utils/browser';
 import Fixture from './special-trigger.svelte';
 
 type Store = NonNullable<Parameters<typeof Fixture>[1]>['store'];
@@ -23,11 +24,11 @@ describe('Svelte Tooltip 的特殊触发器（浏览器）', () => {
     ] as const)('Tooltip 内的 %s（child=%s 起 child snippet）是单个 Tab 停靠点，输入框持有描述', async (kind, role, child) => {
         setup({ kind, child });
         const control = screen.getByRole(role);
-        await userEvent.tab();
+        await tab();
         expect(control).toHaveFocus();
         await waitFor(() => expect(control).toHaveAccessibleDescription('content'));
         expect(document.querySelector('.wrapper')?.hasAttribute('aria-describedby') ?? false).toBe(false);
-        await userEvent.tab();
+        await tab();
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
     });
 
@@ -48,10 +49,10 @@ describe('Svelte Tooltip 的特殊触发器（浏览器）', () => {
     it('loading 的 Button 与外层只占一个 Tab 停靠点，描述在按钮上', async () => {
         setup({ props: { loading: true } });
         const button = screen.getByRole('button', { name: 'trigger' });
-        await userEvent.tab();
+        await tab();
         expect(button).toHaveFocus();
         await waitFor(() => expect(button).toHaveAccessibleDescription('content'));
-        await userEvent.tab();
+        await tab();
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
     });
 });

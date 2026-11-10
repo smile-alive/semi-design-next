@@ -344,7 +344,7 @@ The parameter type of `#sourcePanel` is `TransferSourcePanelSlotProps`, from whi
 ```ts
 interface TransferSourcePanelSlotProps {
     value: Array<string | number>; // value of all selected items
-    loading: boolean | undefined; // Whether loading
+    loading?: boolean; // Whether loading
     noMatch: boolean; // Whether there is no matching item that matches the current search value
     filterData: Array<Item>; // items that match the current search value
     sourceData: Array<Item>; // All items
@@ -382,7 +382,7 @@ The parameter type of `sourcePanel` is `TransferSourcePanelSnippetProps`, from w
 ```ts
 interface TransferSourcePanelSnippetProps {
     value: Array<string | number>; // value of all selected items
-    loading: boolean | undefined; // Whether loading
+    loading?: boolean; // Whether loading
     noMatch: boolean; // Whether there is no matching item that matches the current search value
     filterData: Array<Item>; // items that match the current search value
     sourceData: Array<Item>; // All items
@@ -801,7 +801,7 @@ In `@fibrae/semi-ui-react`, the types of the interfaces below are exported as `T
 
 `class`, `style`, `aria-*` and other attrs land on the root element of Transfer; with `aria-label` or `aria-labelledby` and no `role`, the root element gets `role="group"`. Pass the props of the search box through `inputProps`, and those of the Tree on the left of a treeList through `treeProps`.
 
-The types of the interfaces below are exported from `@fibrae/semi-ui-vue` as: `TransferDataItem` for Item, `TransferGroupItem` for GroupItem, `TransferTreeItem` for TreeItem, `TransferVirtualize` for VirtualizeProps and `TransferPagination` for PaginationProps.
+The types of the interfaces below are exported from `@fibrae/semi-ui-vue` as: `TransferDataItem` for Item, `TransferGroupItem` for GroupItem, `TransferTreeItem` for TreeItem, `TransferVirtualize` for VirtualizeProps and `TransferPagination` for TransferPaginationProps.
 
 ### Item Interface
 
@@ -825,7 +825,7 @@ An item can carry any custom fields; they appear unchanged on `item` in the slot
 
 `class`, `style`, `aria-*` and other undeclared attributes land on the root element of Transfer; with `aria-label` or `aria-labelledby` and no `role`, the root element gets `role="group"`. `value` can be bound with `bind:value`, or given a plain value as the initial selection; there is no `defaultValue`. Pass the props of the search box through `inputProps`, and those of the Tree on the left of a treeList through `treeProps`.
 
-The types of the interfaces below are exported from `@fibrae/semi-ui-svelte` as: `TransferDataItem` for Item, `TransferGroupItem` for GroupItem, `TransferTreeItem` for TreeItem, `TransferVirtualize` for VirtualizeProps and `TransferPagination` for PaginationProps.
+The types of the interfaces below are exported from `@fibrae/semi-ui-svelte` as: `TransferDataItem` for Item, `TransferGroupItem` for GroupItem, `TransferTreeItem` for TreeItem, `TransferVirtualize` for VirtualizeProps and `TransferPagination` for TransferPaginationProps.
 
 ### Item Interface
 
@@ -888,7 +888,7 @@ TreeItem inherits all the properties of Item
 | width    | Width of the virtualized list                                                                                                                   | number \| string |         |
 | itemSize | Fixed height of each item row                                                                                                                   | number           |         |
 
-### PaginationProps Interface
+### TransferPaginationProps Interface
 
 | props              | description                                     | data type                     | default |
 | ------------------ | ----------------------------------------------- | ----------------------------- | ------- |

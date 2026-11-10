@@ -9,7 +9,7 @@ export type Type = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';
 /** Arrow and arrow keys are fixed: no arrow, and the Dropdown alone moves focus with Up and Down. */
 export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPointAtCenter' | 'disableArrowKeyDown'> {
     contentClassName?: string | unknown[];
-    menu?: DropDownMenuItem[];
+    menu?: DropdownMenuItem[];
     /**
      * How the items of this menu are selected (a submenu takes its own Dropdown's value); `active` marks the selected
      * items, and only showTick shows a tick:
@@ -24,7 +24,7 @@ export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPo
 export interface DropdownEmits extends TooltipEmits {}
 
 export interface DropdownMenuIconSlotProps {
-    item: DropDownMenuItemItem;
+    item: DropdownMenuItemType;
     index: number;
 }
 
@@ -82,7 +82,7 @@ interface MenuEntryAttributes extends DataAttributes, AriaAttributes {
 }
 
 /** The listeners are the ones Dropdown.Item routes itself, as React's DropdownItem declares them */
-export interface DropDownMenuItemItem extends DropdownItemProps, MenuEntryAttributes {
+export interface DropdownMenuItemType extends DropdownItemProps, MenuEntryAttributes {
     node: 'item';
     name?: string | number;
     onClick?: (event: MouseEvent) => void;
@@ -91,13 +91,13 @@ export interface DropDownMenuItemItem extends DropdownItemProps, MenuEntryAttrib
     onMouseleave?: (event: MouseEvent) => void;
 }
 
-export interface DropDownMenuItemDivider extends DropdownDividerProps, MenuEntryAttributes {
+export interface DropdownMenuItemDividerType extends DropdownDividerProps, MenuEntryAttributes {
     node: 'divider';
 }
 
-export interface DropDownMenuItemTitle extends DropdownTitleProps, MenuEntryAttributes {
+export interface DropdownMenuItemTitleType extends DropdownTitleProps, MenuEntryAttributes {
     node: 'title';
     name?: string | number;
 }
 
-export type DropDownMenuItem = DropDownMenuItemItem | DropDownMenuItemDivider | DropDownMenuItemTitle;
+export type DropdownMenuItem = DropdownMenuItemType | DropdownMenuItemDividerType | DropdownMenuItemTitleType;

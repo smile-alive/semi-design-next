@@ -1,6 +1,6 @@
 {
     "tooltip": {
-        "source": "packages/semi-ui-react/src/components/tooltip/index.tsx",
+        "source": "packages/semi-ui-react/src/components/tooltip/tooltip.tsx",
         "props": {
             "afterClose": { "zh-CN": "弹出层关闭且离场动画结束后调用。", "en-US": "Called after the popup has closed and its leave animation has finished." },
             "afterOpen": {
@@ -100,10 +100,6 @@
             "preventScroll": {
                 "zh-CN": "弹出层打开后聚焦 `initialFocusRef` 指向的元素时，是否阻止浏览器滚动到该元素。",
                 "en-US": "Whether focusing the element that `initialFocusRef` points at, when the popup opens, avoids scrolling it into view."
-            },
-            "prefixCls": {
-                "zh-CN": "弹出层 wrapper 的类名前缀，设置后弹出层不再带 Tooltip 的样式。",
-                "en-US": "Class name prefix of the popup wrapper. A custom value drops the Tooltip styles."
             },
             "returnFocusOnClose": {
                 "zh-CN": "弹出层关闭后焦点是否回到触发元素，`trigger` 为 `custom` 时不生效。",

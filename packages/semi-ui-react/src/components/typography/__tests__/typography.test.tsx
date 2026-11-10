@@ -682,6 +682,28 @@ describe('Typography 行为基线', () => {
         expect(fits.querySelector(`.${prefixCls}-ellipsis-expand`)).toBeNull();
     });
 
+    it('JS 省略截断时 children 中的原生元素被压成纯文本，未截断时保留', async () => {
+        mockTextHeight(2);
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const { container } = render(
+            <Paragraph style={{ lineHeight: '20px' }} ellipsis={{ expandable: true }}>
+                {LETTERS}
+                <b>element</b>
+            </Paragraph>
+        );
+        expect(root(container).querySelector('b')).not.toBeNull();
+        await waitFor(() => expect(root(container)).toHaveTextContent(/\.\.\./));
+        expect(root(container).querySelector('b')).toBeNull();
+
+        const { container: fits } = render(
+            <Paragraph style={{ lineHeight: '20px' }} ellipsis={{ expandable: true }}>
+                <b>ok</b>
+            </Paragraph>
+        );
+        await waitFor(() => expect(root(fits)).toHaveTextContent(/^ok$/));
+        expect(root(fits).querySelector('b')).not.toBeNull();
+    });
+
     it('JS 省略只在 children 含 React 元素时警告，字符串数组与数字不警告', async () => {
         mockTextHeight(2);
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});

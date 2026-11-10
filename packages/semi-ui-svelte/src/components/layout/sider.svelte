@@ -7,9 +7,11 @@
     import { getLayoutContext } from './context.js';
     import type { ResponsiveMap, SiderProps } from './interface.js';
 
-    let { prefixCls = cssClasses.PREFIX, breakpoint, onBreakpoint, children, ...rest }: SiderProps = $props();
+    let { breakpoint, onBreakpoint, children, ...rest }: SiderProps = $props();
 
     const layout = getLayoutContext();
+
+    const prefixCls = cssClasses.PREFIX;
 
     // Known limit: breakpoint is read once at mount. Upgrade: re-register the queries when it changes.
     onMount(() => {

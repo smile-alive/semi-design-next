@@ -42,7 +42,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | 确认框显示、进场动画开始时调用，每次打开一次，早于 afterOpen，受控与非受控相同；悬停打开后指针已离开而撤回的打开不调用。 | `TooltipProps['onOpen']` | - |
 | onVisibleChange | 显示状态变化时调用；visible 受控时只报告用户交互发起的请求，使用方自己改变 visible 不调用。 | `TooltipProps['onVisibleChange']` | - |
 | position | 弹出层相对触发元素的位置，共十二个方向。 | `TooltipProps['position']` | - |
-| prefixCls | 确认卡片的类名前缀。 | `string` | `"semi-popconfirm"` |
 | returnFocusOnClose | 关闭后焦点是否回到触发元素；受控的 visible 也照常生效，trigger 为 custom 时不生效。 | `boolean` | - |
 | role | 弹出层的 ARIA role，缺省为 dialog。 | `string` | `"dialog"` |
 | showArrow | 是否显示箭头三角形。 | `boolean` | - |

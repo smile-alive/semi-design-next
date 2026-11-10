@@ -11,7 +11,7 @@ import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
 import Sidebar from '..';
 import Annotation from '../annotation';
-import type { SideBarEmits, SideBarProps } from '../interface';
+import type { SideBarEmits, SideBarMainContentSlotProps, SideBarProps } from '../interface';
 import MCPConfigure from '../mcp-configure';
 import ContainerModel from './fixtures/container-model.vue';
 import KeepAliveHost from './fixtures/keep-alive-host.vue';
@@ -362,7 +362,7 @@ describe('Sidebar', () => {
     });
 
     it('main 模式显示标题、选项，以及当前激活 key 对应的 #mainContent', () => {
-        const mainContent = vi.fn<(props: { activeKey: string | undefined }) => ReturnType<typeof h>>(({ activeKey }) => <div class="main-content">{`content of ${activeKey}`}</div>);
+        const mainContent = vi.fn<(props: SideBarMainContentSlotProps) => ReturnType<typeof h>>(({ activeKey }) => <div class="main-content">{`content of ${activeKey}`}</div>);
         const { container } = render(Sidebar, {
             props: { title: 'Sidebar title', activeKey: 'file', options, visible: true },
             attrs: { class: 'custom' },

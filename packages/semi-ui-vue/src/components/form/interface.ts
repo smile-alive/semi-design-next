@@ -1,6 +1,6 @@
 import type { Component, IntrinsicElementAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
+import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 import type { ColProps } from '../grid/interface';
 import type { ValidateStatus } from '../input/interface';
@@ -33,7 +33,10 @@ export interface LabelSlots {
 export type FormApi<Values extends Record<string, any> = any, Output = Values> = BaseFormApi<Values, Output>;
 
 /** A label configured by data; nodes go in the `#fieldLabel` and `#labelExtra` slots */
-export type FieldLabel = Omit<LabelProps, 'name'>;
+export type FieldLabel = Omit<LabelProps, 'name'> & {
+    /** The id of the label element, which the control's aria-labelledby references; generated when missing */
+    id?: string;
+};
 
 /** The callable member is what makes Vue's compiled prop check accept arktype, whose schemas are functions */
 export type FormSchema<Values, Output = Values> = StandardSchema<Values, Output> | (StandardSchema<Values, Output> & ((...args: any[]) => unknown));
@@ -42,8 +45,8 @@ export type FormProps<Values extends Record<string, any> = any, Output = Values>
 
 /** What the Form reads: global defaults can fill both exclusive sources, so the exclusion applies only to what callers pass */
 export interface AllFormProps<Values extends Record<string, any> = any, Output = Values> {
-    /** Initial values of the fields, copied once when the Form is created */
-    initValues?: Values;
+    /** Initial values of the fields, copied once when the Form is created; may leave out any part of the values */
+    initValues?: DeepPartial<Values>;
     layout?: 'horizontal' | 'vertical';
     labelPosition?: 'top' | 'left' | 'inset';
     labelWidth?: number | string;

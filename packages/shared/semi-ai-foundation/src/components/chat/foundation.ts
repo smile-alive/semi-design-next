@@ -124,7 +124,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps> ext
         this.adapter.notifyClearContext();
     };
 
-    onMessageSend = (input: string, attachment?: any[]) => {
+    sendMessage = (input: string, attachment?: any[]) => {
         let content;
         if (!attachment?.length) {
             content = input;
@@ -166,7 +166,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps> ext
         this.adapter.notifyMessageSend(input, attachment);
     };
 
-    onHintClick = (hint: string) => {
+    handleHintClick = (hint: string) => {
         const newMessage = {
             role: ROLE.USER,
             id: createId(),
@@ -178,7 +178,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps> ext
         this.adapter.notifyHintClick(hint);
     };
 
-    onInputChange = (props: { inputValue: string; attachment: any[] }) => {
+    handleInputChange = (props: { inputValue: string; attachment: any[] }) => {
         this.adapter.notifyInputChange(props);
     };
 

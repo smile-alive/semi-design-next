@@ -3,7 +3,7 @@
     import type { Locale } from '@fibrae/semi-foundation/locale/interface';
     import LocaleProvider from '@fibrae/semi-ui-svelte/locale/locale-provider.svelte';
     import type { PlaceholderProps } from '../interface';
-    import RichTextInput from '../widgets/rich-text-input.svelte';
+    import RichTextInput from '../rich-text-input.svelte';
 
     interface Store {
         locale?: Locale;

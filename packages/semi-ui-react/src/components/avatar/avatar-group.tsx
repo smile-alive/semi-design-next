@@ -6,8 +6,8 @@ import { usePopupLayer } from '../../base/popup-layer';
 import useDefaultProps from '../../base/use-default-props';
 import flattenChildren from '../../utils/flatten-children';
 import useLocale from '../locale/use-locale';
+import Avatar from './avatar';
 import { AvatarGroupContext } from './context';
-import Avatar from './index';
 import type { AvatarGroupProps, AvatarProps } from './interface';
 import { getAvatarText } from './text';
 

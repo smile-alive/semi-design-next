@@ -28,7 +28,6 @@
         options: semiGlobalDefault('CheckboxGroup', 'options'),
         direction: () => semiDefault('CheckboxGroup', 'direction', 'vertical'),
         type: () => semiDefault('CheckboxGroup', 'type', 'default'),
-        prefixCls: semiGlobalDefault('CheckboxGroup', 'prefixCls'),
     });
 
     const emit = defineEmits<CheckboxGroupEmits>();
@@ -58,11 +57,11 @@
 
     const isPureCardType = computed(() => props.type === strings.TYPE_PURECARD);
     const isCardType = computed(() => props.type === strings.TYPE_CARD || isPureCardType.value);
-    const prefix = computed(() => props.prefixCls || checkboxGroupClasses.PREFIX);
+    const prefix = checkboxGroupClasses.PREFIX;
 
     const rootClass = computed(() => {
         const { direction } = props;
-        return [prefix.value, `${prefix.value}-wrapper`, direction && `${prefix.value}-${direction}`, direction && isCardType.value && `${prefix.value}-${direction}-cardType`, direction && isPureCardType.value && `${prefix.value}-${direction}-pureCardType`];
+        return [prefix, `${prefix}-wrapper`, direction && `${prefix}-${direction}`, direction && isCardType.value && `${prefix}-${direction}-cardType`, direction && isPureCardType.value && `${prefix}-${direction}-pureCardType`];
     });
 
     const items = computed<CheckboxOptionItem[]>(() => (props.options ?? []).map((option) => (typeof option === 'string' ? { label: option, value: option } : option)));
@@ -99,7 +98,7 @@
 <template>
     <div v-bind="rootAttrs($attrs)" :class="rootClass" role="group" @focusout="foundation.handleBlur">
         <template v-if="props.options">
-            <Checkbox v-for="(option, index) in items" :key="index" :class="option.class" :disabled="option.disabled || props.disabled" :prefixCls="props.prefixCls" :style="option.style" :value="option.value">
+            <Checkbox v-for="(option, index) in items" :key="index" :class="option.class" :disabled="option.disabled || props.disabled" :style="option.style" :value="option.value">
                 <template v-if="option.label !== undefined || $slots.label" #default>
                     <slot :index="index" name="label" :option="option">{{ option.label }}</slot>
                 </template>

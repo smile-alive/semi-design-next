@@ -14,8 +14,8 @@
     import { splitControlAttrs } from '../../utils/control-attrs';
     import slotKind from '../../utils/slot-kind';
     import Input, { type InputHandle } from '../input';
+    import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';
-    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import Popover, { type PopoverProps } from '../popover';
     import { useNestedPopups } from '../tooltip/context';
@@ -28,8 +28,8 @@
         autoFocus?: boolean;
     }
 
-    type Foundation = TagInputFoundation<FoundationProps, Event>;
-    type Adapter = TagInputAdapter<FoundationProps, Event>;
+    type Foundation = TagInputFoundation<FoundationProps, Event, KeyboardEvent, FocusEvent>;
+    type Adapter = TagInputAdapter<FoundationProps, Event, KeyboardEvent, FocusEvent>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -213,6 +213,14 @@
         },
         { immediate: true }
     );
+
+    // dnd-kit ends a drag cut short by unmounting only after the Sortable has dropped its listeners, so a list going
+    // mid-drag never reports the end and the next blur would still be ignored
+    watch(sorting, (on) => {
+        if (!on) {
+            dragging.value = false;
+        }
+    });
 
     // Switching plain/sortable lists rebuilds every tag, so the input holds focus during the patch; the same tag then
     // takes it back.

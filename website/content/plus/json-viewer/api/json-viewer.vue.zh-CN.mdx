@@ -5,11 +5,11 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | modelValue | 编辑器的文本，配合 v-model 使用；变为与编辑器当前内容不同的值时重建编辑器，与当前内容相同的回写不会丢失光标；未传时按空文本创建。 | `string` | `undefined` |
-| width | 宽度，数字按 px 处理，字符串原样使用。 | `string \| number` | `semiDefault("JsonViewer", "width", 400)` |
-| height | 高度，数字按 px 处理，字符串原样使用。 | `string \| number` | `semiDefault("JsonViewer", "height", 400)` |
-| showSearch | 是否显示搜索按钮。 | `boolean` | `semiDefault("JsonViewer", "showSearch", true)` |
+| width | 宽度，数字按 px 处理，字符串原样使用。 | `string \| number` | `400` |
+| height | 高度，数字按 px 处理，字符串原样使用。 | `string \| number` | `400` |
+| showSearch | 是否显示搜索按钮。 | `boolean` | `true` |
 | options | 编辑器配置，字段见 JsonViewerOptions。ariaLabel、readOnly、autoWrap 的默认值按键合并，只传部分字段时其余仍取默认值。内容按深比较变化时重建编辑器；就地修改 formatOptions、customRenderRule 等嵌套对象不会被察觉，需替换为新对象。 | `JsonViewerOptions` | `semiGlobalDefault("JsonViewer", "options")` |
-| limitSearchButtonBounds | 是否限制搜索按钮的拖动范围在组件容器内。 | `boolean` | `semiDefault("JsonViewer", "limitSearchButtonBounds", false)` |
+| limitSearchButtonBounds | 是否限制搜索按钮的拖动范围在组件容器内。 | `boolean` | `false` |
 
 **Events**
 

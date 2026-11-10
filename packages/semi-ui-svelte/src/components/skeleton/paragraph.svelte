@@ -3,7 +3,9 @@
     import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
     import type { SkeletonParagraphProps } from './interface.js';
 
-    let { prefixCls = cssClasses.PREFIX, rows = 4, ...rest }: SkeletonParagraphProps = $props();
+    let { rows = 4, ...rest }: SkeletonParagraphProps = $props();
+
+    const prefixCls = cssClasses.PREFIX;
 
     // Array.from rounds a fractional count and yields no rows for NaN or a negative number
     const items = $derived(Array.from({ length: rows }, (_, index) => index));

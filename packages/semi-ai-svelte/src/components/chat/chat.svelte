@@ -28,11 +28,11 @@
     import ToastList from '@fibrae/semi-ui-svelte/toast/toast-list.svelte';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';
     import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+    import ChatBox from './chat-box/chat-box.svelte';
     import { setChatContext } from './context.js';
+    import Hint from './hint.svelte';
+    import InputBox from './input-box.svelte';
     import type { ChatProps } from './interface.js';
-    import ChatBox from './widgets/chat-box.svelte';
-    import Hint from './widgets/hint.svelte';
-    import InputBox from './widgets/input-box.svelte';
 
     type Foundation = ChatFoundation<ChatProps>;
     type Adapter = ChatAdapter<ChatProps>;
@@ -231,7 +231,7 @@
     }
 
     export function sendMessage(text: string, attachment?: FileItem[]) {
-        foundation.onMessageSend(text, attachment);
+        foundation.sendMessage(text, attachment);
     }
 </script>
 
@@ -257,7 +257,7 @@
                     {/if}
                 {/each}
                 {#if hints?.length}
-                    <Hint class={hintCls} {hintBox} {hints} onHintClick={foundation.onHintClick} style={hintStyle} />
+                    <Hint class={hintCls} {hintBox} {hints} onHintClick={foundation.handleHintClick} style={hintStyle} />
                 {/if}
             </div>
             <!-- outside the log: a toast inside it would be announced as one more log entry -->
@@ -294,8 +294,8 @@
             {inputBoxCls}
             {inputBoxStyle}
             onClear={foundation.clearContext}
-            onInputChange={foundation.onInputChange}
-            onSend={foundation.onMessageSend}
+            onInputChange={foundation.handleInputChange}
+            onSend={foundation.sendMessage}
             pasteUpload={uploadWays.pasteUpload}
             {placeholder}
             {sendHotKey}

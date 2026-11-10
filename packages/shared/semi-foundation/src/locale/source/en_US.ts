@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Select all rows',
         selectRow: 'Select this row',
+        scrollRegion: 'Scrollable table content',
+        untitledColumn: 'Untitled column',
         filterColumn: 'Filter data with this column',
         filterColumnActive: 'Filter this column, filter active',
         expandRow: 'Expand this row',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Search',
         replace: 'Replace',
         replaceAll: 'Replace All',
+        replaceWith: 'Replace with',
         caseSensitive: 'Match case',
         regex: 'Use regular expression',
         wholeWord: 'Match whole word',

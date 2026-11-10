@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Atlasīt visas rindas',
         selectRow: 'Atlasīt šo rindu',
+        scrollRegion: 'Ritināms tabulas saturs',
+        untitledColumn: 'Kolonna bez nosaukuma',
         filterColumn: 'Filtrēt datus pēc šīs kolonnas',
         filterColumnActive: 'Filtrēt datus pēc šīs kolonnas, filtrs ir aktīvs',
         expandRow: 'Izvērst šo rindu',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Meklēt',
         replace: 'Aizstāt',
         replaceAll: 'Aizstāt visu',
+        replaceWith: 'Aizstāt ar',
         caseSensitive: 'Ņemt vērā burtu reģistru',
         regex: 'Izmantot regulāro izteiksmi',
         wholeWord: 'Meklēt tikai veselus vārdus',

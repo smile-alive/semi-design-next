@@ -15,11 +15,11 @@
     import Divider from '@fibrae/semi-ui-vue/divider/index';
     import Toast from '@fibrae/semi-ui-vue/toast/index';
     import { handOnSlots } from '@fibrae/semi-ui-vue/utils/hand-on';
+    import ChatBox from './chat-box/chat-box.vue';
     import { provideChatContext } from './context';
+    import Hint from './hint.vue';
+    import InputBox from './input-box.vue';
     import type { ChatEmits, ChatHandle, ChatMessage, ChatProps, ChatSlots } from './interface';
-    import ChatBox from './widgets/chat-box.vue';
-    import Hint from './widgets/hint.vue';
-    import InputBox from './widgets/input-box.vue';
 
     type Foundation = ChatFoundation<ChatProps>;
     type Adapter = ChatAdapter<ChatProps>;
@@ -140,7 +140,7 @@
         resetMessage: () => foundation.resetMessage(null),
         clearContext: foundation.clearContext,
         scrollToBottom: foundation.scrollToBottom,
-        sendMessage: foundation.onMessageSend,
+        sendMessage: foundation.sendMessage,
     });
 </script>
 
@@ -160,7 +160,7 @@
                         </template>
                         <component :is="chatBoxNode(item, index)" v-else />
                     </template>
-                    <Hint v-if="props.hints?.length" :class="props.hintCls" :hints="props.hints" :style="props.hintStyle" @hintClick="foundation.onHintClick">
+                    <Hint v-if="props.hints?.length" :class="props.hintCls" :hints="props.hints" :style="props.hintStyle" @hintClick="foundation.handleHintClick">
                         <template v-if="$slots.hintBox" #hintBox="p">
                             <slot name="hintBox" v-bind="p" />
                         </template>
@@ -199,8 +199,8 @@
                 :uploadProps="props.uploadProps"
                 :uploadTipProps="props.uploadTipProps"
                 @clear="foundation.clearContext()"
-                @inputChange="foundation.onInputChange"
-                @send="foundation.onMessageSend"
+                @inputChange="foundation.handleInputChange"
+                @send="foundation.sendMessage"
             >
                 <template v-if="$slots.inputArea" #inputArea="p">
                     <slot name="inputArea" v-bind="p" />

@@ -21,7 +21,7 @@ function getBr({ children, ...props }: BrProps = {}) {
 
 const getItemWraps = (container: HTMLElement) => container.querySelectorAll('.semi-breadcrumb-item-wrap');
 const getSeparatorTexts = (container: HTMLElement) => Array.from(container.querySelectorAll('.semi-breadcrumb-separator')).map((el) => el.textContent);
-const navOf = (container: HTMLElement) => container.querySelector('.semi-breadcrumb-wrapper') as HTMLElement;
+const listOf = (container: HTMLElement) => container.querySelector('.semi-breadcrumb-list') as HTMLElement;
 
 afterEach(() => {
     vi.restoreAllMocks();
@@ -82,7 +82,7 @@ describe('Breadcrumb', () => {
 
     it('maxItemCount', () => {
         const { container } = getBr({ maxItemCount: 3, children: [{ children: 'semi' }, { children: 'design' }, { children: 'powered' }, { children: 'by' }, { children: 'douyin' }] });
-        expect(navOf(container).children).toHaveLength(4);
+        expect(listOf(container).children).toHaveLength(4);
         const texts = Array.from(container.querySelectorAll('.semi-breadcrumb-item-wrap .semi-typography')).map((el) => el.textContent);
         expect(texts).toEqual(['semi', 'by', 'douyin']);
         expect(container.querySelector('.semi-breadcrumb-collapse .semi-icon-more')).not.toBeNull();
@@ -275,10 +275,10 @@ describe('Breadcrumb', () => {
 
     it('routes 超过 maxItemCount 时折叠', () => {
         const { container } = getBr({ routes: ['a', 'b', 'c', 'd', 'e', 'f'] });
-        const nav = navOf(container);
-        expect(nav.children).toHaveLength(5);
-        expect(nav.children[1]).toHaveClass('semi-breadcrumb-collapse');
-        const texts = [...nav.querySelectorAll('.semi-typography')].map((el) => el.textContent);
+        const list = listOf(container);
+        expect(list.children).toHaveLength(5);
+        expect(list.children[1]).toHaveClass('semi-breadcrumb-collapse');
+        const texts = [...list.querySelectorAll('.semi-typography')].map((el) => el.textContent);
         expect(texts).toEqual(['a', 'd', 'e', 'f']);
     });
 
@@ -384,14 +384,14 @@ describe('Breadcrumb', () => {
                 <Breadcrumb.Item>four</Breadcrumb.Item>
             </Breadcrumb>
         ));
-        expect(navOf(container).children).toHaveLength(3);
+        expect(listOf(container).children).toHaveLength(3);
         await userEvent.hover(container.querySelector('.semi-breadcrumb-item-more .semi-icon-more') as Element);
         const content = await waitFor(() => {
             const popup = document.querySelector('.semi-popover-content');
             expect(popup).not.toBeNull();
             return popup as HTMLElement;
         });
-        const hidden = content.querySelectorAll(':scope > .semi-breadcrumb-item-wrap');
+        const hidden = content.querySelectorAll(':scope > ol > .semi-breadcrumb-item-wrap');
         expect([...hidden].map((el) => el.textContent)).toEqual(['two', 'three']);
         expect([...content.querySelectorAll('.semi-breadcrumb-restItem')].map((el) => el.textContent)).toEqual(['>']);
     });
@@ -481,7 +481,7 @@ describe('Breadcrumb', () => {
     it('从 semiGlobal overrideDefaultProps 读取默认值', () => {
         semiGlobal.config.overrideDefaultProps = { Breadcrumb: { separator: '>', maxItemCount: 2 } };
         const { container, unmount } = getBr({ routes: ['a', 'b', 'c', 'd'] });
-        expect(navOf(container).children).toHaveLength(3);
+        expect(listOf(container).children).toHaveLength(3);
         expect(getSeparatorTexts(container)).toEqual(['>', '>']);
         unmount();
         const { container: c2 } = getBr({ routes: ['a', 'b', 'c', 'd'], separator: '|', maxItemCount: 5 });
@@ -624,9 +624,9 @@ describe('Breadcrumb', () => {
 
     it('activeIndex 指向会被折叠的项时，当前项保持可见，折叠其后的项', () => {
         const { container } = getBr({ routes: ['a', 'b', 'c', 'd', 'e', 'f'], activeIndex: 2 });
-        const nav = navOf(container);
-        expect(nav.children[3]).toHaveClass('semi-breadcrumb-collapse');
-        const texts = [...nav.querySelectorAll('.semi-typography')].map((el) => el.textContent);
+        const list = listOf(container);
+        expect(list.children[3]).toHaveClass('semi-breadcrumb-collapse');
+        const texts = [...list.querySelectorAll('.semi-typography')].map((el) => el.textContent);
         expect(texts).toEqual(['a', 'b', 'c', 'f']);
         expect(screen.getByText('c').closest('.semi-breadcrumb-item-wrap')).toHaveAttribute('aria-current', 'page');
     });
@@ -643,7 +643,7 @@ describe('Breadcrumb', () => {
     ])('$n 项、maxItemCount $maxItemCount、activeIndex $activeIndex 时显示 $row', ({ n, maxItemCount, activeIndex, row }) => {
         const routes = 'abcdefghij'.slice(0, n).split('');
         const { container } = getBr({ routes, maxItemCount, activeIndex });
-        expect([...navOf(container).children].map((el) => (el.classList.contains('semi-breadcrumb-collapse') ? 'more' : el.querySelector('.semi-typography')?.textContent))).toEqual(row);
+        expect([...listOf(container).children].map((el) => (el.classList.contains('semi-breadcrumb-collapse') ? 'more' : el.querySelector('.semi-typography')?.textContent))).toEqual(row);
         expect(screen.getByText(routes[activeIndex]).closest('.semi-breadcrumb-item-wrap')).toHaveAttribute('aria-current', 'page');
     });
 });

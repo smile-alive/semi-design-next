@@ -99,7 +99,7 @@ describe('主题尺寸 token', () => {
         });
     });
 
-    it('尺寸 token 声明在 body 上，暗色与 always-light 子树继承同一值', async () => {
+    it('尺寸 token 声明在 :root 上，body 与 always-light 子树在暗色下继承同一值', async () => {
         const { container } = render(<div className="semi-always-light" />);
         expect(token(document.body, '--semi-spacing-base')).toBe('16px');
         expect(token(document.body, '--semi-z-modal')).toBe('1000');

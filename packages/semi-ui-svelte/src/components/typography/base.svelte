@@ -6,7 +6,8 @@
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
-    import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
+    import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
+    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
     import useLocale from '../locale/use-locale.svelte.js';
     import Popover from '../popover/popover.svelte';
@@ -144,9 +145,7 @@
     // The children stay in the DOM, hidden, while the truncated text shows: they are where the full text comes from
     const showFull = $derived(view.expanded || !truncated || view.ellipsisContent === undefined);
     const expandAction = $derived(getExpandButton({ isTruncated: truncated, expanded: view.expanded }, opt));
-
-    // an expanded text that cannot collapse lost its button, so the text takes its focus
-    const focusTarget = $derived(view.expanded && expandAction === undefined);
+    const focusTarget = $derived(isExpandFocusTarget({ isTruncated: truncated, expanded: view.expanded }, opt));
     const ellipsisStyle = $derived(!view.expanded && cssEllipsis && rows > 1 ? `-webkit-line-clamp: ${rows}` : undefined);
     const rootStyle = $derived([weightStyle, rest.style, ellipsisStyle].filter(Boolean).join(';') || undefined);
 
@@ -268,12 +267,12 @@
         const { expanded } = view;
         const onExpand = typeof ellipsis === 'object' ? ellipsis.onExpand : undefined;
         onExpand?.(!expanded, event);
-        const { expandable, collapsible, collapseText } = opt;
+        const { expandable, collapsible } = opt;
         if (!((expandable && !expanded) || (collapsible && expanded))) return;
+        const button = event.currentTarget;
+        const held = button === FocusTrapHandle.getActiveElement(button);
         update({ expanded: !expanded });
-        if (!expanded && collapseText === undefined && event.currentTarget === FocusTrapHandle.getActiveElement(event.currentTarget)) {
-            void tick().then(() => root?.focus());
-        }
+        if (held) void tick().then(() => handoverFocus(button, root));
     };
 
     // Semi icons take their size from a prop a snippet cannot pass, so the size class of a child icon is swapped.

@@ -9,11 +9,10 @@
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import watch from '@fibrae/semi-ui-svelte/hooks/watch.svelte.js';
     import { ToastFactory } from '@fibrae/semi-ui-svelte/toast/index';
+    import CodeItem from './code-item.svelte';
     import Container from './container/container.svelte';
-    import type { SideBarOption, SideBarProps } from './interface.js';
-    import CodeItem from './widgets/code-item.svelte';
-    import FileItem from './widgets/file-item.svelte';
-    import type { CodeItemData, FileItemData } from './widgets/interface.js';
+    import FileItem from './file-item.svelte';
+    import type { CodeItemData, FileItemData, SideBarOption, SideBarProps } from './interface.js';
 
     const defaults = useDefaultProps('Sidebar');
 

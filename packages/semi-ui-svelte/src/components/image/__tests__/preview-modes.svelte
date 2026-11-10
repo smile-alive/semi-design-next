@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ImagePreview from '../preview.svelte';
+    import ImagePreview from '../preview/preview.svelte';
 
     type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
 

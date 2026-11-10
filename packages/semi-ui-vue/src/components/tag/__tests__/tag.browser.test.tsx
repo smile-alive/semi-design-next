@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
+import Modal from '../../modal/modal.vue';
+import Popover from '../../popover/popover.vue';
 import TagGroup from '../group.vue';
 import SplitTagGroup from '../split-tag-group.vue';
 import Tag from '../tag.vue';
@@ -113,6 +115,28 @@ describe('Tag 浏览器', () => {
         expectThemeFocusRing(tags[2]);
         await userEvent.keyboard('{Backspace}');
         expect(tags[2]).toHaveClass('semi-tag-invisible');
+    });
+    it('Modal 内作为 Popover 触发器的可点击标签，Escape 只关闭浮层，焦点回到标签且 Modal 保持打开', async () => {
+        const view = render(() => (
+            <Modal visible motion={false} title="对话框">
+                {() => (
+                    <Popover trigger="click" motion={false}>
+                        {{
+                            default: () => <Tag onClick={() => {}}>{() => '李白'}</Tag>,
+                            content: () => <div>浮层内容</div>,
+                        }}
+                    </Popover>
+                )}
+            </Modal>
+        ));
+        const tag = await view.findByRole('button', { name: /李白/ });
+        tag.focus();
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(view.getByText('浮层内容')).toBeVisible());
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(view.queryByText('浮层内容')).toBeNull());
+        expect(tag).toHaveFocus();
+        expect(view.getByRole('dialog', { name: '对话框' })).toBeVisible();
     });
 });
 

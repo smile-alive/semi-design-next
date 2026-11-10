@@ -92,15 +92,19 @@ describe('Toast 浏览器', () => {
         const firstTop = first.getBoundingClientRect().top;
 
         await userEvent.click(closeButton(first));
-        const transition = await waitFor(() => {
-            const animation = wrappers[0].getAnimations()[0];
-            expect(animation).toBeDefined();
-            return animation;
+        // the row transition and the hide keyframes both collapse the wrapper; without interpolate-size the keyframes
+        // start from the pinned natural height, so every one of them is seeked
+        const leave = await waitFor(() => {
+            const animations = wrappers[0].getAnimations();
+            expect(animations.some((a) => 'animationName' in a && (a as CSSAnimation).animationName.includes('hide'))).toBe(true);
+            return animations;
         });
-        transition.pause();
-        transition.currentTime = 299;
+        leave.forEach((a) => {
+            a.pause();
+            a.currentTime = 299;
+        });
         expect(second.getBoundingClientRect().top).toBeCloseTo(firstTop, 0);
-        transition.play();
+        leave.forEach((a) => a.play());
         await waitFor(() => expect(first.isConnected).toBe(false));
         expect(second.getBoundingClientRect().top).toBeCloseTo(firstTop, 0);
     });

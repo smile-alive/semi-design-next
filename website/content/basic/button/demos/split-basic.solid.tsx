@@ -1,8 +1,8 @@
 import { createSignal } from 'solid-js';
 import { IconTreeTriangleDown } from '@fibrae/semi-icons-solid';
-import { Button, Dropdown, SplitButtonGroup, type DropDownMenuItem } from '@fibrae/semi-ui-solid';
+import { Button, Dropdown, SplitButtonGroup, type DropdownMenuItem } from '@fibrae/semi-ui-solid';
 
-const menu: DropDownMenuItem[] = [
+const menu: DropdownMenuItem[] = [
     { node: 'item', name: '编辑项目', onClick: () => console.log('编辑项目点击') },
     { node: 'item', name: '重置项目' },
     { node: 'divider' },

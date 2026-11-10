@@ -1,6 +1,6 @@
 import { cloneDeep } from 'es-toolkit';
 import type { ContentItem, OutputMessage, OutputText, Reasoning, Refusal, FunctionToolCall, CustomToolCall, MCPToolCall, Message } from '../foundation';
-import type { CodeInterpreterCall, ImageGenerationCall, ResponseChunk, StreamingResponseState } from './interface';
+import type { CodeInterpreterCall, ResponseChunk, StreamingResponseState, WireImageGenerationCall } from './interface';
 
 // The reducer has no clock: a missing chunk is waited for by counting later chunks
 const MAX_GAP = 10;
@@ -10,15 +10,16 @@ const MAX_GAP = 10;
  * consecutive order; chunks seen in earlier calls (via prevState) are skipped.
  *
  * @param prevState - State returned by the previous call
- * @returns The accumulated message and the next state, or null if there are no chunks
+ * @returns The accumulated message (zero or one) and the state to pass to the next call; `state` is null once the
+ * response has completed
  */
-export default function streamingResponseToMessage(chunks?: ResponseChunk[], prevState?: StreamingResponseState) {
-    if (!chunks?.length) return null;
+export default function streamingResponseToMessage(chunks?: ResponseChunk[], prevState?: StreamingResponseState): { messages: Message[]; state: StreamingResponseState | null } {
+    if (!chunks?.length) return { messages: [], state: prevState ?? null };
 
     const tail = chunks.at(-1);
     if (tail.type === 'response.completed') {
         const { id, model, status, output, output_text, created_at } = tail.response;
-        const message = {
+        const message: Message = {
             id: id,
             role: 'assistant',
             content: output == null ? undefined : [output].flat(),
@@ -27,7 +28,7 @@ export default function streamingResponseToMessage(chunks?: ResponseChunk[], pre
             model: model,
             status: status,
         };
-        return { message, nextState: null };
+        return { messages: [message], state: null };
     }
 
     const state = prevState
@@ -218,7 +219,7 @@ export default function streamingResponseToMessage(chunks?: ResponseChunk[], pre
                 break;
             }
             case 'response.image_generation_call.partial_image': {
-                const item = outputAt<ImageGenerationCall>(chunk.output_index);
+                const item = outputAt<WireImageGenerationCall>(chunk.output_index);
                 if (item) item.result = chunk.partial_image_b64;
                 break;
             }
@@ -291,19 +292,21 @@ export default function streamingResponseToMessage(chunks?: ResponseChunk[], pre
         .map((part) => part.text ?? '')
         .join('');
 
-    const message: Message | null =
-        content?.length || state.meta.id
-            ? {
-                  id: state.meta.id,
-                  role: 'assistant',
-                  content,
-                  createdAt: state.meta.created_at,
-                  output_text,
-                  model: state.meta.model,
-                  status: state.meta.status ?? 'in_progress',
-                  error: state.error ?? null,
-              }
-            : null;
+    const messages: Message[] =
+        content.length || state.meta.id
+            ? [
+                  {
+                      id: state.meta.id,
+                      role: 'assistant',
+                      content,
+                      createdAt: state.meta.created_at,
+                      output_text,
+                      model: state.meta.model,
+                      status: state.meta.status ?? 'in_progress',
+                      error: state.error ?? null,
+                  },
+              ]
+            : [];
 
-    return { message, nextState: state };
+    return { messages, state };
 }

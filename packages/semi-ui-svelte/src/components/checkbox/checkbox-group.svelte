@@ -15,22 +15,7 @@
     const defaults = useDefaultProps('CheckboxGroup');
 
     // No fallback on `value`: a bound `undefined` (form reset) would throw with one
-    let {
-        value = $bindable(),
-        disabled = defaults('disabled', false),
-        name = defaults('name'),
-        options = defaults('options'),
-        direction = defaults('direction', 'vertical'),
-        type = defaults('type', 'default'),
-        prefixCls = defaults('prefixCls'),
-        onChange,
-        onBlur,
-        onfocusout,
-        label,
-        extra,
-        children,
-        ...rest
-    }: CheckboxGroupProps = $props();
+    let { value = $bindable(), disabled = defaults('disabled', false), name = defaults('name'), options = defaults('options'), direction = defaults('direction', 'vertical'), type = defaults('type', 'default'), onChange, onBlur, onfocusout, label, extra, children, ...rest }: CheckboxGroupProps = $props();
 
     const uid = $props.id();
 
@@ -60,7 +45,7 @@
 
     const isPureCardType = $derived(type === strings.TYPE_PURECARD);
     const isCardType = $derived(type === strings.TYPE_CARD || isPureCardType);
-    const prefix = $derived(prefixCls || checkboxGroupClasses.PREFIX);
+    const prefix = checkboxGroupClasses.PREFIX;
     const items = $derived<CheckboxOptionItem[]>((options ?? []).map((option) => (typeof option === 'string' ? { label: option, value: option } : option)));
     const rootAttrs = $derived(Object.fromEntries(Object.entries(rest).filter(([key]) => !DROPPED_ATTRS.has(key))));
 
@@ -96,7 +81,7 @@
             {#snippet itemExtra()}
                 {#if extra}{@render extra({ option, index })}{:else}{option.extra}{/if}
             {/snippet}
-            <Checkbox children={option.label !== undefined || label ? itemLabel : undefined} class={option.class} disabled={option.disabled || disabled} extra={option.extra !== undefined || extra ? itemExtra : undefined} {prefixCls} style={option.style} value={option.value} />
+            <Checkbox children={option.label !== undefined || label ? itemLabel : undefined} class={option.class} disabled={option.disabled || disabled} extra={option.extra !== undefined || extra ? itemExtra : undefined} style={option.style} value={option.value} />
         {/each}
     {:else}
         {@render children?.()}

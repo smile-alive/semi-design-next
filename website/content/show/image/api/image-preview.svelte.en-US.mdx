@@ -39,7 +39,7 @@ import ApiType from '#/components/ApiType.astro';
 | preLoad | Whether to preload neighboring images. | `boolean` | `true` |
 | preLoadGap | How many images ahead and behind to preload. | `number` | `2` |
 | previewCls | Custom class name of the preview. | `string` | - |
-| previewMenu | Snippet for the custom bottom menu, receiving MenuProps; menuItems is a snippet that renders all the default items at once. | <ApiType detail={"Snippet\u003c[MenuProps]>"}>Type</ApiType> | - |
+| previewMenu | Snippet for the custom bottom menu, receiving MenuProps. menuItems is a snippet that renders the default items: all of them without arguments, or the slice that start and end pick, so they can be rendered one by one or in groups. | <ApiType detail={"Snippet\u003c[MenuProps]>"}>Type</ApiType> | - |
 | previewStyle | Custom style of the preview. | `string` | - |
 | previewTitle | Title at the top of the preview and the accessible name of the dialog; the title of the current image in titles takes precedence. | `string` | - |
 | prevTip | Tip of the previous button. | `string` | - |

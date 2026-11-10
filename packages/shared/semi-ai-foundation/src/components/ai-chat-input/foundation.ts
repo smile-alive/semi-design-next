@@ -8,7 +8,7 @@ import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
 import { isComposing } from '@fibrae/semi-foundation/utils/key-code';
 import { cssClasses, strings } from './constants';
 import { handleZeroWidthCharLogic } from './extension/plugins';
-import type { Attachment, BaseSkill, Suggestion, Reference, Content, LeftMenuChangeProps, MessageContent, RichTextJSON } from './interface';
+import type { Attachment, BaseSkill, Suggestion, Reference, Content, MessageContent, RichTextJSON, Setup } from './interface';
 import { findSkillSlot, getSkillSlotString, transformJSONResult } from './utils';
 
 export interface AIChatInputBaseProps {
@@ -35,11 +35,11 @@ export interface AIChatInputState {
     skillVisible: boolean;
     suggestionVisible: boolean;
     attachments: Attachment[];
-    skill: BaseSkill | undefined;
+    skill?: BaseSkill;
     activeSkillIndex: number;
     activeSuggestionIndex: number;
     /** The editor JSON; undefined until the editor has created it */
-    content: RichTextJSON | undefined;
+    content?: RichTextJSON;
 }
 
 export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInputBaseProps> extends DefaultAdapter<P, AIChatInputState> {
@@ -48,7 +48,7 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
     getOptionNode: (kind: 'skill' | 'suggestion', index: number) => HTMLElement | null;
     notifyContentChange: (result: Content[]) => void;
     /** `changedValue` is undefined when an item is removed */
-    notifyConfigureChange: (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void;
+    notifyConfigureChange: (value: Setup, changedValue?: Setup) => void;
     manualUpload: (files: File[]) => void;
     notifyMessageSend: (props: MessageContent) => void;
     notifyStopGenerate: () => void;
@@ -113,7 +113,8 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         const { skillVisible, suggestionVisible, activeSkillIndex, activeSuggestionIndex } = this.getStates();
         const oldValue = this.adapter.getEditor()?.getText();
         if (oldValue === '' && event.key === skillHotKey && skills && skills.length) {
-            this.setState({ skillVisible: true, activeSkillIndex: 0 });
+            // one panel at a time: getListbox reads the template first and would hide the skill list
+            this.setState({ skillVisible: true, activeSkillIndex: 0, templateVisible: false });
         } else if ((oldValue === skillHotKey || oldValue?.length === 0) && event.key === 'Backspace') {
             this.setState({ skillVisible: false });
         } else if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
@@ -306,7 +307,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         return handled;
     };
 
-    onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+    onConfigureChange = (value: Setup, changedValue?: Setup) => {
         this.adapter.notifyConfigureChange(value, changedValue);
     };
 

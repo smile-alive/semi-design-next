@@ -1,6 +1,6 @@
 import type { Component } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-import { AIChatInput, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-solid';
+import { AIChatInput, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-solid';
 import { IconBookOpenStroked, IconFeishuLogo, IconGit, IconFigma } from '@fibrae/semi-icons-solid';
 
 const uploadProps = { action: 'https://api.semi.design/upload' };
@@ -22,7 +22,7 @@ function onConfigureButtonClick() {
     console.log('onConfigureButtonClick');
 }
 
-function onConfigureChange(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) {
+function onConfigureChange(value: Setup, changedValue?: Setup) {
     console.log('onConfigureChange', value, changedValue);
 }
 

@@ -35,8 +35,8 @@
                 "en-US": "Icon inside the close button. Passed through to the Modal or SideSheet of the current mode."
             },
             "closeOnEsc": {
-                "zh-CN": "按 Esc 是否关闭弹层，透传给当前模式的 Modal 或 SideSheet。popup 模式需设为 true 才会在按 Esc 时触发 onCancel。",
-                "en-US": "Whether Esc closes the panel, passed through to the Modal or SideSheet of the current mode. In popup mode it must be true for Esc to call onCancel."
+                "zh-CN": "按 Esc 是否触发 onCancel，透传给当前模式的 Modal 或 SideSheet；两种模式默认都开启。",
+                "en-US": "Whether Esc calls onCancel, passed through to the Modal or SideSheet of the current mode; on by default in both modes."
             },
             "footer": {
                 "zh-CN": "替换默认的取消、提交按钮所在的页脚，透传给当前模式的 Modal 或 SideSheet。传入 null 时不渲染页脚。",

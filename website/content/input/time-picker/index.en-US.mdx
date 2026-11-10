@@ -177,7 +177,7 @@ Semi All configuration about time zone is converged in [ConfigProvider](/en-US/r
 
 <TimePickerReactApi />
 
-Undeclared native attributes, such as `title`, `data-*`, `aria-label` and `onKeyDown`, land on the inner input, and `prefix` is shown as the input's prefix content; with a `triggerRender` custom trigger none of these land on any element, and they are available through `componentProps`.
+Undeclared native attributes, such as `title`, `data-*`, `aria-label` and `onKeyDown`, land on the inner input, and `prefix` is shown as the input's prefix content; with a `triggerRender` custom trigger they land on the root element, and are also available through `componentProps`. When the trigger has no focusable element, the root is the focus target with the role `button`, named by `aria-label`; otherwise its role is `group` when `aria-label` or `aria-labelledby` is passed.
 
 With a custom trigger, `focus()` and `blur()` act on the first `input` inside the trigger, and do nothing when there is none.
 
@@ -197,7 +197,7 @@ Among undeclared attributes, `class` and `style` land on the root element, and t
 
 <TimePickerSolidApi />
 
-`class`, `style` and `ref` land on the root element, and the other undeclared attributes (`id`, `title`, `aria-*`, `data-*`, native events and so on) land on the inner input; with `triggerRender` those attributes land on no element. `ref` points to the root element, and its `focus()` and `blur()` act on the input; they do nothing with a custom trigger.
+`class`, `style` and `ref` land on the root element, and the other undeclared attributes (`id`, `title`, `aria-*`, `data-*`, native events and so on) land on the inner input; with `triggerRender` all of them land on the root element, whose role is `group` when `aria-label` or `aria-labelledby` is passed. `ref` points to the root element, and its `focus()` and `blur()` act on the input; they do nothing with a custom trigger.
 
 </Framework>
 
@@ -205,7 +205,7 @@ Among undeclared attributes, `class` and `style` land on the root element, and t
 
 <TimePickerSvelteApi />
 
-Of the undeclared attributes, `class` and `style` land on the root element, and the others (`id`, `title`, `aria-*`, `data-*`, native events and so on) land on the inner input; with the `trigger` snippet they land on no element and are available through `componentProps`.
+Of the undeclared attributes, `class` and `style` land on the root element, and the others (`id`, `title`, `aria-*`, `data-*`, native events and so on) land on the inner input; with the `trigger` snippet all of them land on the root element, whose role is `group` when `aria-label` or `aria-labelledby` is passed, and they are also available through `componentProps`.
 
 Call `focus()` and `blur()` on the component instance; they do nothing with a custom trigger.
 

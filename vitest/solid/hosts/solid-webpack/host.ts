@@ -1,23 +1,54 @@
-// Client-only Solid app on webpack 5 without the Semi plugin: babel-loader with babel-preset-solid compiles the app, and
+// Client-only Solid app on webpack 5, plugin-less in the default variant and with `new SemiWebpackPlugin({ prefixCls })` in `prefix`: babel-loader with babel-preset-solid compiles the app, and
 // the Solid packages resolve to their `default` export condition (`dist/*.js`, already compiled for the DOM).
 import { modalOpens, primaryButton } from '../../../hosts/checks.ts';
 import type { Host, HostPage, ServerStep } from '../../../hosts/types.ts';
 
-const page: HostPage = {
-    name: 'home',
-    path: '/',
-    ready: 'body[data-hydrated]',
-    checks: [primaryButton('#btn-primary'), modalOpens('#open-modal', 'ModalBody')],
-};
+function page(prefixCls: string): HostPage {
+    return {
+        name: 'home',
+        path: '/',
+        ready: 'body[data-hydrated]',
+        checks: [primaryButton('#btn-primary', prefixCls), modalOpens('#open-modal', 'ModalBody')],
+    };
+}
 
-function server(command: string[]): ServerStep {
-    return { command, pages: [page] };
+function server(command: string[], prefixCls: string): ServerStep {
+    return { command, pages: [page(prefixCls)] };
+}
+
+// `semiOptions` is the plugin's constructor argument; without it the config is the plugin-less setup with a CSS rule
+function webpackConfig(semiOptions?: string) {
+    const withPlugin = semiOptions != null;
+    return `${withPlugin ? "import SemiWebpackPlugin from '@fibrae/semi-webpack-plugin';\n" : ''}import HtmlWebpackPlugin from 'html-webpack-plugin';
+
+export default {
+    entry: './src/index.jsx',
+    resolve: { extensions: ['.jsx', '.js'] },
+    module: {
+        rules: [
+            { test: /\\.jsx$/, exclude: /node_modules/, loader: 'babel-loader', options: { presets: ['babel-preset-solid'] } },${withPlugin ? '' : "\n            { test: /\\.css$/, use: ['style-loader', 'css-loader'] },"}
+        ],
+    },
+    plugins: [new HtmlWebpackPlugin({ template: './index.html' })${withPlugin ? `, new SemiWebpackPlugin(${semiOptions})` : ''}],
+};
+`;
+}
+
+function steps(prefixCls = 'semi') {
+    return {
+        // webpack-dev-server exits when an explicit port is taken; only `port: 'auto'` moves on
+        dev: server(['webpack', 'serve', '--mode', 'development', '--port', '{port}'], prefixCls),
+        build: { command: ['webpack', '--mode', 'production'] },
+        // `serve` silently switches ports unless told not to
+        prod: server(['serve', 'dist', '--no-port-switching', '-l', '{port}'], prefixCls),
+    };
 }
 
 export default {
     deps: {
         '@babel/core': '7.29.0',
         '@fibrae/semi-ui-solid': '*',
+        '@fibrae/semi-webpack-plugin': '*',
         'babel-loader': '10.1.1',
         'babel-preset-solid': '1.9.16',
         'css-loader': '7.1.5',
@@ -41,20 +72,7 @@ export default {
     </body>
 </html>
 `,
-        'webpack.config.mjs': `import HtmlWebpackPlugin from 'html-webpack-plugin';
-
-export default {
-    entry: './src/index.jsx',
-    resolve: { extensions: ['.jsx', '.js'] },
-    module: {
-        rules: [
-            { test: /\\.jsx$/, exclude: /node_modules/, loader: 'babel-loader', options: { presets: ['babel-preset-solid'] } },
-            { test: /\\.css$/, use: ['style-loader', 'css-loader'] },
-        ],
-    },
-    plugins: [new HtmlWebpackPlugin({ template: './index.html' })],
-};
-`,
+        'webpack.config.mjs': webpackConfig(),
         'src/index.jsx': `import { createSignal, onMount } from 'solid-js';
 import { render } from 'solid-js/web';
 import { Button, Modal } from '@fibrae/semi-ui-solid';
@@ -81,14 +99,8 @@ render(() => <App />, document.getElementById('root'));
 `,
     },
     variants: [
-        {
-            name: 'default',
-            // webpack-dev-server exits when an explicit port is taken; only `port: 'auto'` moves on
-            dev: server(['webpack', 'serve', '--mode', 'development', '--port', '{port}']),
-            build: { command: ['webpack', '--mode', 'production'] },
-            // `serve` silently switches ports unless told not to
-            prod: server(['serve', 'dist', '--no-port-switching', '-l', '{port}']),
-        },
+        { name: 'default', ...steps() },
+        { name: 'prefix', files: { 'webpack.config.mjs': webpackConfig("{ prefixCls: 'my' }") }, ...steps('my') },
     ],
     expectedFailures: [],
 } satisfies Host;

@@ -5,8 +5,8 @@ export interface RadioChangeEvent {
     /** `checked` is the new state; `name` and `disabled` are the resolved values, group included */
     target: {
         checked: boolean;
-        value: any;
-        name: string | undefined;
+        value?: any;
+        name?: string;
         disabled: boolean;
     };
     stopPropagation: () => void;
@@ -17,7 +17,6 @@ export interface RadioGroupView {
     value?: unknown;
     disabled?: boolean;
     name?: string;
-    prefixCls?: string;
     buttonSize?: string;
     isButtonRadio?: boolean;
     isCardRadio?: boolean;
@@ -36,7 +35,6 @@ export interface RadioBaseProps {
     disabled?: boolean;
     mode?: string;
     name?: string;
-    prefixCls?: string;
     type?: string;
     value?: unknown;
 }
@@ -60,7 +58,6 @@ export interface RadioView {
     isCardRadio: boolean;
     isPureCardRadio: boolean;
     buttonSize?: string;
-    prefixCls?: string;
 }
 
 interface RadioSourceEvent {
@@ -113,7 +110,6 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps> 
                 isCardRadio: Boolean(group.isCardRadio),
                 isPureCardRadio: Boolean(group.isPureCardRadio),
                 buttonSize: group.buttonSize,
-                prefixCls: props.prefixCls || group.prefixCls,
             };
         }
         const isPureCardRadio = props.type === strings.TYPE_PURECARD;
@@ -126,7 +122,6 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps> 
             isCardRadio: props.type === strings.TYPE_CARD || isPureCardRadio,
             isPureCardRadio,
             buttonSize: undefined,
-            prefixCls: props.prefixCls,
         };
     }
 
@@ -150,7 +145,7 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps> 
             target: {
                 checked,
                 value: props.value,
-                name: props.name ?? this.getContexts()?.radioGroup?.name,
+                name: this.getContexts()?.radioGroup?.name ?? props.name,
                 disabled: this.#getView().disabled,
             },
             stopPropagation: () => e.stopPropagation(),

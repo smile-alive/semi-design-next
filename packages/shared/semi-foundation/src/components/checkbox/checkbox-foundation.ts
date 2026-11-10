@@ -6,8 +6,8 @@ import { strings } from './constants';
 /** `checked` is the new state; `name` and `disabled` are the resolved values, group included */
 export interface BasicTargetObject {
     checked: boolean;
-    value: CheckboxValue | undefined;
-    name: string | undefined;
+    value?: CheckboxValue;
+    name?: string;
     disabled: boolean;
 }
 export interface BasicCheckboxEvent {
@@ -182,7 +182,6 @@ export interface BaseCheckboxProps {
     type?: (typeof strings)['TYPE_DEFAULT' | 'TYPE_CARD' | 'TYPE_PURECARD'];
     style?: Record<string, any>;
     className?: string;
-    prefixCls?: string;
     onMouseEnter?: (e: any) => void;
     onMouseLeave?: (e: any) => void;
     extra?: any;

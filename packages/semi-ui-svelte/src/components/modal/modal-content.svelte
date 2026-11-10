@@ -13,7 +13,7 @@
     import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs.js';
     import IconButton from '../icon-button/icon-button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
-    import useShowHide from './use-show-hide.svelte.js';
+    import useShowHide from './hooks/use-show-hide.svelte.js';
 
     type Foundation = ModalContentFoundation<FoundationProps, MouseEvent>;
     type Adapter = ModalContentAdapter<FoundationProps, MouseEvent>;

@@ -12,7 +12,6 @@ import ApiType from '#/components/ApiType.astro';
 | onIntersect | scroll 模式下各项的相交状态变化时调用，参数以 key 为索引，值为对应项的 `IntersectionObserverEntry`。 | <ApiType detail={"(res: { [key: string]: IntersectionObserverEntry }) => void"}>Type</ApiType> | - |
 | onOverflow | collapse 模式下溢出项变化时调用，全部放得下时以空数组调用。 | <ApiType detail={"(overflowItems: Array\u003cT>) => void"}>Type</ApiType> | <ApiType detail={"() => null"}>Type</ApiType> |
 | onVisibleStateChange | scroll 模式下各项的显示或隐藏状态变化时调用，参数为以 key 为索引的 `Map`。 | <ApiType detail={"(visibleState: Map\u003cstring, boolean>) => void"}>Type</ApiType> | - |
-| overflowRenderDirection | scroll 模式下两侧溢出节点的位置，可选 `both`、`start` 或 `end`；供 Tabs 使用，不面向使用方。 | `'both' \| 'end' \| 'start'` | `"both"` |
 | overflowRenderer | 渲染溢出项。collapse 模式下参数为放不下的项，返回一个溢出节点；scroll 模式下参数为 `[start, end]` 两组项，返回两侧各一个节点。 | <ApiType detail={"((overflowItems: Array\u003cT>) => ReactNode) \u007c ((overflowItems: [Array\u003cT>, Array\u003cT>]) => [ReactNode, ReactNode])"}>Type</ApiType> | <ApiType detail={"(): ReactElement => null"}>Type</ApiType> |
 | ref | 根元素的引用。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | renderMode | 渲染模式，可选 `collapse` 或 `scroll`。 | `'collapse' \| 'scroll'` | `"collapse"` |

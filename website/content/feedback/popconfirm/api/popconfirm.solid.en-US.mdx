@@ -42,7 +42,6 @@ import ApiType from '#/components/ApiType.astro';
 | onOpen | Called once per opening when the card is shown, as its enter animation starts, before `afterOpen`, controlled or not. A hover open withdrawn because the pointer already left does not call it. | `TooltipProps['onOpen']` | - |
 | onVisibleChange | Called with the requested visibility. With a controlled `visible` it reports only requests from user interaction, not changes the caller makes to `visible`. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | position | Popup position. Defaults to `bottomLeft` (`bottomRight` in RTL). | `Position` | - |
-| prefixCls | Class prefix of the confirmation card. Defaults to `semi-popconfirm`. | `string` | `"semi-popconfirm"` |
 | ref | Callback that receives the handle, which only has `focusTrigger`. It is called once when the component is created. | <ApiType detail={"Ref\u003cPopconfirmHandle>"}>Type</ApiType> | - |
 | returnFocusOnClose | Whether focus returns to the trigger after closing. Defaults to `true`. It has no effect when `trigger` is `custom`, and works as usual with a controlled `visible`. | `TooltipProps['returnFocusOnClose']` | - |
 | role | ARIA role of the popup. Defaults to `dialog` whatever the `trigger`. | `string` | `"dialog"` |

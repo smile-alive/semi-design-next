@@ -1,7 +1,7 @@
 import { expect, it } from 'vite-plus/test';
 import { renderServer } from '@test/solid/ssr.solid';
 import { ImagePreview } from '..';
-import Header from '../preview-header';
+import Header from '../preview/preview-header';
 
 function counter(text: string) {
     const state = { created: 0 };

@@ -4,34 +4,33 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| motion | 是否展示弹出层动画。 | `boolean` | `semiDefault("Tooltip", "motion", true)` |
-| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("Tooltip", "autoAdjustOverflow", true)` |
-| position | 弹出层相对触发元素的位置。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiDefault("Tooltip", "position", "top")` |
-| prefixCls | 弹出层类名前缀，设置后弹出层不再带 Tooltip 的样式。 | `string` | `semiDefault("Tooltip", "prefixCls", cssClasses.PREFIX)` |
-| spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number; }` | `semiDefault("Tooltip", "spacing", numbers.SPACING)` |
-| showArrow | 是否显示箭头三角形。 | `boolean` | `semiDefault("Tooltip", "showArrow", true)` |
-| role | 弹出层的 ARIA role。 | `string` | `semiDefault("Tooltip", "role", "tooltip")` |
+| motion | 是否展示弹出层动画。 | `boolean` | `true` |
+| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| position | 弹出层相对触发元素的位置。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `"top"` |
+| spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number; }` | `numbers.SPACING` |
+| showArrow | 是否显示箭头三角形。 | `boolean` | `true` |
+| role | 弹出层的 ARIA role。 | `string` | `"tooltip"` |
 | ariaLabel | 弹出层 role 为 dialog 时的 aria-label。 | `string` | `semiGlobalDefault("Tooltip", "ariaLabel")` |
 | ariaLabelledby | 弹出层 role 为 dialog 时的 aria-labelledby。 | `string` | `semiGlobalDefault("Tooltip", "ariaLabelledby")` |
 | ariaDescribedby | 弹出层 role 为 dialog 时的 aria-describedby。 | `string` | `semiGlobalDefault("Tooltip", "ariaDescribedby")` |
-| arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 showArrow。 | `boolean` | `semiDefault("Tooltip", "arrowPointAtCenter", true)` |
-| wrapWhenSpecial | 触发元素禁用或加载中时，是否在外层包裹 span 以保证触发行为。 | `boolean` | `semiDefault("Tooltip", "wrapWhenSpecial", true)` |
+| arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 showArrow。 | `boolean` | `true` |
+| wrapWhenSpecial | 触发元素禁用或加载中时，是否在外层包裹 span 以保证触发行为。 | `boolean` | `true` |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean` | `semiGlobalDefault("Tooltip", "stopPropagation")` |
 | wrapperClassName | 触发元素被 span 包裹时，该 span 的类名。 | `string` | `semiGlobalDefault("Tooltip", "wrapperClassName")` |
 | wrapperId | 弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。 | `string` | `undefined` |
-| keepDOM | 关闭时是否保留弹出层内容而不销毁。 | `boolean` | `semiDefault("Tooltip", "keepDOM", false)` |
+| keepDOM | 关闭时是否保留弹出层内容而不销毁。 | `boolean` | `false` |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭弹出层。 | `boolean` | `semiGlobalDefault("Tooltip", "clickToHide")` |
 | clickTriggerToHide | 点击触发元素时是否关闭已打开的弹出层。 | `boolean` | `semiGlobalDefault("Tooltip", "clickTriggerToHide")` |
-| closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。 | `boolean` | `semiDefault("Tooltip", "closeOnEsc", true)` |
-| condition | 是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的弹出层；visible 受控时只发出 update:visible 与 visibleChange(false)，使用方回写后才关闭。 | `boolean` | `semiDefault("Tooltip", "condition", true)` |
-| disableArrowKeyDown | 是否禁用在触发元素上按方向键把焦点移入弹出层。 | `boolean` | `semiDefault("Tooltip", "disableArrowKeyDown", false)` |
-| disableFocusListener | trigger 为 hover 时，是否不响应键盘聚焦打开弹出层。 | `boolean` | `semiDefault("Tooltip", "disableFocusListener", false)` |
-| guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环。 | `boolean` | `semiDefault("Tooltip", "guardFocus", false)` |
-| mouseEnterDelay | 指针移入后延迟显示的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | `semiDefault("Tooltip", "mouseEnterDelay", numbers.MOUSE_ENTER_DELAY)` |
-| mouseLeaveDelay | 指针移出后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效，不小于 mouseEnterDelay。 | `number` | `semiDefault("Tooltip", "mouseLeaveDelay", numbers.MOUSE_LEAVE_DELAY)` |
+| closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。 | `boolean` | `true` |
+| condition | 是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的弹出层；visible 受控时只发出 update:visible 与 visibleChange(false)，使用方回写后才关闭。 | `boolean` | `true` |
+| disableArrowKeyDown | 是否禁用在触发元素上按方向键把焦点移入弹出层。 | `boolean` | `false` |
+| disableFocusListener | trigger 为 hover 时，是否不响应键盘聚焦打开弹出层。 | `boolean` | `false` |
+| guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环。 | `boolean` | `false` |
+| mouseEnterDelay | 指针移入后延迟显示的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | `numbers.MOUSE_ENTER_DELAY` |
+| mouseLeaveDelay | 指针移出后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效，不小于 mouseEnterDelay。 | `number` | `numbers.MOUSE_LEAVE_DELAY` |
 | preventScroll | 聚焦时是否阻止浏览器滚动到被聚焦元素。 | `boolean` | `semiGlobalDefault("Tooltip", "preventScroll")` |
-| returnFocusOnClose | 弹出层关闭后焦点是否回到触发元素。 | `boolean` | `semiDefault("Tooltip", "returnFocusOnClose", false)` |
-| trigger | 触发显示的时机。custom 时显示与否完全由 visible 决定。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `semiDefault("Tooltip", "trigger", "hover")` |
+| returnFocusOnClose | 弹出层关闭后焦点是否回到触发元素。 | `boolean` | `false` |
+| trigger | 触发显示的时机。custom 时显示与否完全由 visible 决定。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `"hover"` |
 | visible | 弹出层是否显示，配合 v-model:visible 使用；传入后由该值决定显示。 | `boolean` | `semiGlobalDefault("Tooltip", "visible")` |
 
 **Events**
@@ -56,9 +55,10 @@ import ApiType from '#/components/ApiType.astro';
 
 **Exposes**
 
-| 名称         | 说明                                                                                                                                                                                     | 类型                                            |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| focusTrigger | 让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效。                                                                                                      | <ApiType detail={"() => void"}>Type</ApiType>   |
-| getPopupId   | 返回弹出层节点的 id。                                                                                                                                                                    | <ApiType detail={"() => string"}>Type</ApiType> |
-| hide         | 关闭弹出层；visible 受控时只发出 update:visible 与 visibleChange，由使用方回写。                                                                                                         | <ApiType detail={"() => void"}>Type</ApiType>   |
-| rePosition   | 按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。 | <ApiType detail={"() => void"}>Type</ApiType>   |
+| 名称         | 说明                                                                                                                                                                                     | 类型                                                             |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| focusTrigger | 让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效。                                                                                                      | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| getPopupId   | 返回弹出层节点的 id。                                                                                                                                                                    | <ApiType detail={"() => string"}>Type</ApiType>                  |
+| getPopup     | 返回弹出层元素；弹出层不在文档中时返回 `null`。                                                                                                                                          | <ApiType detail={"() => HTMLElement \u007c null"}>Type</ApiType> |
+| hide         | 关闭弹出层；visible 受控时只发出 update:visible 与 visibleChange，由使用方回写。                                                                                                         | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| rePosition   | 按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。 | <ApiType detail={"() => void"}>Type</ApiType>                    |

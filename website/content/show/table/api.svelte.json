@@ -191,7 +191,6 @@
                 "zh-CN": "替换分页信息与分页器，参数 pagination 可直接展开给 Pagination；与 pagination 属性同名空间，所以单独命名。",
                 "en-US": "Replaces the pagination info and the Pagination. The pagination argument can be spread on a Pagination as is. It is named apart from the pagination prop, which shares the namespace."
             },
-            "prefixCls": { "zh-CN": "样式名前缀。", "en-US": "The prefix of the class names." },
             "resizable": {
                 "zh-CN": "是否开启列宽伸缩，需要伸缩的列必须提供 width。传入对象时可配置 onResize、onResizeStart、onResizeStop 与 handlerClassName。",
                 "en-US": "Whether columns can be resized; a resizable column needs a width. An object configures onResize, onResizeStart, onResizeStop and handlerClassName."

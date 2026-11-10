@@ -4,9 +4,10 @@
     import type { UserGuideStepItem } from '../interface';
     import UserGuide from '../user-guide.svelte';
 
-    let { mask, mode, startVisible = false, inner = false }: { mask?: boolean; mode?: 'popup' | 'modal'; startVisible?: boolean; inner?: boolean } = $props();
+    let { mask, mode, startVisible = false, inner = false, themeToggle = false }: { mask?: boolean; mode?: 'popup' | 'modal'; startVisible?: boolean; inner?: boolean; themeToggle?: boolean } = $props();
 
     let visible = $state(untrack(() => startVisible));
+    let theme = $state<'default' | 'primary'>('default');
 
     // A custom element inside the card whose focus lives in a shadow root
     const shadowInput = (node: HTMLElement) => {
@@ -26,4 +27,7 @@
 <Button id="tour-a" onclick={() => (visible = true)}>Start</Button>
 <Button id="tour-b">Second</Button>
 <Button onclick={() => (visible = false)}>Elsewhere</Button>
-<UserGuide bind:visible {mask} {mode} steps={inner ? steps.slice(0, 1) : steps} />
+{#if themeToggle}
+    <Button onclick={() => (theme = 'primary')}>Primary</Button>
+{/if}
+<UserGuide bind:visible {mask} {mode} steps={inner ? steps.slice(0, 1) : steps} {theme} />

@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, normalizeStyle, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
     import { cloneDeep } from 'es-toolkit';
-    import { strings } from '@fibrae/semi-foundation/components/table/constants';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
     import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/components/table/foundation';
     import { amendTableWidth, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -20,8 +20,8 @@
     import Spin from '../spin';
     import Body from './body/body.vue';
     import { provideTableContext, type RowEventName, type TableContextView, type TableFoundationProps as FoundationProps, type TableRowState, type TableState } from './context';
-    import HeadTable from './head-table.vue';
     import type { ColumnProps, RowSelectionProps, TableChangeInfo, TableEmits, TableHandle, TableHeaderCellSlotProps, TablePaginationProps, TableProps, TableRowKey, TableSlots, TableVirtualizedProps } from './interface';
+    import HeadTable from './table-header/head-table.vue';
     import TablePagination from './table-pagination.vue';
     import { expandColumn, selectionColumn } from './use-table-features';
     import { buildColumns, mergeComponents, slotOutput, toElement, type CollectedColumns } from './utils';
@@ -65,7 +65,8 @@
 
     // Table resolves every default before passing its props down; they stay optional in the declaration so that
     // ResizableTable can forward its attrs without listing them
-    const resolved = props as typeof props & Required<Pick<TableProps, 'childrenRecordName' | 'expandRowByClick' | 'hideExpandedColumn' | 'indentSize' | 'prefixCls' | 'rowSpanHover' | 'showHeader' | 'size'>>;
+    const resolved = props as typeof props & Required<Pick<TableProps, 'childrenRecordName' | 'expandRowByClick' | 'hideExpandedColumn' | 'indentSize' | 'rowSpanHover' | 'showHeader' | 'size'>>;
+    const prefixCls = cssClasses.PREFIX;
     const direction = computed(() => props.direction ?? config.value.direction ?? 'ltr');
     const rowKey = computed(() => (props.rowKey ?? readSemiDefault(semi, 'Table', 'rowKey') ?? 'key') as TableRowKey);
     const groupBy = computed(() => (props.groupBy ?? readSemiDefault(semi, 'Table', 'groupBy')) as TableProps['groupBy']);
@@ -88,7 +89,7 @@
 
     const built = computed(() => {
         const origins = new WeakMap<ColumnProps, ColumnProps>();
-        const columns = buildColumns(cachedColumns.value, [expandColumn(props, resolved.prefixCls), selectionColumn(props.rowSelection as TableProps['rowSelection'], resolved.prefixCls)], origins);
+        const columns = buildColumns(cachedColumns.value, [expandColumn(props, prefixCls), selectionColumn(props.rowSelection as TableProps['rowSelection'], prefixCls)], origins);
         return { columns, origins };
     });
 
@@ -229,7 +230,7 @@
     );
 
     const contextView = computed<TableContextView>(() => ({
-        prefixCls: resolved.prefixCls,
+        prefixCls,
         direction: direction.value,
         size: resolved.size,
         anyColumnFixed: anyColumnFixed.value,
@@ -355,24 +356,24 @@
 
 <template>
     <template v-for="(frame, frameIndex) in [renderFrame()]" :key="frameIndex">
-        <div ref="root" v-bind="{ dir: props.direction ?? config.direction, ...frame.rootRest }" :class="[frame.rootClass, `${props.prefixCls}-wrapper`]" :data-column-fixed="String(anyColumnFixed)" :style="frame.rootStyle">
+        <div ref="root" v-bind="{ dir: props.direction ?? config.direction, ...frame.rootRest }" :class="[frame.rootClass, `${prefixCls}-wrapper`]" :data-column-fixed="String(anyColumnFixed)" :style="frame.rootStyle">
             <Spin size="large" :spinning="props.loading">
                 <div
                     ref="wrap"
                     :class="{
-                        [`${props.prefixCls}-${strings.SIZE_SMALL}`]: props.size === strings.SIZE_SMALL,
-                        [`${props.prefixCls}-${strings.SIZE_MIDDLE}`]: props.size === strings.SIZE_MIDDLE,
-                        [`${props.prefixCls}-virtualized`]: virtualized,
-                        [`${props.prefixCls}-bordered`]: props.bordered,
-                        [`${props.prefixCls}-fixed-header`]: Boolean(props.scroll?.y),
+                        [`${prefixCls}-${strings.SIZE_SMALL}`]: props.size === strings.SIZE_SMALL,
+                        [`${prefixCls}-${strings.SIZE_MIDDLE}`]: props.size === strings.SIZE_MIDDLE,
+                        [`${prefixCls}-virtualized`]: virtualized,
+                        [`${prefixCls}-bordered`]: props.bordered,
+                        [`${prefixCls}-fixed-header`]: Boolean(props.scroll?.y),
                     }"
                 >
                     <TablePagination v-if="mergedPagination && (paginationPosition === 'top' || paginationPosition === 'both')" :formatPageText="formatPageText" :pagination="mergedPagination" />
-                    <div v-if="frame.title" :id="titleId" :class="`${props.prefixCls}-title`" x-semi-prop="title">
+                    <div v-if="frame.title" :id="titleId" :class="`${prefixCls}-title`" x-semi-prop="title">
                         <template v-if="typeof frame.title === 'string'">{{ frame.title }}</template>
                         <component :is="node" v-for="[node, key] in frame.title" v-else :key="key" />
                     </div>
-                    <div :aria-rowcount="virtualized ? headerRowCount + virtualizedData.length : undefined" :class="`${props.prefixCls}-container`" :role="splitTable ? 'table' : undefined" v-bind="splitTable ? frame.nameAttrs : {}">
+                    <div :aria-rowcount="virtualized ? headerRowCount + virtualizedData.length : undefined" :class="`${prefixCls}-container`" :role="splitTable ? 'table' : undefined" v-bind="splitTable ? frame.nameAttrs : {}">
                         <HeadTable v-if="fixedHeader" ref="head" :columns="built.columns" />
                         <Body
                             ref="body"
@@ -387,15 +388,15 @@
                             @scroll="(...args) => emit('scroll', ...args)"
                         >
                             <template #empty>
-                                <div :class="`${props.prefixCls}-placeholder`">
-                                    <div :class="`${props.prefixCls}-empty`" x-semi-prop="empty">
+                                <div :class="`${prefixCls}-placeholder`">
+                                    <div :class="`${prefixCls}-empty`" x-semi-prop="empty">
                                         <slot v-if="$slots.empty" name="empty" />
                                         <template v-else>{{ locale.locale.emptyText }}</template>
                                     </div>
                                 </div>
                             </template>
                         </Body>
-                        <div v-if="frame.footer" :class="`${props.prefixCls}-footer`" x-semi-prop="footer">
+                        <div v-if="frame.footer" :class="`${prefixCls}-footer`" x-semi-prop="footer">
                             <template v-if="typeof frame.footer === 'string'">{{ frame.footer }}</template>
                             <component :is="node" v-for="[node, key] in frame.footer" v-else :key="key" />
                         </div>

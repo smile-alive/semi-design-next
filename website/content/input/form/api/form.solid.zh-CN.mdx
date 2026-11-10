@@ -13,7 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | form | `useForm()` 返回的 formApi，用于在 Form 外部控制表单。 | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | - |
 | getFormApi | Form 挂载后调用，参数为 formApi。 | <ApiType detail={"(formApi: FormApi\u003cValues, Output>) => void"}>Type</ApiType> | - |
 | id | form 元素的 id，同时写入 x-form-id；不传时自动生成。 | `string` | - |
-| initValues | 表单的初始值，仅在 Form 创建时复制一次。 | `Values` | - |
+| initValues | 表单的初始值，仅在 Form 创建时复制一次。 | <ApiType detail={"DeepPartial\u003cValues>"}>Type</ApiType> | - |
 | keepState | 字段卸载后是否保留它的值、错误和 touched，重新挂载时按路径恢复。字段、ArrayField 未设置时取这里的值。 | `boolean` | `true` |
 | labelAlign | 统一应用在每个字段上的 label 文本对齐方式，字段上的同名属性优先。 | `'left' \| 'right'` | - |
 | labelCol | 统一应用在每个字段上的 label 栅格布局，同 Col 的 span、offset 等属性，需与 wrapperCol 一起设置。 | `ColProps` | - |

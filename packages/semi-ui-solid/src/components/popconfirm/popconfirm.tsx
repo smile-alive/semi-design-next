@@ -1,4 +1,4 @@
-import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
+import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
 import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
@@ -12,7 +12,7 @@ import Button, { type ButtonProps, type Type as ButtonType } from '../button';
 import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverHandle, type PopoverProps } from '../popover';
-import { type GetTriggerProps, PopupContent, type RenderContentProps } from '../tooltip';
+import { PopupContent, type RenderContentProps } from '../tooltip';
 
 /** `autoFocus` only selects the initially focused button, so it never reaches the DOM */
 export interface PopconfirmButtonProps extends ButtonProps {
@@ -61,12 +61,10 @@ const defaultProps = {
     disabled: false,
     okType: 'primary',
     cancelType: 'tertiary',
-    prefixCls: cssClasses.PREFIX,
     showCloseIcon: true,
 } satisfies Partial<PopconfirmProps>;
 
-// A disabled Popconfirm is only its trigger: the function form gets the own props back untouched
-const passthrough: GetTriggerProps = (own = {} as never) => own as never;
+const prefixCls = cssClasses.PREFIX;
 
 interface FooterButtonProps {
     kind: 'cancel' | 'ok';
@@ -121,7 +119,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
         'onConfirm',
         'onVisibleChange',
         'position',
-        'prefixCls',
         'ref',
         'showCloseIcon',
         'style',
@@ -176,18 +173,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
 
     const defaultPosition = () => (config().direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
 
-    // As Tooltip's renderTrigger: children() reads the getter once and unwraps JSX compiled to an accessor (Show, For),
-    // so a function still left is the trigger render function, called untracked like Tooltip calls it. The memo keeps
-    // its output: insert() reads a returned For or Show in the same scope, so a plain accessor would call it again
-    const disabledTrigger = () => {
-        const resolved = children(() => local.children as JSX.Element);
-        const output = createMemo(() => {
-            const value = resolved() as unknown;
-            return typeof value === 'function' ? untrack(() => (value as (get: GetTriggerProps) => JSX.Element)(passthrough)) : (value as JSX.Element);
-        });
-        return <>{output()}</>;
-    };
-
     const renderCard = (renderProps: RenderContentProps) => {
         const icon = children(() => {
             const value = local.icon;
@@ -221,31 +206,31 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
 
         return (
             // hides in-card clicks from document click listeners whatever stopPropagation says; Tooltip uses mousedown
-            <div class={clsx(local.prefixCls, local.class)} style={local.style} onClick={(event) => event.stopImmediatePropagation()}>
-                <div class={`${local.prefixCls}-inner`}>
-                    <div class={`${local.prefixCls}-header`}>
+            <div class={clsx(prefixCls, local.class)} style={local.style} onClick={(event) => event.stopImmediatePropagation()}>
+                <div class={`${prefixCls}-inner`}>
+                    <div class={`${prefixCls}-header`}>
                         <Show when={hasIcon()}>
-                            <i class={`${local.prefixCls}-header-icon`} x-semi-prop="icon">
+                            <i class={`${prefixCls}-header-icon`} x-semi-prop="icon">
                                 {icon()}
                             </i>
                         </Show>
-                        <div class={`${local.prefixCls}-header-body`}>
+                        <div class={`${prefixCls}-header-body`}>
                             <Show when={showTitle()}>
-                                <div id={titleId} class={`${local.prefixCls}-header-title`} x-semi-prop="title">
+                                <div id={titleId} class={`${prefixCls}-header-title`} x-semi-prop="title">
                                     {title()}
                                 </div>
                             </Show>
                         </div>
                         <Show when={local.showCloseIcon}>
-                            <Button type={local.cancelType} class={`${local.prefixCls}-btn-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={handleCancel} />
+                            <Button type={local.cancelType} class={`${prefixCls}-btn-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={handleCancel} />
                         </Show>
                     </div>
                     <Show when={showContent()}>
-                        <div id={contentId} class={clsx(`${local.prefixCls}-body`, { [`${local.prefixCls}-body-withIcon`]: hasIcon() })} x-semi-prop="content">
+                        <div id={contentId} class={clsx(`${prefixCls}-body`, { [`${prefixCls}-body-withIcon`]: hasIcon() })} x-semi-prop="content">
                             {body()}
                         </div>
                     </Show>
-                    <div ref={(node) => (footer = node)} class={`${local.prefixCls}-footer`}>
+                    <div ref={(node) => (footer = node)} class={`${prefixCls}-footer`}>
                         <FooterButton kind="cancel" own={local.cancelButtonProps} type={local.cancelType} pending={state().cancelLoading} onPress={handleCancel}>
                             {local.cancelText || locale().locale.cancel}
                         </FooterButton>
@@ -285,10 +270,21 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
     }
 
     return (
-        <Show when={!local.disabled} fallback={disabledTrigger()}>
-            <Popover {...rest} ref={(instance) => (popover = instance)} class={cssClasses.POPOVER} aria-describedby={describedBy()} aria-labelledby={labelledBy()} content={renderCard} position={local.position ?? defaultPosition()} visible={open()} onVisibleChange={foundation.handleVisibleChange}>
-                {local.children}
-            </Popover>
-        </Show>
+        // the Popover stays mounted while disabled so toggling it never remounts the trigger; a custom trigger with
+        // `visible` false is a Popover that cannot open
+        <Popover
+            {...rest}
+            ref={(instance) => (popover = instance)}
+            class={cssClasses.POPOVER}
+            aria-describedby={describedBy()}
+            aria-labelledby={labelledBy()}
+            content={renderCard}
+            position={local.position ?? defaultPosition()}
+            trigger={local.disabled ? 'custom' : rest.trigger}
+            visible={local.disabled ? false : open()}
+            onVisibleChange={foundation.handleVisibleChange}
+        >
+            {local.children}
+        </Popover>
     );
 }

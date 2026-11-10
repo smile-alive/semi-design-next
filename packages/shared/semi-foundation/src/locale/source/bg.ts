@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Избор на всички редове',
         selectRow: 'Избор на този ред',
+        scrollRegion: 'Превъртаемо съдържание на таблицата',
+        untitledColumn: 'Колона без заглавие',
         filterColumn: 'Филтриране на данните по тази колона',
         filterColumnActive: 'Филтриране на данните по тази колона, филтърът е активен',
         expandRow: 'Разгъване на този ред',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Търсене',
         replace: 'Заместване',
         replaceAll: 'Заместване на всички',
+        replaceWith: 'Заместване с',
         caseSensitive: 'Разграничаване на главни и малки букви',
         regex: 'Използване на регулярен израз',
         wholeWord: 'Само цели думи',

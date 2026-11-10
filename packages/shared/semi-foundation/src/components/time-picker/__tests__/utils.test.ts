@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { formatOption } from '../combox-foundation';
+import { formatOption } from '../combobox-options';
 import { hourIsDisabled, minuteIsDisabled, secondIsDisabled, transformToArray } from '../utils';
 
 describe('timePicker utils', () => {

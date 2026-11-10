@@ -10,7 +10,6 @@ export interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, 'pla
 }
 
 export interface SkeletonBasicProps extends HTMLAttributes<HTMLDivElement> {
-    prefixCls?: string;
     /** Replaces the kit's own type, which also names its class */
     type?: string;
 }
@@ -21,6 +20,5 @@ export interface SkeletonAvatarProps extends SkeletonBasicProps {
 }
 
 export interface SkeletonParagraphProps extends HTMLAttributes<HTMLUListElement> {
-    prefixCls?: string;
     rows?: number;
 }

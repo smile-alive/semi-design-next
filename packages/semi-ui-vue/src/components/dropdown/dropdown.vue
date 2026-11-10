@@ -9,6 +9,7 @@
     import elementType from '../../utils/element-type';
     import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
     import useConfig from '../config-provider/use-config';
+    import { provideTooltipPrefixContext } from '../tooltip/context';
     import type { FocusTarget, TooltipHandle, TooltipProps } from '../tooltip/interface';
     import Tooltip from '../tooltip/tooltip.vue';
     import { canCarryPopupState } from '../tooltip/trigger';
@@ -18,7 +19,7 @@
     import DropdownMenu from './dropdown-menu.vue';
     import DropdownPopup from './dropdown-popup.vue';
     import DropdownTitle from './dropdown-title.vue';
-    import type { DropDownMenuItem, DropdownEmits, DropdownHandle, DropdownProps, DropdownSlots } from './interface';
+    import type { DropdownMenuItem, DropdownEmits, DropdownHandle, DropdownProps, DropdownSlots } from './interface';
 
     type Foundation = DropdownFoundation<DropdownProps>;
     type Adapter = DropdownAdapter<DropdownProps>;
@@ -31,7 +32,6 @@
         motion: () => semiDefault('Dropdown', 'motion', true),
         mouseLeaveDelay: () => semiDefault('Dropdown', 'mouseLeaveDelay', strings.DEFAULT_LEAVE_DELAY),
         position: () => semiDefault('Dropdown', 'position', 'bottom'),
-        prefixCls: () => semiDefault('Dropdown', 'prefixCls', cssClasses.PREFIX),
         returnFocusOnClose: () => semiDefault('Dropdown', 'returnFocusOnClose', true),
         // an interactive menu must not sit inside role="tooltip"
         role: () => semiDefault('Dropdown', 'role', 'presentation'),
@@ -79,6 +79,8 @@
             spacing: DropdownFoundation.getSpacing(spacing, parent?.view.value.menuDepth),
         };
     });
+
+    provideTooltipPrefixContext(cssClasses.PREFIX);
 
     const getPopupId = () => tooltip.value?.getPopupId() ?? '';
 
@@ -138,7 +140,7 @@
 
     const popVisible = () => props.visible ?? state.value.popVisible;
 
-    const showingClass = () => ({ [`${props.prefixCls}-showing`]: popVisible() });
+    const showingClass = () => ({ [`${cssClasses.PREFIX}-showing`]: popVisible() });
 
     const triggerAttrs = (node: VNode) => {
         const menuButton = elementType(node) === 'Dropdown.Item' || canCarryPopupState(node);
@@ -152,10 +154,10 @@
         };
     };
 
-    const menuKey = (item: DropDownMenuItem, index: number) => `${item.node}${'name' in item ? (item.name ?? '') : ''}${index}`;
+    const menuKey = (item: DropdownMenuItem, index: number) => `${item.node}${'name' in item ? (item.name ?? '') : ''}${index}`;
 
-    const menuItemAttrs = (item: DropDownMenuItem) => {
-        const { node: _node, name: _name, ...rest } = item as DropDownMenuItem & { name?: unknown };
+    const menuItemAttrs = (item: DropdownMenuItem) => {
+        const { node: _node, name: _name, ...rest } = item as DropdownMenuItem & { name?: unknown };
         return rest;
     };
 
@@ -186,7 +188,7 @@
             </template>
         </template>
         <template #content="slotProps">
-            <DropdownPopup :contentClass="props.contentClassName" :context="context" :popStyle="$attrs.style as StyleValue" :prefixCls="props.prefixCls" @vue:beforeMount="bindFocusTarget(slotProps.initialFocusRef)">
+            <DropdownPopup :contentClass="props.contentClassName" :context="context" :popStyle="$attrs.style as StyleValue" @vue:beforeMount="bindFocusTarget(slotProps.initialFocusRef)">
                 <slot v-if="$slots.content" name="content" />
                 <DropdownMenu v-else-if="Array.isArray(props.menu)">
                     <template v-for="(item, index) in props.menu" :key="menuKey(item, index)">

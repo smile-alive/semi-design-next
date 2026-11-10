@@ -11,8 +11,11 @@ import type { BaseProps } from '../../base/base-props';
 import useFoundation from '../../base/use-foundation';
 import useFocusHandover from '../../hooks/use-focus-handover';
 import { hasContent } from '../../utils';
-import Input, { type InputChangeEvent, type InputHandle, type InputProps } from '../input/index';
+import Input, { type InputChangeEvent, type InputHandle, type InputInternalProps, type InputProps } from '../input/index';
 import { InsetDateInput, InsetTimeInput } from './inset-input';
+
+const InternalInput = Input as (props: InputInternalProps) => React.ReactNode;
+const prefixCls = cssClasses.PREFIX;
 
 /** The foundation only forwards the event, so its own types stay free of React */
 type RangeFocusEvent = React.FocusEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>;
@@ -65,7 +68,6 @@ export default function DateInput(rawProps: DateInputProps) {
         type: rawProps.type ?? 'date',
         inputStyle: rawProps.inputStyle ?? {},
         inputReadOnly: rawProps.inputReadOnly ?? false,
-        prefixCls: rawProps.prefixCls ?? cssClasses.PREFIX,
         rangeSeparator: rawProps.rangeSeparator ?? strings.DEFAULT_SEPARATOR_RANGE,
     };
 
@@ -81,7 +83,6 @@ export default function DateInput(rawProps: DateInputProps) {
         insetLabel,
         validateStatus,
         block,
-        prefixCls,
         multiple,
         dateFnsLocale,
         onBlur,
@@ -292,7 +293,7 @@ export default function DateInput(rawProps: DateInputProps) {
         return isRenderMultipleInputs ? (
             renderRangeInput(text, suffix, inputCls)
         ) : (
-            <Input
+            <InternalInput
                 {...rest}
                 ref={inputRef}
                 className={inputCls}

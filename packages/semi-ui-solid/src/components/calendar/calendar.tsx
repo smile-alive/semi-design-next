@@ -5,8 +5,8 @@ import useDefaultProps from '../../base/use-default-props';
 import DayCalendar from './day-calendar';
 import type { CalendarProps } from './interface';
 import MonthCalendar from './month-calendar';
+import useToday, { snapshotToday } from './primitives/use-today';
 import RangeCalendar from './range-calendar';
-import useToday, { snapshotToday } from './use-today';
 import WeekCalendar from './week-calendar';
 
 const views = {

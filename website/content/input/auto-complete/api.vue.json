@@ -149,6 +149,11 @@
                 "en-US": "Replaces the input. Its parameters are value, inputValue, placeholder, disabled, autofocus, size, validateStatus, showClear, insetLabelId, onChange (updates the input text, emits search and change and opens the list), onClear, onFocus, onBlur, controlAttrs (the aria-* attributes given to the component, for the focusable element of the custom trigger) and componentProps. With it, id lands on the root element."
             }
         },
-        "exposed": {}
+        "exposed": {
+            "nativeElement": {
+                "zh-CN": "只读，包裹输入框或自定义触发器的根 div，未挂载时为 `null`。",
+                "en-US": "Read-only. The root div that wraps the input or the custom trigger, `null` before mount."
+            }
+        }
     }
 }

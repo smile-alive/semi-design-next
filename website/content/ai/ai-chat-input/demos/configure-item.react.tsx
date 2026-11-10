@@ -1,4 +1,4 @@
-import { AIChatInput, getConfigureItem, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-react';
+import { AIChatInput, getConfigureItem, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-react';
 import { Cascader, type CascaderProps } from '@fibrae/semi-ui-react';
 
 const uploadProps = { action: 'https://api.semi.design/upload' };
@@ -30,7 +30,7 @@ const CustomCascader = getConfigureItem(myCascader, {
 export default function AIChatInputDemo() {
     const renderLeftMenu = () => <CustomCascader field="model" treeData={cascaderModalOptions} initValue={['GPT', 'GPT-4o']} />;
 
-    const onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+    const onConfigureChange = (value: Setup, changedValue?: Setup) => {
         console.log('onConfigureChange', value, changedValue);
     };
 

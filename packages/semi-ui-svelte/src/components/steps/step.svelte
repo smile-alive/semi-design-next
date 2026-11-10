@@ -70,7 +70,7 @@
                 [`${prefixCls}-${status}-hover`]: clickable,
                 [`${prefixCls}-${status}-active`]: clickable,
                 [`${prefixCls}-clickable`]: clickable,
-                [`${steps.prefixCls}-next-error`]: state.nextError,
+                [`${stepsClasses.PREFIX}-next-error`]: state.nextError,
             },
         ]}
         {role}
@@ -108,7 +108,7 @@
                 [`${prefixCls}-hover`]: clickable,
                 [`${prefixCls}-clickable`]: clickable,
                 [`${prefixCls}-${status}-hover`]: clickable,
-                [`${steps.prefixCls}-next-error`]: state.nextError,
+                [`${stepsClasses.PREFIX}-next-error`]: state.nextError,
             },
         ]}
         {role}

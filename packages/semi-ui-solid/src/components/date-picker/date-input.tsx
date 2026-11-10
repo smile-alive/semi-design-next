@@ -8,8 +8,10 @@ import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-s
 import useFoundation from '../../base/use-foundation';
 import useFocusHandover from '../../primitives/use-focus-handover';
 import hasContent from '../../utils/has-content';
-import Input, { type InputChangeEvent, type InputProps } from '../input';
+import Input, { type InputChangeEvent, type InputInternalProps, type InputProps } from '../input';
 import { InsetDateInput, InsetTimeInput } from './inset-input';
+
+const InternalInput = Input as (props: InputInternalProps) => JSX.Element;
 
 type RangeFocusEvent = FocusEvent | MouseEvent;
 
@@ -56,7 +58,6 @@ const defaultProps = {
     showClear: true,
     type: 'date',
     inputReadOnly: false,
-    prefixCls: cssClasses.PREFIX,
     rangeSeparator: strings.DEFAULT_SEPARATOR_RANGE,
 } satisfies Partial<DateInputProps>;
 
@@ -87,8 +88,8 @@ export default function DateInput(rawProps: DateInputProps) {
 
     const inputCls = () =>
         clsx({
-            [`${props.prefixCls}-input-readonly`]: props.inputReadOnly,
-            [`${props.prefixCls}-monthRange-input`]: props.type === 'monthRange',
+            [`${cssClasses.PREFIX}-input-readonly`]: props.inputReadOnly,
+            [`${cssClasses.PREFIX}-monthRange-input`]: props.type === 'monthRange',
         });
 
     const handleInsetInputChange = (options: InsetInputChangeFoundationProps) => foundation.handleInsetInputChange(options);
@@ -152,15 +153,15 @@ export default function DateInput(rawProps: DateInputProps) {
             <>
                 <Show when={hasLabel()}>
                     {/* the id is what a Form inset label's aria-labelledby points at */}
-                    <div id={hasPrefix() ? undefined : props.insetLabelId} class={`${props.prefixCls}-range-input-prefix`} x-semi-prop="prefix,insetLabel" onClick={foundation.handleRangeInputAffixClick}>
+                    <div id={hasPrefix() ? undefined : props.insetLabelId} class={`${cssClasses.PREFIX}-range-input-prefix`} x-semi-prop="prefix,insetLabel" onClick={foundation.handleRangeInputAffixClick}>
                         {hasPrefix() ? prefix() : insetLabel()}
                     </div>
                 </Show>
                 <div
-                    class={clsx(inputCls(), `${props.prefixCls}-range-input-wrapper-start`, `${props.prefixCls}-range-input-wrapper`, {
-                        [`${props.prefixCls}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeStart' && !props.disabled,
-                        [`${props.prefixCls}-range-input-wrapper-start-with-prefix`]: hasLabel(),
-                        [`${props.prefixCls}-borderless`]: props.borderless,
+                    class={clsx(inputCls(), `${cssClasses.PREFIX}-range-input-wrapper-start`, `${cssClasses.PREFIX}-range-input-wrapper`, {
+                        [`${cssClasses.PREFIX}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeStart' && !props.disabled,
+                        [`${cssClasses.PREFIX}-range-input-wrapper-start-with-prefix`]: hasLabel(),
+                        [`${cssClasses.PREFIX}-borderless`]: props.borderless,
                     })}
                     onClick={focusFromWrapper('rangeStart')}
                 >
@@ -197,9 +198,9 @@ export default function DateInput(rawProps: DateInputProps) {
                     {separatorNode() ?? props.rangeSeparator}
                 </span>
                 <div
-                    class={clsx(inputCls(), `${props.prefixCls}-range-input-wrapper-end`, `${props.prefixCls}-range-input-wrapper`, {
-                        [`${props.prefixCls}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeEnd' && !props.disabled,
-                        [`${props.prefixCls}-borderless`]: props.borderless,
+                    class={clsx(inputCls(), `${cssClasses.PREFIX}-range-input-wrapper-end`, `${cssClasses.PREFIX}-range-input-wrapper`, {
+                        [`${cssClasses.PREFIX}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeEnd' && !props.disabled,
+                        [`${cssClasses.PREFIX}-borderless`]: props.borderless,
                     })}
                     onClick={focusFromWrapper('rangeEnd')}
                 >
@@ -226,13 +227,13 @@ export default function DateInput(rawProps: DateInputProps) {
                     />
                 </div>
                 <Show when={allowClear()}>
-                    <button ref={clearHandover} type="button" class={`${props.prefixCls}-range-input-clearbtn`} aria-label={props.locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
+                    <button ref={clearHandover} type="button" class={`${cssClasses.PREFIX}-range-input-clearbtn`} aria-label={props.locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
                         <Show when={hasContent(clearIcon())} fallback={<IconClear />}>
                             {clearIcon()}
                         </Show>
                     </button>
                 </Show>
-                <div class={`${props.prefixCls}-range-input-suffix`} onClick={foundation.handleRangeInputAffixClick}>
+                <div class={`${cssClasses.PREFIX}-range-input-suffix`} onClick={foundation.handleRangeInputAffixClick}>
                     {props.type.includes('Time') ? <IconCalendarClock /> : <IconCalendar />}
                 </div>
             </>
@@ -246,7 +247,7 @@ export default function DateInput(rawProps: DateInputProps) {
         const names = () => DateInputFoundation.getInsetNames(props.locale, props.type);
 
         return (
-            <div class={`${props.prefixCls}-inset-input-wrapper`} x-type={props.type}>
+            <div class={`${cssClasses.PREFIX}-inset-input-wrapper`} x-type={props.type}>
                 <InsetDateInput
                     inputRef={props.rangeInputStartRef}
                     aria-label={names().start}
@@ -267,7 +268,7 @@ export default function DateInput(rawProps: DateInputProps) {
                     onFocus={() => props.handleInsetTimeFocus?.()}
                 />
                 <Show when={isRenderMultipleInputs()}>
-                    <div class={`${props.prefixCls}-inset-input-separator`}>{props.density === 'compact' ? '' : '-'}</div>
+                    <div class={`${cssClasses.PREFIX}-inset-input-separator`}>{props.density === 'compact' ? '' : '-'}</div>
                     <InsetDateInput
                         inputRef={props.rangeInputEndRef}
                         aria-label={names().end}
@@ -293,7 +294,7 @@ export default function DateInput(rawProps: DateInputProps) {
     };
 
     const renderTriggerInput = () => (
-        <Input
+        <InternalInput
             role={props.role}
             tabIndex={props.tabIndex}
             aria-label={props['aria-label']}

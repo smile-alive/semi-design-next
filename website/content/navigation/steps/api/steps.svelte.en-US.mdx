@@ -11,7 +11,6 @@ import ApiType from '#/components/ApiType.astro';
 | hasLine | Whether the basic type shows connecting lines. | `boolean` | `true` |
 | initial | Starting index, counting from 0. | `number` | `0` |
 | onChange | Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. Passing it makes every step clickable. | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
-| prefixCls | Class name prefix of the root element. | `string` | `"semi-steps"` |
 | size | Size of the basic and nav types: default or small. | `StepsSize` | `"default"` |
 | status | State of the current step: wait, process, finish, error or warning. | `StepStatus` | `"process"` |
 | title | Snippet for the title of each step, with `{ item, index }`; defaults to `item.title`. | <ApiType detail={"Snippet\u003c[StepSnippetProps]>"}>Type</ApiType> | - |

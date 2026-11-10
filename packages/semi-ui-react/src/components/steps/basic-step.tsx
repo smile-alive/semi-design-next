@@ -14,7 +14,6 @@ export interface BasicStepProps extends ElementProps<'div', 'title' | 'onChange'
     className?: string;
     style?: React.CSSProperties;
     active?: boolean;
-    prefixCls?: string;
     stepNumber?: string;
     size?: Size;
     done?: boolean;
@@ -27,13 +26,15 @@ export interface BasicStepProps extends ElementProps<'div', 'title' | 'onChange'
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export const stepSizeMapIconSize = {
+const stepSizeMapIconSize = {
     small: 'large',
     default: 'extra-large',
 } as const;
 
+const prefixCls = css.ITEM;
+
 export default function BasicStep(props: BasicStepProps) {
-    const { ref, role, prefixCls = css.ITEM, className = '', size, title, description, status = 'wait', style, active = false, done = false, icon, stepNumber, onClick, onChange, onKeyDown, ...rest } = props;
+    const { ref, role, className = '', size, title, description, status = 'wait', style, active = false, done = false, icon, stepNumber, onClick, onChange, onKeyDown, ...rest } = props;
 
     const item = useStepItem({ role, onChange, onClick, onKeyDown }, rest);
 

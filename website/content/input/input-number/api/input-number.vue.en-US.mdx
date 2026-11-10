@@ -14,18 +14,18 @@ import ApiType from '#/components/ApiType.astro';
 | maximumFractionDigits | Maximum number of fraction digits shown, passed to Intl.NumberFormat. | `number` | `semiGlobalDefault("InputNumber", "maximumFractionDigits")` |
 | precision | Numerical precision, the number of fraction digits kept. | `number` | `semiGlobalDefault("InputNumber", "precision")` |
 | scientificNotation | Shows scientific notation when blurred and the full number when focused. Pass `{ threshold }` to configure the threshold, 15 significant digits by default. Not supported in currency mode. | `boolean \| ScientificNotationConfig` | `semiGlobalDefault("InputNumber", "scientificNotation")` |
-| showCurrencySymbol | Whether to show the currency symbol, code or name; only in currency mode. | `boolean` | `semiDefault("InputNumber", "showCurrencySymbol", true)` |
+| showCurrencySymbol | Whether to show the currency symbol, code or name; only in currency mode. | `boolean` | `true` |
 | formatter | Format of the displayed value, usually set together with parser. Priority: own prop, global default. | <ApiType detail={"((value: string \u007c number) => string)"}>Type</ApiType> | `undefined` |
 | parser | Converts the text from formatter back to a number string; used together with formatter. Priority: own prop, global default. | <ApiType detail={"((value: string) => string)"}>Type</ApiType> | `undefined` |
-| min | Minimum value. | `number` | `semiDefault("InputNumber", "min", -Infinity)` |
-| max | Maximum value. | `number` | `semiDefault("InputNumber", "max", Infinity)` |
-| step | Step of each change; may be a decimal. | `number` | `semiDefault("InputNumber", "step", numbers.DEFAULT_STEP)` |
-| shiftStep | Step of each change while Shift is held; may be a decimal. | `number` | `semiDefault("InputNumber", "shiftStep", numbers.DEFAULT_SHIFT_STEP)` |
-| pressInterval | Interval in milliseconds between repeats while a step button is held. | `number` | <ApiType detail={"semiDefault(\"InputNumber\", \"pressInterval\", numbers.DEFAULT_PRESS_TIMEOUT)"}>Type</ApiType> |
-| pressTimeout | Delay in milliseconds before repeating starts while a step button is held. | `number` | <ApiType detail={"semiDefault(\"InputNumber\", \"pressTimeout\", numbers.DEFAULT_PRESS_TIMEOUT)"}>Type</ApiType> |
-| keepFocus | Keeps the input focused when a step button is clicked. | `boolean` | `semiDefault("InputNumber", "keepFocus", false)` |
-| innerButtons | Puts the step buttons inside the input, shown on hover or focus and temporarily replacing the suffix slot. | `boolean` | `semiDefault("InputNumber", "innerButtons", false)` |
-| hideButtons | Hides the step buttons; with innerButtons also true, no built-in button is shown either. | `boolean` | `semiDefault("InputNumber", "hideButtons", false)` |
+| min | Minimum value. | `number` | `-Infinity` |
+| max | Maximum value. | `number` | `Infinity` |
+| step | Step of each change; may be a decimal. | `number` | `numbers.DEFAULT_STEP` |
+| shiftStep | Step of each change while Shift is held; may be a decimal. | `number` | `numbers.DEFAULT_SHIFT_STEP` |
+| pressInterval | Interval in milliseconds between repeats while a step button is held. | `number` | `numbers.DEFAULT_PRESS_TIMEOUT` |
+| pressTimeout | Delay in milliseconds before repeating starts while a step button is held. | `number` | `numbers.DEFAULT_PRESS_TIMEOUT` |
+| keepFocus | Keeps the input focused when a step button is clicked. | `boolean` | `false` |
+| innerButtons | Puts the step buttons inside the input, shown on hover or focus and temporarily replacing the suffix slot. | `boolean` | `false` |
+| hideButtons | Hides the step buttons; with innerButtons also true, no built-in button is shown either. | `boolean` | `false` |
 | size | Input size: default, small or large. | `Size` | `undefined` |
 | disabled | Whether disabled. | `boolean` | `undefined` |
 | readonly | Whether read-only. | `boolean` | `semiGlobalDefault("InputNumber", "readonly")` |

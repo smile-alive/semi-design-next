@@ -20,14 +20,13 @@ export interface RadioProps {
     addonClassName?: string;
     addonId?: string;
     extraId?: string;
-    prefixCls?: string;
     preventScroll?: boolean;
 }
 
 export type RadioChangeEventTarget = {
     checked: boolean;
-    value: RadioValue | undefined;
-    name: string | undefined;
+    value?: RadioValue;
+    name?: string;
     disabled: boolean;
 };
 
@@ -66,9 +65,9 @@ export interface RadioOptionItem {
     extraId?: string;
 }
 
-export interface RadioGroupProps {
-    modelValue?: RadioValue;
-    defaultValue?: RadioValue;
+export interface RadioGroupProps<T extends RadioValue = RadioValue> {
+    modelValue?: T;
+    defaultValue?: T;
     disabled?: boolean;
     name?: string;
     options?: Array<string | RadioOptionItem>;
@@ -76,7 +75,6 @@ export interface RadioGroupProps {
     mode?: RadioMode;
     type?: RadioType;
     buttonSize?: RadioGroupButtonSize;
-    prefixCls?: string;
 }
 
 export interface RadioGroupOptionSlotProps {
@@ -90,9 +88,9 @@ export interface RadioGroupSlots {
     extra?: (props: RadioGroupOptionSlotProps) => VNode[];
 }
 
-export interface RadioGroupEmits {
+export interface RadioGroupEmits<T extends RadioValue = RadioValue> {
     /** `undefined` when mode="advanced" unchecks the selected radio. */
-    'update:modelValue': [value: RadioValue | undefined];
+    'update:modelValue': [value: T | undefined];
     change: [event: RadioChangeEvent];
     blur: [event: FocusEvent];
 }

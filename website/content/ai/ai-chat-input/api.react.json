@@ -1,6 +1,6 @@
 {
     "ai-chat-input": {
-        "source": "packages/semi-ai-react/src/components/ai-chat-input/index.tsx",
+        "source": "packages/semi-ai-react/src/components/ai-chat-input/ai-chat-input.tsx",
         "props": {
             "canSend": {
                 "zh-CN": "是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。",
@@ -297,10 +297,6 @@
                 "zh-CN": "下拉菜单容器 `.semi-dropdown` 的类名，可为字符串或数组。",
                 "en-US": "Class name of the menu container `.semi-dropdown`, a string or an array."
             },
-            "disableArrowKeyDown": {
-                "zh-CN": "是否禁用在触发元素上按上下方向键把焦点移入弹出层。",
-                "en-US": "Whether pressing the Up or Down arrow key on the trigger is kept from moving focus into the popup."
-            },
             "disableFocusListener": {
                 "zh-CN": "trigger 为 hover 时，是否不响应键盘聚焦打开菜单，默认 false。",
                 "en-US": "Whether keyboard focus is ignored when trigger is hover. Defaults to false."
@@ -353,10 +349,6 @@
                 "zh-CN": "聚焦时是否阻止浏览器滚动到被聚焦元素，默认 false。",
                 "en-US": "Whether focusing an element avoids scrolling it into view. Defaults to false."
             },
-            "prefixCls": {
-                "zh-CN": "弹出层类名前缀，默认 semi-dropdown。",
-                "en-US": "Class prefix of the popup, semi-dropdown by default."
-            },
             "render": {
                 "zh-CN": "Mcp 自行生成菜单内容，传入的 render 不生效。",
                 "en-US": "Mcp builds the menu content itself, so a render passed here has no effect."
@@ -368,6 +360,10 @@
             "role": {
                 "zh-CN": "包裹菜单的弹层容器的 ARIA role，默认 presentation，菜单本身的 role 为 menu。",
                 "en-US": "ARIA role of the popup container around the menu, presentation by default. The menu itself has role menu."
+            },
+            "aria-describedby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-describedby。",
+                "en-US": "aria-describedby of the popup when its role is dialog."
             },
             "aria-label": {
                 "zh-CN": "弹出层 role 为 dialog 时的 aria-label。",

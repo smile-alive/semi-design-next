@@ -525,14 +525,14 @@ import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMe
 function chatCompletionToMessage(chatCompletion: ChatCompletion): Message[];
 
 // Convert the Chat Completion API streaming data into Message format for Chat Dialogue.
-function streamingChatCompletionToMessage(chatCompletionChunks: ChatCompletionChunk[], state?: StreamingChatState): { messages: Message[]; state?: StreamingChatState };
+function streamingChatCompletionToMessage(chatCompletionChunks: ChatCompletionChunk[], state?: StreamingChatState): { messages: Message[]; state: StreamingChatState };
 
 // Convert the data returned by the Response API into the Message format in Chat Dialogue
 function responseToMessage(response: Response): Message;
 
 // Convert the streaming data returned by the Response API into the Message format in Chat Dialogue
-// ResponseChunk is the union of Response streaming events, discriminated by type; returns null for empty chunks
-function streamingResponseToMessage(chunks: ResponseChunk[], prevState?: StreamingResponseState): { message: Message | null; nextState: StreamingResponseState | null } | null;
+// ResponseChunk is the union of Response streaming events, discriminated by type; messages holds zero or one message, and state is null after response.completed
+function streamingResponseToMessage(chunks: ResponseChunk[], prevState?: StreamingResponseState): { messages: Message[]; state: StreamingResponseState | null };
 
 // Convert Chat Input data to the Message format in Chat Dialogue (same as the Response API Input Message format)
 // The result has no id; add one before putting it into chats

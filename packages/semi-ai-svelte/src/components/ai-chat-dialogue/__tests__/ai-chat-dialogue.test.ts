@@ -13,8 +13,8 @@ import type { AvatarProps } from '@fibrae/semi-ui-svelte/avatar/interface';
 import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import ReferenceWidget from '../dialogue/content-item/reference.svelte';
 import type { AIChatDialogueProps, DefaultActionNodeObj, MarkdownRenderProps, Message, Metadata } from '../interface';
-import ReferenceWidget from '../widgets/content-item/reference.svelte';
 import CustomStrong from './custom-strong.svelte';
 import DialogueHost, { type DialogueHostStore } from './dialogue-host.svelte';
 
@@ -550,7 +550,7 @@ describe('AIChatDialogue 内容块', () => {
             expect($(`.${BASE_CLASS_PREFIX}-codeHighlight`)).toHaveTextContent('const a = 1;');
         });
 
-        it('高亮插件把代码拆成多个元素时，复制的仍是带结尾换行的源码', async () => {
+        it('高亮插件把代码拆成多个元素时不显示语言栏，代码留在 pre 内', async () => {
             interface HastNode {
                 type: string;
                 tagName?: string;
@@ -568,10 +568,8 @@ describe('AIChatDialogue 内容块', () => {
                 walk(tree);
             };
             const { container } = renderDialogue({ chats: codeChats, markdownRenderProps: { rehypePlugins: [splitCode] } });
-            const button = await findCopy();
-            expect(container.querySelectorAll(`.${prefix}-code code span`).length).toBeGreaterThan(1);
-            await click(button);
-            await waitFor(() => expect(writeText).toHaveBeenCalledWith('const a = 1;\n'));
+            await waitFor(() => expect(container.querySelectorAll('pre > code span').length).toBeGreaterThan(1));
+            expect(container.querySelector(`.${prefix}-code`)).toBeNull();
         });
 
         it('显示已复制状态时不再次复制', async () => {

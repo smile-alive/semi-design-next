@@ -15,12 +15,23 @@ export function isPlainText(child: MarkdownChild) {
     return Array.isArray(child) ? child.every(isPlainText) : !isNode(child);
 }
 
-/** CodeHighlight's div and pre may not sit inside a pre, so the wrapper of a block the Semi code highlights goes */
+// Svelte components are compiled functions with no static field of their own, so marks live here
+const codeBlocks = new WeakSet<object>([Code]);
+
+/**
+ * Marks a `components.code` replacement that renders a highlighted block (a div) like the Semi code, so pre drops its
+ * wrapper around it too. Call it at module load, so the server render sees the mark.
+ */
+export function markCodeBlock(component: object) {
+    codeBlocks.add(component);
+}
+
+/** CodeHighlight's div and pre may not sit inside a pre, so the wrapper of a block a marked code highlights goes */
 export function isHighlightedBlock(child: MarkdownChild) {
     const content = [child].flat().filter((item) => typeof item !== 'string' || item.trim() !== '');
     if (content.length !== 1 || !isNode(content[0])) return false;
     const { type, props } = content[0];
-    return type === Code && Boolean(MarkdownRenderFoundation.getCodeLanguage(props.class as string | undefined)) && isPlainText(props.children as MarkdownChild);
+    return typeof type === 'function' && codeBlocks.has(type) && Boolean(MarkdownRenderFoundation.getCodeLanguage(props.class as string | undefined)) && isPlainText(props.children as MarkdownChild);
 }
 
 export function textOf(child: MarkdownChild): string {

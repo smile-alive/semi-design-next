@@ -2,14 +2,14 @@
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| modelValue | Controlled value, bound with v-model; same shape as defaultValue. undefined means uncontrolled, and going back to undefined from a controlled value shows defaultValue again. Treat ColorValue as immutable and replace it as a whole. | `ColorValue` | `undefined` |
-| defaultValue | Initial value when uncontrolled, an object holding hsva, hex and rgba; defaults to the color object of #39c5bb. | `ColorValue` | `semiDefault("ColorPicker", "defaultValue", DEFAULT_COLOR)` |
-| alpha | Whether to enable transparency selection. | `boolean` | `semiDefault("ColorPicker", "alpha", true)` |
-| eyeDropper | Whether to enable the eyedropper color picker; requires a secure context and Chromium 95 or later. | `boolean` | `semiDefault("ColorPicker", "eyeDropper", true)` |
-| defaultFormat | Color format used by default for manual input: rgba, hex or hsva. | `ColorFormat` | `semiDefault("ColorPicker", "defaultFormat", "hex")` |
-| width | Width in pixels. | `number` | `semiDefault("ColorPicker", "width", 280)` |
-| height | Height in pixels. | `number` | `semiDefault("ColorPicker", "height", 280)` |
-| usePopover | Whether to render inside a Popover; the trigger comes from the default slot. | `boolean` | `semiDefault("ColorPicker", "usePopover", false)` |
+| modelValue | Controlled value, bound with v-model; same shape as defaultValue. undefined means uncontrolled, and going back to undefined from a controlled value shows defaultValue again. Treat ColorValue as immutable and replace it as a whole. | `ColorValue \| null` | `undefined` |
+| defaultValue | Initial value when uncontrolled, an object holding hsva, hex and rgba; defaults to the color object of #39c5bb. | `ColorValue` | `DEFAULT_COLOR` |
+| alpha | Whether to enable transparency selection. | `boolean` | `true` |
+| eyeDropper | Whether to enable the eyedropper color picker; requires a secure context and Chromium 95 or later. | `boolean` | `true` |
+| defaultFormat | Color format used by default for manual input: rgba, hex or hsva. | `ColorFormat` | `"hex"` |
+| width | Width in pixels. | `number` | `280` |
+| height | Height in pixels. | `number` | `280` |
+| usePopover | Whether to render inside a Popover; the trigger comes from the default slot. | `boolean` | `false` |
 | popoverProps | Props and listeners (such as onVisibleChange) passed to the Popover when usePopover is on; class and style replace className and style. The popup opens on click with role dialog by default and takes its default name from the locale; ariaLabel and ariaLabelledby take precedence. | `ColorPickerPopoverProps` | `semiGlobalDefault("ColorPicker", "popoverProps")` |
 
 **Events**

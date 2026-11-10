@@ -4,20 +4,16 @@ import type { ResponsiveMap } from '@fibrae/semi-foundation/components/grid/cons
 export type { ResponsiveMap };
 
 export interface LayoutProps {
-    prefixCls?: string;
     tagName?: keyof HTMLElementTagNameMap;
     /** Forces the has-sider class, for server rendering where a nested Sider has not registered yet */
     hasSider?: boolean;
 }
 
 export interface LayoutBasicProps {
-    prefixCls?: string;
     tagName?: keyof HTMLElementTagNameMap;
-    type?: string;
 }
 
 export interface SiderProps {
-    prefixCls?: string;
     /** Breakpoints reported through `breakpoint`; read once at mount */
     breakpoint?: Array<keyof ResponsiveMap>;
 }

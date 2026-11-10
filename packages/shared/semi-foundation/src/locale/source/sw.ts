@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Chagua safu mlalo zote',
         selectRow: 'Chagua safu mlalo hii',
+        scrollRegion: 'Maudhui ya jedwali yanayoweza kusogezwa',
+        untitledColumn: 'Safu wima isiyo na kichwa',
         filterColumn: 'Chuja data kwa safu wima hii',
         filterColumnActive: 'Chuja data kwa safu wima hii, kichujio kinatumika',
         expandRow: 'Panua safu mlalo hii',
@@ -375,6 +377,7 @@ const local: Locale = {
         search: 'Tafuta',
         replace: 'Badilisha',
         replaceAll: 'Badilisha Zote',
+        replaceWith: 'Badilisha kwa',
         caseSensitive: 'Linganisha herufi kubwa na ndogo',
         regex: 'Tumia usemi wa kawaida',
         wholeWord: 'Linganisha neno zima',

@@ -1,6 +1,7 @@
 import type React from 'react';
 import { isValidElement } from 'react';
 import clsx from 'clsx';
+import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
 import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
@@ -11,7 +12,8 @@ import useFoundation from '../../base/use-foundation';
 import useMergedRef from '../../hooks/use-merged-ref';
 import Dropdown from '../dropdown';
 import Tooltip from '../tooltip';
-import { useNavContext } from './context';
+import { type NavContextType, useNavContext } from './context';
+import type { OnSelectedData } from './nav';
 import { fitNavIcon } from './nav-icon';
 import type { SubNavProps } from './sub-nav';
 
@@ -19,6 +21,7 @@ type Foundation = ItemFoundation<FoundationProps>;
 type Adapter = ItemAdapter<FoundationProps>;
 
 const clsPrefix = `${cssClasses.PREFIX}-item`;
+const dropdownItemPrefix = `${dropdownClasses.PREFIX}-item`;
 export interface NavItemProps extends ItemProps, Omit<BaseProps, 'children'>, ElementProps<'li', 'onClick' | 'children'> {
     disabled?: boolean;
     forwardRef?: (ele: HTMLLIElement) => void;
@@ -67,7 +70,7 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
     let itemChildren: React.ReactNode = null;
 
     // ref stays out of the props the foundation reads: onSelect reports a copy of them as selectedItems
-    const [foundation] = useFoundation<Foundation, Adapter, FoundationProps, object>(
+    const [foundation] = useFoundation<Foundation, Adapter, FoundationProps, object, NavContextType>(
         ItemFoundation,
         { ...props, itemConfig },
         () => ({}),
@@ -78,7 +81,7 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
             },
             selectSelf: () => base.getContexts().updateSelectedKeys?.([base.getProp('itemKey')]),
             getSelectedKeysIsControlled: () => base.getContexts().selectedKeysIsControlled,
-            notifyGlobalOnSelect: (data) => base.getContexts().onSelect?.(data),
+            notifyGlobalOnSelect: (data) => base.getContexts().onSelect?.(data as OnSelectedData),
             notifyGlobalOnClick: (data) => base.getContexts().onClick?.(data),
             notifyClick: (data) => base.getProps().onClick?.(data),
             getSelected: () => Boolean(base.getContexts().selectedKeys?.includes(base.getProp('itemKey'))),
@@ -136,7 +139,29 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
 
     const hasLink = typeof link === 'string';
 
-    if (isPopupItem) {
+    if (isPopupItem && isSubNav) {
+        // A nested sub inside a popup is a list item that holds the menuitem (its title), not a menuitem itself: two
+        // nested menuitems would both be found by the menu's arrow keys
+        itemDom = (
+            <li
+                {...rest}
+                ref={setItemRef}
+                className={clsx(className, clsPrefix, `${clsPrefix}-sub`, dropdownItemPrefix, {
+                    [`${clsPrefix}-selected`]: selected,
+                    [`${clsPrefix}-collapsed`]: isCollapsed,
+                    [`${clsPrefix}-disabled`]: disabled,
+                    [`${dropdownItemPrefix}-disabled`]: disabled,
+                    [`${dropdownItemPrefix}-active`]: selected,
+                })}
+                style={style}
+                role="none"
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+            >
+                {itemChildren}
+            </li>
+        );
+    } else if (isPopupItem) {
         const popoverItemCls = clsx({
             [clsPrefix]: true,
             [`${clsPrefix}-sub`]: isSubNav,

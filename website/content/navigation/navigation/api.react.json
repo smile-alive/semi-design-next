@@ -1,6 +1,6 @@
 {
     "nav": {
-        "source": "packages/semi-ui-react/src/components/navigation/index.tsx",
+        "source": "packages/semi-ui-react/src/components/navigation/nav.tsx",
         "props": {
             "bodyStyle": {
                 "zh-CN": "导航项列表的自定义样式。",
@@ -54,10 +54,6 @@
                 "zh-CN": "导航方向，可选 `vertical` 或 `horizontal`。",
                 "en-US": "Orientation of the navigation: `vertical` or `horizontal`."
             },
-            "multiple": {
-                "zh-CN": "未使用，设置后不产生效果。",
-                "en-US": "Unused; setting it has no effect."
-            },
             "onClick": {
                 "zh-CN": "点击任意导航项时触发。数据含 `itemKey`、`text`，点击子导航标题时还含 `openKeys` 与 `isOpen`；`domEvent` 为原生事件。",
                 "en-US": "Called when any navigation item is clicked. The data holds `itemKey` and `text`; clicking a sub navigation title also holds `openKeys` and `isOpen`. `domEvent` is the native event."
@@ -65,10 +61,6 @@
             "onCollapseChange": {
                 "zh-CN": "收起状态变化时的回调，参数为变化后的收起状态。",
                 "en-US": "Called when the collapsed state changes, with the new collapsed state."
-            },
-            "onDeselect": {
-                "zh-CN": "未使用，传入的回调不会被调用。",
-                "en-US": "Unused; the callback is never called."
             },
             "onOpenChange": {
                 "zh-CN": "切换子导航展开状态时触发。数据含 `itemKey`、`openKeys`、`isOpen`，`domEvent` 为原生事件；悬停打开浮层时没有 `domEvent`。",
@@ -256,14 +248,6 @@
                 "zh-CN": "如果没有图标，是否保留其占位，仅对一级导航生效。默认为 `false`。",
                 "en-US": "Whether to keep the icon's space when there is no icon. Applies to the first level only. Defaults to `false`."
             },
-            "isCollapsed": {
-                "zh-CN": "不生效，收起状态由 `Nav` 的 `isCollapsed` 决定。",
-                "en-US": "Has no effect; the collapsed state comes from the `isCollapsed` of `Nav`."
-            },
-            "isOpen": {
-                "zh-CN": "不生效，展开状态由 `Nav` 的 `openKeys` 与 `defaultOpenKeys` 决定。",
-                "en-US": "Has no effect; the open state comes from the `openKeys` and `defaultOpenKeys` of `Nav`."
-            },
             "itemKey": {
                 "zh-CN": "子导航的唯一标识，`openKeys` 与 `selectedKeys` 通过它匹配子导航。",
                 "en-US": "Unique key of the sub navigation. `openKeys` and `selectedKeys` match it."
@@ -271,10 +255,6 @@
             "level": {
                 "zh-CN": "当前项所在的嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 `Nav.Sub` 需要自己传入。默认为 `0`。",
                 "en-US": "Nesting depth of the item, which sets the indentation when `limitIndent` is `false`. Items from `items` set it automatically; a `Nav.Sub` written by hand must pass it. Defaults to `0`."
-            },
-            "maxHeight": {
-                "zh-CN": "不生效。",
-                "en-US": "Has no effect."
             },
             "onMouseEnter": {
                 "zh-CN": "鼠标移入子导航时调用，事件落在 `li` 上。",

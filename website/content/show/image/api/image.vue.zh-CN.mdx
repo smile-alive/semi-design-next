@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | alt             | 图像描述，同时作为可预览缩略图的读屏名称。                                       | `string`                                                     | `semiGlobalDefault("Image", "alt")`         |
 | crossOrigin     | 透传给原生 img 标签的 crossorigin。                                              | `"anonymous" \| "use-credentials"`                           | `semiGlobalDefault("Image", "crossOrigin")` |
 | fallback        | 加载失败时显示的容错图片地址；自定义内容使用 fallback 插槽，插槽优先。           | `string`                                                     | `semiGlobalDefault("Image", "fallback")`    |
-| preview         | 预览配置，为 false 时禁用预览；对象只放数据与回调，自定义内容使用 Image 的插槽。 | `boolean \| ImagePreviewProps`                               | `semiDefault("Image", "preview", true)`     |
+| preview         | 预览配置，为 false 时禁用预览；对象只放数据与回调，自定义内容使用 Image 的插槽。 | `boolean \| ImagePreviewProps`                               | `true`                                      |
 | imgStyle        | 自定义样式，透传给 img 节点。                                                    | `StyleValue`                                                 | `semiGlobalDefault("Image", "imgStyle")`    |
 | imgCls          | 自定义样式类名，透传给 img 节点。                                                | `string`                                                     | `semiGlobalDefault("Image", "imgCls")`      |
 | setDownloadName | 设置图片下载名称。                                                               | <ApiType detail={"((src: string) => string)"}>Type</ApiType> | `undefined`                                 |

@@ -41,7 +41,7 @@ import type { Position, TooltipProps } from '../tooltip';
 import { useSpecialTrigger } from '../tooltip/context';
 import Text from '../typography/text';
 import { type OptionProps, OptionView } from './option';
-import { type GroupRecord, type OptionData, type OptionRecord, plain, readOptions } from './utils';
+import { type GroupRecord, type OptionRecord, readOptions, slotsByValue } from './utils';
 
 const prefix = cssClasses.PREFIX;
 
@@ -255,10 +255,6 @@ const defaultProps = {
     ellipsisTrigger: false,
 } satisfies Partial<SelectBodyProps>;
 
-function labelOf(option: OptionData) {
-    return option._slot ? option._slot() : option.label;
-}
-
 function hasTitle(group?: GroupRecord): group is GroupRecord {
     return Boolean(group && (group.label || group.label === 0));
 }
@@ -267,7 +263,7 @@ function titleAttrs({ key: _key, label: _label, class: _class, style: _style, id
     return rest;
 }
 
-function optionItemRest({ key: _key, class: _class, style: _style, label: _label, value: _value, disabled: _disabled, showTick: _showTick, _slot, ...rest }: OptionData) {
+function optionItemRest({ key: _key, class: _class, style: _style, label: _label, value: _value, disabled: _disabled, showTick: _showTick, ...rest }: OptionProps) {
     return rest;
 }
 
@@ -413,17 +409,14 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         () => ({
             focusInput: () => triggerInput?.focus({ preventScroll: props.preventScroll }),
             focusDropdownInput: () => dropdownInput?.focus({ preventScroll: props.preventScroll }),
-            notifyMaxLimit: (option) => props.onExceed?.(plain(option as OptionData)),
-            notifyDeselect: (value, option) => props.onDeselect?.(value, plain(option as OptionData)),
+            notifyMaxLimit: (option) => props.onExceed?.(option as OptionProps),
+            notifyDeselect: (value, option) => props.onDeselect?.(value, option as OptionProps),
             getOptionsFromChildren: () => records() as BaseOptionRecord[],
-            notifyChange: (value) => {
-                const object = (item: unknown) => (typeof item === 'object' && item !== null ? plain(item as OptionData) : item);
-                props.onChange?.(props.onChangeWithObject ? (Array.isArray(value) ? value.map(object) : object(value)) : value);
-            },
-            notifySelect: (value, option) => props.onSelect?.(value, plain(option as OptionData)),
+            notifyChange: (value) => props.onChange?.(value),
+            notifySelect: (value, option) => props.onSelect?.(value, option as OptionProps),
             notifyDropdownVisibleChange: (visible) => props.onDropdownVisibleChange?.(visible),
             notifySearch: (inputValue, event) => props.onSearch?.(inputValue, event),
-            notifyCreate: (option) => props.onCreate?.(plain(option as OptionData)),
+            notifyCreate: (option) => props.onCreate?.(option as OptionProps),
             // onMouseEnter and onMouseLeave reach the root as native listeners through the rest props
             notifyMouseEnter: () => undefined,
             notifyMouseLeave: () => undefined,
@@ -449,6 +442,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         () => local.ref
     );
 
+    const selectedSlots = createMemo(() => slotsByValue(records()));
     const prefixNode = createIconSlot(() => local.prefix);
     const insetLabelNode = createIconSlot(() => props.insetLabel);
     const suffixNode = createIconSlot(() => local.suffix);
@@ -459,12 +453,12 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     const selectId = () => local.id || generatedId;
 
     const visibleOptions = createMemo(() => SelectFoundation.getVisibleOptions(state().options as OptionRecord[]));
-    const selectedItems = createMemo(() => [...state().selections.values()] as OptionData[]);
+    const selectedItems = createMemo(() => [...state().selections.values()] as OptionProps[]);
     const tagFold = createMemo(() => SelectFoundation.getTagFold(local, state(), selectedItems().length));
 
     const triggerRenderProps: TriggerRenderProps = {
         get value() {
-            return selectedItems().map(plain);
+            return selectedItems();
         },
         get inputValue() {
             return state().inputValue;
@@ -479,6 +473,11 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         onSearch: (value) => handleInputChange(value),
         onClear: (e) => foundation.handleClearClick(e),
         onRemove: (option) => foundation.removeTag(option as BasicOptionProps),
+    };
+
+    const labelOf = (option: OptionProps) => {
+        const slot = selectedSlots().get(option.value);
+        return slot ? slot() : option.label;
     };
 
     const optionId = (index: number) => getOptionId(selectId(), index);
@@ -636,12 +635,12 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     };
 
     // the popup is not a DOM descendant of the trigger, so its keydown does not reach the root's handler
-    const handleDropdownKeyDown = (e: InputElementEvent<KeyboardEvent>) => {
-        callHandler(local.inputProps?.onKeyDown, e);
+    const handleDropdownKeyDown = (e: InputElementEvent<KeyboardEvent>, own: SelectInputProps | undefined) => {
+        callHandler(own?.onKeyDown, e);
         foundation.handleKeyDown(e);
     };
 
-    const removeTagOnClose = (option: OptionData, e?: Event) => {
+    const removeTagOnClose = (option: OptionProps, e?: Event) => {
         // keeps the Tag from hiding itself in controlled mode
         e?.preventDefault();
         const tag = e?.currentTarget instanceof Element ? e.currentTarget.closest(`.${tagCssClasses.PREFIX}`) : null;
@@ -720,67 +719,75 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         virtualList = handle;
     };
 
-    const renderTriggerInput = () => (
-        <Input
-            {...comboboxAttrs}
-            aria-autocomplete="list"
-            // the single-select input is empty until typing, so the selected text is exposed as its description
-            aria-describedby={joinIds(local['aria-describedby'], local.multiple || state().inputValue ? undefined : selectionTextId)}
-            id={`${selectId()}-input`}
-            size={local.size}
-            value={state().inputValue}
-            disabled={local.disabled}
-            onChange={handleInputChange}
-            // the trigger draws its own clear button and adornments: global Input defaults must not add them
-            showClear={false}
-            prefix={null}
-            suffix={null}
-            insetLabel={null}
-            addonBefore={null}
-            addonAfter={null}
-            {...local.inputProps}
-            class={clsx(`${prefix}-input`, local.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, local.inputProps?.class)}
-            style={local.multiple ? { width: state().inputValue ? `${state().inputValue.length * 16}px` : '2px' } : local.inputProps?.style}
-            inputRef={mergeRefs(setTriggerInput, local.inputProps?.inputRef)}
-        />
-    );
-
-    const renderDropdownInput = () => (
-        <div class={`${prefix}-dropdown-search-wrapper`}>
-            {/* a search field over the trigger's list, not a second combobox (the React Aria Autocomplete pattern) */}
+    // inputProps is read once where its field renders: an inline object with JSX (an Input prefix) builds new nodes
+    // on every read of the getter
+    const renderTriggerInput = () => {
+        const own = createMemo(() => local.inputProps);
+        return (
             <Input
-                aria-activedescendant={activeDescendant()}
+                {...comboboxAttrs}
                 aria-autocomplete="list"
-                aria-controls={listboxId}
-                aria-label={name()['aria-label']}
-                aria-labelledby={name()['aria-labelledby']}
-                // the popup mounts after the dropdown opens, so the foundation's focus call finds no input yet
-                autofocus={local.autofocus}
-                prefix={<IconSearch />}
+                // the single-select input is empty until typing, so the selected text is exposed as its description
+                aria-describedby={joinIds(local['aria-describedby'], local.multiple || state().inputValue ? undefined : selectionTextId)}
+                id={`${selectId()}-input`}
+                size={local.size}
                 value={state().inputValue}
                 disabled={local.disabled}
                 onChange={handleInputChange}
-                placeholder={local.searchPlaceholder}
-                showClear
-                // global Input defaults must not add adornments to the search field
+                // the trigger draws its own clear button and adornments: global Input defaults must not add them
+                showClear={false}
+                prefix={null}
                 suffix={null}
                 insetLabel={null}
                 addonBefore={null}
                 addonAfter={null}
-                {...local.inputProps}
-                class={clsx(`${prefix}-dropdown-input`, local.multiple ? `${prefix}-dropdown-input-multiple` : `${prefix}-dropdown-input-single`, local.inputProps?.class)}
-                inputRef={mergeRefs(setDropdownInput, local.inputProps?.inputRef)}
-                onKeyDown={handleDropdownKeyDown}
+                {...own()}
+                class={clsx(`${prefix}-input`, local.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, own()?.class)}
+                style={local.multiple ? { width: state().inputValue ? `${state().inputValue.length * 16}px` : '2px' } : own()?.style}
+                inputRef={mergeRefs(setTriggerInput, own()?.inputRef)}
             />
-        </div>
-    );
+        );
+    };
 
-    const SelectedTag = (tag: { option: OptionData; index: number; collapsed?: boolean; inTagGroup?: boolean }) => {
+    const renderDropdownInput = () => {
+        const own = createMemo(() => local.inputProps);
+        return (
+            <div class={`${prefix}-dropdown-search-wrapper`}>
+                {/* a search field over the trigger's list, not a second combobox (the React Aria Autocomplete pattern) */}
+                <Input
+                    aria-activedescendant={activeDescendant()}
+                    aria-autocomplete="list"
+                    aria-controls={listboxId}
+                    aria-label={name()['aria-label']}
+                    aria-labelledby={name()['aria-labelledby']}
+                    // the popup mounts after the dropdown opens, so the foundation's focus call finds no input yet
+                    autofocus={local.autofocus}
+                    prefix={<IconSearch />}
+                    value={state().inputValue}
+                    disabled={local.disabled}
+                    onChange={handleInputChange}
+                    placeholder={local.searchPlaceholder}
+                    showClear
+                    // global Input defaults must not add adornments to the search field
+                    suffix={null}
+                    insetLabel={null}
+                    addonBefore={null}
+                    addonAfter={null}
+                    {...own()}
+                    class={clsx(`${prefix}-dropdown-input`, local.multiple ? `${prefix}-dropdown-input-multiple` : `${prefix}-dropdown-input-single`, own()?.class)}
+                    inputRef={mergeRefs(setDropdownInput, own()?.inputRef)}
+                    onKeyDown={(e) => handleDropdownKeyDown(e, own())}
+                />
+            </div>
+        );
+    };
+
+    const SelectedTag = (tag: { option: OptionProps; index: number; collapsed?: boolean; inTagGroup?: boolean }) => {
         const tagDisabled = () => Boolean(tag.option.disabled || local.disabled);
         const onClose = (_content: JSX.Element, e?: Event) => removeTagOnClose(tag.option, e);
         const rendered = createMemo(() => {
             const render = local.renderSelectedItem as RenderMultipleSelectedItemFn | undefined;
-            return render ? render(plain(tag.option), { index: tag.index, disabled: tagDisabled(), onClose }) : { isRenderInTag: true, content: labelOf(tag.option) };
+            return render ? render(tag.option, { index: tag.index, disabled: tagDisabled(), onClose }) : { isRenderInTag: true, content: labelOf(tag.option) };
         });
         const content = () =>
             tag.collapsed && !local.renderSelectedItem ? (
@@ -819,13 +826,13 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         return (
             <div class={`${prefix}-content-wrapper-collapse`}>
                 <OverflowList
-                    itemKey={(item) => (item as OptionData).value as string | number}
+                    itemKey={(item) => (item as OptionProps).value as string | number}
                     items={items()}
                     overflowRenderer={(overflowItems: OverflowItem[]) => {
-                        const first = overflowItems[0] as OptionData | undefined;
+                        const first = overflowItems[0] as OptionProps | undefined;
                         return first ? <SelectedTag option={first} index={items().indexOf(first)} collapsed /> : null;
                     }}
-                    visibleItemRenderer={(item, index) => <SelectedTag option={item as OptionData} index={index} />}
+                    visibleItemRenderer={(item, index) => <SelectedTag option={item as OptionProps} index={index} />}
                     onOverflow={handleOverflow}
                 />
                 <Show when={state().overflowItemCount > 0}>
@@ -893,7 +900,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                 return undefined;
             }
             const render = local.renderSelectedItem as RenderSingleSelectedItemFn | undefined;
-            return render ? render(plain(option)) : labelOf(option);
+            return render ? render(option) : labelOf(option);
         });
         const shown = () => {
             const value = content();
@@ -1014,7 +1021,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         // the option as kept in state, the same object Enter selects
         const select = (e: MouseEvent) => foundation.onSelect(record() as BaseOptionRecord, index(), e);
         // the children are created again only when the options are read again, not when a row's flags change
-        const slot = createMemo(() => option()._slot);
+        const slot = createMemo(() => record().slot);
         return (
             <Switch
                 fallback={
@@ -1193,6 +1200,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={state().isOpen}
+            onEscKeyDown={foundation.handleEscKeyDown}
             onOpen={foundation.scrollToSelection}
         >
             {(getTriggerProps) => (

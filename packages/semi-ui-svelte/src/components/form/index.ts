@@ -1,34 +1,34 @@
 import ArrayField from './array-field.svelte';
 import FormErrorMessage from './error-message.svelte';
 import FormField from './field.svelte';
-import FormAutoComplete from './form-auto-complete.svelte';
-import FormCascader from './form-cascader.svelte';
-import FormCheckboxGroup from './form-checkbox-group.svelte';
-import FormCheckbox from './form-checkbox.svelte';
-import FormDatePicker from './form-date-picker.svelte';
-import FormInputNumber from './form-input-number.svelte';
-import FormInput from './form-input.svelte';
-import FormPinCode from './form-pin-code.svelte';
-import FormRadioGroup from './form-radio-group.svelte';
-import FormRadio from './form-radio.svelte';
-import FormRating from './form-rating.svelte';
-import FormSelect from './form-select.svelte';
-import FormSlider from './form-slider.svelte';
-import FormSwitch from './form-switch.svelte';
-import FormTagInput from './form-tag-input.svelte';
-import FormTextArea from './form-text-area.svelte';
-import FormTimePicker from './form-time-picker.svelte';
-import FormTransfer from './form-transfer.svelte';
-import FormTreeSelect from './form-tree-select.svelte';
-import FormUpload from './form-upload.svelte';
+import FormAutoComplete from './fields/form-auto-complete.svelte';
+import FormCascader from './fields/form-cascader.svelte';
+import FormCheckboxGroup from './fields/form-checkbox-group.svelte';
+import FormCheckbox from './fields/form-checkbox.svelte';
+import FormDatePicker from './fields/form-date-picker.svelte';
+import FormInputNumber from './fields/form-input-number.svelte';
+import FormInput from './fields/form-input.svelte';
+import FormPinCode from './fields/form-pin-code.svelte';
+import FormRadioGroup from './fields/form-radio-group.svelte';
+import FormRadio from './fields/form-radio.svelte';
+import FormRating from './fields/form-rating.svelte';
+import FormSelect from './fields/form-select.svelte';
+import FormSlider from './fields/form-slider.svelte';
+import FormSwitch from './fields/form-switch.svelte';
+import FormTagInput from './fields/form-tag-input.svelte';
+import FormTextArea from './fields/form-text-area.svelte';
+import FormTimePicker from './fields/form-time-picker.svelte';
+import FormTransfer from './fields/form-transfer.svelte';
+import FormTreeSelect from './fields/form-tree-select.svelte';
+import FormUpload from './fields/form-upload.svelte';
 import Form from './form.svelte';
+import useForm from './hooks/use-form.svelte.js';
 import FormInputGroup from './input-group.svelte';
 import FormLabel from './label.svelte';
-import SchemaField from './schema-field.svelte';
-import SchemaForm from './schema-form.svelte';
+import SchemaField from './schema-form/schema-field.svelte';
+import SchemaForm from './schema-form/schema-form.svelte';
 import FormSection from './section.svelte';
 import FormSlot from './slot.svelte';
-import useForm from './use-form.svelte.js';
 
 export {
     ArrayField,
@@ -63,7 +63,7 @@ export {
     SchemaForm,
     useForm,
 };
-export { useFieldApi, useFieldState, useFormApi, useFormState } from './hooks.js';
+export { useFieldApi, useFieldState, useFormApi, useFormState } from './hooks/index.js';
 export type {
     ArrayFieldItem,
     ArrayFieldProps,

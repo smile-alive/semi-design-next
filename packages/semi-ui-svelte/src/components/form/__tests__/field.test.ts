@@ -1,7 +1,7 @@
 import { createRawSnippet, flushSync } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import FormInput from '../form-input.svelte';
+import FormInput from '../fields/form-input.svelte';
 import { blur, errorSelector, fieldSelector, getInput, input, labelSelector, prefix, renderForm, settle, typeInto } from './helpers';
 
 const text = (content: string) => createRawSnippet(() => ({ render: () => `<span>${content}</span>` }));

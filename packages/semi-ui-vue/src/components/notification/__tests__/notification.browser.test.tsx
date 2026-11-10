@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { inject } from 'vue';
 import { waitFor } from '@testing-library/vue';
-import { afterEach, describe, expect, it, onTestFinished } from 'vite-plus/test';
+import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { openLayer } from '@fibrae/semi-foundation/utils/layer';
 import { tabTo } from '@test/utils/browser';
@@ -133,16 +133,20 @@ describe('Notification 浏览器', () => {
         });
 
         it('指针在列表上时暂停其中所有通知的计时，期间新来的通知同样暂停', async () => {
+            // the countdowns start at mount; on real timers a slow hover round trip lets them fire first
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
             const host = renderHook();
-            // 1s leaves room for the Playwright hover round trip before the first timers would fire
             host.add('a', 1);
             host.add('b', 1);
             await waitFor(() => expect(host.notices()).toHaveLength(2));
-            await finishAnimations(host.notices());
+            // not finishAnimations: an animation finished before Vue listens ends on Vue's timeout, which is faked here
+            await waitFor(() => expect(host.notices().filter((notice) => /-animation-show_/.test(wrapperOf(notice).className))).toEqual([]));
             await userEvent.hover(host.notices()[0]);
             host.add('c', 1);
-            await new Promise((resolve) => setTimeout(resolve, 1500));
+            await waitFor(() => expect(host.notices()).toHaveLength(3));
+            vi.advanceTimersByTime(1000);
             expect(host.notices()).toHaveLength(3);
+            vi.useRealTimers();
             await userEvent.unhover(host.notices()[0]);
             await waitFor(() => expect(host.notices()).toHaveLength(0), { timeout: 3000 });
         });

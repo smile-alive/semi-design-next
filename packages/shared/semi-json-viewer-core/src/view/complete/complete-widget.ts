@@ -51,6 +51,8 @@ export class CompleteWidget {
             return true;
         };
 
+        // keeps focus on the content area, which is where the caret is restored after the completion is applied
+        this.#suggestionsContainer.addEventListener('mousedown', (e) => e.preventDefault());
         this.#suggestionsContainer.addEventListener('click', (e) => {
             this.#handleSuggestionClick(e);
         });
@@ -77,6 +79,7 @@ export class CompleteWidget {
         };
         void new JSONCompletion(this.#view.options?.completionOptions || null).doCompletion(this.#jsonModel, position, root).then((completions) => {
             this.#suggestions = completions.items || [];
+            this.#selectedIndex = 0;
             this.show();
         });
     }
@@ -220,6 +223,7 @@ export class CompleteWidget {
         this.isVisible = false;
         this.#container.style.display = 'none';
         this.#suggestions = [];
+        this.#selectedIndex = 0;
         this.#view.contentDom.removeAttribute('aria-activedescendant');
     }
 }

@@ -43,7 +43,6 @@ export interface RadioGroupProps extends ElementProps<'div', 'onChange' | 'defau
     mode?: RadioMode;
     type?: RadioType;
     buttonSize?: RadioGroupButtonSize;
-    prefixCls?: string;
     id?: string;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;
@@ -67,7 +66,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         children,
         options,
         mode,
-        prefixCls,
         className,
         style,
         direction,
@@ -115,7 +113,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
     const isPureCardRadio = type === strings.TYPE_PURECARD;
     const isCardRadio = type === strings.TYPE_CARD || isPureCardRadio;
     const isDefaultRadio = type === strings.TYPE_DEFAULT;
-    const prefix = prefixCls || css.PREFIX;
+    const prefix = css.PREFIX;
 
     const prefixClsDisplay = clsx(className, {
         [prefix]: true,
@@ -155,7 +153,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
                         isCardRadio,
                         isPureCardRadio,
                         buttonSize,
-                        prefixCls,
                     },
                     mode,
                 }}

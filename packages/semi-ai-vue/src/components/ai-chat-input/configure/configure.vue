@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, shallowRef } from 'vue';
-    import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+    import type { Setup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
     import { provideConfigureContext } from './context';
     import type { ConfigureEmits, ConfigureHandle, ConfigureProps, ConfigureSlots } from './interface';
 
@@ -11,7 +11,7 @@
     defineSlots<ConfigureSlots>();
 
     // Items register in one mount pass, each merging onto the value the previous one wrote
-    const value = shallowRef<LeftMenuChangeProps>({ ...props.defaultValue });
+    const value = shallowRef<Setup>({ ...props.defaultValue });
 
     provideConfigureContext({
         view: computed(() => value.value),

@@ -1700,7 +1700,7 @@ Field 是 withField 生成的组件，不是单文件组件。字段通过模板
 | --- | --- | --- | --- |
 | convert | field 值改变后，在存入 formState 与展示前，对 field 的值进行二次更新 | `(fieldValue) => any` |  |
 | field | 该表单控件的值在 formState.values 中的映射路径，Form 会使用该值来区分内部的表单控件<br/>**必填!!!**（放在各自 Group 内的 FormCheckbox、FormRadio 除外）示例：[Bindding Syntax](#表单控件值的绑定) | `string` |  |
-| label | 该表单控件的 label 标签文本，不传的时候默认与 field 同名；传入对象时可配置 `text`、`extra`、`required`、`optional`、`align`、`width`、`disabled`，对象中的 `text`、`extra` 只收字符串或数字。`#fieldLabel`、`#labelExtra` 插槽优先 | `string \| number \| FieldLabel` |  |
+| label | 该表单控件的 label 标签文本，不传的时候默认与 field 同名；传入对象时可配置 `text`、`extra`、`required`、`optional`、`align`、`width`、`disabled`、`id`（label 元素的 id），对象中的 `text`、`extra` 只收字符串或数字。`#fieldLabel`、`#labelExtra` 插槽优先 | `string \| number \| FieldLabel` |  |
 | labelPosition | 该表单控件的 label 位置。在Form与Field上同时传入时，以Field props为准 | `'top' \| 'left' \| 'inset'` |  |
 | labelAlign | 该表单控件的 label 文本的 text-align。在Form与Field上同时传入时，以Field props为准 | `'left' \| 'right'` |  |
 | labelWidth | 该表单控件的 label 文本的 width，数字单位为 px。在Form与Field上同时传入时，以Field props为准 | `string \| number` |  |
@@ -1800,7 +1800,7 @@ Field 是 `FormInput`、`FormSelect` 等以 Form 开头的组件，以及 `FormF
 | --- | --- | --- | --- |
 | convert | field 值改变后，在存入 formState 与展示前，对 field 的值进行二次更新 | `(fieldValue) => any` |  |
 | field | 该表单控件的值在 formState.values 中的映射路径，Form 会使用该值来区分内部的表单控件<br/>**必填!!!**（放在各自 Group 内的 FormCheckbox、FormRadio 除外）示例：[Bindding Syntax](#表单控件值的绑定) | `string` |  |
-| label | 该表单控件的 label 标签文本，不传的时候默认与 field 同名；传入对象时可配置 `text`、`required`、`optional`、`align`、`width`、`disabled`，对象中的 `text` 只收字符串或数字。`fieldLabel`、`labelExtra` snippet 优先 | `string \| number \| FieldLabel` |  |
+| label | 该表单控件的 label 标签文本，不传的时候默认与 field 同名；传入对象时可配置 `text`、`required`、`optional`、`align`、`width`、`disabled`、`id`（label 元素的 id），对象中的 `text` 只收字符串或数字。`fieldLabel`、`labelExtra` snippet 优先 | `string \| number \| FieldLabel` |  |
 | labelPosition | 该表单控件的 label 位置。在Form与Field上同时传入时，以Field props为准 | `'top' \| 'left' \| 'inset'` |  |
 | labelAlign | 该表单控件的 label 文本的 text-align。在Form与Field上同时传入时，以Field props为准 | `'left' \| 'right'` |  |
 | labelWidth | 该表单控件的 label 文本的 width，数字单位为 px。在Form与Field上同时传入时，以Field props为准 | `string \| number` |  |

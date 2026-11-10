@@ -5,7 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { Button, Select } from '@fibrae/semi-ui-react';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
-import type { optionRenderProps, SelectProps } from '../index';
+import type { OptionRenderProps, SelectProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-select`;
 const options = [
@@ -347,7 +347,7 @@ describe('Select', () => {
     it('renderOptionItem，键盘上下键', async () => {
         const labels = ['Doubao-Pro-4k', 'Doubao-Pro-32K', 'Doubao-Pro-128K', 'Doubao-Lite-4K', 'Doubao-Lite-32K', 'Doubao-Lite-128K', 'GPT-4', 'GPT-4-32K'];
         const optionList = labels.map((label, index) => ({ value: label, label, 'data-cy': `option-${index + 1}` }));
-        const renderOptionItem = ({ disabled, selected, label, value, focused, className, style, onMouseEnter, onClick, empty, emptyContent, ...rest }: optionRenderProps) => (
+        const renderOptionItem = ({ disabled, selected, label, value, focused, className, style, onMouseEnter, onClick, empty, emptyContent, ...rest }: OptionRenderProps) => (
             <div className={['custom-option-render', focused && 'custom-option-render-focused', className].filter(Boolean).join(' ')} style={style} onClick={() => onClick(undefined)} onMouseEnter={() => onMouseEnter(undefined)} {...rest}>
                 {label}
             </div>

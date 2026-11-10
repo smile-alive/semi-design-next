@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | generating | 是否正在生成中。为 true 时发送按钮变为停止生成按钮。 | `boolean` | `false` |
 | keepSkillAfterSend | 发送消息后是否保留已选的技能。 | `boolean` | `false` |
 | onBlur | 富文本输入框失焦时的回调。会遮住根元素上的原生 onblur。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
-| onConfigureChange | 配置区域发生变化时的回调，参数为全部配置值和本次变化的值；移除配置项时第二个参数为 undefined。 | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onConfigureChange | 配置区域发生变化时的回调，参数为全部配置值和本次变化的值；移除配置项时第二个参数为 undefined。 | <ApiType detail={"(value: Setup, changedValue?: Setup) => void"}>Type</ApiType> | - |
 | onContentChange | 输入框内容变化时的回调，参数为当前内容项列表。 | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
 | onFocus | 富文本输入框聚焦时的回调。会遮住根元素上的原生 onfocus。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
 | onMessageSend | 点击发送按钮时的回调，参数包含引用、上传文件、输入内容和配置区域内容。 | <ApiType detail={"(message: MessageContent) => void"}>Type</ApiType> | - |

@@ -24,7 +24,6 @@
         mode = defaults('mode', ''),
         type = defaults('type', 'default'),
         buttonSize = defaults('buttonSize', 'middle'),
-        prefixCls = defaults('prefixCls'),
         onChange,
         onBlur,
         children,
@@ -67,7 +66,7 @@
     const isButtonRadio = $derived(type === strings.TYPE_BUTTON);
     const isPureCardRadio = $derived(type === strings.TYPE_PURECARD);
     const isCardRadio = $derived(type === strings.TYPE_CARD || isPureCardRadio);
-    const prefix = $derived(prefixCls || radioGroupClasses.PREFIX);
+    const prefix = radioGroupClasses.PREFIX;
     const items = $derived<RadioOptionItem[]>((options ?? []).map((option) => (typeof option === 'string' ? { label: option, value: option } : option)));
     const rootAttrs = $derived(Object.fromEntries(Object.entries(rest).filter(([key]) => !DROPPED_ATTRS.includes(key))));
 
@@ -80,9 +79,6 @@
         },
         get name() {
             return name || uid;
-        },
-        get prefixCls() {
-            return prefixCls;
         },
         get isButtonRadio() {
             return isButtonRadio;

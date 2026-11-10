@@ -182,10 +182,6 @@
                 "zh-CN": "输入框的前缀内容，传入 JSX 元素。",
                 "en-US": "Prefix content of the input. Takes a JSX element."
             },
-            "prefixCls": {
-                "zh-CN": "根元素与面板的类名前缀，一般无需修改。",
-                "en-US": "Class name prefix of the root element and the panel, usually left unchanged."
-            },
             "presetPosition": {
                 "zh-CN": "快捷选择面板的位置，可选值：left、right、top、bottom。",
                 "en-US": "Position of the preset panel, one of left, right, top and bottom."

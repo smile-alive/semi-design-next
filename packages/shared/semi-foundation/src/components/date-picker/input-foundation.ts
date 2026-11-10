@@ -59,7 +59,6 @@ export interface DateInputFoundationProps extends DateInputElementProps, DateInp
     inputStyle?: Record<string, any>;
     inputReadOnly?: boolean;
     validateStatus?: ValidateStatus;
-    prefixCls?: string;
     rangeSeparator?: string;
     /** `any` keeps the foundation framework-agnostic; each framework package declares its own node type */
     rangeSeparatorNode?: any;

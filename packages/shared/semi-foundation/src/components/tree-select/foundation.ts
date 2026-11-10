@@ -6,7 +6,7 @@ import isEnterPress from '../../utils/is-enter-press';
 import { ESC_KEY } from '../../utils/key-code';
 import type { Size } from '../../utils/type';
 import type { BasicTreeInnerData, BasicTreeProps, BasicTreeNodeData, BasicTreeNodeProps, BasicExpandedOtherProps, TreeMotionType } from '../tree/foundation';
-import { calcRelatedCheckedKeys, deriveTreeState, getClearedSelection, getMultipleChange, getMultipleSelectResult, getNodeData, getSearchState, loadTreeNode } from '../tree/shared';
+import { calcRelatedCheckedKeys, deriveTreeState, getClearedSelection, getMultipleChange, getMultipleSelectResult, getNodeData, getSearchState, isTreeNodeLeaf, loadTreeNode } from '../tree/shared';
 import { flattenTreeData, findAncestorKeys, normalizeKeyList, getMotionKeys, getValueOrKey } from '../tree/tree-util';
 import { strings } from './constants';
 
@@ -276,10 +276,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     }
 
     #open() {
-        // reopening inside the exit animation skips afterClose, which would leave the last search's filtered tree
-        if (this.getProp('filterTreeNode')) {
-            this.#clearInput();
-        }
         this.setState({ isOpen: true });
         this.adapter.notifyVisibleChange(true);
     }
@@ -681,7 +677,8 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         const { loadData, keyMaps } = this.getProps();
         const { inputValue, keyEntities } = this.getStates();
         const isSearching = Boolean(inputValue);
-        if (!loadData && (!treeNode.children || !treeNode.children.length)) {
+        // expandAction="click" reaches here from any row, a leaf included
+        if ((!loadData && !treeNode.children?.length) || isTreeNodeLeaf(treeNode, loadData)) {
             return;
         }
 

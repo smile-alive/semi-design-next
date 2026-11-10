@@ -1698,7 +1698,7 @@ A Field is a component made by withField, not a single-file component. The templ
 | --- | --- | --- | --- |
 | convert | After the field value changes, before it is stored in formState and shown, update the value of the field | `(fieldValue) => any` |  |
 | field | The mapping path of the field's value in formState.values. Form will use this value to distinguish the internal form control. <br/> **Required!!!** (except a FormCheckbox or FormRadio inside its group) | `string` |  |
-| label | The label text for this field. When not passed, it defaults to the same name as field. An object can set `text`, `extra`, `required`, `optional`, `align`, `width` and `disabled`; its `text` and `extra` take strings or numbers only. The `#fieldLabel` and `#labelExtra` slots take precedence | `string \| number \| FieldLabel` |  |
+| label | The label text for this field. When not passed, it defaults to the same name as field. An object can set `text`, `extra`, `required`, `optional`, `align`, `width`, `disabled` and `id` (the id of the label element); its `text` and `extra` take strings or numbers only. The `#fieldLabel` and `#labelExtra` slots take precedence | `string \| number \| FieldLabel` |  |
 | labelPosition | Label position of this field. When passed on both Form and Field, the Field props prevail | `'top' \| 'left' \| 'inset'` |  |
 | labelAlign | Text-align of the label text of this field. When passed on both Form and Field, the Field props prevail | `'left' \| 'right'` |  |
 | labelWidth | The width of the label text of this field, a number is in px. When passed on both Form and Field, the Field props prevail | `string \| number` |  |
@@ -1798,7 +1798,7 @@ A Field is a component whose name starts with Form, such as `FormInput` and `For
 | --- | --- | --- | --- |
 | convert | After the field value changes, before it is stored in formState and shown, update the value of the field | `(fieldValue) => any` |  |
 | field | The mapping path of the field's value in formState.values. Form will use this value to distinguish the internal form control. <br/> **Required!!!** (except a FormCheckbox or FormRadio inside its group) | `string` |  |
-| label | The label text for this field. When not passed, it defaults to the same name as field. An object can set `text`, `required`, `optional`, `align`, `width` and `disabled`, and its `text` takes only a string or number. The `fieldLabel` and `labelExtra` snippets take precedence | `string \| number \| FieldLabel` |  |
+| label | The label text for this field. When not passed, it defaults to the same name as field. An object can set `text`, `required`, `optional`, `align`, `width`, `disabled` and `id` (the id of the label element), and its `text` takes only a string or number. The `fieldLabel` and `labelExtra` snippets take precedence | `string \| number \| FieldLabel` |  |
 | labelPosition | Label position of this field. When passed on both Form and Field, the Field props prevail | `'top' \| 'left' \| 'inset'` |  |
 | labelAlign | Text-align of the label text of this field. When passed on both Form and Field, the Field props prevail | `'left' \| 'right'` |  |
 | labelWidth | The width of the label text of this field, a number is in px. When passed on both Form and Field, the Field props prevail | `string \| number` |  |

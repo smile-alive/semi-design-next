@@ -4,6 +4,7 @@ import { setCurrentNameSpaceId } from './common/name-space';
 import { createModel } from './model';
 import type { JSONModel } from './model/json-model';
 import type { CompletionItem } from './service/json-types';
+export type { FindMatch } from './common/model';
 import { View } from './view/view';
 import { type JsonWorkerManager, disposeWorkerManager, getJsonWorkerManager } from './worker/json-worker-manager';
 export interface JsonViewerOptions {

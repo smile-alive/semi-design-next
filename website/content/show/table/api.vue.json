@@ -99,7 +99,6 @@
                 "zh-CN": "分页配置，传 false 关闭分页。",
                 "en-US": "The pagination configuration. Pass false to turn pagination off."
             },
-            "prefixCls": { "zh-CN": "样式名前缀。", "en-US": "The prefix of the class names." },
             "resizable": {
                 "zh-CN": "是否开启列宽伸缩，需要伸缩的列必须提供 width。传入对象时可配置 onResize、onResizeStart、onResizeStop 与 handlerClassName。",
                 "en-US": "Whether columns can be resized; a resizable column needs a width. An object configures onResize, onResizeStart, onResizeStop and handlerClassName."
@@ -254,6 +253,16 @@
                 "en-US": "Replaces the pagination info and the Pagination. The pagination argument can be bound to a Pagination as is. Empty output shows the default pagination."
             }
         },
-        "exposed": {}
+        "exposed": {
+            "getCurrentPageData": {
+                "zh-CN": "返回当前页的数据（深拷贝），形如 `{ dataSource, groups }`；`groups` 是 Map，键为分组键，值为该组的行键集合。",
+                "en-US": "Returns the data of the current page, deep cloned, as `{ dataSource, groups }`; `groups` is a Map from each group key to the set of row keys of that group."
+            },
+            "scrollTo": { "zh-CN": "虚拟化表格滚动到指定的像素偏移。", "en-US": "Scrolls a virtualized table to the given pixel offset." },
+            "scrollToItem": {
+                "zh-CN": "虚拟化表格滚动到指定的行，`align` 为 `auto`（默认）、`smart`、`center`、`start` 或 `end`。",
+                "en-US": "Scrolls a virtualized table to the given row, `align` is `auto` (default), `smart`, `center`, `start` or `end`."
+            }
+        }
     }
 }

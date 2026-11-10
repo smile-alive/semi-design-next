@@ -1,10 +1,12 @@
 <script lang="ts">
+    import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+    import { ConfigProvider } from '../../config-provider';
     import type { TableProps } from '../interface';
     import Table from '../table.svelte';
 
     type SnippetName = 'cell' | 'headerCell' | 'title' | 'footer' | 'empty' | 'expandedRow' | 'groupSection' | 'filterDropdown' | 'selectionCell' | 'sortIcon' | 'filterIcon' | 'expandIcon' | 'paginationContent';
 
-    let { store }: { store: { props: TableProps; snippets?: SnippetName[]; wrapperStyle?: string } } = $props();
+    let { store }: { store: { props: TableProps; snippets?: SnippetName[]; wrapperStyle?: string; locale?: Locale } } = $props();
 
     let table = $state<ReturnType<typeof Table>>();
 
@@ -93,6 +95,8 @@
 
 {#if store.wrapperStyle}
     <div style={store.wrapperStyle}>{@render tableNode()}</div>
+{:else if store.locale}
+    <ConfigProvider locale={store.locale}>{@render tableNode()}</ConfigProvider>
 {:else}
     {@render tableNode()}
 {/if}

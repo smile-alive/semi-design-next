@@ -158,10 +158,6 @@
                 "zh-CN": "弹出方向，缺省为 `bottomLeft`（RTL 下为 `bottomRight`）。",
                 "en-US": "Popup position. Defaults to `bottomLeft` (`bottomRight` in RTL)."
             },
-            "prefixCls": {
-                "zh-CN": "确认卡片的类名前缀，缺省为 `semi-popconfirm`。",
-                "en-US": "Class prefix of the confirmation card. Defaults to `semi-popconfirm`."
-            },
             "returnFocusOnClose": {
                 "zh-CN": "关闭后焦点是否回到触发元素，缺省为 `true`；`trigger` 为 `custom` 时不生效，受控的 `visible` 照常生效。",
                 "en-US": "Whether focus returns to the trigger after closing. Defaults to `true`. It has no effect when `trigger` is `custom`, and works as usual with a controlled `visible`."

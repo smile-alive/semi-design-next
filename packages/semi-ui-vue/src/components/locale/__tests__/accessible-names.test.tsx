@@ -263,7 +263,7 @@ describe('可访问名称跟随语言包', () => {
         });
         await fireEvent.click(view.getByRole('button', { name: ja_JP.JsonViewer.search }));
         expect(view.getByRole('textbox', { name: ja_JP.JsonViewer.search })).toBeInTheDocument();
-        expect(view.getByRole('textbox', { name: ja_JP.JsonViewer.replace })).toBeInTheDocument();
+        expect(view.getByRole('textbox', { name: ja_JP.JsonViewer.replaceWith })).toBeInTheDocument();
     });
 
     it('UserGuide 的按钮使用日语文案', async () => {

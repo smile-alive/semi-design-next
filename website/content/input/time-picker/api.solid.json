@@ -6,6 +6,10 @@
                 "zh-CN": "浮层被遮挡时是否自动调整方向。",
                 "en-US": "Whether to flip the popup automatically when it is clipped."
             },
+            "autofocus": {
+                "zh-CN": "挂载后将焦点交给输入框，透传给输入框的 `autofocus`。",
+                "en-US": "Focuses the input once mounted; passed through to the input's `autofocus`."
+            },
             "borderless": { "zh-CN": "无边框模式。", "en-US": "Borderless mode." },
             "class": {
                 "zh-CN": "根元素的类名。",
@@ -115,10 +119,6 @@
                 "en-US": "Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time; bottomRight under RTL."
             },
             "prefix": { "zh-CN": "输入框的前缀内容。", "en-US": "Prefix content of the input." },
-            "prefixCls": {
-                "zh-CN": "样式类名的前缀。",
-                "en-US": "Prefix of the class names."
-            },
             "preventScroll": {
                 "zh-CN": "指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 调用。",
                 "en-US": "Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component."

@@ -36,21 +36,13 @@ export type {
     DefaultActionNodeObj as AIChatDialogueDefaultActionNodeObj,
     FullDialogueNodes as AIChatDialogueFullDialogueNodes,
 } from './components/ai-chat-dialogue';
-export type { AnnotationItemProps } from './components/ai-chat-dialogue/widgets/content-item/annotation';
-export type { ReasoningWidgetProps } from './components/ai-chat-dialogue/widgets/content-item/reasoning';
+export type { AnnotationItemProps } from './components/ai-chat-dialogue/dialogue/content-item/annotation';
+export type { ReasoningWidgetProps } from './components/ai-chat-dialogue/dialogue/content-item/reasoning';
 // Foundation types are re-exported from their source module: the d.ts bundler drops types that reach the entry
 // through a component module's own re-export of an import
 export type { Content as ChatContent, EnableUploadProps as ChatEnableUploadProps } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 export type { Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-export type {
-    MessageContent as AIChatInputMessageContent,
-    Content as AIChatInputContent,
-    Reference as AIChatInputReference,
-    Attachment as AIChatInputAttachment,
-    LeftMenuChangeProps as AIChatInputLeftMenuChangeProps,
-    Suggestion as AIChatInputSuggestion,
-    Setup as AIChatInputSetup,
-} from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+export type { MessageContent as AIChatInputMessageContent, Content as AIChatInputContent, Reference as AIChatInputReference, Attachment as AIChatInputAttachment, Suggestion as AIChatInputSuggestion, Setup as AIChatInputSetup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/interface';
 export type { StreamingChatState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
 export { default as AIChatInput, getConfigureItem } from './components/ai-chat-input';
@@ -75,6 +67,6 @@ export type { AnnotationInfo } from './components/sidebar/annotation/content';
 export type { AnnotationItem } from './components/sidebar/annotation/item';
 export { default as Sidebar } from './components/sidebar';
 export type { SideBarProps, Option as SideBarOption, DetailContent as SideBarDetailContent } from './components/sidebar/interface';
-export type { ImageUploadNodeOptions } from './components/sidebar/widgets/image-slot';
-export type { CodeItemProps } from './components/sidebar/widgets/code';
-export type { FileItemProps } from './components/sidebar/widgets/file';
+export type { ImageUploadNodeOptions } from './components/sidebar/image-slot';
+export type { CodeItemProps } from './components/sidebar/code';
+export type { FileItemProps } from './components/sidebar/file';

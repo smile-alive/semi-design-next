@@ -5,6 +5,7 @@ import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constan
 import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState, type TagInputValidateStatus, type TagSortIds } from '@fibrae/semi-foundation/components/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/components/tag-input/tag-input.scss';
 import { IconClear, IconHandle } from '@fibrae/semi-icons-solid';
@@ -87,8 +88,8 @@ export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultVa
 
 export interface TagInputState extends TagInputBaseState {}
 
-type Foundation = TagInputFoundation<TagInputProps, Event>;
-type Adapter = TagInputAdapter<TagInputProps, Event>;
+type Foundation = TagInputFoundation<TagInputProps, Event, InputElementEvent<KeyboardEvent>, TagInputFocusEvent>;
+type Adapter = TagInputAdapter<TagInputProps, Event, InputElementEvent<KeyboardEvent>, TagInputFocusEvent>;
 
 const defaultProps = {
     showClear: false,
@@ -289,6 +290,10 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
 
     const clearable = () => (inputValue() !== '' || tagsArray().length > 0) && !local.disabled;
 
+    // Solid passes the events of a popup portaled from inside (the "+N" popover, a Popover in the suffix) through the
+    // root; like the DOM in the other frameworks, focus and clicks there neither enter nor leave the TagInput
+    const inRoot = (e: Event) => isEventInside(e, root);
+
     // A tag list is going: the input holds the focus while its nodes are removed, so the TagInput never sees it leave
     const keepTagFocus = () => {
         focusedTagStop = getFocusedTagStop(wrapper ?? null);
@@ -405,27 +410,33 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         return <TagItem value={tagsArray()[index()]} index={index()} sortableHandle={itemProps.sortableHandle} />;
     };
 
-    const SortableTags = () => (
-        <Suspense fallback={<PlainTags />}>
-            <TagFocusKeeper keep={keepTagFocus} restore={restoreTagFocus} />
-            <Sortable
-                container={SortContainer}
-                dragHandleLabel={locale().locale.dragSort}
-                dragOverlayCls={`${prefixCls}-drag-item-move`}
-                items={sortIds().ids.ids}
-                transition={null}
-                prefix={prefixCls}
-                renderItem={(item) => <SortableTagItem id={item.id as string} sortableHandle={item.sortableHandle} />}
-                onDraggingChange={(isDragging) => (dragging = isDragging)}
-                onSortEnd={(move) =>
-                    batch(() => {
-                        setMoveRequest({ move });
-                        foundation.handleSortEnd(move);
-                    })
-                }
-            />
-        </Suspense>
-    );
+    const SortableTags = () => {
+        // dnd-kit ends a drag cut short by unmounting only after the Sortable has dropped its listeners, so a list
+        // going mid-drag never reports the end and the next blur would still be ignored
+        onCleanup(() => (dragging = false));
+
+        return (
+            <Suspense fallback={<PlainTags />}>
+                <TagFocusKeeper keep={keepTagFocus} restore={restoreTagFocus} />
+                <Sortable
+                    container={SortContainer}
+                    dragHandleLabel={locale().locale.dragSort}
+                    dragOverlayCls={`${prefixCls}-drag-item-move`}
+                    items={sortIds().ids.ids}
+                    transition={null}
+                    prefix={prefixCls}
+                    renderItem={(item) => <SortableTagItem id={item.id as string} sortableHandle={item.sortableHandle} />}
+                    onDraggingChange={(isDragging) => (dragging = isDragging)}
+                    onSortEnd={(move) =>
+                        batch(() => {
+                            setMoveRequest({ move });
+                            foundation.handleSortEnd(move);
+                        })
+                    }
+                />
+            </Suspense>
+        );
+    };
 
     createEffect(on([inputValue, () => tagsArray().length === 0, () => local.placeholder, () => local.size], foundation.fitInputWidth));
 
@@ -450,18 +461,22 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                 callHandler(local.onFocusOut, e);
                 // Chromium blurs the picked-up handle when dnd-kit moves it; that is not the focus leaving, and ending
                 // the active state would unmount the list under the drag
-                if (dragging) {
+                if (dragging || !inRoot(e)) {
                     return;
                 }
                 foundation.handleInputBlur(e);
             }}
             onFocusIn={(e) => {
                 callHandler(local.onFocusIn, e);
-                foundation.handleInputFocus(e);
+                if (inRoot(e)) {
+                    foundation.handleInputFocus(e);
+                }
             }}
             onClick={(e) => {
                 callHandler(local.onClick, e);
-                foundation.handleClick();
+                if (inRoot(e)) {
+                    foundation.handleClick();
+                }
             }}
             onMouseDown={(e) => {
                 markInside(e);

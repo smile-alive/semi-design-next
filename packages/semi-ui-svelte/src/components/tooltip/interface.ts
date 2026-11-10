@@ -44,7 +44,6 @@ export interface TooltipProps extends TooltipBaseProps {
     motion?: boolean;
     autoAdjustOverflow?: boolean;
     position?: Position;
-    prefixCls?: string;
     spacing?: number | { x: number; y: number };
     showArrow?: boolean;
     role?: string;

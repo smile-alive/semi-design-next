@@ -1,5 +1,5 @@
 import { type Accessor, batch, createEffect, createSignal, getOwner, onCleanup, onMount, runWithOwner, untrack } from 'solid-js';
-import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
+import { type ContextOf, type DefaultAdapter, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 function createTrigger() {
     const [track, notify] = createSignal(undefined, { equals: false });
@@ -99,7 +99,7 @@ function createCommitQueue() {
  *   `handlePropsChange` runs in an effect created after the commit queue's and after onMount, so after init and after the
  *   callbacks of the same flush.
  */
-export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = HostContext<A>>(
+export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = ContextOf<A>>(
     Foundation: (new (adapter: A) => F) & PropReactions,
     props: P,
     initialState: (props: P) => S,

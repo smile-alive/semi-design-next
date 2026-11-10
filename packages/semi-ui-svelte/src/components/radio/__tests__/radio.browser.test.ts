@@ -38,7 +38,7 @@ describe('Svelte Radio（浏览器）', () => {
     });
 
     it('方向键在 group 内移动选中项并跳过禁用项', async () => {
-        const onChange = vi.fn<(event: { target: { value: unknown } }) => void>();
+        const onChange = vi.fn<(event: { target: { value?: unknown } }) => void>();
         group({
             options: [
                 { label: 'A', value: 'A' },

@@ -94,9 +94,9 @@ export default class VideoProgressFoundation<P extends VideoProgressBaseProps = 
         return list.find((marker) => VideoProgressFoundation.isInMarker(marker, value))?.title;
     }
 
-    /** The handle's `left`; the 8px is half the handle's width in the stylesheet */
+    /** The handle's `left`; the stylesheet centers the handle on it with translate */
     static getHandleLeft(value: number, max: number) {
-        return `calc(${(max ? value / max : 0) * 100}% - 8px)`;
+        return `${(max ? value / max : 0) * 100}%`;
     }
 
     static getValueWidth({ start, end }: MarkerListItem, value: number) {

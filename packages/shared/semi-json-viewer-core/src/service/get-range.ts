@@ -1,15 +1,16 @@
 /** Based on https://github.com/microsoft/vscode-json-languageservice with modifications for custom requirements */
 
-import { createScanner, SyntaxKind } from 'jsonc-parser';
+import { createScanner } from 'jsonc-parser';
 import { type FoldRange, FoldSource } from '../model/folding-range';
 import type { JSONModel } from '../model/json-model';
+import { SyntaxKind } from '../tokens/tokenize';
 
 export function getFoldingRanges(jsonModel: JSONModel) {
     const ranges: FoldRange[] = [];
     const stack: Omit<FoldRange, 'endLineNumber' | 'isCollapsed' | 'source'>[] = [];
     let prevStart = -1;
     const scanner = createScanner(jsonModel.getValue(), false);
-    let token = scanner.scan();
+    let token: number = scanner.scan();
 
     const addRange = (range: FoldRange) => {
         ranges.push(range);

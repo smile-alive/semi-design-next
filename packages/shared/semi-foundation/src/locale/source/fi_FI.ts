@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Valitse kaikki rivit',
         selectRow: 'Valitse tämä rivi',
+        scrollRegion: 'Vieritettävä taulukon sisältö',
+        untitledColumn: 'Nimetön sarake',
         filterColumn: 'Suodata tietoja tämän sarakkeen mukaan',
         filterColumnActive: 'Suodata tietoja tämän sarakkeen mukaan, suodatin käytössä',
         expandRow: 'Laajenna tämä rivi',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Hae',
         replace: 'Korvaa',
         replaceAll: 'Korvaa kaikki',
+        replaceWith: 'Korvaava teksti',
         caseSensitive: 'Erota isot ja pienet kirjaimet',
         regex: 'Käytä säännöllistä lauseketta',
         wholeWord: 'Vain kokonaiset sanat',

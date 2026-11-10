@@ -16,7 +16,6 @@ export interface RadioInnerProps {
     id?: string;
     name?: string;
     value?: string;
-    prefixCls?: string;
     /** Attached to the native input */
     ref?: React.Ref<HTMLInputElement>;
     isPureCardRadio?: boolean;
@@ -44,7 +43,6 @@ export default function RadioInner({
     addonId,
     extraId,
     tabIndex,
-    prefixCls,
     onChange,
     onClick,
     onKeyUp,
@@ -54,7 +52,7 @@ export default function RadioInner({
     'aria-errormessage': ariaErrormessage,
     'aria-invalid': ariaInvalid,
 }: RadioInnerProps) {
-    const prefix = prefixCls || css.PREFIX;
+    const prefix = css.PREFIX;
 
     const wrapper = clsx({
         [`${prefix}-inner`]: true,

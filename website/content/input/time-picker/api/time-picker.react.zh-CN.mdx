@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabledHours | 返回禁止选择的小时数组。 | <ApiType detail={"() => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
 | disabledMinutes | 按所选小时返回禁止选择的分钟数组。 | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
 | disabledSeconds | 按所选小时和分钟返回禁止选择的秒数组。 | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
-| disabledTime | 仅范围模式生效：按 `value` 与 `panelType`（`left` 或 `right`）返回左右面板各自的规则；`value` 没有值时为空数组，只含一个时间时长度为 1，未选的一侧为 `undefined`。返回的 `disabledHours` 等覆盖顶层同名属性，未返回的回退到顶层，关闭顶层规则需返回空数组的函数；单选模式下忽略。 | <ApiType detail={"( value: Date[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
+| disabledTime | 仅范围模式生效：按 `value` 与 `panelType`（`left` 或 `right`）返回左右面板各自的规则；`value` 没有值时为空数组，只含一个时间时长度为 1，未选的一侧为 `undefined`。返回的 `disabledHours` 等覆盖顶层同名属性，未返回的回退到顶层，关闭顶层规则需返回空数组的函数；单选模式下忽略。 | <ApiType detail={"( value: (Date \u007c undefined)[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
 | focusOnOpen | 挂载后让输入框获得焦点并选中内容，同时打开面板。 | `boolean` | `false` |
 | format | 展示的时间格式，遵循 date-fns 的 format。未设置时，`use12Hours` 为 `true` 取 `a h:mm:ss`，否则取 `HH:mm:ss`。 | `string` | - |
 | hideDisabledOptions | 隐藏禁止选择的选项。 | `boolean` | `false` |
@@ -39,7 +39,6 @@ import ApiType from '#/components/ApiType.astro';
 | popupClassName | 弹出层的类名。 | `string` | `""` |
 | popupStyle | 弹出层的样式，对象的键用 camelCase。 | `React.CSSProperties` | - |
 | position | 浮层位置。未设置时，`type` 为 `timeRange` 取 `bottom`，为 `time` 取 `bottomLeft`；RTL 方向下取 `bottomRight`。 | `Position` | - |
-| prefixCls | 样式类名的前缀。 | `string` | `"semi-timepicker"` |
 | preventScroll | 聚焦时是否阻止浏览器滚动文档，直接作为 `focus()` 的 `preventScroll` 选项，作用于组件内部的聚焦调用。 | `boolean` | - |
 | rangeSeparator | 时间范围的分隔符。 | `string` | `" ~ "` |
 | ref | 组件句柄的引用，方法见 Methods 表。 | <ApiType detail={"React.Ref\u003cTimePickerHandle>"}>Type</ApiType> | - |

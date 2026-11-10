@@ -6,46 +6,46 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | accept | Accepted file types, written like the accept attribute of input: file extensions such as `.jpg` or MIME types, separated by commas. | `string` | `semiGlobalDefault("Upload", "accept")` |
 | action | Upload URL. Required. | `string` | `undefined` |
-| addOnPasting | Whether files in the clipboard are added to the file list on paste, without extra permission. | `boolean` | `semiDefault("Upload", "addOnPasting", false)` |
+| addOnPasting | Whether files in the clipboard are added to the file list on paste, without extra permission. | `boolean` | `false` |
 | afterUpload | Hook after an upload completes without error. The returned object updates the file status, validate message, name and preview URL. Async results are not supported. | <ApiType detail={"((object: AfterUploadProps) => AfterUploadResult)"}>Type</ApiType> | `undefined` |
 | beforeClear | Called before the list is cleared. Returning false, or a Promise that resolves to false or rejects, blocks the clear. | <ApiType detail={"((fileList: FileItem[]) => boolean \u007c Promise\u003cboolean>)"}>Type</ApiType> | `undefined` |
 | beforeCrop | Called before the crop modal opens, once with the first selected image; the result decides cropping for the whole batch. Return false to upload without cropping. May return a Promise. | <ApiType detail={"((file: File, fileList: File[]) => boolean \u007c Promise\u003cboolean>)"}>Type</ApiType> | `undefined` |
 | beforeRemove | Called before a file is removed. Returning false, or a Promise that resolves to false or rejects, blocks the removal. | <ApiType detail={"((file: FileItem, fileList: FileItem[]) => boolean \u007c Promise\u003cboolean>)"}>Type</ApiType> | `undefined` |
 | beforeUpload | Hook before a file is uploaded. The returned object updates the file status and decides whether to upload. A boolean means pass or fail; for a Promise, resolve passes and reject fails. | <ApiType detail={"((object: BeforeUploadProps) => boolean \u007c BeforeUploadObjectResult \u007c Promise\u003cBeforeUploadObjectResult>)"}>Type</ApiType> | `undefined` |
 | capture | How media is captured: user or environment. true renders the attribute with an empty value, false omits it. | `boolean \| "environment" \| "user"` | `semiGlobalDefault("Upload", "capture")` |
-| crop | Enables image cropping. true uses the defaults, an object configures the cropper. Selecting, dragging, pasting and replacing all crop. | `boolean \| UploadCropProps` | `semiDefault("Upload", "crop", false)` |
+| crop | Enables image cropping. true uses the defaults, an object configures the cropper. Selecting, dragging, pasting and replacing all crop. | `boolean \| UploadCropProps` | `false` |
 | cropModalProps | Props of the crop Modal. visible, title, okText, cancelText, onOk and onCancel belong to Upload; width defaults to 600. | `UploadCropModalProps` | `semiGlobalDefault("Upload", "cropModalProps")` |
 | customRequest | Replaces the built-in XMLHttpRequest. It must call the onProgress, onError and onSuccess it receives to update the state. | <ApiType detail={"((object: UploadCustomRequestArgs) => void)"}>Type</ApiType> | `undefined` |
 | data | Extra parameters sent with the upload, or a function that returns them for a file. | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, unknown>)"}>Type</ApiType> | `undefined` |
-| defaultFileList | Initial list of uploaded files, uncontrolled. The uid of every item is required and must be unique. | `FileItem[]` | `semiDefault("Upload", "defaultFileList", [])` |
-| directory | Whether to upload a folder. | `boolean` | `semiDefault("Upload", "directory", false)` |
-| disabled | Whether Upload is disabled. A disabled Upload no longer shows the remove, retry, replace and clear actions. | `boolean` | `semiDefault("Upload", "disabled", false)` |
-| draggable | Whether dragging files to upload is supported. | `boolean` | `semiDefault("Upload", "draggable", false)` |
+| defaultFileList | Initial list of uploaded files, uncontrolled. The uid of every item is required and must be unique. | `FileItem[]` | `[]` |
+| directory | Whether to upload a folder. | `boolean` | `false` |
+| disabled | Whether Upload is disabled. A disabled Upload no longer shows the remove, retry, replace and clear actions. | `boolean` | `false` |
+| draggable | Whether dragging files to upload is supported. | `boolean` | `false` |
 | fileList | Controlled file list, used with v-model:fileList. The uid of every item is required and must be unique. | `FileItem[]` | `semiGlobalDefault("Upload", "fileList")` |
 | fileName | Same as name. Mainly used in FormUpload to avoid clashing with the name of Field. | `string` | `semiGlobalDefault("Upload", "fileName")` |
 | headers | Headers sent with the upload, or a function that returns them for a file. | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | `undefined` |
-| hotSpotLocation | Position of the picture wall add button: start or end. | `"end" \| "start"` | `semiDefault("Upload", "hotSpotLocation", "end")` |
+| hotSpotLocation | Position of the picture wall add button: start or end. | `"end" \| "start"` | `"end"` |
 | itemStyle | Inline style of the file cards. | `StyleValue` | `semiGlobalDefault("Upload", "itemStyle")` |
 | limit | Maximum number of files. With 1, the newest file always replaces the current one and exceed is not emitted. | `number` | `semiGlobalDefault("Upload", "limit")` |
-| listType | How the file list is displayed: list, picture or none. none renders no file list, only the trigger area. | `"list" \| "none" \| "picture"` | `semiDefault("Upload", "listType", "list")` |
+| listType | How the file list is displayed: list, picture or none. none renders no file list, only the trigger area. | `"list" \| "none" \| "picture"` | `"list"` |
 | maxSize | Maximum file size in KB. | `number` | `semiGlobalDefault("Upload", "maxSize")` |
 | minSize | Minimum file size in KB. | `number` | `semiGlobalDefault("Upload", "minSize")` |
-| multiple | Whether several files can be selected at once. | `boolean` | `semiDefault("Upload", "multiple", false)` |
+| multiple | Whether several files can be selected at once. | `boolean` | `false` |
 | name | Field name used for the file when uploading. | `string` | `semiGlobalDefault("Upload", "name")` |
 | onPreviewClick | Listened to as @previewClick. While present the file cards are clickable and show a preview button; its presence changes the rendering, so it stays a function prop. | <ApiType detail={"((fileItem: FileItem) => void)"}>Type</ApiType> | `undefined` |
 | picHeight | Display height of the pictures in picture mode. | `string \| number` | `semiGlobalDefault("Upload", "picHeight")` |
 | picWidth | Display width of the pictures in picture mode. | `string \| number` | `semiGlobalDefault("Upload", "picWidth")` |
-| promptPosition | Position of the prompt: left, right or bottom. In list mode it is relative to the trigger, in picture mode to the picture list. | `"bottom" \| "left" \| "right"` | `semiDefault("Upload", "promptPosition", "right")` |
-| showClear | In list mode, whether to show the clear button when limit is not 1 and there is at least one file. | `boolean` | `semiDefault("Upload", "showClear", true)` |
-| showPicInfo | Whether to show picture information. Only applies in picture mode. | `boolean` | `semiDefault("Upload", "showPicInfo", false)` |
-| showReplace | Whether the file card shows a replace button after a successful upload. | `boolean` | `semiDefault("Upload", "showReplace", false)` |
-| showRetry | Whether the file card shows a retry button when the upload fails. | `boolean` | `semiDefault("Upload", "showRetry", true)` |
-| showTooltip | Whether a truncated file name shows a tooltip, or the tooltip type (tooltip or popover) and the props passed to it. Use the ellipsisTooltip slot for custom popup content. | `boolean \| ShowTooltip` | `semiDefault("Upload", "showTooltip", true)` |
-| showUploadList | Whether to show the file list. | `boolean` | `semiDefault("Upload", "showUploadList", true)` |
+| promptPosition | Position of the prompt: left, right or bottom. In list mode it is relative to the trigger, in picture mode to the picture list. | `"bottom" \| "left" \| "right"` | `"right"` |
+| showClear | In list mode, whether to show the clear button when limit is not 1 and there is at least one file. | `boolean` | `true` |
+| showPicInfo | Whether to show picture information. Only applies in picture mode. | `boolean` | `false` |
+| showReplace | Whether the file card shows a replace button after a successful upload. | `boolean` | `false` |
+| showRetry | Whether the file card shows a retry button when the upload fails. | `boolean` | `true` |
+| showTooltip | Whether a truncated file name shows a tooltip, or the tooltip type (tooltip or popover) and the props passed to it. Use the ellipsisTooltip slot for custom popup content. | `boolean \| ShowTooltip` | `true` |
+| showUploadList | Whether to show the file list. | `boolean` | `true` |
 | transformFile | Called after a file is selected and before it is uploaded; returns the File to upload. | <ApiType detail={"((file: File) => File)"}>Type</ApiType> | `undefined` |
-| uploadTrigger | When uploading starts: auto uploads on selection, custom waits for the upload method. | `"auto" \| "custom"` | `semiDefault("Upload", "uploadTrigger", "auto")` |
+| uploadTrigger | When uploading starts: auto uploads on selection, custom waits for the upload method. | `"auto" \| "custom"` | `"auto"` |
 | validateStatus | Validation status, which styles the root element: default, error, warning or success. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Upload", "validateStatus")` |
-| withCredentials | Whether the upload request carries cookies. | `boolean` | `semiDefault("Upload", "withCredentials", false)` |
+| withCredentials | Whether the upload request carries cookies. | `boolean` | `false` |
 
 **Events**
 

@@ -2,9 +2,8 @@ import { type JSX, type Ref, For, Show, createEffect, createMemo, createRenderEf
 import { insert } from 'solid-js/web';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
-import JsonViewerFoundation, { type CustomRenderRule, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions, type SearchOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
+import JsonViewerFoundation, { type CustomRenderRule, type FindMatch, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions, type SearchOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
@@ -46,7 +45,7 @@ export interface JsonViewerHandle {
     getValue: () => string;
     format: () => void;
     search: (searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => void;
-    getSearchResults: () => ReturnType<JsonViewerFoundation['getSearchResults']>;
+    getSearchResults: () => FindMatch[] | null | undefined;
     prevSearch: (step?: number) => void;
     nextSearch: (step?: number) => void;
     replace: (replaceText: string) => void;
@@ -219,13 +218,6 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
         }
     };
 
-    // search and replace move focus to the editor; restore it so Esc and Tab continue from the bar
-    const keepFocus = (run: () => void) => {
-        const active = FocusTrapHandle.getDeepActiveElement();
-        run();
-        active?.focus();
-    };
-
     const searchFromInput = () => foundation.search(searchInput?.value ?? '');
 
     const searchBox = () => (
@@ -247,7 +239,6 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                     onChange={(_value, e) => {
                         e.preventDefault();
                         searchFromInput();
-                        searchInput?.focus();
                     }}
                     onKeyDown={closeOnEscape}
                 />
@@ -255,7 +246,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                     <For each={searchOptionItems}>
                         {(item) => (
                             <li class={clsx(`${prefixCls}-search-options-item`, { [`${prefixCls}-search-options-item-active`]: state().searchOptions[item.key] })}>
-                                <Button type="tertiary" aria-label={locale().locale[item.key]} aria-pressed={state().searchOptions[item.key]} theme="borderless" icon={<item.icon />} onClick={() => keepFocus(() => foundation.toggleSearchOption(item.key))} onKeyDown={closeOnEscape} />
+                                <Button type="tertiary" aria-label={locale().locale[item.key]} aria-pressed={state().searchOptions[item.key]} theme="borderless" icon={<item.icon />} onClick={() => foundation.toggleSearchOption(item.key)} onKeyDown={closeOnEscape} />
                             </li>
                         )}
                     </For>
@@ -266,7 +257,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                         icon={<IconChevronLeft />}
                         onClick={(e) => {
                             e.preventDefault();
-                            keepFocus(() => foundation.prevSearch());
+                            foundation.prevSearch();
                         }}
                         onKeyDown={closeOnEscape}
                     />
@@ -275,7 +266,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                         icon={<IconChevronRight />}
                         onClick={(e) => {
                             e.preventDefault();
-                            keepFocus(() => foundation.nextSearch());
+                            foundation.nextSearch();
                         }}
                         onKeyDown={closeOnEscape}
                     />
@@ -286,7 +277,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                 <Input
                     inputRef={(node) => (replaceInput = node)}
                     class={`${prefixCls}-replace-bar-input`}
-                    aria-label={locale().locale.replace}
+                    aria-label={locale().locale.replaceWith}
                     placeholder={locale().locale.replace}
                     addonAfter={null}
                     addonBefore={null}
@@ -299,10 +290,10 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                     }}
                     onKeyDown={closeOnEscape}
                 />
-                <Button style={{ width: 'fit-content' }} disabled={mergedOptions().readOnly} onClick={() => keepFocus(() => foundation.replace(replaceInput?.value ?? ''))} onKeyDown={closeOnEscape}>
+                <Button style={{ width: 'fit-content' }} disabled={mergedOptions().readOnly} onClick={() => foundation.replace(replaceInput?.value ?? '')} onKeyDown={closeOnEscape}>
                     {locale().locale.replace}
                 </Button>
-                <Button style={{ width: 'fit-content' }} disabled={mergedOptions().readOnly} onClick={() => keepFocus(() => foundation.replaceAll(replaceInput?.value ?? ''))} onKeyDown={closeOnEscape}>
+                <Button style={{ width: 'fit-content' }} disabled={mergedOptions().readOnly} onClick={() => foundation.replaceAll(replaceInput?.value ?? '')} onKeyDown={closeOnEscape}>
                     {locale().locale.replaceAll}
                 </Button>
             </div>

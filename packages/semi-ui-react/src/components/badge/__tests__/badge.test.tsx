@@ -104,14 +104,11 @@ describe('badge', () => {
         expect(getBadgeRoot(container).lastChild).toBe(count);
     });
 
-    it('badge style 应用到 count 节点，且优先于 countStyle', () => {
-        const { container, rerender } = render(getBadge({ count: 5, style: { color: 'red' }, countStyle: { color: 'blue' } }));
-        const count = () => container.querySelector('[x-semi-prop="count"]');
-        expect(count()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(getBadgeRoot(container)).not.toHaveAttribute('style');
-
-        rerender(getBadge({ count: 5, countStyle: { color: 'blue' } }));
-        expect(count()).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+    it('badge style 落在根元素，countStyle 落在 count 节点', () => {
+        const { container } = render(getBadge({ count: 5, style: { color: 'red' }, countStyle: { color: 'blue' } }));
+        const count = container.querySelector('[x-semi-prop="count"]');
+        expect(getBadgeRoot(container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(count).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     });
 
     it('无 children 的 badge 为块级元素，不带位置类名', () => {

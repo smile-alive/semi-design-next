@@ -8,9 +8,10 @@ import getSplitedArray from './utils/get-splited-array';
 
 export type TagInputValidateStatus = 'default' | 'error' | 'warning';
 export type TagInputChangeEvent = Event;
-export type TagInputCursorEvent = any;
-export type TagInputKeyboardEvent = any;
-export type TagInputMouseEvent = any;
+export type TagInputKeyEvent = Pick<KeyboardEvent, 'key' | 'preventDefault'> & Parameters<typeof isComposing>[0];
+/** focusin and focusout on the root */
+export type TagInputFocusEvent = Parameters<typeof crossesFocusBoundary>[0];
+export type TagInputClearEvent = Pick<Event, 'stopPropagation'>;
 
 export interface OnSortEndProps {
     oldIndex: number;
@@ -52,24 +53,26 @@ export interface TagInputBaseState {
     entering: boolean;
 }
 
-export interface TagInputAdapter<P extends TagInputBaseProps = TagInputBaseProps, E = TagInputChangeEvent> extends DefaultAdapter<P, TagInputBaseState> {
+/** E is any event that changes the typed text; KE and FE are the host's key and focus events, passed through to the callbacks */
+export interface TagInputAdapter<P extends TagInputBaseProps = TagInputBaseProps, E = TagInputChangeEvent, KE = E, FE = E> extends DefaultAdapter<P, TagInputBaseState> {
     focusInput(options?: FocusOptions): void;
     /** A host that binds `inputValue` (Svelte) writes the typed text back here; it runs before every write of the text state */
     syncInputValue?: (inputValue: string) => void;
-    notifyBlur: (e: TagInputCursorEvent) => void;
-    notifyFocus: (e: TagInputCursorEvent) => void;
+    notifyBlur: (e: FE) => void;
+    notifyFocus: (e: FE) => void;
     notifyInputChange: (v: string, e: E) => void;
     notifyTagChange: (v: string[]) => void;
     notifyTagAdd: (v: string[]) => void;
     notifyTagRemove: (v: string, idx: number) => void;
-    notifyKeyDown: (e: TagInputMouseEvent) => void;
+    notifyKeyDown: (e: KE) => void;
     notifyInputExceed: (value: string) => void;
     notifyExceed: (tagList: string[]) => void;
     getInput(): HTMLInputElement | null;
     getRoot(): HTMLElement | null;
 }
 
-export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBaseProps, E = TagInputChangeEvent> extends BaseFoundation<TagInputAdapter<P, E>, P, TagInputBaseState> {
+// Enter and blur (addOnBlur) add the typed text, so the key and focus events also reach onInputChange as E
+export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBaseProps, E = TagInputChangeEvent, KE extends E & TagInputKeyEvent = E & TagInputKeyEvent, FE extends E & TagInputFocusEvent = E & TagInputFocusEvent> extends BaseFoundation<TagInputAdapter<P, E, KE, FE>, P, TagInputBaseState> {
     // the browser lacks CSS field-sizing, so the input width is written inline
     #fitInline = false;
 
@@ -277,8 +280,8 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         this.setState({ entering: true });
     };
 
-    handleInputCompositionEnd = (e: any) => {
-        const { value } = e.target;
+    handleInputCompositionEnd = (e: E & Pick<Event, 'target'>) => {
+        const { value } = e.target as HTMLInputElement;
         const { maxLength, separator } = this.getProps();
         if (typeof maxLength !== 'number') {
             return;
@@ -308,7 +311,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         }
     };
 
-    handleKeyDown = (e: TagInputKeyboardEvent) => {
+    handleKeyDown = (e: KE) => {
         const { inputValue, tagsArray } = this.#current();
         const key = isComposing(e) ? '' : e.key;
         if (key === 'Enter') {
@@ -327,7 +330,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
     };
 
     /** Bound to focusout on the root: focus moving among the input, tags and buttons inside is not leaving */
-    handleInputBlur = (e: TagInputCursorEvent) => {
+    handleInputBlur = (e: FE) => {
         if (!crossesFocusBoundary(e)) {
             return;
         }
@@ -343,7 +346,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
     };
 
     /** Bound to focusin on the root; see handleInputBlur */
-    handleInputFocus = (e: TagInputCursorEvent) => {
+    handleInputFocus = (e: FE) => {
         if (!crossesFocusBoundary(e)) {
             return;
         }
@@ -367,7 +370,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         this.deactivate();
     };
 
-    handleClearBtn = (e: TagInputMouseEvent) => {
+    handleClearBtn = (e: E & TagInputClearEvent) => {
         const { inputValue, tagsArray } = this.#current();
         if (tagsArray.length > 0) {
             if (!this.isControlledComponent()) {

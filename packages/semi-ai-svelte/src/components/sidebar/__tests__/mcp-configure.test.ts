@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/sve
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { createStore, snapshot } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { MCPConfigure } from '../index';
 import type { MCPConfigureOption, MCPConfigureProps } from '../mcp-configure/interface';
@@ -166,7 +166,6 @@ const vCustom: MCPConfigureOption[] = [
 const items = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-item`)];
 const iconButton = (scope: Element | undefined, icon: string) => scope?.querySelector(`.semi-icon-${icon}`)?.closest('button') as HTMLButtonElement;
 const type = (value: string) => fireEvent.input(search(), { target: { value } });
-const plain = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 
 describe('Svelte MCPConfigure 列表与状态', () => {
     it('渲染计数与搜索框占位', () => {
@@ -243,13 +242,13 @@ describe('Svelte MCPConfigure 列表与状态', () => {
     });
 
     it('bind:options 与 bind:customOptions 跟随状态按钮', async () => {
-        const store = bound({ options: plain(vOptions), customOptions: plain(vCustom) });
+        const store = bound({ options: snapshot(vOptions), customOptions: snapshot(vCustom) });
         await fireEvent.click(iconButton(items()[1], 'plus'));
-        expect(plain(store.options)).toEqual([vOptions[0], { ...vOptions[1], active: true }, vOptions[2]]);
-        expect(plain(store.customOptions)).toEqual(vCustom);
+        expect(snapshot(store.options)).toEqual([vOptions[0], { ...vOptions[1], active: true }, vOptions[2]]);
+        expect(snapshot(store.customOptions)).toEqual(vCustom);
         await switchToCustom();
         await fireEvent.click(iconButton(items()[1], 'minus'));
-        expect(plain(store.customOptions)).toEqual([vCustom[0], { ...vCustom[1], active: false }]);
+        expect(snapshot(store.customOptions)).toEqual([vCustom[0], { ...vCustom[1], active: false }]);
         expect(store.log).toEqual(['status false', 'status true']);
     });
 

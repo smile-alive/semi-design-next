@@ -24,11 +24,11 @@ import callHandler from '@fibrae/semi-ui-solid/utils/call-handler';
 import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
 import mergeStyles from '@fibrae/semi-ui-solid/utils/merge-styles';
 import Configure, { type ConfigureHandle } from './configure';
+import HorizontalScroller from './horizontal-scroller';
 import type { AIChatInputHandle, AIChatInputProps, ActionAreaProps, Attachment, Reference, RenderTopSlotProps, RenderUploadButtonProps, Skill } from './interface';
-import HorizontalScroller from './widgets/horizontal-scroller';
-import RichTextInput from './widgets/rich-text-input';
-import SkillItem from './widgets/skill-item';
-import SuggestionItem from './widgets/suggestion-item';
+import RichTextInput from './rich-text-input';
+import SkillItem from './skill-item';
+import SuggestionItem from './suggestion-item';
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -235,7 +235,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
 
     const sendEnabled = () => AIChatInputFoundation.getCanSend(local.canSend, state().content, attachments());
 
-    const sendNode = (
+    const sendNode = () => (
         <button
             type="button"
             class={clsx(`${prefixCls}-footer-action-button`, {
@@ -301,22 +301,16 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         });
     };
 
-    const uploadNode = (
-        <Upload
-            {...uploadAttrs()}
-            ref={mergeRefs<UploadElement>((element) => (upload = element), local.uploadProps?.ref)}
-            // paste upload goes through this Upload, so it stays mounted without a trigger
-            style={local.showUploadButton ? local.uploadProps?.style : hiddenStyle}
-            fileList={state().attachments}
-            listType="none"
-            onChange={foundation.onUploadChange}
-        >
-            <Show when={local.showUploadButton}>{uploadTrigger()}</Show>
-        </Upload>
+    const uploadNode = () => (
+        <Show when={local.showUploadButton}>
+            <Upload {...uploadAttrs()} fileList={state().attachments} listType="none" onChange={foundation.onUploadChange}>
+                {uploadTrigger()}
+            </Upload>
+        </Show>
     );
 
-    const actionNodes = [uploadNode, sendNode];
-    const actionAreaProps: ActionAreaProps = { menuItem: actionNodes, class: actionCls };
+    // thunks: a node the custom action area leaves out would be created uninserted, which shifts hydration keys
+    const actionAreaProps: ActionAreaProps = { menuItem: [uploadNode, sendNode], class: actionCls };
 
     const templateNode = () => {
         const render = renderTemplate();
@@ -511,9 +505,20 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                                 </Button>
                             </Show>
                         </div>
-                        <Show when={local.renderActionArea} keyed fallback={<div class={actionCls}>{actionNodes}</div>}>
+                        <Show
+                            when={local.renderActionArea}
+                            keyed
+                            fallback={
+                                <div class={actionCls}>
+                                    {uploadNode()}
+                                    {sendNode()}
+                                </div>
+                            }
+                        >
                             {(render) => render(actionAreaProps)}
                         </Show>
+                        {/* paste upload, openFileDialog and uploadProps.ref go through this Upload, so they work whatever the action area renders */}
+                        <Upload {...uploadAttrs()} ref={mergeRefs<UploadElement>((element) => (upload = element), local.uploadProps?.ref)} id={undefined} style={hiddenStyle} fileList={state().attachments} listType="none" onChange={foundation.onUploadChange} />
                     </div>
                 </div>
             )}

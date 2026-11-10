@@ -4,19 +4,19 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| autoCollapse | Whether the next level of links is shown dynamically while scrolling. | `boolean` | `semiDefault("Anchor", "autoCollapse", false)` |
-| defaultAnchor | Link highlighted by default. | `string` | `semiDefault("Anchor", "defaultAnchor", "")` |
+| autoCollapse | Whether the next level of links is shown dynamically while scrolling. | `boolean` | `false` |
+| defaultAnchor | Link highlighted by default. | `string` | `""` |
 | getContainer | Returns the scrolling container, window when omitted. When it returns the value of a template ref, the listener follows the container as it appears or is replaced. | <ApiType detail={"(() => HTMLElement \u007c Window \u007c null)"}>Type</ApiType> | `undefined` |
-| maxHeight | max-height of the component, with a scrollbar when exceeded. A max-height in style wins. | `string \| number` | `semiDefault("Anchor", "maxHeight", strings.MAX_HEIGHT)` |
-| maxWidth | max-width of the component, truncating when exceeded. A max-width in style wins. | `string \| number` | `semiDefault("Anchor", "maxWidth", strings.MAX_WIDTH)` |
-| offsetTop | Offset from the top of the container at which the current link switches while content scrolls. | `number` | `semiDefault("Anchor", "offsetTop", 0)` |
+| maxHeight | max-height of the component, with a scrollbar when exceeded. A max-height in style wins. | `string \| number` | `strings.MAX_HEIGHT` |
+| maxWidth | max-width of the component, truncating when exceeded. A max-width in style wins. | `string \| number` | `strings.MAX_WIDTH` |
+| offsetTop | Offset from the top of the container at which the current link switches while content scrolls. | `number` | `0` |
 | position | Position of the Tooltip when showTooltip is on, with the same values as the Tooltip position. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Anchor", "position")` |
-| railTheme | Theme of the rail: primary, tertiary or muted. | `"muted" \| "primary" \| "tertiary"` | `semiDefault("Anchor", "railTheme", "primary")` |
-| scrollMotion | Whether scrolling after a click is animated. | `boolean` | `semiDefault("Anchor", "scrollMotion", false)` |
+| railTheme | Theme of the rail: primary, tertiary or muted. | `"muted" \| "primary" \| "tertiary"` | `"primary"` |
+| scrollMotion | Whether scrolling after a click is animated. | `boolean` | `false` |
 | scrollIntoViewOptions | Options passed to scroll-into-view-if-needed when a link is clicked, combined with scrollMotion and targetOffset. | `Options` | `semiGlobalDefault("Anchor", "scrollIntoViewOptions")` |
-| showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `semiDefault("Anchor", "showTooltip", false)` |
-| size | Size of the anchor: small or default. | `"default" \| "small"` | `semiDefault("Anchor", "size", "default")` |
-| targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `semiDefault("Anchor", "targetOffset", 0)` |
+| showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `false` |
+| size | Size of the anchor: small or default. | `"default" \| "small"` | `"default"` |
+| targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `0` |
 
 **Events**
 

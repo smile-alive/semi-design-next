@@ -51,9 +51,6 @@ $color-input_counter_danger-text-default: var(--semi-color-danger); // 多行文
 
 $color-input_group-border-default: var(--semi-color-border); // 输入框组合分割线颜色
 
-$color_input-default-border-only_border-default: var(--semi-color-border); // 只有描边的输入框描边颜色 - 默认
-$color_input-default-border-only_border-hover: var(--semi-color-border); // 只有描边的输入框描边颜色 - 默认
-
 $height-input_large: $height-control-large - 2px; // 输入框高度 & 行高 - 大尺寸
 $height-input_small: $height-control-small - 2px; // 输入框高度 & 行高 - 小尺寸
 $height-input_default: $height-control-default - 2px; // 输入框高度 & 行高 - 默认尺寸

@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
 import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
-import type { DailyEventLayout, EventObject, weekStartsOnEnum } from '@fibrae/semi-foundation/components/calendar/foundation';
+import type { DailyEventLayout, EventObject, WeekStartsOn } from '@fibrae/semi-foundation/components/calendar/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { ElementProps } from '../../base/element-props';
 
@@ -15,7 +15,7 @@ export interface CalendarProps extends ElementProps<'div', 'onClick' | 'onClose'
     events?: EventObject[];
     mode?: ArrayElement<typeof strings.MODE>;
     showCurrTime?: boolean;
-    weekStartsOn?: weekStartsOnEnum;
+    weekStartsOn?: WeekStartsOn;
     scrollTop?: number;
     onClick?: (e: MouseEvent, value: Date) => void;
     /** the close button's click, the Esc keydown, or `null` when a mousedown outside closes the card */
@@ -27,7 +27,7 @@ export interface CalendarProps extends ElementProps<'div', 'onClick' | 'onClose'
     width?: number | string;
     height?: number | string;
     renderDateDisplay?: (date: Date) => JSX.Element;
-    dateGridRender?: (dateString?: string, date?: Date) => JSX.Element;
+    dateGridRender?: (dateString: string, date: Date) => JSX.Element;
     allDayEventsRender?: (events: EventObject[]) => JSX.Element;
 }
 

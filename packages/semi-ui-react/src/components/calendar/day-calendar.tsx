@@ -8,10 +8,10 @@ import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import useMergedRef from '../../hooks/use-merged-ref';
 import useLocale from '../locale/use-locale';
 import DayCol from './day-col';
+import useScrollGrid from './hooks/use-scroll-grid';
+import useToday from './hooks/use-today';
 import type { DayCalendarProps, DayColProps } from './interface';
 import TimeCol from './time-col';
-import useScrollGrid from './use-scroll-grid';
-import useToday from './use-today';
 
 const prefixCls = `${cssClasses.PREFIX}-day`;
 

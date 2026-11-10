@@ -1,9 +1,9 @@
+import CodeContent from './code-content.svelte';
+import CodeItem from './code-item.svelte';
 import Container from './container/container.svelte';
+import FileContent from './file-content.svelte';
+import FileItem from './file-item.svelte';
 import SidebarBase from './sidebar.svelte';
-import CodeContent from './widgets/code-content.svelte';
-import CodeItem from './widgets/code-item.svelte';
-import FileContent from './widgets/file-content.svelte';
-import FileItem from './widgets/file-item.svelte';
 
 export { Annotation } from './annotation/index.js';
 export { MCPConfigure } from './mcp-configure/index.js';

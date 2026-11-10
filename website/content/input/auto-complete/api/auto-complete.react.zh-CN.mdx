@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoFocus | 挂载后是否自动聚焦输入框。 | `boolean` | `false` |
 | className | 根 div 的类名。 | `string` | - |
 | clearIcon | 自定义清除图标，showClear 为 true 时有效。 | `ReactNode` | - |
-| data | 候选项的数据源，可以是字符串、数字或对象的数组。对象项的 `value` 是选中值，`label` 是候选行的内容，不传时候选行为空。其余字段原样保留，出现在 `renderItem` 的参数里。需替换为新数组才会更新列表。 | `T[]` | `[]` |
+| data | 候选项的数据源，可以是字符串、数字或对象的数组。对象项的 `value` 是选中值，`label` 是候选行的内容，缺省时显示 `value`。其余字段原样保留，出现在 `renderItem` 的参数里。需替换为新数组才会更新列表。 | `T[]` | `[]` |
 | defaultActiveFirstOption | 面板打开后是否默认高亮第一个候选项，此时按 Enter 可直接选中。 | `boolean` | `false` |
 | defaultOpen | 挂载时是否默认展开下拉面板。 | `boolean` | - |
 | defaultValue | 非受控时输入框的初始值，只在挂载时读取。 | `string \| number` | - |

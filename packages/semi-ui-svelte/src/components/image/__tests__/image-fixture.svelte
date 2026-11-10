@@ -1,6 +1,6 @@
 <script lang="ts">
     import Image from '../image.svelte';
-    import type { ImageProps, MenuProps } from '../interface';
+    import type { ImagePreviewTitleSnippetProps, ImageProps, MenuProps } from '../interface';
 
     let { store }: { store: { props: ImageProps; snippets: string[] } } = $props();
 
@@ -9,7 +9,7 @@
 
 {#snippet placeholder()}<span class="ph">loading</span>{/snippet}
 {#snippet fallback()}<span class="fb">failed</span>{/snippet}
-{#snippet title({ title: text, index }: { title: string | undefined; index: number })}<b class="custom-title">{index}:{text}</b>{/snippet}
+{#snippet title({ title: text, index }: ImagePreviewTitleSnippetProps)}<b class="custom-title">{index}:{text}</b>{/snippet}
 {#snippet closeIcon()}<i class="custom-close">x</i>{/snippet}
 {#snippet leftIcon({ index }: { index: number })}<i class="custom-left">L{index}</i>{/snippet}
 {#snippet rightIcon({ index }: { index: number })}<i class="custom-right">R{index}</i>{/snippet}

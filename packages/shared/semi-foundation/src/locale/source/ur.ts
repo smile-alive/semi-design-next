@@ -222,6 +222,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'تمام قطاریں منتخب کریں',
         selectRow: 'یہ قطار منتخب کریں',
+        scrollRegion: 'اسکرول ہونے والا جدول کا مواد',
+        untitledColumn: 'بغیر عنوان کا کالم',
         filterColumn: 'اس کالم سے ڈیٹا فلٹر کریں',
         filterColumnActive: 'اس کالم سے ڈیٹا فلٹر کریں، فلٹر فعال ہے',
         expandRow: 'اس قطار کو وسیع کریں',
@@ -375,6 +377,7 @@ const local: Locale = {
         search: 'تلاش کریں',
         replace: 'بدلیں',
         replaceAll: 'سب بدلیں',
+        replaceWith: 'اس سے بدلیں',
         caseSensitive: 'حروف کی بڑی چھوٹی شکل کا خیال رکھیں',
         regex: 'ریگولر ایکسپریشن استعمال کریں',
         wholeWord: 'مکمل لفظ سے مطابقت',

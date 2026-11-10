@@ -6,7 +6,6 @@
                 "zh-CN": "表示子元素里有 Sider。直接子节点中的 Sider 会自动识别；嵌套更深的 Sider 在挂载后才登记，服务端渲染时传 true 可避免样式闪动。传 false 不能去掉 Sider 带来的 has-sider 类。",
                 "en-US": "Indicates that a Sider is inside. A Sider among the direct children is detected automatically; a deeper one registers after mount, so pass true during server rendering to avoid style flashing. Passing false cannot remove the has-sider class that a Sider adds."
             },
-            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
             "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." }
         },
         "events": {},
@@ -21,12 +20,7 @@
     "layout-header": {
         "source": "packages/semi-ui-vue/src/components/layout/header.vue",
         "props": {
-            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
-            "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." },
-            "type": {
-                "zh-CN": "内部使用，决定类名后缀。",
-                "en-US": "For internal use; decides the class name suffix."
-            }
+            "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." }
         },
         "events": {},
         "slots": { "default": { "zh-CN": "顶部区域的内容。", "en-US": "Content of the header." } },
@@ -35,12 +29,7 @@
     "layout-footer": {
         "source": "packages/semi-ui-vue/src/components/layout/footer.vue",
         "props": {
-            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
-            "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." },
-            "type": {
-                "zh-CN": "内部使用，决定类名后缀。",
-                "en-US": "For internal use; decides the class name suffix."
-            }
+            "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." }
         },
         "events": {},
         "slots": { "default": { "zh-CN": "底部区域的内容。", "en-US": "Content of the footer." } },
@@ -49,12 +38,7 @@
     "layout-content": {
         "source": "packages/semi-ui-vue/src/components/layout/content.vue",
         "props": {
-            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
-            "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." },
-            "type": {
-                "zh-CN": "内部使用，决定类名后缀。",
-                "en-US": "For internal use; decides the class name suffix."
-            }
+            "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." }
         },
         "events": {},
         "slots": { "default": { "zh-CN": "内容区域的内容。", "en-US": "Content of the main area." } },
@@ -66,8 +50,7 @@
             "breakpoint": {
                 "zh-CN": "触发响应式布局的断点，可选 xs、sm、md、lg、xl、xxl。仅在挂载时读取一次。",
                 "en-US": "Breakpoints that trigger the responsive layout: xs, sm, md, lg, xl or xxl. Read once at mount."
-            },
-            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." }
+            }
         },
         "events": {
             "breakpoint": {

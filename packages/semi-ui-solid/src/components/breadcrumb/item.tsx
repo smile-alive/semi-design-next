@@ -101,7 +101,7 @@ export function ItemView(props: BreadcrumbItemViewProps) {
     const handleKeyDown = (e: KeyboardEvent & { currentTarget: HTMLElement }) => foundation.handleKeyDown(e, isKeyboardLink());
 
     return (
-        <span {...rest} ref={mergeRefs(local.ref)} class={clsx(`${clsPrefix}-item-wrap`, local.class)} aria-current={local.active ? 'page' : undefined}>
+        <li {...rest} ref={mergeRefs(local.ref)} class={clsx(`${clsPrefix}-item-wrap`, local.class)} aria-current={local.active ? 'page' : undefined}>
             <Show
                 when={local.active || !hasHref()}
                 fallback={
@@ -119,6 +119,6 @@ export function ItemView(props: BreadcrumbItemViewProps) {
                     {ownSeparator()}
                 </Show>
             </Show>
-        </span>
+        </li>
     );
 }

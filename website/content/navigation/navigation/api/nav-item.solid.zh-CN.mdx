@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabled         | 是否禁用。禁用项仍可聚焦，但激活无效。                                                                                | `boolean`                                                                           | -      |
 | forwardRef       | 接收导航项 `li` 元素的回调，与 `ref` 同时生效。                                                                       | <ApiType detail={"(ele: HTMLLIElement) => void"}>Type</ApiType>                     | -      |
 | icon             | 导航项图标。未设置尺寸的 Semi 图标按导航项的尺寸显示。                                                                | `JSX.Element`                                                                       | -      |
-| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。                                                                      | `boolean \| number`                                                                 | -      |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。                                                                      | `boolean`                                                                           | -      |
 | isCollapsed      | 为 `true` 时该项按收起状态显示，文案改由 Tooltip 提供。与导航的收起状态取或。                                         | `boolean`                                                                           | -      |
 | itemKey          | 导航项唯一标识。                                                                                                      | `ItemKey`                                                                           | -      |
 | level            | 当前项所在嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 Nav.Item 需要自己传入。 | `number`                                                                            | -      |

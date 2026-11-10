@@ -74,6 +74,13 @@ export interface BaseFormAdapter<P = Record<string, any>, Values extends object 
 // union limit
 type OpaqueValue = Date | Blob | FileList | ((...args: never[]) => unknown) | EventTarget;
 
+/**
+ * What `initValues` may leave out: object keys at any depth, array elements partial in turn. As the type of `initValues`
+ * it lets a `schema` infer the values alone (inference through the conditional type ranks lower), while without a
+ * `schema` the values are still inferred from `initValues`.
+ */
+export type DeepPartial<T> = T extends OpaqueValue ? T : T extends readonly unknown[] ? { [K in keyof T]: DeepPartial<T[K]> } : T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
+
 // Errors and touched mirror the values: an object or array holds the entries of the fields under it, and a field
 // holding it as a whole has its own entry in its place
 type FieldStateTree<T, Leaf> = { [K in keyof T]?: Leaf | NestedFieldState<T[K], Leaf> };
@@ -92,7 +99,7 @@ export interface FormState<T extends Record<string, any> = any> {
     errors?: AllErrors<T>;
     touched?: T extends Record<string, any> ? FieldStateTree<T, boolean> : Record<string, any>;
 }
-export interface setValuesConfig {
+export interface SetValuesConfig {
     isOverride: boolean;
 }
 
@@ -159,7 +166,7 @@ export interface BaseFormApi<T extends object = any, O = T> {
     getInitValue: <K extends FieldPath<T>>(field?: K) => any;
     getInitValues: () => any;
     getValues: () => T;
-    setValues: (fieldsValue: Partial<T>, config?: setValuesConfig) => void;
+    setValues: (fieldsValue: Partial<T>, config?: SetValuesConfig) => void;
     scrollToField: <K extends FieldPath<T>>(field: K, scrollConfig?: ScrollIntoViewOptions) => void;
     scrollToError: <K extends FieldPath<T>>(config?: ScrollToErrorOptions<K>) => void;
 }

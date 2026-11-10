@@ -34,9 +34,9 @@
 {:else if store}
     <ScrollList>
         {#snippet header()}滚动列表{/snippet}
-        <ScrollItem cycled={false} list={ampms} {mode} onSelect={(data) => store.onSelect('ampm', data)} selectedIndex={store.ampm} type={1} />
-        <ScrollItem cycled={false} list={hours} {mode} onSelect={(data) => store.onSelect('hour', data)} selectedIndex={1} type={2} />
-        <ScrollItem cycled={false} list={minutes} {mode} onSelect={(data) => store.onSelect('minute', data)} selectedIndex={1} type={3} />
+        <ScrollItem cycled={false} list={ampms} {mode} onSelect={(data) => store.onSelect('ampm', data)} selectedIndex={store.ampm} />
+        <ScrollItem cycled={false} list={hours} {mode} onSelect={(data) => store.onSelect('hour', data)} selectedIndex={1} />
+        <ScrollItem cycled={false} list={minutes} {mode} onSelect={(data) => store.onSelect('minute', data)} selectedIndex={1} />
         {#snippet footer()}<button type="button">Ok</button>{/snippet}
     </ScrollList>
 {/if}

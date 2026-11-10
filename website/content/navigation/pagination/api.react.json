@@ -1,6 +1,6 @@
 {
     "pagination": {
-        "source": "packages/semi-ui-react/src/components/pagination/index.tsx",
+        "source": "packages/semi-ui-react/src/components/pagination/pagination.tsx",
         "props": {
             "className": { "zh-CN": "根元素 `ul` 的类名。", "en-US": "Class name of the root `ul` element." },
             "style": { "zh-CN": "根元素 `ul` 的内联样式。", "en-US": "Inline style of the root `ul` element." },

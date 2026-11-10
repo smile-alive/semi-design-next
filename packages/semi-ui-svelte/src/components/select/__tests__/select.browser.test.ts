@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { clickOutside, mouse } from '@test/utils/browser';
+import { clickOutside, mouse, tab } from '@test/utils/browser';
 import type { SelectOptionProps, SelectProps, SelectValue } from '..';
 import SelectCase from './select-case.svelte';
 
@@ -69,13 +69,16 @@ describe('Svelte Select 浏览器：select-only combobox（APG）', () => {
     it('打开时按 Tab 关闭列表并离开，发出一次 onBlur', async () => {
         const onBlur = vi.fn<(event: FocusEvent | MouseEvent) => void>();
         const { combobox } = setup({ onBlur });
+        // Firefox keeps focus on the last tabbable element of the page instead of leaving it
+        const after = document.body.appendChild(document.createElement('button'));
         combobox.focus();
         await userEvent.keyboard('{ArrowDown}');
         await screen.findByRole('listbox');
-        await userEvent.tab();
+        await tab();
         await waitFor(() => expect(screen.queryByRole('listbox')).toBe(null));
-        expect(combobox).not.toHaveFocus();
+        expect(after).toHaveFocus();
         expect(onBlur).toHaveBeenCalledTimes(1);
+        after.remove();
     });
 
     it('指针点选选项后关闭，焦点留在 combobox', async () => {

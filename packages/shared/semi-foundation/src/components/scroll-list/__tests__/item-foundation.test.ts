@@ -37,7 +37,7 @@ describe('ItemFoundation.getRows', () => {
 // jsdom has no layout: items are 36px rows and the scroll element is 180px tall
 function createColumn(initialProps: ScrollItemBaseProps) {
     let props = initialProps;
-    let state: ScrollItemBaseState = { prependCount: 0, appendCount: 0 };
+    let state: ScrollItemBaseState = { prependCount: 0, appendCount: 0, highlightedKey: null };
     const wrapper = document.createElement('div');
     Object.defineProperty(wrapper, 'offsetHeight', { value: 180 });
     const list = document.createElement('ul');

@@ -14,7 +14,7 @@ import useRealUnmount from '../../hooks/use-real-unmount';
 import CSSAnimation from '../../internal/css-animation';
 import Portal from '../../internal/portal';
 import Button from '../button';
-import type { ButtonProps } from '../button/button';
+import type { ButtonProps } from '../button/base-button';
 import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import ModalContent from './modal-content';
@@ -234,8 +234,9 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
         }
     });
 
+    // only the dialog ends a run without an animation: a mask whose animation alone is off must not cut the dialog's
     return (
-        <CSSAnimation startClassName={visible ? `${cssClasses.DIALOG}-content-animate-show` : `${cssClasses.DIALOG}-content-animate-hide`} animationState={visible ? 'enter' : 'leave'} motion={motion} onAnimationEnd={updateState}>
+        <CSSAnimation startClassName={visible ? `${cssClasses.DIALOG}-content-animate-show` : `${cssClasses.DIALOG}-content-animate-hide`} animationState={visible ? 'enter' : 'leave'} getElement={() => runtime.lastRoot?.querySelector(`.${cssClasses.DIALOG}-content`)} motion={motion} onAnimationEnd={updateState}>
             {({ animationClassName, animationEventsNeedBind }) => (
                 <CSSAnimation startClassName={visible ? `${cssClasses.DIALOG}-mask-animate-show` : `${cssClasses.DIALOG}-mask-animate-hide`} animationState={visible ? 'enter' : 'leave'} motion={motion} onAnimationEnd={updateState}>
                     {({ animationClassName: maskAnimationClassName, animationEventsNeedBind: maskAnimationEventsNeedBind }) =>

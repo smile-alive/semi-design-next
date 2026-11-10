@@ -150,7 +150,7 @@ ImagePreview 的 `src` 数组决定组内有哪些图片及其顺序，Image 不
 
 <Framework only="solid">
 
-预览组件 ImagePreview 可以单独使用，通过 `visible` 和 `onVisibleChange` 控制是否预览，通过 `src` 传入可以预览的图片，通过 `previewTitle`（JSX 元素）设置预览顶部的标题
+预览组件 ImagePreview 可以单独使用，通过 `visible` 和 `onVisibleChange` 控制是否预览，通过 `src` 传入可以预览的图片，通过 `previewTitle`（JSX 元素，或预览打开后才调用的返回 JSX 的函数）设置预览顶部的标题
 
 </Framework>
 
@@ -218,7 +218,7 @@ ImagePreview 的 `src` 数组决定组内有哪些图片及其顺序，Image 不
 
 <Framework only="svelte">
 
-如果想基于默认底部操作区域自定义预览底部操作区域，可以渲染 MenuProps 中的 `menuItems` snippet：它一次渲染全部默认项，顺序依次为上一张、页码、下一张、缩小、缩放滑块、放大、原始尺寸 / 适应页面、旋转、下载，自定义内容只能放在它之前或之后，不能插到默认项之间。只有未传 `previewMenu` 时，默认各项之间才有分隔线。
+如果想基于默认底部操作区域自定义预览底部操作区域，可以渲染 MenuProps 中的 `menuItems` snippet。默认项的顺序依次为上一张、页码、下一张、缩小、缩放滑块、放大、原始尺寸 / 适应页面、旋转、下载；`{@render menu.menuItems()}` 渲染全部默认项，传入 `start`、`end` 时按 `Array.prototype.slice` 的规则只渲染其中一段，如 `{@render menu.menuItems(0, 3)}`，可以逐项或按组渲染，并在中间插入分隔线或自定义内容。只有未传 `previewMenu` 时，组件才在默认各项之间插入分隔线。
 
 </Framework>
 
@@ -416,29 +416,29 @@ ImagePreview 的 `src` 数组决定组内有哪些图片及其顺序，Image 不
 
 <Framework only="svelte">
 
-| 属性            | 说明                                           | 类型                         |
-| --------------- | ---------------------------------------------- | ---------------------------- |
-| curPage         | 当前图片页下标                                 | number                       |
-| disabledPrev    | 是否禁用向左切换按钮                           | boolean                      |
-| disabledNext    | 是否禁用向右切换按钮                           | boolean                      |
-| disabledZoomIn  | 是否已放大到最大比例（放大按钮禁用）           | boolean                      |
-| disabledZoomOut | 是否已缩小到最小比例（缩小按钮禁用）           | boolean                      |
-| disableDownload | 是否禁用下载按钮                               | boolean                      |
-| max             | 图片缩放最大比例（百分比）                     | number                       |
-| min             | 图片缩放最小比例（百分比）                     | number                       |
-| onDownload      | 图片下载的调用函数                             | () => void                   |
-| onZoomIn        | 图片放大时的调用函数                           | () => void                   |
-| onZoomOut       | 图片缩小时的调用函数                           | () => void                   |
-| onRatioClick    | 切换原始尺寸与适应页面的调用函数               | () => void                   |
-| onPrev          | 向前切换图片的调用函数                         | () => void                   |
-| onNext          | 向后切换图片的调用函数                         | () => void                   |
-| onRotateLeft    | 逆时针旋转图片的调用函数                       | () => void                   |
-| onRotateRight   | 顺时针旋转图片的调用函数                       | () => void                   |
-| ratio           | 原始尺寸或适应页面按钮状态                     | `"adaptation" \| "realSize"` |
-| step            | 缩放的比例步长（百分比）                       | number                       |
-| totalNum        | 可预览的总图片数                               | number                       |
-| zoom            | 当前图片缩放比例（百分比）                     | number                       |
-| menuItems       | 一次渲染全部默认底部预览操作区域各项的 snippet | Snippet                      |
+| 属性            | 说明                                                                                             | 类型                                      |
+| --------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------- |
+| curPage         | 当前图片页下标                                                                                   | number                                    |
+| disabledPrev    | 是否禁用向左切换按钮                                                                             | boolean                                   |
+| disabledNext    | 是否禁用向右切换按钮                                                                             | boolean                                   |
+| disabledZoomIn  | 是否已放大到最大比例（放大按钮禁用）                                                             | boolean                                   |
+| disabledZoomOut | 是否已缩小到最小比例（缩小按钮禁用）                                                             | boolean                                   |
+| disableDownload | 是否禁用下载按钮                                                                                 | boolean                                   |
+| max             | 图片缩放最大比例（百分比）                                                                       | number                                    |
+| min             | 图片缩放最小比例（百分比）                                                                       | number                                    |
+| onDownload      | 图片下载的调用函数                                                                               | () => void                                |
+| onZoomIn        | 图片放大时的调用函数                                                                             | () => void                                |
+| onZoomOut       | 图片缩小时的调用函数                                                                             | () => void                                |
+| onRatioClick    | 切换原始尺寸与适应页面的调用函数                                                                 | () => void                                |
+| onPrev          | 向前切换图片的调用函数                                                                           | () => void                                |
+| onNext          | 向后切换图片的调用函数                                                                           | () => void                                |
+| onRotateLeft    | 逆时针旋转图片的调用函数                                                                         | () => void                                |
+| onRotateRight   | 顺时针旋转图片的调用函数                                                                         | () => void                                |
+| ratio           | 原始尺寸或适应页面按钮状态                                                                       | `"adaptation" \| "realSize"`              |
+| step            | 缩放的比例步长（百分比）                                                                         | number                                    |
+| totalNum        | 可预览的总图片数                                                                                 | number                                    |
+| zoom            | 当前图片缩放比例（百分比）                                                                       | number                                    |
+| menuItems       | 渲染默认底部预览操作区域各项的 snippet，`start`、`end` 按 slice 规则选取其中一段，缺省时渲染全部 | `Snippet<[start?: number, end?: number]>` |
 
 </Framework>
 

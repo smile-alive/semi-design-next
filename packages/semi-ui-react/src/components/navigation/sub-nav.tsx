@@ -16,7 +16,7 @@ import CSSAnimation from '../../internal/css-animation';
 import Collapsible from '../collapsible';
 import Dropdown, { type DropdownProps } from '../dropdown';
 import Tooltip from '../tooltip';
-import { NavContext, useNavContext } from './context';
+import { NavContext, type NavContextType, useNavContext } from './context';
 import { NavItemShell } from './item';
 import { fitNavIcon } from './nav-icon';
 
@@ -27,12 +27,9 @@ export interface SubNavProps extends BaseProps, ElementProps<'li', 'onClick'> {
     disabled?: boolean;
     dropdownStyle?: React.CSSProperties;
     icon?: React.ReactNode;
-    indent?: boolean | number;
-    isCollapsed?: boolean;
-    isOpen?: boolean;
+    indent?: boolean;
     itemKey?: string | number;
     level?: number;
-    maxHeight?: number;
     onMouseEnter?: React.MouseEventHandler<HTMLLIElement>;
     onMouseLeave?: React.MouseEventHandler<HTMLLIElement>;
     text?: React.ReactNode;
@@ -44,13 +41,13 @@ export interface SubNavProps extends BaseProps, ElementProps<'li', 'onClick'> {
 }
 
 export default function SubNav({ ref, ...props }: SubNavProps) {
-    const { text, icon, itemKey, indent = false, disabled = false, level = 0, expandIcon, style, className, onMouseEnter, onMouseLeave, children, dropdownStyle, dropdownProps: userDropdownProps, subDropdownProps, isCollapsed: isCollapsedProp, isOpen: isOpenProp, maxHeight, ...restProps } = props;
+    const { text, icon, itemKey, indent = false, disabled = false, level = 0, expandIcon, style, className, onMouseEnter, onMouseLeave, children, dropdownStyle, dropdownProps: userDropdownProps, subDropdownProps, ...restProps } = props;
 
     const context = useNavContext();
 
     const itemRef = useRef<HTMLLIElement>(null);
 
-    const [foundation] = useFoundation<Foundation, Adapter, SubNavProps, object>(
+    const [foundation] = useFoundation<Foundation, Adapter, SubNavProps, object, NavContextType>(
         SubNavFoundation,
         props,
         () => ({}),

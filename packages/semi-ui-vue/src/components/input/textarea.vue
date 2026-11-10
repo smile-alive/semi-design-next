@@ -15,10 +15,10 @@
     import useResizeObserver from '../../composables/use-resize-observer';
     import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
     import useLocale from '../locale/use-locale';
+    import useGroupLooks from './composables/use-group-looks';
+    import useTextEntry from './composables/use-text-entry';
     import type { TextAreaEmits, TextAreaHandle, TextAreaProps, TextAreaState } from './interface';
     import { defersUpdate } from './model-modifiers';
-    import useGroupLooks from './use-group-looks';
-    import useTextEntry from './use-text-entry';
 
     interface FoundationProps extends TextAreaProps {
         value?: string;

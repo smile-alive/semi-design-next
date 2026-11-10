@@ -15,7 +15,7 @@
     import { SkeletonImage } from '../skeleton';
     import { usePreviewContext, type GroupImage } from './context';
     import type { ImageEmits, ImageProps, ImageSlots } from './interface';
-    import PreviewInner from './preview-inner.vue';
+    import PreviewInner from './preview/preview-inner.vue';
 
     type Foundation = ImageFoundation<ImageProps>;
     type Adapter = ImageAdapter<ImageProps>;

@@ -143,7 +143,7 @@ describe('VideoProgressFoundation 标记命中与手柄位置', () => {
     });
 
     it('手柄位置按比例减去半个手柄宽度，max 为 0 时在起点', () => {
-        expect(VideoProgressFoundation.getHandleLeft(5, 20)).toBe('calc(25% - 8px)');
-        expect(VideoProgressFoundation.getHandleLeft(5, 0)).toBe('calc(0% - 8px)');
+        expect(VideoProgressFoundation.getHandleLeft(5, 20)).toBe('25%');
+        expect(VideoProgressFoundation.getHandleLeft(5, 0)).toBe('0%');
     });
 });

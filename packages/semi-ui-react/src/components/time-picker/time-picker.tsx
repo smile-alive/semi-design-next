@@ -6,6 +6,7 @@ import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
@@ -48,7 +49,7 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
      * are used instead).
      */
     disabledTime?: (
-        value: Date[],
+        value: (Date | undefined)[],
         panelType: PanelType
     ) => {
         disabledHours?: () => number[];
@@ -75,7 +76,6 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     popupClassName?: string;
     popupStyle?: React.CSSProperties;
     position?: Position;
-    prefixCls?: string;
     preventScroll?: boolean;
     rangeSeparator?: string;
     scrollItemProps?: Pick<ScrollItemProps<any>, 'cycled' | 'mode' | 'motion' | 'transform'>;
@@ -101,7 +101,8 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
 export interface TimePickerTriggerRenderProps {
     disabled: boolean;
     placeholder: string;
-    value: Date[];
+    /** The unpicked side of a range is undefined */
+    value: (Date | undefined)[];
     inputValue: string;
     componentProps: Omit<TimePickerProps, 'ref'>;
     onChange: (inputValue: string) => void;
@@ -126,12 +127,13 @@ export interface TimePickerState {
     invalid: boolean;
 }
 
+const prefixCls = cssClasses.PREFIX;
+
 const defaultProps = {
     autoAdjustOverflow: true,
     borderless: false,
     showClear: true,
     rangeSeparator: strings.DEFAULT_RANGE_SEPARATOR,
-    prefixCls: cssClasses.PREFIX,
     inputReadOnly: false,
     style: {},
     stopPropagation: true,
@@ -216,7 +218,6 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         popupClassName: _popupClassName,
         popupStyle,
         position: _position,
-        prefixCls,
         preventScroll,
         rangeSeparator,
         scrollItemProps,
@@ -235,7 +236,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         onChange,
         onFocus,
         onOpenChange,
-        // undeclared props (data-*, Form's name, Input props such as prefix) go to the Input
+        // undeclared props (data-*, Form's name, Input props such as prefix) go to the Input, or to the root with a custom trigger
         ...rest
     } = props;
 
@@ -248,7 +249,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
     const position = TimePickerFoundation.getPosition(props, direction);
     const isRange = type === strings.TYPE_TIME_RANGE_PICKER;
     const useCustomTrigger = typeof triggerRender === 'function';
-    const popupClassName = clsx(TimePickerFoundation.getPanelClassNames(props), props.popupClassName);
+    const popupClassName = clsx(TimePickerFoundation.getPanelClassNames({ ...props, prefixCls }), props.popupClassName);
 
     // class props never carried ref; a triggerRender that spreads componentProps must not grab the handle
     const componentProps = { ...props };
@@ -305,7 +306,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
                     key={index}
                     // an empty range starts its end panel in the afternoon
                     defaultIsAM={index === 0}
-                    // ComboboxFoundation, hideDisabledOptions included, works on the resolved functions
+                    // getOptions, hideDisabledOptions included, works on the resolved functions
                     {...TimePickerFoundation.getDisabledTimeFns(props, state.value, index === 1 ? 'right' : 'left', isRange)}
                     format={format}
                     hideDisabledOptions={hideDisabledOptions}
@@ -328,7 +329,18 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
     delete componentProps.ref;
 
     const isTriggerButton = useCustomTrigger && !customTriggerFocusable;
-    const outerProps = useCustomTrigger ? { onClick: foundation.handlePanelOpen } : {};
+
+    // F2: with no Input to take them, the undeclared props and the attributes kept for the Input land on the root
+    const rootProps = (useCustomTrigger ? { ...rest, id, 'aria-describedby': ariaDescribedby, 'aria-errormessage': ariaErrormessage, 'aria-invalid': ariaInvalid, 'aria-labelledby': ariaLabelledby, 'aria-required': ariaRequired } : {}) as React.HTMLAttributes<HTMLDivElement>;
+
+    const outerProps = useCustomTrigger
+        ? {
+              onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+                  rootProps.onClick?.(e);
+                  foundation.handlePanelOpen();
+              },
+          }
+        : {};
 
     const buttonProps = isTriggerButton
         ? {
@@ -339,6 +351,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
               'aria-expanded': open,
               'aria-haspopup': 'dialog' as const,
               onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+                  rootProps.onKeyDown?.(e);
                   if (e.target === e.currentTarget) {
                       foundation.handleTriggerKeyDown(e);
                   }
@@ -348,7 +361,19 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
 
     return (
         <InputGroupContext value={undefined}>
-            <div ref={rootRef} className={clsx(prefixCls, className)} style={style} {...outerProps} {...buttonProps} onMouseDownCapture={markPressInside}>
+            <div
+                role={namedRole(rootProps)}
+                {...rootProps}
+                ref={rootRef}
+                className={clsx(prefixCls, className)}
+                style={style}
+                {...outerProps}
+                {...buttonProps}
+                onMouseDownCapture={(e) => {
+                    rootProps.onMouseDownCapture?.(e);
+                    markPressInside(e);
+                }}
+            >
                 <Popover
                     contentClassName={popupClassName}
                     style={popupStyle}

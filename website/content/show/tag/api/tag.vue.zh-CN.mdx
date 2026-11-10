@@ -6,16 +6,16 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | tabindex | 标签的 tabindex；可交互的标签缺省为 0。 | `number` | `semiGlobalDefault("Tag", "tabindex")` |
 | tagKey | 标签的唯一标识，作为 close 事件的第二个参数。 | `string \| number` | `semiGlobalDefault("Tag", "tagKey")` |
-| size | 标签尺寸，可选 small、default 或 large。 | `"default" \| "large" \| "small"` | `semiDefault("Tag", "size", "default")` |
-| color | 标签颜色，可选色板中的 16 种颜色和 white。 | <ApiType detail={"\"amber\" \u007c \"blue\" \u007c \"cyan\" \u007c \"green\" \u007c \"grey\" \u007c \"indigo\" \u007c \"light-blue\" \u007c \"light-green\" \u007c \"lime\" \u007c \"orange\" \u007c \"pink\" \u007c \"purple\" \u007c \"red\" \u007c \"teal\" \u007c \"violet\" \u007c \"white\" \u007c \"yellow\""}>Type</ApiType> | `semiDefault("Tag", "color", "grey")` |
-| type | 样式类型，可选 light、ghost 或 solid。 | `"ghost" \| "light" \| "solid"` | `semiDefault("Tag", "type", "light")` |
-| closable | 标签是否可以关闭。 | `boolean` | `semiDefault("Tag", "closable", false)` |
+| size | 标签尺寸，可选 small、default 或 large。 | `"default" \| "large" \| "small"` | `"default"` |
+| color | 标签颜色，可选色板中的 16 种颜色和 white。 | <ApiType detail={"\"amber\" \u007c \"blue\" \u007c \"cyan\" \u007c \"green\" \u007c \"grey\" \u007c \"indigo\" \u007c \"light-blue\" \u007c \"light-green\" \u007c \"lime\" \u007c \"orange\" \u007c \"pink\" \u007c \"purple\" \u007c \"red\" \u007c \"teal\" \u007c \"violet\" \u007c \"white\" \u007c \"yellow\""}>Type</ApiType> | `"grey"` |
+| type | 样式类型，可选 light、ghost 或 solid。 | `"ghost" \| "light" \| "solid"` | `"light"` |
+| closable | 标签是否可以关闭。 | `boolean` | `false` |
 | visible | 标签是否可见，配合 v-model:visible 使用；传入后由该值决定显示。 | `boolean` | `semiGlobalDefault("Tag", "visible")` |
 | avatarSrc | 头像资源地址，设置后生成头像标签。 | `string` | `semiGlobalDefault("Tag", "avatarSrc")` |
-| colorful | 是否为多彩标签。 | `boolean` | `semiDefault("Tag", "colorful", false)` |
-| gradient | 多彩标签是否为渐变色，需 colorful 为 true。 | `boolean` | `semiDefault("Tag", "gradient", false)` |
-| avatarShape | 头像标签中头像的形状，可选 square 或 circle。 | `AvatarShape` | `semiDefault("Tag", "avatarShape", "square")` |
-| shape | 标签形状，可选 square 或 circle。 | `TagShape` | `semiDefault("Tag", "shape", "square")` |
+| colorful | 是否为多彩标签。 | `boolean` | `false` |
+| gradient | 多彩标签是否为渐变色，需 colorful 为 true。 | `boolean` | `false` |
+| avatarShape | 头像标签中头像的形状，可选 square 或 circle。 | `AvatarShape` | `"square"` |
+| shape | 标签形状，可选 square 或 circle。 | `TagShape` | `"square"` |
 
 **Events**
 

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Component } from 'svelte';
-    import { AIChatInput, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-svelte';
+    import { AIChatInput, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-svelte';
     import { IconBookOpenStroked, IconFeishuLogo, IconFigma, IconGit } from '@fibrae/semi-icons-svelte';
 
     const uploadProps = { action: 'https://api.semi.design/upload' };
@@ -28,7 +28,7 @@
         console.log('onConfigureButtonClick');
     };
 
-    const onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+    const onConfigureChange = (value: Setup, changedValue?: Setup) => {
         console.log('onConfigureChange', value, changedValue);
     };
 </script>

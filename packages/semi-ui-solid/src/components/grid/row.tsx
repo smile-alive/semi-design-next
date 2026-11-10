@@ -13,14 +13,11 @@ export interface RowProps extends ElementProps<'div'> {
     align?: 'top' | 'middle' | 'bottom';
     justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between';
     gutter?: Gutter | [Gutter, Gutter];
-    prefixCls?: string;
 }
 
-const defaultProps = { prefixCls: cssClasses.PREFIX } satisfies Partial<RowProps>;
-
 export default function Row(rawProps: RowProps) {
-    const props = useDefaultProps('Row', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'gutter', 'justify', 'prefixCls', 'style', 'type']);
+    const props = useDefaultProps('Row', rawProps, {});
+    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'gutter', 'justify', 'style', 'type']);
 
     const style = () => {
         const [horizontal, vertical] = normalizeGutter(local.gutter ?? 0);
@@ -34,7 +31,7 @@ export default function Row(rawProps: RowProps) {
     };
 
     return (
-        <div {...rest} class={getRowClassName(local.prefixCls, { type: local.type, justify: local.justify, align: local.align }, local.class)} style={style()} x-semi-prop="children">
+        <div {...rest} class={getRowClassName(cssClasses.PREFIX, { type: local.type, justify: local.justify, align: local.align }, local.class)} style={style()} x-semi-prop="children">
             {local.children}
         </div>
     );

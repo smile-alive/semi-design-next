@@ -19,6 +19,7 @@ export interface AnchorAdapter<P extends AnchorBaseProps = AnchorBaseProps, E = 
 }
 
 export interface AnchorBaseProps {
+    autoCollapse?: boolean;
     defaultAnchor?: string;
     scrollMotion?: boolean;
     targetOffset?: number;
@@ -29,6 +30,8 @@ export interface AnchorBaseProps {
 export interface AnchorBaseState {
     activeLink: string;
     links: string[];
+    /** Href of the link each registered link is nested in, as `addLink` received it */
+    linkParents: Record<string, string>;
     clickLink: boolean;
     slideBarTop: string;
 }
@@ -36,6 +39,7 @@ export interface AnchorBaseState {
 export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProps, E = unknown> extends BaseFoundation<AnchorAdapter<P, E>, P, AnchorBaseState> {
     #container: HTMLElement | Window | null = null;
     #slideBarTop: number | null = null;
+    #activeFromScroll = false;
     #throttledScroll = throttle(() => this.handleScroll(), 100);
     #debouncedScrollEnd = debounce(() => this.#handleClickLink(), 100);
 
@@ -96,6 +100,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     #goToLink(link: string, shouldNotify: boolean) {
         const destNode = this.#getContentNode(link);
         const prevLink = this.getState('activeLink');
+        this.#activeFromScroll = false;
         this.setActiveLink(link, prevLink, shouldNotify);
         if (destNode) {
             this.setState({ clickLink: true }, () => {
@@ -103,6 +108,17 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
                 // no scroll event fires when already in place, so end the click by time too
                 this.#debouncedScrollEnd();
             });
+        }
+    }
+
+    // An autoCollapse branch mounts its links only once a scroll made its parent active, and no scroll event follows
+    // a jump: pick again among the links now mounted. A link chosen by click or defaultAnchor stays, and before the
+    // first scroll mounting picks nothing.
+    #rescanAfterCommit() {
+        if (this.getProp('autoCollapse') && this.#activeFromScroll) {
+            // not the throttled handler: a host that commits synchronously (Solid) lands here inside its leading call,
+            // and es-toolkit drops a call made while the leading one runs
+            this.handleScroll();
         }
     }
 
@@ -150,12 +166,28 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
             }
         }
         // no section above the top: '' is the "no active link" value, undefined would differ from it
+        this.#activeFromScroll = true;
         this.setActiveLink(links[lastNegativeIndex] ?? '', prevActiveLink);
     }
 
     /** `links` is for hosts that know theirs up front, as with `setLinks` */
     static getInitialState(links: string[] = []): AnchorBaseState {
-        return { activeLink: '', links, clickLink: false, slideBarTop: '0' };
+        return { activeLink: '', links, linkParents: {}, clickLink: false, slideBarTop: '0' };
+    }
+
+    /** Like `getChildMap`, from the parents the mounted links registered: it reaches links that other components render */
+    static getRegisteredChildMap(linkParents: Record<string, string>) {
+        return AnchorFoundation.getChildMap(
+            Object.keys(linkParents).map((href) => {
+                let node: AnchorNode = { href };
+                const seen = new Set([href]);
+                for (let parent = linkParents[href]; parent && !seen.has(parent); parent = linkParents[parent]) {
+                    seen.add(parent);
+                    node = { href: parent, children: [node] };
+                }
+                return node;
+            })
+        );
     }
 
     /**
@@ -216,15 +248,21 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         this.setState({ links });
     };
 
-    addLink = (link: string) => {
-        this.setState({ links: [...this.getState('links'), link] });
+    /** `parent` is the href of the link this one is nested in */
+    addLink = (link: string, parent?: string) => {
+        const linkParents = this.getState('linkParents');
+        this.setState({ links: [...this.getState('links'), link], linkParents: parent ? { ...linkParents, [link]: parent } : linkParents }, () => this.#rescanAfterCommit());
     };
 
     removeLink = (link: string) => {
         const links = this.getState('links');
         const index = links.indexOf(link);
         if (index !== -1) {
-            this.setState({ links: links.toSpliced(index, 1) });
+            const rest = links.toSpliced(index, 1);
+            const linkParents = this.getState('linkParents');
+            // another link with the same href may still be mounted
+            const nextParents = rest.includes(link) ? linkParents : Object.fromEntries(Object.entries(linkParents).filter(([href]) => href !== link));
+            this.setState({ links: rest, linkParents: nextParents }, () => this.#rescanAfterCommit());
         }
     };
 

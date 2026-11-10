@@ -17,7 +17,8 @@ export class FoldingModel {
         this.#jsonModel = jsonModel;
         this.updateFoldingRanges();
         this.#emitter.on('contentChanged', (e) => {
-            this.#hiddenRangeModel.notifyChangeModelContent(e);
+            // absent until the worker's first foldRange reply; nothing can be folded before it
+            this.#hiddenRangeModel?.notifyChangeModelContent(e);
         });
 
         this.#emitter.on('problemsChanged', () => {

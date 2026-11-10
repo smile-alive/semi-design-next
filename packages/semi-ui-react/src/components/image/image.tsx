@@ -10,9 +10,9 @@ import useFoundation from '../../base/use-foundation';
 import HydratedImage from '../../internal/hydrated-image';
 import useLocale from '../locale/use-locale';
 import Skeleton from '../skeleton';
-import { usePreviewContext } from './context';
+import { type PreviewContextProps, usePreviewContext } from './context';
 import type { ImageProps } from './interface';
-import PreviewInner from './preview-inner';
+import PreviewInner from './preview/preview-inner';
 
 type Foundation = ImageFoundation<ImageProps>;
 type Adapter = ImageAdapter<ImageProps>;
@@ -26,7 +26,7 @@ const defaultProps = {
 
 export default function Image(rawProps: ImageProps) {
     const props = useDefaultProps('Image', rawProps, defaultProps);
-    const { ref, src, width, height, alt, style, className, crossOrigin, preview, fallback, placeholder, setDownloadName, imgCls, imgStyle, children, onLoad, onError, ...restProps } = props;
+    const { ref, src, width, height, alt, style, className, crossOrigin, preview, fallback, placeholder, setDownloadName, imgCls, imgStyle, onLoad, onError, ...restProps } = props;
 
     const context = usePreviewContext();
     const { locale } = useLocale('Image');
@@ -34,7 +34,7 @@ export default function Image(rawProps: ImageProps) {
     let extra = null;
     const thumbRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, state] = useFoundation<Foundation, Adapter, ImageProps, ImageState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, ImageProps, ImageState, PreviewContextProps>(
         ImageFoundation,
         props,
         () => ImageFoundation.getInitialState(props),

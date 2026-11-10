@@ -221,6 +221,8 @@ const local: Locale = {
     Table: {
         selectAllRows: 'Bütün sətirləri seç',
         selectRow: 'Bu sətri seç',
+        scrollRegion: 'Sürüşdürülə bilən cədvəl məzmunu',
+        untitledColumn: 'Başlıqsız sütun',
         filterColumn: 'Bu sütunla məlumatları filtrlə',
         filterColumnActive: 'Bu sütunla məlumatları filtrlə, filtr aktivdir',
         expandRow: 'Bu sətri genişləndir',
@@ -374,6 +376,7 @@ const local: Locale = {
         search: 'Axtarış',
         replace: 'Əvəz et',
         replaceAll: 'Hamısını əvəz et',
+        replaceWith: 'Əvəzləmə mətni',
         caseSensitive: 'Böyük-kiçik hərfi fərqləndir',
         regex: 'Requlyar ifadədən istifadə et',
         wholeWord: 'Tam sözü uyğunlaşdır',

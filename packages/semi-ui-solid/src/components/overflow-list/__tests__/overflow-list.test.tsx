@@ -4,7 +4,9 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockResizeObserver } from '@test/utils/solid';
-import OverflowList, { type OverflowItem, type OverflowListProps } from '..';
+import OverflowList, { type OverflowItem, type OverflowListInternalProps, type OverflowListProps } from '..';
+
+const InternalOverflowList = OverflowList as (props: OverflowListInternalProps) => JSX.Element;
 
 const prefixCls = `${BASE_CLASS_PREFIX}-overflow-list`;
 const keys = ['alarm', 'bookmark', 'camera', 'duration', 'edit', 'folder'];
@@ -433,18 +435,18 @@ describe('OverflowList', () => {
         expect(wrapper).toHaveAttribute('role', 'list');
     });
 
-    it.each<[NonNullable<OverflowListProps['overflowRenderDirection']>, string[]]>([
+    it.each<[NonNullable<OverflowListInternalProps['overflowRenderDirection']>, string[]]>([
         ['both', ['overflow-0', 'wrapper', 'overflow-1']],
         ['start', ['overflow-0', 'overflow-1', 'wrapper']],
         ['end', ['wrapper', 'overflow-0', 'overflow-1']],
     ])('scroll: overflowRenderDirection 为 %s 时，两个 overflow 节点的位置', (direction, order) => {
-        const { container } = render(() => <OverflowList items={items} overflowRenderDirection={direction} overflowRenderer={() => [<span>overflow-0</span>, <span>overflow-1</span>]} visibleItemRenderer={renderKey} renderMode="scroll" />);
+        const { container } = render(() => <InternalOverflowList items={items} overflowRenderDirection={direction} overflowRenderer={() => [<span>overflow-0</span>, <span>overflow-1</span>]} visibleItemRenderer={renderKey} renderMode="scroll" />);
         expect([...getList(container).children].map((child) => (child.classList.contains(`${prefixCls}-scroll-wrapper`) ? 'wrapper' : child.textContent))).toEqual(order);
     });
 
     it('scroll: 运行时改变 overflowRenderDirection，两个 overflow 节点移到新位置', () => {
-        const [direction, setDirection] = createSignal<NonNullable<OverflowListProps['overflowRenderDirection']>>('both');
-        const { container } = render(() => <OverflowList items={items} overflowRenderDirection={direction()} overflowRenderer={() => [<span>overflow-0</span>, <span>overflow-1</span>]} visibleItemRenderer={renderKey} renderMode="scroll" />);
+        const [direction, setDirection] = createSignal<NonNullable<OverflowListInternalProps['overflowRenderDirection']>>('both');
+        const { container } = render(() => <InternalOverflowList items={items} overflowRenderDirection={direction()} overflowRenderer={() => [<span>overflow-0</span>, <span>overflow-1</span>]} visibleItemRenderer={renderKey} renderMode="scroll" />);
         const order = () => [...getList(container).children].map((child) => (child.classList.contains(`${prefixCls}-scroll-wrapper`) ? 'wrapper' : child.textContent));
         const expected = { both: ['overflow-0', 'wrapper', 'overflow-1'], start: ['overflow-0', 'overflow-1', 'wrapper'], end: ['wrapper', 'overflow-0', 'overflow-1'] };
         for (const next of ['start', 'end', 'both', 'end', 'start', 'both'] as const) {

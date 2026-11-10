@@ -115,10 +115,6 @@
             "placeholder": { "zh-CN": "占位文本。", "en-US": "Placeholder text." },
             "precision": { "zh-CN": "数值精度，即保留的小数位数。", "en-US": "Numerical precision, the number of fraction digits kept." },
             "prefix": { "zh-CN": "前缀内容，显示在输入框内部的左侧。", "en-US": "Prefix content, shown inside the input on the left." },
-            "prefixCls": {
-                "zh-CN": "组件样式类名的前缀，根元素类名为前缀加 `-number`，默认即 `semi-input-number`。",
-                "en-US": "Class name prefix of the component; the root class is the prefix plus `-number`, `semi-input-number` by default."
-            },
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动文档以显示输入框，作用于组件内的聚焦。",
                 "en-US": "Whether focusing stops the browser from scrolling the document to the input; applies to focusing inside the component."
@@ -148,10 +144,6 @@
                 "en-US": "Step of each change while Shift is held; may be a decimal."
             },
             "showClear": { "zh-CN": "是否显示清除按钮。", "en-US": "Whether to show the clear button." },
-            "showClearIgnoreDisabled": {
-                "zh-CN": "内部属性，由 DatePicker 设置，使用方一般不需要传入。",
-                "en-US": "Internal prop set by DatePicker; callers normally do not pass it."
-            },
             "showCurrencySymbol": {
                 "zh-CN": "是否显示货币符号、代码或名称，仅货币模式下生效。",
                 "en-US": "Whether to show the currency symbol, code or name; only in currency mode."
@@ -173,10 +165,6 @@
             "value": {
                 "zh-CN": "当前值，传入即为受控，需要配合 `onChange` 更新。传 `undefined` 时按非受控处理。",
                 "en-US": "Current value; passing it makes the component controlled, so update it in `onChange`. An explicit `undefined` is treated as uncontrolled."
-            },
-            "onlyBorder": {
-                "zh-CN": "内部属性，指定外框的边框宽度（像素），由其他组件设置，使用方一般不需要传入。",
-                "en-US": "Internal prop giving the border width of the wrapper in pixels, set by other components; callers normally do not pass it."
             }
         }
     }

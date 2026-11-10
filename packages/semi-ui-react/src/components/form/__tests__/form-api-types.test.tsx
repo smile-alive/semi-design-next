@@ -2,9 +2,11 @@ import type React from 'react';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import * as z from 'zod';
 import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/components/form/interface';
-import Form from '../base-form';
+import type { CheckboxEvent } from '../../checkbox/index';
+import type { RadioChangeEvent } from '../../radio/index';
 import { FormInput, type FormUpload } from '../field';
-import type { BaseFormProps, FieldProps, FormApi, FormCheckboxProps, FormRadioProps } from '../interface';
+import Form from '../form';
+import type { BaseFormProps, FieldProps, FormApi, FormCheckboxProps, FormRadioProps, FormSelectProps } from '../interface';
 
 interface Values {
     name: string;
@@ -101,6 +103,12 @@ describe('字段 onChange 类型', () => {
         type Two = FieldProps<{ onChange?: (value: string, e: Event) => void }>;
         expectTypeOf<NonNullable<Two['onChange']>>().parameters.toEqualTypeOf<[string, Event, Record<string, any>]>();
     });
+
+    it('FormCheckbox、FormRadio 的 onChange 末参 latestValues 可选（不传 field 时只有事件），FormSelect 的 onChange 带 latestValues', () => {
+        expectTypeOf<NonNullable<FormCheckboxProps['onChange']>>().parameters.toEqualTypeOf<[CheckboxEvent, undefined?, Record<string, any>?]>();
+        expectTypeOf<NonNullable<FormRadioProps['onChange']>>().parameters.toEqualTypeOf<[RadioChangeEvent, undefined?, Record<string, any>?]>();
+        expectTypeOf<Parameters<NonNullable<FormSelectProps<string, false>['onChange']>>[2]>().toEqualTypeOf<Record<string, any>>();
+    });
 });
 
 describe('字段 Props 不接受被值属性取代的属性', () => {
@@ -147,6 +155,17 @@ describe('表单状态与校验结果类型', () => {
         expectTypeOf({ validator }).toExtend<Props>();
         expectTypeOf({ schema, validator }).not.toExtend<Props>();
         expectTypeOf(inferValues({ schema })).toEqualTypeOf<{ name: string }>();
+    });
+
+    it('有 schema 时 initValues 可以只给一部分，没有 schema 时 Values 从 initValues 推断', () => {
+        const schema = z.object({ name: z.string(), profile: z.object({ age: z.number(), city: z.string() }), users: z.array(z.object({ name: z.string(), role: z.number() })) });
+        const inferValues = <V extends Record<string, any>, O>(_props: BaseFormProps<V, O>) => ({}) as V;
+        expectTypeOf(inferValues({ schema, initValues: { profile: { age: 1 }, users: [{ name: 'a' }] } })).toEqualTypeOf<z.input<typeof schema>>();
+        // @ts-expect-error initValues still follow the schema's keys
+        inferValues({ schema, initValues: { nam: 'a' } });
+        // @ts-expect-error initValues still follow the schema's value types
+        inferValues({ schema, initValues: { profile: { age: '1' } } });
+        expectTypeOf(inferValues({ initValues: { name: 'a', profile: { age: 1 } } })).toEqualTypeOf<{ name: string; profile: { age: number } }>();
     });
 
     it('schema 的输出要与 values 一致', () => {

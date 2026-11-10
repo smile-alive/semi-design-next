@@ -19,10 +19,12 @@
             <Popover showArrow :style="{ padding: '12px' }">
                 <IconMore tabindex="-1" />
                 <template #content>
-                    <template v-for="(item, idx) in moreContext.restItems" :key="idx">
-                        <component :is="item" />
-                        <span v-if="idx !== moreContext.restItems.length - 1" :style="{ color: 'var(--semi-color-text-2)', marginInlineEnd: '6px' }">{{ separator }}</span>
-                    </template>
+                    <ol :style="{ display: 'flex', flexWrap: 'wrap', padding: 0, margin: 0, listStyle: 'none' }">
+                        <template v-for="(item, idx) in moreContext.restItems" :key="idx">
+                            <component :is="item" />
+                            <li v-if="idx !== moreContext.restItems.length - 1" aria-hidden="true" :style="{ color: 'var(--semi-color-text-2)', marginInlineEnd: '6px' }">{{ separator }}</li>
+                        </template>
+                    </ol>
                 </template>
             </Popover>
         </template>

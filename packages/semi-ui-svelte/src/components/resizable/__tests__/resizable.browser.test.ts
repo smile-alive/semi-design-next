@@ -1,6 +1,7 @@
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import Group from './group.svelte';
 import Outside from './outside.svelte';
 
 const query = <T extends Element = HTMLElement>(container: Element, selector: string) => container.querySelector<T>(selector) as T;
@@ -33,5 +34,24 @@ describe('Svelte Resizable（浏览器）', () => {
 
         await userEvent.hover(query(container, '.semi-resizable-item'));
         expect(first?.offsetWidth).toBe(width);
+    });
+
+    it('min 比较的是项的 border-box 尺寸：真实指针拖到最小值，容器收窄后仍停在同一最小值', async () => {
+        const { container } = render(Group, { props: { items: [{ style: 'padding-left: 16px; padding-right: 16px', min: '200px' }, {}], width: '810px' } });
+        const host = query(container, '[data-testid="group"]').parentElement as HTMLElement;
+        const outside = document.createElement('div');
+        outside.style.cssText = 'width: 300px; height: 20px';
+        (host.parentElement as HTMLElement).style.display = 'flex';
+        host.before(outside);
+        const [first, second] = container.querySelectorAll<HTMLElement>('.semi-resizable-item');
+        const handler = query(container, '.semi-resizable-handler');
+
+        await userEvent.dragAndDrop(handler, outside, { force: true });
+        expect(first?.offsetWidth).toBeCloseTo(200, 0);
+
+        host.style.width = '410px';
+        window.dispatchEvent(new Event('resize'));
+        await expect.poll(() => second?.offsetWidth).toBeCloseTo(200, 0);
+        expect(first?.offsetWidth).toBeCloseTo(200, 0);
     });
 });

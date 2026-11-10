@@ -190,6 +190,31 @@ describe('Anchor（浏览器）', () => {
         expect(linkTitles(noCollapse.container)).toEqual(expect.arrayContaining(['1.1 组件', '1.1.1 Avatar', '1.1.2 Button', '1.1.3 Icon']));
     });
 
+    it('autoCollapse：逐步滚动进入未展开的折叠分支时，高亮落到子项', async () => {
+        const box = document.createElement('div');
+        box.id = 'box';
+        box.style.cssText = 'height: 400px; overflow: scroll';
+        for (const id of ['Semi Design', '组件', '头像', '按钮', '图标', '物料', '主题商店', '设计语言']) {
+            const section = document.createElement('div');
+            section.id = id;
+            section.style.height = '300px';
+            box.append(section);
+        }
+        document.body.append(box);
+        try {
+            render(Collapsible, { props: { autoCollapse: true, getContainer: () => box } });
+            const avatarTop = (document.getElementById('头像') as HTMLElement).offsetTop;
+            for (let top = 0; top < avatarTop; top += 50) {
+                box.scrollTop = top;
+                await sleep(120);
+            }
+            box.scrollTop = avatarTop + 10;
+            await waitFor(() => expect(activeTitle()).toHaveTextContent('1.1.1 Avatar'));
+        } finally {
+            box.remove();
+        }
+    });
+
     it('ShadowRoot 内点击链接滚动到同一 ShadowRoot 内的目标', async () => {
         const host = document.createElement('div');
         document.body.append(host);

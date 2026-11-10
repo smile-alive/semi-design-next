@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { Component } from 'vue';
-    import { AIChatInput, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-vue';
+    import { AIChatInput, type AIChatInputSetup as Setup } from '@fibrae/semi-ai-vue';
     import { IconBookOpenStroked, IconFeishuLogo, IconGit, IconFigma } from '@fibrae/semi-icons-vue';
 
     const uploadProps = { action: 'https://api.semi.design/upload' };
@@ -28,7 +28,7 @@
         console.log('onConfigureButtonClick');
     };
 
-    const onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+    const onConfigureChange = (value: Setup, changedValue?: Setup) => {
         console.log('onConfigureChange', value, changedValue);
     };
 </script>

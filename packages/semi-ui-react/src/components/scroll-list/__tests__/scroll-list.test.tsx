@@ -72,9 +72,9 @@ class Demo extends React.PureComponent<DemoProps> {
                 }
                 header="滚动列表"
             >
-                <ScrollItem {...commonProps} type={1} list={ampms} selectedIndex={selectedAmpmIndex} onSelect={ampmOnSelect} />
-                <ScrollItem {...commonProps} type={2} list={hours} selectedIndex={selectedHourIndex} onSelect={hourOnSelect} />
-                <ScrollItem {...commonProps} type={3} list={minutes} selectedIndex={selectedMinuteIndex} onSelect={minuteOnSelect} />
+                <ScrollItem {...commonProps} list={ampms} selectedIndex={selectedAmpmIndex} onSelect={ampmOnSelect} />
+                <ScrollItem {...commonProps} list={hours} selectedIndex={selectedHourIndex} onSelect={hourOnSelect} />
+                <ScrollItem {...commonProps} list={minutes} selectedIndex={selectedMinuteIndex} onSelect={minuteOnSelect} />
             </ScrollList>
         );
     }
@@ -121,7 +121,7 @@ describe(`ScrollList`, () => {
 
         await userEvent.click(minuteItems[nextEnabledMinuteIndex]);
         await waitFor(() => expect(minuteOnSelect).toHaveBeenCalledTimes(1));
-        expect(minuteOnSelect).toHaveBeenLastCalledWith(expect.objectContaining({ value: nextEnabledMinuteIndex, type: 3, index: nextEnabledMinuteIndex }));
+        expect(minuteOnSelect).toHaveBeenLastCalledWith(expect.objectContaining({ value: nextEnabledMinuteIndex, index: nextEnabledMinuteIndex }));
 
         // scroll minute list: without layout every item is at the selector, so the first enabled item is nearest
         fireEvent.scroll(minuteList);
@@ -133,11 +133,11 @@ describe(`ScrollList`, () => {
         expect(getItemTexts(ampmList)).toEqual(['上午', 'PM']);
         await userEvent.click(within(ampmList).getByText('PM'));
         await waitFor(() => expect(ampmOnSelect).toHaveBeenCalled());
-        expect(ampmOnSelect).toHaveBeenLastCalledWith(expect.objectContaining({ value: 'PM', type: 1, index: 1 }));
+        expect(ampmOnSelect).toHaveBeenLastCalledWith(expect.objectContaining({ value: 'PM', index: 1 }));
 
         fireEvent.scroll(hourList);
         await waitFor(() => expect(hourOnSelect).toHaveBeenCalled());
-        expect(hourOnSelect).toHaveBeenLastCalledWith(expect.objectContaining({ value: 1, type: 2, index: 0 }));
+        expect(hourOnSelect).toHaveBeenLastCalledWith(expect.objectContaining({ value: 1, index: 0 }));
     });
 
     it(`normal 模式外观`, async () => {
@@ -162,7 +162,7 @@ describe(`ScrollList`, () => {
         const minuteItemDoms = within(minuteList).getAllByRole('option');
         await userEvent.click(minuteItemDoms[nextEnabledMinuteIndex]);
         expect(minuteOnSelect).toHaveBeenCalledTimes(1);
-        expect(minuteOnSelect).toHaveBeenCalledWith(expect.objectContaining({ value: nextEnabledMinuteIndex, type: 3, index: nextEnabledMinuteIndex }));
+        expect(minuteOnSelect).toHaveBeenCalledWith(expect.objectContaining({ value: nextEnabledMinuteIndex, index: nextEnabledMinuteIndex }));
 
         await userEvent.click(minuteItemDoms[DEFAULTS.MINUTE_INDEX]);
         expect(minuteOnSelect).toHaveBeenCalledTimes(1);
@@ -320,14 +320,14 @@ describe('ScrollItem 行为', () => {
         expect(screen.getAllByRole('option')[1]).toHaveClass(`${prefix}-item-sel`);
     });
 
-    it('normal 模式点击调用 onSelect，传入 item、type 与 index；跳过禁用项', async () => {
+    it('normal 模式点击调用 onSelect，传入 item 与 index；跳过禁用项', async () => {
         const onSelect = vi.fn<(item: Item) => void>();
         const list = [
             { value: 'a', extra: 1 },
             { value: 'b', disabled: true },
             { value: 'c', text: 'C' },
         ];
-        render(<ScrollItem type="letter" list={list} mode="normal" onSelect={onSelect} />);
+        render(<ScrollItem list={list} mode="normal" onSelect={onSelect} />);
         const options = screen.getAllByRole('option');
 
         await userEvent.click(options[1]);
@@ -335,10 +335,10 @@ describe('ScrollItem 行为', () => {
 
         await userEvent.click(options[2]);
         expect(onSelect).toHaveBeenCalledTimes(1);
-        expect(onSelect).toHaveBeenCalledWith({ value: 'c', text: 'C', type: 'letter', index: 2 });
+        expect(onSelect).toHaveBeenCalledWith({ value: 'c', text: 'C', index: 2 });
 
         await userEvent.click(options[0]);
-        expect(onSelect).toHaveBeenLastCalledWith({ value: 'a', extra: 1, type: 'letter', index: 0 });
+        expect(onSelect).toHaveBeenLastCalledWith({ value: 'a', extra: 1, index: 0 });
     });
 
     it('wheel 模式渲染遮罩、选择器与非循环的外层列表', () => {
@@ -352,13 +352,13 @@ describe('ScrollItem 行为', () => {
         expect(root.querySelector(`.${prefix}-item-sel`)).toBeNull();
     });
 
-    it('wheel 模式点击在防抖后选中，并传入 item、type 与 index', async () => {
+    it('wheel 模式点击在防抖后选中，并传入 item 与 index', async () => {
         const onSelect = vi.fn<(item: Item) => void>();
-        render(<ScrollItem type="n" list={numbers(5)} onSelect={onSelect} />);
+        render(<ScrollItem list={numbers(5)} onSelect={onSelect} />);
         await userEvent.click(screen.getAllByRole('option')[3]);
         expect(onSelect).not.toHaveBeenCalled();
         await waitFor(() => expect(onSelect).toHaveBeenCalledTimes(1));
-        expect(onSelect).toHaveBeenCalledWith({ value: 3, type: 'n', index: 3 });
+        expect(onSelect).toHaveBeenCalledWith({ value: 3, index: 3 });
     });
 
     it('循环 wheel 模式在需要副本填满视图时将列表渲染三次', () => {
@@ -426,13 +426,12 @@ describe('ScrollItem 行为', () => {
         expect(screen.getAllByRole('option', { hidden: true })).toHaveLength(36);
     });
 
-    it('类型：onSelect 的参数带有 index 与 type', () => {
+    it('类型：onSelect 的参数带有 index', () => {
         type Opt = { value: number; text: string };
         expectTypeOf<Parameters<NonNullable<ScrollItemProps<Opt>['onSelect']>>[0]>().toExtend<{
             value: number;
             text: string;
             index: number;
-            type?: string | number;
         }>();
     });
 
@@ -519,7 +518,7 @@ describe('ScrollItem 行为', () => {
         await waitFor(() => expect(onSelect).toHaveBeenCalledTimes(1));
         await sleep(100);
         expect(onSelect).toHaveBeenCalledTimes(1);
-        expect(onSelect).toHaveBeenCalledWith({ value: 2, type: undefined, index: 2 });
+        expect(onSelect).toHaveBeenCalledWith({ value: 2, index: 2 });
     });
 
     it('两种模式下都能渲染空列表', () => {
@@ -563,20 +562,20 @@ describe('ScrollItem 行为', () => {
     it('方向键、Home、End 与输入字符通过 onSelect 选中，跳过禁用项', async () => {
         const onSelect = vi.fn<(item: Item) => void>();
         const list = [{ value: 'apple' }, { value: 'banana', disabled: true }, { value: 'cherry' }, { value: 'cocoa' }];
-        const { rerender } = render(<ScrollItem type="fruit" list={list} mode="normal" selectedIndex={0} onSelect={onSelect} />);
+        const { rerender } = render(<ScrollItem list={list} mode="normal" selectedIndex={0} onSelect={onSelect} />);
         screen.getByRole('listbox').focus();
         await userEvent.keyboard('{ArrowDown}');
-        expect(onSelect).toHaveBeenLastCalledWith({ value: 'cherry', type: 'fruit', index: 2 });
+        expect(onSelect).toHaveBeenLastCalledWith({ value: 'cherry', index: 2 });
 
-        rerender(<ScrollItem type="fruit" list={list} mode="normal" selectedIndex={2} onSelect={onSelect} />);
+        rerender(<ScrollItem list={list} mode="normal" selectedIndex={2} onSelect={onSelect} />);
         await userEvent.keyboard('{End}');
-        expect(onSelect).toHaveBeenLastCalledWith({ value: 'cocoa', type: 'fruit', index: 3 });
+        expect(onSelect).toHaveBeenLastCalledWith({ value: 'cocoa', index: 3 });
         await userEvent.keyboard('{Home}');
-        expect(onSelect).toHaveBeenLastCalledWith({ value: 'apple', type: 'fruit', index: 0 });
+        expect(onSelect).toHaveBeenLastCalledWith({ value: 'apple', index: 0 });
         await userEvent.keyboard('co');
-        expect(onSelect).toHaveBeenLastCalledWith({ value: 'cocoa', type: 'fruit', index: 3 });
+        expect(onSelect).toHaveBeenLastCalledWith({ value: 'cocoa', index: 3 });
         onSelect.mockClear();
-        rerender(<ScrollItem type="fruit" list={list} mode="normal" selectedIndex={3} onSelect={onSelect} />);
+        rerender(<ScrollItem list={list} mode="normal" selectedIndex={3} onSelect={onSelect} />);
         await userEvent.keyboard('{ArrowDown}');
         expect(onSelect).not.toHaveBeenCalled();
     });
@@ -584,19 +583,19 @@ describe('ScrollItem 行为', () => {
     it('带 Ctrl 或 Meta 的字符键不触发搜索选中', async () => {
         const onSelect = vi.fn<(item: Item) => void>();
         const list = [{ value: 'apple' }, { value: 'cherry' }];
-        render(<ScrollItem type="fruit" list={list} mode="normal" selectedIndex={0} onSelect={onSelect} />);
+        render(<ScrollItem list={list} mode="normal" selectedIndex={0} onSelect={onSelect} />);
         screen.getByRole('listbox').focus();
         await userEvent.keyboard('{Control>}c{/Control}{Meta>}c{/Meta}');
         expect(onSelect).not.toHaveBeenCalled();
         await userEvent.keyboard('c');
-        expect(onSelect).toHaveBeenCalledWith({ value: 'cherry', type: 'fruit', index: 1 });
+        expect(onSelect).toHaveBeenCalledWith({ value: 'cherry', index: 1 });
     });
 
     it('循环列表用方向键首尾相接', async () => {
         const onSelect = vi.fn<(item: Item) => void>();
-        render(<ScrollItem type="n" cycled list={numbers(3)} selectedIndex={2} onSelect={onSelect} />);
+        render(<ScrollItem cycled list={numbers(3)} selectedIndex={2} onSelect={onSelect} />);
         screen.getAllByRole('listbox')[0].focus();
         await userEvent.keyboard('{ArrowDown}');
-        expect(onSelect).toHaveBeenLastCalledWith({ value: 0, type: 'n', index: 0 });
+        expect(onSelect).toHaveBeenLastCalledWith({ value: 0, index: 0 });
     });
 });

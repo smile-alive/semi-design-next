@@ -21,6 +21,7 @@ export default function Arrow({ position = '', className, arrowStyle, popStyle, 
         width: 24,
         height: 8,
         xmlns: 'http://www.w3.org/2000/svg',
+        'aria-hidden': true,
         className: cls,
     };
 

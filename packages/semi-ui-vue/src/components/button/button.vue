@@ -59,7 +59,7 @@
     };
 
     // A loading button stays focusable, so its click is stopped in the capture phase (covers .once/.capture/.passive
-    // listeners); preventDefault blocks form submit, which pointer-events cannot do for Enter or Space.
+    // listeners); preventDefault blocks form submit.
     const guardLoadingClick = (event: MouseEvent) => {
         if (!props.loading) return;
         event.preventDefault();

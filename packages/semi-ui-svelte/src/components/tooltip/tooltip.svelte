@@ -16,7 +16,7 @@
     import useFoundation from '../../base/use-foundation.svelte.js';
     import teleport from '../../utils/teleport.js';
     import { getConfigContext } from '../config-provider/context.js';
-    import { getTooltipPopupsContext, setTooltipPopupsContext, setTriggerContext, type TriggerBinding, type TriggerState } from './context.js';
+    import { getTooltipPopupsContext, getTooltipPrefixContext, setTooltipPopupsContext, setTooltipPrefixContext, setTriggerContext, type TriggerBinding, type TriggerState } from './context.js';
     import type { FocusTarget, RenderContentProps, TooltipProps, TooltipTriggerProps } from './interface.js';
     import TriangleArrow from './triangle-arrow.svelte';
 
@@ -39,7 +39,6 @@
         arrowPointAtCenter = defaults('arrowPointAtCenter', true),
         trigger = defaults('trigger', 'hover'),
         position = defaults('position', 'top'),
-        prefixCls = defaults('prefixCls', cssClasses.PREFIX),
         role = defaults('role', 'tooltip'),
         mouseEnterDelay = defaults('mouseEnterDelay', numbers.MOUSE_ENTER_DELAY),
         mouseLeaveDelay = defaults('mouseLeaveDelay', numbers.MOUSE_LEAVE_DELAY),
@@ -281,6 +280,11 @@
     const describes = $derived(status === strings.STATUS_LOADING || Boolean(triggerState?.describes));
     const blockTrigger = $derived(Boolean(triggerState?.block || (inner && isBlockDisplay(inner.style.display))));
     const spanTabindex = $derived(focusableInside || status === strings.STATUS_LOADING ? -1 : 0);
+
+    // Popover and Dropdown hand their class prefix to this Tooltip only, not to Tooltips rendered in its trigger or content
+    const prefixCls = getTooltipPrefixContext() ?? cssClasses.PREFIX;
+
+    setTooltipPrefixContext(undefined);
 
     setTooltipPopupsContext({
         register: (popup) => {

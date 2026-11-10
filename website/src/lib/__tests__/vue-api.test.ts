@@ -29,6 +29,11 @@ describe('Vue API 生成', () => {
         expect(ownProps(extracted).map((prop) => prop.name)).toEqual(['label', 'id']);
     });
 
+    it('泛型 SFC 也提取 defineExpose 的成员', () => {
+        const source = resolve('website/src/lib/__tests__/fixtures/vue-api/generic-expose.vue');
+        expect(extractApi(source).exposed).toEqual([{ name: 'reset', type: '(next?: T | undefined) => T | undefined' }]);
+    });
+
     it('输出双语四组表格、默认值与实际成员', () => {
         const chinese = renderApi(meta, description, 'zh-CN');
         expect(chinese).toContain('| value | 说明 | `string` | `undefined` |');

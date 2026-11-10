@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | immediatelyRender | 传给 tiptap 编辑器的 immediatelyRender 参数。为 false 时编辑器在挂载后创建，服务端渲染可用；为 true 时在首次渲染中创建，只用于纯客户端渲染。 | `boolean` | `false` |
 | keepSkillAfterSend | 发送消息后是否保留已选的技能。 | `boolean` | `false` |
 | onBlur | 富文本输入区失去焦点时调用，参数为焦点事件。 | <ApiType detail={"(event: React.FocusEvent) => void"}>Type</ApiType> | - |
-| onConfigureChange | 配置区域的值变化时调用。移除配置项时 changedValue 为 undefined。 | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onConfigureChange | 配置区域的值变化时调用。移除配置项时 changedValue 为 undefined。 | <ApiType detail={"(value: Setup, changedValue?: Setup) => void"}>Type</ApiType> | - |
 | onContentChange | 输入框内容变化时调用，参数为当前内容。 | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
 | onFocus | 富文本输入区获得焦点时调用，参数为焦点事件。 | <ApiType detail={"(event: React.FocusEvent) => void"}>Type</ApiType> | - |
 | onMessageSend | 发送消息时调用（点击发送按钮或按发送快捷键），参数包含引用、上传文件、输入内容与配置区域的值。 | <ApiType detail={"(props: MessageContent) => void"}>Type</ApiType> | - |

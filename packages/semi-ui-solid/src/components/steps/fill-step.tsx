@@ -6,12 +6,14 @@ import hasContent from '../../utils/has-content';
 import type { FillStepProps } from './interface';
 import { createStepItem } from './use-step-item';
 
-const defaultProps = { prefixCls: css.ITEM, status: 'wait' } satisfies Partial<FillStepProps>;
+const defaultProps = { status: 'wait' } satisfies Partial<FillStepProps>;
+
+const prefixCls = css.ITEM;
 
 // An internal item: Steps builds its props, so the global defaults of Step do not apply
 export default function FillStep(rawProps: FillStepProps) {
     const props = mergeProps(defaultProps, rawProps);
-    const [local, rest] = splitProps(props, ['active', 'class', 'description', 'icon', 'onChange', 'onClick', 'onKeyDown', 'prefixCls', 'role', 'status', 'stepNumber', 'title']);
+    const [local, rest] = splitProps(props, ['active', 'class', 'description', 'icon', 'onChange', 'onClick', 'onKeyDown', 'role', 'status', 'stepNumber', 'title']);
 
     const item = createStepItem(local, rest);
     const title = children(() => local.title);
@@ -26,11 +28,11 @@ export default function FillStep(rawProps: FillStepProps) {
             {...rest}
             class={clsx(
                 {
-                    [local.prefixCls]: true,
-                    [`${local.prefixCls}-${local.status}`]: true,
-                    [`${local.prefixCls}-${local.status}-hover`]: item.clickable(),
-                    [`${local.prefixCls}-${local.status}-active`]: item.clickable(),
-                    [`${local.prefixCls}-clickable`]: item.clickable(),
+                    [prefixCls]: true,
+                    [`${prefixCls}-${local.status}`]: true,
+                    [`${prefixCls}-${local.status}-hover`]: item.clickable(),
+                    [`${prefixCls}-${local.status}-active`]: item.clickable(),
+                    [`${prefixCls}-clickable`]: item.clickable(),
                 },
                 local.class
             )}
@@ -43,11 +45,11 @@ export default function FillStep(rawProps: FillStepProps) {
             <Show when={!customIcon() || hasContent(icon())}>
                 <div
                     class={clsx({
-                        [`${local.prefixCls}-left`]: true,
-                        [`${local.prefixCls}-icon`]: customIcon(),
-                        [`${local.prefixCls}-plain`]: !customIcon(),
-                        [`${local.prefixCls}-icon-process`]: !customIcon() && local.status === 'process',
-                        [`${local.prefixCls}-hover`]: item.clickable(),
+                        [`${prefixCls}-left`]: true,
+                        [`${prefixCls}-icon`]: customIcon(),
+                        [`${prefixCls}-plain`]: !customIcon(),
+                        [`${prefixCls}-icon-process`]: !customIcon() && local.status === 'process',
+                        [`${prefixCls}-hover`]: item.clickable(),
                     })}
                 >
                     <Show when={!customIcon()} fallback={icon()}>
@@ -66,11 +68,11 @@ export default function FillStep(rawProps: FillStepProps) {
                     </Show>
                 </div>
             </Show>
-            <div class={`${local.prefixCls}-content`}>
-                <div class={`${local.prefixCls}-title`} title={typeof title() === 'string' ? (title() as string) : undefined}>
-                    <span class={`${local.prefixCls}-title-text`}>{title()}</span>
+            <div class={`${prefixCls}-content`}>
+                <div class={`${prefixCls}-title`} title={typeof title() === 'string' ? (title() as string) : undefined}>
+                    <span class={`${prefixCls}-title-text`}>{title()}</span>
                 </div>
-                <div class={`${local.prefixCls}-description`} title={typeof description() === 'string' ? (description() as string) : undefined}>
+                <div class={`${prefixCls}-description`} title={typeof description() === 'string' ? (description() as string) : undefined}>
                     {description()}
                 </div>
             </div>

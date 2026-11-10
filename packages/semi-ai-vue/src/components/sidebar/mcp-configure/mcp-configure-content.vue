@@ -16,8 +16,8 @@
     import Tooltip from '@fibrae/semi-ui-vue/tooltip/index';
     import type { MCPConfigureContentEmits, MCPConfigureContentProps, MCPConfigureContentSlots, MCPConfigureOption } from './interface';
 
-    type Foundation = MCPConfigureContentFoundation<MouseEvent>;
-    type Adapter = MCPConfigureContentAdapter<MouseEvent>;
+    type Foundation = MCPConfigureContentFoundation<MouseEvent, MCPConfigureOption>;
+    type Adapter = MCPConfigureContentAdapter<MouseEvent, MCPConfigureOption>;
 
     const props = withDefaults(defineProps<MCPConfigureContentProps>(), {
         options: () => [],
@@ -31,21 +31,20 @@
 
     const locale = useLocale('Sidebar');
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, MCPConfigureContentState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps<MCPConfigureOption>, MCPConfigureContentState>(
         MCPConfigureContentFoundation,
-        props as FoundationProps,
+        props as FoundationProps<MCPConfigureOption>,
         () => MCPConfigureContentFoundation.getInitialState(),
         () => ({
-            notifyConfigureClick: (event, option) => emit('configureClick', event, option as MCPConfigureOption),
-            notifyEditClick: (event, option) => emit('editClick', event, option as MCPConfigureOption),
+            notifyConfigureClick: (event, option) => emit('configureClick', event, option),
+            notifyEditClick: (event, option) => emit('editClick', event, option),
             notifyStatusChange: (options, custom) => {
-                const list = options as MCPConfigureOption[];
                 if (custom) {
-                    emit('update:customOptions', list);
+                    emit('update:customOptions', options);
                 } else {
-                    emit('update:options', list);
+                    emit('update:options', options);
                 }
-                emit('statusChange', list, custom);
+                emit('statusChange', options, custom);
             },
             notifyAddClick: (event) => emit('addClick', event),
             notifySearch: (inputValue, custom) => emit('search', inputValue, custom),

@@ -7,13 +7,12 @@
     import { getPopupLayerContext } from '../../base/popup-layer.js';
     import useDefaultProps from '../../base/use-default-props.js';
     import { getInputGroupInScope } from '../input/context.js';
-    import { getButtonGroupContext, setButtonGroupContext } from './context.js';
+    import { getButtonGroupInScope, setButtonGroupContext } from './context.js';
     import type { ButtonGroupProps } from './interface.js';
 
     const defaults = useDefaultProps('ButtonGroup');
-    let { colorful = defaults('colorful'), disabled = defaults('disabled'), size = defaults('size'), theme = defaults('theme'), type = defaults('type'), children, ...rest }: ButtonGroupProps = $props();
+    let { colorful, disabled, size, theme, type, children, ...rest }: ButtonGroupProps = $props();
 
-    const outer = getButtonGroupContext();
     const layer = getPopupLayerContext();
 
     const buttons = new SvelteSet<HTMLElement>();
@@ -22,10 +21,12 @@
     let order = $state(0);
 
     const prefix = cssClasses.PREFIX;
+    const outer = getButtonGroupInScope();
     const inputGroup = getInputGroupInScope();
 
-    // A nested group inherits the outer one, which has already folded in the InputGroup
-    const inherited = $derived(inheritGroupLooks({ colorful, disabled, size, theme, type }, outer ?? inputGroup));
+    // A nested group inherits the outer one, which has already folded in the InputGroup; the group's global defaults
+    // come after both
+    const inherited = $derived(inheritGroupLooks(inheritGroupLooks({ colorful, disabled, size, theme, type }, outer ?? inputGroup), { colorful: defaults('colorful'), disabled: defaults('disabled'), size: defaults('size'), theme: defaults('theme'), type: defaults('type') }));
 
     setButtonGroupContext({
         layer,

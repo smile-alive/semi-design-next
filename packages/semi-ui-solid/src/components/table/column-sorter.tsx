@@ -51,7 +51,8 @@ export default function ColumnSorter(props: ColumnSorterProps) {
     const handleClick = (e: MouseEvent) => props.onClick?.(e);
 
     const renderButton = (own: JSX.ButtonHTMLAttributes<HTMLButtonElement> = {}) => (
-        <button {...own} type="button" class={`${prefixCls()}-column-sorter-wrapper`} onClick={handleClick}>
+        // a useFullRender title function or an empty title leaves the button only the icon; the next sort action then names it
+        <button {...own} type="button" class={`${prefixCls()}-column-sorter-wrapper`} aria-label={props.title == null ? locale().locale[getNextSortOrder(sortOrder())] : undefined} onClick={handleClick}>
             {props.title}
             {renderSortIcon()}
         </button>

@@ -15,11 +15,11 @@ import { useLocale, useResizeObserver } from '@fibrae/semi-ui-solid/primitives';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import callHandler from '@fibrae/semi-ui-solid/utils/call-handler';
 import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
+import ChatBox from './chat-box/chat-box';
 import { ChatContext, type ChatContextValue, type ChatView } from './context';
+import Hint from './hint';
+import InputBox, { type InputBoxHandle } from './input-box';
 import type { ChatHandle, ChatProps, Message } from './interface';
-import ChatBox from './widgets/chat-box';
-import Hint from './widgets/hint';
-import InputBox, { type InputBoxHandle } from './widgets/input-box';
 
 type Foundation = ChatFoundation<ChatProps>;
 type Adapter = ChatAdapter<ChatProps>;
@@ -183,7 +183,7 @@ export default function Chat(rawProps: ChatProps) {
         resetMessage: () => foundation.resetMessage(null),
         clearContext: foundation.clearContext,
         scrollToBottom: foundation.scrollToBottom,
-        sendMessage: foundation.onMessageSend,
+        sendMessage: foundation.sendMessage,
     };
 
     const handleDragOver = (e: RootDragEvent) => {
@@ -247,7 +247,7 @@ export default function Chat(rawProps: ChatProps) {
                             <For each={keys()}>{renderRow}</For>
                         </ChatContext.Provider>
                         <Show when={local.hints?.length}>
-                            <Hint class={local.hintCls} style={local.hintStyle} value={local.hints ?? []} renderHintBox={local.renderHintBox} onHintClick={foundation.onHintClick} />
+                            <Hint class={local.hintCls} style={local.hintStyle} value={local.hints ?? []} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
                         </Show>
                     </div>
                     {/* outside the log: a toast inside it would be announced as one more log entry */}
@@ -281,8 +281,8 @@ export default function Chat(rawProps: ChatProps) {
                     uploadTipProps={local.uploadTipProps}
                     renderInputArea={local.renderInputArea}
                     onClearContext={foundation.clearContext}
-                    onInputChange={foundation.onInputChange}
-                    onSend={foundation.onMessageSend}
+                    onInputChange={foundation.handleInputChange}
+                    onSend={foundation.sendMessage}
                 />
                 {local.bottomSlot}
             </div>

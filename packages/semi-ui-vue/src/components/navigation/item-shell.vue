@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { computed, isVNode, mergeProps, toRaw, useAttrs, type VNode } from 'vue';
+    import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
     import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
     import ItemFoundation, { type ItemAdapter, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
@@ -51,6 +52,7 @@
 
     const prefix = cssClasses.PREFIX;
     const itemPrefix = `${prefix}-item`;
+    const dropdownItemPrefix = `${dropdownClasses.PREFIX}-item`;
     const isCollapsed = computed(() => props.isCollapsed || ctx.view.value.isCollapsed);
     const horizontal = computed(() => ctx.view.value.mode === strings.MODE_HORIZONTAL);
     const popup = computed(() => props.isInSubNav && (isCollapsed.value || horizontal.value));
@@ -111,6 +113,14 @@
             [`${itemPrefix}-collapsed`]: isCollapsed.value,
             [`${itemPrefix}-disabled`]: props.disabled,
         };
+        if (popup.value && props.isSubNav) {
+            // A nested sub inside a popup is a list item that holds the menuitem (its title), not a menuitem itself:
+            // two nested menuitems would both be found by the menu's arrow keys
+            return mergeProps(attrs, {
+                class: [itemPrefix, state, dropdownItemPrefix, { [`${itemPrefix}-selected`]: selected.value, [`${dropdownItemPrefix}-disabled`]: props.disabled, [`${dropdownItemPrefix}-active`]: selected.value }],
+                role: 'none',
+            });
+        }
         if (popup.value) {
             return mergeProps(attrs, {
                 active: selected.value,
@@ -182,7 +192,7 @@
 </script>
 
 <template>
-    <component :is="popup ? DropdownItem : 'li'" v-bind="rootAttrs($attrs)">
+    <component :is="popup && !props.isSubNav ? DropdownItem : 'li'" v-bind="rootAttrs($attrs)">
         <component :is="tooltipped ? Tooltip : SlotFragment" v-bind="tooltipped ? tooltipProps : {}">
             <component :is="controlTag()" v-bind="controlAttrs($attrs)">
                 <slot v-if="$slots.content" name="content" />

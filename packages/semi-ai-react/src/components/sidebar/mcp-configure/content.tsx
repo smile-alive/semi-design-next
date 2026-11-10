@@ -16,8 +16,8 @@ import Radio from '@fibrae/semi-ui-react/radio/index';
 import RadioGroup from '@fibrae/semi-ui-react/radio/radio-group';
 import Tooltip from '@fibrae/semi-ui-react/tooltip/index';
 
-type Foundation = MCPConfigureContentFoundation<React.MouseEvent<HTMLButtonElement>>;
-type Adapter = MCPConfigureContentAdapter<React.MouseEvent<HTMLButtonElement>>;
+type Foundation = MCPConfigureContentFoundation<React.MouseEvent<HTMLButtonElement>, MCPReactOption>;
+type Adapter = MCPConfigureContentAdapter<React.MouseEvent<HTMLButtonElement>, MCPReactOption>;
 
 const prefixCls = cssClasses.MCP_CONFIGURE_CONTENT;
 const buttonCls = buttonClasses.PREFIX;
@@ -27,7 +27,7 @@ export interface MCPReactOption extends MCPOption {
     desc?: ReactNode;
 }
 
-export interface MCPConfigureContentReactProps extends MCPConfigureContentProps {
+export interface MCPConfigureContentReactProps extends MCPConfigureContentProps<MCPReactOption> {
     options?: MCPReactOption[];
     customOptions?: MCPReactOption[];
     filter?: (inputValue: string, option: MCPReactOption) => boolean;
@@ -44,7 +44,7 @@ export default function MCPConfigureContent(props: MCPConfigureContentReactProps
 
     const { locale } = useLocale('Sidebar');
 
-    const [foundation, state] = useFoundation<Foundation, Adapter, MCPConfigureContentProps, MCPConfigureContentState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, MCPConfigureContentProps<MCPReactOption>, MCPConfigureContentState>(
         MCPConfigureContentFoundation,
         props,
         () => MCPConfigureContentFoundation.getInitialState(),
@@ -73,7 +73,7 @@ export default function MCPConfigureContent(props: MCPConfigureContentReactProps
         </Button>
     );
 
-    const renderStatusButton = (option: MCPOption) => {
+    const renderStatusButton = (option: MCPReactOption) => {
         const label = option.active ? locale.disable : locale.enable;
         const theme = option.active ? 'light' : 'solid';
         const icon = option.active ? <IconMinus /> : <IconPlus />;

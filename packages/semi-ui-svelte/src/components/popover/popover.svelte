@@ -2,6 +2,7 @@
     import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
     import '@fibrae/semi-foundation/components/popover/popover.scss';
     import useDefaultProps from '../../base/use-default-props.js';
+    import { setTooltipPrefixContext } from '../tooltip/context.js';
     import { type RenderContentProps, Tooltip } from '../tooltip/index.js';
     import Arrow from './arrow.svelte';
     import type { PopoverProps } from './interface.js';
@@ -21,7 +22,6 @@
         motion = defaults('motion', true),
         trigger = defaults('trigger', 'hover'),
         position = defaults('position', 'bottom'),
-        prefixCls = defaults('prefixCls', cssClasses.PREFIX),
         // Tooltip defaults these three to false; a Popover card is interactive
         closeOnEsc = defaults('closeOnEsc', true),
         returnFocusOnClose = defaults('returnFocusOnClose', true),
@@ -52,9 +52,12 @@
 
     let tooltip = $state<Tooltip>();
 
+    const prefixCls = cssClasses.PREFIX;
     const popupRole = $derived(getPopoverRole(role, trigger));
     const popupSpacing = $derived(getPopoverSpacing(spacing, showArrow));
     const stop = $derived(stopPropagation === undefined ? undefined : Boolean(stopPropagation));
+
+    setTooltipPrefixContext(prefixCls);
 
     export function focusTrigger() {
         tooltip?.focusTrigger();
@@ -113,7 +116,6 @@
     {onOpen}
     {onVisibleChange}
     {position}
-    {prefixCls}
     {returnFocusOnClose}
     role={popupRole}
     {showArrow}

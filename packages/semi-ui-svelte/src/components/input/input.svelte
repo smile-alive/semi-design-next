@@ -10,7 +10,7 @@
     import { splitControlAttrs } from '../../utils/control-attrs.js';
     import { type SlotKind, trackSlotKind } from '../../utils/slot-kind.js';
     import useLocale from '../locale/use-locale.svelte.js';
-    import { getInputGroupInScope } from './context.js';
+    import { getInputGroupInScope, setInputGroupContext } from './context.js';
     import { isNotClassOrStyle } from './control-attrs.js';
     import type { InputProps, InputState } from './interface.js';
 
@@ -125,6 +125,9 @@
             ariaLabelledby: attrs.control['aria-labelledby'] as string | undefined,
         })
     );
+
+    // controls in the addons and adornments (a Button in the suffix) are not members of the group
+    setInputGroupContext(undefined);
 
     const focusInput = () => {
         input?.focus({ preventScroll });

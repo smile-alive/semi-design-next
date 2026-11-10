@@ -6,16 +6,23 @@ import { childSlots, normalizeVNodeProps, toVNodes as toNodes } from '../../util
 import slotNodes from '../../utils/slot-nodes';
 import type { SelectOptionProps } from './interface';
 
-export interface OptionData extends SelectOptionProps {
-    _slot?: FunctionalComponent;
+export interface OptionRecord extends BaseOptionRecord<SelectOptionProps, GroupRecord> {
+    /** The markup in a `Select.Option`'s default slot, shown in place of `label`; kept off `data`, which reaches the user */
+    slot?: FunctionalComponent;
 }
 
-export type OptionRecord = BaseOptionRecord<OptionData, GroupRecord>;
-
-export interface GroupRecord extends Record<string, unknown> {
+export interface GroupRecord {
     key: string;
+    /** Read by the foundation's search */
     label?: string | number;
-    _labelSlot?: FunctionalComponent;
+    /** The `Select.OptGroup`'s props, which land on its title */
+    attrs: Record<string, unknown>;
+    labelSlot?: FunctionalComponent;
+}
+
+/** The slot of each option by value, for the selection, which holds the options' data */
+export function slotsByValue(options: readonly OptionRecord[]) {
+    return new Map(options.flatMap((option) => (option.slot ? [[option.data.value, option.slot] as const] : [])));
 }
 
 const booleanProps = new Set(['disabled', 'showTick']);
@@ -30,8 +37,11 @@ function readOption(node: VNode, key: string, index: number, group?: GroupRecord
     const text = content.length && textOnly ? content.map(([child]) => child.children).join('') : undefined;
     // like React's label || children || value: an undefined or empty label does not hide the slot text
     const label = (props.label || undefined) ?? (text || undefined) ?? (props.value as string | number | undefined);
-    const data = { ...props, label, _slot: content.length && !textOnly ? () => toNodes(slot?.()) : undefined };
-    return toOptionRecord(data, index, group, key) as OptionRecord;
+    const record = toOptionRecord({ ...props, label }, index, group, key) as OptionRecord;
+    if (content.length && !textOnly) {
+        record.slot = () => toNodes(slot?.());
+    }
+    return record;
 }
 
 /** Called while the Select renders or from a computed it reads, so the result tracks what the slot content reads. */
@@ -48,10 +58,12 @@ export function readOptions(nodes: VNode[], optionList?: SelectOptionProps[]) {
         } else if (type === 'Select.OptGroup') {
             const slots = childSlots(node);
             const labelSlot = slots.label;
+            const attrs = normalizeProps(node.props);
             const group: GroupRecord = {
-                ...normalizeProps(node.props),
                 key,
-                _labelSlot: labelSlot ? () => toNodes(labelSlot()) : undefined,
+                label: attrs.label as GroupRecord['label'],
+                attrs,
+                labelSlot: labelSlot ? () => toNodes(labelSlot()) : undefined,
             };
             for (const [child, childKey] of slotNodes(toNodes(slots.default?.()))) {
                 if (elementType(child) === 'Select.Option') {

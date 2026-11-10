@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { ConfigProvider, Dropdown, Tag } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { sleep } from '@test/utils/react';
-import type { DropDownMenuItem, DropdownHandle, DropdownProps } from '../index';
+import type { DropdownMenuItem, DropdownHandle, DropdownProps } from '../index';
 
 const defaultItems = [{ children: 'Menu Item 1' }, { children: 'Menu Item 2' }, { children: 'Menu Item 3' }];
 
@@ -230,7 +230,7 @@ describe('Dropdown', () => {
     });
 
     it('Dropdown 数组菜单', () => {
-        const menu: DropDownMenuItem[] = [
+        const menu: DropdownMenuItem[] = [
             { node: 'title', name: '分组1' },
             { node: 'item', name: 'primary1', type: 'primary', onClick: () => {} },
             { node: 'item', name: 'secondary', type: 'secondary' },
@@ -242,14 +242,14 @@ describe('Dropdown', () => {
         ];
         const { rerender } = render(<Dropdown menu={menu} trigger="custom" visible />);
         expect(document.querySelector('.semi-dropdown-menu').children).toHaveLength(menu.length);
-        const menu2: DropDownMenuItem[] = [
+        const menu2: DropdownMenuItem[] = [
             // iconType is not a declared title prop; it must be ignored at runtime
-            { node: 'title', name: '分组1', iconType: 'menu' } as unknown as DropDownMenuItem,
+            { node: 'title', name: '分组1', iconType: 'menu' } as unknown as DropdownMenuItem,
             { node: 'item', name: 'secondary', type: 'secondary' },
             { node: 'divider' },
             { node: 'title', name: '分组2' },
             // an unknown node kind must be skipped at runtime
-            { node: 'invalid node', name: '分组2' } as unknown as DropDownMenuItem,
+            { node: 'invalid node', name: '分组2' } as unknown as DropdownMenuItem,
         ];
         rerender(<Dropdown menu={menu2} trigger="custom" visible />);
         expect(document.querySelector('.semi-dropdown-menu').children).toHaveLength(menu2.length - 1);
@@ -265,7 +265,7 @@ describe('Dropdown 行为', () => {
     });
 
     it('菜单渲染标题、选项与分隔线', () => {
-        const menu: DropDownMenuItem[] = [
+        const menu: DropdownMenuItem[] = [
             { node: 'title', name: 'Group' },
             { node: 'item', name: 'A', active: true },
             { node: 'item', name: 'B', disabled: true },
@@ -1453,7 +1453,7 @@ describe('Dropdown 行为', () => {
 
     it('menu 项的类型不含 children', () => {
         // @ts-expect-error the label comes from name; children would be overwritten
-        const items: DropDownMenuItem[] = [{ node: 'item', name: 'x', children: 'y' }];
+        const items: DropdownMenuItem[] = [{ node: 'item', name: 'x', children: 'y' }];
         expect(items).toHaveLength(1);
     });
 

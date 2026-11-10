@@ -14,12 +14,11 @@ export interface ScrollItemProps<T extends Item> extends ElementProps<'div', 'on
     cycled?: boolean;
     list?: T[];
     selectedIndex?: number;
-    onSelect?: (data: T & { type?: string | number; index: number }) => void;
-    transform?: (value: any, text?: string) => string;
+    onSelect?: (data: T & { index: number }) => void;
+    transform?: (value: T['value'], text?: string) => string;
     className?: string;
     motion?: Motion;
     style?: React.CSSProperties;
-    type?: string | number; // identifies the item to the Semi components that use it; not for end users
 }
 
 /** Called by TimePicker and DatePicker to re-centre a column, e.g. after the panel resizes */
@@ -40,7 +39,7 @@ const defaultProps = {
 
 export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> & { ref?: React.Ref<ScrollItemHandle> }) {
     const props = useDefaultProps('ScrollItem', rawProps, defaultProps);
-    const { ref, mode, cycled, list, selectedIndex, onSelect, transform, className, motion, style, type, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, ...rest } = props;
+    const { ref, mode, cycled, list, selectedIndex, onSelect, transform, className, motion, style, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, ...rest } = props;
 
     const listRef = useRef<HTMLUListElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -92,6 +91,7 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
                     id={copy ? undefined : optionId(index)}
                     className={clsx({
                         [`${prefix}-item-sel`]: selected && !isWheel,
+                        [cssClasses.SELECTED]: isWheel && key === state.highlightedKey,
                         [`${prefix}-item-disabled`]: Boolean(item.disabled),
                     })}
                     aria-disabled={item.disabled}

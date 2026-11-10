@@ -126,31 +126,14 @@ describe('Row', () => {
 
     it('读取 app 的全局默认值，显式属性优先；undefined 回落到全局值', async () => {
         const semi = new SemiGlobal();
-        semi.config.overrideDefaultProps = { Row: { gutter: 16, prefixCls: 'g' } };
+        semi.config.overrideDefaultProps = { Row: { gutter: 16 } };
         const global = { provide: { [semiGlobalKey]: semi } };
         const view = render(Row, { global });
-        expect(view.container.firstChild).toHaveClass('g-row');
         expect(gutterVars(view.container.firstChild as HTMLElement, 'x').md).toBe('16px');
         const zero = render(Row, { global, props: { gutter: 0 } });
         expect(gutterVars(zero.container.firstChild as HTMLElement, 'x').md).toBe('0px');
         const unset = render(Row, { global, props: { gutter: undefined } });
         expect(gutterVars(unset.container.firstChild as HTMLElement, 'x').md).toBe('16px');
-    });
-
-    it('prefixCls 局部覆盖对 Row 与 Col 分别生效', () => {
-        const view = render(() => (
-            <Row prefixCls="a">
-                {() => (
-                    <>
-                        <Col prefixCls="b" />
-                        <Col />
-                    </>
-                )}
-            </Row>
-        ));
-        expect(view.container.querySelector('.a-row')).not.toBeNull();
-        expect(view.container.querySelector('.b-col')).not.toBeNull();
-        expect(view.container.querySelector('.semi-col')).not.toBeNull();
     });
 });
 
@@ -210,14 +193,14 @@ describe('Col', () => {
 
     it('读取 app 的全局默认值，显式属性优先', () => {
         const semi = new SemiGlobal();
-        semi.config.overrideDefaultProps = { Col: { prefixCls: 'g', span: 4 } };
+        semi.config.overrideDefaultProps = { Col: { span: 4 } };
         const view = render(
             () => (
                 <Row>
                     {() => (
                         <>
                             <Col />
-                            <Col prefixCls="own" />
+                            <Col span={6} />
                         </>
                     )}
                 </Row>
@@ -226,8 +209,8 @@ describe('Col', () => {
                 global: { provide: { [semiGlobalKey]: semi } },
             }
         );
-        expect(view.container.querySelector('.g-col')).toHaveClass('g-col-4');
-        expect(view.container.querySelector('.own-col')).not.toBeNull();
+        expect(view.container.querySelector('.semi-col-4')).not.toBeNull();
+        expect(view.container.querySelector('.semi-col-6')).not.toBeNull();
     });
 
     it('组件实例的 $el 指向根 div', () => {

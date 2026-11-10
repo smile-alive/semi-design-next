@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import Popover from '..';
 import Button from '../../button';
+import Input from '../../input';
 import type { Position, RenderContentProps } from '../../tooltip';
 
 const popStyle = { height: '200px', width: '200px' };
@@ -149,6 +150,26 @@ describe('Popover（浏览器）', () => {
         ));
         await userEvent.click(screen.getByRole('button', { name: 'custom initialFocus' }));
         await waitFor(() => expect(screen.getByTestId('initial-focus-input')).toHaveFocus());
+    });
+
+    it('初始焦点通过 Input 的 inputRef 设置', async () => {
+        render(() => (
+            <Popover
+                aria-label="Details"
+                content={({ initialFocusRef }) => (
+                    <div style={popStyle}>
+                        <button>first focusable</button>
+                        <Input inputRef={initialFocusRef} aria-label="handle input" />
+                    </div>
+                )}
+                motion={false}
+                trigger="click"
+            >
+                {(t) => <Button {...t()}>handle initialFocus</Button>}
+            </Popover>
+        ));
+        await userEvent.click(screen.getByRole('button', { name: 'handle initialFocus' }));
+        await waitFor(() => expect(screen.getByRole('textbox', { name: 'handle input' })).toHaveFocus());
     });
 
     it('trigger=click 且 closeOnEsc=false', async () => {

@@ -27,7 +27,6 @@
                 "zh-CN": "点击或键盘选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有步骤变为可点击。",
                 "en-US": "Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. Passing it makes every step clickable."
             },
-            "prefixCls": { "zh-CN": "根元素的类名前缀。", "en-US": "Class name prefix of the root element." },
             "size": {
                 "zh-CN": "basic 与 nav 类型的尺寸，可选 default、small。",
                 "en-US": "Size of the basic and nav types: default or small."

@@ -32,8 +32,9 @@ export default function Numeral(props: NumeralProps) {
 
     const format = (value: string) => new FormatNumeral(value, local.rule ?? 'text', local.precision ?? 0, local.truncate ?? 'round', local.parser).format();
 
+    // Numeral declares no ellipsis: one passed through rest must not truncate a formatted number
     return (
-        <Base {...(rest as BaseTypographyProps)} component={rest.component ?? 'span'}>
+        <Base {...(rest as BaseTypographyProps)} component={rest.component ?? 'span'} ellipsis={false}>
             <FormattedChildren format={format}>{local.children}</FormattedChildren>
         </Base>
     );

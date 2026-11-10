@@ -70,8 +70,6 @@ export interface TextAreaProps extends ElementProps<'textarea', 'onChange' | 'on
     getValueLength?: (value: string) => number;
     maxLength?: number;
     minLength?: number;
-    /** Internal, used by Chat: Enter does not start a new line, Shift+Enter does */
-    disabledEnterStartNewLine?: boolean;
     showLineNumber?: boolean;
     lineNumberStart?: number;
     lineNumberClassName?: string;
@@ -85,6 +83,12 @@ export interface TextAreaProps extends ElementProps<'textarea', 'onChange' | 'on
     ref?: Ref<HTMLDivElement>;
     /** The native textarea; called again with the new element when `showLineNumber` remounts it */
     textareaRef?: (element: HTMLTextAreaElement) => void;
+}
+
+/** Props Semi's own components pass, kept out of the public TextAreaProps */
+export interface TextAreaInternalProps extends TextAreaProps {
+    /** Chat: Enter does not start a new line, Shift+Enter does */
+    disabledEnterStartNewLine?: boolean;
 }
 
 export interface TextAreaState {
@@ -109,7 +113,7 @@ const defaultProps = {
 } satisfies Partial<TextAreaProps>;
 
 export default function TextArea(rawProps: TextAreaProps) {
-    const defaulted = useDefaultProps('TextArea', rawProps, defaultProps);
+    const defaulted = useDefaultProps('TextArea', rawProps as TextAreaInternalProps, defaultProps);
 
     const group = useInputGroupContext();
     const layer = usePopupLayer();

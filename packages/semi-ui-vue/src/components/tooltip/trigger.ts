@@ -2,6 +2,7 @@ import { type CSSProperties, type VNode, Text, normalizeStyle } from 'vue';
 import { cssClasses, canRoleCarryPopupState, isBlockDisplay, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
 import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import elementType from '../../utils/element-type';
+import type { NativeTagComponent } from '../../utils/native-tag';
 import type { TooltipProps } from './interface';
 
 type Attrs = Record<string, unknown>;
@@ -17,7 +18,8 @@ const isOn = (value: unknown) => value === '' || value === true;
 
 export function canCarryPopupState(node: VNode) {
     if (node.props?.role) return canRoleCarryPopupState(node.props.role as string);
-    if (typeof node.type === 'string') return node.type === 'button' || (node.type === 'a' && Boolean(node.props?.href));
+    const tag = typeof node.type === 'string' ? node.type : (node.type as Partial<NativeTagComponent>).nativeTag;
+    if (tag) return tag === 'button' || (tag === 'a' && Boolean(node.props?.href));
     return elementType(node) === 'Button' || elementType(node) === 'IconButton';
 }
 
@@ -52,7 +54,8 @@ function triggerAttrs(aria: Attrs, popupId: string, keydown: EventListener | und
     return { ...attrs, ...joinedDescription(aria, own), [POPUP_ID_ATTRIBUTE]: popupId, onKeydownCapture: keydown };
 }
 
-export default function bindTrigger(nodes: VNode[], props: TooltipProps, popupId: string, popup: PopupState, keydown?: EventListener): TriggerBinding {
+/** `groupDisabled`: the enclosing ButtonGroup's `disabled`, which a Button or IconButton without its own inherits */
+export default function bindTrigger(nodes: VNode[], props: TooltipProps, popupId: string, popup: PopupState, keydown?: EventListener, groupDisabled?: boolean): TriggerBinding {
     const wrapperClass = [`${cssClasses.PREFIX}-trigger-wrapper`, props.wrapperClassName];
     const node = nodes.length === 1 && nodes[0].type !== Text ? nodes[0] : undefined;
     if (!node) {
@@ -67,9 +70,10 @@ export default function bindTrigger(nodes: VNode[], props: TooltipProps, popupId
         };
     }
 
-    const disabled = isOn(node.props?.disabled);
+    const isButton = ['Button', 'IconButton'].includes(elementType(node) ?? '');
+    const disabled = node.props?.disabled == null ? Boolean(isButton && groupDisabled) : isOn(node.props.disabled);
     // Button ignores loading while disabled
-    const loading = !disabled && isOn(node.props?.loading) && ['Button', 'IconButton'].includes(elementType(node) ?? '');
+    const loading = !disabled && isOn(node.props?.loading) && isButton;
     const special = Boolean(props.wrapWhenSpecial && (disabled || loading));
     const wrapped = special && wrapsSpecialTrigger(props.trigger, loading);
     if (!wrapped) {

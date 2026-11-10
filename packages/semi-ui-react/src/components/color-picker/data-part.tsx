@@ -75,7 +75,22 @@ export default function DataPart(props: DataPartProps) {
                         onNumberChange={foundation.handleAlphaInputChange}
                     />
                 )}
-                <Select className={`${cssClasses.PREFIX}-formatSelect`} aria-label={locale.format} value={format} optionList={['hex', 'rgba', 'hsva'].map((type) => ({ label: type, value: type }))} size="small" onSelect={(v) => foundation.handleFormatChange(v as ColorFormat)} />
+                <Select
+                    className={`${cssClasses.PREFIX}-formatSelect`}
+                    aria-label={locale.format}
+                    multiple={false}
+                    value={format}
+                    // a fixed list of three formats: global Select defaults must not make it search, create or multiple, nor add a clear button or adornments
+                    allowCreate={false}
+                    filter={false}
+                    insetLabel={null}
+                    optionList={['hex', 'rgba', 'hsva'].map((type) => ({ label: type, value: type }))}
+                    showClear={false}
+                    size="small"
+                    prefix={null}
+                    suffix={null}
+                    onSelect={(v) => foundation.handleFormatChange(v as ColorFormat)}
+                />
             </InputGroup>
 
             {eyeDropper && <Button type="tertiary" aria-label={locale.eyeDropper} size="small" theme="light" icon={<IconEyedropper />} onClick={foundation.handlePickValueWithStraw} />}

@@ -8,6 +8,9 @@ export interface PopupRegistry {
 
 export const [getTooltipPopupsContext, setTooltipPopupsContext] = createContext<PopupRegistry>('TooltipPopups', { optional: true });
 
+/** Set by Popover and Dropdown for the Tooltip they wrap, which resets it for its own subtree; kept out of the public TooltipProps */
+export const [getTooltipPrefixContext, setTooltipPrefixContext] = createContext<string>('TooltipPrefix', { optional: true });
+
 export interface TriggerState {
     disabled: boolean;
     loading: boolean;

@@ -8,8 +8,9 @@ import type { ElementProps } from '../../base/base';
 import flattenChildren from '../../utils/flatten-children';
 import type { Direction, Size, Status } from './types';
 
+const prefixCls = css.PREFIX;
+
 export interface BasicStepsProps extends ElementProps<'div', 'onChange'> {
-    prefixCls?: string;
     className?: string;
     direction?: Direction;
     current?: number;
@@ -25,7 +26,7 @@ export interface BasicStepsProps extends ElementProps<'div', 'onChange'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export default function Steps({ size = 'default', current = 0, status = 'process', children, prefixCls = css.PREFIX, initial = 0, direction = 'horizontal', className, hasLine = true, onChange, ...rest }: BasicStepsProps) {
+export default function Steps({ size = 'default', current = 0, status = 'process', children, initial = 0, direction = 'horizontal', className, hasLine = true, onChange, ...rest }: BasicStepsProps) {
     const filteredChildren = flattenChildren(children).filter((c) => isValidElement(c)) as Array<ReactElement<any>>;
 
     const inner = Children.map(filteredChildren, (child: React.ReactElement<any>, index) => {

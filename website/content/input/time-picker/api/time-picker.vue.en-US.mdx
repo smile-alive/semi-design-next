@@ -7,10 +7,10 @@ import ApiType from '#/components/ApiType.astro';
 | modelValue | Current time, used with v-model; an array when type is timeRange. null is a controlled empty value, and undefined means uncontrolled. | `TimePickerValue \| (TimePickerValue \| undefined)[] \| null` | `undefined` |
 | defaultValue | Initial time when uncontrolled, in the same forms as modelValue. | `TimePickerValue \| (TimePickerValue \| undefined)[]` | `semiGlobalDefault("TimePicker", "defaultValue")` |
 | open | Whether the panel is open, used with v-model:open; undefined means uncontrolled. | `boolean` | `undefined` |
-| defaultOpen | Whether the panel is open by default when uncontrolled. | `boolean` | `semiDefault("TimePicker", "defaultOpen", false)` |
-| type | Selection type: time for a single time, timeRange for a range. | `TimePickerType` | `semiDefault("TimePicker", "type", strings.DEFAULT_TYPE)` |
+| defaultOpen | Whether the panel is open by default when uncontrolled. | `boolean` | `false` |
+| type | Selection type: time for a single time, timeRange for a range. | `TimePickerType` | `strings.DEFAULT_TYPE` |
 | format | Display format, following date-fns format. Defaults to a h:mm:ss with use12Hours, else HH:mm:ss. | `string` | `semiGlobalDefault("TimePicker", "format")` |
-| use12Hours | Uses the 12-hour clock. | `boolean` | `semiDefault("TimePicker", "use12Hours", false)` |
+| use12Hours | Uses the 12-hour clock. | `boolean` | `false` |
 | hourStep | Interval of the hour options; a positive integer. | `number` | `semiGlobalDefault("TimePicker", "hourStep")` |
 | minuteStep | Interval of the minute options; a positive integer. | `number` | `semiGlobalDefault("TimePicker", "minuteStep")` |
 | secondStep | Interval of the second options; a positive integer. | `number` | `semiGlobalDefault("TimePicker", "secondStep")` |
@@ -19,25 +19,25 @@ import ApiType from '#/components/ApiType.astro';
 | disabledMinutes | Returns the minutes that cannot be selected for the selected hour. | <ApiType detail={"((selectedHour: number) => number[])"}>Type</ApiType> | `undefined` |
 | disabledSeconds | Returns the seconds that cannot be selected for the selected hour and minute. | <ApiType detail={"((selectedHour: number, selectedMinute: number) => number[])"}>Type</ApiType> | `undefined` |
 | disabledTime | Range mode only: returns the disabled rules of the left and right panel from the current value and the panel. The unpicked side of value is undefined; a returned disabledHours, disabledMinutes or disabledSeconds overrides the prop of the same name, and one left out falls back to it. | <ApiType detail={"((value: (Date \u007c undefined)[], panelType: PanelType) => DisabledTimeFns)"}>Type</ApiType> | `undefined` |
-| hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `semiDefault("TimePicker", "hideDisabledOptions", false)` |
+| hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `false` |
 | placeholder | Hint shown without a value; defaults to the locale text of type. | `string` | `semiGlobalDefault("TimePicker", "placeholder")` |
-| rangeSeparator | Separator between the two times of a range. | `string` | <ApiType detail={"semiDefault(\"TimePicker\", \"rangeSeparator\", strings.DEFAULT_RANGE_SEPARATOR)"}>Type</ApiType> |
+| rangeSeparator | Separator between the two times of a range. | `string` | `strings.DEFAULT_RANGE_SEPARATOR` |
 | size | Size of the input. | `Size` | `undefined` |
-| borderless | Borderless mode. | `boolean` | `semiDefault("TimePicker", "borderless", false)` |
-| showClear | Whether to show the clear button. | `boolean` | `semiDefault("TimePicker", "showClear", true)` |
-| inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices. | `boolean` | `semiDefault("TimePicker", "inputReadOnly", false)` |
+| borderless | Borderless mode. | `boolean` | `false` |
+| showClear | Whether to show the clear button. | `boolean` | `true` |
+| inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices. | `boolean` | `false` |
 | validateStatus | Validation status. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TimePicker", "validateStatus")` |
 | insetLabelId | id of the insetLabel, referenced through aria-labelledby. | `string` | `undefined` |
 | inputStyle | Style of the input's root element. | `StyleValue` | `semiGlobalDefault("TimePicker", "inputStyle")` |
-| autofocus | Focuses the input on mount, which opens the panel. | `boolean` | `semiDefault("TimePicker", "autofocus", false)` |
-| focusOnOpen | Focuses the input and selects its content once mounted, which opens the panel. | `boolean` | `semiDefault("TimePicker", "focusOnOpen", false)` |
+| autofocus | Focuses the input on mount, which opens the panel. | `boolean` | `false` |
+| focusOnOpen | Focuses the input and selects its content once mounted, which opens the panel. | `boolean` | `false` |
 | preventScroll | Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component. | `boolean` | `semiGlobalDefault("TimePicker", "preventScroll")` |
-| motion | Whether the popup animates. | `boolean` | `semiDefault("TimePicker", "motion", true)` |
-| autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `semiDefault("TimePicker", "autoAdjustOverflow", true)` |
+| motion | Whether the popup animates. | `boolean` | `true` |
+| autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `true` |
 | position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TimePicker", "position")` |
 | popupClassName | Class name of the popup. | `string` | `semiGlobalDefault("TimePicker", "popupClassName")` |
 | popupStyle | Style of the popup. | `StyleValue` | `semiGlobalDefault("TimePicker", "popupStyle")` |
-| stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `semiDefault("TimePicker", "stopPropagation", true)` |
+| stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | `undefined` |
 | scrollItemProps | Props passed to the columns; only cycled, mode, motion and transform, as on the ScrollItem of ScrollList. | `TimePickerScrollItemProps` | `semiGlobalDefault("TimePicker", "scrollItemProps")` |
 

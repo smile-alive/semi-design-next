@@ -8,9 +8,10 @@ import type { ElementProps } from '../../base/base';
 import type { BaseProps } from '../../base/base-props';
 import { usePopupLayer } from '../../base/popup-layer';
 import useDefaultProps from '../../base/use-default-props';
+import elementTypeOf from '../../utils/element-type';
 import flattenChildren from '../../utils/flatten-children';
 import { readGlobalDefaults } from '../../utils/semi-global';
-import type { Type, Size, ButtonProps, Theme } from './button';
+import type { Type, Size, ButtonProps, Theme } from './base-button';
 import { type ButtonGroupLooks, ButtonGroupContext, useInheritedButtonLooks } from './context';
 
 export type { Theme };
@@ -28,8 +29,6 @@ export interface ButtonGroupProps extends BaseProps, ElementProps<'div'> {
 }
 
 const prefixCls = cssClasses.PREFIX;
-
-const elementTypeOf = (node: ReactNode) => (isValidElement(node) ? (node.type as { elementType?: string }).elementType : undefined);
 
 // Resolves the looks in the order Button does, so the line matches the rendered button
 function withLines(inner: ReactNode[], group: ButtonGroupLooks) {
@@ -61,8 +60,9 @@ export default function ButtonGroup(rawProps: ButtonGroupProps) {
 
     const parent = useInheritedButtonLooks();
 
-    // A nested group inherits the outer one, then an InputGroup
-    const looks: ButtonGroupLooks = inheritGroupLooks({ disabled, size, type, theme, colorful }, parent);
+    // A nested group inherits the outer one, then an InputGroup; the group's global defaults come after both, so they
+    // are read from the merged props only where the raw ones are unset
+    const looks: ButtonGroupLooks = inheritGroupLooks(inheritGroupLooks(rawProps, parent), { disabled, size, type, theme, colorful });
 
     return (
         <div role="group" {...rest} className={clsx(`${prefixCls}-group`, className)}>

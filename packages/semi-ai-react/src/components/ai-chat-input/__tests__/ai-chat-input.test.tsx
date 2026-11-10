@@ -7,7 +7,7 @@ import Popover from '@fibrae/semi-ui-react/popover/index';
 import type { UploadProps } from '@fibrae/semi-ui-react/upload/index';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { countLiveListeners } from '@test/utils/react';
-import AIChatInput, { getConfigureItem, type AIChatInputHandle, type AIChatInputProps, type Attachment, type LeftMenuChangeProps } from '../index';
+import AIChatInput, { getConfigureItem, type AIChatInputHandle, type AIChatInputProps, type Attachment, type Setup } from '../index';
 
 type Props = AIChatInputProps;
 const { Configure } = AIChatInput;
@@ -1289,7 +1289,7 @@ describe('AIChatInput Configure 类型', () => {
     it('类型：onConfigureChange 的 changedValue 可为 undefined（移除配置项时）', () => {
         type ChangedValue = Parameters<NonNullable<Props['onConfigureChange']>>[1];
         expectTypeOf<undefined>().toExtend<ChangedValue>();
-        expectTypeOf<LeftMenuChangeProps>().toExtend<ChangedValue>();
+        expectTypeOf<Setup>().toExtend<ChangedValue>();
     });
 
     it('类型：不声明从未触发的 onSuggestClick 与 onTemplateVisibleChange', () => {

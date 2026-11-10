@@ -1,6 +1,6 @@
 {
     "card": {
-        "source": "packages/semi-ui-react/src/components/card/index.tsx",
+        "source": "packages/semi-ui-react/src/components/card/card.tsx",
         "props": {
             "actions": {
                 "zh-CN": "卡片操作区，数组中的每个元素是一个操作，位于内容区底部，操作之间以 12px 的水平间距排列。",

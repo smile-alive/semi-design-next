@@ -12,9 +12,9 @@ import ByKey from './by-key';
 import DayCol from './day-col';
 import EventContent from './event-content';
 import type { DayCalendarProps, DayColProps } from './interface';
+import useScrollGrid from './primitives/use-scroll-grid';
+import useToday from './primitives/use-today';
 import TimeCol from './time-col';
-import useScrollGrid from './use-scroll-grid';
-import useToday from './use-today';
 import { rootStyle, viewPropKeys } from './view-props';
 
 const prefixCls = `${cssClasses.PREFIX}-day`;

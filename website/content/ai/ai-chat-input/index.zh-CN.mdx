@@ -433,11 +433,11 @@ interface AIChatInputActionAreaSlotProps {
 
 <Framework only="solid">
 
-输入框右下角为操作区域，用户可以通过 `renderActionArea` API 自定义操作区域，展示自定义的操作按钮。`menuItem` 依次是上传节点（`showUploadButton` 为 `false` 时是隐藏的上传节点，仍需渲染才能粘贴上传）与发送或停止按钮。
+输入框右下角为操作区域，用户可以通过 `renderActionArea` API 自定义操作区域，展示自定义的操作按钮。`menuItem` 依次是创建上传按钮（`showUploadButton` 为 `false` 时不渲染）与发送或停止按钮的函数，在插入处调用；不渲染上传按钮也能粘贴上传。
 
 ```ts
 interface ActionAreaProps {
-    menuItem: JSX.Element[];
+    menuItem: (() => JSX.Element)[];
     class: string;
 }
 ```
@@ -617,7 +617,7 @@ interface Skill {
 
 ```ts
 interface AIChatInputTemplateSlotProps {
-    skill: Skill | undefined;
+    skill?: Skill;
     // 模版点击回调，点击模版后，用模版的内容替换输入框的内容
     onTemplateClick: (content: string) => void;
 }
@@ -668,7 +668,7 @@ interface Skill {
 
 ```ts
 interface AIChatInputTemplateSnippetProps {
-    skill: Skill | undefined;
+    skill?: Skill;
     // 模版点击回调，点击模版后，用模版的内容替换输入框的内容
     onTemplateClick: (content: string) => void;
 }

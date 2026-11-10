@@ -20,7 +20,7 @@ import type { RenderContentProps } from '../tooltip';
 import ByKey from './by-key';
 import EventContent from './event-content';
 import type { DayCalendarProps } from './interface';
-import useToday from './use-today';
+import useToday from './primitives/use-today';
 import { rootStyle, viewPropKeys } from './view-props';
 
 const prefixCls = `${cssClasses.PREFIX}-month`;

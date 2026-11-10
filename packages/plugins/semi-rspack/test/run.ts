@@ -50,7 +50,7 @@ function setupFixtureNodeModules() {
         })
     );
 
-    for (const name of ['ui-vue', 'icons-vue', 'ai-react', 'ai-vue']) {
+    for (const name of ['ui-vue', 'icons-vue', 'ai-react', 'ai-vue', 'ai-solid', 'ai-svelte']) {
         const exports = name === 'icons-vue' ? { '.': './dist/index.js', './lab': './dist/lab/index.js', './package.json': './package.json', './*': './dist/*.js' } : name === 'ui-vue' ? { ...uiExports, './tailwind.css': './dist/tailwind.css' } : uiExports;
         write(path.join(nm, `semi-${name}/package.json`), JSON.stringify({ name: `@fibrae/semi-${name}`, exports }));
         write(path.join(nm, `semi-${name}/dist/sample.js`), `import './sample.css';\nexport const sample = '${name}';\n`);
@@ -159,12 +159,14 @@ console.log('\n== AI 包的主题编译与 omitCss ==');
     const { cssContent } = await runCase('ai-prefix', { prefixCls: 'custom' }, 'src/ai-entry.js');
     assert.match(cssContent, /\.custom-ai-react/, 'semi-ai-react 应编译主题并替换前缀');
     assert.match(cssContent, /\.custom-ai-vue/, 'semi-ai-vue 应编译主题并替换前缀');
+    assert.match(cssContent, /\.custom-ai-solid/, 'semi-ai-solid 应编译主题并替换前缀');
+    assert.match(cssContent, /\.custom-ai-svelte/, 'semi-ai-svelte 应编译主题并替换前缀');
     assert.match(cssContent, /@layer\s+semi/, 'AI 包样式应置于 semi layer');
     const { jsContent, hasCss } = await runCase('ai-omit-css', { omitCss: true }, 'src/ai-entry.js');
-    assert.ok(!hasCss, 'omitCss 应移除两个 AI 包的 CSS');
+    assert.ok(!hasCss, 'omitCss 应移除四个 AI 包的 CSS');
     assert.match(jsContent, /ai-react/, 'semi-ai-react 的 JS 应保留');
     assert.match(jsContent, /ai-vue/, 'semi-ai-vue 的 JS 应保留');
-    assert.equal((jsContent.match(/\/\/ import '\.\/sample\.css'/g) ?? []).length, 2, '两个 AI 包都应移除样式导入');
+    assert.equal((jsContent.match(/\/\/ import '\.\/sample\.css'/g) ?? []).length, 4, '四个 AI 包都应移除样式导入');
 }
 
 console.log('\nAll assertions passed');

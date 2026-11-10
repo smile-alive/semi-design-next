@@ -1,7 +1,7 @@
 <script lang="ts">
     import ArrayField from '../array-field.svelte';
     import FormField from '../field.svelte';
-    import FormInput from '../form-input.svelte';
+    import FormInput from '../fields/form-input.svelte';
     import ProbeControl from './probe-control.svelte';
 
     let { field, initValue, rowInitValue, probe = false }: { field: string; initValue?: unknown[]; rowInitValue?: string; probe?: boolean } = $props();

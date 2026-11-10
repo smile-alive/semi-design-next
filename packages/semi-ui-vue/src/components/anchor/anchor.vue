@@ -62,15 +62,19 @@
     // while cached, an update or a container change must not bind the scroll listeners
     const { isDeactivated } = useKeepAliveFoundation(foundation);
 
+    const childMap = computed(() => AnchorFoundation.getRegisteredChildMap(state.value.linkParents));
+
     provideAnchorContext({
         view: computed(() => ({
             activeLink: state.value.activeLink,
             autoCollapse: props.autoCollapse,
+            childMap: childMap.value,
             position: props.position,
             showTooltip: props.showTooltip,
             size: props.size,
         })),
         level: 1,
+        parentHref: () => undefined,
         onClick: foundation.handleClick,
         addLink: foundation.addLink,
         removeLink: foundation.removeLink,

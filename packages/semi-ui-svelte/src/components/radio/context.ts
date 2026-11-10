@@ -6,7 +6,6 @@ export interface RadioGroupContextValue {
     readonly value?: RadioValue;
     readonly disabled: boolean;
     readonly name: string;
-    readonly prefixCls?: string;
     readonly isButtonRadio: boolean;
     readonly isCardRadio: boolean;
     readonly isPureCardRadio: boolean;

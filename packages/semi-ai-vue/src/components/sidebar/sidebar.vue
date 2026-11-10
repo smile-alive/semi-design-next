@@ -10,12 +10,12 @@
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import { ToastFactory } from '@fibrae/semi-ui-vue/toast/index';
     import { hasSlotContent } from '@fibrae/semi-ui-vue/utils/slot-nodes';
+    import CodeItem from './code-item.vue';
     import pickContainerProps from './container/container-props';
     import Container from './container/container.vue';
     import type { ContainerHandle } from './container/interface';
+    import FileItem from './file-item.vue';
     import type { SideBarEmits, SideBarOption, SideBarProps, SideBarSlots } from './interface';
-    import CodeItem from './widgets/code-item.vue';
-    import FileItem from './widgets/file-item.vue';
 
     defineOptions({ name: 'Sidebar' });
 
