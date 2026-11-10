@@ -4,15 +4,17 @@ import clsx from 'clsx';
 import { settleConfirm } from '@fibrae/semi-foundation/components/modal/confirm';
 import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
 import '@fibrae/semi-foundation/components/modal/modal.scss';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { isSemiIcon } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
 import type { ConfirmProps } from './confirm';
 import Modal from './modal';
 
 // onMount is private to Modal.confirm and useModal, which have to know when the first commit happened
-export default function ConfirmModal({ title, content, icon, type, onCancel, onOk, onMount, className, direction: directionProp, ...rest }: ConfirmProps & { onMount?: () => void }) {
+export default function ConfirmModal({ title, content, icon: rawIcon, type, onCancel, onOk, onMount, className, direction: directionProp, ...rest }: ConfirmProps & { onMount?: () => void }) {
     // Modal.confirm renders outside any ConfigProvider and passes the direction itself
     const { direction: contextDirection } = useConfigContext();
+    const icon = useUnwrappedLazy(rawIcon);
 
     const [visible, setVisible] = useState(true);
     const [confirmLoading, setConfirmLoading] = useState<boolean>();

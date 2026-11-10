@@ -10,7 +10,7 @@ import { isEventInside, type ArrayElement } from '@fibrae/semi-foundation/utils'
 import '@fibrae/semi-foundation/components/tag-input/tag-input.scss';
 import { IconClear, IconHandle } from '@fibrae/semi-icons-react';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside } from '../../hooks/index';
+import { useClickOutside, useUnwrappedLazy } from '../../hooks/index';
 import type { RenderItemProps } from '../../internal/sortable';
 import type { SortableHandle } from '../../internal/sortable/types';
 import { hasContent, isSemiIcon, isText } from '../../utils/index';
@@ -209,7 +209,7 @@ export default function TagInput(rawProps: TagInputProps) {
         size,
         split,
         style,
-        suffix,
+        suffix: rawSuffix,
         validateStatus,
         value,
         autoFocus,
@@ -434,7 +434,8 @@ export default function TagInput(rawProps: TagInputProps) {
 
     let clearNode: React.ReactNode = null;
 
-    const labelNode = hasContent(prefix) ? prefix : insetLabel;
+    const labelNode = useUnwrappedLazy(hasContent(prefix) ? prefix : insetLabel);
+    const suffix = useUnwrappedLazy(rawSuffix);
     const insetLabelShown = !hasContent(prefix) && hasContent(insetLabel);
 
     // a rendered inset label names the input (WCAG 2.5.3), so it needs an id even when the caller gives none

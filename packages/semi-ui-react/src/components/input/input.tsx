@@ -8,6 +8,7 @@ import { stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/uti
 import '@fibrae/semi-foundation/components/input/input.scss';
 import { IconClear, IconEyeOpened, IconEyeClosedSolid } from '@fibrae/semi-icons-react';
 import { useDefaultProps, useFoundation } from '../../base/index';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { hasContent, isSemiIcon, isText } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import { InputGroupContext, useInputGroupInScope, withInputGroup } from './context';
@@ -129,8 +130,8 @@ export default function Input(rawProps: InputProps) {
 
     const {
         ref,
-        addonAfter,
-        addonBefore,
+        addonAfter: rawAddonAfter,
+        addonBefore: rawAddonBefore,
         autoFocus,
         clearIcon,
         className,
@@ -146,7 +147,7 @@ export default function Input(rawProps: InputProps) {
         type,
         readonly,
         size,
-        suffix,
+        suffix: rawSuffix,
         style,
         showClear,
         onEnterPress,
@@ -173,6 +174,10 @@ export default function Input(rawProps: InputProps) {
     } = props as InputInternalProps;
 
     const { locale } = useLocale('Input');
+    const addonAfter = useUnwrappedLazy(rawAddonAfter);
+    const addonBefore = useUnwrappedLazy(rawAddonBefore);
+    const suffix = useUnwrappedLazy(rawSuffix);
+    const labelNode = useUnwrappedLazy(hasContent(prefix) ? prefix : insetLabel);
 
     const generatedId = useId();
     const inputRef = useRef<HTMLInputElement>(null);
@@ -203,7 +208,6 @@ export default function Input(rawProps: InputProps) {
     const wrapperPrefix = `${prefixCls}-wrapper`;
     const hasBefore = hasContent(addonBefore);
     const hasAfter = hasContent(addonAfter);
-    const labelNode = hasContent(prefix) ? prefix : insetLabel;
 
     const { labelId, ariaInvalid, ariaLabelledby } = InputFoundation.getLabelA11y({
         shown: hasContent(insetLabel) && !hasContent(prefix),

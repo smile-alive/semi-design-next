@@ -1,4 +1,4 @@
-import React, { type ReactNode, isValidElement, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { type ReactNode, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
@@ -149,7 +149,7 @@ function renderExpandIcon(record: any = {}, isNested = false, groupKey: string |
  * A title function gets the sorter and filter nodes only with useFullRender; otherwise its result is the title
  */
 function addFnsInColumn(column: HeaderColumn = {}, queries: ColumnProps[], prefixCls: string, foundation: TableFoundation<any>) {
-    const { needsTitle, hasSorter, hasFilter, clickToSort: clickColumnToSorter, showSortTip, query: curQuery, sortOrder, filteredValue } = TableFoundation.getColumnFlags(column, queries, isValidElement(column.filterDropdown));
+    const { needsTitle, hasSorter, hasFilter, clickToSort: clickColumnToSorter, showSortTip, query: curQuery, sortOrder, filteredValue } = TableFoundation.getColumnFlags(column, queries, column.filterDropdown != null);
     if (needsTitle) {
         let hasSorterOrFilter = false;
         const { dataIndex, title: rawTitle, useFullRender } = column;

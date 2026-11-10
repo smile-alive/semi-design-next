@@ -15,6 +15,6 @@ export default defineConfig({
         define: { 'process.env.NODE_ENV': 'process.env.NODE_ENV' },
         outDir: 'dist',
         dts: true,
-        plugins: [semiPackStyles(fileURLToPath(new URL('src', import.meta.url)), { ignore: notShipped, bundles: semiUiBundles }), semiUseClient],
+        plugins: [semiPackStyles(fileURLToPath(new URL('src', import.meta.url)), { ignore: notShipped, bundles: semiUiBundles }), semiUseClient(['index.js', 'locale.js'])],
     },
 });

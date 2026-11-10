@@ -485,19 +485,14 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
     execFileSync(process.execPath, [importDist, 'collect', exportsFile, ...reactDists, ...distDirs(['semi-ui-vue', 'semi-ai-vue', 'semi-icons-vue'])], { stdio: 'inherit' });
 
     const startsWithUseClient = (distDir: string, file: string) => /^["']use client["']/.test(fs.readFileSync(path.join(distDir, file), 'utf-8').slice(0, 20));
-    for (const name of ['semi-ui-react', 'semi-ai-react']) {
+    const serverEntriesOf = { 'semi-ui-react': ['index.js', 'locale.js'], 'semi-ai-react': ['index.js'], 'semi-icons-react': ['index.js', 'lab/index.js', 'illustrations/index.js'] };
+    for (const [name, serverEntries] of Object.entries(serverEntriesOf)) {
         const distDir = path.join(scope, name, 'dist');
-        const serverEntries = name === 'semi-ui-react' ? ['index.js', 'locale.js'] : ['index.js'];
         const missing = fs.globSync('**/*.js', { cwd: distDir }).filter((file) => !serverEntries.includes(file) && !startsWithUseClient(distDir, file));
         assert.deepStrictEqual(missing, [], `every ${name} module but ${serverEntries.join(' and ')} starts with 'use client'`);
         for (const file of serverEntries) {
             assert.ok(!startsWithUseClient(distDir, file), `${name}/dist/${file} is not marked 'use client'`);
         }
-    }
-    {
-        const distDir = path.join(scope, 'semi-icons-react', 'dist');
-        const marked = fs.globSync('**/*.js', { cwd: distDir }).filter((file) => startsWithUseClient(distDir, file));
-        assert.deepStrictEqual(marked, [], `semi-icons-react modules are not marked 'use client'`);
     }
     execFileSync(process.execPath, ['--conditions=react-server', importDist, 'rsc', exportsFile, ...reactDists], { stdio: 'inherit' });
 

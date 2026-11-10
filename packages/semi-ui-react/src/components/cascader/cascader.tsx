@@ -8,7 +8,7 @@ import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } fr
 import '@fibrae/semi-foundation/components/cascader/cascader.scss';
 import { IconClear, IconChevronDown } from '@fibrae/semi-icons-react';
 import { type Bivariant, type ByMultiple, type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside, useFocusHandover } from '../../hooks/index';
+import { useClickOutside, useFocusHandover, useUnwrappedLazy } from '../../hooks/index';
 import type { VirtualListHandle } from '../../internal/index';
 import Trigger from '../../internal/trigger';
 import { hasContent, renderTriggerPrefix, renderTriggerSuffix } from '../../utils/index';
@@ -266,6 +266,9 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
 
     // A rendered inset label names the combobox and the tree, so it needs an id even when the caller gives none
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
+    const prefixNode = useUnwrappedLazy(prefix);
+    const insetLabelNode = useUnwrappedLazy(insetLabel);
+    const suffixNode = useUnwrappedLazy(suffix);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
     const prefixId = insetLabelId ?? (insetLabelShown ? `${popupId}-inset-label` : undefined);
     const nameProps = comboboxName(ariaLabelledby, ariaLabel, insetLabelShown ? prefixId : undefined, locale.label);
@@ -699,11 +702,11 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         const inner = useCustomTrigger
             ? renderCustomTrigger()
             : [
-                  <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefix, insetLabel, prefixId)}</Fragment>,
+                  <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId)}</Fragment>,
                   <Fragment key="selection">
                       <div className={sectionCls}>{renderSelectContent()}</div>
                   </Fragment>,
-                  <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffix)}</Fragment>,
+                  <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode)}</Fragment>,
                   <Fragment key="clearbtn">{renderClearBtn()}</Fragment>,
                   <Fragment key="arrow">{renderArrow()}</Fragment>,
               ];

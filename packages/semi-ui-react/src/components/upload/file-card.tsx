@@ -6,6 +6,7 @@ import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundati
 import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import { IconAlertCircle, IconClose, IconClear, IconFile, IconRefresh } from '@fibrae/semi-icons-react';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { HydratedImage } from '../../internal/index';
 import Button from '../button/index';
 import useLocale from '../locale/use-locale';
@@ -253,7 +254,7 @@ function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPrev
 }
 
 export default function FileCard(rawProps: FileCardProps) {
-    const props = withDefaults(rawProps);
+    const props = { ...withDefaults(rawProps), validateMessage: useUnwrappedLazy(rawProps.validateMessage) };
 
     const { locale } = useLocale('Upload');
 

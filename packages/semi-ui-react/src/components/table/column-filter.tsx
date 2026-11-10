@@ -6,6 +6,7 @@ import { toggleFilteredValue } from '@fibrae/semi-foundation/components/table/ut
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import { noop } from '@fibrae/semi-foundation/utils';
 import { IconFilter } from '@fibrae/semi-icons-react';
+import { useUnwrappedLazy } from '../../hooks/index';
 import Button from '../button';
 import { Checkbox } from '../checkbox';
 import Dropdown, { type DropdownProps } from '../dropdown';
@@ -148,8 +149,9 @@ function renderDropdown(props: RenderDropdownProps, nestedElem: React.ReactNode,
 }
 
 export default function ColumnFilter(props: ColumnFilterProps = {}): React.ReactElement {
-    const { prefixCls = cssClasses.PREFIX, filteredValue, filterIcon, filterDropdownProps, onSelect, filterDropdownVisible, renderFilterDropdown, onFilterDropdownVisibleChange, filterConfirmMode = 'immediate' } = props;
-    let { filterDropdown = null } = props;
+    const { prefixCls = cssClasses.PREFIX, filteredValue, filterDropdownProps, onSelect, filterDropdownVisible, renderFilterDropdown, onFilterDropdownVisibleChange, filterConfirmMode = 'immediate' } = props;
+    const filterIcon = useUnwrappedLazy(props.filterIcon);
+    const filterDropdown = useUnwrappedLazy(props.filterDropdown);
 
     const { locale: tableLocale } = useLocale('Table');
 

@@ -5,7 +5,7 @@ import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
 import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
 import { IconChevronRight, IconChevronLeft, IconChevronDown } from '@fibrae/semi-icons-react';
 import { useFoundation } from '../../base/index';
-import { useMergedRef } from '../../hooks/index';
+import { useMergedRef, useUnwrappedLazy } from '../../hooks/index';
 import ReactResizeObserver from '../../internal/resize-observer';
 import Button from '../button';
 import Dropdown, { type DropdownProps } from '../dropdown';
@@ -33,7 +33,7 @@ export default function TabBar(props: TabBarProps) {
         showRestInDropdown,
         size,
         style,
-        tabBarExtraContent,
+        tabBarExtraContent: rawTabBarExtraContent,
         tabPosition,
         type,
         dropdownClassName,
@@ -54,6 +54,7 @@ export default function TabBar(props: TabBarProps) {
 
     const { locale } = useLocale('Tabs');
     const tabsContext = useTabsContext();
+    const tabBarExtraContent = useUnwrappedLazy(rawTabBarExtraContent);
 
     const tabBarRef = useRef<HTMLDivElement>(null);
     let contents: ReactNode;

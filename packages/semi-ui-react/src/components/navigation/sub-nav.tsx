@@ -8,7 +8,7 @@ import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-react';
 import { type ElementProps, type BaseProps, useFoundation } from '../../base/index';
-import { useFocusHandover, useMergedRef } from '../../hooks/index';
+import { useFocusHandover, useMergedRef, useUnwrappedLazy } from '../../hooks/index';
 import CSSAnimation from '../../internal/css-animation';
 import Collapsible from '../collapsible';
 import Dropdown, { type DropdownProps } from '../dropdown';
@@ -38,9 +38,11 @@ export interface SubNavProps extends BaseProps, ElementProps<'li', 'onClick'> {
 }
 
 export default function SubNav({ ref, ...props }: SubNavProps) {
-    const { text, icon, itemKey, indent = false, disabled = false, level = 0, expandIcon, style, className, onMouseEnter, onMouseLeave, children, dropdownStyle, dropdownProps: userDropdownProps, subDropdownProps, ...restProps } = props;
+    const { text, icon: rawIcon, itemKey, indent = false, disabled = false, level = 0, expandIcon: rawExpandIcon, style, className, onMouseEnter, onMouseLeave, children, dropdownStyle, dropdownProps: userDropdownProps, subDropdownProps, ...restProps } = props;
 
     const context = useNavContext();
+    const icon = useUnwrappedLazy(rawIcon);
+    const expandIcon = useUnwrappedLazy(rawExpandIcon);
 
     const itemRef = useRef<HTMLLIElement>(null);
 

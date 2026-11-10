@@ -5,6 +5,7 @@ import { normalizeFieldError } from '@fibrae/semi-foundation/components/form/err
 import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
 import { joinIds, namedRole } from '@fibrae/semi-foundation/utils';
 import type { ElementProps } from '../../base/index';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { hasContent } from '../../utils/index';
 import { Col } from '../grid';
 import { useFieldBridgeContext } from './context';
@@ -30,8 +31,9 @@ function isConfig(value: unknown): value is object {
     return value !== null && (typeof value === 'object' || typeof value === 'function') && !React.isValidElement(value) && !Array.isArray(value);
 }
 
-export default function FormSlot({ children, label, className, style, error, noLabel, labelPosition: slotLabelPosition, ref, ...rest }: SlotProps) {
+export default function FormSlot({ children, label: rawLabel, className, style, error, noLabel, labelPosition: slotLabelPosition, ref, ...rest }: SlotProps) {
     const fieldBridge = useFieldBridgeContext();
+    const label = useUnwrappedLazy(rawLabel);
 
     const generatedId = useId();
     let slotError = null;

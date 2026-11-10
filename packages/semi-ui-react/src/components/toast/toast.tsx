@@ -6,6 +6,7 @@ import { numbers, cssClasses, getStackLayerTransform } from '@fibrae/semi-founda
 import ToastFoundation, { type ToastAdapter, type ToastInstance, type ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { IconClose, IconAlertTriangle, IconInfoCircle, IconTickCircle, IconAlertCircle } from '@fibrae/semi-icons-react';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useUnwrappedLazy } from '../../hooks/index';
 import { isSemiIcon } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
 import Button from '../icon-button/index';
@@ -54,10 +55,11 @@ const typeIcons: Record<string, React.ReactElement<any>> = {
 
 export default function Toast(rawProps: ToastItemProps) {
     const props = useDefaultProps('Toast', rawProps, defaultProps);
-    const { ref, id, motion, top, bottom, left, right, zIndex, getPopupContainer, duration, onClose, close, content, type, theme, textMaxWidth, showClose, icon, direction: propDirection, stack, stackExpanded, positionInList, listState, className, style, onAnimationStart, onAnimationEnd, ...rest } = props;
+    const { ref, id, motion, top, bottom, left, right, zIndex, getPopupContainer, duration, onClose, close, content, type, theme, textMaxWidth, showClose, icon: rawIcon, direction: propDirection, stack, stackExpanded, positionInList, listState, className, style, onAnimationStart, onAnimationEnd, ...rest } = props;
 
     const { direction: contextDirection } = useConfigContext();
     const { locale } = useLocale('Toast');
+    const icon = useUnwrappedLazy(rawIcon);
 
     let iconNode: React.ReactNode = null;
 

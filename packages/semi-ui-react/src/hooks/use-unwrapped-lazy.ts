@@ -1,11 +1,10 @@
 import { type ReactNode, use } from 'react';
+import { REACT_LAZY_TYPE } from '../utils/element-type';
 
 interface LazyNode {
     $$typeof: symbol;
     _payload: PromiseLike<ReactNode>;
 }
-
-const REACT_LAZY_TYPE = Symbol.for('react.lazy');
 
 function isLazyNode(node: unknown): node is LazyNode {
     if (typeof node !== 'object' || node === null) {
@@ -21,10 +20,10 @@ function isLazyNode(node: unknown): node is LazyNode {
  * `cloneElement`) reads it through this hook, or client and server render different trees. The payload is a Flight
  * chunk that `use()` reads; it can resolve to another lazy node, so this loops like Radix Slot does.
  */
-export default function useUnwrappedLazy(node: ReactNode): ReactNode {
+export default function useUnwrappedLazy<T>(node: T) {
     let resolved: unknown = node;
     while (isLazyNode(resolved)) {
         resolved = use(resolved._payload);
     }
-    return resolved as ReactNode;
+    return resolved as T;
 }

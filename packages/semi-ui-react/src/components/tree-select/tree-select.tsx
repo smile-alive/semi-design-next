@@ -11,7 +11,7 @@ import '@fibrae/semi-foundation/components/tree/tree.scss';
 import '@fibrae/semi-foundation/components/tree-select/tree-select.scss';
 import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-react';
 import { type Bivariant, type ByMultiple, type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside, useFocusHandover } from '../../hooks/index';
+import { useClickOutside, useFocusHandover, useUnwrappedLazy } from '../../hooks/index';
 import { VirtualList, type VirtualListHandle } from '../../internal/index';
 import Trigger from '../../internal/trigger';
 import { hasContent, renderTriggerPrefix, renderTriggerSuffix } from '../../utils/index';
@@ -428,6 +428,9 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const clearHandover = useFocusHandover<HTMLButtonElement>(() => (inputIsCombobox ? triggerRef.current?.querySelector('input') : triggerRef.current));
 
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
+    const prefixNode = useUnwrappedLazy(prefix);
+    const insetLabelNode = useUnwrappedLazy(insetLabel);
+    const suffixNode = useUnwrappedLazy(suffix);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
     const prefixId = insetLabelId ?? (insetLabelShown ? `${treeId}-inset-label` : undefined);
     const nameProps = comboboxName(ariaLabelledby, ariaLabel, insetLabelShown ? prefixId : undefined, locale.label);
@@ -789,11 +792,11 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             inner = <Trigger disabled={disabled} placeholder={placeholder} value={triggerRenderKeys.map(getNodeData).filter(Boolean)} componentProps={componentProps} inputValue={inputValue} triggerRender={triggerRender} onClear={handleClear} onRemove={removeTag} onSearch={search} />;
         } else {
             inner = [
-                <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefix, insetLabel, prefixId)}</Fragment>,
+                <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId)}</Fragment>,
                 <Fragment key="selection">
                     <div className={`${prefixcls}-selection`}>{renderSelectContent(triggerRenderKeys)}</div>
                 </Fragment>,
-                <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffix)}</Fragment>,
+                <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode)}</Fragment>,
                 <Fragment key="clearBtn">{renderClearBtn()}</Fragment>,
                 <Fragment key="arrow">{renderArrow()}</Fragment>,
             ];

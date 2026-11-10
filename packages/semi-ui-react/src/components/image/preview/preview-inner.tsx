@@ -5,7 +5,7 @@ import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerStat
 import { coversPage } from '@fibrae/semi-foundation/utils';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-react';
 import { useFoundation } from '../../../base/index';
-import { useIsServerRender } from '../../../hooks/index';
+import { useIsServerRender, useUnwrappedLazy } from '../../../hooks/index';
 import Portal from '../../../internal/portal';
 import { useConfigContext } from '../../config-provider/context';
 import useLocale from '../../locale/use-locale';
@@ -157,6 +157,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     const currentIndex = PreviewInnerFoundation.getCurrentIndex(props, state);
     const ratio = PreviewInnerFoundation.getRatio(props, state);
+    const leftIcon = useUnwrappedLazy(typeof renderLeftIcon === 'function' ? renderLeftIcon(currentIndex) : renderLeftIcon);
+    const rightIcon = useUnwrappedLazy(typeof renderRightIcon === 'function' ? renderRightIcon(currentIndex) : renderRightIcon);
 
     // only a preview whose container covers the page is modal, locks scroll and keeps Tab inside. The caller's getter
     // may read document; on the server and while hydrating the Portal renders nothing anyway
@@ -184,8 +186,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const showNext = PreviewInnerFoundation.canSwitch('next', currentIndex, total, infinite);
     const title = previewContext?.titles?.[currentIndex] ?? previewTitle;
     const hasTitle = title != null && title !== '';
-    const leftIcon = typeof renderLeftIcon === 'function' ? renderLeftIcon(currentIndex) : renderLeftIcon;
-    const rightIcon = typeof renderRightIcon === 'function' ? renderRightIcon(currentIndex) : renderRightIcon;
 
     const handlePrev = () => foundation.handleSwitchImage('prev');
 
