@@ -25,7 +25,7 @@
 
     let { store }: { store: FixtureStore } = $props();
 
-    let picker = $state<DatePicker>();
+    let picker = $state<DatePickerHandle>();
 
     const log = (entry: string) => {
         store.log.push(entry);

@@ -2,7 +2,7 @@
     import type { DatePickerProps } from '../interface';
 
     export interface ClearIconFixtureStore {
-        props: Omit<DatePickerProps, 'clearIcon'>;
+        props: DatePickerProps;
     }
 </script>
 

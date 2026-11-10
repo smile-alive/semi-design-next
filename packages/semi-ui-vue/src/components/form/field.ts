@@ -4,7 +4,7 @@ import type { ElementProps, EmitHandlers, EmitProps } from '../../base/index';
 import AutoComplete, { type AutoCompleteEmits, type AutoCompleteHandle, type AutoCompleteItems, type AutoCompleteProps, type AutoCompleteSlots } from '../auto-complete';
 import Cascader, { type CascaderEmits, type CascaderHandle, type CascaderProps, type CascaderSlots } from '../cascader';
 import Checkbox, { CheckboxGroup } from '../checkbox';
-import DatePicker from '../date-picker';
+import DatePicker, { type DatePickerEmits, type DatePickerHandle, type DatePickerProps, type DatePickerSlots, type DatePickerType } from '../date-picker';
 import Input, { TextArea } from '../input';
 import InputNumber from '../input-number';
 import PinCode from '../pincode';
@@ -50,6 +50,10 @@ type FormCascaderProps<Multiple extends boolean | undefined> = FieldProps<CallSi
 
 type FormCascaderComponent = <Multiple extends boolean | undefined = undefined>(props: FormCascaderProps<Multiple>, ctx?: GenericFieldContext<CascaderSlots<Multiple>>) => GenericFieldNode<FormCascaderProps<Multiple>, CascaderSlots<Multiple>, CascaderHandle>;
 
+type FormDatePickerProps<Kind extends DatePickerType | undefined, Multiple extends boolean | undefined> = FieldProps<CallSiteProps<DatePickerProps<Kind, Multiple>, DatePickerEmits<Kind, Multiple>>>;
+
+type FormDatePickerComponent = <Kind extends DatePickerType | undefined = undefined, Multiple extends boolean | undefined = undefined>(props: FormDatePickerProps<Kind, Multiple>, ctx?: GenericFieldContext<DatePickerSlots>) => GenericFieldNode<FormDatePickerProps<Kind, Multiple>, DatePickerSlots, DatePickerHandle>;
+
 type FormAutoCompleteProps<T extends AutoCompleteItems> = FieldProps<CallSiteProps<AutoCompleteProps<T>, AutoCompleteEmits>>;
 
 type FormAutoCompleteComponent = <T extends AutoCompleteItems = AutoCompleteItems>(props: FormAutoCompleteProps<T>, ctx?: GenericFieldContext<AutoCompleteSlots<T>>) => GenericFieldNode<FormAutoCompleteProps<T>, AutoCompleteSlots<T>, AutoCompleteHandle>;
@@ -87,7 +91,7 @@ export const FormRadio: OptionalFieldComponent<typeof Radio> = withField(Radio, 
     valuePath: 'target.checked',
     shouldInject: false,
 });
-export const FormDatePicker: FieldComponent<typeof DatePicker> = withField(DatePicker);
+export const FormDatePicker = withField(DatePicker) as unknown as FormDatePickerComponent;
 export const FormSwitch: FieldComponent<typeof Switch> = withField(Switch);
 export const FormSlider: FieldComponent<typeof Slider> = withField(Slider);
 export const FormTimePicker: FieldComponent<typeof TimePicker> = withField(TimePicker);

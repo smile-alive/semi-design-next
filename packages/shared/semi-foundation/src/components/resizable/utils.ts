@@ -20,7 +20,7 @@ export function has(dir: 'top' | 'right' | 'bottom' | 'left', target: string) {
     return new RegExp(dir, 'i').test(target);
 }
 export function findNextSnap(n: number, snapArray: number[], snapGap: number = 0) {
-    const closest = minBy(snapArray, (v) => Math.abs(v - n));
+    const closest = minBy(snapArray, (v) => Math.abs(v - n)) ?? n;
     return snapGap === 0 || Math.abs(closest - n) < snapGap ? closest : n;
 }
 export function getStringSize(n: number | string) {

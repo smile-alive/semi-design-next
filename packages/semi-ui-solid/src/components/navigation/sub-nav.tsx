@@ -249,7 +249,7 @@ export function SubView(props: SubNavProps) {
                         dropdownOptions().onVisibleChange?.(visible);
                     }}
                 >
-                    {(trigger: GetDropdownTriggerProps) => renderTitle(trigger as unknown as GetTriggerProps)}
+                    {(trigger: GetDropdownTriggerProps) => renderTitle(trigger as GetTriggerProps)}
                 </Dropdown>
             </Match>
         </Switch>

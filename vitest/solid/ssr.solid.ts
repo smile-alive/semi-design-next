@@ -18,7 +18,7 @@ export interface SsrCase<Export extends string = string> {
     text?: string[];
     // Markup the server HTML must contain, for first-frame state that lives in attributes (an input's value)
     html?: string[];
-    // Attributes docs/component-issues.md registers as written after mount; '*' when the structure itself changes
+    // Attributes docs/decisions.md registers as written after mount; '*' when the structure itself changes
     mountDiff?: MountDiff[];
     // Role of the overlay the case opens by default; hydration must leave an element with it in the body outside the
     // root, which the root comparison cannot see because overlays are portaled

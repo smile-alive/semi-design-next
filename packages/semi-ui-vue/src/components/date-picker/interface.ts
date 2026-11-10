@@ -27,18 +27,31 @@ export type DatePickerTimePickerOpts = Partial<Pick<ComboboxProps, 'use12Hours' 
 
 export type DatePickerYearAndMonthOpts = Partial<Pick<ScrollItemProps, 'cycled' | 'mode' | 'motion' | 'transform'>>;
 
-export interface DatePickerProps {
+export type DatePickerChangeArgs<Kind, Multiple> = Kind extends unknown
+    ? Kind extends 'dateRange' | 'dateTimeRange' | 'monthRange'
+        ? [date: Date[], dateString: string[]]
+        : Kind extends 'date' | undefined
+          ? Multiple extends unknown
+              ? true extends Multiple
+                  ? [date: Date[], dateString: string[]]
+                  : [date: Date | undefined, dateString: string | undefined]
+              : never
+          : [date: Date | undefined, dateString: string | undefined]
+    : never;
+
+export interface DatePickerProps<Kind extends DatePickerType | undefined = DatePickerType, Multiple extends boolean | undefined = boolean> {
     /** `null` is a controlled empty value; only `undefined` leaves the picker uncontrolled */
     modelValue?: DatePickerValueType | null;
     defaultValue?: DatePickerValueType;
     open?: boolean;
     defaultOpen?: boolean;
     /** A format without time tokens turns dateTime into date and dateTimeRange into dateRange */
-    type?: DatePickerType;
+    // `& string` and `& boolean` keep Vue's runtime String and Boolean casting, which a bare type parameter loses
+    type?: Kind & string;
     format?: string;
     defaultPickerValue?: DatePickerValueType;
     /** Only for the date type */
-    multiple?: boolean;
+    multiple?: Multiple & boolean;
     max?: number;
     /** Only for dateTime and dateTimeRange */
     needConfirm?: boolean;
@@ -92,10 +105,10 @@ export interface DatePickerProps {
     dropdownStyle?: StyleValue;
 }
 
-export interface DatePickerEmits {
+export interface DatePickerEmits<Kind extends DatePickerType | undefined = DatePickerType, Multiple extends boolean | undefined = boolean> {
     /** `undefined` (single) or `[]` (range and multiple) when cleared */
     'update:modelValue': [value: Date | Date[] | undefined];
-    change: [date: Date | Date[] | undefined, dateString: string | string[]];
+    change: DatePickerChangeArgs<Kind, Multiple>;
     'update:open': [open: boolean];
     openChange: [open: boolean];
     /**

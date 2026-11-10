@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" generics="T extends DatePickerType = 'date', M extends boolean = false">
     import { onMount } from 'svelte';
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
@@ -28,7 +28,7 @@
     import { useNestedPopups } from '../tooltip/context.js';
     import DateInput from './date-input.svelte';
     import Footer from './footer.svelte';
-    import type { DatePickerProps, DatePickerTriggerRenderProps } from './interface.js';
+    import type { DatePickerProps, DatePickerTriggerRenderProps, DatePickerType } from './interface.js';
     import MonthsGrid from './months-grid.svelte';
     import QuickControl from './quick-control.svelte';
     import YearAndMonth from './year-and-month.svelte';
@@ -40,10 +40,10 @@
     let {
         value = $bindable(),
         open: openProp = $bindable(),
-        type: typeProp = defaults('type', 'date'),
+        type: typeProp = defaults('type', 'date') as T,
         format = defaults('format'),
         defaultPickerValue = defaults('defaultPickerValue'),
-        multiple = defaults('multiple', false),
+        multiple = defaults('multiple', false) as M,
         max = defaults('max'),
         needConfirm = defaults('needConfirm', false),
         disabled: disabledProp,
@@ -105,7 +105,7 @@
         clearIcon,
         rangeSeparatorNode,
         ...rest
-    }: DatePickerProps = $props();
+    }: DatePickerProps<T, M> = $props();
 
     const config = useConfig();
     const locale = useLocale('DatePicker');
@@ -236,7 +236,7 @@
                     if (!confirmNeeded) {
                         value = next;
                     }
-                    onChange?.(next, dateString);
+                    (onChange as ((date: Date | Date[], dateString: string | string[]) => void) | undefined)?.(next, dateString);
                 },
                 notifyCancel: (next, dateString) => onCancel?.(next, dateString),
                 notifyConfirm: (next, dateString) => {

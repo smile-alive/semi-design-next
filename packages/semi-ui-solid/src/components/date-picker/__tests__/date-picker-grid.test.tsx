@@ -9,7 +9,7 @@ import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerProps } from '..';
 
-type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
+type ChangeHandler = (date: Date | Date[], dateString: string | string[]) => void;
 
 const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 

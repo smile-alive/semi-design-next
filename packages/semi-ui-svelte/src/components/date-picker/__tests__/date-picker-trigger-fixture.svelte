@@ -2,7 +2,7 @@
     import type { DatePickerProps } from '../interface';
 
     export interface TriggerFixtureStore {
-        props: Omit<DatePickerProps, 'trigger'>;
+        props: DatePickerProps;
     }
 </script>
 

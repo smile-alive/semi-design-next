@@ -16,8 +16,9 @@ interface GetDefaultPickerValueDateOptions {
 export default function getDefaultPickerDate({ defaultPickerValue, format, dateFnsLocale, timeZone }: GetDefaultPickerValueDateOptions) {
     const [now, next] = Array.isArray(defaultPickerValue) ? defaultPickerValue : [defaultPickerValue];
     const options = { format, dateFnsLocale, timeZone };
-    const nowDate = isPickerValue(now) ? parseValue(now, options) : toWallTime(new Date(), timeZone);
-    const nextDate = isPickerValue(next) ? parseValue(next, options) : addMonths(toDateArg(nowDate), 1);
+    // an unparseable string counts as absent
+    const nowDate = (isPickerValue(now) && parseValue(now, options)) || toWallTime(new Date(), timeZone);
+    const nextDate = (isPickerValue(next) && parseValue(next, options)) || addMonths(toDateArg(nowDate), 1);
 
     return { nowDate, nextDate };
 }

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="Kind extends DatePickerType | undefined = undefined, Multiple extends boolean | undefined = undefined">
     import { computed, onMounted, onUpdated, shallowRef, useId, useTemplateRef } from 'vue';
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
@@ -19,22 +19,22 @@
     import { useNestedPopups } from '../tooltip/context';
     import DateInput from './date-input.vue';
     import Footer from './footer.vue';
-    import type { DatePickerEmits, DatePickerHandle, DatePickerProps, DatePickerSlots, DatePickerTriggerSlotProps } from './interface';
+    import type { DatePickerEmits, DatePickerHandle, DatePickerProps, DatePickerSlots, DatePickerTriggerSlotProps, DatePickerType } from './interface';
     import MonthsGrid from './months-grid.vue';
     import QuickControl from './quick-control.vue';
     import YearAndMonth from './year-and-month.vue';
 
     defineOptions({ inheritAttrs: false });
 
-    const props = withDefaults(defineProps<DatePickerProps & /* @vue-ignore */ ElementProps<'div', keyof DatePickerProps | EmitHandlers<DatePickerEmits>>>(), {
+    const props = withDefaults(defineProps<DatePickerProps<Kind, Multiple> & /* @vue-ignore */ ElementProps<'div', keyof DatePickerProps<Kind, Multiple> | EmitHandlers<DatePickerEmits<Kind, Multiple>>>>(), {
         modelValue: undefined,
         defaultValue: semiGlobalDefault('DatePicker', 'defaultValue'),
         open: undefined,
         defaultOpen: () => semiDefault('DatePicker', 'defaultOpen', false),
-        type: () => semiDefault('DatePicker', 'type', 'date'),
+        type: () => semiDefault('DatePicker', 'type', 'date') as NonNullable<Kind>,
         format: semiGlobalDefault('DatePicker', 'format'),
         defaultPickerValue: semiGlobalDefault('DatePicker', 'defaultPickerValue'),
-        multiple: () => semiDefault('DatePicker', 'multiple', false),
+        multiple: () => semiDefault('DatePicker', 'multiple', false) as NonNullable<Multiple>,
         max: semiGlobalDefault('DatePicker', 'max'),
         needConfirm: () => semiDefault('DatePicker', 'needConfirm', false),
         // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
@@ -78,7 +78,7 @@
         dropdownStyle: semiGlobalDefault('DatePicker', 'dropdownStyle'),
     });
 
-    const emit = defineEmits<DatePickerEmits>();
+    const emit = defineEmits<DatePickerEmits<Kind, Multiple>>();
     const slots = defineSlots<DatePickerSlots>();
 
     const semi = useSemiGlobal();
@@ -139,7 +139,7 @@
     // Vue's StyleValue (dropdownStyle) is wider than the foundation's Record<string, any>, so the props type does not match.
     const { foundation, state } = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerFoundationProps, DatePickerFoundationState>(
         DatePickerFoundation,
-        props as unknown as Readonly<Partial<DatePickerFoundationProps>>,
+        props as Readonly<Partial<DatePickerFoundationProps>>,
         (view) => DatePickerFoundation.getInitialState(view),
         (base) => {
             const rangeInputs = () => insetDateInput.value ?? triggerInput.value;
@@ -150,7 +150,7 @@
                 notifyClear: (event) => emit('clear', event),
                 notifyChange: (date, dateString) => {
                     emit('update:modelValue', date);
-                    emit('change', date, dateString);
+                    (emit as unknown as (event: 'change', date: Date | Date[], dateString: string | string[]) => void)('change', date, dateString);
                 },
                 notifyCancel: (date, dateString) => emit('cancel', date, dateString),
                 notifyConfirm: (date, dateString) => emit('confirm', date, dateString),
@@ -275,7 +275,7 @@
         rangeInputFocus: state.value.rangeInputFocus,
         type: type.value,
         format: props.format,
-        multiple: props.multiple,
+        multiple: props.multiple as boolean,
         autofocus: state.value.autofocus,
         componentProps: { ...props, ...looks },
         onChange: foundation.handleInputChange,

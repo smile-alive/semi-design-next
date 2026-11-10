@@ -14,7 +14,7 @@ import LocaleProvider from '../../locale/locale-provider';
 import Tooltip from '../../tooltip';
 import YearAndMonth from '../year-and-month';
 
-type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
+type ChangeHandler = (date: Date | Date[], dateString: string | string[]) => void;
 
 const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 
@@ -228,7 +228,7 @@ describe('DatePicker 触发器语义', () => {
 
     it('面板对话框以所选内容命名', async () => {
         for (const type of ['dateRange', 'dateTime', 'dateTimeRange', 'month', 'monthRange', 'year'] as const) {
-            const { unmount } = render(() => <DatePicker type={type} defaultOpen motion={false} />);
+            const { unmount } = render(() => <DatePicker {...({ type, defaultOpen: true, motion: false } as DatePickerProps)} />);
             expect(await screen.findByRole('dialog', { name: zh_CN.DatePicker.panel[type] })).toBeInTheDocument();
             unmount();
         }

@@ -16,7 +16,7 @@ import { LocaleProvider } from '../../locale';
 import Popover from '../../popover';
 import TimePicker from '../../time-picker';
 
-type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
+type ChangeHandler = (date: Date | Date[], dateString: string | string[]) => void;
 
 const baseYear = 2019;
 const baseDay = 8;
@@ -592,7 +592,7 @@ describe('DatePicker', () => {
         expect((args[0] as Date[]).length).toBe(2);
         expect(args[1]).toBe('left');
 
-        rerender({ ...props, type: 'dateTime' });
+        rerender({ ...props, type: 'dateTime' } as DatePickerProps);
         await userEvent.click(getElement(`.${dp}-month-grid-left .${dp}-switch-time`));
         const args2 = disabledTime.mock.lastCall as Parameters<typeof disabledTime>;
         expect(Array.isArray(args2[0])).toBe(false);

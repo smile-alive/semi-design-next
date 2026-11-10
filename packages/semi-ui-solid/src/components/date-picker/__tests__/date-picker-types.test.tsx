@@ -7,14 +7,25 @@ import type { DateInputProps, DatePickerProps, MonthsGridProps, TriggerRenderPro
 describe('DatePicker 回调类型与运行时入参一致', () => {
     it('onChange 的参数固定为 (date, dateString)，没有 onChangeWithDateFirst', () => {
         const props: DatePickerProps = {
+            type: 'date',
             onChange: (date, dateString) => {
-                expectTypeOf(date).toEqualTypeOf<Date | Date[]>();
-                expectTypeOf(dateString).toEqualTypeOf<string | string[]>();
+                expectTypeOf(date).toEqualTypeOf<Date>();
+                expectTypeOf(dateString).toEqualTypeOf<string>();
             },
         };
         // @ts-expect-error onChangeWithDateFirst is removed; the order is always (date, dateString)
         const reordered: DatePickerProps = { onChangeWithDateFirst: false };
         expect([typeof props.onChange, reordered.type]).toEqual(['function', undefined]);
+    });
+
+    it('onChange 按 type 与 multiple 联合：单值拿 Date 与 string，范围与 multiple 拿数组', () => {
+        const month: DatePickerProps = { type: 'month', multiple: false, onChange: (...args) => expectTypeOf(args).toEqualTypeOf<[Date, string]>() };
+        const range: DatePickerProps = { type: 'dateTimeRange', onChange: (...args) => expectTypeOf(args).toEqualTypeOf<[Date[], string[]]>() };
+        const multiple: DatePickerProps = { type: 'date', multiple: true, onChange: (...args) => expectTypeOf(args).toEqualTypeOf<[Date[], string[]]>() };
+        const monthMultiple: DatePickerProps = { type: 'month', multiple: true, onChange: (...args) => expectTypeOf(args).toEqualTypeOf<[Date, string]>() };
+        // @ts-expect-error a range type never gets a single Date
+        const wrong: DatePickerProps = { type: 'dateRange', onChange: (date: Date) => date };
+        expect([month, range, multiple, monthMultiple, wrong]).toHaveLength(5);
     });
 
     it('timePickerOpts 只接受 Combobox 的数据属性，不接受会覆盖面板内部值的 onChange、format、timeStampValue', () => {

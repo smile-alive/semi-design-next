@@ -9,23 +9,22 @@
 1. 查看 `git status --short`，读目标文件、调用方和测试。工作区常有其他人未提交的改动：不覆盖、不回退，同一文件里只动本任务的部分。不用 `git stash`（所有 worktree 共用一个 stash 栈）。
 2. 按任务先读：
 
-| 任务                                                                       | 先读                                                                                                                        |
-| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| 目录结构、支持环境、常用命令、分支与发布                                   | [CONTRIBUTING.md](CONTRIBUTING.md)                                                                                          |
-| 已定决策（D、S、C、F、A 系列，Solid 的 X 系列）与未完成事项                | [decisions](docs/decisions.md) 第 1、2 节，Solid 见第 3 节；依赖现状看各 `package.json` 与 `pnpm-workspace.yaml` 的 catalog |
-| 某组件未结的问题、已知限制与保持原样的决定                                 | [component-issues](docs/component-issues.md)                                                                                |
-| 相对原 Semi 的破坏性变化与行为变化                                         | [release-notes](docs/release-notes.md)                                                                                      |
-| TS/TSX 写法：导出、函数、类成员、依赖与工具函数、Node 脚本                 | [coding-style](.agents/references/coding-style.md)                                                                          |
-| lint 目录隔离、作用域、导入边界与豁免                                      | [lint](.agents/references/lint.md)                                                                                          |
-| 组件的跨框架协议：语句顺序、foundation 与 adapter、属性透传与 ref、context | [components](.agents/references/components.md)                                                                              |
-| 角色、键盘、可访问名称、jsx-a11y 豁免                                      | [a11y](.agents/references/a11y.md)                                                                                          |
-| 组件 SCSS、主题 token、逻辑属性、`@layer`                                  | [styles](.agents/references/styles.md)；主题插件协议见 styles 的「Sass 模块与 semi: importer」「主题 token 协议」两节       |
-| 测试写法、浏览器测试的坑、验证范围                                         | [testing](.agents/references/testing.md)                                                                                    |
-| 文档站内容、demo、MDX、dev server                                          | [website](.agents/references/website.md)                                                                                    |
-| 解析源码做统计、检查或 codemod                                             | [ast](.agents/references/ast.md)                                                                                            |
-| 修组件 bug                                                                 | [fix-component-bug](.agents/skills/fix-component-bug/SKILL.md)                                                              |
-| 新增或修改可访问名称、内置文案                                             | [locale-text](.agents/skills/locale-text/SKILL.md)                                                                          |
-| 扫描文档站页面、维护 a11y 基线                                             | [check-pages](.agents/skills/check-pages/SKILL.md)                                                                          |
+| 任务                                                                       | 先读                                                                                                                  |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 目录结构、支持环境、常用命令、分支与发布                                   | [CONTRIBUTING.md](CONTRIBUTING.md)                                                                                    |
+| 已定决策、待办，以及某组件的已知限制与保持原样的决定                       | [decisions](docs/decisions.md)；依赖现状看各 `package.json` 与 `pnpm-workspace.yaml` 的 catalog                       |
+| 相对原 Semi 的破坏性变化与行为变化                                         | [release-notes](docs/release-notes.md)                                                                                |
+| TS/TSX 写法：导出、函数、类成员、依赖与工具函数、Node 脚本                 | [coding-style](.agents/references/coding-style.md)                                                                    |
+| lint 目录隔离、作用域、导入边界与豁免                                      | [lint](.agents/references/lint.md)                                                                                    |
+| 组件的跨框架协议：语句顺序、foundation 与 adapter、属性透传与 ref、context | [components](.agents/references/components.md)                                                                        |
+| 角色、键盘、可访问名称、jsx-a11y 豁免                                      | [a11y](.agents/references/a11y.md)                                                                                    |
+| 组件 SCSS、主题 token、逻辑属性、`@layer`                                  | [styles](.agents/references/styles.md)；主题插件协议见 styles 的「Sass 模块与 semi: importer」「主题 token 协议」两节 |
+| 测试写法、浏览器测试的坑、验证范围                                         | [testing](.agents/references/testing.md)                                                                              |
+| 文档站内容、demo、MDX、dev server                                          | [website](.agents/references/website.md)                                                                              |
+| 解析源码做统计、检查或 codemod                                             | [ast](.agents/references/ast.md)                                                                                      |
+| 修组件 bug                                                                 | [fix-component-bug](.agents/skills/fix-component-bug/SKILL.md)                                                        |
+| 新增或修改可访问名称、内置文案                                             | [locale-text](.agents/skills/locale-text/SKILL.md)                                                                    |
+| 扫描文档站页面、维护 a11y 基线                                             | [check-pages](.agents/skills/check-pages/SKILL.md)                                                                    |
 
 改哪个框架的包或文件，就先读该框架目录下全部文件；改框架无关代码，只读共享文件。新增框架只加一行，并按 [lint](.agents/references/lint.md) 的步骤登记。
 
@@ -40,15 +39,15 @@
 
 ## 产品边界
 
-- 各框架包支持的框架版本以其 `package.json` 的 `peerDependencies` 为准。浏览器支持 Chrome 120、Firefox 125、Safari 17.2 及以上（D15），用到的每项 JS、DOM 与 CSS 能力都要在这三个版本上成立：
+- 各框架包支持的框架版本以其 `package.json` 的 `peerDependencies` 为准。浏览器支持 Chrome 120、Firefox 125、Safari 17.2 及以上，用到的每项 JS、DOM 与 CSS 能力都要在这三个版本上成立：
     - es-toolkit 等已有依赖能直接替代的 JS 能力（如 `RegExp.escape`、Set methods、`Map.groupBy`），组件代码直接调用该函数；
     - 只能从全局补齐的 API 放进 `@fibrae/semi-polyfill`，组件代码照常调用原生 API，组件包不导入 polyfill；
     - 参数级差异与 CSS 新特性在 `semi-foundation/src/utils/supports.ts` 或组件 foundation 中挂载后检测，支持时走新写法，否则走兼容写法，注释写明可删除的浏览器版本；CSS 回退写在 `@supports not (...)` 块里。
-- 部署在 HTTPS 下（D1），`navigator.clipboard`、`crypto.randomUUID` 直接用，不留回退。
+- 部署在 HTTPS 下，`navigator.clipboard`、`crypto.randomUUID` 直接用，不留回退。
 - 发布物只有 ESM，由 `vp pack` 产出；不提供 UMD、CDN 构建。
 - 支持服务端渲染与 hydration（React 另支持 RSC 客户端边界），写法见 [components](.agents/references/components.md#服务端渲染)。
-- 原组件只作参考实现（F10）：a11y 按 WAI-ARIA 与 APG 的推荐做法；证据确凿的原有 bug 默认修复；文档与代码不一致时，先用 git 历史判断原意，再改另一边。
-- 属性落点以决策为准：F2 根元素透传未声明属性；F6 Props 类型为原 Semi 声明加属性落点元素的原生属性（`ElementProps`，同名时原 Semi 签名优先）；F7 对外导出的顶层组件都读全局默认值；F11 无根 DOM 的包装组件丢弃未声明属性；F12 对话框的 `aria-*` 落在 `role="dialog"` 元素上。
+- 原组件只作参考实现：a11y 按 WAI-ARIA 与 APG 的推荐做法；证据确凿的原有 bug 默认修复；文档与代码不一致时，先用 git 历史判断原意，再改另一边。
+- 属性落点以决策为准：根元素透传未声明属性；Props 类型为原 Semi 声明加属性落点元素的原生属性（`ElementProps`，同名时原 Semi 签名优先）；对外导出的顶层组件都读全局默认值；无根 DOM 的包装组件丢弃未声明属性；对话框的 `aria-*` 落在 `role="dialog"` 元素上。
 - 可访问名称和内置文案一律从语言包读取，不写死字面量；新增时 zh_CN、en_US 两个包一起补齐。
 - 已有成熟库能覆盖的能力（如 Motion 动画），Semi 只提供给该库使用的预设，不做包装组件或绑定包。
 
@@ -66,7 +65,7 @@
 
 - 格式化只用 `vp fmt`（oxfmt，含 `sortImports`），lint 使用 `vp lint`（oxlint）和 stylelint。框架另需的 lint 工具与例外见该框架的 lint.md。lint 规则按框架放在 `lint/<框架>/`，根目录只组合，细则见 [lint](.agents/references/lint.md)。
 - TS/TSX 按 [coding-style](.agents/references/coding-style.md)。硬性规则：私有成员用 `#`，不用 TS `private`、`public` 和构造参数属性；Node 脚本写成 `.ts`，只用可擦除语法。
-- 组件按 [components](.agents/references/components.md) 与所属框架的 components.md。硬性规则：对外导出的顶层组件都读全局默认值（F7），并在本框架 `semi-global.ts` 的类型里补上组件名；渲染与派生计算无副作用。各框架的其余硬性写法见上文框架表中该框架的 `components.md`。
+- 组件按 [components](.agents/references/components.md) 与所属框架的 components.md。硬性规则：对外导出的顶层组件都读全局默认值，并在本框架 `semi-global.ts` 的类型里补上组件名；渲染与派生计算无副作用。各框架的其余硬性写法见上文框架表中该框架的 `components.md`。
 - 样式按 [styles](.agents/references/styles.md)：Sass 变量是内部实现，不写 `!default`、不与 `semi:theme` 的名字重名；用逻辑属性，不写 `!important`。
 - 测试按 [testing](.agents/references/testing.md)：放在 `__tests__/`，断言可见行为；修 bug 不新增回归用例。
 
@@ -77,7 +76,7 @@
 - 工具指令（`@jsxImportSource`、`@ts-expect-error`、`stylelint-disable -- 原因` 等）和本文及 `.agents/references/` 要求写的注释（豁免原因、可删除的浏览器版本、各框架 components.md 要求的说明、SCSS 变量的行尾说明）；
 - 已知限制和它的升级条件，写成 `shortcut: <限制>, <何时升级>` 或 `Known limitation: ...`；
 - 跨文件或时序约束、外部库和浏览器的怪癖、为什么不能用显然的写法；
-- 决策与规范编号（D15、F7、APG 等）；
+- 决策名称与规范（如「全局默认值」、APG）；
 - 公开 API 的非显然语义（`null` 与 `undefined` 的区别、调用时机与次数、落点元素）。
 
 不写复述名字或代码的注释、局部逻辑解释、类和函数的概述，不写修改历史，删代码不留墓碑。注释用英文，一句能说清就写一句；注释与实现矛盾时改注释。
@@ -128,7 +127,12 @@ export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH"
 ## 交付
 
 - 回复和文档用简体中文，技术标识保持原文。README 例外：`README.md` 用英文，`README.zh-CN.md` 用简体中文，两份同步修改。结果用 `PASS`、`FAIL`、`SKIP`、`UNKNOWN` 标记。
-- 组件的行为或公开 API 有变化时，写进 `docs/release-notes.md` 对应组件的章节；发现但不在本次范围内的问题，登记到 `docs/component-issues.md`。
+- 组件的行为或公开 API 有变化时，写进 `docs/release-notes.md` 对应组件的章节；发现但不在本次范围内的问题，登记到 `docs/decisions.md` 对应组件的章节。
+- `docs/` 下的文档给人读，写成能直接读懂的最终状态：
+    - 先写结论，一条只说一件事，一两句话写完；括号里只写原因或升级条件，不写排查过程、实测细节和修订历史。
+    - 按主题或组件分节，用名称当标题，不给条目编号，不用宽表格装大段文字。
+    - 写进去之前先找有没有同类条目，有就合并；多个组件共有的限制只写一次。
+    - 新增内容如果读起来像工作记录，先压缩成结论再写。
 - 文件用编辑工具修改，不用 sed、重定向、heredoc 或脚本改写内容；formatter、linter 自动修复和生成命令除外。用 codemod 改写仓库文件前，先说明范围并取得用户确认（见 [ast](.agents/references/ast.md)）。删除用 `trash`。
 - 一次性脚本、复现、探针、日志等中间产物放在仓库根的 `tmp/<任务名>/`，不用系统临时目录或会话 scratchpad；用完用 `trash` 删掉这个子目录，需要留给后续使用的在回报里列出路径和原因。`tmp/` 已被 git 和各 lint、格式化工具忽略；`tmp/vitest`、`tmp/vitest-firefox-home` 由测试工具使用，不动。
 - 只在用户要求时 commit，不 push。用户要求推送时，从 `release` 拉分支推送并开 PR 合入 `release`，不直接推 `release` 或 `main`；分支模型见 [CONTRIBUTING](CONTRIBUTING.md#分支)。commit 用 Conventional Commits：`type(scope)` 用英文，scope 写包名或组件目录名；subject 和 body 用简体中文，header 不超过 72 个字符；只暂存本任务的改动，不加 AI 署名。

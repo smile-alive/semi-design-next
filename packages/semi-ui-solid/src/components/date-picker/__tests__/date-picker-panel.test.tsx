@@ -10,7 +10,7 @@ import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerProps, type YearAndMonthProps } from '..';
 import YearAndMonth from '../year-and-month';
 
-type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
+type ChangeHandler = (date: Date | Date[], dateString: string | string[]) => void;
 
 const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 

@@ -22,7 +22,7 @@
     defineExpose<FormHandle<Values, Output>>({
         // a template ref is filled on mount, before a parent can read this handle
         get formApi() {
-            return (form.value as unknown as FormHandle<Values, Output>).formApi;
+            return (form.value as FormHandle<Values, Output>).formApi;
         },
     });
 </script>

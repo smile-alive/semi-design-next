@@ -2,7 +2,7 @@
     import type { DatePickerProps, DatePickerTriggerRenderProps } from '../interface';
 
     export interface SnippetsFixtureStore {
-        props: Omit<DatePickerProps, 'trigger' | 'leftSlot' | 'rightSlot' | 'rangeSeparatorNode'>;
+        props: DatePickerProps;
         inputTrigger?: boolean;
         sides?: boolean;
         separatorNode?: boolean;

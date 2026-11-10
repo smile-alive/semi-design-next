@@ -181,7 +181,7 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, BasicTreeSelectProps, BasicTreeSelectInnerData>(
         TreeSelectFoundation,
         // The value type T is an unconstrained generic, so TS cannot prove it fits the foundation's BasicValue
-        props as unknown as Readonly<Partial<BasicTreeSelectProps>>,
+        props as Readonly<Partial<BasicTreeSelectProps>>,
         (foundationProps) => TreeSelectFoundation.getInitialState(foundationProps),
         () => ({
             notifySelect: (selectedKey, selected, node) => emit('select', selectedKey, selected, node as TreeNodeData),

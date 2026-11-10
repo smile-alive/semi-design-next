@@ -293,7 +293,7 @@ describe('Svelte DatePicker 回归：选择与受控值', () => {
                 type: 'dateTimeRange',
                 defaultPickerValue: '2021-08-01',
                 motion: false,
-                onChange: (value) => {
+                onChange: (value: Date[]) => {
                     notified.push(value);
                     store.props.value = value;
                 },

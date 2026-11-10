@@ -34,7 +34,7 @@ Component docs and examples are in [website/content/ai](../../website/content/ai
 - [Sidebar](../../website/content/ai/sidebar)
 - [AI components overview](../../website/content/ai/ai-component)
 
-Known issues are in the AIChatInput section of [docs/component-issues.md](../../docs/component-issues.md).
+Known issues are in the AIChatInput section of [docs/decisions.md](../../docs/decisions.md).
 
 ## Related packages
 

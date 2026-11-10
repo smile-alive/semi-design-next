@@ -1,6 +1,6 @@
 # 发布说明
 
-本文记录 Semi Design Next 相对上游 Semi Design 的破坏性变化与使用方需要注意的行为变化；未结的问题见 docs/component-issues.md，决策依据见 docs/decisions.md 第 1 节。
+本文记录 Semi Design Next 相对上游 Semi Design 的破坏性变化与使用方需要注意的行为变化；决策依据与未结的问题见 docs/decisions.md。
 
 每条只写使用方要改什么或会看到什么，一两句话，不写实现细节与原因；各框架相同的变化只写一次，以框架名开头的条目（如「Vue：」）只列该框架特有的差异。
 
@@ -206,10 +206,12 @@
 - 破坏性：删除 `onChangeWithDateFirst`，`onChange` 固定为 `(date, dateString)`；React 删除 `locale`、`localeCode`、`dateFnsLocale` 属性，改经 `LocaleProvider`、`ConfigProvider` 设置。
 - 日历按 APG 支持键盘：每个月份网格一个 Tab 停靠点，方向键、PageUp、PageDown 移动日期，Enter、Space 选中，Esc 关闭面板。输入框为 `role="combobox"`，按 `textbox` 查询的测试需改为 combobox。
 - 破坏性（类型）：`onClear` 为 `MouseEventHandler<HTMLButtonElement>`，`onClickOutSide` 参数为原生 `MouseEvent`，`onBlur` 改为面板关闭时触发的 `(e?: MouseEvent) => void`；`yearAndMonthOpts`、`timePickerOpts` 收窄；深路径 foundation 的 `RangeType` 改名 `RangeInput`，不再导出 `OnChangeType`。
+- 破坏性（类型）：`onChange` 按 `type` 与 `multiple` 判别，单值类型（含 `multiple` 不生效的 `dateTime`、`month`、`year`）为 `(Date, string)`，范围类型与 `type="date"` 的 `multiple` 为 `(Date[], string[])`。React、Solid 的 `DatePickerProps` 改为类型别名（`interface X extends DatePickerProps` 改交叉类型），省略 `type` 时内联 `onChange` 的参数推断不出（这两个包不开启 strictNullChecks）；Vue 的 DatePicker 与 `FormDatePicker` 是泛型组件，模板中 `@change` 按 `type`、`multiple` 收窄，单值为 `Date | undefined`、`string | undefined`；Svelte 的 `DatePickerProps<T, M>` 带泛型，单值同为可含 `undefined`。传入类型为宽联合的 `type` 变量时需先收窄。
 - `multiple` 只对 `type="date"` 生效；支持 `type="year"`，选中值为该年 1 月 1 日。`onOpenChange` 只在由关到开时上报一次，`needConfirm` 时 Esc 关闭会调用 `onCancel`，键入无法解析的日期按 Enter 不再以今天提交。
 - `month`、`monthRange` 的预设与回落值取当月 1 日 00:00，`disabledDate` 以每月 1 日 00:00 调用，`rangeStart`、`rangeEnd` 无值时为 `''`。`timeZone` 取值顺序为 prop、ConfigProvider、全局默认值。
 - 范围类型（`dateRange`、`dateTimeRange`、`monthRange`）只提交两端都是有效日期的值：只选或只输入一端时不写入 `value`，不触发 `onChange`、`onConfirm`，确认按钮禁用，输入框保留已输入的文字；清空仍触发 `onChange([], [])`。
 - `open` 或 `defaultOpen` 为 true 且 `disabled` 时，初始不显示面板。
+- `defaultPickerValue` 是无法按 `format` 解析的字符串时按未传处理，面板显示当前月份（原来得到无效日期）。
 - 首次渲染即由 `value`、`defaultValue` 算出选中值，服务端 HTML 的输入框带格式化后的日期（原来挂载后才填入）。
 - 面板的「今天」标记在服务端渲染与 hydration 期间不出现，hydration 后再标出，并在跨日时更新（原来在面板挂载时固定）。
 - Vue：`v-model` 与 `v-model:open`；`triggerRender`、`renderDate`、`renderFullDate` 改为插槽 `#trigger`、`#date`、`#fullDate`；`topSlot`、`bottomSlot`、`leftSlot`、`rightSlot`、`prefix`、`insetLabel`、`clearIcon` 改为同名插槽，`rangeSeparatorNode` 改为 `#rangeSeparator`；`autoFocus` 改为 `autofocus`。
@@ -481,6 +483,7 @@
 - 破坏性（样式钩子）：节点数据的 `active` 字段不再生成 `-active` 类，`BasicTreeNodeProps.active` 与 `&-active` 规则删除。`TreeProps.expandIcon` 放宽为 `ReactNode | ((props) => ReactNode)`；删除 `preventScroll`；拖拽回调的 `event` 改为 `DragEvent`；ref 改为 `TreeHandle { search, scrollTo }`。
 - 键盘按 APG Tree View：整棵树是一个 Tab 停靠点，焦点留在 `role="tree"` 上并用 `aria-activedescendant` 指向当前节点；展开箭头与复选框不可聚焦，多选不再有 `role="group"` 层，传给 Tree 的 `tabIndex` 与 `aria-label` 等落在 `role="tree"` 元素上。节点内容里可聚焦元素的 `click` 仍冒泡触发 `onSelect`，需自行 `stopPropagation`。
 - 节点数据中与行状态同名的字段（`expanded`、`checked`、`level`、`empty` 等）不再覆盖内部状态；树外拖入不再触发 `onDrop`，需要时在容器上监听原生 `drop`；默认搜索只匹配字符串与数字 `label`，元素 `label` 请用 `treeNodeFilterProp` 或自定义 `filterTreeNode`；多选 `related` 下全选的父节点不再同时半选。
+- 没有 `treeData` 时把 `treeDataSimpleJson` 改为 `undefined` 不再抛 `TypeError`，树变为空（TreeSelect 同）。
 - Vue：`v-model`、`v-model:expandedKeys`、`v-model:loadedKeys`；`renderLabel`、`icon`、`expandIcon`、`renderFullLabel`、`searchRender`、`emptyContent` 改为 `#label`、`#icon`、`#expandIcon`、`#fullLabel`、`#search`（空插槽隐藏搜索框）、`#emptyContent`；`renderDraggingNode` prop 删除，改为同名作用域插槽；没有 `Tree.TreeNode` 与默认插槽，`treeData` 只支持整体替换，`label` 只接受 `string | number`；`change`、`select`、`drop` 事件会遮住根元素上的同名原生监听。
 - Solid：`renderFullLabel` 对每行只调用一次，参数是随行状态更新的活对象，字段要在返回的 JSX 中读取；返回内容一律由 Tree 自己的 `li` 包住，这个 `li` 带 `id`、`role="treeitem"`、行状态和拖拽处理（同 Vue），虚拟化时的定位样式也在它上面，参数中没有 `style`。`RenderFullLabelProps`、`SearchRenderProps` 和函数形式 `expandIcon` 的参数用 `class` 代替 `className`。破坏性（类型）：`RenderFullLabelProps.expandIcon` 是创建内置展开按钮的渲染函数 `() => JSX.Element`，在插入处调用 `row.expandIcon()`，没调用的行不创建展开按钮。
 - Solid：不提供 `Tree.TreeNode`；搜索结果不延后渲染；`ref` 拿到根元素 `TreeElement`，其上带 `search`，`scrollTo` 收到带 `key` 的 `ScrollData` 时滚到该节点，其余参数照原生 `scrollTo` 滚动根元素。元素形式的 `icon`、`expandIcon` 每行各读取一次（每行一个新元素），`expandIcon` 元素会被就地加上 `-expand-icon` 类和点击展开的原生监听；函数形式的 `icon` 收到 `TreeRowProps`；`renderLabel` 只在标签、节点数据或搜索词变化时重新调用。
@@ -685,6 +688,7 @@
 - Svelte：`children` 与 `handle` snippet 对应 Vue 的默认插槽与 `handle` 插槽，`handle` 的参数是 `{ direction }`；回调为 `onChange`、`onResizeEnd`；`style`、`handleStyle` 只接受字符串；`size` 是单向 prop（按轴受控），不能 `bind:size`，`defaultSize` 保留为各轴的回退值。
 - 受控 `size` 拖动时立即显示 `onChange` 中同步写回的尺寸，不落后一次指针移动（四个框架）。
 - ResizeGroup 不卸载、只移除正在拖动的 ResizeHandler 时结束这次拖动，透明背景层随之移除，不再挡住页面；这次拖动不调用 `onResizeEnd`（四个框架）。
+- `snap.x` 或 `snap.y` 为空数组时按没有吸附点处理；原来 `snapGap` 为 0 时尺寸变成 `undefined`。
 
 ### CodeHighlight
 

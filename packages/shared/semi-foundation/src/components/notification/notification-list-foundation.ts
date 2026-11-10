@@ -40,7 +40,7 @@ export type NoticesInPosition<T extends NoticeInstance = NoticeInstance> = Recor
  */
 export function groupNoticesByPosition<T extends NoticeInstance>({ items, removedItems, order }: { items: T[]; removedItems: T[]; order: string[] }, direction?: 'ltr' | 'rtl') {
     const byId = new Map([...items, ...removedItems].map((notice) => [notice.id, notice]));
-    const grouped = Object.fromEntries(noticePositions.map((position) => [position, []])) as unknown as NoticesInPosition<T>;
+    const grouped = Object.fromEntries(noticePositions.map((position) => [position, [] as T[]])) as NoticesInPosition<T>;
     for (const id of order) {
         const notice = byId.get(id);
         if (notice) {

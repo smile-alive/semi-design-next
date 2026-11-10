@@ -199,7 +199,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         body.parentElement?.toggleAttribute('data-scrollable-right', right);
     }
 
-    static #addNoDuplicatedItemsToArr(srcArr: any[] = [], ...objArrs: any[][]) {
+    static #addNoDuplicatedItemsToArr(srcArr: BaseRowKeyType[] = [], ...objArrs: BaseRowKeyType[][]) {
         for (const objArr of objArrs) {
             if (Array.isArray(objArr)) {
                 for (const item of objArr) {
@@ -1604,7 +1604,7 @@ export type BaseEllipsis = boolean | { showTitle: boolean };
 export type CheckRelation = 'related' | 'unRelated';
 
 export interface BaseEntity {
-    key?: string | number;
+    key?: string;
     level?: number;
     children?: BaseEntity[];
     parent?: BaseEntity | null;

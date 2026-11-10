@@ -38,7 +38,7 @@ function fitSize(node: Element, size: string) {
  * An icon created inside the slot reads the slot from context and registers the node it renders, so its size, class
  * and the slot's kind come out the same on the server and in the browser. Content created before it reached the slot
  * (JSX in a data object such as `Modal.confirm({ icon })`) cannot see the context; the browser fits
- * those elements as React's cloneElement would, and the server HTML goes without (registered in component-issues).
+ * those elements as React's cloneElement would, and the server HTML goes without (registered in docs/decisions.md).
  *
  * shortcut: size and class reach every Semi icon created under the slot, also one nested in other content
  * (`<Badge><IconX /></Badge>`); upgrade when such nesting shows up in a sized slot, by resetting the context in the

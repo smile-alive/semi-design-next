@@ -34,7 +34,7 @@ export default function App() {
 - [Sidebar](../../website/content/ai/sidebar)
 - [AI 组件概览](../../website/content/ai/ai-component)
 
-已知问题见 [docs/component-issues.md](../../docs/component-issues.md) 的 AIChatInput 章节。
+已知问题见 [docs/decisions.md](../../docs/decisions.md) 的 AIChatInput 章节。
 
 ## 与其他包的关系
 

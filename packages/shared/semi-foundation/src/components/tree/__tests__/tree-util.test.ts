@@ -60,7 +60,7 @@ describe('convertDataToEntities', () => {
         expect(keyEntities['a2'].parent.key).toBe('g1');
         expect(keyEntities['a2'].level).toBe(2);
         expect(keyEntities['root'].parent).toBeUndefined();
-        expect(keyEntities['g2'].children.map((child: { key: string }) => child.key)).toEqual(['b1', 'b2']);
+        expect(keyEntities['g2'].children.map((child) => child.key)).toEqual(['b1', 'b2']);
         expect(valueEntities['b2']).toBe('b2');
     });
 
@@ -85,7 +85,7 @@ describe('convertJsonToData', () => {
     it('多层对象转成带路径 key 的节点，叶子的 value 为原值', () => {
         const data = convertJsonToData({ Asia: { China: { Beijing: 'bj' }, Japan: 'jp' }, Europe: 'eu' });
         expect(data.map((node) => node.key)).toEqual(['Asia', 'Europe']);
-        expect(data[0].children.map((node: { key: string }) => node.key)).toEqual(['Asia_SEMI_TREE_SPLIT_China', 'Asia_SEMI_TREE_SPLIT_Japan']);
+        expect(data[0].children.map((node) => node.key)).toEqual(['Asia_SEMI_TREE_SPLIT_China', 'Asia_SEMI_TREE_SPLIT_Japan']);
         expect(data[0].children[0].children[0]).toEqual({
             key: 'Asia_SEMI_TREE_SPLIT_China_SEMI_TREE_SPLIT_Beijing',
             label: 'Beijing',
@@ -100,9 +100,9 @@ describe('flattenTreeData', () => {
         const flat = flattenTreeData(treeData, new Set(['root', 'g1']), undefined);
         expect(flat.map((node) => node.key)).toEqual(['root', 'g1', 'a1', 'a2', 'a3', 'g2']);
         const root = flat[0];
-        expect(root.children.map((node: { key: string }) => node.key)).toEqual(['g1', 'g2']);
+        expect(root.children.map((node) => node.key)).toEqual(['g1', 'g2']);
         const g1 = root.children[0];
-        expect(g1.children.map((node: { key: string }) => node.key)).toEqual(['a1', 'a2', 'a3']);
+        expect(g1.children.map((node) => node.key)).toEqual(['a1', 'a2', 'a3']);
         expect(g1.children[2].isEnd).toEqual([true, false, true]);
         expect(root.children[1].children).toEqual([]);
     });
@@ -124,7 +124,7 @@ describe('flattenTreeData', () => {
     it('filteredShownKeys 限制只保留命中的节点', () => {
         const flat = flattenTreeData(treeData, new Set(['root', 'g1']), undefined, new Set(['root', 'g1']));
         expect(flat.map((node) => node.key)).toEqual(['root', 'g1']);
-        expect(flat[0].children.map((node: { key: string }) => node.key)).toEqual(['g1', 'g2']);
+        expect(flat[0].children.map((node) => node.key)).toEqual(['g1', 'g2']);
     });
 
     it('getPosition 在父节点 pos 后拼接下标', () => {
@@ -263,10 +263,10 @@ describe('搜索', () => {
         const all = filterTreeData({ ...base, showFilteredOnly: false });
         expect(sorted(all.filteredKeys)).toEqual(['b1']);
         expect(sorted(all.filteredExpandedKeys)).toEqual(['g2', 'root']);
-        expect(all.flattenNodes.map((node: { key: string }) => node.key)).toEqual(['root', 'g1', 'g2', 'b1', 'b2']);
+        expect(all.flattenNodes.map((node) => node.key)).toEqual(['root', 'g1', 'g2', 'b1', 'b2']);
         const only = filterTreeData({ ...base, showFilteredOnly: true });
         expect(sorted(only.filteredShownKeys)).toEqual(['b1', 'g2', 'root']);
-        expect(only.flattenNodes.map((node: { key: string }) => node.key)).toEqual(['root', 'g2', 'b1']);
+        expect(only.flattenNodes.map((node) => node.key)).toEqual(['root', 'g2', 'b1']);
     });
 
     it('filterTreeData 把仍存在的 prevExpandedKeys 合并进展开集合，丢弃已不存在的', () => {

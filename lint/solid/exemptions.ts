@@ -423,7 +423,7 @@ export const solidExemptions: Exemption[] = [
         off: ['jsx-a11y/no-noninteractive-tabindex'],
     },
     // Pointer-only resize handle, no role (keyboard resizing is out of scope, see the Table section of
-    // docs/component-issues.md); click stops sorting
+    // docs/decisions.md); click stops sorting
     {
         files: ['packages/semi-ui-solid/src/components/table/table-header/resizable-header-cell.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],

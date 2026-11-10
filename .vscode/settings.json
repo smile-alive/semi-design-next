@@ -83,5 +83,11 @@
         ".env": ".env.*",
         "AGENTS.md": "CLAUDE.md, skills-lock.json, CONTEXT.md",
         "README.md": "LICENSE"
-    }
+    },
+    "files.watcherExclude": {
+        "**/tmp/**": true,
+        "**/dist/**": true,
+        "**/.astro/**": true
+    },
+    "typescript.tsserver.maxTsServerMemory": 8192
 }

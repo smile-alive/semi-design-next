@@ -21,12 +21,12 @@ describe('DatePicker 日期参数', () => {
         expect(isSameDay(null, new Date(1970, 0, 1))).toBe(false);
     });
 
-    it('无法解析的默认 picker 值保持非法状态', () => {
+    it('无法解析的默认 picker 值按未传处理，回落到当前月份', () => {
         const { nowDate, nextDate } = getDefaultPickerDate({
             defaultPickerValue: 'not a date',
             format: 'yyyy-MM-dd',
         } as unknown as Parameters<typeof getDefaultPickerDate>[0]);
-        expect(nowDate).toBeNull();
-        expect(Number.isNaN(nextDate.getTime())).toBe(true);
+        expect(isSameDay(nowDate, new Date())).toBe(true);
+        expect(Number.isNaN(nextDate.getTime())).toBe(false);
     });
 });

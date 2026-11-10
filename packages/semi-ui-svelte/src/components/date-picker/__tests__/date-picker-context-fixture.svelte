@@ -2,7 +2,7 @@
     import type { DatePickerProps } from '../interface';
 
     export interface ContextFixtureStore {
-        props: Omit<DatePickerProps, 'trigger'>;
+        props: DatePickerProps;
         direction?: 'ltr' | 'rtl';
         label?: string;
         textTrigger?: boolean;

@@ -329,7 +329,7 @@ export const vueExemptions: VueExemption[] = [
         off: [],
         templateOff: ['vuejs-accessibility/form-control-has-label'],
     },
-    // Slot and day clicks are pointer shortcuts (keyboard event creation needs a grid, see component-issues).
+    // Slot and day clicks are pointer shortcuts (keyboard event creation needs a grid, see the Calendar section of docs/decisions.md).
     {
         files: ['packages/semi-ui-vue/src/components/calendar/day-col.vue', 'packages/semi-ui-vue/src/components/calendar/month-calendar.vue'],
         off: [],

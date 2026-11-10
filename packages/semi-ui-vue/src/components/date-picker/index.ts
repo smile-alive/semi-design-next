@@ -1,6 +1,7 @@
 export { default } from './date-picker.vue';
 export type {
     DatePickerBaseValueType,
+    DatePickerChangeArgs,
     DatePickerDateOffsetType,
     DatePickerDateSlotProps,
     DatePickerDayStatusType,

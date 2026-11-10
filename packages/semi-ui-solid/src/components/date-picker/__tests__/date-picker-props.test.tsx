@@ -10,7 +10,7 @@ import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerProps } from '..';
 
-type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
+type ChangeHandler = (date: Date | Date[], dateString: string | string[]) => void;
 
 const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 const baseMon = 8;
@@ -59,7 +59,7 @@ describe('DatePicker 属性', () => {
     });
 
     it('dateRange 的 showClearIgnoreDisabled', () => {
-        const undeclared = { showClearIgnoreDisabled: true } as DatePickerProps;
+        const undeclared = { showClearIgnoreDisabled: true } as object;
         const { container } = renderDatePicker({ type: 'dateRange', defaultValue: [new Date(2021, 7, 1), new Date(2021, 7, 15)], disabled: true, motion: false, ...undeclared });
 
         for (const input of inputs(container)) {

@@ -7,21 +7,17 @@ import { difference, uniq, omit } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
 import { isObject } from '../../utils/index';
 import { strings } from './constants';
-import type { BasicKeyEntities, BasicTreeNodeData, BasicTreeNodeProps, BasicValue } from './foundation';
-
-export interface KeyEntities {
-    [x: string]: any;
-}
+import type { BasicFlattenNode, BasicKeyEntities, BasicKeyEntity, BasicTreeNodeData, BasicTreeNodeProps, BasicValue } from './foundation';
 
 interface TreeDataSimpleJson {
     [x: string]: string | TreeDataSimpleJson;
 }
 
 export interface NodeData {
-    key: any;
-    label: any;
+    key: string;
+    label: string;
     value: any;
-    children?: any;
+    children?: NodeData[];
 }
 
 export interface KeyMapProps {
@@ -40,15 +36,15 @@ export function getPosition(parentPos: string, index: number) {
     return `${parentPos}-${index}`;
 }
 
-export function flattenTreeData(treeNodeList: any[], expandedKeys: Set<string>, keyMaps: KeyMapProps, filteredShownKeys: boolean | Set<any> = false) {
-    const flattenList: any[] = [];
+export function flattenTreeData(treeNodeList: BasicTreeNodeData[], expandedKeys: Set<string>, keyMaps: KeyMapProps, filteredShownKeys: boolean | Set<string> = false) {
+    const flattenList: BasicFlattenNode[] = [];
     const filterSearch = Boolean(filteredShownKeys);
     const realKeyName = keyMaps?.key ?? 'key';
     const realChildrenName = keyMaps?.children ?? 'children';
     if (treeNodeList === undefined) {
         return [];
     }
-    const flatten = (list: any[], parent: any = null) => {
+    const flatten = (list: BasicTreeNodeData[], parent: BasicFlattenNode = null) => {
         return list.map((treeNode, index) => {
             const pos = getPosition(parent ? parent.pos : '0', index);
             const mergedKey = treeNode[realKeyName];
@@ -62,7 +58,7 @@ export function flattenTreeData(treeNodeList: any[], expandedKeys: Set<string>, 
                 });
             }
 
-            const flattenNode: any = {
+            const flattenNode: BasicFlattenNode = {
                 // `in` also reads inherited properties, such as getters of class-based tree data
                 ...Object.fromEntries(['key', 'label', 'value', 'icon', 'disabled', 'isLeaf'].filter((name) => name in treeNode).map((name) => [name, treeNode[name]])),
                 ...otherData,
@@ -92,8 +88,8 @@ export function flattenTreeData(treeNodeList: any[], expandedKeys: Set<string>, 
 }
 
 export function convertJsonToData(treeJson: TreeDataSimpleJson) {
-    const treeData: any[] = [];
-    const traverseNode = (key: string, children: any, path: any, res: any[]) => {
+    const treeData: NodeData[] = [];
+    const traverseNode = (key: string, children: string | TreeDataSimpleJson, path: string[], res: NodeData[]) => {
         const currPath = [...path, key];
         const itemKey = currPath.join(strings.JSON_KEY_SPLIT);
 
@@ -103,7 +99,7 @@ export function convertJsonToData(treeJson: TreeDataSimpleJson) {
             value: children,
         };
         if (isObject(children)) {
-            const newChildren: any[] = [];
+            const newChildren: NodeData[] = [];
             Object.entries(children).forEach((c) => {
                 traverseNode(c[0], c[1], currPath, newChildren);
             });
@@ -111,29 +107,29 @@ export function convertJsonToData(treeJson: TreeDataSimpleJson) {
         }
         res.push(newNode);
     };
-    Object.entries(treeJson).forEach((item) => traverseNode(item[0], item[1], [], treeData));
+    Object.entries(treeJson ?? {}).forEach((item) => traverseNode(item[0], item[1], [], treeData));
     return treeData;
 }
 
 export interface TraversedNode {
-    data: any;
+    data: BasicTreeNodeData;
     ind: number;
     pos: string;
-    key: any;
-    parentPos: any;
+    key: string;
+    parentPos: string | null;
     level: number;
 }
 
 interface TraverseParent {
-    node: any;
+    node: BasicTreeNodeData;
     pos: string;
     level: number;
 }
 
-export function traverseDataNodes(treeNodes: any[], callback: (data: TraversedNode) => void, keyMaps: KeyMapProps) {
+export function traverseDataNodes(treeNodes: BasicTreeNodeData[], callback: (data: TraversedNode) => void, keyMaps: KeyMapProps) {
     const realKeyName = keyMaps?.key ?? 'key';
     const realChildrenName = keyMaps?.children ?? 'children';
-    const processNode = (node: any, ind?: number, parent?: TraverseParent) => {
+    const processNode = (node: BasicTreeNodeData, ind?: number, parent?: TraverseParent) => {
         const children = node ? node[realChildrenName] : treeNodes;
         const pos = node ? getPosition(parent.pos, ind) : '0';
         if (node) {
@@ -149,7 +145,7 @@ export function traverseDataNodes(treeNodes: any[], callback: (data: TraversedNo
             callback(data);
         }
         if (children) {
-            children.forEach((subNode: any, subIndex: number) => {
+            children.forEach((subNode: BasicTreeNodeData, subIndex: number) => {
                 processNode(subNode, subIndex, {
                     node,
                     pos,
@@ -162,10 +158,10 @@ export function traverseDataNodes(treeNodes: any[], callback: (data: TraversedNo
     processNode(null);
 }
 
-export function convertDataToEntities(dataNodes: any[], keyMaps?: KeyMapProps) {
-    const posEntities = {};
-    const keyEntities = {};
-    const valueEntities = {};
+export function convertDataToEntities(dataNodes: BasicTreeNodeData[], keyMaps?: KeyMapProps) {
+    const posEntities: BasicKeyEntities = {};
+    const keyEntities: BasicKeyEntities = {};
+    const valueEntities: Record<string, string> = {};
     const wrapper = {
         posEntities,
         keyEntities,
@@ -175,9 +171,9 @@ export function convertDataToEntities(dataNodes: any[], keyMaps?: KeyMapProps) {
 
     traverseDataNodes(
         dataNodes,
-        (data: any) => {
+        (data) => {
             const { pos, key, parentPos } = data;
-            const entity = { ...data };
+            const entity: BasicKeyEntity = { ...data };
             const value = get(entity, `data.${realValueName}`, null);
 
             if (value !== null) {
@@ -199,7 +195,7 @@ export function convertDataToEntities(dataNodes: any[], keyMaps?: KeyMapProps) {
     return wrapper;
 }
 
-export function findKeysForValues(valueList: any, valueEntities: any, isMultiple = false) {
+export function findKeysForValues(valueList: any, valueEntities: Record<string, string>, isMultiple = false) {
     if (valueList == null) {
         return [];
     }
@@ -213,7 +209,7 @@ export function findKeysForValues(valueList: any, valueEntities: any, isMultiple
         return valueList;
     }
 
-    const res: any[] = [];
+    const res: string[] = [];
     valueList.forEach((val: string) => {
         if (val in valueEntities) {
             res.push(valueEntities[val]);
@@ -225,16 +221,16 @@ export function findKeysForValues(valueList: any, valueEntities: any, isMultiple
     return res;
 }
 
-export function findDescendantKeys(selectedKeys: string[], options: KeyEntities, self = true) {
+export function findDescendantKeys(selectedKeys: string[], options: BasicKeyEntities, self = true) {
     const res: string[] = [];
-    const findChild = (item: any) => {
+    const findChild = (item: BasicKeyEntity) => {
         if (!item) {
             return;
         }
         const { children } = item;
         const hasChildren = children != null;
         if (hasChildren) {
-            children.forEach((child: any) => {
+            children.forEach((child) => {
                 res.push(child.key);
                 findChild(options[child.key]);
             });
@@ -249,13 +245,13 @@ export function findDescendantKeys(selectedKeys: string[], options: KeyEntities,
     return res;
 }
 
-export function findChildKeys(keys: string[], options: KeyEntities, omitKeys: any[] = []) {
-    const res: any[] = [];
+export function findChildKeys(keys: string[], options: BasicKeyEntities, omitKeys: string[] = []) {
+    const res: string[] = [];
     if (keys) {
         keys.forEach((key) => {
             const opts = options[key];
             if (opts && opts.children) {
-                opts.children.forEach((child: any) => {
+                opts.children.forEach((child) => {
                     if (!omitKeys.length || !omitKeys.includes(child.key)) {
                         res.push(child.key);
                     }
@@ -266,8 +262,8 @@ export function findChildKeys(keys: string[], options: KeyEntities, omitKeys: an
     return res;
 }
 
-export function findSiblingKeys(selectedKeys: string[], options: KeyEntities, self = true) {
-    const par: any[] = [];
+export function findSiblingKeys(selectedKeys: string[], options: BasicKeyEntities, self = true) {
+    const par: string[] = [];
     selectedKeys.forEach((item) => {
         if (options[item] && options[item].parent) {
             par.push(options[item].parent.key);
@@ -278,9 +274,9 @@ export function findSiblingKeys(selectedKeys: string[], options: KeyEntities, se
     return res;
 }
 
-export function findAncestorKeys(selectedKeys: string[], options: KeyEntities, self = true) {
-    const res: any[] = [];
-    const findPar = (item: any) => {
+export function findAncestorKeys(selectedKeys: string[], options: BasicKeyEntities, self = true) {
+    const res: string[] = [];
+    const findPar = (item: BasicKeyEntity) => {
         if (item.parent) {
             res.push(item.parent.key);
             findPar(item.parent);
@@ -297,7 +293,7 @@ export function findAncestorKeys(selectedKeys: string[], options: KeyEntities, s
     return res;
 }
 
-function getSortedKeyList(keyList: any[], keyEntities: KeyEntities) {
+function getSortedKeyList(keyList: string[], keyEntities: BasicKeyEntities) {
     const levelMap = {};
     keyList.forEach((key) => {
         if (!keyEntities[key]) {
@@ -313,7 +309,7 @@ function getSortedKeyList(keyList: any[], keyEntities: KeyEntities) {
     return levelMap;
 }
 
-export function calcCheckedKeys(values: any, keyEntities: KeyEntities) {
+export function calcCheckedKeys(values: string | string[], keyEntities: BasicKeyEntities) {
     const keyList = Array.isArray(values) ? values : [values];
     const descendantKeys = findDescendantKeys(keyList, keyEntities, true);
     const checkedKeys = new Set(descendantKeys);
@@ -322,7 +318,7 @@ export function calcCheckedKeys(values: any, keyEntities: KeyEntities) {
 
     const levelMap: { [key: number]: string[] } = getSortedKeyList(keyList, keyEntities);
 
-    const calcCurrLevel = ({ key, parent, level }: any) => {
+    const calcCurrLevel = ({ key, parent, level }: BasicKeyEntity) => {
         if (!parent || visited.has(key)) {
             return;
         }
@@ -353,7 +349,7 @@ export function calcCheckedKeys(values: any, keyEntities: KeyEntities) {
     };
 }
 
-export function calcExpandedKeys(keyList: any[] = [], keyEntities: KeyEntities, autoExpandParent = true) {
+export function calcExpandedKeys(keyList: string[] = [], keyEntities: BasicKeyEntities, autoExpandParent = true) {
     if (!Array.isArray(keyList)) {
         keyList = [keyList];
     }
@@ -364,12 +360,12 @@ export function calcExpandedKeys(keyList: any[] = [], keyEntities: KeyEntities, 
     return new Set(keyList);
 }
 
-export function calcExpandedKeysForValues(value: any, keyEntities: KeyEntities, isMultiple: boolean, valueEntities: Record<string, string>) {
+export function calcExpandedKeysForValues(value: any, keyEntities: BasicKeyEntities, isMultiple: boolean, valueEntities: Record<string, string>) {
     const keys = findKeysForValues(value, valueEntities, isMultiple);
     return new Set(findAncestorKeys(keys, keyEntities, false));
 }
 
-export function calcMotionKeys(oldKeySet: Set<string>, newKeySet: Set<string>, keyEntities: KeyEntities) {
+export function calcMotionKeys(oldKeySet: Set<string>, newKeySet: Set<string>, keyEntities: BasicKeyEntities) {
     let motionType: 'show' | 'hide' = 'show';
     const oldKeys = [...oldKeySet];
     const newKeys = [...newKeySet];
@@ -392,7 +388,7 @@ export function calcMotionKeys(oldKeySet: Set<string>, newKeySet: Set<string>, k
     };
 }
 
-export function matchTreeNode(searchValue: string, option: any, filterTreeNode: any, filterProps: any) {
+export function matchTreeNode(searchValue: string, option: BasicTreeNodeData, filterTreeNode: any, filterProps: string) {
     if (!filterTreeNode) {
         return true;
     }
@@ -421,7 +417,7 @@ export function normalizedArr(val: any) {
     }
 }
 
-export function normalizeKeyList(keyList: any, keyEntities: KeyEntities, leafOnly = false, keepUnknownKeys?: boolean) {
+export function normalizeKeyList(keyList: string[] | Set<string>, keyEntities: BasicKeyEntities, leafOnly = false, keepUnknownKeys?: boolean) {
     const res: string[] = [];
     const keyListSet = new Set(keyList);
     if (!leafOnly) {
@@ -451,12 +447,12 @@ export function normalizeKeyList(keyList: any, keyEntities: KeyEntities, leafOnl
     return res;
 }
 
-export function getMotionKeys(eventKey: string, expandedKeys: Set<string>, keyEntities: KeyEntities) {
-    const res: any[] = [];
+export function getMotionKeys(eventKey: string, expandedKeys: Set<string>, keyEntities: BasicKeyEntities) {
+    const res: string[] = [];
 
     const getChild = (itemKey: string) => {
         if (keyEntities[itemKey].children) {
-            keyEntities[itemKey].children.forEach(({ key }: any) => {
+            keyEntities[itemKey].children.forEach(({ key }) => {
                 res.push(key);
                 if (expandedKeys.has(key)) {
                     getChild(key);
@@ -468,14 +464,14 @@ export function getMotionKeys(eventKey: string, expandedKeys: Set<string>, keyEn
     return res;
 }
 
-export function calcCheckedKeysForChecked(key: string, keyEntities: KeyEntities, checkedKeys: Set<string>, halfCheckedKeys: Set<string>) {
+export function calcCheckedKeysForChecked(key: string, keyEntities: BasicKeyEntities, checkedKeys: Set<string>, halfCheckedKeys: Set<string>) {
     const descendantKeys = findDescendantKeys([key], keyEntities, true);
     const nodeItem = keyEntities[key];
     checkedKeys = new Set([...checkedKeys, key]);
     halfCheckedKeys = new Set(halfCheckedKeys);
     halfCheckedKeys.delete(key);
     descendantKeys.forEach((descendantKey) => halfCheckedKeys.delete(descendantKey));
-    const calcCurrLevel = (node: any) => {
+    const calcCurrLevel = (node: BasicKeyEntity) => {
         if (!node.parent) {
             return;
         }
@@ -503,15 +499,15 @@ export function calcCheckedKeysForChecked(key: string, keyEntities: KeyEntities,
  * Same result as applying `calcCheckedKeysForChecked` to each key in turn, but every ancestor is resolved once,
  * bottom up, instead of once per key, which keeps selecting all rows linear in the number of nodes
  */
-export function calcCheckedKeysForCheckedKeys(keys: string[], keyEntities: KeyEntities, checkedKeys: Set<string>, halfCheckedKeys: Set<string>) {
+export function calcCheckedKeysForCheckedKeys(keys: string[], keyEntities: BasicKeyEntities, checkedKeys: Set<string>, halfCheckedKeys: Set<string>) {
     const checked = new Set(checkedKeys);
     const half = new Set(halfCheckedKeys);
-    const parentsByLevel = new Map<number, Set<any>>();
+    const parentsByLevel = new Map<number, Set<BasicKeyEntity>>();
     const markChecked = (key: string) => {
         checked.add(key);
         half.delete(key);
     };
-    const enqueueParent = ({ parent }: any) => {
+    const enqueueParent = ({ parent }: BasicKeyEntity) => {
         if (!parent) {
             return;
         }
@@ -532,7 +528,7 @@ export function calcCheckedKeysForCheckedKeys(keys: string[], keyEntities: KeyEn
     while (parentsByLevel.size > 0) {
         const level = Math.max(...parentsByLevel.keys());
         for (const parent of parentsByLevel.get(level)) {
-            if (parent.children.every((child: any) => checked.has(child.key))) {
+            if (parent.children.every((child) => checked.has(child.key))) {
                 markChecked(parent.key);
                 enqueueParent(parent);
             } else {
@@ -546,7 +542,7 @@ export function calcCheckedKeysForCheckedKeys(keys: string[], keyEntities: KeyEn
     return { checkedKeys: checked, halfCheckedKeys: half };
 }
 
-export function calcCheckedKeysForUnchecked(key: string, keyEntities: KeyEntities, checkedKeys: Set<string>, halfCheckedKeys: Set<string>) {
+export function calcCheckedKeysForUnchecked(key: string, keyEntities: BasicKeyEntities, checkedKeys: Set<string>, halfCheckedKeys: Set<string>) {
     const descendantKeys = findDescendantKeys([key], keyEntities, true);
     const nodeItem = keyEntities[key];
     descendantKeys.forEach((descendantKey) => {
@@ -557,7 +553,7 @@ export function calcCheckedKeysForUnchecked(key: string, keyEntities: KeyEntitie
             halfCheckedKeys.delete(descendantKey);
         }
     });
-    const calcCurrLevel = (node: any) => {
+    const calcCurrLevel = (node: BasicKeyEntity) => {
         const par = node.parent;
         if (!par) {
             return;
@@ -619,8 +615,8 @@ export function filterTreeData({
 }) {
     let filteredOptsKeys = [];
     filteredOptsKeys = Object.values(keyEntities)
-        .filter((item: any) => matchTreeNode(inputValue, item.data, filterTreeNode, filterProps))
-        .map((item: any) => item.key);
+        .filter((item) => matchTreeNode(inputValue, item.data, filterTreeNode, filterProps))
+        .map((item) => item.key);
     const ancestorKeys = findAncestorKeys(filteredOptsKeys, keyEntities, false);
     let expandedOptsKeys = prevFilteredKeys
         ? findAncestorKeys(
@@ -662,14 +658,14 @@ export function normalizeValue(value: BasicValue, withObject: boolean, keyMaps?:
     }
 }
 
-export function calcDisabledKeys(keyEntities: KeyEntities, keyMaps?: KeyMapProps) {
+export function calcDisabledKeys(keyEntities: BasicKeyEntities, keyMaps?: KeyMapProps) {
     const disabledName = keyMaps?.disabled ?? 'disabled';
     const disabledKeys = Object.keys(keyEntities).filter((key) => keyEntities[key].data[disabledName]);
     const { checkedKeys } = calcCheckedKeys(disabledKeys, keyEntities);
     return checkedKeys;
 }
 
-export function calcDropRelativePosition({ clientY }: any, treeNode: BasicTreeNodeProps) {
+export function calcDropRelativePosition({ clientY }: { clientY: number }, treeNode: BasicTreeNodeProps) {
     const { top, bottom, height } = treeNode.nodeInstance.getBoundingClientRect();
     if (clientY <= top + height * DRAG_OFFSET) {
         return -1;
@@ -681,7 +677,7 @@ export function calcDropRelativePosition({ clientY }: any, treeNode: BasicTreeNo
     return 0;
 }
 
-export function getDragNodesKeys(key: string, keyEntities: KeyEntities) {
+export function getDragNodesKeys(key: string, keyEntities: BasicKeyEntities) {
     return findDescendantKeys([key], keyEntities, true);
 }
 

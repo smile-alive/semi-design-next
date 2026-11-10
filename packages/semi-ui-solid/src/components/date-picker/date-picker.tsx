@@ -59,7 +59,7 @@ type RedeclaredKeys =
     | 'onClickOutSide';
 
 /** Undeclared props (data-*, aria-label, id, title) go to the root element */
-export interface DatePickerProps extends Omit<DatePickerFoundationProps, RedeclaredKeys>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'onCancel' | 'placeholder' | 'autofocus' | 'ref'> {
+interface DatePickerCommonProps extends Omit<DatePickerFoundationProps, RedeclaredKeys | 'type' | 'multiple'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'onCancel' | 'placeholder' | 'autofocus' | 'ref'> {
     autofocus?: boolean;
     bottomSlot?: JSX.Element;
     /** On the root element */
@@ -100,10 +100,16 @@ export interface DatePickerProps extends Omit<DatePickerFoundationProps, Redecla
     onFocus?: (e: FocusEvent | MouseEvent | KeyboardEvent, rangeType?: RangeInput | false) => void;
     onPresetClick?: (item: PresetType, e: MouseEvent) => void;
     onClickOutSide?: (e: MouseEvent) => void;
-    /** Gets arrays in range and multiple mode */
-    onChange?: (date: Date | Date[], dateString: string | string[]) => void;
     ref?: Ref<DatePickerElement>;
 }
+
+export type DatePickerProps = DatePickerCommonProps &
+    (
+        | { type?: 'date'; multiple?: false; onChange?: (date: Date, dateString: string) => void }
+        | { type?: 'dateTime' | 'month' | 'year'; multiple?: boolean; onChange?: (date: Date, dateString: string) => void }
+        | { type?: 'date'; multiple: true; onChange?: (date: Date[], dateString: string[]) => void }
+        | { type: 'dateRange' | 'dateTimeRange' | 'monthRange'; multiple?: boolean; onChange?: (date: Date[], dateString: string[]) => void }
+    );
 
 /** React's DatePickerHandle methods; the root element passed to `ref` carries them */
 export interface DatePickerHandle {
@@ -313,7 +319,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             notifyBlur: (e) => props.onBlur?.(e),
             notifyFocus: (e, rangeType) => props.onFocus?.(e, rangeType),
             notifyClear: (e) => props.onClear?.(e),
-            notifyChange: (date, dateStr) => props.onChange?.(date, dateStr),
+            notifyChange: (date, dateStr) => (props.onChange as ((date: Date | Date[], dateStr: string | string[]) => void) | undefined)?.(date, dateStr),
             notifyCancel: (date, dateStr) => props.onCancel?.(date, dateStr),
             notifyConfirm: (date, dateStr) => props.onConfirm?.(date, dateStr),
             notifyOpenChange: (open) => props.onOpenChange?.(open),
