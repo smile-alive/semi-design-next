@@ -98,6 +98,7 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
         const full = needsFullBuild(renderer);
         let pending = LottieFoundation.#pending.get(full);
         if (!pending) {
+            // a CommonJS deep path: semi-vite's CJS_DEEP_IMPORTS lists it for the Solid dev pre-bundle
             pending = (full ? import('lottie-web') : import('lottie-web/build/player/lottie_light'))
                 .then((module) => module.default)
                 .catch((error) => {
