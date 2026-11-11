@@ -3,15 +3,17 @@
 // page scripts from loading a framework package.
 import { register } from '@fibrae/semi-foundation/components/code-highlight/registry';
 
-register({
-    languages: [
-        () => import('shiki/langs/javascript.mjs'),
-        () => import('shiki/langs/typescript.mjs'),
-        () => import('shiki/langs/jsx.mjs'),
-        () => import('shiki/langs/tsx.mjs'),
-        () => import('shiki/langs/css.mjs'),
-        () => import('shiki/langs/html.mjs'),
-        () => import('shiki/langs/json.mjs'),
-        () => import('shiki/langs/bash.mjs'),
-    ],
-});
+export function setupCodeHighlight() {
+    register({
+        languages: [
+            () => import('shiki/langs/javascript.mjs'),
+            () => import('shiki/langs/typescript.mjs'),
+            () => import('shiki/langs/jsx.mjs'),
+            () => import('shiki/langs/tsx.mjs'),
+            () => import('shiki/langs/css.mjs'),
+            () => import('shiki/langs/html.mjs'),
+            () => import('shiki/langs/json.mjs'),
+            () => import('shiki/langs/bash.mjs'),
+        ],
+    });
+}
