@@ -15,7 +15,7 @@ const getColumns = (): ColumnProps[] => [
     { title: 'Address', dataIndex: 'address' },
 ];
 const getPaginationInfo = () => query(`.${P}-pagination-info`).textContent;
-const clickPage = (page: number) => userEvent.click(getPageItems().find((item) => item.textContent === `${page}`) as HTMLElement);
+const clickPage = (page: number) => userEvent.click(getPageItems().find((item) => item.textContent === `${page}`)!);
 const getPageNumbers = () =>
     getPageItems()
         .map((item) => Number(item.textContent))

@@ -106,7 +106,7 @@ function FixedOpenKeys() {
     );
 }
 
-const itemText = (text: string) => [...document.querySelectorAll(`.${prefix}-item-text`)].find((el) => el.textContent === text) as Element;
+const itemText = (text: string) => [...document.querySelectorAll(`.${prefix}-item-text`)].find((el) => el.textContent === text)!;
 const selectedTexts = () => [...document.querySelectorAll(`.${prefix}-item-selected`)].map((el) => el.textContent);
 
 describe('Navigation（浏览器）', () => {

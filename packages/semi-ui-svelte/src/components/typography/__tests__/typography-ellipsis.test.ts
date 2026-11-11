@@ -24,7 +24,7 @@ function setup(store: Store, target?: HTMLElement) {
 const root = (container: Element = document.body) => getElement(`.${prefix}`, container);
 const settle = (ms = 50) => new Promise((resolve) => setTimeout(resolve, ms));
 // mouseenter does not bubble: the hover listener sits on the span wrapping the text, a pointer over the text enters it first
-const enterText = (node: HTMLElement) => fireEvent.mouseEnter(node.firstElementChild as Element);
+const enterText = (node: HTMLElement) => fireEvent.mouseEnter(node.firstElementChild!);
 
 function visibleText(node: Element): string {
     return [...node.childNodes].map((child) => (child.nodeType === Node.TEXT_NODE ? child.textContent : child instanceof HTMLElement && child.hidden ? '' : visibleText(child as Element))).join('');

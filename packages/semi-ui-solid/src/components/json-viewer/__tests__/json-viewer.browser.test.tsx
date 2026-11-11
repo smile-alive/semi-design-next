@@ -50,9 +50,9 @@ const baseStr = `{
 
 const renderViewer = () => render(() => <JsonViewer value={baseStr} height={400} options={{ lineHeight: 20, autoWrap: true, formatOptions: { tabSize: 4 } }} width={700} />);
 
-const q = <T extends Element = HTMLElement>(selector: string) => document.querySelector(selector) as T;
+const q = <T extends Element = HTMLElement>(selector: string) => getElement<T>(selector);
 const lines = () => [...q('.lines-content').children];
-const tokenCount = (index: number) => (lines()[index].firstElementChild as Element).children.length;
+const tokenCount = (index: number) => lines()[index].firstElementChild!.children.length;
 const lineNumber = (n: number) => q(`.${prefixCls}-line-number[data-line-number="${n}"]`);
 const completeContainer = () => q(`.${prefixCls}-complete-container`);
 const suggestionCount = () => q(`.${prefixCls}-complete-suggestions-container`).children.length;
@@ -389,7 +389,7 @@ describe('JsonViewer', () => {
     it('搜索按钮可以拖动，紧随拖动的 click 不打开搜索栏，之后的点击正常打开', async () => {
         renderViewer();
         const button = trigger();
-        const mover = button.parentElement as HTMLElement;
+        const mover = button.parentElement!;
         await expect.element(mover).toHaveStyle({ position: 'absolute', cursor: 'move' });
         const start = mover.getBoundingClientRect();
         fireEvent.pointerDown(button, { pointerId: 1, pointerType: 'mouse', button: 0, clientX: 300, clientY: 100 });

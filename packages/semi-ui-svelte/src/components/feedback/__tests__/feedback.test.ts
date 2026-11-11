@@ -98,7 +98,7 @@ describe('Svelte Feedback 渲染', () => {
             radioGroupProps: { options },
             checkboxGroupProps: { options },
         });
-        const root = $(`div.${sheetCls}`) as HTMLElement;
+        const root = $(`div.${sheetCls}`)!;
         expect(root).toHaveClass(prefix);
         expect(root).toHaveAttribute('data-testid', 'feedback');
         const names = [...root.attributes].map((attribute) => attribute.name);
@@ -118,7 +118,7 @@ describe('Svelte Feedback 渲染', () => {
 
     it('modal 模式渲染 Modal，确定按钮等待选择值', async () => {
         await setup({ type: 'text', mode: 'modal', motion: false });
-        const root = $(`.${prefix}`) as HTMLElement;
+        const root = $(`.${prefix}`)!;
         expect(root).toHaveClass(`${prefix}-text`);
         expect(root.querySelector(`.${modalCls}`)).not.toBeNull();
         expect($(`.${sheetCls}`)).toBeNull();
@@ -494,7 +494,7 @@ describe('Svelte Feedback visible', () => {
     });
 
     it('modal：取消按钮、关闭按钮、遮罩点击、Esc 都使 visible 变 false', async () => {
-        const closers = [() => click(cancel()), () => click(screen.getByRole('button', { name: zh_CN.Modal.close })), () => click($(`.${modalCls}-wrap`) as HTMLElement), async () => pressEsc()];
+        const closers = [() => click(cancel()), () => click(screen.getByRole('button', { name: zh_CN.Modal.close })), () => click($(`.${modalCls}-wrap`)!), async () => pressEsc()];
         for (const close of closers) {
             const view = render(FeedbackModes, { props: { mode: 'bind' } });
             flushSync();
@@ -810,7 +810,7 @@ describe('Svelte Feedback 透传', () => {
         const { store } = await setup({ mode: 'modal', motion: false, width: 321, maskClosable: false, okText: 'Go' });
         expect(screen.getByRole('button', { name: 'Go' })).toBeInTheDocument();
         expect($(`.${modalCls}`)?.style.width).toBe('321px');
-        await click($(`.${modalCls}-wrap`) as HTMLElement);
+        await click($(`.${modalCls}-wrap`)!);
         expect(store.props.visible).toBe(true);
     });
 

@@ -62,7 +62,7 @@ function runCase(label: string, options: SemiWebpackPluginOptions, entry = './sr
         compiler.run((err, stats) => {
             compiler.close(() => {});
             if (err) return reject(err);
-            if (stats.hasErrors()) return reject(new Error(stats.toString('errors-only')));
+            if (stats!.hasErrors()) return reject(new Error(stats!.toString('errors-only')));
             resolve(fs.readFileSync(path.join(outDir, 'bundle.js'), 'utf-8'));
         });
     });

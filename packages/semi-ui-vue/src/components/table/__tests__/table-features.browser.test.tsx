@@ -26,7 +26,7 @@ const getFileData = (total: number) =>
     }));
 const designFilters = ['Semi Design 设计稿', 'Semi D2C 设计稿'].map((value) => ({ text: value, value }));
 
-const getHeaderCell = (container: Element, title: string) => Array.from(container.querySelectorAll<HTMLElement>(`.${prefix}-thead .${prefix}-row-head`)).find((th) => th.textContent === title) as HTMLElement;
+const getHeaderCell = (container: Element, title: string) => Array.from(container.querySelectorAll<HTMLElement>(`.${prefix}-thead .${prefix}-row-head`)).find((th) => th.textContent === title)!;
 const getBody = () => getElement(`.${prefix}-body`);
 const getBodyRows = () => document.querySelectorAll(`.${prefix}-tbody .${prefix}-row`);
 const getDropdown = () => document.querySelector(`.${BASE_CLASS_PREFIX}-dropdown`);
@@ -35,7 +35,7 @@ const findElement = <E extends Element>(find: () => E | null | undefined) =>
     waitFor(() => {
         const found = find();
         expect(found).toBeTruthy();
-        return found as E;
+        return found!;
     });
 
 function mountTable(props: Record<string, unknown>, slots: Slots = {}) {
@@ -543,7 +543,7 @@ describe('Table 列功能（浏览器）', () => {
         await clickButton('清除后不关闭');
         await waitFor(() => expect(paginationInfo()).toHaveTextContent('显示第 1 条-第 10 条，共 46 条'));
         expect(getDropdown()).not.toBeNull();
-        await userEvent.click(getInput() as HTMLElement);
+        await userEvent.click(getInput()!);
         await userEvent.keyboard('郝宣');
         await clickButton('筛选后不关闭');
         await waitFor(() => expect(paginationInfo()).toHaveTextContent('显示第 1 条-第 10 条，共 23 条'));

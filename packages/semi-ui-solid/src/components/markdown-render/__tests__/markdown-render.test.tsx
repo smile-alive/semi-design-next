@@ -483,7 +483,7 @@ describe('MarkdownRender', () => {
         const img = await waitFor(() => {
             const node = container.querySelector('img');
             expect(node).not.toBeNull();
-            return node as HTMLImageElement;
+            return node!;
         });
         fireEvent.load(img);
         await waitFor(() => expect(container.querySelector('a [role="button"], a [tabindex="0"]')).not.toBeNull());

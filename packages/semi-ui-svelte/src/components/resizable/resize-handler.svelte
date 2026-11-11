@@ -29,7 +29,7 @@
         }
     };
 
-    onMount(() => group.registerHandler(handler as HTMLDivElement));
+    onMount(() => group.registerHandler(handler!));
 </script>
 
 <div

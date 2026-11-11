@@ -405,7 +405,7 @@ describe('Table', () => {
                 onChange(changeInfo);
                 const tablePagination = changeInfo.pagination;
                 if (tablePagination && tablePagination.currentPage !== pagination().currentPage) {
-                    setPagination({ ...pagination(), currentPage: tablePagination.currentPage as number });
+                    setPagination({ ...pagination(), currentPage: tablePagination.currentPage! });
                     setCols([...cols()]);
                 }
             };
@@ -949,7 +949,7 @@ describe('Table', () => {
         const filterNode = await waitFor(() => {
             const node = queryAll(`.${BASE_CLASS_PREFIX}-checkbox-addon`).find((item) => item.textContent === 'Semi Design 设计稿');
             expect(node).toBeDefined();
-            return node as HTMLElement;
+            return node!;
         });
         await userEvent.click(filterNode);
         expect(onChange).toHaveBeenCalledTimes(1);
@@ -970,13 +970,13 @@ describe('Table 回归用例', () => {
     const getHeaderCheckbox = () => query(`.${P}-thead .${BASE_CLASS_PREFIX}-checkbox`);
     const getBodyCheckboxes = () => queryAll(`.${P}-tbody .${BASE_CLASS_PREFIX}-checkbox`);
     const getCheckedBodyCount = () => getBodyCheckboxes().filter((el) => el.classList.contains(`${BASE_CLASS_PREFIX}-checkbox-checked`)).length;
-    const clickPage = (page: number) => userEvent.click(getPageItems().find((item) => item.textContent === `${page}`) as HTMLElement);
+    const clickPage = (page: number) => userEvent.click(getPageItems().find((item) => item.textContent === `${page}`)!);
     const getPaginationInfo = () => query(`.${P}-pagination-info`).textContent;
     const openFilter = async () => {
         await userEvent.click(query(`.${P}-column-filter`));
         await screen.findAllByText(nameFilters[0].text);
     };
-    const clickFilterItem = (text: string) => userEvent.click(queryAll(`.${BASE_CLASS_PREFIX}-dropdown-item`).find((item) => item.textContent === text) as HTMLElement);
+    const clickFilterItem = (text: string) => userEvent.click(queryAll(`.${BASE_CLASS_PREFIX}-dropdown-item`).find((item) => item.textContent === text)!);
 
     it('FixRenderReturnProps：固定列上应用 onCell 返回的 rowSpan', () => {
         const spanColumns: ColumnProps[] = [

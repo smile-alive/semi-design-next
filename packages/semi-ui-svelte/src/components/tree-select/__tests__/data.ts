@@ -71,7 +71,7 @@ export const getRoot = () => getElement(`.${prefixCls}`);
 export const getPopover = () => document.querySelector<HTMLElement>(`.${prefixCls}-popover`);
 export const getRows = () => [...document.querySelectorAll<HTMLElement>(`.${optionCls}`)];
 export const getRowLabels = () => getRows().map((row) => row.textContent?.trim());
-export const getRow = (label: string) => getRows().find((row) => row.textContent?.trim() === label) as HTMLElement;
+export const getRow = (label: string) => getRows().find((row) => row.textContent?.trim() === label)!;
 export const getSelection = () => getElement(`.${prefixCls}-selection`);
 export const getSelectionText = () => getSelection().textContent?.trim();
 export const getTags = () => [...document.querySelectorAll<HTMLElement>(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag`)];
@@ -81,7 +81,7 @@ export const getSearchInput = () => getElement<HTMLInputElement>(`.${treePrefixC
 export const getTriggerInput = () => getElement<HTMLInputElement>('input', getRoot());
 
 export async function click(element: Element | null) {
-    await fireEvent.click(element as Element);
+    await fireEvent.click(element!);
     await settle();
 }
 

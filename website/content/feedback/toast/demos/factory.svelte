@@ -3,7 +3,7 @@
     import { Button, Toast, ToastFactory } from '@fibrae/semi-ui-svelte';
 
     const ToastInCustomContainer = ToastFactory.create({
-        getPopupContainer: () => document.getElementById('custom-toast-container') as HTMLElement,
+        getPopupContainer: () => document.getElementById('custom-toast-container')!,
     });
     onDestroy(() => ToastInCustomContainer.destroyAll());
 </script>

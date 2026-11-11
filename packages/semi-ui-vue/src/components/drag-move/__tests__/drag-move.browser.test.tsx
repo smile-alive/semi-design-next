@@ -54,7 +54,7 @@ describe('DragMove（浏览器）', () => {
                 </DragMove>
             ),
         });
-        await expect.element(screen.getByText('inner').parentElement as HTMLElement).toHaveStyle({ position: 'absolute' });
+        await expect.element(screen.getByText('inner').parentElement!).toHaveStyle({ position: 'absolute' });
 
         await userEvent.click(screen.getByText('inner'));
 

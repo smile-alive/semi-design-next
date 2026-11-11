@@ -40,7 +40,7 @@ function renderRating(props: Props = {}, provider: Props = {}) {
             </ConfigProvider>
         ),
     });
-    return { ...view, state, handle: () => handle.value as RatingHandle };
+    return { ...view, state, handle: () => handle.value! };
 }
 const keyOnList = (key: string) => fireEvent.keyDown(getList(), { key });
 

@@ -94,7 +94,7 @@ describe('Notification', () => {
     it('打开后立即关闭的通知会播放离开动画', () => {
         show('info', { title: 'mounted', duration: 0 });
         Notification.close(Notification.info({ title: 'brief', duration: 0 }));
-        const brief = screen.getAllByRole('status').find((notice) => notice.textContent === 'brief') as HTMLElement;
+        const brief = screen.getAllByRole('status').find((notice) => notice.textContent === 'brief')!;
         expect(brief).toHaveClass(hideTopRight);
         endAnimation(brief);
         expect(screen.getAllByRole('status').map((notice) => notice.textContent)).toEqual(['mounted']);
@@ -281,7 +281,7 @@ describe('Notification', () => {
         const [title, setTitle] = createSignal<string | undefined>('title');
         const [content, setContent] = createSignal('content');
         render(() => <NotificationItem title={title()} content={content()} />);
-        const labelledBy = screen.getByRole('status').getAttribute('aria-labelledby') as string;
+        const labelledBy = screen.getByRole('status').getAttribute('aria-labelledby')!;
         setContent('changed');
         expect(screen.getByRole('status')).toHaveAttribute('aria-labelledby', labelledBy);
         expect(document.getElementById(labelledBy)).toHaveTextContent('title');
@@ -538,11 +538,11 @@ describe('Notification', () => {
         expect(notice).toHaveClass(`${noticeCls}-light`);
         expect(notice.querySelector('button')).toBeNull();
         render(() => <NotificationItem title="direct" />);
-        const direct = screen.getAllByRole('status').find((item) => item.textContent === 'direct') as HTMLElement;
+        const direct = screen.getAllByRole('status').find((item) => item.textContent === 'direct')!;
         expect(direct).toHaveClass(`${noticeCls}-light`);
         expect(direct.querySelector('button')).toBeNull();
         show('info', { title: 'explicit', duration: 0, showClose: true });
-        const explicit = screen.getAllByRole('status').find((item) => item.textContent === 'explicit') as HTMLElement;
+        const explicit = screen.getAllByRole('status').find((item) => item.textContent === 'explicit')!;
         expect(explicit.querySelector('button')).not.toBeNull();
     });
 
@@ -746,7 +746,7 @@ describe('Notification', () => {
         const [, goneClose] = screen.getAllByRole('button', { name: zh_CN.Notification.close });
         goneClose.focus();
         Notification.close('gone');
-        const gone = screen.getAllByRole('status').find((notice) => notice.textContent === 'gone') as HTMLElement;
+        const gone = screen.getAllByRole('status').find((notice) => notice.textContent === 'gone')!;
         endAnimation(gone);
         vi.advanceTimersByTime(1000);
         expect(screen.getByRole('status')).toHaveClass(hideTopRight);

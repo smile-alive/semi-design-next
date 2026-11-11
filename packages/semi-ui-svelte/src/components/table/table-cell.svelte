@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { get } from 'es-toolkit/compat';
-    import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
     import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils';
     import ColumnSelection from './column-selection.svelte';
@@ -37,7 +36,7 @@
 
     const table = getTableContext('Table cell');
 
-    const custom = $derived({ ...column.onCell?.(record as AnyRecord, index as number), ...cellAttrs });
+    const custom = $derived({ ...column.onCell?.(record!, index!), ...cellAttrs });
     const colSpan = $derived(custom.colspan);
     const rowSpan = $derived(custom.rowspan);
     const isRTL = $derived(table.direction === 'rtl');
@@ -84,7 +83,7 @@
             // a table, not a grid: the cells have no arrow-key navigation; the role also covers the div cells of a
             // virtualized body
             role: 'cell',
-            title: shouldShowEllipsisTitle(column.ellipsis as BaseEllipsis) && inner === 'default' && !table.parts.cell && typeof text === 'string' ? text : undefined,
+            title: shouldShowEllipsisTitle(column.ellipsis!) && inner === 'default' && !table.parts.cell && typeof text === 'string' ? text : undefined,
             style: joinStyles(position, width != null && `width: ${toCssLength(width)}`, customStyle as string | undefined, align),
         };
     });
@@ -122,8 +121,8 @@
     {:else if table.parts.cell}
         {@render table.parts.cell({
             text: value,
-            record: record as AnyRecord,
-            index: index as number,
+            record: record!,
+            index: index!,
             column,
             expandIcon: expandIconArgs ? expandIconNode : undefined,
             isHovering: hovered,

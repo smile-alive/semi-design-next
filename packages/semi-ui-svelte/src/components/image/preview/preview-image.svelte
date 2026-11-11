@@ -63,8 +63,8 @@
         },
         () => PreviewImageFoundation.getInitialState(),
         () => ({
-            getContainer: () => container as HTMLDivElement,
-            getImage: () => image as HTMLImageElement,
+            getContainer: () => container!,
+            getImage: () => image!,
             requestZoom: (value, reportToUser) => onZoom(value, reportToUser),
             notifyLoad: (loaded) => onLoad(loaded),
             notifyError: (failed) => onError(failed),

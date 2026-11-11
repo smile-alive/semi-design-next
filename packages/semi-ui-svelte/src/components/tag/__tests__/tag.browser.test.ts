@@ -149,7 +149,7 @@ describe('Svelte TagGroup（浏览器）', () => {
         const popup = await waitFor(() => {
             const found = document.querySelector<HTMLElement>('.semi-tag-rest-group-popover');
             expect(found).not.toBeNull();
-            return found as HTMLElement;
+            return found!;
         });
         await userEvent.click(getElement('.semi-tag-close', popup));
         expect(close).toHaveBeenCalledWith(expect.any(MouseEvent), 'b');

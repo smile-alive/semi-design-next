@@ -2,7 +2,7 @@
     import { computed, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
     import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
-    import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputValue, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
+    import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-vue';
     import { useFoundation } from '../../base/index';
     import { useFocusHandover } from '../../composables/index';
@@ -88,7 +88,7 @@
     const insetValue = computed(() =>
         DateInputFoundation.getInsetInputValue(props, {
             value: props.value,
-            insetInputValue: props.insetInputValue as InsetInputValue,
+            insetInputValue: props.insetInputValue!,
         })
     );
 

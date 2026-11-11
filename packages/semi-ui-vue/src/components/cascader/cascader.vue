@@ -323,7 +323,7 @@
     };
 
     const tagSlotProps = (key: string, index: number): CascaderTagSlotProps => ({
-        entity: entityOf(key) as CascaderEntity,
+        entity: entityOf(key)!,
         index,
         disabled: isTagDisabled(key),
         onClose: (event) => removeTag(key, event),

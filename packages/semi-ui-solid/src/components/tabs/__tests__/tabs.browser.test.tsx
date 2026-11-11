@@ -275,7 +275,7 @@ function AutoTabs(props: { width: number; collapsible?: 'auto'; controlled?: boo
 function measureAutoTabs() {
     const probe = render(() => <AutoTabs width={2000} />);
     const nodes = [...document.querySelectorAll<HTMLElement>(`.${prefix}-tab`)];
-    const total = (nodes.at(-1) as HTMLElement).getBoundingClientRect().right - nodes[0].getBoundingClientRect().left;
+    const total = nodes.at(-1)!.getBoundingClientRect().right - nodes[0].getBoundingClientRect().left;
     probe.unmount();
     return total;
 }
@@ -366,7 +366,7 @@ describe('Tabs 折叠（浏览器）', () => {
         await expectArrows(container, { start: false, end: true });
         expect(isInside(last, scrollWrapper(container))).toBe(false);
 
-        setActiveKey(keys.at(-1) as string);
+        setActiveKey(keys.at(-1)!);
         await waitFor(() => expect(isInside(last, scrollWrapper(container))).toBe(true));
     });
 
@@ -408,7 +408,7 @@ describe('Tabs 折叠（浏览器）', () => {
         await expectArrows(container, { start: false, end: true });
         await userEvent.hover(arrowButton(container, 'end'));
         const menuItems = await screen.findAllByRole('menuitemcheckbox');
-        await userEvent.click(menuItems.find((item) => item.textContent === 'Tab-6') as HTMLElement);
+        await userEvent.click(menuItems.find((item) => item.textContent === 'Tab-6')!);
         await waitFor(() => expect(activePane(container)).toHaveTextContent('Content of card tab 6'));
 
         await waitFor(() => expect(arrowButton(container, 'start')).toBeEnabled());

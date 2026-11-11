@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-    import MCPConfigureContentFoundation, { type MCPConfigureContentAdapter, type MCPConfigureContentProps as FoundationProps, type MCPConfigureContentState, type MCPConfigureMode, type MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
+    import MCPConfigureContentFoundation, { type MCPConfigureContentAdapter, type MCPConfigureContentProps as FoundationProps, type MCPConfigureContentState, type MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
     import { getShowOptions } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
     import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { IconEdit, IconMinus, IconPlus, IconSearch, IconSetting } from '@fibrae/semi-icons-vue';
@@ -65,7 +65,7 @@
 <template>
     <div :class="prefix">
         <div :class="`${prefix}-header`">
-            <RadioGroup :aria-label="text.mcpConfigure" :modelValue="state.mode" type="button" @update:modelValue="foundation.handleModeChange($event as MCPConfigureMode)">
+            <RadioGroup :aria-label="text.mcpConfigure" :modelValue="state.mode" type="button" @update:modelValue="foundation.handleModeChange($event!)">
                 <Radio :value="strings.MCP_MODE.INNER">{{ text.mcpServers }}</Radio>
                 <Radio :value="strings.MCP_MODE.CUSTOM">{{ text.newMcpAdd }}</Radio>
             </RadioGroup>

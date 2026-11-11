@@ -343,7 +343,7 @@ describe('DatePicker foundation 行为', () => {
     it('多选的 insetInput 按内嵌格式解析输入', () => {
         const onChange = vi.fn<ChangeHandler>();
         renderDatePicker({ type: 'date', multiple: true, defaultOpen: true, format: 'yyyy-MM-dd EEEE', insetInput: true, motion: false, onChange });
-        typeIn(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd'), '2021-06-01,2021-06-15');
+        typeIn(within(getPopup()!).getByPlaceholderText('yyyy-MM-dd'), '2021-06-01,2021-06-15');
         expect(onChange).toHaveBeenCalledWith([new Date(2021, 5, 1), new Date(2021, 5, 15)], ['2021-06-01 星期二', '2021-06-15 星期二']);
     });
 
@@ -373,7 +373,7 @@ describe('DatePicker foundation 行为', () => {
 
     it('monthsGrid 通过 foundation 显示年份选择器', async () => {
         renderDatePicker({ type: 'date', defaultValue: baseDate, defaultOpen: true, motion: false });
-        const popup = getPopup() as HTMLElement;
+        const popup = getPopup()!;
         expect(popup.querySelector(`.${dp}-month-grid`)).toHaveAttribute('x-panel-yearandmonth-open-type', 'none');
         await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(popup.querySelector(`.${dp}-month-grid`)).toHaveAttribute('x-panel-yearandmonth-open-type', 'left');
@@ -440,7 +440,7 @@ describe('DatePicker foundation 行为', () => {
         renderDatePicker({ type: 'dateTime', defaultValue: baseDate, defaultOpen: true, disabledTime, motion: false });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime }));
         const disabledTexts = (list: Element) => [...new Set(Array.from(list.querySelectorAll('li[aria-disabled="true"]')).map((li) => li.textContent))];
-        const [hours, minutes, seconds] = (getPopup() as HTMLElement).querySelectorAll(`.${dp}-tpk ul[role="listbox"]`);
+        const [hours, minutes, seconds] = getPopup()!.querySelectorAll(`.${dp}-tpk ul[role="listbox"]`);
         expect(disabledTexts(hours)).toEqual(['00', '01', '02', '03']);
         expect(disabledTexts(minutes)).toEqual(['00', '15', '30', '45']);
         expect(disabledTexts(seconds)).toEqual(['00']);
@@ -525,7 +525,7 @@ describe('DatePicker foundation 行为', () => {
     it('foundation handleSelectedChange 带 insetInput', async () => {
         const onChange = vi.fn<ChangeHandler>();
         renderDatePicker({ type: 'date', defaultPickerValue: '2021-06-01', insetInput: true, motion: false, open: true, onChange });
-        const insetInput = within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd');
+        const insetInput = within(getPopup()!).getByPlaceholderText('yyyy-MM-dd');
         expect(insetInput).toHaveValue('');
         await userEvent.click(getDay('2021-06-15'));
         expect(onChange).toHaveBeenCalledWith(new Date(2021, 5, 15), '2021-06-15');
@@ -550,7 +550,7 @@ describe('DatePicker foundation 行为', () => {
 
     it('inputFoundation getInsetInputPlaceholder 处理 dateTime', () => {
         renderDatePicker({ type: 'dateTime', defaultValue: baseDate, defaultOpen: true, format: 'yyyy/MM/dd HH:mm', insetInput: true, motion: false });
-        expect(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy/MM/dd')).toHaveValue('2019/09/08');
-        expect(within(getPopup() as HTMLElement).getByPlaceholderText('HH:mm')).toHaveValue('08:08');
+        expect(within(getPopup()!).getByPlaceholderText('yyyy/MM/dd')).toHaveValue('2019/09/08');
+        expect(within(getPopup()!).getByPlaceholderText('HH:mm')).toHaveValue('08:08');
     });
 });

@@ -1,7 +1,7 @@
 import { type Accessor, type JSX, type ResolvedChildren, For, Show, children, createComputed, createEffect, createMemo, createSignal, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/overflow-list/constants';
-import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -147,7 +147,7 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
     const visibleItemRenderer = createMemo(() => local.visibleItemRenderer);
 
     // the foundation falls back to the `key` field when itemKey is unset, but types the option as required
-    const itemKey = createMemo(() => props.itemKey as ItemKeyOption);
+    const itemKey = createMemo(() => props.itemKey!);
 
     // Keyed by item key so a measured box keeps its element, and with it its observer, while the list settles
     const entries = createMemo(() => new Map(OverflowListFoundation.getVisibleItems(view(), itemKey()).map(({ key, item, index }) => [key, { item, index }] as const)));

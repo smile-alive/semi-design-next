@@ -95,7 +95,7 @@ describe('Form', () => {
             ],
         };
         const remove = (key: number) => {
-            const api = formApi as FormApi;
+            const api = formApi!;
             const effects = (api.getValue('effects') as typeof initValues.effects).filter((effect) => effect.key !== key);
             api.setValue('effects', effects.length ? effects : undefined);
         };

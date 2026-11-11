@@ -57,7 +57,7 @@ describe('Tooltip', () => {
         expect(document.querySelectorAll(wrapperSelector)).toHaveLength(1);
         await waitFor(() => expect(shown()).not.toBeNull());
 
-        await userEvent.click(popup() as HTMLElement);
+        await userEvent.click(popup()!);
         expect(shown()).not.toBeNull();
 
         clickOutside();
@@ -313,10 +313,10 @@ describe('Tooltip', () => {
                     </Tooltip>
                 </>
             ));
-            const inline = screen.getByText('inline').parentElement as HTMLElement;
+            const inline = screen.getByText('inline').parentElement!;
             expect(inline.style.display).toBe('inline-block');
             expect(inline.style.width).toBe('');
-            expect((screen.getByText('block').parentElement as HTMLElement).style.width).toBe('100%');
+            expect(screen.getByText('block').parentElement!.style.width).toBe('100%');
         });
 
         it('span 内有可聚焦元素时 span 为 -1 并告警一次，Tab 只停一次', async () => {
@@ -798,7 +798,7 @@ describe('Tooltip', () => {
                 </Tooltip>
             ));
             await waitFor(() => expect(shown()).not.toBeNull());
-            const element = popup() as HTMLElement;
+            const element = popup()!;
 
             tip?.hide();
             clickOutside();

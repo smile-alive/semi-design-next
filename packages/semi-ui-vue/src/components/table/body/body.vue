@@ -259,7 +259,7 @@
             >
                 <template #default="{ index, style }">
                     <template v-for="item in [virtualItem(index)]" :key="item.key">
-                        <SectionRow v-if="item.sectionRow" :expanded="Boolean(item.expanded)" :group="item.group as Set<BaseRowKeyType>" :groupKey="item.groupKey as BaseRowKeyType" :index="index" :records="groupRecords(item.group as Set<BaseRowKeyType>)" :style="{ ...style, width: toCssLength(list.rowWidth) }" />
+                        <SectionRow v-if="item.sectionRow" :expanded="Boolean(item.expanded)" :group="item.group!" :groupKey="item.groupKey!" :index="index" :records="groupRecords(item.group!)" :style="{ ...style, width: toCssLength(list.rowWidth) }" />
                         <ExpandedRow v-else-if="item.expandedRow" expanded :index="index" :record="item.record" :rowKey="recordKey(item.record, index)" :style="{ ...style, width: toCssLength(list.rowWidth) }" :virtualIndex="index" />
                         <BaseRow v-else v-bind="baseRowState(item.record, recordKey(item.record, index), item.level)" :index="index" :record="item.record" :style="{ ...style, width: toCssLength(list.rowWidth) }" @hoverChange="handleRowHover" />
                     </template>

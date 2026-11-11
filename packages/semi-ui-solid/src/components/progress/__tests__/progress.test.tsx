@@ -197,11 +197,11 @@ describe('Progress', () => {
         const inners = container.querySelectorAll(`.${prefixCls}-circle-ring-inner-indeterminate`);
         expect(inners).toHaveLength(1);
         const arcs = inners[0];
-        const [arc, total] = (arcs.getAttribute('stroke-dasharray') as string).split(' ').map(Number);
+        const [arc, total] = arcs.getAttribute('stroke-dasharray')!.split(' ').map(Number);
         expect(arc / total).toBeCloseTo(0.3, 3);
         expect(arcs).toHaveAttribute('stroke-dashoffset', '0');
         const track = getElement(`.${prefixCls}-circle-ring-track`, container);
-        const [trackArc, trackTotal] = (track.getAttribute('stroke-dasharray') as string).split(' ').map(Number);
+        const [trackArc, trackTotal] = track.getAttribute('stroke-dasharray')!.split(' ').map(Number);
         expect(trackArc).toEqual(trackTotal);
         expect(text(container, 'circle')).toBeNull();
         expect(getProgressbar()).not.toHaveAttribute('aria-valuenow');

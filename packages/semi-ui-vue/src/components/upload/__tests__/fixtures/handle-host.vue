@@ -5,7 +5,7 @@
 
     const props = defineProps<{ uploadProps?: Partial<UploadProps>; onReady: (handle: UploadHandle) => void }>();
     const upload = useTemplateRef<UploadHandle>('upload');
-    onMounted(() => props.onReady(upload.value as UploadHandle));
+    onMounted(() => props.onReady(upload.value!));
 </script>
 
 <template>

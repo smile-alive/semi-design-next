@@ -324,7 +324,7 @@ function renderFieldWithProps(fieldProps: Record<string, unknown>, formProps: Re
     });
     const view = render(Demo, { props: { fieldProps } });
     return {
-        api: () => api as FormApi,
+        api: () => api!,
         rerender: (next: Record<string, unknown>) => view.rerender({ fieldProps: next }),
     };
 }

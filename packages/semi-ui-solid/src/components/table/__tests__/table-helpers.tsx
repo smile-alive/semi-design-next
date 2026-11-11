@@ -15,7 +15,7 @@ export const getPageItems = () => queryAll(`.${BASE_CLASS_PREFIX}-page .${BASE_C
 export const getActivePage = () => document.querySelector(`.${BASE_CLASS_PREFIX}-page .${BASE_CLASS_PREFIX}-page-item-active`);
 export const getHeaderSelectionCheckbox = () => getElement(`.${P}-thead .${P}-column-selection .${BASE_CLASS_PREFIX}-checkbox`);
 export const containsSelector = (el: Element, selector: string) => el.matches(selector) || el.querySelector(selector) !== null;
-export const query = <E extends HTMLElement = HTMLElement>(selector: string) => document.querySelector<E>(selector) as E;
+export const query = <E extends HTMLElement = HTMLElement>(selector: string) => document.querySelector<E>(selector)!;
 
 type Row = ReturnType<typeof getData>[number];
 

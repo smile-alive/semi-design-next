@@ -193,8 +193,8 @@
             notifyRemove: (file, list, item) => onRemove?.(file, list as FileItem[], item as FileItem),
             notifySizeError: (file, list) => onSizeError?.(file, list as FileItem[]),
             notifyExceed: (files) => onExceed?.(files),
-            notifyBeforeUpload: (object) => (beforeUpload as NonNullable<UploadProps['beforeUpload']>)(object),
-            notifyAfterUpload: (object) => (afterUpload as NonNullable<UploadProps['afterUpload']>)(object),
+            notifyBeforeUpload: (object) => beforeUpload!(object),
+            notifyAfterUpload: (object) => afterUpload!(object),
             resetInput: () => {
                 if (input) {
                     input.value = '';

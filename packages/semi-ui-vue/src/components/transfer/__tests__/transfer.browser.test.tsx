@@ -49,7 +49,7 @@ describe('Transfer（浏览器）', () => {
         const overlay = await waitFor(() => {
             const node = document.querySelector<HTMLElement>(overlaySelector);
             expect(node).toHaveTextContent('选项名称 2');
-            return node as HTMLElement;
+            return node!;
         });
         // The Popover content is in the top layer; dnd-kit makes the overlay click-through with an inline !important
         overlay.style.setProperty('pointer-events', 'auto', 'important');
@@ -138,7 +138,7 @@ describe('Transfer（浏览器）', () => {
         const list = await waitFor(() => {
             const node = document.querySelector<HTMLElement>(`.${prefixCls}-right-virtual-list`);
             expect(node?.getBoundingClientRect().height).toBeGreaterThan(0);
-            return node as HTMLElement;
+            return node!;
         });
         expect(list.getBoundingClientRect().bottom).toBeLessThanOrEqual(getElement(`.${prefixCls}-right`).getBoundingClientRect().bottom + 1);
         expect(screen.getByText('条目 0', { selector: `.${prefixCls}-right-item-text` })).toBeInTheDocument();

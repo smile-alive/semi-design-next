@@ -48,7 +48,7 @@ function mountTable(props: Record<string, unknown>, slots: Slots = {}, wrapperSt
     );
     return {
         container: result.container,
-        handle: () => handle.value as TableHandle,
+        handle: () => handle.value!,
         update: async (next: Record<string, unknown>) => {
             state.props = { ...state.props, ...next };
             await nextTick();

@@ -63,7 +63,7 @@ describe('DatePicker 回归用例', () => {
 
     describe('Fix2567：切换年份后 monthRange 修正非法范围', () => {
         const disabledDate = (date?: Date) => {
-            const time = (date as Date).getTime();
+            const time = date!.getTime();
             return time < new Date('2024/11/1 00:00:00').getTime() || time > new Date('2025/3/1 00:00:00').getTime();
         };
         it.each([
@@ -187,7 +187,7 @@ describe('DatePicker 回归用例', () => {
         await userEvent.click(screen.getByRole('button', { name: 'trigger' }));
         await userEvent.click(getDay('2022-07-10'));
         await userEvent.click(getDay('2022-07-15'));
-        const lastDates = () => (onChange.mock.lastCall as Parameters<typeof onChange>)[0] as Date[];
+        const lastDates = () => onChange.mock.lastCall![0] as Date[];
         expect(lastDates().map(ymd)).toEqual(['2022-07-10', '2022-07-15']);
 
         await userEvent.click(screen.getByRole('button', { name: 'clear' }));
@@ -198,7 +198,7 @@ describe('DatePicker 回归用例', () => {
 
     it('fix #520 FixDisabledMonth：切换到该月份被禁用的年份时，选中最近的可用月份', async () => {
         const disabledDate = (date?: Date) => {
-            const d = date as Date;
+            const d = date!;
             return d < set(d, { year: 2021, month: 10 }) || d > set(d, { year: 2022, month: 10 });
         };
         const { container } = renderDatePicker({ type: 'month', defaultValue: new Date('2022-11'), disabledDate, motion: false, yearAndMonthOpts: { motion: false } });

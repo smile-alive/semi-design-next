@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, mouse, silentWavUrl, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { getElement, render } from '@test/utils/vue';
 import AudioPlayer from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-audio-player`;
@@ -12,7 +12,7 @@ function centerX(el: Element) {
     const rect = el.getBoundingClientRect();
     return rect.left + rect.width / 2;
 }
-const query = <E extends Element = HTMLElement>(container: Element, selector: string) => container.querySelector<E>(selector) as E;
+const query = <E extends Element = HTMLElement>(container: Element, selector: string) => getElement<E>(selector, container);
 
 // A source that loads: a load error removes the slider, and Firefox and Safari reject a WAV without samples
 const audioUrl = silentWavUrl(1);
@@ -105,7 +105,7 @@ describe('AudioPlayer（浏览器）', () => {
         const tooltip = await vi.waitFor(() => {
             const el = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tooltip-wrapper-show`);
             expect(el).not.toBeNull();
-            return el as HTMLElement;
+            return el!;
         });
         await expect.poll(() => centerX(tooltip) - centerX(dot)).toBeCloseTo(0, 0);
     });
@@ -187,7 +187,7 @@ describe('AudioPlayer 加载失败（浏览器）', () => {
             const error = await vi.waitFor(() => {
                 const el = container.querySelector(`.${prefixCls}-error`);
                 expect(el).not.toBeNull();
-                return el as Element;
+                return el!;
             });
             const { width: w, height } = error.getBoundingClientRect();
             return { height, width: w };

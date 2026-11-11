@@ -88,7 +88,7 @@ function SchemaArray(props: NodeProps & { title?: string }) {
                         if (row === undefined) {
                             array.add();
                         } else {
-                            array.addWithInitValue(row as Record<string, any>);
+                            array.addWithInitValue(row!);
                         }
                     };
 
@@ -202,5 +202,5 @@ export default function SchemaField(rawProps: SchemaFieldProps) {
 
     createEffect(on(root, (value) => warning(!value, '[Semi Form] SchemaField has no JSON Schema: pass jsonSchema, or give the Form a schema that implements Standard JSON Schema')));
 
-    return <Show when={node()}>{(current) => <SchemaNode config={props} messages={messages} node={current()} root={root() as JsonSchema} />}</Show>;
+    return <Show when={node()}>{(current) => <SchemaNode config={props} messages={messages} node={current()} root={root()!} />}</Show>;
 }

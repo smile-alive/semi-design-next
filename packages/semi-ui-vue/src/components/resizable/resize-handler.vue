@@ -41,7 +41,7 @@
     const onLostpointercapture = (e: PointerEvent) => group.notifyResizeEnd(e.currentTarget as HTMLDivElement, e);
 
     onMounted(() => {
-        unregister = group.registerHandler(handler.value as HTMLDivElement);
+        unregister = group.registerHandler(handler.value!);
     });
 
     onBeforeUnmount(() => unregister());

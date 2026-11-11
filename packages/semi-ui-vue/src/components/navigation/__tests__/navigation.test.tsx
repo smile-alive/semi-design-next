@@ -270,7 +270,7 @@ describe('Navigation', () => {
         const title = screen.getByRole('button', { name: '用户管理' });
         expect(title).toHaveClass(`${prefixCls}-sub-title`);
         expect(title).toHaveAttribute('aria-expanded', 'true');
-        const subList = defined(document.getElementById(title.getAttribute('aria-controls') as string));
+        const subList = defined(document.getElementById(title.getAttribute('aria-controls')!));
         expect(subList.tagName).toBe('UL');
         expect(subList).toContainElement(screen.getByRole('button', { name: '用户列表' }));
 
@@ -1901,7 +1901,7 @@ describe('Navigation 的 Vue 用法', () => {
         await userEvent.click(title);
         const listId = title.getAttribute('aria-controls');
         expect(listId).toBeTruthy();
-        expect(document.getElementById(listId as string)).not.toBeNull();
+        expect(document.getElementById(listId!)).not.toBeNull();
     });
 
     it('NavItem 收到 content 插槽时不转发给内部结构', () => {

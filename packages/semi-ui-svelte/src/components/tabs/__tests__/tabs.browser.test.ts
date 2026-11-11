@@ -151,7 +151,7 @@ describe('Svelte Tabs（浏览器）', () => {
         setup({ more: { count: 2, dropdownProps: { trigger: 'click' } } });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.Tabs.more }));
         const items = await screen.findAllByRole('menuitemcheckbox');
-        await userEvent.click(items.find((item) => textOf(item) === '关于') as HTMLElement);
+        await userEvent.click(items.find((item) => textOf(item) === '关于')!);
         await waitFor(() => expect(activePane()).toHaveTextContent('关于'));
         expect(screen.getByRole('tabpanel', { name: '关于' })).toBe(activePane());
     });
@@ -268,7 +268,7 @@ describe('Svelte Tabs 折叠（浏览器）', () => {
         await expectArrows({ start: false, end: true });
         expect(isInside(last, scrollWrapper())).toBe(false);
 
-        store.props.activeKey = keys.at(-1) as string;
+        store.props.activeKey = keys.at(-1)!;
         await waitFor(() => expect(isInside(last, scrollWrapper())).toBe(true));
     });
 
@@ -309,7 +309,7 @@ describe('Svelte Tabs 折叠（浏览器）', () => {
         await expectArrows({ start: false, end: true });
         await userEvent.hover(arrowButton('end'));
         const menuItems = await screen.findAllByRole('menuitemcheckbox');
-        await userEvent.click(menuItems.find((item) => textOf(item) === 'Tab-6') as HTMLElement);
+        await userEvent.click(menuItems.find((item) => textOf(item) === 'Tab-6')!);
         await waitFor(() => expect(activePane()).toHaveTextContent('Content of card tab 6'));
 
         await waitFor(() => expect(arrowButton('start')).toBeEnabled());
@@ -334,7 +334,7 @@ describe('Svelte Tabs 折叠（浏览器）', () => {
         const measure = () => {
             const probe = setup({ type: 'card', style: 'width: 2000px' }, autoPanes);
             const nodes = [...document.querySelectorAll<HTMLElement>(`.${prefix}-tab`)];
-            const total = (nodes.at(-1) as HTMLElement).getBoundingClientRect().right - nodes[0].getBoundingClientRect().left;
+            const total = nodes.at(-1)!.getBoundingClientRect().right - nodes[0].getBoundingClientRect().left;
             probe.unmount();
             return total;
         };

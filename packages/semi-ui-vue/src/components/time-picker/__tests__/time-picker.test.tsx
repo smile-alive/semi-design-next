@@ -1457,7 +1457,7 @@ describe('TimePicker combobox 与面板键盘操作', () => {
         expect(input).toHaveAttribute('aria-expanded', 'false');
         input.focus();
         await waitFor(() => expect(input).toHaveAttribute('aria-expanded', 'true'));
-        const panel = document.getElementById(input.getAttribute('aria-controls') as string);
+        const panel = document.getElementById(input.getAttribute('aria-controls')!);
         expect(panel).toContainElement(screen.getAllByRole('listbox')[0]);
         expect(screen.getByRole('dialog', { name: en_US.TimePicker.panel.time })).toContainElement(panel);
     });

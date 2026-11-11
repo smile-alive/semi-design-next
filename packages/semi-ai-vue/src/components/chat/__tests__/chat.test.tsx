@@ -60,7 +60,7 @@ function mount(props: Props = {}, slots?: Slots) {
     return {
         container: view.container,
         unmount: () => view.unmount(),
-        handle: () => handle as ChatHandle,
+        handle: () => handle!,
         rerender: async (next: Props = {}) => {
             state.value = { chats, roleConfig, ...next };
             await nextTick();
@@ -1388,7 +1388,7 @@ describe('Chat', () => {
             ));
             const button = await waitFor(() => {
                 expect(copyButton(container)).not.toBeNull();
-                return copyButton(container) as HTMLElement;
+                return copyButton(container)!;
             });
             expect(button).toHaveAccessibleName(text.copy);
             button.focus();

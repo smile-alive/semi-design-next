@@ -417,7 +417,7 @@ describe('AIChatDialogue 内容块', () => {
             const button = await waitFor(() => {
                 const el = result.container.querySelector<HTMLButtonElement>(`.${prefix}-code-topSlot-copy-wrapper`);
                 expect(el).not.toBeNull();
-                return el as HTMLButtonElement;
+                return el!;
             });
             return { ...result, button };
         };
@@ -945,7 +945,7 @@ describe('AIChatDialogue 消息操作', () => {
 
     it('更多菜单打开后按 Escape 关闭', async () => {
         renderDialogue();
-        fireEvent.click(screen.getAllByRole('button', { name: text.more }).at(-1) as HTMLElement);
+        fireEvent.click(screen.getAllByRole('button', { name: text.more }).at(-1)!);
         fireEvent.keyDown(await screen.findByRole('menuitem'), { key: 'Escape' });
         await waitFor(() => {
             endLeaveAnimations();
@@ -1078,7 +1078,7 @@ describe('AIChatDialogue 滚动', () => {
         vi.advanceTimersByTime(200);
         expect(backBottom()).toHaveAccessibleName(text.backToBottom);
 
-        fireEvent.click(backBottom() as HTMLElement);
+        fireEvent.click(backBottom()!);
         vi.advanceTimersByTime(500);
         expect(list.scrollTop).toBe(1000);
 
@@ -1278,7 +1278,7 @@ describe('AIChatDialogue 节点与焦点保持', () => {
         const copy = await waitFor(() => {
             const el = container.querySelector<HTMLButtonElement>(`.${prefix}-code-topSlot-copy-wrapper`);
             expect(el).not.toBeNull();
-            return el as HTMLButtonElement;
+            return el!;
         });
         copy.focus();
         rerender({ chats: chat('```js\nconst a = 1;\n```\n\nmore') });

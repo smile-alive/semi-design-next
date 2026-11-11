@@ -86,7 +86,7 @@ export default function Tabs(rawProps: TabsProps) {
     // hydration. The data never carries it; the bar creates it through renderTab where it is inserted.
     const panePlain = createMemo((previous?: PlainTab[]) =>
         tokens().map(({ props }) => {
-            const item: PlainTab = { itemKey: props.itemKey as string, disabled: props.disabled, closable: props.closable };
+            const item: PlainTab = { itemKey: props.itemKey!, disabled: props.disabled, closable: props.closable };
             return previous?.find((old) => isEqual(old, item)) ?? item;
         })
     );

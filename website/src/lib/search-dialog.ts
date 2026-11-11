@@ -90,8 +90,8 @@ function render(entries: ComponentEntry[], query: string) {
         })
     );
     input().setAttribute('aria-expanded', String(results.length > 0));
-    (document.getElementById('search-clear') as HTMLElement).hidden = !query;
-    (document.getElementById('search-empty') as HTMLElement).hidden = !query.trim() || results.length > 0;
+    document.getElementById('search-clear')!.hidden = !query;
+    document.getElementById('search-empty')!.hidden = !query.trim() || results.length > 0;
     setActive(results.length > 0 ? 0 : -1);
 }
 
@@ -103,7 +103,7 @@ function open() {
     render([], '');
     target.showModal();
     // prefetch; search() awaits it, and a failure shows up as an unhandled rejection
-    void loadIndex(target.dataset.framework as string);
+    void loadIndex(target.dataset.framework!);
 }
 
 function go(entry?: ComponentEntry) {
@@ -115,7 +115,7 @@ function go(entry?: ComponentEntry) {
 
 async function search() {
     const target = dialog();
-    const entries = await loadIndex(target.dataset.framework as string);
+    const entries = await loadIndex(target.dataset.framework!);
     if (target !== dialog()) return;
     // input may have changed while the index loaded
     render(entries, input().value);

@@ -316,7 +316,7 @@
                 onExpand?.(keys, { expanded: info.expanded, node: info.node as TreeNodeData });
             },
             notifyFocus: (event) => onFocus?.(event),
-            notifyBlur: (event) => onBlur?.(event as FoundationEvent | FocusEvent),
+            notifyBlur: (event) => onBlur?.(event!),
             focusInput: () => {
                 searchField()?.focus({ preventScroll });
                 tagInput?.focus();

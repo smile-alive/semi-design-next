@@ -141,7 +141,7 @@
     );
 
     const cls = `${cssClasses.PREFIX}-preview`;
-    const srcList = computed(() => PreviewInnerFoundation.getSrcList(props.src as string | string[]));
+    const srcList = computed(() => PreviewInnerFoundation.getSrcList(props.src!));
     const total = computed(() => srcList.value.length);
     const currentIndex = computed(() => PreviewInnerFoundation.getCurrentIndex(props, state.value));
     const ratio = computed(() => PreviewInnerFoundation.getRatio(props, state.value));

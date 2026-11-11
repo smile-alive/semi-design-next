@@ -646,11 +646,11 @@ describe('Calendar 行为', () => {
         expect(onMoreClick).toHaveBeenCalledTimes(1);
         expect(onMoreClick.mock.calls[0].slice(1)).toEqual([today, 2]);
         await waitFor(() => expect(card()).not.toBeNull());
-        expect([...(card() as HTMLElement).querySelectorAll(`.${prefixCls}-month-event-card-list li`)].map((li) => li.textContent)).toEqual(['a', 'b']);
-        expect((card() as HTMLElement).querySelector(`.${prefixCls}-month-event-card-header-info-date`)).toHaveTextContent('8');
+        expect([...card()!.querySelectorAll(`.${prefixCls}-month-event-card-list li`)].map((li) => li.textContent)).toEqual(['a', 'b']);
+        expect(card()!.querySelector(`.${prefixCls}-month-event-card-header-info-date`)).toHaveTextContent('8');
 
-        expect((card() as HTMLElement).querySelector(`.${prefixCls}-month-event-card-close`)).toBe(screen.getByRole('button', { name: zh_CN.Calendar.close }));
-        await userEvent.click(getElement(`.${prefixCls}-month-event-card-close`, card() as HTMLElement));
+        expect(card()!.querySelector(`.${prefixCls}-month-event-card-close`)).toBe(screen.getByRole('button', { name: zh_CN.Calendar.close }));
+        await userEvent.click(getElement(`.${prefixCls}-month-event-card-close`, card()!));
         expect(onClose).toHaveBeenCalledTimes(1);
         await closeCard();
 
@@ -668,7 +668,7 @@ describe('Calendar 行为', () => {
         render(() => <Calendar displayValue={today} events={events} mode="month" onClose={onClose} />);
         await userEvent.click(screen.getByText('还有1项'));
         await waitFor(() => expect(card()).not.toBeNull());
-        fireEvent.mouseDown(getElement(`.${prefixCls}-month-event-card-body`, card() as HTMLElement));
+        fireEvent.mouseDown(getElement(`.${prefixCls}-month-event-card-body`, card()!));
         expect(onClose).not.toHaveBeenCalled();
         expect(card()).not.toBeNull();
     });
@@ -684,7 +684,7 @@ describe('Calendar 行为', () => {
         expect(cell()).toBe(node);
         await userEvent.click(screen.getByRole('button', { name: /还有/ }));
         await waitFor(() => expect(card()).not.toBeNull());
-        expect((card() as HTMLElement).querySelector('.node-evt')).not.toBe(node);
+        expect(card()!.querySelector('.node-evt')).not.toBe(node);
         expect(cell()).toBe(node);
     });
 
@@ -1033,7 +1033,7 @@ describe('Calendar 表格语义', () => {
 
     it.each(MODES)('%s 视图的表头内容位于自身行的单元格中', (mode) => {
         const { container } = render(() => <Calendar displayValue={today} header={<b>custom header</b>} mode={mode} range={weekRange} />);
-        const cell = screen.getByText('custom header').parentElement as HTMLElement;
+        const cell = screen.getByText('custom header').parentElement!;
         expect(cell).toHaveAttribute('role', 'cell');
         expect(roleOf(cell)).toBe('row');
         expectValidTable(container);
@@ -1093,7 +1093,7 @@ describe('Calendar 表格语义', () => {
         await waitFor(() => expect(card()).not.toBeNull());
         expect(more).toHaveAttribute('aria-expanded', 'true');
         await waitFor(() => expect(screen.getByRole('button', { name: zh_CN.Calendar.close })).toHaveFocus());
-        const header = getElement(`.${prefixCls}-month-event-card-header-info`, card() as HTMLElement);
+        const header = getElement(`.${prefixCls}-month-event-card-header-info`, card()!);
         expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby', header.id);
         expect(header).toHaveTextContent('8');
     });

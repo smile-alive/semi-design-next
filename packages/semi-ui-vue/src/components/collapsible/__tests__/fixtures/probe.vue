@@ -5,7 +5,7 @@
     const emit = defineEmits<{ updated: [height: string, duration: string] }>();
 
     const handleUpdated = () => {
-        const wrapper = document.querySelector<HTMLElement>('.semi-collapsible-wrapper') as HTMLElement;
+        const wrapper = document.querySelector<HTMLElement>('.semi-collapsible-wrapper')!;
         emit('updated', wrapper.style.getPropertyValue('--semi-collapsible-height'), wrapper.style.transitionDuration);
     };
 </script>

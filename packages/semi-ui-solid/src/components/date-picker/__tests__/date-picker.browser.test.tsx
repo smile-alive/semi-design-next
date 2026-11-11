@@ -886,9 +886,9 @@ describe('DatePicker（浏览器）日历网格键盘焦点', () => {
     it('重新选择时 disabledDate 接收当前的 rangeStart/rangeEnd（修复 #777）', async () => {
         const disabledDate: DisabledDateType = (date, options) => {
             if (options?.rangeInputFocus === 'rangeStart') {
-                return date.getTime() <= addDays(new Date(options.rangeEnd as string), -20).getTime();
+                return date.getTime() <= addDays(new Date(options.rangeEnd!), -20).getTime();
             } else if (options?.rangeInputFocus === 'rangeEnd') {
-                return date.getTime() >= addDays(new Date(options.rangeStart as string), 20).getTime();
+                return date.getTime() >= addDays(new Date(options.rangeStart!), 20).getTime();
             }
             return false;
         };
@@ -1057,7 +1057,7 @@ describe('DatePicker（浏览器）ShadowRoot 内的焦点', () => {
         const title = await waitFor(() => {
             const button = shadow.querySelector<HTMLElement>(`.${dp}-navigation-month button`);
             expect(button).not.toBeNull();
-            return button as HTMLElement;
+            return button!;
         });
         title.click();
         const back = await within(getElement(`.${dp}-month-grid-left`, shadow)).findByRole('button', { name: zh_CN.DatePicker.selectDate });

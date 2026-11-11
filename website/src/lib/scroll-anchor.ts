@@ -19,11 +19,10 @@ export function setupScrollAnchor() {
     } catch {}
     const { type } = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
     const anchor = saved?.href === location.href && type !== 'navigate' ? document.getElementById(saved.id) : null;
-    const doc = document.querySelector('.doc');
-    if (anchor && saved && doc) {
+    if (anchor && saved) {
         const pin = () => scrollBy({ top: anchor.getBoundingClientRect().top - saved.top, behavior: 'instant' });
         const observer = new ResizeObserver(pin);
-        observer.observe(doc);
+        observer.observe(document.querySelector('.doc')!);
         const release = () => observer.disconnect();
         for (const type of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventListener(type, release, { once: true, passive: true });
     }

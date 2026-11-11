@@ -80,7 +80,7 @@ describe('Collapsible', () => {
 
     it('首次挂载时默认展开不播放动画', () => {
         const { container } = renderCollapsible({ isOpen: true });
-        const wrapper = getWrapper(container) as HTMLElement;
+        const wrapper = getWrapper(container)!;
         expect(wrapper).not.toHaveClass('semi-collapsible-transition');
         expect(wrapper.style.getPropertyValue(heightVar)).toBe(openHeight);
         expect(wrapper.style.transitionDuration).toBe('0ms');
@@ -89,14 +89,14 @@ describe('Collapsible', () => {
 
     it('默认渲染折叠的外层容器，overflow 隐藏且不渲染 children', () => {
         const { container } = renderCollapsible();
-        const wrapper = getWrapper(container) as HTMLElement;
+        const wrapper = getWrapper(container)!;
         expect(container.firstElementChild).toBe(wrapper);
         expect(wrapper).not.toHaveClass('semi-collapsible-transition');
         expect(wrapper.style.getPropertyValue(heightVar)).toBe('0px');
         expect(wrapper.style.overflow).toBe('hidden');
         expect(wrapper.style.opacity).toBe('1');
         expect(wrapper.style.transitionDuration).toBe('0ms');
-        expect((getInner(container) as HTMLElement).style.overflow).toBe('hidden');
+        expect(getInner(container)!.style.overflow).toBe('hidden');
         expect(queryContent()).toBeNull();
     });
 
@@ -104,7 +104,7 @@ describe('Collapsible', () => {
         const motionEnd = vi.fn<() => void>();
         const view = renderCollapsible({}, { onMotionEnd: motionEnd });
         await view.rerender({ isOpen: true });
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         expect(wrapper).toHaveClass('semi-collapsible-transition');
         expect(wrapper.style.transitionDuration).toBe('250ms');
         expect(wrapper.style.getPropertyValue(heightVar)).toBe(openHeight);
@@ -123,7 +123,7 @@ describe('Collapsible', () => {
         const motionEnd = vi.fn<() => void>();
         const view = renderCollapsible({ isOpen: true, duration: 400 }, { onMotionEnd: motionEnd });
         await view.rerender({ isOpen: false });
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         expect(wrapper).toHaveClass('semi-collapsible-transition');
         expect(wrapper.style.transitionDuration).toBe('400ms');
         expect(wrapper.style.getPropertyValue(heightVar)).toBe('0px');
@@ -140,7 +140,7 @@ describe('Collapsible', () => {
         const motionEnd = vi.fn<() => void>();
         const view = renderCollapsible({ motion: false }, { onMotionEnd: motionEnd });
         await view.rerender({ isOpen: true });
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         expect(wrapper).not.toHaveClass('semi-collapsible-transition');
         expect(wrapper.style.transitionDuration).toBe('0ms');
         expect(wrapper.style.getPropertyValue(heightVar)).toBe(openHeight);
@@ -201,7 +201,7 @@ describe('Collapsible', () => {
             },
         });
         await view.rerender({ isOpen: false });
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         await fireEvent.transitionEnd(screen.getByTestId('child'), { propertyName: 'height' });
         await fireEvent.transitionEnd(wrapper, { propertyName: 'opacity' });
         expect(motionEnd).not.toHaveBeenCalled();
@@ -218,7 +218,7 @@ describe('Collapsible', () => {
         const motionEnd = vi.fn<() => void>();
         const view = renderCollapsible({ fade: true }, { onMotionEnd: motionEnd });
         await view.rerender({ isOpen: true });
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         await fireEvent.transitionEnd(wrapper, { propertyName: 'opacity' });
         expect(motionEnd).not.toHaveBeenCalled();
         await fireEvent.transitionEnd(wrapper, { propertyName: 'height' });
@@ -227,7 +227,7 @@ describe('Collapsible', () => {
 
     it('id 放在内容元素上，data 属性、class 与 style 传到外层', () => {
         const { container } = renderCollapsible({ id: 'panel' }, { class: 'custom', style: { height: '5px', color: 'red' }, 'data-foo': 'bar' });
-        const wrapper = getWrapper(container) as HTMLElement;
+        const wrapper = getWrapper(container)!;
         expect(getInner(container)).toHaveAttribute('id', 'panel');
         expect(wrapper).not.toHaveAttribute('id');
         expect(wrapper).toHaveClass('custom');
@@ -261,7 +261,7 @@ describe('Collapsible', () => {
         const motionEnd = vi.fn<() => void>();
         const view = renderCollapsible({}, { onMotionEnd: motionEnd });
         await view.rerender({ isOpen: true });
-        await fireEvent.transitionEnd(getWrapper(view.container) as HTMLElement, { propertyName: 'height' });
+        await fireEvent.transitionEnd(getWrapper(view.container)!, { propertyName: 'height' });
         expect(motionEnd).toHaveBeenCalledWith();
     });
 
@@ -270,7 +270,7 @@ describe('Collapsible', () => {
         const transitionend = vi.fn<(event: Event) => void>();
         const view = renderCollapsible({}, { onMotionEnd: motionEnd, onTransitionend: transitionend });
         await view.rerender({ isOpen: true });
-        await fireEvent.transitionEnd(getWrapper(view.container) as HTMLElement, { propertyName: 'height' });
+        await fireEvent.transitionEnd(getWrapper(view.container)!, { propertyName: 'height' });
         expect(transitionend).toHaveBeenCalledTimes(1);
         expect(motionEnd).toHaveBeenCalledTimes(1);
     });

@@ -23,12 +23,12 @@ const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const getPreview = () => $(`div.${previewCls}`);
 const previewImg = () => $(`.${previewCls}-image-img`) as HTMLImageElement;
 const pageInfo = () => $(`.${previewCls}-footer-page`)?.textContent?.trim();
-const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`) as HTMLElement;
+const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`)!;
 const thumbs = () => document.querySelectorAll<HTMLImageElement>(`.${prefixCls}-img`);
-const arrow = (side: 'prev' | 'next') => $(`.${previewCls}-${side}`) as HTMLElement;
+const arrow = (side: 'prev' | 'next') => $(`.${previewCls}-${side}`)!;
 async function clickMask(x = 10, y = 10) {
-    await fireEvent.mouseDown(getPreview() as HTMLElement, { clientX: x, clientY: y });
-    await fireEvent.mouseUp(getPreview() as HTMLElement, { clientX: x, clientY: y });
+    await fireEvent.mouseDown(getPreview()!, { clientX: x, clientY: y });
+    await fireEvent.mouseUp(getPreview()!, { clientX: x, clientY: y });
 }
 // a real key press starts at the focused element and bubbles through the document
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
@@ -75,8 +75,8 @@ function mockLayout({ container = [1000, 800], natural = [2000, 1000] } = {}) {
     return () => {
         delete (HTMLElement.prototype as { clientWidth?: number }).clientWidth;
         delete (HTMLElement.prototype as { clientHeight?: number }).clientHeight;
-        Object.defineProperty(HTMLImageElement.prototype, 'naturalWidth', naturalWidth as PropertyDescriptor);
-        Object.defineProperty(HTMLImageElement.prototype, 'naturalHeight', naturalHeight as PropertyDescriptor);
+        Object.defineProperty(HTMLImageElement.prototype, 'naturalWidth', naturalWidth!);
+        Object.defineProperty(HTMLImageElement.prototype, 'naturalHeight', naturalHeight!);
     };
 }
 
@@ -347,7 +347,7 @@ describe('ImagePreview', () => {
     it('遮罩：鼠标微小移动仍关闭，拖动或操作区域不关闭，maskClosable 为 false 时永不关闭', async () => {
         const view = renderGroup();
         await fireEvent.click(thumbs()[0]);
-        const preview = getPreview() as HTMLElement;
+        const preview = getPreview()!;
         await fireEvent.mouseDown(preview, { clientX: 0, clientY: 0 });
         await fireEvent.mouseUp(preview, { clientX: 20, clientY: 0 });
         expect(getPreview()).not.toBeNull();
@@ -375,7 +375,7 @@ describe('ImagePreview', () => {
         const first = render(ImagePreview, { props: { onClose }, slots: { default: children } });
         await fireEvent.click(thumbs()[0]);
         expect($(`.${previewCls}-header-title`)?.textContent).toBe('first');
-        const close = $(`.${previewCls}-header-close`) as HTMLElement;
+        const close = $(`.${previewCls}-header-close`)!;
         await fireEvent.mouseDown(close, { clientX: 0, clientY: 0 });
         await fireEvent.mouseUp(close, { clientX: 0, clientY: 0 });
         expect(getPreview()).not.toBeNull();
@@ -426,7 +426,7 @@ describe('ImagePreview', () => {
 
     it('#previewMenu 的 menuItems 渲染出的默认按钮仍可用', async () => {
         await renderPreview({}, { previewMenu: (menu: MenuProps) => <div class="menu">{menu.menuItems.slice(0, 3)}</div> });
-        const menu = $(`.${previewCls}-footer .menu`) as HTMLElement;
+        const menu = $(`.${previewCls}-footer .menu`)!;
         expect(within(menu).getAllByRole('button')).toHaveLength(2);
         await fireEvent.click(footerIcon('chevron_right'));
         expect(pageInfo()).toBe('2/3');
@@ -480,11 +480,11 @@ describe('ImagePreview', () => {
         const onZoomOut = vi.fn<(zoom: number) => void>();
         await renderPreview({ onZoomIn, onZoomOut });
         await fireEvent.load(previewImg());
-        const wheel = await dispatch(getPreview() as HTMLElement, new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: -10 }));
+        const wheel = await dispatch(getPreview()!, new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: -10 }));
         expect(wheel.defaultPrevented).toBe(true);
         expect(onZoomIn).toHaveBeenLastCalledWith(0.56);
         expect(previewImg()).toHaveStyle({ width: '1120px' });
-        await fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 });
+        await fireEvent.wheel(getPreview()!, { deltaY: 10 });
         expect(onZoomOut).toHaveBeenLastCalledWith(0.46);
         expect(previewImg()).toHaveStyle({ width: '920px' });
     });
@@ -495,12 +495,12 @@ describe('ImagePreview', () => {
         await fireEvent.load(previewImg());
         expect(previewImg()).toHaveStyle({ width: '920px' });
         // 0.46 + 0.1 passes maxZoom
-        await fireEvent.wheel(getPreview() as HTMLElement, { deltaY: -10 });
+        await fireEvent.wheel(getPreview()!, { deltaY: -10 });
         expect(previewImg()).toHaveStyle({ width: '1000px' });
 
         await view.rerender({ minZoom: 0.42 });
-        await fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 });
-        await fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 });
+        await fireEvent.wheel(getPreview()!, { deltaY: 10 });
+        await fireEvent.wheel(getPreview()!, { deltaY: 10 });
         expect(previewImg()).toHaveStyle({ width: '840px' });
     });
 
@@ -697,7 +697,7 @@ describe('ImagePreview', () => {
         await advance(1000);
         expect(header()).toHaveClass(`${previewCls}-hide`);
         expect($(`.${previewCls}-footer`)).toHaveClass(`${previewCls}-hide`);
-        await dispatch(getPreview() as HTMLElement, new MouseEvent('mousemove', { bubbles: true }));
+        await dispatch(getPreview()!, new MouseEvent('mousemove', { bubbles: true }));
         expect(header()).not.toHaveClass(`${previewCls}-hide`);
     });
 
@@ -710,7 +710,7 @@ describe('ImagePreview', () => {
         await advance(400);
         expect(footer()).toHaveClass(`${previewCls}-hide`);
 
-        await dispatch(getPreview() as HTMLElement, new MouseEvent('mousemove', { bubbles: true }));
+        await dispatch(getPreview()!, new MouseEvent('mousemove', { bubbles: true }));
         await advance(600);
         await view.rerender({ src: [...srcList, 'https://example.com/4.jpg'] });
         await advance(400);
@@ -776,8 +776,8 @@ describe('ImagePreview', () => {
             slots: { title: () => <span class="custom-title">title</span> },
         });
         await nextTick();
-        await fireEvent.mouseDown($('.custom-title') as HTMLElement, { clientX: 0, clientY: 0 });
-        await fireEvent.mouseUp($('.custom-title') as HTMLElement, { clientX: 0, clientY: 0 });
+        await fireEvent.mouseDown($('.custom-title')!, { clientX: 0, clientY: 0 });
+        await fireEvent.mouseUp($('.custom-title')!, { clientX: 0, clientY: 0 });
         expect(getPreview()).not.toBeNull();
         view.unmount();
 
@@ -1355,8 +1355,8 @@ describe('ImagePreview 键盘与屏幕阅读器', () => {
         renderGroup();
         await fireEvent.click(thumbs()[0]);
         for (const button of [1, 2]) {
-            await fireEvent.mouseDown(getPreview() as HTMLElement, { button, clientX: 10, clientY: 10 });
-            await fireEvent.mouseUp(getPreview() as HTMLElement, { button, clientX: 10, clientY: 10 });
+            await fireEvent.mouseDown(getPreview()!, { button, clientX: 10, clientY: 10 });
+            await fireEvent.mouseUp(getPreview()!, { button, clientX: 10, clientY: 10 });
         }
         expect(getPreview()).not.toBeNull();
         await clickMask();
@@ -1424,7 +1424,7 @@ describe('ImagePreview 键盘与屏幕阅读器', () => {
                 ),
             }
         );
-        const rich = $('.rich') as HTMLElement;
+        const rich = $('.rich')!;
         // jsdom does not implement isContentEditable
         Object.defineProperty(rich, 'isContentEditable', { value: true });
         for (const field of [screen.getByRole('textbox', { name: 'note' }), screen.getByRole('textbox', { name: 'long note' }), rich]) {

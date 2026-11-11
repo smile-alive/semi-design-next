@@ -6,7 +6,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils';
 import { expectThemeFocusRing, silentWavUrl, tabTo } from '@test/utils/browser';
-import { render, defined } from '@test/utils/vue';
+import { getElement, render, defined } from '@test/utils/vue';
 import VideoPlayer from '..';
 import type { VideoPlayerProps } from '../interface';
 
@@ -17,7 +17,7 @@ const src = silentWavUrl(DURATION);
 const poster = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="500" height="280"><rect width="500" height="280" fill="teal"/></svg>')}`;
 const base = { height: '280px', poster, src, width: '500px' };
 
-const query = <E extends Element = HTMLElement>(container: ParentNode, selector: string) => container.querySelector<E>(selector) as E;
+const query = <E extends Element = HTMLElement>(container: ParentNode, selector: string) => getElement<E>(selector, container);
 const renderPlayer = (props: Partial<VideoPlayerProps> = {}) => render(VideoPlayer, { props: { ...base, ...props } });
 
 const waitForDuration = (container: Document | Element = document) => waitFor(() => container.querySelectorAll(`.${prefixCls}-controls-time`).forEach((time) => expect(time).toMatchTextContent('/ 01:00')));
@@ -113,7 +113,7 @@ describe('VideoPlayer（浏览器）', () => {
                 { label: '2.0x', value: 2 },
             ],
         });
-        const rateButton = [...container.querySelectorAll(`.${prefixCls}-controls-menu-item`)].find((item) => item.textContent?.trim() === '1.0x') as Element;
+        const rateButton = [...container.querySelectorAll(`.${prefixCls}-controls-menu-item`)].find((item) => item.textContent?.trim() === '1.0x')!;
         await userEvent.hover(rateButton);
         const items = await waitFor(() => {
             const found = document.querySelectorAll(`.${prefixCls}-controls-popup-menu-item`);
@@ -206,7 +206,7 @@ describe('VideoPlayer（浏览器）', () => {
         const tooltip = await vi.waitFor(() => {
             const el = document.querySelector(`.${prefixCls}-progress-tooltip.${BASE_CLASS_PREFIX}-tooltip-wrapper-show`);
             expect(el).not.toBeNull();
-            return el as Element;
+            return el!;
         });
         expect(getComputedStyle(tooltip).pointerEvents).toBe('none');
 
@@ -232,7 +232,7 @@ describe('VideoPlayer（浏览器）', () => {
         const tooltip = await vi.waitFor(() => {
             const el = document.querySelector<HTMLElement>(`.${prefixCls}-progress-tooltip.${BASE_CLASS_PREFIX}-tooltip-wrapper-show`);
             expect(el).not.toBeNull();
-            return el as HTMLElement;
+            return el!;
         });
         await expect
             .poll(() => {
@@ -333,7 +333,7 @@ describe('VideoPlayer（浏览器）', () => {
                 const found = [...document.querySelectorAll<HTMLElement>(`.${prefixCls}-controls-popup-menu-item`)];
                 const target = found.find((el) => el.textContent?.trim() === '2.0x');
                 expect(target).toBeDefined();
-                return target as HTMLElement;
+                return target!;
             });
             // outside the fullscreen element the menu gets no pointer events
             expect(root).toContainElement(item);

@@ -187,7 +187,7 @@ const getSelection = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select-selecti
 const getTags = () => Array.from(getSelection().querySelectorAll(`.${BASE_CLASS_PREFIX}-tag`));
 const getTagTexts = () => getTags().map((tag) => tag.textContent);
 async function click(element: Element | null) {
-    await userEvent.click(element as Element);
+    await userEvent.click(element!);
     await settle();
 }
 const closeTag = (index: number) => click(getTags()[index].querySelector(`.${BASE_CLASS_PREFIX}-tag-close`));

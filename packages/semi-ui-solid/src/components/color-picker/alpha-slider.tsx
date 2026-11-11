@@ -40,7 +40,7 @@ export default function AlphaSlider(props: AlphaSliderProps) {
         foundationProps,
         () => ColorSliderFoundation.getInitialState(),
         () => ({
-            getDOM: () => dom as HTMLDivElement,
+            getDOM: () => dom!,
             notifyChange: (percent) => props.onChange(percent / 100),
         })
     );

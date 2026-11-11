@@ -49,7 +49,7 @@ describe('Svelte DatePicker 时间面板', () => {
         await click(switchTime());
         await click(within(hourList()).getAllByRole('option', { name: '14' })[0]);
         expect(onChange).toHaveBeenCalledTimes(1);
-        expect((onChange.mock.calls[0][0] as Date).getHours()).toBe(14);
+        expect(onChange.mock.calls[0][0]!.getHours()).toBe(14);
     });
 
     it('dateTimeRange 无聚焦输入框时点击日期：替换开始并保留时间', async () => {

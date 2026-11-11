@@ -608,9 +608,9 @@ describe('Svelte Carousel', () => {
         it('有指示点时，每张幻灯片是对应 tab 的 panel', () => {
             setup();
             for (const tab of tabs()) {
-                const panel = document.getElementById(tab.getAttribute('aria-controls') as string);
+                const panel = document.getElementById(tab.getAttribute('aria-controls')!);
                 expect(panel).toHaveAttribute('role', 'tabpanel');
-                expect(panel).toHaveAccessibleName(tab.getAttribute('aria-label') as string);
+                expect(panel).toHaveAccessibleName(tab.getAttribute('aria-label')!);
             }
         });
 

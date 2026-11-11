@@ -24,7 +24,7 @@ const items = keys.map((key) => ({ key }));
 function stubResizeObserver() {
     const observer = mockResizeObserverCore();
     return async (element: Element | null, width: number) => {
-        observer.fire(element as Element, [{ target: { clientWidth: width }, contentRect: { width } }]);
+        observer.fire(element!, [{ target: { clientWidth: width }, contentRect: { width } }]);
         flushSync();
         await tick();
         await tick();

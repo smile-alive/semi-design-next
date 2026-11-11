@@ -34,11 +34,11 @@ const getWeekDays = (side: string, weekIndex: number) => getPanel(side).querySel
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
 const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll('input'));
-const getTimeLists = () => (getPopup() as HTMLElement).querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
+const getTimeLists = () => getPopup()!.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
 const findOption = (list: HTMLElement, prefix: string) =>
     within(list)
         .getAllByRole('option')
-        .find((li) => li.textContent?.startsWith(prefix)) as HTMLElement;
+        .find((li) => li.textContent?.startsWith(prefix))!;
 const switchToTime = () => userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime }));
 
 afterEach(() => {

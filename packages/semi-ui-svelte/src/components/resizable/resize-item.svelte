@@ -21,7 +21,7 @@
     // group's update if a changing style is needed.
     onMount(() =>
         group.registerItem({
-            element: item as HTMLDivElement,
+            element: item!,
             min: () => min,
             max: () => max,
             defaultSize: () => defaultSize,

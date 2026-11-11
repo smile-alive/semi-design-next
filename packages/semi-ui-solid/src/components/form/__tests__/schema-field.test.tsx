@@ -36,7 +36,7 @@ function renderSchema(jsonSchema: Record<string, any>, initValues?: Record<strin
             </Form>
         </LocaleProvider>
     ));
-    return { ...result, api: () => api as FormApi };
+    return { ...result, api: () => api! };
 }
 
 describe('SchemaField', () => {

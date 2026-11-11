@@ -12,7 +12,7 @@ const prefix = 'semi-notification';
 const noticeCls = `${prefix}-notice`;
 const closeButton = (notice: Element) => getElement<HTMLButtonElement>(`.${noticeCls}-icon-close`, notice);
 const top = (el: HTMLElement) => el.getBoundingClientRect().top;
-const wrapperOf = (notice: HTMLElement) => notice.parentElement as HTMLElement;
+const wrapperOf = (notice: HTMLElement) => notice.parentElement!;
 // The enter and leave classes go on animationend; until then a finished slide still holds the wrapper's height
 async function finishAnimations(notices: HTMLElement[]) {
     for (const notice of notices)
@@ -289,7 +289,7 @@ describe('Notification 浏览器', () => {
         api.open({ title: 'first', content: 'first', duration: 1 });
         await waitFor(() => expect(notices()).toHaveLength(2));
         await finishAnimations(notices());
-        closeButton(notices().find((notice) => notice.textContent?.includes('first')) as HTMLElement).focus();
+        closeButton(notices().find((notice) => notice.textContent?.includes('first'))!).focus();
         api.close(leaving);
         await waitFor(() => expect(notices()).toHaveLength(1));
         // asserting that nothing closes needs a fixed wait longer than the duration

@@ -101,8 +101,8 @@ function ColumnTitle(props: { column: ColumnProps; flags: ReturnType<typeof useC
                 renderFilterDropdown={query().renderFilterDropdown}
                 renderFilterDropdownItem={query().renderFilterDropdownItem}
                 filterConfirmMode={query().filterConfirmMode}
-                onFilterDropdownVisibleChange={(visible) => table.foundation.toggleShowFilter(column().dataIndex as string, Boolean(visible))}
-                onSelect={(data) => table.foundation.handleFilterSelect(column().dataIndex as string, data)}
+                onFilterDropdownVisibleChange={(visible) => table.foundation.toggleShowFilter(column().dataIndex!, Boolean(visible))}
+                onSelect={(data) => table.foundation.handleFilterSelect(column().dataIndex!, data)}
             />
         );
     };

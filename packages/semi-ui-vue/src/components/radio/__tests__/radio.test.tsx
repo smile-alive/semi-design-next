@@ -220,7 +220,7 @@ describe('Radio', () => {
 
     it('暴露的句柄只有 focus 与 blur', () => {
         const holder = handleOf();
-        expect(Object.keys(holder.current as RadioHandle).sort()).toEqual(['blur', 'focus']);
+        expect(Object.keys(holder.current!).sort()).toEqual(['blur', 'focus']);
     });
 
     it('focus 将 preventScroll 传给原生 input', () => {

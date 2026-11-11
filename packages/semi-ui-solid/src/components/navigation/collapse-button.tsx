@@ -5,7 +5,7 @@ import Tooltip, { type GetTriggerProps } from '../tooltip';
 import type { CollapseButtonProps } from './interface';
 
 export default function CollapseButton(props: CollapseButtonProps) {
-    const label = () => (typeof props.collapseText === 'function' ? props.collapseText(props.isCollapsed as boolean) : props.isCollapsed ? props.locale?.expandText : props.locale?.collapseText);
+    const label = () => (typeof props.collapseText === 'function' ? props.collapseText(props.isCollapsed!) : props.isCollapsed ? props.locale?.expandText : props.locale?.collapseText);
 
     // One element tree for both states: swapping the wrapper would remount the button and drop the focus it holds
     return (

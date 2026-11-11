@@ -194,7 +194,7 @@ describe('Tooltip 浏览器', () => {
                 content: () => 'content',
             },
         });
-        const wrapper = screen.getByRole('button', { name: '首个元素' }).parentElement as HTMLElement;
+        const wrapper = screen.getByRole('button', { name: '首个元素' }).parentElement!;
         expect(screen.getByText('第二个元素').parentElement).toBe(wrapper);
         await userEvent.click(screen.getByText('第二个元素'));
         await waitFor(() => expect(Math.abs(center(popup()) - center(wrapper))).toBeLessThanOrEqual(1));

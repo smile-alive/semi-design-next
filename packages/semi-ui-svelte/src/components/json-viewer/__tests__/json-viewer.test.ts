@@ -129,7 +129,7 @@ function setup(props: JsonViewerProps = {}, init: Partial<Omit<FixtureStore, 'pr
     let handle: Handle | undefined;
     const view = render(Fixture, { props: { store, onHandle: (value) => (handle = value) } });
     flushSync();
-    return { store, view, handle: () => handle as Handle };
+    return { store, view, handle: () => handle! };
 }
 
 function customSpan(map: Map<HTMLElement, unknown>, ruleIndex: number, content: string) {
@@ -458,7 +458,7 @@ describe('Svelte JsonViewer', () => {
         setup();
         await openBar();
         const { search } = current().searchWidget;
-        const input = searchInput() as HTMLInputElement;
+        const input = searchInput()!;
         await fireEvent.compositionStart(input);
         await typeText(input, 'n');
         await typeText(input, 'ni');
@@ -684,7 +684,7 @@ describe('Svelte JsonViewer', () => {
             try {
                 for (const control of controls) {
                     await openBar();
-                    await fireEvent.keyDown(control() as HTMLElement, { key: 'Escape' });
+                    await fireEvent.keyDown(control()!, { key: 'Escape' });
                     await settle();
                     expect(searchInput()).toBeNull();
                 }
@@ -742,8 +742,8 @@ describe('Svelte JsonViewer', () => {
 
         it('limitSearchButtonBounds 为 true 时拖动被限制在容器内', async () => {
             setup({ limitSearchButtonBounds: true });
-            const wrapper = get(`.${prefixCls}-search-bar-trigger`).parentElement as HTMLElement;
-            const container = wrapper.parentElement as HTMLElement;
+            const wrapper = get(`.${prefixCls}-search-bar-trigger`).parentElement!;
+            const container = wrapper.parentElement!;
             for (const [element, width, height] of [
                 [container, 100, 100],
                 [wrapper, 20, 20],

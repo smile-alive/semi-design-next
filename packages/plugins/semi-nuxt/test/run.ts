@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { loadNuxt } from '@nuxt/kit';
-import type { Plugin } from 'vite';
+import type { EnvironmentOptions, Plugin } from 'vite';
 import semiNuxt from '../dist/module.mjs';
 
 // loadNuxt resolves `nuxt` from cwd, so it must run from the package, not from a temp dir; build artifacts go to a temp dir
@@ -14,7 +14,7 @@ function loadWithModule(overrides: Record<string, unknown>, cwd = path.join(impo
     return loadNuxt({ cwd, dotenv: { cwd: buildDir, fileName: [] }, overrides: { buildDir, modules: [semiNuxt], telemetry: false, ...overrides } });
 }
 
-async function viteConfigOf(semi?: Record<string, unknown>, environments?: Record<string, unknown>) {
+async function viteConfigOf(semi?: Record<string, unknown>, environments?: Record<string, EnvironmentOptions>) {
     const nuxt = await loadWithModule(semi ? { semi } : {});
     try {
         const ctx = { nuxt, config: { plugins: [] as Plugin[][], ...(environments && { environments }) } };

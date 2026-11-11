@@ -10,9 +10,9 @@
 
 <div bind:this={container} class="modal-container"></div>
 {#if config}
-    <ConfigProvider getPopupContainer={() => container as HTMLDivElement}>
+    <ConfigProvider getPopupContainer={() => container!}>
         <Modal getPopupContainer={own} motion={false} title="Dialog" {visible} />
     </ConfigProvider>
 {:else}
-    <Modal getPopupContainer={() => container as HTMLDivElement} motion={false} title="Dialog" {visible} />
+    <Modal getPopupContainer={() => container!} motion={false} title="Dialog" {visible} />
 {/if}

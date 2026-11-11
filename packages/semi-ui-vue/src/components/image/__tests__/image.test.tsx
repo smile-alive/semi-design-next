@@ -23,8 +23,8 @@ async function loaded(props: Record<string, unknown> = {}) {
     return view;
 }
 async function clickMask() {
-    await fireEvent.mouseDown(preview() as HTMLElement, { clientX: 10, clientY: 10 });
-    await fireEvent.mouseUp(preview() as HTMLElement, { clientX: 10, clientY: 10 });
+    await fireEvent.mouseDown(preview()!, { clientX: 10, clientY: 10 });
+    await fireEvent.mouseUp(preview()!, { clientX: 10, clientY: 10 });
 }
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
 // VTL's fireEvent does not return whether the default was prevented
@@ -183,7 +183,7 @@ describe('Image', () => {
         const { container } = await loaded({ preview: { onVisibleChange } });
         await fireEvent.click(thumb(container));
         expect(onVisibleChange).toHaveBeenCalledTimes(1);
-        await fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-plus`) as HTMLElement);
+        await fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-plus`)!);
         expect(onVisibleChange).toHaveBeenCalledTimes(1);
         expect(preview()).not.toBeNull();
     });
@@ -304,8 +304,8 @@ describe('Image', () => {
         expect(previewImg()).toHaveAttribute('src', big);
         expect(previewImg()).toHaveAttribute('crossorigin', 'use-credentials');
 
-        await fireEvent.mouseDown(preview() as HTMLElement, { clientX: 0, clientY: 0 });
-        await fireEvent.mouseUp(preview() as HTMLElement, { clientX: 0, clientY: 0 });
+        await fireEvent.mouseDown(preview()!, { clientX: 0, clientY: 0 });
+        await fireEvent.mouseUp(preview()!, { clientX: 0, clientY: 0 });
         expect(onVisibleChange).toHaveBeenLastCalledWith(false);
         expect(preview()).not.toBeNull();
 
@@ -369,12 +369,12 @@ describe('Image', () => {
         const srcList = ['https://example.com/1.jpg', 'https://example.com/2.jpg'];
         const { container } = await loaded({ preview: { src: srcList, onZoomIn, onClose, onNext, onChange } });
         await fireEvent.click(thumb(container));
-        await fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-plus`) as HTMLElement);
+        await fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-plus`)!);
         expect(onZoomIn).toHaveBeenCalledTimes(1);
-        await fireEvent.click($(`.${prefixCls}-preview-next`) as HTMLElement);
+        await fireEvent.click($(`.${prefixCls}-preview-next`)!);
         expect(onNext).toHaveBeenCalledWith(1);
         expect(onChange).toHaveBeenCalledWith(1);
-        await fireEvent.click($(`.${prefixCls}-preview-header-close`) as HTMLElement);
+        await fireEvent.click($(`.${prefixCls}-preview-header-close`)!);
         expect(onClose).toHaveBeenCalledTimes(1);
     });
 
@@ -386,7 +386,7 @@ describe('Image', () => {
         );
         const { container } = await loaded({ setDownloadName });
         await fireEvent.click(thumb(container));
-        await fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-download`) as HTMLElement);
+        await fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-download`)!);
         expect(setDownloadName).toHaveBeenCalledWith(src);
         expect(fetch).toHaveBeenCalledWith(src);
     });
@@ -467,7 +467,7 @@ describe('Image', () => {
         );
         const { container } = await loaded();
         await fireEvent.click(thumb(container));
-        await fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-download`) as HTMLElement);
+        await fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-download`)!);
         expect(setDownloadName).toHaveBeenCalledWith(src);
     });
 

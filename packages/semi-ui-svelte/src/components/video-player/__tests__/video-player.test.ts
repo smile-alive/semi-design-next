@@ -560,7 +560,7 @@ describe('Svelte VideoPlayer', () => {
         const video = getVideo(container);
         setMedia(video, { currentTime: 42, paused: false });
         const qualityItems = await openMenu(container, '1080P');
-        await click(qualityItems.find((item) => item.textContent?.trim() === '720P') as HTMLElement);
+        await click(qualityItems.find((item) => item.textContent?.trim() === '720P')!);
         expect(onQualityChange).toHaveBeenCalledExactlyOnceWith('720p');
         expect(notification(container)).toHaveTextContent('切换清晰度至720P');
         video.currentTime = 0;
@@ -580,7 +580,7 @@ describe('Svelte VideoPlayer', () => {
             onRouteChange,
         });
         const routeItems = await openMenu(container, 'Line 1');
-        await click(routeItems.find((item) => item.textContent?.trim() === 'Line 2') as HTMLElement);
+        await click(routeItems.find((item) => item.textContent?.trim() === 'Line 2')!);
         expect(onRouteChange).toHaveBeenCalledExactlyOnceWith('line2');
         expect(notification(container)).toHaveTextContent('切换线路至Line 2');
     });

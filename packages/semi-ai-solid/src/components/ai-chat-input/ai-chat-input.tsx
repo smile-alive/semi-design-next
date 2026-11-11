@@ -384,7 +384,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const renderAttachment = (uid: string) => {
         // a row keeps its last item while the list it left is still being removed
         const find = () => attachments().find((attachment) => attachment.uid === uid);
-        const item = createMemo<Attachment>((prev) => find() ?? prev, untrack(find) as Attachment);
+        const item = createMemo<Attachment>((prev) => find() ?? prev, untrack(find)!);
         const realType = () => getAttachmentType(item());
         const signIconType = () => getContentType(realType());
         return (

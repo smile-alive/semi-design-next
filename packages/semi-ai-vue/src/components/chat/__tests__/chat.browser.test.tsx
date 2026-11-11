@@ -26,7 +26,7 @@ const find = <T extends Element = HTMLElement>(container: Element, selector: str
     waitFor(() => {
         const found = container.querySelector<T>(selector);
         expect(found).not.toBeNull();
-        return found as T;
+        return found!;
     });
 
 function renderChat(props: Record<string, unknown>, wrap: (chat: VNode) => VNode = (chat) => chat) {
@@ -66,7 +66,7 @@ describe('Chat 浏览器', () => {
         const area = getElement('.semi-chat-container', container);
         area.scrollTop = 0;
         await new Promise((resolve) => requestAnimationFrame(resolve));
-        const anchor = () => [...container.querySelectorAll<HTMLElement>('.semi-chat-chatBox')].find((el) => el.textContent?.includes('history 10')) as HTMLElement;
+        const anchor = () => [...container.querySelectorAll<HTMLElement>('.semi-chat-chatBox')].find((el) => el.textContent?.includes('history 10'))!;
         const offset = () => anchor().getBoundingClientRect().top - area.getBoundingClientRect().top;
         const before = offset();
         list.value = [...history(7, 10), ...chats];
@@ -243,7 +243,7 @@ describe('Chat 浏览器', () => {
         const tip = await waitFor(() => {
             const el = document.querySelector('[role="tooltip"]');
             expect(el).not.toBeNull();
-            return el as Element;
+            return el!;
         });
         await waitFor(() => expect(uploadButton).toHaveAttribute('aria-describedby', tip.id));
     });

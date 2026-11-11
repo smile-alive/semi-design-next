@@ -11,9 +11,9 @@ export const $ = (selector: string) => document.querySelector<HTMLElement>(selec
 export const getPreview = () => $(`div.${previewCls}`);
 export const previewImg = () => $(`.${previewCls}-image-img`) as HTMLImageElement;
 export const pageInfo = () => $(`.${previewCls}-footer-page`)?.textContent?.trim();
-export const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`) as HTMLElement;
+export const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`)!;
 export const thumbs = () => document.querySelectorAll<HTMLImageElement>(`.${prefixCls}-img`);
-export const arrow = (side: 'prev' | 'next') => $(`.${previewCls}-${side}`) as HTMLElement;
+export const arrow = (side: 'prev' | 'next') => $(`.${previewCls}-${side}`)!;
 
 export async function fire(action: Promise<unknown>) {
     await action;
@@ -21,8 +21,8 @@ export async function fire(action: Promise<unknown>) {
 }
 
 export async function clickMask(x = 10, y = 10) {
-    await fire(fireEvent.mouseDown(getPreview() as HTMLElement, { clientX: x, clientY: y }));
-    await fire(fireEvent.mouseUp(getPreview() as HTMLElement, { clientX: x, clientY: y }));
+    await fire(fireEvent.mouseDown(getPreview()!, { clientX: x, clientY: y }));
+    await fire(fireEvent.mouseUp(getPreview()!, { clientX: x, clientY: y }));
 }
 
 // a real key press starts at the focused element and bubbles through the document
@@ -61,8 +61,8 @@ export function mockLayout({ container = [1000, 800], natural = [2000, 1000] } =
     return () => {
         delete (HTMLElement.prototype as { clientWidth?: number }).clientWidth;
         delete (HTMLElement.prototype as { clientHeight?: number }).clientHeight;
-        Object.defineProperty(HTMLImageElement.prototype, 'naturalWidth', naturalWidth as PropertyDescriptor);
-        Object.defineProperty(HTMLImageElement.prototype, 'naturalHeight', naturalHeight as PropertyDescriptor);
+        Object.defineProperty(HTMLImageElement.prototype, 'naturalWidth', naturalWidth!);
+        Object.defineProperty(HTMLImageElement.prototype, 'naturalHeight', naturalHeight!);
     };
 }
 

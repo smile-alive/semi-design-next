@@ -10,7 +10,7 @@ export type Row = Record<string, any>;
 export type Slots = Record<string, (...args: any[]) => unknown>;
 
 export const queryAll = <E extends Element = HTMLElement>(selector: string, root: ParentNode = document) => Array.from(root.querySelectorAll<E>(selector));
-export const query = <E extends Element = HTMLElement>(selector: string, root: ParentNode = document) => root.querySelector<E>(selector) as E;
+export const query = <E extends Element = HTMLElement>(selector: string, root: ParentNode = document) => root.querySelector<E>(selector)!;
 export const getBodyRows = () => queryAll(`.${P}-tbody .${P}-row`);
 export const getHeads = () => queryAll(`.${P}-thead .${P}-row-head`);
 export const rowKeys = () => getBodyRows().map((row) => row.getAttribute('data-row-key'));
@@ -37,7 +37,7 @@ export function mountTable(props: Record<string, unknown>, slots: Slots = {}) {
     return {
         container: result.container,
         unmount: () => result.unmount(),
-        handle: () => handle.value as TableHandle,
+        handle: () => handle.value!,
         update: async (next: { props?: Record<string, unknown>; slots?: Slots }) => {
             state.props = { ...state.props, ...next.props };
             state.slots = { ...(next.slots ?? state.slots) };

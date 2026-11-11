@@ -157,7 +157,7 @@
     );
 
     const cls = `${cssClasses.PREFIX}-preview`;
-    const srcList = $derived(PreviewInnerFoundation.getSrcList(src as string | string[]));
+    const srcList = $derived(PreviewInnerFoundation.getSrcList(src!));
     const total = $derived(srcList.length);
     const currentIndex = $derived(PreviewInnerFoundation.getCurrentIndex({ currentIndex: controlledIndex }, states()));
     const ratio = $derived(PreviewInnerFoundation.getRatio({ currentIndex: controlledIndex }, states()));

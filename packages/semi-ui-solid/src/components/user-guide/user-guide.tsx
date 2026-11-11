@@ -128,9 +128,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     const isPrimaryTheme = () => (step()?.theme ?? local.theme) === 'primary';
 
-    const item = () => step() as StepItem;
-
-    const rect = () => state().spotlightRect as DOMRect;
+    const rect = () => state().spotlightRect!;
 
     const prevText = () => local.prevButtonProps?.children || locale().locale.prev;
 
@@ -139,12 +137,12 @@ export default function UserGuide(rawProps: UserGuideProps) {
     // Called in the shown card only, so the render functions create the current step's content alone; resolved once,
     // the checks and the insertion read the same nodes
     const stepContent = () => {
-        const args = (): StepRenderProps => ({ item: item(), index: current() });
+        const args = (): StepRenderProps => ({ item: step()!, index: current() });
         const cover = children(() => local.renderCover?.(args()));
         const customTitle = children(() => local.renderTitle?.(args()));
         const customDescription = children(() => local.renderDescription?.(args()));
-        const title = () => (hasContent(customTitle()) ? customTitle() : item().title);
-        const description = () => (hasContent(customDescription()) ? customDescription() : item().description);
+        const title = () => (hasContent(customTitle()) ? customTitle() : step()!.title);
+        const description = () => (hasContent(customDescription()) ? customDescription() : step()!.description);
         return { cover, title, description };
     };
 
@@ -152,7 +150,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
         const { cover, title, description } = stepContent();
         return (
             <Modal
-                class={clsx(modalPrefixCls, local.class, item().class)}
+                class={clsx(modalPrefixCls, local.class, step()!.class)}
                 bodyStyle={{ padding: '0' }}
                 style={local.style}
                 aria-labelledby={hasContent(title()) ? titleId : undefined}
@@ -254,12 +252,12 @@ export default function UserGuide(rawProps: UserGuideProps) {
         return (
             <Popover
                 ref={(instance) => (popover = instance)}
-                class={clsx(`${prefixCls}-popover`, local.class, item().class)}
+                class={clsx(`${prefixCls}-popover`, local.class, step()!.class)}
                 style={mergeStyles({ padding: '0', ...(isPrimaryTheme() ? { 'background-color': 'var(--semi-color-primary)' } : {}) }, local.style)}
                 aria-labelledby={hasContent(title()) ? titleId : undefined}
                 content={content}
-                position={item().position || local.position}
-                showArrow={item().showArrow !== false}
+                position={step()!.position || local.position}
+                showArrow={step()!.showArrow !== false}
                 trigger="custom"
                 visible
                 onEscKeyDown={foundation.handleSkip}

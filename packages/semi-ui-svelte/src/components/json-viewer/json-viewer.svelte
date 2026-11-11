@@ -54,7 +54,7 @@
         foundationProps,
         () => JsonViewerFoundation.getInitialState(),
         () => ({
-            getEditorRef: () => editor as HTMLDivElement,
+            getEditorRef: () => editor!,
             notifyChange: (next) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 value = next;

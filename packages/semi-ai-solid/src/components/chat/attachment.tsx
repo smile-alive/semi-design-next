@@ -54,7 +54,7 @@ export default function Attachment(props: AttachmentProps) {
     const renderItem = (uid: string) => {
         // a row keeps its last item while the list it left is still being removed
         const find = () => props.attachment.find((item) => item.uid === uid);
-        const item = createMemo<FileItem>((prev) => find() ?? prev, untrack(find) as FileItem);
+        const item = createMemo<FileItem>((prev) => find() ?? prev, untrack(find)!);
         const mime = () => item().fileInstance?.type;
         return (
             <div class={`${PREFIX_ATTACHMENT}-item`}>

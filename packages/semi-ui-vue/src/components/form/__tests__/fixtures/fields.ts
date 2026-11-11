@@ -32,7 +32,7 @@ export function renderForm(props: Record<string, unknown> = {}, content?: Conten
     });
     return {
         ...view,
-        api: () => formApi as FormApi,
+        api: () => formApi!,
         rerender: (next: Record<string, unknown>) => view.rerender(next),
         unmount: () => view.unmount(),
     };

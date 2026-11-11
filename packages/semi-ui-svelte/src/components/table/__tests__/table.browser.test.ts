@@ -34,13 +34,13 @@ const getFilterTriggers = () => queryAll(`.${P}-column-filter`);
 const getHeadEllipsis = () => queryAll(`.${P}-row-head-ellipsis`);
 const hasTitle = (el: Element) => el.matches('[title]') || el.querySelector('[title]') !== null;
 // the filter button keeps a zero-width space for its icon to align to
-const getHeaderCell = (container: Element, title: string) => queryAll(`.${P}-thead .${P}-row-head`, container).find((th) => th.textContent?.replaceAll('​', '').trim() === title) as HTMLElement;
+const getHeaderCell = (container: Element, title: string) => queryAll(`.${P}-thead .${P}-row-head`, container).find((th) => th.textContent?.replaceAll('​', '').trim() === title)!;
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 const findElement = <E extends Element>(find: () => E | null | undefined) =>
     waitFor(() => {
         const found = find();
         expect(found).toBeTruthy();
-        return found as E;
+        return found!;
     });
 
 // Real mouse input from Playwright in every browser: setPointerCapture rejects a synthetic pointerId. The drop target is

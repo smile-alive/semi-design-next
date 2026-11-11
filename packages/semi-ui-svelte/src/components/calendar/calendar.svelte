@@ -60,25 +60,5 @@
 {:else if mode === 'month'}
     <MonthCalendar {...rest} {dateDisplay} {dateGrid} displayValue={shownValue} {event} {events} {header} {height} {markWeekend} {onClick} {onClose} {onMoreClick} today={today()} {weekStartsOn} {width} />
 {:else}
-    <TimeGrid
-        {...rest}
-        {allDayEvents}
-        {dateDisplay}
-        {dateGrid}
-        {event}
-        {events}
-        {header}
-        {height}
-        labelDate={mode === 'week' ? shownValue : undefined}
-        {markWeekend}
-        {minEventHeight}
-        {onClick}
-        range={mode === 'week' ? weekRange : (range as Date[])}
-        {scrollTop}
-        {showCurrTime}
-        {timeDisplay}
-        today={today()}
-        {weekStartsOn}
-        {width}
-    />
+    <TimeGrid {...rest} {allDayEvents} {dateDisplay} {dateGrid} {event} {events} {header} {height} labelDate={mode === 'week' ? shownValue : undefined} {markWeekend} {minEventHeight} {onClick} range={mode === 'week' ? weekRange : range!} {scrollTop} {showCurrTime} {timeDisplay} today={today()} {weekStartsOn} {width} />
 {/if}

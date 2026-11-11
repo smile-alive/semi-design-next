@@ -76,7 +76,7 @@ foundation 的 `base/`、`utils/`、`locale/`，ai-foundation 的 `base/`、`uti
 
 **TypeScript 严格模式**（2026-11-10）
 
-Vue、Solid、Svelte 的 UI、AI、图标包，以及 `semi-icons-core`、`semi-icons-react`、`semi-animation`、`semi-scss-compile`、`semi-polyfill` 开启 `strictNullChecks`。存量包 `semi-foundation`、`semi-ai-foundation`、`semi-json-viewer-core`、`semi-ui-react`、`semi-ai-react` 与构建插件不开启：实测全量开启后，为过类型加的判空、兜底与类型拼装远多于发现的真实缺陷。TS 只用于开发期发现隐形 bug，不为类型写防御代码。`noImplicitOverride`、`noUnusedLocals` 对全仓开启。不用 `isolatedDeclarations`（2026-10-08）：它要求所有导出函数显式标注返回类型，而本仓库可推导的返回类型不手写。
+Vue、Solid、Svelte 的 UI、AI、图标包，以及 `semi-icons-core`、`semi-icons-react`、`semi-animation`、`semi-polyfill`、全部构建插件，以及 `tsconfig.node.json` 覆盖的 Node 脚本（lint 规则、`scripts/`、插件测试、打包与宿主测试）开启 `strictNullChecks`。存量包 `semi-foundation`、`semi-ai-foundation`、`semi-json-viewer-core`、`semi-ui-react`、`semi-ai-react` 不开启：实测全量开启后，为过类型加的判空、兜底与类型拼装远多于发现的真实缺陷。TS 只用于开发期发现隐形 bug，不为类型写防御代码。`noImplicitOverride`、`noUnusedLocals` 对全仓开启。不用 `isolatedDeclarations`（2026-10-08）：它要求所有导出函数显式标注返回类型，而本仓库可推导的返回类型不手写。
 
 **分支与历史**（2026-11-04）
 

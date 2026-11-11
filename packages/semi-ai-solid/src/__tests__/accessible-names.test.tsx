@@ -46,7 +46,7 @@ describe('AI 组件的可访问名称跟随语言包', () => {
         const { container } = inEnglish(() => <AIChatDialogue chats={chats} roleConfig={{ assistant: { name: 'A' } }} />);
         const codeBlock = container.querySelector<HTMLElement>('.semi-ai-chat-dialogue-code');
         expect(codeBlock).not.toBeNull();
-        expect(within(codeBlock as HTMLElement).getByRole('button', { name: en_US.AIChatDialogue.copy })).toBeInTheDocument();
+        expect(within(codeBlock!).getByRole('button', { name: en_US.AIChatDialogue.copy })).toBeInTheDocument();
     });
 
     it('Sidebar 容器为关闭按钮命名', () => {

@@ -16,7 +16,7 @@ function expectNoLeakedAttrs(element: Element | null) {
 
 describe('FormSwitch', () => {
     const getSwitch = () => screen.getByRole<HTMLInputElement>('switch');
-    const getWrapper = () => getSwitch().parentElement as HTMLElement;
+    const getWrapper = () => getSwitch().parentElement!;
 
     it('formApi.reset 后再次取消选中', async () => {
         let formApi: FormApi | undefined;
@@ -247,7 +247,7 @@ describe('FormTreeSelect', () => {
     ];
     const getTrigger = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select`);
     const getSelection = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select-selection`);
-    const getNode = (label: string) => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option`)].find((node) => node.textContent === label) as HTMLElement;
+    const getNode = (label: string) => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option`)].find((node) => node.textContent === label)!;
 
     it('blur 校验与重置', async () => {
         let formApi: FormApi | undefined;

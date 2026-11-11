@@ -53,7 +53,7 @@ describe('Svelte Form-formApi', () => {
 
     it('formApi.getTouched 在字段失焦后返回 true', async () => {
         const { api } = renderForm({}, fields());
-        await fireEvent.focusOut(fieldInput('name') as HTMLInputElement);
+        await fireEvent.focusOut(fieldInput('name')!);
         expect(api().getTouched('name')).toEqual(true);
         expect(!api().getTouched('business')).toEqual(true);
     });
@@ -61,7 +61,7 @@ describe('Svelte Form-formApi', () => {
     it('formApi.getValue 按路径取值，不传路径时返回全部值', async () => {
         const { api } = renderForm({}, fields());
         expect(api().getValue('name')).toEqual(undefined);
-        await typeInto(fieldInput('name') as HTMLInputElement, 'semi');
+        await typeInto(fieldInput('name')!, 'semi');
         expect(api().getValue('name')).toEqual('semi');
         expect(api().getValue()).toEqual({ name: 'semi' });
         expect(api().getValues()).toEqual({ name: 'semi' });
@@ -69,14 +69,14 @@ describe('Svelte Form-formApi', () => {
 
     it('formApi.getError 返回字段校验失败的错误', async () => {
         const { api } = renderForm({}, [input('name', { rules: muji, trigger: 'change' })]);
-        await typeInto(fieldInput('name') as HTMLInputElement, 'semi');
+        await typeInto(fieldInput('name')!, 'semi');
         await waitFor(() => expect(api().getError('name')).toEqual(['not muji']));
         expect(errorOf('name')).toHaveTextContent('not muji');
     });
 
     it('formApi.getFormState 返回 values、errors 与 touched', async () => {
         const { api } = renderForm({}, [input('name', { rules: muji, trigger: 'change' })]);
-        await typeInto(fieldInput('name') as HTMLInputElement, 'semi');
+        await typeInto(fieldInput('name')!, 'semi');
         await waitFor(() => expect(api().getFormState()).toEqual({ values: { name: 'semi' }, errors: { name: ['not muji'] }, touched: { name: true } }));
     });
 
@@ -107,7 +107,7 @@ describe('Svelte Form-formApi', () => {
 
     it('formApi.reset 将值恢复为初始值并清空错误与 touched', async () => {
         const { api } = renderForm({ initValues: { name: 'a' } }, fields());
-        await typeInto(fieldInput('name') as HTMLInputElement, 'b');
+        await typeInto(fieldInput('name')!, 'b');
         expect(fieldInput('name')).toHaveValue('b');
         api().reset();
         await settle();

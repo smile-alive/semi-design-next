@@ -20,7 +20,7 @@ function renderList(props: Partial<VirtualListProps<string[]>> = {}) {
             {Row}
         </VirtualList>
     ));
-    return { handle: () => handle as VirtualListHandle, outer: screen.getByTestId('outer') };
+    return { handle: () => handle!, outer: screen.getByTestId('outer') };
 }
 
 const firstRow = () => screen.getAllByTestId('row')[0].textContent;

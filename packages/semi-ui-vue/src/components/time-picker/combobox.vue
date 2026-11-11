@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import { applyItem, getOptions, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
+    import { applyItem, getOptions, type ColumnType } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
     import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import useLocale from '../locale/use-locale';
     import ScrollItem from '../scroll-list/scroll-item.vue';
@@ -44,7 +44,7 @@
 
     const pick = (type: ColumnType, item: { value: string }) =>
         emit('change', {
-            timeStampValue: Number(applyItem(props.timeStampValue as TimeStamp, type, item.value, props.use12Hours, options.value.isAM)),
+            timeStampValue: Number(applyItem(props.timeStampValue!, type, item.value, props.use12Hours, options.value.isAM)),
         });
 
     defineExpose<ComboboxHandle>({

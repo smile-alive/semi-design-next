@@ -49,7 +49,7 @@ async function renderFixture(fixture: Component, props: Record<string, unknown> 
     await settle();
     return {
         ...view,
-        handle: () => handle as SelectHandle,
+        handle: () => handle!,
         unmount: () => view.unmount(),
         rerender: async (next: Record<string, unknown>) => {
             await view.rerender(next);
@@ -95,7 +95,7 @@ async function keyDown(key: string, init: KeyboardEventInit = {}, target: Elemen
     await settle();
 }
 async function click(element: Element | null) {
-    await userEvent.click(element as Element);
+    await userEvent.click(element!);
     await settle();
 }
 const expectClosed = () => waitFor(() => expect(getOptionList()).toBeNull());
@@ -414,7 +414,7 @@ describe('Select', async () => {
         await click(getTrigger());
         await search('abc');
         await waitFor(() => expect(getOptionTexts()).toEqual(['Abc']));
-        const activeId = getTrigger().getAttribute('aria-activedescendant') as string;
+        const activeId = getTrigger().getAttribute('aria-activedescendant')!;
         expect(activeId).toBeTruthy();
         expect(document.getElementById(activeId)).toBe(getOptionByText('Abc'));
         await search('zzz');
@@ -900,7 +900,7 @@ describe('Select', async () => {
         expect(input).not.toBeNull();
         expect(getTrigger()).not.toContainElement(input);
         expect(getTrigger().querySelector('input')).toBeNull();
-        await search('abc', input as HTMLInputElement);
+        await search('abc', input!);
         expect(getOptionTexts()).toEqual(['Abc']);
     });
 
@@ -991,7 +991,7 @@ describe('Select', async () => {
     it('listScroll 事件', async () => {
         const onListScroll = vi.fn<(event: Event) => void>();
         await renderSelect({ defaultOpen: true, onListScroll });
-        await fireEvent.scroll(getOptionList() as HTMLElement);
+        await fireEvent.scroll(getOptionList()!);
         expect(onListScroll).toHaveBeenCalledTimes(1);
     });
 
@@ -1397,7 +1397,7 @@ describe('Select', async () => {
         });
         const groups = Array.from(document.querySelectorAll(`.${prefixCls}-group`));
         expect(groups.map((group) => group.textContent)).toEqual(['Group1', 'Group2']);
-        const groupNodes = Array.from((getOptionList() as HTMLElement).children);
+        const groupNodes = Array.from(getOptionList()!.children);
         expect(groupNodes.map((group) => Array.from(group.children).map((node) => node.textContent))).toEqual([
             ['Group1', 'a-1'],
             ['Group2', 'b-1'],
@@ -2734,7 +2734,7 @@ describe('Select', async () => {
                         onClick={onClick}
                         onMouseenter={(event: MouseEvent) => {
                             mouseEnterCalled = true;
-                            (onMouseenter as (e: MouseEvent) => void)(event);
+                            onMouseenter!(event);
                         }}
                     >
                         {label as string}
@@ -2939,7 +2939,7 @@ describe('Select', async () => {
         const overflowList = collapse().firstElementChild;
         expect(overflowList).not.toBeNull();
         await click(getTrigger());
-        await click(getOptionByText('TopBuzz') as HTMLElement);
+        await click(getOptionByText('TopBuzz')!);
         expect(getTagTexts()).toEqual(['Abc', 'Hotsoon', '+2']);
         expect(collapse().firstElementChild).toBe(overflowList);
     });
@@ -2969,7 +2969,7 @@ describe('Select', async () => {
         });
         expect(getTagTexts()).toEqual(['Abc', 'Hotsoon']);
         await click(getTrigger());
-        await click(getOptionByText('Pipixia') as HTMLElement);
+        await click(getOptionByText('Pipixia')!);
         expect(document.querySelector(`.${prefixCls}-content-wrapper-collapse-tag`)).toHaveTextContent(/^\+1$/);
     });
 
@@ -3077,7 +3077,7 @@ describe('Select', async () => {
         const onChange = vi.fn<(value: unknown) => void>();
         await renderSelect({ defaultValue: 'abc', optionList: defaultList, onChange });
         await click(getTrigger());
-        await click(getOptionByText('Abc') as HTMLElement);
+        await click(getOptionByText('Abc')!);
         await expectClosed();
         expect(onChange).not.toHaveBeenCalled();
     });
@@ -3160,8 +3160,8 @@ describe('Select', async () => {
         });
         expect(getTagTexts()).toEqual(['Abc', 'Hotsoon']);
         await click(getTrigger());
-        await click(getOptionByText('Pipixia') as HTMLElement);
-        await click(getOptionByText('TopBuzz') as HTMLElement);
+        await click(getOptionByText('Pipixia')!);
+        await click(getOptionByText('TopBuzz')!);
         expect(getTagTexts()).toEqual(['Abc', 'Hotsoon', '+2']);
     });
 
@@ -3254,7 +3254,7 @@ describe('Select', async () => {
         await click(getTrigger());
         const trigger = getTrigger();
         expect(document.querySelector(`#${trigger.id}`)).toBe(trigger);
-        expect(document.querySelector(`#${trigger.getAttribute('aria-controls') as string}`)).toBe(getOptionList());
+        expect(document.querySelector(`#${trigger.getAttribute('aria-controls')!}`)).toBe(getOptionList());
     });
 
     it('读取 semiGlobal overrideDefaultProps 中的默认值', async () => {
@@ -3302,7 +3302,7 @@ describe('Select', async () => {
         await click(getTrigger());
         const trigger = getTrigger();
         expect(trigger).toHaveAttribute('aria-expanded', 'true');
-        expect(document.getElementById(trigger.getAttribute('aria-controls') as string)).toBe(getOptionList());
+        expect(document.getElementById(trigger.getAttribute('aria-controls')!)).toBe(getOptionList());
         expect(trigger.getAttribute('aria-activedescendant')).toBe(getOptions()[0].id);
         expect(getOptionList()).toHaveAttribute('role', 'listbox');
     });
@@ -3406,7 +3406,7 @@ describe('Select', async () => {
             onChange: (value: unknown) => calls.push(['change', value]),
         });
         await click(getTrigger());
-        await click(getOptionByText('Hotsoon') as HTMLElement);
+        await click(getOptionByText('Hotsoon')!);
         expect(calls).toEqual([
             ['select', 'hotsoon'],
             ['change', 'hotsoon'],
@@ -3422,7 +3422,7 @@ describe('Select', async () => {
         await renderSelect({ onDropdownVisibleChange, onChange, onBlur });
         await click(getTrigger());
         expect(onDropdownVisibleChange.mock.calls).toEqual([[true]]);
-        await click(getOptionByText('Hotsoon') as HTMLElement);
+        await click(getOptionByText('Hotsoon')!);
         expect(onChange.mock.calls).toEqual([['hotsoon']]);
         await expectClosed();
         await click(getTrigger());
@@ -3866,10 +3866,10 @@ describe('Select', async () => {
     describe('Vue 写法', () => {
         it('模板中的布尔简写与显式 false', async () => {
             await renderFixture(TemplateOptions, { defaultOpen: true });
-            const on = getOptionByText('On') as HTMLElement;
+            const on = getOptionByText('On')!;
             expect(on).toHaveAttribute('aria-disabled', 'true');
             expect(on.querySelector(`.${prefixCls}-option-icon`)).not.toBeNull();
-            const off = getOptionByText('Off') as HTMLElement;
+            const off = getOptionByText('Off')!;
             expect(off).not.toHaveAttribute('aria-disabled', 'true');
             expect(off.querySelector(`.${prefixCls}-option-icon`)).toBeNull();
         });
@@ -3881,10 +3881,10 @@ describe('Select', async () => {
                     default: () => [h(SelectOption as Component, { value: 'on', disabled: '', 'show-tick': '' }, () => 'On'), h(SelectOption as Component, { value: 'off', disabled: false, 'show-tick': false }, () => 'Off')],
                 }
             );
-            const on = getOptionByText('On') as HTMLElement;
+            const on = getOptionByText('On')!;
             expect(on).toHaveAttribute('aria-disabled', 'true');
             expect(on.querySelector(`.${prefixCls}-option-icon`)).not.toBeNull();
-            const off = getOptionByText('Off') as HTMLElement;
+            const off = getOptionByText('Off')!;
             expect(off).not.toHaveAttribute('aria-disabled', 'true');
             expect(off.querySelector(`.${prefixCls}-option-icon`)).toBeNull();
         });
@@ -3988,7 +3988,7 @@ describe('Select', async () => {
                 changeWithObject: true,
                 onChange,
             });
-            const row = getOptions().find((option) => option.querySelector('b')) as HTMLElement;
+            const row = getOptions().find((option) => option.querySelector('b'))!;
             expect(row.querySelector('b')).toHaveTextContent(/^Alpha$/);
             await click(row);
             expect(getSelectionText()?.querySelector('b')).toHaveTextContent(/^Alpha$/);
@@ -4020,7 +4020,7 @@ describe('Select', async () => {
             const props = { defaultOpen: true, motion: false, optionList: defaultList, onChange, ...attrs };
             render(() => <ConfigProvider locale={en_US}>{() => h(Select as Component, props)}</ConfigProvider>);
             await settle();
-            await click(getOptionByText('Abc') as HTMLElement);
+            await click(getOptionByText('Abc')!);
             expect(onChange).toHaveBeenCalledTimes(1);
             expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ value: 'abc', label: 'Abc' }));
         });
@@ -4059,7 +4059,7 @@ describe('Select', async () => {
             await userEvent.type(getTriggerInput(), 'ab');
             await settle();
             expect(onChange).not.toHaveBeenCalled();
-            await click(getOptionByText('Abc') as HTMLElement);
+            await click(getOptionByText('Abc')!);
             expect(onChange.mock.calls).toEqual([['abc']]);
         });
 

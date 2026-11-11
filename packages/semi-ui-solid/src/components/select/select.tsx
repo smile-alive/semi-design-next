@@ -813,7 +813,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         return (
             <div class={`${prefix}-content-wrapper-collapse`}>
                 <OverflowList
-                    itemKey={(item) => (item as OptionProps).value as string | number}
+                    itemKey={(item) => (item as OptionProps).value!}
                     items={items()}
                     overflowRenderer={(overflowItems: OverflowItem[]) => {
                         const first = overflowItems[0] as OptionProps | undefined;
@@ -1077,7 +1077,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                     // OptionGroup renders no title without a label, and a group needs one for its name
                     <Show when={hasTitle(run().group)} fallback={<RunRows run={run} />}>
                         <div class={`${prefix}-group-wrapper`} aria-labelledby={titleId()} role="group">
-                            <div {...titleAttrs(run().group as GroupRecord)} id={titleId()} class={clsx(run().group?.class as string | undefined, cssClasses.PREFIX_GROUP)} style={run().group?.style as JSX.CSSProperties | string | undefined}>
+                            <div {...titleAttrs(run().group!)} id={titleId()} class={clsx(run().group?.class as string | undefined, cssClasses.PREFIX_GROUP)} style={run().group?.style as JSX.CSSProperties | string | undefined}>
                                 {run().group?.label}
                             </div>
                             <RunRows run={run} />

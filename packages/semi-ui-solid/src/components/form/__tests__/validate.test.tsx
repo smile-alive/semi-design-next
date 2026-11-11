@@ -12,7 +12,7 @@ function renderNameForm(props: FormProps = {}, fieldProps: Record<string, unknow
             <FormInput field="name" rules={[{ required: true, message: 'req' }]} {...fieldProps} />
         </Form>
     ));
-    return { ...utils, getApi: () => api as FormApi, input: () => getElement<HTMLInputElement>('input', utils.container) };
+    return { ...utils, getApi: () => api!, input: () => getElement<HTMLInputElement>('input', utils.container) };
 }
 
 describe('Form 静默校验', () => {

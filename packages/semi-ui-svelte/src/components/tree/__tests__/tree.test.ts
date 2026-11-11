@@ -514,7 +514,7 @@ describe('Tree 虚拟化（jsdom）', () => {
             renderTree({ expandAll: true, virtualize: { itemSize: 28, height: '100%' } });
             flushSync();
             const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`);
-            const parent = wrapper.parentElement as HTMLElement;
+            const parent = wrapper.parentElement!;
             expect(observer.observed()).toContain(parent);
             expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-virtual-list`)).toBeNull();
             Object.defineProperty(parent, 'offsetHeight', { configurable: true, value: 84 });

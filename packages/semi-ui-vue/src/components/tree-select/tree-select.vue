@@ -211,7 +211,7 @@
                 emit('expand', expandedKeys, { expanded, node: node as TreeNodeData });
             },
             notifyFocus: (event) => emit('focus', event),
-            notifyBlur: (event) => emit('blur', event as FoundationEvent | FocusEvent),
+            notifyBlur: (event) => emit('blur', event!),
             focusInput: () => {
                 searchInput.value?.focus({ preventScroll: props.preventScroll });
                 tagInputs.value?.[0]?.focus();

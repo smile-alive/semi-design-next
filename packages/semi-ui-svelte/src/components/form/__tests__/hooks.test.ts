@@ -22,7 +22,7 @@ function renderHooks(field = 'a', initValues?: Record<string, unknown>, outside 
             onProbe: (probe: Probe) => probes.push(probe),
         },
     });
-    return { ...view, store, api: () => formApi as FormApi, probe: () => probes[0] };
+    return { ...view, store, api: () => formApi!, probe: () => probes[0] };
 }
 
 const stateOf = (testId: string) => JSON.parse(screen.getByTestId(testId).textContent ?? '');

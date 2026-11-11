@@ -9,7 +9,8 @@
         "allowImportingTsExtensions": true,
         "noImplicitAny": true,
         "noImplicitReturns": false,
-        "noImplicitThis": true
+        "noImplicitThis": true,
+        "strictNullChecks": true
     },
     "include": [
         "commitlint.config.ts",

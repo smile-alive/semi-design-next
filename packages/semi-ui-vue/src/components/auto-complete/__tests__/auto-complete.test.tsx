@@ -36,7 +36,7 @@ async function renderWith(component: Component, props: Record<string, unknown> =
     await settle();
     return {
         ...view,
-        handle: () => handle as AutoCompleteHandle,
+        handle: () => handle!,
         rerender: async (next: Record<string, unknown>) => {
             await view.rerender(next);
             await settle();
@@ -62,7 +62,7 @@ async function keyDown(key: string, target: Element = getInput()) {
     await settle();
 }
 async function click(element: Element | null) {
-    await userEvent.click(element as Element);
+    await userEvent.click(element!);
     await settle();
 }
 async function mouseDown(element: Element) {
@@ -153,7 +153,7 @@ describe('AutoComplete', () => {
     it('defaultOpen 为 true 且 data 非空时显示候选列表', async () => {
         await renderAc({ defaultOpen: true, data: stringData });
         expect(screen.getByRole('listbox')).toBeInTheDocument();
-        const candidate = (getList() as HTMLElement).children;
+        const candidate = getList()!.children;
         expect(candidate).toHaveLength(4);
         expect(candidate[0]).toHaveTextContent(/^semi$/);
         expect(candidate[1]).toHaveTextContent(/^ies$/);
@@ -567,7 +567,7 @@ describe('AutoComplete', () => {
         await renderAc({ data: layoutData(stringData), defaultOpen: true, defaultActiveFirstOption: true });
         await keyDown('ArrowDown');
         expect(getFocusedOption()).toHaveTextContent('ies');
-        expect((getList() as HTMLElement).scrollTop).toBe(40);
+        expect(getList()!.scrollTop).toBe(40);
     });
 
     it('【ArrowUp】高亮上移', async () => {
@@ -665,7 +665,7 @@ describe('AutoComplete', () => {
         await keyDown('ArrowDown');
         await keyDown('ArrowDown');
         expect(getFocusedOption()).toHaveTextContent('design');
-        expect((getList() as HTMLElement).scrollTop).toBe(80);
+        expect(getList()!.scrollTop).toBe(80);
     });
 
     it('【select】selectWithObject 时载荷带上数据项的其他字段', async () => {
@@ -782,7 +782,7 @@ describe('AutoComplete', () => {
         expect(input).not.toHaveAttribute('aria-activedescendant');
 
         await keyDown('ArrowDown');
-        const focused = getFocusedOption() as HTMLElement;
+        const focused = getFocusedOption()!;
         expect(focused).toHaveAttribute('role', 'option');
         expect(focused.id).not.toBe('');
         expect(input).toHaveAttribute('aria-activedescendant', focused.id);
@@ -804,17 +804,17 @@ describe('AutoComplete', () => {
         await renderAc({ data: layoutData(stringData), defaultOpen: true, defaultActiveFirstOption: true });
         await keyDown('ArrowUp');
         expect(getFocusedOption()).toHaveTextContent('platform');
-        expect((getList() as HTMLElement).scrollTop).toBe(120);
+        expect(getList()!.scrollTop).toBe(120);
     });
 
     it('【滚动】从匹配 defaultValue 的项开始滚动', async () => {
         await renderAc({ data: layoutData(stringData), defaultOpen: true, defaultValue: 'semi' });
-        expect((getList() as HTMLElement).scrollTop).toBe(0);
+        expect(getList()!.scrollTop).toBe(0);
         await keyDown('ArrowDown');
         await keyDown('ArrowDown');
         await keyDown('ArrowDown');
         expect(getFocusedOption()).toHaveTextContent('platform');
-        expect((getList() as HTMLElement).scrollTop).toBe(120);
+        expect(getList()!.scrollTop).toBe(120);
     });
 
     it('【点击外部】触发器内的 mousedown 不关闭列表', async () => {
@@ -1715,5 +1715,5 @@ describe('AutoComplete 加载、禁用与键盘细节', () => {
 });
 
 function getOptionByText(text: string) {
-    return getOptions().find((option) => option.textContent === text) as HTMLElement;
+    return getOptions().find((option) => option.textContent === text)!;
 }

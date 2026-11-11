@@ -11,6 +11,6 @@
 </script>
 
 <div bind:this={host} class="preview-container"></div>
-<ConfigProvider {...props} getPopupContainer={container ? () => host as HTMLDivElement : props.getPopupContainer}>
+<ConfigProvider {...props} getPopupContainer={container ? () => host! : props.getPopupContainer}>
     <ImagePreview getPopupContainer={own} src={srcList} visible />
 </ConfigProvider>

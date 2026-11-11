@@ -4,7 +4,7 @@
     const srcList = ['/assets/root-web-sites/abstract.jpg', '/assets/root-web-sites/sky.jpg', '/assets/root-web-sites/greenleaf.jpg'];
 
     const getPopupContainer = () => {
-        const node = document.getElementById('container') as HTMLElement;
+        const node = document.getElementById('container')!;
         return node;
     };
 </script>

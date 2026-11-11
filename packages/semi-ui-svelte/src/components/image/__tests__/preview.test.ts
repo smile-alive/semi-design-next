@@ -240,7 +240,7 @@ describe('Svelte ImagePreview', () => {
     it('遮罩：鼠标微小移动仍关闭，拖动或操作区域不关闭，maskClosable 为 false 时永不关闭', async () => {
         const { store } = renderGroup();
         await fire(fireEvent.click(thumbs()[0]));
-        const preview = getPreview() as HTMLElement;
+        const preview = getPreview()!;
         await fire(fireEvent.mouseDown(preview, { clientX: 0, clientY: 0 }));
         await fire(fireEvent.mouseUp(preview, { clientX: 20, clientY: 0 }));
         expect(getPreview()).not.toBeNull();
@@ -263,7 +263,7 @@ describe('Svelte ImagePreview', () => {
         const first = renderGroup({ onClose, titles: ['first'] });
         await fire(fireEvent.click(thumbs()[0]));
         expect($(`.${previewCls}-header-title`)?.textContent?.trim()).toBe('first');
-        const close = $(`.${previewCls}-header-close`) as HTMLElement;
+        const close = $(`.${previewCls}-header-close`)!;
         await fire(fireEvent.mouseDown(close, { clientX: 0, clientY: 0 }));
         await fire(fireEvent.mouseUp(close, { clientX: 0, clientY: 0 }));
         expect(getPreview()).not.toBeNull();
@@ -294,7 +294,7 @@ describe('Svelte ImagePreview', () => {
 
     it('menuItems 渲染出的默认按钮在自定义菜单里仍可用', async () => {
         renderPreview({ currentIndex: 1 }, ['previewMenu']);
-        const menu = $(`.${previewCls}-footer .custom-menu`) as HTMLElement;
+        const menu = $(`.${previewCls}-footer .custom-menu`)!;
         // prev, next, zoom out, zoom in, ratio, rotate, download plus the slider's own handle
         expect(within(menu).getAllByRole('button').length).toBeGreaterThanOrEqual(7);
         await fire(fireEvent.click(footerIcon('chevron_right')));
@@ -350,11 +350,11 @@ describe('Svelte ImagePreview', () => {
         const onZoomOut = vi.fn<(zoom: number) => void>();
         renderPreview({ onZoomIn, onZoomOut });
         await fire(fireEvent.load(previewImg()));
-        const wheel = dispatch(getPreview() as HTMLElement, new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: -10 }));
+        const wheel = dispatch(getPreview()!, new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: -10 }));
         expect(wheel.defaultPrevented).toBe(true);
         expect(onZoomIn).toHaveBeenLastCalledWith(0.56);
         expect(previewImg()).toHaveStyle({ width: '1120px' });
-        await fire(fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 }));
+        await fire(fireEvent.wheel(getPreview()!, { deltaY: 10 }));
         expect(onZoomOut).toHaveBeenLastCalledWith(0.46);
         expect(previewImg()).toHaveStyle({ width: '920px' });
     });
@@ -365,13 +365,13 @@ describe('Svelte ImagePreview', () => {
         await fire(fireEvent.load(previewImg()));
         expect(previewImg()).toHaveStyle({ width: '920px' });
         // 0.46 + 0.1 passes maxZoom
-        await fire(fireEvent.wheel(getPreview() as HTMLElement, { deltaY: -10 }));
+        await fire(fireEvent.wheel(getPreview()!, { deltaY: -10 }));
         expect(previewImg()).toHaveStyle({ width: '1000px' });
 
         store.props.minZoom = 0.42;
         flushSync();
-        await fire(fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 }));
-        await fire(fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 }));
+        await fire(fireEvent.wheel(getPreview()!, { deltaY: 10 }));
+        await fire(fireEvent.wheel(getPreview()!, { deltaY: 10 }));
         expect(previewImg()).toHaveStyle({ width: '840px' });
     });
 
@@ -541,7 +541,7 @@ describe('Svelte ImagePreview', () => {
         flushSync();
         expect(header()).toHaveClass(`${previewCls}-hide`);
         expect($(`.${previewCls}-footer`)).toHaveClass(`${previewCls}-hide`);
-        dispatch(getPreview() as HTMLElement, new MouseEvent('mousemove', { bubbles: true }));
+        dispatch(getPreview()!, new MouseEvent('mousemove', { bubbles: true }));
         expect(header()).not.toHaveClass(`${previewCls}-hide`);
     });
 
@@ -556,7 +556,7 @@ describe('Svelte ImagePreview', () => {
         flushSync();
         expect(footer()).toHaveClass(`${previewCls}-hide`);
 
-        dispatch(getPreview() as HTMLElement, new MouseEvent('mousemove', { bubbles: true }));
+        dispatch(getPreview()!, new MouseEvent('mousemove', { bubbles: true }));
         vi.advanceTimersByTime(600);
         store.props.src = [...srcList, 'https://example.com/4.jpg'];
         flushSync();
@@ -623,8 +623,8 @@ describe('Svelte ImagePreview', () => {
 
     it('遮罩关闭只排除操作区：自定义 title 内的点击不关闭', async () => {
         renderPreview({}, ['title']);
-        await fire(fireEvent.mouseDown($('.custom-title') as HTMLElement, { clientX: 0, clientY: 0 }));
-        await fire(fireEvent.mouseUp($('.custom-title') as HTMLElement, { clientX: 0, clientY: 0 }));
+        await fire(fireEvent.mouseDown($('.custom-title')!, { clientX: 0, clientY: 0 }));
+        await fire(fireEvent.mouseUp($('.custom-title')!, { clientX: 0, clientY: 0 }));
         expect(getPreview()).not.toBeNull();
     });
 
@@ -690,7 +690,7 @@ describe('Svelte ImagePreview', () => {
 describe('Svelte ImagePreview 键盘与屏幕阅读器', () => {
     it('每个控件都是以语言包命名的原生按钮，缩放滑块也有名称', async () => {
         renderPreview({ currentIndex: 1 });
-        const dialog = getPreview() as HTMLElement;
+        const dialog = getPreview()!;
         const { Image: names } = zh_CN;
         for (const name of [names.close, names.prevTip, names.nextTip, names.zoomInTip, names.zoomOutTip, names.rotateTip, names.downloadTip, names.originTip]) {
             expect(within(dialog).getAllByRole('button', { name }).length).toBeGreaterThan(0);
@@ -724,7 +724,7 @@ describe('Svelte ImagePreview 键盘与屏幕阅读器', () => {
 
     it('预览为模态对话框，以标题命名，无标题时以语言包命名', () => {
         const first = renderPreview({ previewTitle: 'Gallery' });
-        const dialog = getPreview() as HTMLElement;
+        const dialog = getPreview()!;
         expect(dialog).toHaveAttribute('role', 'dialog');
         expect(dialog).toHaveAttribute('aria-modal', 'true');
         expect(dialog).toHaveAttribute('aria-labelledby', $(`.${previewCls}-header-title`)?.id);
@@ -771,7 +771,7 @@ describe('Svelte ImagePreview 键盘与屏幕阅读器', () => {
         expect(press('ArrowRight', {}, input).defaultPrevented).toBe(false);
         expect(pageInfo()).toBe('1/3');
         input.remove();
-        expect(press('ArrowRight', { altKey: true }, getPreview() as HTMLElement).defaultPrevented).toBe(false);
+        expect(press('ArrowRight', { altKey: true }, getPreview()!).defaultPrevented).toBe(false);
         expect(pageInfo()).toBe('1/3');
     });
 
@@ -797,8 +797,8 @@ describe('Svelte ImagePreview 键盘与屏幕阅读器', () => {
 
     it('非主按钮的按下与抬起不关闭预览', async () => {
         renderPreview();
-        await fire(fireEvent.mouseDown(getPreview() as HTMLElement, { button: 2, clientX: 0, clientY: 0 }));
-        await fire(fireEvent.mouseUp(getPreview() as HTMLElement, { button: 2, clientX: 0, clientY: 0 }));
+        await fire(fireEvent.mouseDown(getPreview()!, { button: 2, clientX: 0, clientY: 0 }));
+        await fire(fireEvent.mouseUp(getPreview()!, { button: 2, clientX: 0, clientY: 0 }));
         expect(getPreview()).not.toBeNull();
     });
 });

@@ -33,7 +33,7 @@ describe('Form（ShadowRoot）', () => {
             },
         });
         try {
-            const api = formApi as FormApi;
+            const api = formApi!;
             const field = getElement('.semi-form-field[x-field-id="b"]', shadow);
             await expect(api.validate()).rejects.toBeDefined();
             await flush();

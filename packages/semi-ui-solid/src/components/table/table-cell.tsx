@@ -45,7 +45,7 @@ export default function TableCell(props: TableCellProps) {
     const custom = createMemo(() => {
         const onCell = column().onCell;
         const record = props.record ?? {};
-        const index = props.index as number;
+        const index = props.index!;
         return (typeof onCell === 'function' ? untrack(() => onCell(record, index)) : undefined) ?? {};
     });
 
@@ -124,7 +124,7 @@ export default function TableCell(props: TableCellProps) {
     const renderContent = () => {
         const col = column();
         const record = props.record ?? {};
-        const index = props.index as number;
+        const index = props.index!;
         const text = col.dataIndex ? get(record, col.dataIndex) : record;
         if (typeof col.render === 'function') {
             const render = col.render;

@@ -45,7 +45,7 @@ function renderUpload(props: Record<string, unknown> & { children?: JSX.Element;
         ...rest
     } = props;
     return render(() => (
-        <Upload {...(rest as Partial<UploadProps>)} action={(rest.action as string) || action}>
+        <Upload {...(rest as Partial<UploadProps>)} action={rest.action! || action}>
             {children}
         </Upload>
     ));
@@ -2068,7 +2068,7 @@ describe('Upload 审计修复', () => {
     const renderWithHandle = (props: Partial<UploadProps>) => {
         let handle: UploadHandle | undefined;
         render(() => <Upload ref={(value: UploadHandle) => (handle = value)} action={action} {...props} />);
-        return () => handle as UploadHandle;
+        return () => handle!;
     };
 
     it('beforeUpload 同步返回的对象缺省 shouldUpload 时照常上传', () => {

@@ -9,7 +9,7 @@ import { errorSelector, prefix, settle, typeInto } from './helpers';
 function renderComposite(kind: 'array' | 'arrayFromForm' | 'group' | 'hooks' | 'layout' | 'useForm', initValues?: Record<string, unknown>) {
     let formApi: FormApi | undefined;
     const view = render(CompositeFixture, { props: { kind, initValues, onApi: (api: FormApi) => (formApi = api) } });
-    return { ...view, api: () => formApi as FormApi };
+    return { ...view, api: () => formApi! };
 }
 
 const rowValues = () => screen.getAllByRole('textbox', { name: '名字' }).map((item) => (item as HTMLInputElement).value);

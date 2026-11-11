@@ -26,13 +26,13 @@ export default function TagGroup(rawProps: TagGroupProps) {
     const keys = createMemo(() => getTagListKeys(local.tagList));
     const entries = createMemo(() => new Map<string | number, Entry>(local.tagList.map((tag, index) => [keys()[index], { tag, index }])));
 
-    const restTotal = () => local.restCount || local.tagList.length - (local.maxTagCount as number);
+    const restTotal = () => local.restCount || local.tagList.length - local.maxTagCount!;
 
     const limited = () => local.maxTagCount !== undefined && restTotal() > 0;
 
     const renderItem = (key: string | number) => {
         // the last entry stays readable while the row is being disposed after its key left the list
-        const entry = createMemo((previous?: Entry) => entries().get(key) ?? (previous as Entry));
+        const entry = createMemo((previous?: Entry) => entries().get(key) ?? previous!);
         const tagProps = mergeProps(() => entry().tag, {
             get size() {
                 return entry().tag.size || local.size;
@@ -82,7 +82,7 @@ export default function TagGroup(rawProps: TagGroupProps) {
             <Items from={0} to={limited() ? local.maxTagCount : undefined} />
             <Show when={limited()}>
                 <Show when={local.showPopover} fallback={plusN()}>
-                    <Popover class={`${prefixCls}-rest-group-popover`} autoAdjustOverflow content={<Items from={local.maxTagCount as number} />} position="top" showArrow trigger="hover" {...local.popoverProps}>
+                    <Popover class={`${prefixCls}-rest-group-popover`} autoAdjustOverflow content={<Items from={local.maxTagCount!} />} position="top" showArrow trigger="hover" {...local.popoverProps}>
                         {(getTriggerProps) => plusN(getTriggerProps())}
                     </Popover>
                 </Show>

@@ -138,7 +138,7 @@ describe('Pagination', () => {
         expect(view.emitted('change')).toEqual([[20, defaultPageSize]]);
         expect(getActivePage(view.container)).toHaveTextContent(/^20$/);
 
-        await userEvent.click(getActivePage(view.container) as Element);
+        await userEvent.click(getActivePage(view.container)!);
         await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.more }));
         expect(view.emitted('change')).toHaveLength(1);
         expect(getActivePage(view.container)).toHaveTextContent(/^20$/);

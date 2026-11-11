@@ -82,7 +82,7 @@
         :labelDate="props.mode === 'week' ? displayValue : undefined"
         :markWeekend="props.markWeekend"
         :minEventHeight="props.minEventHeight"
-        :range="props.mode === 'week' ? weekRange : (props.range as Date[])"
+        :range="props.mode === 'week' ? weekRange : props.range!"
         :scrollTop="props.scrollTop"
         :showCurrTime="props.showCurrTime"
         :style="rootStyle"

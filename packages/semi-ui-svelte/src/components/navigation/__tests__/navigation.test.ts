@@ -76,7 +76,7 @@ describe('Svelte Navigation', () => {
         const title = screen.getByRole('button', { name: '用户' });
         expect(title).toHaveClass(`${prefix}-sub-title`);
         expect(title).toHaveAttribute('aria-expanded', 'true');
-        const subList = defined(document.getElementById(title.getAttribute('aria-controls') as string));
+        const subList = defined(document.getElementById(title.getAttribute('aria-controls')!));
         expect(subList.tagName).toBe('UL');
         expect(subList).toContainElement(screen.getByRole('button', { name: '用户列表' }));
         expect(screen.getByRole('button', { name: '用户列表' })).toHaveAttribute('aria-current', 'page');
@@ -481,7 +481,7 @@ describe('Svelte Navigation 的内容 snippet 与属性落点', () => {
 
     it('wrapper 收到的 props 只含传入的字段', () => {
         renderNav({ items: [{ itemKey: 'a', text: '甲', disabled: true }] }, { wrap: true });
-        expect(JSON.parse(screen.getByTestId('wrapped').dataset.props as string)).toEqual({ itemKey: 'a', text: '甲', disabled: true, level: 0 });
+        expect(JSON.parse(screen.getByTestId('wrapped').dataset.props!)).toEqual({ itemKey: 'a', text: '甲', disabled: true, level: 0 });
     });
 
     it('未知属性透传到根元素，项配置里的 class、style、data-*、aria-* 落在 li，其他字段不落到 DOM', () => {

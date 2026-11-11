@@ -85,7 +85,7 @@
         },
         () => DialogueFoundation.getInitialState(),
         () => ({
-            getContainerRef: () => list as HTMLDivElement,
+            getContainerRef: () => list!,
             notifySelect: (ids) => onSelect?.(ids),
             notifyChatsChange: (next) => {
                 chats = next;

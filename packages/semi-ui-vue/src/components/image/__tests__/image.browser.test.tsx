@@ -113,7 +113,7 @@ describe('Image', () => {
         const view = renderImage({});
         await expect.poll(() => thumbnails()[0]).toHaveStyle({ width: '360px', height: '200px' });
         await openPreview();
-        await userEvent.click(preview() as HTMLElement);
+        await userEvent.click(preview()!);
         await waitFor(() => expect(preview()).toBeNull());
 
         await view.rerender({ preview: false });
@@ -143,7 +143,7 @@ describe('Image', () => {
         render(Model, { props: { src: [abstractLite] } });
         await userEvent.click(screen.getByText('open'));
         await waitFor(() => expect(preview()).toBeInTheDocument());
-        await userEvent.click(preview() as HTMLElement);
+        await userEvent.click(preview()!);
         await waitFor(() => expect(preview()).toBeNull());
     });
 
@@ -163,7 +163,7 @@ describe('Image', () => {
             />
         ));
         await openPreview();
-        await userEvent.click(preview() as HTMLElement);
+        await userEvent.click(preview()!);
         await waitFor(() => expect(preview()).toBeNull());
     });
 
@@ -301,7 +301,7 @@ describe('Image', () => {
         await openPreview();
         await userEvent.keyboard('{Escape}');
         expect(preview()).toBeInTheDocument();
-        await userEvent.click(preview() as HTMLElement);
+        await userEvent.click(preview()!);
         await waitFor(() => expect(preview()).toBeNull());
     });
 
@@ -314,7 +314,7 @@ describe('Image', () => {
     it('maskClosable', async () => {
         renderImage({ preview: { maskClosable: false } });
         await openPreview();
-        await userEvent.click(preview() as HTMLElement);
+        await userEvent.click(preview()!);
         expect(preview()).toBeInTheDocument();
         await userEvent.click($(`.${BASE_CLASS_PREFIX}-icon-close`));
         await waitFor(() => expect(preview()).toBeNull());
@@ -579,7 +579,7 @@ describe('Image', () => {
         await openPreview(0);
         expect(preview()).toHaveClass('test-preview');
         expect(preview()?.getAttribute('style')).toContain('background: lightblue;');
-        await userEvent.click(preview() as HTMLElement);
+        await userEvent.click(preview()!);
         await waitFor(() => expect(preview()).toBeNull());
 
         await openPreview(1);

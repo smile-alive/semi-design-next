@@ -2,11 +2,11 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { getElement, render } from '@test/utils/vue';
 import { Resizable, ResizeGroup, ResizeHandler, ResizeItem } from '..';
 import Group from './fixtures/group.vue';
 
-const query = <T extends Element = HTMLElement>(container: Element, selector: string) => container.querySelector<T>(selector) as T;
+const query = <T extends Element = HTMLElement>(container: Element, selector: string) => getElement<T>(selector, container);
 
 describe('Resizable（浏览器）', () => {
     it('拖动手柄时，即使指针移出盒子也继续缩放，松开后结束', async () => {

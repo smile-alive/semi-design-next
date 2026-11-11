@@ -186,7 +186,7 @@ describe('Form.ArrayField', () => {
     it('行内字段与 ArrayField 的初值不同时，reset 后输入框与表单值一致', async () => {
         const { api } = renderArrayForm({ formProps: { initValues: { data } }, fieldProps: { initValue: 'semi' } });
         await flush();
-        await userEvent.type(getFieldInput('data[0][name]') as HTMLInputElement, 'x');
+        await userEvent.type(getFieldInput('data[0][name]')!, 'x');
         api().reset();
         await flush();
         expect(getFieldInput('data[0][name]')).toHaveValue(api().getValue('data[0][name]'));
@@ -210,8 +210,8 @@ describe('Form.ArrayField', () => {
         ));
         add?.();
         await flush();
-        await userEvent.type(getFieldInput('data[1][name]') as HTMLInputElement, 'x');
-        await userEvent.type(getFieldInput('name') as HTMLInputElement, 'm');
+        await userEvent.type(getFieldInput('data[1][name]')!, 'x');
+        await userEvent.type(getFieldInput('name')!, 'm');
         api().reset(['name']);
         await flush();
         expect(api().getValue('name')).toBe('n');

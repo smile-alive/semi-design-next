@@ -105,7 +105,7 @@ describe('Banner', () => {
         const view = render(Banner, {
             slots: { title: () => 'T', description: () => 'D', default: () => <span>extra</span> },
         });
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root.children).toHaveLength(2);
         expect(root.firstElementChild).toHaveClass(`${prefix}-content-wrapper`);
         const body = getElement(`.${prefix}-content-body`, view.container);
@@ -133,7 +133,7 @@ describe('Banner', () => {
 
     it('title 可以是字符串 prop，同时给出插槽时插槽优先，且不成为原生 tooltip', () => {
         const view = render(Banner, { props: { title: 'plain' } });
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(view.container.querySelector('[x-semi-prop="title"]')).toHaveTextContent(/^plain$/);
         expect(root).not.toHaveAttribute('title');
 
@@ -228,7 +228,7 @@ describe('Banner', () => {
         const view = render(Banner, {
             attrs: { id: 'b', 'aria-live': 'polite', role: 'alert', onMouseenter },
         });
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root).toHaveAttribute('id', 'b');
         expect(root).toHaveAttribute('aria-live', 'polite');
         expect(root).toHaveAttribute('role', 'alert');

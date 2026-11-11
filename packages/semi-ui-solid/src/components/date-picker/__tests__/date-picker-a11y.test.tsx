@@ -221,7 +221,7 @@ describe('DatePicker 触发器语义', () => {
         await userEvent.click(input);
         await waitFor(() => expect(getPopup()).not.toBeNull());
         expect(input).toHaveAttribute('aria-expanded', 'true');
-        const panel = document.getElementById(input.getAttribute('aria-controls') as string);
+        const panel = document.getElementById(input.getAttribute('aria-controls')!);
         expect(panel).toBe(getPopup());
         expect(panel?.closest('[role="dialog"]')).toBe(screen.getByRole('dialog', { name: zh_CN.DatePicker.panel.date }));
     });
@@ -298,7 +298,7 @@ describe('DatePicker 触发器语义', () => {
 describe('DatePicker 日历网格键盘操作', () => {
     const activeDay = () => {
         const grid = screen.getByRole('grid');
-        return document.getElementById(grid.getAttribute('aria-activedescendant') as string);
+        return document.getElementById(grid.getAttribute('aria-activedescendant')!);
     };
 
     it('网格为单个 Tab 停靠点，并从已选日期开始', () => {
@@ -418,7 +418,7 @@ describe('DatePicker 日历网格键盘操作', () => {
 
     it('insetInput 的 dateTimeRange 四个内嵌输入框名称互不相同', () => {
         render(() => <DatePicker type="dateTimeRange" defaultOpen insetInput motion={false} />);
-        const names = within(getPopup() as HTMLElement)
+        const names = within(getPopup()!)
             .getAllByRole('textbox')
             .map((input) => input.getAttribute('aria-label'));
         const [startDate, endDate] = zh_CN.DatePicker.placeholder.dateTimeRange;
@@ -433,7 +433,7 @@ describe('DatePicker 日历网格键盘操作', () => {
 
     it('insetInput 的 dateTime 内嵌日期框与时间框有名称', () => {
         render(() => <DatePicker type="dateTime" defaultOpen insetInput motion={false} />);
-        const names = within(getPopup() as HTMLElement)
+        const names = within(getPopup()!)
             .getAllByRole('textbox')
             .map((input) => input.getAttribute('aria-label'));
         expect(names).toEqual([zh_CN.DatePicker.placeholder.dateTime, zh_CN.DatePicker.selectTime]);
@@ -448,7 +448,7 @@ describe('DatePicker 日历网格键盘操作', () => {
 describe('DatePicker year 类型', () => {
     it('面板只有一个以语言包命名的年份列表', () => {
         render(() => <DatePicker type="year" defaultOpen motion={false} />);
-        const lists = within(getPopup() as HTMLElement).getAllByRole('listbox');
+        const lists = within(getPopup()!).getAllByRole('listbox');
         expect(lists).toHaveLength(1);
         expect(lists[0]).toHaveAccessibleName(zh_CN.DatePicker.year);
         expect(getPopup()?.querySelector(`.${dp}-yearmonth-body`)).toBeNull();
@@ -495,7 +495,7 @@ describe('DatePicker year 类型', () => {
 
     it('disabledDate 按每年的 1 月 1 日判断，列表与输入一致', () => {
         const onChange = vi.fn<ChangeHandler>();
-        const disabledDate = (date?: Date) => (date as Date).getTime() < new Date(2021, 2, 1).getTime();
+        const disabledDate = (date?: Date) => date!.getTime() < new Date(2021, 2, 1).getTime();
         const { container } = render(() => <DatePicker type="year" defaultValue={new Date(2022, 0)} defaultOpen disabledDate={disabledDate} motion={false} onChange={onChange} />);
         const years = within(getYMLists()[0]);
         expect(years.getByRole('option', { name: '2021' })).toHaveAttribute('aria-disabled', 'true');
@@ -509,7 +509,7 @@ describe('DatePicker year 类型', () => {
 
     it('insetInput 的内嵌输入框以 yyyy 为占位符，与 month 一样以 chooseDate 命名', () => {
         render(() => <DatePicker type="year" defaultOpen insetInput motion={false} />);
-        const inset = within(getPopup() as HTMLElement).getByRole('textbox');
+        const inset = within(getPopup()!).getByRole('textbox');
         expect(inset).toHaveAttribute('placeholder', 'yyyy');
         expect(inset).toHaveAccessibleName(zh_CN.DatePicker.chooseDate);
     });
@@ -565,10 +565,10 @@ describe('DatePicker month 类型取当月 1 日', () => {
     it('年份列、月份列与切换年份时以每月 1 日 00:00 调用 disabledDate', async () => {
         vi.useFakeTimers({ toFake: ['Date'] });
         vi.setSystemTime(new Date(2021, 5, 18, 10, 30));
-        const disabledDate = vi.fn<(date?: Date) => boolean>((date) => (date as Date).getTime() < new Date(2021, 5, 10).getTime());
+        const disabledDate = vi.fn<(date?: Date) => boolean>((date) => date!.getTime() < new Date(2021, 5, 10).getTime());
         render(() => <DatePicker type="month" defaultValue={new Date(2022, 5)} defaultOpen disabledDate={disabledDate} motion={false} />);
         await userEvent.click(within(getYMLists()[0]).getByRole('option', { name: '2021' }));
-        const dates = disabledDate.mock.calls.map(([date]) => date as Date);
+        const dates = disabledDate.mock.calls.map(([date]) => date!);
         expect(dates.filter((date) => date.getTime() !== new Date(date.getFullYear(), date.getMonth()).getTime())).toEqual([]);
         expect(within(getYMLists()[1]).getByRole('option', { name: '6月' })).toHaveAttribute('aria-disabled', 'true');
     });
@@ -704,7 +704,7 @@ describe('DatePicker 焦点方法', () => {
         let picker!: DatePickerElement;
         render(() => <DatePicker ref={(el) => (picker = el)} defaultOpen insetInput motion={false} />);
         await waitForPanelOpened();
-        const inset = within(getPopup() as HTMLElement).getByRole('textbox');
+        const inset = within(getPopup()!).getByRole('textbox');
         inset.blur();
         picker.focus();
         expect(inset).toHaveFocus();
@@ -802,7 +802,7 @@ describe('DatePicker 可访问性', () => {
             </LocaleProvider>
         ));
         expect(screen.getByRole('button', { name: en_US.DatePicker.clearRange })).not.toBeNull();
-        expect(within(getPopup() as HTMLElement).getByRole('textbox')).toHaveAccessibleName(en_US.DatePicker.placeholder.date as string);
+        expect(within(getPopup()!).getByRole('textbox')).toHaveAccessibleName(en_US.DatePicker.placeholder.date as string);
     });
 
     it('Tooltip 包住的 DatePicker 只在输入框停留，根元素不是 Tab 停靠点', async () => {

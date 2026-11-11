@@ -75,7 +75,7 @@ describe('Form 状态快照', () => {
                 <FormInput field="address.city" />
             </Form>
         ));
-        return formApi as FormApi;
+        return formApi!;
     };
 
     it('每次变化都交出新的 values，并保留未变化的子树', () => {

@@ -296,7 +296,7 @@ describe('Svelte Sidebar.FileItem 图片上传', () => {
         const { editor } = await mountEditor({ imgUploadProps: { action: 'https://semi.design/upload', accept: '.png', customRequest: () => {} } });
         await fireEvent.click(button(text.image));
         const input = await slotInput();
-        const slot = $('.tiptap-image-slot') as HTMLElement;
+        const slot = $('.tiptap-image-slot')!;
         expect(editor.getHTML()).toContain('data-type="image-upload"');
         expect(editor.getHTML()).not.toMatch(/action=|accept=|limit=/);
         expect(slot).not.toHaveAttribute('tabindex');

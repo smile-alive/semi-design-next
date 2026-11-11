@@ -87,7 +87,7 @@ function mountTable(props: Record<string, unknown>, slots: Slots = {}) {
     return {
         container: result.container,
         unmount: () => result.unmount(),
-        handle: () => handle.value as TableHandle,
+        handle: () => handle.value!,
         update: async (next: { props?: Record<string, unknown>; slots?: Slots }) => {
             state.props = { ...state.props, ...next.props };
             state.slots = { ...(next.slots ?? state.slots) };

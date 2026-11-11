@@ -12,7 +12,7 @@
     import { Dropdown, DropdownMenu, type DropdownProps, type DropdownTriggerProps } from '../dropdown/index.js';
     import { Tooltip } from '../tooltip/index.js';
     import { type NavContextValue, getNavContext, setNavContext } from './context.js';
-    import type { ItemKey, NavClickData, NavOpenChangeData, NavWrapperArgs, SubNavProps } from './interface.js';
+    import type { NavClickData, NavOpenChangeData, NavWrapperArgs, SubNavProps } from './interface.js';
     import ItemShell from './item-shell.svelte';
     import WrapperOutlet from './wrapper-outlet.svelte';
 
@@ -51,7 +51,7 @@
         () => ({
             getOpenKeys: () => outer.openKeys,
             getOpenKeysIsControlled: () => outer.openKeysIsControlled,
-            updateOpen: (open) => (open ? outer.addOpenKey : outer.removeOpenKey)(itemKey as ItemKey),
+            updateOpen: (open) => (open ? outer.addOpenKey : outer.removeOpenKey)(itemKey!),
             notifyGlobalOpenChange: (data) => outer.notifyOpenChange(data as NavOpenChangeData),
             notifyGlobalOnClick: (data) => outer.notifyClick(data as NavClickData),
             getIsOpen: () => isOpen,

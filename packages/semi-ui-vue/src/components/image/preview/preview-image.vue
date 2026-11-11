@@ -41,8 +41,8 @@
         props,
         () => PreviewImageFoundation.getInitialState(),
         () => ({
-            getContainer: () => container.value as HTMLDivElement,
-            getImage: () => image.value as HTMLImageElement,
+            getContainer: () => container.value!,
+            getImage: () => image.value!,
             requestZoom: (zoom, reportToUser) => emit('zoom', zoom, reportToUser),
             notifyLoad: (src) => emit('load', src),
             notifyError: (src) => emit('error', src),

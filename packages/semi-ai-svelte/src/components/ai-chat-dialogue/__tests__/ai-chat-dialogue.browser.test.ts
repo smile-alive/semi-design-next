@@ -34,7 +34,7 @@ const find = <T extends Element = HTMLElement>(container: Element, selector: str
     waitFor(() => {
         const found = container.querySelector<T>(selector);
         expect(found).not.toBeNull();
-        return found as T;
+        return found!;
     });
 const findMore = (container: Element) => find(container, `.${BASE_CLASS_PREFIX}-icon-more_stroked`).then((icon) => defined(icon.closest<HTMLElement>('button')));
 const renderDialogue = (chats: Message[], props: Record<string, unknown> = {}) => render(AIChatDialogue, { props: { chats, roleConfig, ...props } });
@@ -151,7 +151,7 @@ describe('AIChatDialogue 浏览器', () => {
         const stops: Element[] = [];
         while (document.activeElement !== more && stops.length < 30) {
             await userEvent.keyboard('{Tab}');
-            stops.push(document.activeElement as Element);
+            stops.push(document.activeElement!);
         }
         expect(more).toHaveFocus();
         expect(stops.filter((el) => el.contains(more))).toEqual([more]);

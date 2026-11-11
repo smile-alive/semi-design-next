@@ -6,7 +6,7 @@
     const props = defineProps<{ onReady: (handle: VideoPlayerHandle, root: Element) => void }>();
     const player = useTemplateRef<VideoPlayerHandle & { $el: Element }>('player');
     onMounted(() => {
-        const handle = player.value as VideoPlayerHandle & { $el: Element };
+        const handle = player.value!;
         props.onReady(handle, handle.$el);
     });
 </script>

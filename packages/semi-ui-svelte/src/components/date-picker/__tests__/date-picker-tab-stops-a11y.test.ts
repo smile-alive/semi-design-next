@@ -102,7 +102,7 @@ describe('Svelte DatePicker 触发器语义', () => {
         await click(input);
         expect(getPopup()).not.toBeNull();
         expect(input).toHaveAttribute('aria-expanded', 'true');
-        const panel = document.getElementById(input.getAttribute('aria-controls') as string);
+        const panel = document.getElementById(input.getAttribute('aria-controls')!);
         expect(panel).toBe(getPopup());
         expect(panel?.closest('[role="dialog"]')).toBe(screen.getByRole('dialog', { name: zh_CN.DatePicker.panel.date }));
     });
@@ -171,7 +171,7 @@ describe('Svelte DatePicker 触发器语义', () => {
 describe('Svelte DatePicker 日历网格键盘操作', () => {
     const activeDay = () => {
         const grid = screen.getByRole('grid');
-        return document.getElementById(grid.getAttribute('aria-activedescendant') as string);
+        return document.getElementById(grid.getAttribute('aria-activedescendant')!);
     };
     const focusGrid = async () => {
         screen.getByRole('grid').focus();
@@ -284,8 +284,8 @@ describe('Svelte DatePicker 日历网格键盘操作', () => {
     it('月份网格以各自的月份标题命名，范围的两个网格名称不同', async () => {
         await setup({ open: true, props: { type: 'dateRange', defaultPickerValue: '2021-06-01' } });
         const [left, right] = screen.getAllByRole('grid');
-        expect(left).toHaveAccessibleName(getNavTitle('left') as string);
-        expect(right).toHaveAccessibleName(getNavTitle('right') as string);
+        expect(left).toHaveAccessibleName(getNavTitle('left')!);
+        expect(right).toHaveAccessibleName(getNavTitle('right')!);
         expect(getNavTitle('left')).not.toBe(getNavTitle('right'));
     });
 });

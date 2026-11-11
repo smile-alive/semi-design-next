@@ -528,7 +528,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         get inputReadOnly() {
             return local.inputReadOnly || Boolean(local.insetInput);
         },
-        onFocus: (e, range) => foundation.handleInputFocus(e, range as RangeInput),
+        onFocus: (e, range) => foundation.handleInputFocus(e, range!),
         onClear: foundation.handleInputClear,
         get prefix() {
             return local.prefix;

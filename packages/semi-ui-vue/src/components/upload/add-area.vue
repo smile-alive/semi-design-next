@@ -26,7 +26,7 @@
     useMutationObserver(
         root,
         () => {
-            const node = root.value as HTMLDivElement;
+            const node = root.value!;
             hasControl.value = containsControl(node);
             hasName.value = containsName(node);
         },

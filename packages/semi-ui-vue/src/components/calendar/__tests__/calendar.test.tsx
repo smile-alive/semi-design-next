@@ -496,10 +496,10 @@ describe('Calendar 行为', () => {
         mockLayout();
         const { container } = renderCal({ displayValue: today, mode: 'day' });
         await nextTick();
-        expect(px((currLine(container) as HTMLElement).style.top)).toBe(240);
+        expect(px(currLine(container)!.style.top)).toBe(240);
         vi.advanceTimersByTime(90_000);
         await nextTick();
-        expect(px((currLine(container) as HTMLElement).style.top)).toBeCloseTo(240.48, 2);
+        expect(px(currLine(container)!.style.top)).toBeCloseTo(240.48, 2);
     });
 
     it('固定 displayValue 的列跨过午夜后不再显示当前时间线', async () => {
@@ -634,7 +634,7 @@ describe('Calendar 行为', () => {
         expect(onMoreClick).toHaveBeenCalledTimes(1);
         expect(onMoreClick.mock.calls[0].slice(1)).toEqual([today, 2]);
         await waitFor(() => expect(card()).not.toBeNull());
-        expect([...(card() as HTMLElement).querySelectorAll(`.${prefixCls}-month-event-card-list li`)].map((li) => li.textContent)).toEqual(['a', 'b']);
+        expect([...card()!.querySelectorAll(`.${prefixCls}-month-event-card-list li`)].map((li) => li.textContent)).toEqual(['a', 'b']);
         expect(card()?.querySelector(`.${prefixCls}-month-event-card-header-info-date`)).toHaveTextContent('8');
 
         const close = card()?.querySelector(`.${prefixCls}-month-event-card-close`) as HTMLElement;
@@ -880,7 +880,7 @@ describe('Calendar 表格语义', () => {
 
     it.each(MODES)('%s 视图的表头内容位于自身行的单元格中', (mode) => {
         const { container } = renderCal({ displayValue: today, mode, range: weekRange }, { header: () => <b>custom header</b> });
-        const cell = screen.getByText('custom header').parentElement as HTMLElement;
+        const cell = screen.getByText('custom header').parentElement!;
         expect(cell).toHaveAttribute('role', 'cell');
         expect(roleOf(cell)).toBe('row');
         expectValidTable(container);
@@ -1303,7 +1303,7 @@ describe('Calendar（Vue）', () => {
         const tuesday = screen.getByRole('cell', { name: '2019年8月6日' });
         await userEvent.click(within(tuesday).getByRole('button'));
         await waitFor(() => expect(card()).not.toBeNull());
-        const items = [...(card() as HTMLElement).querySelectorAll('li')];
+        const items = [...card()!.querySelectorAll('li')];
         expect(items.map((li) => li.textContent)).toEqual(['b']);
     });
 
@@ -1378,7 +1378,7 @@ describe('Calendar（Vue）', () => {
         const scroll = getElement(`.${prefixCls}-day-scroll`, container);
         await observer.fire(scroll, [{}]);
         expect(Math.round(px(dayItems(container)[0].style.top))).toBe(200);
-        expect(px((currLine(container) as HTMLElement).style.top)).toBe(240);
+        expect(px(currLine(container)!.style.top)).toBe(240);
         expect(root.scrollTop).toBe(400);
         root.scrollTop = 10;
         await observer.fire(scroll, [{}]);

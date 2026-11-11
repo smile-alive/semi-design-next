@@ -28,7 +28,7 @@ export default function ResizableHeaderCell(props: ResizableHeaderCellProps) {
         // Keeps the press from starting a text selection, which would break the drag
         e.preventDefault();
         e.currentTarget.setPointerCapture(e.pointerId);
-        const rtl = getComputedStyle(e.currentTarget.parentElement as HTMLElement).direction === 'rtl';
+        const rtl = getComputedStyle(e.currentTarget.parentElement!).direction === 'rtl';
         press = { x: e.clientX, width: local.width, sign: rtl ? -1 : 1 };
         local.onResizeStart?.(e);
     };

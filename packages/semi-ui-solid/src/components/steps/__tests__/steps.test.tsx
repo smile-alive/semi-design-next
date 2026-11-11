@@ -99,7 +99,7 @@ describe('Steps 基线', () => {
         expect(items[1].querySelector(`.${ITEM}-icon-process`)).not.toBeNull();
         expect(items[0].querySelector(`.${ITEM}-title`)).toHaveAttribute('title', 'A');
         expect(items[0].querySelector(`.${ITEM}-description`)).toHaveAttribute('title', 'a');
-        expect((items[0].parentElement as HTMLElement).style.width).toBe('33.3333%');
+        expect(items[0].parentElement!.style.width).toBe('33.3333%');
     });
 
     it('fill 非字符串标题不写 title 属性', () => {
@@ -110,7 +110,7 @@ describe('Steps 基线', () => {
     it('fill 垂直列没有宽度', () => {
         const { container } = renderSteps({ type: 'fill', direction: 'vertical' });
         expect(container.firstChild).toHaveClass(`${PREFIX}-vertical`);
-        expect((getItems(container)[0].parentElement as HTMLElement).style.width).toBe('');
+        expect(getItems(container)[0].parentElement!.style.width).toBe('');
     });
 
     it('nav 标记当前步骤为 active，并省略最后一步后的箭头', () => {
@@ -605,7 +605,7 @@ describe('Steps 响应式', () => {
             </Steps>
         ));
         setKeys(['a', 'b', 'c']);
-        expect((getItems(container)[0].parentElement as HTMLElement).style.width).toBe('33.3333%');
+        expect(getItems(container)[0].parentElement!.style.width).toBe('33.3333%');
     });
 
     it('nav 的箭头随 Step 数量更新', () => {
@@ -695,7 +695,7 @@ describe('Steps 响应式', () => {
                 </Show>
             </Steps>
         ));
-        const root = container.firstElementChild as Element;
+        const root = container.firstElementChild!;
         const [first, second] = getItems(container);
         expect(root).toHaveAttribute('role', 'group');
         expect(first).toHaveAttribute('role', 'group');

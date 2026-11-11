@@ -244,7 +244,7 @@
             {#snippet children({ index, style })}
                 {@const item = virtualItem(index)}
                 {#if item.sectionRow}
-                    <SectionRow expanded={Boolean(item.expanded)} group={item.group as Set<BaseRowKeyType>} groupKey={item.groupKey as BaseRowKeyType} {index} records={groupRecords(item.group as Set<BaseRowKeyType>)} style="{style}; {rowStyle}" />
+                    <SectionRow expanded={Boolean(item.expanded)} group={item.group!} groupKey={item.groupKey!} {index} records={groupRecords(item.group!)} style="{style}; {rowStyle}" />
                 {:else if item.expandedRow}
                     <ExpandedRow expanded {index} record={item.record} rowKey={recordKey(item.record, index)} style="{style}; {rowStyle}" virtualIndex={index} />
                 {:else}

@@ -120,7 +120,7 @@ describe('Svelte TreeSelect 浏览器：虚拟化', () => {
         const list = document.querySelector<HTMLElement>(`.${optionCls}`)?.closest<HTMLElement>('[style*="overflow"], .semi-tree-option-list') ?? undefined;
         const scroller = [...document.querySelectorAll<HTMLElement>('.semi-tree-select-popover *')].find((element) => element.scrollHeight > element.clientHeight + 100) ?? list;
         expect(scroller).toBeDefined();
-        (scroller as HTMLElement).scrollTop = 3000;
+        scroller!.scrollTop = 3000;
         await waitFor(() => expect(first()).not.toBe('Node 0'));
     });
 });

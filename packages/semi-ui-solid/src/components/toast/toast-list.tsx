@@ -54,7 +54,7 @@ export default function ToastList(props: ToastListProps) {
     };
 
     const renderToast = (id: string) => {
-        const item = () => byId().get(id) as ToastProps;
+        const item = () => byId().get(id)!;
         const leaving = () => !shown().has(id);
         const depth = () => depths().get(id) ?? 0;
         const animation = useCSSAnimation({

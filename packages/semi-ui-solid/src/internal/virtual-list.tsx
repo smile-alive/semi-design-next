@@ -131,7 +131,7 @@ export default function VirtualList<T>(props: VirtualListProps<T>) {
 
     const renderRow = (key: PropertyKey) => {
         // the same store item while the key keeps its index, so a scroll only updates the fields that moved
-        const item = createMemo(() => itemsByKey().get(key) as VirtualItem);
+        const item = createMemo(() => itemsByKey().get(key)!);
         return local.children({
             get index() {
                 return item().index;

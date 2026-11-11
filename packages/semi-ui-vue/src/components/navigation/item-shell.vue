@@ -79,7 +79,7 @@
         () => ({}),
         () => ({
             getSelectedItem: () => copySelectedItem(props.itemConfig ? { ...props.itemConfig, level: props.level } : { ...attrs, ...givenProps(props) }, isVNode) as ItemShellProps,
-            selectSelf: () => ctx.updateSelectedKeys([props.itemKey as NonNullable<typeof props.itemKey>]),
+            selectSelf: () => ctx.updateSelectedKeys([props.itemKey!]),
             getSelectedKeysIsControlled: () => ctx.view.value.selectedKeysIsControlled,
             notifyGlobalOnSelect: (data) => ctx.notifySelect(data as OnSelectedData),
             notifyGlobalOnClick: (data) => ctx.notifyClick(data),

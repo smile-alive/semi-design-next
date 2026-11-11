@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { h, Text, type StyleValue, type VNode } from 'vue';
     import { get } from 'es-toolkit/compat';
-    import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
     import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { SlotFragment } from '../../base/index';
@@ -66,7 +65,7 @@
         } else if (fixedRight) {
             position[isRTL ? 'left' : 'right'] = toCssLength(props.fixedRight as number);
         }
-        const { class: customClass, style: customStyle, onClick, ...customAttrs } = { ...column.onCell?.(record as AnyRecord, index as number) };
+        const { class: customClass, style: customStyle, onClick, ...customAttrs } = { ...column.onCell?.(record!, index!) };
         const { style: extraStyle, ...extraAttrs } = props.cellAttrs ?? {};
         const merged = { ...customAttrs, ...extraAttrs };
         const colSpan = spanOf(merged, 'col');
@@ -85,12 +84,12 @@
                   style: { paddingInlineStart: toCssLength(indentSize * indent) },
               })
             : null;
-        const expandIcon = props.expandIconArgs ? renderExpandIconNode(record as AnyRecord, props.expandIconArgs.isNested, props.expandIconArgs.groupKey) : null;
+        const expandIcon = props.expandIconArgs ? renderExpandIconNode(record!, props.expandIconArgs.isNested, props.expandIconArgs.groupKey) : null;
         const inner = isSelectionColumn(column) ? 'selection' : isExpandedColumn(column) ? 'expand' : slots.default ? 'slot' : 'default';
         const slotProps: TableCellSlotProps = {
             text: value,
-            record: record as AnyRecord,
-            index: index as number,
+            record: record!,
+            index: index!,
             column,
             expandIcon,
             isHovering: props.hovered,
@@ -123,7 +122,7 @@
                 // a table, not a grid: the cells have no arrow-key navigation; the role also covers the div cells of a
                 // virtualized body
                 role: 'cell',
-                title: shouldShowEllipsisTitle(column.ellipsis as BaseEllipsis) && typeof shownText === 'string' ? shownText : undefined,
+                title: shouldShowEllipsisTitle(column.ellipsis!) && typeof shownText === 'string' ? shownText : undefined,
                 onClick,
                 ...merged,
                 style: [position, { width: toCssLength(props.width), height: toCssLength(props.height) }, customStyle as StyleValue, extraStyle as StyleValue, align],

@@ -32,7 +32,7 @@ async function find<T extends Element = HTMLElement>(query: () => T | null | und
     return waitFor(() => {
         const el = query();
         expect(el).not.toBeNull();
-        return el as T;
+        return el!;
     });
 }
 

@@ -15,7 +15,7 @@ function renderToggledField(formProps: FormProps = {}) {
             </Show>
         </Form>
     ));
-    return { api: () => api as FormApi, setShown };
+    return { api: () => api!, setShown };
 }
 
 function renderRows(initRows: Array<{ name: string }>) {
@@ -34,7 +34,7 @@ function renderRows(initRows: Array<{ name: string }>) {
             </Show>
         </Form>
     ));
-    return { api: () => api as FormApi, rows: () => rows as ArrayFieldChildrenProps, setShown };
+    return { api: () => api!, rows: () => rows!, setShown };
 }
 
 describe('Form keepState', () => {

@@ -19,7 +19,7 @@ type Row = Record<string, any>;
 
 const B = BASE_CLASS_PREFIX;
 const menuShown = () => document.querySelector(`.${B}-dropdown-wrapper-show`);
-const clickPage = (page: number) => userEvent.click(getPageItems().find((item) => item.textContent === `${page}`) as HTMLElement);
+const clickPage = (page: number) => userEvent.click(getPageItems().find((item) => item.textContent === `${page}`)!);
 
 describe('Table 回归用例（续）', () => {
     it('fix #2128：dataSource 为空时，表头复选框不选中', () => {
@@ -1523,7 +1523,7 @@ describe('Table 列位置与展开行', () => {
         render(() => <Table columns={[{ title: 'Name', dataIndex: 'name', width: 200 }]} dataSource={[{ key: '1', name: 'Ann' }]} expandCellFixed="right" hideExpandedColumn={false} pagination={false} rowSelection={{ fixed: 'right' }} expandedRowRender={() => 'detail'} />);
         const headers = screen.getAllByRole('columnheader');
         expect(headers[0]).toHaveTextContent('Name');
-        expect(within(headers.at(-1) as HTMLElement).getByRole('checkbox')).toBeInTheDocument();
+        expect(within(headers.at(-1)!).getByRole('checkbox')).toBeInTheDocument();
     });
 
     it('rowExpandable 为假的行没有展开行，展开行以 expanded 为 true 渲染', () => {

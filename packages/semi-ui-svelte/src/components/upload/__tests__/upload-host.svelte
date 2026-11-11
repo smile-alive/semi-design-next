@@ -27,7 +27,7 @@
         return name;
     };
 
-    onMount(() => onReady?.(upload as UploadHandle));
+    onMount(() => onReady?.(upload!));
 </script>
 
 {#snippet button()}<Button theme="light">点击上传</Button>{/snippet}

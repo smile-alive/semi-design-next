@@ -183,7 +183,7 @@ describe('ScrollItem 行为', () => {
         const list = [{ value: 'a' }, { value: 'b', transform: (v: string) => `item-${v}` }, { value: 'c', disabled: true }];
         const transform = (v: string) => `common-${v}`;
         const view = renderItem({ list, mode: 'normal', selectedIndex: 0, transform, class: 'col', style: 'color: red', 'aria-label': 'letters' });
-        const root = view.container.firstElementChild as Element;
+        const root = view.container.firstElementChild!;
         expect(root).toHaveClass(`${prefix}-item`, 'col');
         expect(root).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(screen.getByRole('listbox', { name: 'letters' })).toBeInTheDocument();
@@ -215,7 +215,7 @@ describe('ScrollItem 行为', () => {
 
     it('wheel 模式渲染遮罩、选择器与非循环的外层列表', () => {
         const view = renderItem({ list: numbers(3), selectedIndex: 1 });
-        const root = view.container.firstElementChild as Element;
+        const root = view.container.firstElementChild!;
         expect(root).toHaveClass(`${prefix}-item-wheel`);
         expect(root.querySelector(`.${prefix}-shade-pre`)).toBeInTheDocument();
         expect(root.querySelector(`.${prefix}-shade-post`)).toBeInTheDocument();
@@ -253,7 +253,7 @@ describe('ScrollItem 行为', () => {
     it('挂载时把选中项滚动到中间', () => {
         mockItemLayout();
         const view = renderItem({ list: numbers(10), mode: 'normal', motion: false, selectedIndex: 0 });
-        const wrapper = view.container.firstElementChild as Element;
+        const wrapper = view.container.firstElementChild!;
         // the first item has offsetTop 0, which the scroll target treats as unknown and falls back to the list middle
         expect(wrapper.scrollTop).toBe(108);
     });
@@ -320,7 +320,7 @@ describe('ScrollItem 行为', () => {
     it('组件实例的 scrollToIndex() 滚动回选中项', async () => {
         mockItemLayout();
         const view = render(ScrollItem, { props: { list: numbers(10), mode: 'normal', motion: false, selectedIndex: 4 } });
-        const wrapper = view.container.firstElementChild as Element;
+        const wrapper = view.container.firstElementChild!;
         expect(wrapper.scrollTop).toBe(72);
         wrapper.scrollTop = 0;
         (view.component as unknown as ScrollItemHandle).scrollToIndex();

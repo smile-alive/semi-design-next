@@ -205,7 +205,7 @@ describe('TagGroup', () => {
             props: { tagList: [{ children: 'a' }, { children: 'b' }], maxTagCount: 1, restCount: 5 },
         });
         expect(view.queryByText('b')).toBeNull();
-        await fireEvent.mouseEnter(view.getByText('+5').parentElement as HTMLElement);
+        await fireEvent.mouseEnter(view.getByText('+5').parentElement!);
         expect(view.emitted().plusNMouseEnter).toHaveLength(1);
     });
     it('tag 作用域插槽接收原始数据与下标，直接渲染自定义标签', () => {

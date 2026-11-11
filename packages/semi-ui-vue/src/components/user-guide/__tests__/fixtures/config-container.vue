@@ -10,7 +10,7 @@
 
 <template>
     <div ref="container" class="config-container" />
-    <ConfigProvider :getPopupContainer="() => container as HTMLDivElement">
+    <ConfigProvider :getPopupContainer="() => container!">
         <UserGuide :getPopupContainer="ownContainer" :mode="mode" :steps="steps" visible />
     </ConfigProvider>
 </template>

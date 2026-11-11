@@ -3,7 +3,6 @@
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import DatePickerFoundation, { getYearMonthFromValue, isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm, type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DisabledDateOptions } from '@fibrae/semi-foundation/components/date-picker/foundation';
-    import type { RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils';
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
@@ -453,7 +452,7 @@
                     @change="foundation.handleInputChange"
                     @clear="foundation.handleInputClear"
                     @enterPress="foundation.handleInputComplete"
-                    @focus="(event, range) => foundation.handleInputFocus(event, range as RangeInput)"
+                    @focus="(event, range) => foundation.handleInputFocus(event, range!)"
                     @rangeClear="foundation.handleRangeInputClear"
                     @rangeEndTabPress="foundation.handleRangeEndTabPress"
                 >

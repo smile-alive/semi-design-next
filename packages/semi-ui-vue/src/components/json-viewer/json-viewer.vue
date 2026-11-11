@@ -47,7 +47,7 @@
         props as Readonly<Omit<JsonViewerProps, 'options'>>,
         () => JsonViewerFoundation.getInitialState(),
         () => ({
-            getEditorRef: () => editor.value as HTMLDivElement,
+            getEditorRef: () => editor.value!,
             notifyChange: (value) => {
                 emit('update:modelValue', value);
                 emit('change', value);

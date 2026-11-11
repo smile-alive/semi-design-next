@@ -56,12 +56,12 @@ describe('Card 阴影（浏览器）', () => {
 
     it('shadows="always" 时始终显示阴影', () => {
         const { container } = render(() => <Card shadows="always" />);
-        expect(shadowOf(container.firstElementChild as Element)()).not.toBe('none');
+        expect(shadowOf(container.firstElementChild!)()).not.toBe('none');
     });
 
     it('shadows="hover" 时仅悬停时显示阴影', async () => {
         const { container } = render(() => <Card shadows="hover" />);
-        const card = container.firstElementChild as Element;
+        const card = container.firstElementChild!;
         expect(shadowOf(card)()).toBe('none');
         await userEvent.hover(card);
         // box-shadow transitions in, so poll until it has started

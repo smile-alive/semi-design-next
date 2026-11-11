@@ -50,7 +50,7 @@ describe('Form 滚动', () => {
                 <Form onGetFormApi={(api: FormApi) => (formApi = api)}>{() => <FormInput field="b" rules={required} />}</Form>
             </>
         ));
-        const api = formApi as FormApi;
+        const api = formApi!;
         const target = document.querySelectorAll('.semi-form-field[x-field-id="b"]')[1];
         api.scrollToField('b', { block: 'end' });
         expect(scrollIntoView).toHaveBeenLastCalledWith(target, { block: 'end' });

@@ -33,7 +33,7 @@ async function openFilter(index = 0) {
     await userEvent.click(getFilterButtons()[index]);
     await waitFor(() => expect(menuOpen()).toBe(true));
 }
-const clickFilterItem = (text: string) => userEvent.click(queryAll('.semi-dropdown-item').find((item) => item.textContent === text) as HTMLElement);
+const clickFilterItem = (text: string) => userEvent.click(queryAll('.semi-dropdown-item').find((item) => item.textContent === text)!);
 const itemSelector = '.semi-dropdown-item *, .semi-dropdown-item';
 
 describe('Table 筛选', () => {

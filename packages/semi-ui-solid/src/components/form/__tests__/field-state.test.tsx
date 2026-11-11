@@ -98,7 +98,7 @@ describe('ArrayField 行操作', () => {
             </Form>
         ));
         const rendered = () => [...container.querySelectorAll('input')].map((input) => input.value);
-        const stored = () => ((api as FormApi).getValue('tasks') as Array<{ name?: string } | undefined>).map((row) => row?.name ?? '');
+        const stored = () => (api!.getValue('tasks') as Array<{ name?: string } | undefined>).map((row) => row?.name ?? '');
 
         ops?.add(1);
         expect(rendered()).toEqual(['t0', '', 't1']);

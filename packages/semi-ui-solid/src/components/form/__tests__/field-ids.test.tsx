@@ -39,7 +39,7 @@ function renderForm(children: () => JSX.Element, props: FormProps = {}) {
             {children()}
         </Form>
     ));
-    return { container, getApi: () => api as FormApi };
+    return { container, getApi: () => api! };
 }
 
 function expectReferencesExist(input: Element) {

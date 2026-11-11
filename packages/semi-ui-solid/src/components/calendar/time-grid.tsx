@@ -134,8 +134,8 @@ export default function TimeGrid(props: TimeGridProps) {
                                             <li
                                                 class={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`}
                                                 style={{
-                                                    'inset-inline-start': toPercent(event().leftPos as number),
-                                                    width: toPercent(event().width as number),
+                                                    'inset-inline-start': toPercent(event().leftPos!),
+                                                    width: toPercent(event().width!),
                                                     top: `${event().topInd}em`,
                                                 }}
                                             >

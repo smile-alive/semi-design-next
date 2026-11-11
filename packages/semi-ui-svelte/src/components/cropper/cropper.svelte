@@ -83,8 +83,8 @@
         foundationProps,
         () => CropperFoundation.getInitialState(),
         () => ({
-            getContainer: () => root as HTMLDivElement,
-            getImg: () => img as HTMLImageElement,
+            getContainer: () => root!,
+            getImg: () => img!,
             notifyZoomChange: (next) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 zoom = next;

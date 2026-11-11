@@ -41,8 +41,8 @@ const pageInfo = () => document.querySelector(`.${previewCls}-footer-page`)?.tex
 const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`);
 const thumbs = () => document.querySelectorAll<HTMLImageElement>(`.${prefixCls}-img`);
 function clickMask(x = 10, y = 10) {
-    fireEvent.mouseDown(getPreview() as HTMLElement, { clientX: x, clientY: y });
-    fireEvent.mouseUp(getPreview() as HTMLElement, { clientX: x, clientY: y });
+    fireEvent.mouseDown(getPreview()!, { clientX: x, clientY: y });
+    fireEvent.mouseUp(getPreview()!, { clientX: x, clientY: y });
 }
 // a real key press starts at the focused element and bubbles through the document
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
@@ -62,8 +62,8 @@ function mockLayout({ container = [1000, 800], natural = [2000, 1000] } = {}) {
             return sized(this) ? container[1] : 0;
         },
     });
-    const naturalWidth = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'naturalWidth') as PropertyDescriptor;
-    const naturalHeight = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'naturalHeight') as PropertyDescriptor;
+    const naturalWidth = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'naturalWidth')!;
+    const naturalHeight = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'naturalHeight')!;
     Object.defineProperty(HTMLImageElement.prototype, 'naturalWidth', { configurable: true, get: () => natural[0] });
     Object.defineProperty(HTMLImageElement.prototype, 'naturalHeight', { configurable: true, get: () => natural[1] });
     return () => {
@@ -327,14 +327,14 @@ describe('ImagePreview', () => {
     it('遮罩：鼠标微小移动仍关闭，拖动或操作区域不关闭，maskClosable={false} 时永不关闭', () => {
         const { rerender } = renderGroup();
         fireEvent.click(thumbs()[0]);
-        fireEvent.mouseDown(getPreview() as HTMLElement, { clientX: 0, clientY: 0 });
-        fireEvent.mouseUp(getPreview() as HTMLElement, { clientX: 20, clientY: 0 });
+        fireEvent.mouseDown(getPreview()!, { clientX: 0, clientY: 0 });
+        fireEvent.mouseUp(getPreview()!, { clientX: 20, clientY: 0 });
         expect(getPreview()).not.toBeNull();
         fireEvent.mouseDown(footerIcon('rotate'), { clientX: 0, clientY: 0 });
         fireEvent.mouseUp(footerIcon('rotate'), { clientX: 0, clientY: 0 });
         expect(getPreview()).not.toBeNull();
-        fireEvent.mouseDown(getPreview() as HTMLElement, { clientX: 0, clientY: 0 });
-        fireEvent.mouseUp(getPreview() as HTMLElement, { clientX: 4, clientY: 5 });
+        fireEvent.mouseDown(getPreview()!, { clientX: 0, clientY: 0 });
+        fireEvent.mouseUp(getPreview()!, { clientX: 4, clientY: 5 });
         expect(getPreview()).toBeNull();
 
         rerender({ maskClosable: false });
@@ -468,10 +468,10 @@ describe('ImagePreview', () => {
         const onZoomOut = vi.fn<(zoom: number) => void>();
         render(() => <ImagePreview src={srcList} visible onZoomIn={onZoomIn} onZoomOut={onZoomOut} />);
         fireEvent.load(previewImg());
-        expect(fireEvent.wheel(getPreview() as HTMLElement, { deltaY: -10 })).toBe(false);
+        expect(fireEvent.wheel(getPreview()!, { deltaY: -10 })).toBe(false);
         expect(onZoomIn).toHaveBeenLastCalledWith(0.56);
         expect(previewImg()).toHaveStyle({ width: '1120px' });
-        fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 });
+        fireEvent.wheel(getPreview()!, { deltaY: 10 });
         expect(onZoomOut).toHaveBeenLastCalledWith(0.46);
         expect(previewImg()).toHaveStyle({ width: '920px' });
     });
@@ -481,12 +481,12 @@ describe('ImagePreview', () => {
         const { rerender } = renderPreview({ maxZoom: 0.5, src: srcList, visible: true });
         fireEvent.load(previewImg());
         expect(previewImg()).toHaveStyle({ width: '920px' });
-        fireEvent.wheel(getPreview() as HTMLElement, { deltaY: -10 });
+        fireEvent.wheel(getPreview()!, { deltaY: -10 });
         expect(previewImg()).toHaveStyle({ width: '1000px' });
 
         rerender({ maxZoom: 0.5, minZoom: 0.42, src: srcList, visible: true });
-        fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 });
-        fireEvent.wheel(getPreview() as HTMLElement, { deltaY: 10 });
+        fireEvent.wheel(getPreview()!, { deltaY: 10 });
+        fireEvent.wheel(getPreview()!, { deltaY: 10 });
         expect(previewImg()).toHaveStyle({ width: '840px' });
     });
 
@@ -674,7 +674,7 @@ describe('ImagePreview', () => {
         vi.advanceTimersByTime(1000);
         expect(header()).toHaveClass(`${previewCls}-hide`);
         expect($(`.${previewCls}-footer`)).toHaveClass(`${previewCls}-hide`);
-        fireEvent.mouseMove(getPreview() as HTMLElement);
+        fireEvent.mouseMove(getPreview()!);
         expect(header()).not.toHaveClass(`${previewCls}-hide`);
     });
 
@@ -749,7 +749,7 @@ describe('ImagePreview', () => {
         const getContainer = () => {
             const container = document.querySelector<HTMLElement>('.preview-container');
             found.push(container !== null);
-            return container as HTMLElement;
+            return container!;
         };
         render(() => (
             <div class="preview-container">
@@ -1277,8 +1277,8 @@ describe('ImagePreview 键盘与屏幕阅读器', () => {
         renderGroup();
         fireEvent.click(thumbs()[0]);
         for (const button of [1, 2]) {
-            fireEvent.mouseDown(getPreview() as HTMLElement, { button, clientX: 10, clientY: 10 });
-            fireEvent.mouseUp(getPreview() as HTMLElement, { button, clientX: 10, clientY: 10 });
+            fireEvent.mouseDown(getPreview()!, { button, clientX: 10, clientY: 10 });
+            fireEvent.mouseUp(getPreview()!, { button, clientX: 10, clientY: 10 });
         }
         expect(getPreview()).not.toBeNull();
         clickMask();

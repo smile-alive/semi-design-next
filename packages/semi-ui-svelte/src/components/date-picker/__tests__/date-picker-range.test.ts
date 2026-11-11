@@ -23,7 +23,7 @@ describe('Svelte DatePicker 范围选择', () => {
 
         const startDay = getElement(`.${dp}-day-selected-start`);
         const endDay = document.querySelector(`.${dp}-day-selected-end`);
-        expect(Array.from({ length: dayOffset }).reduce<Element>((current) => current.nextElementSibling as Element, startDay)).toBe(endDay);
+        expect(Array.from({ length: dayOffset }).reduce<Element>((current) => current.nextElementSibling!, startDay)).toBe(endDay);
 
         await click(getElement(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`, getPanel('right')));
         for (let i = 0; i < leftPrevClickTimes; i++) {

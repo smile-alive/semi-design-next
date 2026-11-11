@@ -87,7 +87,7 @@ describe('Form-formApi', () => {
 
     it('formApi.getTouched 在字段失焦后返回 true', async () => {
         const { api } = renderForm({}, fields);
-        await fireEvent.focusOut(getInput('name') as HTMLInputElement);
+        await fireEvent.focusOut(getInput('name')!);
         expect(api().getTouched('name')).toEqual(true);
         expect(!api().getTouched('business')).toEqual(true);
     });
@@ -95,7 +95,7 @@ describe('Form-formApi', () => {
     it('formApi.getValue 按路径取值，不传路径时返回全部值', async () => {
         const { api } = renderForm({}, fields);
         expect(api().getValue('name')).toEqual(undefined);
-        await fireEvent.update(getInput('name') as HTMLInputElement, 'semi');
+        await fireEvent.update(getInput('name')!, 'semi');
         expect(api().getValue('name')).toEqual('semi');
         expect(api().getValue()).toEqual({ name: 'semi' });
         expect(api().getValues()).toEqual({ name: 'semi' });
@@ -104,14 +104,14 @@ describe('Form-formApi', () => {
     it('formApi.getError 返回字段的校验错误并显示在界面上', async () => {
         const errorMessage = 'not muji';
         const { api } = renderForm({}, () => <FormInput field="name" rules={[{ validator: (value: unknown) => value === 'muji', message: errorMessage }]} trigger="change" />);
-        await fireEvent.update(getInput('name') as HTMLInputElement, 'semi');
+        await fireEvent.update(getInput('name')!, 'semi');
         await waitFor(() => expect(api().getError('name')).toEqual([errorMessage]));
         expect(getErrorMessage('name')).toHaveTextContent(errorMessage);
     });
 
     it('formApi.getFormState 返回 values、errors 和 touched', async () => {
         const { api } = renderForm({}, () => <FormInput field="name" rules={[{ validator: (value: unknown) => value === 'muji', message: 'not muji' }]} trigger="change" />);
-        await fireEvent.update(getInput('name') as HTMLInputElement, 'semi');
+        await fireEvent.update(getInput('name')!, 'semi');
         await waitFor(() =>
             expect(api().getFormState()).toEqual({
                 values: { name: 'semi' },
@@ -149,7 +149,7 @@ describe('Form-formApi', () => {
 
     it('formApi.reset 把值恢复为初始值并清空 errors 和 touched', async () => {
         const { api } = renderForm({ initValues: { name: 'a' } }, fields);
-        await fireEvent.update(getInput('name') as HTMLInputElement, 'b');
+        await fireEvent.update(getInput('name')!, 'b');
         expect(getInput('name')).toHaveValue('b');
         api().reset();
         await nextTick();

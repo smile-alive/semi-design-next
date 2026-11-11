@@ -23,4 +23,4 @@ export const getPresetButtons = () => document.querySelectorAll<HTMLElement>(`.$
 export const getFooterButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-footer .${BASE_CLASS_PREFIX}-button`);
 export const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
 export const getYMSelected = (root: ParentNode = document) => Array.from(root.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((item) => item.textContent);
-export const nextSibling = (element: Element, steps: number) => Array.from({ length: steps }).reduce<Element>((current) => current.nextElementSibling as Element, element);
+export const nextSibling = (element: Element, steps: number) => Array.from({ length: steps }).reduce<Element>((current) => current.nextElementSibling!, element);

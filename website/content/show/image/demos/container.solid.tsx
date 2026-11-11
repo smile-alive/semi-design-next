@@ -8,7 +8,7 @@ export default function ImageDemo() {
         <div id="container" style={{ height: '400px', position: 'relative' }}>
             <ImagePreview
                 getPopupContainer={() => {
-                    const node = document.getElementById('container') as HTMLElement;
+                    const node = document.getElementById('container')!;
                     return node;
                 }}
                 style={{ height: '100%', display: 'flex', 'align-items': 'center', 'justify-content': 'center' }}

@@ -44,7 +44,7 @@ export function renderUpload(props: Record<string, unknown> = {}, { trigger = 'b
             flushSync();
         },
         call(run: (handle: UploadHandle) => void) {
-            run(handle as UploadHandle);
+            run(handle!);
             flushSync();
         },
     };

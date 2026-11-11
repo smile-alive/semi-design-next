@@ -561,6 +561,10 @@ describe('Svelte Sidebar 全局默认值与透传', () => {
         ['Container', Sidebar.Container, { afterVisibleChange: () => {}, closeOnEsc: true }],
     ] as const)('%s 只由组件使用的属性不进入 DOM', (_name, component, props) => {
         render(component as typeof Sidebar, { props: { ...props, visible: true } as SideBarProps });
-        expect((root() as HTMLElement).getAttributeNames().filter((name) => name !== 'class' && name !== 'style')).toEqual([]);
+        expect(
+            root()!
+                .getAttributeNames()
+                .filter((name) => name !== 'class' && name !== 'style')
+        ).toEqual([]);
     });
 });

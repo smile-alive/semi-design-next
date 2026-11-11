@@ -168,7 +168,7 @@ describe('Badge', () => {
             attrs: { 'data-testid': 'badge', id: 'b', onClick, onMouseenter, onMouseleave },
             props: { count: 5 },
         });
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root).toBe(view.getByTestId('badge'));
         expect(root).toHaveAttribute('id', 'b');
         await fireEvent.click(root);

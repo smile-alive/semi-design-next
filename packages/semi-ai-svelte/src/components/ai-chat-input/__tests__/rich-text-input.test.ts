@@ -27,7 +27,7 @@ function setup(initial: Partial<Store> = {}) {
     const result = render(RichTextHost, { props: { store } });
     flushSync();
     const pm = () => getElement('.ProseMirror', result.container);
-    return { ...result, store, pm, editor: () => store.editor as Editor };
+    return { ...result, store, pm, editor: () => store.editor! };
 }
 
 describe('RichTextInput 编辑器宿主（attachment）', () => {
@@ -157,7 +157,7 @@ describe('RichTextInput 插槽节点视图', () => {
         const combobox = getElement('.node-selectSlot [role="combobox"]', pm());
         expect(combobox).toHaveTextContent('a');
         await fireEvent.click(combobox);
-        const listbox = defined(document.getElementById(combobox.getAttribute('aria-controls') as string));
+        const listbox = defined(document.getElementById(combobox.getAttribute('aria-controls')!));
         expect([...listbox.querySelectorAll('[role="option"]')].map((option) => option.textContent?.trim())).toEqual(['a', 'b']);
         await fireEvent.click(listbox.querySelectorAll('[role="option"]')[1]);
         flushSync();

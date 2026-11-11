@@ -187,7 +187,7 @@ describe('Radio（浏览器）', () => {
         await userEvent.keyboard('{Backspace}');
         const checkedInner = radios[0]?.querySelector(`.${prefix}-inner-checked`);
         expect(checkedInner).not.toBeNull();
-        await userEvent.click(checkedInner as Element);
+        await userEvent.click(checkedInner!);
         expect(radios[0]?.querySelector(`.${prefix}-inner-checked`)).toBeNull();
         expect(screen.getByRole('radio', { name: '111' })).not.toBeChecked();
     });

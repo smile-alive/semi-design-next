@@ -587,7 +587,7 @@ describe('RadioGroup', () => {
         const { container } = renderChildren({}, { title: 'tip', onClick: click });
         expect(container.firstElementChild).toHaveAttribute('title', 'tip');
         expect(container.firstElementChild).toHaveAttribute('role', 'radiogroup');
-        await userEvent.click(container.firstElementChild as Element);
+        await userEvent.click(container.firstElementChild!);
         expect(click).toHaveBeenCalledOnce();
     });
 

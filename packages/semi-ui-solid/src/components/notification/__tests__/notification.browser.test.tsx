@@ -151,7 +151,7 @@ describe('Notification', () => {
             }
             await waitFor(() => expect(notices()).toHaveLength(3));
             notices().forEach((n) => n.getAnimations().forEach((a) => a.finish()));
-            const items = () => notices().map((n) => n.parentElement as HTMLElement);
+            const items = () => notices().map((n) => n.parentElement!);
             await waitFor(() => expect(items().every((item) => item.offsetHeight > 0)).toBe(true));
 
             add('d', 0, { stack: true });
@@ -175,7 +175,7 @@ describe('Notification', () => {
             }
             await waitFor(() => expect(notices()).toHaveLength(3));
             notices().forEach((n) => n.getAnimations().forEach((a) => a.finish()));
-            const items = () => notices().map((n) => n.parentElement as HTMLElement);
+            const items = () => notices().map((n) => n.parentElement!);
             const [front] = notices();
             await userEvent.hover(front);
             await waitFor(() => expect(items().every((item) => item.offsetHeight > 0)).toBe(true));
@@ -201,7 +201,7 @@ describe('Notification', () => {
             await waitFor(() => expect(notices()).toHaveLength(2));
             notices().forEach((n) => n.getAnimations().forEach((a) => a.finish()));
             const [front, behind] = notices();
-            await waitFor(() => expect((behind.parentElement as HTMLElement).offsetHeight).toBe(0));
+            await waitFor(() => expect(behind.parentElement!.offsetHeight).toBe(0));
             await waitFor(() => expect(behind.getBoundingClientRect().bottom).toBeCloseTo(front.getBoundingClientRect().bottom - 8, 0));
             expect(front.getBoundingClientRect().bottom).toBeLessThan(window.innerHeight);
         });

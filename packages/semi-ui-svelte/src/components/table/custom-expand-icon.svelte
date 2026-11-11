@@ -18,7 +18,7 @@
     const table = getTableContext('Table expand button');
     const locale = useLocale('Table');
 
-    const rowKey = $derived(typeof groupKey === 'string' || typeof groupKey === 'number' ? groupKey : TableFoundation.getRecordKey({ rowKey: table.rowKey }, record as AnyRecord));
+    const rowKey = $derived(typeof groupKey === 'string' || typeof groupKey === 'number' ? groupKey : TableFoundation.getRecordKey({ rowKey: table.rowKey }, record!));
     const expanded = $derived(table.expandedRowKeys.includes(rowKey));
 
     // the classes turn the arrow, without an animationend to remove them

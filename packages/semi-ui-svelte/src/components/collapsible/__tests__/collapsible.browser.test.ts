@@ -130,7 +130,7 @@ describe('Svelte Collapsible（浏览器）- 内容的样式', () => {
     it('不支持 calc-size() 时在测得的高度之间播放动画，动画结束即结束过渡', async () => {
         vi.spyOn(CSS, 'supports').mockReturnValue(false);
         const { wrapper, ended, set } = mount({ collapseHeight: 30, collapseHeightAdaptive: true, duration: 1000, height: '60px' });
-        const heightAnimation = () => wrapper.getAnimations().find((animation) => !(animation instanceof CSSTransition)) as Animation;
+        const heightAnimation = () => wrapper.getAnimations().find((animation) => !(animation instanceof CSSTransition))!;
         const heights = (animation: Animation) => (animation.effect as KeyframeEffect).getKeyframes().map((keyframe) => keyframe.height);
 
         set({ isOpen: true });

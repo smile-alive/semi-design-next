@@ -63,7 +63,7 @@ describe('Svelte FloatButtonGroup 布局与样式（浏览器）', () => {
 
     it('分组项在相同属性下具有与独立 FloatButton 相同的形状、尺寸和彩色外观', () => {
         render(LayoutFixture, { props: { scene: 'compare' } });
-        const alone = getComputedStyle(screen.getByRole('button', { name: 'alone' }).firstElementChild as Element);
+        const alone = getComputedStyle(screen.getByRole('button', { name: 'alone' }).firstElementChild!);
         const item = screen.getByRole('button', { name: 'grouped' });
         const grouped = getComputedStyle(item);
         expect(grouped.backgroundImage).toBe(alone.backgroundImage);
@@ -99,8 +99,8 @@ describe('Svelte FloatButton 键盘操作（浏览器）', () => {
 
         await userEvent.keyboard('{Tab}');
         expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Edit' }));
-        expect(getComputedStyle(document.activeElement as Element).outlineStyle).toBe('solid');
-        expect(getComputedStyle(document.activeElement as Element).outlineWidth).toBe('2px');
+        expect(getComputedStyle(document.activeElement!).outlineStyle).toBe('solid');
+        expect(getComputedStyle(document.activeElement!).outlineWidth).toBe('2px');
         await userEvent.keyboard('{Enter}');
         await userEvent.keyboard(' ');
         expect(log).toEqual(['edit', 'edit']);

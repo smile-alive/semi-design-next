@@ -50,7 +50,7 @@ describe('Svelte TagInput（浏览器）拖拽排序', () => {
             const node = document.querySelector<HTMLElement>(`.${tagInputCls}-drag-item-move`);
             expect(node).toHaveAttribute('data-dnd-dragging', 'true');
             expect(node).toHaveTextContent('抖音');
-            return node as HTMLElement;
+            return node!;
         });
         // The Popover content is in the top layer; dnd-kit makes the overlay click-through with an inline !important
         overlay.style.setProperty('pointer-events', 'auto', 'important');
@@ -128,7 +128,7 @@ describe('Svelte TagInput（浏览器）tag 与 +N', () => {
 
     it('expandRestTagsOnClick 为 false 时 +N 指示器可聚焦并显示主题焦点环', async () => {
         mountCase({ value: ['抖音', '火山', '西瓜视频'], expandRestTagsOnClick: false, maxTagCount: 1 });
-        const plusN = getRest() as Element;
+        const plusN = getRest()!;
         await tabTo(plusN);
         expectThemeFocusRing(plusN);
     });
@@ -264,7 +264,7 @@ describe('Svelte TagInput（浏览器）激活状态跟随键盘焦点', () => {
         await tab({ shift: true });
         expect(document.activeElement).toHaveAccessibleName(zh_CN.TagInput.dragSort);
         expect(document.activeElement?.contains(getHandles()[2])).toBe(true);
-        expectThemeFocusRing(document.activeElement as Element);
+        expectThemeFocusRing(document.activeElement!);
         await tab();
         await tab();
         await tab();

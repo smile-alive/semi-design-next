@@ -612,7 +612,7 @@ describe('ScrollItem 行为', () => {
         const listbox = screen.getByRole('listbox', { name: 'hour' });
         await userEvent.tab();
         expect(listbox).toHaveFocus();
-        const active = document.getElementById(listbox.getAttribute('aria-activedescendant') as string);
+        const active = document.getElementById(listbox.getAttribute('aria-activedescendant')!);
         expect(active).toHaveTextContent('1');
         expect(active).toHaveAttribute('aria-selected', 'true');
     });

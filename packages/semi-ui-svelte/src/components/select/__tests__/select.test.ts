@@ -482,7 +482,7 @@ describe('Svelte Select 分组与 optionLabel', () => {
         expect(groups).toHaveLength(2);
         expect(screen.getByRole('group', { name: 'Fruits' })).toBe(groups[0]);
         expect(screen.getByRole('group', { name: 'Vegetables' })).toBe(groups[1]);
-        const title = document.getElementById(groups[0].getAttribute('aria-labelledby') as string);
+        const title = document.getElementById(groups[0].getAttribute('aria-labelledby')!);
         expect(title).toHaveClass(`${prefixCls}-group`);
         expect(title).toHaveTextContent('Fruits');
         expect(

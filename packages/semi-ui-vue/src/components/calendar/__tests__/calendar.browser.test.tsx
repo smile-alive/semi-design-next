@@ -217,7 +217,7 @@ describe('Calendar（浏览器）', () => {
 
         await userEvent.click(screen.getByRole('button', { name: /还有/ }));
         await waitFor(() => expect(box()).not.toBeNull());
-        const opened = box() as NonNullable<ReturnType<typeof box>>;
+        const opened = box()!;
         expect(opened.left).toBeGreaterThanOrEqual(0);
         expect(opened.left + opened.width).toBeLessThanOrEqual(document.documentElement.clientWidth);
         // the exit can end before the click's round trip returns under load, so every frame is recorded from before the

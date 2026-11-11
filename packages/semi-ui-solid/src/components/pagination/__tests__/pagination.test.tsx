@@ -175,7 +175,7 @@ describe('Pagination', () => {
         expect(spyOnChange).toHaveBeenCalledWith(targetPage, defaultPageSize);
         expect(getActivePage(container)).toHaveTextContent(/^20$/);
 
-        await userEvent.click(getActivePage(container) as Element);
+        await userEvent.click(getActivePage(container)!);
         await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.more }));
         expect(spyOnChange).toHaveBeenCalledTimes(1);
         expect(getActivePage(container)).toHaveTextContent(/^20$/);

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Button, ToastFactory, Toast } from '@fibrae/semi-ui-react';
 
 const ToastInCustomContainer = ToastFactory.create({
-    getPopupContainer: () => document.getElementById('custom-toast-container') as HTMLElement,
+    getPopupContainer: () => document.getElementById('custom-toast-container')!,
 });
 
 export default function ToastDemo() {

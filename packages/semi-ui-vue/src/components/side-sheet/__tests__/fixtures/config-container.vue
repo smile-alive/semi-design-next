@@ -9,7 +9,7 @@
 
 <template>
     <div ref="container" class="config-container" />
-    <ConfigProvider :getPopupContainer="() => container as HTMLDivElement">
+    <ConfigProvider :getPopupContainer="() => container!">
         <SideSheet :getPopupContainer="ownContainer" :motion="false" title="Sheet" visible />
     </ConfigProvider>
 </template>

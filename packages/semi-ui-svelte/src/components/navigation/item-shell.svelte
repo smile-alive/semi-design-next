@@ -78,7 +78,7 @@
         () => ({}),
         () => ({
             getSelectedItem: () => copySelectedItem(itemConfig ? { ...itemConfig, level } : { ...reported }) as ItemProps,
-            selectSelf: () => ctx.updateSelectedKeys([itemKey as ItemKey]),
+            selectSelf: () => ctx.updateSelectedKeys([itemKey!]),
             getSelectedKeysIsControlled: () => ctx.selectedKeysIsControlled,
             notifyGlobalOnSelect: (data) => ctx.notifySelect(data as OnSelectedData),
             notifyGlobalOnClick: (data) => ctx.notifyClick(data),

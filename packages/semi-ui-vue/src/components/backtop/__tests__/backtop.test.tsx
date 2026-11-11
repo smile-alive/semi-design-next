@@ -132,7 +132,7 @@ describe('BackTop', () => {
     it('默认渲染一个圆形原生 FloatButton，图标为回到顶部', async () => {
         const view = render(BackTop, { props: { visibilityHeight: -1 } });
         await frame();
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root.tagName).toBe('BUTTON');
         expect(root).toHaveAttribute('type', 'button');
         expect(root).not.toHaveAttribute('role');
@@ -149,7 +149,7 @@ describe('BackTop', () => {
             slots: { icon: () => <i data-testid="icon" /> },
         });
         await frame();
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root).toHaveClass('semi-floatButton-square', 'semi-floatButton-large');
         const body = root.querySelector('.semi-floatButton-body');
         expect(body).toHaveClass('semi-floatButton-colorful');
@@ -176,7 +176,7 @@ describe('BackTop', () => {
             },
         });
         await frame();
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root.tagName).toBe('BUTTON');
         expect(root.querySelector('.semi-floatButton-body .custom')).toHaveTextContent('UP');
         expect(root.querySelector('[data-testid="icon"]')).toBeNull();
@@ -488,7 +488,7 @@ describe('BackTop', () => {
         ));
         expect(holder.instance?.$el.nodeType).toBe(Node.COMMENT_NODE);
         await frame();
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root).not.toHaveAttribute('duration');
         expect(holder.instance?.$el).toBe(root);
         expect(holder.instance?.$el).toBeInstanceOf(HTMLButtonElement);

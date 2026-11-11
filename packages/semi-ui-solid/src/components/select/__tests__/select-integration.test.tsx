@@ -67,7 +67,7 @@ describe('Select 与 Tooltip、Popover 的集成', () => {
         const popover = await waitFor(() => {
             const node = document.querySelector<HTMLElement>(popoverSelector);
             expect(node).not.toBeNull();
-            return node as HTMLElement;
+            return node!;
         });
         await userEvent.click(within(popover).getByRole('combobox'));
         await userEvent.click(await screen.findByRole('option', { name: '西瓜视频' }));
@@ -94,7 +94,7 @@ describe('Select 与 Tooltip、Popover 的集成', () => {
         const tip = await waitFor(() => {
             const node = document.querySelector<HTMLElement>(tooltipShownSelector);
             expect(node).not.toBeNull();
-            return node as HTMLElement;
+            return node!;
         });
         await userEvent.click(within(tip).getByRole('combobox'));
         const option = await screen.findByRole('option', { name: '火山' });

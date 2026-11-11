@@ -18,7 +18,7 @@ function renderForm(props: FormProps, children?: () => JSX.Element) {
             {children?.()}
         </Form>
     ));
-    return () => formApi as FormApi;
+    return () => formApi!;
 }
 
 function renderRows(props: FormProps, list: string, fields: string[]) {
@@ -40,7 +40,7 @@ function renderRows(props: FormProps, list: string, fields: string[]) {
             )}
         </Form>
     ));
-    return () => formApi as FormApi;
+    return () => formApi!;
 }
 
 const fields = () => (
@@ -78,7 +78,7 @@ describe('Form-formApi', () => {
             );
         }
         render(() => <HookForm />);
-        const [formApi, , values] = state as ReturnType<typeof useForm>;
+        const [formApi, , values] = state!;
         expect(formApi.getValues()).toEqual({ name: 'semi' });
         expect(values()).toEqual({ name: 'semi' });
         formApi.setValue('name', 'design');
@@ -139,7 +139,7 @@ describe('Form-formApi', () => {
 
     it('formApi.getTouched 在失焦后返回 true', () => {
         const api = renderForm({}, fields);
-        fireEvent.focusOut(getInput('name') as HTMLInputElement);
+        fireEvent.focusOut(getInput('name')!);
         expect(api().getTouched('name')).toEqual(true);
         expect(api().getTouched('business')).toBeFalsy();
     });
@@ -147,7 +147,7 @@ describe('Form-formApi', () => {
     it('formApi.getValue 按路径取值，不传路径时返回全部值', async () => {
         const api = renderForm({}, fields);
         expect(api().getValue('name')).toEqual(undefined);
-        await userEvent.type(getInput('name') as HTMLInputElement, 'semi');
+        await userEvent.type(getInput('name')!, 'semi');
         expect(api().getValue('name')).toEqual('semi');
         expect(api().getValue()).toEqual({ name: 'semi' });
         expect(api().getValues()).toEqual({ name: 'semi' });
@@ -155,14 +155,14 @@ describe('Form-formApi', () => {
 
     it('formApi.getError 返回校验失败的错误数组', async () => {
         const api = renderForm({}, () => <FormInput field="name" rules={notMuji} trigger="change" />);
-        fireEvent.input(getInput('name') as HTMLInputElement, { target: { value: 'semi' } });
+        fireEvent.input(getInput('name')!, { target: { value: 'semi' } });
         await waitFor(() => expect(api().getError('name')).toEqual(['not muji']));
         expect(getErrorMessage('name')).toHaveTextContent('not muji');
     });
 
     it('formApi.getFormState 返回 values、errors 和 touched', async () => {
         const api = renderForm({}, () => <FormInput field="name" rules={notMuji} trigger="change" />);
-        fireEvent.input(getInput('name') as HTMLInputElement, { target: { value: 'semi' } });
+        fireEvent.input(getInput('name')!, { target: { value: 'semi' } });
         await waitFor(() => expect(api().getFormState()).toEqual({ values: { name: 'semi' }, errors: { name: ['not muji'] }, touched: { name: true } }));
     });
 
@@ -191,7 +191,7 @@ describe('Form-formApi', () => {
 
     it('formApi.reset 恢复初始值并清空 errors 和 touched', () => {
         const api = renderForm({ initValues: { name: 'a' } }, fields);
-        fireEvent.input(getInput('name') as HTMLInputElement, { target: { value: 'b' } });
+        fireEvent.input(getInput('name')!, { target: { value: 'b' } });
         expect(getInput('name')).toHaveValue('b');
         api().reset();
         expect(getInput('name')).toHaveValue('a');

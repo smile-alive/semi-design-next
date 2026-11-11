@@ -6,7 +6,7 @@
     defineProps<{ preventScroll?: boolean }>();
     const emit = defineEmits<{ ready: [handle: CheckboxHandle] }>();
     const checkbox = useTemplateRef<CheckboxHandle>('checkbox');
-    onMounted(() => emit('ready', checkbox.value as CheckboxHandle));
+    onMounted(() => emit('ready', checkbox.value!));
 </script>
 
 <template>

@@ -1262,7 +1262,7 @@ describe('Dropdown Vue 受控与插槽', () => {
         expect(text).toHaveClass('semi-tooltip-trigger-wrapper', 'own-wrapper');
         expect(text).toHaveAttribute('tabindex', '0');
         expect(text).not.toHaveAttribute('aria-haspopup');
-        const multi = screen.getByText('part one').parentElement as HTMLElement;
+        const multi = screen.getByText('part one').parentElement!;
         expect(multi).toHaveClass('semi-tooltip-trigger-wrapper');
         expect(multi).toHaveStyle({ display: 'inline-block' });
         expect(multi).toContainElement(screen.getByText('part two'));

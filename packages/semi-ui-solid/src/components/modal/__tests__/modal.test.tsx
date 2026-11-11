@@ -176,7 +176,7 @@ describe('Modal', () => {
         const getContainer = () => {
             const container = document.querySelector<HTMLElement>('.modal-container');
             found.push(container !== null);
-            return container as HTMLElement;
+            return container!;
         };
         render(() => (
             <div class="modal-container">

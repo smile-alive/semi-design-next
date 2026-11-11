@@ -52,7 +52,7 @@
     // The group lists its srcs as data; an image opens the entry of its own (or its preview's first) src. One that is
     // not listed, or that sits outside a group, previews on its own.
     const previewSrc = $derived(previewObject?.src ?? src);
-    const groupIndex = $derived(group && preview ? group.srcList.indexOf([previewSrc].flat()[0] as string) : -1);
+    const groupIndex = $derived(group && preview ? group.srcList.indexOf([previewSrc].flat()[0]!) : -1);
     const inGroup = $derived(groupIndex >= 0);
 
     const { foundation, states } = useFoundation<Foundation, Adapter, ImageProps, ImageState>(

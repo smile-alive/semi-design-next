@@ -24,7 +24,7 @@ const getFileData = (total: number) =>
         size: (i * 1000) % 199,
     }));
 
-const getHeaderCell = (container: Element, title: string) => [...container.querySelectorAll<HTMLElement>(`.${prefix}-thead .${prefix}-row-head`)].find((th) => th.textContent === title) as HTMLElement;
+const getHeaderCell = (container: Element, title: string) => [...container.querySelectorAll<HTMLElement>(`.${prefix}-thead .${prefix}-row-head`)].find((th) => th.textContent === title)!;
 
 interface AXNode {
     nodeId: string;
@@ -117,7 +117,7 @@ describe('Table（浏览器）', () => {
             while (parent && (parent.ignored || parent.role.value === 'generic')) {
                 parent = byId.get(parent.parentId ?? '');
             }
-            return parent as AXNode;
+            return parent!;
         };
 
         expect(ofRole('LayoutTable')).toHaveLength(0);
@@ -713,7 +713,7 @@ describe('table', () => {
         const footer = await waitFor(() => {
             const found = document.querySelector<HTMLElement>(`.${prefix}-column-filter-footer`);
             expect(found).not.toBeNull();
-            return found as HTMLElement;
+            return found!;
         });
         const style = getComputedStyle(footer);
         expect(style.display).toBe('flex');
@@ -826,7 +826,7 @@ describe('Table 虚拟化（浏览器）', () => {
         const tbody = await waitFor(() => {
             const found = container.querySelector(`.${prefix}-tbody`);
             expect(found).not.toBeNull();
-            return found as Element;
+            return found!;
         });
         expect(getComputedStyle(tbody).display).toBe('block');
     });
@@ -842,7 +842,7 @@ describe('Table 虚拟化（浏览器）', () => {
         const emptyRect = await waitFor(() => {
             const placeholder = document.querySelector(`.${prefix}-placeholder`);
             expect(placeholder).not.toBeNull();
-            return (placeholder as Element).getBoundingClientRect();
+            return placeholder!.getBoundingClientRect();
         });
         expect(emptyRect.height).toBeGreaterThan(0);
         expect(getBody().getBoundingClientRect().height).toBeLessThan(600);

@@ -15,7 +15,7 @@ const CHECKED_CLS = `${prefixCls}-checked`;
 const DISABLED_CLS = `${prefixCls}-disabled`;
 
 const getSwitch = () => screen.getByRole<HTMLInputElement>('switch');
-const getWrapper = () => getSwitch().parentElement as HTMLElement;
+const getWrapper = () => getSwitch().parentElement!;
 const query = (cls: string) => document.querySelector(`.${cls}`);
 
 describe('Switch', () => {

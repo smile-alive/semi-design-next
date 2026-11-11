@@ -9,7 +9,7 @@ import { joinIds, warning } from '@fibrae/semi-foundation/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import { useWatch } from '../../primitives/index';
 import { hasContent, isMarkup } from '../../utils/index';
-import { type FormContextValue, useArrayFieldContext, useFormContext, useFormInputGroupContext } from './context';
+import { useArrayFieldContext, useFormContext, useFormInputGroupContext } from './context';
 import ErrorMessage, { type ErrorMessageInternalProps } from './error-message';
 import FieldGrid from './field-grid';
 import type { CommonFieldProps, FieldProps } from './interface';
@@ -65,7 +65,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
     function FormField(props: AnyProps) {
         const [local, rest] = splitProps(props, [...fieldKeys, ...valueKeys, valueKey, changeKey, 'onBlur', 'prefix']) as [AnyProps, AnyProps];
 
-        const form = useFormContext() as FormContextValue;
+        const form = useFormContext()!;
         const arrayField = useArrayFieldContext();
         const group = useFormInputGroupContext();
 

@@ -99,7 +99,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const shown = createMemo(() => mounted() && visible());
 
     // by content: a group builds a new list on every change
-    const srcList = createMemo(() => PreviewInnerFoundation.getSrcList(props.src as string | string[]), undefined, { equals: isEqual });
+    const srcList = createMemo(() => PreviewInnerFoundation.getSrcList(props.src!), undefined, { equals: isEqual });
     const total = createMemo(() => srcList().length);
     const showPrev = createMemo(() => PreviewInnerFoundation.canSwitch('prev', currentIndex(), total(), props.infinite));
     const showNext = createMemo(() => PreviewInnerFoundation.canSwitch('next', currentIndex(), total(), props.infinite));

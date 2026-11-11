@@ -238,7 +238,7 @@ describe('Collapsible（浏览器）- 内容的样式', () => {
             </Collapsible>
         ));
         const wrapper = getWrapper(container);
-        const heightAnimation = () => wrapper.getAnimations().find((animation) => !(animation instanceof CSSTransition)) as Animation;
+        const heightAnimation = () => wrapper.getAnimations().find((animation) => !(animation instanceof CSSTransition))!;
         const heights = (animation: Animation) => (animation.effect as KeyframeEffect).getKeyframes().map((keyframe) => keyframe.height);
 
         setOpen(true);

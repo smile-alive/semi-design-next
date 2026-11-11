@@ -318,7 +318,7 @@ export default function FileContent(props: FileContentProps) {
         <Collapse {...rest} class={clsx(collapseCls, `${collapseCls}-file`, local.class)} activeKey={local.activeKey} clickHeaderToExpand={false} onChange={local.onChange}>
             <For each={local.files}>
                 {(file) => (
-                    <Collapse.Panel header={<CollapseHeader content={file} mode="file" />} itemKey={file.key as string} extra={local.onExpand ? <CollapseExpandButton content={file} mode="file" onExpand={local.onExpand} /> : undefined}>
+                    <Collapse.Panel header={<CollapseHeader content={file} mode="file" />} itemKey={file.key!} extra={local.onExpand ? <CollapseExpandButton content={file} mode="file" onExpand={local.onExpand} /> : undefined}>
                         <FileItem {...file} editable={false} />
                     </Collapse.Panel>
                 )}

@@ -19,7 +19,7 @@ describe('Svelte Empty 标题（浏览器）', () => {
         heading.style.cssText = title?.style.cssText ?? '';
         heading.textContent = 'title';
         title?.after(heading);
-        const actual = getComputedStyle(title as HTMLElement);
+        const actual = getComputedStyle(title!);
         const expected = getComputedStyle(heading);
         for (const property of properties) {
             expect([property, actual.getPropertyValue(property)]).toEqual([property, expected.getPropertyValue(property)]);

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
     import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
-    import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputValue, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
+    import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils';
     import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-svelte';
     import { useFoundation } from '../../base/index.js';
@@ -50,7 +50,7 @@
     });
 
     const allowRangeClear = $derived(DateInputFoundation.getRangeClearVisible({ ...rangeParts, showClear: props.showClear ?? true, disabled: props.disabled, showClearIgnoreDisabled: props.showClearIgnoreDisabled }));
-    const insetValue = $derived(DateInputFoundation.getInsetInputValue(props, { value, insetInputValue: props.insetInputValue as InsetInputValue }));
+    const insetValue = $derived(DateInputFoundation.getInsetInputValue(props, { value, insetInputValue: props.insetInputValue! }));
 
     const insetPlaceholders = $derived.by(() => {
         const own = (typeof props.insetInput === 'object' && props.insetInput.placeholder) || {};

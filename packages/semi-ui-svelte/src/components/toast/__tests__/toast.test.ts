@@ -445,7 +445,7 @@ describe('Toast', () => {
         render(ProviderHost, { props: { onApi: (toast: ToastHookApi) => (api = toast) } });
         api.info({ content: 'hook', duration: 0 });
         await show({ content: 'static', duration: 0 });
-        const hooked = [...document.querySelectorAll<HTMLElement>(`.${prefix}-info`)].find((el) => el.textContent?.trim() === 'hook') as HTMLElement;
+        const hooked = [...document.querySelectorAll<HTMLElement>(`.${prefix}-info`)].find((el) => el.textContent?.trim() === 'hook')!;
         expect(hooked).toHaveAttribute('aria-label', en_US.Toast.info);
         expect(hooked).toHaveAttribute('dir', 'rtl');
         expect(hooked.querySelector('button')).toHaveAccessibleName(en_US.Toast.close);

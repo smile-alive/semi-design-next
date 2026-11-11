@@ -16,7 +16,7 @@ const noticeCls = `${prefix}-notice`;
 const closeButton = (notice: Element) => getElement<HTMLButtonElement>(`.${noticeCls}-icon-close`, notice);
 const top = (el: HTMLElement) => el.getBoundingClientRect().top;
 // The list animates each notice's root wrapper, which is also its stack item.
-const wrapperOf = (notice: HTMLElement) => notice.parentElement as HTMLElement;
+const wrapperOf = (notice: HTMLElement) => notice.parentElement!;
 // Vue drops the enter and leave classes on animationend, or on a timeout when the animations finished before it started
 // listening; until then a finished slide still holds the wrapper's height
 async function finishAnimations(notices: HTMLElement[]) {
@@ -307,7 +307,7 @@ describe('Notification 浏览器', () => {
             api.open({ title: 'first', content: 'first', duration: 1 });
             await waitFor(() => expect(notices()).toHaveLength(2));
             await finishAnimations(notices());
-            closeButton(notices().find((notice) => notice.textContent?.includes('first')) as HTMLElement).focus();
+            closeButton(notices().find((notice) => notice.textContent?.includes('first'))!).focus();
             api.close(leaving);
             await waitFor(() => expect(notices()).toHaveLength(1));
             await new Promise((resolve) => setTimeout(resolve, 1500));

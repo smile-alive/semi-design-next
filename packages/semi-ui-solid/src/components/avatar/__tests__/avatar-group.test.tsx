@@ -421,10 +421,7 @@ describe('AvatarGroup', () => {
 
         const items = () => within(screen.getByRole('list')).getAllByRole('listitem');
         const texts = () => items().map((item) => item.textContent);
-        const moreName = () =>
-            within(items().at(-1) as HTMLElement)
-                .getByRole('img')
-                .getAttribute('aria-label');
+        const moreName = () => within(items().at(-1)!).getByRole('img').getAttribute('aria-label');
 
         it('avatar/删除可见头像后由被隐藏的头像补位', () => {
             const [names, setNames] = createSignal(['A', 'B', 'C', 'D', 'E']);

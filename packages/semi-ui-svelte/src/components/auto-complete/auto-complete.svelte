@@ -135,8 +135,8 @@
             notifyDropdownVisibleChange: (visible) => onDropdownVisibleChange?.(visible),
             notifyClear: () => onClear?.(),
             // the adapter declares the event optional, the foundation always passes it
-            notifyFocus: (event) => onFocus?.(event as FocusEvent),
-            notifyBlur: (event) => onBlur?.(event as FocusEvent),
+            notifyFocus: (event) => onFocus?.(event!),
+            notifyBlur: (event) => onBlur?.(event!),
             notifyKeyDown: (event) => rest.onkeydown?.(event),
         })
     );

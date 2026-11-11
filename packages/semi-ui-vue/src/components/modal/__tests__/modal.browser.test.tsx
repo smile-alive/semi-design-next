@@ -56,7 +56,7 @@ describe('Modal（浏览器）', () => {
         const footerButtons = document.querySelectorAll(`.${prefix}-footer .semi-button`);
         expect(footerButtons[footerButtons.length - 1]).toHaveTextContent('Confirm');
 
-        await userEvent.click(query(`.${prefix}-header .${prefix}-close`) as HTMLElement);
+        await userEvent.click(query(`.${prefix}-header .${prefix}-close`)!);
         await waitFor(() => expect(query(`.${prefix}`)).toBeNull());
     });
 
@@ -201,22 +201,22 @@ describe('Modal（浏览器）', () => {
         render(OpenModal, { props: { fullScreen: true } });
         await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
         await waitFor(() => expect(query(`.${prefix}-content-fullScreen`)).not.toBeNull());
-        const content = query(`.${prefix}-content-fullScreen`) as HTMLElement;
-        expect(content.getBoundingClientRect().height).toBe((query(`.${prefix}-mask`) as HTMLElement).getBoundingClientRect().height);
+        const content = query(`.${prefix}-content-fullScreen`)!;
+        expect(content.getBoundingClientRect().height).toBe(query(`.${prefix}-mask`)!.getBoundingClientRect().height);
     });
 
     it('设置高度', async () => {
         render(OpenModal, { props: { height: 300 } });
         await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
         await waitFor(() => expect(query(`.${prefix}-content`)).not.toBeNull());
-        expect((query(`.${prefix}-content`) as HTMLElement).getBoundingClientRect().height).toBe(300);
+        expect(query(`.${prefix}-content`)!.getBoundingClientRect().height).toBe(300);
     });
 
     it('通过 style 设置高度', async () => {
         render(OpenModal, { attrs: { style: { height: '300px' } } });
         await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
         await waitFor(() => expect(query(`.${prefix}-content`)).not.toBeNull());
-        expect((query(`.${prefix}-content`) as HTMLElement).getBoundingClientRect().height).toBe(300);
+        expect(query(`.${prefix}-content`)!.getBoundingClientRect().height).toBe(300);
     });
 
     it('mask 为 false 时点击对话框外的页面元素落在该元素上，不触发 onCancel', async () => {

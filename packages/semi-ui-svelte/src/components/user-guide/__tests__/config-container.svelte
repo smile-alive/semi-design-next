@@ -9,6 +9,6 @@
 </script>
 
 <div bind:this={container} class="config-container"></div>
-<ConfigProvider getPopupContainer={() => container as HTMLDivElement}>
+<ConfigProvider getPopupContainer={() => container!}>
     <UserGuide getPopupContainer={ownContainer} {mode} {steps} visible />
 </ConfigProvider>

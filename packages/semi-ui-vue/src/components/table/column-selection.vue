@@ -30,7 +30,7 @@
     });
 
     const prefixCls = computed(() => table.view.value.prefixCls);
-    const recordKey = computed(() => TableFoundation.getRecordKey({ rowKey: table.rowState.value.rowKey }, props.record as AnyRecord));
+    const recordKey = computed(() => TableFoundation.getRecordKey({ rowKey: table.rowState.value.rowKey }, props.record!));
 
     const selected = computed(() => {
         const selectedSet = rowSelection.value?.selectedRowKeysSet ?? EMPTY_KEYS;
@@ -66,7 +66,7 @@
                 modelValue: selected.value,
                 onKeyup: table.foundation.handleSelectionKeyUp,
                 onChange: (event: CheckboxEvent) => (props.inHeader ? selectAll : selectRow)(event.target.checked, event),
-                ...(props.inHeader ? {} : selection.getCheckboxProps?.(props.record as AnyRecord)),
+                ...(props.inHeader ? {} : selection.getCheckboxProps?.(props.record!)),
             }),
         ]);
         const slotProps: TableSelectionCellSlotProps = {

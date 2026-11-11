@@ -67,7 +67,7 @@ export default function CodeContent(props: CodeContentProps) {
         <Collapse {...rest} class={clsx(collapseCls, `${collapseCls}-code`, local.class)} activeKey={local.activeKey} clickHeaderToExpand={false} onChange={local.onChange}>
             <For each={local.codes}>
                 {(code) => (
-                    <Collapse.Panel header={<CollapseHeader content={code} mode="code" />} itemKey={code.key as string} extra={local.onExpand ? <CollapseExpandButton content={code} mode="code" onExpand={local.onExpand} /> : undefined}>
+                    <Collapse.Panel header={<CollapseHeader content={code} mode="code" />} itemKey={code.key!} extra={local.onExpand ? <CollapseExpandButton content={code} mode="code" onExpand={local.onExpand} /> : undefined}>
                         <CodeItem {...code} />
                     </Collapse.Panel>
                 )}

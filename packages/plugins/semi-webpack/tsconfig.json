@@ -6,7 +6,8 @@
         "rootDir": "./src",
         "declaration": true,
         "rewriteRelativeImportExtensions": true,
-        "noImplicitAny": true
+        "noImplicitAny": true,
+        "strictNullChecks": true
     },
     "include": ["src"]
 }

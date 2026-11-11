@@ -7,7 +7,7 @@ import Progress, { type ProgressProps } from '..';
 const prefixCls = `${BASE_CLASS_PREFIX}-progress`;
 
 function toRgba(color: string) {
-    const context = document.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
+    const context = document.createElement('canvas').getContext('2d')!;
     context.fillStyle = color;
     context.fillRect(0, 0, 1, 1);
     return [...context.getImageData(0, 0, 1, 1).data];

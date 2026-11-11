@@ -67,7 +67,7 @@
     );
 
     const prefix = cssClasses.PREFIX;
-    const todayText = $derived(today() === null ? '' : format(today() as number, strings.FORMAT_FULL_DATE));
+    const todayText = $derived(today() === null ? '' : format(today()!, strings.FORMAT_FULL_DATE));
     const weeks = $derived(MonthFoundation.getMonthTable(props.month, props.weekStartsOn).weeks);
     const activeDate = $derived(MonthFoundation.getActiveDate(props, states(), todayText));
     const weekdays = $derived(MonthFoundation.getWeekdays(props.weekStartsOn).map((key) => props.locale.weeks[key as keyof MonthProps['locale']['weeks']]));
@@ -99,7 +99,7 @@
     };
 
     const statusOf = (day: MonthDayInfo) => {
-        const status = statuses.get(day.fullDate) as ReturnType<typeof MonthFoundation.getDayStatus>;
+        const status = statuses.get(day.fullDate)!;
         return day.fullDate === todayText ? { ...status, isToday: true } : status;
     };
 

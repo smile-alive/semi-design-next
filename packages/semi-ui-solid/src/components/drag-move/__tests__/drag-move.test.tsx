@@ -319,7 +319,7 @@ describe('DragMove', () => {
         const signalOf = (options?: boolean | AddEventListenerOptions) => (options as AddEventListenerOptions | undefined)?.signal;
         const dragCalls = addListener.mock.calls.filter(([, , options]) => signalOf(options));
         expect(dragCalls.map(([type]) => type)).toEqual(['pointermove', 'pointerup', 'pointercancel', 'selectstart', 'dragstart']);
-        const signals = dragCalls.map(([, , options]) => signalOf(options) as AbortSignal);
+        const signals = dragCalls.map(([, , options]) => signalOf(options)!);
         expect(new Set(signals).size).toBe(1);
         expect(signals[0].aborted).toBe(false);
 

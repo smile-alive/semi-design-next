@@ -149,7 +149,7 @@ describe('Svelte Badge', () => {
         const onclick = vi.fn<(event: MouseEvent) => void>();
         const onmouseenter = vi.fn<(event: MouseEvent) => void>();
         const { container } = setup({ 'data-testid': 'badge', id: 'b', count: 5, onclick, onmouseenter });
-        const root = getRoot(container) as HTMLElement;
+        const root = getRoot(container)!;
         expect(root).toBe(screen.getByTestId('badge'));
         expect(root).toHaveAttribute('id', 'b');
         await fireEvent.click(root);

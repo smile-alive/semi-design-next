@@ -96,8 +96,8 @@
             notifySelect: (option) => emit('select', option),
             notifyDropdownVisibleChange: (visible) => emit('dropdownVisibleChange', visible),
             notifyClear: () => emit('clear'),
-            notifyFocus: (event) => emit('focus', event as FocusEvent),
-            notifyBlur: (event) => emit('blur', event as FocusEvent),
+            notifyFocus: (event) => emit('focus', event!),
+            notifyBlur: (event) => emit('blur', event!),
             notifyKeyDown: (event) => emit('keydown', event),
         }),
         {

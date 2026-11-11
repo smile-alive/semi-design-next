@@ -50,7 +50,7 @@ export default function ResizableTable(props: TableProps) {
     // The caller's onHeaderCell runs when the header renders the column, so its result follows the dragged width
     const assignResizableRender = (cols: ColumnProps[]) =>
         cols.map((col) => {
-            const key = col.key as ColumnKey;
+            const key = col.key!;
             const ownHeaderCell = col.onHeaderCell;
             const nextColumn: ColumnProps = {
                 ...col,

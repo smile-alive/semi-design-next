@@ -241,7 +241,7 @@ describe('Input', () => {
         const clear = vi.fn<(event: MouseEvent) => void>();
         const change = vi.fn<Change>();
         render(Input, { props: { defaultValue: 'test', showClear: true, onChange: change, onClear: clear } });
-        await fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        await fireEvent.mouseDown(getClearBtn()!);
         expect(clear).toHaveBeenCalledTimes(1);
         expect(clear.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
         expect(change).toHaveBeenCalledTimes(1);
@@ -371,7 +371,7 @@ describe('Input', () => {
 
     it('密码按钮是原生 button，Space 切换显隐并把焦点交给输入框', async () => {
         render(Input, { props: { defaultValue: 'test', mode: 'password' } });
-        const button = getModeBtn() as HTMLElement;
+        const button = getModeBtn()!;
         expect(button.tagName).toBe('BUTTON');
         expect(button).toHaveAttribute('type', 'button');
         expect(button).not.toHaveAttribute('role');
@@ -380,14 +380,14 @@ describe('Input', () => {
         await userEvent.keyboard(' ');
         expect(getInput()).toHaveAttribute('type', 'text');
         expect(getInput()).toHaveFocus();
-        (getModeBtn() as HTMLElement).focus();
+        getModeBtn()!.focus();
         await userEvent.keyboard(' ');
         expect(getInput()).toHaveAttribute('type', 'password');
     });
 
     it('密码按钮的 mousedown 阻止默认行为', () => {
         render(Input, { props: { defaultValue: 'test', mode: 'password' } });
-        expectMouseDownPrevented(getModeBtn() as HTMLElement);
+        expectMouseDownPrevented(getModeBtn()!);
     });
 
     it('模板 ref 拿到 expose 的句柄', () => {
@@ -398,10 +398,10 @@ describe('Input', () => {
 
     it('密码按钮按下与松开鼠标不切换模式，点击才切换', async () => {
         render(Input, { props: { defaultValue: 'test', mode: 'password' } });
-        await fireEvent.mouseDown(getModeBtn() as HTMLElement);
-        await fireEvent.mouseUp(getModeBtn() as HTMLElement);
+        await fireEvent.mouseDown(getModeBtn()!);
+        await fireEvent.mouseUp(getModeBtn()!);
         expect(getInput()).toHaveAttribute('type', 'password');
-        await fireEvent.click(getModeBtn() as HTMLElement);
+        await fireEvent.click(getModeBtn()!);
         expect(getInput()).toHaveAttribute('type', 'text');
     });
 
@@ -424,11 +424,11 @@ describe('Input', () => {
         document.addEventListener('keydown', hostKeyDown);
         onTestFinished(() => document.removeEventListener('keydown', hostKeyDown));
         render(Input, { props: { defaultValue: 'test', mode: 'password' } });
-        (getModeBtn() as HTMLElement).focus();
+        getModeBtn()!.focus();
         await userEvent.keyboard('{Enter}');
         expect(getInput()).toHaveAttribute('type', 'text');
         expect(getInput()).toHaveFocus();
-        (getModeBtn() as HTMLElement).focus();
+        getModeBtn()!.focus();
         await userEvent.keyboard(' ');
         expect(getInput()).toHaveAttribute('type', 'password');
         expect(hostKeyDown).not.toHaveBeenCalled();
@@ -537,7 +537,7 @@ describe('Input 行为基线', () => {
         const change = vi.fn<Change>();
         const clear = vi.fn<(event: MouseEvent) => void>();
         render(Input, { props: { modelValue: 'semi', showClear: true, onChange: change, onClear: clear } });
-        await fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        await fireEvent.mouseDown(getClearBtn()!);
         expect(change).toHaveBeenCalledWith('', expect.anything());
         expect(clear).toHaveBeenCalledTimes(1);
         expect(getInput()).toHaveValue('semi');
@@ -546,7 +546,7 @@ describe('Input 行为基线', () => {
     it('清除按钮触发 change 时第二个参数是鼠标事件', async () => {
         const change = vi.fn<Change>();
         render(Input, { props: { defaultValue: 'semi', showClear: true, onChange: change } });
-        await fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        await fireEvent.mouseDown(getClearBtn()!);
         expect(change.mock.calls[0][1]).toBeInstanceOf(MouseEvent);
         expect(change.mock.calls[0][1].type).toBe('mousedown');
     });
@@ -588,7 +588,7 @@ describe('Input 行为基线', () => {
         const blur = vi.fn<(event: FocusEvent) => void>();
         render(Input, { props: { defaultValue: 'semi', showClear: true, onBlur: blur } });
         await userEvent.click(getInput());
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(getInput()).toHaveValue('');
         expect(getInput()).toHaveFocus();
         expect(blur).not.toHaveBeenCalled();
@@ -601,7 +601,7 @@ describe('Input 行为基线', () => {
         document.body.addEventListener('mousedown', outer);
         onTestFinished(() => document.body.removeEventListener('mousedown', outer));
         render(Input, { props: { defaultValue: 'semi', showClear: true, onChange: change } });
-        await fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        await fireEvent.mouseDown(getClearBtn()!);
         expect(change).toHaveBeenCalledWith('', expect.objectContaining({ type: 'mousedown' }));
         expect(outer).toHaveBeenCalledTimes(1);
     });

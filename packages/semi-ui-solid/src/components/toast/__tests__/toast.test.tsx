@@ -145,7 +145,7 @@ describe('Toast', () => {
         document.body.appendChild(container);
         const ContainerToast = ToastFactory.create({ getPopupContainer: () => container });
         ContainerToast.info('specific getPopupContainer');
-        expect(document.getElementById(ContainerToast.getWrapperId() as string)?.parentNode).toBe(container);
+        expect(document.getElementById(ContainerToast.getWrapperId()!)?.parentNode).toBe(container);
         expect(container).toHaveTextContent('specific getPopupContainer');
         ContainerToast.destroyAll();
         container.remove();
@@ -155,7 +155,7 @@ describe('Toast', () => {
         Toast.config({ top: '400px', theme: 'light', zIndex: 2333, duration: 0 });
         Toast.resetConfig();
         Toast.info('semi');
-        const wrapper = defined(document.getElementById(Toast.getWrapperId() as string));
+        const wrapper = defined(document.getElementById(Toast.getWrapperId()!));
         expect(wrapper).toHaveStyle({ zIndex: '1010' });
         expect(wrapper.style.top).toBe('');
         expect(getInfoToast()).not.toHaveClass(`${prefix}-light`);
@@ -165,7 +165,7 @@ describe('Toast', () => {
     it('config({ top: undefined }) 清除容器上已有的 top', () => {
         Toast.config({ top: 10 });
         Toast.info('first');
-        const wrapper = defined(document.getElementById(Toast.getWrapperId() as string));
+        const wrapper = defined(document.getElementById(Toast.getWrapperId()!));
         expect(wrapper.style.top).toBe('10px');
         Toast.config({ top: undefined });
         Toast.info('second');
@@ -178,7 +178,7 @@ describe('Toast', () => {
         Other.resetConfig();
         expect(Other.defaultOpts).toMatchObject({ top: 77, zIndex: 3000, duration: 5 });
         Other.info('other');
-        expect(document.getElementById(Other.getWrapperId() as string)).toHaveStyle({ top: '77px', zIndex: '3000' });
+        expect(document.getElementById(Other.getWrapperId()!)).toHaveStyle({ top: '77px', zIndex: '3000' });
         Other.destroyAll();
     });
 
@@ -294,7 +294,7 @@ describe('Toast', () => {
     it('每次调用都应用 zIndex', () => {
         Toast.info('a');
         Toast.info({ content: 'b', zIndex: 2000 });
-        expect(document.getElementById(Toast.getWrapperId() as string)).toHaveStyle({ zIndex: '2000' });
+        expect(document.getElementById(Toast.getWrapperId()!)).toHaveStyle({ zIndex: '2000' });
     });
 
     it('info、success 与无 type 的 Toast 为 status，warning、error 为 alert', () => {
@@ -353,8 +353,8 @@ describe('Toast', () => {
         const Other = ToastFactory.create({ top: 77, zIndex: 3000 });
         Toast.info({ content: 'main', duration: 0 });
         Other.info({ content: 'other', duration: 0 });
-        const main = defined(document.getElementById(Toast.getWrapperId() as string));
-        const other = defined(document.getElementById(Other.getWrapperId() as string));
+        const main = defined(document.getElementById(Toast.getWrapperId()!));
+        const other = defined(document.getElementById(Other.getWrapperId()!));
         expect(main).not.toBe(other);
         expect(main).toHaveStyle({ zIndex: '1010' });
         expect(main.style.top).toBe('');
@@ -447,7 +447,7 @@ describe('Toast', () => {
         Toast.info({ content: 'global', duration: 0 });
         expect(getInfoToast()).toHaveClass(`${prefix}-light`);
         expect(getInfoToast()?.querySelector('button')).toBeNull();
-        expect(document.getElementById(Toast.getWrapperId() as string)).toHaveStyle({ top: '12px' });
+        expect(document.getElementById(Toast.getWrapperId()!)).toHaveStyle({ top: '12px' });
         Toast.success({ content: 'own', duration: 0, theme: 'normal', showClose: true });
         const own = document.querySelector(`.${prefix}-success`);
         expect(own).not.toHaveClass(`${prefix}-light`);
@@ -577,7 +577,7 @@ describe('Toast', () => {
 
     it('后一条 Toast 切换 stack 时，已显示的 Toast 节点与焦点保持不变', () => {
         Toast.info({ content: 'a', duration: 0, stack: true });
-        const first = getInfoToast() as HTMLElement;
+        const first = getInfoToast()!;
         const closeButton = getElement('button', first);
         closeButton.focus();
         Toast.info({ content: 'b', duration: 0 });
@@ -590,7 +590,7 @@ describe('Toast', () => {
         vi.useFakeTimers();
         Toast.info({ id: 'gone', content: 'gone', duration: 0, motion: false });
         Toast.success({ id: 'stays', content: 'stays', duration: 1, motion: false });
-        getElement('button', getInfoToast() as HTMLElement).focus();
+        getElement('button', getInfoToast()!).focus();
         Toast.close('gone');
         expect(getInfoToast()).toBeNull();
         vi.advanceTimersByTime(1000);

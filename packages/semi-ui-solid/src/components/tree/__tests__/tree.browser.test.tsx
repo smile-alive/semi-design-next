@@ -100,7 +100,7 @@ describe('tree', () => {
                 const collect = (nodes: TreeNodeData[]) =>
                     nodes.forEach((node) => {
                         if (String(node.label).includes(nextInputValue)) {
-                            keys.push(node.key as string);
+                            keys.push(node.key!);
                         }
                         if (node.children) {
                             collect(node.children);
@@ -157,7 +157,7 @@ describe('tree', () => {
 describe('Tree 键盘焦点', () => {
     const activeRow = () => {
         const tree = screen.getByRole('tree');
-        return defined(document.getElementById(tree.getAttribute('aria-activedescendant') as string));
+        return defined(document.getElementById(tree.getAttribute('aria-activedescendant')!));
     };
 
     it('树获得键盘焦点时，主题焦点环跟随当前行', async () => {
@@ -233,7 +233,7 @@ describe('Tree 键盘焦点', () => {
             tree.focus();
             await userEvent.keyboard('{End}');
             await waitFor(() => {
-                const row = defined(shadow.getElementById(tree.getAttribute('aria-activedescendant') as string));
+                const row = defined(shadow.getElementById(tree.getAttribute('aria-activedescendant')!));
                 expect(row).toHaveAttribute('data-key', '29');
                 expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual(getElement(`.${BASE_CLASS_PREFIX}-tree-wrapper`, shadow).getBoundingClientRect().bottom + 1);
             });
@@ -300,7 +300,7 @@ describe('Tree 虚拟滚动', () => {
         const tree = screen.getByRole('tree');
         await tabTo(tree);
         await waitFor(() => expect(getNode('99')).not.toBeNull());
-        expect(document.getElementById(tree.getAttribute('aria-activedescendant') as string)).toBe(getNode('99'));
+        expect(document.getElementById(tree.getAttribute('aria-activedescendant')!)).toBe(getNode('99'));
     });
 
     it('用户滚动虚拟树后渲染靠后的节点', async () => {
@@ -317,7 +317,7 @@ describe('Tree 虚拟滚动', () => {
         list.scrollTop = 30 * 80;
         await waitFor(() => expect(getNode('81')).not.toBeNull());
         const scrollTop = list.scrollTop;
-        await userEvent.click(getNode('81') as HTMLElement);
+        await userEvent.click(getNode('81')!);
         await waitFor(() => expect(getNode('81')).toHaveAttribute('aria-selected', 'true'));
         expect(list.scrollTop).toBe(scrollTop);
     });

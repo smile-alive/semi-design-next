@@ -263,7 +263,7 @@ describe('Typography（浏览器）', () => {
             const button = await waitFor(() => {
                 const found = shadow.querySelector<HTMLElement>(`.${prefix}-ellipsis-expand`);
                 expect(found).not.toBeNull();
-                return found as HTMLElement;
+                return found!;
             });
             button.focus();
             await userEvent.keyboard('{Enter}');

@@ -23,7 +23,7 @@
         props,
         () => ColorSliderFoundation.getInitialState(),
         () => ({
-            getDOM: () => dom.value as HTMLDivElement,
+            getDOM: () => dom.value!,
             notifyChange: (value) => emit('change', value),
         }),
         { props: { value: () => props.hue, max: () => 360 } }

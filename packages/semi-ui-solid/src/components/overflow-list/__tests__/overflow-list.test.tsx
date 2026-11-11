@@ -63,7 +63,7 @@ function stubIntersectionObserver() {
                 observer.callback(
                     [...observer.elements].map((target) => ({
                         target,
-                        isIntersecting: Boolean(visibility[(target as HTMLElement).dataset.scrollkey as string]),
+                        isIntersecting: Boolean(visibility[(target as HTMLElement).dataset.scrollkey!]),
                         boundingClientRect: { y: 0 },
                     }))
                 )

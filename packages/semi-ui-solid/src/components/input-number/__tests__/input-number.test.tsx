@@ -1805,7 +1805,7 @@ describe('InputNumber', () => {
                 {(t) => <InputNumber disabled {...t()} />}
             </Tooltip>
         ));
-        const span = getWrapper().parentElement as HTMLElement;
+        const span = getWrapper().parentElement!;
         expect(span).toHaveClass(`${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
         await userEvent.click(span);
         expect(await screen.findByText('tip')).toBeInTheDocument();

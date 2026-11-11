@@ -94,7 +94,7 @@ describe('AutoComplete', () => {
         await screen.findByText('1@163.com');
         const trigger = getElement(`.${BASE_CLASS_PREFIX}-autocomplete`);
         // offsetWidth ignores the enter animation's scale transform
-        expect((getPopupWrapper() as HTMLElement).offsetWidth).toBeGreaterThanOrEqual(trigger.offsetWidth);
+        expect(getPopupWrapper()!.offsetWidth).toBeGreaterThanOrEqual(trigger.offsetWidth);
     });
 
     it('鼠标点选候选项后焦点留在输入框，不发出 blur', async () => {

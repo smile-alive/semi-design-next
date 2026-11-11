@@ -9,9 +9,9 @@
 
 <div bind:this={container} class="sheet-container"></div>
 {#if config}
-    <ConfigProvider getPopupContainer={() => container as HTMLDivElement}>
+    <ConfigProvider getPopupContainer={() => container!}>
         <SideSheet getPopupContainer={own} motion={false} title="Sheet" {visible} />
     </ConfigProvider>
 {:else}
-    <SideSheet getPopupContainer={() => container as HTMLDivElement} motion={false} {visible} />
+    <SideSheet getPopupContainer={() => container!} motion={false} {visible} />
 {/if}
