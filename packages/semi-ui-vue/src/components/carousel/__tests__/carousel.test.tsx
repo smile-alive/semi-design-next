@@ -372,7 +372,7 @@ describe('Carousel', () => {
 
             const fade = renderCarousel({ autoPlay: false, animation: 'fade', speed: 500 });
             expect(query(fade.container, 'content')).toHaveClass(`${BASE_CLASS_PREFIX}-carousel-content-fade`);
-            expect(getActiveItem(fade.container)).toHaveStyle({ transitionDuration: '500ms' });
+            expect(getActiveItem(fade.container)).toHaveStyle({ transitionDuration: '0.5s' });
             await clickNext(fade.container);
             expect(query(fade.container, 'content-item-slide-in')).toBeNull();
         });

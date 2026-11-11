@@ -33,7 +33,7 @@
     },
     "devDependencies": {
         "@fibrae/semi-scss-compile": "workspace:*",
-        "@rspack/core": "^2.2.9",
+        "@rspack/core": "^2.3.2",
         "typescript": "catalog:"
     }
 }

@@ -182,7 +182,7 @@ describe('Svelte Carousel', () => {
 
             const fade = setup({ animation: 'fade', speed: 500 });
             expect(query(fade.container, 'content')).toHaveClass(`${prefix}-content-fade`);
-            expect(getActive(fade.container)).toHaveStyle({ transitionDuration: '500ms' });
+            expect(getActive(fade.container)).toHaveStyle({ transitionDuration: '0.5s' });
             await fade.next();
             expect(query(fade.container, 'content-item-slide-in')).toBeNull();
         });

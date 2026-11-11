@@ -92,7 +92,7 @@ describe('Steps 基线', () => {
         expect(items[1].querySelector(`.${ITEM}-icon-process`)).not.toBeNull();
         expect(items[0].querySelector(`.${ITEM}-title`)).toHaveAttribute('title', 'A');
         expect(items[0].querySelector(`.${ITEM}-description`)).toHaveAttribute('title', 'a');
-        expect(items[0].parentElement?.style.width).toBe(`${100 / 3}%`);
+        expect(items[0].parentElement?.style.width).toBe('33.3333%');
     });
 
     it('fill 的 snippet 标题不输出 title 属性', () => {

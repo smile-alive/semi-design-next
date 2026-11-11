@@ -99,7 +99,7 @@ describe('Steps 基线', () => {
         expect(items[1].querySelector(`.${ITEM}-icon-process`)).not.toBeNull();
         expect(items[0].querySelector(`.${ITEM}-title`)).toHaveAttribute('title', 'A');
         expect(items[0].querySelector(`.${ITEM}-description`)).toHaveAttribute('title', 'a');
-        expect((items[0].parentElement as HTMLElement).style.width).toBe(`${100 / 3}%`);
+        expect((items[0].parentElement as HTMLElement).style.width).toBe('33.3333%');
     });
 
     it('fill 非字符串标题不写 title 属性', () => {
@@ -605,7 +605,7 @@ describe('Steps 响应式', () => {
             </Steps>
         ));
         setKeys(['a', 'b', 'c']);
-        expect((getItems(container)[0].parentElement as HTMLElement).style.width).toBe(`${100 / 3}%`);
+        expect((getItems(container)[0].parentElement as HTMLElement).style.width).toBe('33.3333%');
     });
 
     it('nav 的箭头随 Step 数量更新', () => {

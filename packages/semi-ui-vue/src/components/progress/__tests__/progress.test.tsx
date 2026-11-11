@@ -84,7 +84,7 @@ describe('Progress', () => {
             type: 'circle',
         });
         // jsdom normalizes the colors and drops the default 50% of the color-mix() the component sets
-        expect(ringStyle(container)).toEqual('stroke: color-mix(in srgb, rgba(0, 0, 0, 0), rgb(255, 255, 255));');
+        expect(ringStyle(container)).toEqual('stroke: color-mix(in srgb, rgb(0 0 0 / 0), rgb(255, 255, 255));');
     });
 
     it('rgba 色标的小数透明度不会被截成 0', () => {
@@ -128,8 +128,8 @@ describe('Progress', () => {
             percent: 55,
             type: 'circle',
         });
-        // jsdom serializes the hsla() stop in rgb() form; the browser test checks the mixed color
-        expect(ringStyle(container)).toEqual('stroke: color-mix(in srgb, rgb(59, 176, 68) 10%, rgb(0, 99, 167));');
+        // jsdom serializes the hsla() stop in its own form; the browser test checks the mixed color
+        expect(ringStyle(container)).toEqual('stroke: color-mix(in srgb, hsl(125 50% 46% / 1) 10%, rgb(0 99 167) 90%);');
     });
 
     it('direction', () => {

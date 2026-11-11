@@ -112,7 +112,7 @@ describe('Svelte Cropper', () => {
         expect(getCorners(container)).toEqual([]);
         await loadImage(container);
         expect(imgStyle(container)).toEqual({ width: '400px', height: '200px', transform: 'translate(0px, 50px) rotate(0deg)' });
-        expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px, 0px)' });
+        expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px)' });
         expect(getCorners(container)).toEqual(['tl', 'tm', 'tr', 'ml', 'mr', 'bl', 'bm', 'br']);
         const viewImg = query(container, '.semi-cropper-view-img');
         expect(viewImg).toHaveAttribute('src', SRC);
@@ -124,7 +124,7 @@ describe('Svelte Cropper', () => {
         const { container: wide } = await renderLoaded({ aspectRatio: 2 });
         expect(boxStyle(wide)).toEqual({ width: '400px', height: '200px', transform: 'translate(0px, 50px)' });
         const { container: tall } = await renderLoaded({ defaultAspectRatio: 0.5 });
-        expect(boxStyle(tall)).toEqual({ width: '150px', height: '300px', transform: 'translate(125px, 0px)' });
+        expect(boxStyle(tall)).toEqual({ width: '150px', height: '300px', transform: 'translate(125px)' });
     });
 
     it('class 与 style 应用到根元素', () => {
@@ -411,7 +411,7 @@ describe('Svelte Cropper', () => {
         const store = createStore<CropperProps>({ src: SRC, aspectRatio: 1 });
         const { container } = renderSvelte(Cropper, { props: store });
         await loadImage(container);
-        expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px, 0px)' });
+        expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px)' });
         store.aspectRatio = 2;
         flushSync();
         expect(boxStyle(container)).toEqual({ width: '400px', height: '200px', transform: 'translate(0px, 50px)' });
@@ -444,12 +444,12 @@ describe('Svelte Cropper', () => {
             const box = getBox(container);
             await pointer(box, 'pointerDown', { clientX: 200, clientY: 150 });
             await pointer(box, 'pointerMove', { clientX: 210, clientY: 150 });
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
             await pointer(box, 'pointerMove', { clientX: 500, clientY: 150 });
-            expect(boxStyle(container).transform).toBe('translate(100px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(100px)');
             await release(box);
             await pointer(box, 'pointerMove', { clientX: 0, clientY: 150 });
-            expect(boxStyle(container).transform).toBe('translate(100px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(100px)');
         });
 
         it('无 aspectRatio 时，缩放手柄可自由缩放裁剪框', async () => {
@@ -457,7 +457,7 @@ describe('Svelte Cropper', () => {
             const corner = getCorner(container, 'br');
             await pointer(corner, 'pointerDown', { clientX: 350, clientY: 300 });
             await pointer(corner, 'pointerMove', { clientX: 300, clientY: 200 });
-            expect(boxStyle(container)).toEqual({ width: '250px', height: '200px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '250px', height: '200px', transform: 'translate(50px)' });
             await release(corner);
             await pointer(corner, 'pointerMove', { clientX: 100, clientY: 100 });
             expect(boxStyle(container).width).toBe('250px');
@@ -468,7 +468,7 @@ describe('Svelte Cropper', () => {
             const corner = getCorner(container, 'br');
             await pointer(corner, 'pointerDown', { clientX: 350, clientY: 300 });
             await pointer(corner, 'pointerMove', { clientX: 0, clientY: 200 });
-            expect(boxStyle(container)).toEqual({ width: '200px', height: '200px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '200px', height: '200px', transform: 'translate(50px)' });
             await release(corner);
         });
 
@@ -476,11 +476,11 @@ describe('Svelte Cropper', () => {
             ['tl', 70, 30, { width: '280px', height: '270px', transform: 'translate(70px, 30px)' }],
             ['tm', 200, 30, { width: '300px', height: '270px', transform: 'translate(50px, 30px)' }],
             ['tr', 330, 30, { width: '280px', height: '270px', transform: 'translate(50px, 30px)' }],
-            ['ml', 70, 150, { width: '280px', height: '300px', transform: 'translate(70px, 0px)' }],
-            ['mr', 330, 150, { width: '280px', height: '300px', transform: 'translate(50px, 0px)' }],
-            ['bl', 70, 270, { width: '280px', height: '270px', transform: 'translate(70px, 0px)' }],
-            ['bm', 200, 270, { width: '300px', height: '270px', transform: 'translate(50px, 0px)' }],
-            ['br', 330, 270, { width: '280px', height: '270px', transform: 'translate(50px, 0px)' }],
+            ['ml', 70, 150, { width: '280px', height: '300px', transform: 'translate(70px)' }],
+            ['mr', 330, 150, { width: '280px', height: '300px', transform: 'translate(50px)' }],
+            ['bl', 70, 270, { width: '280px', height: '270px', transform: 'translate(70px)' }],
+            ['bm', 200, 270, { width: '300px', height: '270px', transform: 'translate(50px)' }],
+            ['br', 330, 270, { width: '280px', height: '270px', transform: 'translate(50px)' }],
         ])('无 aspectRatio 时 %s 手柄只移动自己的边', async (dir, x, y, expected) => {
             const { container } = await renderLoaded();
             const handle = getCorner(container, dir);
@@ -565,7 +565,7 @@ describe('Svelte Cropper', () => {
             observer.fireLive((target) => ({ target }));
             flushSync();
             expect(imgStyle(container)).toEqual({ width: '800px', height: '400px', transform: 'translate(0px, 100px) rotate(0deg)' });
-            expect(boxStyle(container)).toEqual({ width: '600px', height: '600px', transform: 'translate(100px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '600px', height: '600px', transform: 'translate(100px)' });
         });
 
         it('图片加载前容器尺寸已变化，按加载时的尺寸布局', async () => {
@@ -576,7 +576,7 @@ describe('Svelte Cropper', () => {
             observer.fireLive((target) => ({ target }));
             await loadImage(container);
             expect(imgStyle(container)).toEqual({ width: '800px', height: '400px', transform: 'translate(0px, 100px) rotate(0deg)' });
-            expect(boxStyle(container)).toEqual({ width: '600px', height: '600px', transform: 'translate(100px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '600px', height: '600px', transform: 'translate(100px)' });
         });
 
         it('挂载时容器宽高为 0，之后变大并重新适配，不出现 NaN', async () => {
@@ -590,7 +590,7 @@ describe('Svelte Cropper', () => {
             observer.fireLive((target) => ({ target }));
             flushSync();
             expect(imgStyle(container)).toEqual({ width: '400px', height: '200px', transform: 'translate(0px, 50px) rotate(0deg)' });
-            expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px)' });
         });
 
         it('卸载时断开 ResizeObserver', async () => {
@@ -629,7 +629,7 @@ describe('Svelte Cropper', () => {
             await pointer(edge, 'pointerDown', { clientX: 350, clientY: 150 });
             await pointer(edge, 'pointerMove', { clientX: 50, clientY: 150 });
             await release(edge);
-            expect(boxStyle(container)).toEqual({ width: '10px', height: '300px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '10px', height: '300px', transform: 'translate(50px)' });
             expect(component.getCropperCanvas().width).toBe(20);
             expect(getImageData).toHaveBeenCalled();
         });
@@ -708,21 +708,21 @@ describe('Svelte Cropper', () => {
         it('方向键每次移动裁剪框 10px，并在容器边缘停止', async () => {
             const { container } = await renderLoaded();
             key(container, 'ArrowRight');
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
             key(container, 'ArrowDown');
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
             for (let i = 0; i < 20; i++) key(container, 'ArrowRight');
-            expect(boxStyle(container).transform).toBe('translate(100px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(100px)');
             for (let i = 0; i < 20; i++) key(container, 'ArrowLeft');
-            expect(boxStyle(container).transform).toBe('translate(0px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(0px)');
         });
 
         it('Shift 加方向键从左上角缩放，且限制在容器内', async () => {
             const { container } = await renderLoaded();
             key(container, 'ArrowLeft', { shiftKey: true });
-            expect(boxStyle(container)).toEqual({ width: '290px', height: '300px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '290px', height: '300px', transform: 'translate(50px)' });
             key(container, 'ArrowUp', { shiftKey: true });
-            expect(boxStyle(container)).toEqual({ width: '290px', height: '290px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '290px', height: '290px', transform: 'translate(50px)' });
             for (let i = 0; i < 10; i++) key(container, 'ArrowRight', { shiftKey: true });
             expect(boxStyle(container).width).toBe('350px');
         });
@@ -740,7 +740,7 @@ describe('Svelte Cropper', () => {
             key(container, 'ArrowLeft', { shiftKey: true });
             expect(boxStyle(container).width).toBe('300px');
             key(container, 'ArrowRight');
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
         });
 
         it('Alt、Ctrl、Meta 加方向键不移动也不缩放裁剪框，并放行默认行为', async () => {
@@ -749,7 +749,7 @@ describe('Svelte Cropper', () => {
                 expect(key(container, 'ArrowRight', { [modifier]: true })).toBe(false);
                 expect(key(container, 'ArrowLeft', { [modifier]: true, shiftKey: true })).toBe(false);
             }
-            expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px)' });
         });
 
         it('放行其他按键，并接管方向键', async () => {
