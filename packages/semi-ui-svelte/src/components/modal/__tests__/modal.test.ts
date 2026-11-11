@@ -14,11 +14,11 @@ type Store = NonNullable<Parameters<typeof ModalFixture>[1]>['store'];
 const prefix = 'semi-modal';
 const loadingCls = 'semi-button-loading';
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
-const getRoot = () => $('.semi-portal > div') as HTMLElement;
-const getBox = () => $(`.${prefix}`) as HTMLElement;
-const getDialog = () => $(`.${prefix}-content`) as HTMLElement;
-const getMask = () => $(`.${prefix}-mask`) as HTMLElement;
-const getWrap = () => $(`.${prefix}-wrap`) as HTMLElement;
+const getRoot = () => $('.semi-portal > div')!;
+const getBox = () => $(`.${prefix}`)!;
+const getDialog = () => $(`.${prefix}-content`)!;
+const getMask = () => $(`.${prefix}-mask`)!;
+const getWrap = () => $(`.${prefix}-wrap`)!;
 const footerButtons = () => document.querySelectorAll<HTMLElement>(`.${prefix}-footer .semi-button`);
 // fireEvent dispatches synchronously and returns a promise that only waits for Svelte's flush, which flushSync does here
 function fire(dispatch: () => unknown) {

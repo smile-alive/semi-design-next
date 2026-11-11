@@ -6,7 +6,7 @@
     defineProps<{ preventScroll?: boolean }>();
     const emit = defineEmits<{ ready: [handle: RadioHandle] }>();
     const radio = useTemplateRef<RadioHandle>('radio');
-    onMounted(() => emit('ready', radio.value as RadioHandle));
+    onMounted(() => emit('ready', radio.value!));
 </script>
 
 <template>

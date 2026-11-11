@@ -238,7 +238,7 @@ describe('PinCode', () => {
         let root: HTMLDivElement | undefined;
         render(() => <PinCode ref={(node) => (root = node)} count={2} />);
         expect(root).toBe(getWrapper());
-        expect([...(root as HTMLDivElement).querySelectorAll('input')]).toEqual(getInputs());
+        expect([...root!.querySelectorAll('input')]).toEqual(getInputs());
     });
 
     it('ref 的 focus 聚焦第一个空输入框，全部填满时聚焦最后一个，blur 释放焦点', () => {
@@ -669,7 +669,7 @@ describe('PinCode', () => {
                     {(t) => <PinCode count={2} disabled {...t()} />}
                 </Tooltip>
             ));
-            const span = getWrapper().parentElement as HTMLElement;
+            const span = getWrapper().parentElement!;
             expect(span).toHaveClass(`${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
             await userEvent.click(span);
             expect(await screen.findByText('tip')).toBeInTheDocument();

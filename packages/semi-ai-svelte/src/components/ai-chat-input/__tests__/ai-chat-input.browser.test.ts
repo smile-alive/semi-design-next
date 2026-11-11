@@ -19,7 +19,7 @@ const find = <T extends Element = HTMLElement>(selector: string, root: ParentNod
     waitFor(() => {
         const found = root.querySelector<T>(selector);
         expect(found).not.toBeNull();
-        return found as T;
+        return found!;
     });
 
 describe('AIChatInput', () => {
@@ -33,7 +33,7 @@ describe('AIChatInput', () => {
             await waitFor(() => expect(panel.lastElementChild).toHaveAttribute('aria-selected', 'true'));
             expect(panel.scrollTop).toBeGreaterThan(0);
             const panelRect = panel.getBoundingClientRect();
-            const itemRect = (panel.lastElementChild as Element).getBoundingClientRect();
+            const itemRect = panel.lastElementChild!.getBoundingClientRect();
             expect(itemRect.top).toBeGreaterThanOrEqual(panelRect.top);
             expect(itemRect.bottom).toBeLessThanOrEqual(panelRect.bottom + 1);
         };

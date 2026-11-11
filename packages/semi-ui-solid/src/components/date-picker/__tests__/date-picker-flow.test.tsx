@@ -516,7 +516,7 @@ describe('DatePicker 选择流程', () => {
     });
 
     it('monthRange 只有一个可用月份', () => {
-        const disabledDate = (date?: Date) => Boolean(date) && (date as Date).getFullYear() === 2022 && (date as Date).getMonth() > 0;
+        const disabledDate = (date?: Date) => Boolean(date) && date!.getFullYear() === 2022 && date!.getMonth() > 0;
         renderDatePicker({ type: 'monthRange', defaultValue: ['2022-06', '2022-08'], defaultOpen: true, disabledDate, motion: false });
         const leftMonths = within(getYMLists()[1]).getAllByRole('option');
         const enabledMonths = leftMonths.filter((option) => option.getAttribute('aria-disabled') === 'false');
@@ -544,7 +544,7 @@ describe('DatePicker 选择流程', () => {
         },
     ])('monthRange $name', async ({ disabled, expected }) => {
         const onChange = vi.fn<ChangeHandler>();
-        const disabledDate = (date?: Date) => Boolean(date) && (date as Date).getFullYear() === 2022 && disabled.includes((date as Date).getMonth());
+        const disabledDate = (date?: Date) => Boolean(date) && date!.getFullYear() === 2022 && disabled.includes(date!.getMonth());
         renderDatePicker({ type: 'monthRange', defaultValue: ['2022-06', '2022-08'], defaultOpen: true, disabledDate, motion: false, onChange });
         await userEvent.click(within(getYMLists()[0]).getByRole('option', { name: '2022年' }));
         expect(onChange).toHaveBeenLastCalledWith(...expected);
@@ -552,7 +552,7 @@ describe('DatePicker 选择流程', () => {
 
     it('monthRange 在当前索引之前查找可用月份', async () => {
         const onChange = vi.fn<ChangeHandler>();
-        const disabledDate = (date?: Date) => Boolean(date) && (date as Date).getFullYear() === 2023 && (date as Date).getMonth() >= 5;
+        const disabledDate = (date?: Date) => Boolean(date) && date!.getFullYear() === 2023 && date!.getMonth() >= 5;
         renderDatePicker({ type: 'monthRange', defaultValue: ['2023-06', '2023-08'], defaultOpen: true, disabledDate, motion: false, onChange });
         await userEvent.click(within(getYMLists()[0]).getByRole('option', { name: '2023年' }));
         expect(onChange).toHaveBeenLastCalledWith([new Date(2023, 0), new Date(2023, 0)], ['2023-01', '2023-01']);

@@ -921,9 +921,9 @@ describe('日历网格键盘焦点', () => {
             if (date === undefined) {
                 return false;
             } else if (rangeInputFocus === 'rangeStart') {
-                return date <= addDays(new Date(options.rangeEnd as string), -20);
+                return date <= addDays(new Date(options.rangeEnd!), -20);
             } else if (rangeInputFocus === 'rangeEnd') {
-                return date >= addDays(new Date(options.rangeStart as string), 20);
+                return date >= addDays(new Date(options.rangeStart!), 20);
             }
             return false;
         };
@@ -1106,7 +1106,7 @@ describe('ShadowRoot 内的焦点', () => {
         const title = await waitFor(() => {
             const button = shadow.querySelector<HTMLElement>(`.${dp}-navigation-month button`);
             expect(button).not.toBeNull();
-            return button as HTMLElement;
+            return button!;
         });
         title.click();
         const back = await within(getElement(`.${dp}-month-grid-left`, shadow)).findByRole('button', { name: zh_CN.DatePicker.selectDate });

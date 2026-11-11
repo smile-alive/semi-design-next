@@ -19,7 +19,7 @@ function renderForm(props: FormProps, children: () => JSX.Element) {
             {children()}
         </Form>
     ));
-    return () => formApi as FormApi;
+    return () => formApi!;
 }
 
 describe('Form 滚动', () => {

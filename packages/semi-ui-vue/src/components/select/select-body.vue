@@ -99,14 +99,14 @@
             focusInput: () => triggerInput.value?.focus({ preventScroll: props.preventScroll }),
             focusDropdownInput: () => dropdownInput.value?.focus({ preventScroll: props.preventScroll }),
             notifyMaxLimit: (option) => emit('exceed', option as SelectOptionProps),
-            notifyDeselect: (value, option) => emit('deselect', value as string | number, option as SelectOptionProps),
+            notifyDeselect: (value, option) => emit('deselect', value!, option as SelectOptionProps),
             getOptionsFromChildren: () => props.optionRecords as BaseOptionRecord[],
             notifyChange: (value) => {
                 const payload = value as SelectChangeValue<T, Multiple>;
                 emit('update:modelValue', payload);
                 emit('change', payload);
             },
-            notifySelect: (value, option) => emit('select', value as string | number, option as SelectOptionProps),
+            notifySelect: (value, option) => emit('select', value!, option as SelectOptionProps),
             notifyDropdownVisibleChange: (visible) => emit('dropdownVisibleChange', visible),
             notifySearch: (inputValue, event) => emit('search', inputValue, event),
             notifyCreate: (option) => emit('create', option as SelectOptionProps),

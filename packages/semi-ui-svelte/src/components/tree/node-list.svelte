@@ -36,7 +36,7 @@
 
     const groupKey = (group: FlattenNode[]) => `motion-${String(group[0]?.key)}`;
 
-    const rowKey = (node: FlattenNode) => (itemKey ? itemKey(node) : (node.key as string));
+    const rowKey = (node: FlattenNode) => (itemKey ? itemKey(node) : node.key!);
 
     const itemKeyAt = (index: number) => rowKey(flattenNodes[index]);
 

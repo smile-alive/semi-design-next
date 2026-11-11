@@ -239,7 +239,7 @@
         rows: () => view.flattenNodes as FlattenNode[],
         defaultIndex: () =>
             Math.max(
-                view.flattenNodes.findIndex((node) => view.selectedKeys.includes(node.key as string)),
+                view.flattenNodes.findIndex((node) => view.selectedKeys.includes(node.key!)),
                 0
             ),
         rowProps: (node) => rowProps(node),

@@ -139,7 +139,7 @@ describe('Svelte BackTop', () => {
     it('默认渲染一个圆形原生 FloatButton，图标为回到顶部', async () => {
         const { container } = setup({ visibilityHeight: -1 });
         await frame();
-        const root = getRoot(container) as HTMLElement;
+        const root = getRoot(container)!;
         expect(root.tagName).toBe('BUTTON');
         expect(root).toHaveAttribute('type', 'button');
         expect(root).not.toHaveAttribute('role');
@@ -153,7 +153,7 @@ describe('Svelte BackTop', () => {
     it('把 icon、shape、size、colorful 与 badge 交给 FloatButton', async () => {
         const { container } = setup({ badge: { dot: true }, colorful: true, shape: 'square', size: 'large', visibilityHeight: -1 }, { icon: true });
         await frame();
-        const root = getRoot(container) as HTMLElement;
+        const root = getRoot(container)!;
         expect(root).toHaveClass('semi-floatButton-square', 'semi-floatButton-large');
         const body = root.querySelector('.semi-floatButton-body');
         expect(body).toHaveClass('semi-floatButton-colorful');
@@ -171,7 +171,7 @@ describe('Svelte BackTop', () => {
     it('children 作为静态内容渲染在按钮内，替代图标', async () => {
         const { container } = setup({ visibilityHeight: -1 }, { children: 'UP', icon: true });
         await frame();
-        const root = getRoot(container) as HTMLElement;
+        const root = getRoot(container)!;
         expect(root.tagName).toBe('BUTTON');
         expect(root.querySelector('.semi-floatButton-body .custom')).toHaveTextContent('UP');
         expect(root.querySelector('[data-testid="icon"]')).toBeNull();

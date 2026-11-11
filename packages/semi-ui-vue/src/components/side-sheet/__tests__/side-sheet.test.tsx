@@ -24,9 +24,9 @@ type View = ReturnType<typeof render>;
 
 const prefix = 'semi-sidesheet';
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
-const getRoot = () => $(`div.${prefix}`) as HTMLElement;
-const getInner = () => $(`.${prefix}-inner`) as HTMLElement;
-const getMask = () => $(`.${prefix}-mask`) as HTMLElement;
+const getRoot = () => $(`div.${prefix}`)!;
+const getInner = () => $(`.${prefix}-inner`)!;
+const getMask = () => $(`.${prefix}-mask`)!;
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
 const content = () => <p>This is content of basic sideSheet</p>;
 
@@ -158,7 +158,7 @@ describe('SideSheet', () => {
 
     it('关闭按钮发出一次 cancel 与 update:visible(false)', async () => {
         const view = await renderSideSheet({ visible: true });
-        await userEvent.click($(`button.${prefix}-close`) as HTMLElement);
+        await userEvent.click($(`button.${prefix}-close`)!);
         expect(view.emitted().cancel).toHaveLength(1);
         expect(view.emitted()['update:visible']).toEqual([[false]]);
     });
@@ -452,7 +452,7 @@ describe('SideSheet 行为', () => {
         const container = document.body.appendChild(document.createElement('div'));
         await renderSideSheet({ visible: true, getPopupContainer: () => container });
         expect(getRoot()).toHaveClass(`${prefix}-popup`);
-        const portal = $('.semi-portal') as HTMLElement;
+        const portal = $('.semi-portal')!;
         expect(portal.parentElement).toBe(container);
         expect(portal.style.position).toBe('static');
         expect(portal.style.zIndex).toBe('1000');
@@ -777,10 +777,10 @@ describe('SideSheet Vue 写法', () => {
         const page = document.body.appendChild(document.createElement('main'));
         render(ConfigContainer);
         await nextTick();
-        const container = $('.config-container') as HTMLElement;
+        const container = $('.config-container')!;
         expect(container).toContainElement(getRoot());
         expect(getRoot()).toHaveClass(`${prefix}-popup`);
-        expect(($('.semi-portal') as HTMLElement).style.position).toBe('static');
+        expect($('.semi-portal')!.style.position).toBe('static');
         expect(document.body.style.overflow).toBe('');
         expect(screen.getByRole('dialog', { name: 'Sheet' })).not.toHaveAttribute('aria-modal');
         expect(page.inert).toBeFalsy();

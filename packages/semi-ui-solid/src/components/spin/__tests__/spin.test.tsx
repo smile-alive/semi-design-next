@@ -47,10 +47,10 @@ describe('Spin', () => {
             </Spin>
         ));
         expect(getSpin(container)).toHaveAttribute('aria-busy', 'true');
-        expect((screen.getByText('content').parentElement as HTMLElement).inert).toBe(true);
+        expect(screen.getByText('content').parentElement!.inert).toBe(true);
         setSpinning(false);
         expect(getSpin(container)).not.toHaveAttribute('aria-busy');
-        expect((screen.getByText('content').parentElement as HTMLElement).inert).toBe(false);
+        expect(screen.getByText('content').parentElement!.inert).toBe(false);
     });
 
     it('数字 0 的 tip 与 children 照常渲染', () => {

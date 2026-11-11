@@ -8,6 +8,6 @@
 
 <template>
     <div ref="container" class="sidesheet-container">
-        <SideSheet :getPopupContainer="() => container as HTMLDivElement" :motion="false" :visible="visible" />
+        <SideSheet :getPopupContainer="() => container!" :motion="false" :visible="visible" />
     </div>
 </template>

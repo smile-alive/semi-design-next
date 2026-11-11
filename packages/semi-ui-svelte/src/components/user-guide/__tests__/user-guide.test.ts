@@ -385,7 +385,7 @@ describe('Svelte UserGuide 弹出模式', () => {
     it('锚点的位置与尺寸带 px 单位且不是 Tab 停靠点', async () => {
         setup();
         await screen.findByText('Title A');
-        const anchor = $('[tabindex="-1"][style*="position: fixed"]') as HTMLElement;
+        const anchor = $('[tabindex="-1"][style*="position: fixed"]')!;
         expect(anchor).not.toBeNull();
         expect(anchor.style.left).toBe('5px');
         expect(anchor.style.top).toBe('15px');
@@ -450,7 +450,7 @@ describe('Svelte UserGuide 滚动锁', () => {
 
     it('ConfigProvider 的 getPopupContainer 指向其他元素时，modal 模式渲染进容器且不锁定 body 滚动', async () => {
         render(ConfigContainer, { props: { steps: makeSteps(), mode: 'modal' } });
-        const host = $('.config-container') as HTMLElement;
+        const host = $('.config-container')!;
         await waitFor(() => expect(host.querySelector(`.${BASE_CLASS_PREFIX}-modal`)).not.toBeNull());
         expect(overflow()).toBe('');
     });
@@ -750,7 +750,7 @@ describe('Svelte UserGuide 弹窗模式', () => {
         steps[0].mask = false;
         setup({ getPopupContainer: () => container, mode: 'modal', zIndex: 2000, class: 'guide-cls', style: 'color: red' }, { steps });
         await screen.findByText('Title A');
-        const modal = $(`.${modalPrefix}`) as HTMLElement;
+        const modal = $(`.${modalPrefix}`)!;
         expect(modal).toHaveClass('guide-cls', 'step-cls');
         expect(modal.querySelector(`.${BASE_CLASS_PREFIX}-modal`) ?? modal).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(container.contains(modal)).toBe(true);
@@ -989,7 +989,7 @@ describe('Svelte UserGuide 未声明的属性', () => {
         const onclick = vi.fn<() => void>();
         setup({ class: 'attr-cls', id: 'guide-id', 'data-x': '1', 'aria-label': 'ignored', onclick } as never);
         await screen.findByText('Title A');
-        const popover = $(`.${prefix}-popover`) as HTMLElement;
+        const popover = $(`.${prefix}-popover`)!;
         expect(popover).toHaveClass('attr-cls');
         expect($('#guide-id')).toBeNull();
         expect($('[data-x]')).toBeNull();
@@ -1007,7 +1007,7 @@ describe('Svelte UserGuide 未声明的属性', () => {
         expect($('#guide-id')).toBeNull();
         expect($('[data-x]')).toBeNull();
         expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-label');
-        await fireEvent.click($(`.${modalPrefix}`) as HTMLElement);
+        await fireEvent.click($(`.${modalPrefix}`)!);
         expect(onclick).not.toHaveBeenCalled();
     });
 });

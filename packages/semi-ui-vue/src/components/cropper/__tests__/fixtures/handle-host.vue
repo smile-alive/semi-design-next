@@ -5,7 +5,7 @@
 
     const props = defineProps<{ cropperProps?: CropperProps; onReady: (handle: CropperHandle) => void }>();
     const cropper = useTemplateRef<CropperHandle>('cropper');
-    onMounted(() => props.onReady(cropper.value as CropperHandle));
+    onMounted(() => props.onReady(cropper.value!));
 </script>
 
 <template>

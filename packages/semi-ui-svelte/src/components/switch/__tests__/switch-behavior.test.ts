@@ -12,7 +12,7 @@ import SwitchFixture from './switch-fixture.svelte';
 type SwitchChange = (checked: boolean, event: Event) => void;
 const prefixCls = `${BASE_CLASS_PREFIX}-switch`;
 const getSwitch = () => screen.getByRole<HTMLInputElement>('switch');
-const getWrapper = () => getSwitch().parentElement as HTMLElement;
+const getWrapper = () => getSwitch().parentElement!;
 
 function setup(props: SwitchProps = {}, texts = false) {
     const store = createStore<{ props: SwitchProps; texts: boolean }>({ props, texts });

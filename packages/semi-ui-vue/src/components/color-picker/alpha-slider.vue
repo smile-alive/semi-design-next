@@ -24,7 +24,7 @@
         props,
         () => ColorSliderFoundation.getInitialState(),
         () => ({
-            getDOM: () => dom.value as HTMLDivElement,
+            getDOM: () => dom.value!,
             notifyChange: (percent) => emit('change', percent / 100),
         }),
         { props: { value: () => props.hsva.a * 100, max: () => 100 } }

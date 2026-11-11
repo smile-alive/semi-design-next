@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, silentWavUrl, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import { defined } from '@test/utils/function';
 import VideoPlayer from '../video-player.svelte';
 
@@ -10,7 +11,7 @@ const prefixCls = `${BASE_CLASS_PREFIX}-videoPlayer`;
 const DURATION = 60;
 // A WAV in a video element still loads and plays, and needs no video fixture
 const src = silentWavUrl(DURATION);
-const query = <E extends Element = HTMLElement>(container: Element, selector: string) => container.querySelector<E>(selector) as E;
+const query = <E extends Element = HTMLElement>(container: Element, selector: string) => getElement<E>(selector, container);
 const playButton = (container: Element) => defined(query(container, '.semi-icon-play').closest<HTMLButtonElement>('button'));
 
 describe('Svelte VideoPlayer（浏览器）', () => {
@@ -48,7 +49,7 @@ describe('Svelte VideoPlayer（浏览器）', () => {
         await userEvent.click(query(container, `.${prefixCls}-controls-popup`));
         const findItem = () => [...document.querySelectorAll<HTMLElement>(`.${prefixCls}-controls-popup-menu-item`)].find((el) => el.textContent?.trim() === '2.0x');
         await expect.poll(findItem).toBeTruthy();
-        await userEvent.click(findItem() as HTMLElement);
+        await userEvent.click(findItem()!);
         await expect.poll(() => video.playbackRate).toBe(2);
     });
 

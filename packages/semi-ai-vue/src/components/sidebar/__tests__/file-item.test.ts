@@ -32,7 +32,7 @@ async function mountEditor(props: Record<string, unknown> = {}) {
     });
     await waitFor(() => expect(editors).toHaveLength(1));
     await waitFor(() => expect(view.container.querySelector('.ProseMirror')).toBeInTheDocument());
-    const editor = editors.at(-1) as Editor;
+    const editor = editors.at(-1)!;
     return { view, container: view.container, editor, onContentChange };
 }
 
@@ -175,7 +175,7 @@ describe('Sidebar.FileItem', () => {
         const h3 = await waitFor(() => {
             const icon = document.querySelector('.semi-icon-h3');
             expect(icon).toBeInTheDocument();
-            return icon as Element;
+            return icon!;
         });
         await fireEvent.click(h3);
         expect(onContentChange).toHaveBeenLastCalledWith('<h3>text</h3><p></p>');
@@ -393,7 +393,7 @@ describe('Sidebar.FileItem', () => {
         const input = await waitFor(() => {
             const el = container.querySelector('.tiptap-image-slot input[type="file"]');
             expect(el).toBeInTheDocument();
-            return el as Element;
+            return el!;
         });
         await fireEvent.change(input, { target: { files: [new File(['x'], 'a.png', { type: 'image/png' })] } });
         await waitFor(() => expect(container.querySelector('.ProseMirror img')).toHaveAttribute('src', 'https://semi.design/uploaded.png'));
@@ -413,7 +413,7 @@ describe('Sidebar.FileItem', () => {
         const input = await waitFor(() => {
             const el = container.querySelector('.tiptap-image-slot input[type="file"]');
             expect(el).toBeInTheDocument();
-            return el as Element;
+            return el!;
         });
         await fireEvent.change(input, { target: { files: [new File(['x'], 'a.png', { type: 'image/png' })] } });
         await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
@@ -461,7 +461,7 @@ describe('Sidebar.FileItem', () => {
         const slot = await waitFor(() => {
             const el = container.querySelector('.tiptap-image-slot');
             expect(el).toBeInTheDocument();
-            return el as Element;
+            return el!;
         });
         const html = editor.getHTML();
         expect(html).toContain('data-type="image-upload"');

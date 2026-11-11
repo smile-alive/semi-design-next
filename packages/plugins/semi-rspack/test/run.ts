@@ -75,7 +75,7 @@ async function runCase(label: string, options: SemiWebpackPluginOptions, entry =
                 module: { rules: [{ test: /\.s?css$/, type: 'css' }] },
                 plugins: [new SemiRspackPlugin(options)],
             },
-            (err, result) => (err ? reject(err) : resolve(result))
+            (err, result) => (err ? reject(err) : resolve(result!))
         );
     });
     assert.ok(!stats.hasErrors(), stats.toString({ all: false, errors: true }));

@@ -24,7 +24,7 @@ function renderSchema(options: SchemaFixtureStore) {
             },
         },
     });
-    return { ...view, store, api: () => formApi as FormApi };
+    return { ...view, store, api: () => formApi! };
 }
 
 const fieldOf = (path: string) => getElement(`.semi-form-field[x-field-id="${path}"]`);

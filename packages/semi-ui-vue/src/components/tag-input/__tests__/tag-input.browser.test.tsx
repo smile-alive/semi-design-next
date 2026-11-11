@@ -41,7 +41,7 @@ describe('TagInput（浏览器）', () => {
         const overlay = await waitFor(() => {
             const node = document.querySelector<HTMLElement>(`.${tagInputCls}-drag-item-move`);
             expect(node).toHaveTextContent('抖音');
-            return node as HTMLElement;
+            return node!;
         });
         // The Popover content is in the top layer; dnd-kit makes the overlay click-through with an inline !important
         overlay.style.setProperty('pointer-events', 'auto', 'important');
@@ -270,7 +270,7 @@ describe('TagInput 激活状态跟随键盘焦点', () => {
         await tab({ shift: true });
         expect(document.activeElement).toHaveAccessibleName(zh_CN.TagInput.dragSort);
         expect(document.activeElement?.contains(getHandles()[2])).toBe(true);
-        expectThemeFocusRing(document.activeElement as Element);
+        expectThemeFocusRing(document.activeElement!);
         await tab();
         await tab();
         await tab();

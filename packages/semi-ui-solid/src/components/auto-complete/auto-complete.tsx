@@ -224,8 +224,8 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
             notifySelect: (option) => local.onSelect?.(option as string | number | BaseDataItem),
             notifyDropdownVisibleChange: (visible) => local.onDropdownVisibleChange?.(visible),
             notifyClear: () => local.onClear?.(),
-            notifyFocus: (event) => local.onFocus?.(event as FocusEvent),
-            notifyBlur: (event) => local.onBlur?.(event as FocusEvent),
+            notifyFocus: (event) => local.onFocus?.(event!),
+            notifyBlur: (event) => local.onBlur?.(event!),
             notifyKeyDown: (event) => callHandler(local.onKeyDown, event),
         })
     );

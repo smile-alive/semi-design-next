@@ -15,9 +15,9 @@ type Cancel = (event: MouseEvent | KeyboardEvent) => void;
 
 const prefix = 'semi-sidesheet';
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
-const getRoot = () => $(`div.${prefix}`) as HTMLElement;
-const getInner = () => $(`.${prefix}-inner`) as HTMLElement;
-const getMask = () => $(`.${prefix}-mask`) as HTMLElement;
+const getRoot = () => $(`div.${prefix}`)!;
+const getInner = () => $(`.${prefix}-inner`)!;
+const getMask = () => $(`.${prefix}-mask`)!;
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
 const animationEnd = (node: Element) => node.dispatchEvent(new Event('animationend', { bubbles: true }));
 // the setup stubs getAnimations() with [], which ends every run at once; a running animation keeps the sheet mounted
@@ -227,7 +227,7 @@ describe('Svelte SideSheet 取消', () => {
     it('关闭按钮调用一次 onCancel，并关闭抽屉', async () => {
         const cancel = vi.fn<Cancel>();
         setup({ visible: true, motion: false, title: 'Sheet', onCancel: cancel });
-        await fireEvent.click($(`button.${prefix}-close`) as HTMLElement);
+        await fireEvent.click($(`button.${prefix}-close`)!);
         expect(cancel).toHaveBeenCalledTimes(1);
         expect(getRoot()).toBeNull();
     });
@@ -326,7 +326,7 @@ describe('Svelte SideSheet 动画与显示状态', () => {
         holdAnimations();
         const { store } = setup({ visible: true }, { footer: true });
         update(store, { visible: false });
-        animationEnd($(`.${prefix}-footer span`) as HTMLElement);
+        animationEnd($(`.${prefix}-footer span`)!);
         flushSync();
         expect(getRoot()).not.toBeNull();
     });
@@ -534,7 +534,7 @@ describe('Svelte SideSheet 容器与上下文', () => {
         expect(sheets).toHaveLength(1);
         expect($('.sheet-container')).toContainElement(sheets[0] as HTMLElement);
         expect(getRoot()).toHaveClass(`${prefix}-popup`);
-        expect(($('.semi-portal') as HTMLElement).style.position).toBe('static');
+        expect($('.semi-portal')!.style.position).toBe('static');
         expect(document.body.style.overflow).toBe('');
     });
 

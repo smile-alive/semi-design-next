@@ -30,9 +30,9 @@ function renderSideSheet(initial: TestProps = {}, children: () => JSX.Element = 
 
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const getRoot = () => $(`div.${prefix}`);
-const getInner = () => $(`.${prefix}-inner`) as HTMLElement;
-const getMask = () => $(`.${prefix}-mask`) as HTMLElement;
-const getPortal = () => $(`.${BASE_CLASS_PREFIX}-portal`) as HTMLElement;
+const getInner = () => $(`.${prefix}-inner`)!;
+const getMask = () => $(`.${prefix}-mask`)!;
+const getPortal = () => $(`.${BASE_CLASS_PREFIX}-portal`)!;
 const animationEnd = (node: Element) => node.dispatchEvent(new Event('animationend', { bubbles: true }));
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
 // the setup stubs getAnimations() with [], which ends every run at once
@@ -173,7 +173,7 @@ describe('SideSheet', () => {
     it('onCancel', async () => {
         const spyOnCancel = vi.fn<CancelHandler>();
         renderSideSheet({ visible: true, onCancel: spyOnCancel });
-        await userEvent.click($(`button.${prefix}-close`) as HTMLElement);
+        await userEvent.click($(`button.${prefix}-close`)!);
         expect(spyOnCancel).toHaveBeenCalledTimes(1);
     });
 

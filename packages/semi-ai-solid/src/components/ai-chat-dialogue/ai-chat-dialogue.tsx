@@ -96,7 +96,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
         foundationProps,
         () => DialogueFoundation.getInitialState(),
         () => ({
-            getContainerRef: () => list as HTMLDivElement,
+            getContainerRef: () => list!,
             notifySelect: (ids) => local.onSelect?.(ids),
             notifyChatsChange: (chats) => local.onChatsChange?.(chats),
             notifyChatsPropChange: () => local.onChatsChange?.(local.chats ?? EMPTY_CHATS),
@@ -172,7 +172,10 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
                     <For each={chatIds()}>
                         {(id, index) => {
                             // a row keeps its last message while the list it left is still being removed
-                            const message = createMemo<Message>((previous) => chatsById().get(id) ?? previous, untrack(() => chatsById().get(id)) as Message);
+                            const message = createMemo<Message>(
+                                (previous) => chatsById().get(id) ?? previous,
+                                untrack(() => chatsById().get(id))!
+                            );
                             return <Dialogue role={local.roleConfig[message().role]} isLastChat={index() === chatIds().length - 1} isSelected={state().selectedIds.has(id)} message={message()} />;
                         }}
                     </For>

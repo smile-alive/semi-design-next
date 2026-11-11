@@ -64,7 +64,7 @@ describe('Form（浏览器）', () => {
             ],
         };
         const remove = (key: number) => {
-            const api = formApi as FormApi;
+            const api = formApi!;
             const effects = (api.getValue('effects') as Effect[]).filter((effect) => effect.key !== key);
             api.setValue('effects', effects.length ? effects : undefined);
         };

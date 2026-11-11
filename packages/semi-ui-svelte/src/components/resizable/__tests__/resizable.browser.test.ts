@@ -1,10 +1,11 @@
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import { getElement } from '@test/utils/dom/common';
 import Group from './group.svelte';
 import Outside from './outside.svelte';
 
-const query = <T extends Element = HTMLElement>(container: Element, selector: string) => container.querySelector<T>(selector) as T;
+const query = <T extends Element = HTMLElement>(container: Element, selector: string) => getElement<T>(selector, container);
 
 describe('Svelte Resizable（浏览器）', () => {
     it('拖动手柄时，即使指针移出盒子也继续缩放，松开后结束', async () => {
@@ -38,10 +39,10 @@ describe('Svelte Resizable（浏览器）', () => {
 
     it('min 比较的是项的 border-box 尺寸：真实指针拖到最小值，容器收窄后仍停在同一最小值', async () => {
         const { container } = render(Group, { props: { items: [{ style: 'padding-left: 16px; padding-right: 16px', min: '200px' }, {}], width: '810px' } });
-        const host = query(container, '[data-testid="group"]').parentElement as HTMLElement;
+        const host = query(container, '[data-testid="group"]').parentElement!;
         const outside = document.createElement('div');
         outside.style.cssText = 'width: 300px; height: 20px';
-        (host.parentElement as HTMLElement).style.display = 'flex';
+        host.parentElement!.style.display = 'flex';
         host.before(outside);
         const [first, second] = container.querySelectorAll<HTMLElement>('.semi-resizable-item');
         const handler = query(container, '.semi-resizable-handler');

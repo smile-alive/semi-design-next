@@ -56,7 +56,7 @@ async function keyDown(key: string, target: Element = getInput()) {
 }
 
 async function click(element: Element | null) {
-    await fireEvent.click(element as Element);
+    await fireEvent.click(element!);
     await settle();
 }
 
@@ -543,7 +543,7 @@ describe('Svelte AutoComplete 键盘', () => {
         expect(getList()).toHaveAttribute('id', input.getAttribute('aria-controls'));
         expect(getList()).toHaveAttribute('role', 'listbox');
         await keyDown('ArrowDown');
-        const focused = getFocusedOption() as HTMLElement;
+        const focused = getFocusedOption()!;
         expect(focused).toHaveAttribute('role', 'option');
         expect(input).toHaveAttribute('aria-activedescendant', focused.id);
         expect(new Set(getOptions().map((option) => option.id)).size).toBe(getOptions().length);

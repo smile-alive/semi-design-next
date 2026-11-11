@@ -45,7 +45,7 @@ describe('Transfer（浏览器）', () => {
         const overlay = await waitFor(() => {
             const node = document.querySelector<HTMLElement>(overlaySelector);
             expect(node).toHaveTextContent('选项名称 2');
-            return node as HTMLElement;
+            return node!;
         });
         // dnd-kit makes the overlay click-through; the inline important outranks its stylesheet so it can be hit-tested
         overlay.style.setProperty('pointer-events', 'auto', 'important');
@@ -101,7 +101,7 @@ describe('Transfer（浏览器）', () => {
         const list = await waitFor(() => {
             const node = container.querySelector<HTMLElement>(`.${prefixCls}-right-virtual-list`);
             expect(node).not.toBeNull();
-            return node as HTMLElement;
+            return node!;
         });
         const panel = getElement(`.${prefixCls}-right`, container).getBoundingClientRect();
         expect(list.getBoundingClientRect().height).toBeGreaterThan(100);

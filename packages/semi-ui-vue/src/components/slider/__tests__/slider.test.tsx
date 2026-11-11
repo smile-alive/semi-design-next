@@ -1342,14 +1342,14 @@ describe('Slider', () => {
         const signalOf = (options: unknown) => (options as AddEventListenerOptions | undefined)?.signal;
         const dragCalls = () => addListener.mock.calls.filter(([type, , options]) => type.startsWith('pointer') && signalOf(options));
         expect(dragCalls().map(([type]) => type)).toEqual(['pointermove', 'pointerup', 'pointercancel']);
-        const signal = signalOf(dragCalls()[0]?.[2]) as AbortSignal;
+        const signal = signalOf(dragCalls()[0]?.[2])!;
         expect(dragCalls().every(([, , options]) => signalOf(options) === signal)).toBe(true);
         expect(signal.aborted).toBe(false);
         await release();
         expect(signal.aborted).toBe(true);
 
         await press(getHandle(), { clientX: 0, clientY: 10 });
-        const second = signalOf(dragCalls().at(-1)?.[2]) as AbortSignal;
+        const second = signalOf(dragCalls().at(-1)?.[2])!;
         expect(second).not.toBe(signal);
         view.unmount();
         expect(second.aborted).toBe(true);

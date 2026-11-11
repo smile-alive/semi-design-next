@@ -356,7 +356,7 @@ export default function Tree(rawProps: TreeProps) {
                     <div
                         {...treeAttrs}
                         ref={(node) => (treeElement = node)}
-                        aria-activedescendant={activeKey() === undefined ? undefined : nodeId(treeId, activeKey() as string)}
+                        aria-activedescendant={activeKey() === undefined ? undefined : nodeId(treeId, activeKey()!)}
                         aria-multiselectable={Boolean(local.multiple)}
                         class={listClass()}
                         role="tree"

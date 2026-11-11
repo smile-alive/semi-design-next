@@ -571,7 +571,7 @@
                         onChange={foundation.handleInputChange}
                         onClear={foundation.handleInputClear}
                         onEnterPress={foundation.handleInputComplete}
-                        onFocus={(event, range) => foundation.handleInputFocus(event, range as RangeInput)}
+                        onFocus={(event, range) => foundation.handleInputFocus(event, range!)}
                         onRangeClear={foundation.handleRangeInputClear}
                         onRangeEndTabPress={foundation.handleRangeEndTabPress}
                         placeholder={shownPlaceholder}

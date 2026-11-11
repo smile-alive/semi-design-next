@@ -54,7 +54,7 @@
         props,
         () => DialogueFoundation.getInitialState(),
         () => ({
-            getContainerRef: () => list.value as HTMLDivElement,
+            getContainerRef: () => list.value!,
             notifySelect: (ids: string[]) => emit('select', ids),
             notifyChatsChange: (next: Message[]) => {
                 emit('update:chats', next);

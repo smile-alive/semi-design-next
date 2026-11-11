@@ -205,7 +205,7 @@ describe('Table 排序', () => {
         mountTable({ columns: fileColumns(), dataSource: fileData(25), onChange });
         await userEvent.click(query(`.${P}-column-filter`));
         const option = queryAll('.semi-checkbox-addon').find((node) => node.textContent === 'Semi Design 设计稿');
-        await userEvent.click(option as HTMLElement);
+        await userEvent.click(option!);
         expect(onChange).toHaveBeenCalledTimes(1);
         const [arg] = onChange.mock.calls[0];
         expect(arg.sorter).toHaveProperty('defaultSortOrder', 'ascend');

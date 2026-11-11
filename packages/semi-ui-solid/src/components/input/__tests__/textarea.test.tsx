@@ -111,7 +111,7 @@ describe('TextArea', () => {
     it('showClear / onClear', async () => {
         const onClear = vi.fn<NonNullable<TextAreaProps['onClear']>>();
         render(() => <TextArea defaultValue="123" showClear onClear={onClear} />);
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(getTextArea()).toHaveValue('');
         expect(getClearBtn()).toBeNull();
@@ -409,7 +409,7 @@ describe('TextArea', () => {
         await userEvent.click(getTextArea());
         document.body.addEventListener('click', onOuterClick);
         onTestFinished(() => document.body.removeEventListener('click', onOuterClick));
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(onBlur).not.toHaveBeenCalled();
         expect(onChange).toHaveBeenLastCalledWith('', expect.anything());
         expect(onClear).toHaveBeenCalledTimes(1);
@@ -555,10 +555,10 @@ describe('TextArea', () => {
         ));
         const other = screen.getByRole('button', { name: 'other' });
         other.focus();
-        await user.click(getClearBtn() as HTMLElement);
+        await user.click(getClearBtn()!);
         expect(other).toHaveFocus();
         await user.type(getTextArea(), 'a');
-        (getClearBtn() as HTMLElement).focus();
+        getClearBtn()!.focus();
         await user.keyboard('{Enter}');
         expect(getTextArea()).toHaveFocus();
     });
@@ -593,7 +593,7 @@ describe('TextArea', () => {
     it('onChange 的事件类型涵盖清除按钮、输入法结束和失焦截断', async () => {
         const onChange = vi.fn<Change>();
         render(() => <TextArea defaultValue="semi" showClear onChange={onChange} />);
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(onChange).toHaveBeenCalledWith('', expect.objectContaining({ type: 'click' }));
         expectTypeOf<MouseEvent>().toExtend<TextAreaChangeEvent>();
         expectTypeOf<CompositionEvent & { currentTarget: HTMLTextAreaElement; target: Element }>().toExtend<TextAreaChangeEvent>();

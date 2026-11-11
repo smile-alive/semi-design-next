@@ -37,7 +37,7 @@ export default function Code(props: ComponentProps<typeof MarkdownCode>) {
                             aria-label={copied() ? locale().locale.copySuccess : locale().locale.copy}
                             onClick={() => {
                                 if (!copied()) {
-                                    void copy(source() as string);
+                                    void copy(source()!);
                                 }
                             }}
                         >

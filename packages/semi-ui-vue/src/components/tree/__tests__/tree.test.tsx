@@ -693,7 +693,7 @@ describe('非数字高度的 Tree virtualize', () => {
         renderTree({ defaultExpandAll: true, virtualize: { itemSize: 28, height: '100%' } });
         await nextTick();
         const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`);
-        const parent = wrapper.parentElement as HTMLElement;
+        const parent = wrapper.parentElement!;
         expect(observer.observed()).toContain(parent);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-virtual-list`)).toBeNull();
 

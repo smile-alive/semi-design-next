@@ -24,7 +24,7 @@
         props,
         () => ColorChooseAreaFoundation.getInitialState(),
         () => ({
-            getDOM: () => dom as HTMLDivElement,
+            getDOM: () => dom!,
             notifyChange: (color) => props.onChange(color),
         })
     );

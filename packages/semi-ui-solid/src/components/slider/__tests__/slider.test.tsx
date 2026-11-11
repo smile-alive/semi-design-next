@@ -181,7 +181,7 @@ describe('Slider', () => {
                 value={value()}
                 onAfterChange={onAfterChange}
                 onChange={(next) => {
-                    setValue(next as number | number[]);
+                    setValue(next!);
                 }}
             />
         ));
@@ -931,7 +931,7 @@ describe('Slider 的指针', () => {
 
     it.each([0, null])('step 为 %s 时指针按 1 取整，不回报 NaN', (step) => {
         const onChange = vi.fn<OnChange>();
-        render(() => <Slider style={SIZED} defaultValue={30} step={step as number} onChange={onChange} />);
+        render(() => <Slider style={SIZED} defaultValue={30} step={step!} onChange={onChange} />);
         fireEvent.mouseDown(getHandle(), { clientX: 0, clientY: 10 });
         fireEvent.mouseMove(document.body, { clientX: 64, clientY: 10 });
         fireEvent.mouseUp(window);

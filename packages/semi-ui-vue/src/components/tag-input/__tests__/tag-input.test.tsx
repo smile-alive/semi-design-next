@@ -189,7 +189,7 @@ describe('TagInput', () => {
         expect(onChange).toHaveBeenNthCalledWith(2, ['abc', 'toutiao']);
 
         await userEvent.hover(getRoot());
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(onChange).toHaveBeenNthCalledWith(3, []);
         expect(onRemove).toHaveBeenCalledTimes(2);
         expect(onChange).toHaveBeenCalledTimes(3);
@@ -411,7 +411,7 @@ describe('TagInput', () => {
             showRestTagsPopover: true,
             restTagsPopoverProps: { position: 'bottom' },
         });
-        await userEvent.hover(getRestCount() as Element);
+        await userEvent.hover(getRestCount()!);
         await waitFor(() => expect(document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`)).not.toBeNull());
         const popover = document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
         expect(popover).toHaveAttribute('x-placement', 'bottom');
@@ -424,7 +424,7 @@ describe('TagInput', () => {
         vi.spyOn(Range.prototype, 'getBoundingClientRect').mockReturnValue({ width: 100, height: 20 } as DOMRect);
         noEnterDelay();
         renderTagInput({ defaultValue: ['abc'], showContentTooltip: true });
-        await hoverUntil(screen.getByText('abc').parentElement as HTMLElement, `.${BASE_CLASS_PREFIX}-tooltip-wrapper`);
+        await hoverUntil(screen.getByText('abc').parentElement!, `.${BASE_CLASS_PREFIX}-tooltip-wrapper`);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-wrapper`)).toHaveTextContent('abc');
     });
 
@@ -432,7 +432,7 @@ describe('TagInput', () => {
         vi.spyOn(Range.prototype, 'getBoundingClientRect').mockReturnValue({ width: 100, height: 20 } as DOMRect);
         noEnterDelay();
         renderTagInput({ defaultValue: ['abc'], showContentTooltip: { type: 'popover', opts: { position: 'top' } } });
-        await hoverUntil(screen.getByText('abc').parentElement as HTMLElement, `.${BASE_CLASS_PREFIX}-popover-wrapper`);
+        await hoverUntil(screen.getByText('abc').parentElement!, `.${BASE_CLASS_PREFIX}-popover-wrapper`);
         const popover = document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
         expect(popover).toHaveAttribute('x-placement', 'top');
         expect(popover).toHaveTextContent('abc');
@@ -482,7 +482,7 @@ describe('TagInput', () => {
         await nextTick();
         expect(tag).not.toHaveFocus();
         expect(getRoot()).not.toHaveClass(`${tagInputCls}-focus`);
-        (getClearBtn() as HTMLElement).focus();
+        getClearBtn()!.focus();
         handle().blur();
         await nextTick();
         expect(document.activeElement).toBe(document.body);
@@ -589,7 +589,7 @@ describe('TagInput', () => {
     it('点击清空按钮', async () => {
         const onChange = vi.fn<Handler<'change'>>();
         renderTagInput({ defaultValue: ['abc', 'def'], showClear: true, onChange });
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange).toHaveBeenCalledWith([]);
         expect(getTagTexts()).toEqual([]);
@@ -1005,7 +1005,7 @@ describe('TagInput 行为基线', () => {
         expect(getTagTexts()).toEqual(['abc', 'def']);
 
         await userEvent.hover(getRoot());
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(onChange).toHaveBeenLastCalledWith([]);
         expect(getTagTexts()).toEqual(['abc', 'def']);
     });
@@ -1248,7 +1248,7 @@ describe('TagInput（Vue）', () => {
         expect(screen.getByTestId('tags')).toHaveTextContent('["a"]');
         await userEvent.click(screen.getByRole('button', { name: 'set' }));
         expect(getTagTexts()).toEqual(['x', 'y']);
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(screen.getByTestId('tags')).toHaveTextContent('[]');
         await userEvent.click(screen.getByRole('button', { name: 'set' }));
         await userEvent.click(screen.getByRole('button', { name: 'reset' }));
@@ -1290,7 +1290,7 @@ describe('TagInput（Vue）', () => {
         await userEvent.tab();
         await userEvent.tab();
         await userEvent.type(getInput(), 'c');
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         await fireEvent.compositionStart(getInput());
         await fireEvent.compositionEnd(getInput(), { target: { value: 'abc' } });
         expect(types()).toEqual(['input', 'keydown', 'input', 'focusout', 'input', 'click', 'compositionend']);

@@ -228,7 +228,7 @@ describe('Radio', () => {
     it('checked={false} 与 defaultChecked 同时存在时，state 初值取受控值', () => {
         const [checked, setChecked] = createSignal<boolean | null>(false);
         render(() => (
-            <Radio checked={checked() as boolean} defaultChecked>
+            <Radio checked={checked()!} defaultChecked>
                 A
             </Radio>
         ));

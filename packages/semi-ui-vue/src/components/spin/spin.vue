@@ -47,7 +47,7 @@
             return;
         }
         wasBlocked = blocked;
-        foundation.handleBlockedChange(root.value as HTMLElement, blocked);
+        foundation.handleBlockedChange(root.value!, blocked);
     });
 </script>
 

@@ -35,7 +35,7 @@
         foundationProps,
         () => ColorSliderFoundation.getInitialState(),
         () => ({
-            getDOM: () => dom as HTMLDivElement,
+            getDOM: () => dom!,
             notifyChange: (percent) => props.onChange(percent / 100),
         })
     );

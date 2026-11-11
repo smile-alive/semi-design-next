@@ -39,9 +39,9 @@ for (const name of process.argv.slice(2)) {
     })) as Rolldown.RolldownOutput;
     const chunks = result.output.filter((item) => item.type === 'chunk');
     // initial JS: the entry plus its static imports (`imports` also lists the external react, hence the chunk check)
-    const initial = new Set([chunks.find((chunk) => chunk.isEntry).fileName]);
+    const initial = new Set([chunks.find((chunk) => chunk.isEntry)!.fileName]);
     for (const file of initial) {
-        for (const dep of chunks.find((chunk) => chunk.fileName === file).imports) {
+        for (const dep of chunks.find((chunk) => chunk.fileName === file)!.imports) {
             if (chunks.some((chunk) => chunk.fileName === dep)) initial.add(dep);
         }
     }

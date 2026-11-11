@@ -41,7 +41,7 @@ export default function useTreeKeyboard(options: TreeKeyboardOptions): TreeKeybo
     const activeKey = computed(() => options.rows()[activeIndex.value]?.key);
 
     const moveTo = (index: number) => {
-        const key = options.rows()[index].key as string;
+        const key = options.rows()[index].key!;
         keyboardKey.value = key;
         options.reveal(index, key);
     };

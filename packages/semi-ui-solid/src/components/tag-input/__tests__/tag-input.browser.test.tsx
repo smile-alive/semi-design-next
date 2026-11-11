@@ -43,7 +43,7 @@ describe('TagInput（浏览器）', () => {
         const overlay = await waitFor(() => {
             const node = document.querySelector<HTMLElement>(`.${tagInputCls}-drag-item-move`);
             expect(node).toHaveTextContent('抖音');
-            return node as HTMLElement;
+            return node!;
         });
         // The overlay sits over the Popover content, which is in the top layer, so it is hit-testable only from above it;
         // dnd-kit makes the overlay click-through, and an inline important declaration outranks its stylesheet

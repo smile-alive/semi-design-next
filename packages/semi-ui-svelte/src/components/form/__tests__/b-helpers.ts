@@ -11,7 +11,7 @@ function apiCollector() {
     const onApi = vi.fn<(api: FormApi) => void>((api) => {
         formApi = api;
     });
-    return { onApi, api: () => formApi as FormApi };
+    return { onApi, api: () => formApi! };
 }
 
 export function renderAnyFields(form: Record<string, unknown>, fields: AnyFieldSpec[]) {

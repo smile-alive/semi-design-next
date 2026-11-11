@@ -11,7 +11,7 @@ import MiniRouter from './fixtures/mini-router.vue';
 
 const prefix = 'semi-navigation';
 
-const itemText = (text: string) => [...document.querySelectorAll<HTMLElement>(`.${prefix}-item-text`)].find((el) => el.textContent === text) as HTMLElement;
+const itemText = (text: string) => [...document.querySelectorAll<HTMLElement>(`.${prefix}-item-text`)].find((el) => el.textContent === text)!;
 const selectedTexts = () => [...document.querySelectorAll(`.${prefix}-item-selected`)].map((el) => el.textContent);
 const header = () => (
     <NavHeader text="Semi 运营后台">
@@ -191,7 +191,7 @@ describe('Navigation（浏览器）', () => {
         await waitFor(() => expect(nav).not.toHaveClass(`${prefix}-collapse-animating`));
         await userEvent.click(screen.getByText('任务平台'));
         await screen.findByText('任务管理');
-        expect(fading().filter((animation) => ((animation.effect as KeyframeEffect).target as Element).matches(`.${prefix}-item-text`))).toEqual([]);
+        expect(fading().filter((animation) => (animation.effect as KeyframeEffect).target!.matches(`.${prefix}-item-text`))).toEqual([]);
     });
 
     // collapse-animating only helps while the width really animates; without a width transition no transitionend comes

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { applyItem, getOptions, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
+    import { applyItem, getOptions, type ColumnType } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
     import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import useLocale from '../locale/use-locale.svelte.js';
     import { ScrollItem, type ScrollItemHandle, type ScrollItemSelectData, ScrollList } from '../scroll-list/index.js';
@@ -27,7 +27,7 @@
     };
 
     const pick = (type: ColumnType, item: ScrollItemSelectData) => {
-        onChange?.({ timeStampValue: Number(applyItem(timeStampValue as TimeStamp, type, String(item.value), use12Hours, options.isAM)) });
+        onChange?.({ timeStampValue: Number(applyItem(timeStampValue!, type, String(item.value), use12Hours, options.isAM)) });
     };
 
     // The selected index follows the value only: a selection is reported through onSelect, and a value its owner

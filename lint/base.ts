@@ -50,7 +50,6 @@ export const typescriptRules = {
     // `pnpm lint:private` rejects the `private` keyword, which this rule cannot express
     'typescript/explicit-member-accessibility': ['error', { accessibility: 'no-public' }],
     'typescript/parameter-properties': 'error',
-    'typescript/no-non-null-assertion': 'error',
     'typescript/no-require-imports': 'error',
     // `typeof import()` stays allowed for vi.mock's importOriginal and for probing types an entry does not export
     'typescript/consistent-type-imports': ['error', { disallowTypeAnnotations: false, fixStyle: 'inline-type-imports' }],
@@ -63,7 +62,18 @@ export const baseOverrides: OxlintOverride[] = [
         // package: list each package that turns it on. Options keep only rewrites with the same result: `||` and `&&` on a primitive or `any` also act on '', 0
         // and false; `x !== undefined ? x : y` keeps a `null` that `??` would replace; inside `Boolean()` `||` reads as
         // the truth test it is
-        files: ['packages/semi-{ui,ai,icons}-{vue,solid,svelte}/src/**', 'packages/semi-icons-react/src/**', 'packages/shared/semi-{animation,icons-core,polyfill}/src/**', 'packages/plugins/semi-scss-compile/src/**', 'website/**'],
+        files: [
+            'packages/semi-{ui,ai,icons}-{vue,solid,svelte}/src/**',
+            'packages/semi-icons-react/src/**',
+            'packages/shared/semi-{animation,icons-core,polyfill}/src/**',
+            'packages/plugins/*/src/**',
+            'packages/plugins/*/test/run.ts',
+            'lint/**',
+            'scripts/**',
+            'packages/**/scripts/**',
+            'vitest/{packed,hosts,*/hosts}/**',
+            'website/**',
+        ],
         rules: {
             'typescript/prefer-nullish-coalescing': ['error', { ignorePrimitives: true, ignoreTernaryTests: true, ignoreBooleanCoercion: true }],
             'typescript/prefer-optional-chain': ['error', { checkAny: false, checkUnknown: false, checkString: false, checkNumber: false, checkBoolean: false, checkBigInt: false }],

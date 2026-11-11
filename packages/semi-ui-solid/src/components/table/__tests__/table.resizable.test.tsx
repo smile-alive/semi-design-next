@@ -113,7 +113,7 @@ describe('Table 可调整列宽', () => {
         expect(getHandles().length).toBeGreaterThan(0);
         const headers = screen.getAllByRole('columnheader');
         expect(headers[0]).toHaveTextContent('Name');
-        expect(within(headers.at(-1) as HTMLElement).getByRole('checkbox')).toBeInTheDocument();
+        expect(within(headers.at(-1)!).getByRole('checkbox')).toBeInTheDocument();
     });
 
     it('JSX 写法的列照常渲染，并警告一次不支持调整列宽', () => {

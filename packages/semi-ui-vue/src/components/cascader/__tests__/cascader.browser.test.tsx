@@ -135,11 +135,7 @@ const getTrigger = () => getElement(`.${prefixCls}`);
 const getPopover = () => document.querySelector<HTMLElement>(`.${prefixCls}-popover`);
 async function getOption(label: string) {
     await waitFor(() => expect(getPopover()).not.toBeNull());
-    return defined(
-        within(getPopover() as HTMLElement)
-            .getByText(label)
-            .closest<HTMLElement>(`.${prefixCls}-option`)
-    );
+    return defined(within(getPopover()!).getByText(label).closest<HTMLElement>(`.${prefixCls}-option`));
 }
 const clickOption = async (label: string) => userEvent.click(await getOption(label));
 const clickCheckbox = async (label: string) => userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, await getOption(label)));
@@ -149,7 +145,7 @@ const findClearButton = () =>
     waitFor(() => {
         const button = document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
         expect(button).not.toBeNull();
-        return button as HTMLElement;
+        return button!;
     });
 
 describe('cascader', () => {
@@ -272,7 +268,7 @@ describe('cascader', () => {
         mount(() => <Demo />);
         await userEvent.click(getTrigger());
         await clickOption('Node1');
-        await waitFor(() => expect(within(getPopover() as HTMLElement).getByText('Node1 - 1')).toBeInTheDocument());
+        await waitFor(() => expect(within(getPopover()!).getByText('Node1 - 1')).toBeInTheDocument());
     });
 
     it('超出限制时', async () => {

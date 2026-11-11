@@ -473,7 +473,7 @@ describe('Carousel', () => {
             };
             const { container } = setup({ autoPlay: false, ...handlers });
             const root = getRoot(container);
-            const arrow = query(container, 'arrow-next') as HTMLElement;
+            const arrow = query(container, 'arrow-next')!;
             fireEvent.mouseEnter(root);
             fireEvent.mouseLeave(root);
             fireEvent.focusIn(arrow);
@@ -810,9 +810,9 @@ describe('Carousel', () => {
             ));
             const tabs = screen.getAllByRole('tab');
             for (const tab of tabs) {
-                const panel = document.getElementById(tab.getAttribute('aria-controls') as string);
+                const panel = document.getElementById(tab.getAttribute('aria-controls')!);
                 expect(panel).toHaveAttribute('role', 'tabpanel');
-                expect(panel).toHaveAccessibleName(tab.getAttribute('aria-label') as string);
+                expect(panel).toHaveAccessibleName(tab.getAttribute('aria-label')!);
             }
             expect(screen.getByText('a')).toHaveAttribute('id', 'mine');
         });
@@ -833,7 +833,7 @@ describe('Carousel', () => {
             expect(first).toHaveAttribute('aria-roledescription', 'custom');
             expect(first).toHaveAttribute('id', 'mine');
             expect(first).not.toHaveAttribute('inert');
-            const wrapper = first.parentElement as HTMLElement;
+            const wrapper = first.parentElement!;
             expect(wrapper).toHaveClass(`${BASE_CLASS_PREFIX}-carousel-content-item`, `${BASE_CLASS_PREFIX}-carousel-content-item-active`);
             expect(wrapper).toHaveAttribute('role', 'group');
             expect(wrapper).toHaveAttribute('aria-roledescription', zh_CN.Carousel.slide);
@@ -859,7 +859,7 @@ describe('Carousel', () => {
                     {count() > 1 ? <div>b</div> : null}
                 </Carousel>
             ));
-            const wrapper = screen.getByTestId('first').parentElement as HTMLElement;
+            const wrapper = screen.getByTestId('first').parentElement!;
             expect(wrapper).toHaveAttribute('role', 'tabpanel');
             setCount(1);
             expect(wrapper).toHaveAttribute('role', 'group');

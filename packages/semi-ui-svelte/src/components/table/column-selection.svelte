@@ -20,7 +20,7 @@
     const locale = useLocale('Table');
 
     const selection = $derived(table.rowSelection && typeof table.rowSelection === 'object' ? (table.rowSelection as RowSelectionProps & { selectedRowKeysSet?: Set<string | number> }) : null);
-    const recordKey = $derived(TableFoundation.getRecordKey({ rowKey: table.rowKey }, record as AnyRecord));
+    const recordKey = $derived(TableFoundation.getRecordKey({ rowKey: table.rowKey }, record!));
 
     const selected = $derived.by(() => {
         const selectedSet = selection?.selectedRowKeysSet ?? new Set<string | number>();
@@ -32,7 +32,7 @@
 
     const indeterminate = $derived(inHeader ? TableFoundation.hasRowSelected(selection?.selectedRowKeys ?? [], table.filteredSortedRowKeysSet) && !selected : selection?.checkRelation === 'related' && table.halfCheckedRowKeysSet.has(recordKey));
     const disabled = $derived(inHeader ? Boolean(selection?.disabled) : false);
-    const checkboxProps = $derived(inHeader ? {} : (selection?.getCheckboxProps?.(record as AnyRecord) ?? {}));
+    const checkboxProps = $derived(inHeader ? {} : (selection?.getCheckboxProps?.(record!) ?? {}));
 
     const selectAll = (checked: boolean, event: Pick<Event, 'stopPropagation'>) => table.foundation.handleSelectAllRow(checked, event);
 

@@ -22,7 +22,7 @@ const items = keys.map((key) => ({ key }));
 function stubResizeObserver() {
     const observer = mockResizeObserver();
     return async (element: Element | null, width: number) => {
-        await observer.fire(element as Element, [{ target: { clientWidth: width }, contentRect: { width } }]);
+        await observer.fire(element!, [{ target: { clientWidth: width }, contentRect: { width } }]);
         await nextTick();
     };
 }
@@ -325,7 +325,7 @@ describe('OverflowList', () => {
     it('scroll: items 渲染在 wrapper 中，两个 overflow 节点位于其两侧', () => {
         const overflow = vi.fn<OverflowSlot>(sides);
         const view = renderList({ renderMode: 'scroll', wrapperClassName: 'wrapper', wrapperStyle: { gap: '4px' } }, { item: keyDiv, overflow }, { class: 'custom', style: { color: 'red' } });
-        const list = getList(view.container) as HTMLElement;
+        const list = getList(view.container)!;
         expect(list).toHaveClass('custom');
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(list.style.visibility).toBe('');

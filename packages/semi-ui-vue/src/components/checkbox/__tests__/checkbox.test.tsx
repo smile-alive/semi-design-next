@@ -229,7 +229,7 @@ describe('Checkbox', () => {
     it('暴露的句柄只有 focus 与 blur', () => {
         let handle: CheckboxHandle | undefined;
         render(Handle, { props: { onReady: (value: CheckboxHandle) => (handle = value) } });
-        expect(Object.keys(handle as CheckboxHandle).sort()).toEqual(['blur', 'focus']);
+        expect(Object.keys(handle!).sort()).toEqual(['blur', 'focus']);
     });
 
     it('focus 将 preventScroll 传给原生 input', () => {

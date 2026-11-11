@@ -152,7 +152,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
         foundationProps,
         () => JsonViewerFoundation.getInitialState(),
         () => ({
-            getEditorRef: () => editor as HTMLDivElement,
+            getEditorRef: () => editor!,
             notifyChange: (value) => local.onChange?.(value),
             toCoreOptions: (options) => {
                 const { customRenderRule, ...rest } = options as JsonViewerOptions;

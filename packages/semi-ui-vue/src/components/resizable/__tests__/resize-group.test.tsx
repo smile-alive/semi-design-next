@@ -251,7 +251,7 @@ describe('ResizeGroup', () => {
         const resize = mockResizeObserver();
         renderGroup({ items: [{}, { min: '400px' }] });
         const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get');
-        const visibleWidth = width.getMockImplementation() as (this: HTMLElement) => number;
+        const visibleWidth = width.getMockImplementation()!;
         width.mockReturnValue(0);
         await resize.fire(getGroup(), []);
         vi.advanceTimersByTime(200);

@@ -258,7 +258,7 @@ describe(`DatePicker`, () => {
         expect(onOpenChange).not.toHaveBeenCalled();
 
         const inputWrapper = getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`, container);
-        await userEvent.click(inputWrapper.parentElement as HTMLElement);
+        await userEvent.click(inputWrapper.parentElement!);
         expect(onOpenChange).toHaveBeenCalledWith(true);
 
         await typeInto(getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input-wrapper input`, container), '2019-10-02 08:30:02');
@@ -284,7 +284,7 @@ describe(`DatePicker`, () => {
         const startDayDom = getElement(`.${dp}-day-selected-start`);
         const endDayDom = document.querySelector(`.${dp}-day-selected-end`);
 
-        expect(Array.from({ length: dayOffset }).reduce<Element>((cur) => cur.nextElementSibling as Element, startDayDom)).toBe(endDayDom);
+        expect(Array.from({ length: dayOffset }).reduce<Element>((cur) => cur.nextElementSibling!, startDayDom)).toBe(endDayDom);
 
         await userEvent.click(getElement(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`, getPanel('right')));
 
@@ -370,10 +370,10 @@ describe(`DatePicker`, () => {
 
         const [yearList, monthList] = getYMLists();
         const currentSelectedYear = getElement(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`, yearList);
-        await userEvent.click(Array.from({ length: yearOffset }).reduce<Element>((cur) => cur.nextElementSibling as Element, currentSelectedYear));
+        await userEvent.click(Array.from({ length: yearOffset }).reduce<Element>((cur) => cur.nextElementSibling!, currentSelectedYear));
 
         const currentSelectedMon = getElement(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`, monthList);
-        await userEvent.click(Array.from({ length: monOffset }).reduce<Element>((cur) => cur.nextElementSibling as Element, currentSelectedMon));
+        await userEvent.click(Array.from({ length: monOffset }).reduce<Element>((cur) => cur.nextElementSibling!, currentSelectedMon));
 
         const value = onChange.mock.calls.at(-1)?.[0] as Date;
         expect(value.getFullYear()).toBe(baseYear + yearOffset);
@@ -1154,7 +1154,7 @@ describe(`DatePicker`, () => {
         const timePanel = await waitFor(() => {
             const panel = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-timepicker-panel`);
             expect(panel).not.toBeNull();
-            return panel as HTMLElement;
+            return panel!;
         });
         await fireEvent.mouseDown(timePanel);
         expect(getPopup()).not.toBeNull();
@@ -1572,7 +1572,7 @@ describe(`DatePicker`, () => {
             motion: false,
         });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime }));
-        const [hourList] = (getPopup() as HTMLElement).querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
+        const [hourList] = getPopup()!.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
         const disabledHours = new Set(Array.from(hourList.querySelectorAll('li[aria-disabled="true"]')).map((li) => li.textContent));
         expect([...disabledHours]).toEqual(['00', '01', '02', '03', '04', '05']);
     });
@@ -1774,12 +1774,12 @@ describe(`DatePicker`, () => {
             onChange,
         });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime }));
-        const [ampmList, hourList] = (getPopup() as HTMLElement).querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
+        const [ampmList, hourList] = getPopup()!.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
         expect(within(ampmList).getAllByRole('option')[0]).toHaveClass(`${BASE_CLASS_PREFIX}-scrolllist-item-sel`);
         await userEvent.click(
             within(hourList)
                 .getAllByRole('option')
-                .find((li) => li.textContent?.startsWith('09')) as HTMLElement
+                .find((li) => li.textContent?.startsWith('09'))!
         );
         expect(onChange).toHaveBeenCalledTimes(1);
         expect((onChange.mock.calls[0][0] as Date).getHours()).toBe(9);
@@ -1796,12 +1796,12 @@ describe(`DatePicker`, () => {
             onChange,
         });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime }));
-        const [ampmList, hourList] = (getPopup() as HTMLElement).querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
+        const [ampmList, hourList] = getPopup()!.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
         expect(within(ampmList).getAllByRole('option')[1]).toHaveClass(`${BASE_CLASS_PREFIX}-scrolllist-item-sel`);
         await userEvent.click(
             within(hourList)
                 .getAllByRole('option')
-                .find((li) => li.textContent?.startsWith('04')) as HTMLElement
+                .find((li) => li.textContent?.startsWith('04'))!
         );
         expect(onChange).toHaveBeenCalledTimes(1);
         expect((onChange.mock.calls[0][0] as Date).getHours()).toBe(16);
@@ -2096,7 +2096,7 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        const popup = getPopup() as HTMLElement;
+        const popup = getPopup()!;
         expect(within(popup).getByPlaceholderText('yyyy-MM-dd')).toHaveValue('2019-09-08');
         expect(within(popup).getByPlaceholderText('HH:mm:ss')).toHaveValue('08:08:08');
         expect(popup.querySelectorAll(`.${dp}-inset-input-wrapper input`)).toHaveLength(2);
@@ -2113,7 +2113,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        await typeInto(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd'), '2021-06-15');
+        await typeInto(within(getPopup()!).getByPlaceholderText('yyyy-MM-dd'), '2021-06-15');
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][1]).toBe('2021-06-15 08:08:08');
         expect(container.querySelector('input')).toHaveValue('2021-06-15 08:08:08');
@@ -2130,7 +2130,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        const [dateInput, timeInput] = (getPopup() as HTMLElement).querySelectorAll<HTMLInputElement>(`.${dp}-inset-input-wrapper input`);
+        const [dateInput, timeInput] = getPopup()!.querySelectorAll<HTMLInputElement>(`.${dp}-inset-input-wrapper input`);
         expect(timeInput).toHaveValue('15:30');
         await typeInto(dateInput, '2021-06-15');
         expect(onChange).toHaveBeenCalledWith(new Date(2021, 5, 15, 15, 30), '2021-06-15 03:30 下午');
@@ -2144,7 +2144,7 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        const popup = getPopup() as HTMLElement;
+        const popup = getPopup()!;
         const dateInputs = within(popup).getAllByPlaceholderText<HTMLInputElement>('yyyy-MM-dd');
         const timeInputs = within(popup).getAllByPlaceholderText<HTMLInputElement>('HH:mm:ss');
         expect(dateInputs.map((input) => input.value)).toEqual(['2021-06-01', '2021-06-15']);
@@ -2162,7 +2162,7 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        const popup = getPopup() as HTMLElement;
+        const popup = getPopup()!;
         const dateInputs = within(popup).getAllByPlaceholderText<HTMLInputElement>('yyyy-MM-dd');
         expect(dateInputs.map((input) => input.value)).toEqual(['2021-06-01', '2021-06-15']);
         expect(within(popup).queryByPlaceholderText('HH:mm:ss')).toBeNull();
@@ -2645,7 +2645,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        await typeInto(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd'), '2021-06-01,2021-06-15');
+        await typeInto(within(getPopup()!).getByPlaceholderText('yyyy-MM-dd'), '2021-06-01,2021-06-15');
         expect(onChange).toHaveBeenCalledWith([new Date(2021, 5, 1), new Date(2021, 5, 15)], ['2021-06-01 星期二', '2021-06-15 星期二']);
     });
 
@@ -2760,7 +2760,7 @@ describe(`DatePicker`, () => {
         });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime }));
         const disabledTexts = (list: Element) => [...new Set(Array.from(list.querySelectorAll('li[aria-disabled="true"]')).map((li) => li.textContent))];
-        const [hours, minutes, seconds] = (getPopup() as HTMLElement).querySelectorAll(`.${dp}-tpk ul[role="listbox"]`);
+        const [hours, minutes, seconds] = getPopup()!.querySelectorAll(`.${dp}-tpk ul[role="listbox"]`);
         expect(disabledTexts(hours)).toEqual(['00', '01', '02', '03']);
         expect(disabledTexts(minutes)).toEqual(['00', '15', '30', '45']);
         expect(disabledTexts(seconds)).toEqual(['00']);
@@ -2873,7 +2873,7 @@ describe(`DatePicker`, () => {
             open: true,
             onChange,
         });
-        const insetInput = within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd');
+        const insetInput = within(getPopup()!).getByPlaceholderText('yyyy-MM-dd');
         expect(insetInput).toHaveValue('');
         await userEvent.click(getDay('2021-06-15'));
         expect(onChange).toHaveBeenCalledWith(new Date(2021, 5, 15), '2021-06-15');
@@ -2912,8 +2912,8 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        expect(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy/MM/dd')).toHaveValue('2019/09/08');
-        expect(within(getPopup() as HTMLElement).getByPlaceholderText('HH:mm')).toHaveValue('08:08');
+        expect(within(getPopup()!).getByPlaceholderText('yyyy/MM/dd')).toHaveValue('2019/09/08');
+        expect(within(getPopup()!).getByPlaceholderText('HH:mm')).toHaveValue('08:08');
     });
 
     it('date 的 insetInput 占位符', async () => {
@@ -2924,7 +2924,7 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        const insetInputs = (getPopup() as HTMLElement).querySelectorAll(`.${dp}-inset-input-wrapper input`);
+        const insetInputs = getPopup()!.querySelectorAll(`.${dp}-inset-input-wrapper input`);
         expect(insetInputs).toHaveLength(1);
         expect(insetInputs[0]).toHaveAttribute('placeholder', 'yyyy-MM-dd');
     });
@@ -2939,7 +2939,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        await typeInto(within(getPopup() as HTMLElement).getByPlaceholderText('HH:mm:ss'), '10:30:00');
+        await typeInto(within(getPopup()!).getByPlaceholderText('HH:mm:ss'), '10:30:00');
         expect(onChange).toHaveBeenCalledWith(new Date(2019, 8, 8, 10, 30), '2019-09-08 10:30:00');
     });
 
@@ -2953,7 +2953,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        const insetInput = within(getPopup() as HTMLElement).getByPlaceholderText<HTMLInputElement>('yyyy-MM-dd');
+        const insetInput = within(getPopup()!).getByPlaceholderText<HTMLInputElement>('yyyy-MM-dd');
         await typeInto(insetInput, '2019-09-1');
         expect(insetInput).toHaveValue('2019-09-1');
         expect(onChange).not.toHaveBeenCalled();
@@ -2967,12 +2967,12 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        await typeInto(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd'), '2019-09-1');
+        await typeInto(within(getPopup()!).getByPlaceholderText('yyyy-MM-dd'), '2019-09-1');
         await fireEvent.mouseDown(document.body);
         await waitForClosed();
         await userEvent.click(getElement('input', container));
         await settle();
-        expect(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd')).toHaveValue('2019-09-08');
+        expect(within(getPopup()!).getByPlaceholderText('yyyy-MM-dd')).toHaveValue('2019-09-08');
     });
 
     it('dateTime 的 insetInput 键入日期后从 defaultPickerValue 补时间', async () => {
@@ -2985,9 +2985,9 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        const timeInput = within(getPopup() as HTMLElement).getByPlaceholderText('HH:mm:ss');
+        const timeInput = within(getPopup()!).getByPlaceholderText('HH:mm:ss');
         expect(timeInput).toBeDisabled();
-        await typeInto(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd'), '2021-06-15');
+        await typeInto(within(getPopup()!).getByPlaceholderText('yyyy-MM-dd'), '2021-06-15');
         expect(timeInput).toHaveValue('09:30:00');
         expect(timeInput).toBeEnabled();
         expect(onChange).toHaveBeenCalledWith(new Date(2021, 5, 15, 9, 30), '2021-06-15 09:30:00');
@@ -3003,10 +3003,10 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        const [startDate, endDate] = within(getPopup() as HTMLElement).getAllByPlaceholderText('yyyy-MM-dd');
+        const [startDate, endDate] = within(getPopup()!).getAllByPlaceholderText('yyyy-MM-dd');
         await typeInto(startDate as HTMLInputElement, '2021-06-01');
         await typeInto(endDate as HTMLInputElement, '2021-06-20');
-        const timeInputs = within(getPopup() as HTMLElement).getAllByPlaceholderText<HTMLInputElement>('HH:mm:ss');
+        const timeInputs = within(getPopup()!).getAllByPlaceholderText<HTMLInputElement>('HH:mm:ss');
         expect(timeInputs.map((input) => input.value)).toEqual(['10:00:00', '18:00:00']);
         expect(onChange).toHaveBeenLastCalledWith([new Date(2021, 5, 1, 10), new Date(2021, 5, 20, 18)], ['2021-06-01 10:00:00', '2021-06-20 18:00:00']);
     });
@@ -3020,7 +3020,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        const [startDate, endDate] = within(getPopup() as HTMLElement).getAllByPlaceholderText('yyyy-MM-dd');
+        const [startDate, endDate] = within(getPopup()!).getAllByPlaceholderText('yyyy-MM-dd');
         await typeInto(startDate as HTMLInputElement, '2021-06-01');
         expect(onChange).not.toHaveBeenCalled();
         await typeInto(endDate as HTMLInputElement, '2021-06-15');
@@ -3040,14 +3040,14 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        const [, endTime] = within(getPopup() as HTMLElement).getAllByPlaceholderText('HH:mm:ss');
+        const [, endTime] = within(getPopup()!).getAllByPlaceholderText('HH:mm:ss');
         await typeInto(endTime as HTMLInputElement, '20:00:00');
         expect(onChange).toHaveBeenCalledWith([new Date(2021, 5, 1, 10), new Date(2021, 5, 15, 20)], ['2021-06-01 10:00:00', '2021-06-15 20:00:00']);
     });
 
     it('monthRange 的 insetInput 占位符', async () => {
         await renderPicker({ type: 'monthRange', defaultOpen: true, insetInput: true, motion: false });
-        const insetInputs = (getPopup() as HTMLElement).querySelectorAll(`.${dp}-inset-input-wrapper input`);
+        const insetInputs = getPopup()!.querySelectorAll(`.${dp}-inset-input-wrapper input`);
         expect(insetInputs).toHaveLength(1);
         expect(insetInputs[0]).toHaveAttribute('placeholder', 'yyyy-MM ~ yyyy-MM');
     });
@@ -3163,7 +3163,7 @@ describe(`DatePicker`, () => {
         expect(container.querySelectorAll('input')[0]).toHaveValue('2021-06-10 10:00:00');
     });
 
-    const getHourList = (root: ParentNode = getPopup() as HTMLElement) => root.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`)[0];
+    const getHourList = (root: ParentNode = getPopup()!) => root.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`)[0];
 
     it('dateTime 选择小时', async () => {
         const onChange = vi.fn<ChangeFn>();
@@ -3320,7 +3320,7 @@ describe(`DatePicker`, () => {
         const [yearList, monthList] = getYMLists();
         await userEvent.click(within(monthList).getByRole('option', { name: '4月' }));
         await userEvent.click(within(yearList).getByRole('option', { name: '2023' }));
-        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup() as HTMLElement));
+        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup()!));
         expect(getNavTitle('left')).toBe('2023年 4月');
     });
 
@@ -3387,7 +3387,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        expect((getPopup() as HTMLElement).querySelectorAll(`.${dp}-day[aria-label]`)).toHaveLength(30);
+        expect(getPopup()!.querySelectorAll(`.${dp}-day[aria-label]`)).toHaveLength(30);
         expect(getDay('2019-09-08')).toHaveAttribute('aria-selected', 'true');
         await userEvent.click(getDay('2019-09-11'));
         expect(onChange).toHaveBeenCalledWith(new Date(2019, 8, 11), '2019-09-11');
@@ -3468,7 +3468,7 @@ describe(`DatePicker`, () => {
             defaultOpen: true,
             motion: false,
         });
-        const monthGrid = (getPopup() as HTMLElement).querySelector(`.${dp}-month-grid`);
+        const monthGrid = getPopup()!.querySelector(`.${dp}-month-grid`);
         await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('right')));
         expect(monthGrid).toHaveAttribute('x-panel-yearandmonth-open-type', 'right');
         await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
@@ -3505,7 +3505,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        await typeInto(within(getPopup() as HTMLElement).getByPlaceholderText('yyyy-MM-dd'), '2021-06-1');
+        await typeInto(within(getPopup()!).getByPlaceholderText('yyyy-MM-dd'), '2021-06-1');
         expect(onChange).not.toHaveBeenCalled();
         expect(container.querySelector('input')).toHaveValue('2019-09-08 08:08:08');
     });
@@ -3529,7 +3529,7 @@ describe(`DatePicker`, () => {
 
     it('高亮今天', async () => {
         await renderPicker({ type: 'date', defaultOpen: true, motion: false });
-        const today = (getPopup() as HTMLElement).querySelectorAll(`.${dp}-day-today`);
+        const today = getPopup()!.querySelectorAll(`.${dp}-day-today`);
         expect(today).toHaveLength(1);
         expect(today[0]).toHaveAttribute('aria-label', ymd(new Date()));
     });
@@ -3748,7 +3748,7 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        const wrapper = getElement(`.${dp}-inset-input-wrapper`, getPopup() as HTMLElement);
+        const wrapper = getElement(`.${dp}-inset-input-wrapper`, getPopup()!);
         expect(wrapper).toHaveAttribute('x-type', 'date');
         expect(wrapper.querySelectorAll('input')).toHaveLength(1);
         expect(wrapper.querySelector(`.${dp}-inset-input-separator`)).toBeNull();
@@ -3762,8 +3762,8 @@ describe(`DatePicker`, () => {
             insetInput: { placeholder: { dateStart: 'Date Start', timeStart: 'Time Start' } },
             motion: false,
         });
-        expect(within(getPopup() as HTMLElement).getByPlaceholderText('Date Start')).toHaveValue('2019-09-08');
-        expect(within(getPopup() as HTMLElement).getByPlaceholderText('Time Start')).toHaveValue('08:08:08');
+        expect(within(getPopup()!).getByPlaceholderText('Date Start')).toHaveValue('2019-09-08');
+        expect(within(getPopup()!).getByPlaceholderText('Time Start')).toHaveValue('08:08:08');
     });
 
     it('dateRange 的 insetInput 使用 compact 密度', async () => {
@@ -3775,7 +3775,7 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        const separator = (getPopup() as HTMLElement).querySelector(`.${dp}-inset-input-separator`);
+        const separator = getPopup()!.querySelector(`.${dp}-inset-input-separator`);
         expect(separator).not.toBeNull();
         expect(separator).toBeEmptyDOMElement();
     });
@@ -3931,7 +3931,7 @@ describe(`DatePicker`, () => {
             defaultOpen: true,
             motion: false,
         });
-        expect((getPopup() as HTMLElement).querySelectorAll(`.${dp}-navigation`)).toHaveLength(2);
+        expect(getPopup()!.querySelectorAll(`.${dp}-navigation`)).toHaveLength(2);
         expect(getPanel('left').querySelector(`.${dp}-switch`)).toHaveTextContent('2021-06-0110:00:00');
         expect(getPanel('right').querySelector(`.${dp}-switch`)).toHaveTextContent('2021-06-1518:00:00');
     });
@@ -3944,7 +3944,7 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        const popup = getPopup() as HTMLElement;
+        const popup = getPopup()!;
         expect(popup.querySelector(`.${dp}-month-grid`)).toHaveAttribute('x-insetinput', 'true');
         expect(popup.querySelectorAll(`.${dp}-inset-input-wrapper input`)).toHaveLength(4);
         expect(popup.querySelector(`.${dp}-switch`)).toBeNull();
@@ -4053,7 +4053,7 @@ describe(`DatePicker`, () => {
         await settle();
         picker.value?.open();
         await settle();
-        const [, endDate] = within(getPopup() as HTMLElement).getAllByPlaceholderText('yyyy-MM-dd');
+        const [, endDate] = within(getPopup()!).getAllByPlaceholderText('yyyy-MM-dd');
         await waitFor(() => expect(endDate).toHaveFocus());
     });
 
@@ -4114,7 +4114,7 @@ describe(`DatePicker`, () => {
         await userEvent.click(switchOf('right', zh_CN.DatePicker.switchToTime));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'time');
         expect(getPanel('right')).toHaveAttribute('x-open-type', 'time');
-        expect((getPopup() as HTMLElement).querySelectorAll(`.${dp}-tpk`)).toHaveLength(2);
+        expect(getPopup()!.querySelectorAll(`.${dp}-tpk`)).toHaveLength(2);
         await userEvent.click(switchOf('left', zh_CN.DatePicker.switchToDate));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'date');
         expect(getPanel('right')).toHaveAttribute('x-open-type', 'time');
@@ -4140,7 +4140,7 @@ describe(`DatePicker`, () => {
             motion: false,
             weekStartsOn: 1,
         });
-        expect((getPopup() as HTMLElement).querySelectorAll(`.${dp}-day[aria-label]`)).toHaveLength(31);
+        expect(getPopup()!.querySelectorAll(`.${dp}-day[aria-label]`)).toHaveLength(31);
         expect(getWeekDays('left', 0)[4]).toHaveAttribute('aria-label', '2021-01-01');
     });
 
@@ -4154,8 +4154,8 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        const [startDate] = within(getPopup() as HTMLElement).getAllByPlaceholderText<HTMLInputElement>('yyyy-MM-dd');
-        const [startTime] = within(getPopup() as HTMLElement).getAllByPlaceholderText<HTMLInputElement>('HH:mm:ss');
+        const [startDate] = within(getPopup()!).getAllByPlaceholderText<HTMLInputElement>('yyyy-MM-dd');
+        const [startTime] = within(getPopup()!).getAllByPlaceholderText<HTMLInputElement>('HH:mm:ss');
         await typeInto(startDate, '2021-06-10');
         expect(onChange).toHaveBeenLastCalledWith([new Date(2021, 5, 10, 10), new Date(2021, 5, 15, 18)], ['2021-06-10 10:00:00', '2021-06-15 18:00:00']);
         await typeInto(startTime, '11:00:00');
@@ -4186,7 +4186,7 @@ describe(`DatePicker`, () => {
         await renderPicker({ type: 'date', defaultValue: new Date(2021, 5, 1), defaultOpen: true, motion: false });
         await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(getPanel('left').querySelector(`.${dp}-navigation`)).toBeNull();
-        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup() as HTMLElement));
+        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup()!));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'date');
         expect(getNavTitle('left')).toBe('2021年 6月');
     });
@@ -4259,7 +4259,7 @@ describe(`DatePicker`, () => {
             motion: false,
             onChange,
         });
-        const [, endDate] = within(getPopup() as HTMLElement).getAllByPlaceholderText('yyyy-MM-dd');
+        const [, endDate] = within(getPopup()!).getAllByPlaceholderText('yyyy-MM-dd');
         endDate.focus();
         await settle();
         await userEvent.click(getDay('2021-06-20'));
@@ -4272,7 +4272,7 @@ describe(`DatePicker`, () => {
             type: 'monthRange',
             defaultValue: ['2021-06', '2021-08'],
             defaultOpen: true,
-            disabledDate: (date?: Date) => Boolean(date) && (date as Date).getMonth() === 5,
+            disabledDate: (date?: Date) => Boolean(date) && date!.getMonth() === 5,
             motion: false,
             onChange,
         });
@@ -4290,7 +4290,7 @@ describe(`DatePicker`, () => {
         const timeSwitch = (side: string) => getElement(`[aria-label="${zh_CN.DatePicker.switchToTime}"]`, getPanel(side));
         await userEvent.click(timeSwitch('left'));
         await userEvent.click(timeSwitch('right'));
-        expect((getPopup() as HTMLElement).querySelectorAll(`.${dp}-tpk`)).toHaveLength(2);
+        expect(getPopup()!.querySelectorAll(`.${dp}-tpk`)).toHaveLength(2);
         expect(timeSwitch('left')).toHaveTextContent('10:00:00');
         expect(timeSwitch('right')).toHaveTextContent('18:00:00');
     });
@@ -4314,8 +4314,8 @@ describe(`DatePicker`, () => {
         });
         await waitForPanelOpened();
         await settle();
-        const [startDate] = within(getPopup() as HTMLElement).getAllByPlaceholderText('yyyy-MM-dd');
-        const [startTime] = within(getPopup() as HTMLElement).getAllByPlaceholderText('HH:mm:ss');
+        const [startDate] = within(getPopup()!).getAllByPlaceholderText('yyyy-MM-dd');
+        const [startTime] = within(getPopup()!).getAllByPlaceholderText('HH:mm:ss');
         startTime.focus();
         await settle();
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'time');
@@ -4366,7 +4366,7 @@ describe(`DatePicker`, () => {
             onChange,
         });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime }));
-        const [, minuteList] = (getPopup() as HTMLElement).querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
+        const [, minuteList] = getPopup()!.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
         await userEvent.click(within(minuteList).getAllByRole('option', { name: '45' })[0]);
         expect(onChange).toHaveBeenLastCalledWith(new Date(2021, 5, 1, 10, 45), '2021-06-01 10:45:00');
     });
@@ -4385,7 +4385,7 @@ describe(`DatePicker`, () => {
         const [yearList, monthList] = getYMLists();
         await userEvent.click(within(yearList).getByRole('option', { name: '2022' }));
         await userEvent.click(within(monthList).getByRole('option', { name: '3月' }));
-        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup() as HTMLElement));
+        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup()!));
         expect(getNavTitle('left')).toBe('2022年 3月');
         expect(onChange).not.toHaveBeenCalled();
     });
@@ -5292,7 +5292,7 @@ describe('DatePicker 触发器语义', () => {
         await userEvent.click(input);
         await waitFor(() => expect(getPopup()).not.toBeNull());
         expect(input).toHaveAttribute('aria-expanded', 'true');
-        const panel = document.getElementById(input.getAttribute('aria-controls') as string);
+        const panel = document.getElementById(input.getAttribute('aria-controls')!);
         expect(panel).toBe(getPopup());
         expect(panel?.closest('[role="dialog"]')).toBe(screen.getByRole('dialog', { name: zh_CN.DatePicker.panel.date }));
     });
@@ -5378,7 +5378,7 @@ describe('DatePicker 触发器语义', () => {
 describe('DatePicker 日历网格键盘操作', () => {
     const activeDay = () => {
         const grid = screen.getByRole('grid');
-        return document.getElementById(grid.getAttribute('aria-activedescendant') as string);
+        return document.getElementById(grid.getAttribute('aria-activedescendant')!);
     };
     const focusGrid = async () => {
         screen.getByRole('grid').focus();
@@ -5527,7 +5527,7 @@ describe('DatePicker 日历网格键盘操作', () => {
     it('insetInput 的 dateTimeRange 四个内嵌输入框名称互不相同', async () => {
         await renderPicker({ type: 'dateTimeRange', defaultOpen: true, insetInput: true, motion: false });
         await settle();
-        const names = within(getPopup() as HTMLElement)
+        const names = within(getPopup()!)
             .getAllByRole('textbox')
             .map((input) => input.getAttribute('aria-label'));
         const [startDate, endDate] = zh_CN.DatePicker.placeholder.dateTimeRange;
@@ -5543,7 +5543,7 @@ describe('DatePicker 日历网格键盘操作', () => {
     it('insetInput 的 dateTime 内嵌日期框与时间框有名称', async () => {
         await renderPicker({ type: 'dateTime', defaultOpen: true, insetInput: true, motion: false });
         await settle();
-        const names = within(getPopup() as HTMLElement)
+        const names = within(getPopup()!)
             .getAllByRole('textbox')
             .map((input) => input.getAttribute('aria-label'));
         expect(names).toEqual([zh_CN.DatePicker.placeholder.dateTime, zh_CN.DatePicker.selectTime]);
@@ -5558,7 +5558,7 @@ describe('DatePicker 日历网格键盘操作', () => {
 describe('DatePicker year 类型', () => {
     it('面板只有一个以语言包命名的年份列表', async () => {
         await renderPicker({ type: 'year', defaultOpen: true, motion: false });
-        const lists = within(getPopup() as HTMLElement).getAllByRole('listbox');
+        const lists = within(getPopup()!).getAllByRole('listbox');
         expect(lists).toHaveLength(1);
         expect(lists[0]).toHaveAccessibleName(zh_CN.DatePicker.year);
         expect(getPopup()?.querySelector(`.${dp}-yearmonth-body`)).toBeNull();
@@ -5645,7 +5645,7 @@ describe('DatePicker year 类型', () => {
 
     it('insetInput 的内嵌输入框以 yyyy 为占位符，与 month 一样以 chooseDate 命名', async () => {
         await renderPicker({ type: 'year', defaultOpen: true, insetInput: true, motion: false });
-        const inset = within(getPopup() as HTMLElement).getByRole('textbox');
+        const inset = within(getPopup()!).getByRole('textbox');
         expect(inset).toHaveAttribute('placeholder', 'yyyy');
         expect(inset).toHaveAccessibleName(zh_CN.DatePicker.chooseDate);
     });
@@ -5966,8 +5966,8 @@ describe('DatePicker Vue 写法', () => {
             });
             await settle();
             const [left, right] = screen.getAllByRole('grid');
-            expect(left).toHaveAccessibleName(getNavTitle('left') as string);
-            expect(right).toHaveAccessibleName(getNavTitle('right') as string);
+            expect(left).toHaveAccessibleName(getNavTitle('left')!);
+            expect(right).toHaveAccessibleName(getNavTitle('right')!);
             expect(getNavTitle('left')).not.toBe(getNavTitle('right'));
         });
 
@@ -6230,7 +6230,7 @@ describe('DatePicker 面板开合与焦点', () => {
         const picker = ref<DatePickerHandle>();
         await renderNode(() => <DatePicker ref={picker} insetInput defaultOpen motion={false} />);
         await waitForPanelOpened();
-        const inset = within(getPopup() as HTMLElement).getByRole('textbox');
+        const inset = within(getPopup()!).getByRole('textbox');
         inset.blur();
         picker.value?.focus();
         await settle();
@@ -6290,7 +6290,7 @@ describe('DatePicker 值与输入的边界', () => {
     it('Form inset 标签下 dateRange 的 group 名称指向渲染出的标签', async () => {
         await renderNode(() => <Form labelPosition="inset">{() => <FormDatePicker field="range" label="区间" type="dateRange" />}</Form>);
         const group = screen.getByRole('group', { name: '区间' });
-        expect(document.getElementById(group.getAttribute('aria-labelledby') as string)).not.toBeNull();
+        expect(document.getElementById(group.getAttribute('aria-labelledby')!)).not.toBeNull();
     });
 
     it('Tooltip 包住的 DatePicker 只在输入框停留，根元素不是 Tab 停靠点', async () => {

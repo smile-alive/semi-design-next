@@ -206,7 +206,7 @@ describe('Svelte Breadcrumb', () => {
         expect(second.querySelector('.semi-typography')).toHaveTextContent(/^breadcrumb$/);
         expect(third.querySelector('.semi-typography')).toHaveTextContent(/^string only$/);
         expect(first.querySelector(`.${prefix}-item-title`)).toBeNull();
-        (store.props as BreadcrumbProps).compact = false;
+        store.props!.compact = false;
         flushSync();
         expect(document.querySelector('.semi-icon-home')).toHaveClass('semi-icon-default');
     });
@@ -298,14 +298,14 @@ describe('Svelte Breadcrumb', () => {
         const { store } = setup();
         expect(width()).toBe('150px');
         const showTooltip = { width: 80, opts: { mouseEnterDelay: 10 } };
-        (store.props as BreadcrumbProps).showTooltip = showTooltip;
+        store.props!.showTooltip = showTooltip;
         flushSync();
         expect(width()).toBe('80px');
         expect(showTooltip).toEqual({ width: 80, opts: { mouseEnterDelay: 10 } });
-        (store.props as BreadcrumbProps).showTooltip = { width: '6em' };
+        store.props!.showTooltip = { width: '6em' };
         flushSync();
         expect(width()).toBe('6em');
-        (store.props as BreadcrumbProps).showTooltip = false;
+        store.props!.showTooltip = false;
         flushSync();
         expect(width()).toBe('150px');
     });
@@ -322,10 +322,10 @@ describe('Svelte Breadcrumb', () => {
     it('routes 变化时按 key 更新，空 routes 不渲染项', () => {
         const { store } = setup({ routes: ['a', 'b'] });
         expect(getItemWraps()).toHaveLength(2);
-        (store.props as BreadcrumbProps).routes = ['a', 'b', 'c', 'd'];
+        store.props!.routes = ['a', 'b', 'c', 'd'];
         flushSync();
         expect(getItemWraps()).toHaveLength(4);
-        (store.props as BreadcrumbProps).routes = [];
+        store.props!.routes = [];
         flushSync();
         expect(getItemWraps()).toHaveLength(0);
     });

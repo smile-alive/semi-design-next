@@ -126,7 +126,7 @@ describe('AutoComplete', () => {
     it('defaultOpen 为 true 且 data 非空时显示 optionList', () => {
         renderAc({ defaultOpen: true, data: stringData, ...commonProps });
         expect(screen.getByRole('listbox')).toBeInTheDocument();
-        const candidate = (getList() as HTMLElement).children;
+        const candidate = getList()!.children;
         expect(candidate).toHaveLength(4);
         expect(candidate[0]).toHaveTextContent(/^semi$/);
         expect(candidate[1]).toHaveTextContent(/^ies$/);
@@ -593,27 +593,27 @@ describe('AutoComplete', () => {
         focusInput();
         pressKey('DOWN');
         expect(getFocusedOption()).toHaveTextContent('ies');
-        expect((getList() as HTMLElement).scrollTop).toBe(40);
+        expect(getList()!.scrollTop).toBe(40);
         pressKey('DOWN');
         expect(getFocusedOption()).toHaveTextContent('design');
-        expect((getList() as HTMLElement).scrollTop).toBe(80);
+        expect(getList()!.scrollTop).toBe(80);
         pressKey('UP');
         expect(getFocusedOption()).toHaveTextContent('ies');
         pressKey('UP');
         pressKey('UP');
         expect(getFocusedOption()).toHaveTextContent('platform');
-        expect((getList() as HTMLElement).scrollTop).toBe(120);
+        expect(getList()!.scrollTop).toBe(120);
     });
 
     it('defaultValue 打开时不滚动，方向键到末项时滚动', () => {
         renderAc({ data: layoutData(stringData), defaultOpen: true, defaultValue: 'semi', ...commonProps });
-        expect((getList() as HTMLElement).scrollTop).toBe(0);
+        expect(getList()!.scrollTop).toBe(0);
         focusInput();
         pressKey('DOWN');
         pressKey('DOWN');
         pressKey('DOWN');
         expect(getFocusedOption()).toHaveTextContent('platform');
-        expect((getList() as HTMLElement).scrollTop).toBe(120);
+        expect(getList()!.scrollTop).toBe(120);
     });
 
     it('triggerRender 替换输入框，点击后打开列表', async () => {
@@ -1107,7 +1107,7 @@ describe('AutoComplete 属性落点与 ref', () => {
                 {(t) => <AutoComplete {...t()} disabled data={stringData} />}
             </Tooltip>
         ));
-        const span = getRoot().parentElement as HTMLElement;
+        const span = getRoot().parentElement!;
         expect(span).toHaveClass(`${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
         expect(getRoot().style.pointerEvents).toBe('none');
     });
@@ -1365,7 +1365,7 @@ describe('AutoComplete 审计修复', () => {
     it('键盘聚焦项 aria-selected 为 true，其余为 false；聚焦项不带 -selected 类', () => {
         renderAc({ ...commonProps, data: stringData, defaultOpen: true, defaultActiveFirstOption: true });
         const input = getInput();
-        const active = () => document.getElementById(input.getAttribute('aria-activedescendant') as string);
+        const active = () => document.getElementById(input.getAttribute('aria-activedescendant')!);
         expect(active()).toHaveAttribute('aria-selected', 'true');
         pressKey('DOWN');
         expect(active()).toHaveTextContent('ies');

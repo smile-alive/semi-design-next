@@ -1,7 +1,6 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
-    import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
     import {
         getColumnsByLevel,
         getHeadWidths,
@@ -111,7 +110,7 @@
                                 : undefined,
                     },
                     sortTip: showSortTip ? locale().locale[getNextSortOrder(flags.sortOrder) as 'ascend'] : undefined,
-                    titleAttr: typeof column.title === 'string' && shouldShowEllipsisTitle(column.ellipsis as BaseEllipsis) && !table.parts.headerCell ? column.title : undefined,
+                    titleAttr: typeof column.title === 'string' && shouldShowEllipsisTitle(column.ellipsis!) && !table.parts.headerCell ? column.title : undefined,
                     // a headerCell snippet may render a title of its own, which this cannot see
                     untitled: !isSelectionColumn(column) && !isExpandedColumn(column) && !table.parts.headerCell && (column.title == null || column.title === ''),
                 },

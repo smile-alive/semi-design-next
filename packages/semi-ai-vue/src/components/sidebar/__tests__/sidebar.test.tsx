@@ -84,7 +84,7 @@ async function expectJsonSlotsForwarded(mount: () => void) {
     instances.length = 0;
     mount();
     await waitFor(() => expect(instances).toHaveLength(1));
-    const core = instances.at(-1) as FakeViewer;
+    const core = instances.at(-1)!;
     const span = core.container.appendChild(document.createElement('span'));
     const rule = core.options.customRenderRule?.[0];
     core.emitter.emit('customRender', { customRenderMap: new Map([[span, rule?.render('"x"')]]) });
@@ -787,7 +787,7 @@ describe('Sidebar 全局默认值与透传', () => {
         ['Container', Container, { onAfterVisibleChange: () => {}, closeOnEsc: true }],
     ] as const)('%s 只由组件使用的属性不进入 DOM', (_name, component, props) => {
         const { container } = render(component, { props: { ...props, visible: true } });
-        const root = sidebarContainer(container) as HTMLElement;
+        const root = sidebarContainer(container)!;
         expect(root.getAttributeNames().filter((name) => name !== 'class' && name !== 'style')).toEqual([]);
     });
 

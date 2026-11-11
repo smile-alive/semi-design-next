@@ -73,7 +73,7 @@
     // Every group image registers, even without preview: the group lazy-loads them all.
     const registration = computed<Omit<GroupImage, 'node'>>((previous) => {
         const next = {
-            src: props.src as string,
+            src: props.src!,
             previewSrc: props.preview ? previewSrc.value : undefined,
             title: previewObject.value?.previewTitle,
             alt: props.alt,
@@ -99,7 +99,7 @@
             watch(
                 registration,
                 (entry, _, onCleanup) => {
-                    const node = root.value as HTMLDivElement;
+                    const node = root.value!;
                     group.registerImage({ ...entry, node });
                     onCleanup(() => group.unregisterImage(node));
                 },

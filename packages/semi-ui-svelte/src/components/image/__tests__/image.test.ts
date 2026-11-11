@@ -258,7 +258,7 @@ describe('Svelte Image', () => {
         const onZoomIn = vi.fn<(zoom: number) => void>();
         const onClose = vi.fn<() => void>();
         await loaded({ preview: { src: srcList, visible: true, onChange, onNext, onZoomIn, onClose } });
-        await fire(fireEvent.click($('.semi-image-preview-next') as HTMLElement));
+        await fire(fireEvent.click($('.semi-image-preview-next')!));
         expect(onChange).toHaveBeenCalledWith(1);
         expect(onNext).toHaveBeenCalledWith(1);
         await fire(fireEvent.click(footerIcon('plus')));
@@ -306,7 +306,7 @@ describe('Svelte Image 单图预览的片段', () => {
         expect($('.custom-title')?.textContent).toBe('0:T');
         expect($('.custom-close')).not.toBeNull();
         expect($('.custom-menu')?.textContent).toContain('1/3');
-        await fire(fireEvent.click($('.semi-image-preview-next') as HTMLElement));
+        await fire(fireEvent.click($('.semi-image-preview-next')!));
         expect($('.custom-right')).not.toBeNull();
         expect($('.custom-left')?.textContent).toBe('L1');
     });
@@ -339,7 +339,7 @@ describe('Svelte Image 在分组内', () => {
 
     it('分组内尚未加载的缩略图同样是可聚焦按钮，Enter 打开分组预览', async () => {
         group();
-        const first = thumbs()[1].parentElement as HTMLElement;
+        const first = thumbs()[1].parentElement!;
         expect(first).toHaveAttribute('role', 'button');
         await fire(fireEvent.keyDown(first, { key: 'Enter' }));
         expect(getPreview()).not.toBeNull();

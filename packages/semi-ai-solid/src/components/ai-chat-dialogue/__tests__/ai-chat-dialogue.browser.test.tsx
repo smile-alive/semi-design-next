@@ -24,7 +24,7 @@ async function find<T extends Element = HTMLElement>(query: () => T | null | und
     return waitFor(() => {
         const found = query();
         expect(found).toBeTruthy();
-        return found as T;
+        return found!;
     });
 }
 
@@ -155,7 +155,7 @@ describe('AIChatDialogue', () => {
         const stops: Element[] = [];
         while (document.activeElement !== more && stops.length < 30) {
             await userEvent.keyboard('{Tab}');
-            stops.push(document.activeElement as Element);
+            stops.push(document.activeElement!);
         }
         expect(more).toHaveFocus();
         // a focusable wrapper around the button would be an extra stop drawn with the user agent ring

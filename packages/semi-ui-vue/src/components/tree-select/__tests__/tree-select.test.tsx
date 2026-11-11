@@ -278,7 +278,7 @@ const getPopover = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREF
 const getPopoverWrapper = () => getElement(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 const getOptions = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option`)];
 const getOptionsOfLevel = (level: number) => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option.${BASE_CLASS_PREFIX}-tree-option-level-${level}`)];
-const getNode = (label: string) => getOptions().find((node) => node.textContent === label) as HTMLElement;
+const getNode = (label: string) => getOptions().find((node) => node.textContent === label)!;
 const getNodeLabels = () => getOptions().map((node) => node.textContent);
 const getSelectedLabels = () => [...document.querySelectorAll(`.${BASE_CLASS_PREFIX}-tree-option-selected`)].map((node) => node.textContent);
 const getHighlights = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option-highlight`)];
@@ -294,7 +294,7 @@ const getTagClose = (index = 0) => getTags()[index].querySelector(`.${BASE_CLASS
 const getClearButton = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-clearbtn`);
 const getExpandIcon = (label: string) => getNode(label).querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option-expand-icon`);
 async function click(element: Element | null) {
-    await userEvent.click(element as Element);
+    await userEvent.click(element!);
     await settle();
 }
 const clickExpandIcon = (label: string) => click(getExpandIcon(label));
@@ -1498,7 +1498,7 @@ describe('TreeSelect', () => {
         const restTag = await waitFor(() => {
             const tag = [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tag`)].find((el) => el.textContent === '东京');
             expect(tag).toBeDefined();
-            return tag as HTMLElement;
+            return tag!;
         });
         await fireEvent.mouseDown(restTag);
         expect(getPopover()).not.toBeNull();
@@ -1633,7 +1633,7 @@ describe('TreeSelect', () => {
 
     it('按 Escape 关闭', async () => {
         await renderTreeSelect({ defaultOpen: true });
-        await fireEvent.keyDown(getPopover() as HTMLElement, { key: 'Escape' });
+        await fireEvent.keyDown(getPopover()!, { key: 'Escape' });
         await waitFor(() => expect(getPopover()).toBeNull());
     });
 
@@ -1680,7 +1680,7 @@ describe('TreeSelect', () => {
     it('空 #emptyContent 插槽不渲染空状态', async () => {
         await renderTreeSelect({ treeData: [] }, { emptyContent: () => [] });
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-empty`)).toBeNull();
-        const list = document.getElementById(getTrigger().getAttribute('aria-controls') as string);
+        const list = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(list).toHaveClass(`${BASE_CLASS_PREFIX}-tree-option-list-hidden`);
     });
 
@@ -1829,7 +1829,7 @@ describe('TreeSelect', () => {
     it('在弹层上按 Escape 以外的键不关闭', async () => {
         const onDropdownVisibleChange = spy<'dropdownVisibleChange'>();
         await renderTreeSelect({ defaultOpen: true, onDropdownVisibleChange });
-        await fireEvent.keyDown(getPopover() as HTMLElement, { key: 'Enter' });
+        await fireEvent.keyDown(getPopover()!, { key: 'Enter' });
         await settle();
         expect(onDropdownVisibleChange).not.toHaveBeenCalledWith(false);
         expect(getPopover()).not.toBeNull();
@@ -2068,7 +2068,7 @@ describe('TreeSelect', () => {
     it('showSearchClear 属性', async () => {
         await renderTreeSelect({ filterTreeNode: true, showSearchClear: true });
         await search('test');
-        await fireEvent.mouseEnter(getSearchInput().parentElement as HTMLElement);
+        await fireEvent.mouseEnter(getSearchInput().parentElement!);
         await click(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         expect(getSearchInput()).toHaveValue('');
     });
@@ -2121,7 +2121,7 @@ describe('TreeSelect', () => {
         await renderTreeSelect({ filterTreeNode: true, defaultOpen: true });
         await search('北京');
         expect(getHighlights()).toHaveLength(1);
-        await fireEvent.keyDown(getPopover() as HTMLElement, { key: 'Escape' });
+        await fireEvent.keyDown(getPopover()!, { key: 'Escape' });
         await waitFor(() => expect(getPopover()).toBeNull());
         await click(getTrigger());
         expect(getSearchInput()).toHaveValue('');
@@ -2462,7 +2462,7 @@ describe('TreeSelect', () => {
             defaultValue: ['Beijing', 'NotInTree'],
             defaultExpandAll: true,
         });
-        const notInTreeTag = getTags().find((tag) => tag.textContent === 'NotInTree') as HTMLElement;
+        const notInTreeTag = getTags().find((tag) => tag.textContent === 'NotInTree')!;
         await click(notInTreeTag.querySelector(`.${BASE_CLASS_PREFIX}-tag-close`));
         expect(onChange.mock.calls[0][0]).toEqual(['Beijing']);
         expect(getTagTexts()).toEqual(['Beijing']);
@@ -3288,14 +3288,13 @@ describe('TreeSelect 行为', () => {
                 },
             }
         );
-        const slotProps = () => triggerProps as TreeSelectTriggerSlotProps<unknown, boolean>;
         expect(screen.getByRole('combobox').querySelector('.custom-trigger')).toHaveTextContent('北京,东京');
-        expect(slotProps().componentProps.multiple).toBe(true);
-        await act(() => slotProps().onRemove('dongjing'));
+        expect(triggerProps!.componentProps.multiple).toBe(true);
+        await act(() => triggerProps!.onRemove('dongjing'));
         expect(onChange.mock.calls[0][0]).toEqual(['Beijing']);
-        await act(() => slotProps().onSearch('上'));
+        await act(() => triggerProps!.onSearch('上'));
         expect(onSearch.mock.calls[0][0]).toBe('上');
-        await act(() => slotProps().onClear());
+        await act(() => triggerProps!.onClear());
         expect(onChange.mock.calls[1][0]).toEqual([]);
         expect(screen.getByRole('combobox').querySelector('.custom-trigger')).toHaveTextContent('');
     });
@@ -3357,14 +3356,14 @@ describe('TreeSelect 行为', () => {
         const { unmount } = await renderTreeSelect({ defaultOpen: false });
         await click(getTrigger());
         expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
-        const tree = document.getElementById(getTrigger().getAttribute('aria-controls') as string);
+        const tree = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(tree).toHaveAttribute('role', 'tree');
         expect(tree).toHaveAttribute('aria-multiselectable', 'false');
         expect(tree).toHaveAccessibleName(locale.label);
         unmount();
         await renderTreeSelect({ defaultOpen: false, multiple: true, 'aria-label': 'Region' });
         await click(getTrigger());
-        const multipleTree = document.getElementById(getTrigger().getAttribute('aria-controls') as string);
+        const multipleTree = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(multipleTree).toHaveAttribute('role', 'tree');
         expect(multipleTree).toHaveAttribute('aria-multiselectable', 'true');
         expect(multipleTree).toHaveAccessibleName('Region');
@@ -3373,13 +3372,13 @@ describe('TreeSelect 行为', () => {
     it('optionListStyle 在有数据和无数据时都落在 aria-controls 指向的元素上', async () => {
         const { unmount } = await renderTreeSelect({ defaultOpen: false, optionListStyle: { height: '200px' } });
         await click(getTrigger());
-        const tree = document.getElementById(getTrigger().getAttribute('aria-controls') as string);
+        const tree = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(tree).toHaveAttribute('role', 'tree');
         expect(tree).toHaveStyle({ height: '200px' });
         unmount();
         await renderTreeSelect({ defaultOpen: false, treeData: [], optionListStyle: { height: '200px' } });
         await click(getTrigger());
-        const empty = document.getElementById(getTrigger().getAttribute('aria-controls') as string);
+        const empty = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(empty).not.toHaveAttribute('role', 'tree');
         expect(empty).toHaveStyle({ height: '200px' });
     });
@@ -3993,7 +3992,7 @@ describe('TreeSelect Vue', () => {
             defaultOpen: true,
         });
         expect(getNodeLabels()).toEqual(['亚洲', '中国', '北京', '上海', '日本', '北美洲']);
-        (handle().data[1].children as TreeNodeData[]).push({ label: '墨西哥', value: 'Mexico', key: 'mexico' });
+        handle().data[1].children!.push({ label: '墨西哥', value: 'Mexico', key: 'mexico' });
         await clickExpandIcon('北美洲');
         expect(getNodeLabels()).not.toContain('墨西哥');
 

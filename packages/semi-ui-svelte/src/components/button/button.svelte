@@ -87,7 +87,7 @@
     };
 
     onMount(() => {
-        const button = root as HTMLButtonElement;
+        const button = root!;
         group?.add(button);
         return () => group?.remove(button);
     });

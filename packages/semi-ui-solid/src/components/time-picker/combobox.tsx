@@ -58,7 +58,7 @@ export default function Combobox(props: ComboboxProps) {
 
     const select = (type: ColumnType) => (item: { value: string }) =>
         props.onChange?.({
-            timeStampValue: Number(applyItem(props.timeStampValue as TimeStamp, type, item.value, Boolean(props.use12Hours), options().isAM)),
+            timeStampValue: Number(applyItem(props.timeStampValue!, type, item.value, Boolean(props.use12Hours), options().isAM)),
         });
 
     // accessors, not values: the column is created once and its props stay live

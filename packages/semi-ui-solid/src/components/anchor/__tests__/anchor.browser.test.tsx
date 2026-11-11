@@ -170,7 +170,7 @@ describe('Anchor（浏览器）', () => {
         const stops: Element[] = [];
         for (let i = 0; i < 3; i++) {
             await userEvent.keyboard('{Tab}');
-            stops.push(document.activeElement as Element);
+            stops.push(document.activeElement!);
         }
         expect(stops[0]).toBe(links[0]);
         expect(stops[1]).toBe(links[1]);

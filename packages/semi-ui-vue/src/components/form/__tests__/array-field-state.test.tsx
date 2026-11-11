@@ -21,7 +21,7 @@ function renderRows(formProps: Record<string, unknown>, arrayFieldProps: Record<
             </ArrayField>
         ) : null
     );
-    return { ...view, scope: () => scope as ArrayFieldSlotProps };
+    return { ...view, scope: () => scope! };
 }
 
 const inputValues = () => Array.from(document.querySelectorAll<HTMLInputElement>('.semi-input'), (input) => input.value);

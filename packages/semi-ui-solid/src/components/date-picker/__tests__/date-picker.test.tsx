@@ -41,7 +41,7 @@ const getPanel = (side: string) => getElement(`.${dp}-month-grid-${side}`);
 const getWeekDays = (side: string, weekIndex: number) => getPanel(side).querySelectorAll(`.${dp}-week`)[weekIndex].querySelectorAll<HTMLElement>(`.${dp}-day`);
 const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
-const nthNext = (from: Element, n: number) => Array.from({ length: n }).reduce<Element>((cur) => cur.nextElementSibling as Element, from);
+const nthNext = (from: Element, n: number) => Array.from({ length: n }).reduce<Element>((cur) => cur.nextElementSibling!, from);
 const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll('input'));
 const getPopoverWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
@@ -193,7 +193,7 @@ describe('DatePicker', () => {
         expect(onOpenChange).not.toHaveBeenCalled();
 
         const inputWrapper = getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`, container);
-        await userEvent.click(inputWrapper.parentElement as HTMLElement);
+        await userEvent.click(inputWrapper.parentElement!);
         expect(onOpenChange).toHaveBeenCalledWith(true);
 
         fireEvent.input(getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input-wrapper input`, container), { target: { value: '2019-10-02 08:30:02' } });
@@ -588,13 +588,13 @@ describe('DatePicker', () => {
         };
         const { rerender } = renderDatePicker(props);
         await userEvent.click(getElement(`.${dp}-month-grid-left .${dp}-switch-time`));
-        const args = disabledTime.mock.lastCall as Parameters<typeof disabledTime>;
+        const args = disabledTime.mock.lastCall!;
         expect((args[0] as Date[]).length).toBe(2);
         expect(args[1]).toBe('left');
 
         rerender({ ...props, type: 'dateTime' } as DatePickerProps);
         await userEvent.click(getElement(`.${dp}-month-grid-left .${dp}-switch-time`));
-        const args2 = disabledTime.mock.lastCall as Parameters<typeof disabledTime>;
+        const args2 = disabledTime.mock.lastCall!;
         expect(Array.isArray(args2[0])).toBe(false);
         expect(args2[1]).toBe('left');
     });
@@ -959,7 +959,7 @@ describe('DatePicker', () => {
         const timePanel = await waitFor(() => {
             const node = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-timepicker-panel`);
             expect(node).not.toBeNull();
-            return node as HTMLElement;
+            return node!;
         });
         fireEvent.mouseDown(timePanel);
         expect(getPopup()).not.toBeNull();

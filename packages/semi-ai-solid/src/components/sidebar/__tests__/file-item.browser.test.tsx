@@ -17,7 +17,7 @@ describe('Sidebar.FileItem', () => {
             await userEvent.keyboard('{Tab}');
         }
         while (bar.contains(document.activeElement) && stops.length < 40) {
-            stops.push(document.activeElement as Element);
+            stops.push(document.activeElement!);
             await userEvent.keyboard('{Tab}');
         }
         expect(stops.length).toBeGreaterThan(0);

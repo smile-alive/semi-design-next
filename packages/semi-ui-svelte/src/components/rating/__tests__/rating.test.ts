@@ -37,7 +37,7 @@ function renderRating(props: RatingProps = {}, extra: Partial<Omit<FixtureStore,
     const store = createStore<FixtureStore>({ props, ...extra });
     let handle: Handle | undefined;
     const view = render(RatingFixture, { props: { store, onHandle: (h: Handle) => (handle = h) } });
-    return { ...view, store, handle: () => handle as Handle };
+    return { ...view, store, handle: () => handle! };
 }
 
 async function keyOnList(key: string) {

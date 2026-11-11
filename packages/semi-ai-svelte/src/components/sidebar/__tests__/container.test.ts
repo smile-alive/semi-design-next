@@ -84,7 +84,7 @@ describe('Svelte Sidebar.Container', () => {
 
     it('点击关闭按钮先写 visible=false 再触发 onCancel', async () => {
         const { store } = bound();
-        await fireEvent.click(closeButton() as HTMLElement);
+        await fireEvent.click(closeButton()!);
         expect(store.visible).toBe(false);
         expect(store.log).toEqual(['cancel']);
         await tick();
@@ -231,7 +231,7 @@ describe('Svelte Sidebar.Container', () => {
     it('关闭按钮的点击事件交给 onCancel', async () => {
         const onCancel = vi.fn<NonNullable<ContainerProps['onCancel']>>();
         setup({ visible: true, onCancel });
-        await fireEvent.click(closeButton() as HTMLElement);
+        await fireEvent.click(closeButton()!);
         expect(onCancel).toHaveBeenCalledWith(expect.objectContaining({ type: 'click' }));
     });
 

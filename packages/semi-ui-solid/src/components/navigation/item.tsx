@@ -10,7 +10,7 @@ import { callHandler, splitControlAttrs, forwardFocus, hasContent, createIconSlo
 import DropdownItem from '../dropdown/dropdown-item';
 import Tooltip, { type GetTriggerProps } from '../tooltip';
 import { useNavContext } from './context';
-import type { ItemKey, NavItemProps, OnSelectedData, SubNavProps } from './interface';
+import type { NavItemProps, OnSelectedData, SubNavProps } from './interface';
 
 const prefix = cssClasses.PREFIX;
 const itemPrefix = `${prefix}-item`;
@@ -71,7 +71,7 @@ export function ItemView(allProps: NavItemProps & { itemConfig?: NavItemType }) 
 
     const horizontal = () => view().mode === strings.MODE_HORIZONTAL;
 
-    const selected = () => view().selectedKeys.includes(local.itemKey as ItemKey);
+    const selected = () => view().selectedKeys.includes(local.itemKey!);
 
     const { foundation } = useFoundation<ItemFoundation, ItemAdapter<NavItemProps>, NavItemProps, object>(
         ItemFoundation,
@@ -79,7 +79,7 @@ export function ItemView(allProps: NavItemProps & { itemConfig?: NavItemType }) 
         () => ({}),
         () => ({
             getSelectedItem: () => copySelectedItem(internal.itemConfig ? { ...internal.itemConfig, level: props.level } : givenProps(props)),
-            selectSelf: () => context.updateSelectedKeys([props.itemKey as ItemKey]),
+            selectSelf: () => context.updateSelectedKeys([props.itemKey!]),
             getSelectedKeysIsControlled: () => view().selectedKeysIsControlled,
             notifyGlobalOnSelect: (data) => context.notifySelect(data as OnSelectedData),
             notifyGlobalOnClick: (data) => context.notifyClick(data),

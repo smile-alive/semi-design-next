@@ -24,8 +24,6 @@
     const pending = shallowRef<any[] | undefined>(undefined);
     const localVisible = shallowRef(false);
 
-    const dataIndex = () => props.column.dataIndex as string;
-
     const controlled = () => props.query.filterDropdownVisible !== undefined;
 
     const confirmMode = () => props.query.filterConfirmMode === 'confirm';
@@ -40,11 +38,11 @@
     // handler replaces the caller's; bound beside it, Vue would call both, and a submenu would report its own opening
     const dropdownProps = () => omit(props.query.filterDropdownProps ?? {}, ['onVisibleChange', 'onUpdate:visible']);
 
-    const select = (filteredValue: any[]) => table.foundation.handleFilterSelect(dataIndex(), { filteredValue });
+    const select = (filteredValue: any[]) => table.foundation.handleFilterSelect(props.column.dataIndex!, { filteredValue });
 
     const requestClose = () => {
         if (controlled()) {
-            table.foundation.toggleShowFilter(dataIndex(), false);
+            table.foundation.toggleShowFilter(props.column.dataIndex!, false);
         } else {
             // the Dropdown does not report a close its owner applies
             handleVisibleChange(false);
@@ -54,7 +52,7 @@
     const confirm = (options: { closeDropdown?: boolean; filteredValue?: any[] } = {}) => {
         const next = options.filteredValue || tempFilteredValue();
         if (!isEqual(next, props.filteredValue)) {
-            select(next as any[]);
+            select(next!);
         }
         if (options.closeDropdown) {
             requestClose();
@@ -87,12 +85,12 @@
         if (next && selfManaged()) {
             return;
         }
-        table.foundation.toggleShowFilter(dataIndex(), next);
+        table.foundation.toggleShowFilter(props.column.dataIndex!, next);
     };
 
     const handleOpen = () => {
         if (selfManaged()) {
-            table.foundation.toggleShowFilter(dataIndex(), true);
+            table.foundation.toggleShowFilter(props.column.dataIndex!, true);
         }
     };
 

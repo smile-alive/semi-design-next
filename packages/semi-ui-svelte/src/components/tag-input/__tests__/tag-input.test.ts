@@ -237,7 +237,7 @@ describe('Svelte TagInput', () => {
         expect(onRemove).toHaveBeenNthCalledWith(2, 'lark', 2);
         expect(onChange).toHaveBeenNthCalledWith(2, ['abc', 'toutiao']);
 
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(onChange).toHaveBeenNthCalledWith(3, []);
         expect(onRemove).toHaveBeenCalledTimes(2);
         expect(getTagTexts()).toEqual([]);
@@ -329,7 +329,7 @@ describe('Svelte TagInput', () => {
             return selector === ':hover' ? this === getRestCount() : nativeMatches.call(this, selector);
         });
         setup({ props: { value: ['abc', 'hotsoon', 'lark'], maxTagCount: 1, restTagsPopoverProps: { position: 'bottom' } } });
-        await userEvent.hover(getRestCount() as Element);
+        await userEvent.hover(getRestCount()!);
         await waitFor(() => expect(document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`)).not.toBeNull());
         const popover = document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
         expect(popover).toHaveAttribute('x-placement', 'bottom');
@@ -430,7 +430,7 @@ describe('Svelte TagInput', () => {
         await userEvent.tab();
         await userEvent.tab();
         await typeText('c');
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         await fireEvent.compositionStart(getInput());
         await fireEvent.compositionEnd(getInput(), { target: { value: 'abc' } });
         await settle();

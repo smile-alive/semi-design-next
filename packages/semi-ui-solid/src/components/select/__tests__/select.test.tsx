@@ -46,7 +46,7 @@ const getOptionList = () => screen.queryByRole('listbox');
 const getOptions = () => screen.queryAllByRole('option');
 const getOptionTexts = () => getOptions().map((option) => option.textContent);
 // the tick icon contributes to the accessible name of an option, so options are matched by their text
-const getOptionByText = (text: string) => getOptions().find((option) => option.textContent === text) as HTMLElement;
+const getOptionByText = (text: string) => getOptions().find((option) => option.textContent === text)!;
 const getFocusedOption = () => document.querySelector(`.${prefixCls}-option-focused`);
 const getSelectionText = () => document.querySelector(`.${prefixCls}-selection-text`);
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)).map((tag) => tag.textContent);
@@ -328,7 +328,7 @@ describe('Select', () => {
         await userEvent.click(getTrigger());
         search('abc');
         expect(getOptionTexts()).toEqual(['Abc']);
-        const activeId = getTrigger().getAttribute('aria-activedescendant') as string;
+        const activeId = getTrigger().getAttribute('aria-activedescendant')!;
         expect(activeId).toBeTruthy();
         expect(document.getElementById(activeId)).toBe(getOptionByText('Abc'));
         search('zzz');
@@ -899,7 +899,7 @@ describe('Select', () => {
     it('onListScroll 回调', () => {
         const onListScroll = vi.fn<NonNullable<SelectProps['onListScroll']>>();
         renderSelect({ defaultOpen: true, onListScroll });
-        fireEvent.scroll(getOptionList() as HTMLElement);
+        fireEvent.scroll(getOptionList()!);
         expect(onListScroll).toHaveBeenCalledTimes(1);
     });
 
@@ -1298,7 +1298,7 @@ describe('Select 交互', () => {
                 </Select.OptGroup>,
             ],
         });
-        const groupNodes = Array.from((getOptionList() as HTMLElement).children);
+        const groupNodes = Array.from(getOptionList()!.children);
         expect(groupNodes.map((group) => Array.from(group.children).map((node) => node.textContent))).toEqual([
             ['Group1', 'a-1'],
             ['Group2', 'b-1'],
@@ -1539,7 +1539,7 @@ describe('Select 交互', () => {
 
     it('maxHeight 为字符串时原样作为列表的 max-height', () => {
         renderSelect({ defaultOpen: true, maxHeight: '50%' });
-        expect((getOptionList() as HTMLElement).style.maxHeight).toBe('50%');
+        expect(getOptionList()!.style.maxHeight).toBe('50%');
     });
 
     it('inputProps.class 与搜索框的内置类名合并', () => {
@@ -2414,7 +2414,7 @@ describe('Select 子节点与边界', () => {
     });
 
     it.each(['inner-top', 'outer-top', 'outer-bottom'])('悬停 %s 插槽时取消选项高亮', async (slot) => {
-        const key = { 'inner-top': 'innerTopSlot', 'outer-top': 'outerTopSlot', 'outer-bottom': 'outerBottomSlot' }[slot] as string;
+        const key = { 'inner-top': 'innerTopSlot', 'outer-top': 'outerTopSlot', 'outer-bottom': 'outerBottomSlot' }[slot]!;
         renderSelect({ defaultOpen: true, [key]: <div>Slot</div> });
         expect(getFocusedOption()).not.toBeNull();
         await userEvent.hover(getElement(`.${prefixCls}-option-list-${slot}-slot`));
@@ -2695,7 +2695,7 @@ describe('Select 行为基线', () => {
         await userEvent.click(getTrigger());
         const trigger = getTrigger();
         expect(trigger).toHaveAttribute('aria-expanded', 'true');
-        expect(document.getElementById(trigger.getAttribute('aria-controls') as string)).toBe(getOptionList());
+        expect(document.getElementById(trigger.getAttribute('aria-controls')!)).toBe(getOptionList());
         expect(trigger.getAttribute('aria-activedescendant')).toBe(getOptions()[0].id);
     });
 
@@ -3172,7 +3172,7 @@ describe('Select 回调参数与禁用、键盘细节', () => {
     it('virtualize 时滚动虚拟列表触发 onListScroll', () => {
         const onListScroll = vi.fn<NonNullable<SelectProps['onListScroll']>>();
         renderSelect({ defaultOpen: true, optionList: range(300), virtualize: { itemSize: 36, height: 270 }, onListScroll });
-        const scroller = (getOptionList() as HTMLElement).firstElementChild as HTMLElement;
+        const scroller = getOptionList()!.firstElementChild as HTMLElement;
         scroller.scrollTop = 360;
         fireEvent.scroll(scroller);
         expect(onListScroll).toHaveBeenCalledTimes(1);
@@ -3348,7 +3348,7 @@ describe('ref 上的 SelectHandle 方法', () => {
     const renderWithRef = (props: Props = {}) => {
         let element: SelectElement | undefined;
         const result = renderSelect({ ...props, ref: (node: SelectElement) => (element = node) });
-        return { ...result, ref: () => element as SelectElement };
+        return { ...result, ref: () => element! };
     };
 
     it('ref.rePosition 让下拉层跟随移动后的触发器', () => {

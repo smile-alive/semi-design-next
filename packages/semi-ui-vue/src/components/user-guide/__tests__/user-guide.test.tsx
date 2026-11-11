@@ -379,7 +379,7 @@ describe('UserGuide 弹出模式', () => {
     it('ConfigProvider 的 getPopupContainer 指向其他元素时，modal 模式渲染进容器且不锁定 body 滚动', async () => {
         render(ConfigContainer, { props: { steps: makeSteps(), mode: 'modal' } });
         await nextTick();
-        const host = $('.config-container') as HTMLElement;
+        const host = $('.config-container')!;
         expect(host.querySelector(`.${BASE_CLASS_PREFIX}-modal`)).not.toBeNull();
         expect(document.body.style.overflow).toBe('');
     });
@@ -502,7 +502,7 @@ describe('UserGuide 弹出模式', () => {
             attrs: { class: 'guide-cls', style: { color: 'red' } },
         });
         await screen.findByText('Title A');
-        const modal = $(`.${modalPrefix}`) as HTMLElement;
+        const modal = $(`.${modalPrefix}`)!;
         expect(modal).toHaveClass('guide-cls', 'step-cls');
         expect(modal.querySelector(`.${BASE_CLASS_PREFIX}-modal`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(modal).not.toHaveStyle({ color: 'rgb(255, 0, 0)' });
@@ -560,7 +560,7 @@ describe('UserGuide 测量', () => {
     it('锚点的位置与尺寸带 px 单位且不是 Tab 停靠点', async () => {
         renderGuide();
         await screen.findByText('Title A');
-        const anchor = $('[tabindex="-1"][style*="position: fixed"]') as HTMLElement;
+        const anchor = $('[tabindex="-1"][style*="position: fixed"]')!;
         expect(anchor).not.toBeNull();
         expect(anchor.style.left).toBe('5px');
         expect(anchor.style.top).toBe('15px');
@@ -918,7 +918,7 @@ describe('UserGuide 插槽与文本', () => {
         const steps = makeSteps();
         const view = render(TemplateSlots, { props: { steps, showTitle: true } });
         const dialog = await screen.findByRole('dialog', { name: 'Title A-0' });
-        const titleId = dialog.getAttribute('aria-labelledby') as string;
+        const titleId = dialog.getAttribute('aria-labelledby')!;
         expect(document.getElementById(titleId)).toContainElement(screen.getByText('Title A-0'));
         view.unmount();
 
@@ -1027,7 +1027,7 @@ describe('UserGuide attrs', () => {
             attrs: { class: 'attr-cls', id: 'guide-id', 'data-x': '1', 'aria-label': 'ignored', onClick },
         });
         await screen.findByText('Title A');
-        const popover = $(`.${prefix}-popover`) as HTMLElement;
+        const popover = $(`.${prefix}-popover`)!;
         expect(popover).toHaveClass('attr-cls');
         expect($('#guide-id')).toBeNull();
         expect($('[data-x]')).toBeNull();
@@ -1051,7 +1051,7 @@ describe('UserGuide attrs', () => {
         expect($('[data-x]')).toBeNull();
         expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-label');
         await click('下一步');
-        await fireEvent.click($(`.${modalPrefix}`) as HTMLElement);
+        await fireEvent.click($(`.${modalPrefix}`)!);
         expect(onClick).not.toHaveBeenCalled();
         expect(warn.mock.calls.filter(([message]) => String(message).includes('Extraneous'))).toHaveLength(0);
     });

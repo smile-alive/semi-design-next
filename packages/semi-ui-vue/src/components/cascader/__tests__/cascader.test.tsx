@@ -115,7 +115,7 @@ const getHighlights = () => document.querySelectorAll(`.${prefixCls}-option-labe
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)).map((node) => node.textContent);
 const focus = (element: HTMLElement) => act(() => element.focus());
 async function click(element: Element | null) {
-    await userEvent.click(element as Element);
+    await userEvent.click(element!);
     await settle();
 }
 async function type(text: string, input: HTMLElement = getSelectionInput()) {
@@ -1132,7 +1132,7 @@ describe('Cascader', () => {
         const rows = document.querySelectorAll(`.${prefixCls}-option-list li`);
         expect(rows).toHaveLength(3);
         rows.forEach((row) => expect(row).toHaveStyle({ position: 'absolute', height: '36px' }));
-        const list = rows[0].parentElement as HTMLElement;
+        const list = rows[0].parentElement!;
         expect(list.tagName).toBe('UL');
         expect(list).toHaveAttribute('role', 'none');
         expect(list.parentElement).toHaveStyle({ height: '300px' });

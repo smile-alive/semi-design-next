@@ -34,8 +34,8 @@ const getInput = () => getElement<HTMLInputElement>(`.${prefixCls} input`);
 const getRoot = () => getElement(`.${prefixCls}`);
 const getPanels = () => Array.from(document.querySelectorAll<HTMLElement>(`.${scrollListCls}`));
 const getList = (type: string, panel: ParentNode = document) => panel.querySelector<HTMLElement>(`.${prefixCls}-panel-list-${type}`);
-const getItems = (type: string, panel?: ParentNode) => Array.from((getList(type, panel) as HTMLElement).querySelectorAll('li'));
-const getSelectedText = (type: string, panel?: ParentNode) => (getList(type, panel) as HTMLElement).querySelector(`.${scrollListCls}-item-sel`)?.textContent;
+const getItems = (type: string, panel?: ParentNode) => Array.from(getList(type, panel)!.querySelectorAll('li'));
+const getSelectedText = (type: string, panel?: ParentNode) => getList(type, panel)!.querySelector(`.${scrollListCls}-item-sel`)?.textContent;
 const clickItem = (type: string, index: number, panel?: ParentNode) => fireEvent.click(getItems(type, panel)[index]);
 const clickOutside = () => fireEvent.mouseDown(document.body);
 const typeText = (value: string) => fireEvent.input(getInput(), { target: { value } });
@@ -74,7 +74,7 @@ describe('TimePicker', () => {
         expect(document.querySelectorAll(`.${scrollListCls}-footer`)).toHaveLength(1);
         expect(getInput()).toHaveValue('10:24:18');
 
-        fireEvent.click(getElement(`.${scrollListCls}-list-outer ul li`, getList('minute') as HTMLElement));
+        fireEvent.click(getElement(`.${scrollListCls}-list-outer ul li`, getList('minute')!));
         await waitFor(() => expect(onChange).toHaveBeenCalledTimes(1));
         const [selectedDate, selectedStr] = onChange.mock.calls[0] as [Date, string];
         expect(hms(selectedDate)).toEqual([10, 0, 18]);
@@ -1230,7 +1230,7 @@ describe('TimePicker combobox 与面板键盘操作', () => {
         expect(input).toHaveAttribute('aria-expanded', 'false');
         input.focus();
         await waitFor(() => expect(input).toHaveAttribute('aria-expanded', 'true'));
-        const panel = document.getElementById(input.getAttribute('aria-controls') as string);
+        const panel = document.getElementById(input.getAttribute('aria-controls')!);
         expect(panel).toContainElement(screen.getAllByRole('listbox')[0]);
         expect(screen.getByRole('dialog', { name: Locale.TimePicker.panel.time })).toContainElement(panel);
     });
@@ -1408,7 +1408,7 @@ describe('TimePicker 面板与属性边界', () => {
         const scrollItemProps = { cycled: false, onSelect, 'aria-label': 'x' } as unknown as TimePickerProps['scrollItemProps'];
         renderTimePicker({ defaultValue: '10:23:15', defaultOpen: true, onChange, scrollItemProps });
 
-        expect((getList('hour') as HTMLElement).querySelector('ul')).toHaveAttribute('aria-label', Locale.TimePicker.hourList);
+        expect(getList('hour')!.querySelector('ul')).toHaveAttribute('aria-label', Locale.TimePicker.hourList);
         clickItem('hour', 3);
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onSelect).not.toHaveBeenCalled();

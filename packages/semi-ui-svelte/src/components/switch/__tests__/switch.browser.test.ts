@@ -21,7 +21,7 @@ describe('Svelte Switch（浏览器）', () => {
         const change = vi.fn<SwitchChange>();
         const { control } = setup({ 'aria-label': 'toggle', onChange: change } as SwitchProps);
         await tabTo(control);
-        expectThemeFocusRing(control.parentElement as HTMLElement);
+        expectThemeFocusRing(control.parentElement!);
         await userEvent.keyboard(' ');
         expect(control).toBeChecked();
         expect(change).toHaveBeenLastCalledWith(true, expect.any(Event));

@@ -93,10 +93,10 @@ describe('Tree 键盘焦点（浏览器）', () => {
     it('树获得键盘焦点时，主题焦点环跟随当前行', async () => {
         mount(() => <Tree defaultExpandAll treeData={treeData} />);
         await tabTo(screen.getByRole('tree'));
-        expectThemeFocusRing(activeRow() as HTMLElement);
+        expectThemeFocusRing(activeRow()!);
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(activeRow()).toHaveAttribute('data-key', 'zhongguo'));
-        expectThemeFocusRing(activeRow() as HTMLElement);
+        expectThemeFocusRing(activeRow()!);
         expect(screen.getByRole('tree')).toHaveFocus();
     });
 

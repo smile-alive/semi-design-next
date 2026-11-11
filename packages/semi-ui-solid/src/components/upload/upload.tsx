@@ -254,7 +254,7 @@ export default function Upload(rawProps: UploadProps) {
             notifySizeError: (file, fileList) => base.getProps().onSizeError?.(file, fileList),
             notifyExceed: (fileList) => base.getProps().onExceed?.(fileList),
             // called only when beforeUpload is a function; its result goes through unchanged, so undefined uploads nothing
-            notifyBeforeUpload: ({ file, fileList }) => (base.getProps().beforeUpload as NonNullable<UploadProps['beforeUpload']>)({ file, fileList }),
+            notifyBeforeUpload: ({ file, fileList }) => base.getProps().beforeUpload!({ file, fileList }),
             notifyAfterUpload: ({ response, file, fileList }) => base.getProps().afterUpload?.({ response, file, fileList }) ?? {},
             resetInput: () => {
                 if (input) {

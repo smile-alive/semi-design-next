@@ -18,7 +18,7 @@ const options = [
     { value: 'xigua', label: '西瓜视频' },
 ];
 
-const getOption = (text: string) => screen.getAllByRole('option').find((option) => option.textContent === text) as HTMLElement;
+const getOption = (text: string) => screen.getAllByRole('option').find((option) => option.textContent === text)!;
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`), (tag) => tag.textContent ?? '');
 const getOptionList = () => screen.queryByRole('listbox');
 const getOptionTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-option`), (option) => option.textContent);
@@ -315,7 +315,7 @@ describe('Select', () => {
         function Demo() {
             const [value, setValue] = createSignal<string>();
             return (
-                <Select style={{ width: '180px' }} data-cy="singleControl" value={value()} onChange={(next) => setValue(next as string)}>
+                <Select style={{ width: '180px' }} data-cy="singleControl" value={value()} onChange={(next) => setValue(next!)}>
                     <Select.OptGroup label="Asia">
                         <Select.Option data-cy="a-1" value="a-1">
                             <div>China</div>
@@ -477,14 +477,14 @@ describe('Select', () => {
             screen.getByRole('combobox').focus();
             await userEvent.keyboard('{End}');
             await waitFor(() => expect(optionNamed('option 99')).not.toBeNull());
-            await expectInView(optionNamed('option 99') as HTMLElement, scrollerOf(screen.getByRole('listbox')));
+            await expectInView(optionNamed('option 99')!, scrollerOf(screen.getByRole('listbox')));
         });
 
         it('打开时滚到已选项', async () => {
             render(() => <Select defaultValue={50} optionList={many} virtualize={{ itemSize: 36 }} />);
             await userEvent.click(screen.getByRole('combobox'));
             await waitFor(() => expect(optionNamed('option 50')).not.toBeNull());
-            await expectInView(optionNamed('option 50') as HTMLElement, scrollerOf(screen.getByRole('listbox')));
+            await expectInView(optionNamed('option 50')!, scrollerOf(screen.getByRole('listbox')));
         });
     });
 

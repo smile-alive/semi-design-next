@@ -49,7 +49,7 @@ export default function Image(rawProps: ImageProps) {
         (view) => ImageFoundation.getInitialState(view),
         () => ({
             getIsInGroup: () => Boolean(group),
-            openGroupPreview: () => group?.openImage(thumb as HTMLDivElement),
+            openGroupPreview: () => group?.openImage(thumb!),
             notifyLoad: (e) => callHandler(local.onLoad, e),
             notifyError: (e) => callHandler(local.onError, e),
             notifyPreviewVisibleChange: (visible) => {
@@ -119,8 +119,8 @@ export default function Image(rawProps: ImageProps) {
         if (!group) {
             return;
         }
-        const node = thumb as HTMLDivElement;
-        group.registerImage({ node, src: local.src as string, previewSrc: preview() ? previewSrc() : undefined, title: previewObject()?.previewTitle, alt: local.alt });
+        const node = thumb!;
+        group.registerImage({ node, src: local.src!, previewSrc: preview() ? previewSrc() : undefined, title: previewObject()?.previewTitle, alt: local.alt });
         onCleanup(() => group.unregisterImage(node));
     });
 

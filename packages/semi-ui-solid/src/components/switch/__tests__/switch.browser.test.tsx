@@ -13,7 +13,7 @@ describe('Switch（浏览器）', () => {
         render(() => <Switch aria-label="toggle" onChange={onChange} />);
         const control = screen.getByRole('switch', { name: 'toggle' });
         await tabTo(control);
-        expectThemeFocusRing(control.parentElement as HTMLElement);
+        expectThemeFocusRing(control.parentElement!);
 
         await userEvent.keyboard(' ');
         expect(control).toBeChecked();
@@ -30,7 +30,7 @@ describe('Switch（浏览器）', () => {
         expect(control).toHaveFocus();
         await userEvent.keyboard(' ');
         expect(control).not.toBeChecked();
-        expectThemeFocusRing(control.parentElement as HTMLElement);
+        expectThemeFocusRing(control.parentElement!);
     });
 
     it('onChange 中置 loading 后焦点仍在 switch 上，loading 期间 Space 不切换', async () => {

@@ -163,7 +163,7 @@
         rows,
         defaultIndex: () =>
             Math.max(
-                view.value.flattenNodes.findIndex((node) => view.value.selectedKeys.includes(node.key as string)),
+                view.value.flattenNodes.findIndex((node) => view.value.selectedKeys.includes(node.key!)),
                 0
             ),
         rowProps,

@@ -250,7 +250,7 @@ describe('FloatButtonGroup', () => {
     it('忽略项以外的点击', () => {
         const onClick = vi.fn<GroupClickHandler>();
         const { container } = render(() => <FloatButtonGroup items={items} onClick={onClick} />);
-        fireEvent.click(container.firstElementChild as Element);
+        fireEvent.click(container.firstElementChild!);
         fireEvent.click(getElement('.semi-badge-count', container));
         expect(onClick).not.toHaveBeenCalled();
     });

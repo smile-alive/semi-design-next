@@ -113,7 +113,7 @@ describe('Slider 的真实布局', () => {
                     value={value()}
                     onChange={(next) => {
                         onChange(next);
-                        setValue(next as number | number[]);
+                        setValue(next!);
                     }}
                 />
             </div>

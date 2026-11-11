@@ -44,7 +44,7 @@ export default function BaseRow(props: BaseRowProps) {
     const rowProps = createMemo(() => {
         const onRow = props.onRow;
         const record = props.record;
-        const index = props.index as number;
+        const index = props.index!;
         const status = { disabled: Boolean(props.disabled), selected: Boolean(props.selected) };
         return (typeof onRow === 'function' ? untrack(() => onRow(record, index, status)) : undefined) ?? {};
     });
@@ -85,13 +85,13 @@ export default function BaseRow(props: BaseRowProps) {
     const virtualizedCells = () => virtualized() && !props.expandedRow && components().body.cell !== 'td';
 
     const handleMouseEnter = (e: RowEvent) => {
-        props.onHover?.(true, props.rowKey as BaseRowKeyType);
+        props.onHover?.(true, props.rowKey!);
         table.props.onRowMouseEnter?.(props.record, e);
         callHandler(rowProps().onMouseEnter, e);
     };
 
     const handleMouseLeave = (e: RowEvent) => {
-        props.onHover?.(false, props.rowKey as BaseRowKeyType);
+        props.onHover?.(false, props.rowKey!);
         table.props.onRowMouseLeave?.(props.record, e);
         callHandler(rowProps().onMouseLeave, e);
     };
@@ -107,11 +107,11 @@ export default function BaseRow(props: BaseRowProps) {
     };
 
     const handleClick = (e: RowEvent) => {
-        props.onRowClick?.(props.rowKey as BaseRowKeyType, e, Boolean(props.expanded));
+        props.onRowClick?.(props.rowKey!, e, Boolean(props.expanded));
         callHandler(rowProps().onClick, e);
         // an expanded or section row is no record, so its key is never selected
         if (!props.disabled && !props.expandedRow && !props.isSection) {
-            table.handleRowSelection(props.rowKey as BaseRowKeyType, !props.selected, e);
+            table.handleRowSelection(props.rowKey!, !props.selected, e);
         }
     };
 

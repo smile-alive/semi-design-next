@@ -28,7 +28,7 @@ describe('Svelte DatePicker 时间面板的选项', () => {
         await click(
             within(hourList)
                 .getAllByRole('option')
-                .find((item) => item.textContent?.startsWith('09')) as HTMLElement
+                .find((item) => item.textContent?.startsWith('09'))!
         );
         expect(changes(store)).toHaveLength(1);
         expect(changes(store)[0]).toMatch(/^change 2019-09-08 09:08:08 /);
@@ -42,7 +42,7 @@ describe('Svelte DatePicker 时间面板的选项', () => {
         await click(
             within(hourList)
                 .getAllByRole('option')
-                .find((item) => item.textContent?.startsWith('04')) as HTMLElement
+                .find((item) => item.textContent?.startsWith('04'))!
         );
         expect(changes(store)).toHaveLength(1);
         expect(changes(store)[0]).toMatch(/^change 2019-09-08 16:08:08 /);

@@ -91,7 +91,7 @@ describe('TextArea', () => {
     it('showClear 与 clear：指针清除不移动焦点，清空后按钮消失', async () => {
         const clear = vi.fn<(event: MouseEvent) => void>();
         render(TextArea, { props: { defaultValue: '123', showClear: true, onClear: clear } });
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(clear).toHaveBeenCalledTimes(1);
         expect(clear.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
         expect(getTextArea()).toHaveValue('');
@@ -105,7 +105,7 @@ describe('TextArea', () => {
         onTestFinished(() => outside.remove());
         render(TextArea, { props: { defaultValue: 'semi', showClear: true } });
         outside.focus();
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(getTextArea()).toHaveValue('');
         expect(outside).toHaveFocus();
     });
@@ -417,7 +417,7 @@ describe('TextArea', () => {
         await userEvent.click(getTextArea());
         document.body.addEventListener('click', outer);
         onTestFinished(() => document.body.removeEventListener('click', outer));
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(blur).not.toHaveBeenCalled();
         expect(change).toHaveBeenLastCalledWith('', expect.any(MouseEvent));
         expect(clear).toHaveBeenCalledTimes(1);

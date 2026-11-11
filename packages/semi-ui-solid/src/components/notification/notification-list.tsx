@@ -46,7 +46,7 @@ export default function NotificationList(props: NotificationListProps) {
 
     const notices = createMemo(() => state().items as (NoticeProps & { id: string })[]);
     const shown = createMemo(() => new Set(notices().map((notice) => notice.id)));
-    const byId = createMemo(() => new Map([...notices(), ...(state().removedItems as NoticeProps[])].map((notice) => [notice.id as string, notice])));
+    const byId = createMemo(() => new Map([...notices(), ...(state().removedItems as NoticeProps[])].map((notice) => [notice.id!, notice])));
 
     // keyed by id: an update in place replaces the notice object, and the notice must keep its element and countdown
     const idsInPosition = createMemo(() => {
@@ -57,7 +57,7 @@ export default function NotificationList(props: NotificationListProps) {
     const releaseFocus = () => setFocusedPosition(null);
 
     const renderNotice = (id: string, position: Position, expanded: () => boolean, depths: () => Map<string, number>) => {
-        const notice = () => byId().get(id) as NoticeProps;
+        const notice = () => byId().get(id)!;
         const leaving = () => !shown().has(id);
         const ids = () => idsInPosition()[position];
         const index = () => ids().indexOf(id);
@@ -117,7 +117,7 @@ export default function NotificationList(props: NotificationListProps) {
                 <div
                     ref={(element) => lists.set(position, element)}
                     class={cssClasses.LIST}
-                    style={positionStyle(byId().get(ids()[0]) as NoticeProps)}
+                    style={positionStyle(byId().get(ids()[0])!)}
                     x-placement={position}
                     onFocusIn={() => setFocusedPosition(position)}
                     onFocusOut={(event) => {

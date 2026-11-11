@@ -377,7 +377,7 @@ const getPopoverWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLA
 const getOptions = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option`)];
 const getOptionsOfLevel = (level: number) => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option.${BASE_CLASS_PREFIX}-tree-option-level-${level}`)];
 // label text queries break once Highlight splits a searched label into several spans
-const getNode = (label: string) => getOptions().find((node) => node.textContent === label) as HTMLElement;
+const getNode = (label: string) => getOptions().find((node) => node.textContent === label)!;
 const getNodeLabels = () => getOptions().map((node) => node.textContent);
 const getSelectedLabels = () => [...document.querySelectorAll(`.${BASE_CLASS_PREFIX}-tree-option-selected`)].map((node) => node.textContent);
 const getHighlights = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option-highlight`)];
@@ -1873,7 +1873,7 @@ describe('TreeSelect', () => {
         const restTag = await waitFor(() => {
             const tag = [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tag`)].find((el) => el.textContent === '东京');
             expect(tag).toBeDefined();
-            return tag as HTMLElement;
+            return tag!;
         });
         fireEvent.mouseDown(restTag);
         expect(getPopover()).not.toBeNull();
@@ -2040,7 +2040,7 @@ describe('TreeSelect', () => {
         renderTreeSelect({
             defaultOpen: true,
         });
-        fireEvent.keyDown(getPopover() as HTMLElement, { key: 'Escape' });
+        fireEvent.keyDown(getPopover()!, { key: 'Escape' });
         await waitFor(() => expect(getPopover()).toBeNull());
     });
 
@@ -2098,14 +2098,14 @@ describe('TreeSelect', () => {
             emptyContent: null,
         });
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-empty`)).toBeNull();
-        const list = document.getElementById(screen.getByRole('combobox').getAttribute('aria-controls') as string);
+        const list = document.getElementById(screen.getByRole('combobox').getAttribute('aria-controls')!);
         expect(list).toHaveClass(`${BASE_CLASS_PREFIX}-tree-option-list-hidden`);
     });
 
     it('没有数据时列表容器是 role="none"，不是没有 treeitem 的 tree', () => {
         renderTreeSelect({ treeData: [], multiple: true, 'aria-label': 'Region' });
         expect(screen.queryByRole('tree')).toBeNull();
-        const list = document.getElementById(screen.getByRole('combobox').getAttribute('aria-controls') as string);
+        const list = document.getElementById(screen.getByRole('combobox').getAttribute('aria-controls')!);
         expect(list).toHaveAttribute('role', 'none');
         expect(list).not.toHaveAttribute('aria-label');
         expect(list).not.toHaveAttribute('aria-multiselectable');
@@ -2289,7 +2289,7 @@ describe('TreeSelect', () => {
             defaultOpen: true,
             onVisibleChange,
         });
-        fireEvent.keyDown(getPopover() as HTMLElement, { key: 'Enter' });
+        fireEvent.keyDown(getPopover()!, { key: 'Enter' });
         expect(onVisibleChange).not.toHaveBeenCalledWith(false);
         expect(getPopover()).not.toBeNull();
     });
@@ -2562,7 +2562,7 @@ describe('TreeSelect', () => {
             showSearchClear: true,
         });
         search('test');
-        fireEvent.mouseEnter(getSearchInput().parentElement as HTMLElement);
+        fireEvent.mouseEnter(getSearchInput().parentElement!);
         await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         expect(getSearchInput()).toHaveValue('');
     });
@@ -2624,7 +2624,7 @@ describe('TreeSelect', () => {
         });
         search('北京');
         expect(getHighlights()).toHaveLength(1);
-        fireEvent.keyDown(getPopover() as HTMLElement, { key: 'Escape' });
+        fireEvent.keyDown(getPopover()!, { key: 'Escape' });
         await waitFor(() => expect(getPopover()).toBeNull());
         await userEvent.click(getTrigger());
         expect(getSearchInput()).toHaveValue('');
@@ -3014,7 +3014,7 @@ describe('TreeSelect', () => {
             defaultValue: ['Beijing', 'NotInTree'],
             defaultExpandAll: true,
         });
-        const notInTreeTag = getTags().find((tag) => tag.textContent === 'NotInTree') as HTMLElement;
+        const notInTreeTag = getTags().find((tag) => tag.textContent === 'NotInTree')!;
         await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag-close`, notInTreeTag));
         expect(onChange.mock.calls[0][0]).toEqual(['Beijing']);
         expect(getTagTexts()).toEqual(['Beijing']);
@@ -3965,14 +3965,14 @@ describe('TreeSelect 行为', () => {
         const { unmount } = render(() => <TreeSelect motion={false} motionExpand={false} treeData={treeData} />);
         await userEvent.click(getTrigger());
         expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
-        const tree = document.getElementById(getTrigger().getAttribute('aria-controls') as string);
+        const tree = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(tree).toHaveAttribute('role', 'tree');
         expect(tree).toHaveAttribute('aria-multiselectable', 'false');
-        expect(tree).toHaveAccessibleName(getTrigger().getAttribute('aria-label') as string);
+        expect(tree).toHaveAccessibleName(getTrigger().getAttribute('aria-label')!);
         unmount();
         render(() => <TreeSelect motion={false} motionExpand={false} multiple treeData={treeData} />);
         await userEvent.click(getTrigger());
-        const multipleTree = document.getElementById(getTrigger().getAttribute('aria-controls') as string);
+        const multipleTree = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(multipleTree).toHaveAttribute('role', 'tree');
         expect(multipleTree).toHaveAttribute('aria-multiselectable', 'true');
     });
@@ -4114,7 +4114,7 @@ describe('TreeSelect Tab 停靠点', () => {
 });
 
 describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
-    const activeLabel = (host: Element) => document.getElementById(host.getAttribute('aria-activedescendant') as string)?.textContent;
+    const activeLabel = (host: Element) => document.getElementById(host.getAttribute('aria-activedescendant')!)?.textContent;
     const focus = (el: HTMLElement) => el.focus();
 
     it.each(['{Enter}', ' ', '{ArrowDown}'])('triggerRender 内按钮聚焦时 %j 只交给按钮，不打开面板', async (key) => {
@@ -4319,7 +4319,7 @@ describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
         expect(input).toHaveValue('Beijing');
         await waitFor(() => expect(getNodeLabels()).toContain('Beijing'));
         await userEvent.keyboard('{ArrowDown}');
-        const active = defined(document.getElementById(input.getAttribute('aria-activedescendant') as string));
+        const active = defined(document.getElementById(input.getAttribute('aria-activedescendant')!));
         expect(active).not.toBeNull();
         expect(getOptions()).toContain(active);
         search('none');

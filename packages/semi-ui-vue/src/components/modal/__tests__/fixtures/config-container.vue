@@ -2,7 +2,7 @@
     import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import Modal from '../../modal.vue';
 
-    const container = () => document.querySelector<HTMLElement>('.config-container') as HTMLElement;
+    const container = () => document.querySelector<HTMLElement>('.config-container')!;
 </script>
 
 <template>

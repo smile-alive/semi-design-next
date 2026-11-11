@@ -77,7 +77,7 @@ interface FakeViewer {
 }
 const instances = () => fake.instances as FakeViewer[];
 const live = () => instances().filter((instance) => instance.dispose.mock.calls.length === 0);
-const current = () => instances().at(-1) as FakeViewer;
+const current = () => instances().at(-1)!;
 const rules = () => current().options.customRenderRule ?? [];
 const trigger = () => getElement(`.${prefixCls}-search-bar-trigger`);
 const queryTrigger = () => document.querySelector(`.${prefixCls}-search-bar-trigger`);

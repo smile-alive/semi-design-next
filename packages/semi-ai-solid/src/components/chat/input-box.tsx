@@ -185,7 +185,7 @@ export default function InputBox(props: InputBoxProps) {
     const renderProps: RenderInputAreaProps = {
         defaultNode: nodes,
         onSend: (content, attachment) => props.onSend?.(content ?? '', attachment),
-        onClear: (e) => props.onClearContext?.(e as MouseEvent),
+        onClear: (e) => props.onClearContext?.(e!),
         detailProps: {
             clearContextNode: clearNode,
             uploadNode,

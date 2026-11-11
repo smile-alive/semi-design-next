@@ -85,7 +85,7 @@ describe('FloatButtonGroup 布局与样式', () => {
                 <FloatButtonGroup items={[{ icon: <i>i</i>, shape: 'square', size: 'large', colorful: true, 'aria-label': 'grouped' }]} />
             </div>
         ));
-        const alone = getComputedStyle(screen.getByRole('button', { name: 'alone' }).firstElementChild as Element);
+        const alone = getComputedStyle(screen.getByRole('button', { name: 'alone' }).firstElementChild!);
         const item = screen.getByRole('button', { name: 'grouped' });
         const grouped = getComputedStyle(item);
         expect(grouped.backgroundImage).toBe(alone.backgroundImage);
@@ -160,8 +160,8 @@ describe('FloatButton 键盘操作', () => {
 
         await userEvent.keyboard('{Tab}');
         expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Edit' }));
-        expect(getComputedStyle(document.activeElement as Element).outlineStyle).toBe('solid');
-        expect(getComputedStyle(document.activeElement as Element).outlineWidth).toBe('2px');
+        expect(getComputedStyle(document.activeElement!).outlineStyle).toBe('solid');
+        expect(getComputedStyle(document.activeElement!).outlineWidth).toBe('2px');
         await userEvent.keyboard('{Enter}');
         await userEvent.keyboard(' ');
         expect(onClick.mock.calls).toEqual([['edit'], ['edit']]);

@@ -41,10 +41,10 @@ async function act(run: () => unknown) {
     await run();
     await settle();
 }
-const click = (element: Element | null) => act(() => userEvent.click(element as Element));
+const click = (element: Element | null) => act(() => userEvent.click(element!));
 const typeInto = (element: Element, text: string) => act(() => userEvent.type(element, text));
 const update = (element: Element, text: string) => act(() => fireEvent.update(element, text));
-const byClass = <E extends Element = HTMLElement>(name: string) => document.querySelector<E>(`.${BASE_CLASS_PREFIX}-${name}`) as E;
+const byClass = <E extends Element = HTMLElement>(name: string) => getElement<E>(`.${BASE_CLASS_PREFIX}-${name}`);
 const options = [
     { label: 'A', value: 'a' },
     { label: 'B', value: 'b' },
@@ -167,7 +167,7 @@ const cases: Record<string, FieldCase> = {
         init: 'a',
         change: async () => {
             await click(byClass('tree-select'));
-            await click([...document.querySelectorAll(`.${BASE_CLASS_PREFIX}-tree-option`)].find((node) => node.textContent === 'B') as Element);
+            await click([...document.querySelectorAll(`.${BASE_CLASS_PREFIX}-tree-option`)].find((node) => node.textContent === 'B')!);
         },
         value: 'b',
     },
@@ -328,7 +328,7 @@ describe('Form 字段', () => {
         const layout = (name: string) => document.querySelector(`.${name}`)?.getAttribute('x-label-pos');
         const warned = (name: string) => warn.mock.calls.some(([message]) => String(message).includes(`${name} has no inset label`));
         expect(Object.fromEntries(names.map((name) => [name, [layout(name), warned(name)]]))).toEqual(Object.fromEntries(names.map((name) => [name, inset.includes(name) ? ['inset', false] : ['top', true]])));
-        const references = [...document.querySelectorAll('[aria-labelledby]')].flatMap((element) => (element.getAttribute('aria-labelledby') as string).split(' '));
+        const references = [...document.querySelectorAll('[aria-labelledby]')].flatMap((element) => element.getAttribute('aria-labelledby')!.split(' '));
         expect(references.length).toBeGreaterThanOrEqual(names.length);
         expect(references.filter((id) => !document.getElementById(id))).toEqual([]);
         warn.mockRestore();

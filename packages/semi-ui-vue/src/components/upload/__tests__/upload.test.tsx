@@ -38,7 +38,7 @@ function renderHandle(uploadProps: Record<string, unknown> = {}) {
     return {
         ...view,
         async call(run: (handle: UploadHandle) => void) {
-            run(handle as UploadHandle);
+            run(handle!);
             await nextTick();
         },
     };

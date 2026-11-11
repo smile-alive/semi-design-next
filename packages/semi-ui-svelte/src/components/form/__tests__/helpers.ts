@@ -24,7 +24,7 @@ export function renderForm(form: Record<string, unknown> = {}, fields: FieldSpec
         formApi = api;
     });
     const view = render(FormFixture, { props: { store, onApi: onGetFormApi } });
-    return { ...view, store, onGetFormApi, api: () => formApi as FormApi };
+    return { ...view, store, onGetFormApi, api: () => formApi! };
 }
 
 export const input = (field: string, props: Record<string, unknown> = {}): FieldSpec => ({ type: 'input', props: { field, ...props } });

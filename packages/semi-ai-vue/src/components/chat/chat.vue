@@ -69,7 +69,7 @@
         props,
         () => ChatFoundation.getInitialState(),
         () => ({
-            getContainerRef: () => container.value as HTMLDivElement,
+            getContainerRef: () => container.value!,
             notifyChatsChange: (chats) => {
                 emit('update:chats', chats);
                 emit('chatsChange', chats);
@@ -84,7 +84,7 @@
             notifyStopGenerate: (e) => emit('stopGenerator', e),
             notifyHintClick: (hint) => emit('hintClick', hint),
             manualUpload: (files) => inputBox.value?.insertFiles(files),
-            getDropAreaElement: () => dropArea.value as HTMLDivElement,
+            getDropAreaElement: () => dropArea.value!,
         }),
         { props: { chats: () => followedChats.value, hints: () => followedHints.value } }
     );

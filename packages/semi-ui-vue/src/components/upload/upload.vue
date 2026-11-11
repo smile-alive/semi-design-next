@@ -118,8 +118,8 @@
             notifyRemove: (file, fileList, fileItem) => emit('remove', file, fileList, fileItem),
             notifySizeError: (file, fileList) => emit('sizeError', file, fileList),
             notifyExceed: (files) => emit('exceed', files),
-            notifyBeforeUpload: (object) => (fnProp('beforeUpload') as NonNullable<UploadProps['beforeUpload']>)(object),
-            notifyAfterUpload: (object) => (fnProp('afterUpload') as NonNullable<UploadProps['afterUpload']>)(object),
+            notifyBeforeUpload: (object) => fnProp('beforeUpload')!(object),
+            notifyAfterUpload: (object) => fnProp('afterUpload')!(object),
             resetInput: () => {
                 if (input.value) {
                     input.value.value = '';

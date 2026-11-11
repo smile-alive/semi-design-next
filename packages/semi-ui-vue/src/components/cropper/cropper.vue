@@ -50,7 +50,7 @@
         props as CropperFoundationProps,
         () => CropperFoundation.getInitialState(),
         () => ({
-            getContainer: () => root.value as HTMLDivElement,
+            getContainer: () => root.value!,
             getImg: () => img.value?.$el as HTMLImageElement,
             notifyZoomChange: (zoom) => {
                 emit('update:zoom', zoom);

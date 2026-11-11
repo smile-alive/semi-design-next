@@ -275,7 +275,7 @@ describe('JsonViewer', () => {
         const onChange = vi.fn<(value: string) => void>();
         mount({ onChange });
         await openBar();
-        await fireEvent.change(searchInput() as HTMLElement);
+        await fireEvent.change(searchInput()!);
         expect(onChange).not.toHaveBeenCalled();
     });
 
@@ -389,7 +389,7 @@ describe('JsonViewer', () => {
         mount();
         await openBar();
         const { search } = current().searchWidget;
-        await fireEvent.update(searchInput() as HTMLElement, 'a');
+        await fireEvent.update(searchInput()!, 'a');
         expect(search).toHaveBeenLastCalledWith('a', false, false, false);
 
         const [caseSensitive] = optionItems();
@@ -443,7 +443,7 @@ describe('JsonViewer', () => {
         await emit('contentChanged');
         expect(current().searchWidget.search).not.toHaveBeenCalled();
         await openBar();
-        await fireEvent.update(searchInput() as HTMLElement, 'k');
+        await fireEvent.update(searchInput()!, 'k');
         current().searchWidget.search.mockClear();
         await emit('contentChanged');
         expect(current().searchWidget.search).toHaveBeenCalledWith('k', false, false, false);
@@ -461,7 +461,7 @@ describe('JsonViewer', () => {
     it('关闭搜索栏时清除编辑器中的搜索结果', async () => {
         mount();
         await openBar();
-        await fireEvent.update(searchInput() as HTMLElement, 'k');
+        await fireEvent.update(searchInput()!, 'k');
         current().searchWidget.clear.mockClear();
         await fireEvent.click(closeButton());
         expect(current().searchWidget.clear).toHaveBeenCalledTimes(1);
@@ -479,7 +479,7 @@ describe('JsonViewer', () => {
     it('默认搜索栏打开后 showSearch 变为 false，内容变化不抛错', async () => {
         const view = mount();
         await openBar();
-        await fireEvent.update(searchInput() as HTMLElement, 'k');
+        await fireEvent.update(searchInput()!, 'k');
         await view.rerender({ showSearch: false });
         expect(searchInput()).toBeNull();
         current().searchWidget.search.mockClear();
@@ -492,7 +492,7 @@ describe('JsonViewer', () => {
         mount();
         await openBar();
         const { search } = current().searchWidget;
-        await fireEvent.update(searchInput() as HTMLElement, 'a');
+        await fireEvent.update(searchInput()!, 'a');
         const toggle = screen.getByRole('button', { name: zh_CN.JsonViewer.caseSensitive });
         expect(toggle).toHaveAttribute('aria-pressed', 'false');
         expect(screen.getByRole('button', { name: zh_CN.JsonViewer.regex })).toBeInTheDocument();
@@ -522,7 +522,7 @@ describe('JsonViewer', () => {
     it('使用替换输入框的文本进行替换', async () => {
         mount();
         await openBar();
-        await fireEvent.update(replaceInput() as HTMLElement, 'x');
+        await fireEvent.update(replaceInput()!, 'x');
         const [replace, replaceAll] = replaceButtons();
         await fireEvent.click(replace);
         expect(current().searchWidget.replace).toHaveBeenCalledWith('x');
@@ -628,7 +628,7 @@ describe('JsonViewer', () => {
             await fireEvent.click(closeButton());
             await waitFor(() => expect(trigger()).toHaveFocus());
             await openBar();
-            await fireEvent.keyDown(searchInput() as HTMLElement, { key: 'Escape' });
+            await fireEvent.keyDown(searchInput()!, { key: 'Escape' });
             expect(searchInput()).toBeNull();
             await waitFor(() => expect(trigger()).toHaveFocus());
         });
@@ -652,7 +652,7 @@ describe('JsonViewer', () => {
             try {
                 for (const control of controls) {
                     await openBar();
-                    await fireEvent.keyDown(control() as HTMLElement, { key: 'Escape' });
+                    await fireEvent.keyDown(control()!, { key: 'Escape' });
                     expect(searchInput()).toBeNull();
                 }
                 expect(outside).not.toHaveBeenCalled();

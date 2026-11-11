@@ -241,7 +241,7 @@ export default function DateInput(rawProps: DateInputProps) {
     };
 
     const renderInputInset = () => {
-        const insetInputValue = () => DateInputFoundation.getInsetInputValue(props, { value: props.value ?? [], insetInputValue: props.insetInputValue as NonNullable<DateInputProps['insetInputValue']> });
+        const insetInputValue = () => DateInputFoundation.getInsetInputValue(props, { value: props.value ?? [], insetInputValue: props.insetInputValue! });
         const customPlaceholder = () => (typeof props.insetInput === 'object' ? (props.insetInput.placeholder ?? {}) : {}) as NonNullable<InsetInputProps['placeholder']>;
         const defaultPlaceholder = () => DateInputFoundation.getInsetInputPlaceholder(props);
         const names = () => DateInputFoundation.getInsetNames(props.locale, props.type);

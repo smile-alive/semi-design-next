@@ -61,7 +61,7 @@
     const dayId = (fullDate: string) => `${gridId}-${fullDate}`;
 
     const statusOf = (day: MonthDayInfo) => {
-        const status = statuses.value.get(day.fullDate) as ReturnType<typeof MonthFoundation.getDayStatus>;
+        const status = statuses.value.get(day.fullDate)!;
         return day.fullDate === todayText.value ? { ...status, isToday: true } : status;
     };
 

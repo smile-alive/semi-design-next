@@ -225,7 +225,7 @@ describe('Svelte DatePicker 组件实例', () => {
         await settle();
         const scope = getElement('[data-keys]');
         expect(scope).toHaveAttribute('data-type', 'date');
-        const keys = (scope.dataset.keys as string).split(',');
+        const keys = scope.dataset.keys!.split(',');
         for (const key of ['class', 'data-testid', 'trigger']) {
             expect(keys).not.toContain(key);
         }

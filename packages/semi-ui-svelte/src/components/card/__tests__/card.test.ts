@@ -52,7 +52,7 @@ describe('Svelte Card', () => {
 
     it('字符串 title 渲染为 div 形式的 6 号标题，没有 title 与额外内容时不渲染头部', () => {
         const { find, store } = setup({ title: 'Card title' });
-        const title = find('.semi-typography-h6') as HTMLElement;
+        const title = find('.semi-typography-h6')!;
         expect(title.tagName).toBe('DIV');
         expect(title).toHaveTextContent('Card title');
         expect(find(`.${prefixCls}-header`)).toHaveClass(`${prefixCls}-header-bordered`);

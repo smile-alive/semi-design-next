@@ -40,7 +40,7 @@ export default function ColorSlider(props: ColorSliderProps) {
         foundationProps,
         () => ColorSliderFoundation.getInitialState(),
         () => ({
-            getDOM: () => dom as HTMLDivElement,
+            getDOM: () => dom!,
             notifyChange: (value) => props.onChange(value),
         })
     );

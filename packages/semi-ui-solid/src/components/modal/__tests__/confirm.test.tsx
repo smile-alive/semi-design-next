@@ -12,7 +12,6 @@ const prefixCls = `${BASE_CLASS_PREFIX}-modal`;
 const loadingCls = `${BASE_CLASS_PREFIX}-button-loading`;
 
 const getConfirm = () => document.querySelector<HTMLElement>(`.${prefixCls}-confirm`);
-const confirmEl = () => getConfirm() as HTMLElement;
 const getButton = (name: string) => screen.getByRole('button', { name });
 const closeName = '关闭';
 
@@ -53,15 +52,15 @@ describe('Modal 静态方法', () => {
 
     it('confirm 标题、正文与各类型图标', () => {
         let handle = openConfirm('confirm');
-        expect(confirmEl().querySelector(`.${prefixCls}-title`)).toHaveTextContent(/^Semi$/);
-        expect(confirmEl().querySelector(`.${prefixCls}-confirm-content`)).toHaveTextContent(/^Content$/);
-        expect(confirmEl().querySelector(`.${prefixCls}-confirm-icon`)).toHaveClass(`${BASE_CLASS_PREFIX}-icon-help_circle`, `${BASE_CLASS_PREFIX}-icon-extra-large`);
+        expect(getConfirm()!.querySelector(`.${prefixCls}-title`)).toHaveTextContent(/^Semi$/);
+        expect(getConfirm()!.querySelector(`.${prefixCls}-confirm-content`)).toHaveTextContent(/^Content$/);
+        expect(getConfirm()!.querySelector(`.${prefixCls}-confirm-icon`)).toHaveClass(`${BASE_CLASS_PREFIX}-icon-help_circle`, `${BASE_CLASS_PREFIX}-icon-extra-large`);
         handle.destroy();
         expect(getConfirm()).toBeNull();
 
         for (const type of ['error', 'success', 'info', 'warning'] as const) {
             handle = openConfirm(type);
-            expect(confirmEl().querySelector(`.${prefixCls}-confirm-icon`)).toHaveClass(`${prefixCls}-${type}-icon`);
+            expect(getConfirm()!.querySelector(`.${prefixCls}-confirm-icon`)).toHaveClass(`${prefixCls}-${type}-icon`);
             handle.destroy();
             expect(getConfirm()).toBeNull();
         }
@@ -69,13 +68,13 @@ describe('Modal 静态方法', () => {
 
     it('自定义图标', () => {
         openConfirm('confirm', { icon: <IconSend /> });
-        expect(confirmEl().querySelector(`.${BASE_CLASS_PREFIX}-icon-send`)).toHaveClass(`${prefixCls}-confirm-icon`, `${BASE_CLASS_PREFIX}-icon-extra-large`);
+        expect(getConfirm()!.querySelector(`.${BASE_CLASS_PREFIX}-icon-send`)).toHaveClass(`${prefixCls}-confirm-icon`, `${BASE_CLASS_PREFIX}-icon-extra-large`);
     });
 
     it('icon 为 null 时不渲染图标', () => {
         openConfirm('info', { icon: null });
-        expect(confirmEl().querySelector(`.${prefixCls}-confirm-icon`)).toBeNull();
-        expect(confirmEl().querySelector(`.${prefixCls}-confirm-content`)).not.toHaveClass(`${prefixCls}-confirm-content-withIcon`);
+        expect(getConfirm()!.querySelector(`.${prefixCls}-confirm-icon`)).toBeNull();
+        expect(getConfirm()!.querySelector(`.${prefixCls}-confirm-content`)).not.toHaveClass(`${prefixCls}-confirm-content-withIcon`);
     });
 
     it('confirm 回调', async () => {
@@ -184,17 +183,17 @@ describe('Modal 静态方法', () => {
 
     it('显式传入 undefined 的 icon 等同未传，保留类型图标', () => {
         openConfirm('error', { icon: undefined });
-        expect(confirmEl().querySelector(`.${prefixCls}-confirm-icon`)).toHaveClass(`${prefixCls}-error-icon`);
+        expect(getConfirm()!.querySelector(`.${prefixCls}-confirm-icon`)).toHaveClass(`${prefixCls}-error-icon`);
     });
 
     it('okButtonProps 中显式传入 undefined 的 type 不覆盖 error 的 danger', () => {
         openConfirm('error', { okButtonProps: { type: undefined } });
-        expect(confirmEl().querySelectorAll(`.${BASE_CLASS_PREFIX}-button`)[2]).toHaveClass(`${BASE_CLASS_PREFIX}-button-danger`);
+        expect(getConfirm()!.querySelectorAll(`.${BASE_CLASS_PREFIX}-button`)[2]).toHaveClass(`${BASE_CLASS_PREFIX}-button-danger`);
     });
 
     it('自定义 Semi 图标保留使用方的 class 与 size', () => {
         openConfirm('confirm', { icon: <IconSend class="mine" size="small" /> });
-        const icon = confirmEl().querySelector(`.${BASE_CLASS_PREFIX}-icon-send`);
+        const icon = getConfirm()!.querySelector(`.${BASE_CLASS_PREFIX}-icon-send`);
         expect(icon).toHaveClass('mine', `${prefixCls}-confirm-icon`, `${BASE_CLASS_PREFIX}-icon-small`);
     });
 
@@ -208,13 +207,13 @@ describe('Modal 静态方法', () => {
 
     it('update 可以修改按钮，类型图标类名保持不变', () => {
         const handle = openConfirm('error');
-        expect(confirmEl().querySelector(`.${prefixCls}-error-icon`)).not.toBeNull();
-        expect(confirmEl().querySelectorAll(`.${BASE_CLASS_PREFIX}-button`)[2]).toHaveClass(`${BASE_CLASS_PREFIX}-button-danger`);
+        expect(getConfirm()!.querySelector(`.${prefixCls}-error-icon`)).not.toBeNull();
+        expect(getConfirm()!.querySelectorAll(`.${BASE_CLASS_PREFIX}-button`)[2]).toHaveClass(`${BASE_CLASS_PREFIX}-button-danger`);
         handle.update({ okText: 'Fine', hasCancel: false });
-        const buttons = confirmEl().querySelectorAll(`.${prefixCls}-footer .${BASE_CLASS_PREFIX}-button`);
+        const buttons = getConfirm()!.querySelectorAll(`.${prefixCls}-footer .${BASE_CLASS_PREFIX}-button`);
         expect(buttons).toHaveLength(1);
         expect(buttons[0]).toHaveTextContent('Fine');
-        expect(confirmEl().querySelector(`.${prefixCls}-error-icon`)).not.toBeNull();
+        expect(getConfirm()!.querySelector(`.${prefixCls}-error-icon`)).not.toBeNull();
     });
 
     it('关闭并 afterClose 之后再 update，不会重建弹窗', async () => {
@@ -243,7 +242,7 @@ describe('Modal 静态方法', () => {
 
     it('update 修改标题与正文', () => {
         const handle = openConfirm('confirm');
-        const modalDom = confirmEl();
+        const modalDom = getConfirm()!;
         handle.update({ title: 'Updated Semi', content: 'Updated Content' });
         expect(modalDom.querySelector(`.${prefixCls}-confirm-title-text`)).toHaveTextContent(/^Updated Semi$/);
         expect(modalDom.querySelector(`.${prefixCls}-confirm-content`)).toHaveTextContent(/^Updated Content$/);
@@ -252,7 +251,7 @@ describe('Modal 静态方法', () => {
     it('静态方法读不到外部 ConfigProvider，direction 需自行传入', () => {
         render(() => <ConfigProvider direction="rtl">{null}</ConfigProvider>);
         openConfirm('info');
-        expect(confirmEl()).not.toHaveAttribute('dir');
+        expect(getConfirm()!).not.toHaveAttribute('dir');
         openConfirm('info', { direction: 'rtl', title: 'R' });
         expect(document.querySelectorAll(`.${prefixCls}-confirm`)[1]).toHaveAttribute('dir', 'rtl');
     });
@@ -262,9 +261,9 @@ describe('Modal 静态方法', () => {
         const afterClose = vi.fn<() => void>();
         const handle = modal.warning({ title: 'Hook', content: 'Body', motion: false, afterClose });
         expect(screen.getByTestId('holder')).toBeInTheDocument();
-        expect(confirmEl().querySelector(`.${prefixCls}-warning-icon`)).not.toBeNull();
+        expect(getConfirm()!.querySelector(`.${prefixCls}-warning-icon`)).not.toBeNull();
         handle.update({ title: 'Hook updated' });
-        expect(confirmEl().querySelector(`.${prefixCls}-confirm-title-text`)).toHaveTextContent('Hook updated');
+        expect(getConfirm()!.querySelector(`.${prefixCls}-confirm-title-text`)).toHaveTextContent('Hook updated');
         handle.destroy();
         expect(getConfirm()).toBeNull();
         expect(afterClose).toHaveBeenCalledTimes(1);
@@ -297,7 +296,7 @@ describe('Modal 静态方法', () => {
     it('useModal 弹窗跟随 ConfigProvider 的方向', () => {
         const modal = renderHookHolder(undefined, (demo) => <ConfigProvider direction="rtl">{demo()}</ConfigProvider>);
         modal.confirm({ title: 'Hook', content: 'Body', motion: false });
-        expect(confirmEl()).toHaveAttribute('dir', 'rtl');
+        expect(getConfirm()!).toHaveAttribute('dir', 'rtl');
     });
 
     it('Modal.confirm 与 useModal 的 aria 属性落在对话框上，data-* 落在外层元素上', () => {
@@ -312,7 +311,7 @@ describe('Modal 静态方法', () => {
         };
         const props: TestProps = { 'aria-label': 'Custom', 'aria-describedby': 'outside-desc', 'data-foo': 'bar' };
         openConfirm('confirm', props);
-        expectLanding(confirmEl());
+        expectLanding(getConfirm()!);
 
         const modal = renderHookHolder();
         modal.info({ title: 'Hook', content: 'Body', motion: false, ...props });

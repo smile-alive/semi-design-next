@@ -66,7 +66,7 @@ describe('Divider', () => {
 
     it('children 为数字 0 时按内容处理：有 with-text 类，且包进 inner-text', () => {
         const { container } = render(() => <Divider>{0}</Divider>);
-        const divider = container.firstElementChild as Element;
+        const divider = container.firstElementChild!;
         expect(divider).toHaveClass('semi-divider-with-text', 'semi-divider-with-text-center');
         expect(divider.querySelector('.semi-divider_inner-text')).toHaveTextContent('0');
     });
@@ -136,7 +136,7 @@ describe('Divider', () => {
                 {''}
             </Divider>
         ));
-        const divider = container.firstElementChild as Element;
+        const divider = container.firstElementChild!;
         expect(divider).toHaveAttribute('role', 'separator');
         expect(divider).not.toHaveClass('semi-divider-with-text');
     });
@@ -176,7 +176,7 @@ describe('Divider', () => {
     it('children 变化时在文字、元素和无内容之间切换', () => {
         const [content, setContent] = createSignal<string | undefined>('text');
         const { container } = render(() => <Divider>{content()}</Divider>);
-        const divider = container.firstElementChild as Element;
+        const divider = container.firstElementChild!;
         expect(divider).toHaveClass('semi-divider-with-text');
         setContent(undefined);
         expect(divider).not.toHaveClass('semi-divider-with-text');

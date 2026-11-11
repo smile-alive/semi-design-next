@@ -33,7 +33,7 @@ describe('Svelte ImagePreview 焦点（浏览器）', () => {
     it('Tab 保持在预览内，Esc 关闭后焦点回到打开它的缩略图', async () => {
         renderGroup();
         await openPreview(1);
-        const dialog = getPreview() as HTMLElement;
+        const dialog = getPreview()!;
         await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
         for (let i = 0; i < 12; i++) {
             await userEvent.keyboard('{Tab}');
@@ -73,7 +73,7 @@ describe('Svelte ImagePreview 交互（浏览器）', () => {
         const fitted = width();
         const wheel = (deltaY: number) => {
             const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY });
-            (getPreview() as HTMLElement).dispatchEvent(event);
+            getPreview()!.dispatchEvent(event);
             return event;
         };
         expect(wheel(-100).defaultPrevented).toBe(true);

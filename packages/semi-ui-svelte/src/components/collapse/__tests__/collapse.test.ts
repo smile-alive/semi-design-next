@@ -131,7 +131,7 @@ describe('Svelte Collapse', () => {
     it('生成的面板 id 是合法的 CSS id 选择器', async () => {
         setup({ collapse: { motion: false } });
         await click(getHeaders()[1]);
-        const id = getHeaders()[1].getAttribute('aria-controls') as string;
+        const id = getHeaders()[1].getAttribute('aria-controls')!;
         expect(document.querySelector(`#${id}`)).toHaveTextContent('Hi, bytedance dance dance.');
     });
 
@@ -214,7 +214,7 @@ describe('Svelte Collapse', () => {
     it('内容与标题携带展开状态', async () => {
         const { container } = setup({ collapse: { motion: false, keepDOM: true } });
         const items = container.querySelectorAll(`.${prefixCls}-item`);
-        const inert = (index: number) => (items[index].querySelector(`.${prefixCls}-content`) as HTMLElement & { inert?: boolean }).inert;
+        const inert = (index: number) => getElement<HTMLElement & { inert?: boolean }>(`.${prefixCls}-content`, items[index]).inert;
         expect(items[0]).not.toHaveClass(`${prefixCls}-item-active`);
         expect(inert(0)).toBe(true);
         await click(getHeaders()[0]);
@@ -239,7 +239,7 @@ describe('Svelte Collapse', () => {
         const [header] = getHeaders();
         expect(header).not.toHaveAttribute('aria-controls');
         await click(header);
-        const region = defined(document.getElementById(header.getAttribute('aria-controls') as string));
+        const region = defined(document.getElementById(header.getAttribute('aria-controls')!));
         expect(region).toHaveClass(`${prefixCls}-content`);
         expect(region).toHaveAttribute('role', 'region');
         expect(region).toHaveAttribute('aria-labelledby', header.id);
@@ -248,7 +248,7 @@ describe('Svelte Collapse', () => {
 
     it('首次渲染时标题的 aria-controls 指向内容 id，且每个面板唯一', () => {
         setup({ collapse: { keepDOM: true, motion: false } });
-        const ids = getHeaders().map((header) => header.getAttribute('aria-controls') as string);
+        const ids = getHeaders().map((header) => header.getAttribute('aria-controls')!);
         expect(new Set(ids).size).toBe(3);
         ids.forEach((id) => {
             expect(id).toMatch(new RegExp(`^${prefixCls}-`));
@@ -264,7 +264,7 @@ describe('Svelte Collapse', () => {
         expectExpanded([false, false, false]);
         const id = getHeaders()[1].getAttribute('aria-controls');
         expect(id).not.toBeNull();
-        expect(document.getElementById(id as string)).not.toBeNull();
+        expect(document.getElementById(id!)).not.toBeNull();
         expect(getHeaders()[2]).not.toHaveAttribute('aria-controls');
     });
 
@@ -272,7 +272,7 @@ describe('Svelte Collapse', () => {
         semiGlobal.config.overrideDefaultProps = { Collapsible: { keepDOM: true } };
         setup({ collapse: { motion: false } });
         getHeaders().forEach((header) => {
-            expect(document.getElementById(header.getAttribute('aria-controls') as string)).not.toBeNull();
+            expect(document.getElementById(header.getAttribute('aria-controls')!)).not.toBeNull();
         });
     });
 

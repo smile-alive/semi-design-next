@@ -183,7 +183,7 @@ describe('Svelte DatePicker 与 Form、Tooltip 组合', () => {
     it('Form inset 标签下 dateRange 的 group 名称指向渲染出的标签', async () => {
         await renderWrapped('form');
         const group = screen.getByRole('group', { name: '区间' });
-        expect(document.getElementById(group.getAttribute('aria-labelledby') as string)).not.toBeNull();
+        expect(document.getElementById(group.getAttribute('aria-labelledby')!)).not.toBeNull();
     });
 
     it('Tooltip 包住的 DatePicker 只在输入框停留，根元素不是 Tab 停靠点', async () => {

@@ -23,7 +23,7 @@ describe('Calendar KeepAlive', () => {
         const view = render(Host, { props: { active: true } });
         await nextTick();
         // the cached DOM stays in memory, so the line is held while the page is away
-        const line = currLine(view.container) as HTMLElement;
+        const line = currLine(view.container)!;
         expect(parseFloat(line.style.top)).toBe(240);
 
         await view.rerender({ active: false });
@@ -33,6 +33,6 @@ describe('Calendar KeepAlive', () => {
 
         await view.rerender({ active: true });
         await nextTick();
-        expect(parseFloat((currLine(view.container) as HTMLElement).style.top)).toBeCloseTo(240.48, 2);
+        expect(parseFloat(currLine(view.container)!.style.top)).toBeCloseTo(240.48, 2);
     });
 });

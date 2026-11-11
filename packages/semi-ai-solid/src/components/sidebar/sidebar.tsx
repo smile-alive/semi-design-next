@@ -9,9 +9,9 @@ import Button from '@fibrae/semi-ui-solid/button/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { ToastFactory } from '@fibrae/semi-ui-solid/toast/index';
 import { hasContent } from '@fibrae/semi-ui-solid/utils';
-import CodeContent, { CodeItem, type CodeItemProps } from './code';
+import CodeContent, { CodeItem } from './code';
 import Container from './container';
-import FileContent, { FileItem, type FileItemProps } from './file';
+import FileContent, { FileItem } from './file';
 import type { SideBarProps } from './interface';
 import Options from './options';
 
@@ -54,7 +54,7 @@ function Sidebar(rawProps: SideBarProps) {
 
     let root: HTMLDivElement | undefined;
 
-    const toast = ToastFactory.create({ getPopupContainer: () => root as HTMLDivElement });
+    const toast = ToastFactory.create({ getPopupContainer: () => root! });
     const mode = createMemo(() => local.mode);
 
     // another item, or the same key in another mode, remounts the detail and with it the editor
@@ -114,10 +114,10 @@ function Sidebar(rawProps: SideBarProps) {
                     <Show when={detailKey()} keyed>
                         <Switch>
                             <Match when={mode() === strings.MODE.CODE}>
-                                <CodeItem {...(local.detailContent as CodeItemProps)} />
+                                <CodeItem {...local.detailContent!} />
                             </Match>
                             <Match when={mode() === strings.MODE.FILE}>
-                                <FileItem {...(local.detailContent as FileItemProps)} editable={local.fileEditable ?? true} imgUploadProps={local.imgUploadProps} onContentChange={local.onFileContentChange} />
+                                <FileItem {...local.detailContent!} editable={local.fileEditable ?? true} imgUploadProps={local.imgUploadProps} onContentChange={local.onFileContentChange} />
                             </Match>
                         </Switch>
                     </Show>
@@ -140,7 +140,7 @@ function Sidebar(rawProps: SideBarProps) {
             <Show when={isMain()} fallback={detail()}>
                 <div class={`${prefixCls}-main-content-wrapper`}>
                     <Options activeKey={local.activeKey} options={local.options} renderOptionIcon={local.renderOptionIcon} renderOptionItem={local.renderOptionItem} onChange={local.onActiveOptionChange} />
-                    <div class={`${prefixCls}-main-content`}>{local.renderMainContent?.(local.activeKey as string)}</div>
+                    <div class={`${prefixCls}-main-content`}>{local.renderMainContent?.(local.activeKey!)}</div>
                 </div>
             </Show>
         </Container>

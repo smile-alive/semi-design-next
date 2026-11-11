@@ -116,8 +116,8 @@ describe('Image', () => {
         expect($(`.${prefixCls}-preview-image-img`)).toHaveAttribute('src', src);
         expect(document.body.style.overflow).toBe('hidden');
 
-        fireEvent.mouseDown(preview() as HTMLElement, { clientX: 10, clientY: 10 });
-        fireEvent.mouseUp(preview() as HTMLElement, { clientX: 10, clientY: 10 });
+        fireEvent.mouseDown(preview()!, { clientX: 10, clientY: 10 });
+        fireEvent.mouseUp(preview()!, { clientX: 10, clientY: 10 });
         expect(preview()).toBeNull();
         expect(document.body.style.overflow).toBe('');
     });
@@ -146,7 +146,7 @@ describe('Image', () => {
         fireEvent.load(thumb(container));
         fireEvent.click(thumb(container));
         expect(onVisibleChange).toHaveBeenCalledTimes(1);
-        fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-plus`) as HTMLElement);
+        fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-plus`)!);
         expect(onVisibleChange).toHaveBeenCalledTimes(1);
         expect(preview()).not.toBeNull();
     });
@@ -166,7 +166,7 @@ describe('Image', () => {
         fireEvent.keyDown(root, { key: 'Enter' });
         expect(preview()).not.toBeNull();
         expect($(`.${prefixCls}-preview-image-img`)).toHaveAttribute('alt', 'a lamp');
-        fireEvent.keyDown(document.activeElement as Element, { key: 'Escape' });
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         expect(preview()).toBeNull();
         expect(fireEvent.keyDown(root, { key: ' ' })).toBe(false);
         expect(preview()).not.toBeNull();
@@ -254,8 +254,8 @@ describe('Image', () => {
         expect($(`.${prefixCls}-preview-image-img`)).toHaveAttribute('src', big);
         expect($(`.${prefixCls}-preview-image-img`)).toHaveAttribute('crossorigin', 'use-credentials');
 
-        fireEvent.mouseDown(preview() as HTMLElement, { clientX: 0, clientY: 0 });
-        fireEvent.mouseUp(preview() as HTMLElement, { clientX: 0, clientY: 0 });
+        fireEvent.mouseDown(preview()!, { clientX: 0, clientY: 0 });
+        fireEvent.mouseUp(preview()!, { clientX: 0, clientY: 0 });
         expect(onVisibleChange).toHaveBeenLastCalledWith(false);
         expect(preview()).not.toBeNull();
 
@@ -319,7 +319,7 @@ describe('Image', () => {
         const { container } = render(() => <Image setDownloadName={setDownloadName} src={src} />);
         fireEvent.load(thumb(container));
         fireEvent.click(thumb(container));
-        fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-download`) as HTMLElement);
+        fireEvent.click($(`.${prefixCls}-preview-footer .${BASE_CLASS_PREFIX}-icon-download`)!);
         expect(setDownloadName).toHaveBeenCalledWith(src);
         expect(fetch).toHaveBeenCalledWith(src);
     });
@@ -356,7 +356,7 @@ describe('Image', () => {
                 <Image alt="a lamp" src={src} />
             </ImagePreview>
         ));
-        const root = thumb(container).parentElement as HTMLElement;
+        const root = thumb(container).parentElement!;
         expect(thumb(container)).not.toHaveAttribute('src');
         expect(root).toHaveAttribute('role', 'button');
         expect(root).toHaveAttribute('tabindex', '0');
@@ -364,7 +364,7 @@ describe('Image', () => {
         expect(thumb(container)).toHaveClass(`${prefixCls}-img-preview`);
         fireEvent.keyDown(root, { key: 'Enter' });
         expect(preview()).not.toBeNull();
-        fireEvent.keyDown(document.activeElement as Element, { key: 'Escape' });
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         expect(preview()).toBeNull();
 
         fireEvent.error(thumb(container));

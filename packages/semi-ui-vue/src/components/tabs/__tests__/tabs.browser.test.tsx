@@ -213,7 +213,7 @@ describe('Tabs（浏览器）', () => {
         await expectArrows(container, { start: false, end: true });
         expect(isInside(last, scrollWrapper(container))).toBe(false);
 
-        await update({ activeKey: keys.at(-1) as string });
+        await update({ activeKey: keys.at(-1)! });
         await waitFor(() => expect(isInside(last, scrollWrapper(container))).toBe(true));
     });
 
@@ -277,7 +277,7 @@ describe('Tabs（浏览器）', () => {
         await expectArrows(container, { start: false, end: true });
         await userEvent.hover(arrowButton(container, 'end'));
         const menuItems = await screen.findAllByRole('menuitemcheckbox');
-        await userEvent.click(menuItems.find((item) => item.textContent === 'Tab-6') as HTMLElement);
+        await userEvent.click(menuItems.find((item) => item.textContent === 'Tab-6')!);
         await waitFor(() => expect(activePane(container)).toMatchTextContent('Content of card tab 6'));
 
         await waitFor(() => expect(arrowButton(container, 'start')).toBeEnabled());
@@ -304,7 +304,7 @@ describe('Tabs（浏览器）', () => {
 
         await userEvent.keyboard('{Enter}');
         await userEvent.keyboard('{Tab}');
-        await waitFor(() => expect(document.getElementById(tabByDataKey('semiTab5').getAttribute('aria-controls') as string)).toHaveFocus());
+        await waitFor(() => expect(document.getElementById(tabByDataKey('semiTab5').getAttribute('aria-controls')!)).toHaveFocus());
     });
 
     it('垂直 Tabs 的键盘测试', async () => {

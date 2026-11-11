@@ -221,7 +221,7 @@ export const builtinOwnLine: Rule.RuleModule = {
                 if (!sides.length) continue;
                 const gaps = sides.map(([container, near, far]) => pickGap(container, near, far));
                 // Skipped without a report: a tag glued to text or to a space-separated sibling keeps its line, since every break there renders differently or is undone by the formatter
-                if (gaps.some((gap) => gap == null)) continue;
+                if (!gaps.every((gap) => gap != null)) continue;
                 const all = new Set([...claimed, ...gaps]);
                 const opened = new Set(containersOf(gaps).filter((node) => line(node.range[0]) === line(node.range[1])));
                 // oxfmt wraps the space before an element that turns multi-line, and Vue renders that space but not a line break

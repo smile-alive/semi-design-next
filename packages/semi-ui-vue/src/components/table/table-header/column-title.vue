@@ -1,5 +1,4 @@
 <script setup lang="ts">
-    import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
     import { shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
     import { SlotFragment } from '../../../base/index';
     import type { KeyedNode } from '../../../utils/index';
@@ -51,7 +50,7 @@
             full: null,
             flags,
             title,
-            titleAttr: typeof title === 'string' && shouldShowEllipsisTitle(column.ellipsis as BaseEllipsis) ? title : undefined,
+            titleAttr: typeof title === 'string' && shouldShowEllipsisTitle(column.ellipsis!) ? title : undefined,
             untitled: title == null || title === '',
         };
     };

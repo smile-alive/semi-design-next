@@ -231,7 +231,7 @@ describe('Svelte Pagination 交互与事件', () => {
         const { container, onChange } = setup({ total: 200 });
         await click(getPageItems(container)[7]);
         expect(onChange).toHaveBeenCalledTimes(1);
-        await click(getActivePage(container) as Element);
+        await click(getActivePage(container)!);
         await click(screen.getByRole('button', { name: zh_CN.Pagination.more }));
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(getActivePage(container)).toHaveTextContent(/^20$/);

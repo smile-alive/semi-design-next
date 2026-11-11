@@ -152,7 +152,7 @@ const getCheckbox = (label: string) => getElement(`.${BASE_CLASS_PREFIX}-checkbo
 const getHighlights = () => document.querySelectorAll(`.${prefixCls}-option-label-highlight`);
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)).map((node) => node.textContent);
 const isDropdownOpen = () => document.querySelector(`.${prefixCls}-option-lists`) !== null;
-const activeLabel = (host: HTMLElement) => document.getElementById(host.getAttribute('aria-activedescendant') as string)?.querySelector(`.${prefixCls}-option-label`)?.textContent;
+const activeLabel = (host: HTMLElement) => document.getElementById(host.getAttribute('aria-activedescendant')!)?.querySelector(`.${prefixCls}-option-label`)?.textContent;
 // the popup unmounts once its layer has closed, a task after the state change
 const expectClosed = () => waitFor(() => expect(isDropdownOpen()).toBe(false));
 
@@ -456,7 +456,7 @@ describe('Cascader', () => {
         expect(input).toHaveValue('北');
         expect(getHighlights()).toHaveLength(3);
         await userEvent.keyboard('{ArrowDown}');
-        const active = document.getElementById(input.getAttribute('aria-activedescendant') as string);
+        const active = document.getElementById(input.getAttribute('aria-activedescendant')!);
         expect(active).not.toBeNull();
         expect(document.querySelector(`.${prefixCls}-option-lists`)).toContainElement(active);
     });
@@ -803,7 +803,7 @@ describe('Cascader', () => {
         const onClear = vi.fn<NonNullable<CascaderProps['onClear']>>();
         const triggerRender = (props: TriggerRenderProps<false>) => (
             <div class="custom-trigger">
-                <span data-testid="state">{`${props.disabled}|${props.placeholder as string}|${props.inputValue}`}</span>
+                <span data-testid="state">{`${props.disabled}|${props.placeholder!}|${props.inputValue}`}</span>
                 <button type="button" onClick={() => props.onSearch('as')}>
                     Search
                 </button>
@@ -2271,9 +2271,9 @@ describe('Cascader 行为', () => {
         expect(root).toHaveAttribute('aria-haspopup', 'tree');
         await userEvent.click(root);
         await waitFor(() => expect(root).toHaveAttribute('aria-expanded', 'true'));
-        const target = document.getElementById(root.getAttribute('aria-controls') as string);
+        const target = document.getElementById(root.getAttribute('aria-controls')!);
         expect(target).toHaveAttribute('role', 'tree');
-        expect(target).toHaveAccessibleName(root.getAttribute('aria-label') as string);
+        expect(target).toHaveAccessibleName(root.getAttribute('aria-label')!);
     });
 
     describe('combobox 与 tree 用同一个名称来源', () => {
@@ -2528,7 +2528,7 @@ describe('Cascader 行为', () => {
                 .find((tag) => tag.textContent === text)
                 ?.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tag-close`);
         expect(closeOf('北京')).toBeNull();
-        await userEvent.click(closeOf('上海') as HTMLElement);
+        await userEvent.click(closeOf('上海')!);
         expect(getTagTexts()).toEqual(['北京']);
     });
 
@@ -2625,7 +2625,7 @@ describe('Cascader 树语义（APG combobox 搭配 tree 弹出层）', () => {
         await userEvent.type(getSelectionInput(), '美');
         const root = screen.getByRole('combobox');
         expect(root).toHaveAttribute('aria-haspopup', 'listbox');
-        expect(document.getElementById(root.getAttribute('aria-controls') as string)).toHaveAttribute('role', 'listbox');
+        expect(document.getElementById(root.getAttribute('aria-controls')!)).toHaveAttribute('role', 'listbox');
         expect(screen.getAllByRole('option')).toHaveLength(2);
     });
 
@@ -2751,9 +2751,9 @@ describe('Cascader 键盘操作', () => {
         await userEvent.type(input, '美');
         expect(input).not.toHaveAttribute('aria-activedescendant');
         await userEvent.keyboard('{ArrowDown}{ArrowDown}');
-        expect(document.getElementById(input.getAttribute('aria-activedescendant') as string)).toHaveTextContent('加拿大');
+        expect(document.getElementById(input.getAttribute('aria-activedescendant')!)).toHaveTextContent('加拿大');
         await userEvent.keyboard('{ArrowLeft}{Home}');
-        expect(document.getElementById(input.getAttribute('aria-activedescendant') as string)).toHaveTextContent('加拿大');
+        expect(document.getElementById(input.getAttribute('aria-activedescendant')!)).toHaveTextContent('加拿大');
         await userEvent.keyboard('{Enter}');
         expect(onChange).toHaveBeenCalledWith(['North America', 'Canada']);
     });
@@ -2772,7 +2772,7 @@ describe('Cascader 键盘操作', () => {
         const input = getSelectionInput();
         await userEvent.type(input, '美');
         await userEvent.keyboard('{ArrowDown}');
-        expect(document.getElementById(input.getAttribute('aria-activedescendant') as string)).toHaveTextContent('美国');
+        expect(document.getElementById(input.getAttribute('aria-activedescendant')!)).toHaveTextContent('美国');
         await userEvent.keyboard('{Enter}');
         expect(onChange).toHaveBeenCalledWith([['North America', 'United States']]);
     });
@@ -3218,7 +3218,7 @@ describe('Cascader 选中状态、搜索与回调', () => {
             ],
         });
         const restTag = screen.getAllByText('上海').find((node) => node.closest(`.${BASE_CLASS_PREFIX}-popover`));
-        fireEvent.mouseDown(restTag as HTMLElement);
+        fireEvent.mouseDown(restTag!);
         expect(document.querySelector(`.${prefixCls}-option-lists`)).not.toBeNull();
         fireEvent.mouseDown(document.body);
         await expectClosed();

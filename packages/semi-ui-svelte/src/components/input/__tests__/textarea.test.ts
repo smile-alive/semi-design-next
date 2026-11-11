@@ -110,7 +110,7 @@ describe('Svelte TextArea', () => {
         setup({ props: { value: '123', showClear: true, onClear, onChange } });
         document.body.addEventListener('click', outer);
         onTestFinished(() => document.body.removeEventListener('click', outer));
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         await settle();
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(onClear.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
@@ -127,7 +127,7 @@ describe('Svelte TextArea', () => {
         onTestFinished(() => outside.remove());
         setup({ props: { value: 'semi', showClear: true } });
         outside.focus();
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         await settle();
         expect(getTextArea()).toHaveValue('');
         expect(outside).toHaveFocus();

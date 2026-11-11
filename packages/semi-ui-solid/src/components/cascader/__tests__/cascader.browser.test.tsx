@@ -25,7 +25,7 @@ describe('Cascader（浏览器）', () => {
         await userEvent.click(trigger);
         const getInput = () => container.querySelector<HTMLElement>(`.${prefixCls}-selection input`);
         await waitFor(() => expect(getInput()).not.toBeNull());
-        const input = getInput() as HTMLElement;
+        const input = getInput()!;
         const wrapper = getElement(`.${prefixCls}-search-wrapper`, container).getBoundingClientRect();
         const triggerRect = trigger.getBoundingClientRect();
         expect(input).toHaveFocus();
@@ -127,22 +127,18 @@ const getTrigger = () => getElement(`.${prefixCls}`);
 const getPopover = () => document.querySelector<HTMLElement>(`.${prefixCls}-popover`);
 async function getOption(label: string) {
     await waitFor(() => expect(getPopover()).not.toBeNull());
-    return defined(
-        within(getPopover() as HTMLElement)
-            .getByText(label)
-            .closest<HTMLElement>(`.${prefixCls}-option`)
-    );
+    return defined(within(getPopover()!).getByText(label).closest<HTMLElement>(`.${prefixCls}-option`));
 }
 const clickOption = async (label: string) => userEvent.click(await getOption(label));
 const clickCheckbox = async (label: string) => userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, await getOption(label)));
 const getTagTexts = () => [...document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)].map((tag) => tag.textContent);
 const getSearchText = () => document.querySelector(`.${prefixCls}-search-wrapper span`)?.textContent;
-const activeOption = (host: HTMLElement, root: Document | ShadowRoot = document) => defined(root.getElementById(host.getAttribute('aria-activedescendant') as string));
+const activeOption = (host: HTMLElement, root: Document | ShadowRoot = document) => defined(root.getElementById(host.getAttribute('aria-activedescendant')!));
 const findClearButton = () =>
     waitFor(() => {
         const button = document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
         expect(button).not.toBeNull();
-        return button as HTMLElement;
+        return button!;
     });
 
 function renderInShadow(ui: () => ReturnType<typeof Cascader>, withStyles: boolean) {
@@ -286,7 +282,7 @@ describe('cascader', () => {
         render(() => <Demo />);
         await userEvent.click(getTrigger());
         await clickOption('Node1');
-        await waitFor(() => expect(within(getPopover() as HTMLElement).getByText('Node1 - 1')).toBeInTheDocument());
+        await waitFor(() => expect(within(getPopover()!).getByText('Node1 - 1')).toBeInTheDocument());
     });
 
     it('超出限制时', async () => {

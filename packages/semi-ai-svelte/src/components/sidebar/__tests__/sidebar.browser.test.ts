@@ -45,7 +45,7 @@ describe('Sidebar.Container 浏览器', () => {
         const root = await waitFor(() => {
             const found = document.querySelector<HTMLElement>('.semi-sidebar-container');
             expect(found).not.toBeNull();
-            return found as HTMLElement;
+            return found!;
         });
         expect(root).toHaveClass('semi-sidebar-animation-content_show');
         await waitFor(() => expect(root).not.toHaveClass('semi-sidebar-animation-content_show'));
@@ -68,7 +68,7 @@ describe('Sidebar.Container 浏览器', () => {
         const close = await waitFor(() => {
             const found = mount.querySelector<HTMLElement>(`[aria-label="${text.close}"]`);
             expect(found).not.toBeNull();
-            return found as HTMLElement;
+            return found!;
         });
         close.focus();
         expect(shadow.activeElement).toBe(close);
@@ -152,7 +152,7 @@ describe('Sidebar.FileItem 浏览器', () => {
         return waitFor(() => {
             const bar = container.querySelector('.semi-sidebar-file-menu-bar');
             expect(bar).not.toBeNull();
-            return bar as Element;
+            return bar!;
         });
     };
 
@@ -163,7 +163,7 @@ describe('Sidebar.FileItem 浏览器', () => {
             await userEvent.keyboard('{Tab}');
         }
         while (bar.contains(document.activeElement) && stops.length < 40) {
-            stops.push(document.activeElement as Element);
+            stops.push(document.activeElement!);
             await userEvent.keyboard('{Tab}');
         }
         expect(stops.length).toBeGreaterThan(0);

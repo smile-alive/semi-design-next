@@ -34,7 +34,7 @@ const getAreaHandle = () => getElement(`.${prefixCls}-colorChooseArea .${prefixC
 const getColorSlider = () => getElement(`.${prefixCls}-colorSlider`);
 const getColorSliderHandle = () => getElement(`.${prefixCls}-colorSlider .${prefixCls}-handle`);
 const getAlphaSlider = () => document.querySelector<HTMLElement>(`.${prefixCls}-alphaSlider`);
-const getAlphaRange = () => within(getAlphaSlider() as HTMLElement).getByRole('slider');
+const getAlphaRange = () => within(getAlphaSlider()!).getByRole('slider');
 const getAlphaHandle = () => getElement(`.${prefixCls}-alphaHandle`);
 const getInput = () => getElement<HTMLInputElement>(`.${prefixCls}-colorPickerInput input`);
 const getAlphaInput = () => document.querySelector<HTMLInputElement>(`.${prefixCls}-colorPickerInputNumber input`);
@@ -44,7 +44,7 @@ const getFormatSelect = () => screen.getByRole('combobox');
 const lastColor = (onChange: ReturnType<typeof vi.fn<OnChange>>) => onChange.mock.calls[onChange.mock.calls.length - 1][0];
 
 const changeInput = (value: string) => fireEvent.input(getInput(), { target: { value } });
-const changeAlphaInput = (value: string) => fireEvent.input(getAlphaInput() as HTMLInputElement, { target: { value } });
+const changeAlphaInput = (value: string) => fireEvent.input(getAlphaInput()!, { target: { value } });
 
 // the setup rect mock has no x/y, which the pickers subtract from clientX/clientY
 function mockRect(el: HTMLElement) {
@@ -63,7 +63,7 @@ function release(el: HTMLElement) {
 async function selectFormat(format: string) {
     await userEvent.click(getFormatSelect());
     const options = await screen.findAllByRole('option');
-    await userEvent.click(options.find((option) => option.textContent === format) as HTMLElement);
+    await userEvent.click(options.find((option) => option.textContent === format)!);
 }
 
 afterEach(() => {
@@ -522,7 +522,7 @@ describe('ColorPicker', () => {
     it('按住指针拖动时 AlphaSlider 调整透明度，松开后停止', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ alpha: true, onChange, defaultValue: defaultColor });
-        const slider = mockRect(getAlphaSlider() as HTMLElement);
+        const slider = mockRect(getAlphaSlider()!);
 
         fireEvent.pointerDown(getAlphaHandle(), { clientX: 280 });
         onChange.mockClear();
@@ -557,7 +557,7 @@ describe('ColorPicker', () => {
     it('按下时在拖拽区域捕获指针', () => {
         const capture = vi.spyOn(Element.prototype, 'setPointerCapture');
         renderColorPicker({ alpha: true, defaultValue: defaultColor });
-        for (const surface of [getArea(), getColorSlider(), getAlphaSlider() as HTMLElement]) {
+        for (const surface of [getArea(), getColorSlider(), getAlphaSlider()!]) {
             fireEvent.pointerDown(mockRect(surface), { pointerId: 7, clientX: 10, clientY: 10 });
             expect(capture.mock.contexts.at(-1)).toBe(surface);
             expect(capture.mock.calls.at(-1)).toEqual([7]);
@@ -731,7 +731,7 @@ describe('ColorPicker', () => {
     it('拖动透明度更新透明度', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ onChange, alpha: true, defaultValue: defaultColor });
-        fireEvent.pointerDown(mockRect(getAlphaSlider() as HTMLElement), { clientX: 140 });
+        fireEvent.pointerDown(mockRect(getAlphaSlider()!), { clientX: 140 });
         expect(lastColor(onChange)).toEqual({ rgba: { r: 255, g: 0, b: 0, a: 0.5 }, hsva: { h: 0, s: 100, v: 100, a: 0.5 }, hex: '#ff000080' });
         expect(getAlphaRange()).toHaveAttribute('aria-valuetext', '50%');
         expect(getAlphaInput()).toHaveValue('50');
@@ -741,7 +741,7 @@ describe('ColorPicker', () => {
     it('受控时拖动透明度只报告变化', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ onChange, alpha: true, value: defaultColor });
-        fireEvent.pointerDown(mockRect(getAlphaSlider() as HTMLElement), { clientX: 140 });
+        fireEvent.pointerDown(mockRect(getAlphaSlider()!), { clientX: 140 });
         expect(lastColor(onChange).rgba.a).toBe(0.5);
         expect(getAlphaInput()).toHaveValue('100');
         expect(getAlphaHandle()).toHaveStyle({ left: '271px' });
@@ -807,13 +807,13 @@ describe('ColorPicker', () => {
         renderColorPicker({ onChange, alpha: true, defaultValue: defaultColor });
         fireEvent.pointerDown(mockRect(getArea()), { clientX: 100, clientY: 100, button: 2 });
         fireEvent.pointerDown(mockRect(getColorSlider()), { clientX: 100, button: 2 });
-        fireEvent.pointerDown(mockRect(getAlphaSlider() as HTMLElement), { clientX: 100, button: 2 });
+        fireEvent.pointerDown(mockRect(getAlphaSlider()!), { clientX: 100, button: 2 });
         expect(onChange).not.toHaveBeenCalled();
         expect(getArea()).toHaveStyle({ cursor: 'pointer' });
     });
 
     it.each([
-        ['透明度', () => getAlphaSlider() as HTMLElement, getAlphaHandle, (color: ColorValue) => color.rgba.a, [1, 0]],
+        ['透明度', () => getAlphaSlider()!, getAlphaHandle, (color: ColorValue) => color.rgba.a, [1, 0]],
         ['色相', getColorSlider, getColorSliderHandle, (color: ColorValue) => color.hsva.h, [360, 0]],
     ] as const)('%s滑块拖出任一端时，handle 保持在该端', (_name, getSlider, getHandle, read, [end, start]) => {
         const onChange = vi.fn<OnChange>();
@@ -960,7 +960,7 @@ describe('ColorPicker', () => {
     describe('逐字输入透明度', () => {
         const typeAlpha = async (defaultFormat: ColorFormat, typed: string) => {
             renderColorPicker({ alpha: true, defaultFormat, defaultValue: defaultColor });
-            const alphaInput = getAlphaInput() as HTMLInputElement;
+            const alphaInput = getAlphaInput()!;
             await userEvent.clear(alphaInput);
             await userEvent.type(alphaInput, typed);
             expect(getAlphaRange()).toHaveAttribute('aria-valuetext', `${typed}%`);
@@ -1038,7 +1038,7 @@ describe('ColorPicker', () => {
         const second = vi.fn<OnChange>();
         const [onChange, setOnChange] = createSignal(first);
         render(() => <ColorPicker alpha defaultValue={defaultColor} onChange={onChange()} />);
-        const slider = mockRect(getAlphaSlider() as HTMLElement);
+        const slider = mockRect(getAlphaSlider()!);
         fireEvent.pointerDown(slider, { clientX: 280 });
         setOnChange(() => second);
         fireEvent.pointerMove(slider, { clientX: 140 });
@@ -1085,7 +1085,7 @@ describe('ColorPicker', () => {
     it.each([
         ['area', getArea],
         ['color slider', getColorSlider],
-        ['alpha slider', () => getAlphaSlider() as HTMLElement],
+        ['alpha slider', () => getAlphaSlider()!],
     ])('在 %s 上拖动中途卸载后，停止后续变化', (_name, getTarget) => {
         const onChange = vi.fn<OnChange>();
         const { unmount } = renderColorPicker({ alpha: true, onChange, defaultValue: defaultColor });

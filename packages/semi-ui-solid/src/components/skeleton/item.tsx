@@ -25,17 +25,15 @@ function Generic(props: GenericProps) {
 
     const prefixCls = cssClasses.PREFIX;
 
-    const type = () => local.type as string;
-
-    const avatar = () => type().toUpperCase() === 'AVATAR';
+    const avatar = () => local.type!.toUpperCase() === 'AVATAR';
 
     return (
         <div
             aria-hidden="true"
             {...rest}
-            class={clsx(local.class, `${prefixCls}-${type()}`, {
-                [`${prefixCls}-${type()}-${local.size ?? 'medium'}`]: avatar(),
-                [`${prefixCls}-${type()}-${local.shape ?? 'circle'}`]: avatar(),
+            class={clsx(local.class, `${prefixCls}-${local.type!}`, {
+                [`${prefixCls}-${local.type!}-${local.size ?? 'medium'}`]: avatar(),
+                [`${prefixCls}-${local.type!}-${local.shape ?? 'circle'}`]: avatar(),
             })}
         />
     );

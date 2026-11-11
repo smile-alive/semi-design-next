@@ -9,7 +9,7 @@ export function createSourceSuffixLoaderRule(_opts?: SemiWebpackPluginOptions) {
     };
 }
 
-export function createThemeLoaderRule(opts?: SemiWebpackPluginOptions) {
+export function createThemeLoaderRule(opts: SemiWebpackPluginOptions) {
     const options = {
         prefixCls: opts.prefixCls,
         cssLayer: opts.cssLayer,
@@ -28,7 +28,7 @@ export function createOmitCssLoaderRule(_opts?: SemiWebpackPluginOptions) {
     };
 }
 
-export function createPrefixLoaderRule(opts?: SemiWebpackPluginOptions) {
+export function createPrefixLoaderRule(opts: SemiWebpackPluginOptions) {
     const options = {
         replacers: { BASE_CLASS_PREFIX: opts.prefixCls },
     };
@@ -38,7 +38,7 @@ export function createPrefixLoaderRule(opts?: SemiWebpackPluginOptions) {
     };
 }
 
-export function applySemiRules(opts?: SemiWebpackPluginOptions) {
+export function applySemiRules(opts: SemiWebpackPluginOptions) {
     const rules: RuleSetRule[] = [];
     // The prefix lives in Semi's JS, so it is rewritten even with a prebuilt stylesheet
     if (opts.prefixCls) {

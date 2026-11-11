@@ -117,9 +117,9 @@ describe('Svelte Annotation', () => {
 
     // jsdom does not navigate, so the default is cancelled up front to keep it from logging
     const click = (element: Element | null) => {
-        const event = createEvent.click(element as Element);
+        const event = createEvent.click(element!);
         event.preventDefault();
-        return fireEvent(element as Element, event);
+        return fireEvent(element!, event);
     };
 
     it('class 与 style 落在容器上，分组带书本图标', () => {

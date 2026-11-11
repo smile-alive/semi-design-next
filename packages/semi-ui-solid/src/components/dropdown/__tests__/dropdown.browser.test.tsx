@@ -512,7 +512,7 @@ describe('Dropdown 键盘操作（浏览器）', () => {
         ));
         const button = screen.getByRole('button', { name: /loading trigger/ });
         // the button ignores the pointer, so the wrapper takes the click
-        await userEvent.click(button.parentElement as HTMLElement);
+        await userEvent.click(button.parentElement!);
         await waitFor(() => expect(item('Loading first')).toHaveFocus());
         expect(button).toHaveAttribute('aria-expanded', 'true');
         button.focus();

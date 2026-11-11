@@ -112,11 +112,7 @@ const getRoot = (root: ParentNode = document) => getElement(`.${prefixCls}`, roo
 const getSelection = (root: ParentNode = document) => getElement(`.${prefixCls}-selection`, root);
 async function getOption(label: string) {
     await waitFor(() => expect(getPopover()).not.toBeNull());
-    return defined(
-        within(getPopover() as HTMLElement)
-            .getByText(label)
-            .closest<HTMLElement>(`.${optionCls}`)
-    );
+    return defined(within(getPopover()!).getByText(label).closest<HTMLElement>(`.${optionCls}`));
 }
 const clickOption = async (label: string) => userEvent.click(await getOption(label));
 const getTagTexts = (root: ParentNode = document) => [...root.querySelectorAll(`.${BASE_CLASS_PREFIX}-tag-content`)].map((tag) => tag.textContent);
@@ -187,7 +183,7 @@ describe('TreeSelect（浏览器）', () => {
         const popover = await waitFor(() => {
             const element = getPopover();
             expect(element).not.toBeNull();
-            return element as HTMLElement;
+            return element!;
         });
         expect(getComputedStyle(popover).maxHeight).toBe('300px');
         expect(popover.getBoundingClientRect().height).toBeLessThanOrEqual(300);
@@ -261,8 +257,8 @@ describe('treeSelect', () => {
         mount(() => <LoadDataTreeSelect />);
         await userEvent.click(getSelection());
         await waitFor(() => expect(getPopover()).not.toBeNull());
-        await userEvent.click(expandIconOf(getPopover() as HTMLElement));
-        await waitFor(() => expect(within(getPopover() as HTMLElement).getAllByText('Child Node')).toHaveLength(2));
+        await userEvent.click(expandIconOf(getPopover()!));
+        await waitFor(() => expect(within(getPopover()!).getAllByText('Child Node')).toHaveLength(2));
     });
 
     it('清空并关闭', async () => {
@@ -437,7 +433,7 @@ describe('treeSelect', () => {
         await waitFor(() => expect(getPopover()).toBeNull());
         await userEvent.click(getSelection());
         await expectOptionCount(2);
-        await userEvent.click(expandIconOf(getPopover() as HTMLElement));
+        await userEvent.click(expandIconOf(getPopover()!));
         await expectOptionCount(4);
     });
 
@@ -518,7 +514,7 @@ describe('treeSelect', () => {
         await waitFor(() => expect(getOptions()).toHaveLength(3));
         await userEvent.keyboard('{Escape}{ArrowDown}');
         expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
-        await waitFor(() => expect(within(getPopover() as HTMLElement).getByText('北美洲')).toBeInTheDocument());
+        await waitFor(() => expect(within(getPopover()!).getByText('北美洲')).toBeInTheDocument());
     });
 
     it('鼠标点选节点关闭弹层后，焦点仍在触发器上', async () => {
@@ -552,7 +548,7 @@ describe('treeSelect', () => {
         await waitFor(() => {
             const row = defined(document.getElementById(trigger.getAttribute('aria-activedescendant') ?? ''));
             expect(row).toHaveTextContent('node 39');
-            expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual((getPopover() as HTMLElement).getBoundingClientRect().bottom + 1);
+            expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual(getPopover()!.getBoundingClientRect().bottom + 1);
         });
     });
 
@@ -591,9 +587,9 @@ describe('treeSelect', () => {
         mount(() => <TreeSelect style={{ width: '300px' }} filterTreeNode keyMaps={{ key: 'key', value: 'value', label: 'name' }} treeData={rename(treeDataEn)} />);
         await userEvent.click(getRoot());
         await waitFor(() => expect(getPopover()).not.toBeNull());
-        await clickAndType(within(getPopover() as HTMLElement).getByRole('textbox'), '1');
-        await userEvent.click(getElement(`.${optionCls}-expand-icon`, getPopover() as HTMLElement));
-        expect((getPopover() as HTMLElement).querySelector(`.${optionCls}-label-text`)).toHaveTextContent('Asia');
+        await clickAndType(within(getPopover()!).getByRole('textbox'), '1');
+        await userEvent.click(getElement(`.${optionCls}-expand-icon`, getPopover()!));
+        expect(getPopover()!.querySelector(`.${optionCls}-label-text`)).toHaveTextContent('Asia');
     });
 
     it.each([
@@ -779,7 +775,7 @@ it('焦点在弹层搜索框时按 Escape 关闭，焦点回到触发器，不�
     mount(() => <TreeSelect style={{ width: '300px' }} filterTreeNode treeData={regionTreeData} {...spies} />);
     await userEvent.click(screen.getByRole('combobox'));
     await waitFor(() => expect(getPopover()).not.toBeNull());
-    const search = getElement<HTMLInputElement>('input', getPopover() as HTMLElement);
+    const search = getElement<HTMLInputElement>('input', getPopover()!);
     await userEvent.click(search);
     expect(search).toHaveFocus();
     await userEvent.keyboard('{Escape}');

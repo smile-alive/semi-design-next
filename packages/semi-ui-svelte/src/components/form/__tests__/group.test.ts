@@ -89,7 +89,7 @@ describe('FormInputGroup', () => {
         const textbox = screen.getByRole('textbox', { name: 'Own Full name' });
         expect(textbox).toHaveAccessibleDescription('Note hint');
         await waitFor(() => expect(textbox).toHaveAttribute('aria-invalid', 'true'));
-        const errorId = textbox.getAttribute('aria-errormessage') as string;
+        const errorId = textbox.getAttribute('aria-errormessage')!;
         expect(document.getElementById(errorId)).toHaveTextContent('bad');
     });
 

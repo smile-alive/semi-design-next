@@ -149,8 +149,8 @@ describe('Modal', () => {
 
     it('height 与 width，数字按 px 处理', async () => {
         const view = await renderModal({ width: '413px', height: '613px', visible: true });
-        expect(getComputedStyle($(`.${prefix}`) as HTMLElement).width).toBe('413px');
-        expect(getComputedStyle($(`.${prefix}`) as HTMLElement).height).toBe('613px');
+        expect(getComputedStyle($(`.${prefix}`)!).width).toBe('413px');
+        expect(getComputedStyle($(`.${prefix}`)!).height).toBe('613px');
         view.unmount();
         await renderModal({ width: 413, height: 613, visible: true });
         expect($(`.${prefix}`)).toHaveStyle({ width: '413px', height: '613px' });
@@ -187,13 +187,13 @@ describe('Modal', () => {
     it('maskClosable', async () => {
         const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
         const view = await renderModal({ maskClosable: true, visible: true, onCancel });
-        await userEvent.click($(`.${prefix}-wrap`) as HTMLElement);
+        await userEvent.click($(`.${prefix}-wrap`)!);
         expect(onCancel).toHaveBeenCalledTimes(1);
         view.unmount();
 
         const onCancel2 = vi.fn<NonNullable<ModalProps['onCancel']>>();
         await renderModal({ maskClosable: false, visible: true, onCancel: onCancel2 });
-        await userEvent.click($(`.${prefix}-wrap`) as HTMLElement);
+        await userEvent.click($(`.${prefix}-wrap`)!);
         expect(onCancel2).not.toHaveBeenCalled();
     });
 
@@ -229,7 +229,7 @@ describe('Modal', () => {
         const onOk = vi.fn<NonNullable<ModalProps['onOk']>>();
         await renderModal({ visible: true, onCancel, onOk });
         const buttons = getButtons();
-        await userEvent.click($(`button.${prefix}-close`) as HTMLElement);
+        await userEvent.click($(`button.${prefix}-close`)!);
         await userEvent.click(buttons[1]);
         await userEvent.click(buttons[2]);
         expect(onCancel).toHaveBeenCalledTimes(2);
@@ -454,15 +454,15 @@ describe('Modal 行为', () => {
     it('在对话框内按下、在遮罩上松开的操作不会关闭 modal', async () => {
         const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
         await renderModal({ visible: true, onCancel });
-        const wrap = $(`.${prefix}-wrap`) as HTMLElement;
-        await fireEvent.mouseDown($(`.${prefix}`) as HTMLElement);
+        const wrap = $(`.${prefix}-wrap`)!;
+        await fireEvent.mouseDown($(`.${prefix}`)!);
         await fireEvent.mouseUp(wrap);
         await fireEvent.click(wrap);
         expect(onCancel).not.toHaveBeenCalled();
         await tick();
         await fireEvent.click(wrap);
         expect(onCancel).toHaveBeenCalledTimes(1);
-        await fireEvent.click($(`.${prefix}-body`) as HTMLElement);
+        await fireEvent.click($(`.${prefix}-body`)!);
         expect(onCancel).toHaveBeenCalledTimes(1);
     });
 
@@ -597,10 +597,10 @@ describe('Modal 行为', () => {
     it('maskClosable 由 false 改为 true 后，首次点击遮罩即关闭', async () => {
         const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
         const { rerender } = await renderModal({ visible: true, maskClosable: false, onCancel });
-        await fireEvent.mouseDown($(`.${prefix}`) as HTMLElement);
-        await fireEvent.mouseUp($(`.${prefix}`) as HTMLElement);
+        await fireEvent.mouseDown($(`.${prefix}`)!);
+        await fireEvent.mouseUp($(`.${prefix}`)!);
         await rerender({ visible: true, maskClosable: true, onCancel });
-        await fireEvent.click($(`.${prefix}-wrap`) as HTMLElement);
+        await fireEvent.click($(`.${prefix}-wrap`)!);
         expect(onCancel).toHaveBeenCalledTimes(1);
     });
 
@@ -891,7 +891,7 @@ describe('Modal（Vue）', () => {
         await renderModal({ visible: true, title: 'T', 'onUpdate:visible': onUpdate });
         await userEvent.click(screen.getByRole('button', { name: '关闭' }));
         expect(onUpdate).toHaveBeenCalledTimes(1);
-        await userEvent.click($(`.${prefix}-wrap`) as HTMLElement);
+        await userEvent.click($(`.${prefix}-wrap`)!);
         expect(onUpdate).toHaveBeenCalledTimes(2);
         await pressEsc();
         expect(onUpdate).toHaveBeenCalledTimes(3);
@@ -1046,7 +1046,7 @@ describe('Modal（Vue）', () => {
         expect(root.getAttribute('style')).toBeNull();
         expect($(`.${prefix}`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(screen.getByRole('dialog')).toHaveAttribute('aria-label', 'Named');
-        await userEvent.click($(`.${prefix}-body`) as HTMLElement);
+        await userEvent.click($(`.${prefix}-body`)!);
         expect(onClick).toHaveBeenCalledTimes(1);
     });
 
@@ -1120,7 +1120,7 @@ describe('Modal（Vue）', () => {
         const page = document.body.appendChild(document.createElement('main'));
         render(ConfigContainer);
         await nextTick();
-        const container = $('.config-container') as HTMLElement;
+        const container = $('.config-container')!;
         expect(container.querySelector(`.${prefix}`)).not.toBeNull();
         expect(container.querySelector(`.${prefix}-popup`)).not.toBeNull();
         expect($('.semi-portal')?.style.position).toBe('static');

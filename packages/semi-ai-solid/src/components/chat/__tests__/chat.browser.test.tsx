@@ -18,7 +18,7 @@ const findEl = (container: ParentNode, selector: string) =>
     waitFor(() => {
         const el = container.querySelector<HTMLElement>(selector);
         expect(el).not.toBeNull();
-        return el as HTMLElement;
+        return el!;
     });
 
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
@@ -56,7 +56,7 @@ describe('Chat', () => {
         const area = getElement('.semi-chat-container', container);
         area.scrollTop = 0;
         await nextFrame();
-        const anchor = () => [...container.querySelectorAll<HTMLElement>('.semi-chat-chatBox')].find((el) => el.textContent?.includes('history 10')) as HTMLElement;
+        const anchor = () => [...container.querySelectorAll<HTMLElement>('.semi-chat-chatBox')].find((el) => el.textContent?.includes('history 10'))!;
         const offset = () => anchor().getBoundingClientRect().top - area.getBoundingClientRect().top;
         const before = offset();
         update([...history(7, 10), ...chats]);

@@ -280,7 +280,7 @@ describe('Navigation', () => {
         const title = screen.getByRole('button', { name: '用户管理' });
         expect(title).toHaveClass(`${prefixCls}-sub-title`);
         expect(title).toHaveAttribute('aria-expanded', 'true');
-        const subList = defined(document.getElementById(title.getAttribute('aria-controls') as string));
+        const subList = defined(document.getElementById(title.getAttribute('aria-controls')!));
         expect(subList.tagName).toBe('UL');
         expect(subList).toContainElement(screen.getByRole('button', { name: '用户列表' }));
 
@@ -293,7 +293,7 @@ describe('Navigation', () => {
                 expect(child.tagName).toBe('LI');
             }
         }
-        expect((screen.getByText('其他内容').parentElement as HTMLElement).parentElement).toBe(getList());
+        expect(screen.getByText('其他内容').parentElement!.parentElement).toBe(getList());
         expect(screen.getAllByRole('listitem')).toHaveLength(5);
     });
 
@@ -1535,6 +1535,6 @@ describe('Navigation 的透传与合并', () => {
         await userEvent.click(title);
         const listId = title.getAttribute('aria-controls');
         expect(listId).toBeTruthy();
-        expect(document.getElementById(listId as string)).not.toBeNull();
+        expect(document.getElementById(listId!)).not.toBeNull();
     });
 });

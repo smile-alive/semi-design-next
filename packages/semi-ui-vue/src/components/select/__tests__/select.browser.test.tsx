@@ -48,7 +48,7 @@ async function toggle(label: string) {
     if (!getOptionList()) {
         await userEvent.click(getElement(`.${prefixCls}-arrow`));
     }
-    await userEvent.click(getOption(label) as HTMLElement);
+    await userEvent.click(getOption(label)!);
 }
 
 const renderEllipsisSelect = (props: Record<string, unknown>) => mount(() => <Select multiple ellipsisTrigger motion={false} optionList={options} showRestTagsPopover {...props} />);
@@ -477,7 +477,7 @@ describe('Select', () => {
             document.removeEventListener('keydown', record, true);
         }
         expect(activeAtEnter).toMatch(/1/);
-        await waitFor(() => expect(document.querySelector(`.${prefixCls}-selection-text`)).toHaveTextContent(activeAtEnter as string));
+        await waitFor(() => expect(document.querySelector(`.${prefixCls}-selection-text`)).toHaveTextContent(activeAtEnter!));
     });
 
     it('虚拟列表本身不是 Tab 停留点', async () => {
@@ -510,7 +510,7 @@ describe('Select', () => {
             await userEvent.keyboard('{End}');
             await waitFor(() => expect(optionNamed('option 99')).not.toBeNull());
             await waitFor(() => {
-                const row = (optionNamed('option 99') as HTMLElement).getBoundingClientRect();
+                const row = optionNamed('option 99')!.getBoundingClientRect();
                 const box = scroller().getBoundingClientRect();
                 expect(row.top).toBeGreaterThanOrEqual(box.top - 1);
                 expect(row.bottom).toBeLessThanOrEqual(box.bottom + 1);
@@ -522,7 +522,7 @@ describe('Select', () => {
             await userEvent.click(screen.getByRole('combobox'));
             await waitFor(() => expect(optionNamed('option 50')).not.toBeNull());
             await waitFor(() => {
-                const row = (optionNamed('option 50') as HTMLElement).getBoundingClientRect();
+                const row = optionNamed('option 50')!.getBoundingClientRect();
                 const box = scroller().getBoundingClientRect();
                 expect(row.top).toBeGreaterThanOrEqual(box.top - 1);
                 expect(row.bottom).toBeLessThanOrEqual(box.bottom + 1);
@@ -571,7 +571,7 @@ describe('Select', () => {
     ])('%s：点击选项后焦点留在 combobox 上', async (_name, props) => {
         mount(() => <Select optionList={options} motion={false} {...props} />);
         await userEvent.click(getElement(`.${prefixCls}`));
-        await userEvent.click(getOption('剪映') as HTMLElement);
+        await userEvent.click(getOption('剪映')!);
         await waitFor(() => expect(screen.getByRole('combobox')).toHaveFocus());
         expect(document.querySelector(`.${prefixCls}`)).toHaveClass(`${prefixCls}-focus`);
     });
@@ -729,7 +729,7 @@ describe('Select 分组', () => {
         await userEvent.click(screen.getByRole('combobox'));
         const listbox = await screen.findByRole('listbox');
         await waitFor(() => expect(listbox.scrollTop).toBeGreaterThan(0));
-        const selected = (getOption('G2-6') as HTMLElement).getBoundingClientRect();
+        const selected = getOption('G2-6')!.getBoundingClientRect();
         const box = listbox.getBoundingClientRect();
         expect(selected.top).toBeGreaterThanOrEqual(box.top);
         expect(selected.bottom).toBeLessThanOrEqual(box.bottom);
@@ -777,7 +777,7 @@ describe('Select 鼠标与键盘混用', () => {
     it('多选点选一个选项后焦点留在 combobox，方向键与 Enter 继续作用于列表', async () => {
         mount(() => <Select multiple motion={false} optionList={fruits} style={{ width: '300px' }} />);
         await userEvent.click(screen.getByRole('combobox'));
-        await userEvent.click((await waitFor(() => getOption('apple'))) as HTMLElement);
+        await userEvent.click((await waitFor(() => getOption('apple')))!);
         expect(screen.getByRole('combobox')).toHaveFocus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(activeText()).toBe('banana'));
@@ -791,7 +791,7 @@ describe('Select 鼠标与键盘混用', () => {
         const search = await screen.findByRole('textbox');
         await userEvent.click(search);
         await userEvent.keyboard('a');
-        await userEvent.click((await waitFor(() => getOption('apple'))) as HTMLElement);
+        await userEvent.click((await waitFor(() => getOption('apple')))!);
         expect(search).toHaveFocus();
         await userEvent.keyboard('ch');
         await waitFor(() => expect(search).toHaveValue('ch'));
@@ -804,7 +804,7 @@ it('受控单选选中后在离场动画内重新打开，change 已发出且只
     const onChange = vi.fn<(value: unknown) => void>();
     mount(() => <Select style={{ width: '180px' }} optionList={options} modelValue={value.value} onUpdate:modelValue={(next: unknown) => (value.value = next as string)} onChange={onChange} />);
     await userEvent.click(screen.getByRole('combobox'));
-    await userEvent.click((await waitFor(() => getOption('抖音'))) as HTMLElement);
+    await userEvent.click((await waitFor(() => getOption('抖音')))!);
     screen.getByRole('combobox').click();
     await waitFor(() => expect(onChange.mock.calls).toEqual([['abc']]));
     expect(getOptionList()).not.toBeNull();

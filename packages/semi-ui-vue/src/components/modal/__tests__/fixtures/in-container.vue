@@ -2,7 +2,7 @@
     import Modal from '../../modal.vue';
 
     // The container is in the same template, so it exists only once this tree has mounted.
-    const container = () => document.querySelector<HTMLElement>('.modal-container') as HTMLElement;
+    const container = () => document.querySelector<HTMLElement>('.modal-container')!;
 </script>
 
 <template>

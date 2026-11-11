@@ -58,7 +58,7 @@ const queryExpandIcon = (node: HTMLElement) => node.querySelector(`.${optionCls}
 const getVisibleKeys = () => [...document.querySelectorAll('[role="treeitem"]')].map((node) => node.getAttribute('data-key'));
 const isChecked = (key: string) => getNode(key).querySelector(`.${BASE_CLASS_PREFIX}-checkbox-inner-checked`) !== null;
 const isHalfChecked = (key: string) => getNode(key).querySelector(`.${BASE_CLASS_PREFIX}-checkbox-indeterminate`) !== null;
-const activeKey = () => document.getElementById(screen.getByRole('tree').getAttribute('aria-activedescendant') as string)?.getAttribute('data-key');
+const activeKey = () => document.getElementById(screen.getByRole('tree').getAttribute('aria-activedescendant')!)?.getAttribute('data-key');
 const focusTree = () => screen.getByRole('tree').focus();
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -346,7 +346,7 @@ describe('Tree 行为', () => {
         render(() => <Tree motion={false} renderFullLabel={renderFullLabel} treeData={treeData} />);
         expect(screen.getAllByRole('treeitem')).toHaveLength(2);
         focusTree();
-        const active = document.getElementById(screen.getByRole('tree').getAttribute('aria-activedescendant') as string);
+        const active = document.getElementById(screen.getByRole('tree').getAttribute('aria-activedescendant')!);
         expect(active).toBe(screen.getAllByRole('treeitem')[0]);
         expect(active).toHaveAttribute('aria-level', '1');
     });
@@ -432,7 +432,7 @@ describe('Tree 行为', () => {
         await userEvent.click(getExpandIcon(getNode('b')));
         await waitFor(() => expect(onLoad).toHaveBeenCalledTimes(2));
         expect(loadData.mock.calls.map(([node]) => node)).toEqual(data);
-        expect([...(onLoad.mock.calls[1][0] as Set<string>)]).toEqual(['a', 'b']);
+        expect([...onLoad.mock.calls[1][0]!]).toEqual(['a', 'b']);
     });
 
     it('loadData 失败时停止显示加载状态，并允许重试', async () => {
@@ -866,7 +866,7 @@ describe('Tree 焦点', () => {
         const tree = screen.getByRole('tree');
         expect(tree).toHaveFocus();
         await userEvent.keyboard('{ArrowDown}');
-        expect(document.getElementById(tree.getAttribute('aria-activedescendant') as string)).toHaveAttribute('data-key', 'beimeizhou');
+        expect(document.getElementById(tree.getAttribute('aria-activedescendant')!)).toHaveAttribute('data-key', 'beimeizhou');
     });
 });
 

@@ -32,7 +32,7 @@ describe('Sidebar.Container', () => {
         const close = await waitFor(() => {
             const found = mount.querySelector<HTMLElement>(`[aria-label="${zh_CN.Sidebar.close}"]`);
             expect(found).not.toBeNull();
-            return found as HTMLElement;
+            return found!;
         });
         close.focus();
         expect(shadow.activeElement).toBe(close);

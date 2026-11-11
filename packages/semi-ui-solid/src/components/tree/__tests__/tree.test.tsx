@@ -523,7 +523,7 @@ describe('Tree', () => {
         search('东京');
         expect(screen.getByRole('textbox')).toHaveValue('东京');
         expect(screen.getAllByRole('treeitem').map((row) => row.textContent)).toContain('东京');
-        const activeId = screen.getByRole('tree').getAttribute('aria-activedescendant') as string;
+        const activeId = screen.getByRole('tree').getAttribute('aria-activedescendant')!;
         expect(document.getElementById(activeId)).toBe(screen.getAllByRole('treeitem')[0]);
     });
 
@@ -1103,7 +1103,7 @@ describe('非数字高度的 Tree virtualize', () => {
             </div>
         ));
         const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`);
-        const parent = wrapper.parentElement as HTMLElement;
+        const parent = wrapper.parentElement!;
         expect(resize.observed()).toEqual([parent]);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-virtual-list`)).toBeNull();
 

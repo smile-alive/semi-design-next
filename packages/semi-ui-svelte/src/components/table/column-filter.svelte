@@ -23,7 +23,7 @@
     let pending = $state<any[] | undefined>(undefined);
     let localVisible = $state(false);
 
-    const dataIndex = $derived(column.dataIndex as string);
+    const dataIndex = $derived(column.dataIndex!);
     const controlled = $derived(query.filterDropdownVisible !== undefined);
     const confirmMode = $derived(query.filterConfirmMode === 'confirm');
     const selfManaged = $derived(!controlled && (column.filterDropdown === true || confirmMode));

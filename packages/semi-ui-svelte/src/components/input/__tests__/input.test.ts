@@ -217,7 +217,7 @@ describe('Svelte Input', () => {
         document.addEventListener('mousedown', outer);
         onTestFinished(() => document.removeEventListener('mousedown', outer));
         setup({ props: { value: 'test', showClear: true, onChange, onClear } });
-        await fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        await fireEvent.mouseDown(getClearBtn()!);
         await settle();
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(onClear.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
@@ -349,7 +349,7 @@ describe('Svelte Input', () => {
         document.addEventListener('keydown', hostKeyDown);
         onTestFinished(() => document.removeEventListener('keydown', hostKeyDown));
         setup({ props: { value: 'test', mode: 'password' } });
-        const button = getModeBtn() as HTMLElement;
+        const button = getModeBtn()!;
         expect(button.tagName).toBe('BUTTON');
         expect(button).toHaveAttribute('type', 'button');
         expectMouseDownPrevented(button);
@@ -359,7 +359,7 @@ describe('Svelte Input', () => {
         await userEvent.keyboard('{Enter}');
         expect(getInput()).toHaveAttribute('type', 'text');
         expect(getInput()).toHaveFocus();
-        (getModeBtn() as HTMLElement).focus();
+        getModeBtn()!.focus();
         await userEvent.keyboard(' ');
         expect(getInput()).toHaveAttribute('type', 'password');
         expect(hostKeyDown).not.toHaveBeenCalled();
@@ -398,7 +398,7 @@ describe('Svelte Input', () => {
         const onBlur = vi.fn<(event: FocusEvent) => void>();
         setup({ props: { value: 'semi', showClear: true, onBlur } });
         await userEvent.click(getInput());
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         await settle();
         expect(getInput()).toHaveValue('');
         expect(getInput()).toHaveFocus();

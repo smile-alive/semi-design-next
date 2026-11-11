@@ -15,7 +15,7 @@ import Collapsible from '../collapsible';
 import Dropdown, { type DropdownProps, type GetDropdownTriggerProps } from '../dropdown';
 import Tooltip, { type GetTriggerProps } from '../tooltip';
 import { NavContext, type NavContextValue, type NavView, useNavContext } from './context';
-import type { ItemKey, NavItemProps, SubNavProps } from './interface';
+import type { NavItemProps, SubNavProps } from './interface';
 import { ItemView, ItemWrapper, NAV_ITEM, iconSlotClass, plainTrigger } from './item';
 
 const prefix = cssClasses.PREFIX;
@@ -104,7 +104,7 @@ export function SubView(props: SubNavProps) {
         () => ({
             getOpenKeys: () => view().openKeys,
             getOpenKeysIsControlled: () => view().openKeysIsControlled,
-            updateOpen: (open) => (open ? outer.addOpenKey : outer.removeOpenKey)(props.itemKey as ItemKey),
+            updateOpen: (open) => (open ? outer.addOpenKey : outer.removeOpenKey)(props.itemKey!),
             notifyGlobalOpenChange: (data) => outer.notifyOpenChange(data),
             notifyGlobalOnClick: (data) => outer.notifyClick(data),
             getIsOpen: isOpen,

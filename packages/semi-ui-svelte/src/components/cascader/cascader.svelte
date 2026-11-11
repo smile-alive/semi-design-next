@@ -3,7 +3,7 @@
     import { isEqual } from 'es-toolkit';
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
-    import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicValue, type CascaderAdapter } from '@fibrae/semi-foundation/components/cascader/foundation';
+    import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type CascaderAdapter } from '@fibrae/semi-foundation/components/cascader/foundation';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/cascader/cascader.scss';
@@ -212,7 +212,7 @@
             return treeNodeFilterProp;
         },
         get value() {
-            return value as BasicValue;
+            return value!;
         },
     };
 
@@ -343,7 +343,7 @@
     };
 
     const tagSnippetProps = (key: string, index: number): CascaderTagSnippetProps => {
-        return { entity: entityOf(key) as CascaderEntity, index, disabled: isTagDisabled(key), onClose: (event) => removeTag(key, event) };
+        return { entity: entityOf(key)!, index, disabled: isTagDisabled(key), onClose: (event) => removeTag(key, event) };
     };
 
     const handleClear = (event?: MouseEvent) => {

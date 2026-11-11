@@ -28,11 +28,11 @@ const nameFilters = [
 ];
 const getBodyCheckboxes = () => queryAll(`.${P}-tbody .semi-checkbox`);
 const getCheckedBodyCount = () => getBodyCheckboxes().filter((el) => el.classList.contains('semi-checkbox-checked')).length;
-const clickPage = (page: number) => userEvent.click(getPageItems().find((item) => item.textContent === `${page}`) as HTMLElement);
+const clickPage = (page: number) => userEvent.click(getPageItems().find((item) => item.textContent === `${page}`)!);
 const expectRowsCheckedBy = (keys: string[]) =>
     getBodyRows().forEach((row) => {
         const checked = row.querySelector('.semi-checkbox-inner-checked') !== null;
-        expect(checked).toBe(keys.includes(row.getAttribute('data-row-key') as string));
+        expect(checked).toBe(keys.includes(row.getAttribute('data-row-key')!));
     });
 
 describe('Table 选择', () => {
@@ -456,7 +456,7 @@ describe('Table 全选范围与 changedRows', () => {
             rowSelection: { checkRelation, selectedRowKeys, onSelectAll },
         });
         await userEvent.click(getHeaderCheckbox());
-        const [selected, selectedRows, changedRows] = onSelectAll.mock.lastCall as Parameters<Selection['onSelectAll']>;
+        const [selected, selectedRows, changedRows] = onSelectAll.mock.lastCall!;
         const sorted = (keys: string[]) => keys.toSorted((a, b) => a.localeCompare(b));
         return { selected, selectedKeys: sorted(keysOf(selectedRows)), changedKeys: sorted(keysOf(changedRows)) };
     };

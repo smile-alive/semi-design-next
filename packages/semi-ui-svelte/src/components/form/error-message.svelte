@@ -27,7 +27,7 @@
         {/if}
         {#if failed}
             <span id={errorMessageId}>
-                {#if errorContent}{@render errorContent({ error: error as string[] })}{:else}{messages.join(', ')}{/if}
+                {#if errorContent}{@render errorContent({ error: error! })}{:else}{messages.join(', ')}{/if}
             </span>
         {:else}
             <span id={helpTextId}>{@render helpText?.()}</span>

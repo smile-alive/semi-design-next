@@ -37,7 +37,7 @@
 
     const prefix = cssClasses.PREFIX;
 
-    const readPlaceholder = (args: PlaceholderArgs) => (typeof props.placeholder === 'function' ? props.placeholder(args) : (props.placeholder as string));
+    const readPlaceholder = (args: PlaceholderArgs) => (typeof props.placeholder === 'function' ? props.placeholder(args) : props.placeholder!);
 
     const editorProps = () =>
         createEditorProps({

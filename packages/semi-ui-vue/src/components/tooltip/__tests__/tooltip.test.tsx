@@ -699,7 +699,7 @@ describe('Tooltip', () => {
         ));
         expect(screen.getByRole('button').parentElement).toHaveClass('wrapper');
         expect(screen.getByRole('button').parentElement).toHaveStyle({ width: '100%' });
-        await fireEvent.click(screen.getByRole('button').parentElement as HTMLElement);
+        await fireEvent.click(screen.getByRole('button').parentElement!);
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
         view.unmount();
         renderTip({ wrapperClassName: 'wrapper' }, () => <button disabled>disabled</button>);
@@ -709,7 +709,7 @@ describe('Tooltip', () => {
     it('loading Button 的包装只有一个 Tab 停靠点且描述在按钮', async () => {
         renderTip({ trigger: 'click', wrapperClassName: 'loading-wrapper' }, () => <Button loading />);
         const button = screen.getByRole('button');
-        await fireEvent.click(button.parentElement as HTMLElement);
+        await fireEvent.click(button.parentElement!);
         expect(button).toHaveAccessibleDescription('content');
         expect(button.parentElement).toHaveAttribute('tabindex', '-1');
         expect(button.parentElement).not.toHaveAttribute('aria-describedby');

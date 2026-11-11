@@ -28,7 +28,7 @@ describe('TimePicker（浏览器）阴影', () => {
         const lists = await waitFor(() => {
             const el = document.querySelector(`.${prefixCls}-range-panel .${prefixCls}-lists`);
             expect(el).not.toBeNull();
-            return el as Element;
+            return el!;
         });
         expect(getComputedStyle(lists).boxShadow).toContain('inset');
     });
@@ -45,7 +45,7 @@ describe('TimePicker（浏览器）定位', () => {
         const wrapper = await waitFor(() => {
             const el = document.querySelector<HTMLElement>('[x-placement]');
             expect(el).not.toBeNull();
-            return el as HTMLElement;
+            return el!;
         });
         const inputRect = input.getBoundingClientRect();
         await waitFor(() => {

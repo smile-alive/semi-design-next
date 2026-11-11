@@ -61,8 +61,8 @@ describe('Switch', () => {
         const enter = vi.fn<(event: MouseEvent) => void>();
         const leave = vi.fn<(event: MouseEvent) => void>();
         render(Switch, { attrs: { onMouseenter: enter, onMouseleave: leave } });
-        await fireEvent.mouseEnter(getWrapper() as HTMLElement);
-        await fireEvent.mouseLeave(getWrapper() as HTMLElement);
+        await fireEvent.mouseEnter(getWrapper()!);
+        await fireEvent.mouseLeave(getWrapper()!);
         expect(enter).toHaveBeenCalledOnce();
         expect(leave).toHaveBeenCalledOnce();
         expect(enter.mock.calls[0]?.[0]).toBeInstanceOf(MouseEvent);

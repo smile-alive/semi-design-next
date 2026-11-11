@@ -22,7 +22,7 @@ const find = <T extends Element = HTMLElement>(container: Element, selector: str
     waitFor(() => {
         const found = container.querySelector<T>(selector);
         expect(found).not.toBeNull();
-        return found as T;
+        return found!;
     });
 
 function renderChat(chats: ChatMessage[], props: ChatHostStore['props'] = {}) {

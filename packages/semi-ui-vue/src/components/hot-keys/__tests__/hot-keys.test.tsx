@@ -56,7 +56,7 @@ describe('HotKeys 行为', () => {
     it('接收从 document.body 后代冒泡上来的事件', () => {
         const onHotKey = hotKeyHandler();
         const view = render(HotKeys, { props: { hotKeys: ['Control', 'k'], onHotKey } });
-        press(getRoot(view.container) as HTMLElement, { code: 'KeyK', ctrlKey: true });
+        press(getRoot(view.container)!, { code: 'KeyK', ctrlKey: true });
         expect(onHotKey).toHaveBeenCalledTimes(1);
     });
 
@@ -265,7 +265,7 @@ describe('HotKeys 行为', () => {
 
     it('渲染以 "+" 连接的 hotKeys 分段', () => {
         const view = render(HotKeys, { props: { hotKeys: ['Control', 'Shift', 'k'] } });
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root.tagName).toBe('DIV');
         expect([...root.querySelectorAll(`.${prefix}-content`)].map((n) => n.textContent)).toEqual(['Control', 'Shift', 'k']);
         expect(root.querySelectorAll(`.${prefix}-split`)).toHaveLength(2);
@@ -284,7 +284,7 @@ describe('HotKeys 行为', () => {
             props: { hotKeys: ['k'] },
             slots: { default: slot },
         });
-        const root = getRoot(view.container) as HTMLElement;
+        const root = getRoot(view.container)!;
         expect(root).toHaveClass('custom');
         expect(root.querySelector('b.r')).toHaveTextContent('Press K');
         expect(root.querySelector(`.${prefix}-content`)).toBeNull();
@@ -315,7 +315,7 @@ describe('HotKeys 行为', () => {
     it('点击根元素时 click 作为原生属性落到根元素', async () => {
         const onClick = vi.fn<(event: MouseEvent) => void>();
         const view = render(HotKeys, { attrs: { onClick }, props: { hotKeys: ['k'] } });
-        await fireEvent.click(getRoot(view.container) as HTMLElement);
+        await fireEvent.click(getRoot(view.container)!);
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0]?.[0].type).toBe('click');
     });

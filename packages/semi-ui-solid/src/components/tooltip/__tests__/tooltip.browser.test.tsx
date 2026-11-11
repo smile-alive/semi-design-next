@@ -245,7 +245,7 @@ describe('Tooltip 触发（浏览器）', () => {
         const toggle = screen.getByRole('button', { name: 'toggle' });
         await userEvent.click(toggle);
         await expectShown('fading tip');
-        const popup = shown() as HTMLElement;
+        const popup = shown()!;
         toggle.click();
         await new Promise(requestAnimationFrame);
         expect(popup.getAnimations().length).toBeGreaterThan(0);
@@ -265,7 +265,7 @@ describe('Tooltip 触发（浏览器）', () => {
             </Tooltip>
         ));
         await expectShown('keyframe tip');
-        const popup = shown() as HTMLElement;
+        const popup = shown()!;
         expect(popup.getAnimations().map((animation) => (animation as CSSAnimation).animationName)).toEqual([`${BASE_CLASS_PREFIX}-tooltip-zoom-in`]);
         await waitFor(() => expect(popup.getAnimations()).toHaveLength(0));
 
@@ -291,7 +291,7 @@ describe('Tooltip 触发（浏览器）', () => {
             </Tooltip>
         ));
         await expectShown('still tip');
-        const popup = shown() as HTMLElement;
+        const popup = shown()!;
         expect(popup.getAnimations()).toHaveLength(0);
         setVisible(false);
         await waitFor(() => expect(popup.matches(':popover-open')).toBe(false));
@@ -306,7 +306,7 @@ describe('Tooltip 触发（浏览器）', () => {
         const button = screen.getByRole('button', { name: 'right click me' });
         await userEvent.click(button, { button: 'right', position: { x: 1, y: 1 } });
         await expectShown('menu tip');
-        const tip = shown() as HTMLElement;
+        const tip = shown()!;
         await settled(tip);
         expect(Math.abs(center(tip.getBoundingClientRect()) - center(button.getBoundingClientRect()))).toBeLessThan(8);
         button.focus();
@@ -640,11 +640,11 @@ describe('Tooltip 顶层弹层（浏览器）', () => {
             </Tooltip>
         ));
         await expectShown('opening tip');
-        expect((shown() as HTMLElement).getAnimations().length).toBeGreaterThan(0);
+        expect(shown()!.getAnimations().length).toBeGreaterThan(0);
         expect(afterOpen).not.toHaveBeenCalled();
         await waitFor(() => expect(afterOpen).toHaveBeenCalledTimes(1));
         await sleep(100);
-        expect((shown() as HTMLElement).matches(':popover-open')).toBe(true);
+        expect(shown()!.matches(':popover-open')).toBe(true);
         expect(onVisibleChange).not.toHaveBeenCalled();
         expect(afterOpen).toHaveBeenCalledTimes(1);
     });

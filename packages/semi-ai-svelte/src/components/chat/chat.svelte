@@ -112,7 +112,7 @@
         },
         () => ChatFoundation.getInitialState(),
         () => ({
-            getContainerRef: () => container as HTMLDivElement,
+            getContainerRef: () => container!,
             notifyChatsChange: (next) => {
                 chats = next;
                 onChatsChange?.(next);
@@ -127,7 +127,7 @@
             notifyStopGenerate: (event) => onStopGenerator?.(event),
             notifyHintClick: (hint) => onHintClick?.(hint),
             manualUpload: (files) => inputBox?.insertFiles(files),
-            getDropAreaElement: () => dropArea as HTMLDivElement,
+            getDropAreaElement: () => dropArea!,
         })
     );
 

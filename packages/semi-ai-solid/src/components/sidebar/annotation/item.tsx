@@ -36,7 +36,7 @@ export function VideoItem(props: AnnotationItem) {
                 </Show>
                 <IconPlay class={`${prefixCls}-video-play`} />
                 <Show when={typeof props.duration === 'number'}>
-                    <span class={`${prefixCls}-video-duration`}>{formatTime(props.duration as number)}</span>
+                    <span class={`${prefixCls}-video-duration`}>{formatTime(props.duration!)}</span>
                 </Show>
             </div>
             <div class={`${prefixCls}-video-content`}>

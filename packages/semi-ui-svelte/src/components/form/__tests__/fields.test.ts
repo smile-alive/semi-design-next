@@ -152,9 +152,9 @@ async function act(run: () => unknown) {
     await run();
     await settle();
 }
-const click = (element: Element | null) => act(() => userEvent.click(element as Element));
+const click = (element: Element | null) => act(() => userEvent.click(element!));
 const typeText = (element: Element, content: string) => act(() => userEvent.type(element, content));
-const byClass = <E extends Element = HTMLElement>(name: string) => document.querySelector<E>(`.semi-${name}`) as E;
+const byClass = <E extends Element = HTMLElement>(name: string) => getElement<E>(`.semi-${name}`);
 const treeData = [
     { label: 'A', value: 'a', key: 'a' },
     { label: 'B', value: 'b', key: 'b' },
@@ -241,7 +241,7 @@ const cases: Record<string, FieldCase> = {
         init: 'a',
         change: async () => {
             await click(byClass('tree-select'));
-            await click([...document.querySelectorAll('.semi-tree-option')].find((node) => node.textContent?.trim() === 'B') as Element);
+            await click([...document.querySelectorAll('.semi-tree-option')].find((node) => node.textContent?.trim() === 'B')!);
         },
         value: 'b',
     },
@@ -381,7 +381,7 @@ describe('Svelte Form 全部字段', () => {
         const layout = (name: string) => document.querySelector(`.${name}`)?.getAttribute('x-label-pos');
         const warned = (name: string) => warn.mock.calls.some(([message]) => String(message).includes(`Field "${name}" is laid out`));
         expect(Object.fromEntries(names.map((name) => [name, [layout(name), warned(name)]]))).toEqual(Object.fromEntries(names.map((name) => [name, inset.includes(name) ? ['inset', false] : ['top', true]])));
-        const references = [...document.querySelectorAll('[aria-labelledby]')].flatMap((element) => (element.getAttribute('aria-labelledby') as string).split(' '));
+        const references = [...document.querySelectorAll('[aria-labelledby]')].flatMap((element) => element.getAttribute('aria-labelledby')!.split(' '));
         expect(references.length).toBeGreaterThanOrEqual(names.length);
         expect(references.filter((id) => !document.getElementById(id))).toEqual([]);
         warn.mockRestore();

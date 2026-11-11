@@ -13,7 +13,7 @@ export default function ImageDemo() {
         >
             <ImagePreview
                 getPopupContainer={() => {
-                    const node = document.getElementById('container') as HTMLElement;
+                    const node = document.getElementById('container')!;
                     return node;
                 }}
                 style={{

@@ -21,8 +21,8 @@ export default function PreviewImage(props: Props) {
         props,
         () => PreviewImageFoundation.getInitialState(),
         (base) => ({
-            getContainer: () => container as HTMLDivElement,
-            getImage: () => image as HTMLImageElement,
+            getContainer: () => container!,
+            getImage: () => image!,
             requestZoom: (zoom, reportToUser) => base.getProps().onZoom?.(zoom, reportToUser),
             notifyLoad: (src) => base.getProps().onLoad?.(src),
             notifyError: (src) => base.getProps().onError?.(src),

@@ -10,7 +10,7 @@ import HookHost from './hook-host.svelte';
 const prefix = 'semi-toast';
 const closeButton = (toast: Element) => getElement<HTMLButtonElement>(`.${prefix}-close-button .semi-button`, toast);
 const finishAnimations = (elements: Element[]) => elements.forEach((el) => el.getAnimations({ subtree: true }).forEach((a) => a.finish()));
-const wrapperOf = (toast: Element) => toast.parentElement as HTMLElement;
+const wrapperOf = (toast: Element) => toast.parentElement!;
 
 function renderHook(reachable?: string) {
     const result = {} as { api: ToastHookApi };
@@ -194,7 +194,7 @@ describe('Toast 浏览器', () => {
         toast.info({ content: 'keyboard', duration: 0.5 });
         const toastEl = () => document.querySelector<HTMLElement>(`.${prefix}`);
         await waitFor(() => expect(toastEl()).not.toBeNull());
-        await tabTo(closeButton(toastEl() as HTMLElement));
+        await tabTo(closeButton(toastEl()!));
         await new Promise((resolve) => setTimeout(resolve, 1200));
         expect(toastEl()).not.toBeNull();
         await userEvent.keyboard('{Enter}');
@@ -222,7 +222,7 @@ describe('Toast 浏览器', () => {
         api.open({ content: 'first', duration: 1 });
         await waitFor(() => expect(toasts()).toHaveLength(2));
         finishAnimations(toasts().map(wrapperOf));
-        closeButton(toasts().find((toast) => toast.textContent?.includes('first')) as HTMLElement).focus();
+        closeButton(toasts().find((toast) => toast.textContent?.includes('first'))!).focus();
         api.close(leaving);
         await waitFor(() => expect(toasts()).toHaveLength(1));
         await new Promise((resolve) => setTimeout(resolve, 1500));

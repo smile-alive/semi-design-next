@@ -15,7 +15,7 @@ describe('Svelte Pagination 浏览器', () => {
         const dropdown = await waitFor(() => {
             const el = document.querySelector(`.${prefix}-select-dropdown`);
             expect(el).not.toBeNull();
-            return el as Element;
+            return el!;
         });
         expect(getComputedStyle(dropdown).userSelect).toBe('none');
     });

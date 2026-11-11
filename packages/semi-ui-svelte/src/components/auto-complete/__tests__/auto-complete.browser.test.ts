@@ -29,7 +29,7 @@ describe('Svelte AutoComplete 浏览器', () => {
         const wrapper = await waitFor(() => {
             const element = document.querySelector<HTMLElement>('.semi-autocomplete-loading-wrapper');
             expect(element).not.toBeNull();
-            return element as HTMLElement;
+            return element!;
         });
         const spin = getElement('.semi-spin', wrapper);
         const { top, bottom } = wrapper.getBoundingClientRect();
@@ -95,7 +95,7 @@ describe('Svelte AutoComplete 浏览器', () => {
         await screen.findByText('1@163.com');
         const trigger = getElement('.semi-autocomplete');
         // offsetWidth ignores the enter animation's scale transform
-        expect((getPopupWrapper() as HTMLElement).offsetWidth).toBeGreaterThanOrEqual(trigger.offsetWidth);
+        expect(getPopupWrapper()!.offsetWidth).toBeGreaterThanOrEqual(trigger.offsetWidth);
     });
 
     it('鼠标点选候选项后焦点留在输入框，不发出 onBlur', async () => {

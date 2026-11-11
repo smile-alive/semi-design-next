@@ -202,13 +202,13 @@
             focusInput: () => triggerInput?.focus({ preventScroll }),
             focusDropdownInput: () => dropdownInput?.focus({ preventScroll }),
             notifyMaxLimit: (option) => onExceed?.(option as SelectOptionProps),
-            notifyDeselect: (deselected, option) => onDeselect?.(deselected as string | number, option as SelectOptionProps),
+            notifyDeselect: (deselected, option) => onDeselect?.(deselected!, option as SelectOptionProps),
             getOptionsFromChildren: () => collectedOptions as BaseOptionRecord[],
             notifyChange: (next) => {
                 value = next as SelectValue;
                 onChange?.(next as SelectValue);
             },
-            notifySelect: (selected, option) => onSelect?.(selected as string | number, option as SelectOptionProps),
+            notifySelect: (selected, option) => onSelect?.(selected!, option as SelectOptionProps),
             notifyDropdownVisibleChange: (visible) => onDropdownVisibleChange?.(visible),
             notifySearch: (inputValue, event) => onSearch?.(inputValue, event),
             notifyCreate: (option) => onCreate?.(option as SelectOptionProps),

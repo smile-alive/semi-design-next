@@ -643,12 +643,12 @@ describe('Svelte Slider 拖动', () => {
         const signalOf = (options: unknown) => (options as AddEventListenerOptions | undefined)?.signal;
         const dragCalls = () => addListener.mock.calls.filter(([type, , options]) => type.startsWith('pointer') && signalOf(options));
         expect(dragCalls().map(([type]) => type)).toEqual(['pointermove', 'pointerup', 'pointercancel']);
-        const signal = signalOf(dragCalls()[0]?.[2]) as AbortSignal;
+        const signal = signalOf(dragCalls()[0]?.[2])!;
         expect(signal.aborted).toBe(false);
         await release();
         expect(signal.aborted).toBe(true);
         await press(getHandle(), { clientX: 0, clientY: 10 });
-        const second = signalOf(dragCalls().at(-1)?.[2]) as AbortSignal;
+        const second = signalOf(dragCalls().at(-1)?.[2])!;
         expect(second).not.toBe(signal);
         view.unmount();
         expect(second.aborted).toBe(true);
@@ -924,7 +924,7 @@ describe('Svelte Slider 可访问性与属性', () => {
         const single = setup({ name: 'volume', value: 30 });
         const range = setup({ name: 'price', value: [20, 60], range: true });
         const form = document.createElement('form');
-        form.append(single.container.firstElementChild as Element, range.container.firstElementChild as Element);
+        form.append(single.container.firstElementChild!, range.container.firstElementChild!);
         document.body.append(form);
         expect(new FormData(form).getAll('volume')).toEqual(['30']);
         expect(new FormData(form).getAll('price')).toEqual(['20', '60']);

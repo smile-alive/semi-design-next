@@ -23,7 +23,7 @@ function captureEditors() {
             editors.push(this.editor);
         },
     });
-    return { editors, extension, editor: () => editors.at(-1) as Editor };
+    return { editors, extension, editor: () => editors.at(-1)! };
 }
 
 const menuButton = (container: HTMLElement, icon: string) => container.querySelector(`.semi-icon-${icon}`)?.closest('button') as HTMLButtonElement;

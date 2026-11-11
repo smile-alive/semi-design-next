@@ -722,15 +722,15 @@ for (const ui of ['', 'vue-']) {
         server: { middlewareMode: true, ws: false },
     });
     const entry = await server.transformRequest('/src/components.js');
-    const depUrl = entry.code.match(/from ["']([^"']*\.vite\/deps\/@fibrae_semi-ui-react\.js[^"']*)["']/)?.[1];
+    const depUrl = entry!.code.match(/from ["']([^"']*\.vite\/deps\/@fibrae_semi-ui-react\.js[^"']*)["']/)?.[1];
     assert.ok(depUrl, 'semi-ui-react is served from the dependency pre-bundle');
-    const dep = await server.transformRequest(depUrl);
+    const dep = (await server.transformRequest(depUrl))!;
     // lazy parts (ResizableTable, the sortable lists) split shared modules such as env.js into chunks the entry imports
     // statically, so the replaced constant may live in one of them
     const chunkUrls = [...dep.code.matchAll(/from ["']([^"']*\.vite\/deps\/[^"']+\.js[^"']*)["']/g)].map(([, url]) => url);
     const codes = [dep.code];
     for (const url of chunkUrls) {
-        codes.push((await server.transformRequest(url)).code);
+        codes.push((await server.transformRequest(url))!.code);
     }
     await server.close();
     // assert.ok, not assert.match: a failure would print the whole multi-megabyte bundle

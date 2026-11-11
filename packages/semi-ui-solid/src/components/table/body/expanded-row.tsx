@@ -25,7 +25,7 @@ export default function TableExpandedRow(props: TableExpandedRowProps) {
     const cell = createMemo(() => {
         const render = props.expandedRowRender;
         const record = props.record ?? {};
-        const index = props.index as number;
+        const index = props.index!;
         const expanded = Boolean(props.expanded);
         return render ? untrack(() => render(record, index, expanded)) : null;
     });

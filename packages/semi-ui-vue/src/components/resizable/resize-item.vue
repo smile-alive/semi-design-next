@@ -31,7 +31,7 @@
 
     onMounted(() => {
         unregister = group.registerItem({
-            element: item.value as HTMLDivElement,
+            element: item.value!,
             min: () => props.min,
             max: () => props.max,
             defaultSize: () => props.defaultSize,

@@ -21,7 +21,7 @@ const getInput = () => getElement<HTMLInputElement>('input');
 const getWrapper = () => getElement(`.${prefixCls}-wrapper`);
 const query = (cls: string) => document.querySelector<HTMLElement>(`.${cls}`);
 const getClearBtn = () => query(`${prefixCls}-clearbtn`);
-const getModeBtn = () => query(`${prefixCls}-modebtn`) as HTMLElement;
+const getModeBtn = () => query(`${prefixCls}-modebtn`)!;
 const type = (value: string, init: InputEventInit = {}) => fireEvent.input(getInput(), { target: { value }, ...init });
 
 function spyWarn() {
@@ -203,14 +203,14 @@ describe('Input', () => {
     it('点击 prefix/suffix 聚焦', async () => {
         const onFocus = vi.fn<FocusHandler>();
         const { unmount } = render(() => <Input defaultValue="Semi Design" prefix="search" onFocus={onFocus} />);
-        await userEvent.click(query(`${prefixCls}-prefix`) as HTMLElement);
+        await userEvent.click(query(`${prefixCls}-prefix`)!);
         expect(getInput()).toHaveFocus();
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
         expect(onFocus).toHaveBeenCalledTimes(1);
         unmount();
 
         render(() => <Input defaultValue="Semi Design" suffix="search" onFocus={onFocus} />);
-        await userEvent.click(query(`${prefixCls}-suffix`) as HTMLElement);
+        await userEvent.click(query(`${prefixCls}-suffix`)!);
         expect(getInput()).toHaveFocus();
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
         expect(onFocus).toHaveBeenCalledTimes(2);
@@ -306,11 +306,11 @@ describe('Input', () => {
     it('只有主键按下清除按钮才清空，其他鼠标键只阻止抢走焦点', () => {
         const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
         render(() => <Input defaultValue="semi" showClear onClear={onClear} />);
-        expect(fireEvent.mouseDown(getClearBtn() as HTMLElement, { button: 2 })).toBe(false);
-        expect(fireEvent.mouseDown(getClearBtn() as HTMLElement, { button: 1 })).toBe(false);
+        expect(fireEvent.mouseDown(getClearBtn()!, { button: 2 })).toBe(false);
+        expect(fireEvent.mouseDown(getClearBtn()!, { button: 1 })).toBe(false);
         expect(onClear).not.toHaveBeenCalled();
         expect(getInput()).toHaveValue('semi');
-        fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        fireEvent.mouseDown(getClearBtn()!);
         expect(onClear).toHaveBeenCalledTimes(1);
     });
 
@@ -319,7 +319,7 @@ describe('Input', () => {
         document.addEventListener('mousedown', onMouseDown);
         onTestFinished(() => document.removeEventListener('mousedown', onMouseDown));
         render(() => <Input defaultValue="semi" showClear />);
-        fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        fireEvent.mouseDown(getClearBtn()!);
         expect(onMouseDown).toHaveBeenCalledTimes(1);
     });
 
@@ -335,7 +335,7 @@ describe('Input', () => {
         await userEvent.click(getInput());
         expect(await screen.findByText('tip')).toBeInTheDocument();
         onVisibleChange.mockClear();
-        fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        fireEvent.mouseDown(getClearBtn()!);
         expect(getClearBtn()).toBeNull();
         expect(onVisibleChange).not.toHaveBeenCalled();
     });
@@ -344,7 +344,7 @@ describe('Input', () => {
         const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
         const onChange = vi.fn<Change>();
         render(() => <Input defaultValue="test" showClear onChange={onChange} onClear={onClear} />);
-        fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        fireEvent.mouseDown(getClearBtn()!);
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][0]).toBe('');
@@ -512,8 +512,8 @@ describe('Input', () => {
 
     it('prefix、suffix 的 mousedown 阻止默认行为', () => {
         render(() => <Input defaultValue="test" prefix="prefix" suffix="suffix" />);
-        expect(fireEvent.mouseDown(query(`${prefixCls}-prefix`) as HTMLElement)).toBe(false);
-        expect(fireEvent.mouseDown(query(`${prefixCls}-suffix`) as HTMLElement)).toBe(false);
+        expect(fireEvent.mouseDown(query(`${prefixCls}-prefix`)!)).toBe(false);
+        expect(fireEvent.mouseDown(query(`${prefixCls}-suffix`)!)).toBe(false);
     });
 });
 
@@ -569,7 +569,7 @@ describe('Input 行为基线', () => {
         const onChange = vi.fn<Change>();
         const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
         render(() => <Input value="semi" showClear onChange={onChange} onClear={onClear} />);
-        fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        fireEvent.mouseDown(getClearBtn()!);
         expect(onChange).toHaveBeenCalledWith('', expect.anything());
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(getInput()).toHaveValue('semi');
@@ -578,7 +578,7 @@ describe('Input 行为基线', () => {
     it('清除按钮触发 onChange 时第二个参数是鼠标事件，类型包含它', () => {
         const onChange = vi.fn<Change>();
         render(() => <Input defaultValue="semi" showClear onChange={onChange} />);
-        fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        fireEvent.mouseDown(getClearBtn()!);
         expect(onChange).toHaveBeenCalledWith('', expect.objectContaining({ type: 'mousedown' }));
         expectTypeOf<MouseEvent>().toExtend<InputChangeEvent>();
         expectTypeOf<CompositionEvent & { currentTarget: HTMLInputElement; target: Element }>().toExtend<InputChangeEvent>();
@@ -612,7 +612,7 @@ describe('Input 行为基线', () => {
         const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
         render(() => <Input defaultValue="semi" readOnly showClear onClear={onClear} />);
         expect(getInput()).toHaveAttribute('readonly');
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(getInput()).toHaveValue('');
     });
@@ -636,7 +636,7 @@ describe('Input 行为基线', () => {
         const onBlur = vi.fn<NonNullable<InputProps['onBlur']>>();
         render(() => <Input defaultValue="semi" showClear onBlur={onBlur} />);
         await userEvent.click(getInput());
-        await userEvent.click(getClearBtn() as HTMLElement);
+        await userEvent.click(getClearBtn()!);
         expect(getInput()).toHaveValue('');
         expect(getInput()).toHaveFocus();
         expect(onBlur).not.toHaveBeenCalled();
@@ -649,7 +649,7 @@ describe('Input 行为基线', () => {
         document.body.addEventListener('mousedown', onOuterMouseDown);
         onTestFinished(() => document.body.removeEventListener('mousedown', onOuterMouseDown));
         render(() => <Input defaultValue="semi" showClear onChange={onChange} />);
-        fireEvent.mouseDown(getClearBtn() as HTMLElement);
+        fireEvent.mouseDown(getClearBtn()!);
         expect(onChange).toHaveBeenCalledWith('', expect.objectContaining({ type: 'mousedown' }));
         expect(onOuterMouseDown).toHaveBeenCalledTimes(1);
     });
@@ -751,7 +751,7 @@ describe('Input 行为基线', () => {
     it('只传 insetLabel 时以它命名输入框，显式名称优先，有 prefix 时不命名', () => {
         const [props, setProps] = createSignal<InputProps>({});
         render(() => <Input insetLabel="Name" {...props()} />);
-        const labelId = (query(`${prefixCls}-inset-label`) as HTMLElement).id;
+        const labelId = query(`${prefixCls}-inset-label`)!.id;
         expect(labelId).not.toBe('');
         expect(screen.getByRole('textbox', { name: 'Name' })).toHaveAttribute('aria-labelledby', labelId);
         setProps({ insetLabelId: 'label-id' });
@@ -849,7 +849,7 @@ describe('Input 行为基线', () => {
                 {(t) => <Input {...t()} disabled />}
             </Tooltip>
         ));
-        const span = getWrapper().parentElement as HTMLElement;
+        const span = getWrapper().parentElement!;
         expect(span).toHaveClass(`${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
         expect(span).toHaveStyle({ cursor: 'not-allowed' });
         expect(getWrapper().style.pointerEvents).toBe('none');
@@ -1133,7 +1133,7 @@ describe('InputGroup', () => {
         expect(group).toHaveAttribute('id', 'score');
         expect(group).toHaveClass('g');
         expect(group).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        const label = query(`${BASE_CLASS_PREFIX}-form-field-label`) as HTMLElement;
+        const label = query(`${BASE_CLASS_PREFIX}-form-field-label`)!;
         expect(label).toHaveTextContent('Score');
     });
 

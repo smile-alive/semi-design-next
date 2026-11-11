@@ -42,7 +42,7 @@ describe('未声明属性落在根元素上', () => {
         const root = view.container.querySelector<HTMLElement>('[data-probe]');
         expect(root).toHaveClass(`${BASE_CLASS_PREFIX}-${cls}`);
         expect(root).toHaveAttribute('id', 'probe');
-        await fireEvent.keyDown(root as HTMLElement, { key: 'Enter' });
+        await fireEvent.keyDown(root!, { key: 'Enter' });
         expect(onKeydown).toHaveBeenCalledTimes(1);
     });
 

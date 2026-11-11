@@ -496,7 +496,7 @@ describe('Feedback', () => {
         });
 
         it('modal：取消按钮、关闭按钮、遮罩点击、Esc 都使 visible 变 false', async () => {
-            for (const close of [() => userEvent.click(cancel()), () => userEvent.click(screen.getByRole('button', { name: zh_CN.Modal.close })), () => userEvent.click($(`.${modalCls}-wrap`) as HTMLElement), () => fireEvent.keyDown(document, { key: 'Escape' })]) {
+            for (const close of [() => userEvent.click(cancel()), () => userEvent.click(screen.getByRole('button', { name: zh_CN.Modal.close })), () => userEvent.click($(`.${modalCls}-wrap`)!), () => fireEvent.keyDown(document, { key: 'Escape' })]) {
                 const view = await renderModel({ mode: 'modal', motion: false });
                 expect(visibleOutput()).toBe('true');
                 await close();
@@ -524,7 +524,7 @@ describe('Feedback', () => {
             const onUpdate = vi.fn<(...args: unknown[]) => void>();
             const promises = [new Promise<void>((r) => (resolve = r)), new Promise<void>((_, r) => (reject = r))];
             promises[1].catch(() => {});
-            const onCancel = vi.fn<() => Promise<void>>(() => promises.shift() as Promise<void>);
+            const onCancel = vi.fn<() => Promise<void>>(() => promises.shift()!);
             await renderFeedback({
                 mode: 'modal',
                 title: 'T',
@@ -927,7 +927,7 @@ describe('Feedback', () => {
             });
             expect(screen.getByRole('button', { name: 'Go' })).toBeInTheDocument();
             expect($(`.${modalCls}-wrap [style*="width: 321px"]`)).not.toBeNull();
-            await userEvent.click($(`.${modalCls}-wrap`) as HTMLElement);
+            await userEvent.click($(`.${modalCls}-wrap`)!);
             expect(onUpdate).not.toHaveBeenCalled();
         });
 

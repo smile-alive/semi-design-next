@@ -428,7 +428,7 @@ describe('Sidebar', () => {
     it('file 模式通过 onFileContentChange 报告编辑', () => {
         const onFileContentChange = vi.fn<NonNullable<SideBarProps['onFileContentChange']>>();
         const { container } = render(() => <Sidebar detailContent={{ name: 'a.md', content: '<p>text</p>' }} mode="file" visible onFileContentChange={onFileContentChange} />);
-        const editor = (container.querySelector('.ProseMirror') as HTMLElement & { editor: Editor }).editor;
+        const editor = getElement<HTMLElement & { editor: Editor }>('.ProseMirror', container).editor;
         editor.commands.selectAll();
         fireEvent.click(container.querySelector('.semi-icon-bold')?.closest('button') as HTMLElement);
         expect(onFileContentChange).toHaveBeenLastCalledWith('<p><strong>text</strong></p>');

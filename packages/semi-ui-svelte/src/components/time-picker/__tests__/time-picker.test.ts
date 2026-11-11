@@ -296,7 +296,7 @@ describe('Svelte TimePicker 面板', () => {
         const input = screen.getByRole('combobox');
         expect(input).toBe(getInput());
         expect(input).toHaveAttribute('aria-haspopup', 'dialog');
-        const panel = document.getElementById(input.getAttribute('aria-controls') as string);
+        const panel = document.getElementById(input.getAttribute('aria-controls')!);
         expect(panel).toContainElement(screen.getAllByRole('listbox')[0]);
         expect(screen.getByRole('dialog', { name: en_US.TimePicker.panel.time })).toContainElement(panel);
         expect(document.querySelector(`.${prefixCls}-header`)).toHaveAttribute('tabindex', '-1');
@@ -571,7 +571,7 @@ describe('Svelte TimePicker 自定义触发器', () => {
         await settle();
         expect(getPanels()).toHaveLength(1);
         expect(wrapper).toHaveAttribute('aria-expanded', 'true');
-        expect(document.getElementById(wrapper.getAttribute('aria-controls') as string)).toContainElement(getPanels()[0]);
+        expect(document.getElementById(wrapper.getAttribute('aria-controls')!)).toContainElement(getPanels()[0]);
     });
 
     it('disabled 时点击不打开，也不通知 onOpenChange', async () => {

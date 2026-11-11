@@ -38,7 +38,7 @@ describe('Collapsible（浏览器）', () => {
                 {() => <div style={{ height: `${state.height}px` }}>content</div>}
             </Collapsible>
         ));
-        const wrapper = getWrapper(container) as HTMLElement;
+        const wrapper = getWrapper(container)!;
         await expect.poll(() => wrapper.getBoundingClientRect().height).toBe(50);
 
         state.height = 120;
@@ -79,7 +79,7 @@ describe('Collapsible（浏览器）', () => {
                 {() => <div style={{ height: `${state.height}px` }}>content</div>}
             </Collapsible>
         ));
-        const wrapper = getWrapper(container) as HTMLElement;
+        const wrapper = getWrapper(container)!;
         await expect.poll(() => wrapper.getBoundingClientRect().height).toBe(18);
 
         state.height = 60;
@@ -96,7 +96,7 @@ describe('Collapsible（浏览器）- 用值高度不变时的过渡边界', () 
     it('collapseHeightAdaptive 且内容比 collapseHeight 矮：收起前后用值高度相同（计算值从 calc-size 变为 auto）', async () => {
         const motionEnd = vi.fn<() => void>();
         const view = mount({ collapseHeight: 40, collapseHeightAdaptive: true, duration }, () => <div style={{ height: '20px' }}>content</div>, { onMotionEnd: motionEnd });
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         await expect.poll(() => wrapper.getBoundingClientRect().height).toBe(20);
 
         await view.rerender({ isOpen: true });
@@ -111,7 +111,7 @@ describe('Collapsible（浏览器）- 用值高度不变时的过渡边界', () 
         const view = mount({ collapseHeight: 30, duration }, () => <div style={{ height: '30px' }}>content</div>, {
             onMotionEnd: motionEnd,
         });
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         await expect.poll(() => wrapper.getBoundingClientRect().height).toBe(30);
 
         await view.rerender({ isOpen: true });
@@ -125,7 +125,7 @@ describe('Collapsible（浏览器）- 用值高度不变时的过渡边界', () 
         const view = mount({ duration, fade: true }, () => <div style={{ height: '40px' }}>content</div>, {
             onMotionEnd: motionEnd,
         });
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         // lets the browser paint the closed state before the next patch starts the transition; otherwise two
         // patches in the same task may collapse into a single style recalc and no transition ever starts
         await expect.poll(() => wrapper.getBoundingClientRect().height).toBe(0);
@@ -143,7 +143,7 @@ describe('Collapsible（浏览器）- 用值高度不变时的过渡边界', () 
     it('内容为空（高度为 0）且 collapseHeight=0：计算值仍在 auto 与 0px 间变化，motionEnd 照常触发', async () => {
         const motionEnd = vi.fn<() => void>();
         const view = mount({ duration }, () => [], { onMotionEnd: motionEnd });
-        await expect.poll(() => (getWrapper(view.container) as HTMLElement).getBoundingClientRect().height).toBe(0);
+        await expect.poll(() => getWrapper(view.container)!.getBoundingClientRect().height).toBe(0);
 
         await view.rerender({ isOpen: true });
         await expect.poll(() => motionEnd.mock.calls.length).toBe(1);
@@ -167,8 +167,8 @@ describe('Collapsible（浏览器）- 切换前的状态还没有计算样式', 
         await view.rerender({ isOpen: true });
         await expect.poll(() => motionEnd.mock.calls.length).toBe(1);
         // motionEnd is emitted in the transitionend handler, before the patch that drops the class
-        await expect.poll(() => (getWrapper(view.container) as HTMLElement).classList.contains('semi-collapsible-transition')).toBe(false);
-        expect((getWrapper(view.container) as HTMLElement).getBoundingClientRect().height).toBe(50);
+        await expect.poll(() => getWrapper(view.container)!.classList.contains('semi-collapsible-transition')).toBe(false);
+        expect(getWrapper(view.container)!.getBoundingClientRect().height).toBe(50);
     });
 
     it('挂载为展开后在同一任务内收起：过渡照常结束并卸载内容', async () => {
@@ -193,8 +193,8 @@ describe('Collapsible（浏览器）- 切换前的状态还没有计算样式', 
         await nextTick();
         state.hidden = false;
         await expect.poll(() => motionEnd.mock.calls.length).toBe(1);
-        await expect.poll(() => (getWrapper(container) as HTMLElement).classList.contains('semi-collapsible-transition')).toBe(false);
-        expect((getWrapper(container) as HTMLElement).getBoundingClientRect().height).toBe(50);
+        await expect.poll(() => getWrapper(container)!.classList.contains('semi-collapsible-transition')).toBe(false);
+        expect(getWrapper(container)!.getBoundingClientRect().height).toBe(50);
     });
 
     it('祖先 display: none 时收起，之后显示：过渡结束并卸载内容', async () => {
@@ -207,7 +207,7 @@ describe('Collapsible（浏览器）- 切换前的状态还没有计算样式', 
                 </Collapsible>
             </div>
         ));
-        await expect.poll(() => (getWrapper(view.container) as HTMLElement).getBoundingClientRect().height).toBe(50);
+        await expect.poll(() => getWrapper(view.container)!.getBoundingClientRect().height).toBe(50);
         state.hidden = true;
         await nextTick();
         // the hidden subtree drops its computed style once a frame recalculates it
@@ -224,7 +224,7 @@ describe('Collapsible（浏览器）- 切换前的状态还没有计算样式', 
 describe('Collapsible（浏览器）- 内容的样式', () => {
     it('展开时高度连续变化，不是一步跳到内容高度', async () => {
         const view = mount({ duration: 1000 }, () => <div style={{ height: '100px' }}>content</div>);
-        const wrapper = getWrapper(view.container) as HTMLElement;
+        const wrapper = getWrapper(view.container)!;
         await expect.poll(() => wrapper.getBoundingClientRect().height).toBe(0);
         await view.rerender({ isOpen: true });
         await expect.poll(() => wrapper.getBoundingClientRect().height).toBeGreaterThan(0);
@@ -236,8 +236,8 @@ describe('Collapsible（浏览器）- 内容的样式', () => {
         vi.spyOn(CSS, 'supports').mockReturnValue(false);
         const onMotionEnd = vi.fn<() => void>();
         const view = mount({ collapseHeight: 30, collapseHeightAdaptive: true, duration: 1000 }, () => <div style={{ height: '60px' }}>content</div>, { onMotionEnd });
-        const wrapper = getWrapper(view.container) as HTMLElement;
-        const heightAnimation = () => wrapper.getAnimations().find((animation) => !(animation instanceof CSSTransition)) as Animation;
+        const wrapper = getWrapper(view.container)!;
+        const heightAnimation = () => wrapper.getAnimations().find((animation) => !(animation instanceof CSSTransition))!;
         const heights = (animation: Animation) => (animation.effect as KeyframeEffect).getKeyframes().map((keyframe) => keyframe.height);
 
         await view.rerender({ isOpen: true });

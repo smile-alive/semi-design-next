@@ -171,7 +171,7 @@ describe('scrollList', () => {
         const listbox = screen.getByRole('listbox');
         await tabTo(listbox);
         await userEvent.keyboard('{ArrowDown}{ArrowDown}');
-        const active = () => document.getElementById(listbox.getAttribute('aria-activedescendant') as string);
+        const active = () => document.getElementById(listbox.getAttribute('aria-activedescendant')!);
         await waitFor(() => expect(active()).toMatchTextContent(/^3$/));
         expect(listbox).toHaveFocus();
     });

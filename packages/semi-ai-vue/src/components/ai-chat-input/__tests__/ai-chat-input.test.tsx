@@ -2,7 +2,7 @@
 import { defineComponent, nextTick, shallowRef, toRaw, type VNode } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
-import { Extension, Node, type Editor } from '@tiptap/core';
+import { Extension, Node } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
@@ -32,11 +32,11 @@ async function setup(props: Record<string, unknown> = {}, slots: Record<string, 
         ...options,
     });
     await settle();
-    const current = () => handle as AIChatInputHandle;
+    const current = () => handle!;
     return {
         ...view,
         handle: current,
-        editor: () => current().getEditor() as Editor,
+        editor: () => current().getEditor()!,
         unmount: () => view.unmount(),
         rerender: async (next: Record<string, unknown>) => {
             await view.rerender(next);

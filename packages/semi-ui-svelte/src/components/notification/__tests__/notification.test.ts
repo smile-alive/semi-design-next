@@ -244,7 +244,7 @@ describe('Notification', () => {
 
     it('aria-labelledby 绑定到标题，没有标题时不输出', () => {
         const view = renderNotice({ title: 'title', content: 'content' });
-        const labelledBy = view.getByRole('status').getAttribute('aria-labelledby') as string;
+        const labelledBy = view.getByRole('status').getAttribute('aria-labelledby')!;
         expect(document.getElementById(labelledBy)).toHaveTextContent('title');
         const untitled = renderNotice({ content: 'no title' });
         expect(untitled.getAllByRole('status').at(-1)).not.toHaveAttribute('aria-labelledby');
@@ -336,10 +336,10 @@ describe('Notification', () => {
         holdAnimations();
         await show('info', { title: 'hover', duration: 1 });
         await advance(500);
-        await dispatch(getList() as HTMLElement, 'mouseenter');
+        await dispatch(getList()!, 'mouseenter');
         await advance(5000);
         expect(wrapperOf(screen.getByRole('status'))).not.toHaveClass(hideCls());
-        await dispatch(getList() as HTMLElement, 'mouseleave');
+        await dispatch(getList()!, 'mouseleave');
         await advance(999);
         expect(wrapperOf(screen.getByRole('status'))).not.toHaveClass(hideCls());
         await advance(1);
@@ -351,12 +351,12 @@ describe('Notification', () => {
         holdAnimations();
         const onClose = vi.fn<() => void>();
         await show('info', { id: 'progress', title: 'upload', content: '10%', duration: 1, onClose });
-        await dispatch(getList() as HTMLElement, 'mouseenter');
+        await dispatch(getList()!, 'mouseenter');
         await show('info', { id: 'progress', title: 'upload', content: '50%', duration: 1, onClose });
         await advance(5000);
         expect(screen.getByRole('status')).toHaveTextContent('50%');
         expect(wrapperOf(screen.getByRole('status'))).not.toHaveClass(hideCls());
-        await dispatch(getList() as HTMLElement, 'mouseleave');
+        await dispatch(getList()!, 'mouseleave');
         await advance(999);
         expect(wrapperOf(screen.getByRole('status'))).not.toHaveClass(hideCls());
         await advance(1);
@@ -399,7 +399,7 @@ describe('Notification', () => {
         holdAnimations();
         await show('info', { id: 'a', title: 'a', duration: 0 });
         await show('info', { id: 'b', title: 'b', duration: 1 });
-        const a = notices().find((notice) => notice.querySelector(`.${noticeCls}-title`)?.textContent?.trim() === 'a') as HTMLElement;
+        const a = notices().find((notice) => notice.querySelector(`.${noticeCls}-title`)?.textContent?.trim() === 'a')!;
         getElement<HTMLButtonElement>('button', a).focus();
         await tick();
         await advance(2000);
@@ -463,7 +463,7 @@ describe('Notification', () => {
         await show('info', { id: 'a', title: 'a', duration: 1 });
         await advance(500);
         await show('info', { id: 'b', title: 'b', duration: 0, stack: true });
-        const a = () => notices().find((notice) => notice.querySelector(`.${noticeCls}-title`)?.textContent?.trim() === 'a') as HTMLElement;
+        const a = () => notices().find((notice) => notice.querySelector(`.${noticeCls}-title`)?.textContent?.trim() === 'a')!;
         expect(a().parentElement).toHaveClass(`${noticeCls}-stack-item`);
         await advance(499);
         expect(wrapperOf(a())).not.toHaveClass(hideCls());
@@ -646,7 +646,7 @@ describe('Notification', () => {
         expect(direct).toHaveClass(`${noticeCls}-light`);
         expect(direct.querySelector('button')).toBeNull();
         await show('success', { title: 'explicit', duration: 0, showClose: true, theme: 'normal' });
-        const explicit = notices().find((item) => item.querySelector(`.${noticeCls}-title`)?.textContent?.trim() === 'explicit') as HTMLElement;
+        const explicit = notices().find((item) => item.querySelector(`.${noticeCls}-title`)?.textContent?.trim() === 'explicit')!;
         expect(explicit.querySelector('button')).not.toBeNull();
         expect(explicit).not.toHaveClass(`${noticeCls}-light`);
     });

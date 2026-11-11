@@ -23,7 +23,7 @@ export default function ColorChooseArea(props: ColorChooseAreaProps) {
         props,
         () => ColorChooseAreaFoundation.getInitialState(),
         () => ({
-            getDOM: () => dom as HTMLDivElement,
+            getDOM: () => dom!,
             notifyChange: (newColor) => props.onChange(newColor),
         })
     );

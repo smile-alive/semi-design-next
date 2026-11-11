@@ -381,7 +381,7 @@ describe('TagInput', () => {
             showRestTagsPopover: true,
             restTagsPopoverProps: { position: 'bottom' },
         });
-        await hover(getRestCount() as Element);
+        await hover(getRestCount()!);
         await waitFor(() => expect(document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`)).not.toBeNull());
         const popover = document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
         expect(popover).toHaveAttribute('x-placement', 'bottom');
@@ -1211,7 +1211,7 @@ describe('TagInput 函数组件', () => {
     it('showContentTooltip 的溢出文字不在可关闭的标签内成为独立的 Tab 停靠点', async () => {
         vi.spyOn(Range.prototype, 'getBoundingClientRect').mockReturnValue({ width: 100, height: 20 } as DOMRect);
         renderTagInput({ defaultValue: ['abc'], showContentTooltip: true });
-        const text = screen.getByText('abc').parentElement as HTMLElement;
+        const text = screen.getByText('abc').parentElement!;
         await hover(screen.getByText('abc'));
         await waitFor(() => expect(text).toHaveAccessibleDescription('abc'));
         expect(text).not.toHaveAttribute('tabindex');

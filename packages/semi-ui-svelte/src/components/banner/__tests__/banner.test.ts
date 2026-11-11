@@ -120,7 +120,7 @@ describe('Svelte Banner', () => {
 
     it('title、description 与 children 组成的结构', () => {
         const { view, root } = setup({ props: {}, titleSnippet: true, description: true, extra: true });
-        const rootEl = root() as HTMLElement;
+        const rootEl = root()!;
         expect(rootEl.children).toHaveLength(2);
         expect(rootEl.firstElementChild).toHaveClass(`${prefix}-content-wrapper`);
         const body = getElement(`.${prefix}-content-body`, view.container);
@@ -226,7 +226,7 @@ describe('Svelte Banner', () => {
     it('未声明的属性落在根元素，包括 role', () => {
         const onmouseenter = vi.fn<() => void>();
         const { root } = setup({ props: { id: 'b', 'aria-live': 'polite', role: 'alert', onmouseenter } });
-        const rootEl = root() as HTMLElement;
+        const rootEl = root()!;
         expect(rootEl).toHaveAttribute('id', 'b');
         expect(rootEl).toHaveAttribute('aria-live', 'polite');
         expect(rootEl).toHaveAttribute('role', 'alert');

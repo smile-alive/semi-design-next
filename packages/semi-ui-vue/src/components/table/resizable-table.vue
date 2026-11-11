@@ -74,7 +74,7 @@
     const withResizeHandlers = (columns: ColumnProps[]) =>
         columns.map((column) => {
             const own = column.onHeaderCell;
-            const key = column.key as ColumnKey;
+            const key = column.key!;
             const next: ColumnProps = {
                 ...column,
                 onHeaderCell: (headerColumn, columnIndex, rowIndex) => ({

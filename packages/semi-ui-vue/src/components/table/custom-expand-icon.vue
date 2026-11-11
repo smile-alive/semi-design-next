@@ -23,7 +23,7 @@
     const table = useTableContext();
     const locale = useLocale('Table');
 
-    const rowKey = computed<BaseRowKeyType>(() => (typeof props.groupKey === 'string' || typeof props.groupKey === 'number' ? props.groupKey : TableFoundation.getRecordKey({ rowKey: table.rowState.value.rowKey }, props.record as AnyRecord)));
+    const rowKey = computed<BaseRowKeyType>(() => (typeof props.groupKey === 'string' || typeof props.groupKey === 'number' ? props.groupKey : TableFoundation.getRecordKey({ rowKey: table.rowState.value.rowKey }, props.record!)));
     const expanded = computed(() => table.rowState.value.expandedRowKeys.includes(rowKey.value));
     const prefixCls = computed(() => table.view.value.prefixCls);
 

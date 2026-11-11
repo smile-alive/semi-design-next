@@ -10,7 +10,7 @@
     import { useStoreSnapshot } from '../../hooks/index.js';
     import { type SlotKind, trackSlotKind } from '../../utils/index.js';
     import type { ColProps } from '../grid/interface.js';
-    import { type FormContextValue, getArrayFieldContext, getFormContext, getFormInputGroupContext } from './context.js';
+    import { getArrayFieldContext, getFormContext, getFormInputGroupContext } from './context.js';
     import ErrorMessage from './error-message.svelte';
     import FieldGrid from './field-grid.svelte';
     import type { CommonFieldProps, FieldLabel, WithFieldOption } from './interface.js';
@@ -59,7 +59,7 @@
         ...rest
     }: InnerProps = $props();
 
-    const form = getFormContext() as FormContextValue;
+    const form = getFormContext()!;
     const arrayField = getArrayFieldContext();
     const group = getFormInputGroupContext();
 

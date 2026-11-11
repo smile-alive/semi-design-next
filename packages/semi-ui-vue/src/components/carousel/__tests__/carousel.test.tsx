@@ -43,7 +43,7 @@ function renderCarousel(props: Props = {}, count = 3) {
             </Carousel>
         ),
     });
-    return { ...view, state, total, handle: () => handle.value as CarouselHandle };
+    return { ...view, state, total, handle: () => handle.value! };
 }
 
 // The carousel sits in a KeepAlive; setting `shown` to false deactivates it, back to true activates it.
@@ -263,7 +263,7 @@ describe('Carousel', () => {
         expect(getActiveItem(container)).toHaveTextContent(/^index1$/);
         expect(screen.getAllByRole('tab').filter((tab) => tab.tabIndex === 0)).toHaveLength(1);
 
-        await fireEvent.click(query(container, 'arrow-next') as HTMLElement);
+        await fireEvent.click(query(container, 'arrow-next')!);
         expect(onChange).toHaveBeenCalledExactlyOnceWith(0, 1);
         expect(getActiveItem(container)).toHaveTextContent(/^index0$/);
     });
@@ -289,8 +289,8 @@ describe('Carousel', () => {
     });
 
     describe('基线', () => {
-        const clickNext = (container: Element) => fireEvent.click(query(container, 'arrow-next') as HTMLElement);
-        const clickPrev = (container: Element) => fireEvent.click(query(container, 'arrow-prev') as HTMLElement);
+        const clickNext = (container: Element) => fireEvent.click(query(container, 'arrow-next')!);
+        const clickPrev = (container: Element) => fireEvent.click(query(container, 'arrow-prev')!);
 
         it('change 传入新索引与旧索引，并同时发出 update:activeIndex', async () => {
             const onChange = vi.fn<OnChange>();
@@ -440,7 +440,7 @@ describe('Carousel', () => {
             };
             const { container } = renderCarousel({ autoPlay: false, ...handlers });
             const root = getRoot(container);
-            const arrow = query(container, 'arrow-next') as HTMLElement;
+            const arrow = query(container, 'arrow-next')!;
             await fireEvent.mouseEnter(root);
             await fireEvent.mouseLeave(root);
             arrow.focus();
@@ -646,7 +646,7 @@ describe('Carousel', () => {
                 const onChange = vi.fn<OnChange>();
                 const { container, handle } = renderCarousel({ onChange, autoPlay: { interval: 1000 } });
                 handle().stop();
-                await fireEvent.click(query(container, 'arrow-next') as HTMLElement);
+                await fireEvent.click(query(container, 'arrow-next')!);
                 handle().next();
                 expect(onChange).toHaveBeenCalledTimes(2);
                 await tick(10000);
@@ -821,9 +821,9 @@ describe('Carousel', () => {
             render(MixedSlides);
             const tabs = screen.getAllByRole('tab');
             for (const tab of tabs) {
-                const panel = document.getElementById(tab.getAttribute('aria-controls') as string);
+                const panel = document.getElementById(tab.getAttribute('aria-controls')!);
                 expect(panel).toHaveAttribute('role', 'tabpanel');
-                expect(panel).toHaveAccessibleName(tab.getAttribute('aria-label') as string);
+                expect(panel).toHaveAccessibleName(tab.getAttribute('aria-label')!);
             }
             expect(tabs[0]).toHaveAttribute('aria-controls', 'first');
         });

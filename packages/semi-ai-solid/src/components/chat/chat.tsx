@@ -123,7 +123,7 @@ export default function Chat(rawProps: ChatProps) {
         foundationProps,
         () => ChatFoundation.getInitialState(),
         () => ({
-            getContainerRef: () => container() as HTMLDivElement,
+            getContainerRef: () => container()!,
             notifyChatsChange: (chats) => local.onChatsChange?.(chats),
             notifyLikeMessage: (message) => local.onMessageGoodFeedback?.(message),
             notifyDislikeMessage: (message) => local.onMessageBadFeedback?.(message),
@@ -136,7 +136,7 @@ export default function Chat(rawProps: ChatProps) {
             notifyStopGenerate: (e) => local.onStopGenerator?.(e),
             notifyHintClick: (hint) => local.onHintClick?.(hint),
             manualUpload: (files) => inputBox?.insert(files),
-            getDropAreaElement: () => dropArea as HTMLDivElement,
+            getDropAreaElement: () => dropArea!,
         })
     );
 
@@ -211,7 +211,11 @@ export default function Chat(rawProps: ChatProps) {
 
     const renderRow = (key: string) => {
         // a row keeps its last entry while the list it left is still being removed
-        const entry = createMemo<Row>((prev) => rows().get(key) ?? prev, untrack(() => rows().get(key)) as Row, { equals: sameFields });
+        const entry = createMemo<Row>(
+            (prev) => rows().get(key) ?? prev,
+            untrack(() => rows().get(key))!,
+            { equals: sameFields }
+        );
         const message = () => entry().message;
         const isLast = () => entry().index === chats().length - 1;
         // the first message has no predecessor, even when its role is undefined too

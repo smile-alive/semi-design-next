@@ -1,6 +1,6 @@
 import { type ComponentProps, For, type JSX, Show, createSignal, onMount } from 'solid-js';
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
-import { type Editor, Extension, Node } from '@tiptap/core';
+import { Extension, Node } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import Popover from '@fibrae/semi-ui-solid/popover/index';
@@ -26,7 +26,7 @@ async function setup(props: Partial<Props> & Record<string, unknown> = {}, wrap?
         setCurrent({ ...props, ...next });
         await tick();
     };
-    return { ...result, ref, rerender, editor: () => ref.current.getEditor() as Editor };
+    return { ...result, ref, rerender, editor: () => ref.current.getEditor()! };
 }
 
 const el = (parent: ParentNode, selector: string) => getElement(selector, parent);
@@ -788,7 +788,7 @@ describe('AIChatInput', () => {
             const { container, ref, rerender } = await setup({ skills, skillHotKey: '/', keepSkillAfterSend: true });
             keyDown(container, '/');
             keyDown(container, 'Enter');
-            (ref.current.getEditor() as Editor).commands.insertContent('more');
+            ref.current.getEditor()!.commands.insertContent('more');
             await rerender({ generating: true });
             expect(pm(container).querySelector('.skill-slot')).toHaveTextContent('Writing');
             expect(pm(container).textContent).not.toContain('more');
@@ -800,13 +800,13 @@ describe('AIChatInput', () => {
             const { container, ref } = await setup();
             setContent(ref, '<p>set</p>');
             expect(pm(container).textContent).toBe('set');
-            expect((ref.current.getEditor() as Editor).getText()).toBe('set');
+            expect(ref.current.getEditor()!.getText()).toBe('set');
             ref.current.focusEditor();
             await tick();
-            expect((ref.current.getEditor() as Editor).state.selection.from).toBe(4);
+            expect(ref.current.getEditor()!.state.selection.from).toBe(4);
             ref.current.focusEditor('start');
             await tick();
-            expect((ref.current.getEditor() as Editor).state.selection.from).toBe(1);
+            expect(ref.current.getEditor()!.state.selection.from).toBe(1);
         });
 
         it('changeTemplateVisible 切换模板弹层', async () => {

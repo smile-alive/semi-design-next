@@ -38,7 +38,7 @@
 
     watch(
         () => blocked,
-        (value) => foundation.handleBlockedChange(root as HTMLDivElement, value)
+        (value) => foundation.handleBlockedChange(root!, value)
     );
 </script>
 

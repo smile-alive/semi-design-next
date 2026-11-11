@@ -330,7 +330,7 @@ describe('Dropdown 键盘操作（浏览器）', () => {
     it('loading Button 触发器的菜单打开后，ArrowDown 聚焦第一项', async () => {
         renderDropdown({ trigger: 'click' }, () => <Button loading>{() => 'loading trigger'}</Button>, menuOf('Loading first', 'Loading last'));
         const button = screen.getByRole('button', { name: /loading trigger/ });
-        await userEvent.click(button.parentElement as HTMLElement);
+        await userEvent.click(button.parentElement!);
         await waitFor(() => expect(item('Loading first')).toHaveFocus());
         expect(button).toHaveAttribute('aria-expanded', 'true');
         button.focus();

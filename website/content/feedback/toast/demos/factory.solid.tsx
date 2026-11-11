@@ -2,7 +2,7 @@ import { onCleanup } from 'solid-js';
 import { Button, Toast, ToastFactory } from '@fibrae/semi-ui-solid';
 
 const ToastInCustomContainer = ToastFactory.create({
-    getPopupContainer: () => document.getElementById('custom-toast-container') as HTMLElement,
+    getPopupContainer: () => document.getElementById('custom-toast-container')!,
 });
 
 export default function ToastDemo() {

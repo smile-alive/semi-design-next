@@ -40,7 +40,7 @@ const getRoot = (container: Element) => container.firstElementChild as HTMLEleme
 const getList = (container: Element) => getElement(`.${prefix}-list`, container);
 const getWrappers = (container: Element) => container.querySelectorAll<HTMLElement>(`.${prefix}-wrapper`);
 const getActionButton = (wrapper: Element, icon: string) => wrapper.querySelector(`.${actionCls} .${BASE_CLASS_PREFIX}-icon-${icon}`)?.closest('button') ?? null;
-const click = (el: Element | null) => fireEvent.click(el as Element);
+const click = (el: Element | null) => fireEvent.click(el!);
 
 // jsdom has no layout: scroll metrics are faked on Element.prototype, scrollTop backed by a map
 const scrollProps = ['scrollHeight', 'clientHeight', 'scrollTop'] as const;
@@ -736,7 +736,12 @@ describe('AIChatDialogue 消息操作', () => {
     it('显示每种角色与状态允许的操作', () => {
         const { container } = renderDialogue();
         const [user, assistant] = getWrappers(container);
-        const icons = (wrapper: Element) => Array.from(wrapper.querySelectorAll(`.${actionCls} button .${BASE_CLASS_PREFIX}-icon`), (n) => (Array.from(n.classList).find((c) => c.startsWith(`${BASE_CLASS_PREFIX}-icon-`) && c !== `${BASE_CLASS_PREFIX}-icon-default`) as string).replace(`${BASE_CLASS_PREFIX}-icon-`, ''));
+        const icons = (wrapper: Element) =>
+            Array.from(wrapper.querySelectorAll(`.${actionCls} button .${BASE_CLASS_PREFIX}-icon`), (n) =>
+                Array.from(n.classList)
+                    .find((c) => c.startsWith(`${BASE_CLASS_PREFIX}-icon-`) && c !== `${BASE_CLASS_PREFIX}-icon-default`)!
+                    .replace(`${BASE_CLASS_PREFIX}-icon-`, '')
+            );
         expect(icons(user)).toEqual(['copy_stroked', 'share_stroked', 'edit_stroked', 'more_stroked']);
         expect(icons(assistant)).toEqual(['copy_stroked', 'redo_stroked', 'share_stroked', 'thumb_up_stroked', 'thumb_up_stroked', 'more_stroked']);
         expect(assistant.querySelector(`.${actionCls}`)).toHaveClass(`${actionCls}-show`);
@@ -788,7 +793,7 @@ describe('AIChatDialogue 消息操作', () => {
         const { container } = renderDialogue({ onChatsChange, onMessageReset });
         await click(getActionButton(getWrappers(container)[1], 'redo_stroked'));
         expect(onMessageReset).toHaveBeenCalledWith(baseChats[1]);
-        const [next] = onChatsChange.mock.lastCall as [Message[]];
+        const [next] = onChatsChange.mock.lastCall!;
         expect(next).toHaveLength(2);
         // the harness passes props reactively, so the untouched message comes back as a proxy of the same object
         expect(toRaw(next[0])).toBe(baseChats[0]);
@@ -814,7 +819,7 @@ describe('AIChatDialogue 消息操作', () => {
         ];
         const { container } = renderDialogue({ chats, onChatsChange });
         await click(getActionButton(getWrappers(container)[1], 'edit_stroked'));
-        const [next] = onChatsChange.mock.lastCall as [Message[]];
+        const [next] = onChatsChange.mock.lastCall!;
         expect(next.map((chat) => chat.editing)).toEqual([false, true]);
     });
 
@@ -1024,7 +1029,7 @@ describe('AIChatDialogue 提示', () => {
 
         await click(items[1]);
         expect(onHintClick).toHaveBeenCalledWith('second');
-        const [next] = onChatsChange.mock.lastCall as [Message[]];
+        const [next] = onChatsChange.mock.lastCall!;
         expect(next.slice(0, 2)).toEqual(baseChats);
         expect(next[2]).toEqual(expect.objectContaining({ role: 'user', content: 'second', createdAt: Date.now() }));
 
@@ -1480,7 +1485,7 @@ describe('AIChatDialogue 代码审计修复', () => {
 
     it('更多菜单打开后按 Escape 关闭', async () => {
         renderDialogue();
-        const more = screen.getAllByRole('button', { name: text.more }).at(-1) as HTMLElement;
+        const more = screen.getAllByRole('button', { name: text.more }).at(-1)!;
         expect(more).toHaveAttribute('aria-haspopup', 'menu');
         expect(more).toHaveAttribute('aria-expanded', 'false');
         await click(more);

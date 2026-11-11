@@ -77,7 +77,7 @@ describe('Grid（浏览器）', () => {
 
         it('justify 与 align 始终生效', () => {
             const [col] = renderCols(() => <Col span={6}>col</Col>, { align: 'middle', justify: 'center' });
-            const row = col.parentElement as HTMLElement;
+            const row = col.parentElement!;
             expect(getComputedStyle(row).justifyContent).toBe('center');
             expect(getComputedStyle(row).alignItems).toBe('center');
             expect(col.getBoundingClientRect().left - row.getBoundingClientRect().left).toBe(180);

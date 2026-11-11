@@ -19,7 +19,7 @@ describe('Select ellipsisTrigger', () => {
     it('OverflowList 由溢出变为全部放下时，+N 等于 maxTagCount 之外的数量', () => {
         render(() => <Select defaultValue={optionList.map((option) => option.value)} multiple ellipsisTrigger maxTagCount={3} motion={false} optionList={optionList} />);
         expect(screen.getByText('+2')).toBeInTheDocument();
-        const props = overflowList.props as OverflowListProps;
+        const props = overflowList.props!;
         const [first, second] = props.items ?? [];
         props.onOverflow?.([first, second]);
         expect(screen.getByText('+3')).toBeInTheDocument();

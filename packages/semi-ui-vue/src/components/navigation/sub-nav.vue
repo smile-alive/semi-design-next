@@ -13,7 +13,7 @@
     import Dropdown from '../dropdown/dropdown.vue';
     import Tooltip from '../tooltip/tooltip.vue';
     import { provideNavContext, useNav } from './context';
-    import type { ItemKey, SubNavProps, SubNavSlots } from './interface';
+    import type { SubNavProps, SubNavSlots } from './interface';
     import ItemShell from './item-shell.vue';
     import { iconAttrs } from './nav-icon';
     import WrapperOutlet from './wrapper-outlet.vue';
@@ -51,7 +51,7 @@
         () => ({
             getOpenKeys: () => view.value.openKeys,
             getOpenKeysIsControlled: () => view.value.openKeysIsControlled,
-            updateOpen: (open) => (open ? outer.addOpenKey : outer.removeOpenKey)(props.itemKey as ItemKey),
+            updateOpen: (open) => (open ? outer.addOpenKey : outer.removeOpenKey)(props.itemKey!),
             notifyGlobalOpenChange: (data) => outer.notifyOpenChange(data),
             notifyGlobalOnClick: (data) => outer.notifyClick(data),
             getIsOpen: () => isOpen.value,

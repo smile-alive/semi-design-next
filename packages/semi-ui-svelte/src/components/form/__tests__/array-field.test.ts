@@ -21,7 +21,7 @@ function renderArrayForm(options: Partial<ArrayRowsStore> = {}) {
             },
         },
     });
-    return { ...view, store, api: () => formApi as FormApi };
+    return { ...view, store, api: () => formApi! };
 }
 
 const getFieldInput = (path: string) => document.querySelector<HTMLInputElement>(`.semi-form-field[x-field-id="${path}"] .semi-input`);
@@ -183,7 +183,7 @@ describe('Svelte Form ArrayField 行为', () => {
     it('行内字段与 ArrayField 的初值不同时，reset 后输入框与表单值一致', async () => {
         const { api } = renderArrayForm({ formProps: { initValues: { data } }, fieldProps: { initValue: 'semi' } });
         await settle();
-        await typeInto(getFieldInput('data[0][name]') as HTMLInputElement, 'semix');
+        await typeInto(getFieldInput('data[0][name]')!, 'semix');
         api().reset();
         await settle();
         expect(getFieldInput('data[0][name]')).toHaveValue(api().getValue('data[0][name]'));
@@ -193,8 +193,8 @@ describe('Svelte Form ArrayField 行为', () => {
     it('reset(fields) 不改动路径之外的 ArrayField', async () => {
         const { api } = renderArrayForm({ formProps: { initValues: { name: 'n', data: [data[0]] } }, withName: true });
         await clickAddEmptyLine();
-        await typeInto(getFieldInput('data[1][name]') as HTMLInputElement, 'x');
-        await typeInto(getFieldInput('name') as HTMLInputElement, 'nm');
+        await typeInto(getFieldInput('data[1][name]')!, 'x');
+        await typeInto(getFieldInput('name')!, 'nm');
         api().reset(['name']);
         await settle();
         expect(api().getValue('name')).toBe('n');
@@ -233,7 +233,7 @@ describe('Svelte Form ArrayField keepState 与 onMove', () => {
     it('整体卸载默认保留行，再挂载读取保留的行，reset 仍恢复最初的 initValue', async () => {
         const { api, store } = renderArrayForm({ arrayInitValue: data });
         await clickAddEmptyLine();
-        await typeInto(getFieldInput('data[2][name]') as HTMLInputElement, 'kept');
+        await typeInto(getFieldInput('data[2][name]')!, 'kept');
         store.showArray = false;
         await settle();
         expect(api().getValue('data')).toEqual([...data, { name: 'kept' }]);
@@ -250,7 +250,7 @@ describe('Svelte Form ArrayField keepState 与 onMove', () => {
 
     it('ArrayField 的 keepState={false} 卸载即移除行，再挂载回到 initValue', async () => {
         const { api, store } = renderArrayForm({ arrayInitValue: data, arrayKeepState: false });
-        await typeInto(getFieldInput('data[0][name]') as HTMLInputElement, 'changed');
+        await typeInto(getFieldInput('data[0][name]')!, 'changed');
         store.showArray = false;
         await settle();
         expect(api().getValue('data')).toBeUndefined();

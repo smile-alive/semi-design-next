@@ -14,7 +14,7 @@ describe('cssAnimation 复用 foundation SCSS 的动画类', () => {
 
         store.visible = true;
         flushSync();
-        const node = content() as HTMLElement;
+        const node = content()!;
         expect(node.classList.contains('semi-modal-content-animate-show')).toBe(true);
         const { animationName, animationDuration } = getComputedStyle(node);
         expect(animationName).toBe('semi-modal-content-keyframe-show');

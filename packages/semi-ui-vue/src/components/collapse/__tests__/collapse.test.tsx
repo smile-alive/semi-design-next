@@ -161,7 +161,7 @@ describe('Collapse', () => {
     it('生成的面板 id 是合法的 CSS id 选择器', async () => {
         renderPanels({ motion: false });
         await userEvent.click(getHeaders()[1]);
-        const id = getHeaders()[1].getAttribute('aria-controls') as string;
+        const id = getHeaders()[1].getAttribute('aria-controls')!;
         expect(document.querySelector(`#${id}`)).toHaveTextContent('Hi, bytedance dance dance.');
     });
 
@@ -278,7 +278,7 @@ describe('Collapse', () => {
 
     it('首次渲染时标题的 aria-controls 指向内容 id，且每个面板唯一', () => {
         renderPanels({ keepDOM: true, motion: false });
-        const ids = getHeaders().map((header) => header.getAttribute('aria-controls') as string);
+        const ids = getHeaders().map((header) => header.getAttribute('aria-controls')!);
         expect(new Set(ids).size).toBe(3);
         ids.forEach((id) => {
             expect(id).toMatch(new RegExp(`^${prefixCls}-`));
@@ -288,7 +288,7 @@ describe('Collapse', () => {
 
     it('keepDOM 下关闭面板的内容设为 inert 而非 aria-hidden', () => {
         renderPanels({ keepDOM: true, motion: false });
-        const region = document.getElementById(getHeaders()[0].getAttribute('aria-controls') as string);
+        const region = document.getElementById(getHeaders()[0].getAttribute('aria-controls')!);
         expect(region).toHaveAttribute('inert');
         expect(region).not.toHaveAttribute('aria-hidden');
     });
@@ -574,7 +574,7 @@ describe('Collapse', () => {
         const [header] = getHeaders();
         expect(header).not.toHaveAttribute('aria-controls');
         await userEvent.click(header);
-        const region = document.getElementById(header.getAttribute('aria-controls') as string);
+        const region = document.getElementById(header.getAttribute('aria-controls')!);
         expect(region).toHaveClass(`${prefixCls}-content`);
         expect(region).toHaveAttribute('role', 'region');
         expect(region).toHaveAttribute('aria-labelledby', header.id);
@@ -585,7 +585,7 @@ describe('Collapse', () => {
     it('keepDOM 保留关闭内容时存在 aria-controls，lazyRender 下展开前不存在', async () => {
         const view = renderPanels({ keepDOM: true, motion: false });
         getHeaders().forEach((header) => {
-            expect(document.getElementById(header.getAttribute('aria-controls') as string)).not.toBeNull();
+            expect(document.getElementById(header.getAttribute('aria-controls')!)).not.toBeNull();
         });
         await view.rerender({ lazyRender: true });
         expect(getHeaders()[1]).not.toHaveAttribute('aria-controls');
@@ -598,7 +598,7 @@ describe('Collapse', () => {
         expectExpanded([false, false, false]);
         const id = getHeaders()[1].getAttribute('aria-controls');
         expect(id).not.toBeNull();
-        expect(document.getElementById(id as string)).not.toBeNull();
+        expect(document.getElementById(id!)).not.toBeNull();
         expect(getHeaders()[2]).not.toHaveAttribute('aria-controls');
     });
 
@@ -612,14 +612,14 @@ describe('Collapse', () => {
         expect(screen.queryByText('body')).toBeNull();
         expect(getHeaders()[0]).not.toHaveAttribute('aria-controls');
         await userEvent.click(getHeaders()[0]);
-        expect(document.getElementById(getHeaders()[0].getAttribute('aria-controls') as string)).not.toBeNull();
+        expect(document.getElementById(getHeaders()[0].getAttribute('aria-controls')!)).not.toBeNull();
     });
 
     it('只设 Collapsible 的全局 keepDOM 时，收起面板的内容在 DOM 中且有 aria-controls', () => {
         semiGlobal.config.overrideDefaultProps = { Collapsible: { keepDOM: true } };
         renderPanels({ motion: false });
         getHeaders().forEach((header) => {
-            expect(document.getElementById(header.getAttribute('aria-controls') as string)).not.toBeNull();
+            expect(document.getElementById(header.getAttribute('aria-controls')!)).not.toBeNull();
         });
     });
 
