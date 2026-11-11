@@ -72,7 +72,7 @@
     const config = useConfig();
 
     const root = useTemplateRef('root');
-    const listbox = useTemplateRef('listbox');
+    const listbox = useTemplateRef<HTMLDivElement>('listbox');
     const listId = useId();
     const controlKeys = new Set(['id', 'name', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-label', 'aria-labelledby', 'aria-required']);
 

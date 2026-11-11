@@ -1114,7 +1114,7 @@ describe('table', () => {
         });
         const style = getComputedStyle(footer);
         expect(style.display).toBe('flex');
-        expect(style.justifyContent).toBe('flex-end');
+        expect(footer).toHaveStyle({ justifyContent: 'flex-end' });
         expect(style.padding).toBe('8px 12px');
         expect(style.borderTopWidth).toBe('1px');
         expect(style.borderTopStyle).toBe('solid');

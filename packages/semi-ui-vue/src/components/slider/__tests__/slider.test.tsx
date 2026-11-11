@@ -1340,7 +1340,7 @@ describe('Slider', () => {
         await press(getHandle(), { clientX: 0, clientY: 10 });
 
         const signalOf = (options: unknown) => (options as AddEventListenerOptions | undefined)?.signal;
-        const dragCalls = () => addListener.mock.calls.filter(([, , options]) => signalOf(options));
+        const dragCalls = () => addListener.mock.calls.filter(([type, , options]) => type.startsWith('pointer') && signalOf(options));
         expect(dragCalls().map(([type]) => type)).toEqual(['pointermove', 'pointerup', 'pointercancel']);
         const signal = signalOf(dragCalls()[0]?.[2]) as AbortSignal;
         expect(dragCalls().every(([, , options]) => signalOf(options) === signal)).toBe(true);

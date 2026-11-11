@@ -65,9 +65,6 @@
         "@sveltejs/package": "catalog:",
         "@sveltejs/vite-plugin-svelte": "catalog:",
         "@testing-library/svelte": "catalog:",
-        "@tiptap/extension-document": "catalog:",
-        "@tiptap/extension-paragraph": "catalog:",
-        "@tiptap/extension-text": "catalog:",
         "svelte": "catalog:",
         "svelte-check": "catalog:",
         "typescript": "catalog:"

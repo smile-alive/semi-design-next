@@ -96,7 +96,7 @@ describe('Steps 基线', () => {
         expect(items[1].querySelector(`.${ITEM}-icon-process`)).not.toBeNull();
         expect(items[0].querySelector(`.${ITEM}-title`)).toHaveAttribute('title', 'A');
         expect(items[0].querySelector(`.${ITEM}-description`)).toHaveAttribute('title', 'a');
-        expect(items[0].parentElement?.style.width).toBe(`${100 / 3}%`);
+        expect(items[0].parentElement?.style.width).toBe('33.3333%');
     });
 
     it('fill 的节点标题不输出 title 属性', () => {
@@ -546,7 +546,7 @@ describe('Steps（Vue）', () => {
         expect(container.querySelector('.own')).toHaveTextContent('x');
         expect(items[1]).toHaveClass(type === 'fill' ? `${ITEM}-process` : `${ITEM}-active`);
         expect(items[1]).toHaveTextContent(type === 'nav' ? 'B' : '3B');
-        expect(items[0].parentElement?.style.width).toBe(type === 'fill' ? `${100 / 3}%` : '');
+        expect(items[0].parentElement?.style.width).toBe(type === 'fill' ? '33.3333%' : '');
         expect(warn).not.toHaveBeenCalled();
         warn.mockRestore();
     });

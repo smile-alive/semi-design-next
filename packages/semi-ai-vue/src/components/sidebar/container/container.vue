@@ -33,7 +33,7 @@
 
     const locale = useLocale('Sidebar');
 
-    const root = useTemplateRef('root');
+    const root = useTemplateRef<HTMLDivElement>('root');
     const resizable = useTemplateRef<ComponentPublicInstance>('resizable');
 
     // Kept by the Transition hooks: true once the element has entered, false once its leave has ended. The element stays

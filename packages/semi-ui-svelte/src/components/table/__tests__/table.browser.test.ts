@@ -601,7 +601,7 @@ describe('Svelte Table 列功能（浏览器）', () => {
         const ownerCell = getHeaderCell(container, 'Owner');
         const ownerOperate = query(`.${P}-operate-wrapper`, ownerCell);
         expect(getComputedStyle(sizeOperate).justifyContent).toBe('center');
-        expect(getComputedStyle(ownerOperate).justifyContent).toBe('flex-end');
+        expect(ownerOperate).toHaveStyle({ justifyContent: 'flex-end' });
         const ownerCellRect = ownerCell.getBoundingClientRect();
         const ownerTitleRect = (ownerOperate.firstElementChild as HTMLElement).getBoundingClientRect();
         expect(ownerTitleRect.left).toBeGreaterThan(ownerCellRect.left + ownerCellRect.width / 2);
@@ -1008,7 +1008,7 @@ describe('Svelte Table 列功能（浏览器）', () => {
         const footer = await findElement(() => document.querySelector<HTMLElement>(`.${P}-column-filter-footer`));
         const style = getComputedStyle(footer);
         expect(style.display).toBe('flex');
-        expect(style.justifyContent).toBe('flex-end');
+        expect(footer).toHaveStyle({ justifyContent: 'flex-end' });
         expect(style.padding).toBe('8px 12px');
         expect(style.borderTopWidth).toBe('1px');
         expect(style.borderTopStyle).toBe('solid');

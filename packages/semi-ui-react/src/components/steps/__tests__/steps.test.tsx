@@ -79,7 +79,7 @@ describe('Steps 基线', () => {
         expect(items[1].querySelector(`.${ITEM}-icon-process`)).not.toBeNull();
         expect(items[0].querySelector(`.${ITEM}-title`)).toHaveAttribute('title', 'A');
         expect(items[0].querySelector(`.${ITEM}-description`)).toHaveAttribute('title', 'a');
-        expect(items[0].parentElement.style.width).toBe(`${100 / 3}%`);
+        expect(items[0].parentElement.style.width).toBe('33.3333%');
     });
 
     it('fill 垂直列没有宽度', () => {
@@ -549,7 +549,7 @@ describe('Steps 函数组件', () => {
         expect(container.querySelector('.own')).toHaveTextContent('x');
         expect(items[1]).toHaveClass(type === 'fill' ? `${ITEM}-process` : `${ITEM}-active`);
         expect(items[1]).toHaveTextContent(type === 'nav' ? 'B' : '3B');
-        expect(items[0].parentElement?.style.width).toBe(type === 'fill' ? `${100 / 3}%` : '');
+        expect(items[0].parentElement?.style.width).toBe(type === 'fill' ? '33.3333%' : '');
         // the native element takes no step props, which React would report as unknown DOM attributes
         expect(error).not.toHaveBeenCalled();
         error.mockRestore();

@@ -37,7 +37,7 @@
         "clsx": "catalog:",
         "date-fns": "catalog:",
         "es-toolkit": "catalog:",
-        "hast-util-to-jsx-runtime": "^2.3.6",
+        "hast-util-to-jsx-runtime": "^2.3.7",
         "lottie-web": "^5.13.0",
         "remark-gfm": "^4.0.1",
         "remark-parse": "^11.0.0",

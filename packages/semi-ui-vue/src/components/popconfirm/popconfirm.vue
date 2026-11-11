@@ -67,7 +67,7 @@
     const context = useConfig();
 
     const popover = useTemplateRef<PopoverHandle>('popover');
-    const footer = useTemplateRef('footer');
+    const footer = useTemplateRef<HTMLDivElement>('footer');
 
     const confirmFn = computed(() => props.onConfirm ?? readSemiDefault(semi, 'Popconfirm', 'onConfirm'));
     const cancelFn = computed(() => props.onCancel ?? readSemiDefault(semi, 'Popconfirm', 'onCancel'));

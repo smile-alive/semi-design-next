@@ -87,8 +87,8 @@ startTransition(() => setShown(true));
 
 ```html
 <script setup>
-    import '@fibrae/semi-animation/styles/view-transition.css';
     import { nextTick, ref } from 'vue';
+    import '@fibrae/semi-animation/styles/view-transition.css';
 
     const shown = ref(false);
     const toggle = () =>

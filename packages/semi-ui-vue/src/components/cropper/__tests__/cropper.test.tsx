@@ -118,7 +118,7 @@ describe('Cropper', () => {
             height: '200px',
             transform: 'translate(0px, 50px) rotate(0deg)',
         });
-        expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px, 0px)' });
+        expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px)' });
         expect(getCorners(container)).toEqual(['tl', 'tm', 'tr', 'ml', 'mr', 'bl', 'bm', 'br']);
         const viewImg = query(container, '.semi-cropper-view-img');
         expect(viewImg).toHaveAttribute('src', SRC);
@@ -129,7 +129,7 @@ describe('Cropper', () => {
         const { container: wide } = await renderLoaded({ aspectRatio: 2 });
         expect(boxStyle(wide)).toEqual({ width: '400px', height: '200px', transform: 'translate(0px, 50px)' });
         const { container: tall } = await renderLoaded({ defaultAspectRatio: 0.5 });
-        expect(boxStyle(tall)).toEqual({ width: '150px', height: '300px', transform: 'translate(125px, 0px)' });
+        expect(boxStyle(tall)).toEqual({ width: '150px', height: '300px', transform: 'translate(125px)' });
     });
 
     it('class 与 style 应用到根元素', () => {
@@ -440,7 +440,7 @@ describe('Cropper', () => {
     it('加载后改变 aspectRatio，裁剪框按新比例重排并保持在容器内', async () => {
         const view = await renderLoaded({ aspectRatio: 1 });
         const { container } = view;
-        expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px, 0px)' });
+        expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px)' });
         await view.rerender({ src: SRC, aspectRatio: 2 });
         expect(boxStyle(container)).toEqual({ width: '400px', height: '200px', transform: 'translate(0px, 50px)' });
         await view.rerender({ src: SRC, aspectRatio: 0.5 });
@@ -467,7 +467,7 @@ describe('Cropper', () => {
             const box = getBox(container);
             await fireEvent.pointerDown(box, { pointerType: 'mouse', button: 0, clientX: 200, clientY: 150 });
             await fireEvent.pointerMove(box, { pointerType: 'mouse', clientX: 210, clientY: 150 });
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
         });
 
         it('裁剪框在容器内移动，直到松开', async () => {
@@ -475,12 +475,12 @@ describe('Cropper', () => {
             const box = getBox(container);
             await fireEvent.pointerDown(box, { clientX: 200, clientY: 150 });
             await fireEvent.pointerMove(box, { clientX: 210, clientY: 150 });
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
             await fireEvent.pointerMove(box, { clientX: 500, clientY: 150 });
-            expect(boxStyle(container).transform).toBe('translate(100px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(100px)');
             await release(box);
             await fireEvent.pointerMove(box, { clientX: 0, clientY: 150 });
-            expect(boxStyle(container).transform).toBe('translate(100px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(100px)');
         });
 
         it('无 aspectRatio 时，缩放手柄可自由缩放裁剪框', async () => {
@@ -488,7 +488,7 @@ describe('Cropper', () => {
             const corner = getCorner(container, 'br');
             await fireEvent.pointerDown(corner, { clientX: 350, clientY: 300 });
             await fireEvent.pointerMove(corner, { clientX: 300, clientY: 200 });
-            expect(boxStyle(container)).toEqual({ width: '250px', height: '200px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '250px', height: '200px', transform: 'translate(50px)' });
             await release(corner);
             await fireEvent.pointerMove(corner, { clientX: 100, clientY: 100 });
             expect(boxStyle(container).width).toBe('250px');
@@ -499,7 +499,7 @@ describe('Cropper', () => {
             const corner = getCorner(container, 'br');
             await fireEvent.pointerDown(corner, { clientX: 350, clientY: 300 });
             await fireEvent.pointerMove(corner, { clientX: 0, clientY: 200 });
-            expect(boxStyle(container)).toEqual({ width: '200px', height: '200px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '200px', height: '200px', transform: 'translate(50px)' });
             await release(corner);
         });
 
@@ -531,11 +531,11 @@ describe('Cropper', () => {
             ['tl', 70, 30, { width: '280px', height: '270px', transform: 'translate(70px, 30px)' }],
             ['tm', 200, 30, { width: '300px', height: '270px', transform: 'translate(50px, 30px)' }],
             ['tr', 330, 30, { width: '280px', height: '270px', transform: 'translate(50px, 30px)' }],
-            ['ml', 70, 150, { width: '280px', height: '300px', transform: 'translate(70px, 0px)' }],
-            ['mr', 330, 150, { width: '280px', height: '300px', transform: 'translate(50px, 0px)' }],
-            ['bl', 70, 270, { width: '280px', height: '270px', transform: 'translate(70px, 0px)' }],
-            ['bm', 200, 270, { width: '300px', height: '270px', transform: 'translate(50px, 0px)' }],
-            ['br', 330, 270, { width: '280px', height: '270px', transform: 'translate(50px, 0px)' }],
+            ['ml', 70, 150, { width: '280px', height: '300px', transform: 'translate(70px)' }],
+            ['mr', 330, 150, { width: '280px', height: '300px', transform: 'translate(50px)' }],
+            ['bl', 70, 270, { width: '280px', height: '270px', transform: 'translate(70px)' }],
+            ['bm', 200, 270, { width: '300px', height: '270px', transform: 'translate(50px)' }],
+            ['br', 330, 270, { width: '280px', height: '270px', transform: 'translate(50px)' }],
         ])('无 aspectRatio 时 %s 手柄只移动自己的边', async (dir, x, y, expected) => {
             const { container } = await renderLoaded();
             const handle = getCorner(container, dir);
@@ -641,7 +641,7 @@ describe('Cropper', () => {
             expect(boxStyle(container)).toEqual({
                 width: '600px',
                 height: '600px',
-                transform: 'translate(100px, 0px)',
+                transform: 'translate(100px)',
             });
         });
 
@@ -660,7 +660,7 @@ describe('Cropper', () => {
             expect(boxStyle(container)).toEqual({
                 width: '600px',
                 height: '600px',
-                transform: 'translate(100px, 0px)',
+                transform: 'translate(100px)',
             });
         });
 
@@ -678,7 +678,7 @@ describe('Cropper', () => {
                 height: '200px',
                 transform: 'translate(0px, 50px) rotate(0deg)',
             });
-            expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px)' });
         });
     });
 
@@ -725,7 +725,7 @@ describe('Cropper', () => {
             await fireEvent.pointerDown(edge, { clientX: 350, clientY: 150 });
             await fireEvent.pointerMove(edge, { clientX: 50, clientY: 150 });
             await release(edge);
-            expect(boxStyle(container)).toEqual({ width: '10px', height: '300px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '10px', height: '300px', transform: 'translate(50px)' });
             const canvas = handle().getCropperCanvas();
             expect(canvas.width).toBe(20);
             expect(getImageData).toHaveBeenCalled();
@@ -858,21 +858,21 @@ describe('Cropper', () => {
         it('方向键每次移动裁剪框 10px，并在容器边缘停止', async () => {
             const { container } = await renderLoaded();
             await key(container, 'ArrowRight');
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
             await key(container, 'ArrowDown');
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
             for (let i = 0; i < 20; i++) await key(container, 'ArrowRight');
-            expect(boxStyle(container).transform).toBe('translate(100px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(100px)');
             for (let i = 0; i < 20; i++) await key(container, 'ArrowLeft');
-            expect(boxStyle(container).transform).toBe('translate(0px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(0px)');
         });
 
         it('Shift 加方向键从左上角缩放，且限制在容器内', async () => {
             const { container } = await renderLoaded();
             await key(container, 'ArrowLeft', { shiftKey: true });
-            expect(boxStyle(container)).toEqual({ width: '290px', height: '300px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '290px', height: '300px', transform: 'translate(50px)' });
             await key(container, 'ArrowUp', { shiftKey: true });
-            expect(boxStyle(container)).toEqual({ width: '290px', height: '290px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '290px', height: '290px', transform: 'translate(50px)' });
             for (let i = 0; i < 10; i++) await key(container, 'ArrowRight', { shiftKey: true });
             expect(boxStyle(container).width).toBe('350px');
         });
@@ -891,7 +891,7 @@ describe('Cropper', () => {
             await key(container, 'ArrowLeft', { shiftKey: true });
             expect(boxStyle(container).width).toBe('300px');
             await key(container, 'ArrowRight');
-            expect(boxStyle(container).transform).toBe('translate(60px, 0px)');
+            expect(boxStyle(container).transform).toBe('translate(60px)');
         });
 
         it('Alt、Ctrl、Meta 加方向键不移动也不缩放裁剪框，并放行默认行为', async () => {
@@ -900,7 +900,7 @@ describe('Cropper', () => {
                 expect(await key(container, 'ArrowRight', { [modifier]: true })).toBe(false);
                 expect(await key(container, 'ArrowLeft', { [modifier]: true, shiftKey: true })).toBe(false);
             }
-            expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px, 0px)' });
+            expect(boxStyle(container)).toEqual({ width: '300px', height: '300px', transform: 'translate(50px)' });
         });
 
         it('放行其他按键，并接管方向键', async () => {
