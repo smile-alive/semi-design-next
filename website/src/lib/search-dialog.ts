@@ -113,45 +113,6 @@ function go(entry?: ComponentEntry) {
     if (href !== location.pathname) void navigate(href);
 }
 
-document.addEventListener('click', (event) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    if (target.closest('#search-toggle')) open();
-    // closedby="any" needs Chrome 134 and Firefox 141 and has not shipped in Safari; delete once the floor has it.
-    // The dialog itself is also the target of clicks on its padding, hence the box check
-    if (target === dialog() && !('closedBy' in target)) {
-        const box = target.getBoundingClientRect();
-        const { clientX: x, clientY: y } = event;
-        if (x < box.left || x > box.right || y < box.top || y > box.bottom) dialog().close();
-    }
-    if (target.closest('#search-clear')) {
-        input().value = '';
-        render([], '');
-        input().focus();
-    }
-    const option = target.closest('#search-results [role="option"]');
-    if (option) go(results[[...list().children].indexOf(option)]);
-});
-
-document.addEventListener('keydown', (event) => {
-    if (event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        open();
-        return;
-    }
-    if (event.target !== input() || results.length === 0) return;
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-        event.preventDefault();
-        const step = event.key === 'ArrowDown' ? 1 : -1;
-        setActive((active + step + results.length) % results.length);
-    }
-    // Enter during IME composition only confirms the candidate
-    if (event.key === 'Enter' && !event.isComposing) {
-        event.preventDefault();
-        go(results[active]);
-    }
-});
-
 async function search() {
     const target = dialog();
     const entries = await loadIndex(target.dataset.framework as string);
@@ -160,15 +121,56 @@ async function search() {
     render(entries, input().value);
 }
 
-// skip searches during IME composition and search once on compositionend, so the list does not jump with each letter
-document.addEventListener('input', (event) => {
-    if (event.target === input() && !(event as InputEvent).isComposing) void search();
-});
-document.addEventListener('compositionend', (event) => {
-    if (event.target === input()) void search();
-});
+export function setupSearchDialog() {
+    document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (target.closest('#search-toggle')) open();
+        // closedby="any" needs Chrome 134 and Firefox 141 and has not shipped in Safari; delete once the floor has it.
+        // The dialog itself is also the target of clicks on its padding, hence the box check
+        if (target === dialog() && !('closedBy' in target)) {
+            const box = target.getBoundingClientRect();
+            const { clientX: x, clientY: y } = event;
+            if (x < box.left || x > box.right || y < box.top || y > box.bottom) dialog().close();
+        }
+        if (target.closest('#search-clear')) {
+            input().value = '';
+            render([], '');
+            input().focus();
+        }
+        const option = target.closest('#search-results [role="option"]');
+        if (option) go(results[[...list().children].indexOf(option)]);
+    });
 
-document.addEventListener('astro:page-load', () => {
-    const shortcut = document.querySelector('#search-toggle kbd');
-    if (shortcut instanceof HTMLElement) shortcut.dataset.keys = /Mac/.test(navigator.userAgent) ? '⌘ K' : 'Ctrl K';
-});
+    document.addEventListener('keydown', (event) => {
+        if (event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) {
+            event.preventDefault();
+            open();
+            return;
+        }
+        if (event.target !== input() || results.length === 0) return;
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            const step = event.key === 'ArrowDown' ? 1 : -1;
+            setActive((active + step + results.length) % results.length);
+        }
+        // Enter during IME composition only confirms the candidate
+        if (event.key === 'Enter' && !event.isComposing) {
+            event.preventDefault();
+            go(results[active]);
+        }
+    });
+
+    // skip searches during IME composition and search once on compositionend, so the list does not jump with each letter
+    document.addEventListener('input', (event) => {
+        if (event.target === input() && !(event as InputEvent).isComposing) void search();
+    });
+    document.addEventListener('compositionend', (event) => {
+        if (event.target === input()) void search();
+    });
+
+    document.addEventListener('astro:page-load', () => {
+        const shortcut = document.querySelector('#search-toggle kbd');
+        if (shortcut instanceof HTMLElement) shortcut.dataset.keys = /Mac/.test(navigator.userAgent) ? '⌘ K' : 'Ctrl K';
+    });
+}
