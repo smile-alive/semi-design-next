@@ -252,6 +252,9 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
 
     const { direction } = useConfigContext();
     const { locale } = useLocale('Cascader');
+    const prefixNode = useUnwrappedLazy(prefix);
+    const insetLabelNode = useUnwrappedLazy(insetLabel);
+    const suffixNode = useUnwrappedLazy(suffix);
 
     const popupId = useId();
     const selectionTextId = useId();
@@ -266,9 +269,6 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
 
     // A rendered inset label names the combobox and the tree, so it needs an id even when the caller gives none
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
-    const prefixNode = useUnwrappedLazy(prefix);
-    const insetLabelNode = useUnwrappedLazy(insetLabel);
-    const suffixNode = useUnwrappedLazy(suffix);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
     const prefixId = insetLabelId ?? (insetLabelShown ? `${popupId}-inset-label` : undefined);
     const nameProps = comboboxName(ariaLabelledby, ariaLabel, insetLabelShown ? prefixId : undefined, locale.label);

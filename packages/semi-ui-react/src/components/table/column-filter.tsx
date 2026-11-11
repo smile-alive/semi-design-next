@@ -150,9 +150,9 @@ function renderDropdown(props: RenderDropdownProps, nestedElem: React.ReactNode,
 
 export default function ColumnFilter(props: ColumnFilterProps = {}): React.ReactElement {
     const { prefixCls = cssClasses.PREFIX, filteredValue, filterDropdownProps, onSelect, filterDropdownVisible, renderFilterDropdown, onFilterDropdownVisibleChange, filterConfirmMode = 'immediate' } = props;
+
     const filterIcon = useUnwrappedLazy(props.filterIcon);
     const filterDropdown = useUnwrappedLazy(props.filterDropdown);
-
     const { locale: tableLocale } = useLocale('Table');
 
     const [pendingFilteredValue, setPendingFilteredValue] = useState<any[]>();

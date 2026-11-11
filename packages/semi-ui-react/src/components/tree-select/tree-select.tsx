@@ -417,6 +417,10 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         setKeyboardKey(null);
     }
 
+    const prefixNode = useUnwrappedLazy(prefix);
+    const insetLabelNode = useUnwrappedLazy(insetLabel);
+    const suffixNode = useUnwrappedLazy(suffix);
+
     const activeRendered = activeKey !== undefined && (listView === view || renderedIndexOf(activeKey) !== -1);
     const activeDescendant = activeRendered ? nodeId(treeId, activeKey) : undefined;
 
@@ -428,9 +432,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const clearHandover = useFocusHandover<HTMLButtonElement>(() => (inputIsCombobox ? triggerRef.current?.querySelector('input') : triggerRef.current));
 
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
-    const prefixNode = useUnwrappedLazy(prefix);
-    const insetLabelNode = useUnwrappedLazy(insetLabel);
-    const suffixNode = useUnwrappedLazy(suffix);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
     const prefixId = insetLabelId ?? (insetLabelShown ? `${treeId}-inset-label` : undefined);
     const nameProps = comboboxName(ariaLabelledby, ariaLabel, insetLabelShown ? prefixId : undefined, locale.label);

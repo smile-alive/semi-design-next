@@ -301,9 +301,10 @@ export function canCarryPopupState(child: React.ReactElement<Record<string, any>
 export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<TooltipHandle> }) {
     const props = useDefaultProps('Tooltip', rawProps as TooltipInternalProps & { ref?: React.Ref<TooltipHandle> }, defaultProps);
     const { wrapWhenSpecial, role, trigger, wrapperClassName, prefixCls, style, content, motion, className: propClassName } = props;
-    const showArrow = useUnwrappedLazy(props.showArrow);
 
+    const showArrow = useUnwrappedLazy(props.showArrow);
     const context = useConfigContext();
+    let children = useUnwrappedLazy(props.children);
 
     const [runtime] = useState(() => new TooltipRuntime());
 
@@ -312,7 +313,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
     let extraStyle: React.CSSProperties = {};
     let wrapsFocusTarget = false;
 
-    let children = useUnwrappedLazy(props.children);
     const buttonGroup = useButtonGroupLooks();
 
     const generatedId = useId();

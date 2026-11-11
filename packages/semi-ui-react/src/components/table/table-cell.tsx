@@ -122,6 +122,7 @@ function TableCell({
     } else {
         text = get(record, dataIndex);
     }
+
     text = useUnwrappedLazy(text);
 
     const indentText = indent && indentSize ? <span className={`${prefixCls}-row-indent indent-level-${indent}`} style={{ paddingInlineStart: `${indentSize * indent}px` }} /> : null;

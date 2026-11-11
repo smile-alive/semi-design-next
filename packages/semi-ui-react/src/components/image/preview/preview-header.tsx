@@ -10,7 +10,6 @@ const prefixCls = `${cssClasses.PREFIX}-preview-header`;
 
 export default function Header({ ref, onClose, title, titleId, titleStyle, className, renderHeader, closable, renderCloseIcon }: HeaderProps) {
     const { locale } = useLocale('Image');
-
     const closeIcon = useUnwrappedLazy(typeof renderCloseIcon === 'function' ? renderCloseIcon() : renderCloseIcon);
 
     if (typeof closeIcon !== 'undefined' && !isValidElement(closeIcon)) {

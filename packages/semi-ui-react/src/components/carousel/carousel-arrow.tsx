@@ -38,9 +38,9 @@ function hasReadableText(node: ReactNode) {
 
 export default function CarouselArrow({ type, theme, prev, next, arrowProps }: CarouselArrowProps) {
     const { locale } = useLocale('Carousel');
-
     const leftChildren = useUnwrappedLazy(arrowProps?.leftArrow?.children);
     const rightChildren = useUnwrappedLazy(arrowProps?.rightArrow?.children);
+
     const themeCls = { [`${cssClasses.CAROUSEL_ARROW}-${theme}`]: theme };
 
     return (

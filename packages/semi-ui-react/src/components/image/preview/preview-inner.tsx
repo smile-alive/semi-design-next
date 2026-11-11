@@ -156,9 +156,11 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     );
 
     const currentIndex = PreviewInnerFoundation.getCurrentIndex(props, state);
-    const ratio = PreviewInnerFoundation.getRatio(props, state);
+
     const leftIcon = useUnwrappedLazy(typeof renderLeftIcon === 'function' ? renderLeftIcon(currentIndex) : renderLeftIcon);
     const rightIcon = useUnwrappedLazy(typeof renderRightIcon === 'function' ? renderRightIcon(currentIndex) : renderRightIcon);
+
+    const ratio = PreviewInnerFoundation.getRatio(props, state);
 
     // only a preview whose container covers the page is modal, locks scroll and keeps Tab inside. The caller's getter
     // may read document; on the server and while hydrating the Portal renders nothing anyway

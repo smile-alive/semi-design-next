@@ -432,10 +432,11 @@ export default function TagInput(rawProps: TagInputProps) {
         );
     }
 
-    let clearNode: React.ReactNode = null;
-
     const labelNode = useUnwrappedLazy(hasContent(prefix) ? prefix : insetLabel);
     const suffix = useUnwrappedLazy(rawSuffix);
+
+    let clearNode: React.ReactNode = null;
+
     const insetLabelShown = !hasContent(prefix) && hasContent(insetLabel);
 
     // a rendered inset label names the input (WCAG 2.5.3), so it needs an id even when the caller gives none

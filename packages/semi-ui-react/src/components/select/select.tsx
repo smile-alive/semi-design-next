@@ -353,6 +353,9 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
 
     const { direction } = useConfigContext();
     const { locale } = useLocale('Select');
+    const prefixNode = useUnwrappedLazy(prefix);
+    const insetLabelNode = useUnwrappedLazy(insetLabel);
+    const suffixNode = useUnwrappedLazy(suffix);
 
     const triggerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<InputHandle>(null);
@@ -421,9 +424,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const activeIndex = SelectFoundation.getActiveOptionIndex({ isOpen, loading, focusIndex: deferredFocusIndex, visibleCount: visibleOptions.length });
     const activeDescendant = activeIndex === undefined ? undefined : getOptionId(selectID, activeIndex);
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
-    const prefixNode = useUnwrappedLazy(prefix);
-    const insetLabelNode = useUnwrappedLazy(insetLabel);
-    const suffixNode = useUnwrappedLazy(suffix);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
     const prefixId = insetLabelId ?? (insetLabelShown ? `${selectID}-inset-label` : undefined);
     const name = comboboxName(ariaLabelledby, ariaLabel, insetLabelShown ? prefixId : undefined, locale.label);

@@ -4,6 +4,7 @@ export const reactComponentOrder: ComponentOrder = {
     calls: {
         useDefaultProps: ['props'],
         use: ['context'],
+        useUnwrappedLazy: ['context'],
         useContext: ['context'],
         useState: ['state'],
         useRef: ['state'],
