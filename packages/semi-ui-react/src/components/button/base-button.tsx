@@ -71,6 +71,7 @@ export default function BaseButton({
     ...attr
 }: ButtonProps & { 'x-semi-children-alias'?: string }) {
     const icon = useUnwrappedLazy(rawIcon);
+
     let iconElem: React.ReactNode = null;
 
     const { disabled, size, type, theme, colorful } = resolveButtonLooks({ disabled: rawDisabled, size: rawSize, type: rawType, theme: rawTheme, colorful: rawColorful }, undefined, {});

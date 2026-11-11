@@ -31,9 +31,9 @@ interface CopyableInnerProps extends CopyableProps {
 
 export default function Copyable(props: CopyableInnerProps) {
     const { content, copyTip, duration, ref, onCopy, onCopiedChange, render, style, className } = props;
+
     const successTip = useUnwrappedLazy(props.successTip);
     const icon = useUnwrappedLazy(props.icon);
-
     const { locale } = useLocale('Typography');
 
     const [copied, copyText] = useCopied(duration * 1000);

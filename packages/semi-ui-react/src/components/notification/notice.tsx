@@ -69,6 +69,7 @@ export default function Notice(rawProps: NoticeReactProps) {
 
     const { locale } = useLocale('Notification');
     const context = useConfigContext();
+    const typeIcon = useUnwrappedLazy(icon || iconMap[type]);
 
     const [foundation] = useFoundation<Foundation, Adapter, NoticeProps, NoticeState>(
         NotificationFoundation,
@@ -85,7 +86,6 @@ export default function Notice(rawProps: NoticeReactProps) {
     const direction = directionProp || context.direction;
     const hasTitle = hasContent(title);
     const hasBody = hasContent(content);
-    const typeIcon = useUnwrappedLazy(icon || iconMap[type]);
     const isAlert = isAlertType(type);
 
     useLayoutEffect(() => {

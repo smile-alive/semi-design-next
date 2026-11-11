@@ -128,6 +128,7 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
 
     const parentContext = useDropdownContext();
     const { direction } = useConfigContext();
+    const triggerNode = useUnwrappedLazy(children);
 
     const tooltipRef = useRef<TooltipHandle>(null);
 
@@ -142,8 +143,6 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
         }),
         { ...parentContext, direction }
     );
-
-    const triggerNode = useUnwrappedLazy(children);
 
     const { menuDepth } = parentContext;
     const popVisible = props.visible ?? state.popVisible;
