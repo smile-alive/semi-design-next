@@ -11,6 +11,11 @@ export const exemptions: Exemption[] = [
         files: ['packages/shared/semi-polyfill/src/__tests__/polyfill.test.ts'],
         off: ['typescript/unbound-method'],
     },
+    // The spec runner receives each spec's describe name as a parameter
+    {
+        files: ['vitest/specs/shared/define-spec.ts'],
+        off: ['vitest/valid-title'],
+    },
     // Bundler plugin tests build entries that import both React and Vue packages
     {
         files: ['packages/plugins/{semi-vite,semi-rspack,semi-webpack}/test/fixture/**'],

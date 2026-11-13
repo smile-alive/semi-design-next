@@ -136,44 +136,6 @@ describe('AutoComplete', () => {
         expect(getInput()).toHaveValue('semi');
     });
 
-    it('【onSearch】输入变化时触发 onSearch', () => {
-        let spyOnSearch = vi.fn<NonNullable<AutoCompleteProps<string>['onSearch']>>();
-        let props = {
-            onSearch: spyOnSearch,
-        };
-        renderAc(props);
-        let inputValue = 'semi';
-        fireEvent.change(getInput(), { target: { value: inputValue } });
-        expect(spyOnSearch).toHaveBeenCalledTimes(1);
-        expect(spyOnSearch).toHaveBeenCalledWith(inputValue);
-    });
-
-    it('defaultOpen 为 true 且 data 非空时显示 optionList', () => {
-        let props = {
-            defaultOpen: true,
-            data: stringData,
-            ...commonProps,
-        };
-        renderAc(props);
-        expect(screen.getByRole('listbox')).toBeInTheDocument();
-        const candidate = getList().children;
-        expect(candidate).toHaveLength(4);
-        expect(candidate[0]).toHaveTextContent(/^semi$/);
-        expect(candidate[1]).toHaveTextContent(/^ies$/);
-    });
-
-    it('【data】data 变化时 updateOptionList', () => {
-        let props = {
-            defaultOpen: true,
-            data: ['semi'],
-            ...commonProps,
-        };
-        const { rerender } = renderAc(props);
-        expect(getOptionTexts()).toEqual(['semi']);
-        rerender(<AutoComplete {...props} data={['ies', 'design']} />);
-        expect(getOptionTexts()).toEqual(['ies', 'design']);
-    });
-
     it('【loading】loading 为 true 时隐藏 optionList 并显示加载中', () => {
         let props = {
             loading: true,
@@ -184,20 +146,6 @@ describe('AutoComplete', () => {
         renderAc(props);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-autocomplete-loading-wrapper`)).not.toBeNull();
         expect(getOptions()).toHaveLength(0);
-    });
-
-    it('【onSelect】点击候选项时触发 onSelect', async () => {
-        let spyOnSelect = vi.fn<(value: unknown) => void>();
-        let props = {
-            defaultOpen: true,
-            data: stringData,
-            onSelect: spyOnSelect,
-            ...commonProps,
-        };
-        renderAc(props);
-        await userEvent.click(getOptions()[0]);
-        expect(spyOnSelect).toHaveBeenCalledTimes(1);
-        expect(spyOnSelect).toHaveBeenCalledWith(BASE_CLASS_PREFIX);
     });
 
     it('【onSelect】onSelectWithObject 为 true 时以对象回调', async () => {
@@ -270,18 +218,6 @@ describe('AutoComplete', () => {
         await userEvent.click(getOptions()[0]);
         expect(fakeOnChange).toHaveBeenCalledWith('XK');
         expect(getInput()).toHaveValue('');
-    });
-
-    it('【value】受控模式', () => {
-        let props = {
-            data: [],
-            ...commonProps,
-            value: 'semi',
-        };
-        const { rerender } = renderAc(props);
-        expect(getInput()).toHaveValue('semi');
-        rerender(<AutoComplete {...props} value="ies" />);
-        expect(getInput()).toHaveValue('ies');
     });
 
     it('【autoFocus】正常工作', () => {
@@ -701,24 +637,6 @@ describe('AutoComplete', () => {
         await expectClosed();
     });
 
-    it('【Option 禁用】禁用时不触发 onSelect', async () => {
-        const onSelect = vi.fn<(value: unknown) => void>();
-        const props = {
-            data: [
-                { value: 'disabled', label: 'Disabled', disabled: true },
-                { value: 'enabled', label: 'Enabled' },
-            ],
-            defaultOpen: true,
-            onSelect,
-            ...commonProps,
-        };
-        renderAc(props);
-        const [disabledOption] = getOptions();
-        expect(disabledOption).toHaveAttribute('aria-disabled', 'true');
-        await userEvent.click(disabledOption);
-        expect(onSelect).not.toHaveBeenCalled();
-    });
-
     it('【emptyContent null】emptyContent 为 null 时返回 null', () => {
         const props = {
             data: [],
@@ -975,21 +893,6 @@ describe('AutoComplete', () => {
         renderAc(props);
         await userEvent.click(getOptions()[0]);
         expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ value: 'opt1', label: 'Option 1', customProp: 'custom' }));
-    });
-
-    it('【Option 禁用状态】不触发 onSelect', async () => {
-        const onSelect = vi.fn<(value: unknown) => void>();
-        const customData = [{ label: 'Disabled Option', value: 'disabled', disabled: true }];
-        const props = {
-            data: customData,
-            defaultOpen: true,
-            onSelect,
-            ...commonProps,
-        };
-        renderAc(props);
-        await userEvent.click(getOptions()[0]);
-        expect(onSelect).not.toHaveBeenCalled();
-        expect(getList()).not.toBeNull();
     });
 
     it('【notifyDropdownVisibleChange】触发 onDropdownVisibleChange 回调', async () => {
@@ -1343,17 +1246,6 @@ describe('AutoComplete 行为基线', () => {
         expect(getList()).toBeNull();
     });
 
-    it('Esc 关闭已打开的列表，并上报 onDropdownVisibleChange(false)', async () => {
-        const onDropdownVisibleChange = vi.fn<NonNullable<AutoCompleteProps<string>['onDropdownVisibleChange']>>();
-        renderAc({ data: stringData, onDropdownVisibleChange, ...commonProps });
-        focusInput();
-        pressKey('DOWN');
-        expect(onDropdownVisibleChange).toHaveBeenLastCalledWith(true);
-        pressKey('ESC');
-        expect(onDropdownVisibleChange).toHaveBeenLastCalledWith(false);
-        await expectClosed();
-    });
-
     it('clear 清空 input，并上报空搜索', () => {
         const onSearch = vi.fn<NonNullable<AutoCompleteProps<string>['onSearch']>>();
         const onChange = vi.fn<NonNullable<AutoCompleteProps<string>['onChange']>>();
@@ -1466,9 +1358,9 @@ describe('AutoComplete 函数组件', () => {
         }
     });
 
-    it('StrictMode 下打开时只保留一个 document mousedown 监听，卸载后不保留', () => {
-        const add = vi.spyOn(document, 'addEventListener');
-        const remove = vi.spyOn(document, 'removeEventListener');
+    it('StrictMode 下打开时只保留一个 window mousedown 监听，卸载后不保留', () => {
+        const add = vi.spyOn(window, 'addEventListener');
+        const remove = vi.spyOn(window, 'removeEventListener');
         const live = () => countLiveListeners(add, remove, 'mousedown');
         try {
             const { unmount } = render(
@@ -1524,7 +1416,7 @@ describe('AutoComplete 审计修复', () => {
         expect(getInput()).toHaveValue('');
     });
 
-    it('首项禁用且 defaultActiveFirstOption 时按 Enter 不选中', () => {
+    it('首项禁用且 defaultActiveFirstOption 时高亮并选中第一个可用项', () => {
         const onSelect = vi.fn<(value: unknown) => void>();
         renderAc({
             ...commonProps,
@@ -1537,8 +1429,9 @@ describe('AutoComplete 审计修复', () => {
             onSelect,
         });
         focusInput();
+        expect(getInput().getAttribute('aria-activedescendant')).toBe(getOptions()[1].id);
         pressKey('ENTER');
-        expect(onSelect).not.toHaveBeenCalled();
+        expect(onSelect).toHaveBeenCalledExactlyOnceWith('b');
     });
 
     it('onSelectWithObject 下点击与 Enter 选中得到相同且不含内部字段的对象', async () => {
@@ -1574,15 +1467,6 @@ describe('AutoComplete 审计修复', () => {
         renderAc({ ...commonProps, data: ['plain'], defaultOpen: true, onSelectWithObject: true, onSelect });
         await userEvent.click(getOptions()[0]);
         expect(onSelect.mock.calls[0][0]).toEqual({ value: 'plain', label: 'plain' });
-    });
-
-    it('面板关闭时按 Tab 与 Esc 不触发 onDropdownVisibleChange', () => {
-        const onDropdownVisibleChange = vi.fn<(visible: boolean) => void>();
-        renderAc({ ...commonProps, data: stringData, onDropdownVisibleChange });
-        focusInput();
-        pressKey('TAB');
-        pressKey('ESC');
-        expect(onDropdownVisibleChange).not.toHaveBeenCalled();
     });
 
     it('方向键在首尾禁用项时仍循环，全部禁用时不越界', () => {

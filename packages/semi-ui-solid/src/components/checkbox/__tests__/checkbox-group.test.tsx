@@ -1,5 +1,5 @@
 import { createSignal, For, onMount } from 'solid-js';
-import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
+import { fireEvent, render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -60,30 +60,6 @@ describe('CheckboxGroup', () => {
         expect(screen.getByRole('group').children).toHaveLength(4);
         const labels = Array.from(document.querySelectorAll(`.${prefixCls}-addon`), (label) => label.textContent);
         expect(labels).toEqual(['Abc', 'Hotsoon', 'Pipixia', 'Toutiao']);
-    });
-
-    it('基础渲染', () => {
-        render(() => (
-            <CheckboxGroup>
-                <Checkbox value="A">A</Checkbox>
-                <Checkbox value="B">B</Checkbox>
-                <Checkbox value="C">C</Checkbox>
-            </CheckboxGroup>
-        ));
-        expect(getWrappers()).toHaveLength(3);
-        expect(screen.getAllByRole('checkbox')).toHaveLength(3);
-    });
-
-    it.each(['horizontal', 'vertical'] as const)('direction %s', (direction) => {
-        render(() => <CheckboxGroup direction={direction} options={['a']} />);
-        expect(screen.getByRole('group')).toHaveClass(`${groupCls}-${direction}`);
-    });
-
-    it('name 传给每个 checkbox', () => {
-        render(() => <CheckboxGroup name="checkboxgroup" options={['Yes', 'No']} />);
-        const checkboxes = screen.getAllByRole('checkbox');
-        expect(checkboxes).toHaveLength(2);
-        checkboxes.forEach((el) => expect(el).toHaveAttribute('name', 'checkboxgroup'));
     });
 
     it('分组 onChange', async () => {
@@ -341,22 +317,6 @@ describe('CheckboxGroup', () => {
         absent();
     });
 
-    it('未设置 name 的分组为其 checkbox 生成一个名称，且与其他分组不同', () => {
-        render(() => (
-            <>
-                <CheckboxGroup aria-label="one" options={['a', 'b']} />
-                <CheckboxGroup aria-label="two" options={['a', 'b']} />
-            </>
-        ));
-        const names = ['one', 'two'].map((label) => {
-            const inputs = screen.getByRole('group', { name: label }).querySelectorAll('input');
-            expect(inputs[0].name).toBeTruthy();
-            expect(inputs[0].name).toBe(inputs[1].name);
-            return inputs[0].name;
-        });
-        expect(names[0]).not.toBe(names[1]);
-    });
-
     it('分组将 aria-invalid 与 aria-errormessage 传给每个 input，aria-describedby 保留在根元素，并丢弃 aria-required', () => {
         render(() => <CheckboxGroup aria-describedby="d" aria-errormessage="em" aria-invalid aria-label="x" aria-required options={['a', { label: 'b', value: 'b' }]} />);
         const root = screen.getByRole('group', { name: 'x' });
@@ -380,23 +340,6 @@ describe('CheckboxGroup', () => {
         ));
         expect(getCheckbox('a')).toHaveAttribute('aria-invalid', 'false');
         expect(getCheckbox('b')).toHaveAttribute('aria-invalid', 'true');
-    });
-
-    it('onBlur 在焦点移出分组时调用一次，组内移动不调用', async () => {
-        const onBlur = vi.fn<(event: FocusEvent) => void>();
-        render(() => (
-            <>
-                <CheckboxGroup onBlur={onBlur} options={['a', 'b']} />
-                <button type="button">outside</button>
-            </>
-        ));
-        await userEvent.tab();
-        await userEvent.tab();
-        expect(getCheckbox('b')).toHaveFocus();
-        expect(onBlur).not.toHaveBeenCalled();
-        await userEvent.tab();
-        expect(screen.getByRole('button', { name: 'outside' })).toHaveFocus();
-        await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1));
     });
 
     it('Form 注入的 validateStatus 不进入 DOM', () => {

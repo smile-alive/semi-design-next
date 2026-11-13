@@ -20,7 +20,7 @@ const common: TestProjectInlineConfiguration = {
     test: {
         ...jsdomBase,
         name: 'common',
-        include: [`packages/${commonPackages}/**/__tests__/**/*.test.{ts,tsx}`, 'website/src/**/__tests__/**/*.test.ts', 'lint/**/__tests__/**/*.test.ts'],
+        include: [`packages/${commonPackages}/**/__tests__/**/*.test.{ts,tsx}`, 'website/src/**/__tests__/**/*.test.ts', 'lint/**/__tests__/**/*.test.ts', 'vitest/specs/__tests__/*.test.ts', 'vitest/utils/apg/__tests__/*.test.ts'],
         exclude: [...jsdomBase.exclude, ...frameworkFiles],
         setupFiles: ['./vitest/vitest.setup.ts'],
     },

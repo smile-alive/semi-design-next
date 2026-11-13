@@ -111,13 +111,6 @@ describe('Svelte Radio', () => {
         semiGlobal.config.overrideDefaultProps = {};
     });
 
-    it('基础功能正常', () => {
-        render(Radio);
-        expect(getRadio()).not.toBeChecked();
-        expect(getRadio()).not.toBeDisabled();
-        expect(getRadio()).toHaveAttribute('type', 'radio');
-    });
-
     it('checked 为 true 时选中，disabled 时禁用且点击不触发 onChange', async () => {
         const onChange = vi.fn<(event: RadioChangeEvent) => void>();
         render(Radio, { props: { checked: true, disabled: true, onChange } });
@@ -138,59 +131,12 @@ describe('Svelte Radio', () => {
         expect(typeof event.preventDefault).toBe('function');
     });
 
-    it('高级模式：点击已选中项取消选中', async () => {
-        const onChange = vi.fn<(event: RadioChangeEvent) => void>();
-        render(Radio, { props: { mode: 'advanced', onChange } });
-        await click(getRadio());
-        expect(getRadio()).toBeChecked();
-        await click(getRadio());
-        expect(getRadio()).not.toBeChecked();
-        expect(getLabel()).not.toHaveClass(`${prefix}-checked`);
-        expect(onChange.mock.calls.map(([event]) => event.target.checked)).toEqual([true, false]);
-    });
-
-    it.each([
-        ['button', `${prefix}-buttonRadioComponent`],
-        ['card', `${prefix}-cardRadioGroup`],
-        ['pureCard', `${prefix}-inner-pureCardRadio`],
-    ] as const)('type=%s 样式', (type, cls) => {
-        render(Radio, { props: { type } });
-        expect(document.querySelector(`.${cls}`)).not.toBeNull();
-    });
-
-    it('displayMode 为 vertical', () => {
-        render(Radio, { props: { displayMode: 'vertical' } });
-        expect(document.querySelector(`.${prefix}-vertical`)).not.toBeNull();
-    });
-
-    it('value 进入原生 input，表单序列化得到该值', () => {
-        render(Radio, { props: { name: 'fruit', value: 'apple', checked: true } });
-        expect(getRadio()).toHaveAttribute('value', 'apple');
-    });
-
     it('根元素上使用方的 onclick，点击文字时只调用一次', async () => {
         const onclick = vi.fn<() => void>();
         fixture({ onclick }, 'label');
         await click(screen.getByText('label'));
         expect(onclick).toHaveBeenCalledTimes(1);
         expect(getRadio()).toBeChecked();
-    });
-
-    it('aria-label、id、tabindex 落在原生 input，data-* 与 title 落在 label', () => {
-        render(Radio, { props: { 'aria-label': 'Test radio', id: 'r-id', tabindex: 0, title: 'tip', 'data-x': 'y' } as RadioProps });
-        expect(getRadio()).toHaveAttribute('aria-label', 'Test radio');
-        expect(getRadio()).toHaveAttribute('id', 'r-id');
-        expect(getRadio()).toHaveAttribute('tabindex', '0');
-        expect(getLabel()).not.toHaveAttribute('aria-label');
-        expect(getLabel()).not.toHaveAttribute('id');
-        expect(getLabel()).toHaveAttribute('title', 'tip');
-        expect(getLabel()).toHaveAttribute('data-x', 'y');
-    });
-
-    it('name 作用于 input 而非 label', () => {
-        render(Radio, { props: { name: 'n' } });
-        expect(getRadio()).toHaveAttribute('name', 'n');
-        expect(getLabel()).not.toHaveAttribute('name');
     });
 
     it('class、style 作用于根 label', () => {

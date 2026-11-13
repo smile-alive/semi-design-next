@@ -64,32 +64,12 @@ describe('Rating 审计修复', () => {
         expectValue(0);
     });
 
-    it('allowHalf 时在半星上按 Enter 选中半星', async () => {
-        const change = vi.fn<OnValue>();
-        renderRating({ value: 1, allowHalf: true, onChange: change });
-        getRadio('2.5 stars').focus();
-        await userEvent.keyboard('{Enter}');
-        await settle();
-        expect(change).toHaveBeenLastCalledWith(2.5);
-        expectValue(2.5);
-    });
-
     it('allowHalf 时在已选半星上按 Enter 清除', async () => {
         renderRating({ value: 2.5, allowHalf: true });
         getRadio('2.5 stars').focus();
         await userEvent.keyboard('{Enter}');
         await settle();
         expectValue(0);
-    });
-
-    it('悬停不改变 aria-checked 与 Tab 停靠点', async () => {
-        renderRating({ value: 2 });
-        await moveOver(getRadios()[3] as HTMLElement);
-        expect(getRadio('2 stars')).toHaveAttribute('aria-checked', 'true');
-        expect(getRadio('4 stars')).toHaveAttribute('aria-checked', 'false');
-        expect(getRadios().filter((radio) => radio.getAttribute('tabindex') === '0')).toHaveLength(1);
-        expect(getRadio('2 stars')).toHaveAttribute('tabindex', '0');
-        expect(getFullStars()).toHaveLength(4);
     });
 
     it('字符串 character 作单位，在其他语言下不追加英文复数 s', () => {
@@ -123,25 +103,11 @@ describe('Rating', () => {
         expect(getRadios()).toHaveLength(11);
     });
 
-    it('不同尺寸', () => {
-        const view = renderRating({ size: 'small' });
-        expect(document.querySelector(`.${prefixCls}-star-small`)).not.toBeNull();
-        view.unmount();
-
-        renderRating();
-        expect(document.querySelector(`.${prefixCls}-star-default`)).not.toBeNull();
-    });
-
     it('初始 value', () => {
         renderRating({ value: 4 });
         expectValue(4);
         expect(getFullStars()).toHaveLength(4);
         expect(getRadio('4 stars')).toHaveAttribute('aria-checked', 'true');
-    });
-
-    it('disabled', () => {
-        renderRating({ value: 3, disabled: true });
-        expect(getList()).toHaveClass(`${prefixCls}-disabled`);
     });
 
     it('allowHalf', () => {
@@ -155,16 +121,6 @@ describe('Rating', () => {
     it('character 字符串自定义字符', () => {
         renderRating({}, { text: '赞' });
         expect(document.querySelector(`.${prefixCls}-star-second`)).toHaveTextContent(/^赞$/);
-    });
-
-    it('change 回调', async () => {
-        const change = vi.fn<OnValue>();
-        renderRating({ value: 3, onChange: change });
-        await userEvent.click(getRadios()[0] as HTMLElement);
-        await settle();
-        expectValue(1);
-        expect(change).toHaveBeenCalledTimes(1);
-        expect(change).toHaveBeenCalledWith(1);
     });
 
     it('受控 value 随父级更新', async () => {
@@ -200,15 +156,6 @@ describe('Rating', () => {
         await leave(getList());
         expect(hoverChange).toHaveBeenCalledTimes(2);
         expect(hoverChange).toHaveBeenLastCalledWith(undefined);
-    });
-
-    it('allowClear', async () => {
-        renderRating({ value: 2, allowClear: true });
-        expectValue(2);
-        await userEvent.click(getRadios()[1] as HTMLElement);
-        await settle();
-        expectValue(0);
-        expect(getFullStars()).toHaveLength(0);
     });
 
     it('tooltips', async () => {
@@ -293,43 +240,6 @@ describe('Rating', () => {
         expectValue(3);
         await keyOnList('ArrowRight');
         await keyOnList('ArrowRight');
-        expectValue(2);
-    });
-
-    it('值落在两个 radio 之间时，方向键选中相邻的 radio', async () => {
-        const between = renderRating({ value: 2.5 });
-        await keyOnList('ArrowRight');
-        expectValue(3);
-        expect(getRadio('3 stars')).toHaveFocus();
-        between.unmount();
-
-        const below = renderRating({ value: 2.5 });
-        await keyOnList('ArrowLeft');
-        expectValue(2);
-        expect(getRadio('2 stars')).toHaveFocus();
-        below.unmount();
-
-        renderRating({ value: 3.65, allowHalf: true });
-        await keyOnList('ArrowDown');
-        expectValue(4);
-        await keyOnList('ArrowUp');
-        expectValue(3.5);
-        expect(getRadio('3.5 stars')).toHaveFocus();
-    });
-
-    it('Down 选中下一个、Up 选中上一个，RTL 下上下方向不镜像', async () => {
-        const view = renderRating({ value: 2 });
-        await keyOnList('ArrowDown');
-        expectValue(3);
-        expect(getRadio('3 stars')).toHaveFocus();
-        await keyOnList('ArrowUp');
-        expectValue(2);
-        view.unmount();
-
-        renderRating({ value: 2 }, { direction: 'rtl' });
-        await keyOnList('ArrowDown');
-        expectValue(3);
-        await keyOnList('ArrowUp');
         expectValue(2);
     });
 
@@ -462,19 +372,6 @@ describe('Rating', () => {
         expect(hoverChange).not.toHaveBeenCalled();
         expectValue(2);
         expect(getFullStars()).toHaveLength(2);
-    });
-
-    it('Space 选中未选中的星，在已选中的星上不清除', async () => {
-        const change = vi.fn<OnValue>();
-        renderRating({ value: 2, onChange: change });
-        await fireEvent.keyDown(getRadio('4 stars'), { key: ' ' });
-        await settle();
-        expectValue(4);
-        expect(change).toHaveBeenCalledWith(4);
-        await fireEvent.keyDown(getRadio('4 stars'), { key: ' ' });
-        await settle();
-        expectValue(4);
-        expect(change).toHaveBeenCalledTimes(1);
     });
 
     it('allowClear 为 false 时，第二次点击不清空', async () => {
@@ -649,16 +546,6 @@ describe('Rating', () => {
         expect(tabbable()).toEqual([getRadio('0.5 stars')]);
     });
 
-    it('禁用的 star item tabindex 为 -1', () => {
-        renderRating({ value: 3, disabled: true });
-        const radios = getRadios();
-        expect(radios).toHaveLength(6);
-        radios.forEach((radio) => {
-            expect(radio).toHaveAttribute('tabindex', '-1');
-            expect(radio).toHaveAttribute('aria-disabled', 'true');
-        });
-    });
-
     it('点击只由 foundation 带序号触发一次', async () => {
         const click = vi.fn<OnClick>();
         renderRating({ onClick: click });
@@ -826,22 +713,6 @@ describe('Rating 的 ul 事件、非指针激活与修饰键', () => {
         await settle();
         expect(change).toHaveBeenLastCalledWith(2.5);
         expectValue(2.5);
-    });
-
-    it.each(['altKey', 'ctrlKey', 'metaKey'])('带 %s 的方向键是浏览器快捷键，不改值、不移焦、不触发 keydown', async (modifier) => {
-        const change = vi.fn<OnValue>();
-        const keydown = vi.fn<(event: KeyboardEvent) => void>();
-        renderRating({ value: 3, onChange: change, onKeyDown: keydown });
-        const radio = getRadio('3 stars');
-        radio.focus();
-        const event = new KeyboardEvent('keydown', { key: 'ArrowLeft', [modifier]: true, bubbles: true, cancelable: true });
-        radio.dispatchEvent(event);
-        await settle();
-        expect(event.defaultPrevented).toBe(false);
-        expect(change).not.toHaveBeenCalled();
-        expect(keydown).not.toHaveBeenCalled();
-        expect(radio).toHaveFocus();
-        expectValue(3);
     });
 });
 

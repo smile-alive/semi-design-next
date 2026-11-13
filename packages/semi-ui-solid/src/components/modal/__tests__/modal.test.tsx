@@ -1,5 +1,5 @@
 import { type JSX, Show, createSignal } from 'solid-js';
-import { createEvent, fireEvent, render, screen } from '@solidjs/testing-library';
+import { fireEvent, render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { type MockInstance, afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -59,6 +59,22 @@ afterEach(() => {
 });
 
 describe('Modal', () => {
+    it('无遮罩', () => {
+        renderModal({ mask: false, visible: true });
+        expect($(`div.${p}`)).not.toBeNull();
+        expect(query(`.${p}-mask`)).toBeNull();
+    });
+
+    it('closeOnEsc', () => {
+        const onCancel = vi.fn<CancelHandler>();
+        const { rerender } = renderModal({ visible: true, onCancel });
+        pressEsc();
+        expect(onCancel).toHaveBeenCalledTimes(1);
+        rerender({ visible: true, onCancel, closeOnEsc: false });
+        pressEsc();
+        expect(onCancel).toHaveBeenCalledTimes(1);
+    });
+
     it('默认标题是 2 级标题，外观仍是 h5', () => {
         renderModal({ visible: true, title: 'Dialog title' });
         expect(screen.getByRole('heading', { level: 2, name: 'Dialog title' })).toHaveClass(`${BASE_CLASS_PREFIX}-typography-h5`);
@@ -187,19 +203,6 @@ describe('Modal', () => {
         expect(found.every(Boolean)).toBe(true);
     });
 
-    it('maskClosable', async () => {
-        const spyOnCancel = vi.fn<CancelHandler>();
-        const spyOnCancel2 = vi.fn<CancelHandler>();
-        const { unmount } = renderModal({ maskClosable: true, visible: true, onCancel: spyOnCancel });
-        await userEvent.click($(`.${p}-wrap`));
-        expect(spyOnCancel).toHaveBeenCalledTimes(1);
-        unmount();
-
-        renderModal({ maskClosable: false, visible: true, onCancel: spyOnCancel2 });
-        await userEvent.click($(`.${p}-wrap`));
-        expect(spyOnCancel2).not.toHaveBeenCalled();
-    });
-
     it('按钮相关属性：cancelText / okText / okButtonProps / cancelButtonProps / hasCancel / confirmLoading', () => {
         const baseProps: TestProps = { cancelText: 'cancel', okText: 'ok', okType: 'secondary', visible: true, closable: false };
         const { rerender } = renderModal(baseProps);
@@ -216,24 +219,6 @@ describe('Modal', () => {
         footerBtn = getButtons();
         expect(footerBtn).toHaveLength(1);
         expect(footerBtn[0]).toHaveClass(loadingCls);
-    });
-
-    it('onCancel / onOk', async () => {
-        const spyOnCancel = vi.fn<CancelHandler>();
-        const spyOnOk = vi.fn<() => void>();
-        renderModal({ visible: true, onCancel: spyOnCancel, onOk: spyOnOk });
-        const btn = getButtons();
-        await userEvent.click($(`button.${p}-close`));
-        await userEvent.click(btn[1]);
-        await userEvent.click(btn[2]);
-        expect(spyOnCancel).toHaveBeenCalledTimes(2);
-        expect(spyOnOk).toHaveBeenCalledTimes(1);
-    });
-
-    it('无遮罩', () => {
-        renderModal({ mask: false, visible: true });
-        expect($(`div.${p}`)).not.toBeNull();
-        expect(query(`.${p}-mask`)).toBeNull();
     });
 
     it('closeIcon', () => {
@@ -440,37 +425,6 @@ describe('Modal 行为', () => {
         expect(onCancel).toHaveBeenCalledTimes(1);
         fireEvent.click($(`.${p}-body`));
         expect(onCancel).toHaveBeenCalledTimes(1);
-    });
-
-    it('closeOnEsc', () => {
-        const onCancel = vi.fn<CancelHandler>();
-        const { rerender } = renderModal({ visible: true, onCancel });
-        pressEsc();
-        expect(onCancel).toHaveBeenCalledTimes(1);
-        rerender({ visible: true, onCancel, closeOnEsc: false });
-        pressEsc();
-        expect(onCancel).toHaveBeenCalledTimes(1);
-    });
-
-    it('closeOnEsc 为 false 时，最上层 modal 上的 Escape 不会传到下层 modal', () => {
-        const onLowerCancel = vi.fn<CancelHandler>();
-        render(() => (
-            <>
-                <Modal motion={false} visible title="Lower" onCancel={onLowerCancel} />
-                <Modal motion={false} visible title="Upper" closeOnEsc={false} />
-            </>
-        ));
-        pressEsc();
-        expect(onLowerCancel).not.toHaveBeenCalled();
-    });
-
-    it('modal 使其后的页面变为 inert，关闭时释放', () => {
-        const page = document.body.appendChild(document.createElement('main'));
-        const { rerender } = renderModal({ visible: true, title: 'Dialog' });
-        expect(page.inert).toBe(true);
-        rerender({ visible: false, title: 'Dialog' });
-        expect(page.inert).toBe(false);
-        page.remove();
     });
 
     it('仅当对话框阻挡整个页面时才设置 aria-modal', () => {
@@ -780,13 +734,6 @@ describe('Modal 行为', () => {
         expect(dialog).toHaveAccessibleName('Title');
     });
 
-    it('aria-label 替换生成的标题引用', () => {
-        renderModal({ visible: true, title: 'Title', 'aria-label': 'Custom label' });
-        const dialog = screen.getByRole('dialog');
-        expect(dialog).not.toHaveAttribute('aria-labelledby');
-        expect(dialog).toHaveAccessibleName('Custom label');
-    });
-
     it('卸载已显示的 modal 时只调用一次 afterClose，隐藏或已关闭的不调用', () => {
         const afterClose = vi.fn<() => void>();
         renderModal({ visible: true, afterClose }).unmount();
@@ -878,16 +825,6 @@ describe('Modal 模态判断与初始焦点', () => {
         expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-modal');
         expect(document.body.style.overflow).toBe('');
         container.remove();
-    });
-
-    it('非模态时 Tab 不被锁在对话框内', () => {
-        renderModal({ visible: true, title: 'T', mask: false });
-        const ok = footerButtons()[1];
-        ok.focus();
-        const event = createEvent.keyDown(ok, { key: 'Tab' });
-        fireEvent(ok, event);
-        expect(event.defaultPrevented).toBe(false);
-        expect(document.activeElement).toBe(ok);
     });
 
     it('非模态关闭时不夺回已移到页面其他位置的焦点', () => {

@@ -3,6 +3,7 @@ import { fireEvent, render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { checkPattern } from '@test/utils/apg';
 import { isWebKit, tab } from '@test/utils/browser';
 import { getElement } from '@test/utils/solid';
 import Slider, { type SliderProps } from '..';
@@ -306,5 +307,22 @@ describe('Slider 的真实布局', () => {
         ));
         await userEvent.hover(getHandles()[0]);
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-handle-tooltip`)?.textContent).toMatch(/^0$/));
+    });
+
+    // Vertical keys differ from the APG on purpose (release-notes, Slider): the arrow toward max, Down by default, raises the value
+    it.each([
+        ['水平', {}, {}, {}],
+        ['水平 RTL', { direction: 'rtl' as const }, {}, { direction: 'rtl' as const }],
+        ['垂直', {}, { vertical: true }, { sliderKeys: { increase: 'ArrowDown', decrease: 'ArrowUp' } }],
+        ['垂直 verticalReverse', {}, { vertical: true, verticalReverse: true }, { sliderKeys: { increase: 'ArrowUp', decrease: 'ArrowDown' } }],
+    ])('遵循 APG slider 模式：%s', async (_name, providerProps, sliderProps, options) => {
+        const { container } = render(() => (
+            <ConfigProvider {...providerProps}>
+                <div style={{ width: '300px', height: '300px' }}>
+                    <Slider aria-label="Volume" defaultValue={50} {...sliderProps} />
+                </div>
+            </ConfigProvider>
+        ));
+        await expect(checkPattern('slider', container, { press: (key) => userEvent.keyboard(key.length === 1 ? key : `{${key}}`), ...options })).resolves.toBeUndefined();
     });
 });

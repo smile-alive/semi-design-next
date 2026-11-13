@@ -37,6 +37,21 @@ describe('Rating', () => {
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('边界处的键盘导航绕回', () => {
+        const { unmount } = render(() => <Rating defaultValue={5} />);
+        fireEvent.keyDown(getList(), { key: 'ArrowRight' });
+        expectValue(0);
+        expect(screen.getByRole('radio', { name: '0 stars' })).toHaveFocus();
+        unmount();
+
+        render(() => <Rating defaultValue={1} />);
+        fireEvent.keyDown(getList(), { key: 'ArrowLeft' });
+        expectValue(0);
+        fireEvent.keyDown(getList(), { key: 'ArrowLeft' });
+        expectValue(5);
+        expect(screen.getByRole('radio', { name: '5 stars' })).toHaveFocus();
+    });
+
     it('count 决定星数，另有一颗空星', () => {
         render(() => <Rating count={10} />);
         expect(getList().children).toHaveLength(11);
@@ -72,15 +87,6 @@ describe('Rating', () => {
         expectValue(4);
         expect(getFullStars()).toHaveLength(4);
         expect(screen.getByRole('radio', { name: '4 stars' })).toHaveAttribute('aria-checked', 'true');
-    });
-
-    it('disabled 加类名，radio 退出 Tab 顺序并标记 aria-disabled', () => {
-        render(() => <Rating defaultValue={3} disabled />);
-        expect(getList()).toHaveClass(`${prefixCls}-disabled`);
-        getRadios().forEach((radio) => {
-            expect(radio).toHaveAttribute('tabindex', '-1');
-            expect(radio).toHaveAttribute('aria-disabled', 'true');
-        });
     });
 
     it('allowHalf 显示半星', () => {
@@ -150,17 +156,6 @@ describe('Rating', () => {
         expectValue(5);
     });
 
-    it('受控 value 变回 undefined 时回到 defaultValue，之后非受控', async () => {
-        const [value, setValue] = createSignal<number | undefined>(3);
-        render(() => <Rating defaultValue={1} value={value()} />);
-        expectValue(3);
-        setValue(undefined);
-        expectValue(1);
-        expect(screen.getByRole('radio', { name: '1 star' })).toBeChecked();
-        await userEvent.click(screen.getByRole('radio', { name: '4 stars' }));
-        expectValue(4);
-    });
-
     it('父组件挂载时就把 value 改为 undefined，回到 defaultValue', () => {
         function Demo() {
             const [value, setValue] = createSignal<number | undefined>(3);
@@ -194,15 +189,6 @@ describe('Rating', () => {
         expect(onHoverChange).toHaveBeenLastCalledWith(1.5);
         fireEvent.mouseMove(firstHalf, { clientX: 1 });
         expect(onHoverChange).toHaveBeenLastCalledWith(2);
-    });
-
-    it('悬停不改变 aria-checked 与 Tab 停靠点', () => {
-        render(() => <Rating defaultValue={2} />);
-        fireEvent.mouseMove(getRadios()[3]);
-        expect(screen.getByRole('radio', { name: '2 stars' })).toHaveAttribute('aria-checked', 'true');
-        expect(screen.getByRole('radio', { name: '4 stars' })).toHaveAttribute('aria-checked', 'false');
-        expect(tabStops()).toEqual([screen.getByRole('radio', { name: '2 stars' })]);
-        expect(getFullStars()).toHaveLength(4);
     });
 
     it('allowClear：再次点击当前值清空，之后停留的星不再预览', async () => {
@@ -330,26 +316,6 @@ describe('Rating', () => {
         expect(screen.getByRole('radio', { name: '3 stars' })).toHaveFocus();
     });
 
-    it('Down 选中下一个、Up 选中上一个，RTL 下上下方向不镜像', () => {
-        const { unmount } = render(() => <Rating defaultValue={2} />);
-        fireEvent.keyDown(getList(), { key: 'ArrowDown' });
-        expectValue(3);
-        expect(screen.getByRole('radio', { name: '3 stars' })).toHaveFocus();
-        fireEvent.keyDown(getList(), { key: 'ArrowUp' });
-        expectValue(2);
-        unmount();
-
-        render(() => (
-            <ConfigProvider direction="rtl">
-                <Rating defaultValue={2} />
-            </ConfigProvider>
-        ));
-        fireEvent.keyDown(getList(), { key: 'ArrowDown' });
-        expectValue(3);
-        fireEvent.keyDown(getList(), { key: 'ArrowUp' });
-        expectValue(2);
-    });
-
     it('rtl 模式左右方向键镜像', () => {
         const { unmount } = render(() => (
             <ConfigProvider direction="rtl">
@@ -374,34 +340,6 @@ describe('Rating', () => {
         expectValue(2);
     });
 
-    it('边界处的键盘导航绕回', () => {
-        const { unmount } = render(() => <Rating defaultValue={5} />);
-        fireEvent.keyDown(getList(), { key: 'ArrowRight' });
-        expectValue(0);
-        expect(screen.getByRole('radio', { name: '0 stars' })).toHaveFocus();
-        unmount();
-
-        render(() => <Rating defaultValue={1} />);
-        fireEvent.keyDown(getList(), { key: 'ArrowLeft' });
-        expectValue(0);
-        fireEvent.keyDown(getList(), { key: 'ArrowLeft' });
-        expectValue(5);
-        expect(screen.getByRole('radio', { name: '5 stars' })).toHaveFocus();
-    });
-
-    it.each(['altKey', 'ctrlKey', 'metaKey'])('带 %s 的方向键是浏览器快捷键，不改值、不移焦、不触发 onKeyDown', (modifier) => {
-        const onChange = vi.fn<RatingCallback<'onChange'>>();
-        const onKeyDown = vi.fn<RatingCallback<'onKeyDown'>>();
-        render(() => <Rating defaultValue={3} onChange={onChange} onKeyDown={onKeyDown} />);
-        const radio = screen.getByRole('radio', { name: '3 stars' });
-        radio.focus();
-        expect(fireEvent.keyDown(radio, { key: 'ArrowLeft', [modifier]: true })).toBe(true);
-        expect(onChange).not.toHaveBeenCalled();
-        expect(onKeyDown).not.toHaveBeenCalled();
-        expect(radio).toHaveFocus();
-        expectValue(3);
-    });
-
     it('Enter 选中被按下的 radio，空星上得到 0', async () => {
         const onChange = vi.fn<RatingCallback<'onChange'>>();
         render(() => <Rating onChange={onChange} />);
@@ -413,29 +351,6 @@ describe('Rating', () => {
         fireEvent.keyDown(getRadios()[0], { key: 'Enter' });
         expectValue(1);
         expect(onChange).toHaveBeenLastCalledWith(1);
-    });
-
-    it('allowHalf 时 Enter 选中半星，在已选半星上清除', async () => {
-        const onChange = vi.fn<RatingCallback<'onChange'>>();
-        render(() => <Rating defaultValue={1} allowHalf onChange={onChange} />);
-        screen.getByRole('radio', { name: '2.5 stars' }).focus();
-        await userEvent.keyboard('{Enter}');
-        expect(onChange).toHaveBeenLastCalledWith(2.5);
-        expectValue(2.5);
-        await userEvent.keyboard('{Enter}');
-        expectValue(0);
-    });
-
-    it('Space 选中获得焦点且未选中的星，在已选中的星上不清除', async () => {
-        const onChange = vi.fn<RatingCallback<'onChange'>>();
-        render(() => <Rating defaultValue={2} onChange={onChange} />);
-        screen.getByRole('radio', { name: '4 stars' }).focus();
-        await userEvent.keyboard(' ');
-        expectValue(4);
-        expect(onChange).toHaveBeenLastCalledWith(4);
-        await userEvent.keyboard(' ');
-        expectValue(4);
-        expect(onChange).toHaveBeenCalledTimes(1);
     });
 
     it('非指针激活空星得到 0 而不是 count + 1', () => {
@@ -481,26 +396,6 @@ describe('Rating', () => {
 
         render(() => <Rating autofocus defaultValue={2.5} />);
         expect(screen.getByRole('radio', { name: '1 star' })).toHaveFocus();
-    });
-
-    it('值落在两个 radio 之间时，方向键选中相邻的 radio', () => {
-        const between = render(() => <Rating defaultValue={2.5} />);
-        fireEvent.keyDown(getList(), { key: 'ArrowRight' });
-        expectValue(3);
-        expect(screen.getByRole('radio', { name: '3 stars' })).toHaveFocus();
-        between.unmount();
-
-        const below = render(() => <Rating defaultValue={2.5} />);
-        fireEvent.keyDown(getList(), { key: 'ArrowLeft' });
-        expectValue(2);
-        below.unmount();
-
-        render(() => <Rating defaultValue={3.65} allowHalf />);
-        fireEvent.keyDown(getList(), { key: 'ArrowDown' });
-        expectValue(4);
-        fireEvent.keyDown(getList(), { key: 'ArrowUp' });
-        expectValue(3.5);
-        expect(screen.getByRole('radio', { name: '3.5 stars' })).toHaveFocus();
     });
 
     it('preventScroll 传给 focus', () => {

@@ -405,14 +405,6 @@ describe('Svelte InputNumber', () => {
         expect(getInput()).toHaveValue('');
     });
 
-    it('aria-valuenow 为普通十进制数，包括 0', () => {
-        const { store } = mount({ value: 0 });
-        expect(getInput()).toHaveAttribute('aria-valuenow', '0');
-        store.props.value = 1.235e-7;
-        flushSync();
-        expect(getInput()).toHaveAttribute('aria-valuenow', '0.0000001235');
-    });
-
     it('没有边界时不输出 aria-valuemin 与 aria-valuemax，设置后输出', () => {
         const none = mount({ value: 1 });
         expect(getInput()).not.toHaveAttribute('aria-valuemin');
@@ -449,17 +441,6 @@ describe('Svelte InputNumber', () => {
         expect(getInput()).toHaveValue('0');
         expect(getInput()).toHaveAttribute('aria-valuenow', '0');
         expect(onChange).not.toHaveBeenCalled();
-    });
-
-    it('输入的值在失焦时夹紧到 min 与 max，按钮在边界处停止', async () => {
-        mount({ value: 5, min: 0, max: 10 });
-        focusInput();
-        await typeText('99');
-        blurInput();
-        expect(getInput()).toHaveValue('10');
-        expect(getUpButton()).toHaveClass(`${prefixCls}-number-button-up-not-allowed`);
-        await press(getUpButton());
-        expect(getInput()).toHaveValue('10');
     });
 
     it('输入的值在失焦时按 precision 取整，并按解析后的数字报告', async () => {
@@ -521,33 +502,6 @@ describe('Svelte InputNumber', () => {
         expect(onUpClick).not.toHaveBeenCalled();
     });
 
-    it('readonly：按钮与方向键不改值，Home、End 仍移动光标，keydown 仍发出', async () => {
-        const onChange = vi.fn<Change>();
-        const onKeyDown = vi.fn<KeyHandler>();
-        mount({ value: 10, max: 50, min: 2, readonly: true, onChange, onKeyDown });
-        expect(getInput()).toHaveAttribute('readonly');
-        await press(getUpButton());
-        for (const key of ['ArrowUp', 'ArrowDown', 'Home', 'End']) {
-            await keyDown(key);
-        }
-        expect(getInput()).toHaveValue('10');
-        expect(onChange).not.toHaveBeenCalled();
-        expect(onKeyDown).toHaveBeenCalledTimes(4);
-        expect(await dispatchKey('Home')).toBe(true);
-    });
-
-    it('距边界不足一个 step 时，上键与按钮夹到边界', async () => {
-        const upper = mount({ value: 9.5, max: 10, min: 0.5, step: 1 });
-        await press(getUpButton());
-        expect(getInput()).toHaveValue('10');
-        expect(getUpButton()).toHaveClass(`${prefixCls}-number-button-up-not-allowed`);
-        upper.unmount();
-        mount({ value: 0.8, max: 10, min: 0.5, step: 1 });
-        await keyDown('ArrowDown');
-        expect(getInput()).toHaveValue('0.5');
-        expect(getDownButton()).toHaveClass(`${prefixCls}-number-button-down-not-allowed`);
-    });
-
     it('方向键步进，阻止默认的光标移动；其他按键正常传递', async () => {
         const onChange = vi.fn<Change>();
         mount({ value: 10, onChange });
@@ -567,23 +521,6 @@ describe('Svelte InputNumber', () => {
         expect(onChange).toHaveBeenCalledWith(2, expect.anything());
         expect(await dispatchKey('End')).toBe(true);
         expect(getInput()).toHaveValue('2');
-    });
-
-    it('step 影响加减步长并写到原生 input；小于 1e-6 的 step 能正确加减', async () => {
-        const view = mount({ value: 10, step: 5 });
-        await press(getUpButton());
-        expect(getInput()).toHaveValue('15');
-        await press(getDownButton());
-        await press(getDownButton());
-        expect(getInput()).toHaveValue('5');
-        expect(getInput()).toHaveAttribute('step', '5');
-        view.unmount();
-
-        mount({ value: 0, step: 1e-8, precision: 8 });
-        await press(getUpButton());
-        expect(getInput()).toHaveValue('0.00000001');
-        await press(getDownButton());
-        expect(getInput()).toHaveValue('0.00000000');
     });
 
     it('validateStatus 的 warning 与 error 样式', () => {
@@ -608,13 +545,6 @@ describe('Svelte InputNumber', () => {
         await press(getUpButton());
         expect(onNumberChange).toHaveBeenCalledTimes(1);
         expect(onNumberChange).toHaveBeenCalledWith(11, expect.any(PointerEvent));
-    });
-
-    it('键盘在边界处值未变时不触发 onChange', async () => {
-        const onChange = vi.fn<Change>();
-        mount({ value: 10, max: 10, onChange });
-        await keyDown('ArrowUp');
-        expect(onChange).not.toHaveBeenCalled();
     });
 
     it('清除按钮清空值', async () => {

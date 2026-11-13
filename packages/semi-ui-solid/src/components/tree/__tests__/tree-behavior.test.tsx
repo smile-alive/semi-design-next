@@ -6,7 +6,6 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { getElement } from '@test/utils/solid';
 import Tree, { type RenderFullLabelProps, type TreeHandle, type TreeNodeData, type TreeProps } from '..';
-import ConfigProvider from '../../config-provider';
 import Tooltip from '../../tooltip';
 
 const treeData = [
@@ -138,70 +137,6 @@ describe('Tree 行为', () => {
     });
 
     describe('键盘操作（APG tree view）', () => {
-        it('树是唯一的 Tab 停靠点，并从已选行开始', () => {
-            render(() => <Tree defaultExpandAll defaultValue="Shanghai" treeData={treeData} />);
-            expect(screen.getByRole('tree')).toHaveAttribute('tabindex', '0');
-            expect(screen.getAllByRole('treeitem').filter((row) => row.hasAttribute('tabindex'))).toHaveLength(0);
-            expect(activeKey()).toBe('shanghai');
-        });
-
-        it('Up、Down、Home 和 End 在可见行之间移动', async () => {
-            render(() => <Tree treeData={treeData} />);
-            focusTree();
-            expect(activeKey()).toBe('yazhou');
-            await userEvent.keyboard('{ArrowDown}');
-            expect(activeKey()).toBe('beimeizhou');
-            await userEvent.keyboard('{ArrowDown}');
-            expect(activeKey()).toBe('beimeizhou');
-            await userEvent.keyboard('{Home}');
-            expect(activeKey()).toBe('yazhou');
-            await userEvent.keyboard('{End}');
-            expect(activeKey()).toBe('beimeizhou');
-        });
-
-        it('Right 展开分支后进入其中；Left 先回到父级，再收起', async () => {
-            const onExpand = vi.fn<NonNullable<TreeProps['onExpand']>>();
-            render(() => <Tree motion={false} treeData={treeData} onExpand={onExpand} />);
-            focusTree();
-            await userEvent.keyboard('{ArrowRight}');
-            expect(getNode('yazhou')).toHaveAttribute('aria-expanded', 'true');
-            expect(onExpand).toHaveBeenLastCalledWith(['yazhou'], expect.objectContaining({ expanded: true }));
-            await userEvent.keyboard('{ArrowRight}');
-            expect(activeKey()).toBe('zhongguo');
-            await userEvent.keyboard('{ArrowLeft}');
-            expect(activeKey()).toBe('yazhou');
-            await userEvent.keyboard('{ArrowLeft}');
-            expect(getNode('yazhou')).toHaveAttribute('aria-expanded', 'false');
-            expect(getVisibleKeys()).toEqual(['yazhou', 'beimeizhou']);
-        });
-
-        it('RTL 下 Left 展开分支，Right 收起', async () => {
-            render(() => (
-                <ConfigProvider direction="rtl">
-                    <Tree motion={false} treeData={treeData} />
-                </ConfigProvider>
-            ));
-            focusTree();
-            await userEvent.keyboard('{ArrowLeft}');
-            expect(getNode('yazhou')).toHaveAttribute('aria-expanded', 'true');
-            await userEvent.keyboard('{ArrowRight}');
-            expect(getNode('yazhou')).toHaveAttribute('aria-expanded', 'false');
-        });
-
-        it('数字标签参与键入跳转', async () => {
-            render(() => (
-                <Tree
-                    treeData={[
-                        { label: 'alpha', value: 'a', key: 'a' },
-                        { label: 2024, value: 'y', key: 'y' },
-                    ]}
-                />
-            ));
-            focusTree();
-            await userEvent.keyboard('2');
-            expect(activeKey()).toBe('y');
-        });
-
         it('Enter 选中当前行；多选树中 Space 勾选当前行', async () => {
             const onChange = vi.fn<NonNullable<TreeProps['onChange']>>();
             const { rerender } = renderTree({ treeData, onChange });
@@ -217,32 +152,18 @@ describe('Tree 行为', () => {
             expect(getNode('beimeizhou')).toHaveAttribute('aria-checked', 'true');
         });
 
-        it('输入字符时移动到标签以输入内容开头的下一行', async () => {
-            render(() => <Tree treeData={treeData} />);
-            focusTree();
-            await userEvent.keyboard('北');
-            expect(activeKey()).toBe('beimeizhou');
-        });
-
-        it('行内可聚焦控件保留自身的 Enter 和 Space', async () => {
-            const onSelect = vi.fn<NonNullable<TreeProps['onSelect']>>();
-            const onClick = vi.fn<(e: MouseEvent) => void>((e) => e.stopPropagation());
+        it('数字标签参与键入跳转', async () => {
             render(() => (
                 <Tree
-                    renderLabel={(label) => (
-                        <button type="button" onClick={onClick}>
-                            open {label}
-                        </button>
-                    )}
-                    treeData={treeData}
-                    onSelect={onSelect}
+                    treeData={[
+                        { label: 'alpha', value: 'a', key: 'a' },
+                        { label: 2024, value: 'y', key: 'y' },
+                    ]}
                 />
             ));
-            screen.getByRole('button', { name: 'open 亚洲' }).focus();
-            await userEvent.keyboard('{Enter}');
-            await userEvent.keyboard(' ');
-            expect(onClick).toHaveBeenCalledTimes(2);
-            expect(onSelect).not.toHaveBeenCalled();
+            focusTree();
+            await userEvent.keyboard('2');
+            expect(activeKey()).toBe('y');
         });
     });
 
@@ -303,40 +224,6 @@ describe('Tree 行为', () => {
         expect(screen.getByRole('tree', { name: '目录', description: '提示' })).toBeInTheDocument();
         expect(container.querySelector(`.${prefix}-wrapper`)).not.toHaveAttribute('aria-labelledby');
         expect(container.querySelector(`.${prefix}-wrapper`)).not.toHaveAttribute('aria-describedby');
-    });
-
-    describe('指针操作后的键盘当前行', () => {
-        it('单选树：点击行后，方向键从被点击的行继续', async () => {
-            render(() => <Tree defaultExpandAll motion={false} treeData={treeData} />);
-            focusTree();
-            await userEvent.keyboard('{ArrowDown}');
-            expect(activeKey()).toBe('zhongguo');
-            await userEvent.click(getNode('riben'));
-            await userEvent.keyboard('{ArrowDown}');
-            expect(activeKey()).toBe('dongjing');
-        });
-
-        it('多选树：点击勾选行后，方向键从被勾选的行继续', async () => {
-            render(() => <Tree defaultExpandAll motion={false} multiple treeData={treeData} />);
-            await userEvent.click(getNode('beijing'));
-            focusTree();
-            await userEvent.keyboard('{ArrowDown}');
-            expect(activeKey()).toBe('shanghai');
-        });
-
-        it('点击展开箭头、右键、双击的行同样成为当前行', async () => {
-            render(() => <Tree defaultExpandAll motion={false} treeData={treeData} />);
-            focusTree();
-            fireEvent.contextMenu(getNode('shanghai'));
-            await userEvent.keyboard('{ArrowUp}');
-            expect(activeKey()).toBe('beijing');
-            fireEvent.dblClick(getNode('riben'));
-            await userEvent.keyboard('{ArrowDown}');
-            expect(activeKey()).toBe('dongjing');
-            await userEvent.click(getExpandIcon(getNode('zhongguo')));
-            await userEvent.keyboard('{ArrowDown}');
-            expect(activeKey()).not.toBe('beijing');
-        });
     });
 
     it.each([
@@ -625,6 +512,22 @@ describe('Tree 行为', () => {
         await userEvent.click(getExpandIcon(getNode('yazhou')));
         expect(screen.getByTestId('keys')).toHaveTextContent('riben');
         expect(queryNode('riben')).toBeNull();
+    });
+});
+
+describe('指针操作后的键盘当前行', () => {
+    it('点击展开箭头、右键、双击的行同样成为当前行', async () => {
+        render(() => <Tree defaultExpandAll motion={false} treeData={treeData} />);
+        focusTree();
+        fireEvent.contextMenu(getNode('shanghai'));
+        await userEvent.keyboard('{ArrowUp}');
+        expect(activeKey()).toBe('beijing');
+        fireEvent.dblClick(getNode('riben'));
+        await userEvent.keyboard('{ArrowDown}');
+        expect(activeKey()).toBe('dongjing');
+        await userEvent.click(getExpandIcon(getNode('zhongguo')));
+        await userEvent.keyboard('{ArrowDown}');
+        expect(activeKey()).not.toBe('beijing');
     });
 });
 

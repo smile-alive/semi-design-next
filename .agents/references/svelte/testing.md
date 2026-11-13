@@ -15,4 +15,5 @@
 - 驱动 props 变化用 `src/__tests__/store.svelte.ts` 的 `createStore` 建 `$state` 对象传给 fixture，测试里改它的字段，再调 `flushSync()`；不用 `rerender`。要 `$state` 代理的普通副本（断言、等值替换）时用同文件的 `snapshot`（即 `$state.snapshot`），不用 `structuredClone`（遇代理抛错）或 JSON 深拷贝。
 - 交互用 `fireEvent` 后调 `flushSync()`，再断言 DOM。
 - 有受控值的组件覆盖 `bind:`、函数绑定、单向传值、不传四种写法，参照 `components/switch/__tests__/switch-modes.svelte`。首帧可见的内容加一条 `svelte-ssr` 用例。
+- 共享 spec（见 [testing](../testing.md#共享-spec)）的夹具写成 `<组件>-spec-fixture.svelte`，接收 `createStore` 建的 spec props，受控值用函数绑定，参照 `components/tabs/__tests__/tabs-spec-fixture.svelte`；`update` 里改 store 字段后调 `flushSync()`。
 - 宿主改动跑 `src/__tests__/host-contract.test.ts`，除「destroy 时 DOM 仍挂载」一条外必须通过。

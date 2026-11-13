@@ -485,27 +485,6 @@ describe('Dropdown 行为', () => {
             </Dropdown>
         );
 
-    it('selectionMode="single" 的选项是带 aria-checked 的 menuitemradio', () => {
-        renderModes({ selectionMode: 'single' });
-        expect(item('on')).toHaveAttribute('role', 'menuitemradio');
-        expect(item('on')).toHaveAttribute('aria-checked', 'true');
-        expect(item('off')).toHaveAttribute('role', 'menuitemradio');
-        expect(item('off')).toHaveAttribute('aria-checked', 'false');
-    });
-
-    it('selectionMode="multiple" 的选项是带 aria-checked 的 menuitemcheckbox', () => {
-        renderModes({ selectionMode: 'multiple' });
-        expect(item('on')).toHaveAttribute('role', 'menuitemcheckbox');
-        expect(item('on')).toHaveAttribute('aria-checked', 'true');
-        expect(item('off')).toHaveAttribute('aria-checked', 'false');
-    });
-
-    it('未设 selectionMode 且无 showTick 时选项是不带 aria-checked 的 menuitem', () => {
-        renderModes({});
-        expect(item('on')).toHaveAttribute('role', 'menuitem');
-        expect(item('on')).not.toHaveAttribute('aria-checked');
-    });
-
     it('对勾只由 showTick 决定，selectionMode 不改可见 UI', () => {
         renderModes({ selectionMode: 'single' });
         expect(item('on')).not.toHaveClass('semi-dropdown-item-withTick');
@@ -796,34 +775,6 @@ describe('Dropdown 行为', () => {
         );
         fireEvent.keyDown(screen.getByRole('button', { name: 'own keydown trigger' }), { key: 'x' });
         expect(onKeyDown).toHaveBeenCalledTimes(1);
-    });
-
-    it('Escape 关闭弹层、调用 onEscKeyDown，并把焦点还给触发器', async () => {
-        const onEscKeyDown = vi.fn<() => void>();
-        render(
-            <Dropdown motion={false} render={getSubMenu()} trigger="click" onEscKeyDown={onEscKeyDown}>
-                <button>esc trigger</button>
-            </Dropdown>
-        );
-        const button = screen.getByRole('button', { name: 'esc trigger' });
-        await userEvent.click(button);
-        await waitFor(() => expect(item('Menu Item 1')).toHaveFocus());
-        await userEvent.keyboard('{Escape}');
-        await waitFor(() => expect(portalInner()).toBeNull());
-        expect(onEscKeyDown).toHaveBeenCalledTimes(1);
-        expect(button).toHaveFocus();
-    });
-
-    it('closeOnEsc 为 false 时按 Escape 不关闭弹层', async () => {
-        render(
-            <Dropdown closeOnEsc={false} motion={false} render={getSubMenu()} trigger="click">
-                <button>no esc trigger</button>
-            </Dropdown>
-        );
-        await userEvent.click(screen.getByRole('button', { name: 'no esc trigger' }));
-        await waitFor(() => expect(item('Menu Item 1')).toHaveFocus());
-        await userEvent.keyboard('{Escape}');
-        expect(portalInner()).not.toBeNull();
     });
 
     it('弹层容器不是 tooltip 角色，trigger="custom" 时 Escape 把焦点还给触发器', async () => {
@@ -1119,29 +1070,6 @@ describe('Dropdown 行为', () => {
         } finally {
             error.mockRestore();
         }
-    });
-
-    it('Home 与 End 聚焦第一个和最后一个可用选项', async () => {
-        render(
-            <Dropdown
-                menu={[
-                    { node: 'item', name: 'Head disabled', disabled: true },
-                    { node: 'item', name: 'First' },
-                    { node: 'item', name: 'Middle' },
-                    { node: 'item', name: 'Last' },
-                ]}
-                motion={false}
-                trigger="click"
-            >
-                <button>home end trigger</button>
-            </Dropdown>
-        );
-        await userEvent.click(screen.getByRole('button', { name: 'home end trigger' }));
-        await waitFor(() => expect(item('First')).toHaveFocus());
-        await userEvent.keyboard('{End}');
-        expect(item('Last')).toHaveFocus();
-        await userEvent.keyboard('{Home}');
-        expect(item('First')).toHaveFocus();
     });
 
     it('仅在菜单打开时，触发器上的 Up 与 Down 阻止默认行为', async () => {

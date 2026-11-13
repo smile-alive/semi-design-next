@@ -295,11 +295,6 @@ describe('Slider', () => {
         expect(queryAll('dot')).toHaveLength(2);
     });
 
-    it('aria-label 属性', () => {
-        renderSlider({ 'aria-label': 'Volume slider', defaultValue: 30 });
-        expect(screen.getByRole('slider', { name: 'Volume slider' })).toBeInTheDocument();
-    });
-
     it('aria-valuetext 属性', () => {
         renderSlider({ 'aria-valuetext': '30 percent', defaultValue: 30 });
         expect(getInput()).toHaveAttribute('aria-valuetext', '30 percent');
@@ -309,19 +304,6 @@ describe('Slider', () => {
         const getAriaValueText = (value: number, index?: number) => `${value} percent at index ${index}`;
         renderSlider({ defaultValue: 30, getAriaValueText });
         expect(getInput()).toHaveAttribute('aria-valuetext', '30 percent at index 0');
-    });
-
-    it('range slider 的 getAriaValueText', () => {
-        const getAriaValueText = (value: number, index?: number) => `${value}% (${index === 0 ? 'min' : 'max'})`;
-        renderSlider({ defaultValue: [20, 60], getAriaValueText, range: true });
-        const [min, max] = getInputs();
-        expect(min).toHaveAttribute('aria-valuetext', '20% (min)');
-        expect(max).toHaveAttribute('aria-valuetext', '60% (max)');
-    });
-
-    it('禁用的 slider 会禁用其输入，使其不在 Tab 顺序中', () => {
-        renderSlider({ defaultValue: [20, 60], disabled: true, range: true });
-        getInputs().forEach((input) => expect(input).toBeDisabled());
     });
 
     it('只有输入框是 Tab 停靠点，绘制滑块的元素不是且不被 Tooltip 描述', async () => {
@@ -361,23 +343,6 @@ describe('Slider', () => {
         expect(getInput()).toHaveAttribute('dir', 'ltr');
         await view.rerender({ verticalReverse: true });
         expect(getInput()).toHaveAttribute('dir', 'rtl');
-    });
-
-    it('handle 输入携带值和边界', () => {
-        renderSlider({ defaultValue: 50, max: 90, min: 10 });
-        const input = getInput();
-        expect(input).toHaveAttribute('type', 'range');
-        expect(input).toHaveValue('50');
-        expect(input).toHaveAttribute('min', '10');
-        expect(input).toHaveAttribute('max', '90');
-        // a native range already exposes them: ARIA in HTML says not to repeat them
-        expect(input).not.toHaveAttribute('aria-valuenow');
-        expect(input).not.toHaveAttribute('aria-valuemax');
-    });
-
-    it('受控 value 为 0 时初始值是 0，不取 defaultValue', () => {
-        renderSlider({ defaultValue: 50, modelValue: 0 });
-        expect(getInput()).toHaveValue('0');
     });
 
     it('两个范围输入都横跨 slider 边界，且一个滑块不能越过另一个', async () => {
@@ -625,16 +590,6 @@ describe('Slider', () => {
             ),
         });
         expectValues(10, 10, 10, 0);
-    });
-
-    it('既无 modelValue 也无 defaultValue 时使用范围默认值', () => {
-        renderSlider({ range: true });
-        expectValues(0, 0);
-    });
-
-    it('既无 modelValue 也无 defaultValue 时使用单值默认值', () => {
-        renderSlider();
-        expectValues(0);
     });
 
     it('受控 slider 点击轨道只报告新值', async () => {
@@ -1235,14 +1190,6 @@ describe('Slider', () => {
         document.removeEventListener('keydown', keydown);
     });
 
-    it('禁用的 slider 忽略输入框的变化', async () => {
-        const change = vi.fn<OnChange>();
-        renderSlider({ defaultValue: 30, disabled: true, onChange: change });
-        await changeTo(getInput(), 31);
-        expect(change).not.toHaveBeenCalled();
-        expectValues(30);
-    });
-
     it('仅松开 value 相关的 key 时报告 afterChange', async () => {
         const afterChange = vi.fn<OnChange>();
         const mouseUp = vi.fn<(event: PointerEvent | KeyboardEvent) => void>();
@@ -1375,17 +1322,6 @@ describe('Slider', () => {
         expect(new FormData(form).getAll('price')).toEqual(['20', '60']);
         await changeTo(getInputs()[0] as HTMLInputElement, 45);
         expect(new FormData(form).getAll('volume')).toEqual(['45']);
-    });
-
-    it('滑块输入框变化时移动该滑块并报告值', async () => {
-        const change = vi.fn<OnChange>();
-        renderSlider({ defaultValue: [20, 60], range: true, onChange: change });
-        const [minInput, maxInput] = getInputs() as [HTMLInputElement, HTMLInputElement];
-        await changeTo(minInput, 40);
-        expect(change).toHaveBeenLastCalledWith([40, 60]);
-        await changeTo(maxInput, 10);
-        expect(change).toHaveBeenLastCalledWith([40, 40]);
-        expect([minInput.value, maxInput.value]).toEqual(['40', '40']);
     });
 
     it('受控 range 的新值两端都越界时，两个滑块都夹到边界内', async () => {

@@ -1,5 +1,5 @@
 import { createSignal, onMount, type JSX } from 'solid-js';
-import { render, screen, waitFor, within } from '@solidjs/testing-library';
+import { render, screen, within } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -26,32 +26,31 @@ function threeRadios(props: RadioGroupProps = {}) {
     );
 }
 
-const abcOptions = [
-    { label: 'A', value: 'A' },
-    { label: 'B', value: 'B' },
-    { label: 'C', value: 'C' },
-];
-
 describe('RadioGroup', () => {
     afterEach(() => {
         semiGlobal.config.overrideDefaultProps = {};
     });
 
-    it('value 变化时触发 change 事件', async () => {
+    it('禁用 group', () => {
+        render(() => threeRadios({ disabled: true }));
+        const radios = screen.getAllByRole('radio');
+        expect(radios).toHaveLength(3);
+        radios.forEach((input) => expect(input).toBeDisabled());
+    });
+
+    it('受控高级 group 取消选中时上报 undefined', async () => {
         const onChange = vi.fn<Change>();
-        const { unmount } = render(() => threeRadios({ onChange, defaultValue: 'B' }));
+        render(() => (
+            <RadioGroup value="A" mode="advanced" onChange={onChange}>
+                <Radio value="A">A</Radio>
+                <Radio value="B">B</Radio>
+            </RadioGroup>
+        ));
         await userEvent.click(getRadio('A'));
         expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].target.value).toBe('A');
+        expect(onChange.mock.calls[0][0].target.value).toBeUndefined();
+        expect(onChange.mock.calls[0][0].target.checked).toBe(false);
         expect(getRadio('A')).toBeChecked();
-        unmount();
-
-        render(() => threeRadios({ onChange, value: 'A' }));
-        await userEvent.click(getRadio('B'));
-        expect(onChange).toHaveBeenCalledTimes(2);
-        expect(onChange.mock.calls[1][0].target.value).toBe('B');
-        expect(getRadio('A')).toBeChecked();
-        expect(getRadio('B')).not.toBeChecked();
     });
 
     it('radio 与 radioGroup 同时存在时都会触发 onChange 事件', async () => {
@@ -83,13 +82,6 @@ describe('RadioGroup', () => {
         expect(onChangeRadioGroup).toHaveBeenCalledTimes(2);
     });
 
-    it('使用 options 的 group 中只触发一次', async () => {
-        const onChange = vi.fn<Change>();
-        render(() => <RadioGroup options={[{ label: 'Bamboo', value: 'Bamboo' }]} onChange={onChange} />);
-        await userEvent.click(getRadio('Bamboo'));
-        expect(onChange).toHaveBeenCalledTimes(1);
-    });
-
     it('value 不变时不触发 change 事件', async () => {
         const onChange = vi.fn<Change>();
         const { unmount } = render(() => threeRadios({ onChange, defaultValue: 'B' }));
@@ -113,20 +105,6 @@ describe('RadioGroup', () => {
         ));
         expect(getRadio('A')).not.toBeChecked();
         expect(getRadio('B')).not.toBeChecked();
-    });
-
-    it('options 正确渲染', () => {
-        render(() => <RadioGroup options={abcOptions} />);
-        expect(screen.getAllByRole('radio')).toHaveLength(3);
-        expect(getRadio('A')).toBeInTheDocument();
-        expect(getRadio('C')).toBeInTheDocument();
-    });
-
-    it('所有子项都有 name 属性', () => {
-        render(() => threeRadios({ name: 'radiogroup' }));
-        const radios = screen.getAllByRole('radio');
-        expect(radios).toHaveLength(3);
-        radios.forEach((el) => expect(el).toHaveAttribute('name', 'radiogroup'));
     });
 
     it('button 样式与 buttonSize', () => {
@@ -160,11 +138,6 @@ describe('RadioGroup', () => {
         screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toBeChecked());
     });
 
-    it.each(['horizontal', 'vertical'] as const)('direction %s', (direction) => {
-        const { container } = render(() => threeRadios({ direction }));
-        expect(container.querySelector(`.${groupCls}-${direction}`)).not.toBeNull();
-    });
-
     it('受控 value 随 signal 更新', () => {
         const [value, setValue] = createSignal<string | undefined>('A');
         render(() =>
@@ -180,35 +153,6 @@ describe('RadioGroup', () => {
         setValue('B');
         expect(getRadio('A')).not.toBeChecked();
         expect(getRadio('B')).toBeChecked();
-    });
-
-    it('defaultValue', () => {
-        render(() => threeRadios({ defaultValue: 'B' }));
-        expect(getRadio('A')).not.toBeChecked();
-        expect(getRadio('B')).toBeChecked();
-    });
-
-    it('禁用 group', () => {
-        render(() => threeRadios({ disabled: true }));
-        const radios = screen.getAllByRole('radio');
-        expect(radios).toHaveLength(3);
-        radios.forEach((input) => expect(input).toBeDisabled());
-    });
-
-    it('没有 name 的 group 内 radio 共用生成的 name，且与其他 group 不同', () => {
-        render(() => (
-            <>
-                <RadioGroup aria-label="one" options={['A', 'B']} />
-                <RadioGroup aria-label="two" options={['A', 'B']} />
-            </>
-        ));
-        const names = ['one', 'two'].map((label) => {
-            const radios = screen.getByLabelText(label).querySelectorAll('input');
-            expect(radios[0].name).toBeTruthy();
-            expect(radios[0].name).toBe(radios[1].name);
-            return radios[0].name;
-        });
-        expect(names[0]).not.toBe(names[1]);
     });
 
     it('方向键不会在两个没有 name 的 group 之间移动', async () => {
@@ -298,12 +242,6 @@ describe('RadioGroup', () => {
         expect(screen.getByRole('radio', { name: '1' })).toBeInTheDocument();
     });
 
-    it('字符串选项跟随 group 的 disabled', () => {
-        render(() => <RadioGroup disabled options={['x', 'y']} />);
-        expect(getRadio('x')).toBeDisabled();
-        expect(getRadio('y')).toBeDisabled();
-    });
-
     it('启用的 group 中禁用的 Radio', async () => {
         const onChange = vi.fn<Change>();
         render(() => (
@@ -344,32 +282,6 @@ describe('RadioGroup', () => {
         expect(getRadio('B')).toBeChecked();
     });
 
-    it('方向键在 group 内移动选中项并跳过禁用项', async () => {
-        const onChange = vi.fn<Change>();
-        render(() => (
-            <RadioGroup name="keys" defaultValue="A" onChange={onChange}>
-                <Radio value="A">A</Radio>
-                <Radio disabled value="B">
-                    B
-                </Radio>
-                <Radio value="C">C</Radio>
-            </RadioGroup>
-        ));
-        getRadio('A').focus();
-        await userEvent.keyboard('{ArrowDown}');
-        expect(getRadio('C')).toHaveFocus();
-        expect(getRadio('C')).toBeChecked();
-        expect(getRadio('A')).not.toBeChecked();
-        expect(onChange.mock.calls[0][0].target.value).toBe('C');
-        await userEvent.keyboard('{ArrowRight}');
-        expect(getRadio('A')).toBeChecked();
-        await userEvent.keyboard('{ArrowUp}');
-        expect(getRadio('C')).toBeChecked();
-        await userEvent.keyboard('{ArrowLeft}');
-        expect(getRadio('A')).toBeChecked();
-        expect(onChange).toHaveBeenCalledTimes(4);
-    });
-
     it('受控 group 在 value 属性变化前忽略点击与方向键，原生选中项写回', async () => {
         const onChange = vi.fn<Change>();
         render(() => threeRadios({ value: 'A', onChange, name: 'controlled' }));
@@ -383,36 +295,6 @@ describe('RadioGroup', () => {
         expect(onChange.mock.calls[1][0].target.value).toBe('B');
         expect(getRadio('A')).toBeChecked();
         expect(getRadio('B')).not.toBeChecked();
-    });
-
-    it('受控高级 group 取消选中时上报 undefined', async () => {
-        const onChange = vi.fn<Change>();
-        render(() => (
-            <RadioGroup value="A" mode="advanced" onChange={onChange}>
-                <Radio value="A">A</Radio>
-                <Radio value="B">B</Radio>
-            </RadioGroup>
-        ));
-        await userEvent.click(getRadio('A'));
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].target.value).toBeUndefined();
-        expect(onChange.mock.calls[0][0].target.checked).toBe(false);
-        expect(getRadio('A')).toBeChecked();
-    });
-
-    it('非受控高级 group 可切换到另一个选项', async () => {
-        const onChange = vi.fn<Change>();
-        render(() => (
-            <RadioGroup mode="advanced" onChange={onChange}>
-                <Radio value="A">A</Radio>
-                <Radio value="B">B</Radio>
-            </RadioGroup>
-        ));
-        await userEvent.click(getRadio('A'));
-        await userEvent.click(getRadio('B'));
-        expect(onChange.mock.calls.map(([event]) => event.target.value)).toEqual(['A', 'B']);
-        expect(getRadio('A')).not.toBeChecked();
-        expect(getRadio('B')).toBeChecked();
     });
 
     it('高级 group 用方向键移动选中项，与原生 radiogroup 一致', async () => {
@@ -442,22 +324,6 @@ describe('RadioGroup', () => {
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][0].target.value).toBeUndefined();
         expect(getRadio('A')).not.toBeChecked();
-    });
-
-    it('button 与 card 类型的 group 标记选中的 radio', async () => {
-        const { container, unmount } = render(() => threeRadios({ type: 'button', defaultValue: 'B' }));
-        const addons = container.querySelectorAll(`.${prefixCls}-addon-buttonRadio`);
-        expect(addons[1]).toHaveClass(`${prefixCls}-addon-buttonRadio-checked`);
-        expect(addons[0]).not.toHaveClass(`${prefixCls}-addon-buttonRadio-checked`);
-        expect(container.querySelector(`.${groupCls}-buttonRadio`)).not.toBeNull();
-        expect(container.querySelector(`.${groupCls}-horizontal`)).toBeNull();
-        unmount();
-
-        const second = render(() => threeRadios({ type: 'card', direction: 'vertical' }));
-        await userEvent.click(getRadio('C'));
-        const cards = second.container.querySelectorAll(`.${prefixCls}-cardRadioGroup`);
-        expect(cards[2]).toHaveClass(`${prefixCls}-cardRadioGroup_checked`);
-        expect(second.container.querySelector(`.${groupCls}-vertical-card`)).not.toBeNull();
     });
 
     it('group 的 id、aria-*、data-*、class 与 style 作用于根元素', () => {
@@ -555,23 +421,6 @@ describe('RadioGroup', () => {
         expect(container.firstElementChild).toHaveAttribute('title', 'tip');
         await userEvent.click(getRadio('A'));
         expect(onClick).toHaveBeenCalled();
-    });
-
-    it('onBlur 在焦点移出 group 时调用一次，组内移动不调用', async () => {
-        const onBlur = vi.fn<(event: FocusEvent) => void>();
-        render(() => (
-            <>
-                {threeRadios({ onBlur, name: 'blur' })}
-                <button type="button">outside</button>
-            </>
-        ));
-        getRadio('A').focus();
-        await userEvent.keyboard('{ArrowDown}');
-        expect(getRadio('B')).toHaveFocus();
-        expect(onBlur).not.toHaveBeenCalled();
-        await userEvent.tab();
-        expect(screen.getByRole('button', { name: 'outside' })).toHaveFocus();
-        await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1));
     });
 
     it('Form 注入的 validateStatus 不进入 DOM', () => {

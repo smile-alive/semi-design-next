@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { checkPattern } from '@test/utils/apg';
 import { isWebKit, mouse, tab } from '@test/utils/browser';
 import { getElement } from '@test/utils/dom/common';
 import type { SliderProps } from '../interface';
@@ -305,5 +306,17 @@ describe('Svelte Slider 键盘（浏览器）', () => {
         const { handles } = setup({ showBoundary: true });
         await userEvent.hover(handles[0] as HTMLElement);
         await waitFor(() => expect(document.querySelector(`.${prefix}-handle-tooltip`)?.textContent?.trim()).toBe('0'));
+    });
+
+    // Vertical keys differ from the APG on purpose (release-notes, Slider): the arrow toward max, Down by default, raises the value
+    it.each([
+        ['水平', {}, {}, {}],
+        ['水平 RTL', { direction: 'rtl' }, {}, { direction: 'rtl' }],
+        ['垂直', {}, { vertical: true }, { sliderKeys: { increase: 'ArrowDown', decrease: 'ArrowUp' } }],
+        ['垂直 verticalReverse', {}, { vertical: true, verticalReverse: true }, { sliderKeys: { increase: 'ArrowUp', decrease: 'ArrowDown' } }],
+    ] as const)('遵循 APG slider 模式：%s', async (_, config, sliderProps, options) => {
+        const { container } = render(SliderConfig, { props: { props: { value: 50, 'aria-label': 'Volume', style: 'width: 300px; height: 300px', ...sliderProps }, ...config } });
+        flushSync();
+        await expect(checkPattern('slider', container, { press: (key) => userEvent.keyboard(key.length === 1 ? key : `{${key}}`), ...options })).resolves.toBeUndefined();
     });
 });

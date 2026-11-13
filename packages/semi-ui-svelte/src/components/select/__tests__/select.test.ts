@@ -106,23 +106,6 @@ describe('Svelte Select 渲染', () => {
 });
 
 describe('Svelte Select 打开与选择', () => {
-    it('点击触发器打开选项列表并发出 onDropdownVisibleChange', async () => {
-        const onDropdownVisibleChange = vi.fn<(visible: boolean) => void>();
-        setup({ onDropdownVisibleChange });
-        expect(screen.queryByRole('listbox')).toBeNull();
-        await clickTrigger();
-        expect(screen.getByRole('listbox')).toBeInTheDocument();
-        expect(getOptionTexts()).toEqual(['Abc', 'Hotsoon', 'Pipixia', 'TopBuzz']);
-        expect(onDropdownVisibleChange).toHaveBeenCalledWith(true);
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
-    });
-
-    it('defaultOpen 挂载即打开', async () => {
-        setup({ defaultOpen: true });
-        await settle();
-        expect(screen.getByRole('listbox')).toBeInTheDocument();
-    });
-
     it('disabled 时点击不打开，标记 aria-disabled', async () => {
         setup({ disabled: true });
         await clickTrigger();
@@ -142,41 +125,6 @@ describe('Svelte Select 打开与选择', () => {
         expect(calls).toEqual(['select hotsoon', 'change hotsoon']);
         expect(getSelectionText()).toBe('Hotsoon');
         expect(screen.queryByRole('listbox')).toBeNull();
-    });
-
-    it('点击选项选中', async () => {
-        const { store } = setup();
-        await clickTrigger();
-        await fireEvent.click(getOptions()[2]);
-        await settle();
-        expect(store.log).toEqual(['change "pipixia"']);
-        expect(getSelectionText()).toBe('Pipixia');
-    });
-
-    it('禁用的选项不能被选中', async () => {
-        const { store } = setup(
-            {},
-            {
-                optionList: [
-                    { value: 'a', label: 'A', disabled: true },
-                    { value: 'b', label: 'B' },
-                ],
-            }
-        );
-        await clickTrigger();
-        expect(getOptions()[0]).toHaveAttribute('aria-disabled', 'true');
-        await fireEvent.click(getOptions()[0]);
-        await settle();
-        expect(store.log).toEqual([]);
-    });
-
-    it('Escape 关闭列表', async () => {
-        const onDropdownVisibleChange = vi.fn<(visible: boolean) => void>();
-        setup({ onDropdownVisibleChange });
-        await clickTrigger();
-        await keyDown('Escape');
-        expect(screen.queryByRole('listbox')).toBeNull();
-        expect(onDropdownVisibleChange.mock.calls).toEqual([[true], [false]]);
     });
 
     it('onChangeWithObject 时 onChange 收到选项记录', async () => {

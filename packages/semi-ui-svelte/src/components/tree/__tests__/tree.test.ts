@@ -420,51 +420,6 @@ describe('Tree 拖拽（jsdom 事件序列）', () => {
 });
 
 describe('Tree 键盘（APG tree view）', () => {
-    it('树是唯一的 Tab 停靠点，并从已选行开始', () => {
-        renderTree({ value: 'Shanghai', expandAll: true });
-        expect(getTree()).toHaveAttribute('tabindex', '0');
-        expect(screen.getAllByRole('treeitem').filter((row) => row.hasAttribute('tabindex'))).toHaveLength(0);
-        expect(activeKey()).toBe('shanghai');
-    });
-
-    it('Up、Down、Home 和 End 在可见行之间移动', async () => {
-        renderTree();
-        expect(activeKey()).toBe('yazhou');
-        await press('ArrowDown');
-        expect(activeKey()).toBe('beimeizhou');
-        await press('ArrowDown');
-        expect(activeKey()).toBe('beimeizhou');
-        await press('Home');
-        expect(activeKey()).toBe('yazhou');
-        await press('End');
-        expect(activeKey()).toBe('beimeizhou');
-        await press('ArrowUp');
-        expect(activeKey()).toBe('yazhou');
-    });
-
-    it('Right 展开分支后进入其中；Left 先回到父级，再收起', async () => {
-        const onExpand = spyOn('onExpand');
-        renderTree({ onExpand });
-        await press('ArrowRight');
-        expect(getNode('yazhou')).toHaveAttribute('aria-expanded', 'true');
-        expect(onExpand).toHaveBeenLastCalledWith(['yazhou'], expect.objectContaining({ expanded: true }));
-        await press('ArrowRight');
-        expect(activeKey()).toBe('zhongguo');
-        await press('ArrowLeft');
-        expect(activeKey()).toBe('yazhou');
-        await press('ArrowLeft');
-        expect(getNode('yazhou')).toHaveAttribute('aria-expanded', 'false');
-        expect(visibleKeys()).toEqual(['yazhou', 'beimeizhou']);
-    });
-
-    it('RTL 下 Left 展开分支，Right 收起', async () => {
-        renderTree({}, 'rtl');
-        await press('ArrowLeft');
-        expect(getNode('yazhou')).toHaveAttribute('aria-expanded', 'true');
-        await press('ArrowRight');
-        expect(getNode('yazhou')).toHaveAttribute('aria-expanded', 'false');
-    });
-
     it('Enter 选中当前行；多选树中 Space 勾选当前行', async () => {
         const onChange = spyOn('onChange');
         const { update } = renderTree({ onChange });
@@ -482,17 +437,6 @@ describe('Tree 键盘（APG tree view）', () => {
     it('输入字符时移动到标签以输入内容开头的下一行', async () => {
         renderTree();
         await press('北');
-        expect(activeKey()).toBe('beimeizhou');
-    });
-
-    it('指针点击、展开、右键的行成为键盘当前行', async () => {
-        renderTree();
-        await click(getNode('beimeizhou'));
-        expect(activeKey()).toBe('beimeizhou');
-        await click(getExpandIcon(getNode('yazhou')));
-        expect(activeKey()).toBe('yazhou');
-        await fireEvent.contextMenu(getNode('beimeizhou'));
-        flushSync();
         expect(activeKey()).toBe('beimeizhou');
     });
 });

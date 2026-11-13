@@ -1,6 +1,6 @@
 import type React from 'react';
 import { Activity, Component, Profiler, StrictMode, createRef, useEffect } from 'react';
-import { render, screen, fireEvent, waitFor, act, createEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -164,27 +164,6 @@ describe('modal', () => {
         expect($('.modal-container')).toContainElement(modals[0]);
     });
 
-    it('maskClosable', async () => {
-        let spyOnCancel = vi.fn<() => void>();
-        let spyOnCancel2 = vi.fn<() => void>();
-        const { unmount } = renderModal({
-            maskClosable: true,
-            visible: true,
-            onCancel: spyOnCancel,
-        });
-        await userEvent.click($(`.${BASE_CLASS_PREFIX}-modal-wrap`));
-        expect(spyOnCancel).toHaveBeenCalledTimes(1);
-        unmount();
-
-        renderModal({
-            maskClosable: false,
-            visible: true,
-            onCancel: spyOnCancel2,
-        });
-        await userEvent.click($(`.${BASE_CLASS_PREFIX}-modal-wrap`));
-        expect(spyOnCancel2).not.toHaveBeenCalled();
-    });
-
     it('按钮相关属性：cancelText / okText / okButtonProps / cancelButtonProps / hasCancel / confirmLoading', () => {
         const baseProps = {
             cancelText: 'cancel',
@@ -211,22 +190,6 @@ describe('modal', () => {
         footerBtn = getButtons();
         expect(footerBtn).toHaveLength(1);
         expect(footerBtn[0]).toHaveClass(`${BASE_CLASS_PREFIX}-button-loading`);
-    });
-
-    it('onCancel / onOk', async () => {
-        let spyOnCancel = vi.fn<() => void>();
-        let spyOnOk = vi.fn<() => void>();
-        renderModal({
-            visible: true,
-            onCancel: spyOnCancel,
-            onOk: spyOnOk,
-        });
-        let btn = getButtons();
-        await userEvent.click($(`button.${BASE_CLASS_PREFIX}-modal-close`));
-        await userEvent.click(btn[1]);
-        await userEvent.click(btn[2]);
-        expect(spyOnCancel).toHaveBeenCalledTimes(2);
-        expect(spyOnOk).toHaveBeenCalledTimes(1);
     });
 
     it('无遮罩', () => {
@@ -505,15 +468,6 @@ describe('modal 行为', () => {
         );
         pressEsc();
         expect(onLowerCancel).not.toHaveBeenCalled();
-    });
-
-    it('modal 使其后的页面变为 inert，关闭时释放', () => {
-        const page = document.body.appendChild(document.createElement('main'));
-        const { rerender } = renderModal({ visible: true, title: 'Dialog' });
-        expect(page.inert).toBe(true);
-        rerender({ visible: false, title: 'Dialog' });
-        expect(page.inert).toBe(false);
-        page.remove();
     });
 
     it('仅当对话框阻挡整个页面时才设置 aria-modal', () => {
@@ -899,13 +853,6 @@ describe('modal 修复', () => {
         expect(dialog).toHaveAccessibleName('Title');
     });
 
-    it('aria-label 替换生成的标题引用', () => {
-        render(getModal({ visible: true, title: 'Title', 'aria-label': 'Custom label' }));
-        const dialog = screen.getByRole('dialog');
-        expect(dialog).not.toHaveAttribute('aria-labelledby');
-        expect(dialog).toHaveAccessibleName('Custom label');
-    });
-
     // the unmount hook runs after StrictMode's simulated unmount, which must not report a close
     it('卸载已显示的 modal 时只调用一次 afterClose，隐藏或已关闭的不调用', async () => {
         const afterClose = vi.fn<() => void>();
@@ -1020,16 +967,6 @@ describe('Modal 模态判断与初始焦点', () => {
         expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-modal');
         expect(document.body.style.overflow).toBe('');
         container.remove();
-    });
-
-    it('非模态时 Tab 不被锁在对话框内', () => {
-        renderModal({ visible: true, title: 'T', mask: false });
-        const [, ok] = footerButtons();
-        (ok as HTMLElement).focus();
-        const event = createEvent.keyDown(ok, { key: 'Tab' });
-        fireEvent(ok, event);
-        expect(event.defaultPrevented).toBe(false);
-        expect(document.activeElement).toBe(ok);
     });
 
     // keepDOM keeps the dialog mounted, so the hiding commit runs the restore rather than unmounting the content

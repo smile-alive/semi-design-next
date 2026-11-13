@@ -82,6 +82,17 @@ describe('Svelte Select 浏览器：select-only combobox（APG）', () => {
         after.remove();
     });
 
+    it('可搜索时打开后按 Tab 关闭列表并移到下一个元素', async () => {
+        const { combobox } = setup({ filter: true });
+        const after = document.body.appendChild(document.createElement('button'));
+        await userEvent.click(combobox);
+        await screen.findByRole('listbox');
+        await tab();
+        expect(after).toHaveFocus();
+        await waitFor(() => expect(screen.queryByRole('listbox')).toBe(null));
+        after.remove();
+    });
+
     it('指针点选选项后关闭，焦点留在 combobox', async () => {
         const { store, combobox } = setup();
         await userEvent.click(combobox);

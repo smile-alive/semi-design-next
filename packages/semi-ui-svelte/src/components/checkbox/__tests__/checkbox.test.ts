@@ -1,5 +1,5 @@
 import { type ComponentProps, createRawSnippet, flushSync } from 'svelte';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -103,16 +103,6 @@ describe('Svelte Checkbox', () => {
         render(Checkbox, { props: { class: 'test', style: 'color: red', children: label } });
         expect(getWrapper()).toHaveClass('test');
         expect(getWrapper()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-    });
-
-    it('禁用状态不触发 onChange', async () => {
-        const change = vi.fn<Change>();
-        render(Checkbox, { props: { disabled: true, onChange: change, children: label } });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-disabled`);
-        expect(getInput()).toBeDisabled();
-        await fireEvent.click(getWrapper());
-        expect(getInput()).not.toBeChecked();
-        expect(change).not.toHaveBeenCalled();
     });
 
     it('onChange 的 target 只含 checked、value、name、disabled，nativeEvent 是原生点击', async () => {

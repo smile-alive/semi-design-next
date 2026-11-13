@@ -39,20 +39,6 @@ describe('Checkbox', () => {
         expect(getWrapper()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('基本功能与点击行为', async () => {
-        render(Checkbox, { slots: label });
-        expect(getInput()).not.toBeChecked();
-        expect(getInput()).toBeEnabled();
-        await userEvent.click(getWrapper());
-        expect(getInput()).toBeChecked();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-checked`);
-    });
-
-    it('defaultChecked 生效', () => {
-        render(Checkbox, { props: { defaultChecked: true }, slots: label });
-        expect(getInput()).toBeChecked();
-    });
-
     it('modelValue 受控模式随 props 变化，变回 undefined 时清空', async () => {
         const view = render(Checkbox, { props: { modelValue: true }, slots: label });
         const innerChecked = () => document.querySelector(`.${prefixCls}-inner-checked`);
@@ -66,16 +52,6 @@ describe('Checkbox', () => {
         await view.rerender({ modelValue: undefined });
         expect(getInput()).not.toBeChecked();
         expect(innerChecked()).toBeNull();
-    });
-
-    it('禁用状态', async () => {
-        const change = vi.fn<Change>();
-        render(Checkbox, { props: { disabled: true, onChange: change }, slots: label });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-disabled`);
-        expect(getInput()).toBeDisabled();
-        await fireEvent.click(getWrapper());
-        expect(getInput()).not.toBeChecked();
-        expect(change).not.toHaveBeenCalled();
     });
 
     it('change 报告新的选中状态，并同时发出 update:modelValue', async () => {
@@ -98,6 +74,27 @@ describe('Checkbox', () => {
         expect(getInput()).toHaveAttribute('aria-describedby', extra.id);
     });
 
+    it('键盘 Enter 不切换，Space 切换', async () => {
+        const change = vi.fn<Change>();
+        render(Checkbox, { props: { onChange: change } });
+        getInput().focus();
+        await userEvent.keyboard('{Enter}');
+        expect(change).not.toHaveBeenCalled();
+        await userEvent.keyboard(' ');
+        expect(change).toHaveBeenCalledTimes(1);
+        expect(change.mock.calls[0]?.[0].target.checked).toBe(true);
+    });
+
+    it('非受控 checkbox 可反复切换', async () => {
+        const change = vi.fn<Change>();
+        render(Checkbox, { props: { onChange: change }, slots: label });
+        await userEvent.click(getWrapper());
+        await userEvent.click(getWrapper());
+        expect(change.mock.calls.map(([event]) => event.target.checked)).toEqual([true, false]);
+        expect(getInput()).not.toBeChecked();
+        expect(getWrapper()).toHaveClass(`${prefixCls}-unChecked`);
+    });
+
     it('半选状态', () => {
         render(Checkbox, { props: { indeterminate: true }, slots: label });
         expect(getWrapper()).toHaveClass(`${prefixCls}-indeterminate`);
@@ -111,48 +108,6 @@ describe('Checkbox', () => {
         expect(getInput()).toBeChecked();
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-icon-checkbox_tick`)).not.toBeNull();
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-icon-checkbox_indeterminate`)).toBeNull();
-    });
-
-    it('半选状态暴露为原生 indeterminate，不输出 aria-checked', async () => {
-        const view = render(Checkbox, { props: { indeterminate: true } });
-        expect(getInput()).toBePartiallyChecked();
-        expect(getInput()).not.toHaveAttribute('aria-checked');
-        expect(getInput().matches(':indeterminate')).toBe(true);
-        await view.rerender({ modelValue: true });
-        expect(getInput()).not.toBePartiallyChecked();
-        expect(getInput()).toBeChecked();
-    });
-
-    it('点击原生输入后受控半选仍保持 indeterminate', async () => {
-        const change = vi.fn<Change>();
-        render(Checkbox, { props: { modelValue: false, indeterminate: true, onChange: change } });
-        await userEvent.click(getInput());
-        expect(change).toHaveBeenCalledTimes(1);
-        expect(getInput()).toBePartiallyChecked();
-        expect(getInput().checked).toBe(false);
-    });
-
-    it('键盘 Enter 不切换，Space 切换', async () => {
-        const change = vi.fn<Change>();
-        render(Checkbox, { props: { onChange: change } });
-        getInput().focus();
-        await userEvent.keyboard('{Enter}');
-        expect(change).not.toHaveBeenCalled();
-        await userEvent.keyboard(' ');
-        expect(change).toHaveBeenCalledTimes(1);
-        expect(change.mock.calls[0]?.[0].target.checked).toBe(true);
-    });
-
-    it('聚焦后按 Space 反复切换', async () => {
-        const change = vi.fn<Change>();
-        render(Checkbox, { props: { onChange: change } });
-        await userEvent.tab();
-        expect(getInput()).toHaveFocus();
-        await userEvent.keyboard(' ');
-        expect(getInput()).toBeChecked();
-        await userEvent.keyboard(' ');
-        expect(getInput()).not.toBeChecked();
-        expect(change).toHaveBeenCalledTimes(2);
     });
 
     it('禁用的 checkbox 忽略 Enter，且不输出 aria-disabled', async () => {
@@ -199,18 +154,6 @@ describe('Checkbox', () => {
         render(Checkbox, { attrs: { 'aria-labelledby': 'label-id' }, slots: label });
         expect(getInput().getAttribute('aria-labelledby')).toMatch(/^label-id \S+$/);
         expect(getWrapper()).not.toHaveAttribute('aria-labelledby');
-    });
-
-    it('card 类型', () => {
-        render(Checkbox, { props: { type: 'card' }, slots: label });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-cardType`);
-        expect(document.querySelector(`.${prefixCls}-inner-pureCardType`)).toBeNull();
-    });
-
-    it('pureCard 类型', () => {
-        render(Checkbox, { props: { type: 'pureCard' }, slots: label });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-cardType`);
-        expect(document.querySelector(`.${prefixCls}-inner-pureCardType`)).not.toBeNull();
     });
 
     it('focus 与 blur 方法', async () => {
@@ -286,28 +229,6 @@ describe('Checkbox', () => {
         expect(event.nativeEvent.type).toBe('click');
         expect(typeof event.stopPropagation).toBe('function');
         expect(typeof event.preventDefault).toBe('function');
-    });
-
-    it('非受控 checkbox 可反复切换', async () => {
-        const change = vi.fn<Change>();
-        render(Checkbox, { props: { onChange: change }, slots: label });
-        await userEvent.click(getWrapper());
-        await userEvent.click(getWrapper());
-        expect(change.mock.calls.map(([event]) => event.target.checked)).toEqual([true, false]);
-        expect(getInput()).not.toBeChecked();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-unChecked`);
-    });
-
-    it('受控 checkbox 只通知，直到父组件更新 modelValue', async () => {
-        const change = vi.fn<Change>();
-        const view = render(Checkbox, { props: { modelValue: false, onChange: change }, slots: label });
-        await userEvent.click(getWrapper());
-        expect(change.mock.calls[0]?.[0].target.checked).toBe(true);
-        expect(getInput()).not.toBeChecked();
-        await userEvent.click(getInput());
-        expect(getInput().checked).toBe(false);
-        await view.rerender({ modelValue: true });
-        expect(getInput()).toBeChecked();
     });
 
     it('modelValue 为 undefined 按非受控处理：取 defaultChecked，点击即切换', async () => {
@@ -453,12 +374,6 @@ describe('Checkbox', () => {
     it('autofocus 在挂载后聚焦 input', async () => {
         render(Late);
         await userEvent.click(screen.getByRole('button', { name: 'show' }));
-        expect(getInput()).toHaveFocus();
-    });
-
-    it('点击文字时聚焦原生 input', async () => {
-        render(Checkbox, { slots: label });
-        await userEvent.click(getElement(`.${prefixCls}-addon`));
         expect(getInput()).toHaveFocus();
     });
 

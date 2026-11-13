@@ -49,14 +49,6 @@ describe('Switch', () => {
         expect(getSwitch()).toBeEnabled();
     });
 
-    it('change 报告新值', async () => {
-        const change = vi.fn<SwitchChange>();
-        render(Switch, { props: { onChange: change } });
-        await userEvent.click(getSwitch());
-        expect(change).toHaveBeenCalledOnce();
-        expect(change.mock.calls[0]?.[0]).toBe(true);
-    });
-
     it('mouseenter/mouseleave 接收原生事件', async () => {
         const enter = vi.fn<(event: MouseEvent) => void>();
         const leave = vi.fn<(event: MouseEvent) => void>();
@@ -68,13 +60,6 @@ describe('Switch', () => {
         expect(enter.mock.calls[0]?.[0]).toBeInstanceOf(MouseEvent);
     });
 
-    it.each(['small', 'default', 'large'] as const)('size=%s 使用对应类名', (size) => {
-        render(Switch, { props: { size } });
-        expect(getWrapper()).toHaveClass(prefixCls);
-        expect(getWrapper()?.classList.contains(`${prefixCls}-small`)).toBe(size === 'small');
-        expect(getWrapper()?.classList.contains(`${prefixCls}-large`)).toBe(size === 'large');
-    });
-
     it('v-model 受控更新值并发出原生事件', async () => {
         const change = vi.fn<SwitchChange>();
         render(Model, { props: { onChange: change } });
@@ -82,39 +67,6 @@ describe('Switch', () => {
         expect(change).toHaveBeenCalledWith(true, expect.any(Event));
         expect(getSwitch()).toBeChecked();
         expect(getWrapper()).toHaveClass(`${prefixCls}-checked`);
-    });
-
-    it('loading 可动态移除', async () => {
-        const view = render(Switch, { props: { loading: true } });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-loading`);
-        await view.rerender({ loading: false });
-        expect(getWrapper()).not.toHaveClass(`${prefixCls}-loading`);
-    });
-
-    it('loading 挂载时显示类名', () => {
-        render(Switch, { props: { loading: true } });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-loading`);
-    });
-
-    it('aria-label 落在控件', () => {
-        render(Switch, { attrs: { 'aria-label': 'Toggle switch' } });
-        expect(screen.getByRole('switch', { name: 'Toggle switch' })).toBe(getSwitch());
-        expect(getWrapper()).not.toHaveAttribute('aria-label');
-    });
-
-    it('defaultChecked 只初始化一次，之后非受控切换', async () => {
-        const view = render(Switch, { props: { defaultChecked: true } });
-        expect(getSwitch()).toBeChecked();
-        await userEvent.click(getSwitch());
-        expect(getSwitch()).not.toBeChecked();
-        await view.rerender({ defaultChecked: false });
-        expect(getSwitch()).not.toBeChecked();
-    });
-
-    it('id 只落在原生控件', () => {
-        render(Switch, { attrs: { id: 'my-switch' } });
-        expect(getSwitch()).toHaveAttribute('id', 'my-switch');
-        expect(getWrapper()).not.toHaveAttribute('id');
     });
 
     it('checkedText 支持自定义节点', () => {
@@ -140,33 +92,6 @@ describe('Switch', () => {
         expect(getWrapper()).not.toHaveAttribute(key);
     });
 
-    it('原生 checked 表达状态，不叠加 aria-checked', async () => {
-        render(Switch, { props: { defaultChecked: true } });
-        expect(getSwitch()).toBeChecked();
-        expect(getSwitch()).not.toHaveAttribute('aria-checked');
-        await userEvent.click(getSwitch());
-        expect(getSwitch()).not.toBeChecked();
-    });
-
-    it('disabled 用原生属性表达', () => {
-        render(Switch, { props: { disabled: true } });
-        expect(getSwitch()).toBeDisabled();
-        expect(getSwitch()).not.toHaveAttribute('aria-disabled');
-    });
-
-    it('原生输入带 switch role', () => {
-        render(Switch);
-        expect(getSwitch()).toHaveAttribute('role', 'switch');
-    });
-
-    it('Tab 进入与离开控件', async () => {
-        render(Switch);
-        await userEvent.tab();
-        expect(getSwitch()).toHaveFocus();
-        await userEvent.tab();
-        expect(getSwitch()).not.toHaveFocus();
-    });
-
     it('loading 保持可聚焦并阻止切换与通知', async () => {
         const change = vi.fn<SwitchChange>();
         const update = vi.fn<(checked: boolean) => void>();
@@ -185,52 +110,10 @@ describe('Switch', () => {
         expect(screen.queryByText('OFF')).toBeNull();
     });
 
-    it.each(['large', 'default'] as const)('%s 显示 checkedText', (size) => {
-        render(Switch, { props: { size, modelValue: true }, slots: textSlots });
-        expect(screen.getByText('ON')).toBeInTheDocument();
-    });
-
-    it.each([false, true])('选中=%s 时只显示当前文本', (modelValue) => {
-        render(Switch, { props: { modelValue }, slots: textSlots });
-        expect(screen.getByText(modelValue ? 'ON' : 'OFF')).toBeInTheDocument();
-        expect(screen.queryByText(modelValue ? 'OFF' : 'ON')).toBeNull();
-    });
-
-    it('loading 显示 Spin 并替换滑块', () => {
-        render(Switch, { props: { loading: true } });
-        expect(document.querySelector(`.${prefixCls}-loading-spin`)).toBeInTheDocument();
-        expect(document.querySelector(`.${prefixCls}-knob`)).toBeNull();
-    });
-
     it('非 loading 显示滑块', () => {
         render(Switch);
         expect(document.querySelector(`.${prefixCls}-knob`)).toBeInTheDocument();
         expect(document.querySelector(`.${prefixCls}-loading-spin`)).toBeNull();
-    });
-
-    it('挂载初始化 disabled 状态', () => {
-        render(Switch, { props: { disabled: true } });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-disabled`);
-        expect(getSwitch()).toBeDisabled();
-    });
-
-    it('卸载清理控件', () => {
-        const view = render(Switch);
-        view.unmount();
-        expect(screen.queryByRole('switch')).toBeNull();
-    });
-
-    it('modelValue 更新立即控制原生状态和类名', async () => {
-        const view = render(Switch, { props: { modelValue: false } });
-        expect(getSwitch()).not.toBeChecked();
-        await view.rerender({ modelValue: true });
-        expect(getSwitch()).toBeChecked();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-checked`);
-    });
-
-    it('输入类型为 checkbox', () => {
-        render(Switch);
-        expect(getSwitch()).toHaveAttribute('type', 'checkbox');
     });
 
     it('输入类名与共享样式一致', () => {
@@ -244,17 +127,6 @@ describe('Switch', () => {
         expect(document.querySelector(`.${prefixCls}-loading-spin`)).toHaveClass(`${BASE_CLASS_PREFIX}-spin-${size}`);
     });
 
-    it('disabled 和 loading 可同时生效', () => {
-        render(Switch, { props: { disabled: true, loading: true } });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-disabled`, `${prefixCls}-loading`);
-        expect(getSwitch()).toBeDisabled();
-    });
-
-    it('defaultChecked 和 disabled 可同时生效', () => {
-        render(Switch, { props: { defaultChecked: true, disabled: true } });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-checked`, `${prefixCls}-disabled`);
-    });
-
     it('change 事件保留原生 Event 和目标', async () => {
         const change = vi.fn<SwitchChange>();
         render(Switch, { props: { onChange: change } });
@@ -264,30 +136,6 @@ describe('Switch', () => {
         expect(event).toBeInstanceOf(Event);
         expect(event.type).toBe('change');
         expect(event.target).toBe(getSwitch());
-    });
-
-    it('连续切换逐次发出值', async () => {
-        const change = vi.fn<SwitchChange>();
-        render(Switch, { props: { onChange: change } });
-        await userEvent.click(getSwitch());
-        await userEvent.click(getSwitch());
-        await userEvent.click(getSwitch());
-        expect(change.mock.calls.map(([value]) => value)).toEqual([true, false, true]);
-    });
-
-    it('未监听事件仍可切换', async () => {
-        render(Switch);
-        await userEvent.click(getSwitch());
-        expect(getSwitch()).toBeChecked();
-    });
-
-    it('受控值变回 undefined 后清空并转为非受控', async () => {
-        const view = render(Switch, { props: { modelValue: true } });
-        await view.rerender({ modelValue: undefined });
-        expect(getSwitch()).not.toBeChecked();
-        expect(getWrapper()).not.toHaveClass(`${prefixCls}-checked`);
-        await userEvent.click(getSwitch());
-        expect(getSwitch()).toBeChecked();
     });
 
     it('未知属性在根元素，焦点属性在输入框', async () => {

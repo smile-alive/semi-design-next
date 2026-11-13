@@ -241,7 +241,13 @@ describe('AIChatInput', () => {
             expect(found).toHaveLength(2);
             return found;
         });
-        const [first, second] = comboboxes.map((combobox) => combobox.getAttribute('aria-controls'));
+        // aria-controls is only written while the listbox is open
+        const ids: (string | null)[] = [];
+        for (const combobox of comboboxes) {
+            await userEvent.click(combobox);
+            ids.push(combobox.getAttribute('aria-controls'));
+        }
+        const [first, second] = ids;
         expect(first).toBeTruthy();
         expect(second).toBeTruthy();
         expect(first).not.toBe(second);

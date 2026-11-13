@@ -3,6 +3,7 @@ import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { checkPattern } from '@test/utils/apg';
 import { isWebKit, tab } from '@test/utils/browser';
 import { render, getElement } from '@test/utils/vue';
 import Slider from '..';
@@ -344,5 +345,26 @@ describe('Slider 交互（浏览器）', () => {
         const { handles } = renderHorizontalSliders();
         await userEvent.hover(handles[0] as HTMLElement);
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-handle-tooltip`)).toMatchTextContent(/^0$/));
+    });
+
+    // Vertical keys differ from the APG on purpose (release-notes, Slider): the arrow toward max, Down by default, raises the value
+    it.each([
+        ['水平', {}, {}, {}],
+        ['水平 RTL', { direction: 'rtl' }, {}, { direction: 'rtl' }],
+        ['垂直', {}, { vertical: true }, { sliderKeys: { increase: 'ArrowDown', decrease: 'ArrowUp' } }],
+        ['垂直 verticalReverse', {}, { vertical: true, verticalReverse: true }, { sliderKeys: { increase: 'ArrowUp', decrease: 'ArrowDown' } }],
+    ] as const)('遵循 APG slider 模式：%s', async (_, providerProps, sliderProps, options) => {
+        const { container } = render({
+            render: () => (
+                <ConfigProvider {...providerProps}>
+                    {() => (
+                        <div style={{ width: '300px', height: '300px' }}>
+                            <Slider aria-label="Volume" defaultValue={50} {...sliderProps} />
+                        </div>
+                    )}
+                </ConfigProvider>
+            ),
+        });
+        await expect(checkPattern('slider', container, { press: (key) => userEvent.keyboard(key.length === 1 ? key : `{${key}}`), ...options })).resolves.toBeUndefined();
     });
 });

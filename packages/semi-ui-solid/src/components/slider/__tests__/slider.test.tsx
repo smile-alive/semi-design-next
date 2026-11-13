@@ -473,17 +473,6 @@ describe('Slider 的无障碍', () => {
         expect(maxInput).toHaveAttribute('aria-valuetext', '60% (max)');
     });
 
-    it('输入框是原生 range，携带值与边界而不重复 aria-valuenow', () => {
-        render(() => <Slider defaultValue={50} max={90} min={10} />);
-        const input = getInput();
-        expect(input).toHaveAttribute('type', 'range');
-        expect(input).toHaveValue('50');
-        expect(input).toHaveAttribute('min', '10');
-        expect(input).toHaveAttribute('max', '90');
-        expect(input).not.toHaveAttribute('aria-valuenow');
-        expect(input).not.toHaveAttribute('aria-valuemax');
-    });
-
     it('垂直 slider 的输入框有 aria-orientation 与竖排书写模式，dir 跟随方向', () => {
         const [reverse, setReverse] = createSignal(false);
         render(() => <Slider defaultValue={30} vertical verticalReverse={reverse()} />);

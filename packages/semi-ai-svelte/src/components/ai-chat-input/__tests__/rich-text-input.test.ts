@@ -165,9 +165,14 @@ describe('RichTextInput 插槽节点视图', () => {
         expect(combobox).toHaveTextContent('b');
     });
 
-    it('两个 select slot 的 listbox id 不同', () => {
+    it('两个 select slot 的 listbox id 不同', async () => {
         const { pm } = setup({ defaultContent: `<p>${select('a')} and ${select('b')}</p>` });
-        const [first, second] = [...pm().querySelectorAll('.node-selectSlot [role="combobox"]')].map((combobox) => combobox.getAttribute('aria-controls'));
+        const ids: (string | null)[] = [];
+        for (const combobox of pm().querySelectorAll('.node-selectSlot [role="combobox"]')) {
+            await fireEvent.click(combobox);
+            ids.push(combobox.getAttribute('aria-controls'));
+        }
+        const [first, second] = ids;
         expect(first).toBeTruthy();
         expect(second).toBeTruthy();
         expect(first).not.toBe(second);

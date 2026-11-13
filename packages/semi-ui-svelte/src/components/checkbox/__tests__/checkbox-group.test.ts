@@ -140,21 +140,6 @@ describe('Svelte CheckboxGroup', () => {
         expect(cards[1]).not.toHaveClass(`${prefixCls}-cardType_checked_disabled`);
     });
 
-    it('name 下发给所有 input；未设置时每组生成不同的名称', () => {
-        const view = render(CheckboxGroup, { props: { name: 'checkboxgroup', options: ['Yes', 'No'] } });
-        screen.getAllByRole('checkbox').forEach((el) => expect(el).toHaveAttribute('name', 'checkboxgroup'));
-        view.unmount();
-        render(CheckboxGroup, { props: { 'aria-label': 'one', options: ['a', 'b'] } });
-        render(CheckboxGroup, { props: { 'aria-label': 'two', options: ['a', 'b'] } });
-        const names = ['one', 'two'].map((groupName) => {
-            const inputs = screen.getByRole('group', { name: groupName }).querySelectorAll('input');
-            expect(inputs[0]?.name).toBeTruthy();
-            expect(inputs[0]?.name).toBe(inputs[1]?.name);
-            return inputs[0]?.name;
-        });
-        expect(names[0]).not.toBe(names[1]);
-    });
-
     it('禁用分组不触发任何 onChange', async () => {
         const change = vi.fn<GroupChange>();
         const { container } = renderOptions({ onChange: change, disabled: true });

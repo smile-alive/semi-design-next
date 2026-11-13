@@ -41,6 +41,17 @@
 - jsdom 不运行 CSS 动画，`animationend` 不会触发。Tooltip 系弹层在定位完成（jsdom 中是 100ms 兜底计时器）后才启用动画，此后关闭要等 `animationend` 才卸载；用例在这之前还是之后关闭取决于机器快慢，负载高时就会一直等到超时。等弹层卸载的单元测试要么传 `motion={false}`，要么在等待时给带 `-animation-hide` class 的元素派发 `webkitAnimationEnd`（见 timePicker 测试的 `waitForClosed`）。
 - 监听是否随卸载移除，用 `@test/utils/<框架>` 的 `countLiveListeners(add, remove, type)` 数存活的监听（已 abort 的 signal 算作移除），不断言 `removeEventListener` 的调用次数。
 
+### APG 模式检查
+
+`@test/utils/apg` 的 `checkPattern(pattern, root, options)` 按 WAI-ARIA APG 检查已渲染的控件：先查必需的角色、状态、id 引用、可访问名称和 Tab 停靠点，再从当前项出发按 APG 规定的键，断言焦点的去向。它补 axe 查不到的键盘交互；所有问题收集后抛一个 Error，每行写明元素（角色加名称或 id）和违反的规则。
+
+- 模式：`tabs`、`menu`、`menubar`、`listbox`、`combobox`、`tree`、`radio-group`、`toolbar`、`dialog`、`alertdialog`、`disclosure`、`accordion`、`slider`、`switch`、`checkbox`。`root` 是承载模式的元素或它的容器，弹层渲染在别处时靠 `aria-controls` 找到；菜单、对话框要先打开再检查。
+- `press` 由调用方注入，检查器自己不产生事件。键名是 `KeyboardEvent.key`（`ArrowDown`、`Home`、` `），唯一的组合键是 `Shift+Tab`。jsdom 里包 user-event 的 `keyboard`：`(key) => user.keyboard(key === 'Shift+Tab' ? '{Shift>}{Tab}{/Shift}' : key.length === 1 ? key : `{${key}}`)`；浏览器测试里同样包 `vite-plus/test/browser` 的 `userEvent.keyboard`。`press` 要等到控件重新渲染后再返回。
+- 两种焦点模型都按 APG 判定合法：容器或输入框带 `aria-activedescendant` 时，当前项是它指向的元素，DOM 焦点不动（combobox、listbox、tree、grid）；否则当前项是 `document.activeElement`，同一时刻只有一个 `tabindex=0`（tabs、menu、toolbar、radio-group）。检查器读到哪种就按哪种判，不需要声明。
+- APG 标为可选的行为不判违规：Home 与 End、循环、type-ahead 只在控件表现出该行为时检查一致性，`homeEnd: true`、`wraps`（`true` 必须循环、`false` 禁止、`'optional'` 都可以）、`typeahead: true` 把它们变成硬性要求或开启检查。tabs、menubar、radio-group 的循环 APG 没标可选，默认必须循环。`direction: 'rtl'` 翻转水平方向键。
+- 检查会按 Enter、Space、Escape，可能切换值或关闭弹层（`actions: false` 只查结构与导航）；它还会移动焦点、高亮和选中项，结束时不恢复，每次调用都用新渲染的控件。
+- 在共享 spec 里调用，让四个框架跑同一份检查：`press` 用 `vitest/specs/shared/press.ts` 导出的适配函数，布置（LTR、RTL、垂直、含禁用项）各写一条用例，参照 `vitest/specs/tabs.ts`。模式要求可访问名称时，名称通过夹具的 props 传入、走组件自己的落点，不在 spec 里直接改 DOM。检查器报出的是某个框架组件的真实问题时，不要放宽检查器，也不要改成通过：在该框架夹具的 `fails` 里写用例标题（断言保持预期的正确行为，修复后删掉条目），并在 `docs/decisions.md` 对应组件小节登记。
+
 ## 浏览器测试的坑
 
 - 每个用例开始前，`vitest/browser.setup.ts` 会把真实指针移到右下角：上一个用例留下的悬停会让 Chromium 给新渲染的元素发 mouseenter，暂停自动播放或打开 hover 弹层。
@@ -68,6 +79,48 @@
 | 首帧内容       | 框架告警发现不了的差异用内容断言：受控值、DatePicker 已选日期文字、`md` 正文、Typography 文字（Solid）、虚拟化 Table 数据行（Vue）                                                                               |
 | 时间           | 用例表中的 Calendar 一律传 `displayValue`；跨日用 `vi.setSystemTime` 在服务端渲染与 hydration 之间推进到次日，断言「今天」标记只在 hydration 后出现；跨时区不进单测                                              |
 | hydration 环境 | React、Vue 在 jsdom 项目中 `renderToString` 后 hydration，jsdom 补丁放本框架的 setup 文件，不改 `vitest/setup.ts`；Solid 在 `solid-hydration-browser` 中（服务端与客户端是两套编译产物）；一律用开发构建判断告警 |
+
+## 共享 spec
+
+四个框架必须一致的可见行为写成一份框架无关的 spec，每个框架只提供夹具，避免同一组用例在四个包里各写一套而漂移。先例是 Tabs。
+
+### 位置与协议
+
+- spec 放 `vitest/specs/<组件目录名>.ts`，属通用范围，不导入框架模块，可用 `vite-plus/test`、`@testing-library/dom`、`@testing-library/user-event`；协议与 `defineSpec` 在 `vitest/specs/shared/define-spec.ts`。每个 spec 导出 `<组件>Spec(mount, options?)`，用例通过 `defineSpec` 的 `test` 声明，标题写法同「共同约定」。
+- 夹具提供 `SpecMount<P>`：`(props: P) => SpecHandle<P> | Promise<SpecHandle<P>>`，`SpecHandle` 为 `{ container, update(partial), unmount() }`。`update` 把 `partial` 合并进当前 props（值为 `undefined` 的键照样传 `undefined`），框架重渲染完成后才 resolve。
+- `P` 是该 spec 自己定义的框架无关 props，只含字符串、数字、布尔、普通对象数组和函数，不含框架节点。内容用数据表达（如 `items: { itemKey, tab, content, disabled?, closable? }[]`），由夹具转成本框架写法：React 与 Solid 的 children、Vue 的插槽、Svelte 的 `tabList` 加 snippet。回调参数的类型取各框架共有的部分（如事件只声明 `{ type: string }`，React 是合成事件）。
+- 框架里的命名与受控方式差异由夹具映射，spec 用统一名字：Svelte 没有 `defaultActiveKey`，`activeKey` 单向传值时组件可本地覆盖，夹具用函数绑定 `bind:activeKey={getter, setter}`，getter 返回受控值，setter 拒绝写入，默认值作为绑定的初始值（见 `semi-ui-svelte/src/components/tabs/__tests__/tabs-spec-fixture.svelte`）。映射不了的差异不要硬凑，该用例留在框架自己的测试里。
+- spec 只在 jsdom 项目里运行，只由各框架的非浏览器 tsconfig 检查；浏览器 tsconfig 带 `@vitest/browser` 的 matcher 类型，不得把 spec 纳入。React、Vue、Solid 的浏览器 tsconfig 只列 `*.browser.test.*`，天然不含夹具；Svelte 的浏览器 tsconfig 按 `__tests__/**/*.svelte` 收录，所以显式排除 `*-spec-fixture.svelte`，夹具必须以此命名。
+
+### 什么进 spec
+
+- 进：受控与非受控、默认值、回调的参数、禁用项、键盘与焦点（方向键、Home、End、RTL、`aria-orientation`）、ARIA 角色与状态、关闭、props 更新后的表现，且四个框架断言相同。
+- 不进：已登记的框架差异（`docs/decisions.md`、`docs/release-notes.md`）、只在某个框架存在的 API（插槽、snippet、`TabItem` 的 ref 等）、断言比 spec 更细的用例、依赖真实布局、焦点环、指针的行为（放 `*.browser.test.*`，这次没有纳入）、依赖语言包文案的断言（spec 不读各框架的语言包）。按键会同步卸载当前焦点元素的行为（如可搜索 Select 按 Tab 关闭并卸载输入框）也不进：jsdom 里各框架的卸载时机不同，user-event 会丢掉 Tab 的起点，放浏览器测试。
+
+### 写 spec 和夹具的规则
+
+- 读文本先 `trim`：Svelte 的 snippet 文本带首尾空白。
+- 夹具的 `container` 必须是 `HTMLElement`：Vue 的 `render` 返回 `Element`，夹具里写 `as HTMLElement`。
+- 不在 spec 里往 DOM 里塞节点；需要节点内容的用例留在框架自己的测试里。
+- 用点击得到「当前选中项」，不用默认值：Svelte 绑定的初始值在第一次交互前算受控。
+- 查询范围用 `within(handle.container)`；弹层 portal 到 `document.body` 时用 `document.body` 范围，不要假设内容在 `container` 里。
+- 每个夹具直接把 spec props 展开传给组件，只映射命名差异；不为让用例通过在夹具里补行为。
+- spec 文件里 `describe(name)` 的 `vitest/valid-title` 已在 `lint/exemptions.ts` 为 `define-spec.ts` 豁免，新 spec 不需要再登记。
+
+### 已知失败
+
+某个框架表现与 spec 不同且没有登记依据，就是真实的行为漂移：不改 spec 迁就，也不在夹具里绕过。在该框架夹具入口传 `tabsSpec(mount, { fails: ['用例标题'] })`，该用例按 `it.fails` 运行；标题不存在时 `defineSpec` 抛错，修复后用例通过会让 `it.fails` 报失败，迫使清单随修复清空。同时把漂移登记到 `docs/decisions.md` 对应组件的小节。
+
+### 守卫
+
+`vitest/specs/__tests__/spec-fixtures.test.ts`（`common` 项目）遍历 `vitest/specs/*.ts`，断言 `lint/index.ts` 的 `frameworks` 里每个框架的 UI 包（`semi-ui-<框架>`）都有 `src/components/<组件>/__tests__/<组件>.spec.test.*`，缺一个即失败。
+
+### 新增一个组件 spec
+
+1. 从四个框架现有测试里找共同断言的行为，加上 APG 对该模式要求而现有用例漏掉的行为，写 `vitest/specs/<组件>.ts`：定义 `P`，用 `defineSpec` 声明用例。
+2. 每个框架写 `packages/semi-ui-<框架>/src/components/<组件>/__tests__/<组件>.spec.test.{ts,tsx}`：实现 `mount` 后调用 `<组件>Spec(mount)`；Svelte 需要 `.svelte` 夹具时放同目录。
+3. 四个框架都跑通后，从各自现有测试里删掉被 spec 完全覆盖的用例，断言更细的保留。
+4. 每个框架跑 `vp test run --project <框架> packages/semi-ui-<框架>/src/components/<组件>`，再跑 `vp test run --project common vitest/specs`。
 
 ## 宿主夹具
 
@@ -148,4 +201,5 @@
 - 框架包的类型读取 semi-foundation 已构建的 `dist`：foundation 有改动时，先 `pnpm build` 再 typecheck。只跑框架包的 `tsc` 查不出 foundation 自己的类型错误，要用根目录的 `pnpm typecheck`。
 - `pnpm test:coverage` 的全局阈值在 `vitest/index.ts`、包级阈值在 `vitest/<框架>/index.ts`，按实测值向下取整，随覆盖率提升上调；它在一条命令里先跑完全量单测再跑全量浏览器用例（单测项目 `groupOrder` 为 0、浏览器项目为 1，由 `vitest/framework.ts` 统一设置，两者同跑会让浏览器用例超时），阈值对两段合起来的覆盖率检查，只在合入后（`check:full`）运行。SSR 与 hydration 项目（`*-ssr`、`*-hydration-browser`）不进覆盖率运行，由 `pnpm test:ssr` 在 `check:full` 中另跑：Vue、Solid 在这些项目里把同一源文件编译成服务端或 hydration 版本，istanbul 按路径合并后多出只有另一种编译才走得到的语句和分支，计入后覆盖率会随 SSR 用例增加而下降。带 `--coverage` 时浏览器依赖预构建缓存放在 `node_modules/.vite/coverage`，不与普通运行和编辑器的 Vitest 扩展共用：两者配置 hash 不同，共用时后启动的一方会删掉对方正在使用的 deps，浏览器会话报 `Failed to connect to the browser session`。
 - `test:packed` 和 `test:plugins` 需要先 `pnpm build`。
+- `pnpm size` 同样需要先 `pnpm build`，在合入后的 `check:full` 中跑一次；改动组件逻辑或依赖使体积有意变化时，用 `pnpm size --update` 重写 `size-budget.json` 并随改动提交。`node scripts/size.ts Button Spin` 单项查看体积明细。
 - 完成声明要有本次实际运行的输出；未执行或无法验证的部分标 `UNKNOWN`，并写明验证条件。

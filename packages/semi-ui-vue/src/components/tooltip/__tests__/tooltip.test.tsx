@@ -100,6 +100,17 @@ describe('Tooltip', () => {
         expect(document.querySelector(wrapper)).toBeNull();
     });
 
+    it('condition=false 阻止打开并关闭已显示的弹层', async () => {
+        const view = renderTip({ trigger: 'click', condition: false });
+        await fireEvent.click(screen.getByRole('button'));
+        expect(document.querySelector(wrapper)).toBeNull();
+        await view.rerender({ condition: true });
+        await fireEvent.click(screen.getByRole('button'));
+        expect(document.querySelector(shown)).not.toBeNull();
+        await view.rerender({ condition: false });
+        expect(document.querySelector(wrapper)).toBeNull();
+    });
+
     it('visible=false 单向受控连续点击只通知，父级同值更新不漂移', async () => {
         const view = renderTip({ trigger: 'click', visible: false });
         await fireEvent.click(screen.getByRole('button'));
@@ -496,17 +507,6 @@ describe('Tooltip', () => {
         await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'false'));
         expect(popup).toBeInTheDocument();
         expect(trigger).toHaveAttribute('aria-controls', popup.id);
-    });
-
-    it('condition=false 阻止打开并关闭已显示的弹层', async () => {
-        const view = renderTip({ trigger: 'click', condition: false });
-        await fireEvent.click(screen.getByRole('button'));
-        expect(document.querySelector(wrapper)).toBeNull();
-        await view.rerender({ condition: true });
-        await fireEvent.click(screen.getByRole('button'));
-        expect(document.querySelector(shown)).not.toBeNull();
-        await view.rerender({ condition: false });
-        expect(document.querySelector(wrapper)).toBeNull();
     });
 
     it('弹层方向键保留输入焦点，触发器方向键进入首尾控件', async () => {

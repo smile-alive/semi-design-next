@@ -1208,6 +1208,7 @@ describe('Tooltip', () => {
 
         it('挂载后未打开时不注册 window 的 resize 与 mousedown 监听，卸载后移除点击外部监听', async () => {
             const add = vi.spyOn(window, 'addEventListener');
+            const remove = vi.spyOn(window, 'removeEventListener');
             const view = render(() => (
                 <Tooltip content="hint" motion={false} trigger="click">
                     {(t) => <Button {...t()}>trigger</Button>}
@@ -1216,11 +1217,10 @@ describe('Tooltip', () => {
             expect(add.mock.calls.filter(([type]) => type === 'resize' || type === 'mousedown')).toHaveLength(0);
             fireEvent.click(screen.getByRole('button'));
             await waitFor(() => expect(shown()).not.toBeNull());
-            const options = add.mock.calls.find(([type]) => type === 'mousedown')?.[2] as AddEventListenerOptions | undefined;
-            const signal = options?.signal;
-            expect(signal?.aborted).toBe(false);
+            const handler = add.mock.calls.find(([type]) => type === 'mousedown')?.[1];
+            expect(handler).toBeDefined();
             view.unmount();
-            expect(signal?.aborted).toBe(true);
+            expect(remove).toHaveBeenCalledWith('mousedown', handler);
         });
     });
 

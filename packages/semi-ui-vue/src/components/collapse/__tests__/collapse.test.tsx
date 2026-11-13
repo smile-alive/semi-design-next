@@ -37,14 +37,6 @@ describe('Collapse', () => {
         expect(collapse).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('Collapse 使用 defaultActiveKey', () => {
-        const first = renderPanels({ defaultActiveKey: '1' });
-        expectExpanded([true, false, false]);
-        first.unmount();
-        renderPanels({ defaultActiveKey: ['1', '2'] });
-        expectExpanded([true, true, false]);
-    });
-
     it('Collapse 自定义 expandIcon 与 collapseIcon 插槽', async () => {
         const { container } = renderPanels({}, {}, { expandIcon: () => <IconPlus />, collapseIcon: () => <IconMinus /> });
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-icon-plus`)).toHaveLength(3);
@@ -83,23 +75,6 @@ describe('Collapse', () => {
         expect(panel2.querySelector(`.${BASE_CLASS_PREFIX}-icon-copy`)).not.toBeNull();
     });
 
-    it('change 事件的载荷是 activeKey 数组与点击事件', async () => {
-        const change = vi.fn<Change>();
-        renderPanels({ onChange: change });
-        await userEvent.click(getHeaders()[2]);
-        expect(change).toHaveBeenCalledTimes(1);
-        expect(change).toHaveBeenCalledWith(['3'], expect.any(MouseEvent));
-    });
-
-    it('可同时展开多个面板', async () => {
-        const change = vi.fn<Change>();
-        renderPanels({ onChange: change });
-        await userEvent.click(getHeaders()[1]);
-        await userEvent.click(getHeaders()[2]);
-        expect(change).toHaveBeenLastCalledWith(['2', '3'], expect.any(MouseEvent));
-        expectExpanded([false, true, true]);
-    });
-
     it('手风琴模式只允许展开一个面板', async () => {
         const change = vi.fn<Change>();
         renderPanels({ accordion: true, defaultActiveKey: ['1', '2'], onChange: change });
@@ -107,26 +82,6 @@ describe('Collapse', () => {
         await userEvent.click(getHeaders()[2]);
         expect(change).toHaveBeenCalledWith(['3'], expect.any(MouseEvent));
         expectExpanded([false, false, true]);
-    });
-
-    it('禁用面板', () => {
-        const { container } = renderPanels({}, { disabled: true });
-        const rows = getRows(container);
-        expect(rows[0]).toHaveClass(`${prefixCls}-header-disabled`);
-        expect(getHeaders()[0]).toBeDisabled();
-        expect(rows[1]).not.toHaveClass(`${prefixCls}-header-disabled`);
-        expect(getHeaders()[1]).toBeEnabled();
-    });
-
-    it('每个标题是原生 button，名称为标题文本，位于三级标题内', () => {
-        renderPanels();
-        const headings = screen.getAllByRole('heading', { level: 3 });
-        expect(headings).toHaveLength(3);
-        const button = screen.getByRole('button', { name: 'This is panel header 1' });
-        expect(button.tagName).toBe('BUTTON');
-        expect(button).toHaveAttribute('type', 'button');
-        expect(headings[0]).toContainElement(button);
-        expect(headings[0]).toHaveAccessibleName('This is panel header 1');
     });
 
     it('extra 与切换按钮并列，其自身的 button 不嵌套在切换按钮内', async () => {
@@ -152,32 +107,11 @@ describe('Collapse', () => {
         expect(change).not.toHaveBeenCalled();
     });
 
-    it('隐藏面板图标', () => {
-        const { container } = renderPanels({}, { panelAttrs: { showArrow: false } });
-        expect(container.querySelectorAll(`.${prefixCls}-header-icon`)).toHaveLength(2);
-        expect(getRows(container)[0].querySelector(`.${prefixCls}-header-icon`)).toBeNull();
-    });
-
     it('生成的面板 id 是合法的 CSS id 选择器', async () => {
         renderPanels({ motion: false });
         await userEvent.click(getHeaders()[1]);
         const id = getHeaders()[1].getAttribute('aria-controls')!;
         expect(document.querySelector(`#${id}`)).toHaveTextContent('Hi, bytedance dance dance.');
-    });
-
-    it('受控 activeKey 只通过 props 变化', async () => {
-        const change = vi.fn<Change>();
-        const view = renderPanels({ activeKey: '1', onChange: change });
-        expectExpanded([true, false, false]);
-        await userEvent.click(getHeaders()[1]);
-        expect(change).toHaveBeenLastCalledWith(['1', '2'], expect.any(MouseEvent));
-        expectExpanded([true, false, false]);
-        await view.rerender({ activeKey: ['2', '3'] });
-        expectExpanded([false, true, true]);
-        await userEvent.click(getHeaders()[2]);
-        expect(change).toHaveBeenLastCalledWith(['2'], expect.any(MouseEvent));
-        await view.rerender({ activeKey: [] });
-        expectExpanded([false, false, false]);
     });
 
     it('单向绑定 activeKey 与 change，点击后面板不自行翻转', async () => {
@@ -192,48 +126,6 @@ describe('Collapse', () => {
         const view = renderPanels({ activeKey: ['2'] });
         await view.rerender({ activeKey: ['2'] });
         expectExpanded([false, true, false]);
-    });
-
-    it('activeKey 优先于 defaultActiveKey', () => {
-        renderPanels({ activeKey: ['2'], defaultActiveKey: ['1'] });
-        expectExpanded([false, true, false]);
-    });
-
-    it("'' 与 null 的 activeKey 是受控的空值，收起全部面板", async () => {
-        const change = vi.fn<Change>();
-        const view = renderPanels({ activeKey: ['2'], onChange: change });
-        for (const activeKey of ['', null]) {
-            await view.rerender({ activeKey: ['2'] });
-            expectExpanded([false, true, false]);
-            await view.rerender({ activeKey });
-            expectExpanded([false, false, false]);
-            // still controlled: a click only reports, without the empty value in the keys
-            await userEvent.click(getHeaders()[0]);
-            expect(change).toHaveBeenLastCalledWith(['1'], expect.any(MouseEvent));
-            expectExpanded([false, false, false]);
-        }
-    });
-
-    it('activeKey 变回 undefined 后转为非受控，从最后的受控值继续', async () => {
-        const change = vi.fn<Change>();
-        const view = renderPanels({ activeKey: ['2'], onChange: change });
-        await view.rerender({ activeKey: '' });
-        await view.rerender({ activeKey: undefined });
-        expectExpanded([false, false, false]);
-        await userEvent.click(getHeaders()[0]);
-        expect(change).toHaveBeenLastCalledWith(['1'], expect.any(MouseEvent));
-        expectExpanded([true, false, false]);
-    });
-
-    it('转为非受控后，从上次受控的 activeKey 继续', async () => {
-        const change = vi.fn<Change>();
-        const view = renderPanels({ activeKey: ['1'], onChange: change });
-        await view.rerender({ activeKey: ['3'] });
-        await view.rerender({ activeKey: undefined });
-        expectExpanded([false, false, true]);
-        await userEvent.click(getHeaders()[1]);
-        expect(change).toHaveBeenLastCalledWith(['3', '2'], expect.any(MouseEvent));
-        expectExpanded([false, true, true]);
     });
 
     it('v-model:activeKey 双向绑定：点击写回父值，父值改变面板跟随', async () => {
@@ -286,13 +178,6 @@ describe('Collapse', () => {
         });
     });
 
-    it('keepDOM 下关闭面板的内容设为 inert 而非 aria-hidden', () => {
-        renderPanels({ keepDOM: true, motion: false });
-        const region = document.getElementById(getHeaders()[0].getAttribute('aria-controls')!);
-        expect(region).toHaveAttribute('inert');
-        expect(region).not.toHaveAttribute('aria-hidden');
-    });
-
     it('未知属性传到根元素', () => {
         const { container } = renderPanels({ 'aria-label': 'faq', id: 'faq' });
         const root = container.querySelector(`.${prefixCls}`);
@@ -320,15 +205,6 @@ describe('Collapse', () => {
         expect(change).toHaveBeenLastCalledWith(['1'], expect.any(MouseEvent));
     });
 
-    it('手风琴关闭已展开面板，并以数组形式通知', async () => {
-        const change = vi.fn<Change>();
-        renderPanels({ accordion: true, defaultActiveKey: '2', onChange: change });
-        expectExpanded([false, true, false]);
-        await userEvent.click(getHeaders()[1]);
-        expect(change).toHaveBeenLastCalledWith([], expect.any(MouseEvent));
-        expectExpanded([false, false, false]);
-    });
-
     it('change 接收点击事件', async () => {
         const change = vi.fn<Change>();
         renderPanels({ onChange: change });
@@ -344,36 +220,6 @@ describe('Collapse', () => {
         expect(container.querySelector(`.${prefixCls}-header-icon`)).toHaveClass(`${prefixCls}-header-iconDisabled`);
     });
 
-    it('禁用面板忽略点击，展开图标显示为禁用态', async () => {
-        const change = vi.fn<Change>();
-        const { container } = renderPanels({ onChange: change }, { disabled: true });
-        await userEvent.click(getHeaders()[0]);
-        expect(change).not.toHaveBeenCalled();
-        expectExpanded([false, false, false]);
-        const icons = container.querySelectorAll(`.${prefixCls}-header-icon`);
-        expect(icons[0]).toHaveClass(`${prefixCls}-header-iconDisabled`);
-        expect(icons[1]).not.toHaveClass(`${prefixCls}-header-iconDisabled`);
-    });
-
-    it('没有默认插槽的面板图标禁用、无内容，但仍可切换', async () => {
-        const change = vi.fn<Change>();
-        const { container } = render(() => <Collapse onChange={change}>{() => <CollapsePanel itemKey="1">{{ header: () => 'empty' }}</CollapsePanel>}</Collapse>);
-        const icon = () => container.querySelector(`.${prefixCls}-header-icon`);
-        expect(icon()).toHaveClass(`${prefixCls}-header-iconDisabled`);
-        expect(container.querySelector(`.${prefixCls}-content`)).toBeNull();
-        await userEvent.click(getHeaders()[0]);
-        expect(change).toHaveBeenCalledWith(['1'], expect.any(MouseEvent));
-        expect(icon()).toHaveClass(`${prefixCls}-header-iconDisabled`);
-    });
-
-    it('expandIconPosition 为 left 时图标位于标题文本之前', () => {
-        const { container } = renderPanels({ expandIconPosition: 'left' });
-        const row = getRows(container)[0];
-        expect(row).toHaveClass(`${prefixCls}-header-iconLeft`);
-        expect(row.firstElementChild).toHaveClass(`${prefixCls}-header-icon`);
-        expect(container.querySelectorAll(`.${prefixCls}-header-right .${prefixCls}-header-icon`)).toHaveLength(0);
-    });
-
     it('clickHeaderToExpand 为 false 时，切换 expandIconPosition 后点击图标仍能切换', async () => {
         const change = vi.fn<Change>();
         const view = renderPanels({ clickHeaderToExpand: false, onChange: change });
@@ -382,15 +228,6 @@ describe('Collapse', () => {
         await userEvent.click(icon);
         expect(change).toHaveBeenCalledTimes(1);
         expect(change.mock.calls[0][0]).toEqual(['1']);
-    });
-
-    it('expandIconPosition 为 right 时图标位于 extra 之后', () => {
-        const { container } = renderPanels({}, { extra: 'more' });
-        const row = getRows(container)[0];
-        const right = getElement(`.${prefixCls}-header-right`, row);
-        expect(right).toHaveTextContent('more');
-        expect(right.lastElementChild).toHaveClass(`${prefixCls}-header-icon`);
-        expect(row).not.toHaveClass(`${prefixCls}-header-iconLeft`);
     });
 
     it('元素标题原样放入切换按钮，extra 并列其旁', () => {
@@ -458,50 +295,30 @@ describe('Collapse', () => {
         expect(icon.children).toHaveLength(0);
     });
 
-    it('clickHeaderToExpand 为 false 时仅点击按钮与图标切换，不响应整行点击', async () => {
-        const change = vi.fn<Change>();
-        const { container } = renderPanels({ clickHeaderToExpand: false, onChange: change }, { extra: 'more' });
-        await userEvent.click(screen.getByText('more'));
-        await userEvent.click(getRows(container)[0]);
-        expect(change).not.toHaveBeenCalled();
-        expectExpanded([false, false, false]);
-        await userEvent.click(getElement(`.${prefixCls}-header-icon`, container));
-        expect(change).toHaveBeenLastCalledWith(['1'], expect.any(MouseEvent));
-        expectExpanded([true, false, false]);
-        await userEvent.click(screen.getByText('This is panel header 2'));
-        expect(change).toHaveBeenLastCalledWith(['1', '2'], expect.any(MouseEvent));
-        expectExpanded([true, true, false]);
+    it('extra 内 input 中的 Enter 与 Space 不切换面板', async () => {
+        render(() => (
+            <Collapse>
+                {() => (
+                    <CollapsePanel itemKey="1">
+                        {{
+                            header: () => 'title',
+                            extra: () => <input aria-label="inner" />,
+                            default: () => 'one',
+                        }}
+                    </CollapsePanel>
+                )}
+            </Collapse>
+        ));
+        screen.getByLabelText('inner').focus();
+        await userEvent.keyboard('{Enter} ');
+        expectExpanded([false]);
     });
 
-    it('clickHeaderToExpand 为 true 时点击整行（包括 extra）均可切换', async () => {
-        const change = vi.fn<Change>();
-        const { container } = renderPanels({ onChange: change }, { extra: 'more' });
-        await userEvent.click(screen.getByText('more'));
-        expectExpanded([true, false, false]);
-        await userEvent.click(getRows(container)[0]);
-        expectExpanded([false, false, false]);
-        expect(change).toHaveBeenCalledTimes(2);
-    });
-
-    it('未设置 keepDOM 时，折叠内容会被卸载', async () => {
-        const first = renderPanels({ motion: false, defaultActiveKey: '1' });
-        expect(first.container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(1);
-        await userEvent.click(getHeaders()[0]);
-        expect(first.container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(0);
-        first.unmount();
-
-        const kept = renderPanels({ motion: false, keepDOM: true });
-        expect(kept.container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(3);
-    });
-
-    it('keepDOM 与 lazyRender 同时使用时，内容首次展开后挂载并保留', async () => {
-        const { container } = renderPanels({ motion: false, keepDOM: true, lazyRender: true });
-        expect(container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(0);
-        await userEvent.click(getHeaders()[1]);
-        expect(container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(1);
-        await userEvent.click(getHeaders()[1]);
-        expectExpanded([false, false, false]);
-        expect(container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(1);
+    it('keepDOM 下关闭面板的内容设为 inert 而非 aria-hidden', () => {
+        renderPanels({ keepDOM: true, motion: false });
+        const region = document.getElementById(getHeaders()[0].getAttribute('aria-controls')!);
+        expect(region).toHaveAttribute('inert');
+        expect(region).not.toHaveAttribute('aria-hidden');
     });
 
     it('内容与标题携带展开状态', async () => {
@@ -512,18 +329,6 @@ describe('Collapse', () => {
         await userEvent.click(getHeaders()[0]);
         expect(items[0]).toHaveClass(`${prefixCls}-item-active`);
         expect(items[0].querySelector(`.${prefixCls}-content`)).not.toHaveAttribute('inert');
-    });
-
-    it('标题获得焦点后，Enter 与 Space 切换面板', async () => {
-        const change = vi.fn<Change>();
-        renderPanels({ onChange: change });
-        getHeaders()[0].focus();
-        await userEvent.keyboard('{Enter}');
-        expectExpanded([true, false, false]);
-        await userEvent.keyboard(' ');
-        expectExpanded([false, false, false]);
-        expect(change).toHaveBeenCalledTimes(2);
-        expect(change.mock.calls[0][0]).toEqual(['1']);
     });
 
     it('即使 clickHeaderToExpand 为 false，键盘仍可切换；Tab 跳过禁用面板', async () => {
@@ -550,38 +355,6 @@ describe('Collapse', () => {
         expectExpanded([true, false, true]);
     });
 
-    it('extra 内 input 中的 Enter 与 Space 不切换面板', async () => {
-        render(() => (
-            <Collapse>
-                {() => (
-                    <CollapsePanel itemKey="1">
-                        {{
-                            header: () => 'title',
-                            extra: () => <input aria-label="inner" />,
-                            default: () => 'one',
-                        }}
-                    </CollapsePanel>
-                )}
-            </Collapse>
-        ));
-        screen.getByLabelText('inner').focus();
-        await userEvent.keyboard('{Enter} ');
-        expectExpanded([false]);
-    });
-
-    it('标题控制内容，内容为由标题命名的 region', async () => {
-        const { container } = renderPanels({ motion: false });
-        const [header] = getHeaders();
-        expect(header).not.toHaveAttribute('aria-controls');
-        await userEvent.click(header);
-        const region = document.getElementById(header.getAttribute('aria-controls')!);
-        expect(region).toHaveClass(`${prefixCls}-content`);
-        expect(region).toHaveAttribute('role', 'region');
-        expect(region).toHaveAttribute('aria-labelledby', header.id);
-        expect(header).not.toHaveAttribute('aria-owns');
-        expect(container.querySelector(`#${header.id}`)).toBe(header);
-    });
-
     it('keepDOM 保留关闭内容时存在 aria-controls，lazyRender 下展开前不存在', async () => {
         const view = renderPanels({ keepDOM: true, motion: false });
         getHeaders().forEach((header) => {
@@ -589,17 +362,6 @@ describe('Collapse', () => {
         });
         await view.rerender({ lazyRender: true });
         expect(getHeaders()[1]).not.toHaveAttribute('aria-controls');
-    });
-
-    it('keepDOM 加 lazyRender：展开过再收起，内容仍在 DOM 且 aria-controls 仍指向它', async () => {
-        renderPanels({ keepDOM: true, lazyRender: true, motion: false });
-        await userEvent.click(getHeaders()[1]);
-        await userEvent.click(getHeaders()[1]);
-        expectExpanded([false, false, false]);
-        const id = getHeaders()[1].getAttribute('aria-controls');
-        expect(id).not.toBeNull();
-        expect(document.getElementById(id!)).not.toBeNull();
-        expect(getHeaders()[2]).not.toHaveAttribute('aria-controls');
     });
 
     it('keepDOM 加 lazyRender：内容消失后在收起状态下恢复，未重新展开前无 aria-controls', async () => {

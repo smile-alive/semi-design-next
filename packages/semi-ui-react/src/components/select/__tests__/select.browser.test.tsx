@@ -629,6 +629,20 @@ it('打开时按 Tab 关闭列表并离开，onBlur 恰好一次', async () => {
     expect(onBlur).toHaveBeenCalledTimes(1);
 });
 
+it('可搜索的 Select 打开时按 Tab 关闭列表并移到下一个元素', async () => {
+    render(
+        <>
+            <Select style={{ width: 200 }} filter optionList={options} />
+            <Button>after</Button>
+        </>
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    await screen.findByRole('listbox');
+    await tab();
+    expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+    await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull());
+});
+
 it('Select 标签获得焦点时被移除，焦点交给 combobox', async () => {
     const onBlur = vi.fn<() => void>();
     render(
