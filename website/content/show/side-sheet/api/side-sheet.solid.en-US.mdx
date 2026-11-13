@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| afterVisibleChange | Called right in the update where visible becomes true, without waiting for the enter animation. When hiding, called after the leave animation ends, and once with false when unmounted while shown. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| afterVisibleChange | Called with true after the enter animation ends, or right after showing without motion. Called with false after the leave animation ends, and once with false when unmounted while shown. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
 | bodyStyle | Style of the content area, as an object with kebab-case keys (such as `'border-bottom'`) or as a string. | `JSX.CSSProperties \| string` | - |
 | canVerticalSetWidth | Whether width applies when placement is top or bottom. By default those sheets span the full width. | `boolean` | - |
 | closable | Whether the close button in the top right corner is shown. | `boolean` | `true` |

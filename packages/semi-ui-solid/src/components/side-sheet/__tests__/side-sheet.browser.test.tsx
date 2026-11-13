@@ -99,14 +99,14 @@ describe('SideSheet 焦点（浏览器）', () => {
 });
 
 describe('SideSheet 离场动画（浏览器）', () => {
-    it('离场动画结束后卸载，期间保留 DOM，焦点回到触发元素', async () => {
+    it('离场动画期间保留 DOM 和焦点，结束后卸载，焦点回到触发元素', async () => {
         render(() => <Page motion />);
         const opener = screen.getByRole('button', { name: 'Open' });
         await keyboardClick(opener);
         const dialog = await screen.findByRole('dialog', { name: 'Sheet' });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.SideSheet.close }));
         expect(dialog).toBeInTheDocument();
-        expect(opener).toHaveFocus();
+        expect(dialog).toContainElement(document.activeElement as HTMLElement);
         await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
         expect(opener).toHaveFocus();
     });

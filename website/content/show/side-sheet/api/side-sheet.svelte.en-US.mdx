@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| afterVisibleChange | Called with true right after the commit that shows the sheet, without waiting for the enter animation. Called with false after the leave animation, and once with false if the sheet is unmounted while shown. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| afterVisibleChange | Called with true after the enter animation ends, or right after showing without motion. Called with false after the leave animation, and once with false if the sheet is unmounted while shown. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
 | bodyStyle | Style of the panel body, as a string. | `string` | - |
 | canVerticalSetWidth | Whether width applies when placement is top or bottom. By default those sheets span the full width. | `boolean` | - |
 | children | Body of the sheet, written inside the tag. | `Snippet` | - |

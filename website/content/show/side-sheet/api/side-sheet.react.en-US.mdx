@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| afterVisibleChange | Called in the commit where `visible` becomes `true`, without waiting for the enter animation. When hiding, called after the leave animation ends; also called once with `false` when unmounted while shown, or when its subtree is hidden by `Activity`. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| afterVisibleChange | Called with `true` after the enter animation ends, or right after showing without motion; called with `false` after the leave animation ends, and once with `false` when unmounted while shown, or when its subtree is hidden by `Activity`. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
 | aria-label | Accessible name of the dialog. When set, it takes the place of the name generated from `title`. | `string` | - |
 | bodyStyle | Style of the content area, a `CSSProperties` object with camelCase keys such as `borderBottom`. | `CSSProperties` | - |
 | canVerticalSetWidth | Whether `width` applies when `placement` is `top` or `bottom`. By default those sheets span the full width. | `boolean` | - |

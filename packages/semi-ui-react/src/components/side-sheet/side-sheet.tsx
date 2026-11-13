@@ -72,8 +72,8 @@ class SideSheetRuntime {
 
 // Rendered in the Portal after the content, so these effects run once the sheet's DOM and refs exist: in the
 // Portal's first commit, which on a hydrated page comes after hydration rather than with the sheet's own mount
-function SideSheetOpenEffects({ visible, foundation }: { visible: boolean; foundation: Foundation }) {
-    useOverlayResources(foundation, visible);
+function SideSheetOpenEffects({ shown, foundation }: { shown: boolean; foundation: Foundation }) {
+    useOverlayResources(foundation, shown);
 
     return null;
 }
@@ -132,6 +132,11 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
 
     const updateState = () => setDisplayNone(!visible);
 
+    const handleContentEnd = () => {
+        updateState();
+        foundation.handleAnimationEnd();
+    };
+
     useDidUpdate(displayNone, foundation.handleHiddenChange);
 
     useRealUnmount(() => {
@@ -145,7 +150,7 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
     return (
         <CSSAnimation startClassName={visible ? `${prefixCls}-animation-mask_show` : `${prefixCls}-animation-mask_hide`} animationState={visible ? 'enter' : 'leave'} motion={motion} onAnimationEnd={updateState}>
             {({ animationClassName: maskAnimationClassName, animationEventsNeedBind: maskAnimationEventsNeedBind }) => (
-                <CSSAnimation startClassName={visible ? `${prefixCls}-animation-content_show_${placement}` : `${prefixCls}-animation-content_hide_${placement}`} animationState={visible ? 'enter' : 'leave'} getElement={() => runtime.dialog} motion={motion} onAnimationEnd={updateState}>
+                <CSSAnimation startClassName={visible ? `${prefixCls}-animation-content_show_${placement}` : `${prefixCls}-animation-content_hide_${placement}`} animationState={visible ? 'enter' : 'leave'} getElement={() => runtime.dialog} motion={motion} onAnimationEnd={handleContentEnd}>
                     {({ animationClassName, animationStyle, animationEventsNeedBind }) =>
                         shouldRender ? (
                             <Portal style={{ zIndex }} getPopupContainer={getPopupContainer}>
@@ -175,7 +180,7 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
                                 >
                                     {children}
                                 </SideSheetContent>
-                                <SideSheetOpenEffects foundation={foundation} visible={visible} />
+                                <SideSheetOpenEffects foundation={foundation} shown={!hidden} />
                             </Portal>
                         ) : null
                     }

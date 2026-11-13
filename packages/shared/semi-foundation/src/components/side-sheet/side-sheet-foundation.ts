@@ -61,12 +61,15 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
     readonly #session = new OverlaySession();
     readonly #lifecycle = new PopupLifecycle();
     readonly #resources = new ModalResources();
+    // not PopupLifecycle's open report: without motion React and Solid end the enter before handleHiddenChange(false)
+    #shownReported = false;
 
     constructor(adapter: SideSheetAdapter<P>) {
         super(adapter);
         // a sheet mounted visible is shown without a report, and its unmount still reports afterVisibleChange(false)
         if (this.getProp('visible')) {
             this.#lifecycle.show();
+            this.#shownReported = true;
         }
     }
 
@@ -77,6 +80,13 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         this.handleCancel(e);
         return true;
     };
+
+    #reportShown() {
+        if (!this.#shownReported) {
+            this.#shownReported = true;
+            this.adapter.notifyAfterVisibleChange(true);
+        }
+    }
 
     /** Without a mask the width goes on the outer element and the dialog fills it: a percentage repeated on the dialog would compound. */
     static getSheetSize({ placement, canVerticalSetWidth, width, height, mask }: Pick<SideSheetProps, 'placement' | 'width' | 'height' | 'mask'> & { canVerticalSetWidth?: boolean }): SheetSize {
@@ -133,15 +143,29 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
     };
 
     /**
+     * Hosts call this when the dialog's animation ends, and at once when a run without motion starts: the end of an
+     * enter reports afterVisibleChange(true), once per showing.
+     */
+    handleAnimationEnd = () => {
+        if (this.getProp('visible')) {
+            this.#reportShown();
+        }
+    };
+
+    /**
      * Hosts call this when the sheet stops or starts being hidden (once the animations ended), not on mount, and with
-     * `true` when it unmounts for good: afterVisibleChange(false) is reported once per showing.
+     * `true` when it unmounts for good: afterVisibleChange(false) is reported once per showing, after its `true`.
      */
     handleHiddenChange = (isHidden: boolean) => {
         if (isHidden) {
-            this.#lifecycle.ended(() => this.adapter.notifyAfterVisibleChange(false));
+            this.#lifecycle.ended(() => {
+                // closed before the enter ended
+                this.#reportShown();
+                this.#shownReported = false;
+                this.adapter.notifyAfterVisibleChange(false);
+            });
         } else {
             this.#lifecycle.show();
-            this.adapter.notifyAfterVisibleChange(true);
         }
     };
 

@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-svelte/src/components/side-sheet/side-sheet.svelte",
         "props": {
             "afterVisibleChange": {
-                "zh-CN": "显示时在 visible 变为 true 的那次提交立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次。",
-                "en-US": "Called with true right after the commit that shows the sheet, without waiting for the enter animation. Called with false after the leave animation, and once with false if the sheet is unmounted while shown."
+                "zh-CN": "显示时在进场动画结束后以 true 触发，无动画时显示后立即触发；隐藏时在离场动画结束后以 false 触发；显示期间被卸载时以 false 触发一次。",
+                "en-US": "Called with true after the enter animation ends, or right after showing without motion. Called with false after the leave animation, and once with false if the sheet is unmounted while shown."
             },
             "bodyStyle": { "zh-CN": "面板内容区的样式，字符串。", "en-US": "Style of the panel body, as a string." },
             "canVerticalSetWidth": {

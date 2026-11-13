@@ -314,11 +314,11 @@ describe('Svelte SideSheet 动画与显示状态', () => {
         expect(store.afterVisible).toEqual([false]);
 
         update(store, { visible: true });
-        expect(store.afterVisible).toEqual([false, true]);
+        expect(store.afterVisible).toEqual([false]);
         expect(getInner()).toHaveClass(`${prefix}-animation-content_show_right`);
         animationEnd(getInner());
         flushSync();
-        expect(store.afterVisible).toHaveLength(2);
+        expect(store.afterVisible).toEqual([false, true]);
         expect(getInner()).not.toHaveClass(`${prefix}-animation-content_show_right`);
     });
 
@@ -388,9 +388,13 @@ describe('Svelte SideSheet 动画与显示状态', () => {
 
 describe('Svelte SideSheet 滚动锁、遮罩与焦点', () => {
     it('disableScroll', () => {
+        holdAnimations();
         const { store } = setup({ visible: true });
         expect(document.body.style.overflow).toBe('hidden');
         update(store, { visible: false });
+        expect(document.body.style.overflow).toBe('hidden');
+        animationEnd(getInner());
+        flushSync();
         expect(document.body.style.overflow).not.toBe('hidden');
         update(store, { disableScroll: false, visible: true });
         expect(document.body.style.overflow).not.toBe('hidden');

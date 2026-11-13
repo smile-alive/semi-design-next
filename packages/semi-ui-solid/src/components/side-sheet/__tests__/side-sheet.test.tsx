@@ -271,18 +271,20 @@ describe('SideSheet 行为', () => {
         expect(getInner()).toHaveClass(`${prefix}-animation-content_hide_right`);
         expect(getMask()).toHaveClass(`${prefix}-animation-mask_hide`);
         expect(afterVisibleChange).not.toHaveBeenCalled();
+        expect(document.body.style.overflow).toBe('hidden');
 
         animationEnd(getInner());
         expect(getRoot()).toBeNull();
+        expect(document.body.style.overflow).not.toBe('hidden');
         expect(afterVisibleChange).toHaveBeenCalledTimes(1);
         expect(afterVisibleChange).toHaveBeenLastCalledWith(false);
 
         rerender({ visible: true, afterVisibleChange });
-        expect(afterVisibleChange).toHaveBeenCalledTimes(2);
-        expect(afterVisibleChange).toHaveBeenLastCalledWith(true);
+        expect(afterVisibleChange).toHaveBeenCalledTimes(1);
         animationEnd(getInner());
         animationEnd(getMask());
         expect(afterVisibleChange).toHaveBeenCalledTimes(2);
+        expect(afterVisibleChange).toHaveBeenLastCalledWith(true);
         expect(getInner()).not.toHaveClass(`${prefix}-animation-content_show_right`);
     });
 

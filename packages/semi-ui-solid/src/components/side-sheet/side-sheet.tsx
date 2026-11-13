@@ -17,7 +17,7 @@ const prefixCls = cssClasses.PREFIX;
 type Style = JSX.CSSProperties | string;
 
 export interface SideSheetProps extends ElementProps<'div', 'title' | 'onCancel'> {
-    /** Reports the sheet as shown when it opens and as hidden when its leave animation ends */
+    /** Reports the sheet as shown when its enter animation ends and as hidden when its leave animation ends */
     afterVisibleChange?: (isVisible: boolean) => void;
     bodyStyle?: Style;
     /** Lets `width` apply to a top or bottom sheet */
@@ -137,7 +137,10 @@ export default function SideSheet(rawProps: SideSheetProps) {
     const content = useCSSAnimation({
         startClassName: () => (visible() ? `${prefixCls}-animation-content_show_${props.placement}` : `${prefixCls}-animation-content_hide_${props.placement}`),
         motion: () => props.motion,
-        onAnimationEnd: () => setDisplayNone(!props.visible),
+        onAnimationEnd: () => {
+            setDisplayNone(!props.visible);
+            foundation.handleAnimationEnd();
+        },
     });
 
     const hidden = createMemo(() => (visible() ? false : !props.motion || displayNone()));
@@ -169,7 +172,7 @@ export default function SideSheet(rawProps: SideSheetProps) {
     const onClose = (event: MouseEvent) => foundation.handleCancel(event);
 
     // The dialog is tracked, so the sheet takes the layer, scroll lock and focus once its content is in the document
-    useOverlayResources(foundation, visible, () => Boolean(dialog() && visible()));
+    useOverlayResources(foundation, visible, () => Boolean(dialog() && !hidden()));
 
     // an interrupted leave must start from the shown state, or the next close would unmount at once
     createRenderEffect(

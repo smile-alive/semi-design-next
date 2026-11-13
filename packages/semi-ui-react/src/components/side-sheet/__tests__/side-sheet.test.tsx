@@ -118,6 +118,8 @@ describe('SideSheet', () => {
         const { rerender } = renderSideSheet({ visible: true });
         expect(document.body.style.overflow).toEqual('hidden');
         rerender({ visible: false });
+        expect(document.body.style.overflow).toEqual('hidden');
+        animationEnd(getInner());
         expect(document.body.style.overflow).not.toEqual('hidden');
 
         rerender({ disableScroll: false, visible: true });
@@ -250,11 +252,11 @@ describe('SideSheet 行为', () => {
         expect(afterVisibleChange).toHaveBeenLastCalledWith(false);
 
         rerender({ visible: true, afterVisibleChange });
-        expect(afterVisibleChange).toHaveBeenCalledTimes(2);
-        expect(afterVisibleChange).toHaveBeenLastCalledWith(true);
+        expect(afterVisibleChange).toHaveBeenCalledTimes(1);
         animationEnd(getInner());
         animationEnd(getMask());
         expect(afterVisibleChange).toHaveBeenCalledTimes(2);
+        expect(afterVisibleChange).toHaveBeenLastCalledWith(true);
         expect(getInner()).not.toHaveClass(`${prefix}-animation-content_show_right`);
     });
 

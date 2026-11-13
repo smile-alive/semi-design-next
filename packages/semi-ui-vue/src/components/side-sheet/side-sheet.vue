@@ -190,7 +190,17 @@
                 <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-animation-mask_show`" :leaveActiveClass="`${prefix}-animation-mask_hide`" :name="prefix" type="animation">
                     <div v-if="props.mask" v-show="props.visible" aria-hidden="true" :class="`${prefix}-mask`" :style="props.maskStyle" @click.self="onMaskClick" />
                 </Transition>
-                <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-animation-content_show_${props.placement}`" :leaveActiveClass="`${prefix}-animation-content_hide_${props.placement}`" :name="prefix" type="animation" @afterEnter="foundation.handleAnimationEnd" @afterLeave="onAfterLeave" @enter="onEnter">
+                <Transition
+                    appear
+                    :css="props.motion"
+                    :enterActiveClass="`${prefix}-animation-content_show_${props.placement}`"
+                    :leaveActiveClass="`${prefix}-animation-content_hide_${props.placement}`"
+                    :name="prefix"
+                    type="animation"
+                    @afterEnter="foundation.handleAnimationEnd"
+                    @afterLeave="onAfterLeave"
+                    @enter="onEnter"
+                >
                     <div v-show="props.visible" ref="dialog" v-bind="dialogAttrs(inBody)" :class="[`${prefix}-inner`, `${prefix}-inner-wrap`, `${prefix}-size-${props.size}`]" role="dialog" :style="[$attrs.style as StyleValue, dialogStyle()]" tabindex="-1">
                         <div :class="`${prefix}-content`">
                             <div :class="`${prefix}-header`" :style="props.headerStyle">

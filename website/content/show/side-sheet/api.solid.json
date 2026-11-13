@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-solid/src/components/side-sheet/side-sheet.tsx",
         "props": {
             "afterVisibleChange": {
-                "zh-CN": "面板显示时在 visible 变为 true 的那次更新中立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次。",
-                "en-US": "Called right in the update where visible becomes true, without waiting for the enter animation. When hiding, called after the leave animation ends, and once with false when unmounted while shown."
+                "zh-CN": "显示时在进场动画结束后以 true 触发，无动画时显示后立即触发；隐藏时在离场动画结束后以 false 触发；显示期间被卸载时以 false 触发一次。",
+                "en-US": "Called with true after the enter animation ends, or right after showing without motion. Called with false after the leave animation ends, and once with false when unmounted while shown."
             },
             "bodyStyle": {
                 "zh-CN": "面板内容区的样式，可以是对象（键用 kebab-case，如 `'border-bottom'`）或字符串。",

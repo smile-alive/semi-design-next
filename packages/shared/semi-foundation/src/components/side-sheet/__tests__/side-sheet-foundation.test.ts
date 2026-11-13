@@ -32,6 +32,30 @@ describe('SideSheetFoundation.handleHiddenChange', () => {
         foundation.handleHiddenChange(true);
         expect(notifyAfterVisibleChange.mock.calls).toEqual([[true], [false]]);
     });
+
+    it('进场动画结束才报显示，离场中重新打开不重复报告，进场中关闭先补报显示', () => {
+        const props: SideSheetProps = { visible: false };
+        const { foundation, notifyAfterVisibleChange } = createFoundation(props);
+        props.visible = true;
+        foundation.handleHiddenChange(false);
+        expect(notifyAfterVisibleChange).not.toHaveBeenCalled();
+        foundation.handleAnimationEnd();
+        expect(notifyAfterVisibleChange.mock.calls).toEqual([[true]]);
+
+        props.visible = false;
+        foundation.handleAnimationEnd();
+        props.visible = true;
+        foundation.handleAnimationEnd();
+        expect(notifyAfterVisibleChange.mock.calls).toEqual([[true]]);
+
+        props.visible = false;
+        foundation.handleHiddenChange(true);
+        props.visible = true;
+        foundation.handleHiddenChange(false);
+        props.visible = false;
+        foundation.handleHiddenChange(true);
+        expect(notifyAfterVisibleChange.mock.calls).toEqual([[true], [false], [true], [false]]);
+    });
 });
 
 describe('SideSheetFoundation.getSheetSize', () => {
