@@ -10,7 +10,10 @@ import InputNumber from '../input-number';
 import PinCode from '../pincode';
 import Radio, { type RadioGroupEmits, type RadioGroupProps, type RadioGroupSlots, type RadioValue, RadioGroup } from '../radio';
 import Rating from '../rating';
-import Select, { type BasicSelectValue, type SelectEmits, type SelectHandle, type SelectOptGroup, type SelectOption, type SelectProps, type SelectSlots } from '../select';
+import type { BasicSelectValue, SelectEmits, SelectHandle, SelectOptGroup, SelectOption, SelectProps, SelectSlots } from '../select';
+import SelectOptGroupComponent from '../select/option-group.vue';
+import SelectOptionComponent from '../select/option.vue';
+import Select from '../select/select.vue';
 import Slider from '../slider';
 import Switch from '../switch';
 import TagInput from '../tag-input';
@@ -73,39 +76,40 @@ type OptionalFieldComponent<C> = new () => Omit<InstanceType<FieldComponent<C>>,
     $props: Omit<FieldPropsOf<C>, 'field' | 'onChange'> & ExclusiveFieldValidation & { field?: string; onChange?: OptionalLatestValues<FieldPropsOf<C>> };
 };
 
-export const FormInput: FieldComponent<typeof Input> = withField(Input);
-export const FormInputNumber: FieldComponent<typeof InputNumber> = withField(InputNumber);
-export const FormTextArea: FieldComponent<typeof TextArea> = withField(TextArea);
-// Select collects children by element type, so reuse its own Option and OptGroup
-export const FormSelect: FormSelectComponent & { Option: typeof SelectOption; OptGroup: typeof SelectOptGroup } = Object.assign(withField(Select) as unknown as FormSelectComponent, {
-    Option: Select.Option,
-    OptGroup: Select.OptGroup,
+// Every field is created by a /* @__PURE__ */ call: without it the bundler cannot drop unused fields, so importing one pulls in all of them
+export const FormInput: FieldComponent<typeof Input> = /* @__PURE__ */ withField(Input);
+export const FormInputNumber: FieldComponent<typeof InputNumber> = /* @__PURE__ */ withField(InputNumber);
+export const FormTextArea: FieldComponent<typeof TextArea> = /* @__PURE__ */ withField(TextArea);
+// Select collects children by element type, so reuse its own Option and OptGroup; they are bare identifiers because a property read such as `Select.Option` is kept as a possible side effect
+export const FormSelect: FormSelectComponent & { Option: typeof SelectOption; OptGroup: typeof SelectOptGroup } = /* @__PURE__ */ Object.assign(/* @__PURE__ */ withField(Select) as unknown as FormSelectComponent, {
+    Option: SelectOptionComponent,
+    OptGroup: SelectOptGroupComponent,
 });
-export const FormCheckboxGroup: FieldComponent<typeof CheckboxGroup> = withField(CheckboxGroup);
-export const FormCheckbox: OptionalFieldComponent<typeof Checkbox> = withField(Checkbox, {
+export const FormCheckboxGroup: FieldComponent<typeof CheckboxGroup> = /* @__PURE__ */ withField(CheckboxGroup);
+export const FormCheckbox: OptionalFieldComponent<typeof Checkbox> = /* @__PURE__ */ withField(Checkbox, {
     valuePath: 'target.checked',
     shouldInject: false,
 });
-export const FormRadioGroup = withField(RadioGroup, { valuePath: 'target.value' }) as unknown as FormRadioGroupComponent;
-export const FormRadio: OptionalFieldComponent<typeof Radio> = withField(Radio, {
+export const FormRadioGroup = /* @__PURE__ */ withField(RadioGroup, { valuePath: 'target.value' }) as unknown as FormRadioGroupComponent;
+export const FormRadio: OptionalFieldComponent<typeof Radio> = /* @__PURE__ */ withField(Radio, {
     valuePath: 'target.checked',
     shouldInject: false,
 });
-export const FormDatePicker = withField(DatePicker) as unknown as FormDatePickerComponent;
-export const FormSwitch: FieldComponent<typeof Switch> = withField(Switch);
-export const FormSlider: FieldComponent<typeof Slider> = withField(Slider);
-export const FormTimePicker: FieldComponent<typeof TimePicker> = withField(TimePicker);
-export const FormTreeSelect = withField(TreeSelect) as unknown as FormTreeSelectComponent;
-export const FormCascader = withField(Cascader) as unknown as FormCascaderComponent;
-export const FormTransfer: FieldComponent<typeof Transfer> = withField(Transfer);
-export const FormRating: FieldComponent<typeof Rating> = withField(Rating);
-export const FormAutoComplete = withField(AutoComplete) as unknown as FormAutoCompleteComponent;
-export const FormUpload: FieldComponent<typeof Upload, 'fileList'> = withField(Upload, {
+export const FormDatePicker = /* @__PURE__ */ withField(DatePicker) as unknown as FormDatePickerComponent;
+export const FormSwitch: FieldComponent<typeof Switch> = /* @__PURE__ */ withField(Switch);
+export const FormSlider: FieldComponent<typeof Slider> = /* @__PURE__ */ withField(Slider);
+export const FormTimePicker: FieldComponent<typeof TimePicker> = /* @__PURE__ */ withField(TimePicker);
+export const FormTreeSelect = /* @__PURE__ */ withField(TreeSelect) as unknown as FormTreeSelectComponent;
+export const FormCascader = /* @__PURE__ */ withField(Cascader) as unknown as FormCascaderComponent;
+export const FormTransfer: FieldComponent<typeof Transfer> = /* @__PURE__ */ withField(Transfer);
+export const FormRating: FieldComponent<typeof Rating> = /* @__PURE__ */ withField(Rating);
+export const FormAutoComplete = /* @__PURE__ */ withField(AutoComplete) as unknown as FormAutoCompleteComponent;
+export const FormUpload: FieldComponent<typeof Upload, 'fileList'> = /* @__PURE__ */ withField(Upload, {
     valueKey: 'fileList',
     valuePath: 'fileList',
 });
-export const FormTagInput: FieldComponent<typeof TagInput> = withField(TagInput);
-export const FormPinCode: FieldComponent<typeof PinCode> = withField(PinCode);
+export const FormTagInput: FieldComponent<typeof TagInput> = /* @__PURE__ */ withField(TagInput);
+export const FormPinCode: FieldComponent<typeof PinCode> = /* @__PURE__ */ withField(PinCode);
 
 export type FormCheckboxProps = InstanceType<typeof FormCheckbox>['$props'];
 export type FormRadioProps = InstanceType<typeof FormRadio>['$props'];

@@ -23,4 +23,4 @@ function OptionGroup({ label, className, style, children, ...rest }: OptionGroup
     );
 }
 
-export default Object.assign(OptionGroup, { elementType: 'Select.OptGroup' });
+export default /* @__PURE__ */ Object.assign(OptionGroup, { elementType: 'Select.OptGroup' });
