@@ -38,6 +38,7 @@
 - **临时复现用例要放进包的 `__tests__/`。** vitest 的 include 只收 `packages/` 下的 `__tests__`（`vitest/framework.ts` 的 `filesOfKind`），放在 `tmp/` 下不会被收集。用完用 `trash` 删除。
 - **测试通过但 `typecheck` 报 adapter 方法或导出不存在。** vitest 经 `vite.semi.ts` 的 `semiSourceAliases` 把 Semi 包都映射到 `src`，改完 foundation 不用构建就能跑测试；类型检查读的是 foundation 的 `dist`。foundation 有改动时先 `pnpm build` 再 `pnpm typecheck`，见 [AGENTS.md](../../AGENTS.md#验证)「类型」一行。
 - **`node scripts/typecheck.ts` 直接跑会报 `spawn tsc ENOENT`。** 脚本按名字启动 `tsc`，依赖 `node_modules/.bin` 在 `PATH` 里。用 `pnpm typecheck` 或 `pnpm exec node scripts/typecheck.ts`。
+- **带覆盖率的长跑里浏览器项目报 `Browser connection was closed`。** Chromium 不回收已跑完文件的 iframe 文档，插桩后累积几十个文件就会断开页面的 WebSocket，断点随机，该项目剩余文件不再执行。`test:coverage` 用 `VITEST_CHROMIUM_GC_FORCE=1` 与 `VITEST_CHROMIUM_GC_DISK_THRESHOLD_GB` 让 vitest 在每个文件后回收（默认只在 Linux 磁盘不足时回收）；vitest 修复 [#11702](https://github.com/vitest-dev/vitest/issues/11702) 后可删。
 
 ## 构建与体积
 

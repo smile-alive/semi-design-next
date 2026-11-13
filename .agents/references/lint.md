@@ -9,7 +9,9 @@
 - 框架范围的插件与模板规则见各框架目录的 `lint.md`。豁免按文件所属框架放在 `lint/<框架>/exemptions.ts`，框架无关的文件放 `lint/exemptions.ts`；只加入实际报错的规则并解释原因。源码与模板都不写禁用 lint 的注释。
 - 同包相对导入、跨包包名导入。测试工具按框架分入口（如 `@test/utils/<框架>`），框架无关的工具直接导入所在模块；导入另一框架的入口由边界规则拦下。
 - `lint-private` 检查框架源文件中的 private 关键字，图标点击的 TSX 检查不覆盖模板。
-- 检查命令：`pnpm lint:scopes [文件...]` 输出文件的归属框架；`pnpm lint:component-order` 检查各框架的组件体语句顺序；`pnpm lint:private`、`pnpm lint:<框架>`（框架专属检查，含模板）等见 `package.json` 的 `lint` 链。
+- `lint-layers` 检查 foundation 与 ai-foundation 的导入分层（类型导入同样计入）：`base/`、`utils/`、`locale/`、`theme/` 不导入 `components/`；`components/<A>` 不导入 `components/<B>`，ai-foundation 导入 foundation 的组件同样算。例外登记在 `scripts/lint-layers.ts` 的 `exceptions`，每条写明原因。例外已不再被导入时失败，须删掉该条。
+- `lint-click-outside` 检查组件包：渲染 `trigger="custom"` 弹层的组件经弹层的 `onClickOutSide` 处理点击外部，不再另配 `useClickOutside`。内部区域与「触发器加弹层」不同的组件登记在 `scripts/lint-click-outside.ts` 的 `exceptions`，每条写明原因；例外已不再匹配任何文件时失败，须删掉该条。
+- 检查命令：`pnpm lint:layers` 检查导入分层；`pnpm lint:scopes [文件...]` 输出文件的归属框架；`pnpm lint:component-order` 检查各框架的组件体语句顺序；`pnpm lint:private`、`pnpm lint:<框架>`（框架专属检查，含模板）等见 `package.json` 的 `lint` 链。
 
 ## 新增框架
 
