@@ -12,8 +12,8 @@ import ApiType from '#/components/ApiType.astro';
 | offsetTop | Offset from the top of the container at which the current link switches while content scrolls. | `number` | `0` |
 | position | Position of the Tooltip when showTooltip is on, with the same values as the Tooltip position. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Anchor", "position")` |
 | railTheme | Theme of the rail: primary, tertiary or muted. | `"muted" \| "primary" \| "tertiary"` | `"primary"` |
-| scrollMotion | Whether scrolling after a click is animated. | `boolean` | `false` |
 | scrollIntoViewOptions | Options passed to scroll-into-view-if-needed when a link is clicked, combined with scrollMotion and targetOffset. | `Options` | `semiGlobalDefault("Anchor", "scrollIntoViewOptions")` |
+| scrollMotion | Whether scrolling after a click is animated. | `boolean` | `false` |
 | showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `false` |
 | size | Size of the anchor: small or default. | `"default" \| "small"` | `"default"` |
 | targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `0` |

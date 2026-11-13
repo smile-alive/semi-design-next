@@ -4,39 +4,39 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property        | Description                                                                                                                                                    | Type                                            | Default     |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ----------- |
+| disabled        | Whether the card is disabled. A disabled card shows no remove, retry or replace button.                                                                        | `boolean`                                       | `undefined` |
 | file            | The file to show. Required.                                                                                                                                    | `FileItem`                                      | `undefined` |
 | index           | Position of the file in the list.                                                                                                                              | `number`                                        | `undefined` |
 | listType        | Display type of the card: list, picture or none. none renders no card.                                                                                         | `"list" \| "none" \| "picture"`                 | `"list"`    |
-| disabled        | Whether the card is disabled. A disabled card shows no remove, retry or replace button.                                                                        | `boolean`                                       | `undefined` |
-| showRetry       | Whether to show a retry button on failure. The showRetry of the file wins.                                                                                     | `boolean`                                       | `undefined` |
-| showReplace     | Whether to show a replace button after success. The showReplace of the file wins.                                                                              | `boolean`                                       | `undefined` |
-| showPicInfo     | Whether to show picture information. Only applies in picture mode.                                                                                             | `boolean`                                       | `undefined` |
-| showTooltip     | Whether a truncated file name shows a tooltip, or the tooltip type and the props passed to it.                                                                 | `boolean \| ShowTooltip`                        | `true`      |
-| picWidth        | Width of the picture in picture mode.                                                                                                                          | `string \| number`                              | `undefined` |
-| picHeight       | Height of the picture in picture mode.                                                                                                                         | `string \| number`                              | `undefined` |
-| validateMessage | Validate message. Wins over the validateMessage of the file.                                                                                                   | `string`                                        | `undefined` |
 | onPreviewClick  | Listened to as @previewClick. While present the card is clickable and shows a preview button; its presence changes the rendering, so it stays a function prop. | <ApiType detail={"(() => void)"}>Type</ApiType> | `undefined` |
+| picHeight       | Height of the picture in picture mode.                                                                                                                         | `string \| number`                              | `undefined` |
+| picWidth        | Width of the picture in picture mode.                                                                                                                          | `string \| number`                              | `undefined` |
+| showPicInfo     | Whether to show picture information. Only applies in picture mode.                                                                                             | `boolean`                                       | `undefined` |
+| showReplace     | Whether to show a replace button after success. The showReplace of the file wins.                                                                              | `boolean`                                       | `undefined` |
+| showRetry       | Whether to show a retry button on failure. The showRetry of the file wins.                                                                                     | `boolean`                                       | `undefined` |
+| showTooltip     | Whether a truncated file name shows a tooltip, or the tooltip type and the props passed to it.                                                                 | `boolean \| ShowTooltip`                        | `true`      |
+| validateMessage | Validate message. Wins over the validateMessage of the file.                                                                                                   | `string`                                        | `undefined` |
 
 **Events**
 
 | Event   | Description                      | Callback parameters |
 | ------- | -------------------------------- | ------------------- |
 | remove  | Emitted when remove is clicked.  | `[]`                |
-| retry   | Emitted when retry is clicked.   | `[]`                |
 | replace | Emitted when replace is clicked. | `[]`                |
+| retry   | Emitted when retry is clicked.   | `[]`                |
 
 **Slots**
 
 | Slot            | Description                                                                                                                                             | Scope parameters                 |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| previewFile     | Custom preview that replaces the thumbnail. Only applies in list mode.                                                                                  | `UploadFileItemSlotProps`        |
-| thumbnail       | Custom picture wall thumbnail. Only applies in picture mode.                                                                                            | `UploadFileItemSlotProps`        |
+| ellipsisTooltip | Custom popup content for a truncated file name, with content and trigger.                                                                               | `TypographyEllipsisTooltipProps` |
+| fileOperation   | Custom operation area of a list item.                                                                                                                   | `UploadFileItemSlotProps`        |
+| picClose        | Custom close button of the picture wall, with class and onRemove. Only applies in picture mode.                                                         | `UploadPicCloseSlotProps`        |
 | picInfo         | Custom picture wall information. Only applies in picture mode with showPicInfo set to true.                                                             | `UploadFileItemSlotProps`        |
 | picPreviewIcon  | Custom preview icon shown on hover in the picture wall. Only applies in picture mode.                                                                   | `UploadFileItemSlotProps`        |
-| picClose        | Custom close button of the picture wall, with class and onRemove. Only applies in picture mode.                                                         | `UploadPicCloseSlotProps`        |
-| fileOperation   | Custom operation area of a list item.                                                                                                                   | `UploadFileItemSlotProps`        |
+| previewFile     | Custom preview that replaces the thumbnail. Only applies in list mode.                                                                                  | `UploadFileItemSlotProps`        |
+| thumbnail       | Custom picture wall thumbnail. Only applies in picture mode.                                                                                            | `UploadFileItemSlotProps`        |
 | validateMessage | Custom validate message. Falls back to the string when empty. When the slot renders content for the file, the picture wall shows the validate icon too. | `UploadFileItemSlotProps`        |
-| ellipsisTooltip | Custom popup content for a truncated file name, with content and trigger.                                                                               | `TypographyEllipsisTooltipProps` |
 
 **Exposes**
 

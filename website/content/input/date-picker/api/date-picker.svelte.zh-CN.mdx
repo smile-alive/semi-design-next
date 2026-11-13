@@ -32,11 +32,11 @@ import ApiType from '#/components/ApiType.astro';
 | leftSlot | 面板左侧的额外区域。 | `Snippet` | - |
 | max | multiple 为 true 时可选的日期个数，不传则不限制。 | `number` | - |
 | motion | 是否开启面板展开的动画。 | `boolean` | `true` |
-| multiple | 是否可以选择多个日期，仅 type 为 date 时有效。 | `boolean` | `false` |
+| multiple | 是否可以选择多个日期，仅 type 为 date 时有效。 | `M` | `false` |
 | needConfirm | 是否需要点击确认才写入值，仅 dateTime 与 dateTimeRange 类型有效。 | `boolean` | `false` |
 | onBlur | 面板关闭时调用。点击外部关闭时参数为那次 mousedown，确认、选中日期、Esc 等其他关闭方式不带参数。 | <ApiType detail={"(event?: MouseEvent) => void"}>Type</ApiType> | - |
 | onCancel | 取消选择时调用，参数为上次确认的值，仅 needConfirm 时有效。 | <ApiType detail={"(date: Date \u007c Date[], dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
-| onChange | 值变化时调用，参数为日期和日期字符串，范围与多选时两者都是数组。清空时单选为 undefined，范围与多选为 []。范围类型在起止日期都选好后才调用。 | <ApiType detail={"(date: Date \u007c Date[] \u007c undefined, dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onChange | 值变化时调用，参数为日期和日期字符串，范围与多选时两者都是数组。清空时单选为 undefined，范围与多选为 []。范围类型在起止日期都选好后才调用。 | <ApiType detail={"T extends 'dateRange' \u007c 'dateTimeRange' \u007c 'monthRange' ? (date: Date[], dateString: string[]) => void : T extends 'date' ? M extends true ? (date: Date[], dateString: string[]) => void : (date: Date \u007c undefined, dateString: string \u007c undefined) => void : (date: Date \u007c undefined, dateString: string \u007c undefined) => void"}>Type</ApiType> | - |
 | onClear | 点击清除按钮时调用。 | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
 | onClickOutSide | 面板打开时点击浮层和触发器之外的区域调用，参数为原生 mousedown 事件。 | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
 | onConfirm | 确认选择时调用，参数为当前选择的值，仅 needConfirm 时有效。 | <ApiType detail={"(date: Date \u007c Date[], dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
@@ -65,7 +65,7 @@ import ApiType from '#/components/ApiType.astro';
 | timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，`dateString` 和今天的标记也按该时区。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | - |
 | topSlot | 面板顶部的额外区域。 | `Snippet` | - |
 | trigger | 完全自定义触发器，参数含 value、inputValue、placeholder、disabled、size、inputReadOnly、rangeInputFocus、type、format、multiple、autofocus、componentProps，以及 onChange（更新输入文本）、onEnterPress（提交输入文本）、onClear。默认的清除按钮不再生效。 | <ApiType detail={"Snippet\u003c[DatePickerTriggerRenderProps]>"}>Type</ApiType> | - |
-| type | 类型，可选 date、dateRange、dateTime、dateTimeRange、month、monthRange、year。 | `DatePickerType` | `"date"` |
+| type | 类型，可选 date、dateRange、dateTime、dateTimeRange、month、monthRange、year。 | `T` | `"date"` |
 | validateStatus | 校验状态，可选 default、error、warning，仅影响样式。 | `ValidateStatus` | - |
 | value | 值，可用 bind:value 绑定，可以是 Date、时间戳或符合 format 的字符串，范围与多选为数组。只传值时作为初始值；null 表示受控的空值，undefined 为非受控。 | `DatePickerValueType \| null` | - |
 | weekStartsOn | 每周的第一天，0 为周日，1 为周一，以此类推。 | `WeekStartNumber` | `0` |

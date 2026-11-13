@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | Name of the popup when its role is dialog. | `string` | - |
 | aria-labelledby | id of the element that names the popup when its role is dialog. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires `showArrow`. Unset, it is true. | `boolean` | - |
-| arrowStyle | `borderColor`, `backgroundColor` and `borderOpacity` of the arrow. Colors that are not set follow `backgroundColor` and `borderColor` in `style`. | `ArrowStyle` | - |
+| arrowStyle | `borderColor`, `backgroundColor` and `borderOpacity` of the arrow. Colors that are not set follow `backgroundColor` and `borderColor` in `style`. | <ApiType detail={"Pick\u003cReact.CSSProperties, 'backgroundColor' \u007c 'borderColor'> & { borderOpacity?: string \u007c number }"}>Type</ApiType> | - |
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
 | children | The trigger. Event listeners are applied to it and its real DOM node sets the position, so a component must pass its props and ref down to its root DOM node. | `React.ReactNode` | - |
 | className | Class name of the popup. | `string` | - |

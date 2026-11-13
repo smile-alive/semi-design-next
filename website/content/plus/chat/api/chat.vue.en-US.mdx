@@ -4,59 +4,59 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| chats | The conversation list, used with v-model:chats. Only replacing the whole array counts as a change; pushing into the same array does not trigger scroll following. | `Message[]` | `semiGlobalDefault("Chat", "chats")` |
 | align | Conversation layout: leftRight or leftAlign. | `ChatAlign` | `"leftRight"` |
-| mode | Conversation mode: bubble, noBubble or userBubble. | `ChatMode` | `"bubble"` |
-| roleConfig | Role information, keyed by the message role. avatar takes an image URL only; use the roleAvatar slot for a node avatar. color is passed to Avatar. | `ChatRoleConfig` | `semiGlobalDefault("Chat", "roleConfig")` |
-| hints | The list of hints. Clicking one emits hintClick and the hint becomes a new user message. | `string[]` | `semiGlobalDefault("Chat", "hints")` |
-| sendHotKey | Send hot key: enter or shift+enter. With enter, Enter sends and Shift+Enter inserts a line break; shift+enter is the reverse. | `SendHotKey` | `"enter"` |
-| placeholder | Placeholder of the input. | `string` | `semiGlobalDefault("Chat", "placeholder")` |
-| showStopGenerate | Whether to show the stop button while the last message is generating. Sending is unavailable meanwhile, and clicking the stop button emits stopGenerator. | `boolean` | `false` |
-| showClearContext | Whether to show the clear context button in the input. | `boolean` | `false` |
-| enableUpload | Whether uploading is enabled. A boolean controls paste, click and drag upload together; an object sets pasteUpload, clickUpload and dragUpload separately, and unset items are true. | `boolean \| EnableUploadProps` | `true` |
 | canSend | Whether the send button is usable. The internal logic decides by default; a given value overrides it. | `boolean` | `semiGlobalDefault("Chat", "canSend")` |
-| escapeHtml | Whether to escape HTML tags in the user's messages, so the Markdown parser does not treat them as HTML and drop the content. | `boolean` | `true` |
-| uploadProps | Props passed to Upload. Chat owns fileList and defaultFileList, and Upload events are given as onXxx. Chat handles onChange itself when an attachment is added or removed. | `ChatUploadProps` | `semiGlobalDefault("Chat", "uploadProps")` |
-| uploadTipProps | Props of the upload button's Tooltip, without content; use the uploadTip slot for the text. | <ApiType detail={"Omit\u003cTooltipProps, \"content\">"}>Type</ApiType> | `semiGlobalDefault("Chat", "uploadTipProps")` |
-| markdownRenderProps | Props passed to the MarkdownRender that renders message content; format defaults to md. raw and components cannot be set; use customMarkDownComponents for custom renderers. | `ChatMarkdownRenderProps` | `semiGlobalDefault("Chat", "markdownRenderProps")` |
+| chats | The conversation list, used with v-model:chats. Only replacing the whole array counts as a change; pushing into the same array does not trigger scroll following. | `Message[]` | `semiGlobalDefault("Chat", "chats")` |
 | customMarkDownComponents | Custom Markdown renderers keyed by element name, passed to the MarkdownRender of message content. | `MarkdownRenderComponents` | `semiGlobalDefault("Chat", "customMarkDownComponents")` |
+| enableUpload | Whether uploading is enabled. A boolean controls paste, click and drag upload together; an object sets pasteUpload, clickUpload and dragUpload separately, and unset items are true. | `boolean \| EnableUploadProps` | `true` |
+| escapeHtml | Whether to escape HTML tags in the user's messages, so the Markdown parser does not treat them as HTML and drop the content. | `boolean` | `true` |
+| hintCls | Class name of the outermost element of the hint area. | `string` | `semiGlobalDefault("Chat", "hintCls")` |
+| hints | The list of hints. Clicking one emits hintClick and the hint becomes a new user message. | `string[]` | `semiGlobalDefault("Chat", "hints")` |
+| hintStyle | Style of the outermost element of the hint area. | `StyleValue` | `semiGlobalDefault("Chat", "hintStyle")` |
 | inputBoxCls | Class name of the input box. | `string` | `semiGlobalDefault("Chat", "inputBoxCls")` |
 | inputBoxStyle | Style of the input box. | `StyleValue` | `semiGlobalDefault("Chat", "inputBoxStyle")` |
-| hintCls | Class name of the outermost element of the hint area. | `string` | `semiGlobalDefault("Chat", "hintCls")` |
-| hintStyle | Style of the outermost element of the hint area. | `StyleValue` | `semiGlobalDefault("Chat", "hintStyle")` |
+| markdownRenderProps | Props passed to the MarkdownRender that renders message content; format defaults to md. raw and components cannot be set; use customMarkDownComponents for custom renderers. | `ChatMarkdownRenderProps` | `semiGlobalDefault("Chat", "markdownRenderProps")` |
+| mode | Conversation mode: bubble, noBubble or userBubble. | `ChatMode` | `"bubble"` |
+| placeholder | Placeholder of the input. | `string` | `semiGlobalDefault("Chat", "placeholder")` |
+| roleConfig | Role information, keyed by the message role. avatar takes an image URL only; use the roleAvatar slot for a node avatar. color is passed to Avatar. | `ChatRoleConfig` | `semiGlobalDefault("Chat", "roleConfig")` |
+| sendHotKey | Send hot key: enter or shift+enter. With enter, Enter sends and Shift+Enter inserts a line break; shift+enter is the reverse. | `SendHotKey` | `"enter"` |
+| showClearContext | Whether to show the clear context button in the input. | `boolean` | `false` |
+| showStopGenerate | Whether to show the stop button while the last message is generating. Sending is unavailable meanwhile, and clicking the stop button emits stopGenerator. | `boolean` | `false` |
+| uploadProps | Props passed to Upload. Chat owns fileList and defaultFileList, and Upload events are given as onXxx. Chat handles onChange itself when an attachment is added or removed. | `ChatUploadProps` | `semiGlobalDefault("Chat", "uploadProps")` |
+| uploadTipProps | Props of the upload button's Tooltip, without content; use the uploadTip slot for the text. | <ApiType detail={"Omit\u003cTooltipProps, \"content\">"}>Type</ApiType> | `semiGlobalDefault("Chat", "uploadTipProps")` |
 
 **Events**
 
 | Event               | Description                                                                                            | Callback parameters                                       |
 | ------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
-| update:chats        | Emitted when the conversation list changes, for v-model:chats to write back; fires before chatsChange. | `[chats: Message[]]`                                      |
 | chatsChange         | Emitted when the conversation list changes.                                                            | `[chats: Message[]]`                                      |
-| messageSend         | Emitted when a message is sent, with the text and the attachments.                                     | `[content: string, attachment?: FileItem[] \| undefined]` |
-| messageCopy         | Emitted when a message is copied.                                                                      | `[message: Message]`                                      |
-| messageGoodFeedback | Emitted on positive feedback for a message.                                                            | `[message: Message]`                                      |
-| messageBadFeedback  | Emitted on negative feedback for a message.                                                            | `[message: Message]`                                      |
-| messageReset        | Emitted when a message is reset; the argument is null when it comes from the resetMessage method.      | `[message: Message \| null]`                              |
-| messageDelete       | Emitted when a message is deleted.                                                                     | `[message: Message]`                                      |
 | clear               | Emitted when the context is cleared.                                                                   | `[]`                                                      |
 | hintClick           | Emitted when a hint is clicked.                                                                        | `[hint: string]`                                          |
 | inputChange         | Emitted when the input text or the attachments change, with `{ inputValue, attachment }`.              | `[props: ChatInputChangeProps]`                           |
+| messageBadFeedback  | Emitted on negative feedback for a message.                                                            | `[message: Message]`                                      |
+| messageCopy         | Emitted when a message is copied.                                                                      | `[message: Message]`                                      |
+| messageDelete       | Emitted when a message is deleted.                                                                     | `[message: Message]`                                      |
+| messageGoodFeedback | Emitted on positive feedback for a message.                                                            | `[message: Message]`                                      |
+| messageReset        | Emitted when a message is reset; the argument is null when it comes from the resetMessage method.      | `[message: Message \| null]`                              |
+| messageSend         | Emitted when a message is sent, with the text and the attachments.                                     | `[content: string, attachment?: FileItem[] \| undefined]` |
 | stopGenerator       | Emitted when the stop button is clicked.                                                               | `[event: MouseEvent]`                                     |
+| update:chats        | Emitted when the conversation list changes, for v-model:chats to write back; fires before chatsChange. | `[chats: Message[]]`                                      |
 
 **Slots**
 
 | Slot         | Description                                                                                                                                              | Scope parameters           |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| topSlot      | Content above the conversation area.                                                                                                                     | `any`                      |
-| bottomSlot   | Content below the input box.                                                                                                                             | `any`                      |
-| title        | Custom message title, with message, role and the default title defaultTitle. Provided but empty, it hides the title.                                     | `ChatTitleSlotProps`       |
-| avatar       | Custom message avatar, with message, role and the default avatar defaultAvatar. Provided but empty, it hides the avatar.                                 | `ChatAvatarSlotProps`      |
-| roleAvatar   | Avatar content for a role without an image URL, with message and role.                                                                                   | `ChatRoleAvatarSlotProps`  |
-| content      | Custom message content area, with message, role, the default content defaultContent and the class name class.                                            | `ChatContentSlotProps`     |
 | action       | Custom message action bar, with message, the default buttons defaultActions, defaultActionsObj keyed by name and the class name class.                   | `ChatActionSlotProps`      |
-| fullChatBox  | Replaces the whole message box, with message, role, the default node of each part defaultNodes and the class name class.                                 | `ChatFullChatBoxSlotProps` |
-| inputArea    | Custom input area, with defaultNode, the part nodes (clearContextNode, uploadNode, inputNode, sendNode) and onSend, onClear and onClick for you to call. | `ChatInputAreaSlotProps`   |
-| hintBox      | Custom hint item, with content, index and the click handler onHintClick.                                                                                 | `ChatHintBoxSlotProps`     |
+| avatar       | Custom message avatar, with message, role and the default avatar defaultAvatar. Provided but empty, it hides the avatar.                                 | `ChatAvatarSlotProps`      |
+| bottomSlot   | Content below the input box.                                                                                                                             | `any`                      |
+| content      | Custom message content area, with message, role, the default content defaultContent and the class name class.                                            | `ChatContentSlotProps`     |
 | divider      | Custom divider shown after the context is cleared, with message.                                                                                         | `ChatDividerSlotProps`     |
+| fullChatBox  | Replaces the whole message box, with message, role, the default node of each part defaultNodes and the class name class.                                 | `ChatFullChatBoxSlotProps` |
+| hintBox      | Custom hint item, with content, index and the click handler onHintClick.                                                                                 | `ChatHintBoxSlotProps`     |
+| inputArea    | Custom input area, with defaultNode, the part nodes (clearContextNode, uploadNode, inputNode, sendNode) and onSend, onClear and onClick for you to call. | `ChatInputAreaSlotProps`   |
+| roleAvatar   | Avatar content for a role without an image URL, with message and role.                                                                                   | `ChatRoleAvatarSlotProps`  |
+| title        | Custom message title, with message, role and the default title defaultTitle. Provided but empty, it hides the title.                                     | `ChatTitleSlotProps`       |
+| topSlot      | Content above the conversation area.                                                                                                                     | `any`                      |
 | uploadButton | Replaces the upload button.                                                                                                                              | `any`                      |
 | uploadTip    | Text of the upload button's tooltip.                                                                                                                     | `any`                      |
 
@@ -64,7 +64,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Name           | Description                                                                                                  | Type                                                                                                   |
 | -------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| resetMessage   | Resets the last message to an empty loading one and emits messageReset with null.                            | <ApiType detail={"() => void"}>Type</ApiType>                                                          |
 | clearContext   | Clears the context by appending a divider and emits clear; does nothing when the list already ends with one. | <ApiType detail={"() => void"}>Type</ApiType>                                                          |
+| resetMessage   | Resets the last message to an empty loading one and emits messageReset with null.                            | <ApiType detail={"() => void"}>Type</ApiType>                                                          |
 | scrollToBottom | Scrolls to the bottom; smoothly when animation is true, otherwise jumps.                                     | <ApiType detail={"(animation?: boolean \u007c undefined) => void"}>Type</ApiType>                      |
 | sendMessage    | Sends a message; without attachment the message content is a string.                                         | <ApiType detail={"(content: string, attachment?: FileItem[] \u007c undefined) => void"}>Type</ApiType> |

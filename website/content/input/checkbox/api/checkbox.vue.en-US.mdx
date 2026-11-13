@@ -4,22 +4,22 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property       | Description                                                                                                             | Type            | Default                                          |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------------------------------ |
-| modelValue     | Whether the checkbox is checked, controlled with v-model. Ignored inside a CheckboxGroup.                               | `boolean`       | `undefined`                                      |
-| defaultChecked | Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup.                        | `boolean`       | `false`                                          |
-| value          | The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group.                | `CheckboxValue` | `undefined`                                      |
-| disabled       | Whether the checkbox is disabled.                                                                                       | `boolean`       | `semiGlobalDefault("Checkbox", "disabled")`      |
-| indeterminate  | Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value. | `boolean`       | `false`                                          |
-| type           | Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies.                                 | `CheckboxType`  | `"default"`                                      |
 | addonId        | Id of the addon node, which aria-labelledby points to. Generated when omitted.                                          | `string`        | `undefined`                                      |
+| defaultChecked | Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup.                        | `boolean`       | `false`                                          |
+| disabled       | Whether the checkbox is disabled.                                                                                       | `boolean`       | `semiGlobalDefault("Checkbox", "disabled")`      |
 | extraId        | Id of the extra node, which aria-describedby points to. Generated when omitted.                                         | `string`        | `undefined`                                      |
+| indeterminate  | Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value. | `boolean`       | `false`                                          |
+| modelValue     | Whether the checkbox is checked, controlled with v-model. Ignored inside a CheckboxGroup.                               | `boolean`       | `undefined`                                      |
 | preventScroll  | Whether focusing prevents the browser from scrolling the element into view; applies to the focus method.                | `boolean`       | `semiGlobalDefault("Checkbox", "preventScroll")` |
+| type           | Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies.                                 | `CheckboxType`  | `"default"`                                      |
+| value          | The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group.                | `CheckboxValue` | `undefined`                                      |
 
 **Events**
 
 | Event             | Description                                                                                         | Callback parameters      |
 | ----------------- | --------------------------------------------------------------------------------------------------- | ------------------------ |
-| update:modelValue | Emitted when the checked state changes; drives v-model.                                             | `[checked: boolean]`     |
 | change            | Emitted when the checked state changes. The event's target is `{ checked, value, name, disabled }`. | `[event: CheckboxEvent]` |
+| update:modelValue | Emitted when the checked state changes; drives v-model.                                             | `[checked: boolean]`     |
 
 **Slots**
 
@@ -32,5 +32,5 @@ import ApiType from '#/components/ApiType.astro';
 
 | Name  | Description                          | Type                                          |
 | ----- | ------------------------------------ | --------------------------------------------- |
-| focus | Focuses the native input.            | <ApiType detail={"() => void"}>Type</ApiType> |
 | blur  | Removes focus from the native input. | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | Focuses the native input.            | <ApiType detail={"() => void"}>Type</ApiType> |

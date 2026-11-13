@@ -2,16 +2,16 @@
 
 | Property  | Description                                                                     | Type                 | Default     |
 | --------- | ------------------------------------------------------------------------------- | -------------------- | ----------- |
-| codes     | The code entries, each with the CodeItem props and a key identifying its panel. | `CodeItemData[]`     | `[]`        |
 | activeKey | Keys of the expanded code panels; bind it with v-model:activeKey.               | `string \| string[]` | `undefined` |
+| codes     | The code entries, each with the CodeItem props and a key identifying its panel. | `CodeItemData[]`     | `[]`        |
 
 **Events**
 
 | Event            | Description                                                                                                                                                | Callback parameters                                     |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| update:activeKey | Emitted before change when a panel opens or closes, so v-model:activeKey follows.                                                                          | `[activeKey: string[]]`                                 |
 | change           | Emitted when a panel opens or closes through its arrow, with the expanded keys.                                                                            | `[activeKey: string \| string[]]`                       |
 | expand           | Emitted when the expand button beside a panel header is clicked, with the event, its entry and code. The button is only rendered when this event is bound. | `[event: MouseEvent, item: CodeItemData, mode: string]` |
+| update:activeKey | Emitted before change when a panel opens or closes, so v-model:activeKey follows.                                                                          | `[activeKey: string[]]`                                 |
 
 **Slots**
 

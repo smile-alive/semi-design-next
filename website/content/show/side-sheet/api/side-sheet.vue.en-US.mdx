@@ -28,18 +28,18 @@ import ApiType from '#/components/ApiType.astro';
 
 | Event | Description | Callback parameters |
 | --- | --- | --- |
-| cancel | Emitted after update:visible when the user closes the sheet with the close button, the mask or Esc. The payload is the native MouseEvent, or the native KeyboardEvent for Esc. | `[event: MouseEvent \| KeyboardEvent]` |
-| update:visible | Emitted with false before cancel when the close button, the mask or Esc closes the sheet, for v-model:visible to write back. | `[visible: boolean]` |
 | afterVisibleChange | Emitted with true right after the commit that shows the sheet, without waiting for the enter animation. Emitted with false after the leave animation, and once with false if the sheet is unmounted while shown. Not emitted when a KeepAlive deactivates or reactivates it. | `[visible: boolean]` |
+| cancel | Emitted after update:visible when the user closes the sheet with the close button, the mask or Esc. The payload is the native MouseEvent, or the native KeyboardEvent for Esc. | `[event: KeyboardEvent \| MouseEvent]` |
+| update:visible | Emitted with false before cancel when the close button, the mask or Esc closes the sheet, for v-model:visible to write back. | `[visible: boolean]` |
 
 **Slots**
 
 | Slot      | Description                                                                                                             | Scope parameters |
 | --------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| default   | Body of the sheet.                                                                                                      | `any`            |
-| title     | Title. It wins over the title prop and names the dialog. Nothing is rendered when it is empty.                          | `any`            |
-| footer    | Footer of the sheet. Nothing is rendered when it is empty.                                                              | `any`            |
 | closeIcon | Icon inside the close button. An empty slot falls back to the default icon; hide the button with closable set to false. | `any`            |
+| default   | Body of the sheet.                                                                                                      | `any`            |
+| footer    | Footer of the sheet. Nothing is rendered when it is empty.                                                              | `any`            |
+| title     | Title. It wins over the title prop and names the dialog. Nothing is rendered when it is empty.                          | `any`            |
 
 **Exposes**
 

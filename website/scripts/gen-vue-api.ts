@@ -42,15 +42,13 @@ export function renderApi(meta: VueApi, description: ApiDescription, locale: Loc
         groups
             .map((group, index) => {
                 const members = group === 'props' ? ownProps(meta) : meta[group];
-                // The checker lists events by when it created their name literals; the descriptions give the author's order
-                const order = Object.keys(description[group] ?? {});
                 const rows = members
                     .map((member) => {
                         const cells = [apiType(member.type, 'required' in member && !member.required)];
                         if (group === 'props') cells.push(apiType(defaultValue(member)));
                         return { name: member.name, cells };
                     })
-                    .toSorted((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+                    .toSorted((a, b) => a.name.localeCompare(b.name, 'en'));
                 return renderTable(group, titles[index], headings[locale][index], rows, description[group], locale);
             })
             .join('\n\n') + '\n'

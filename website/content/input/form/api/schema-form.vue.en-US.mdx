@@ -4,30 +4,30 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| jsonSchema | The JSON Schema to render. It takes precedence over the JSON Schema exported from `schema`. The events of Form pass through to the inner Form. | `JsonSchema` | `semiGlobalDefault("SchemaForm", "jsonSchema")` |
-| widgets | The widgets of SchemaField. | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "widgets")` |
-| renderField | The renderField of SchemaField. | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
-| initValues | The initValues of Form. | <ApiType detail={"DeepPartial\u003cValues>"}>Type</ApiType> | `undefined` |
-| layout | The layout of Form. | `"horizontal" \| "vertical"` | `undefined` |
-| labelPosition | The labelPosition of Form. | `"inset" \| "left" \| "top"` | `undefined` |
-| labelWidth | The labelWidth of Form. | `string \| number` | `undefined` |
-| labelAlign | The labelAlign of Form. | `"left" \| "right"` | `undefined` |
-| labelCol | The labelCol of Form. | `ColProps` | `undefined` |
-| wrapperCol | The wrapperCol of Form. | `ColProps` | `undefined` |
-| extraTextPosition | The extraTextPosition of Form. | `"bottom" \| "middle"` | `undefined` |
 | allowEmpty | The allowEmpty of Form. | `boolean` | `undefined` |
 | autoScrollToError | The autoScrollToError of Form. | `boolean \| Options` | `undefined` |
-| showValidateIcon | The showValidateIcon of Form. | `boolean` | `undefined` |
 | disabled | The disabled of Form. | `boolean` | `undefined` |
-| stopValidateWithError | The stopValidateWithError of Form. | `boolean` | `undefined` |
-| trigger | The trigger of Form. | `FieldValidateTriggerType` | `undefined` |
-| stopPropagation | The stopPropagation of Form. | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `undefined` |
-| validator | Form-level validation, exclusive with `schema`; works as the validator of Form. | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | `undefined` |
-| schema | A Standard Schema object (Zod, Valibot, ArkType and so on) that validates the form and, when it implements Standard JSON Schema, gives the JSON Schema to render. Once all fields pass, the `submit` event receives the schema's output. | <ApiType detail={"FormSchema\u003cValues, Output>"}>Type</ApiType> | `undefined` |
-| schemaDebounce | The schemaDebounce of Form. | `number` | `undefined` |
-| keepState | The keepState of Form. | `boolean` | `undefined` |
+| extraTextPosition | The extraTextPosition of Form. | `"bottom" \| "middle"` | `undefined` |
 | form | The form of Form. | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | `undefined` |
 | id | The id of Form. | `string` | `undefined` |
+| initValues | The initValues of Form. | <ApiType detail={"DeepPartial\u003cValues>"}>Type</ApiType> | `undefined` |
+| jsonSchema | The JSON Schema to render. It takes precedence over the JSON Schema exported from `schema`. The events of Form pass through to the inner Form. | `JsonSchema` | `semiGlobalDefault("SchemaForm", "jsonSchema")` |
+| keepState | The keepState of Form. | `boolean` | `undefined` |
+| labelAlign | The labelAlign of Form. | `"left" \| "right"` | `undefined` |
+| labelCol | The labelCol of Form. | `ColProps` | `undefined` |
+| labelPosition | The labelPosition of Form. | `"inset" \| "left" \| "top"` | `undefined` |
+| labelWidth | The labelWidth of Form. | `string \| number` | `undefined` |
+| layout | The layout of Form. | `"horizontal" \| "vertical"` | `undefined` |
+| renderField | The renderField of SchemaField. | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
+| schema | A Standard Schema object (Zod, Valibot, ArkType and so on) that validates the form and, when it implements Standard JSON Schema, gives the JSON Schema to render. Once all fields pass, the `submit` event receives the schema's output. | <ApiType detail={"FormSchema\u003cValues, Output>"}>Type</ApiType> | `undefined` |
+| schemaDebounce | The schemaDebounce of Form. | `number` | `undefined` |
+| showValidateIcon | The showValidateIcon of Form. | `boolean` | `undefined` |
+| stopPropagation | The stopPropagation of Form. | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `undefined` |
+| stopValidateWithError | The stopValidateWithError of Form. | `boolean` | `undefined` |
+| trigger | The trigger of Form. | `FieldValidateTriggerType` | `undefined` |
+| validator | Form-level validation, exclusive with `schema`; works as the validator of Form. | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | `undefined` |
+| widgets | The widgets of SchemaField. | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "widgets")` |
+| wrapperCol | The wrapperCol of Form. | `ColProps` | `undefined` |
 
 **Events**
 

@@ -113,7 +113,7 @@ export function extractApis(sources: string[]): ComponentApi[] {
         const { options } = ts.parseJsonConfigFileContent(parsed.config, ts.sys, dirname(config));
         // The foundation's sources let a fallback such as `cssClasses.PREFIX` print as its value
         const paths = Object.fromEntries(['semi-foundation', 'semi-ai-foundation'].map((name) => [`@fibrae/${name}/*`, [join(root, 'packages/shared', name, 'src', '*')]]));
-        const merged = { ...options, paths: { ...options.paths, ...paths } };
+        const merged = { ...options, paths: { ...options.paths, ...paths }, stableTypeOrdering: true };
         const codes = new Map(targets.filter((target) => target.config === config).map((target) => [target.virtual, target.script.code]));
         const host = ts.createCompilerHost(merged);
         const getSourceFile = host.getSourceFile.bind(host);

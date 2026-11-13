@@ -275,7 +275,9 @@ export function extractApis(framework: Framework, sources: string[]): ComponentA
         // A foundation's built declarations keep the types of its constants but not their values; its sources let a
         // default such as `cssClasses.PREFIX` print as the value.
         const paths = Object.fromEntries(['semi-foundation', 'semi-ai-foundation'].map((name) => [`@fibrae/${name}/*`, [join(root, 'packages/shared', name, 'src', '*')]]));
-        const program = ts.createProgram({ rootNames: targets.filter((_, index) => configs[index] === config).map(({ path }) => path), options: { ...options, paths: { ...options.paths, ...paths } } });
+        // Without stableTypeOrdering the checker orders union members (and the members of a union of shapes) by when it
+        // created each type, so an unrelated source file could reorder a table.
+        const program = ts.createProgram({ rootNames: targets.filter((_, index) => configs[index] === config).map(({ path }) => path), options: { ...options, paths: { ...options.paths, ...paths }, stableTypeOrdering: true } });
         programs.set(config, program);
         return program;
     };

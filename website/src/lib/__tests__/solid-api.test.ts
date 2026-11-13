@@ -35,14 +35,14 @@ describe('Solid API 生成', () => {
         });
     });
 
-    it('联合形状列出各模式的自有成员，类型按作者写法打印，默认值求值为字面量', () => {
+    it('联合形状列出各模式的自有成员，联合成员按固定顺序打印，默认值求值为字面量', () => {
         const [extracted] = extractApis([`${resolve('website/src/lib/__tests__/fixtures/solid-api/modes.solid.ts')}#Modes`]);
         expect(extracted.props.map((prop) => [prop.name, prop.type, prop.optional, prop.default])).toEqual([
             ['alignBy', "'end' | 'start'", true, undefined],
             ['children', 'JSX.Element', true, undefined],
             ['columns', 'number', true, undefined],
-            ['mode', "'list' | 'grid'", true, undefined],
-            ['onPick', '((value: string) => void) | ((value: string[]) => void)', true, undefined],
+            ['mode', "'grid' | 'list'", true, undefined],
+            ['onPick', '((value: string[]) => void) | ((value: string) => void)', true, undefined],
             ['prefixCls', 'string', true, '"semi-modes"'],
             ['size', "'small' | 'large'", true, '"small"'],
             ['sizes', 'string[]', true, '["small", "large", "huge"]'],

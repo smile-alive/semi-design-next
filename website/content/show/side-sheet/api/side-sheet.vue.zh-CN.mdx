@@ -28,18 +28,18 @@ import ApiType from '#/components/ApiType.astro';
 
 | 事件               | 说明                                                                                                                                                                | 回调参数                               |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| cancel             | 用户通过关闭按钮、遮罩或 Esc 关闭面板时触发，晚于 update:visible；载荷为原生 MouseEvent，按 Esc 时为原生 KeyboardEvent。                                            | `[event: MouseEvent \| KeyboardEvent]` |
-| update:visible     | 关闭按钮、遮罩或 Esc 关闭面板时先于 cancel 触发，值为 false，供 v-model:visible 回写。                                                                              | `[visible: boolean]`                   |
 | afterVisibleChange | 显示时在 visible 变为 true 的那次提交立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次；在 KeepAlive 中失活、重新激活时不触发。 | `[visible: boolean]`                   |
+| cancel             | 用户通过关闭按钮、遮罩或 Esc 关闭面板时触发，晚于 update:visible；载荷为原生 MouseEvent，按 Esc 时为原生 KeyboardEvent。                                            | `[event: KeyboardEvent \| MouseEvent]` |
+| update:visible     | 关闭按钮、遮罩或 Esc 关闭面板时先于 cancel 触发，值为 false，供 v-model:visible 回写。                                                                              | `[visible: boolean]`                   |
 
 **Slots**
 
 | 插槽      | 说明                                                                        | 作用域参数 |
 | --------- | --------------------------------------------------------------------------- | ---------- |
-| default   | 面板的正文。                                                                | `any`      |
-| title     | 标题，优先于 title 属性，同时作为对话框的可访问名称。内容为空时不渲染标题。 | `any`      |
-| footer    | 面板底部。内容为空时不渲染底部。                                            | `any`      |
 | closeIcon | 关闭按钮中的图标；空插槽时回落到默认图标，隐藏按钮用 closable 为 false。    | `any`      |
+| default   | 面板的正文。                                                                | `any`      |
+| footer    | 面板底部。内容为空时不渲染底部。                                            | `any`      |
+| title     | 标题，优先于 title 属性，同时作为对话框的可访问名称。内容为空时不渲染标题。 | `any`      |
 
 **Exposes**
 

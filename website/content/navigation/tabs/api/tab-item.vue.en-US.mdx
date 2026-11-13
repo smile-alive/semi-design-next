@@ -2,13 +2,13 @@
 
 | Property    | Description                                                                                                                                               | Type          | Default     |
 | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----------- |
+| closable    | Whether to show the close button.                                                                                                                         | `boolean`     | `false`     |
+| disabled    | Whether the tab is disabled; clicks, the close button and the Enter, Space, Delete and Backspace keys have no effect, while the close button still shows. | `boolean`     | `false`     |
 | itemKey     | Unique key of the tab.                                                                                                                                    | `string`      | `""`        |
 | selected    | Whether the tab is selected.                                                                                                                              | `boolean`     | `false`     |
-| disabled    | Whether the tab is disabled; clicks, the close button and the Enter, Space, Delete and Backspace keys have no effect, while the close button still shows. | `boolean`     | `false`     |
-| closable    | Whether to show the close button.                                                                                                                         | `boolean`     | `false`     |
 | size        | Size; defaults to the size of the enclosing Tabs.                                                                                                         | `TabSize`     | `undefined` |
-| type        | Style; defaults to the type of the enclosing Tabs, else line.                                                                                             | `TabType`     | `undefined` |
 | tabPosition | Position; defaults to the tabPosition of the enclosing Tabs, else top.                                                                                    | `TabPosition` | `undefined` |
+| type        | Style; defaults to the type of the enclosing Tabs, else line.                                                                                             | `TabType`     | `undefined` |
 
 **Events**
 
@@ -20,8 +20,8 @@
 
 | Slot | Description                                | Scope parameters |
 | ---- | ------------------------------------------ | ---------------- |
-| tab  | Tab content.                               | `any`            |
 | icon | Tab icon; an empty result renders no icon. | `any`            |
+| tab  | Tab content.                               | `any`            |
 
 **Exposes**
 

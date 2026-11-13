@@ -4,25 +4,25 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性           | 说明                                                                                            | 类型               | 默认值                                         |
 | -------------- | ----------------------------------------------------------------------------------------------- | ------------------ | ---------------------------------------------- |
-| modelValue     | 是否选中，配合 v-model 受控使用；在 RadioGroup 中使用时无效。                                   | `boolean`          | `undefined`                                    |
-| defaultChecked | 初始是否选中，非受控使用；在 RadioGroup 中使用时无效。                                          | `boolean`          | `false`                                        |
-| value          | Radio 的值，RadioGroup 据此判断是否选中；同时作为原生 input 的 value 参与表单提交。             | `RadioValue`       | `undefined`                                    |
-| disabled       | 是否禁用。                                                                                      | `boolean`          | `semiGlobalDefault("Radio", "disabled")`       |
-| displayMode    | 设为 vertical 时 Radio 以块级元素独占一行。                                                     | `RadioDisplayMode` | `semiGlobalDefault("Radio", "displayMode")`    |
-| mode           | 设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中；在 RadioGroup 中以组的 mode 为准。 | `RadioMode`        | `""`                                           |
-| type           | 样式类型，可选 default、button、card、pureCard；在 RadioGroup 中以组的 type 为准。              | `RadioType`        | `"default"`                                    |
-| addonStyle     | 包裹内容容器的内联样式。                                                                        | `StyleValue`       | `semiGlobalDefault("Radio", "addonStyle")`     |
 | addonClassName | 包裹内容容器的类名。                                                                            | `string`           | `semiGlobalDefault("Radio", "addonClassName")` |
 | addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。                                | `string`           | `undefined`                                    |
+| addonStyle     | 包裹内容容器的内联样式。                                                                        | `StyleValue`       | `semiGlobalDefault("Radio", "addonStyle")`     |
+| defaultChecked | 初始是否选中，非受控使用；在 RadioGroup 中使用时无效。                                          | `boolean`          | `false`                                        |
+| disabled       | 是否禁用。                                                                                      | `boolean`          | `semiGlobalDefault("Radio", "disabled")`       |
+| displayMode    | 设为 vertical 时 Radio 以块级元素独占一行。                                                     | `RadioDisplayMode` | `semiGlobalDefault("Radio", "displayMode")`    |
 | extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。                               | `string`           | `undefined`                                    |
+| mode           | 设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中；在 RadioGroup 中以组的 mode 为准。 | `RadioMode`        | `""`                                           |
+| modelValue     | 是否选中，配合 v-model 受控使用；在 RadioGroup 中使用时无效。                                   | `boolean`          | `undefined`                                    |
 | preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                                           | `boolean`          | `semiGlobalDefault("Radio", "preventScroll")`  |
+| type           | 样式类型，可选 default、button、card、pureCard；在 RadioGroup 中以组的 type 为准。              | `RadioType`        | `"default"`                                    |
+| value          | Radio 的值，RadioGroup 据此判断是否选中；同时作为原生 input 的 value 参与表单提交。             | `RadioValue`       | `undefined`                                    |
 
 **Events**
 
 | 事件              | 说明                                                                        | 回调参数                    |
 | ----------------- | --------------------------------------------------------------------------- | --------------------------- |
-| update:modelValue | 选中状态变化时触发，用于 v-model。                                          | `[checked: boolean]`        |
 | change            | 选中状态变化时触发，参数的 target 为 `{ checked, value, name, disabled }`。 | `[event: RadioChangeEvent]` |
+| update:modelValue | 选中状态变化时触发，用于 v-model。                                          | `[checked: boolean]`        |
 
 **Slots**
 
@@ -35,5 +35,5 @@ import ApiType from '#/components/ApiType.astro';
 
 | 名称  | 说明                    | 类型                                          |
 | ----- | ----------------------- | --------------------------------------------- |
-| focus | 使原生 input 获得焦点。 | <ApiType detail={"() => void"}>Type</ApiType> |
 | blur  | 使原生 input 失去焦点。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | 使原生 input 获得焦点。 | <ApiType detail={"() => void"}>Type</ApiType> |

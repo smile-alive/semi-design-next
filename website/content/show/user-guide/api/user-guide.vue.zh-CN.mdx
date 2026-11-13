@@ -24,23 +24,23 @@ import ApiType from '#/components/ApiType.astro';
 
 | 事件           | 说明                                                                                          | 回调参数            |
 | -------------- | --------------------------------------------------------------------------------------------- | ------------------- |
-| update:current | 步骤改变时触发，值为新的索引，供 v-model:current 回写；先于 change。                          | `[current: number]` |
-| update:visible | 点击跳过、按 Esc 或完成引导时触发，值为 false，供 v-model:visible 回写；先于 skip 与 finish。 | `[visible: false]`  |
 | change         | 步骤改变时触发，参数为新的索引。                                                              | `[current: number]` |
+| finish         | 点击最后一步的完成按钮时触发。                                                                | `[]`                |
 | next           | 点击下一步按钮时触发，参数为新的索引；最后一步触发 finish。                                   | `[current: number]` |
 | prev           | 点击上一步按钮时触发，参数为新的索引。                                                        | `[current: number]` |
 | skip           | 点击跳过按钮或按 Esc 时触发。                                                                 | `[]`                |
-| finish         | 点击最后一步的完成按钮时触发。                                                                | `[]`                |
+| update:current | 步骤改变时触发，值为新的索引，供 v-model:current 回写；先于 change。                          | `[current: number]` |
+| update:visible | 点击跳过、按 Esc 或完成引导时触发，值为 false，供 v-model:visible 回写；先于 skip 与 finish。 | `[visible: false]`  |
 
 **Slots**
 
 | 插槽        | 说明                                                                        | 作用域参数               |
 | ----------- | --------------------------------------------------------------------------- | ------------------------ |
-| title       | 步骤标题，作用域参数为 `{ item, index }`；渲染为空时使用 item.title。       | `UserGuideStepSlotProps` |
-| description | 步骤描述，作用域参数为 `{ item, index }`；渲染为空时使用 item.description。 | `UserGuideStepSlotProps` |
 | cover       | 步骤封面，作用域参数为 `{ item, index }`；不提供时该步骤没有封面区。        | `UserGuideStepSlotProps` |
+| description | 步骤描述，作用域参数为 `{ item, index }`；渲染为空时使用 item.description。 | `UserGuideStepSlotProps` |
 | nextText    | 下一步按钮的文本，最后一步显示 finishText；不提供时使用语言包中的文案。     | `any`                    |
 | prevText    | 上一步按钮的文本；不提供时使用语言包中的文案。                              | `any`                    |
+| title       | 步骤标题，作用域参数为 `{ item, index }`；渲染为空时使用 item.title。       | `UserGuideStepSlotProps` |
 
 **Exposes**
 

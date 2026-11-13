@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | `aria-label` of the dialog. When given, it takes precedence over the title. | `string` | - |
 | aria-labelledby | `aria-labelledby` of the dialog. Defaults to the title, or to the content without a title. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires `showArrow`. Defaults to `true`. | `boolean` | - |
-| arrowStyle | Border color, background color and border opacity of the arrow. | `ArrowStyle` | - |
+| arrowStyle | Border color, background color and border opacity of the arrow. | <ApiType detail={"Pick\u003cReact.CSSProperties, 'backgroundColor' \u007c 'borderColor'> & { borderOpacity?: string \u007c number }"}>Type</ApiType> | - |
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. Defaults to `true`. | `boolean` | - |
 | cancelButtonProps | Props of the cancel button. `autoFocus` focuses it on open; `className`, `style` and other props land on the button. | `ButtonProps` | - |
 | cancelText | Cancel button text. Defaults to the locale entry `Popconfirm.cancel` (`取消` in zh_CN, `Cancel` in en_US). | `string` | - |

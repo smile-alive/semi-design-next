@@ -4,10 +4,10 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property    | Description                                                 | Type                     | Default                                        |
 | ----------- | ----------------------------------------------------------- | ------------------------ | ---------------------------------------------- |
+| maxCount    | Maximum number of visible avatars; overflow is shown as +N. | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")` |
+| overlapFrom | Avatar overlap direction: start or end.                     | `AvatarGroupOverlapFrom` | `"start"`                                      |
 | shape       | Shape of the avatars in the group.                          | `AvatarShape`            | `"circle"`                                     |
 | size        | Size of the avatars in the group.                           | `string`                 | `"medium"`                                     |
-| overlapFrom | Avatar overlap direction: start or end.                     | `AvatarGroupOverlapFrom` | `"start"`                                      |
-| maxCount    | Maximum number of visible avatars; overflow is shown as +N. | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")` |
 
 **Events**
 

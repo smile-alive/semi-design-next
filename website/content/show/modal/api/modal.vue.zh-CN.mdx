@@ -28,33 +28,33 @@ import ApiType from '#/components/ApiType.astro';
 | okButtonProps | 确认按钮的属性。autoFocus 为 true 时打开后聚焦该按钮；class、style 落在按钮上；onClick 先于内置的确认处理调用，不会替换内置处理。 | `ModalButtonProps` | `semiGlobalDefault("Modal", "okButtonProps")` |
 | okText | 确认按钮文字，缺省取语言包 Modal.confirm。 | `string` | `semiGlobalDefault("Modal", "okText")` |
 | okType | 确认按钮的类型。 | `OKType` | `"primary"` |
+| onCancel | 取消按钮、关闭按钮、遮罩和 Esc 触发；按 Esc 时参数为原生 KeyboardEvent。返回 Promise 时取消按钮保持加载，fulfill 后才更新 v-model:visible，reject 时保持打开；回调执行时父级的 visible 仍为 true。保留为函数 prop 以读取返回值，使用方照常写 @cancel。 | <ApiType detail={"((event: KeyboardEvent \u007c MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+| onOk | 点击确认按钮时调用；返回 Promise 时确认按钮保持加载直到落定。组件不会自行关闭，由使用方把 visible 设为 false。保留为函数 prop 以读取返回值，使用方照常写 @ok。 | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
 | preventScroll | 组件内部调用 focus 时是否阻止浏览器滚动到被聚焦元素，不影响使用方自己的 focus 调用。 | `boolean` | `semiGlobalDefault("Modal", "preventScroll")` |
 | size | 对话框宽度档位：small 为 448px，medium 为 684px，large 为 920px，full-width 为 100vw - 64px。 | `Size` | `"small"` |
 | title | 纯文本标题，同时作为对话框的可访问名称；同时传入 #title 插槽时以插槽为准。声明为 prop，不会作为原生 title 属性落到元素上。 | `string` | `semiGlobalDefault("Modal", "title")` |
 | visible | 对话框是否可见，配合 v-model:visible 使用。 | `boolean` | `false` |
 | width | 对话框宽度，数字按像素处理，字符串为合法 CSS 长度；不传时由 size 决定。 | `string \| number` | `semiGlobalDefault("Modal", "width")` |
 | zIndex | 弹层外层的 z-index。 | `number` | `1000` |
-| onCancel | 取消按钮、关闭按钮、遮罩和 Esc 触发；按 Esc 时参数为原生 KeyboardEvent。返回 Promise 时取消按钮保持加载，fulfill 后才更新 v-model:visible，reject 时保持打开；回调执行时父级的 visible 仍为 true。保留为函数 prop 以读取返回值，使用方照常写 @cancel。 | <ApiType detail={"((event: MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
-| onOk | 点击确认按钮时调用；返回 Promise 时确认按钮保持加载直到落定。组件不会自行关闭，由使用方把 visible 设为 false。保留为函数 prop 以读取返回值，使用方照常写 @ok。 | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
 
 **Events**
 
 | 事件           | 说明                                                                                                                      | 回调参数             |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| update:visible | 取消路径（取消按钮、关闭按钮、遮罩、Esc）完成后触发，值为 false，供 v-model:visible 回写。确认只触发 onOk，不触发该事件。 | `[visible: boolean]` |
 | afterClose     | 对话框完全关闭后触发；显示期间被卸载时也会触发一次。                                                                      | `[]`                 |
+| update:visible | 取消路径（取消按钮、关闭按钮、遮罩、Esc）完成后触发，值为 false，供 v-model:visible 回写。确认只触发 onOk，不触发该事件。 | `[visible: boolean]` |
 
 **Slots**
 
 | 插槽      | 说明                                                                                                | 作用域参数                                                                                                        |
 | --------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| default   | 对话框的正文。                                                                                      | `any`                                                                                                             |
-| title     | 标题，优先于 title 属性，同时作为对话框的可访问名称。                                               | `any`                                                                                                             |
-| header    | 完全替换默认头部（图标、标题与关闭按钮）。传入空插槽时隐藏头部区域。                                | `any`                                                                                                             |
-| footer    | 完全替换默认页脚按钮。传入空插槽时隐藏页脚区域。                                                    | `any`                                                                                                             |
-| icon      | 标题前的图标。                                                                                      | `any`                                                                                                             |
 | closeIcon | 关闭按钮中的图标；空插槽时回落到默认图标。                                                          | `any`                                                                                                             |
+| default   | 对话框的正文。                                                                                      | `any`                                                                                                             |
+| footer    | 完全替换默认页脚按钮。传入空插槽时隐藏页脚区域。                                                    | `any`                                                                                                             |
+| header    | 完全替换默认头部（图标、标题与关闭按钮）。传入空插槽时隐藏头部区域。                                | `any`                                                                                                             |
+| icon      | 标题前的图标。                                                                                      | `any`                                                                                                             |
 | modal     | 自定义渲染对话框本身，参数 modal 是 role=dialog 元素的 VNode，用 `<component :is="modal" />` 放置。 | <ApiType detail={"{ modal: VNode\u003cRendererNode, RendererElement, { [key: string]: any; }>; }"}>Type</ApiType> |
+| title     | 标题，优先于 title 属性，同时作为对话框的可访问名称。                                               | `any`                                                                                                             |
 
 **Exposes**
 

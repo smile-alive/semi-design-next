@@ -4,15 +4,15 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性             | 说明                                                                                                                                              | 类型                                                           | 默认值         |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | -------------- |
-| type             | 步骤条类型，可选 fill、basic、nav。                                                                                                               | `StepsType`                                                    | `"fill"`       |
 | current          | 当前步骤，从 0 开始计数；子 Step 可用 status 覆盖状态。                                                                                           | `number`                                                       | `0`            |
-| initial          | 起始序号，从 0 开始计数。                                                                                                                         | `number`                                                       | `0`            |
 | direction        | 步骤条方向，可选 horizontal、vertical。                                                                                                           | `StepsDirection`                                               | `"horizontal"` |
-| status           | 当前步骤的状态，可选 wait、process、finish、error、warning。                                                                                      | `StepStatus`                                                   | `"process"`    |
-| size             | basic 与 nav 类型的尺寸，可选 default、small。                                                                                                    | `StepsSize`                                                    | `"default"`    |
 | hasLine          | basic 类型是否显示连接线。                                                                                                                        | `boolean`                                                      | `true`         |
+| initial          | 起始序号，从 0 开始计数。                                                                                                                         | `number`                                                       | `0`            |
 | onChange         | 点击或键盘选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。是函数 prop，使用方照常写 @change；传入后所有 Step 变为可点击。 | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined`    |
 | onUpdate:current | v-model:current 绑定的更新函数，行为与 onChange 一致。                                                                                            | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined`    |
+| size             | basic 与 nav 类型的尺寸，可选 default、small。                                                                                                    | `StepsSize`                                                    | `"default"`    |
+| status           | 当前步骤的状态，可选 wait、process、finish、error、warning。                                                                                      | `StepStatus`                                                   | `"process"`    |
+| type             | 步骤条类型，可选 fill、basic、nav。                                                                                                               | `StepsType`                                                    | `"fill"`       |
 
 **Events**
 

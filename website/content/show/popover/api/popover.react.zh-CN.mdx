@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | 弹出层 role 为 dialog 时的名称。 | `string` | - |
 | aria-labelledby | 弹出层 role 为 dialog 时，指向名称元素的 id。 | `string` | - |
 | arrowPointAtCenter | 小三角是否指向触发元素中心，需要同时开启 `showArrow`。未设置时为 true。 | `boolean` | - |
-| arrowStyle | 小三角的 `borderColor`、`backgroundColor` 与 `borderOpacity`；未设置的颜色跟随 `style` 中的 `backgroundColor` 与 `borderColor`。 | `ArrowStyle` | - |
+| arrowStyle | 小三角的 `borderColor`、`backgroundColor` 与 `borderOpacity`；未设置的颜色跟随 `style` 中的 `backgroundColor` 与 `borderColor`。 | <ApiType detail={"Pick\u003cReact.CSSProperties, 'backgroundColor' \u007c 'borderColor'> & { borderOpacity?: string \u007c number }"}>Type</ApiType> | - |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
 | children | 触发元素。事件监听器会应用到它上面，并以它的真实 DOM 节点计算定位，因此组件需要把 props 与 ref 透传到根 DOM 节点。 | `React.ReactNode` | - |
 | className | 弹出层的类名。 | `string` | - |

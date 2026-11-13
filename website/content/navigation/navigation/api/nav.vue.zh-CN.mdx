@@ -26,26 +26,26 @@
 
 | 事件                | 说明                                                                                                        | 回调参数                    |
 | ------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------- |
-| update:selectedKeys | 选中项变化时触发，载荷只含被选中项自身的 itemKey，v-model:selectedKeys 使用。                               | `[selectedKeys: ItemKey[]]` |
-| update:openKeys     | 展开的子导航变化时触发，v-model:openKeys 使用；水平或收起模式下悬停打开子菜单同样触发。                     | `[openKeys: ItemKey[]]`     |
-| update:isCollapsed  | 收起状态变化时触发，v-model:isCollapsed 使用。                                                              | `[isCollapsed: boolean]`    |
-| select              | 第一次选中某个可选中导航项时触发，domEvent 为原生事件。                                                     | `[data: OnSelectedData]`    |
 | click               | 点击任意导航项时触发。点击导航项时数据带 text，点击子导航标题时带 openKeys 与 isOpen，domEvent 为原生事件。 | `[data: NavClickData]`      |
-| openChange          | 切换某个子导航显隐状态时触发，悬停打开浮层时没有 domEvent。                                                 | `[data: NavOpenChangeData]` |
 | collapseChange      | 收起状态变化时触发。                                                                                        | `[isCollapsed: boolean]`    |
+| openChange          | 切换某个子导航显隐状态时触发，悬停打开浮层时没有 domEvent。                                                 | `[data: NavOpenChangeData]` |
+| select              | 第一次选中某个可选中导航项时触发，domEvent 为原生事件。                                                     | `[data: OnSelectedData]`    |
+| update:isCollapsed  | 收起状态变化时触发，v-model:isCollapsed 使用。                                                              | `[isCollapsed: boolean]`    |
+| update:openKeys     | 展开的子导航变化时触发，v-model:openKeys 使用；水平或收起模式下悬停打开子菜单同样触发。                     | `[openKeys: ItemKey[]]`     |
+| update:selectedKeys | 选中项变化时触发，载荷只含被选中项自身的 itemKey，v-model:selectedKeys 使用。                               | `[selectedKeys: ItemKey[]]` |
 
 **Slots**
 
 | 插槽       | 说明                                                                                                                                               | 作用域参数            |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
 | default    | Nav.Item、Nav.Sub、Nav.Header、Nav.Footer 子组件，也可以放入其他自定义元素。Header 与 Footer 移到头部和底部，其余元素放在 items 生成的导航项之后。 | `any`                 |
-| header     | 头部内容，渲染在 header 配置的文案之后。                                                                                                           | `any`                 |
+| expandIcon | items 生成的子导航的展开收起箭头，接收 item 与 level。                                                                                             | `NavItemSlotProps`    |
 | footer     | 底部内容，替换 footer 配置的收起按钮。                                                                                                             | `any`                 |
-| wrapper    | 自定义导航项外层组件，用 `<component :is="itemElement" />` 挂载导航项的 li。接收 itemElement、isSubNav、isInSubNav 与 props。                      | `NavWrapperSlotProps` |
+| header     | 头部内容，渲染在 header 配置的文案之后。                                                                                                           | `any`                 |
 | icon       | items 中导航项的图标，接收 item 与 level。                                                                                                         | `NavItemSlotProps`    |
 | text       | items 中导航项的文案节点，接收 item 与 level；不提供时显示数据中的 text。                                                                          | `NavItemSlotProps`    |
 | toggleIcon | items 中导航项的展开收起图标位置上的图标，接收 item 与 level。                                                                                     | `NavItemSlotProps`    |
-| expandIcon | items 生成的子导航的展开收起箭头，接收 item 与 level。                                                                                             | `NavItemSlotProps`    |
+| wrapper    | 自定义导航项外层组件，用 `<component :is="itemElement" />` 挂载导航项的 li。接收 itemElement、isSubNav、isInSubNav 与 props。                      | `NavWrapperSlotProps` |
 
 **Exposes**
 

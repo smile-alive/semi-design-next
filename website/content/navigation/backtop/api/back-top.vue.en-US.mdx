@@ -4,13 +4,13 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| duration | Milliseconds the scroll to the top takes. The click event is throttled by this interval. | `number` | `numbers.DEFAULT_DURATION` |
-| target | Function returning the scrolled element, the window when unset. Returning null means the node is not available yet. Called on mount and again when the function itself changes. Template refs are assigned before the parent's mounted hook, so they can be read directly. | <ApiType detail={"(() => Window \u007c HTMLElement \u007c null)"}>Type</ApiType> | `undefined` |
-| visibilityHeight | Scroll distance after which the BackTop appears. | `number` | `numbers.DEFAULT_VISIBILITY_HEIGHT` |
 | badge | Badge props, same as FloatButton. | `FloatButtonBadge` | `semiGlobalDefault("BackTop", "badge")` |
 | colorful | Colorful button, same as FloatButton. Falls back to the FloatButton default when unset. | `boolean` | `semiGlobalDefault("BackTop", "colorful")` |
+| duration | Milliseconds the scroll to the top takes. The click event is throttled by this interval. | `number` | `numbers.DEFAULT_DURATION` |
 | shape | Shape: round or square. Falls back to the FloatButton default when unset. | `"round" \| "square"` | `semiGlobalDefault("BackTop", "shape")` |
 | size | Size: default, small or large. Falls back to the FloatButton default when unset. | `"default" \| "large" \| "small"` | `semiGlobalDefault("BackTop", "size")` |
+| target | Function returning the scrolled element, the window when unset. Returning null means the node is not available yet. Called on mount and again when the function itself changes. Template refs are assigned before the parent's mounted hook, so they can be read directly. | <ApiType detail={"(() => HTMLElement \u007c Window \u007c null)"}>Type</ApiType> | `undefined` |
+| visibilityHeight | Scroll distance after which the BackTop appears. | `number` | `numbers.DEFAULT_VISIBILITY_HEIGHT` |
 
 **Events**
 
@@ -22,8 +22,8 @@ import ApiType from '#/components/ApiType.astro';
 
 | Slot       | Description                                                                                      | Scope parameters |
 | ---------- | ------------------------------------------------------------------------------------------------ | ---------------- |
-| default    | Static content of the button, shown in place of the icon. Must not contain interactive elements. | `any`            |
 | badgeCount | Custom badge content, in place of badge.count.                                                   | `any`            |
+| default    | Static content of the button, shown in place of the icon. Must not contain interactive elements. | `any`            |
 | icon       | Button icon. Defaults to IconBackTop.                                                            | `any`            |
 
 **Exposes**

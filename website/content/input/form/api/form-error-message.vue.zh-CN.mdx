@@ -3,11 +3,11 @@
 | 属性             | 说明                                                                                                                                     | 类型                                             | 默认值      |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ----------- |
 | error            | 错误信息，字符串数组，多条以逗号连接显示。有错误时不显示 helpText；`['']` 表示校验失败但没有文本，不渲染内容；空数组与空值视为没有错误。 | `FieldError`                                     | `undefined` |
-| showValidateIcon | 是否显示 validateStatus 对应的图标。                                                                                                     | `boolean`                                        | `undefined` |
-| validateStatus   | 信息所属的校验状态，可选 default、error、warning、success。                                                                              | `"default" \| "error" \| "success" \| "warning"` | `undefined` |
-| isInInputGroup   | 是否位于 InputGroup 中；为 true 且 showValidateIcon 为 true 时，不论 validateStatus 都显示错误图标。                                     | `boolean`                                        | `undefined` |
 | errorMessageId   | 错误文本元素的 id，供 aria-errormessage 引用。                                                                                           | `string`                                         | `undefined` |
 | helpTextId       | 提示文本元素的 id，供 aria-describedby 引用。                                                                                            | `string`                                         | `undefined` |
+| isInInputGroup   | 是否位于 InputGroup 中；为 true 且 showValidateIcon 为 true 时，不论 validateStatus 都显示错误图标。                                     | `boolean`                                        | `undefined` |
+| showValidateIcon | 是否显示 validateStatus 对应的图标。                                                                                                     | `boolean`                                        | `undefined` |
+| validateStatus   | 信息所属的校验状态，可选 default、error、warning、success。                                                                              | `"default" \| "error" \| "success" \| "warning"` | `undefined` |
 
 **Events**
 
@@ -19,8 +19,8 @@
 
 | 插槽     | 说明                                               | 作用域参数               |
 | -------- | -------------------------------------------------- | ------------------------ |
-| helpText | 提示信息，没有错误时显示，与错误信息共用同一区块。 | `any`                    |
 | error    | 自定义错误信息的渲染，作用域参数为 error。         | `{ error: FieldError; }` |
+| helpText | 提示信息，没有错误时显示，与错误信息共用同一区块。 | `any`                    |
 
 **Exposes**
 

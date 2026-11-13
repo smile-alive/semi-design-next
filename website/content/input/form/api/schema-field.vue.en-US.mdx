@@ -6,8 +6,8 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | field | Path of the node to render, the root by default. The root object renders without a Section; other objects render as a Section titled by their title. | `string` | `semiGlobalDefault("SchemaField", "field")` |
 | jsonSchema | The JSON Schema to render. It takes precedence over the JSON Schema exported from the Form's `schema`; with neither, nothing renders and a warning is logged in development. | `JsonSchema` | `semiGlobalDefault("SchemaField", "jsonSchema")` |
-| widgets | Field components in place of the built-in controls, keyed by the JSON Schema `format` or by kind (input, textarea, number, switch, select), looked up by `format` first. A component receives the props of the built-in control. | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaField", "widgets")` |
 | renderField | Renderers by node path, with array rows written as `[]` (such as `contacts[].email`), called with `{ node, field }` and returning VNodes. A match renders the node and its subtree. | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaField", "renderField")` |
+| widgets | Field components in place of the built-in controls, keyed by the JSON Schema `format` or by kind (input, textarea, number, switch, select), looked up by `format` first. A component receives the props of the built-in control. | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaField", "widgets")` |
 
 **Events**
 

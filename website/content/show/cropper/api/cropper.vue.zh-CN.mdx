@@ -4,21 +4,21 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| src | 被裁切图片的地址。 | `string` | `semiGlobalDefault("Cropper", "src")` |
-| imgProps | 传给被裁切图片 img 标签的属性。src 与布局样式由组件决定，class、style 与组件自身的合并，onLoad 在组件处理完成后调用；alt 默认为空字符串，crossorigin 默认为 anonymous，均可覆盖。 | `ImgHTMLAttributes` | `semiGlobalDefault("Cropper", "imgProps")` |
-| shape | 裁切框形状。 | `CropperShape` | `"rect"` |
 | aspectRatio | 固定的裁切框宽高比；加载后改变时，裁切框按新比例重排。 | `number` | `semiGlobalDefault("Cropper", "aspectRatio")` |
-| defaultAspectRatio | 裁切框的初始宽高比，拖动时会随之变化。 | `number` | `1` |
-| zoom | 受控的缩放比例，叠加在图片适应裁切区域的初始缩放之上。 | `number` | `semiGlobalDefault("Cropper", "zoom")` |
-| rotate | 图片旋转角度，单向绑定，组件不会改变它。 | `number` | `semiGlobalDefault("Cropper", "rotate")` |
-| showResizeBox | 是否展示裁切框边角的调整块。 | `boolean` | `true` |
-| cropperBoxStyle | 裁切框样式。 | `StyleValue` | `semiGlobalDefault("Cropper", "cropperBoxStyle")` |
 | cropperBoxCls | 裁切框类名。 | `string` | `semiGlobalDefault("Cropper", "cropperBoxCls")` |
+| cropperBoxStyle | 裁切框样式。 | `StyleValue` | `semiGlobalDefault("Cropper", "cropperBoxStyle")` |
+| defaultAspectRatio | 裁切框的初始宽高比，拖动时会随之变化。 | `number` | `1` |
 | fill | 裁切结果中非图片部分的填充色。 | `string` | `"rgba(0, 0, 0, 0)"` |
+| imgProps | 传给被裁切图片 img 标签的属性。src 与布局样式由组件决定，class、style 与组件自身的合并，onLoad 在组件处理完成后调用；alt 默认为空字符串，crossorigin 默认为 anonymous，均可覆盖。 | `ImgHTMLAttributes` | `semiGlobalDefault("Cropper", "imgProps")` |
 | maxZoom | 最大缩放倍数。 | `number` | `3` |
 | minZoom | 最小缩放倍数。 | `number` | `0.1` |
-| zoomStep | 滚轮缩放的步长。 | `number` | `0.1` |
 | preview | 返回预览容器 DOM 的函数，裁切效果会实时镜像到该容器；可返回 null，表示容器尚未挂载。 | <ApiType detail={"(() => HTMLElement \u007c null \u007c undefined)"}>Type</ApiType> | `undefined` |
+| rotate | 图片旋转角度，单向绑定，组件不会改变它。 | `number` | `semiGlobalDefault("Cropper", "rotate")` |
+| shape | 裁切框形状。 | `CropperShape` | `"rect"` |
+| showResizeBox | 是否展示裁切框边角的调整块。 | `boolean` | `true` |
+| src | 被裁切图片的地址。 | `string` | `semiGlobalDefault("Cropper", "src")` |
+| zoom | 受控的缩放比例，叠加在图片适应裁切区域的初始缩放之上。 | `number` | `semiGlobalDefault("Cropper", "zoom")` |
+| zoomStep | 滚轮缩放的步长。 | `number` | `0.1` |
 
 **Events**
 
