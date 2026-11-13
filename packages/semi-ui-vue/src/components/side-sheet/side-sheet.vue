@@ -1,12 +1,13 @@
 <script setup lang="ts">
     import { computed, nextTick, onBeforeUnmount, shallowRef, useAttrs, useId, useTemplateRef, watch, type CSSProperties, type StyleValue } from 'vue';
+    import { isNil, omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
     import SideSheetFoundation, { type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
-    import { warnIfDialogUnnamed, toCssLength } from '@fibrae/semi-foundation/utils';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import { semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
-    import { useRecordFocus } from '../../composables/index';
+    import { useOverlayResources } from '../../composables/index';
     import { Portal } from '../../internal/index';
     import { isAriaKey, splitControlAttrs, hasSlotContent } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
@@ -53,8 +54,8 @@
     const locale = useLocale('SideSheet');
 
     const titleId = useId();
-    const root = useTemplateRef('root');
-    const dialog = useTemplateRef('dialog');
+    const root = useTemplateRef<HTMLDivElement>('root');
+    const dialog = useTemplateRef<HTMLDivElement>('dialog');
 
     // Kept by the Transition hooks: true once the dialog is shown and vShow has written its display back, false once the
     // leave has ended or the Portal unmounts it without one.
@@ -116,7 +117,8 @@
     };
 
     const dialogAttrs = (inBody: boolean) => {
-        const { control } = splitControlAttrs(attrs, isAriaKey);
+        // an attribute bound to undefined counts as unset, so it cannot replace a generated one
+        const control = omitBy(splitControlAttrs(attrs, isAriaKey).control, isNil);
         return {
             // The title names the dialog unless the caller does; a generated reference would shadow aria-label.
             'aria-labelledby': !control['aria-label'] && hasTitle() ? titleId : undefined,
@@ -140,26 +142,19 @@
         };
     };
 
-    useRecordFocus({ record: foundation.recordFocus }, () => props.visible);
+    // vShow writes the display back only in the directive hook that starts the enter, and a post watch on visible runs
+    // before that hook, so a keepDOM reopen would move focus into a display:none dialog; waiting for displayed also waits
+    // for Portal, which renders a tick after this component mounts.
+    useOverlayResources(
+        foundation,
+        () => props.visible,
+        () => !hidden.value && displayed.value
+    );
 
     // Unmounting the Portal removes a v-show element without a leave, so after-leave never resets displayed.
     watch(shouldRender, (rendered) => {
         if (!rendered) displayed.value = false;
     });
-
-    // vShow writes the display back only in the directive hook that starts the enter, and a post watch on visible runs
-    // before that hook, so a keepDOM reopen would move focus into a display:none dialog; waiting for displayed also waits
-    // for Portal, which renders a tick after this component mounts.
-    watch(
-        () => Boolean(props.visible) && displayed.value,
-        (shown, _, onCleanup) => {
-            if (!shown) return;
-            foundation.beforeShow();
-            warnIfDialogUnnamed(dialog.value, 'SideSheet');
-            onCleanup(foundation.afterHide);
-        },
-        { flush: 'post' }
-    );
 
     watch(() => hidden.value, foundation.handleHiddenChange, { flush: 'post' });
 
@@ -195,7 +190,7 @@
                 <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-animation-mask_show`" :leaveActiveClass="`${prefix}-animation-mask_hide`" :name="prefix" type="animation">
                     <div v-if="props.mask" v-show="props.visible" aria-hidden="true" :class="`${prefix}-mask`" :style="props.maskStyle" @click.self="onMaskClick" />
                 </Transition>
-                <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-animation-content_show_${props.placement}`" :leaveActiveClass="`${prefix}-animation-content_hide_${props.placement}`" :name="prefix" type="animation" @afterLeave="onAfterLeave" @enter="onEnter">
+                <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-animation-content_show_${props.placement}`" :leaveActiveClass="`${prefix}-animation-content_hide_${props.placement}`" :name="prefix" type="animation" @afterEnter="foundation.handleAnimationEnd" @afterLeave="onAfterLeave" @enter="onEnter">
                     <div v-show="props.visible" ref="dialog" v-bind="dialogAttrs(inBody)" :class="[`${prefix}-inner`, `${prefix}-inner-wrap`, `${prefix}-size-${props.size}`]" role="dialog" :style="[$attrs.style as StyleValue, dialogStyle()]" tabindex="-1">
                         <div :class="`${prefix}-content`">
                             <div :class="`${prefix}-header`" :style="props.headerStyle">

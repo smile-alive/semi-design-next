@@ -4,11 +4,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
     import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type StateOptionItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-    import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
-    import { isInnerControlKey, toCssLength, getDataAttr } from '@fibrae/semi-foundation/utils';
+    import { getOptionId, isInnerControlKey, toCssLength, getDataAttr } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
     import { useDefaultProps, useFoundation } from '../../base/index.js';
-    import { useClickOutside } from '../../hooks/index.js';
     import { splitControlAttrs } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
@@ -16,7 +14,6 @@
     import { Popover } from '../popover/index.js';
     import Option from '../select/option.svelte';
     import { Spin } from '../spin/index.js';
-    import { useNestedPopups } from '../tooltip/context.js';
     import type { TooltipTriggerProps } from '../tooltip/index.js';
     import type { AutoCompleteDataItem, AutoCompleteItems, AutoCompleteProps, AutoCompleteTriggerSnippetProps } from './interface.js';
 
@@ -83,8 +80,6 @@
     let input = $state<Input>();
     let previousData: unknown;
     const controlKeys = new Set(['id', 'name', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-label', 'aria-labelledby', 'aria-required']);
-
-    const nestedPopups = useNestedPopups();
 
     // an InputGroup supplies size and disabled when the control is given none; the controls inside this one must not read it again
     const group = getInputGroupInScope();
@@ -228,6 +223,12 @@
         rest.onclick?.(event);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (listbox) {
+            foundation.handleClickOutside(event);
+        }
+    };
+
     // A snapshot of the items, so an array changed in place (push, an edited field) is noticed as well; the items are
     // flat data, nodes go in the item snippet.
     $effect.pre(() => {
@@ -238,17 +239,6 @@
             untrack(() => foundation.handleDataChange(data));
         }
     });
-
-    useClickOutside(
-        [() => root, () => listbox],
-        (event) => {
-            if (listbox) {
-                foundation.handleClickOutside(event);
-            }
-        },
-        () => states().visible,
-        nestedPopups
-    );
 
     export function focus(options?: FocusOptions) {
         input?.focus(options);
@@ -274,7 +264,7 @@
                 {...inputAttrs}
                 aria-activedescendant={activeDescendant}
                 aria-autocomplete="list"
-                aria-controls={listId}
+                aria-controls={states().visible ? listId : undefined}
                 aria-expanded={states().visible}
                 aria-haspopup="listbox"
                 {autofocus}
@@ -330,6 +320,7 @@
     content={panel}
     disableArrowKeyDown
     {motion}
+    onClickOutSide={handleClickOutside}
     onEscKeyDown={foundation.handleEscKeyDown}
     position={resolvedPosition}
     role="presentation"

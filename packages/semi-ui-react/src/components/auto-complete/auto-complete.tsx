@@ -6,11 +6,10 @@ import type { ValidateStatus } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
 import AutoCompleteFoundation, { type AutoCompleteAdapter, type StateOptionItem, type DataItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
-import { isInnerControlKey, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
+import { getOptionId, isInnerControlKey, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside, useDidUpdate } from '../../hooks/index';
+import { useDidUpdate } from '../../hooks/index';
 import Trigger from '../../internal/trigger';
 import { hasContent, isSameNode } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
@@ -190,16 +189,6 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
         })
     );
 
-    const markPressInside = useClickOutside(
-        [triggerRef, optionContainerEl],
-        (e) => {
-            if (optionContainerEl.current) {
-                foundation.handleClickOutside(e);
-            }
-        },
-        state.visible
-    );
-
     const useCustomTrigger = typeof props.triggerRender === 'function';
     const { inputValue, selection, visible, options, focusIndex } = state;
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && !useCustomTrigger;
@@ -273,10 +262,6 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
                     foundation.handleKeyDown(e);
                 }
             }}
-            onMouseDownCapture={(e) => {
-                rest.onMouseDownCapture?.(e);
-                markPressInside(e);
-            }}
         >
             {useCustomTrigger ? (
                 <Trigger {...innerProps} value={Array.from(selection.values())} componentProps={componentProps} inputValue={shownValue as string} triggerRender={triggerRender} />
@@ -288,7 +273,7 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
                     name={name}
                     aria-activedescendant={activeDescendant}
                     aria-autocomplete="list"
-                    aria-controls={optionListId}
+                    aria-controls={visible ? optionListId : undefined}
                     aria-expanded={visible}
                     aria-haspopup="listbox"
                     role="combobox"
@@ -354,7 +339,6 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
             {...nameProps}
             role="listbox"
             onMouseDown={(e) => e.preventDefault()}
-            onMouseDownCapture={markPressInside}
         >
             {!loading ? (
                 optionsNode
@@ -383,6 +367,11 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
                 stopPropagation={stopPropagation}
                 trigger="custom"
                 visible={visible}
+                onClickOutSide={(e) => {
+                    if (optionContainerEl.current) {
+                        foundation.handleClickOutside(e);
+                    }
+                }}
                 onEscKeyDown={foundation.handleEscKeyDown}
             >
                 {input}

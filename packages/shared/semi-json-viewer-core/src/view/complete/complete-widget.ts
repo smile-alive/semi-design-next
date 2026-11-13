@@ -153,7 +153,9 @@ export class CompleteWidget {
     }
 
     show() {
+        // an empty result must not leave the previous list open, where the arrow keys would step through zero items
         if (this.#suggestions.length === 0) {
+            this.hide();
             return;
         }
         const { x, y } = this.#calculatePosition();

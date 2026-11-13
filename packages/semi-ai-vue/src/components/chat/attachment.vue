@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import { getFileType, isImageFile, isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils';
+    import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/utils';
+    import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-foundation/components/upload/utils';
     import { IconAlertCircle, IconClear } from '@fibrae/semi-icons-vue';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Progress from '@fibrae/semi-ui-vue/progress/index';

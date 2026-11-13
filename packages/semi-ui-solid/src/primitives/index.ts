@@ -8,6 +8,7 @@ export { default as useIntersectionObserver } from './use-intersection-observer'
 export { default as useMounted } from './use-mounted';
 export { default as useMutationObserver } from './use-mutation-observer';
 export { default as useNoticeClose } from './use-notice-close';
+export { default as useOverlayResources } from './use-overlay-resources';
 export { default as useRaf } from './use-raf';
 export { default as useRecordFocus } from './use-record-focus';
 export { default as useResizeObserver } from './use-resize-observer';

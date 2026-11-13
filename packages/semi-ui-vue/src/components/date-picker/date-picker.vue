@@ -8,7 +8,7 @@
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
     import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
-    import { useClickOutside } from '../../composables/index';
+    import { getDocument, useClickOutside, useEventListener } from '../../composables/index';
     import { splitControlAttrs } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import useGroupLooks from '../input/composables/use-group-looks';
@@ -284,6 +284,7 @@
 
     useKeepAliveFoundation(foundation);
     useClickOutside([root, panel], foundation.handleClickOutside, panelShow, useNestedPopups());
+    useEventListener(getDocument, 'focusin', (e) => foundation.handleDocumentFocusIn(e, root.value), { enabled: panelShow });
 
     onMounted(measureCustomTrigger);
     onUpdated(measureCustomTrigger);
@@ -425,7 +426,7 @@
                     v-else
                     ref="triggerInput"
                     v-bind="splitControlAttrs($attrs, isControlKey).control"
-                    :aria-controls="panelId"
+                    :aria-controls="panelShow ? panelId : undefined"
                     :aria-expanded="panelShow"
                     aria-haspopup="dialog"
                     :aria-label="$attrs['aria-labelledby'] ? undefined : triggerName"

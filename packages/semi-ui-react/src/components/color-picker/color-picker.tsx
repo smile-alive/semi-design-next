@@ -1,4 +1,4 @@
-import type React from 'react';
+import React, { useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
 import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
@@ -6,7 +6,7 @@ import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import useLocale from '../locale/use-locale';
-import Popover, { type PopoverProps } from '../popover';
+import Popover, { type PopoverHandle, type PopoverProps } from '../popover';
 import AlphaSlider from './alpha-slider';
 import ColorChooseArea from './color-choose-area';
 import ColorSlider from './color-slider';
@@ -47,6 +47,8 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
 
     const { locale } = useLocale('ColorPicker');
 
+    const popoverRef = useRef<PopoverHandle>(null);
+
     const [foundation, state] = useFoundation<Foundation, Adapter, ColorPickerProps, ColorPickerState>(
         ColorPickerFoundation,
         props,
@@ -75,12 +77,17 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
     return (
         <Popover
             {...popoverProps}
+            ref={popoverRef}
             className={clsx(`${cssClasses.PREFIX}-popover`, popoverProps?.className)}
             aria-label={popoverProps?.['aria-label'] ?? (popoverProps?.['aria-labelledby'] ? undefined : locale.color)}
             // a dialog opened by click: moving the pointer away must not close it mid-edit
             role={popoverProps?.role ?? 'dialog'}
             content={picker}
             trigger={popoverProps?.trigger ?? 'click'}
+            onOpen={() => {
+                ColorPickerFoundation.focusPopup(popoverRef.current?.getPopup() ?? null);
+                popoverProps?.onOpen?.();
+            }}
         >
             {children ?? <button type="button" className={clsx(`${cssClasses.PREFIX}-popover-defaultChildren`)} style={{ backgroundColor: currentColor.hex }} aria-label={locale.color} />}
         </Popover>

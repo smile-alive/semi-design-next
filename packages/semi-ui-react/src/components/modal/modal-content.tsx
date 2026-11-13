@@ -1,13 +1,13 @@
 import type React from 'react';
-import { type CSSProperties, type ReactNode, useEffect, useId, useInsertionEffect, useLayoutEffect, useState } from 'react';
+import { type CSSProperties, type ReactNode, useId, useState } from 'react';
 import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
 import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
-import { isAriaKey, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils';
+import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import { IconClose } from '@fibrae/semi-icons-react';
 import { useFoundation } from '../../base/index';
-import { useDidUpdate, useMergedRef } from '../../hooks/index';
+import { useMergedRef, useOverlayResources } from '../../hooks/index';
 import { hasContent } from '../../utils/index';
 import Button from '../icon-button';
 import useLocale from '../locale/use-locale';
@@ -120,35 +120,8 @@ export default function ModalContent(props: ModalContentReactProps) {
     const dialogAria = pickBy(others, isAria);
     const rest = omitBy(others, isAria);
 
-    // records the opener before the layout phase, where the footer's autoFocus button takes focus
-    useInsertionEffect(() => {
-        if (open) {
-            foundation.recordFocus();
-        }
-    }, [open, foundation]);
-
-    // Portal puts its container in the document before this layout effect, so the dialog can take focus
-    useLayoutEffect(() => {
-        if (!open) {
-            return undefined;
-        }
-        foundation.show();
-        return foundation.hide;
-    }, [open, foundation]);
-
-    // after the mutation-phase cleanup React refocuses the previously focused element if still in the document
-    // (a keepDOM dialog's button), so restore again in the layout phase
-    useDidUpdate(open, (isOpen) => {
-        if (!isOpen) {
-            foundation.restoreFocus();
-        }
-    });
-
-    useEffect(() => {
-        if (open) {
-            warnIfDialogUnnamed(runtime.dialog, 'Modal');
-        }
-    }, [open, runtime]);
+    // Portal puts its container in the document before the layout effects, so the dialog can take focus
+    useOverlayResources(foundation, open);
 
     if (hasHeaderProp) {
         headerNode = header;

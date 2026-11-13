@@ -80,7 +80,6 @@
     let focusableInside = $state(false);
     let textOnly = $state(false);
     let initialFocus: FocusTarget | undefined;
-    let clickOutside: AbortController | undefined;
     let warnedFocusable = false;
 
     // The value this Tooltip last wrote to an uncontrolled `visible`: the foundation still sees it as uncontrolled, so
@@ -177,20 +176,6 @@
             removePortal: () => {
                 contentShown = false;
             },
-            showPopover: () => {
-                if (!container?.matches(':popover-open')) {
-                    container?.showPopover();
-                }
-            },
-            hidePopover: () => container?.hidePopover(),
-            // shortcut: a leave set by a prop reaction (handlePropsChange runs in a host effect created before the
-            // phase effect) reaches syncPopup before the template drops the show class, so the animations are read
-            // after tick(). Read them at once again when the host runs prop reactions after the component's effects.
-            waitAnimations: () =>
-                tick().then(() => {
-                    const animations = container?.getAnimations() ?? [];
-                    return animations.length ? Promise.allSettled(animations.map((animation) => animation.finished)) : undefined;
-                }),
             notifyAfterOpen: () => afterOpen?.(),
             notifyAfterClose: () => afterClose?.(),
             notifyVisibleChange: (next) => {
@@ -203,17 +188,9 @@
                 selfWritten = uncontrolled && visible === next ? next : undefined;
                 onVisibleChange?.(next);
             },
-            registerClickOutsideHandler: (handler) => {
-                clickOutside?.abort();
-                clickOutside = new AbortController();
-                window.addEventListener('mousedown', handler, { signal: clickOutside.signal });
-            },
-            unregisterClickOutsideHandler: () => {
-                clickOutside?.abort();
-                clickOutside = undefined;
-            },
             isEventInTrigger: (event) => isEventInside(event, triggerElement),
-            isEventInPopup: (event) => isEventInside(event, container, ...nestedPopups()),
+            getNestedPopups: () => nestedPopups(),
+            batch: (fn) => fn(),
             notifyClickOutSide: (event) => onClickOutSide?.(event),
             getPortalContainer: () => container,
             getTriggerNode: () => triggerElement,
@@ -434,8 +411,11 @@
     $effect(() => {
         void phase;
         void container;
-        // only the phase and the popup element drive it; what the sync reads (layout, props) must not
-        untrack(foundation.syncPopup);
+        // only the phase and the popup element drive it; what the sync reads (layout, props) must not.
+        // shortcut: a leave set by a prop reaction (handlePropsChange runs in a host effect created before this one)
+        // reaches the sync before the template drops the show class, so the animations are read after tick(). Read
+        // them at once again when the host runs prop reactions after the component's effects.
+        untrack(() => foundation.syncPopup(tick()));
     });
 
     // showPopover() ran its autofocus step before the content mounted; syncPopup measured the popup without its

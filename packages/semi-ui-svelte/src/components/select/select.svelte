@@ -4,14 +4,13 @@
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
-    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState, getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
+    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
     import { type BasicOptionProps, type OptionRecord as BaseOptionRecord, getOptionRuns, toOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
     import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
-    import { isTextEditor, joinIds, toCssLength, getDataAttr } from '@fibrae/semi-foundation/utils';
+    import { getOptionId, isTextEditor, joinIds, toCssLength, getDataAttr } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/select/select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-svelte';
     import { useDefaultProps, useFoundation } from '../../base/index.js';
-    import { useClickOutside } from '../../hooks/index.js';
     import { VirtualList } from '../../internal/index.js';
     import { splitControlAttrs, type SlotKind, trackSlotKind } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
@@ -23,7 +22,6 @@
     import { Space } from '../space/index.js';
     import { Spin } from '../spin/index.js';
     import { Tag, type TagCloseEvent, TagGroup } from '../tag/index.js';
-    import { useNestedPopups } from '../tooltip/context.js';
     import type { TooltipTriggerProps } from '../tooltip/index.js';
     import { TypographyText } from '../typography/index.js';
     import type { SelectCreateItemSnippetProps, SelectOptionGroup, SelectOptionItemSnippetProps, SelectOptionProps, SelectProps, SelectSelectedItemSnippetProps, SelectTriggerSnippetProps, SelectValue } from './interface.js';
@@ -127,8 +125,6 @@
     let suffixKind = $state<SlotKind>();
     let previous: OptionRecord[] | undefined;
     const comboboxKeys = new Set(['aria-label', 'aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required']);
-
-    const nestedPopups = useNestedPopups();
 
     // an InputGroup supplies size and disabled when the control is given none; the controls inside this one must not read it again
     const group = getInputGroupInScope();
@@ -261,7 +257,7 @@
         ...attrs.control,
         role: 'combobox',
         'aria-activedescendant': activeDescendant,
-        'aria-controls': listboxId,
+        'aria-controls': states().isOpen ? listboxId : undefined,
         'aria-expanded': states().isOpen,
         'aria-haspopup': 'listbox' as const,
         ...nameAttrs,
@@ -418,8 +414,6 @@
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
     const handleOverflow = (items: SelectOptionProps[]) => foundation.updateOverflowItemCount(Math.max(items.length - 1, 0));
-
-    useClickOutside([() => root, () => optionContainer], foundation.handleClickOutside, () => states().isOpen, nestedPopups);
 
     // An option list change re-resolves the selection; the first run records the options the initial state read
     $effect(() => {
@@ -841,6 +835,7 @@
     content={panel}
     disableArrowKeyDown
     {motion}
+    onClickOutSide={foundation.handleClickOutside}
     onEscKeyDown={foundation.handleEscKeyDown}
     onOpen={foundation.scrollToSelection}
     position={resolvedPosition}

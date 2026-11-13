@@ -9,7 +9,7 @@ import { namedRole } from '@fibrae/semi-foundation/utils';
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside } from '../../hooks/index';
+import { getDocument, useClickOutside, useEventListener } from '../../hooks/index';
 import Trigger from '../../internal/trigger';
 import { useConfigContext } from '../config-provider/context';
 import type { InputSize } from '../input';
@@ -295,8 +295,6 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
 
     const open = TimePickerFoundation.isPanelShown(props, state);
 
-    const markPressInside = useClickOutside([rootRef, panelRef], foundation.handleClickOutside, open);
-
     const panelContent = (
         <div ref={panelRef} id={panelId} className={clsx({ [cssClasses.RANGE_PANEL_LISTS]: isRange })}>
             {(isRange ? [0, 1] : [0]).map((index) => (
@@ -322,6 +320,10 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         </div>
     );
 
+    useEventListener(getDocument, 'focusin', (e) => foundation.handleDocumentFocusIn(e, rootRef.current), { enabled: open });
+
+    const markPressInside = useClickOutside([rootRef, panelRef], foundation.handleClickOutside, open);
+
     useImperativeHandle(props.ref, () => ({ focus: foundation.focus, blur: foundation.blur }), [foundation]);
 
     delete componentProps.ref;
@@ -345,7 +347,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
               role: 'button',
               tabIndex: disabled ? -1 : 0,
               'aria-disabled': disabled,
-              'aria-controls': panelId,
+              'aria-controls': open ? panelId : undefined,
               'aria-expanded': open,
               'aria-haspopup': 'dialog' as const,
               onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -396,7 +398,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
                                 id={id}
                                 type={type}
                                 style={inputStyle}
-                                aria-controls={panelId}
+                                aria-controls={open ? panelId : undefined}
                                 aria-describedby={ariaDescribedby}
                                 aria-errormessage={ariaErrormessage}
                                 aria-expanded={open}

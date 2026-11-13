@@ -10,7 +10,7 @@
 </script>
 
 <template>
-    <component :is="props.tags[0].tag" v-if="props.tags.length" :aria-describedby="props.tags[0].tag === 'a' ? description : undefined" v-bind="props.tags[0].attrs">
+    <component :is="props.tags[0].tag" v-if="props.tags.length" v-bind="props.tags[0].attrs" :aria-describedby="props.tags[0].attrs['aria-describedby'] ?? (props.tags[0].tag === 'a' ? description : undefined)">
         <Decorate :tags="props.tags.slice(1)">
             <slot />
         </Decorate>

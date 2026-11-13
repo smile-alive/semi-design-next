@@ -36,5 +36,5 @@
         "../../packages/shared/semi-foundation/src/dom.d.ts",
         "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"
     ],
-    "exclude": ["../../packages/*/node_modules", "../../packages/*/dist", "../../packages/**/*.browser.test.*"]
+    "exclude": ["../../packages/*/node_modules", "../../packages/*/dist", "../../packages/**/*.browser.test.*", "../../packages/**/__tests__/**/*-browser-utils.ts"]
 }

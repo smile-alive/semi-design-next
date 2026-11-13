@@ -1,7 +1,7 @@
 import { clamp, throttle } from 'es-toolkit';
 import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { formatLocale } from '../../locale/index';
-import { ignoreExpectedMediaErrors } from './utils';
+import { ignoreExpectedMediaErrors } from '../../utils/index';
 
 export interface VideoPlayerBaseProps {
     defaultPlaybackRate?: number;

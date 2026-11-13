@@ -2,11 +2,12 @@ import { format, set, addMonths, subMonths, subYears, addYears, differenceInCale
 import { isEqual } from 'es-toolkit';
 import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { formatLocale, type Locale } from '../../locale/index';
+import { isValidDate } from '../../utils/date-fns-extra';
 import type { ArrayElement } from '../../utils/index';
 import { getDefaultFormatTokenByType } from './_utils/get-default-format-token';
 import getDefaultPickerDate from './_utils/get-default-picker-date';
 import type { WeekStartNumber } from './_utils/get-month-table';
-import { isBefore, isValidDate, getDefaultFormatToken, getFullDateOffset } from './_utils/index';
+import { isBefore, getDefaultFormatToken, getFullDateOffset } from './_utils/index';
 import { compatibleParse } from './_utils/parser';
 import { isDateTimeType, isMultiple, isRangeType } from './_utils/picker-type';
 import toCallbackArgs from './_utils/to-callback-args';

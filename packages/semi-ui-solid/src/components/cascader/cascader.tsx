@@ -8,7 +8,7 @@ import '@fibrae/semi-foundation/components/cascader/cascader.scss';
 import { IconChevronDown, IconClear } from '@fibrae/semi-icons-solid';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import type { VirtualListHandle } from '../../internal/index';
-import { useClickOutside, useFocusHandover } from '../../primitives/index';
+import { useFocusHandover } from '../../primitives/index';
 import { callHandler, omitFormInjected, focusElement, hasContent, createIconSlot, mergeRefs } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import type { InputGroupContextValue } from '../input/context';
@@ -353,16 +353,6 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
         () => local.ref
     );
 
-    const markPressInside = useClickOutside(
-        [() => root, () => optionContainer],
-        (e) => {
-            if (optionContainer) {
-                foundation.handleClickOutside(e);
-            }
-        },
-        () => state().isOpen
-    );
-
     // the owner may clear the value while the clear button holds focus; the combobox takes it back
     const clearHandover = useFocusHandover<HTMLButtonElement>(() => (inputIsCombobox() ? root?.querySelector('input') : root));
 
@@ -561,7 +551,6 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
 
     const handleMouseDown = (e: MouseEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onMouseDown, e);
-        markPressInside(e);
     };
 
     const handleFocusIn = (e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
@@ -624,7 +613,6 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
         if (!isTextEditor(e.target)) {
             e.preventDefault();
         }
-        markPressInside(e);
     };
 
     const handleClearClick = (e: MouseEvent) => {
@@ -923,11 +911,17 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             afterClose={foundation.endSearching}
             autoAdjustOverflow={local.autoAdjustOverflow}
             content={renderContent}
+            disableArrowKeyDown
             motion={local.motion}
             position={position()}
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={view.isOpen}
+            onClickOutSide={(e) => {
+                if (optionContainer) {
+                    foundation.handleClickOutside(e);
+                }
+            }}
             onEscKeyDown={foundation.close}
             onOpen={foundation.handlePopoverOpen}
         >

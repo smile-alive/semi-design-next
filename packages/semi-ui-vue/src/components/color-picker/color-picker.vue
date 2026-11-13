@@ -7,6 +7,7 @@
     import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover';
+    import type { PopoverHandle } from '../popover/interface';
     import ColorPickerPanel from './color-picker-panel.vue';
     import { DEFAULT_COLOR } from './constants';
     import { provideColorPickerContext } from './context';
@@ -39,6 +40,7 @@
     const i18n = useLocale('ColorPicker');
 
     const panel = useTemplateRef('panel');
+    const popover = useTemplateRef<PopoverHandle>('popover');
 
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, ColorPickerState>(
         ColorPickerFoundation,
@@ -98,7 +100,7 @@
             <slot name="bottomSlot" />
         </template>
     </ColorPickerPanel>
-    <Popover v-else v-bind="popoverBindings">
+    <Popover v-else ref="popover" v-bind="popoverBindings" @open="ColorPickerFoundation.focusPopup(popover?.getPopup() ?? null)">
         <slot>
             <button :aria-label="i18n.locale.color" :class="`${cssClasses.PREFIX}-popover-defaultChildren`" :style="{ backgroundColor: currentColor.hex }" type="button" />
         </slot>

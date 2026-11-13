@@ -5,14 +5,14 @@ import { isEqualWith } from 'es-toolkit';
 import { type ValidateStatus, FocusTrapHandle } from '@fibrae/semi-foundation/base';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/select/constants';
-import SelectFoundation, { type SelectAdapter, getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
+import SelectFoundation, { type SelectAdapter } from '@fibrae/semi-foundation/components/select/foundation';
 import { type OptionRecord, getOptionRuns, optionListToRecords } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
-import { isTextEditor, joinIds, stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/utils';
+import { getOptionId, isTextEditor, joinIds, stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/select/select.scss';
 import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-react';
 import { type Bivariant, type ByMultiple, type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside, useMergedRef, useUnwrappedLazy } from '../../hooks/index';
+import { useMergedRef, useUnwrappedLazy } from '../../hooks/index';
 import { VirtualList, type VirtualListHandle } from '../../internal/index';
 import Trigger from '../../internal/trigger';
 import { hasContent, isSameNode, renderTriggerPrefix, renderTriggerSuffix } from '../../utils/index';
@@ -223,7 +223,6 @@ export interface SelectState {
     inputValue: string;
     showInput: boolean;
     focusIndex: number;
-    isFocusInContainer: boolean;
     isFullTags: boolean;
     overflowItemCount: number;
 }
@@ -808,18 +807,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         );
     };
 
-    // The selection keeps labels of earlier options, so it is not derived in render
-    useLayoutEffect(() => {
-        const prev = prevInputsRef.current;
-        const children = Children.toArray(props.children);
-        prevInputsRef.current = { children, optionList: props.optionList };
-        if (prev && (!isEqualWith(prev.children, children, isSameNode) || !isEqualWith(prev.optionList, props.optionList, isSameNode))) {
-            foundation.handleOptionsChange();
-        }
-    });
-
-    const markPressInside = useClickOutside([triggerRef, optionContainerEl], foundation.handleClickOutside, isOpen);
-
     const renderOptions = () => {
         const listContent = virtualize ? (
             <VirtualList ref={virtualizeListRef} style={{ direction }} tabIndex={-1} height={virtualize.height || numbers.LIST_HEIGHT} itemCount={visibleOptions.length} itemData={{ visibleOptions, renderOption }} itemSize={virtualize.itemSize} width={virtualize.width || '100%'}>
@@ -865,7 +852,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                         e.preventDefault();
                     }
                 }}
-                onMouseDownCapture={markPressInside}
             >
                 {renderSlot(outerTopSlot, 'outer-top')}
                 {searchPosition === strings.SEARCH_POSITION_DROPDOWN && filter && renderDropdownInput()}
@@ -891,6 +877,16 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             </div>
         );
     };
+
+    // The selection keeps labels of earlier options, so it is not derived in render
+    useLayoutEffect(() => {
+        const prev = prevInputsRef.current;
+        const children = Children.toArray(props.children);
+        prevInputsRef.current = { children, optionList: props.optionList };
+        if (prev && (!isEqualWith(prev.children, children, isSameNode) || !isEqualWith(prev.optionList, props.optionList, isSameNode))) {
+            foundation.handleOptionsChange();
+        }
+    });
 
     useImperativeHandle(
         props.ref,
@@ -952,6 +948,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 stopPropagation={stopPropagation}
                 trigger="custom"
                 visible={isOpen}
+                onClickOutSide={foundation.handleClickOutside}
                 onEscKeyDown={foundation.handleEscKeyDown}
                 onOpen={foundation.scrollToSelection}
             >
@@ -972,10 +969,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                     onKeyDown={(e) => {
                         rest.onKeyDown?.(e);
                         foundation.handleKeyDown(e);
-                    }}
-                    onMouseDownCapture={(e) => {
-                        rest.onMouseDownCapture?.(e);
-                        markPressInside(e);
                     }}
                     onMouseEnter={foundation.handleMouseEnter}
                     onMouseLeave={foundation.handleMouseLeave}

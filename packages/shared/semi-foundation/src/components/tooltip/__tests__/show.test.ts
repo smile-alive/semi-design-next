@@ -21,8 +21,9 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
     const popup = document.createElement('div');
     document.body.append(popup);
     let state = TooltipFoundation.getInitialState();
-    let clickOutsideHandler: ((e: MouseEvent) => void) | undefined;
     let animations: Promise<void> | null = null;
+    const popover = { showPopover: vi.fn<() => void>(), hidePopover: vi.fn<() => void>() };
+    Object.assign(popup, popover, { getAnimations: () => (animations ? [{ finished: animations }] : []) });
     const adapter = {
         getProp: (key: string) => props[key],
         getProps: () => props,
@@ -31,20 +32,12 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
         setState: vi.fn<(partial: Partial<TooltipBaseState>) => void>((partial) => {
             state = { ...state, ...partial };
         }),
-        registerClickOutsideHandler: (handler: (e: MouseEvent) => void) => {
-            clickOutsideHandler = handler;
-        },
-        unregisterClickOutsideHandler: () => {
-            clickOutsideHandler = undefined;
-        },
         isEventInTrigger: () => false,
-        isEventInPopup: () => false,
+        getNestedPopups: (): HTMLElement[] => [],
+        batch: (fn: () => void) => fn(),
         notifyClickOutSide: vi.fn<(e: MouseEvent) => void>(),
         insertPortal: vi.fn<TooltipAdapter['insertPortal']>(() => ({ portalTarget: null, colorScheme: undefined })),
         removePortal: vi.fn<() => void>(),
-        showPopover: vi.fn<() => void>(),
-        hidePopover: vi.fn<() => void>(),
-        waitAnimations: () => animations,
         notifyAfterOpen: vi.fn<() => void>(),
         notifyAfterClose: vi.fn<() => void>(),
         getPopupId: () => 'popup',
@@ -67,9 +60,9 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
         props.visible = visible;
         foundation.handlePropsChange(prev);
     };
-    const pressOutside = () => {
-        const event = new MouseEvent('mousedown');
-        clickOutsideHandler?.(event);
+    const pressOutside = (target: EventTarget = document.body) => {
+        const event = new MouseEvent('mousedown', { bubbles: true });
+        target.dispatchEvent(event);
         return event;
     };
     // the host's commit: syncs the new phase, and the opening's hover check runs a task later
@@ -84,13 +77,14 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
         return async () => {
             animations = null;
             resolve();
-            await promise;
+            // the same depth as the foundation's wait, so its step has run
+            await Promise.allSettled([promise]);
         };
     };
     // closing marks the popup as leaving
     const closes = () => adapter.setState.mock.calls.filter(([partial]) => partial.transitionState === 'leave').length;
     const getState = () => state;
-    return { foundation, adapter, setVisible, pressOutside, commit, animate, closes, getState };
+    return { foundation, adapter, popup, popover, setVisible, pressOutside, commit, animate, closes, getState };
 }
 
 describe('show', () => {
@@ -204,11 +198,11 @@ describe('show', () => {
 
 describe('syncPopup', () => {
     it('进场：showPopover 之后，进场动画结束时报告一次 afterOpen', async () => {
-        const { foundation, adapter, commit, animate } = createFoundation();
+        const { foundation, adapter, popover, commit, animate } = createFoundation();
         foundation.show();
         const finish = animate();
         commit();
-        expect(adapter.showPopover).toHaveBeenCalledTimes(1);
+        expect(popover.showPopover).toHaveBeenCalledTimes(1);
         expect(adapter.notifyAfterOpen).not.toHaveBeenCalled();
 
         await finish();
@@ -227,35 +221,35 @@ describe('syncPopup', () => {
     });
 
     it('离场：动画结束后 hidePopover、卸载弹层并报告 afterClose', async () => {
-        const { foundation, adapter, commit, animate, getState } = createFoundation();
+        const { foundation, adapter, popover, commit, animate, getState } = createFoundation();
         foundation.show();
         commit();
         foundation.hide();
         const finish = animate();
         commit();
-        expect(adapter.hidePopover).not.toHaveBeenCalled();
+        expect(popover.hidePopover).not.toHaveBeenCalled();
 
         await finish();
-        expect(adapter.hidePopover).toHaveBeenCalledTimes(1);
+        expect(popover.hidePopover).toHaveBeenCalledTimes(1);
         expect(adapter.removePortal).toHaveBeenCalledTimes(1);
         expect(getState().isInsert).toBe(false);
         expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
     });
 
     it('keepDOM 时离场后保留弹层', () => {
-        const { foundation, adapter, commit, getState } = createFoundation({ keepDOM: true });
+        const { foundation, adapter, popover, commit, getState } = createFoundation({ keepDOM: true });
         foundation.show();
         commit();
         foundation.hide();
         commit();
-        expect(adapter.hidePopover).toHaveBeenCalledTimes(1);
+        expect(popover.hidePopover).toHaveBeenCalledTimes(1);
         expect(adapter.removePortal).not.toHaveBeenCalled();
         expect(getState().isInsert).toBe(true);
         expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
     });
 
     it('离场中重新打开：旧的离场作废，重新打开时报告一次 afterClose', async () => {
-        const { foundation, adapter, commit, animate } = createFoundation();
+        const { foundation, adapter, popover, commit, animate } = createFoundation();
         foundation.show();
         commit();
         foundation.hide();
@@ -265,7 +259,7 @@ describe('syncPopup', () => {
         expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
         commit();
         await finish();
-        expect(adapter.hidePopover).not.toHaveBeenCalled();
+        expect(popover.hidePopover).not.toHaveBeenCalled();
         expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
         // the reopening is an opening of its own
         expect(adapter.notifyAfterOpen).toHaveBeenCalledTimes(2);
@@ -322,10 +316,24 @@ describe('handleClickOutside', () => {
         expect(adapter.notifyClickOutSide).not.toHaveBeenCalled();
     });
 
-    it.each(['isEventInTrigger', 'isEventInPopup'] as const)('%s 为 true 时不算外部', (query) => {
+    it('isEventInTrigger 为 true 时不算外部', () => {
         const { adapter, pressOutside, closes } = openPopup({ trigger: 'click' });
-        adapter[query] = () => true;
+        adapter.isEventInTrigger = () => true;
         pressOutside();
+        expect(adapter.notifyClickOutSide).not.toHaveBeenCalled();
+        expect(closes()).toBe(0);
+    });
+
+    it('在弹层、嵌套弹层内按下，或宿主标记为内部的按下，不算外部', () => {
+        const { foundation, adapter, popup, pressOutside, closes } = openPopup({ trigger: 'click' });
+        const nested = document.createElement('div');
+        document.body.append(nested);
+        adapter.getNestedPopups = () => [nested];
+        pressOutside(popup);
+        pressOutside(nested);
+        const marked = new MouseEvent('mousedown', { bubbles: true });
+        foundation.markPressInside(marked);
+        document.body.dispatchEvent(marked);
         expect(adapter.notifyClickOutSide).not.toHaveBeenCalled();
         expect(closes()).toBe(0);
     });

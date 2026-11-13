@@ -1,4 +1,4 @@
-import { isValidDate } from '../date-picker/_utils/index';
+import { isValidDate } from '../../utils/date-fns-extra';
 import { strings } from './constants';
 
 export type TimeStamp = Date | string | number;

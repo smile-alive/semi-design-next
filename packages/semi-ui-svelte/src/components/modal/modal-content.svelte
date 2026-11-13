@@ -1,14 +1,16 @@
 <script lang="ts">
-    import { type Snippet, untrack } from 'svelte';
+    import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+    import { isNil, omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps as FoundationProps, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
     import type { Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
     import { cssClasses as typographyClasses } from '@fibrae/semi-foundation/components/typography/constants';
-    import { warnIfDialogUnnamed, toCssLength } from '@fibrae/semi-foundation/utils';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import { useFoundation } from '../../base/index.js';
+    import { useOverlayResources } from '../../hooks/index.js';
     import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import IconButton from '../icon-button/icon-button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
@@ -105,8 +107,9 @@
 
     const idPrefix = `dialog-${uid}`;
 
-    // F12: aria-* and role go to the dialog element, style to the .semi-modal box, the rest to the outer element
-    const attrs = $derived(splitControlAttrs(rest, (key) => key === 'role' || isAriaKey(key)));
+    // F12: aria-* and role go to the dialog element, style to the .semi-modal box, the rest to the outer element.
+    // Attributes bound to undefined are dropped: they count as unset and keep the generated aria-labelledby, aria-modal.
+    const attrs = $derived(splitControlAttrs(omitBy(rest, isNil), (key) => key === 'role' || isAriaKey(key)));
 
     const rootAttrs = $derived.by(() => {
         const { style: _style, ...others } = attrs.root;
@@ -125,23 +128,13 @@
     const sizeStyle = $derived(isFullScreen ? 'width: 100%; height: 100%; margin: unset' : [width ? `width: ${toCssLength(width)}` : '', height ? `height: ${toCssLength(height)}` : ''].filter(Boolean).join('; '));
     const boxStyle = $derived([userStyle, sizeStyle].filter(Boolean).join(';') || undefined);
 
-    // record before the content's components take focus in their mount effects (an autofocusing Input)
-    $effect.pre(() => {
-        if (visible) {
-            untrack(() => foundation.recordFocus());
-        }
-    });
-
-    // Gated on the dialog being displayed, not on `visible`: it stays displayed through the leave animation, and a
-    // keepDOM reopen shows it again before this runs.
-    $effect(() => {
-        if (!content.displayed || !root || !dialog?.isConnected) return;
-        untrack(() => {
-            foundation.show();
-            warnIfDialogUnnamed(dialog, 'Modal');
-        });
-        return foundation.hide;
-    });
+    // Shown is gated on the dialog being displayed, not on `visible`: it stays displayed through the leave animation,
+    // and a keepDOM reopen shows it again before the hold runs.
+    useOverlayResources(
+        foundation,
+        () => visible,
+        () => Boolean(content.displayed && root && dialog?.isConnected)
+    );
 
     export function getRoot() {
         return root;
@@ -182,7 +175,7 @@
         aria-modal={modalDialog ? 'true' : undefined}
         {...attrs.control}
         {@attach (element) => {
-            // not cleared on teardown: hide() runs after it and still needs the element to decide the focus restore
+            // not cleared on teardown: afterHide() runs after it and still needs the element to decide the focus restore
             dialog = element;
         }}
         {@attach content.attach}

@@ -7,6 +7,7 @@ import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { getElement } from '@test/utils/dom/common';
+import { tabIntoPanel } from './date-picker-browser-utils';
 import Fixture, { type FixtureStore } from './date-picker-fixture.svelte';
 
 const dp = `${BASE_CLASS_PREFIX}-datepicker`;
@@ -41,7 +42,7 @@ describe('Svelte DatePicker 键盘与焦点', () => {
     it('网格获得键盘焦点时，主题焦点环跟随当前日期，Enter 选中后焦点回到输入框', async () => {
         const store = setup({ value: new Date(2019, 8, 11), open: true });
         const grid = await screen.findByRole('grid');
-        await tabTo(grid);
+        await tabIntoPanel(grid);
         expectThemeFocusRing(getDay('2019-09-11'));
         await userEvent.keyboard('{ArrowRight}');
         await waitFor(() => expectThemeFocusRing(getDay('2019-09-12')));
@@ -66,7 +67,7 @@ describe('Svelte DatePicker 键盘与焦点', () => {
         const trigger = getElement('.custom-trigger');
         await tabTo(trigger);
         await userEvent.keyboard('{Enter}');
-        await tabTo(await screen.findByRole('grid'));
+        await tabIntoPanel(await screen.findByRole('grid'), trigger);
         await userEvent.keyboard('{Escape}');
         await waitFor(() => expect(getPopup()).toBeNull());
         expect(trigger).toHaveFocus();
@@ -77,7 +78,7 @@ describe('Svelte DatePicker 键盘与焦点', () => {
         const trigger = await screen.findByRole('button', { name: zh_CN.DatePicker.chooseDate });
         await tabTo(trigger);
         await userEvent.keyboard('{Enter}');
-        await tabTo(await screen.findByRole('grid'));
+        await tabIntoPanel(await screen.findByRole('grid'), trigger);
         await userEvent.keyboard('{Escape}');
         await waitFor(() => expect(getPopup()).toBeNull());
         expect(trigger).toHaveFocus();
@@ -96,7 +97,7 @@ describe('Svelte DatePicker 键盘与焦点', () => {
         setup({ value: new Date(2030, 4, 10), open: true });
         await waitFor(() => expect(getTitle()).not.toBeNull());
         const titleId = getTitle().id;
-        await tabTo(getTitle());
+        await tabIntoPanel(getTitle());
         await userEvent.keyboard('{Enter}');
         const left = getElement(`.${dp}-month-grid-left`);
         await waitFor(() => expect(document.activeElement).toBe(left.querySelector('[role="listbox"]')));

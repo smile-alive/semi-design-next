@@ -2194,21 +2194,19 @@ describe('Select 状态同步与键盘', () => {
     it('焦点在下拉中时触发器失焦不调用 onBlur', () => {
         const onBlur = vi.fn<NonNullable<SelectProps['onBlur']>>();
         renderSelect({ defaultOpen: true, innerBottomSlot: <button class="slot-btn">Button</button>, onBlur });
-        keyDown('Tab');
-        expect(screen.getByRole('button', { name: 'Button' })).toHaveFocus();
+        screen.getByRole('button', { name: 'Button' }).focus();
         fireEvent.focusOut(getTrigger());
         expect(onBlur).not.toHaveBeenCalled();
         expect(getOptionList()).not.toBeNull();
     });
 
-    it('下拉中第一个可聚焦元素上按 Shift + Tab 回到触发器', () => {
+    it('下拉中按 Shift + Tab 关闭并回到触发器', async () => {
         renderSelect({ defaultOpen: true, innerBottomSlot: <button class="slot-btn">Button</button> });
-        keyDown('Tab');
         const button = screen.getByRole('button', { name: 'Button' });
-        expect(button).toHaveFocus();
+        button.focus();
         keyDown('Tab', { shiftKey: true }, button);
         expect(getTrigger()).toHaveFocus();
-        expect(getOptionList()).not.toBeNull();
+        await waitFor(() => expect(getOptionList()).toBeNull());
     });
 
     it('清空输入后去掉新建项', () => {

@@ -1,5 +1,6 @@
 import { isEqual } from 'es-toolkit';
 import { BaseFoundation, type DefaultAdapter, type DirectionContext } from '../../base/index';
+import { getListTargetIndex, handlePrevent } from '../../utils/index';
 import { cssClasses, TAB_DATA_KEY_PREFIX, TAB_KEY_ATTRIBUTE } from './constants';
 
 /** What the previous update showed, so the pane motion is derived in the same update as the key change */
@@ -60,53 +61,16 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, E =
         }
     }
 
-    #handlePrevent(event: TabKeyEvent) {
-        event.stopPropagation();
-        event.preventDefault();
-    }
-
-    #handleArrowKey(event: TabKeyEvent, tab: HTMLElement, allTabs: HTMLElement[]) {
-        const { tabPosition } = this.getProps();
-        const isVertical = tabPosition === 'left';
-
-        if (isVertical) {
-            if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-                this.#switchTabOnArrowPress(event.key, tab, allTabs);
-                this.#handlePrevent(event);
-            }
-        } else {
-            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-                this.#switchTabOnArrowPress(event.key, tab, allTabs);
-                this.#handlePrevent(event);
-            }
-        }
-    }
-
     #handleDeleteKeyDown(event: TabKeyEvent, tab: HTMLElement, tabs: HTMLElement[], itemKey: string, closable: boolean) {
         const { preventScroll } = this.getProps();
         // a disabled tab can hold focus after a click
         if (closable && tab.getAttribute('aria-disabled') !== 'true') {
             // WebKit navigates back on Backspace outside an editable field
-            this.#handlePrevent(event);
+            handlePrevent(event);
             this.handleTabDelete(itemKey);
             const index = tabs.indexOf(tab);
             if (tabs.length !== 1) {
                 tabs[index + 1 >= tabs.length ? index - 1 : index + 1].focus({ preventScroll });
-            }
-        }
-    }
-
-    // Walks the full tab list, disabled tabs included: a disabled tab can hold focus, and the move must start from it
-    #switchTabOnArrowPress(key: string, tab: HTMLElement, allTabs: HTMLElement[]) {
-        const { preventScroll } = this.getProps();
-        const rtl = this.adapter.getContext('direction') === 'rtl';
-        const step = { ArrowLeft: rtl ? 1 : -1, ArrowUp: -1, ArrowRight: rtl ? -1 : 1, ArrowDown: 1 }[key];
-        const start = allTabs.indexOf(tab);
-        for (let offset = 1; offset < allTabs.length; offset++) {
-            const candidate = allTabs[(start + step * offset + allTabs.length) % allTabs.length];
-            if (candidate.getAttribute('aria-disabled') !== 'true') {
-                candidate.focus({ preventScroll });
-                return;
             }
         }
     }
@@ -221,39 +185,35 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, E =
         if (!(tab instanceof HTMLElement) || event.target !== tab) {
             return;
         }
-        const { preventScroll } = this.getProps();
+        const { preventScroll, tabPosition } = this.getProps();
         // siblings are found through the tablist, not the parent: a tab can be wrapped (OverflowList wraps each one)
         const allTabs = [...tab.closest('[role="tablist"]').querySelectorAll<HTMLElement>(`[${TAB_KEY_ATTRIBUTE}^="${TAB_DATA_KEY_PREFIX}"]`)];
-        const tabs = allTabs.filter((item) => item.getAttribute('aria-disabled') !== 'true');
+        const isDisabled = (item: HTMLElement) => item.getAttribute('aria-disabled') === 'true';
 
-        switch (event.key) {
-            case 'ArrowLeft':
-            case 'ArrowRight':
-            case 'ArrowUp':
-            case 'ArrowDown':
-                this.#handleArrowKey(event, tab, allTabs);
-                break;
-            case 'Backspace':
-            case 'Delete':
-                this.#handleDeleteKeyDown(event, tab, tabs, itemKey, closable);
-                break;
-            case 'Enter':
-            case ' ':
-                if (tab.getAttribute('aria-disabled') === 'true') {
-                    break;
-                }
+        if (event.key === 'Backspace' || event.key === 'Delete') {
+            this.#handleDeleteKeyDown(
+                event,
+                tab,
+                allTabs.filter((item) => !isDisabled(item)),
+                itemKey,
+                closable
+            );
+        } else if (event.key === 'Enter' || event.key === ' ') {
+            if (!isDisabled(tab)) {
                 this.handleTabClick(itemKey, event);
-                this.#handlePrevent(event);
-                break;
-            case 'Home':
-                // empty when every tab is disabled
-                tabs[0]?.focus({ preventScroll });
-                this.#handlePrevent(event);
-                break;
-            case 'End':
-                tabs.at(-1)?.focus({ preventScroll });
-                this.#handlePrevent(event);
-                break;
+                handlePrevent(event);
+            }
+        } else {
+            // the walk includes disabled tabs: one can hold focus, and the move must start from it
+            const target = getListTargetIndex(event.key, allTabs.indexOf(tab), allTabs.length, (index) => isDisabled(allTabs[index]), {
+                loop: true,
+                orientation: tabPosition === 'left' ? 'vertical' : 'horizontal',
+                rtl: this.adapter.getContext('direction') === 'rtl',
+            });
+            if (target !== null) {
+                allTabs[target].focus({ preventScroll });
+                handlePrevent(event);
+            }
         }
     };
 }

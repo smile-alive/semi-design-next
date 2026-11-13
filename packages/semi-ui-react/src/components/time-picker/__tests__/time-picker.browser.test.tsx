@@ -192,3 +192,19 @@ describe('timePicker', () => {
         expect(shadow.activeElement).toBe(input);
     });
 });
+
+describe('TimePicker（浏览器）Tab', () => {
+    it('输入框上按 Tab，焦点移到下一个元素并关闭面板', async () => {
+        render(
+            <>
+                <TimePicker motion={false} scrollItemProps={scrollItemProps} />
+                <button type="button">after</button>
+            </>
+        );
+        await userEvent.click(document.querySelector('input'));
+        await waitFor(() => expect(getPanel()).not.toBeNull());
+        await userEvent.tab();
+        expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+        await waitFor(() => expect(getPanel()).toBeNull());
+    });
+});

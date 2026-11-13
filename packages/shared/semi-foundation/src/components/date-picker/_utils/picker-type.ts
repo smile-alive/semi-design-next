@@ -1,5 +1,5 @@
+import { isValidDate } from '../../../utils/date-fns-extra';
 import type { Type } from '../input-foundation';
-import isValidDate from './is-valid-date';
 
 export function isRangeType(type?: Type) {
     return typeof type === 'string' && type.endsWith('Range');

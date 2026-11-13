@@ -595,10 +595,11 @@ export default class SliderFoundation<P extends SliderProps = SliderProps> exten
     };
 
     /**
-     * A value key stays with the slider unless the consumer's handler already prevented it. Page, Home and End keep
-     * the native range's change; arrows step here, since engines map them differently over a vertical or RTL range
-     * (Chrome follows the visual direction, Firefox not when vertical, Safari in neither case). The arrow pointing
-     * towards max increases; the cross-axis arrow follows Up and Right.
+     * A value key stays with the slider unless the consumer's handler already prevented it. Page keys keep the native
+     * range's change; arrows, Home and End are handled here, since engines map them differently over a vertical or RTL
+     * range (Chrome follows the visual direction for arrows, Firefox not when vertical, Safari in neither case, and
+     * Safari swaps Home and End on a vertical range). The arrow pointing towards max increases; the cross-axis arrow
+     * follows Up and Right.
      */
     handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'defaultPrevented' | 'stopPropagation' | 'preventDefault' | KeyModifiers>, pos: 'min' | 'max') => {
         if (!VALUE_KEYS.includes(event.key) || hasModifier(event)) {
@@ -614,14 +615,19 @@ export default class SliderFoundation<P extends SliderProps = SliderProps> exten
         const increase = [toMax, vertical ? 'ArrowRight' : 'ArrowUp'];
         const opposite = { ArrowUp: 'ArrowDown', ArrowDown: 'ArrowUp', ArrowLeft: 'ArrowRight', ArrowRight: 'ArrowLeft' };
         const delta = increase.includes(event.key) ? 1 : increase.map((key) => opposite[key]).includes(event.key) ? -1 : 0;
-        if (!delta) {
+        if (!delta && event.key !== 'Home' && event.key !== 'End') {
             return;
         }
         event.preventDefault();
         const { currentValue } = this.getStates();
         const value = Array.isArray(currentValue) ? currentValue[pos === 'min' ? 0 : 1] : currentValue;
-        // as the native range: a non-positive step counts as 1, and a step past min or max is no change
-        const next = this.normalizeValue(value + delta * (step > 0 ? step : 1)) as number;
+        // as the native range: a non-positive step counts as 1, a step past min or max is no change, and End stops at
+        // the last step not above max (rounded, not floored: 0.7 / 0.1 is 6.999…)
+        const stepSize = step > 0 ? step : 1;
+        let next = this.normalizeValue(event.key === 'Home' ? min : event.key === 'End' ? min + Math.round((max - min) / stepSize) * stepSize : value + delta * stepSize) as number;
+        if (event.key === 'End' && next > max) {
+            next = this.normalizeValue(next - stepSize) as number;
+        }
         if (next >= min && next <= max) {
             this.handleInputChange(next, pos);
         }

@@ -1,13 +1,13 @@
-import { type JSX, Show, createEffect, createMemo, createRenderEffect, createSignal, on, onCleanup, splitProps, untrack } from 'solid-js';
+import { type JSX, Show, createMemo, createRenderEffect, createSignal, on, onCleanup, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import SideSheetFoundation, { type Placement, type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
-import { warnIfDialogUnnamed, coversPage } from '@fibrae/semi-foundation/utils';
+import { coversPage } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { useCSSAnimation, PopupPortal } from '../../internal/index';
-import { useMounted, useRecordFocus, useWatch } from '../../primitives/index';
+import { useMounted, useOverlayResources, useWatch } from '../../primitives/index';
 import { mergeRefs } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import SideSheetContent from './side-sheet-content';
@@ -168,7 +168,8 @@ export default function SideSheet(rawProps: SideSheetProps) {
 
     const onClose = (event: MouseEvent) => foundation.handleCancel(event);
 
-    useRecordFocus({ record: foundation.recordFocus }, visible);
+    // The dialog is tracked, so the sheet takes the layer, scroll lock and focus once its content is in the document
+    useOverlayResources(foundation, visible, () => Boolean(dialog() && visible()));
 
     // an interrupted leave must start from the shown state, or the next close would unmount at once
     createRenderEffect(
@@ -178,19 +179,6 @@ export default function SideSheet(rawProps: SideSheetProps) {
             }
         })
     );
-
-    // The dialog is tracked, so the sheet takes the layer, scroll lock and focus once its content is in the document
-    createEffect(() => {
-        const element = dialog();
-        if (!visible() || !element) {
-            return;
-        }
-        untrack(() => {
-            foundation.beforeShow();
-            warnIfDialogUnnamed(element, 'SideSheet');
-        });
-        onCleanup(foundation.afterHide);
-    });
 
     useWatch(hidden, foundation.handleHiddenChange);
 

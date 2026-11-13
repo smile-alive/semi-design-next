@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -35,6 +35,18 @@ describe('ColorPicker（浏览器）', () => {
         for (const name of ['colorChooseArea', 'colorSlider', 'alphaSlider']) {
             expect(getComputedStyle(container.querySelector(`.${prefixCls}-${name}`)).touchAction).toBe('none');
         }
+    });
+
+    it('弹层打开后焦点进入面板，Esc 关闭后回到触发器', async () => {
+        render(<ColorPicker popoverProps={{ motion: false }} usePopover />);
+        const trigger = screen.getByRole('button');
+        await userEvent.click(trigger);
+        const dialog = await screen.findByRole('dialog');
+        await waitFor(() => expect(dialog).toContainElement(document.activeElement as HTMLElement));
+
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+        expect(trigger).toHaveFocus();
     });
 
     it('默认触发器显示主题焦点环', async () => {

@@ -292,7 +292,11 @@ export default class CalendarMonthFoundation extends BaseFoundation<MonthAdapter
     };
 
     /** APG grid: focus stays on the grid; the keys move the active day, Enter or Space selects it. `todayText` is empty until mounted. */
-    handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'shiftKey' | 'preventDefault'>, todayText: string) => {
+    handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'shiftKey' | 'preventDefault'> & Partial<Pick<KeyboardEvent, 'altKey' | 'ctrlKey' | 'metaKey'>>, todayText: string) => {
+        // with Alt, Ctrl or Meta the key is a browser or system shortcut (Alt+ArrowLeft goes back); Shift is the grid's own (Shift+PageUp)
+        if (event.altKey || event.ctrlKey || event.metaKey) {
+            return;
+        }
         const { month, weekStartsOn } = this.getProps();
         const activeDate = CalendarMonthFoundation.getActiveDate(this.getProps(), this.getStates(), todayText);
         const action = CalendarMonthFoundation.getKeyAction(event, { activeDate, month, weekStartsOn, rtl: this.getContext('direction') === 'rtl' });

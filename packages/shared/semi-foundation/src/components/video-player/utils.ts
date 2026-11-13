@@ -35,21 +35,6 @@ export function formatTimeText(time: number, texts: TimeTexts) {
     return formatLocale(texts.timeS, { seconds });
 }
 
-// play() rejects when interrupted by pause() or a new load, or blocked by autoplay policy; fullscreen and
-// picture-in-picture reject before metadata loads or where unavailable
-const EXPECTED_MEDIA_ERRORS = new Set(['AbortError', 'NotAllowedError', 'InvalidStateError', 'NotSupportedError']);
-
-/** Drops the rejections a media request is expected to meet in normal use; any other rejection stays a rejection. */
-export function ignoreExpectedMediaErrors(request: Promise<unknown>): Promise<void> {
-    return request.then(
-        () => undefined,
-        (error: unknown) => {
-            if (error instanceof DOMException && EXPECTED_MEDIA_ERRORS.has(error.name)) return;
-            throw error;
-        }
-    );
-}
-
 /**
  * Where a pointer is along a slider track: `offset` from the track's start (the left edge, or the bottom edge when
  * vertical) in px and the `ratio` of the track's `total` length, both clamped to the track: a captured pointer keeps

@@ -4,15 +4,15 @@ import { isEqual } from 'es-toolkit';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
-import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState, getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
+import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
 import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
-import { isTextEditor, joinIds, stopButtonActivationKeys, toCssLength, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
+import { getOptionId, isTextEditor, joinIds, stopButtonActivationKeys, toCssLength, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/select/select.scss';
 import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-solid';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { VirtualList, type VirtualListHandle } from '../../internal/index';
-import { useClickOutside, useFocusHandover, useWatch } from '../../primitives/index';
+import { useFocusHandover, useWatch } from '../../primitives/index';
 import { callHandler, omitFormInjected, forwardFocus, focusElement, hasContent, createIconSlot, mergeRefs, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import type { InputGroupContextValue } from '../input/context';
@@ -419,8 +419,6 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         })
     );
 
-    const markPressInside = useClickOutside([() => root, () => optionContainer], foundation.handleClickOutside, () => state().isOpen);
-
     // a removed node fires no blur: focus on the clear button goes to the combobox instead of dropping to the body
     const handover = useFocusHandover<HTMLButtonElement>(() => triggerInput ?? root);
 
@@ -513,7 +511,9 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         get 'aria-activedescendant'() {
             return activeDescendant();
         },
-        'aria-controls': listboxId,
+        get 'aria-controls'() {
+            return state().isOpen ? listboxId : undefined;
+        },
         get 'aria-describedby'() {
             return local['aria-describedby'];
         },
@@ -558,7 +558,6 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
 
     const handleMouseDown = (e: MouseEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onMouseDown, e);
-        markPressInside(e);
     };
 
     const handleFocusIn = (e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
@@ -618,7 +617,6 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         if (!isTextEditor(e.target)) {
             e.preventDefault();
         }
-        markPressInside(e);
     };
 
     // the popup is not a DOM descendant of the trigger, so its keydown does not reach the root's handler
@@ -1187,6 +1185,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={state().isOpen}
+            onClickOutSide={foundation.handleClickOutside}
             onEscKeyDown={foundation.handleEscKeyDown}
             onOpen={foundation.scrollToSelection}
         >

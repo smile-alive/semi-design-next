@@ -7,7 +7,7 @@ import TooltipFoundation, { type Position, type TooltipAdapter, type TooltipBase
 import { joinIds, warnIfDialogUnnamed, isEventInside, noop, POPUP_ID_ATTRIBUTE, warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
 import { PopupLayerContext, useDefaultProps, useFoundation } from '../../base/index';
-import { autofocus } from '../../utils/index';
+import { autofocus, callHandler } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { SpecialTriggerContext, type SpecialTriggerState, TooltipDescriptionContext, type TooltipPopups, TooltipPopupsContext, useSpecialTriggers, useTooltipPopups } from './context';
 import TriangleArrow from './triangle-arrow';
@@ -189,7 +189,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     const [container, setContainer] = createSignal<HTMLDivElement>();
     const [focusableInside, setFocusableInside] = createSignal(false);
     let isRender = false;
-    let clickOutside: AbortController | undefined;
     let initialFocus: FocusTarget | undefined;
 
     // Content mounts after showPopover(): autofocus content cannot focus inside a hidden popup
@@ -200,10 +199,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
 
     // the consumer's element: the spread target (function children) or the single resolved element (Tooltip's span)
     let inner: Accessor<HTMLElement | undefined> = ownElement;
-
-    // last mousedown through the popup's delegated handler: also a press in any portal the content renders, as
-    // React's portal events count it, not only the Tooltip popups registered in `descendants`
-    let pressedInside: Event | undefined;
     const descendants = new Set<Accessor<HTMLElement | undefined>>();
 
     // only those rendered in the content: as React's enter and leave events through portals, moving onto one stays in
@@ -255,39 +250,13 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                     };
                 },
                 removePortal: () => setContentShown(false),
-                showPopover: () => {
-                    const el = container();
-                    if (el && !el.matches(':popover-open')) {
-                        el.showPopover();
-                    }
-                },
-                hidePopover: () => container()?.hidePopover(),
-                // always settles in a microtask: a hide() from the foundation's own timer commits unbatched, and
-                // afterClose must follow its onVisibleChange(false)
-                waitAnimations: () =>
-                    Promise.allSettled(
-                        container()
-                            ?.getAnimations()
-                            .map((animation) => animation.finished) ?? []
-                    ),
                 notifyAfterOpen: () => props.afterOpen?.(),
                 notifyAfterClose: () => props.afterClose?.(),
                 notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
-                registerClickOutsideHandler: (handler) => {
-                    adapter.unregisterClickOutsideHandler();
-                    clickOutside = new AbortController();
-                    // opening from a delegated mousedown handler registers mid-dispatch (S-H1); that press must not close it
-                    const openingPress = window.event;
-                    // the handler is the foundation's own closure, outside the batching proxy
-                    window.addEventListener('mousedown', (e) => e !== openingPress && batch(() => handler(e)), { signal: clickOutside.signal });
-                },
-                unregisterClickOutsideHandler: () => {
-                    clickOutside?.abort();
-                    clickOutside = undefined;
-                },
                 isEventInTrigger: (e) => isEventInside(e, target()),
                 // operating a popup opened from the trigger or the content keeps this one open (D5, F3)
-                isEventInPopup: (e) => pressedInside === e || isEventInside(e, container(), ...nestedPopups()),
+                getNestedPopups: () => nestedPopups(),
+                batch,
                 notifyClickOutSide: (e) => props.onClickOutSide?.(e),
                 getPortalContainer: () => container() ?? null,
                 getTriggerNode: () => target(),
@@ -389,6 +358,18 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
             },
             get 'aria-controls'() {
                 return popupState('aria-controls', state().isInsert ? popupId() : undefined);
+            },
+            // a custom trigger's owner (a dropdown) that hands its onMouseDown through getTriggerProps counts a press in a
+            // portal it renders in the trigger as inside, which the delegated handler sees. Only then: a handler
+            // written beside the spread would be replaced.
+            get onMouseDown() {
+                const own = (rest as JSX.HTMLAttributes<HTMLElement>).onMouseDown;
+                return props.trigger === 'custom' && own
+                    ? (e: MouseEvent & { currentTarget: HTMLElement; target: Element }) => {
+                          foundation.markPressInside(e);
+                          callHandler(own, e);
+                      }
+                    : undefined;
             },
         }) as never;
     };
@@ -533,7 +514,10 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     });
 
     // Portal's own effect runs before user effects, so the container is in the document here
-    createEffect(on([phase, container], () => foundation.syncPopup()));
+    // A state write commits at once, so a leave finished here would unmount the popup inside the event that closed it,
+    // before that event finished bubbling through the popup's delegated handlers, and report afterClose before hide()
+    // reports onVisibleChange(false); the animations are read a microtask later
+    createEffect(on([phase, container], () => foundation.syncPopup(Promise.resolve())));
 
     // The name may point into the content, so check after it mounts. Only contentShown is tracked: an effect that
     // the phase also queued in the same flush would run before the content is inserted.
@@ -625,7 +609,9 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                                 stop(e);
                             }}
                             onMouseDown={(e) => {
-                                pressedInside = e;
+                                // the delegated handler also sees a press in any portal the content renders, as
+                                // React's portal events do, not only in the Tooltip popups registered in `descendants`
+                                foundation.markPressInside(e);
                                 stop(e);
                             }}
                         >

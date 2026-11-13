@@ -331,7 +331,7 @@
 {#snippet decorate(index: number, description: string | undefined)}
     {#if index < decorations.length}
         {@const tag = decorations[index]}
-        <svelte:element this={tag.tag} aria-describedby={tag.tag === 'a' ? description : undefined} {...tag.attrs}>{@render decorate(index + 1, description)}</svelte:element>
+        <svelte:element this={tag.tag} {...tag.attrs} aria-describedby={tag.attrs['aria-describedby'] ?? (tag.tag === 'a' ? description : undefined)}>{@render decorate(index + 1, description)}</svelte:element>
     {:else}
         <!-- Adjacent blocks share a line: whitespace between them would become a visible space inside the text -->
         {#if icon}<span {@attach sizeIcons} bind:this={iconBox} class={`${prefix}-icon`} x-semi-prop="icon">{@render icon()}</span>{/if}{#if linkClass}<span class={linkClass}>{@render body()}</span>{:else}{@render body()}{/if}

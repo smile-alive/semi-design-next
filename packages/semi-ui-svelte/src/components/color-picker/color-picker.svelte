@@ -40,6 +40,7 @@
     const locale = useLocale('ColorPicker');
 
     let picker = $state<HTMLDivElement>();
+    let popover = $state<Popover>();
 
     // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: FoundationProps = {
@@ -111,7 +112,21 @@
 {/snippet}
 
 {#if usePopover}
-    <Popover {...popoverProps} aria-label={popoverLabel} child={children ? undefined : defaultTrigger} {children} class={popoverClass} content={panel} role={popoverProps?.role ?? 'dialog'} trigger={popoverProps?.trigger ?? 'click'} />
+    <Popover
+        {...popoverProps}
+        aria-label={popoverLabel}
+        bind:this={popover}
+        child={children ? undefined : defaultTrigger}
+        {children}
+        class={popoverClass}
+        content={panel}
+        onOpen={() => {
+            ColorPickerFoundation.focusPopup(popover?.getPopup() ?? null);
+            popoverProps?.onOpen?.();
+        }}
+        role={popoverProps?.role ?? 'dialog'}
+        trigger={popoverProps?.trigger ?? 'click'}
+    />
 {:else}
     {@render panel()}
 {/if}

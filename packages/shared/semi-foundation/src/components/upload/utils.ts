@@ -1,9 +1,17 @@
 import { FocusTrapHandle } from '../../base/index';
 import { handoverFocus } from '../../utils/index';
-import { cssClasses } from './constants';
+import { cssClasses, strings } from './constants';
 
 export const byteKB = 1024;
 export const byteMB = 1048576;
+
+export function isUploadProgressVisible({ percent, status }: { percent?: number; status?: string }) {
+    return percent !== undefined && percent !== 100 && status === strings.FILE_STATUS_UPLOADING;
+}
+
+export function isUploadFailed(status?: string) {
+    return status === strings.FILE_STATUS_UPLOAD_FAIL || status === strings.FILE_STATUS_VALID_FAIL;
+}
 
 /** The attributes `containsControl` and `containsName` read, which the add area observes to recheck them */
 export const addAreaObservedAttributes = ['disabled', 'aria-disabled', 'href', 'tabindex', 'contenteditable', 'aria-label', 'aria-labelledby', 'alt'];

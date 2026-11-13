@@ -1,8 +1,8 @@
-import { type Accessor, type JSX, Show, batch, children, createComputed, createEffect, createMemo, createSelector, createSignal, createUniqueId, on, splitProps } from 'solid-js';
+import { type Accessor, type JSX, Show, children, createComputed, createEffect, createMemo, createSelector, createSignal, createUniqueId, on, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
 import TreeFoundation, { type BasicTreeInnerData, type BasicTreeProps, type ScrollAlign, type TreeAdapter } from '@fibrae/semi-foundation/components/tree/foundation';
-import { buildRowProps, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
+import { buildRowProps, handleTreeFocusIn, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/tree/tree.scss';
 import { IconSearch } from '@fibrae/semi-icons-solid';
@@ -16,7 +16,6 @@ import { TreeContext, type TreeContextValue } from './context';
 import type { DragEnterProps, DragProps, ExpandedOtherProps, FlattenNode, OnDragProps, ScrollData, SearchRenderProps, TreeElement, TreeNodeData, TreeProps, TreeRowProps, Value } from './interface';
 import NodeList from './node-list';
 import TreeNode from './tree-node';
-import useTreeKeyboard from './use-tree-keyboard';
 import { sameRow } from './utils';
 
 type Foundation = TreeFoundation<MouseEvent>;
@@ -151,12 +150,24 @@ export default function Tree(rawProps: TreeProps) {
             notifyDrop: (info) => local.onDrop?.(info as OnDragProps),
             // the effect below scrolls once the rows of a search in the same call are rendered
             scrollToNode: (key, align) => setScrollRequest({ key, align }),
-        })
+            revealRow: (index, key) => {
+                if (list) {
+                    list.scrollToItem(index);
+                    return;
+                }
+                // inside the tree, not the document: a tree in a ShadowRoot is out of document.getElementById's reach
+                treeElement?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
+            },
+        }),
+        { context: () => ({ direction: config().direction }) }
     );
 
     // read here, untracked: the Provider's children run in a memo that would track it
     const ref = props.ref;
     const derived = createMemo(() => TreeFoundation.deriveState(snapshot(), state()));
+    const activeIndex = createMemo(() => TreeFoundation.getActiveIndex(state()));
+    const activeKey = createMemo(() => state().flattenNodes[activeIndex()]?.key);
+    const isActive = createSelector(activeKey);
     const resolvedEmpty = children(() => local.emptyContent);
 
     const contextView = createMemo(() => ({
@@ -172,6 +183,22 @@ export default function Tree(rawProps: TreeProps) {
         renderLabel: local.renderLabel,
         renderFullLabel: local.renderFullLabel,
     }));
+
+    const contextValue: TreeContextValue = {
+        view: contextView,
+        icon: () => local.icon,
+        onNodeExpand: foundation.handleNodeExpand,
+        onNodeSelect: foundation.handleNodeSelect,
+        onNodeCheck: foundation.handleNodeSelect,
+        onNodeRightClick: foundation.handleNodeRightClick,
+        onNodeDoubleClick: foundation.handleNodeDoubleClick,
+        onNodeDragStart: foundation.handleNodeDragStart,
+        onNodeDragEnter: foundation.handleNodeDragEnter,
+        onNodeDragOver: foundation.handleNodeDragOver,
+        onNodeDragLeave: foundation.handleNodeDragLeave,
+        onNodeDragEnd: foundation.handleNodeDragEnd,
+        onNodeDrop: foundation.handleNodeDrop,
+    };
 
     const searchProps: SearchRenderProps = {
         class: `${prefix}-input`,
@@ -203,32 +230,6 @@ export default function Tree(rawProps: TreeProps) {
 
     const rowProps = (node: FlattenNode) => buildRowProps(node, state(), props) as TreeRowProps | null;
 
-    const reveal = (index: number, key: string) => {
-        if (list) {
-            list.scrollToItem(index);
-            return;
-        }
-        // inside the tree, not the document: a tree in a ShadowRoot is out of document.getElementById's reach
-        treeElement?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
-    };
-
-    const { setKeyboardKey, activeIndex, activeKey, handleKeyDown } = useTreeKeyboard({
-        rows,
-        defaultIndex: () =>
-            Math.max(
-                rows().findIndex((node) => state().selectedKeys.includes(node.key)),
-                0
-            ),
-        rowProps,
-        hasLoadData: () => Boolean(local.loadData),
-        rtl: () => config().direction === 'rtl',
-        select: foundation.handleNodeSelect,
-        expand: foundation.handleNodeExpand,
-        reveal,
-    });
-
-    const isActive = createSelector(activeKey);
-
     const listClass = () => clsx(`${prefix}-option-list`, { [`${prefix}-option-list-block`]: local.blockNode });
 
     const noData = () => {
@@ -238,28 +239,6 @@ export default function Tree(rawProps: TreeProps) {
     };
 
     const searchRender = () => (typeof local.searchRender === 'function' ? local.searchRender : undefined);
-
-    const activate = (row: TreeRowProps, action: () => void) =>
-        batch(() => {
-            setKeyboardKey(row.key);
-            action();
-        });
-
-    const contextValue: TreeContextValue = {
-        view: contextView,
-        icon: () => local.icon,
-        onNodeExpand: (e, row) => activate(row, () => foundation.handleNodeExpand(e, row)),
-        onNodeSelect: (e, row) => activate(row, () => foundation.handleNodeSelect(e, row)),
-        onNodeCheck: (e, row) => activate(row, () => foundation.handleNodeSelect(e, row)),
-        onNodeRightClick: (e, row) => activate(row, () => foundation.handleNodeRightClick(e, row)),
-        onNodeDoubleClick: (e, row) => activate(row, () => foundation.handleNodeDoubleClick(e, row)),
-        onNodeDragStart: foundation.handleNodeDragStart,
-        onNodeDragEnter: foundation.handleNodeDragEnter,
-        onNodeDragOver: foundation.handleNodeDragOver,
-        onNodeDragLeave: foundation.handleNodeDragLeave,
-        onNodeDragEnd: foundation.handleNodeDragEnd,
-        onNodeDrop: foundation.handleNodeDrop,
-    };
 
     const renderRow = (node: Accessor<FlattenNode | undefined>, style?: Accessor<JSX.CSSProperties>) => {
         const row = createMemo(
@@ -273,28 +252,9 @@ export default function Tree(rawProps: TreeProps) {
         return <Show when={row()}>{(current) => <TreeNode expandIcon={local.expandIcon} focused={isActive(current().key)} id={nodeId(treeId, current().key)} row={current()} showLine={local.showLine} style={style?.()} />}</Show>;
     };
 
-    const handleTreeKeyDown = (event: KeyboardEvent & { currentTarget: HTMLDivElement; target: Element }) => {
-        if (event.target !== event.currentTarget && event.target instanceof HTMLElement && event.target.tabIndex >= 0) {
-            return;
-        }
-        handleKeyDown(event);
-    };
-
-    const handleFocusIn = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
-        const tree = event.currentTarget;
-        if (event.target !== tree) {
-            // a click focuses the tabindex=-1 element it lands on (the virtual scroller, a row's checkbox); the tree
-            // takes focus back, so aria-activedescendant and the row's focus ring keep working
-            if (event.target instanceof HTMLElement && event.target.tabIndex < 0) {
-                tree.focus({ preventScroll: true });
-            }
-            return;
-        }
-        // a virtual list may not have rendered the active row; pointer focus is skipped because scrolling back to the
-        // stale active row would unmount the clicked row
-        if (tree.matches(':focus-visible')) {
-            list?.scrollToItem(activeIndex());
-        }
+    const handleFocusIn = (event: FocusEvent & { currentTarget: HTMLDivElement }) => {
+        const index = activeIndex();
+        handleTreeFocusIn(event, () => list?.scrollToItem(index));
     };
 
     createComputed(on(derived, (value) => value && foundation.syncDerivedState(value)));
@@ -362,7 +322,7 @@ export default function Tree(rawProps: TreeProps) {
                         role="tree"
                         tabIndex={treeAttrs.tabIndex ?? 0}
                         onFocusIn={handleFocusIn}
-                        onKeyDown={handleTreeKeyDown}
+                        onKeyDown={foundation.handleKeyDown}
                     >
                         <NodeList flattenList={state().cachedFlattenNodes as FlattenNode[] | undefined} flattenNodes={rows()} listRef={(handle) => (list = handle)} motion={Boolean(local.motion)} motionKeys={state().motionKeys} motionType={state().motionType} renderRow={renderRow} virtualize={local.virtualize} />
                     </div>

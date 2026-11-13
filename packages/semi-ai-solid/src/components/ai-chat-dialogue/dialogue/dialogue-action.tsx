@@ -9,7 +9,7 @@ import { useFoundation } from '@fibrae/semi-ui-solid/base';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import Dropdown from '@fibrae/semi-ui-solid/dropdown/index';
 import Modal from '@fibrae/semi-ui-solid/modal/index';
-import { useClickOutside, useLocale } from '@fibrae/semi-ui-solid/primitives';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import { useAIChatDialogueContext } from '../context';
 import type { DefaultActionNodeObj } from '../interface';
@@ -47,8 +47,6 @@ export default function DialogueAction(props: DialogueActionProps) {
             notifyDeleteMessage: () => context.messageDelete(props.message),
         })
     );
-
-    const markPressInside = useClickOutside([trigger], foundation.closeMenu, () => state().visible);
 
     // memos: a new message object (a like, a streamed chunk) must not recreate the buttons a custom bar received
     const flags = () => getDialogueActionFlags({ role: props.message.role, status: props.message.status, isLastChat: props.isLastChat, showReset: context.view().showReset });
@@ -108,7 +106,7 @@ export default function DialogueAction(props: DialogueActionProps) {
             class={`${PREFIX_ACTION}-dropdown`}
             position="bottomLeft"
             render={
-                <Dropdown.Menu onMouseDown={markPressInside}>
+                <Dropdown.Menu>
                     <Dropdown.Item onClick={showDeleteModal}>
                         <IconDeleteStroked /> {locale().locale.delete}
                     </Dropdown.Item>
@@ -118,6 +116,7 @@ export default function DialogueAction(props: DialogueActionProps) {
             stopPropagation
             trigger="custom"
             visible={state().visible}
+            onClickOutSide={foundation.closeMenu}
             onEscKeyDown={foundation.closeMenu}
         >
             {(getTriggerProps) => <Button {...getTriggerProps({ ref: setTrigger })} type="tertiary" aria-label={locale().locale.more} theme="borderless" icon={<IconMoreStroked />} onClick={foundation.openMenu} />}

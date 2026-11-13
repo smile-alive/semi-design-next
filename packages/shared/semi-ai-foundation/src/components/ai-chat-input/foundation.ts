@@ -3,7 +3,7 @@ import type { EditorView } from '@tiptap/pm/view';
 import { isEqual } from 'es-toolkit';
 import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '@fibrae/semi-foundation/base';
 import { removeUnlessPrevented } from '@fibrae/semi-foundation/components/upload/utils';
-import { centerInScroller, isComposing } from '@fibrae/semi-foundation/utils';
+import { centerInScroller, getEnabledStepIndex, isComposing } from '@fibrae/semi-foundation/utils';
 import { cssClasses, strings } from './constants';
 import { handleZeroWidthCharLogic } from './extension/plugins';
 import type { Attachment, BaseSkill, Suggestion, Reference, Content, MessageContent, RichTextJSON, Setup } from './interface';
@@ -118,11 +118,11 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         } else if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
             // Same condition as #handleEditorKey, so the highlight Enter selects always moves
             if (skillVisible && skills?.length) {
-                const newIndex = (activeSkillIndex + (event.key === 'ArrowUp' ? -1 : 1) + skills.length) % skills.length;
+                const newIndex = getEnabledStepIndex(event.key === 'ArrowUp' ? -1 : 1, activeSkillIndex, skills.length, () => false);
                 this.setActiveSkillIndex(newIndex);
                 this.#updateScrollTop('skill', newIndex);
             } else if (suggestionVisible && suggestions?.length) {
-                const newIndex = (activeSuggestionIndex + (event.key === 'ArrowUp' ? -1 : 1) + suggestions.length) % suggestions.length;
+                const newIndex = getEnabledStepIndex(event.key === 'ArrowUp' ? -1 : 1, activeSuggestionIndex, suggestions.length, () => false);
                 this.setActiveSuggestionIndex(newIndex);
                 this.#updateScrollTop('suggestion', newIndex);
             }

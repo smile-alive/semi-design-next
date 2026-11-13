@@ -4,14 +4,13 @@
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
-    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState, getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
+    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
     import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
     import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
-    import { isTextEditor, joinIds, toCssLength } from '@fibrae/semi-foundation/utils';
+    import { getOptionId, isTextEditor, joinIds, toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/select/select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-vue';
     import { type ElementProps, type EmitHandlers, readSemiDefault, useSemiGlobal, SlotFragment, useFoundation } from '../../base/index';
-    import { useClickOutside } from '../../composables/index';
     import { VirtualList } from '../../internal/index';
     import { splitControlAttrs, slotKind, hasSlotContent } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
@@ -24,7 +23,6 @@
     import Space from '../space';
     import Spin from '../spin';
     import Tag, { TagGroup, type TagCloseEvent } from '../tag';
-    import { useNestedPopups } from '../tooltip/context';
     import { TypographyText } from '../typography';
     import { provideOptionPrefixContext } from './context';
     import type { BasicSelectValue, SelectChangeValue, SelectCreateItemSlotProps, SelectEmits, SelectHandle, SelectOptionItemSlotProps, SelectOptionProps, SelectProps, SelectSelectedItemSlotProps, SelectSlots, SelectTriggerSlotProps } from './interface';
@@ -196,7 +194,7 @@
         ...splitControlAttrs(attrs, isComboboxKey).control,
         role: 'combobox',
         'aria-activedescendant': activeDescendant.value,
-        'aria-controls': listboxId,
+        'aria-controls': state.value.isOpen ? listboxId : undefined,
         'aria-expanded': state.value.isOpen,
         'aria-haspopup': 'listbox' as const,
         ...nameAttrs(),
@@ -426,8 +424,6 @@
         { flush: 'post' }
     );
 
-    useClickOutside([trigger, optionContainer], foundation.handleClickOutside, () => state.value.isOpen, useNestedPopups());
-
     // The clear button goes with the value. A removed node fires no blur, so a focused button would drop the focus to
     // the body while the Select stays focused; this pre-flush watcher runs before the patch removes the button.
     watch(clearable, (allowed) => {
@@ -462,6 +458,7 @@
         trigger="custom"
         :visible="state.isOpen"
         @afterClose="foundation.handlePopoverClose"
+        @clickOutSide="foundation.handleClickOutside"
         @escKeyDown="foundation.handleEscKeyDown"
         @open="foundation.scrollToSelection"
     >

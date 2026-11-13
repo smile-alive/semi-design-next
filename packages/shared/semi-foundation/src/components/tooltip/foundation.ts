@@ -1,6 +1,6 @@
 import type { FocusableElement } from 'tabbable';
 import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, PopupLifecycle, ReleaseHolder } from '../../base/index';
-import { openLayer, popupTriggerSelector, type ArrayElement, warning } from '../../utils/index';
+import { isEventInside, openLayer, popupTriggerSelector, type ArrayElement, warning } from '../../utils/index';
 import { adjustPosition } from './adjust-position';
 import { numbers, strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
 
@@ -11,25 +11,19 @@ export interface TooltipAdapter<P extends TooltipBaseProps = TooltipBaseProps> e
     insertPortal(): Pick<TooltipBaseState, 'portalTarget' | 'colorScheme'>;
     /** Drops what the host renders into the popup itself (its content), right before the foundation unmounts the popup */
     removePortal(): void;
-    /** Shows the popup in the top layer, unless it is still open (reopened during its exit animation) */
-    showPopover(): void;
-    hidePopover(): void;
-    /**
-     * Settles once the popup's running animations finish or are cancelled, read when called; null when none runs, so
-     * the step finishes at once
-     */
-    waitAnimations(): Promise<unknown> | null;
     /** Once per opening, after the enter animation; not for an opening closed before it finishes */
     notifyAfterOpen(): void;
     /** Once per opening, after the popup left or when the component unmounts while it is shown */
     notifyAfterClose(): void;
-    /** Binds `handler` to every mousedown in the window until `unregisterClickOutsideHandler` */
-    registerClickOutsideHandler(handler: (e: MouseEvent) => void): void;
-    unregisterClickOutsideHandler(): void;
     isEventInTrigger(e: MouseEvent): boolean;
-    /** Whether the press went through the popup, or through a popup opened from its content */
-    isEventInPopup(e: MouseEvent): boolean;
+    /**
+     * The popups of Tooltips rendered in this one's trigger or content: portaled out of its DOM, they still count as
+     * inside for the press outside check. Empty where the framework's own event path covers them (React).
+     */
+    getNestedPopups(): (HTMLElement | null | undefined)[];
     notifyClickOutSide(e: MouseEvent): void;
+    /** Runs `fn`, the foundation's own window listener, as one update: the onVisibleChange it reports lands before the DOM updates (Solid) */
+    batch(fn: () => void): void;
     getPortalContainer(): HTMLElement | null;
     setInitialFocus(): void;
     /** The popup is shown and its enter transition has started; once per opening */
@@ -135,6 +129,11 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     #requestedVisible: boolean | undefined;
     // decided when the click-outside listener is bound: a custom trigger only reports the press
     #hidesOnClickOutside = false;
+    #clickOutside: ((e: MouseEvent) => void) | null = null;
+    // a press inside the content that the host saw on its way to a nested popup portaled out of this DOM
+    #pressedInside: Event | null = null;
+    // Activity hides the popup through destroy, where the host's ref to it may already be detached
+    #lastPopup: HTMLElement | null = null;
     #stopTracking: (() => void) | null = null;
     #triggerVisible = true;
     #applied: Layout | null = null;
@@ -187,7 +186,8 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
 
     // The host answers the trigger and popup checks separately: a press in a portaled popup reaches its logical ancestors differently in each framework.
     #handleClickOutside = (e: MouseEvent) => {
-        if (!this.adapter.getPortalContainer() || this.adapter.isEventInTrigger(e) || this.adapter.isEventInPopup(e)) {
+        const popup = this.adapter.getPortalContainer();
+        if (!popup || this.adapter.isEventInTrigger(e) || e === this.#pressedInside || isEventInside(e, popup, ...this.adapter.getNestedPopups())) {
             return;
         }
         this.adapter.notifyClickOutSide(e);
@@ -237,6 +237,16 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         warning((mouseLeaveDelay ?? 0) < (mouseEnterDelay ?? 0), strings.LEAVE_DELAY_WARNING);
     }
 
+    // Settles once the popup's running animations finish or are cancelled, read now or once `beforeRead` settles;
+    // null when none runs
+    #waitAnimations(beforeRead: Promise<unknown> | undefined) {
+        const read = () => {
+            const animations = this.adapter.getPortalContainer()?.getAnimations() ?? [];
+            return animations.length ? Promise.allSettled(animations.map((animation) => animation.finished)) : null;
+        };
+        return beforeRead ? beforeRead.then(read) : read();
+    }
+
     // Runs `step` once `wait` settles, unless a later sync or a destroy made this phase stale
     #afterAnimations(wait: Promise<unknown> | null, step: () => void) {
         const current = this.#syncStep;
@@ -250,6 +260,19 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         } else {
             run();
         }
+    }
+
+    #showPopover() {
+        const popup = this.adapter.getPortalContainer();
+        // still open when reopened during its exit animation
+        if (popup && !popup.matches(':popover-open')) {
+            popup.showPopover();
+        }
+        this.#lastPopup = popup ?? this.#lastPopup;
+    }
+
+    #hidePopover() {
+        (this.adapter.getPortalContainer() ?? this.#lastPopup)?.hidePopover();
     }
 
     #updateStateIfCursorOnTrigger() {
@@ -293,13 +316,13 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         this.#reportVisibleChange(true);
     }
 
-    #enter() {
+    #enter(beforeRead: Promise<unknown> | undefined) {
         // before showPopover(): the content mounts on beforetoggle and may take focus
         this.#layer.hold(() => openLayer({ element: this.adapter.getPortalContainer(), modal: false, onEscape: this.handleEscape }));
-        this.adapter.showPopover();
+        this.#showPopover();
         this.#handleShown();
         // read right after showPopover() to see the enter animation it started
-        const entering = this.adapter.waitAnimations();
+        const entering = this.#waitAnimations(beforeRead);
         // `:hover` is not updated yet in the mouseenter task, so the hover check of #handleOpened runs a task later
         this.#openTimer = setTimeout(() => {
             if (!this.#openedHandled) {
@@ -317,15 +340,15 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
 
     // The exit animation plays while the popup is still open, so it keeps the top layer; it hides once that ends.
     // Read right after the commit that dropped the show class; cancelled animations settle too.
-    #leave() {
+    #leave(beforeRead: Promise<unknown> | undefined) {
         // released at the commit, not at hide(): a close and a reopen in one task (focus moving from the trigger into
         // the popup) commit no leave, and the popup keeps its layer
         this.#layer.release();
-        this.#afterAnimations(this.adapter.waitAnimations(), () => {
+        this.#afterAnimations(this.#waitAnimations(beforeRead), () => {
             if (this.getState('transitionState') !== 'leave') {
                 return;
             }
-            this.adapter.hidePopover();
+            this.#hidePopover();
             if (!this.getProp('keepDOM')) {
                 this.#removePortal();
             }
@@ -339,7 +362,20 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         const hides = trigger === 'click' || clickTriggerToHide || trigger === 'contextMenu';
         if (hides || trigger === 'custom') {
             this.#hidesOnClickOutside = hides;
-            this.adapter.registerClickOutsideHandler(this.#handleClickOutside);
+            this.#unwatchClickOutside();
+            // opening from a mousedown handler can register while that press is still dispatched (a discrete event
+            // flushes React effects at once, Vue enables in a microtask of it); that press must not close the popup
+            const openingPress = window.event;
+            this.#clickOutside = (e) => e !== openingPress && this.adapter.batch(() => this.#handleClickOutside(e));
+            // no AbortController signal: Slider's tests tell its own signal-bound window listeners apart from this one by it
+            window.addEventListener('mousedown', this.#clickOutside);
+        }
+    }
+
+    #unwatchClickOutside() {
+        if (this.#clickOutside) {
+            window.removeEventListener('mousedown', this.#clickOutside);
+            this.#clickOutside = null;
         }
     }
 
@@ -862,7 +898,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         // React's Activity hides a kept popup by disconnecting effects, and display:none alone would leave it open
         // in the top layer
         if (this.getState('isInsert')) {
-            this.adapter.hidePopover();
+            this.#hidePopover();
         }
         // A hidden popup keeps its open state (the host hides it with the subtree); a leave cut short by hiding would
         // never remove it, so that is finished here.
@@ -872,7 +908,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         this.#mounted = false;
         this.#requestedVisible = undefined;
         this.#endTracking();
-        this.adapter.unregisterClickOutsideHandler();
+        this.#unwatchClickOutside();
         this.#clearDelayTimer();
     }
 
@@ -904,9 +940,11 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
      * Hosts call this after every commit that changes `isInsert`, `transitionState` or the popup element, and again
      * when a hidden popup shows again (Activity, KeepAlive), with the popup in the document. Entering shows the
      * popover, positions it, checks a hover opening a task later and reports afterOpen once the enter animation ends;
-     * leaving waits for the exit animation, hides the popover, unmounts it unless keepDOM and reports afterClose.
+     * leaving releases the Escape layer at once, waits for the exit animation, hides the popover, unmounts it unless
+     * keepDOM and reports afterClose. The animations are read once `beforeRead` settles when a host passes one: the
+     * phase's DOM is not there yet (Svelte), or what follows must not run inside the closing event (Solid).
      */
-    syncPopup = () => {
+    syncPopup = (beforeRead?: Promise<unknown>) => {
         this.#syncStep++;
         clearTimeout(this.#openTimer);
         if (!this.getState('isInsert') || !this.adapter.getPortalContainer()) {
@@ -914,9 +952,9 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
         const phase = this.getState('transitionState');
         if (phase === 'enter') {
-            this.#enter();
+            this.#enter(beforeRead);
         } else if (phase === 'leave') {
-            this.#leave();
+            this.#leave(beforeRead);
         }
     };
 
@@ -990,13 +1028,23 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
             return;
         }
         // a press outside during the exit animation is not another close
-        this.adapter.unregisterClickOutsideHandler();
+        this.#unwatchClickOutside();
         this.#endTracking();
         // a popup still leaving, or kept by keepDOM, is inserted but already closed
         if (wasOpen || this.getState('visible')) {
             this.setState({ transitionState: 'leave', visible: false });
+            // closed before the open timer ran: keep the true/false pairing
+            if (!this.#openReported) {
+                this.#openReported = true;
+                this.#reportVisibleChange(true);
+            }
             this.#reportVisibleChange(false);
         }
+    };
+
+    /** Hosts call this from a capture-phase mousedown on the popup content: a press bound for a nested popup portaled out of this DOM */
+    markPressInside = (e: Event) => {
+        this.#pressedInside = e;
     };
 
     /**

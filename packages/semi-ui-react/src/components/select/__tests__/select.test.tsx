@@ -1315,13 +1315,6 @@ describe('Select', () => {
         expect(getTriggerInput()).toHaveFocus();
     });
 
-    it('下拉中的 Tab 键导航', () => {
-        renderSelect({ defaultOpen: true, innerBottomSlot: <button className="slot-button">Click me</button> });
-        keyDown('Tab');
-        expect(screen.getByRole('button', { name: 'Click me' })).toHaveFocus();
-        expect(getOptionList()).not.toBeNull();
-    });
-
     it('通过 ref 调用 deselectAll', () => {
         const ref = createRef<SelectHandle>();
         const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
@@ -2062,12 +2055,11 @@ describe('Select', () => {
         expect(getFocusedOption()).toHaveTextContent(/^A$/);
     });
 
-    it('handleContainerKeyDown 处理 TAB', async () => {
+    it('handleContainerKeyDown 处理 Shift + Tab：关闭并回到触发器', async () => {
         renderSelect({ defaultOpen: true, innerBottomSlot: <button className="slot-btn">Button</button> });
-        keyDown('Tab');
         const button = screen.getByRole('button', { name: 'Button' });
-        expect(button).toHaveFocus();
-        keyDown('Tab', {}, button);
+        act(() => button.focus());
+        keyDown('Tab', { shiftKey: true }, button);
         await expectClosed();
         expect(getTrigger()).toHaveFocus();
     });
@@ -2652,23 +2644,12 @@ describe('Select', () => {
         expect(getOptionList()).not.toBeNull();
     });
 
-    it('isFocusInContainer 为 true 时 handleTriggerBlur', () => {
+    it('焦点在下拉内时触发器失焦不发 blur', () => {
         const onBlur = vi.fn<NonNullable<SelectProps['onBlur']>>();
         renderSelect({ defaultOpen: true, innerBottomSlot: <button className="slot-btn">Button</button>, onBlur });
-        keyDown('Tab');
-        expect(screen.getByRole('button', { name: 'Button' })).toHaveFocus();
+        act(() => screen.getByRole('button', { name: 'Button' }).focus());
         fireEvent.blur(getTrigger());
         expect(onBlur).not.toHaveBeenCalled();
-        expect(getOptionList()).not.toBeNull();
-    });
-
-    it('第一个元素上的 _handlePanelOpenShiftTabKeyDown', () => {
-        renderSelect({ defaultOpen: true, innerBottomSlot: <button className="slot-btn">Button</button> });
-        keyDown('Tab');
-        const button = screen.getByRole('button', { name: 'Button' });
-        expect(button).toHaveFocus();
-        keyDown('Tab', { shiftKey: true }, button);
-        expect(getTrigger()).toHaveFocus();
         expect(getOptionList()).not.toBeNull();
     });
 

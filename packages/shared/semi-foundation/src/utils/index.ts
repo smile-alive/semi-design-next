@@ -22,6 +22,7 @@ export { default as isPromise } from './is-promise';
 export { default as isValidTimeZone } from './is-valid-time-zone';
 export * from './key-code';
 export * from './layer';
+export * from './media';
 export * from './object';
 export * from './pointer';
 export * from './scroll-lock';

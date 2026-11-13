@@ -1,3 +1,4 @@
+import { getOptionId } from '@fibrae/semi-foundation/utils';
 import { type FileKind, getFileKind, getFileType } from '../../utils/index';
 import { strings } from './constants';
 import type { AIChatInputBaseProps, AIChatInputState } from './foundation';
@@ -9,10 +10,6 @@ export function getAttachmentType(item: Attachment | Reference) {
         return type;
     }
     return getFileType(name, fileInstance?.type) ?? 'UNKNOWN';
-}
-
-export function getOptionId(listId: string, index: number) {
-    return `${listId}-option-${index}`;
 }
 
 /**

@@ -22,7 +22,7 @@ import { isInnerControlKey, namedRole, noop } from '@fibrae/semi-foundation/util
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside } from '../../hooks/index';
+import { getDocument, useClickOutside, useEventListener } from '../../hooks/index';
 import Trigger from '../../internal/trigger';
 import { useConfigContext } from '../config-provider/context';
 import type { InputHandle } from '../input';
@@ -317,7 +317,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         placeholder: placeholder || locale.placeholder[type],
         // APG date picker combobox: the inputs that open the panel carry the popup state
         role: 'combobox',
-        'aria-controls': panelId,
+        'aria-controls': panelShow ? panelId : undefined,
         'aria-expanded': panelShow,
         'aria-haspopup': 'dialog' as const,
         'aria-labelledby': ariaLabelledby,
@@ -505,6 +505,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
             {renderFooter()}
         </div>
     );
+
+    useEventListener(getDocument, 'focusin', (e) => foundation.handleDocumentFocusIn(e, triggerElRef.current), { enabled: panelShow });
 
     useImperativeHandle(
         props.ref,

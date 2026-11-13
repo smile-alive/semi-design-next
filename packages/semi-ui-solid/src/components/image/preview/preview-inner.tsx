@@ -1,4 +1,4 @@
-import { type JSX, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, onCleanup, untrack } from 'solid-js';
+import { type JSX, Show, children, createMemo, createSignal, createUniqueId, mergeProps, onCleanup } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/image/constants';
@@ -7,7 +7,7 @@ import { coversPage } from '@fibrae/semi-foundation/utils';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-solid';
 import { useFoundation } from '../../../base/index';
 import { PopupPortal } from '../../../internal/index';
-import { useMounted, useRecordFocus } from '../../../primitives/index';
+import { useMounted, useOverlayResources } from '../../../primitives/index';
 import { hasContent } from '../../../utils/index';
 import useConfig from '../../config-provider/use-config';
 import useLocale from '../../locale/use-locale';
@@ -135,16 +135,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     const handleNext = () => foundation.handleSwitchImage('next');
 
-    useRecordFocus({ record: foundation.recordFocus }, visible);
-
     // tracks the dialog, so the layer, scroll lock and focus are taken once it is in the document
-    createEffect(() => {
-        if (!visible() || !wrap()) {
-            return;
-        }
-        untrack(foundation.beforeShow);
-        onCleanup(foundation.afterHide);
-    });
+    useOverlayResources(foundation, visible, () => Boolean(visible() && wrap()));
 
     return (
         <Show when={mounted() && visible()}>

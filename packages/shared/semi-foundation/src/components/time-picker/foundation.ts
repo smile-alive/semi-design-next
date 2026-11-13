@@ -2,7 +2,7 @@ import { isValid, type Locale } from 'date-fns';
 import { isEqual } from 'es-toolkit';
 import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { zonedTimeToUtc } from '../../utils/date-fns-extra';
-import { isValidTimeZone } from '../../utils/index';
+import { containsWithPopups, isBrowserChord, isValidTimeZone } from '../../utils/index';
 import { fromWallTime, parseReference, toWallTime } from '../../utils/zoned-time';
 import { getColumns } from './combobox-options';
 import { cssClasses, strings, type PanelType } from './constants';
@@ -319,8 +319,8 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
     };
 
     /** A custom trigger without a focus target of its own is a button: Enter, Space and Down Arrow open the panel */
-    handleTriggerKeyDown = (e: Pick<KeyboardEvent, 'key' | 'preventDefault'>) => {
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+    handleTriggerKeyDown = (e: Pick<KeyboardEvent, 'key' | 'preventDefault'> & Partial<Pick<KeyboardEvent, 'ctrlKey' | 'metaKey' | 'altKey'>>) => {
+        if (!isBrowserChord(e) && (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown')) {
             e.preventDefault();
             this.handlePanelOpen();
         }
@@ -362,6 +362,14 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
     handleClickOutside = (e: MouseEvent) => {
         this.close();
         this.adapter.notifyBlur(e);
+    };
+
+    /** Called for a focusin anywhere while the panel is shown; `root` contains the trigger the panel opens from */
+    handleDocumentFocusIn = (e: Pick<FocusEvent, 'composedPath'>, root?: Node | null) => {
+        // the document sees focus in a shadow root retargeted to its host
+        if (root && !containsWithPopups(root, e.composedPath()[0]) && TimePickerFoundation.isPanelShown(this.getProps(), this.getStates())) {
+            this.close();
+        }
     };
 
     handleInputChange = (input: string) => {

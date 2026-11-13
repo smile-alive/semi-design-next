@@ -363,7 +363,7 @@ API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生�
     - `keepState` 默认 true，ArrayField 保留整组。
     - 值类型区分输入与输出，`onSubmit` 与不带字段的 `validate()` 用输出类型。
     - SchemaField 按 JSON Schema 渲染某个路径，SchemaForm 是 Form 加根 SchemaField；定制只用 `widgets` 与 `renderField`，不做 uiSchema 与 `x-` 扩展。
-- **决策** 导出方式（2026-11-06）：四个框架只有具名导出，`Form` 不挂静态成员，字段、部件、`ArrayField`、`SchemaField`、`SchemaForm`、`useForm` 各自导出。理由：用到 Form 时不再带上全部字段；Server Component 中点语法得到 `undefined`；具名导出可摇树。字段自身的子组件保留点语法（`FormSelect.Option`）。
+- **决策** 导出方式（2026-11-06）：四个框架只有具名导出，`Form` 不挂静态成员，字段、部件、`ArrayField`、`SchemaField`、`SchemaForm`、`useForm` 各自导出。理由：用到 Form 时不再带上全部字段；Server Component 中点语法得到 `undefined`；具名导出可摇树。字段自身的子组件保留点语法（`FormSelect.Option`）。React、Vue、Solid 的 `field` 模块里每个字段由 `/* @__PURE__ */` 标注的调用创建，`Option`、`OptGroup` 用裸标识符引用（属性读取 `Select.Option` 会被当作副作用保留），否则打包器删不掉没用到的字段；`pnpm size` 守着各字段的体积。
 - **已知限制** React：表单状态每次变化都重渲染全部字段，只影响大表单的性能（出现可测的性能问题时，字段改为从实例读初值）。
 - **已知限制** `onSubmitFail` 的 `errors` 类型是错误树，Form `validator` 抛出或返回非对象时实际收到原值。
 - **已知限制** keepState 卸载的 ArrayField 重新挂载后，`reset()` 恢复最初的 `initValue`，而不是最后一次挂载时的。
@@ -486,6 +486,7 @@ API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生�
 #### Tree
 
 - **已知限制** `loadData` reject 的分支没有单测覆盖：未处理的 rejection 会让 vitest 失败。
+- **已知限制** 虚拟化时用滚轮把当前行滚出可视区后，`aria-activedescendant` 指向未渲染的行，四个框架相同（按键移动和键盘聚焦会先把当前行滚回可视区；要消除需由虚拟列表交出可视区范围，只在当前行已渲染时输出该属性）。
 - **已知限制** Solid：Tooltip 包 Tree 只能用元素 children，`aria-describedby` 落不到 `role="tree"` 上；`expandIcon` 为元素时，类名与点击监听挂载后才加上。
 - **保持原样** 拖拽时向 body 临时追加拖拽图元素（`setDragImage` 要求元素已在文档里）；`prevProps` 存在 foundation state，与 rc-tree 相同。
 - **保持原样** 动画中 treeData 变化时 NodeList 停在旧节点；不支持 children 写法；行内按钮的 click 冒泡触发 `onSelect`；Enter、Space 不随 `expandAction` 展开。

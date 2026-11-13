@@ -1,12 +1,12 @@
 import type React from 'react';
-import { type CSSProperties, useEffect, useInsertionEffect, useLayoutEffect, useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
-import { warnIfDialogUnnamed, coversPage } from '@fibrae/semi-foundation/utils';
+import { coversPage } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
 import { useDefaultProps, useFoundation } from '../../base/index';
-import { useDidUpdate, useIsServerRender, useMergedRef, useRealUnmount } from '../../hooks/index';
+import { useDidUpdate, useIsServerRender, useMergedRef, useOverlayResources, useRealUnmount } from '../../hooks/index';
 import CSSAnimation from '../../internal/css-animation';
 import Portal from '../../internal/portal';
 import { useConfigContext } from '../config-provider/context';
@@ -70,35 +70,10 @@ class SideSheetRuntime {
     };
 }
 
-interface SideSheetOpenEffectsProps {
-    visible: boolean;
-    foundation: SideSheetFoundation<SideSheetReactProps>;
-    runtime: SideSheetRuntime;
-}
-
 // Rendered in the Portal after the content, so these effects run once the sheet's DOM and refs exist: in the
 // Portal's first commit, which on a hydrated page comes after hydration rather than with the sheet's own mount
-function SideSheetOpenEffects({ visible, foundation, runtime }: SideSheetOpenEffectsProps) {
-    // Read before this commit's layout phase, where an autoFocus element inside the sheet takes focus
-    useInsertionEffect(() => {
-        if (visible) {
-            foundation.recordFocus();
-        }
-    }, [visible, foundation]);
-
-    useLayoutEffect(() => {
-        if (!visible) {
-            return undefined;
-        }
-        foundation.beforeShow();
-        return () => foundation.afterHide();
-    }, [visible, foundation]);
-
-    useEffect(() => {
-        if (visible) {
-            warnIfDialogUnnamed(runtime.dialog, 'SideSheet');
-        }
-    }, [visible, runtime]);
+function SideSheetOpenEffects({ visible, foundation }: { visible: boolean; foundation: Foundation }) {
+    useOverlayResources(foundation, visible);
 
     return null;
 }
@@ -159,14 +134,6 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
 
     useDidUpdate(displayNone, foundation.handleHiddenChange);
 
-    // after the mutation-phase cleanup React refocuses the previously focused element if still in the document
-    // (a keepDOM sheet's element), so restore again in the layout phase
-    useDidUpdate(visible, (isVisible) => {
-        if (!isVisible) {
-            foundation.restoreFocus();
-        }
-    });
-
     useRealUnmount(() => {
         if (!runtime.lastRoot?.parentNode) {
             foundation.handleHiddenChange(true);
@@ -208,7 +175,7 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
                                 >
                                     {children}
                                 </SideSheetContent>
-                                <SideSheetOpenEffects foundation={foundation} runtime={runtime} visible={visible} />
+                                <SideSheetOpenEffects foundation={foundation} visible={visible} />
                             </Portal>
                         ) : null
                     }

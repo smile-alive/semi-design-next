@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import SelectFoundation, { getOptionId } from '../foundation';
+import SelectFoundation from '../foundation';
 import type { OptionRecord } from '../option-foundation';
 
 describe('SelectFoundation 渲染期静态函数', () => {
@@ -62,9 +62,5 @@ describe('SelectFoundation 渲染期静态函数', () => {
         const props = { maxTagCount: 2, showRestTagsPopover: true };
         expect(SelectFoundation.getTagFold(props, { isOpen: false, isFullTags: true }, 5)).toMatchObject({ shownCount: 5, restCount: undefined });
         expect(SelectFoundation.getTagFold({ maxTagCount: 2 }, { isOpen: false, isFullTags: true }, 5)).toMatchObject({ shownCount: 2, restCount: 3 });
-    });
-
-    it('getOptionId 由列表 id 与下标拼出', () => {
-        expect(getOptionId('my-select', 3)).toBe('my-select-option-3');
     });
 });

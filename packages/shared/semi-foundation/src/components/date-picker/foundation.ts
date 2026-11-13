@@ -1,14 +1,13 @@
 import { format, isValid, isSameSecond, isEqual as isDateEqual, isDate, startOfDay } from 'date-fns';
 import { isEqual } from 'es-toolkit';
 import { type ValidateStatus, BaseFoundation, type DefaultAdapter } from '../../base/index';
-import { zonedTimeToUtc } from '../../utils/date-fns-extra';
-import { isInnerControlActivation, isValidTimeZone, type ArrayElement, warning } from '../../utils/index';
+import { isValidDate, zonedTimeToUtc } from '../../utils/date-fns-extra';
+import { containsWithPopups, isBrowserChord, isInnerControlActivation, isValidTimeZone, type ArrayElement, warning } from '../../utils/index';
 import { parseReference, toWallTime } from '../../utils/zoned-time';
 import { getDefaultFormatTokenByType } from './_utils/get-default-format-token';
 import getInsetInputFormatToken from './_utils/get-inset-input-format-token';
 import getInsetInputValueFromInsetInputStr from './_utils/get-inset-input-value-from-inset-input-str';
 import type { WeekStartNumber } from './_utils/get-month-table';
-import { isValidDate } from './_utils/index';
 import parseValue from './_utils/parse-value';
 import { compatibleParse } from './_utils/parser';
 import { isMultiple, isRangeType, isRangeValueComplete, needConfirm } from './_utils/picker-type';
@@ -839,6 +838,14 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         }
     };
 
+    /** Called for a focusin anywhere while the panel is shown; `root` contains the trigger the panel opens from */
+    handleDocumentFocusIn = (e: Pick<FocusEvent, 'composedPath'>, root?: Node | null) => {
+        // the document sees focus in a shadow root retargeted to its host
+        if (root && !containsWithPopups(root, e.composedPath()[0]) && this.#isPanelShown() && !this.#needConfirm()) {
+            this.closePanel();
+        }
+    };
+
     /** @param e the mousedown outside that closes the panel, passed on to onBlur */
     closePanel(e?: MouseEvent) {
         this.#returnFocusFromPanel();
@@ -1170,7 +1177,10 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
      * APG combobox: Down Arrow on the closed trigger opens the panel (once it is open, the Popover moves focus into
      * it). A custom trigger that is itself the Tab stop is a button, so Enter and Space open it too.
      */
-    handleTriggerKeyDown = (e: Pick<KeyboardEvent, 'key' | 'preventDefault' | 'target' | 'currentTarget'>, isTriggerButton: boolean) => {
+    handleTriggerKeyDown = (e: Pick<KeyboardEvent, 'key' | 'preventDefault' | 'target' | 'currentTarget'> & Partial<Pick<KeyboardEvent, 'ctrlKey' | 'metaKey' | 'altKey'>>, isTriggerButton: boolean) => {
+        if (isBrowserChord(e)) {
+            return;
+        }
         const open = this.isControlledComponent('open') ? this.getProp('open') : this.getState('panelShow');
         const opens = e.key === 'ArrowDown' || (isTriggerButton && (e.key === 'Enter' || e.key === ' '));
         if (!open && opens) {

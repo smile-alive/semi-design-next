@@ -3,7 +3,6 @@ import { COLOR_SCHEME_SELECTOR, colorSchemeOf, cssClasses, popupTarget } from '@
 import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState } from '@fibrae/semi-foundation/components/tooltip/foundation';
 import { warnIfDialogUnnamed, isEventInside } from '@fibrae/semi-foundation/utils';
 import { useFoundation, useKeepAliveFoundation } from '../../base/index';
-import { useEventListener, getWindow } from '../../composables/index';
 import useConfig from '../config-provider/use-config';
 import { provideTooltipPopupsContext, useTooltipPopupsContext } from './context';
 import type { FocusTarget, RenderContentProps, TooltipEmits, TooltipHandle, TooltipProps } from './interface';
@@ -71,7 +70,6 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
     const triggerElement = shallowRef<Element | null>(null);
     const contentShown = shallowRef(false);
     const initialFocusRef = shallowRef<FocusTarget | null>(null);
-    const onClickOutside = shallowRef<((event: MouseEvent) => void) | null>(null);
 
     // KeepAlive leaves the teleported popup on the page when the trigger is cached away; an open popup keeps its state,
     // so tooltip.vue disables the Teleport, which moves the popup into the cached subtree, out of the document.
@@ -101,33 +99,15 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
                 removePortal: () => {
                     contentShown.value = false;
                 },
-                showPopover: () => {
-                    if (!container.value?.matches(':popover-open')) {
-                        container.value?.showPopover();
-                    }
-                },
-                hidePopover: () => container.value?.hidePopover(),
-                waitAnimations: () => {
-                    const animations = container.value?.getAnimations() ?? [];
-                    return animations.length ? Promise.allSettled(animations.map((animation) => animation.finished)) : null;
-                },
                 notifyAfterOpen: () => emit('afterOpen'),
                 notifyAfterClose: () => emit('afterClose'),
                 notifyVisibleChange: (visible) => {
                     emit('update:visible', visible);
                     emit('visibleChange', visible);
                 },
-                registerClickOutsideHandler: (handler) => {
-                    // opening from a mousedown handler enables the listener in a microtask of that same dispatch, so
-                    // the press would still reach it; that press must not close the popup
-                    const openingPress = window.event;
-                    onClickOutside.value = (event) => event !== openingPress && handler(event);
-                },
-                unregisterClickOutsideHandler: () => {
-                    onClickOutside.value = null;
-                },
                 isEventInTrigger: (event) => isEventInside(event, triggerElement.value),
-                isEventInPopup: (event) => isEventInside(event, container.value, ...[...descendants].map((get) => get())),
+                getNestedPopups: () => [...descendants].map((get) => get()),
+                batch: (fn) => fn(),
                 notifyClickOutSide: (event) => emit('clickOutSide', event),
                 getPortalContainer: () => container.value,
                 getTriggerNode: () => triggerElement.value,
@@ -166,14 +146,6 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
             triggerElement.value = element;
         }
     };
-
-    useEventListener(
-        getWindow,
-        'mousedown',
-        // the listener is removed after a flush; a close earlier in the same task has already cleared the handler
-        (event) => onClickOutside.value?.(event),
-        { enabled: () => onClickOutside.value !== null }
-    );
 
     watchEffect(
         (cleanup) => {

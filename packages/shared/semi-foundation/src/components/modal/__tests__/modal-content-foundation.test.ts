@@ -48,11 +48,11 @@ describe('ModalContentFoundation 的遮罩点击', () => {
         expect(notifyClose).toHaveBeenCalledTimes(1);
     });
 
-    it('hide 清除按下标记和待执行的计时器', () => {
+    it('afterHide 清除按下标记和待执行的计时器', () => {
         const { foundation, notifyClose, maskClick } = setup();
         foundation.handleDialogMouseDown();
         foundation.handleMaskMouseUp();
-        foundation.hide();
+        foundation.afterHide();
         expect(vi.getTimerCount()).toBe(0);
         foundation.handleMaskClick(maskClick);
         expect(notifyClose).toHaveBeenCalledTimes(1);

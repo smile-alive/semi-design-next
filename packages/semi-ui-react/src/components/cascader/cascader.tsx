@@ -8,7 +8,7 @@ import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } fr
 import '@fibrae/semi-foundation/components/cascader/cascader.scss';
 import { IconClear, IconChevronDown } from '@fibrae/semi-icons-react';
 import { type Bivariant, type ByMultiple, type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside, useFocusHandover, useUnwrappedLazy } from '../../hooks/index';
+import { useFocusHandover, useUnwrappedLazy } from '../../hooks/index';
 import type { VirtualListHandle } from '../../internal/index';
 import Trigger from '../../internal/trigger';
 import { hasContent, renderTriggerPrefix, renderTriggerSuffix } from '../../utils/index';
@@ -318,16 +318,6 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         }
     );
 
-    const markPressInside = useClickOutside(
-        [triggerRef, optionContainerEl],
-        (e) => {
-            if (optionContainerEl.current) {
-                foundation.handleClickOutside(e);
-            }
-        },
-        state.isOpen
-    );
-
     // Only a keyword change is deferred; clicks, expansion and arrow keys must paint with the live state
     const deferredState = useDeferredValue(state);
 
@@ -540,7 +530,6 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                         e.preventDefault();
                     }
                 }}
-                onMouseDownCapture={markPressInside}
             >
                 {topSlot}
                 <Item
@@ -742,10 +731,6 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                         e.stopPropagation();
                     }
                 }}
-                onMouseDownCapture={(e) => {
-                    rest.onMouseDownCapture?.(e);
-                    markPressInside(e);
-                }}
             >
                 {inner}
             </div>
@@ -773,11 +758,17 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 afterClose={foundation.endSearching}
                 autoAdjustOverflow={autoAdjustOverflow}
                 content={renderContent()}
+                disableArrowKeyDown
                 motion={motion}
                 position={position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
                 stopPropagation={stopPropagation}
                 trigger="custom"
                 visible={isOpen}
+                onClickOutSide={(e) => {
+                    if (optionContainerEl.current) {
+                        foundation.handleClickOutside(e);
+                    }
+                }}
                 onEscKeyDown={foundation.close}
                 onOpen={foundation.handlePopoverOpen}
             >

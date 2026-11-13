@@ -397,6 +397,8 @@
     }
 </script>
 
+<svelte:document onfocusin={(event) => foundation.handleDocumentFocusIn(event, root)} />
+
 {#snippet quickControls()}
     <QuickControl {insetInput} locale={locale().locale} onPresetClick={foundation.handlePresetClick} {presetPosition} {presets} {type} />
 {/snippet}
@@ -528,7 +530,7 @@
             <div
                 bind:this={combobox}
                 {...props}
-                aria-controls={isTriggerButton ? panelId : undefined}
+                aria-controls={isTriggerButton && panelShow ? panelId : undefined}
                 aria-describedby={isTriggerButton ? (rest['aria-describedby'] as string | undefined) : undefined}
                 aria-disabled={isTriggerButton ? disabled : undefined}
                 aria-errormessage={isTriggerButton ? (rest['aria-errormessage'] as string | undefined) : undefined}
@@ -553,7 +555,7 @@
                         {clearIcon}
                         controlAttrs={{
                             ...attrs.control,
-                            'aria-controls': panelId,
+                            'aria-controls': panelShow ? panelId : undefined,
                             'aria-expanded': panelShow,
                             'aria-haspopup': 'dialog',
                             'aria-label': rest['aria-labelledby'] ? undefined : triggerName,

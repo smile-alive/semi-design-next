@@ -6,7 +6,7 @@ import { strings } from './constants';
 import { type KeyMapProps, filter, getColumns, convertDataToEntities, calcMergeType, getKeyByValuePath, getKeysByValuePath, getKeyByPos, getValueOrKey } from './util';
 
 export type { KeyMapProps };
-import { getListTargetIndex, isInnerControlActivation, isTextEditor, Typeahead, isEnterPress, isObject, ESC_KEY, type Size } from '../../utils/index';
+import { getListTargetIndex, isBrowserChord, isInnerControlActivation, isTextEditor, Typeahead, isEnterPress, isObject, ESC_KEY, type Size } from '../../utils/index';
 
 export interface BasicData {
     data: BasicCascaderData;
@@ -1027,13 +1027,18 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return DERIVED_STATE_KEYS.has(key) ? this.getStates()[key] : super.getState(key);
     }
 
-    handleKeyDown = (e: E & Pick<KeyboardEvent, 'key' | 'preventDefault'>) => {
+    handleKeyDown = (e: E & Pick<KeyboardEvent, 'key' | 'preventDefault' | 'target'>) => {
         if (e.key === ESC_KEY) {
             const isOpen = this.getState('isOpen');
             // claim the key so the overlay stack does not also close an enclosing dialog
             if (isOpen) {
                 e.preventDefault();
+                // a field in a slot holds the focus: the popup hides with it, which would drop the focus to the body
+                const focusInPopup = e.target instanceof Element && e.target.closest('[popover]') !== null;
                 this.close();
+                if (focusInPopup) {
+                    this.focus();
+                }
             }
         }
     };
@@ -1248,7 +1253,10 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
      * While open with no current option (handleOptionKeyDown left the key), Space outside a text field acts like
      * Enter, as in Select and TreeSelect. A search input keeps Space, Home and End for its text.
      */
-    handleSelectionKeyDown = (keyboardEvent: E & Pick<KeyboardEvent, 'key' | 'preventDefault' | 'detail' | 'target' | 'currentTarget'>) => {
+    handleSelectionKeyDown = (keyboardEvent: E & Pick<KeyboardEvent, 'key' | 'ctrlKey' | 'metaKey' | 'altKey' | 'preventDefault' | 'detail' | 'target' | 'currentTarget'>) => {
+        if (isBrowserChord(keyboardEvent)) {
+            return;
+        }
         const { key } = keyboardEvent;
         const isOpen = this.getState('isOpen');
         const opensOnArrow = (key === 'ArrowDown' || key === 'ArrowUp') && !isOpen;
