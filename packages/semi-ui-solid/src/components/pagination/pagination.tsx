@@ -22,7 +22,7 @@ export type PaginationLocale = Locale['Pagination'];
 export type PopoverPosition = Position;
 export type { PageList };
 
-export interface PaginationProps extends ElementProps<'ul', 'onChange'> {
+export interface PaginationProps extends ElementProps<'nav', 'onChange'> {
     total?: number;
     showTotal?: boolean;
     pageSize?: number;
@@ -119,6 +119,7 @@ export default function Pagination(rawProps: PaginationProps) {
         'hoverShowPageSelect',
         'disabled',
         'preventPageChangeOnPageSizeChange',
+        'aria-label',
     ]);
 
     const config = useConfig();
@@ -214,69 +215,71 @@ export default function Pagination(rawProps: PaginationProps) {
     return (
         <Show when={!view().hidden}>
             {/* Show's children memo tracks the ref read; a spread props signal would recreate the whole list */}
-            <ul {...rest} ref={untrack(() => mergeRefs(local.ref, registerTrigger))} class={clsx(prefixCls, local.class, { [`${prefixCls}-small`]: small(), [`${prefixCls}-disabled`]: local.disabled })}>
-                <Show when={local.showTotal && !small()}>
-                    <li class={`${prefixCls}-total`}>{formatLocale(text().total, { total: view().totalPageNum })}</li>
-                </Show>
-                <StepButton disabled={disabledState().prevDisabled || local.disabled} kind="prev" label={text().prev} text={local.prevText} onClick={foundation.goPrev} />
-                <Show when={small()} fallback={<For each={pageKeys()}>{(pageKey) => <PageItem pageKey={pageKey} />}</For>}>
-                    {renderSmallCounter()}
-                </Show>
-                <StepButton disabled={disabledState().nextDisabled || local.disabled} kind="next" label={text().next} text={local.nextText} onClick={foundation.goNext} />
-                <Show when={view().sizeChangerShown}>
-                    <li class={`${prefixCls}-switch`}>
-                        <Select<number, false>
-                            dropdownClassName={`${prefixCls}-select-dropdown`}
-                            aria-label={text().pageSizeSelector}
-                            disabled={local.disabled}
-                            value={state().pageSize}
-                            clickToHide
-                            position={view().switchPosition}
-                            // changePageSize takes one number: global Select defaults must not make it search, create, multiple or object-valued, nor add a clear button or adornments
-                            allowCreate={false}
-                            filter={false}
-                            insetLabel={null}
-                            multiple={false}
-                            onChangeWithObject={false}
-                            prefix={null}
-                            showClear={false}
-                            suffix={null}
-                            onChange={(newPageSize) => newPageSize !== undefined && foundation.changePageSize(newPageSize)}
-                        >
-                            <For each={pageSizeOpts()}>
-                                {(option) => (
-                                    <Select.Option value={option}>
-                                        <span>{formatLocale(text().pageSize, { pageSize: option })}</span>
-                                    </Select.Option>
-                                )}
-                            </For>
-                        </Select>
-                    </li>
-                </Show>
-                <Show when={local.showQuickJumper}>
-                    <li class={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: view().quickJumpDisabled })}>
-                        <span>{text().jumpTo}</span>
-                        {/* the adornments and showClear are set so global InputNumber defaults cannot add them to the jumper */}
-                        <InputNumber
-                            class={`${prefixCls}-quickjump-input-number`}
-                            aria-label={text().jumpTo}
-                            disabled={view().quickJumpDisabled}
-                            value={state().quickJumpPage}
-                            addonAfter={null}
-                            addonBefore={null}
-                            hideButtons
-                            insetLabel={null}
-                            showClear={false}
-                            prefix={null}
-                            suffix={null}
-                            onBlur={foundation.handleQuickJumpBlur}
-                            onChange={foundation.handleQuickJumpNumberChange}
-                            onEnterPress={(event) => foundation.handleQuickJumpEnterPress(event.currentTarget.value)}
-                        />
-                        <span>{text().page}</span>
-                    </li>
-                </Show>
-            </ul>
+            <nav {...rest} ref={untrack(() => mergeRefs(local.ref, registerTrigger))} aria-label={local['aria-label'] ?? text().label} class={clsx(local.class, `${prefixCls}-wrapper`)}>
+                <ul class={clsx(prefixCls, { [`${prefixCls}-small`]: small(), [`${prefixCls}-disabled`]: local.disabled })}>
+                    <Show when={local.showTotal && !small()}>
+                        <li class={`${prefixCls}-total`}>{formatLocale(text().total, { total: view().totalPageNum })}</li>
+                    </Show>
+                    <StepButton disabled={disabledState().prevDisabled || local.disabled} kind="prev" label={text().prev} text={local.prevText} onClick={foundation.goPrev} />
+                    <Show when={small()} fallback={<For each={pageKeys()}>{(pageKey) => <PageItem pageKey={pageKey} />}</For>}>
+                        {renderSmallCounter()}
+                    </Show>
+                    <StepButton disabled={disabledState().nextDisabled || local.disabled} kind="next" label={text().next} text={local.nextText} onClick={foundation.goNext} />
+                    <Show when={view().sizeChangerShown}>
+                        <li class={`${prefixCls}-switch`}>
+                            <Select<number, false>
+                                dropdownClassName={`${prefixCls}-select-dropdown`}
+                                aria-label={text().pageSizeSelector}
+                                disabled={local.disabled}
+                                value={state().pageSize}
+                                clickToHide
+                                position={view().switchPosition}
+                                // changePageSize takes one number: global Select defaults must not make it search, create, multiple or object-valued, nor add a clear button or adornments
+                                allowCreate={false}
+                                filter={false}
+                                insetLabel={null}
+                                multiple={false}
+                                onChangeWithObject={false}
+                                prefix={null}
+                                showClear={false}
+                                suffix={null}
+                                onChange={(newPageSize) => newPageSize !== undefined && foundation.changePageSize(newPageSize)}
+                            >
+                                <For each={pageSizeOpts()}>
+                                    {(option) => (
+                                        <Select.Option value={option}>
+                                            <span>{formatLocale(text().pageSize, { pageSize: option })}</span>
+                                        </Select.Option>
+                                    )}
+                                </For>
+                            </Select>
+                        </li>
+                    </Show>
+                    <Show when={local.showQuickJumper}>
+                        <li class={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: view().quickJumpDisabled })}>
+                            <span>{text().jumpTo}</span>
+                            {/* the adornments and showClear are set so global InputNumber defaults cannot add them to the jumper */}
+                            <InputNumber
+                                class={`${prefixCls}-quickjump-input-number`}
+                                aria-label={text().jumpTo}
+                                disabled={view().quickJumpDisabled}
+                                value={state().quickJumpPage}
+                                addonAfter={null}
+                                addonBefore={null}
+                                hideButtons
+                                insetLabel={null}
+                                showClear={false}
+                                prefix={null}
+                                suffix={null}
+                                onBlur={foundation.handleQuickJumpBlur}
+                                onChange={foundation.handleQuickJumpNumberChange}
+                                onEnterPress={(event) => foundation.handleQuickJumpEnterPress(event.currentTarget.value)}
+                            />
+                            <span>{text().page}</span>
+                        </li>
+                    </Show>
+                </ul>
+            </nav>
         </Show>
     );
 }

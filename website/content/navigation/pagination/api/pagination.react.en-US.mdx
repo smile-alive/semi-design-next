@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| className | Class name of the root `ul` element. | `string` | `""` |
+| className | Class name of the root `nav` element. | `string` | `""` |
 | currentPage | Current page. Once set the pagination is controlled and the page is entirely determined by this prop; when undefined the component manages the page itself. | `number` | - |
 | defaultCurrentPage | Initial page when not controlled. | `number` | `1` |
 | disabled | Whether disabled. When disabled, the navigation buttons, the page numbers, the size changer and the quick jumper are all unavailable. | `boolean` | `false` |
@@ -19,10 +19,10 @@ import ApiType from '#/components/ApiType.astro';
 | popoverPosition | Position of the omitted pages popover and the size changer dropdown. When omitted the size changer dropdown uses `bottomLeft` (`bottomRight` in RTL) and the omitted pages popover uses the Popover default `bottom`; not used when `size` is `small`. | `PopoverPosition` | - |
 | preventPageChangeOnPageSizeChange | Keeps the current page when the page size changes without calling `onPageChange`; the consumer picks the new page in `onPageSizeChange`. | `boolean` | `false` |
 | prevText | Replaces the content of the previous page button. A plain text names the button, and any other content (an icon, an element) keeps the locale name; empty content keeps the default icon and the locale name. | `React.ReactNode` | - |
-| ref | Ref of the root `ul` element, in both sizes. | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType> | - |
+| ref | Ref of the root `nav` element, in both sizes. | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType> | - |
 | showQuickJumper | Whether to show the quick jump input; disabled when there are fewer than 2 pages. | `boolean` | `false` |
 | showSizeChanger | Whether to show the size changer; has no effect when `size` is `small`. When it is shown, `hideOnSinglePage` no longer takes effect. | `boolean` | `false` |
 | showTotal | Whether to show the total number of pages; not shown when `size` is `small`. | `boolean` | `false` |
 | size | Size: `default` or `small`. | `'default' \| 'small'` | `"default"` |
-| style | Inline style of the root `ul` element. | `React.CSSProperties` | - |
+| style | Inline style of the root `nav` element. | `React.CSSProperties` | - |
 | total | Total number of items. When it changes, an uncontrolled pagination goes back to page 1; when controlled, the page follows `currentPage`. | `number` | `1` |

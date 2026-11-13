@@ -160,7 +160,7 @@ Turn on `hoverShowPageSelect` to open the page list by hovering the page text an
 
 <PaginationReactApi />
 
-Other native attributes (such as `id`, `aria-*`, `data-*` and `onClick`) fall through to the root `ul`, in both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
+Other native attributes (such as `id`, `aria-*`, `data-*` and `onClick`) fall through to the root `nav`, in both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
 
 </Framework>
 
@@ -168,7 +168,7 @@ Other native attributes (such as `id`, `aria-*`, `data-*` and `onClick`) fall th
 
 <PaginationVueApi />
 
-`class`, `style` and native attributes (`id`, `aria-*`, `data-*`, event listeners) fall through attrs onto the root `ul`, for both the default and the small size. `change` is a declared component event, so `@change` receives only the page and the page size, never the native change event bubbling up from the quick jump input. A template `ref` gives the component instance; the root element is its `$el`.
+`class`, `style` and native attributes (`id`, `aria-*`, `data-*`, event listeners) fall through attrs onto the root `nav`, for both the default and the small size. `change` is a declared component event, so `@change` receives only the page and the page size, never the native change event bubbling up from the quick jump input. A template `ref` gives the component instance; the root element is its `$el`.
 
 </Framework>
 
@@ -176,7 +176,7 @@ Other native attributes (such as `id`, `aria-*`, `data-*` and `onClick`) fall th
 
 <PaginationSolidApi />
 
-`class`, `style`, `ref` and native attributes and events (such as `id`, `aria-*`, `data-*`, `onClick`) land on the root `ul`, for both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
+`class`, `style`, `ref` and native attributes and events (such as `id`, `aria-*`, `data-*`, `onClick`) land on the root `nav`, for both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
 
 </Framework>
 
@@ -184,7 +184,7 @@ Other native attributes (such as `id`, `aria-*`, `data-*` and `onClick`) fall th
 
 <PaginationSvelteApi />
 
-`class`, `style` and native attributes and events (such as `id`, `aria-*`, `data-*`, `onclick`) land on the root `ul`, for both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
+`class`, `style` and native attributes and events (such as `id`, `aria-*`, `data-*`, `onclick`) land on the root `nav`, for both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
 
 </Framework>
 
@@ -194,11 +194,11 @@ Pagination follows the common practice of the [WAI-ARIA navigation example](http
 
 ### ARIA
 
-- The root is a `ul`, and every part (total, previous, pages, next, page size, quick jumper) is an `li` in it
+- The root is a `nav` landmark named "Pagination" by the locale by default (an `aria-label` or `aria-labelledby` you pass takes precedence); the `ul` inside is the list, and every part (total, previous, pages, next, page size, quick jumper) is an `li` in it
 - Previous, next, the pages and "…" are native `button`s. A page is named "Page N", "…" is named "More", and previous and next are named by the locale by default; with `prevText` or `nextText` (slots of the same name in Vue) holding plain text they are named by that text, while icons, elements and other content keep the locale name
 - The button of the current page has `aria-current="page"`; disabled buttons use the native `disabled`
 - The quick jumper input is named "Jump to" and is disabled when there are fewer than 2 pages
-- The component itself is not a navigation landmark. When the pagination is a main way to navigate the page, wrap it in a `<nav aria-label="...">` and tell multiple paginations on the page apart by their names
+- When the page has several paginations, tell them apart with `aria-label`
 
 ### Keyboard and Focus
 

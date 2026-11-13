@@ -160,7 +160,7 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 
 <PaginationReactApi />
 
-`id`、`aria-*`、`data-*`、`onClick` 等其他原生属性落在根元素 `ul` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
+`id`、`aria-*`、`data-*`、`onClick` 等其他原生属性落在根元素 `nav` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
 
 </Framework>
 
@@ -168,7 +168,7 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 
 <PaginationVueApi />
 
-`class`、`style` 与原生属性（`id`、`aria-*`、`data-*`、事件监听）经 attrs 落在根元素 `ul` 上，default 与 small 两种尺寸一致；`change` 已声明为组件事件，`@change` 只收到页码与每页条数，不会收到快速跳转输入框冒泡的原生 change 事件。`ref` 取到的是组件实例，根元素为实例的 `$el`。
+`class`、`style` 与原生属性（`id`、`aria-*`、`data-*`、事件监听）经 attrs 落在根元素 `nav` 上，default 与 small 两种尺寸一致；`change` 已声明为组件事件，`@change` 只收到页码与每页条数，不会收到快速跳转输入框冒泡的原生 change 事件。`ref` 取到的是组件实例，根元素为实例的 `$el`。
 
 </Framework>
 
@@ -176,7 +176,7 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 
 <PaginationSolidApi />
 
-`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`data-*`、`onClick`）落在根元素 `ul` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`data-*`、`onClick`）落在根元素 `nav` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
 
 </Framework>
 
@@ -184,7 +184,7 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 
 <PaginationSvelteApi />
 
-`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`data-*`、`onclick`）落在根元素 `ul` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`data-*`、`onclick`）落在根元素 `nav` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
 
 </Framework>
 
@@ -194,11 +194,11 @@ Pagination 按 [WAI-ARIA 分页导航](https://www.w3.org/WAI/ARIA/apg/patterns/
 
 ### ARIA
 
-- 根元素是 `ul`，每一项（总数、上一页、页码、下一页、每页条数、快速跳转）都是其中的 `li`
+- 根元素是导航地标 `nav`，默认以语言包文案「分页」命名，传入 `aria-label` 或 `aria-labelledby` 时以传入的为准；其中的 `ul` 是列表，每一项（总数、上一页、页码、下一页、每页条数、快速跳转）都是 `li`
 - 上一页、下一页、页码和「…」都是原生 `button`。页码的名称为「第 N 页」，「…」为「更多」，上一页、下一页按钮默认以语言包文案命名；传入 `prevText`、`nextText`（Vue 中为同名插槽）且内容是纯文本时以该文字命名，图标、元素等其他内容仍使用语言包文案
 - 当前页的按钮带 `aria-current="page"`；禁用的按钮使用原生 `disabled`
 - 快速跳转输入框以「跳至」命名，总页数小于 2 时禁用
-- 组件本身不是导航地标。页面上的分页是主要导航手段时，建议包在 `<nav aria-label="...">` 里，并用名称区分页面上的多个分页
+- 页面上有多个分页时，用 `aria-label` 区分各自的名称
 
 ### 键盘和焦点
 

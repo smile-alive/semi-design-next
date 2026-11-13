@@ -362,10 +362,10 @@
 
 ### Pagination
 
-- 破坏性：DOM 改为 `ul > li > button`：上一页、下一页、页码、「…」是 `li` 内的原生 `button`，类名（`semi-page-item`、`semi-page-prev` 等）从 `li` 移到 button，总数、每页条数、快速跳转改为 `li`，small 模式根元素改为 `ul`，`PaginationProps.ref` 收窄为 `Ref<HTMLUListElement>`；按旧结构写的选择器需调整。删除 `popoverZIndex`。
+- 破坏性：DOM 改为 `nav > ul > li > button`：根元素是带名称的 `nav`（默认名称来自语言包 `Pagination.label`，传入 `aria-label` 时优先），`class`、`style`、`ref` 与未声明的属性落在 `nav` 上，`nav` 带 `semi-page-wrapper` 类，`semi-page`、`semi-page-small`、`semi-page-disabled` 留在内层 `ul` 上；上一页、下一页、页码、「…」是 `li` 内的原生 `button`，类名（`semi-page-item`、`semi-page-prev` 等）从 `li` 移到 button，总数、每页条数、快速跳转改为 `li`，`PaginationProps.ref` 为 `Ref<HTMLElement>`；按旧结构写的选择器需调整。删除 `popoverZIndex`。
 - 行为变化：`prevText`、`nextText` 只有文字时以可见文字命名按钮；快速跳转的小数页码向下取整；`size="small"` 时 `showSizeChanger` 不生效；`total` 或 `currentPage` 变化不再重置用户选的页大小，`onPageSizeChange` 回写相同 `pageSize` 不再回到第 1 页；`popoverPosition` 传 `null` 与不传相同。
-- Vue：用 `v-model:currentPage`、`v-model:pageSize`，`onPageChange`、`onPageSizeChange`、`onChange` 改为 `pageChange`、`pageSizeChange`、`change` 事件；`prevText`、`nextText` 改为同名插槽；`class`、`style`、`aria-*` 落在根 `ul`。
-- Solid：`prevText`、`nextText` 为 `JSX.Element`；`class`、`style`、`ref`（回调，指向根 `ul`）与其余原生属性落在根 `ul`。
+- Vue：用 `v-model:currentPage`、`v-model:pageSize`，`onPageChange`、`onPageSizeChange`、`onChange` 改为 `pageChange`、`pageSizeChange`、`change` 事件；`prevText`、`nextText` 改为同名插槽；`class`、`style`、`aria-*` 落在根 `nav`。
+- Solid：`prevText`、`nextText` 为 `JSX.Element`；`class`、`style`、`ref`（回调，指向根 `nav`）与其余原生属性落在根 `nav`。
 - Svelte：`currentPage`、`pageSize` 可绑定，没有 `defaultCurrentPage`、`defaultPageSize`；回调为 `onPageChange`、`onPageSizeChange`、`onChange`；未传 `currentPage` 时点击后页码成为本地值，之后 `total` 或外部 `pageSize` 变化不再回到第 1 页，绑定值写 `undefined` 才回到第 1 页；根元素是 `ul`，未声明的属性透传到 `ul`。
 - Svelte：`prevText`、`nextText` 是 `string | Snippet`。非空字符串直接渲染并从首帧起作为按钮名称，空字符串与不传一样显示默认图标、用语言包名称；snippet 内容是单个文本节点时，按钮名称取该文本（挂载后读取，服务端首帧用语言包名称），图标或元素用语言包名称，传了空内容的 snippet 按钮是空的，不回落图标。
 - React：defaultProps 去掉 `pageSize: null`，API 表的默认值不再显示 `null`；未传时仍取 `pageSizeOpts` 第一项。

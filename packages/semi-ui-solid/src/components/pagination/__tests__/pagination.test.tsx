@@ -44,9 +44,9 @@ afterEach(() => {
 describe('Pagination', () => {
     it('Pagination 使用自定义 class 与 style', () => {
         const { container } = render(() => <Pagination class="test" style={{ color: 'red' }} />);
-        const ul = container.querySelector('ul.test');
-        expect(ul).not.toBeNull();
-        expect(ul).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const nav = container.querySelector('nav.test');
+        expect(nav).not.toBeNull();
+        expect(nav).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
     it('渲染 mini pagination', () => {
@@ -278,7 +278,7 @@ describe('Pagination', () => {
         it('显示当前页 / 总页数，并可通过上一页与下一页翻页', async () => {
             const onChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
             const { container } = render(() => <Pagination showQuickJumper size="small" total={90} onChange={onChange} />);
-            const root = container.firstElementChild as HTMLElement;
+            const root = container.querySelector('nav > ul') as HTMLElement;
             expect(root.tagName).toBe('UL');
             expect(root).toHaveClass(prefixCls, `${prefixCls}-small`);
             expect(getCounter(container).textContent).toBe('1/9 ');
@@ -305,7 +305,7 @@ describe('Pagination', () => {
             const { container, setProps } = renderPagination({ hideOnSinglePage: true, size: 'small', total: 10 });
             expect(container.firstElementChild).toBeNull();
             setProps({ disabled: true, size: 'small', total: 90 });
-            expect(container.firstElementChild).toHaveClass(`${prefixCls}-disabled`);
+            expect(container.querySelector('ul')).toHaveClass(`${prefixCls}-disabled`);
             expect(getCounter(container)).toHaveClass(`${prefixCls}-item-all-disabled`);
         });
     });
@@ -342,7 +342,7 @@ describe('Pagination', () => {
                 {(trigger) => <Pagination disabled={disabled()} total={200} {...trigger()} />}
             </Tooltip>
         ));
-        const root = getElement(`ul.${prefixCls}`, container);
+        const root = getElement(`nav.${prefixCls}-wrapper`, container);
         const span = getElement('.probe', container);
         expect(span).toContainElement(root);
         expect(span).toHaveAttribute('tabindex', '0');
@@ -358,10 +358,10 @@ describe('Pagination', () => {
 
     it('两种尺寸下 data-* 属性都透传到根元素', () => {
         const { setProps } = renderPagination({ 'data-foo': 'bar', 'data-testid': 'pagination', total: 200 } as PaginationProps);
-        expect(screen.getByTestId('pagination').tagName).toBe('UL');
+        expect(screen.getByTestId('pagination').tagName).toBe('NAV');
         expect(screen.getByTestId('pagination')).toHaveAttribute('data-foo', 'bar');
         setProps({ 'data-testid': 'pagination', size: 'small', total: 200 } as PaginationProps);
-        expect(screen.getByTestId('pagination').tagName).toBe('UL');
+        expect(screen.getByTestId('pagination').tagName).toBe('NAV');
     });
 
     describe('语义', () => {
@@ -428,19 +428,19 @@ describe('Pagination', () => {
 
     describe('函数组件', () => {
         it('ref 指向根元素，其他属性透传到根元素', () => {
-            let ref: HTMLUListElement | undefined;
-            const { container, setProps } = renderPagination({ ref: (el: HTMLUListElement) => (ref = el), id: 'pager', 'aria-label': 'Pages', total: 200 });
-            expect(ref).toBe(container.querySelector('ul'));
+            let ref: HTMLElement | undefined;
+            const { container, setProps } = renderPagination({ ref: (el: HTMLElement) => (ref = el), id: 'pager', 'aria-label': 'Pages', total: 200 });
+            expect(ref).toBe(container.querySelector('nav'));
             expect(ref).toHaveAttribute('id', 'pager');
             expect(ref).toHaveAttribute('aria-label', 'Pages');
-            setProps({ ref: (el: HTMLUListElement) => (ref = el), id: 'pager', 'aria-label': 'Pages', size: 'small', total: 200 });
-            expect(ref?.tagName).toBe('UL');
+            setProps({ ref: (el: HTMLElement) => (ref = el), id: 'pager', 'aria-label': 'Pages', size: 'small', total: 200 });
+            expect(ref?.tagName).toBe('NAV');
             expect(ref).toHaveAttribute('id', 'pager');
         });
 
-        it('ref 类型是两种尺寸共同的根元素 ul', () => {
+        it('ref 类型是两种尺寸共同的根元素 nav', () => {
             type Ref = NonNullable<PaginationProps['ref']>;
-            expectTypeOf<Ref>().toEqualTypeOf<HTMLUListElement | ((el: HTMLUListElement) => void)>();
+            expectTypeOf<Ref>().toEqualTypeOf<HTMLElement | ((el: HTMLElement) => void)>();
         });
 
         it('读取 semiGlobal overrideDefaultProps 中的默认值', () => {

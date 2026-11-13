@@ -116,6 +116,7 @@ describe('可访问名称跟随语言包', () => {
 
     it('Pagination 为上一页与下一页按钮命名', () => {
         inEnglish(<Pagination total={50} />);
+        expect(screen.getByRole('navigation', { name: en_US.Pagination.label })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: en_US.Pagination.prev })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: en_US.Pagination.next })).toBeInTheDocument();
     });

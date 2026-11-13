@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { Position } from '../tooltip/index.js';
 
-export interface PaginationProps extends Omit<HTMLAttributes<HTMLUListElement>, 'children'> {
+export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
     total?: number;
     showTotal?: boolean;
     /** Bindable; the size changer writes the chosen size back. Leave it out for an uncontrolled size */

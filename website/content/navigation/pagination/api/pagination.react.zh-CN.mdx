@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| className | 根元素 `ul` 的类名。 | `string` | `""` |
+| className | 根元素 `nav` 的类名。 | `string` | `""` |
 | currentPage | 当前页码。传入后分页器受控，页码完全由该属性决定；不传（undefined）时由组件自己管理。 | `number` | - |
 | defaultCurrentPage | 非受控时的初始页码。 | `number` | `1` |
 | disabled | 是否禁用。禁用时翻页按钮、页码、每页条数选择器与快速跳转均不可用。 | `boolean` | `false` |
@@ -19,10 +19,10 @@ import ApiType from '#/components/ApiType.astro';
 | popoverPosition | 省略页码浮层与每页条数下拉的位置。未传时每页条数下拉为 `bottomLeft`（RTL 下 `bottomRight`），省略页码浮层使用 Popover 的默认位置 `bottom`；`size` 为 `small` 时不使用。 | `PopoverPosition` | - |
 | preventPageChangeOnPageSizeChange | 切换每页条数时保持当前页码不变且不触发 `onPageChange`，新的页码由使用方在 `onPageSizeChange` 中决定。 | `boolean` | `false` |
 | prevText | 替换上一页按钮的内容。纯文本时按钮以该文字命名，其他内容（图标、元素）仍使用语言包的名称；为空时保留默认图标与语言包名称。 | `React.ReactNode` | - |
-| ref | 根元素 `ul` 的 ref，两种尺寸一致。 | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType> | - |
+| ref | 根元素 `nav` 的 ref，两种尺寸一致。 | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType> | - |
 | showQuickJumper | 是否显示快速跳转输入框，总页数小于 2 时禁用。 | `boolean` | `false` |
 | showSizeChanger | 是否显示每页条数选择器，`size` 为 `small` 时不生效。开启后 `hideOnSinglePage` 不再生效。 | `boolean` | `false` |
 | showTotal | 是否显示总页数，`size` 为 `small` 时不显示。 | `boolean` | `false` |
 | size | 尺寸，可选 `default` 或 `small`。 | `'default' \| 'small'` | `"default"` |
-| style | 根元素 `ul` 的内联样式。 | `React.CSSProperties` | - |
+| style | 根元素 `nav` 的内联样式。 | `React.CSSProperties` | - |
 | total | 总条数。总条数变化时，非受控的分页器回到第 1 页；受控时页码以 `currentPage` 为准。 | `number` | `1` |

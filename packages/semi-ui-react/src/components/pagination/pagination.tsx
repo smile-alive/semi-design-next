@@ -21,7 +21,7 @@ type Adapter = PaginationAdapter<PaginationProps>;
 const prefixCls = cssClasses.PREFIX;
 const { Option } = Select;
 
-export interface PaginationProps extends ElementProps<'ul', 'onChange'> {
+export interface PaginationProps extends ElementProps<'nav', 'onChange'> {
     total?: number;
     showTotal?: boolean;
     pageSize?: number;
@@ -47,8 +47,8 @@ export interface PaginationProps extends ElementProps<'ul', 'onChange'> {
      * @default false
      */
     preventPageChangeOnPageSizeChange?: boolean;
-    /** Attached to the root ul, in both sizes */
-    ref?: React.Ref<HTMLUListElement>;
+    /** Attached to the root nav, in both sizes */
+    ref?: React.Ref<HTMLElement>;
 }
 
 export type { PaginationState };
@@ -115,6 +115,7 @@ export default function Pagination(rawProps: PaginationProps) {
         hoverShowPageSelect,
         disabled,
         preventPageChangeOnPageSizeChange,
+        'aria-label': ariaLabel,
         ...rest
     } = props;
 
@@ -229,7 +230,7 @@ export default function Pagination(rawProps: PaginationProps) {
         });
         const text = `${currentPage}/${totalPageNum} `;
         return (
-            <ul {...rest} ref={ref} className={clsx(`${prefixCls}-small`, prefixCls, className, { [`${prefixCls}-disabled`]: disabled })} style={style}>
+            <ul className={clsx(`${prefixCls}-small`, prefixCls, { [`${prefixCls}-disabled`]: disabled })}>
                 {renderPrevBtn(locale)}
                 <li>
                     {hoverShowPageSelect && !disabled ? (
@@ -321,7 +322,7 @@ export default function Pagination(rawProps: PaginationProps) {
     };
 
     const renderDefaultPage = (locale: PaginationLocale) => (
-        <ul {...rest} ref={ref} className={clsx(className, prefixCls, { [`${prefixCls}-disabled`]: disabled })} style={style}>
+        <ul className={clsx(prefixCls, { [`${prefixCls}-disabled`]: disabled })}>
             {showTotal && <li className={`${prefixCls}-total`}>{formatLocale(locale.total, { total: totalPageNum })}</li>}
             {renderPrevBtn(locale)}
             {renderPageList(locale)}
@@ -331,5 +332,13 @@ export default function Pagination(rawProps: PaginationProps) {
         </ul>
     );
 
-    return <LocaleConsumer componentName="Pagination">{(locale) => (size === 'small' ? renderSmallPage(locale) : renderDefaultPage(locale))}</LocaleConsumer>;
+    return (
+        <LocaleConsumer componentName="Pagination">
+            {(locale) => (
+                <nav {...rest} ref={ref} className={clsx(className, `${prefixCls}-wrapper`)} style={style} aria-label={ariaLabel ?? locale.label}>
+                    {size === 'small' ? renderSmallPage(locale) : renderDefaultPage(locale)}
+                </nav>
+            )}
+        </LocaleConsumer>
+    );
 }
