@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { untrack } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-svelte';
     import { useFoundation } from '../../../base/index.js';
+    import { useOverlayResources } from '../../../hooks/index.js';
     import { Portal } from '../../../internal/index.js';
     import { getConfigContext } from '../../config-provider/context.js';
     import useLocale from '../../locale/use-locale.svelte.js';
@@ -174,19 +174,11 @@
     const handleNext = () => foundation.handleSwitchImage('next');
 
     // Recorded before the preview renders, or its own focus would be recorded
-    $effect.pre(() => {
-        if (visible) {
-            untrack(() => foundation.recordFocus());
-        }
-    });
-
-    $effect(() => {
-        if (!visible || !wrapEl) {
-            return;
-        }
-        untrack(() => foundation.beforeShow());
-        return foundation.afterHide;
-    });
+    useOverlayResources(
+        foundation,
+        () => visible,
+        () => Boolean(visible && wrapEl)
+    );
 </script>
 
 {#if visible}

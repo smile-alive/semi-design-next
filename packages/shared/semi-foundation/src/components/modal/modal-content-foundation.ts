@@ -1,4 +1,5 @@
 import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, ModalResources } from '../../base/index';
+import { warnIfDialogUnnamed } from '../../utils/index';
 import { cssClasses } from './constants';
 import type { ModalProps } from './modal-foundation';
 
@@ -51,7 +52,7 @@ export default class ModalContentFoundation<P extends ModalContentProps = ModalC
     };
 
     /** Called when the dialog is shown: joins the overlay stack and moves focus into the dialog (Modal holds the scroll lock) */
-    show = () => {
+    beforeShow = () => {
         const dialog = this.adapter.getDialog();
         if (!dialog) {
             return;
@@ -72,10 +73,11 @@ export default class ModalContentFoundation<P extends ModalContentProps = ModalC
             FocusTrapHandle.pickInitialFocus(dialog, { remembered: this.#bodyFocus, autofocus: true, footer, initialFocus })?.focus({ preventScroll });
         }
         this.#resources.hold({ modal: isModal(this.getProps()), layer: this.adapter.getRoot(), onEscape: this.#handleEscape, lockScroll: false, focus: dialog, preventScroll });
+        warnIfDialogUnnamed(dialog, 'Modal');
     };
 
-    /** The reverse of `show`; the focus returns to the element recorded on opening */
-    hide = () => {
+    /** The reverse of `beforeShow`; the focus returns to the element recorded on opening */
+    afterHide = () => {
         clearTimeout(this.#mouseUpTimer);
         this.#dialogMouseDown = false;
         this.adapter.getDialog()?.blur();

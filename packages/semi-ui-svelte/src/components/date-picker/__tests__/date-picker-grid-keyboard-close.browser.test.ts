@@ -3,8 +3,8 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { tabTo } from '@test/utils/browser';
 import { getElement } from '@test/utils/dom/common';
+import { tabIntoPanel } from './date-picker-browser-utils';
 import Fixture, { type FixtureStore } from './date-picker-fixture.svelte';
 import { dp } from './test-utils';
 
@@ -21,7 +21,7 @@ const changes = (store: FixtureStore) => store.log.filter((entry) => entry.start
 describe('Svelte DatePicker 日历网格键盘关闭面板（浏览器）', () => {
     it('用 Enter 选择日期后关闭面板，焦点返回输入框', async () => {
         setup({ value: new Date(2019, 8, 11), open: true });
-        await tabTo(await screen.findByRole('grid'));
+        await tabIntoPanel(await screen.findByRole('grid'));
         await userEvent.keyboard('{ArrowRight}{Enter}');
         await waitFor(() => expect(screen.queryByRole('grid')).toBeNull());
         expect(getInput()).toHaveValue('2019-09-12');
@@ -30,7 +30,7 @@ describe('Svelte DatePicker 日历网格键盘关闭面板（浏览器）', () =
 
     it('Esc 关闭面板且不选择，焦点返回输入框', async () => {
         const store = setup({ value: new Date(2019, 8, 11), open: true });
-        await tabTo(await screen.findByRole('grid'));
+        await tabIntoPanel(await screen.findByRole('grid'));
         await userEvent.keyboard('{ArrowRight}{Escape}');
         await waitFor(() => expect(screen.queryByRole('grid')).toBeNull());
         expect(getInput()).toHaveValue('2019-09-11');

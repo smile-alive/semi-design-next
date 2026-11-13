@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { strings, cssClasses, numbers, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
 import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState, type Position } from '@fibrae/semi-foundation/components/tooltip/foundation';
-import { joinIds, warnIfDialogUnnamed, isEventInside, POPUP_ID_ATTRIBUTE, type ArrayElement } from '@fibrae/semi-foundation/utils';
+import { joinIds, warnIfDialogUnnamed, POPUP_ID_ATTRIBUTE, type ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
 import { type BaseProps, PopupLayerContext, useDefaultProps, useFoundation } from '../../base/index';
 import { useRealUnmount, useUnwrappedLazy } from '../../hooks/index';
@@ -146,9 +146,6 @@ class TooltipRuntime {
     trigger: FragmentInstance | null = null;
     container: HTMLDivElement | null = null;
     lastContainer: HTMLDivElement | null = null;
-    clickOutsideHandler: ((e: MouseEvent) => void) | null = null;
-    // last mousedown through the popup in the React tree, nested popups' portals included
-    pressedInside: Event | null = null;
     readonly layer = Symbol('semi-popup-layer');
 
     // FragmentInstance.getRootNode skips a portal between the Fragment and its nearest host (React 19.3), so a trigger
@@ -226,11 +223,6 @@ class TooltipRuntime {
     // Activity hides the popup but keeps it in the document; only a real unmount removes it
     isPopupRemoved() {
         return !this.lastContainer?.isConnected;
-    }
-
-    waitAnimations() {
-        const animations = this.container?.getAnimations() ?? [];
-        return animations.length ? Promise.allSettled(animations.map((animation) => animation.finished)) : null;
     }
 
     isInTrigger(node: Node | null) {
@@ -325,34 +317,13 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
             const adapter: Omit<TooltipAdapter<TooltipProps>, keyof typeof base> = {
                 insertPortal: () => ({ portalTarget: runtime.getPortalTarget(), colorScheme: runtime.getColorScheme() }),
                 removePortal: () => setContentShown(false),
-                showPopover: () => {
-                    if (!runtime.container?.matches(':popover-open')) {
-                        runtime.container?.showPopover();
-                    }
-                },
-                // the last element: Activity hides the popup through destroy, where the ref may already be detached
-                hidePopover: () => runtime.lastContainer?.hidePopover(),
-                waitAnimations: () => runtime.waitAnimations(),
                 notifyAfterOpen: () => base.getProps().afterOpen?.(),
                 notifyAfterClose: () => base.getProps().afterClose?.(),
                 notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
-                registerClickOutsideHandler: (handler) => {
-                    adapter.unregisterClickOutsideHandler();
-                    // a discrete event flushes effects synchronously, so opening from a mousedown handler registers
-                    // mid-dispatch and the press would reach this listener; that press must not close the popup
-                    const openingPress = window.event;
-                    runtime.clickOutsideHandler = (e) => e !== openingPress && handler(e);
-                    window.addEventListener('mousedown', runtime.clickOutsideHandler);
-                },
-                unregisterClickOutsideHandler: () => {
-                    if (runtime.clickOutsideHandler) {
-                        window.removeEventListener('mousedown', runtime.clickOutsideHandler);
-                        runtime.clickOutsideHandler = null;
-                    }
-                },
                 isEventInTrigger: (e) => runtime.isInTrigger(e.composedPath()[0] as Node),
-                // a nested popup is portaled outside this DOM, but onMouseDownCapture sees it first
-                isEventInPopup: (e) => isEventInside(e, runtime.container) || runtime.pressedInside === e,
+                // a nested popup is portaled outside this DOM, but onMouseDownCapture marks the press first
+                getNestedPopups: () => [],
+                batch: (fn) => fn(),
                 notifyClickOutSide: (e) => base.getProps().onClickOutSide?.(e),
                 getPortalContainer: () => runtime.container,
                 getTriggerNode: () => runtime.trigger,
@@ -451,9 +422,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                     stop(e);
                 }}
                 onMouseDown={stop}
-                onMouseDownCapture={(e) => {
-                    runtime.pressedInside = e.nativeEvent;
-                }}
+                onMouseDownCapture={(e) => foundation.markPressInside(e.nativeEvent)}
             >
                 {contentShown && (
                     <div className={`${prefix}-content`}>
@@ -588,6 +557,14 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                   ownKeyDown?.(e);
               }
             : ownKeyDown,
+        // a custom trigger's owner (a dropdown) counts a press in a portal it renders in the trigger (a +N Popover)
+        // as inside; other triggers keep counting it outside
+        ...(trigger === 'custom' && {
+            onMouseDownCapture: (e: React.MouseEvent) => {
+                foundation.markPressInside(e.nativeEvent);
+                child.props.onMouseDownCapture?.(e);
+            },
+        }),
         style: { ...child.props.style, ...extraStyle },
         className: clsx(child.props.className),
         // some triggers such as Select set -1 or 0 themselves

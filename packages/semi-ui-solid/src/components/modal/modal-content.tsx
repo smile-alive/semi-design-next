@@ -1,12 +1,12 @@
-import { type JSX, Match, Show, Switch, children, createEffect, createMemo, createUniqueId, on, onCleanup, splitProps } from 'solid-js';
+import { type JSX, Match, Show, Switch, children, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
 import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
 import type { Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
-import { isAriaKey, warnIfDialogUnnamed, toCssLength } from '@fibrae/semi-foundation/utils';
+import { isAriaKey, toCssLength } from '@fibrae/semi-foundation/utils';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import { useFoundation } from '../../base/index';
-import { useRecordFocus } from '../../primitives/index';
+import { useOverlayResources } from '../../primitives/index';
 import { splitControlAttrs, hasContent, mergeRefs } from '../../utils/index';
 import IconButton from '../icon-button';
 import useLocale from '../locale/use-locale';
@@ -273,18 +273,7 @@ export default function ModalContent(props: ModalContentProps) {
         </div>
     );
 
-    useRecordFocus({ record: foundation.recordFocus }, open);
-
-    createEffect(
-        on(open, (isOpen) => {
-            if (!isOpen) {
-                return;
-            }
-            foundation.show();
-            warnIfDialogUnnamed(dialog ?? null, 'Modal');
-            onCleanup(foundation.hide);
-        })
-    );
+    useOverlayResources(foundation, open, open);
 
     return view;
 }

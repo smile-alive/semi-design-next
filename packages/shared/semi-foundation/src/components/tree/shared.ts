@@ -330,6 +330,88 @@ export function getTreeKeyboardAction<T extends BasicFlattenNode>(
     return action;
 }
 
+/** The row the keys act on: the one the keyboard or the pointer moved to while it is shown, else `defaultIndex` (-1 for none) */
+export function getTreeActiveIndex(rows: BasicFlattenNode[], keyboardKey: string | null, defaultIndex: number) {
+    const index = rows.findIndex((row) => row.key === keyboardKey);
+    return index === -1 ? defaultIndex : index;
+}
+
+/** The members of a key event the tree keys read; DOM events and React synthetic events both satisfy it */
+export type TreeKeyEvent = Pick<KeyboardEvent, 'key' | 'ctrlKey' | 'metaKey' | 'altKey' | 'preventDefault' | 'target' | 'currentTarget'>;
+
+export interface TreeKeyDownOptions<E, T extends BasicFlattenNode, R> {
+    rows: T[];
+    activeIndex: number;
+    /** The key goes to a text field (a combobox's search input): only Up, Down and Enter act on the tree */
+    editing: boolean;
+    rtl: boolean;
+    hasLoadData: boolean;
+    /** The props a row renders with, null for a row with nothing to act on */
+    rowProps: (row: T) => R | null;
+    /** One per tree, since the typed string belongs to that tree */
+    typeahead: Typeahead;
+    moveTo: (index: number, key: string) => void;
+    /** Enter, and Space outside a text field: selects, or checks in a multiple tree */
+    select: (event: E, row: R) => void;
+    expand: (event: E, row: R) => void;
+}
+
+/**
+ * The keys of an APG tree view on its active row, which aria-activedescendant points at while focus stays on the tree
+ * or the combobox (see `getTreeKeyboardAction`). Returns whether the key was handled; a handled key is prevented.
+ */
+export function handleTreeKeyDown<E extends TreeKeyEvent, T extends BasicFlattenNode, R extends Pick<BasicTreeNodeProps, 'expanded' | 'isLeaf' | 'children' | 'loaded'>>(event: E, { rows, activeIndex, editing, rtl, hasLoadData, rowProps, typeahead, moveTo, select, expand }: TreeKeyDownOptions<E, T, R>) {
+    const action = getTreeKeyboardAction(
+        event,
+        rows,
+        activeIndex,
+        editing,
+        {
+            isRow: (row) => rowProps(row) !== null,
+            isExpanded: (row) => Boolean(rowProps(row)?.expanded),
+            isLeaf: (row) => isTreeNodeLeaf(rowProps(row) ?? {}, hasLoadData),
+            rtl,
+        },
+        typeahead
+    );
+    if (!action) {
+        return false;
+    }
+    event.preventDefault();
+    const row = rows[activeIndex] ? rowProps(rows[activeIndex]) : null;
+    if (action.type === 'move') {
+        moveTo(action.index, rows[action.index].key);
+    } else if (row && action.type === 'select') {
+        select(event, row);
+    } else if (row && action.type !== 'none') {
+        expand(event, row);
+    }
+    return true;
+}
+
+/** Whether a key on the tree comes from a tabbable control inside a row, which handles its own keys */
+export function isRowControlKey({ target, currentTarget }: Pick<Event, 'target' | 'currentTarget'>) {
+    return target !== currentTarget && (target instanceof HTMLElement || target instanceof SVGElement) && target.tabIndex >= 0;
+}
+
+/**
+ * Focus arriving in a tree that keeps it on itself. A click focuses the tabindex=-1 element it lands on (the virtual
+ * scroller, a row's checkbox), so the tree takes focus back and aria-activedescendant and the row's focus ring keep
+ * working. Keyboard focus on the tree calls `reveal`, since a virtual list may not have rendered the active row;
+ * pointer focus does not, because scrolling back to the stale active row would unmount the clicked row.
+ */
+export function handleTreeFocusIn({ target, currentTarget: tree }: { target: EventTarget | null; currentTarget: HTMLElement }, reveal: () => void) {
+    if (target !== tree) {
+        if ((target instanceof HTMLElement || target instanceof SVGElement) && target.tabIndex < 0) {
+            tree.focus({ preventScroll: true });
+        }
+        return;
+    }
+    if (tree.matches(':focus-visible')) {
+        reveal();
+    }
+}
+
 /**
  * The node for a selected key missing from treeData: found in the object value (onChangeWithObject), else built from
  * the key. The label goes under keyMaps.label, then TreeSelect's treeNodeLabelProp, then 'label'.

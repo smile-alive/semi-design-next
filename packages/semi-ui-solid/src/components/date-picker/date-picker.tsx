@@ -21,7 +21,7 @@ import { isInnerControlKey, namedRole } from '@fibrae/semi-foundation/utils';
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
 import { type ElementProps, usePopupLayer, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside } from '../../primitives/index';
+import { useClickOutside, useEventListener } from '../../primitives/index';
 import { callHandler, omitFormInjected, hasContent, mergeRefs } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { InputGroupContext, useInputGroupContext } from '../input/context';
@@ -350,8 +350,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const panelShow = () => DatePickerFoundation.isPanelShown(props, state());
 
-    const markPressInside = useClickOutside([() => root, panel], foundation.handleClickOutside, panelShow);
-
     const isConfirmNeeded = () => needConfirm(props);
 
     const isYearOrMonth = () => isYearOrMonthType(local.type);
@@ -409,7 +407,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             return isTriggerButton() ? local['aria-labelledby'] : undefined;
         },
         get 'aria-controls'() {
-            return isTriggerButton() ? panelId : null;
+            return isTriggerButton() && panelShow() ? panelId : null;
         },
         get 'aria-expanded'() {
             return isTriggerButton() ? panelShow() : null;
@@ -453,7 +451,9 @@ export default function DatePicker(rawProps: DatePickerProps) {
         },
         // APG date picker combobox: the inputs that open the panel carry the popup state
         role: 'combobox',
-        'aria-controls': panelId,
+        get 'aria-controls'() {
+            return panelShow() ? panelId : undefined;
+        },
         get 'aria-expanded'() {
             return panelShow();
         },
@@ -577,11 +577,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
         registerTrigger(node);
     };
 
-    const handleMouseDown = (e: MouseEvent & { currentTarget: HTMLDivElement; target: Element }) => {
-        callHandler(local.onMouseDown, e);
-        markPressInside(e);
-    };
-
     // null without presets: MonthsGrid sizes the panel by whether a side column exists
     const renderQuickControls = () => (
         <Show when={hasPresets()}>
@@ -699,6 +694,20 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 </div>
             </Show>
         );
+    };
+
+    useEventListener(
+        () => document,
+        'focusin',
+        (e) => foundation.handleDocumentFocusIn(e, root),
+        { enabled: panelShow }
+    );
+
+    const markPressInside = useClickOutside([() => root, panel], foundation.handleClickOutside, panelShow);
+
+    const handleMouseDown = (e: MouseEvent & { currentTarget: HTMLDivElement; target: Element }) => {
+        callHandler(local.onMouseDown, e);
+        markPressInside(e);
     };
 
     const renderPanel = () => (

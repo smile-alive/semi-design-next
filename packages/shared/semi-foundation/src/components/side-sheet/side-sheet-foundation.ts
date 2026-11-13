@@ -1,5 +1,5 @@
-import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, ModalResources, PopupLifecycle } from '../../base/index';
-import { coversPage } from '../../utils/index';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, ModalResources, OverlaySession, PopupLifecycle } from '../../base/index';
+import { coversPage, warnIfDialogUnnamed } from '../../utils/index';
 import { strings } from './constants';
 
 export type Placement = 'top' | 'bottom' | 'left' | 'right';
@@ -58,9 +58,7 @@ export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps> ext
 
 export default class SideSheetFoundation<P extends SideSheetProps = SideSheetProps> extends BaseFoundation<SideSheetAdapter<P>, P, SideSheetState> {
     // between beforeShow and afterHide: the layer, scroll lock and focus trap are held
-    #shown = false;
-    // destroyed while shown: init takes them again
-    #resume = false;
+    readonly #session = new OverlaySession();
     readonly #lifecycle = new PopupLifecycle();
     readonly #resources = new ModalResources();
 
@@ -105,16 +103,14 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
 
     // A hidden instance (KeepAlive, StrictMode replay) holds nothing of the page and init takes it all again
     override init() {
-        if (this.#resume) {
-            this.#resume = false;
+        if (this.#session.resume()) {
             this.beforeShow();
         }
     }
 
     override destroy() {
-        if (this.#shown) {
-            this.afterHide();
-            this.#resume = true;
+        if (this.#session.suspend()) {
+            this.#resources.release();
         }
     }
 
@@ -150,10 +146,9 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
     };
 
     beforeShow = () => {
-        if (this.#shown) {
+        if (!this.#session.begin()) {
             return;
         }
-        this.#shown = true;
         this.#lifecycle.show();
         const { mask, getPopupContainer, disableScroll } = this.getProps();
         const modal = SideSheetFoundation.isModal({ mask, inBody: coversPage(getPopupContainer ?? this.getContext('getPopupContainer')) });
@@ -166,15 +161,13 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         // shortcut: content under a mask confined to a custom container stays Tab-reachable, upgrade to inert on the
         // container's other children if it must become unreachable.
         this.#resources.hold({ modal, layer: this.adapter.getRoot(), onEscape: this.#handleEscape, lockScroll: disableScroll && modal, focus: dialog, preventScroll: true });
+        warnIfDialogUnnamed(dialog ?? null, 'SideSheet');
     };
 
     // a user who moved on to the page next to a non-modal sheet keeps that focus
     afterHide = () => {
-        this.#resume = false;
-        if (!this.#shown) {
-            return;
+        if (this.#session.end()) {
+            this.#resources.release();
         }
-        this.#shown = false;
-        this.#resources.release();
     };
 }

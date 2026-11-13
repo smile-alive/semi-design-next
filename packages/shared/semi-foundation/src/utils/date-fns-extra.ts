@@ -3,6 +3,10 @@ import { parseISO, toDate } from 'date-fns';
 
 const GMTStringReg = /[-+]\d{2}:\d{2}/;
 
+export function isValidDate(date: any) {
+    return date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date);
+}
+
 /**
  * The Intl time zone for a Semi time zone value: an offset in hours or a GMT±HH:MM string becomes the fixed ±HH:MM
  * offset Intl accepts, which never shifts for DST; any other string is used as is, normally an IANA name

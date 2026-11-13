@@ -427,6 +427,10 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
      * APG single-select listbox keyboard, selection follows focus; the column scrolls once `selectedIndex` returns
      */
     handleKeyDown = (event: KeyboardEvent) => {
+        // with a modifier the key is a browser or system shortcut (Alt+ArrowLeft goes back)
+        if (event.altKey || event.ctrlKey || event.metaKey) {
+            return;
+        }
         const { list, selectedIndex, cycled } = this.getProps();
         let target = getListTargetIndex(event.key, selectedIndex, list.length, (index) => Boolean(list[index].disabled), {
             loop: cycled,

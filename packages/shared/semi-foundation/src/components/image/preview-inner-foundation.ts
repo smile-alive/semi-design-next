@@ -1,5 +1,5 @@
 import { isEqual, throttle, type ThrottledFunction } from 'es-toolkit';
-import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, type DirectionContext, ModalResources } from '../../base/index';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, type DirectionContext, ModalResources, OverlaySession } from '../../base/index';
 import { handlePrevent, coversPage, resolvePopupContainer, ESC_KEY } from '../../utils/index';
 import { clampZoom, getPreloadSrcList, downloadImage } from './utils';
 
@@ -72,9 +72,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     #startMouseDown = { x: 0, y: 0 };
     readonly #resources = new ModalResources();
     // between beforeShow and afterHide: the window listener, layer, scroll lock and focus trap are held
-    #shown = false;
-    // destroyed while shown (Activity, KeepAlive): init takes them again
-    #resume = false;
+    readonly #session = new OverlaySession();
 
     static override readonly propKeys = ['src', 'currentIndex'];
 
@@ -125,7 +123,6 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
 
     // a non-modal preview leaves focus the user moved elsewhere where it is
     #release() {
-        this.#shown = false;
         window.removeEventListener('keydown', this.handleKeyDown);
         this.#resources.release();
         this.#clearTimer();
@@ -230,10 +227,9 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
 
     /** Hosts call this once the dialog is in the document and displayed, after `recordFocus` */
     beforeShow = () => {
-        if (this.#shown) {
+        if (!this.#session.begin()) {
             return;
         }
-        this.#shown = true;
         window.addEventListener('keydown', this.handleKeyDown);
         const wrap = this.adapter.getWrap();
         // browsers skip autofocus on elements inserted after page load
@@ -249,8 +245,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     };
 
     afterHide = () => {
-        this.#resume = false;
-        if (!this.#shown) {
+        if (!this.#session.end()) {
             return;
         }
         this.#release();
@@ -279,17 +274,15 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
 
     // A hidden preview (Activity, KeepAlive) holds nothing of the page and stays open; init takes it all again
     override init() {
-        if (this.#resume) {
-            this.#resume = false;
+        if (this.#session.resume()) {
             this.beforeShow();
         }
     }
 
     override destroy() {
         this.#mouseMoveHandler.cancel();
-        if (this.#shown) {
+        if (this.#session.suspend()) {
             this.#release();
-            this.#resume = true;
         }
     }
 

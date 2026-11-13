@@ -1,12 +1,13 @@
 <script lang="ts">
     import { onMount, tick, untrack } from 'svelte';
+    import { isNil, omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
     import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps as SideSheetBaseProps, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
-    import { warnIfDialogUnnamed, toCssLength } from '@fibrae/semi-foundation/utils';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import { useDefaultProps, useFoundation } from '../../base/index.js';
-    import { watch } from '../../hooks/index.js';
+    import { useOverlayResources, watch } from '../../hooks/index.js';
     import { Portal } from '../../internal/index.js';
     import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import { getConfigContext } from '../config-provider/context.js';
@@ -64,7 +65,7 @@
     const shouldRender = $derived(Boolean(visible) || keepDOM || (motion && !hidden));
     const hasTitle = $derived(typeof title === 'string' ? title !== '' : Boolean(title));
     const sheetSize = $derived(SideSheetFoundation.getSheetSize({ placement, canVerticalSetWidth, width, height, mask }));
-    const attrs = $derived(splitControlAttrs(rest, isAriaKey));
+    const attrs = $derived(splitControlAttrs(omitBy(rest, isNil), isAriaKey));
     const horizontal = $derived(placement === 'top' || placement === 'bottom');
     const maskAnimation = $derived(animating ? `${prefix}-animation-mask_${animating}` : undefined);
     const dialogAnimation = $derived(animating ? `${prefix}-animation-content_${animating}_${placement}` : undefined);
@@ -103,7 +104,7 @@
     );
 
     // aria-* go to the dialog (F12); the title names it unless the caller does, since a generated reference would
-    // shadow aria-label
+    // shadow aria-label. `attrs` drops attributes bound to undefined, which count as unset and keep these defaults.
     const dialogAttrs = (inBody: boolean) => ({
         'aria-labelledby': !attrs.control['aria-label'] && hasTitle ? `${uid}-title` : undefined,
         'aria-modal': SideSheetFoundation.isModal({ mask, inBody }) ? true : undefined,
@@ -132,16 +133,14 @@
         animating = undefined;
     };
 
-    // Before the DOM updates, so the focus is recorded ahead of anything in the sheet taking it, and the classes of the
-    // new run are in the first render. The initial run is the mount: shown with an enter animation, or hidden without
-    // a leave one.
+    // Before the DOM updates, so the classes of the new run are in the first render. The initial run is the mount: shown
+    // with an enter animation, or hidden without a leave one.
     $effect.pre(() => {
         const open = visible;
         untrack(() => {
             if (open) {
                 displayNone = false;
                 animating = motion ? 'show' : undefined;
-                foundation.recordFocus();
             } else if (started) {
                 animating = motion ? 'hide' : undefined;
             }
@@ -166,17 +165,11 @@
         });
     });
 
-    $effect(() => {
-        const element = dialogEl;
-        if (!visible || !element || !rootEl) {
-            return;
-        }
-        untrack(() => {
-            foundation.beforeShow();
-            warnIfDialogUnnamed(element, 'SideSheet');
-        });
-        return foundation.afterHide;
-    });
+    useOverlayResources(
+        foundation,
+        () => visible,
+        () => Boolean(dialogEl && visible && rootEl)
+    );
 
     watch(() => hidden, foundation.handleHiddenChange);
 

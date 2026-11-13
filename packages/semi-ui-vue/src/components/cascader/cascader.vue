@@ -8,7 +8,7 @@
     import '@fibrae/semi-foundation/components/cascader/cascader.scss';
     import { IconChevronDown, IconClear } from '@fibrae/semi-icons-vue';
     import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, SlotFragment, useFoundation, useKeepAliveFoundation } from '../../base/index';
-    import { useClickOutside, useFocusHandover } from '../../composables/index';
+    import { useFocusHandover } from '../../composables/index';
     import { splitControlAttrs, slotKind, slotNodes, hasSlotContent, type KeyedNode } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import Input, { type InputHandle } from '../input';
@@ -18,7 +18,6 @@
     import Popover from '../popover';
     import Tag, { type TagCloseEvent } from '../tag';
     import TagInput, { type TagInputHandle } from '../tag-input';
-    import { useNestedPopups } from '../tooltip/context';
     import type { CascaderChangeValue, CascaderData, CascaderEmits, CascaderEntity, CascaderHandle, CascaderProps, CascaderScrollPanelProps, CascaderSimpleValue, CascaderSlots, CascaderTagSlotProps, CascaderTriggerSlotProps } from './interface';
     import Item from './item.vue';
 
@@ -398,6 +397,12 @@
         foundation.handleKeyDown(event);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (content.value) {
+            foundation.handleClickOutside(event);
+        }
+    };
+
     watch(treeData, () => {
         if (treeDataMutated) {
             treeDataMutated = false;
@@ -405,20 +410,7 @@
         }
     });
 
-    const nestedPopups = useNestedPopups();
-
     useKeepAliveFoundation(foundation);
-
-    useClickOutside(
-        [trigger, content],
-        (event) => {
-            if (content.value) {
-                foundation.handleClickOutside(event);
-            }
-        },
-        () => state.value.isOpen,
-        nestedPopups
-    );
 
     // the owner may clear the value while the clear button holds focus; the combobox takes it back
     const clearHandover = useFocusHandover(() => (inputIsCombobox() ? trigger.value?.querySelector('input') : trigger.value));
@@ -436,6 +428,7 @@
     <!-- the tree inside is the combobox's popup; an empty list has no columns to size it, so it takes the trigger's width -->
     <Popover
         :autoAdjustOverflow="props.autoAdjustOverflow"
+        disableArrowKeyDown
         :motion="props.motion"
         :position="position"
         role="presentation"
@@ -444,6 +437,7 @@
         trigger="custom"
         :visible="view.isOpen"
         @afterClose="foundation.endSearching"
+        @clickOutSide="handleClickOutside"
         @escKeyDown="foundation.close"
         @open="foundation.handlePopoverOpen"
     >

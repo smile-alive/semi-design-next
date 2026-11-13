@@ -9,7 +9,6 @@
     import '@fibrae/semi-foundation/components/cascader/cascader.scss';
     import { IconChevronDown, IconClear } from '@fibrae/semi-icons-svelte';
     import { useDefaultProps, useFoundation } from '../../base/index.js';
-    import { useClickOutside } from '../../hooks/index.js';
     import { splitControlAttrs, type SlotKind, trackSlotKind } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
@@ -18,7 +17,6 @@
     import { Popover } from '../popover/index.js';
     import { TagInput, type TagInputTagSnippetProps } from '../tag-input/index.js';
     import { Tag, type TagCloseEvent } from '../tag/index.js';
-    import { useNestedPopups } from '../tooltip/context.js';
     import type { TooltipTriggerProps } from '../tooltip/index.js';
     import type { CascaderChangeValue, CascaderData, CascaderEntity, CascaderProps, CascaderScrollPanelProps, CascaderTagSnippetProps, CascaderTriggerSnippetProps, CascaderValue } from './interface.js';
     import Item from './item.svelte';
@@ -127,8 +125,6 @@
     // A key is reported once: in the capture phase if the options may take it, in the bubble phase for inner controls
     const reported = new WeakSet<KeyboardEvent>();
     const comboboxKeys = new Set(['aria-label', 'aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required']);
-
-    const nestedPopups = useNestedPopups();
 
     // an InputGroup supplies size and disabled when the control is given none; the controls inside this one must not read it again
     const group = getInputGroupInScope();
@@ -435,6 +431,12 @@
         rest.onfocusout?.(event);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (contentEl) {
+            foundation.handleClickOutside(event);
+        }
+    };
+
     $effect.pre(() => {
         const snapshot = $state.snapshot(treeData);
         untrack(() => {
@@ -458,17 +460,6 @@
             (inputIsCombobox ? triggerEl?.querySelector('input') : triggerEl)?.focus({ preventScroll });
         }
     });
-
-    useClickOutside(
-        [() => triggerEl, () => contentEl],
-        (event) => {
-            if (contentEl) {
-                foundation.handleClickOutside(event);
-            }
-        },
-        () => states().isOpen,
-        nestedPopups
-    );
 
     export function open() {
         foundation.open();
@@ -737,7 +728,9 @@
     bind:visible={() => view.isOpen, () => undefined}
     child={triggerNode}
     content={panel}
+    disableArrowKeyDown
     {motion}
+    onClickOutSide={handleClickOutside}
     onEscKeyDown={foundation.close}
     onOpen={foundation.handlePopoverOpen}
     position={resolvedPosition}

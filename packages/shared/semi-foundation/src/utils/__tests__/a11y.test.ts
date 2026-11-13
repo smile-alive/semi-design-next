@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { getEnabledStepIndex, getListTargetIndex, isInnerControlActivation, isInnerControlKey, isNativeInputKey, joinIds, namedRole, stopButtonActivationKeys, Typeahead, type ListNavigationOptions } from '../a11y';
+import { getEnabledStepIndex, getListTargetIndex, getOptionId, isInnerControlActivation, isInnerControlKey, isNativeInputKey, joinIds, namedRole, stopButtonActivationKeys, Typeahead, type ListNavigationOptions } from '../a11y';
 
 describe('getListTargetIndex', () => {
     const none = () => false;
@@ -35,6 +35,12 @@ describe('getListTargetIndex', () => {
     it('空列表没有目标', () => {
         expect(getListTargetIndex('ArrowDown', -1, 0, () => false)).toBeNull();
         expect(getListTargetIndex('End', -1, 0, () => false)).toBeNull();
+    });
+});
+
+describe('getOptionId', () => {
+    it('由列表 id 与下标拼出', () => {
+        expect(getOptionId('my-select', 3)).toBe('my-select-option-3');
     });
 });
 

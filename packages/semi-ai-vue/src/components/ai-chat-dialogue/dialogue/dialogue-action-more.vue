@@ -3,9 +3,8 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconDeleteStroked, IconMoreStroked } from '@fibrae/semi-icons-vue';
     import Button from '@fibrae/semi-ui-vue/button/index';
-    import { useClickOutside, useLocale } from '@fibrae/semi-ui-vue/composables';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Dropdown, { DropdownItem, DropdownMenu } from '@fibrae/semi-ui-vue/dropdown/index';
-    import { useNestedPopups } from '@fibrae/semi-ui-vue/tooltip/context';
 
     const props = defineProps<{ visible: boolean }>();
 
@@ -17,17 +16,10 @@
     const trigger = useTemplateRef('trigger');
 
     const { PREFIX_ACTION } = cssClasses;
-
-    useClickOutside(
-        [() => trigger.value?.$el],
-        () => emit('hide'),
-        () => props.visible,
-        useNestedPopups()
-    );
 </script>
 
 <template>
-    <Dropdown :class="`${PREFIX_ACTION}-dropdown`" position="bottomLeft" :spacing="12" stopPropagation trigger="custom" :visible="props.visible" @escKeyDown="emit('hide')">
+    <Dropdown :class="`${PREFIX_ACTION}-dropdown`" position="bottomLeft" :spacing="12" stopPropagation trigger="custom" :visible="props.visible" @clickOutSide="emit('hide')" @escKeyDown="emit('hide')">
         <Button ref="trigger" :aria-label="locale.locale.more" theme="borderless" type="tertiary" @click="emit('show')">
             <template #icon>
                 <IconMoreStroked />

@@ -1,8 +1,8 @@
 import { get } from 'es-toolkit/compat';
 import { type ValidateStatus, BaseFoundation, type DefaultAdapter } from '../../base/index';
-import { isInnerControlActivation, isTextEditor, isEnterPress, ESC_KEY, type Size } from '../../utils/index';
-import type { BasicTreeInnerData, BasicTreeProps, BasicTreeNodeData, BasicTreeNodeProps, BasicExpandedOtherProps, TreeMotionType } from '../tree/foundation';
-import { calcRelatedCheckedKeys, deriveTreeState, getClearedSelection, getMultipleChange, getMultipleSelectResult, getNodeData, getSearchState, isTreeNodeLeaf, loadTreeNode } from '../tree/shared';
+import { isBrowserChord, isInnerControlActivation, isTextEditor, isEnterPress, ESC_KEY, Typeahead, type Size } from '../../utils/index';
+import type { BasicTreeInnerData, BasicTreeProps, BasicTreeNodeData, BasicTreeNodeProps, BasicExpandedOtherProps, TreeContext, TreeMotionType } from '../tree/foundation';
+import { buildRowProps, calcRelatedCheckedKeys, deriveTreeState, getClearedSelection, getMultipleChange, getMultipleSelectResult, getNodeData, getSearchState, getTreeActiveIndex, handleTreeKeyDown, isTreeNodeLeaf, loadTreeNode, type TreeKeyEvent } from '../tree/shared';
 import { flattenTreeData, findAncestorKeys, normalizeKeyList, getMotionKeys, getValueOrKey } from '../tree/tree-util';
 import { strings } from './constants';
 
@@ -135,6 +135,7 @@ export interface BasicTreeSelectInnerData extends Pick<
     | 'loadedKeys'
     | 'loadingKeys'
     | 'realCheckedKeys'
+    | 'keyboardKey'
 > {
     inputTriggerFocus: boolean;
     isOpen: boolean;
@@ -146,10 +147,9 @@ export interface BasicTreeSelectInnerData extends Pick<
  * E is the host's trigger click or key event, passed on to onFocus and onBlur; focus entering or leaving passes the
  * native FocusEvent, a mousedown outside blurs with the native MouseEvent
  */
-export interface TreeSelectAdapter<P extends BasicTreeSelectProps = BasicTreeSelectProps, S extends BasicTreeSelectInnerData = BasicTreeSelectInnerData, E = unknown> extends DefaultAdapter<P, S> {
+export interface TreeSelectAdapter<P extends BasicTreeSelectProps = BasicTreeSelectProps, S extends BasicTreeSelectInnerData = BasicTreeSelectInnerData, E = unknown> extends DefaultAdapter<P, S, TreeContext> {
     notifySelect: (selectedKey: string, selected: boolean, selectedNode: BasicTreeNodeData) => void;
     notifySearch: (input: string, filteredExpandedKeys: string[], filteredNodes: BasicTreeNodeData[]) => void;
-    /** Called right after `isOpen` is written; a host resets its own view state of the dropdown (the active row) here */
     notifyVisibleChange: (visible: boolean) => void;
     notifyClear: (e: any) => void;
     notifyChange: BasicOnChangeWithBasic;
@@ -163,11 +163,14 @@ export interface TreeSelectAdapter<P extends BasicTreeSelectProps = BasicTreeSel
     /** Focuses the element on the trigger that takes the keyboard: its search input, its tags or the trigger itself */
     focusTrigger: () => void;
     isInTrigger: (node?: EventTarget | null) => boolean;
+    /** Scrolls the row a key moved to into view; `index` is its place in flattenNodes, and the list may not be mounted yet */
+    revealRow: (index: number, key: string) => void;
 }
 
 export default class TreeSelectFoundation<P extends BasicTreeSelectProps = BasicTreeSelectProps, S extends BasicTreeSelectInnerData = BasicTreeSelectInnerData, E = unknown> extends BaseFoundation<TreeSelectAdapter<P, S, E>, P, S> {
     // whether onBlur is owed for the focus now inside; isFocus cannot tell (a Tab in does not set it)
     #blurPending = false;
+    #typeahead = new Typeahead();
 
     /**
      * Every prop `deriveState` reads, which it keeps as `prevProps`. They change state during render, so there is no
@@ -444,8 +447,14 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             cachedKeyValuePairs: {},
             loadedKeys: new Set(),
             loadingKeys: new Set(),
+            keyboardKey: null,
         };
         return { ...state, ...TreeSelectFoundation.deriveState(props, state) };
+    }
+
+    /** The row the keys act on, -1 for none: an APG combobox opens without an active option */
+    static getActiveIndex({ flattenNodes, keyboardKey }: Pick<BasicTreeSelectInnerData, 'flattenNodes' | 'keyboardKey'>) {
+        return getTreeActiveIndex(flattenNodes, keyboardKey, -1);
     }
 
     /** The keys the trigger shows: the selection, or in multiple mode the checked keys merged as onChange reports them */
@@ -550,7 +559,8 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     };
 
     close = () => {
-        this.setState({ isOpen: false });
+        // the next opening starts without an active row (APG combobox)
+        this.setState({ isOpen: false, keyboardKey: null });
         this.adapter.notifyVisibleChange(false);
         if (this.getProp('motionExpand')) {
             this.setState({ motionKeys: new Set([]) });
@@ -588,10 +598,12 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     /**
      * Enter toggles the popup like a click; Down and Up open a closed one (APG combobox). Outside a text field (the
      * select-only combobox) Space toggles it like Enter, and Home and End open a closed one: the view moves to the
-     * first or the last row, which lives in the view. Returns whether Home or End opened it, so the host moves the
-     * view there.
+     * first or the last row.
      */
-    handleSelectionKeyDown = (e: E & Pick<KeyboardEvent, 'key' | 'preventDefault' | 'detail' | 'target' | 'currentTarget'>) => {
+    handleSelectionKeyDown = (e: E & TreeKeyEvent & Pick<KeyboardEvent, 'detail'>) => {
+        if (isBrowserChord(e)) {
+            return;
+        }
         const editing = isTextEditor(e.target);
         const isClosed = !this.getState('isOpen');
         const opensOnEdgeKey = isClosed && !editing && (e.key === 'Home' || e.key === 'End');
@@ -600,7 +612,35 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             e.preventDefault();
             this.handleClick(e);
         }
-        return opensOnEdgeKey && this.getState('isOpen');
+        if (opensOnEdgeKey) {
+            this.handleRowKeyDown(e);
+        }
+    };
+
+    /**
+     * Tree keys of the open popup (APG combobox with a tree popup), acting on the active row while the focus stays on
+     * the combobox. In a text field only Up, Down and Enter act on the tree. Returns whether the key was handled.
+     */
+    handleRowKeyDown = (e: E & TreeKeyEvent) => {
+        const state = this.getStates();
+        if (!state.isOpen) {
+            return false;
+        }
+        return handleTreeKeyDown(e, {
+            rows: state.flattenNodes,
+            activeIndex: TreeSelectFoundation.getActiveIndex(state),
+            editing: isTextEditor(e.target),
+            rtl: this.getContext('direction') === 'rtl',
+            hasLoadData: Boolean(this.getProp('loadData')),
+            rowProps: (row) => buildRowProps(row, state, this.getProps()),
+            typeahead: this.#typeahead,
+            moveTo: (index, key) => {
+                this.setState({ keyboardKey: key });
+                this.adapter.revealRow(index, key);
+            },
+            select: this.handleNodeSelect,
+            expand: this.handleNodeExpand,
+        });
     };
 
     // a custom trigger may clear without an event
@@ -657,7 +697,9 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         this.adapter.notifySelect(eventKey, false, item);
     };
 
+    // a row acted on by the pointer or the keyboard becomes the keyboard's row, a disabled one included
     handleNodeSelect = (e: E, treeNode: BasicTreeNodeProps) => {
+        this.setState({ keyboardKey: treeNode.eventKey });
         const isDisabled = this.#isDisabled(treeNode);
         if (isDisabled) {
             return;
@@ -670,6 +712,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     };
 
     handleNodeExpand = (e: E, treeNode: BasicTreeNodeProps) => {
+        this.setState({ keyboardKey: treeNode.eventKey });
         const { loadData, keyMaps } = this.getProps();
         const { inputValue, keyEntities } = this.getStates();
         const isSearching = Boolean(inputValue);
@@ -737,6 +780,12 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         const { filterTreeNode, searchAutoFocus, searchPosition } = this.getProps();
         if (filterTreeNode && searchPosition === strings.SEARCH_POSITION_DROPDOWN && searchAutoFocus) {
             this.#focusInput();
+        }
+        // a key that opens the popup sets the row before the list mounts, so opening scrolls to it again
+        const state = this.getStates();
+        const index = TreeSelectFoundation.getActiveIndex(state);
+        if (index !== -1) {
+            this.adapter.revealRow(index, state.flattenNodes[index].key);
         }
     };
 

@@ -1,14 +1,8 @@
 import { isEqual } from 'es-toolkit';
-import type { FocusableElement } from 'tabbable';
 import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
-import { crossesFocusBoundary, getEnabledStepIndex, getListTargetIndex, handlePrevent, isInnerControlActivation, isInnerControlKey, isTextEditor, Typeahead, centerInScroller, EventEmitter, ENTER_KEY, isComposing, containsWithPopups, warning } from '../../utils/index';
+import { crossesFocusBoundary, getEnabledStepIndex, getListTargetIndex, handlePrevent, isBrowserChord, isInnerControlActivation, isInnerControlKey, isTextEditor, Typeahead, centerInScroller, getOptionId, revealOption, EventEmitter, ENTER_KEY, isComposing, containsWithPopups, warning } from '../../utils/index';
 import { cssClasses, strings } from './constants';
 import type { BasicOptionProps, OptionRecord } from './option-foundation';
-
-/** The id of the option at `index`, which `aria-activedescendant` points at and the scroll lookup finds; `listId` is the host's id for the list */
-export function getOptionId(listId: string, index: number) {
-    return `${listId}-option-${index}`;
-}
 
 export interface SelectBaseProps {
     allowCreate?: boolean;
@@ -40,7 +34,6 @@ export interface SelectBaseState {
     focusIndex: number;
     inputValue: string;
     isFocus: boolean;
-    isFocusInContainer: boolean;
     isFullTags: boolean;
     isOpen: boolean;
     options: OptionRecord[];
@@ -333,10 +326,13 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             this.adapter.scrollVirtualTo(index);
             return;
         }
-        const target = index === undefined ? `.${cssClasses.PREFIX_OPTION}-selected, .${cssClasses.PREFIX_OPTION}-custom-selected` : `#${CSS.escape(getOptionId(this.adapter.getListId(), index))}`;
-        // by id inside the list, not :nth-child (group titles are siblings of the options) or document.getElementById (misses a ShadowRoot)
+        // searched inside the list, not with document.getElementById, which misses a ShadowRoot
         const optionList: HTMLElement | null | undefined = this.adapter.getOptionList();
-        const destNode = optionList?.querySelector<HTMLElement>(target);
+        if (index !== undefined) {
+            revealOption(optionList, getOptionId(this.adapter.getListId(), index));
+            return;
+        }
+        const destNode = optionList?.querySelector<HTMLElement>(`.${cssClasses.PREFIX_OPTION}-selected, .${cssClasses.PREFIX_OPTION}-custom-selected`);
         const listbox = destNode?.closest<HTMLElement>('[role="listbox"]');
         if (destNode && listbox) {
             centerInScroller(destNode, listbox);
@@ -424,53 +420,27 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     // the key alone does not tell whether focus leaves the Select (clear button and tags are inside), so blur notifies
     #handleTabKeyDown(event: Pick<KeyboardEvent, 'shiftKey' | 'preventDefault' | 'stopPropagation'>) {
-        const { isOpen } = this.getStates();
-
-        if (isOpen) {
-            const focusableElements = FocusTrapHandle.getFocusableElements(this.adapter.getOptionList());
-            const focusableNum = focusableElements.length;
-
-            if (focusableNum > 0) {
-                if (event.shiftKey) {
-                    this.#handlePanelOpenShiftTabKeyDown(focusableElements, event);
-                } else {
-                    this.#handlePanelOpenTabKeyDown(focusableElements, event);
-                }
-            } else {
-                this.close({ event: event });
-            }
+        if (!this.getState('isOpen')) {
+            return;
         }
-    }
-
-    #getActiveElement() {
-        return FocusTrapHandle.getActiveElement(this.adapter.getOptionList());
-    }
-
-    #handlePanelOpenTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault' | 'stopPropagation'>) {
-        const activeElement = this.#getActiveElement();
-        const { isFocusInContainer } = this.getStates();
-        if (!isFocusInContainer) {
-            focusableElements[0].focus();
-            this.setState({ isFocusInContainer: true });
-            handlePrevent(event);
-        } else if (activeElement === focusableElements.at(-1)) {
-            this.#focusTrigger();
-            this.close({ event });
-            handlePrevent(event);
+        const optionList: HTMLElement | null | undefined = this.adapter.getOptionList();
+        if (!optionList?.contains(FocusTrapHandle.getActiveElement(optionList))) {
+            // the browser's Tab moves on from the focused element; refocusing the trigger first would send a Tab into the
+            // trigger's search input, while a Shift+Tab from that input would stop on the trigger without it
+            this.close({ event, returnFocus: event.shiftKey });
+            return;
         }
-    }
-
-    #handlePanelOpenShiftTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault' | 'stopPropagation'>) {
-        const activeElement = this.#getActiveElement();
-        const { isFocusInContainer } = this.getStates();
-
-        if (!isFocusInContainer) {
-            this.close({ event });
-        } else if (activeElement === focusableElements[0]) {
-            this.#focusTrigger();
-            this.setState({ isFocusInContainer: false });
-            handlePrevent(event);
-        }
+        // the dropdown is portaled, so the browser's Tab would move on from the end of the body, not from the trigger
+        handlePrevent(event);
+        this.#focusTrigger();
+        const trigger = FocusTrapHandle.getActiveElement(optionList);
+        const root = trigger?.getRootNode();
+        // shortcut: in a shadow root a tabbable direct child of the root is skipped, as in findFocusAfter; switch both to tabbable(root.host, { getShadowRoot }) if that layout must work
+        const scopes = root instanceof ShadowRoot ? [...root.children] : [trigger?.ownerDocument.body];
+        const next = event.shiftKey || !trigger ? null : scopes.flatMap((scope) => FocusTrapHandle.getFocusableElements(scope as HTMLElement)).find((node) => !trigger.contains(node) && !optionList.contains(node) && trigger.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING);
+        // closed before focus moves on, so the trigger's focusout notifies blur
+        this.close({ event, returnFocus: false });
+        next?.focus();
     }
 
     #handleEnterKeyDown(event: unknown) {
@@ -579,7 +549,6 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     }
 
     #handleTriggerFocus(e: unknown) {
-        this.setState({ isFocusInContainer: false });
         this.#notifyFocus(e);
     }
 
@@ -646,7 +615,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     #focusInput() {
         this.adapter.focusInput();
-        this.setState({ isFocus: true, isFocusInContainer: false });
+        this.setState({ isFocus: true });
     }
 
     #filterByKeyword(options: OptionRecord[]) {
@@ -753,7 +722,6 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         return {
             isOpen: false,
             isFocus: false,
-            isFocusInContainer: false,
             isFullTags: false,
             inputValue: '',
             showInput: false,
@@ -775,7 +743,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         const { searchPosition } = this.getProps();
         const shouldOpenDropdown = openDropdown !== false;
 
-        this.setState({ isFocus: true, isFocusInContainer: false });
+        this.setState({ isFocus: true });
 
         if (isFilterable) {
             /**
@@ -885,7 +853,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             // before closeMenu: the blur this moves out of the search input must still see the dropdown open
             this.#focusTrigger();
         }
-        this.setState({ isOpen: false, isFocusInContainer: false });
+        this.setState({ isOpen: false });
         this.adapter.notifyDropdownVisibleChange(false);
 
         const isFilterable = this.#isFilterable();
@@ -992,7 +960,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         const { loading, filter, multiple, disabled, searchPosition } = this.getProps();
         const { isOpen, showInput } = this.getStates();
 
-        if (loading || disabled || isComposing(event) || isInnerControlKey(event)) {
+        if (loading || disabled || isComposing(event) || isInnerControlKey(event) || isBrowserChord(event)) {
             return;
         }
         // a search input owns characters, Space, Home and End; a closed single select shows no input, so it keeps the

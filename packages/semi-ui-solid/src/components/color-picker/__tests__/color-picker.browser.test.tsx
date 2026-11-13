@@ -133,7 +133,10 @@ describe('ColorPicker（浏览器）', () => {
         await userEvent.keyboard('{Enter}');
         const dialog = await screen.findByRole('dialog', { name: text.color });
 
-        const expected = [text.saturation, text.brightness, text.hue, text.alpha, text.color, text.alpha, text.format, text.eyeDropper];
+        await expect.poll(() => document.activeElement?.getAttribute('aria-label')).toBe(text.saturation);
+        expect(dialog.contains(document.activeElement)).toBe(true);
+
+        const expected = [text.brightness, text.hue, text.alpha, text.color, text.alpha, text.format, text.eyeDropper];
         const seen: (string | null)[] = [];
         for (let i = 0; i < expected.length; i++) {
             await userEvent.keyboard('{Tab}');

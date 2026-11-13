@@ -1,8 +1,8 @@
 import { format as formatFn } from 'date-fns';
 import { type ValidateStatus, BaseFoundation, type DefaultAdapter } from '../../base/index';
 import type { Locale } from '../../locale/index';
+import { isValidDate } from '../../utils/date-fns-extra';
 import { isObject, isSecondaryPress } from '../../utils/index';
-import { isValidDate } from './_utils';
 import { formatDateValues } from './_utils/formatter';
 import { getDefaultFormatTokenByType } from './_utils/get-default-format-token';
 import getDefaultPickerDate from './_utils/get-default-picker-date';

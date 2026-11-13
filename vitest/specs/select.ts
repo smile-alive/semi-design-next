@@ -303,16 +303,17 @@ export function selectSpec(mount: SpecMount<SelectSpecProps>, options: SpecOptio
             expect(after()).toHaveFocus();
         });
 
-        test('面板里有可聚焦元素时 Tab 进入面板，面板保持打开；在最后一个元素上再按 Tab 关闭面板，焦点回到触发器', async () => {
+        test('面板里有可聚焦元素时 Tab 也关闭面板，焦点移到触发器之后；焦点在面板内时同样如此', async () => {
             await render({ bottomButton: true });
             await open();
             await userEvent.tab();
-            const button = screen.getByRole('button', { name: 'slot button' });
-            expect(button).toHaveFocus();
-            expect(listbox()).not.toBeNull();
+            await waitClosed();
+            expect(after()).toHaveFocus();
+            await open();
+            screen.getByRole('button', { name: 'slot button' }).focus();
             await userEvent.tab();
             await waitClosed();
-            expect(trigger()).toHaveFocus();
+            expect(after()).toHaveFocus();
         });
 
         test('点击组件外部关闭面板，焦点留在被点击处', async () => {

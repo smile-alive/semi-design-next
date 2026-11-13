@@ -7,7 +7,7 @@
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
     import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
-    import { useClickOutside } from '../../composables/index';
+    import { getDocument, useClickOutside, useEventListener } from '../../composables/index';
     import { isNotClassOrStyle, splitControlAttrs, hasSlotContent } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import useGroupLooks from '../input/composables/use-group-looks';
@@ -191,6 +191,7 @@
 
     useKeepAliveFoundation(foundation);
     useClickOutside([root, panel], foundation.handleClickOutside, open, useNestedPopups());
+    useEventListener(getDocument, 'focusin', (e) => foundation.handleDocumentFocusIn(e, root.value), { enabled: open });
 
     onMounted(measureCustomTrigger);
     onUpdated(measureCustomTrigger);
@@ -248,7 +249,7 @@
             <div
                 v-if="$slots.trigger"
                 ref="trigger"
-                :aria-controls="isTriggerButton() ? panelId : undefined"
+                :aria-controls="isTriggerButton() && open ? panelId : undefined"
                 :aria-disabled="isTriggerButton() ? looks.disabled : undefined"
                 :aria-expanded="isTriggerButton() ? open : undefined"
                 :aria-haspopup="isTriggerButton() ? 'dialog' : undefined"
@@ -262,7 +263,7 @@
             <span v-else :class="`${prefix}-header`" tabindex="-1">
                 <TimeInput
                     v-bind="splitControlAttrs($attrs, isNotClassOrStyle).control"
-                    :aria-controls="panelId"
+                    :aria-controls="open ? panelId : undefined"
                     :aria-expanded="open"
                     aria-haspopup="dialog"
                     :autofocus="props.autofocus"

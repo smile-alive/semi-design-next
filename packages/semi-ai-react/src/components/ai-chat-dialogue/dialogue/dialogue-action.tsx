@@ -7,7 +7,7 @@ import { IconThumbUpStroked, IconDeleteStroked, IconShareStroked, IconCopyStroke
 import { useFoundation } from '@fibrae/semi-ui-react/base';
 import Button from '@fibrae/semi-ui-react/button/index';
 import Dropdown from '@fibrae/semi-ui-react/dropdown/index';
-import { useClickOutside, useLocale } from '@fibrae/semi-ui-react/hooks';
+import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import Modal from '@fibrae/semi-ui-react/modal/index';
 import Toast from '@fibrae/semi-ui-react/toast/index';
 import type { AIChatDialogueActionProps, DefaultActionNodeObj } from '../interface';
@@ -64,8 +64,6 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
         { locale }
     );
 
-    const markPressInside = useClickOutside([triggerRef], foundation.closeMenu, visible);
-
     const { like, dislike } = message;
     const flags = getDialogueActionFlags({ role: message.role, status: message.status, isLastChat, showReset: showResetProp });
     const { finished, showReset } = flags;
@@ -115,7 +113,7 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
             className={`${PREFIX_ACTION}-dropdown`}
             position="bottomLeft"
             render={
-                <Dropdown.Menu onMouseDownCapture={markPressInside}>
+                <Dropdown.Menu>
                     <Dropdown.Item onClick={showDeleteModal}>
                         <IconDeleteStroked /> {locale.delete}
                     </Dropdown.Item>
@@ -125,6 +123,7 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
             stopPropagation
             trigger="custom"
             visible={visible}
+            onClickOutSide={foundation.closeMenu}
             onEscKeyDown={foundation.closeMenu}
         >
             <Button ref={triggerRef} type="tertiary" aria-label={locale.more} theme="borderless" icon={<IconMoreStroked />} onClick={foundation.openMenu} />

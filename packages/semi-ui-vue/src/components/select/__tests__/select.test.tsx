@@ -2611,14 +2611,13 @@ describe('Select', async () => {
                 ),
             }
         );
-        await keyDown('Tab');
-        expect(screen.getByRole('button', { name: 'Button' })).toHaveFocus();
+        screen.getByRole('button', { name: 'Button' }).focus();
         await fireEvent.blur(getTrigger());
         expect(onBlur).not.toHaveBeenCalled();
         expect(getOptionList()).not.toBeNull();
     });
 
-    it('下拉中第一个可聚焦元素上按 Shift + Tab 回到触发器', async () => {
+    it('下拉中按 Shift + Tab 关闭并回到触发器', async () => {
         await renderSelect(
             { defaultOpen: true },
             {
@@ -2629,12 +2628,11 @@ describe('Select', async () => {
                 ),
             }
         );
-        await keyDown('Tab');
         const button = screen.getByRole('button', { name: 'Button' });
-        expect(button).toHaveFocus();
+        button.focus();
         await keyDown('Tab', { shiftKey: true }, button);
         expect(getTrigger()).toHaveFocus();
-        expect(getOptionList()).not.toBeNull();
+        await waitFor(() => expect(getOptionList()).toBeNull());
     });
 
     it('搜索词清空后不再有新建项', async () => {

@@ -7,8 +7,9 @@ import { throttle } from 'es-toolkit';
 // compat pick resolves deep paths (treeDataSimpleJson)
 import { get, pick } from 'es-toolkit/compat';
 import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { Typeahead } from '../../utils/index';
 import { strings } from './constants';
-import { deriveTreeState, getMultipleChange, getMultipleSelectResult, getSearchState, isTreeNodeLeaf, loadTreeNode } from './shared';
+import { buildRowProps, deriveTreeState, getMultipleChange, getMultipleSelectResult, getSearchState, getTreeActiveIndex, handleTreeKeyDown, isRowControlKey, isTreeNodeLeaf, loadTreeNode, type TreeKeyEvent } from './shared';
 import { flattenTreeData, normalizedArr, getMotionKeys, getValueOrKey, getDragNodesKeys, calcDropRelativePosition, calcDropActualPosition, type KeyMapProps } from './tree-util';
 export type { KeyMapProps };
 
@@ -255,6 +256,13 @@ export interface BasicTreeInnerData {
     dragNodesKeys: Set<string>;
     dragOverNodeKey: string | null;
     dropPosition: number | null;
+    /** The row the keyboard or the pointer last moved to; aria-activedescendant follows it while the row is shown */
+    keyboardKey: string | null;
+}
+
+/** The foundation context a host passes: the reading direction, which flips Left and Right */
+export interface TreeContext {
+    direction?: 'ltr' | 'rtl';
 }
 
 export interface BasicExpandedOtherProps {
@@ -266,7 +274,7 @@ export interface BasicExpandedOtherProps {
 export type TreeDragEvent = Pick<DragEvent, 'dataTransfer' | 'clientY'>;
 
 /** E is the host's node mouse event (right or double click), which the foundation only passes through */
-export interface TreeAdapter<E = unknown> extends DefaultAdapter<BasicTreeProps, BasicTreeInnerData> {
+export interface TreeAdapter<E = unknown> extends DefaultAdapter<BasicTreeProps, BasicTreeInnerData, TreeContext> {
     notifyExpand: (expandedKeys: string[], { expanded, node }: BasicExpandedOtherProps) => void;
     notifySelect: (selectKey: string, bool: boolean, node: BasicTreeNodeData) => void;
     notifyChange: (value: BasicValue) => void;
@@ -282,12 +290,15 @@ export interface TreeAdapter<E = unknown> extends DefaultAdapter<BasicTreeProps,
     notifyDrop: (props: BasicOnDragProps) => void;
     /** Scrolls the virtualized list to a row of flattenNodes, found by key once the rendered rows catch up with a search */
     scrollToNode: (key: string, align: ScrollAlign) => void;
+    /** Scrolls the row a key moved to into view; `index` is its place in flattenNodes */
+    revealRow: (index: number, key: string) => void;
 }
 
 export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdapter<E>, BasicTreeProps, BasicTreeInnerData> {
     #dragNode: BasicTreeNodeProps | null = null;
     #dragEnterTimers = new Set<ReturnType<typeof setTimeout>>();
     #autoExpandTimer: ReturnType<typeof setTimeout> | undefined;
+    #typeahead = new Typeahead();
     /**
      * Every prop `deriveState` reads, which it keeps as `prevProps`. They change state during render, so there is no
      * `handlePropsChange`; a prop deriveState starts reading goes on this list too.
@@ -501,8 +512,15 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             dragNodesKeys: new Set(),
             dragOverNodeKey: null,
             dropPosition: null,
+            keyboardKey: null,
         };
         return { ...state, ...TreeFoundation.deriveState(props, state) };
+    }
+
+    /** The row the keys act on: the keyboard row while it is shown, else the first selected row, else the first */
+    static getActiveIndex({ flattenNodes, selectedKeys, keyboardKey }: Pick<BasicTreeInnerData, 'flattenNodes' | 'selectedKeys' | 'keyboardKey'>) {
+        const selected = flattenNodes.findIndex((node) => selectedKeys.includes(node.key));
+        return getTreeActiveIndex(flattenNodes, keyboardKey, Math.max(selected, 0));
     }
 
     override destroy() {
@@ -529,7 +547,35 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         this.setState(state);
     };
 
+    /**
+     * The keys of an APG tree view on role="tree", acting on the active row; a key on a tabbable control inside a row
+     * belongs to that control. Returns whether the key was handled.
+     */
+    handleKeyDown = (e: TreeKeyEvent) => {
+        if (isRowControlKey(e)) {
+            return false;
+        }
+        const state = this.getStates();
+        return handleTreeKeyDown(e, {
+            rows: state.flattenNodes,
+            activeIndex: TreeFoundation.getActiveIndex(state),
+            editing: false,
+            rtl: this.getContext('direction') === 'rtl',
+            hasLoadData: Boolean(this.getProp('loadData')),
+            rowProps: (row) => buildRowProps(row, state, this.getProps()),
+            typeahead: this.#typeahead,
+            moveTo: (index, key) => {
+                this.setState({ keyboardKey: key });
+                this.adapter.revealRow(index, key);
+            },
+            select: this.handleNodeSelect,
+            expand: this.handleNodeExpand,
+        });
+    };
+
+    // a row acted on by the pointer or the keyboard becomes the keyboard's row, a disabled one included
     handleNodeSelect = (e: unknown, treeNode: BasicTreeNodeProps) => {
+        this.setState({ keyboardKey: treeNode.eventKey });
         const isDisabled = this.#isDisabled(treeNode);
         if (isDisabled) {
             return;
@@ -542,14 +588,17 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
     };
 
     handleNodeRightClick = (e: E, treeNode: BasicTreeNodeProps) => {
+        this.setState({ keyboardKey: treeNode.eventKey });
         this.adapter.notifyRightClick(e, treeNode.data);
     };
 
     handleNodeDoubleClick = (e: E, treeNode: BasicTreeNodeProps) => {
+        this.setState({ keyboardKey: treeNode.eventKey });
         this.adapter.notifyDoubleClick(e, treeNode.data);
     };
 
     handleNodeExpand = (_e: unknown, treeNode: BasicTreeNodeProps) => {
+        this.setState({ keyboardKey: treeNode.eventKey });
         const { loadData } = this.getProps();
         if (!loadData && (!treeNode.children || !treeNode.children.length)) {
             return;

@@ -846,17 +846,24 @@ describe('Select 在 ShadowRoot 内的焦点', () => {
         expect(shadow.activeElement).toBe(combobox);
     });
 
-    it('在面板最后一个可聚焦元素上按 Tab，焦点回到 combobox 并关闭面板', async () => {
+    it('焦点在面板里时按 Tab 关闭面板，焦点移到触发器之后的元素', async () => {
         const { shadow, container } = mountInShadow();
-        render(() => <Select motion={false} optionList={options} outerBottomSlot={<button type="button">bottom</button>} />, { container });
+        render(
+            () => (
+                <>
+                    <Select motion={false} optionList={options} outerBottomSlot={<button type="button">bottom</button>} />
+                    <button type="button">after</button>
+                </>
+            ),
+            { container }
+        );
         const combobox = getElement('[role="combobox"]', shadow);
         combobox.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(shadow.querySelector('[role="listbox"]')).not.toBeNull());
+        [...shadow.querySelectorAll('button')].find((button) => button.textContent === 'bottom')!.focus();
         await tab();
-        expect(shadow.activeElement).toHaveTextContent('bottom');
-        await tab();
-        expect(shadow.activeElement).toBe(combobox);
+        expect(shadow.activeElement).toHaveTextContent('after');
         await waitFor(() => expect(shadow.querySelector('[role="listbox"]')).toBeNull());
     });
 });

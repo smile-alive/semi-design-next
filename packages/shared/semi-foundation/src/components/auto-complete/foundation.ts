@@ -1,6 +1,5 @@
 import { BaseFoundation, type DefaultAdapter } from '../../base/index';
-import { getEnabledStepIndex, isInnerControlActivation, centerInScroller, isObject, isComposing, warning } from '../../utils/index';
-import { getOptionId } from '../select/foundation';
+import { getEnabledStepIndex, getOptionId, isBrowserChord, isInnerControlActivation, revealOption, isObject, isComposing, warning } from '../../utils/index';
 
 export interface DataItem {
     [x: string]: any;
@@ -81,6 +80,10 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         return options.filter((option) => option.show);
     }
 
+    static #firstEnabledIndex(options: StateOptionItem[]) {
+        return AutoCompleteFoundation.#shown(options).findIndex((option) => !option.disabled);
+    }
+
     static #getRenderSelectedItem({ renderSelectedItem }: AutoCompleteBaseProps) {
         return renderSelectedItem ?? ((option: DataItem) => option?.value);
     }
@@ -88,7 +91,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
     static #valueStates(props: AutoCompleteBaseProps, selectedValue: AutoCompleteBaseProps['value'], typed?: string | number) {
         // a controlled value set back to undefined empties the input; there is no option to render it from
         if (selectedValue === undefined) {
-            return { inputValue: '', selection: new Map<any, DataItem>(), focusIndex: props.defaultActiveFirstOption ? 0 : -1 };
+            return { inputValue: '', selection: new Map<any, DataItem>(), focusIndex: props.defaultActiveFirstOption ? AutoCompleteFoundation.#firstEnabledIndex(AutoCompleteFoundation.#generateList(props.data)) : -1 };
         }
         const renderSelectedItem = AutoCompleteFoundation.#getRenderSelectedItem(props);
         const options = AutoCompleteFoundation.#generateList(props.data);
@@ -111,7 +114,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         return {
             inputValue,
             selection,
-            focusIndex: selectedOptionIndex === -1 && props.defaultActiveFirstOption ? 0 : selectedOptionIndex,
+            focusIndex: selectedOptionIndex === -1 && props.defaultActiveFirstOption ? AutoCompleteFoundation.#firstEnabledIndex(options) : selectedOptionIndex,
         };
     }
 
@@ -120,22 +123,17 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
 
         let { data, defaultActiveFirstOption } = this.getProps();
 
+        const allOptions = AutoCompleteFoundation.#generateList(data);
         let selectedOptionIndex = -1;
 
         if (searchValue) {
             let renderSelectedItem = AutoCompleteFoundation.#getRenderSelectedItem(this.getProps());
-            const options = AutoCompleteFoundation.#shown(AutoCompleteFoundation.#generateList(data));
-            selectedOptionIndex = options.findIndex((option) => renderSelectedItem(AutoCompleteFoundation.#toDataItem(option)) === searchValue);
+            selectedOptionIndex = AutoCompleteFoundation.#shown(allOptions).findIndex((option) => renderSelectedItem(AutoCompleteFoundation.#toDataItem(option)) === searchValue);
         }
 
-        if (selectedOptionIndex === -1 && defaultActiveFirstOption) {
-            if (focusIndex !== 0) {
-                this.setState({ focusIndex: 0 });
-            }
-        } else {
-            if (selectedOptionIndex !== focusIndex) {
-                this.setState({ focusIndex: selectedOptionIndex });
-            }
+        const index = selectedOptionIndex === -1 && defaultActiveFirstOption ? AutoCompleteFoundation.#firstEnabledIndex(allOptions) : selectedOptionIndex;
+        if (index !== focusIndex) {
+            this.setState({ focusIndex: index });
         }
     }
 
@@ -144,21 +142,14 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         this.#modifyFocusIndex(inputValue);
     }
 
-    #scrollToOption(index: number) {
-        const listbox = this.adapter.getListbox();
-        const destNode = listbox?.querySelector<HTMLElement>(`#${CSS.escape(getOptionId(listbox.id, index))}`);
-        if (listbox && destNode) {
-            centerInScroller(destNode, listbox);
-        }
-    }
-
     #moveFocus(offset: number) {
         const { focusIndex, options } = this.getStates();
         const visibleOptions = AutoCompleteFoundation.#shown(options);
         const index = getEnabledStepIndex(offset, focusIndex, visibleOptions.length, (i) => visibleOptions[i].disabled);
         this.setState({ focusIndex: index });
         if (index !== -1) {
-            this.#scrollToOption(index);
+            const listbox = this.adapter.getListbox();
+            revealOption(listbox, getOptionId(listbox?.id, index));
         }
     }
 
@@ -239,10 +230,10 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         this.setState(AutoCompleteFoundation.#valueStates(this.getProps(), this.getProp('value'), this.getState('inputValue')));
     }
 
-    handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'preventDefault'> & Parameters<typeof isComposing>[0]) => {
+    handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'preventDefault'> & Partial<Pick<KeyboardEvent, 'ctrlKey' | 'metaKey' | 'altKey'>> & Parameters<typeof isComposing>[0]) => {
         // the spinner replaces the list while loading; the options still in state are the previous, hidden batch
         const listHidden = this.getProp('loading') && this.getState('visible');
-        switch (isComposing(event) ? '' : event.key) {
+        switch (isComposing(event) || isBrowserChord(event) ? '' : event.key) {
             case 'ArrowUp':
                 // keep the Input cursor from moving
                 event.preventDefault();

@@ -11,6 +11,7 @@ export { default as ListStore } from './list-store';
 export * from './list-store';
 export { default as ModalResources } from './modal-resources';
 export * from './modal-resources';
+export { default as OverlaySession } from './overlay-session';
 export { default as PopupLifecycle } from './popup-lifecycle';
 export { default as ReleaseHolder } from './release-holder';
 export * from './reset-timer';

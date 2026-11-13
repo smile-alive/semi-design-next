@@ -4,10 +4,11 @@
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/components/ai-chat-input/foundation';
     import type { Attachment, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
-    import { type ContentType, getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
-    import { isImageFile, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils';
+    import { type ContentType, getAttachmentType, getContentType, getListbox } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
+    import { isImageFile } from '@fibrae/semi-ai-foundation/utils';
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-    import { namedRole, handoverFocus } from '@fibrae/semi-foundation/utils';
+    import { isUploadProgressVisible } from '@fibrae/semi-foundation/components/upload/utils';
+    import { getOptionId, namedRole, handoverFocus } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-ai-foundation/components/ai-chat-input/ai-chat-input.scss';
     import { IconClose, IconCode, IconCrossStroked, IconExcel, IconFile, IconMusic, IconPdf, IconSendMsgStroked, IconTemplateStroked, IconVideo, IconWord } from '@fibrae/semi-icons-vue';
     import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '@fibrae/semi-ui-vue/base';

@@ -1,8 +1,31 @@
+import { centerInScroller } from './dom';
 import { isDev } from './warning';
+
+/** The id of the option at `index`, which `aria-activedescendant` points at and `revealOption` finds; `listId` is the host's id for the list */
+export function getOptionId(listId: string, index: number) {
+    return `${listId}-option-${index}`;
+}
+
+/**
+ * Scrolls the option with `id` inside `root` to the centre of its listbox; a no-op when it is not rendered (virtual
+ * list). The listbox is found from the option, not by position, because group titles are siblings of the options.
+ */
+export function revealOption(root: HTMLElement | null | undefined, id: string) {
+    const option = root?.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
+    const listbox = option?.closest<HTMLElement>('[role="listbox"]');
+    if (option && listbox) {
+        centerInScroller(option, listbox);
+    }
+}
 
 export function handlePrevent(event: Pick<Event, 'stopPropagation' | 'preventDefault'>) {
     event.stopPropagation();
     event.preventDefault();
+}
+
+/** Chords belong to the browser and the system; Alt+Down and Alt+Up still open a popup (APG combobox), and Option+Tab is Safari's Tab to every control */
+export function isBrowserChord({ key, ctrlKey, metaKey, altKey }: Pick<KeyboardEvent, 'key'> & Partial<Pick<KeyboardEvent, 'ctrlKey' | 'metaKey' | 'altKey'>>) {
+    return Boolean(ctrlKey || metaKey || (altKey && key !== 'ArrowDown' && key !== 'ArrowUp' && key !== 'Tab'));
 }
 
 /**

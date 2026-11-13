@@ -25,7 +25,6 @@
     import type { FlattenNode, TreeNodeData, TreeRowProps } from '../tree/interface.js';
     import NodeList from '../tree/node-list.svelte';
     import TreeNode from '../tree/tree-node.svelte';
-    import useTreeKeyboard from '../tree/use-tree-keyboard.svelte.js';
     import type { TreeSelectChangeEvent, TreeSelectProps, TreeSelectSearchSnippetProps, TreeSelectSelectedItemSnippetProps, TreeSelectTriggerSnippetProps, TreeSelectValue } from './interface.js';
 
     type FoundationEvent = MouseEvent | KeyboardEvent;
@@ -294,12 +293,7 @@
                 onLoad?.(keys, node as TreeNodeData);
             },
             notifyClear: (event) => onClear?.(event as TreeSelectChangeEvent),
-            notifyVisibleChange: (visible) => {
-                if (!visible) {
-                    keyboard.reset();
-                }
-                onVisibleChange?.(visible);
-            },
+            notifyVisibleChange: (visible) => onVisibleChange?.(visible),
             notifyChange: (next, node, event) => {
                 echo('value', next);
                 value = next as TreeSelectValue;
@@ -329,38 +323,26 @@
                 }
             },
             isInTrigger: (node) => node instanceof Node && Boolean(root?.contains(node)),
-        })
+            revealRow: (index, key) => {
+                if (!nodeList?.scrollToItem(index)) {
+                    // inside the dropdown, not the document: one in a ShadowRoot is out of document.getElementById's reach
+                    content?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
+                }
+            },
+        }),
+        { context: () => ({ direction: config.direction }) }
     );
 
     // State implied by new props renders with them; the pre-effect writes it back for the handlers before render.
     // Not named `derived`: a local of that name turns the `$derived` rune into a store subscription
     const implied = $derived(TreeSelectFoundation.deriveState(foundationProps, states()));
     const view = $derived<BasicTreeSelectInnerData>(implied ? { ...states(), ...implied } : states());
-
-    const reveal = (index: number, key: string) => {
-        if (!nodeList?.scrollToItem(index)) {
-            // inside the dropdown, not the document: one in a ShadowRoot is out of document.getElementById's reach
-            content?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
-        }
-    };
-
-    const keyboard = useTreeKeyboard({
-        rows: () => view.flattenNodes as FlattenNode[],
-        // an APG combobox opens without an active option
-        defaultIndex: () => -1,
-        rowProps: (node) => rowProps(node),
-        hasLoadData: () => Boolean(loadData),
-        rtl: () => config.direction === 'rtl',
-        editing: (event) => isTextEditor(event.target),
-        select: foundation.handleNodeSelect,
-        expand: foundation.handleNodeExpand,
-        reveal,
-    });
-
     const selectionKeys = $derived(TreeSelectFoundation.getTriggerKeys(foundationProps, view));
     const hasValue = $derived(TreeSelectFoundation.hasValue(foundationProps, view));
     const clearable = $derived(TreeSelectFoundation.isClearable(foundationProps, view));
-    const activeDescendant = $derived(keyboard.activeKey === undefined ? undefined : nodeId(treeId, keyboard.activeKey));
+    const activeIndex = $derived(TreeSelectFoundation.getActiveIndex(view));
+    const activeKey = $derived(view.flattenNodes[activeIndex]?.key);
+    const activeDescendant = $derived(activeKey === undefined ? undefined : nodeId(treeId, activeKey));
 
     const comboboxAttrs = $derived({
         ...attrs.control,
@@ -434,18 +416,9 @@
         },
         dragOverNodeKey: null,
         dropPosition: null,
-        onNodeExpand: (event, row) => {
-            keyboard.activate(row.key);
-            foundation.handleNodeExpand(event, row);
-        },
-        onNodeSelect: (event, row) => {
-            keyboard.activate(row.key);
-            foundation.handleNodeSelect(event, row);
-        },
-        onNodeCheck: (event, row) => {
-            keyboard.activate(row.key);
-            foundation.handleNodeSelect(event, row);
-        },
+        onNodeExpand: foundation.handleNodeExpand,
+        onNodeSelect: foundation.handleNodeSelect,
+        onNodeCheck: foundation.handleNodeSelect,
     });
 
     const getNodeData = (key: string) => getTreeNodeData(key, view.keyEntities, foundationProps) as TreeNodeData | undefined;
@@ -527,20 +500,16 @@
         }
     };
 
-    const handleTreeKeyDown = (event: KeyboardEvent) => view.isOpen && keyboard.handleKeyDown(event);
-
     const handleKeyDown = (event: KeyboardEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
         rest.onkeydown?.(event);
-        if (!isInnerControlKey(event) && !handleTreeKeyDown(event)) {
-            if (foundation.handleSelectionKeyDown(event)) {
-                keyboard.handleKeyDown(event);
-            }
+        if (!isInnerControlKey(event) && !foundation.handleRowKeyDown(event)) {
+            foundation.handleSelectionKeyDown(event);
         }
         foundation.handleKeyDown(event);
     };
 
     const handleContentKeyDown = (event: KeyboardEvent) => {
-        handleTreeKeyDown(event);
+        foundation.handleRowKeyDown(event);
         foundation.handleKeyDown(event);
     };
 
@@ -587,14 +556,6 @@
         }
     };
 
-    // a key that opens the popup sets the row before the list mounts, so opening scrolls to it again
-    const handleOpen = () => {
-        foundation.handlePopoverOpen();
-        if (keyboard.activeKey !== undefined) {
-            reveal(keyboard.activeIndex, keyboard.activeKey);
-        }
-    };
-
     $effect.pre(() => {
         if (implied) {
             foundation.syncDerivedState(implied);
@@ -626,8 +587,8 @@
         }
     });
 
-    // blur comes from a click outside, so it is listened to while focused, not only while open
-    useClickOutside([() => root, () => content], foundation.handleClickOutside, () => view.isOpen || view.isFocus, nestedPopups);
+    // blur comes from a click outside, so it is listened to while focused; while open the Popover reports it
+    useClickOutside([() => root, () => content], foundation.handleClickOutside, () => view.isFocus && !view.isOpen, nestedPopups);
 
     /** Searches as if `value` were typed, opening the dropdown first; needs `filterTreeNode` */
     export function search(input: string) {
@@ -877,7 +838,7 @@
                         {#snippet children({ node, style })}
                             {@const row = rowProps(node)}
                             {#if row}
-                                <TreeNode {expandIcon} focused={row.key === keyboard.activeKey} {fullLabel} {icon} id={nodeId(treeId, row.key)} {label} {row} rowStyle={style} {showLine} />
+                                <TreeNode {expandIcon} focused={row.key === activeKey} {fullLabel} {icon} id={nodeId(treeId, row.key)} {label} {row} rowStyle={style} {showLine} />
                             {/if}
                         {/snippet}
                     </NodeList>
@@ -898,8 +859,9 @@
     content={panel}
     disableArrowKeyDown
     {motion}
+    onClickOutSide={foundation.handleClickOutside}
     onEscKeyDown={foundation.close}
-    onOpen={handleOpen}
+    onOpen={foundation.handlePopoverOpen}
     position={position ?? (config.direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
     role="presentation"
     {stopPropagation}

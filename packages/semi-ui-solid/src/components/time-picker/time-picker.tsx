@@ -8,7 +8,7 @@ import { namedRole } from '@fibrae/semi-foundation/utils';
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import { type ElementProps, usePopupLayer, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside } from '../../primitives/index';
+import { useClickOutside, useEventListener } from '../../primitives/index';
 import { callHandler, omitFormInjected, focusElement, mergeRefs } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import type { InputSize, ValidateStatus } from '../input';
@@ -270,8 +270,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
 
     const open = () => TimePickerFoundation.isPanelShown(props, state());
 
-    const markPressInside = useClickOutside([() => root, panel], foundation.handleClickOutside, open);
-
     const triggerRenderProps: TimePickerTriggerRenderProps = {
         get disabled() {
             return Boolean(local.disabled);
@@ -311,7 +309,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
             return isTriggerButton() ? Boolean(local.disabled) : undefined;
         },
         get 'aria-controls'() {
-            return isTriggerButton() ? panelId : null;
+            return isTriggerButton() && open() ? panelId : null;
         },
         get 'aria-expanded'() {
             return isTriggerButton() ? open() : null;
@@ -342,6 +340,46 @@ export default function TimePicker(rawProps: TimePickerProps) {
         node.blur = foundation.blur;
         registerSpecialTrigger(node);
     };
+
+    const renderInput = () => (
+        <TimeInput
+            {...rest}
+            // APG combobox: the input opens the panel of lists and carries its state
+            role="combobox"
+            style={local.inputStyle}
+            aria-controls={open() ? panelId : undefined}
+            aria-expanded={open()}
+            aria-haspopup="dialog"
+            borderless={local.borderless}
+            clearIcon={local.clearIcon}
+            disabled={local.disabled}
+            focusOnOpen={local.focusOnOpen}
+            inputReadOnly={local.inputReadOnly}
+            insetLabel={props.insetLabel}
+            insetLabelId={props.insetLabelId}
+            invalid={state().invalid}
+            placeholder={local.placeholder || locale().locale.placeholder[local.type]}
+            prefix={local.prefix}
+            prefixCls={prefixCls}
+            preventScroll={local.preventScroll}
+            showClear={local.disabled ? false : local.showClear}
+            size={local.size}
+            validateStatus={props.validateStatus}
+            value={state().inputValue}
+            onBlur={foundation.handleInputBlur}
+            onChange={foundation.handleInputChange}
+            onFocus={foundation.handleFocus}
+        />
+    );
+
+    useEventListener(
+        () => document,
+        'focusin',
+        (e) => foundation.handleDocumentFocusIn(e, root),
+        { enabled: open }
+    );
+
+    const markPressInside = useClickOutside([() => root, panel], foundation.handleClickOutside, open);
 
     const renderPanel = () => (
         // the delegated handler sees a press in a popup portaled from the panel before the popup stops it
@@ -374,37 +412,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
                 }}
             </For>
         </div>
-    );
-
-    const renderInput = () => (
-        <TimeInput
-            {...rest}
-            // APG combobox: the input opens the panel of lists and carries its state
-            role="combobox"
-            style={local.inputStyle}
-            aria-controls={panelId}
-            aria-expanded={open()}
-            aria-haspopup="dialog"
-            borderless={local.borderless}
-            clearIcon={local.clearIcon}
-            disabled={local.disabled}
-            focusOnOpen={local.focusOnOpen}
-            inputReadOnly={local.inputReadOnly}
-            insetLabel={props.insetLabel}
-            insetLabelId={props.insetLabelId}
-            invalid={state().invalid}
-            placeholder={local.placeholder || locale().locale.placeholder[local.type]}
-            prefix={local.prefix}
-            prefixCls={prefixCls}
-            preventScroll={local.preventScroll}
-            showClear={local.disabled ? false : local.showClear}
-            size={local.size}
-            validateStatus={props.validateStatus}
-            value={state().inputValue}
-            onBlur={foundation.handleInputBlur}
-            onChange={foundation.handleInputChange}
-            onFocus={foundation.handleFocus}
-        />
     );
 
     // Known limit: measured when the custom trigger mounts, which a new triggerRender does; a stable one that switches

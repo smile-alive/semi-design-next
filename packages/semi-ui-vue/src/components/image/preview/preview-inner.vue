@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    import { computed, nextTick, useId, useTemplateRef, watch, type StyleValue } from 'vue';
+    import { computed, nextTick, useId, useTemplateRef, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-vue';
     import { useFoundation, useKeepAliveFoundation } from '../../../base/index';
-    import { useRecordFocus } from '../../../composables/index';
+    import { useOverlayResources } from '../../../composables/index';
     import { Portal } from '../../../internal/index';
     import useConfig from '../../config-provider/use-config';
     import useLocale from '../../locale/use-locale';
@@ -158,18 +158,10 @@
     const handleNext = () => foundation.handleSwitchImage('next');
 
     // recorded before the preview renders, or its own focus would be recorded
-    useRecordFocus({ record: foundation.recordFocus }, () => props.visible);
-
-    watch(
-        () => (props.visible ? wrap.value : null),
-        (el, _, onCleanup) => {
-            if (!el) {
-                return;
-            }
-            foundation.beforeShow();
-            onCleanup(foundation.afterHide);
-        },
-        { flush: 'post' }
+    useOverlayResources(
+        foundation,
+        () => props.visible,
+        () => Boolean(props.visible && wrap.value)
     );
 
     // KeepAlive: the Portal removes the hidden preview, so destroy releases page-level holds without closing it. The

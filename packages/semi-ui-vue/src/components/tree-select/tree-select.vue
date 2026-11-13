@@ -24,7 +24,6 @@
     import type { FlattenNode, TreeNodeData, TreeRowProps } from '../tree/interface';
     import NodeList from '../tree/node-list.vue';
     import TreeNode from '../tree/tree-node.vue';
-    import useTreeKeyboard from '../tree/use-tree-keyboard';
     import type { TreeSelectChangeNode, TreeSelectChangeValue, TreeSelectEmits, TreeSelectHandle, TreeSelectProps, TreeSelectSearchSlotProps, TreeSelectSelectedItemSlotProps, TreeSelectSlots, TreeSelectTriggerSlotProps, TreeSelectValue } from './interface';
 
     type FoundationEvent = MouseEvent | KeyboardEvent;
@@ -137,46 +136,6 @@
     const multiple = computed(() => (props.multiple as unknown) === '' || Boolean(props.multiple));
     const loadData = computed(() => props.loadData ?? readSemiDefault(semi, 'TreeSelect', 'loadData'));
     const filterTreeNode = computed(() => props.filterTreeNode ?? readSemiDefault(semi, 'TreeSelect', 'filterTreeNode', false));
-    const virtualized = computed(() => Boolean(props.virtualize && Object.keys(props.virtualize).length));
-    const triggerSearch = computed(() => Boolean(filterTreeNode.value) && props.searchPosition === 'trigger');
-
-    // the Input and TagInput inside are parts of this control, not members of the group
-    provideInputGroupContext(undefined);
-
-    const setSearchInput = (element: Element | ComponentPublicInstance | null) => {
-        searchInput.value = element as Focusable | null;
-    };
-
-    const rows = () => view.value.flattenNodes as FlattenNode[];
-
-    const cachedRows = () => view.value.cachedFlattenNodes as FlattenNode[] | undefined;
-
-    const rowProps = (node: FlattenNode) => buildRowProps(node, view.value as Parameters<typeof buildRowProps>[1], props) as TreeRowProps | null;
-
-    const reveal = (index: number, key: string) => {
-        if (!nodeList.value?.scrollToItem(index)) {
-            // inside the dropdown, not the document: one in a ShadowRoot is out of document.getElementById's reach
-            content.value?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
-        }
-    };
-
-    const {
-        keyboardKey,
-        activeIndex,
-        activeKey,
-        handleKeyDown: handleRowKeyDown,
-    } = useTreeKeyboard({
-        rows,
-        // an APG combobox opens without an active option
-        defaultIndex: () => -1,
-        rowProps,
-        hasLoadData: () => Boolean(loadData.value),
-        rtl: () => config.value.direction === 'rtl',
-        editing: (event) => isTextEditor(event.target),
-        select: (event, row) => foundation.handleNodeSelect(event, row),
-        expand: (event, row) => foundation.handleNodeExpand(event, row),
-        reveal,
-    });
 
     const { foundation, state } = useFoundation<Foundation, Adapter, BasicTreeSelectProps, BasicTreeSelectInnerData>(
         TreeSelectFoundation,
@@ -191,12 +150,7 @@
                 emit('load', loadedKeys, node as TreeNodeData);
             },
             notifyClear: (event) => emit('clear', event as FoundationEvent | null),
-            notifyVisibleChange: (visible) => {
-                if (!visible) {
-                    keyboardKey.value = null;
-                }
-                emit('dropdownVisibleChange', visible);
-            },
+            notifyVisibleChange: (visible) => emit('dropdownVisibleChange', visible),
             notifyChange: (value, node, event) => {
                 const changed = value as TreeSelectChangeValue<T, Multiple>;
                 emit('update:modelValue', changed);
@@ -225,8 +179,15 @@
                 }
             },
             isInTrigger: (node) => node instanceof Node && Boolean(triggers.value?.[0]?.contains(node)),
+            revealRow: (index, key) => {
+                if (!nodeList.value?.scrollToItem(index)) {
+                    // inside the dropdown, not the document: one in a ShadowRoot is out of document.getElementById's reach
+                    content.value?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
+                }
+            },
         }),
         {
+            context: () => ({ direction: config.value.direction }),
             props: {
                 size: () => looks.size,
                 disabled: () => looks.disabled,
@@ -238,6 +199,9 @@
             },
         }
     );
+
+    const virtualized = computed(() => Boolean(props.virtualize && Object.keys(props.virtualize).length));
+    const triggerSearch = computed(() => Boolean(filterTreeNode.value) && props.searchPosition === 'trigger');
 
     // State implied by new props renders with them; the pre-flush watcher writes it back for the handlers before the
     // render. treeData is compared by the foundation, so only a new array is seen.
@@ -257,27 +221,30 @@
             dragOverNodeKey: null,
             dropPosition: null,
         })),
-        onNodeExpand: (event, row) => {
-            keyboardKey.value = row.key;
-            foundation.handleNodeExpand(event, row);
-        },
-        onNodeSelect: (event, row) => {
-            keyboardKey.value = row.key;
-            foundation.handleNodeSelect(event, row);
-        },
-        onNodeCheck: (event, row) => {
-            keyboardKey.value = row.key;
-            foundation.handleNodeSelect(event, row);
-        },
+        onNodeExpand: foundation.handleNodeExpand,
+        onNodeSelect: foundation.handleNodeSelect,
+        onNodeCheck: foundation.handleNodeSelect,
     };
 
     const selectionKeys = computed(() => TreeSelectFoundation.getTriggerKeys(foundationProps.value, view.value));
     const hasValue = computed(() => TreeSelectFoundation.hasValue(foundationProps.value, view.value));
     const clearable = computed(() => TreeSelectFoundation.isClearable(foundationProps.value, view.value));
+    const activeIndex = computed(() => TreeSelectFoundation.getActiveIndex(view.value));
+    const activeKey = computed(() => view.value.flattenNodes[activeIndex.value]?.key);
 
+    // the Input and TagInput inside are parts of this control, not members of the group
+    provideInputGroupContext(undefined);
     provideTreeContext(context);
 
-    const handleTreeKeyDown = (event: KeyboardEvent) => view.value.isOpen && handleRowKeyDown(event);
+    const setSearchInput = (element: Element | ComponentPublicInstance | null) => {
+        searchInput.value = element as Focusable | null;
+    };
+
+    const rows = () => view.value.flattenNodes as FlattenNode[];
+
+    const cachedRows = () => view.value.cachedFlattenNodes as FlattenNode[] | undefined;
+
+    const rowProps = (node: FlattenNode) => buildRowProps(node, view.value as Parameters<typeof buildRowProps>[1], props) as TreeRowProps | null;
 
     const activeDescendant = () => (activeKey.value === undefined ? undefined : nodeId(treeId, activeKey.value));
 
@@ -485,16 +452,14 @@
 
     const handleKeyDown = (event: KeyboardEvent) => {
         emit('keydown', event);
-        if (!isInnerControlKey(event) && !handleTreeKeyDown(event)) {
-            if (foundation.handleSelectionKeyDown(event)) {
-                handleRowKeyDown(event);
-            }
+        if (!isInnerControlKey(event) && !foundation.handleRowKeyDown(event)) {
+            foundation.handleSelectionKeyDown(event);
         }
         foundation.handleKeyDown(event);
     };
 
     const handleContentKeyDown = (event: KeyboardEvent) => {
-        handleTreeKeyDown(event);
+        foundation.handleRowKeyDown(event);
         foundation.handleKeyDown(event);
     };
 
@@ -523,14 +488,6 @@
         }
     };
 
-    // a key that opens the popup sets the row before the list mounts, so opening scrolls to it again
-    const handleOpen = () => {
-        foundation.handlePopoverOpen();
-        if (activeKey.value !== undefined) {
-            reveal(activeIndex.value, activeKey.value);
-        }
-    };
-
     const noData = () => {
         const { inputValue, filteredKeys } = view.value;
         return rows().length === 0 || (props.showFilteredOnly && Boolean(inputValue) && !filteredKeys.size);
@@ -550,8 +507,8 @@
 
     useKeepAliveFoundation(foundation);
 
-    // blur comes from a click outside, so it is listened to while focused, not only while open
-    useClickOutside([() => triggers.value?.[0], content], foundation.handleClickOutside, () => view.value.isOpen || view.value.isFocus, useNestedPopups());
+    // blur comes from a click outside, so it is listened to while focused; while open the Popover reports it
+    useClickOutside([() => triggers.value?.[0], content], foundation.handleClickOutside, () => view.value.isFocus && !view.value.isOpen, useNestedPopups());
 
     // the owner may clear the value while the clear button holds focus; the combobox takes it back
     const clearHandover = useFocusHandover(() => (renderedInputIsCombobox() ? triggers.value?.[0]?.querySelector('input') : triggers.value?.[0]));
@@ -565,6 +522,7 @@
 <template>
     <Popover
         :autoAdjustOverflow="props.autoAdjustOverflow"
+        disableArrowKeyDown
         :motion="props.motion"
         :position="props.position ?? (config.direction === 'rtl' ? 'bottomRight' : 'bottomLeft')"
         role="presentation"
@@ -573,8 +531,9 @@
         trigger="custom"
         :visible="view.isOpen"
         @afterClose="foundation.handleAfterClose"
+        @clickOutSide="foundation.handleClickOutside"
         @escKeyDown="foundation.close"
-        @open="handleOpen"
+        @open="foundation.handlePopoverOpen"
     >
         <template v-for="(parts, p) in [triggerParts()]" :key="p">
             <div ref="trigger" v-bind="rootAttrs(parts.inputIsCombobox)" :class="rootClass(parts.kinds)" :tabindex="looks.disabled || parts.inputIsCombobox ? -1 : 0" @click="foundation.handleClick" @focusin="foundation.handleTriggerFocus" @focusout="handleFocusOut" @keydown="handleKeyDown" @mousedown="handleMouseDown">

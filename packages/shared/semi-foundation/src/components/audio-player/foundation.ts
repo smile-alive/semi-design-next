@@ -1,5 +1,5 @@
 import { BaseFoundation, type DefaultAdapter } from '../../base/index';
-import { ignoreExpectedMediaErrors } from '../video-player/utils';
+import { ignoreExpectedMediaErrors } from '../../utils/index';
 import { DEFAULT_RATE } from './constants';
 
 export type AudioInfo = {

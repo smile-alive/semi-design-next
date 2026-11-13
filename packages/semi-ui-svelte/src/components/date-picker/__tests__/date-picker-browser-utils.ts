@@ -1,5 +1,14 @@
+import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { dp } from './test-utils';
+import { tabTo } from '@test/utils/browser';
+import { dp, getInput } from './test-utils';
+
+// Tab out of the picker closes the panel, so the keyboard enters a shown panel by ArrowDown on its trigger
+export async function tabIntoPanel(target: Element, trigger: Element = getInput()) {
+    await tabTo(trigger);
+    await userEvent.keyboard('{ArrowDown}');
+    await tabTo(target);
+}
 
 export const focusClass = `${BASE_CLASS_PREFIX}-input-wrapper-focus`;
 

@@ -30,7 +30,8 @@
     type Foundation = BreadcrumbFoundation<BreadcrumbProps>;
     type Adapter = BreadcrumbAdapter<BreadcrumbProps>;
 
-    defineOptions({ name: 'Breadcrumb' });
+    // Default fallthrough merges after the root's own bindings, so an explicit undefined aria-label would erase the locale name.
+    defineOptions({ name: 'Breadcrumb', inheritAttrs: false });
 
     const props = withDefaults(defineProps<BreadcrumbProps & /* @vue-ignore */ ElementProps<'nav', keyof BreadcrumbProps>>(), {
         activeIndex: semiGlobalDefault('Breadcrumb', 'activeIndex'),
@@ -135,7 +136,7 @@
 </script>
 
 <template>
-    <nav ref="root" :aria-label="locale.locale.label" :class="[`${prefix}-wrapper`, props.compact ? `${prefix}-wrapper-compact` : `${prefix}-wrapper-loose`]">
+    <nav ref="root" v-bind="$attrs" :aria-label="($attrs['aria-label'] as string | undefined) ?? locale.locale.label" :class="[`${prefix}-wrapper`, props.compact ? `${prefix}-wrapper-compact` : `${prefix}-wrapper-loose`]">
         <ol ref="list" :class="`${prefix}-list`">
             <template v-for="(view, v) in [layout()]" :key="v">
                 <!-- The key sits on each entry's fragment, so the branches inside cannot replace an item's own key. -->

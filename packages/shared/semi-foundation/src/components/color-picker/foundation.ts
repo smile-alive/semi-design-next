@@ -1,5 +1,5 @@
 import { clamp } from 'es-toolkit';
-import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { BaseFoundation, type DefaultAdapter, FocusTrapHandle } from '../../base/index';
 import type { ColorFormat, HsvaColor, RgbaColor } from './interface';
 import { hexToHsva, hexToRgba, hsvaStringToHsva, hsvaToHex, hsvaToRgba, invalidColorString, rgbaToHex, rgbaStringToHsva, rgbaStringToRgba, rgbaToHsva } from './utils/convert';
 
@@ -53,6 +53,11 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
 
     static getInitialState(props: Pick<ColorPickerProps, 'value' | 'defaultValue'>): ColorPickerState {
         return { currentColor: props.value ?? props.defaultValue };
+    }
+
+    /** APG dialog: focus enters the popup's first tabbable control, the popup itself when it has none */
+    static focusPopup(popup: HTMLElement | null) {
+        (FocusTrapHandle.getFocusableElements(popup)[0] ?? popup)?.focus({ preventScroll: true });
     }
 
     /** The color shown: a controlled `value` wins on the render it arrives in, `null` shows `defaultValue` */

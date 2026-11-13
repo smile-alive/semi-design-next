@@ -264,6 +264,8 @@
     }
 </script>
 
+<svelte:document onfocusin={(event) => foundation.handleDocumentFocusIn(event, root)} />
+
 {#snippet content()}
     <div bind:this={panelElement} class={{ [cssClasses.RANGE_PANEL_LISTS]: isRange }} id={panelId}>
         {#each isRange ? [0, 1] : [0] as index (index)}
@@ -299,7 +301,7 @@
                 <div
                     bind:this={triggerWrapper}
                     {...props}
-                    aria-controls={isTriggerButton ? panelId : undefined}
+                    aria-controls={isTriggerButton && shown ? panelId : undefined}
                     aria-disabled={isTriggerButton ? disabled : undefined}
                     aria-expanded={isTriggerButton ? shown : undefined}
                     aria-haspopup={isTriggerButton ? 'dialog' : undefined}
@@ -314,7 +316,7 @@
                 <span {...props} class={`${prefixCls}-header`} tabindex="-1">
                     <TimeInput
                         {...attrs.control}
-                        aria-controls={panelId}
+                        aria-controls={shown ? panelId : undefined}
                         aria-expanded={shown}
                         aria-haspopup="dialog"
                         {autofocus}

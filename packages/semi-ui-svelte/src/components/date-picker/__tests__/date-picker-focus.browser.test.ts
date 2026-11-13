@@ -8,7 +8,7 @@ import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { getElement } from '@test/utils/dom/common';
 import type { DatePickerDisabledDateType, DatePickerProps } from '../interface';
-import { focusClass } from './date-picker-browser-utils';
+import { focusClass, tabIntoPanel } from './date-picker-browser-utils';
 import { getPanel, getPopup } from './date-picker-dom-utils';
 import Fixture, { type FixtureStore } from './date-picker-fixture.svelte';
 import FocusOpenFixture, { type FocusOpenFixtureStore } from './date-picker-focus-open-fixture.svelte';
@@ -79,7 +79,7 @@ describe('Svelte DatePicker 日历网格与焦点（浏览器）', () => {
     it('网格获得键盘焦点时，主题焦点环跟随当前日期，且其他日期没有轮廓', async () => {
         await setup({ value: new Date(2019, 8, 11), open: true });
         const grid = await screen.findByRole('grid');
-        await tabTo(grid);
+        await tabIntoPanel(grid);
         expectThemeFocusRing(getDay('2019-09-11'));
         await userEvent.keyboard('{ArrowRight}');
         await waitFor(() => expectThemeFocusRing(getDay('2019-09-12')));
@@ -178,7 +178,7 @@ describe('Svelte DatePicker 触发器键盘访问（浏览器）', () => {
     it('主题焦点环标记 dateTime 面板的日期与时间切换按钮', async () => {
         await setup({ value: new Date(2019, 8, 11), open: true, props: { type: 'dateTime' } });
         const toTime = await screen.findByRole('button', { name: zh_CN.DatePicker.switchToTime });
-        await tabTo(toTime);
+        await tabIntoPanel(toTime);
         expectThemeFocusRing(toTime);
     });
 
@@ -188,7 +188,7 @@ describe('Svelte DatePicker 触发器键盘访问（浏览器）', () => {
         await tabTo(trigger);
         expectThemeFocusRing(trigger);
         await userEvent.keyboard('{Enter}');
-        await tabTo(await screen.findByRole('grid'));
+        await tabIntoPanel(await screen.findByRole('grid'), trigger);
         await userEvent.keyboard('{Escape}');
         await expectPopupClosed();
         expect(trigger).toHaveFocus();
@@ -284,7 +284,7 @@ describe('Svelte DatePicker 年月选择器的焦点（浏览器）', () => {
     it.each(cases)('$type 用键盘从月份标题进入年月选择器，焦点落在年份列表', async ({ type, value }) => {
         await setup({ value, open: true, props: { type } });
         await waitFor(() => expect(getTitle()).not.toBeNull());
-        await tabTo(getTitle());
+        await tabIntoPanel(getTitle());
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(document.activeElement).toBe(getPanel('left').querySelector('[role="listbox"]')));
     });

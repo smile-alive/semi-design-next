@@ -1,4 +1,4 @@
-import { type Accessor, type JSX, type Ref, Show, batch, children, createComputed, createMemo, createSelector, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
+import { type Accessor, type JSX, type Ref, Show, children, createComputed, createMemo, createSelector, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/tree-select/constants';
@@ -22,7 +22,7 @@ import Tag, { TagGroup, type TagGroupItem } from '../tag';
 import TagInput from '../tag-input';
 import type { Position } from '../tooltip';
 import { useSpecialTrigger } from '../tooltip/context';
-import { type FlattenNode, NodeList, TreeContext, type TreeContextValue, type TreeNodeData, type TreeProps, type TreeRowProps, TreeNode, sameRow, useTreeKeyboard } from '../tree';
+import { type FlattenNode, NodeList, TreeContext, type TreeContextValue, type TreeNodeData, type TreeProps, type TreeRowProps, TreeNode, sameRow } from '../tree';
 
 const prefix = cssClasses.PREFIX;
 const prefixTree = cssClasses.PREFIX_TREE;
@@ -369,13 +369,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             notifySearch: (input, filteredExpandedKeys, filteredNodes) => props.onSearch?.(input, filteredExpandedKeys, filteredNodes as TreeNodeData[]),
             notifyLoad: (loadedKeys, node) => props.onLoad?.(loadedKeys, node as TreeNodeData),
             notifyClear: (e) => props.onClear?.(e),
-            notifyVisibleChange: (visible) => {
-                // a reopened dropdown starts without an active row
-                if (!visible) {
-                    keyboard.setKeyboardKey(null);
-                }
-                props.onVisibleChange?.(visible);
-            },
+            notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
             notifyChange: (value, node, e) => props.onChange?.(value, node, e),
             notifyChangeWithObject: (node, e) => props.onChange?.(node, e),
             notifyExpand: (expandedKeys, { expanded, node }) => props.onExpand?.(expandedKeys, { expanded, node: node as TreeNodeData }),
@@ -393,7 +387,16 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                 }
             },
             isInTrigger: (node) => node instanceof Node && Boolean(root?.contains(node)),
-        })
+            revealRow: (index, key) => {
+                if (list) {
+                    list.scrollToItem(index);
+                    return;
+                }
+                // inside the dropdown, not the document: one in a ShadowRoot is out of document.getElementById's reach
+                optionContainer?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
+            },
+        }),
+        { context: () => ({ direction: config().direction }) }
     );
 
     // the state that new props imply; written back before the DOM updates, so rows and handlers read one state
@@ -419,38 +422,24 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
     }));
 
     const triggerRenderKeys = createMemo(() => TreeSelectFoundation.getTriggerKeys(props, state()));
-
-    const rows = () => state().flattenNodes as FlattenNode[];
+    const activeIndex = createMemo(() => TreeSelectFoundation.getActiveIndex(state()));
+    const activeKey = createMemo(() => state().flattenNodes[activeIndex()]?.key);
+    const isActive = createSelector(activeKey);
 
     // the row state Tree and TreeSelect share; prevProps holds each one's own props
     const rowState: Accessor<Omit<BasicTreeSelectInnerData, 'prevProps'>> = state;
 
-    const rowProps = (node: FlattenNode) => buildRowProps(node, rowState(), props) as TreeRowProps | null;
-
-    const reveal = (index: number, key: string) => {
-        if (list) {
-            list.scrollToItem(index);
-            return;
-        }
-        // inside the dropdown, not the document: one in a ShadowRoot is out of document.getElementById's reach
-        optionContainer?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
+    const contextValue: TreeContextValue = {
+        view: contextView,
+        icon: () => local.icon,
+        onNodeExpand: foundation.handleNodeExpand,
+        onNodeSelect: foundation.handleNodeSelect,
+        onNodeCheck: foundation.handleNodeSelect,
     };
 
-    const keyboard = useTreeKeyboard({
-        // keys act on the live rows, so Enter never picks a row the keyword already filtered out
-        rows,
-        // an APG combobox opens without an active option
-        defaultIndex: () => -1,
-        rowProps,
-        hasLoadData: () => Boolean(local.loadData),
-        rtl: () => config().direction === 'rtl',
-        editing: (event) => isTextEditor(event.target),
-        select: foundation.handleNodeSelect,
-        expand: foundation.handleNodeExpand,
-        reveal,
-    });
+    const rows = () => state().flattenNodes as FlattenNode[];
 
-    const isActive = createSelector(keyboard.activeKey);
+    const rowProps = (node: FlattenNode) => buildRowProps(node, rowState(), props) as TreeRowProps | null;
 
     const filterable = () => Boolean(local.filterTreeNode);
 
@@ -459,7 +448,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
     const isDropdownPositionSearch = () => local.searchPosition === strings.SEARCH_POSITION_DROPDOWN;
 
     const activeDescendant = () => {
-        const key = keyboard.activeKey();
+        const key = activeKey();
         return key === undefined ? undefined : nodeId(treeId, key);
     };
 
@@ -477,8 +466,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
     const markPressInside = useClickOutside(
         [() => root, () => optionContainer],
         foundation.handleClickOutside,
-        // blur comes from a click outside, so it is listened to while focused, not only while open
-        () => state().isOpen || state().isFocus
+        // blur comes from a click outside, so it is listened to while focused; while open the Popover reports it
+        () => state().isFocus && !state().isOpen
     );
 
     const prefixKind = () => prefixNode.kind();
@@ -538,21 +527,6 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
 
     const tagSize = () => (local.size === 'small' ? 'small' : 'large');
 
-    // the row a pointer acts on becomes the keyboard's row, in the same commit as the foundation's update
-    const activate = (row: TreeRowProps, action: () => void) =>
-        batch(() => {
-            keyboard.setKeyboardKey(row.key);
-            action();
-        });
-
-    const contextValue: TreeContextValue = {
-        view: contextView,
-        icon: () => local.icon,
-        onNodeExpand: (e, row) => activate(row, () => foundation.handleNodeExpand(e, row)),
-        onNodeSelect: (e, row) => activate(row, () => foundation.handleNodeSelect(e, row)),
-        onNodeCheck: (e, row) => activate(row, () => foundation.handleNodeSelect(e, row)),
-    };
-
     const search = (value: string) => foundation.search(value);
 
     const handleClear = (e?: MouseEvent) => {
@@ -587,9 +561,6 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         removeTag(key);
     };
 
-    // Tree keys of the open popup (APG combobox with tree popup); returns whether the key was handled
-    const handleTreeKeyDown = (e: KeyboardEvent) => state().isOpen && keyboard.handleKeyDown(e);
-
     const handleFocusIn = (e: FocusEvent) => foundation.handleTriggerFocus(e);
 
     // focus enters the dropdown through its search input or a field in a slot, and the dropdown is not a DOM
@@ -613,11 +584,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
 
     const handleKeyDown = (e: KeyboardEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onKeyDown, e);
-        if (!isInnerControlKey(e) && !handleTreeKeyDown(e)) {
-            // Home and End open the popup on the first or the last row
-            if (foundation.handleSelectionKeyDown(e)) {
-                keyboard.handleKeyDown(e);
-            }
+        if (!isInnerControlKey(e) && !foundation.handleRowKeyDown(e)) {
+            foundation.handleSelectionKeyDown(e);
         }
         foundation.handleKeyDown(e);
     };
@@ -688,21 +656,11 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         if (!isTextEditor(e.target)) {
             e.preventDefault();
         }
-        markPressInside(e);
     };
 
     const handleContainerKeyDown = (e: KeyboardEvent) => {
-        handleTreeKeyDown(e);
+        foundation.handleRowKeyDown(e);
         foundation.handleKeyDown(e);
-    };
-
-    const handleOpen = () => {
-        foundation.handlePopoverOpen();
-        // a key that opens the popup sets the row before the list mounts, so opening scrolls to it again
-        const key = keyboard.activeKey();
-        if (key !== undefined) {
-            reveal(keyboard.activeIndex(), key);
-        }
     };
 
     // ref.focus() focuses the combobox, as Tooltip and focus handover expect; it does not open the dropdown
@@ -1139,8 +1097,9 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={state().isOpen}
+            onClickOutSide={foundation.handleClickOutside}
             onEscKeyDown={foundation.close}
-            onOpen={handleOpen}
+            onOpen={foundation.handlePopoverOpen}
         >
             {(getTriggerProps) => (
                 <div

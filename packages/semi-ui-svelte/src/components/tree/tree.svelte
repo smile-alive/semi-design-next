@@ -3,7 +3,7 @@
     import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
     import TreeFoundation, { type BasicTreeInnerData, type BasicTreeNodeData, type BasicTreeProps, type TreeAdapter } from '@fibrae/semi-foundation/components/tree/foundation';
-    import { buildRowProps, getClearedSelection, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
+    import { buildRowProps, getClearedSelection, handleTreeFocusIn, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
     import '@fibrae/semi-foundation/components/tree/tree.scss';
     import { IconSearch } from '@fibrae/semi-icons-svelte';
     import { useDefaultProps, useFoundation } from '../../base/index.js';
@@ -17,7 +17,6 @@
     import type { FlattenNode, TreeExpandedOtherProps, TreeNodeData, TreeProps, TreeRowProps, TreeScrollData, TreeValue } from './interface.js';
     import NodeList from './node-list.svelte';
     import TreeNode from './tree-node.svelte';
-    import useTreeKeyboard from './use-tree-keyboard.svelte.js';
 
     type Foundation = TreeFoundation<MouseEvent>;
     type Adapter = TreeAdapter<MouseEvent>;
@@ -232,33 +231,22 @@
                         nodeList?.scrollToItem(index, align);
                     }
                 }),
-        })
+            revealRow: (index, key) => {
+                if (!nodeList?.scrollToItem(index)) {
+                    // inside the tree, not the document: a tree in a ShadowRoot is out of document.getElementById's reach
+                    treeRoot?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
+                }
+            },
+        }),
+        { context: () => ({ direction: config.direction }) }
     );
-
-    const keyboard = useTreeKeyboard({
-        rows: () => view.flattenNodes as FlattenNode[],
-        defaultIndex: () =>
-            Math.max(
-                view.flattenNodes.findIndex((node) => view.selectedKeys.includes(node.key!)),
-                0
-            ),
-        rowProps: (node) => rowProps(node),
-        hasLoadData: () => Boolean(loadData),
-        rtl: () => config.direction === 'rtl',
-        select: foundation.handleNodeSelect,
-        expand: foundation.handleNodeExpand,
-        reveal: (index, key) => {
-            if (!nodeList?.scrollToItem(index)) {
-                // inside the tree, not the document: a tree in a ShadowRoot is out of document.getElementById's reach
-                treeRoot?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
-            }
-        },
-    });
 
     // State implied by new props renders with them; the pre-effect writes it back for the handlers before render
     // not named `derived`: a local of that name turns the `$derived` rune into a store subscription
     const implied = $derived(TreeFoundation.deriveState(foundationProps, states()));
     const view = $derived<BasicTreeInnerData>(implied ? { ...states(), ...implied } : states());
+    const activeIndex = $derived(TreeFoundation.getActiveIndex(view));
+    const activeKey = $derived(view.flattenNodes[activeIndex]?.key);
 
     const noData = $derived.by(() => {
         const { keyEntities, inputValue, filteredKeys } = view;
@@ -294,26 +282,11 @@
         get dropPosition() {
             return view.dropPosition;
         },
-        onNodeExpand: (event, row) => {
-            keyboard.activate(row.key);
-            foundation.handleNodeExpand(event, row);
-        },
-        onNodeSelect: (event, row) => {
-            keyboard.activate(row.key);
-            foundation.handleNodeSelect(event, row);
-        },
-        onNodeCheck: (event, row) => {
-            keyboard.activate(row.key);
-            foundation.handleNodeSelect(event, row);
-        },
-        onNodeRightClick: (event, row) => {
-            keyboard.activate(row.key);
-            foundation.handleNodeRightClick(event, row);
-        },
-        onNodeDoubleClick: (event, row) => {
-            keyboard.activate(row.key);
-            foundation.handleNodeDoubleClick(event, row);
-        },
+        onNodeExpand: foundation.handleNodeExpand,
+        onNodeSelect: foundation.handleNodeSelect,
+        onNodeCheck: foundation.handleNodeSelect,
+        onNodeRightClick: foundation.handleNodeRightClick,
+        onNodeDoubleClick: foundation.handleNodeDoubleClick,
         onNodeDragStart: foundation.handleNodeDragStart,
         onNodeDragEnter: foundation.handleNodeDragEnter,
         onNodeDragOver: foundation.handleNodeDragOver,
@@ -338,31 +311,7 @@
 
     const handleSearch = (input: string) => foundation.handleInputChange(input);
 
-    const handleTreeKeyDown = (event: KeyboardEvent) => {
-        // a tabbable control inside a row handles its own keys
-        if (event.target !== event.currentTarget && event.target instanceof HTMLElement && event.target.tabIndex >= 0) {
-            return;
-        }
-        keyboard.handleKeyDown(event);
-    };
-
-    const handleTreeFocus = (event: FocusEvent & { currentTarget: HTMLElement }) => {
-        const tree = event.currentTarget;
-        const target = event.target;
-        if (target !== tree) {
-            // A click focuses the tabindex=-1 element it lands on (the virtual scroller, a row's checkbox); the tree takes
-            // focus back, so aria-activedescendant and the row's focus ring keep working.
-            if (target instanceof HTMLElement && target.tabIndex < 0) {
-                tree.focus({ preventScroll: true });
-            }
-            return;
-        }
-        // A virtual list may not have rendered the active descendant yet. Pointer focus is skipped: mousedown focuses the
-        // tree before click, and scrolling back to the stale active row would unmount the clicked row.
-        if (tree.matches(':focus-visible')) {
-            nodeList?.scrollToItem(keyboard.activeIndex);
-        }
-    };
+    const handleTreeFocus = (event: FocusEvent & { currentTarget: HTMLElement }) => handleTreeFocusIn(event, () => nodeList?.scrollToItem(activeIndex));
 
     $effect.pre(() => {
         if (implied) {
@@ -427,19 +376,19 @@
         <ul
             bind:this={treeRoot}
             {...attrs.control}
-            aria-activedescendant={keyboard.activeKey === undefined ? undefined : nodeId(treeId, keyboard.activeKey)}
+            aria-activedescendant={activeKey === undefined ? undefined : nodeId(treeId, activeKey)}
             aria-multiselectable={multiple}
             class={listClass}
             role="tree"
             tabindex={(attrs.control.tabindex as number | undefined) ?? 0}
             onfocusin={handleTreeFocus}
-            onkeydown={handleTreeKeyDown}
+            onkeydown={foundation.handleKeyDown}
         >
             <NodeList bind:this={nodeList} flattenList={view.cachedFlattenNodes} flattenNodes={view.flattenNodes} {motion} motionKeys={view.motionKeys} motionType={view.motionType} {virtualize}>
                 {#snippet children({ node, style })}
                     {@const row = rowProps(node)}
                     {#if row}
-                        <TreeNode {expandIcon} focused={row.key === keyboard.activeKey} {fullLabel} {icon} id={nodeId(treeId, row.key)} {label} {row} rowStyle={style} {showLine} />
+                        <TreeNode {expandIcon} focused={row.key === activeKey} {fullLabel} {icon} id={nodeId(treeId, row.key)} {label} {row} rowStyle={style} {showLine} />
                     {/if}
                 {/snippet}
             </NodeList>

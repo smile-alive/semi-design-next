@@ -3,7 +3,6 @@ export { TreeContext, useTreeContext } from './context';
 export type { TreeContextValue, TreeContextView } from './context';
 export { default as NodeList } from './node-list';
 export { default as TreeNode } from './tree-node';
-export { default as useTreeKeyboard } from './use-tree-keyboard';
 export { sameRow } from './utils';
 export type {
     DragEnterProps,

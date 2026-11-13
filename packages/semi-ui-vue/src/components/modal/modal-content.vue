@@ -1,10 +1,11 @@
 <script setup lang="ts">
-    import { Transition, h, normalizeStyle, onActivated, onDeactivated, onMounted, shallowRef, useAttrs, useId, useTemplateRef, vShow, watch, withDirectives, type CSSProperties, type ComponentPublicInstance, type TransitionProps } from 'vue';
+    import { Transition, h, normalizeStyle, onActivated, onDeactivated, onMounted, shallowRef, useAttrs, useId, useTemplateRef, vShow, withDirectives, type CSSProperties, type ComponentPublicInstance, type TransitionProps } from 'vue';
+    import { isNil, omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
-    import { warnIfDialogUnnamed, toCssLength } from '@fibrae/semi-foundation/utils';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { useFoundation } from '../../base/index';
-    import { useRecordFocus } from '../../composables/index';
+    import { useOverlayResources } from '../../composables/index';
     import { isAriaKey, splitControlAttrs } from '../../utils/index';
     import type { ModalContentEmits, ModalContentProps, ModalSlots } from './interface';
     import ModalDialog from './modal-dialog.vue';
@@ -70,9 +71,11 @@
         return rest;
     };
 
+    // An attribute bound to undefined counts as unset: falling through to ModalDialog it would replace the generated
+    // aria-labelledby
     const dialogAttrs = () => ({
         'aria-modal': isModal(props) ? ('true' as const) : undefined,
-        ...splitControlAttrs(attrs, isDialogKey).control,
+        ...omitBy(splitControlAttrs(attrs, isDialogKey).control, isNil),
         class: [
             props.contentClass,
             {
@@ -116,21 +119,14 @@
             )
         );
 
-    // record before the content's components take focus in their mounted hooks (an autofocusing Input)
-    useRecordFocus({ record: foundation.recordFocus }, () => props.visible);
-
-    // Gated on `displayed`, not `visible`: vShow restores the display in its own post-flush hook, which runs after a watch
-    // on `visible`, so focusing there would hit a display:none dialog on a keepDOM reopen. Post flush also runs after
-    // Portal moves the nodes back on reactivation, so the inert is computed there.
-    watch(
-        () => displayed.value && active.value,
-        (shown, _, onCleanup) => {
-            if (!shown) return;
-            foundation.show();
-            warnIfDialogUnnamed(dialog.value, 'Modal');
-            onCleanup(foundation.hide);
-        },
-        { flush: 'post' }
+    // Recorded before the content's components take focus in their mounted hooks (an autofocusing Input). Shown is
+    // gated on `displayed`, not `visible`: vShow restores the display in its own post-flush hook, which runs after a
+    // watch on `visible`, so focusing there would hit a display:none dialog on a keepDOM reopen. Post flush also runs
+    // after Portal moves the nodes back on reactivation, so the inert is computed there.
+    useOverlayResources(
+        foundation,
+        () => props.visible,
+        () => displayed.value && active.value
     );
 
     // Portal renders its content a flush after mounting, so a close in that gap mounts the dialog already hidden: no

@@ -1,7 +1,8 @@
 import { For, Show, createMemo, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
-import { getFileType, isImageFile, isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils';
+import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/utils';
+import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-foundation/components/upload/utils';
 import { IconAlertCircle, IconBriefStroked, IconClear } from '@fibrae/semi-icons-solid';
 import Image from '@fibrae/semi-ui-solid/image/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';

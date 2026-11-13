@@ -42,11 +42,15 @@ export function renderApi(meta: VueApi, description: ApiDescription, locale: Loc
         groups
             .map((group, index) => {
                 const members = group === 'props' ? ownProps(meta) : meta[group];
-                const rows = members.map((member) => {
-                    const cells = [apiType(member.type, 'required' in member && !member.required)];
-                    if (group === 'props') cells.push(apiType(defaultValue(member)));
-                    return { name: member.name, cells };
-                });
+                // The checker lists events by when it created their name literals; the descriptions give the author's order
+                const order = Object.keys(description[group] ?? {});
+                const rows = members
+                    .map((member) => {
+                        const cells = [apiType(member.type, 'required' in member && !member.required)];
+                        if (group === 'props') cells.push(apiType(defaultValue(member)));
+                        return { name: member.name, cells };
+                    })
+                    .toSorted((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
                 return renderTable(group, titles[index], headings[locale][index], rows, description[group], locale);
             })
             .join('\n\n') + '\n'
@@ -59,9 +63,9 @@ export function extractApi(source: string): VueApi {
     if (!config) throw new Error(`组件缺少 tsconfig.json：${source}`);
     const parsed = ts.readConfigFile(config, (path) => ts.sys.readFile(path));
     if (parsed.error) throw new Error(ts.flattenDiagnosticMessageText(parsed.error.messageText, '\n'));
-    // One checker per component: a shared checker prints union members in the order earlier components created
-    // them, so a page's table would change whenever another page is added.
-    const checker = createCheckerByJson(dirname(config), parsed.config, { schema: false });
+    // Without stableTypeOrdering the checker orders union members (and the members of a union of shapes) by when it
+    // created each type, so an unrelated source file could reorder a table.
+    const checker = createCheckerByJson(dirname(config), { ...parsed.config, compilerOptions: { ...parsed.config.compilerOptions, stableTypeOrdering: true } }, { schema: false });
     const meta = checker.getComponentMeta(source);
     const { props, events, slots } = meta;
     const program = checker.getProgram();

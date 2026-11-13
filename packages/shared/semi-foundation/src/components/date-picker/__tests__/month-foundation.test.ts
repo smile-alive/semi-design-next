@@ -65,13 +65,20 @@ describe('MonthFoundation 键盘活动日', () => {
     };
 
     it('handleKeyDown 移动活动日，越过月边界时通知面板切换，Enter 选中活动日', () => {
-        const { adapter, press, activeDate } = createFoundation({});
+        const { foundation, adapter, press, activeDate } = createFoundation({});
         expect(press('ArrowDown').preventDefault).toHaveBeenCalled();
         expect(activeDate()).toBe('2021-06-08');
         press('ArrowUp');
         press('ArrowLeft');
         expect(adapter.notifyMonthSwitch).toHaveBeenCalledWith('prevMonth');
         expect(press('a').preventDefault).not.toHaveBeenCalled();
+        const before = activeDate();
+        for (const modifier of ['altKey', 'ctrlKey', 'metaKey'] as const) {
+            const event = { key: 'ArrowLeft', shiftKey: false, [modifier]: true, preventDefault: vi.fn<() => void>() };
+            foundation.handleKeyDown(event, '');
+            expect(event.preventDefault).not.toHaveBeenCalled();
+        }
+        expect(activeDate()).toBe(before);
 
         const next = createFoundation({});
         next.press('ArrowRight');

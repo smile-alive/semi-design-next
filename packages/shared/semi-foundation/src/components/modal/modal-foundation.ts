@@ -1,5 +1,5 @@
 import { debounce } from 'es-toolkit';
-import { BaseFoundation, type DefaultAdapter, ModalResources, PopupLifecycle } from '../../base/index';
+import { BaseFoundation, type DefaultAdapter, ModalResources, OverlaySession, PopupLifecycle } from '../../base/index';
 import { coversPage, resolvePopupContainer, isPromise } from '../../utils/index';
 import { isModal } from './modal-content-foundation';
 
@@ -77,9 +77,7 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
     #lastCancelTarget: EventTarget | null = null;
     #lastOkTarget: EventTarget | null = null;
     // between beforeShow and afterHide: the body lock is held
-    #shown = false;
-    // destroyed while shown: init takes the lock again
-    #resume = false;
+    readonly #session = new OverlaySession();
     readonly #lifecycle = new PopupLifecycle();
     readonly #resources = new ModalResources();
 
@@ -155,8 +153,7 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
     // A hidden instance (KeepAlive, StrictMode replay) holds no body lock and init takes it again; afterClose follows
     // the shown state, not the instance, so neither destroy nor init reports a close
     override init() {
-        if (this.#resume) {
-            this.#resume = false;
+        if (this.#session.resume()) {
             this.beforeShow();
         }
     }
@@ -164,9 +161,8 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
     override destroy() {
         this.#debouncedOk.cancel();
         this.#debouncedCancel.cancel();
-        if (this.#shown) {
-            this.afterHide();
-            this.#resume = true;
+        if (this.#session.suspend()) {
+            this.#resources.release();
         }
     }
 
@@ -193,10 +189,9 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
     };
 
     beforeShow = () => {
-        if (this.#shown) {
+        if (!this.#session.begin()) {
             return;
         }
-        this.#shown = true;
         this.#lifecycle.show();
         // ModalContent holds the layer and focus; the page keeps scrolling behind a non-modal dialog
         const { mask, maskFixed, getPopupContainer } = this.getProps();
@@ -207,12 +202,9 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
     };
 
     afterHide = () => {
-        this.#resume = false;
-        if (!this.#shown) {
-            return;
+        if (this.#session.end()) {
+            this.#resources.release();
         }
-        this.#shown = false;
-        this.#resources.release();
     };
 
     /**

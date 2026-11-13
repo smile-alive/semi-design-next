@@ -29,7 +29,6 @@ import { TreeContext, type TreeContextValue } from '../tree/context';
 import type { TreeProps, TreeState, FlattenNode, TreeNodeData, TreeNodeProps } from '../tree/interface';
 import NodeList from '../tree/node-list';
 import TreeNode from '../tree/tree-node';
-import useTreeKeyboard from '../tree/use-tree-keyboard';
 
 type Foundation = TreeSelectFoundation<TreeSelectBodyProps, TreeSelectState, React.MouseEvent | React.KeyboardEvent>;
 type Adapter = TreeSelectAdapter<TreeSelectBodyProps, TreeSelectState, React.MouseEvent | React.KeyboardEvent>;
@@ -296,12 +295,16 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const { direction } = useConfigContext();
     const { locale } = useLocale('TreeSelect');
     const { locale: treeLocale } = useLocale('Tree');
+    const prefixNode = useUnwrappedLazy(prefix);
+    const insetLabelNode = useUnwrappedLazy(insetLabel);
+    const suffixNode = useUnwrappedLazy(suffix);
 
     const triggerRef = useRef<HTMLDivElement>(null);
     const optionContainerEl = useRef<HTMLDivElement>(null);
     const inputRef = useRef<SearchInputElement | null>(null);
     const tagInputRef = useRef<TagInputHandle>(null);
     const listRef = useRef<VirtualListHandle>(null);
+    const renderedRows = useRef<FlattenNode[]>([]);
     const treeId = useId();
     const singleSearchTextId = useId();
 
@@ -332,7 +335,21 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                 }
             },
             isInTrigger: (node) => node instanceof Node && Boolean(triggerRef.current?.contains(node)),
-        })
+            revealRow: (_index, key) => {
+                if (listRef.current) {
+                    // a deferred keyword renders the row at another index; shortcut: a row not rendered yet is not
+                    // scrolled to, revisit if virtual-list arrow keys get lost
+                    const rendered = renderedRows.current.findIndex((node) => node.key === key);
+                    if (rendered !== -1) {
+                        listRef.current.scrollToItem(rendered);
+                    }
+                } else {
+                    // inside the dropdown, not the document: one in a ShadowRoot is out of document.getElementById's reach
+                    optionContainerEl.current?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
+                }
+            },
+        }),
+        { direction }
     );
 
     // derived in render so new props reach the DOM in one commit; written back for the handlers, which settles
@@ -343,85 +360,19 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const deferredView = useDeferredValue(view);
     const listView = deferredView.inputValue === view.inputValue ? view : deferredView;
     const { isOpen, isFocus } = view;
+
+    // blur comes from a click outside, so it is listened to while focused; while open the Popover reports it
+    const markPressInside = useClickOutside([triggerRef, optionContainerEl], foundation.handleClickOutside, isFocus && !isOpen);
+
     const { inputValue, inputTriggerFocus, keyEntities } = view;
     const { flattenNodes, filteredKeys, motionKeys, motionType, inputValue: listInputValue } = listView;
     const isTriggerPositionSearch = Boolean(filterTreeNode) && searchPosition === strings.SEARCH_POSITION_TRIGGER;
     const isDropdownPositionSearch = searchPosition === strings.SEARCH_POSITION_DROPDOWN;
 
-    // a callback, so passing it to a user searchRender is not a ref access during render
-    const setInputRef = (el: SearchInputElement | null) => {
-        inputRef.current = el;
-    };
-
-    const renderedIndexOf = (key: string) => flattenNodes.findIndex((node) => node.key === key);
-
-    /** The props a row renders with; the key handler reads them from the live state */
-    const getNodeProps = (treeNode: FlattenNode, from: TreeSelectState = listView): TreeNodeProps | null => {
-        const rowProps = buildRowProps(treeNode, from, props);
-        // Node data may carry "empty", which TreeNode renders as the empty-content row
-        return rowProps && ({ ...rowProps, empty: false } as TreeNodeProps);
-    };
-
-    // a key that opens the popup sets the row before the list mounts, so opening scrolls to it again
-    const scrollToRow = (key: string) => {
-        if (listRef.current) {
-            // shortcut: a row not rendered yet is not scrolled to; revisit if virtual-list arrow keys get lost
-            const rendered = renderedIndexOf(key);
-            if (rendered !== -1) {
-                listRef.current.scrollToItem(rendered);
-            }
-        } else {
-            // inside the dropdown, not the document: one in a ShadowRoot is out of document.getElementById's reach
-            optionContainerEl.current?.querySelector(`#${CSS.escape(nodeId(treeId, key))}`)?.scrollIntoView({ block: 'nearest' });
-        }
-    };
-
-    useLayoutEffect(() => {
-        if (derived) {
-            foundation.syncDerivedState(derived);
-        }
-    }, [derived, foundation]);
-
-    // blur comes from a click outside, so it is listened to while focused, not only while open
-    const markPressInside = useClickOutside([triggerRef, optionContainerEl], foundation.handleClickOutside, isOpen || isFocus);
-
-    const {
-        keyboardKey,
-        setKeyboardKey,
-        activeKey,
-        handleKeyDown: handleRowKeyDown,
-    } = useTreeKeyboard({
-        // keys act on the live rows, so Enter never picks a row the keyword already filtered out
-        rows: view.flattenNodes,
-        // an APG combobox opens without an active option
-        defaultIndex: -1,
-        rowProps: (node) => getNodeProps(node, view),
-        hasLoadData: Boolean(loadData),
-        rtl: direction === 'rtl',
-        editing: (event) => isTextEditor(event.target),
-        select: foundation.handleNodeSelect,
-        expand: foundation.handleNodeExpand,
-        reveal: scrollToRow,
-    });
-
-    useImperativeHandle(
-        props.ref,
-        () => ({
-            search: (value: string) => foundation.search(value),
-            close: foundation.close,
-        }),
-        [foundation]
-    );
-
-    if (!isOpen && keyboardKey !== null) {
-        setKeyboardKey(null);
-    }
-
-    const prefixNode = useUnwrappedLazy(prefix);
-    const insetLabelNode = useUnwrappedLazy(insetLabel);
-    const suffixNode = useUnwrappedLazy(suffix);
-
-    const activeRendered = activeKey !== undefined && (listView === view || renderedIndexOf(activeKey) !== -1);
+    // keys act on the live rows, so Enter never picks a row the keyword already filtered out; the deferred list may
+    // not render the active row yet
+    const activeKey = view.flattenNodes[TreeSelectFoundation.getActiveIndex(view)]?.key;
+    const activeRendered = activeKey !== undefined && (listView === view || flattenNodes.some((node) => node.key === activeKey));
     const activeDescendant = activeRendered ? nodeId(treeId, activeKey) : undefined;
 
     // ARIA 1.2: a search input on the trigger is the combobox (`searchRender={false}` leaves single mode without
@@ -468,28 +419,27 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             treeDisabled: disabled,
             expandAction,
             onNodeRightClick: noop,
-            onNodeExpand: (e, treeNode) => {
-                setKeyboardKey(treeNode.eventKey);
-                foundation.handleNodeExpand(e, treeNode);
-            },
-            onNodeSelect: (e, treeNode) => {
-                setKeyboardKey(treeNode.eventKey);
-                foundation.handleNodeSelect(e, treeNode);
-            },
-            onNodeCheck: (e, treeNode) => {
-                setKeyboardKey(treeNode.eventKey);
-                foundation.handleNodeSelect(e, treeNode);
-            },
+            onNodeExpand: foundation.handleNodeExpand,
+            onNodeSelect: foundation.handleNodeSelect,
+            onNodeCheck: foundation.handleNodeSelect,
             multiple,
             renderLabel,
             renderFullLabel,
             labelEllipsis: typeof labelEllipsis === 'undefined' ? virtualize : labelEllipsis,
         }),
-        [loadData, disabled, expandAction, foundation, setKeyboardKey, multiple, renderLabel, renderFullLabel, labelEllipsis, virtualize]
+        [loadData, disabled, expandAction, foundation, multiple, renderLabel, renderFullLabel, labelEllipsis, virtualize]
     );
 
-    /** Tree keys of the open popup (APG combobox with tree popup); returns whether the key was handled */
-    const handleTreeKeyDown = (event: React.KeyboardEvent) => isOpen && handleRowKeyDown(event);
+    // a callback, so passing it to a user searchRender is not a ref access during render
+    const setInputRef = (el: SearchInputElement | null) => {
+        inputRef.current = el;
+    };
+
+    const getNodeProps = (treeNode: FlattenNode): TreeNodeProps | null => {
+        const rowProps = buildRowProps(treeNode, listView, props);
+        // Node data may carry "empty", which TreeNode renders as the empty-content row
+        return rowProps && ({ ...rowProps, empty: false } as TreeNodeProps);
+    };
 
     const getNodeData = (key: string) => getTreeNodeData(key, keyEntities, props);
 
@@ -514,79 +464,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const handleClear = (e: React.MouseEvent) => {
         e?.stopPropagation();
         foundation.handleClear(e);
-    };
-
-    const renderTagList = (triggerRenderKeys: string[]) => {
-        const tagList: Array<React.ReactNode> = [];
-        triggerRenderKeys.forEach((key: TreeNodeData['key'], index) => {
-            const item = getNodeData(key);
-            if (!item) {
-                return;
-            }
-            const onClose = (_tagContent: any, e: React.MouseEvent | React.KeyboardEvent) => {
-                if (e && typeof e.preventDefault === 'function') {
-                    e.preventDefault();
-                }
-                removeTag(key);
-            };
-            const { content, isRenderInTag } = (renderSelectedItem as RenderSelectedItemInMultiple)(item, {
-                index,
-                onClose,
-            });
-            if (content == null) {
-                return;
-            }
-            const tag: Partial<TagProps> = {
-                closable: TreeSelectFoundation.isTagClosable(key, props, view),
-                color: 'white',
-                visible: true,
-                onClose,
-                size: size === 'small' ? 'small' : 'large',
-            };
-            if (isRenderInTag) {
-                tagList.push(
-                    <Tag key={`tag-${key}-${index}`} {...tag}>
-                        {content}
-                    </Tag>
-                );
-            } else {
-                tagList.push(content);
-            }
-        });
-        return tagList;
-    };
-
-    const renderTagItem = (key: string, idx: number) => {
-        const item = getNodeData(key);
-        if (!item) {
-            return null;
-        }
-        const tagCls = clsx(`${prefixcls}-selection-tag`, {
-            [`${prefixcls}-selection-tag-disabled`]: disabled,
-        });
-        const onClose = (_tagChildren: React.ReactNode, e: React.MouseEvent | React.KeyboardEvent) => {
-            e.preventDefault();
-            removeTag(key);
-        };
-        const tagProps: Partial<TagProps> = {
-            size: size === 'small' ? 'small' : 'large',
-            color: 'white',
-            className: tagCls,
-            closable: TreeSelectFoundation.isTagClosable(key, props, view),
-            onClose,
-        };
-        const { content, isRenderInTag } = (renderSelectedItem as RenderSelectedItemInMultiple)(item, {
-            index: idx,
-            onClose,
-        });
-        if (isRenderInTag) {
-            return (
-                <Tag key={`tag-${getValueOrKey(item, keyMaps)}-${idx}`} {...tagProps}>
-                    {content}
-                </Tag>
-            );
-        }
-        return content;
     };
 
     const renderInput = () => {
@@ -654,37 +531,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         );
     };
 
-    const renderTagInput = (triggerRenderKeys: string[]) => (
-        // dropdown search is focused on open instead: autofocus in the off-screen popup scrolls the page to top
-        <TagInput
-            ref={tagInputRef}
-            {...comboboxProps}
-            aria-autocomplete="list"
-            autoFocus={isTriggerPositionSearch ? searchAutoFocus : undefined}
-            disabled={disabled}
-            placeholder={placeholder}
-            value={triggerRenderKeys}
-            // the trigger draws its own clear button and adornments, and its search text only becomes a search: global
-            // TagInput defaults must not add them, drag handles or add-on-blur tags
-            addOnBlur={false}
-            draggable={false}
-            expandRestTagsOnClick={false}
-            inputValue={inputValue}
-            insetLabel={null}
-            maxTagCount={maxTagCount}
-            preventScroll={preventScroll}
-            restTagsPopoverProps={restTagsPopoverProps}
-            showClear={false}
-            showRestTagsPopover={showRestTagsPopover}
-            size={size}
-            prefix={null}
-            renderTagItem={(itemKey, index) => renderTagItem(itemKey, index)}
-            suffix={null}
-            onInputChange={(v) => search(v)}
-            onRemove={(itemKey) => removeTag(itemKey)}
-        />
-    );
-
     const renderSingleTriggerSearchItem = () => {
         const renderText = getRenderTextInSingle();
         const shown = isShownText(renderText);
@@ -699,53 +545,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         );
     };
 
-    const renderSelectContent = (triggerRenderKeys: string[]) => {
-        if (isTriggerPositionSearch) {
-            return multiple ? (
-                renderTagInput(triggerRenderKeys)
-            ) : (
-                <>
-                    {renderInput()}
-                    {!inputValue && renderSingleTriggerSearchItem()}
-                </>
-            );
-        }
-        if (!multiple || !hasValue) {
-            const renderText = getRenderTextInSingle();
-            const shown = isShownText(renderText);
-            const spanCls = clsx(`${prefixcls}-selection-content`, {
-                [`${prefixcls}-selection-placeholder`]: !shown,
-            });
-            return <span className={spanCls}>{shown ? renderText : placeholder}</span>;
-        }
-        return <TagGroup maxTagCount={maxTagCount} mode="custom" popoverProps={restTagsPopoverProps} showPopover={showRestTagsPopover} size={size === 'small' ? 'small' : 'large'} tagList={renderTagList(triggerRenderKeys)} />;
-    };
-
-    const renderClearBtn = () => {
-        if (!clearable) {
-            return null;
-        }
-        return (
-            <button
-                ref={clearHandover}
-                type="button"
-                className={`${prefixcls}-clearbtn`}
-                aria-label={locale.clear}
-                onClick={(e) => {
-                    handleClear(e);
-                    if (inputIsCombobox) {
-                        (inputRef.current ?? tagInputRef.current)?.focus();
-                    } else {
-                        triggerRef.current?.focus();
-                    }
-                }}
-                onKeyDown={stopButtonActivationKeys}
-            >
-                {clearIcon || <IconClear />}
-            </button>
-        );
-    };
-
     const renderArrow = () => {
         if (!arrowIcon) {
             return null;
@@ -753,91 +552,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         return (
             <div className={clsx(`${prefixcls}-arrow`)} x-semi-prop="arrowIcon">
                 {arrowIcon}
-            </div>
-        );
-    };
-
-    const renderSelection = () => {
-        const useCustomTrigger = typeof triggerRender === 'function';
-        const isEmptyTriggerSearch = isTriggerPositionSearch && !hasValue;
-        const isValueTriggerSearch = isTriggerPositionSearch && hasValue;
-        const classNames = useCustomTrigger
-            ? clsx(className)
-            : clsx(
-                  prefixcls,
-                  {
-                      [`${prefixcls}-borderless`]: borderless,
-                      [`${prefixcls}-focus`]: isFocus,
-                      [`${prefixcls}-disabled`]: disabled,
-                      [`${prefixcls}-single`]: !multiple,
-                      [`${prefixcls}-multiple`]: multiple,
-                      [`${prefixcls}-multiple-tagInput-empty`]: multiple && isEmptyTriggerSearch,
-                      [`${prefixcls}-multiple-tagInput-notEmpty`]: multiple && isValueTriggerSearch,
-                      [`${prefixcls}-filterable`]: Boolean(filterTreeNode),
-                      [`${prefixcls}-error`]: validateStatus === 'error',
-                      [`${prefixcls}-warning`]: validateStatus === 'warning',
-                      [`${prefixcls}-small`]: size === 'small',
-                      [`${prefixcls}-large`]: size === 'large',
-                      [`${prefixcls}-with-prefix`]: hasPrefix,
-                      [`${prefixcls}-with-suffix`]: hasContent(suffix),
-                      [`${prefixcls}-triggerTagWrap`]: Boolean(triggerTagWrap) && multiple && isTriggerPositionSearch,
-                  },
-                  className
-              );
-        const triggerRenderKeys = TreeSelectFoundation.getTriggerKeys(props, view);
-        let inner: React.ReactNode;
-        if (useCustomTrigger) {
-            // class props never carried ref; a triggerRender that spreads componentProps must not grab the handle
-            const componentProps = { ...props };
-            delete componentProps.ref;
-            inner = <Trigger disabled={disabled} placeholder={placeholder} value={triggerRenderKeys.map(getNodeData).filter(Boolean)} componentProps={componentProps} inputValue={inputValue} triggerRender={triggerRender} onClear={handleClear} onRemove={removeTag} onSearch={search} />;
-        } else {
-            inner = [
-                <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId)}</Fragment>,
-                <Fragment key="selection">
-                    <div className={`${prefixcls}-selection`}>{renderSelectContent(triggerRenderKeys)}</div>
-                </Fragment>,
-                <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode)}</Fragment>,
-                <Fragment key="clearBtn">{renderClearBtn()}</Fragment>,
-                <Fragment key="arrow">{renderArrow()}</Fragment>,
-            ];
-        }
-        return (
-            <div
-                {...rest}
-                ref={triggerRef}
-                className={classNames}
-                style={style}
-                {...triggerAriaProps}
-                tabIndex={disabled || inputIsCombobox ? -1 : 0}
-                onBlur={handleFocusLeave}
-                onClick={(e) => {
-                    rest.onClick?.(e);
-                    foundation.handleClick(e);
-                }}
-                onFocus={(e) => foundation.handleTriggerFocus(e.nativeEvent)}
-                onKeyDown={(e) => {
-                    rest.onKeyDown?.(e);
-                    if (!isInnerControlKey(e) && !handleTreeKeyDown(e)) {
-                        if (foundation.handleSelectionKeyDown(e)) {
-                            handleRowKeyDown(e);
-                        }
-                    }
-                    foundation.handleKeyDown(e);
-                }}
-                onMouseDown={(e) => {
-                    rest.onMouseDown?.(e);
-                    // refocusing the search input clears its text, so a press elsewhere keeps focus in it
-                    if (inputIsCombobox && !isTextEditor(e.target)) {
-                        e.preventDefault();
-                    }
-                }}
-                onMouseDownCapture={(e) => {
-                    rest.onMouseDownCapture?.(e);
-                    markPressInside(e);
-                }}
-            >
-                {inner}
             </div>
         );
     };
@@ -938,7 +652,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             onBlur={handleFocusLeave}
             onFocus={(e) => foundation.handleTriggerFocus(e.nativeEvent)}
             onKeyDown={(e) => {
-                handleTreeKeyDown(e);
+                foundation.handleRowKeyDown(e);
                 foundation.handleKeyDown(e);
             }}
             // a press would focus the popup, which is hidden on close and drops the focus to body; the focus stays on
@@ -948,10 +662,262 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     e.preventDefault();
                 }
             }}
-            onMouseDownCapture={markPressInside}
         >
             {renderTree()}
         </div>
+    );
+
+    const renderTagList = (triggerRenderKeys: string[]) => {
+        const tagList: Array<React.ReactNode> = [];
+        triggerRenderKeys.forEach((key: TreeNodeData['key'], index) => {
+            const item = getNodeData(key);
+            if (!item) {
+                return;
+            }
+            const onClose = (_tagContent: any, e: React.MouseEvent | React.KeyboardEvent) => {
+                if (e && typeof e.preventDefault === 'function') {
+                    e.preventDefault();
+                }
+                removeTag(key);
+            };
+            const { content, isRenderInTag } = (renderSelectedItem as RenderSelectedItemInMultiple)(item, {
+                index,
+                onClose,
+            });
+            if (content == null) {
+                return;
+            }
+            const tag: Partial<TagProps> = {
+                closable: TreeSelectFoundation.isTagClosable(key, props, view),
+                color: 'white',
+                visible: true,
+                onClose,
+                size: size === 'small' ? 'small' : 'large',
+            };
+            if (isRenderInTag) {
+                tagList.push(
+                    <Tag key={`tag-${key}-${index}`} {...tag}>
+                        {content}
+                    </Tag>
+                );
+            } else {
+                tagList.push(content);
+            }
+        });
+        return tagList;
+    };
+
+    const renderTagItem = (key: string, idx: number) => {
+        const item = getNodeData(key);
+        if (!item) {
+            return null;
+        }
+        const tagCls = clsx(`${prefixcls}-selection-tag`, {
+            [`${prefixcls}-selection-tag-disabled`]: disabled,
+        });
+        const onClose = (_tagChildren: React.ReactNode, e: React.MouseEvent | React.KeyboardEvent) => {
+            e.preventDefault();
+            removeTag(key);
+        };
+        const tagProps: Partial<TagProps> = {
+            size: size === 'small' ? 'small' : 'large',
+            color: 'white',
+            className: tagCls,
+            closable: TreeSelectFoundation.isTagClosable(key, props, view),
+            onClose,
+        };
+        const { content, isRenderInTag } = (renderSelectedItem as RenderSelectedItemInMultiple)(item, {
+            index: idx,
+            onClose,
+        });
+        if (isRenderInTag) {
+            return (
+                <Tag key={`tag-${getValueOrKey(item, keyMaps)}-${idx}`} {...tagProps}>
+                    {content}
+                </Tag>
+            );
+        }
+        return content;
+    };
+
+    const renderTagInput = (triggerRenderKeys: string[]) => (
+        // dropdown search is focused on open instead: autofocus in the off-screen popup scrolls the page to top
+        <TagInput
+            ref={tagInputRef}
+            {...comboboxProps}
+            aria-autocomplete="list"
+            autoFocus={isTriggerPositionSearch ? searchAutoFocus : undefined}
+            disabled={disabled}
+            placeholder={placeholder}
+            value={triggerRenderKeys}
+            // the trigger draws its own clear button and adornments, and its search text only becomes a search: global
+            // TagInput defaults must not add them, drag handles or add-on-blur tags
+            addOnBlur={false}
+            draggable={false}
+            expandRestTagsOnClick={false}
+            inputValue={inputValue}
+            insetLabel={null}
+            maxTagCount={maxTagCount}
+            preventScroll={preventScroll}
+            restTagsPopoverProps={restTagsPopoverProps}
+            showClear={false}
+            showRestTagsPopover={showRestTagsPopover}
+            size={size}
+            prefix={null}
+            renderTagItem={(itemKey, index) => renderTagItem(itemKey, index)}
+            suffix={null}
+            onInputChange={(v) => search(v)}
+            onRemove={(itemKey) => removeTag(itemKey)}
+        />
+    );
+
+    const renderSelectContent = (triggerRenderKeys: string[]) => {
+        if (isTriggerPositionSearch) {
+            return multiple ? (
+                renderTagInput(triggerRenderKeys)
+            ) : (
+                <>
+                    {renderInput()}
+                    {!inputValue && renderSingleTriggerSearchItem()}
+                </>
+            );
+        }
+        if (!multiple || !hasValue) {
+            const renderText = getRenderTextInSingle();
+            const shown = isShownText(renderText);
+            const spanCls = clsx(`${prefixcls}-selection-content`, {
+                [`${prefixcls}-selection-placeholder`]: !shown,
+            });
+            return <span className={spanCls}>{shown ? renderText : placeholder}</span>;
+        }
+        return <TagGroup maxTagCount={maxTagCount} mode="custom" popoverProps={restTagsPopoverProps} showPopover={showRestTagsPopover} size={size === 'small' ? 'small' : 'large'} tagList={renderTagList(triggerRenderKeys)} />;
+    };
+
+    const renderClearBtn = () => {
+        if (!clearable) {
+            return null;
+        }
+        return (
+            <button
+                ref={clearHandover}
+                type="button"
+                className={`${prefixcls}-clearbtn`}
+                aria-label={locale.clear}
+                onClick={(e) => {
+                    handleClear(e);
+                    if (inputIsCombobox) {
+                        (inputRef.current ?? tagInputRef.current)?.focus();
+                    } else {
+                        triggerRef.current?.focus();
+                    }
+                }}
+                onKeyDown={stopButtonActivationKeys}
+            >
+                {clearIcon || <IconClear />}
+            </button>
+        );
+    };
+
+    const renderSelection = () => {
+        const useCustomTrigger = typeof triggerRender === 'function';
+        const isEmptyTriggerSearch = isTriggerPositionSearch && !hasValue;
+        const isValueTriggerSearch = isTriggerPositionSearch && hasValue;
+        const classNames = useCustomTrigger
+            ? clsx(className)
+            : clsx(
+                  prefixcls,
+                  {
+                      [`${prefixcls}-borderless`]: borderless,
+                      [`${prefixcls}-focus`]: isFocus,
+                      [`${prefixcls}-disabled`]: disabled,
+                      [`${prefixcls}-single`]: !multiple,
+                      [`${prefixcls}-multiple`]: multiple,
+                      [`${prefixcls}-multiple-tagInput-empty`]: multiple && isEmptyTriggerSearch,
+                      [`${prefixcls}-multiple-tagInput-notEmpty`]: multiple && isValueTriggerSearch,
+                      [`${prefixcls}-filterable`]: Boolean(filterTreeNode),
+                      [`${prefixcls}-error`]: validateStatus === 'error',
+                      [`${prefixcls}-warning`]: validateStatus === 'warning',
+                      [`${prefixcls}-small`]: size === 'small',
+                      [`${prefixcls}-large`]: size === 'large',
+                      [`${prefixcls}-with-prefix`]: hasPrefix,
+                      [`${prefixcls}-with-suffix`]: hasContent(suffix),
+                      [`${prefixcls}-triggerTagWrap`]: Boolean(triggerTagWrap) && multiple && isTriggerPositionSearch,
+                  },
+                  className
+              );
+        const triggerRenderKeys = TreeSelectFoundation.getTriggerKeys(props, view);
+        let inner: React.ReactNode;
+        if (useCustomTrigger) {
+            // class props never carried ref; a triggerRender that spreads componentProps must not grab the handle
+            const componentProps = { ...props };
+            delete componentProps.ref;
+            inner = <Trigger disabled={disabled} placeholder={placeholder} value={triggerRenderKeys.map(getNodeData).filter(Boolean)} componentProps={componentProps} inputValue={inputValue} triggerRender={triggerRender} onClear={handleClear} onRemove={removeTag} onSearch={search} />;
+        } else {
+            inner = [
+                <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId)}</Fragment>,
+                <Fragment key="selection">
+                    <div className={`${prefixcls}-selection`}>{renderSelectContent(triggerRenderKeys)}</div>
+                </Fragment>,
+                <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode)}</Fragment>,
+                <Fragment key="clearBtn">{renderClearBtn()}</Fragment>,
+                <Fragment key="arrow">{renderArrow()}</Fragment>,
+            ];
+        }
+        return (
+            <div
+                {...rest}
+                ref={triggerRef}
+                className={classNames}
+                style={style}
+                {...triggerAriaProps}
+                tabIndex={disabled || inputIsCombobox ? -1 : 0}
+                onBlur={handleFocusLeave}
+                onClick={(e) => {
+                    rest.onClick?.(e);
+                    foundation.handleClick(e);
+                }}
+                onFocus={(e) => foundation.handleTriggerFocus(e.nativeEvent)}
+                onKeyDown={(e) => {
+                    rest.onKeyDown?.(e);
+                    if (!isInnerControlKey(e) && !foundation.handleRowKeyDown(e)) {
+                        foundation.handleSelectionKeyDown(e);
+                    }
+                    foundation.handleKeyDown(e);
+                }}
+                onMouseDown={(e) => {
+                    rest.onMouseDown?.(e);
+                    // refocusing the search input clears its text, so a press elsewhere keeps focus in it
+                    if (inputIsCombobox && !isTextEditor(e.target)) {
+                        e.preventDefault();
+                    }
+                }}
+                onMouseDownCapture={(e) => {
+                    rest.onMouseDownCapture?.(e);
+                    markPressInside(e);
+                }}
+            >
+                {inner}
+            </div>
+        );
+    };
+
+    useLayoutEffect(() => {
+        if (derived) {
+            foundation.syncDerivedState(derived);
+        }
+    }, [derived, foundation]);
+
+    useLayoutEffect(() => {
+        renderedRows.current = flattenNodes;
+    });
+
+    useImperativeHandle(
+        props.ref,
+        () => ({
+            search: (value: string) => foundation.search(value),
+            close: foundation.close,
+        }),
+        [foundation]
     );
 
     return (
@@ -962,18 +928,15 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                 afterClose={foundation.handleAfterClose}
                 autoAdjustOverflow={autoAdjustOverflow}
                 content={content}
+                disableArrowKeyDown
                 motion={motion}
                 position={position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
                 stopPropagation={stopPropagation}
                 trigger="custom"
                 visible={isOpen}
+                onClickOutSide={foundation.handleClickOutside}
                 onEscKeyDown={foundation.close}
-                onOpen={() => {
-                    foundation.handlePopoverOpen();
-                    if (activeKey !== undefined) {
-                        scrollToRow(activeKey);
-                    }
-                }}
+                onOpen={foundation.handlePopoverOpen}
             >
                 {renderSelection()}
             </Popover>

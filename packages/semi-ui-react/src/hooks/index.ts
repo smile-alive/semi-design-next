@@ -10,6 +10,7 @@ export { default as useIntersectionObserver } from './use-intersection-observer'
 export { default as useIsServerRender } from './use-is-server-render';
 export { default as useMergedRef } from './use-merged-ref';
 export { default as useNoticeListEffects } from './use-notice-list-effects';
+export { default as useOverlayResources } from './use-overlay-resources';
 export { default as useRealUnmount } from './use-real-unmount';
 export { default as useResizeObserver } from './use-resize-observer';
 export { default as useUnwrappedLazy } from './use-unwrapped-lazy';

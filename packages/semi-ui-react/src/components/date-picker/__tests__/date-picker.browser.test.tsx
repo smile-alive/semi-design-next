@@ -1121,3 +1121,23 @@ describe('ShadowRoot 内的焦点', () => {
         expect(shadow.activeElement).toBeNull();
     });
 });
+
+describe('DatePicker Tab', () => {
+    it('Tab 在起止输入框之间不关闭面板，从结束输入框 Tab 离开时关闭', async () => {
+        render(
+            <>
+                <DatePicker type="dateRange" motion={false} />
+                <button type="button">after</button>
+            </>
+        );
+        const [start, end] = document.querySelectorAll('input');
+        await userEvent.click(start);
+        await waitFor(() => expect(getPopup()).not.toBeNull());
+        await userEvent.tab();
+        expect(end).toHaveFocus();
+        expect(getPopup()).not.toBeNull();
+        await userEvent.tab();
+        expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+        await waitFor(() => expect(getPopup()).toBeNull());
+    });
+});

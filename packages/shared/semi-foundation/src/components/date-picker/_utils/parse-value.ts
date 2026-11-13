@@ -1,7 +1,7 @@
 import type { Locale } from 'date-fns';
+import { isValidDate } from '../../../utils/date-fns-extra';
 import { parseReference, toWallTime } from '../../../utils/zoned-time';
 import isTimestamp from './is-timestamp';
-import isValidDate from './is-valid-date';
 import { compatibleParse } from './parser';
 
 type BaseValueType = string | number | Date;

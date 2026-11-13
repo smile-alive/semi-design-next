@@ -4,11 +4,10 @@ import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
 import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type AutoCompleteBaseState, type DataItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
-import { isInnerControlKey, toCssLength, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
+import { getOptionId, isInnerControlKey, toCssLength, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { useClickOutside, useWatch } from '../../primitives/index';
+import { useWatch } from '../../primitives/index';
 import { callHandler, isNativeInputKey, omitFormInjected, splitControlAttrs, forwardFocus, hasContent, mergeRefs } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import type { InputGroupContextValue } from '../input/context';
@@ -147,7 +146,6 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
     const config = useConfig();
 
     const listboxId = createUniqueId();
-    let root: HTMLDivElement | undefined;
     let input: HTMLInputElement | undefined;
     let listbox: HTMLDivElement | undefined;
 
@@ -228,16 +226,6 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
             notifyBlur: (event) => local.onBlur?.(event!),
             notifyKeyDown: (event) => callHandler(local.onKeyDown, event),
         })
-    );
-
-    const markPressInside = useClickOutside(
-        [() => root, () => listbox],
-        (e) => {
-            if (listbox) {
-                foundation.handleClickOutside(e);
-            }
-        },
-        () => state().visible
     );
 
     const registerTrigger = useSpecialTrigger(
@@ -362,7 +350,6 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
 
     const handleMouseDown = (e: MouseEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onMouseDown, e);
-        markPressInside(e);
     };
 
     const rootOwn = mergeProps(rootAttrs, {
@@ -386,11 +373,9 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
     // a press in the list, its padding and scrollbar included, keeps the focus in the input
     const handleListMouseDown = (e: MouseEvent) => {
         e.preventDefault();
-        markPressInside(e);
     };
 
     const setRoot = (node: HTMLDivElement) => {
-        root = node;
         forwardFocus(node, () => input);
         registerTrigger(node);
     };
@@ -412,7 +397,7 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
             role="combobox"
             aria-activedescendant={activeDescendant()}
             aria-autocomplete="list"
-            aria-controls={listboxId}
+            aria-controls={state().visible ? listboxId : undefined}
             aria-expanded={state().visible}
             aria-haspopup="listbox"
             aria-label={name()['aria-label']}
@@ -494,6 +479,11 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={state().visible}
+            onClickOutSide={(e) => {
+                if (listbox) {
+                    foundation.handleClickOutside(e);
+                }
+            }}
             onEscKeyDown={foundation.handleEscKeyDown}
         >
             {(getTriggerProps) => (

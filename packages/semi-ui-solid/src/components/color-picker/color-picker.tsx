@@ -6,7 +6,7 @@ import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { useLocale } from '../locale';
-import Popover, { type PopoverProps } from '../popover';
+import Popover, { type PopoverHandle, type PopoverProps } from '../popover';
 import AlphaSlider from './alpha-slider';
 import ColorChooseArea from './color-choose-area';
 import ColorSlider from './color-slider';
@@ -48,6 +48,8 @@ function ColorPicker(rawProps: ColorPickerProps) {
 
     const locale = useLocale('ColorPicker');
 
+    let popover: PopoverHandle | undefined;
+
     const { foundation, state } = useFoundation<Foundation, Adapter, BaseColorPickerProps, ColorPickerState>(
         ColorPickerFoundation,
         props,
@@ -80,6 +82,11 @@ function ColorPicker(rawProps: ColorPickerProps) {
                 aria-label={local.popoverProps?.['aria-label'] ?? (local.popoverProps?.['aria-labelledby'] ? undefined : locale().locale.color)}
                 // a dialog opened by click: moving the pointer away must not close it mid-edit
                 role={local.popoverProps?.role ?? 'dialog'}
+                ref={(instance) => (popover = instance)}
+                onOpen={() => {
+                    ColorPickerFoundation.focusPopup(popover?.getPopup() ?? null);
+                    local.popoverProps?.onOpen?.();
+                }}
                 content={renderPicker}
                 trigger={local.popoverProps?.trigger ?? 'click'}
             >

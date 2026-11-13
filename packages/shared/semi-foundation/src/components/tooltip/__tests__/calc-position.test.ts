@@ -23,10 +23,6 @@ function createFoundation(props: TooltipBaseProps, triggerRect: DOMRect, popupSi
         observeTrigger: (observer: ResizeObserver | IntersectionObserver) => observers.push(observer),
         unobserveTrigger: vi.fn<(observer: ResizeObserver | IntersectionObserver) => void>(),
         getState: (key: string) => ({ isInsert: true, transitionState: 'enter' })[key],
-        showPopover: () => {},
-        hidePopover: () => {},
-        waitAnimations: () => null,
-        unregisterClickOutsideHandler: () => {},
     };
     const foundation = new TooltipFoundation(adapter as unknown as TooltipAdapter);
     // an entering popup is shown and positioned

@@ -4,11 +4,10 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
     import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type StateOptionItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-    import { getOptionId } from '@fibrae/semi-foundation/components/select/foundation';
-    import { isInnerControlKey, toCssLength, getDataAttr } from '@fibrae/semi-foundation/utils';
+    import { getOptionId, isInnerControlKey, toCssLength, getDataAttr } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
     import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
-    import { useClickOutside, useDidUpdate } from '../../composables/index';
+    import { useDidUpdate } from '../../composables/index';
     import { splitControlAttrs, slotKind } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import Input from '../input';
@@ -19,7 +18,6 @@
     import { provideOptionPrefixContext } from '../select/context';
     import SelectOption from '../select/option.vue';
     import Spin from '../spin';
-    import { useNestedPopups } from '../tooltip/context';
     import type { AutoCompleteDataItem, AutoCompleteEmits, AutoCompleteHandle, AutoCompleteItems, AutoCompleteProps, AutoCompleteSlots, AutoCompleteTriggerSlotProps } from './interface';
 
     interface AutoCompleteState {
@@ -189,6 +187,12 @@
         }
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (listbox.value) {
+            foundation.handleClickOutside(event);
+        }
+    };
+
     // A snapshot of the items, so an array changed in place (push, an edited field) is noticed as well; the items are
     // flat data, nodes go in the item slot.
     useDidUpdate(
@@ -196,17 +200,6 @@
         () => foundation.handleDataChange(props.data),
         isEqual,
         'pre'
-    );
-
-    useClickOutside(
-        [root, listbox],
-        (event) => {
-            if (listbox.value) {
-                foundation.handleClickOutside(event);
-            }
-        },
-        () => state.value.visible,
-        useNestedPopups()
     );
 
     defineExpose<AutoCompleteHandle>({
@@ -228,6 +221,7 @@
         :style="props.dropdownMatchSelectWidth ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined"
         trigger="custom"
         :visible="state.visible"
+        @clickOutSide="handleClickOutside"
         @escKeyDown="foundation.handleEscKeyDown"
     >
         <div
@@ -253,7 +247,7 @@
                 :id="inputId()"
                 :aria-activedescendant="activeDescendant"
                 aria-autocomplete="list"
-                :aria-controls="listId"
+                :aria-controls="state.visible ? listId : undefined"
                 :aria-expanded="state.visible"
                 aria-haspopup="listbox"
                 :autofocus="props.autofocus"
