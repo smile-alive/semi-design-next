@@ -11,7 +11,10 @@ import PinCode from '../pincode/index';
 import { Radio } from '../radio/index';
 import RadioGroup from '../radio/radio-group';
 import Rating from '../rating/index';
-import Select, { type BasicSelectValue } from '../select/index';
+import type { BasicSelectValue } from '../select/index';
+import SelectOption from '../select/option';
+import SelectOptGroup from '../select/option-group';
+import Select from '../select/select';
 import Slider from '../slider/index';
 import Switch from '../switch/index';
 import TagInput from '../tag-input/index';
@@ -22,52 +25,55 @@ import Upload, { type UploadProps } from '../upload/index';
 import type { FieldProps, FormCheckboxProps, FormRadioProps, FormSelectProps } from './interface';
 import withField, { withTopLabelField } from './with-field';
 
-export const FormInput = withField(Input);
-export const FormInputNumber = withField(InputNumber);
-export const FormTextArea = withTopLabelField(TextArea);
+// Every field is created by a /* @__PURE__ */ call: without it the bundler cannot drop unused fields, so importing one pulls in all of them
+
+export const FormInput = /* @__PURE__ */ withField(Input);
+export const FormInputNumber = /* @__PURE__ */ withField(InputNumber);
+export const FormTextArea = /* @__PURE__ */ withTopLabelField(TextArea);
 
 // `withField` fixes generic type parameters to their constraints; these signatures restore the inference
 type FormSelectComponent = <T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(props: FormSelectProps<T, Multiple>) => React.ReactElement;
 type FormTreeSelectComponent = <T extends TreeSelectNodeValue = TreeSelectNodeValue, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(props: FieldProps<TreeSelectProps<T, Multiple, WithObject>>) => React.ReactElement;
 type FormCascaderComponent = <Multiple extends boolean | undefined = undefined>(props: FieldProps<CascaderProps<Multiple>>) => React.ReactElement;
 
-export const FormSelect = Object.assign(withField(Select) as FormSelectComponent, {
-    Option: Select.Option,
-    OptGroup: Select.OptGroup,
+// Option and OptGroup are imported as bare identifiers: a property read such as `Select.Option` is kept as a possible side effect
+export const FormSelect = /* @__PURE__ */ Object.assign(/* @__PURE__ */ withField(Select) as FormSelectComponent, {
+    Option: SelectOption,
+    OptGroup: SelectOptGroup,
 });
 
-export const FormCheckboxGroup = withTopLabelField(CheckboxGroup);
-export const FormCheckbox = withTopLabelField(Checkbox, {
+export const FormCheckboxGroup = /* @__PURE__ */ withTopLabelField(CheckboxGroup);
+export const FormCheckbox = /* @__PURE__ */ withTopLabelField(Checkbox, {
     valueKey: 'checked',
     valuePath: 'target.checked',
     shouldInject: false,
 }) as React.ComponentType<FormCheckboxProps>;
-export const FormRadioGroup = withTopLabelField(RadioGroup, { valuePath: 'target.value' });
-export const FormRadio = withTopLabelField(Radio, {
+export const FormRadioGroup = /* @__PURE__ */ withTopLabelField(RadioGroup, { valuePath: 'target.value' });
+export const FormRadio = /* @__PURE__ */ withTopLabelField(Radio, {
     valueKey: 'checked',
     valuePath: 'target.checked',
     shouldInject: false,
 }) as React.ComponentType<FormRadioProps>;
 
-export const FormDatePicker = withField(DatePicker);
-export const FormSwitch = withTopLabelField(Switch, { valueKey: 'checked' });
-export const FormSlider = withTopLabelField(Slider);
-export const FormTimePicker = withField(TimePicker);
-export const FormTreeSelect = withField(TreeSelect) as FormTreeSelectComponent;
-export const FormCascader = withField(Cascader) as FormCascaderComponent;
+export const FormDatePicker = /* @__PURE__ */ withField(DatePicker);
+export const FormSwitch = /* @__PURE__ */ withTopLabelField(Switch, { valueKey: 'checked' });
+export const FormSlider = /* @__PURE__ */ withTopLabelField(Slider);
+export const FormTimePicker = /* @__PURE__ */ withField(TimePicker);
+export const FormTreeSelect = /* @__PURE__ */ withField(TreeSelect) as FormTreeSelectComponent;
+export const FormCascader = /* @__PURE__ */ withField(Cascader) as FormCascaderComponent;
 
 // Transfer spreads unknown props onto its root div, so the validateStatus the field injects would reach the DOM
 function TransferControl({ validateStatus: _validateStatus, ...props }: TransferProps & { validateStatus?: unknown }) {
     return <Transfer {...props} />;
 }
 
-export const FormTransfer = withTopLabelField(TransferControl);
-export const FormRating = withTopLabelField(Rating);
-export const FormAutoComplete = withField(AutoComplete, { valueKey: 'value', onKeyChangeFnName: 'onChange' });
-export const FormUpload = withTopLabelField(Upload, {
+export const FormTransfer = /* @__PURE__ */ withTopLabelField(TransferControl);
+export const FormRating = /* @__PURE__ */ withTopLabelField(Rating);
+export const FormAutoComplete = /* @__PURE__ */ withField(AutoComplete, { valueKey: 'value', onKeyChangeFnName: 'onChange' });
+export const FormUpload = /* @__PURE__ */ withTopLabelField(Upload, {
     valueKey: 'fileList',
     valuePath: 'fileList',
     onKeyChangeFnName: 'onChange',
 }) as React.ComponentType<Omit<FieldProps<UploadProps>, 'fileList'>>;
-export const FormTagInput = withField(TagInput);
-export const FormPinCode = withTopLabelField(PinCode);
+export const FormTagInput = /* @__PURE__ */ withField(TagInput);
+export const FormPinCode = /* @__PURE__ */ withTopLabelField(PinCode);

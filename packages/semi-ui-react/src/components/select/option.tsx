@@ -89,4 +89,4 @@ function Option(props: OptionProps): React.ReactNode {
     );
 }
 
-export default Object.assign(memo(Option), { elementType: 'Select.Option' });
+export default /* @__PURE__ */ Object.assign(memo(Option), { elementType: 'Select.Option' });
