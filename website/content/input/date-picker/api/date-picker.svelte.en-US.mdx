@@ -32,11 +32,11 @@ import ApiType from '#/components/ApiType.astro';
 | leftSlot | Extra area at the left of the panel. | `Snippet` | - |
 | max | The number of dates multiple allows; unlimited when omitted. | `number` | - |
 | motion | Whether the panel animates when it opens. | `boolean` | `true` |
-| multiple | Whether several dates can be chosen; only for type date. | `boolean` | `false` |
+| multiple | Whether several dates can be chosen; only for type date. | `M` | `false` |
 | needConfirm | Whether the value is written only after a confirmation; for dateTime and dateTimeRange only. | `boolean` | `false` |
 | onBlur | Called when the panel closes. The argument is the mousedown that closed it from outside; other ways to close, such as confirming, choosing a date or Esc, pass none. | <ApiType detail={"(event?: MouseEvent) => void"}>Type</ApiType> | - |
 | onCancel | Called when the selection is cancelled, with the last confirmed value. Only with needConfirm. | <ApiType detail={"(date: Date \u007c Date[], dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
-| onChange | Called when the value changes, with the date and the date string; both are arrays for range and multiple. When cleared, a single value is undefined and range and multiple are []. A range type calls it only after both dates are chosen. | <ApiType detail={"(date: Date \u007c Date[] \u007c undefined, dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onChange | Called when the value changes, with the date and the date string; both are arrays for range and multiple. When cleared, a single value is undefined and range and multiple are []. A range type calls it only after both dates are chosen. | <ApiType detail={"T extends 'dateRange' \u007c 'dateTimeRange' \u007c 'monthRange' ? (date: Date[], dateString: string[]) => void : T extends 'date' ? M extends true ? (date: Date[], dateString: string[]) => void : (date: Date \u007c undefined, dateString: string \u007c undefined) => void : (date: Date \u007c undefined, dateString: string \u007c undefined) => void"}>Type</ApiType> | - |
 | onClear | Called when the clear button is clicked. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
 | onClickOutSide | Called when the panel is open and the user presses outside the panel and the trigger, with the native mousedown event. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
 | onConfirm | Called when the selection is confirmed, with the selected value. Only with needConfirm. | <ApiType detail={"(date: Date \u007c Date[], dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
@@ -65,7 +65,7 @@ import ApiType from '#/components/ApiType.astro';
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get `TZDate`s, and `dateString` and the today mark follow the zone too. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
 | topSlot | Extra area at the top of the panel. | `Snippet` | - |
 | trigger | Replaces the trigger. It receives value, inputValue, placeholder, disabled, size, inputReadOnly, rangeInputFocus, type, format, multiple, autofocus and componentProps, plus onChange (sets the input text), onEnterPress (commits it) and onClear. The default clear button no longer applies. | <ApiType detail={"Snippet\u003c[DatePickerTriggerRenderProps]>"}>Type</ApiType> | - |
-| type | Type: date, dateRange, dateTime, dateTimeRange, month, monthRange or year. | `DatePickerType` | `"date"` |
+| type | Type: date, dateRange, dateTime, dateTimeRange, month, monthRange or year. | `T` | `"date"` |
 | validateStatus | Validation status: default, error or warning. Only affects the style. | `ValidateStatus` | - |
 | value | The value, two-way bindable with bind:value: a Date, a timestamp or a string in format, and an array for range and multiple. A plain value is the initial value; null is a controlled empty value, undefined leaves the picker uncontrolled. | `DatePickerValueType \| null` | - |
 | weekStartsOn | The first day of the week: 0 is Sunday, 1 is Monday, and so on. | `WeekStartNumber` | `0` |

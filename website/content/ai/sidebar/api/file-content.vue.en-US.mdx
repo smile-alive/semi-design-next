@@ -2,16 +2,16 @@
 
 | Property  | Description                                                                                         | Type                 | Default     |
 | --------- | --------------------------------------------------------------------------------------------------- | -------------------- | ----------- |
-| files     | The file entries, rendered read-only: each entry's extensions and imgUploadProps reach its preview. | `FileItemData[]`     | `[]`        |
 | activeKey | Keys of the expanded file panels; bind it with v-model:activeKey.                                   | `string \| string[]` | `undefined` |
+| files     | The file entries, rendered read-only: each entry's extensions and imgUploadProps reach its preview. | `FileItemData[]`     | `[]`        |
 
 **Events**
 
 | Event            | Description                                                                                                                                                | Callback parameters                                     |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| update:activeKey | Emitted before change when a panel opens or closes, so v-model:activeKey follows.                                                                          | `[activeKey: string[]]`                                 |
 | change           | Emitted when a panel opens or closes through its arrow, with the expanded keys.                                                                            | `[activeKey: string \| string[]]`                       |
 | expand           | Emitted when the expand button beside a panel header is clicked, with the event, its entry and file. The button is only rendered when this event is bound. | `[event: MouseEvent, item: FileItemData, mode: string]` |
+| update:activeKey | Emitted before change when a panel opens or closes, so v-model:activeKey follows.                                                                          | `[activeKey: string[]]`                                 |
 
 **Slots**
 

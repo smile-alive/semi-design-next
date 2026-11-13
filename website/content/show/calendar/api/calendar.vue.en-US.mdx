@@ -3,35 +3,35 @@
 | Property       | Description                                                                                                      | Type               | Default                                           |
 | -------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------- |
 | displayValue   | Display date. When omitted it is the current date and updates at midnight.                                       | `Date`             | `semiGlobalDefault("Calendar", "displayValue")`   |
-| range          | Date range shown in range mode, left-closed and right-open. Required in range mode.                              | `Date[]`           | `semiGlobalDefault("Calendar", "range")`          |
 | events         | Events to render, see Event Object.                                                                              | `EventObject[]`    | `[]`                                              |
-| mode           | View mode: day, week, month or range. The view switches as soon as it changes.                                   | `CalendarMode`     | `"week"`                                          |
-| showCurrTime   | Shows the red line of the current time in the day, week and range views.                                         | `boolean`          | `true`                                            |
-| weekStartsOn   | Day of the week that starts the week, 0 for Sunday, 1 for Monday and so on. Applies to the month and week views. | `WeekStartsOn`     | `0`                                               |
-| scrollTop      | Default scroll offset of the content in the day, week and range views.                                           | `number`           | `400`                                             |
+| height         | Height of the calendar; a number is in pixels.                                                                   | `string \| number` | `600`                                             |
 | markWeekend    | Shows weekend columns in grey to tell them from weekdays.                                                        | `boolean`          | `false`                                           |
 | minEventHeight | Minimum height in pixels of events in the day, range and week views.                                             | `number`           | `semiGlobalDefault("Calendar", "minEventHeight")` |
+| mode           | View mode: day, week, month or range. The view switches as soon as it changes.                                   | `CalendarMode`     | `"week"`                                          |
+| range          | Date range shown in range mode, left-closed and right-open. Required in range mode.                              | `Date[]`           | `semiGlobalDefault("Calendar", "range")`          |
+| scrollTop      | Default scroll offset of the content in the day, week and range views.                                           | `number`           | `400`                                             |
+| showCurrTime   | Shows the red line of the current time in the day, week and range views.                                         | `boolean`          | `true`                                            |
+| weekStartsOn   | Day of the week that starts the week, 0 for Sunday, 1 for Monday and so on. Applies to the month and week views. | `WeekStartsOn`     | `0`                                               |
 | width          | Width of the calendar; a number is in pixels.                                                                    | `string \| number` | `semiGlobalDefault("Calendar", "width")`          |
-| height         | Height of the calendar; a number is in pixels.                                                                   | `string \| number` | `600`                                             |
 
 **Events**
 
 | Event | Description | Callback parameters |
 | --- | --- | --- |
 | click | Emitted when a date cell is clicked, with the event and the date of the cell. The unit is half an hour in the day, week and range views and one day in the month view. | `[event: MouseEvent, value: Date]` |
-| close | Emitted when the card showing all events of a day closes in the month view: the click event for the close button or a second click on "N more", the keyboard event for Esc, and null for a click outside or when the component is deactivated in KeepAlive. | `[event: MouseEvent \| KeyboardEvent \| null]` |
+| close | Emitted when the card showing all events of a day closes in the month view: the click event for the close button or a second click on "N more", the keyboard event for Esc, and null for a click outside or when the component is deactivated in KeepAlive. | `[event: KeyboardEvent \| MouseEvent \| null]` |
 | moreClick | Emitted when a click on "N more" opens the card in the month view, with the event, the date and the number of collapsed events. It is not emitted when a second click closes the card. | `[event: MouseEvent, date: Date, remaining: number]` |
 
 **Slots**
 
 | Slot         | Description                                                                                                                                                                      | Scope parameters                |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| header       | Custom header content.                                                                                                                                                           | `any`                           |
-| event        | Custom event content. event is the original object from events and the slot is called once for each place the event appears. The text of children is rendered when it is absent. | `CalendarEventSlotProps`        |
+| allDayEvents | Custom area for events at the top of the day, range and week views; events is the whole events array that was passed in, to be filtered by the slot.                             | `CalendarAllDayEventsSlotProps` |
 | dateDisplay  | Custom date text: the column titles of the week and range views and every cell of the month view. The day view does not use it.                                                  | `CalendarDateDisplaySlotProps`  |
 | dateGrid     | Custom content of a date cell or column, with the date and its dateString (date.toString()). Use absolute positioning for elements.                                              | `CalendarDateGridSlotProps`     |
+| event        | Custom event content. event is the original object from events and the slot is called once for each place the event appears. The text of children is rendered when it is absent. | `CalendarEventSlotProps`        |
+| header       | Custom header content.                                                                                                                                                           | `any`                           |
 | timeDisplay  | Custom time text in the day, week and range views; time is the hour.                                                                                                             | `CalendarTimeDisplaySlotProps`  |
-| allDayEvents | Custom area for events at the top of the day, range and week views; events is the whole events array that was passed in, to be filtered by the slot.                             | `CalendarAllDayEventsSlotProps` |
 
 **Exposes**
 

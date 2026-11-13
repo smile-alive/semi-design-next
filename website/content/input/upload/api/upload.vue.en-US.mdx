@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | beforeCrop | Called before the crop modal opens, once with the first selected image; the result decides cropping for the whole batch. Return false to upload without cropping. May return a Promise. | <ApiType detail={"((file: File, fileList: File[]) => boolean \u007c Promise\u003cboolean>)"}>Type</ApiType> | `undefined` |
 | beforeRemove | Called before a file is removed. Returning false, or a Promise that resolves to false or rejects, blocks the removal. | <ApiType detail={"((file: FileItem, fileList: FileItem[]) => boolean \u007c Promise\u003cboolean>)"}>Type</ApiType> | `undefined` |
 | beforeUpload | Hook before a file is uploaded. The returned object updates the file status and decides whether to upload. A boolean means pass or fail; for a Promise, resolve passes and reject fails. | <ApiType detail={"((object: BeforeUploadProps) => boolean \u007c BeforeUploadObjectResult \u007c Promise\u003cBeforeUploadObjectResult>)"}>Type</ApiType> | `undefined` |
-| capture | How media is captured: user or environment. true renders the attribute with an empty value, false omits it. | `boolean \| "environment" \| "user"` | `semiGlobalDefault("Upload", "capture")` |
+| capture | How media is captured: user or environment. true renders the attribute with an empty value, false omits it. | `"environment" \| "user" \| boolean` | `semiGlobalDefault("Upload", "capture")` |
 | crop | Enables image cropping. true uses the defaults, an object configures the cropper. Selecting, dragging, pasting and replacing all crop. | `boolean \| UploadCropProps` | `false` |
 | cropModalProps | Props of the crop Modal. visible, title, okText, cancelText, onOk and onCancel belong to Upload; width defaults to 600. | `UploadCropModalProps` | `semiGlobalDefault("Upload", "cropModalProps")` |
 | customRequest | Replaces the built-in XMLHttpRequest. It must call the onProgress, onError and onSuccess it receives to update the state. | <ApiType detail={"((object: UploadCustomRequestArgs) => void)"}>Type</ApiType> | `undefined` |
@@ -51,7 +51,6 @@ import ApiType from '#/components/ApiType.astro';
 
 | Event | Description | Callback parameters |
 | --- | --- | --- |
-| update:fileList | Emitted when the file list changes. Backs v-model:fileList. | `[fileList: FileItem[]]` |
 | acceptInvalid | Emitted when received files do not match accept, with those files. | `[files: File[]]` |
 | change | Emitted when a file status changes, including uploading, success and failure. currentFile is null after insert and absent after a clear. Shadows the native change bubbling from the hidden input. | `[object: UploadOnChangeProps]` |
 | clear | Emitted after the list is cleared. | `[]` |
@@ -67,6 +66,7 @@ import ApiType from '#/components/ApiType.astro';
 | retry | Emitted when retry is clicked. | `[fileItem: FileItem]` |
 | sizeError | Emitted when a file size violates maxSize or minSize. | `[file: CustomFile, fileList: FileItem[]]` |
 | success | Emitted after a successful upload, with the server response, the file and the current file list. | `[responseBody: any, file: CustomFile, fileList: FileItem[]]` |
+| update:fileList | Emitted when the file list changes. Backs v-model:fileList. | `[fileList: FileItem[]]` |
 
 **Slots**
 
@@ -76,24 +76,24 @@ import ApiType from '#/components/ApiType.astro';
 | dragIcon            | Icon of the drag area. Falls back to the default icon when empty.                                                                 | `any`                            |
 | dragMainText        | Main text of the drag area. Falls back to the locale text when empty.                                                             | `any`                            |
 | dragSubText         | Help text of the drag area.                                                                                                       | `any`                            |
-| prompt              | Prompt text. Unlike content in the default slot, clicking it does not trigger an upload.                                          | `any`                            |
-| validateMessage     | Validate message of the whole Upload.                                                                                             | `any`                            |
-| fileListTitle       | Replaces only the title text of the file list; the clear button stays.                                                            | `any`                            |
-| fileListHeader      | Replaces the whole title area, clear button included, with fileList, onClear and clearText.                                       | `UploadFileListHeaderSlotProps`  |
+| ellipsisTooltip     | Custom popup content for a truncated file name, with content and trigger.                                                         | `TypographyEllipsisTooltipProps` |
 | fileItem            | Replaces each file card, with UploadFileItemSlotProps. A file it renders nothing for is not shown.                                | `UploadFileItemSlotProps`        |
-| previewFile         | Custom preview that replaces the thumbnail. Only applies in list mode. It does not fall back to the default thumbnail when empty. | `UploadFileItemSlotProps`        |
-| thumbnail           | Custom picture wall thumbnail. Only applies in picture mode.                                                                      | `UploadFileItemSlotProps`        |
-| picInfo             | Custom picture wall information. Only applies in picture mode with showPicInfo set to true.                                       | `UploadFileItemSlotProps`        |
-| picPreviewIcon      | Custom preview icon shown on hover in the picture wall. Only applies in picture mode.                                             | `UploadFileItemSlotProps`        |
-| picClose            | Custom close button of the picture wall, with class and onRemove. Only applies in picture mode.                                   | `UploadPicCloseSlotProps`        |
+| fileListHeader      | Replaces the whole title area, clear button included, with fileList, onClear and clearText.                                       | `UploadFileListHeaderSlotProps`  |
+| fileListTitle       | Replaces only the title text of the file list; the clear button stays.                                                            | `any`                            |
 | fileOperation       | Custom operation area of a list item.                                                                                             | `UploadFileItemSlotProps`        |
 | fileValidateMessage | Custom validate message of a file card. Falls back to the validateMessage string of the file when empty.                          | `UploadFileItemSlotProps`        |
-| ellipsisTooltip     | Custom popup content for a truncated file name, with content and trigger.                                                         | `TypographyEllipsisTooltipProps` |
+| picClose            | Custom close button of the picture wall, with class and onRemove. Only applies in picture mode.                                   | `UploadPicCloseSlotProps`        |
+| picInfo             | Custom picture wall information. Only applies in picture mode with showPicInfo set to true.                                       | `UploadFileItemSlotProps`        |
+| picPreviewIcon      | Custom preview icon shown on hover in the picture wall. Only applies in picture mode.                                             | `UploadFileItemSlotProps`        |
+| previewFile         | Custom preview that replaces the thumbnail. Only applies in list mode. It does not fall back to the default thumbnail when empty. | `UploadFileItemSlotProps`        |
+| prompt              | Prompt text. Unlike content in the default slot, clicking it does not trigger an upload.                                          | `any`                            |
+| thumbnail           | Custom picture wall thumbnail. Only applies in picture mode.                                                                      | `UploadFileItemSlotProps`        |
+| validateMessage     | Validate message of the whole Upload.                                                                                             | `any`                            |
 
 **Exposes**
 
 | Name           | Description                                                         | Type                                                                                              |
 | -------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | insert         | Adds files at index, or at the end without one.                     | <ApiType detail={"(files: CustomFile[], index?: number \u007c undefined) => void"}>Type</ApiType> |
-| upload         | Uploads the waiting files. Use it with uploadTrigger set to custom. | <ApiType detail={"() => void"}>Type</ApiType>                                                     |
 | openFileDialog | Opens the file dialog.                                              | <ApiType detail={"() => void"}>Type</ApiType>                                                     |
+| upload         | Uploads the waiting files. Use it with uploadTrigger set to custom. | <ApiType detail={"() => void"}>Type</ApiType>                                                     |

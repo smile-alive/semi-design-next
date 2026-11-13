@@ -2,16 +2,16 @@
 
 | 属性      | 说明                                                       | 类型                 | 默认值      |
 | --------- | ---------------------------------------------------------- | -------------------- | ----------- |
-| codes     | 代码条目列表，每项为 CodeItem 的属性加用于标识面板的 key。 | `CodeItemData[]`     | `[]`        |
 | activeKey | 当前展开的代码面板 key，配合 v-model:activeKey 使用。      | `string \| string[]` | `undefined` |
+| codes     | 代码条目列表，每项为 CodeItem 的属性加用于标识面板的 key。 | `CodeItemData[]`     | `[]`        |
 
 **Events**
 
 | 事件             | 说明                                                                                              | 回调参数                                                |
 | ---------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| update:activeKey | 展开或收起面板时先于 change 触发，供 v-model:activeKey 回写。                                     | `[activeKey: string[]]`                                 |
 | change           | 通过箭头展开或收起面板时触发，参数为当前展开的 key。                                              | `[activeKey: string \| string[]]`                       |
 | expand           | 点击面板头部旁的展开按钮时触发，参数为点击事件、对应条目和 code。仅在绑定了该事件时渲染展开按钮。 | `[event: MouseEvent, item: CodeItemData, mode: string]` |
+| update:activeKey | 展开或收起面板时先于 change 触发，供 v-model:activeKey 回写。                                     | `[activeKey: string[]]`                                 |
 
 **Slots**
 

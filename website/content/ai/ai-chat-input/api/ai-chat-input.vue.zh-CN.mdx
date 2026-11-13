@@ -28,8 +28,8 @@ import ApiType from '#/components/ApiType.astro';
 | templatesStyle               | 模板面板的样式。                                                                                                                    | `StyleValue`                                                            | `semiGlobalDefault("AIChatInput", "templatesStyle")` |
 | topSlotPosition              | #topSlot 的位置，相对于引用区域与上传文件区域。                                                                                     | `"bottom" \| "middle" \| "top"`                                         | `"top"`                                              |
 | transformer                  | 自定义扩展的转换规则，键为节点名，值为把节点转换成 contentChange 内容项的函数。                                                     | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType>  | `semiGlobalDefault("AIChatInput", "transformer")`    |
-| uploadTipProps               | 上传按钮提示的 Tooltip 配置，不含 content；提示内容使用 #uploadTip 插槽。                                                           | <ApiType detail={"Omit\u003cTooltipProps, \"content\">"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "uploadTipProps")` |
 | uploadProps                  | 上传文件相关配置，同 Upload，但不接受 fileList 与 listType；onChange、onRemove 由 AIChatInput 自己调用，beforeRemove 支持 Promise。 | `AIChatInputUploadProps`                                                | `semiGlobalDefault("AIChatInput", "uploadProps")`    |
+| uploadTipProps               | 上传按钮提示的 Tooltip 配置，不含 content；提示内容使用 #uploadTip 插槽。                                                           | <ApiType detail={"Omit\u003cTooltipProps, \"content\">"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "uploadTipProps")` |
 
 **Events**
 
@@ -51,16 +51,16 @@ import ApiType from '#/components/ApiType.astro';
 
 | 插槽           | 说明                                                                                                                                                              | 作用域参数                           |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| actionArea     | 自定义底部操作区域，作用域参数 menuItem 为上传节点（showUploadButton 为 false 时是隐藏的 Upload，仍需渲染才能粘贴上传）与发送或停止按钮，class 为操作区域的类名。 | `AIChatInputActionAreaSlotProps`     |
+| configureArea  | 底部配置区域，放置 AIChatInput.Configure 的各配置项。                                                                                                             | `any`                                |
 | reference      | 自定义渲染每个引用，作用域参数为 item 与 index。                                                                                                                  | `AIChatInputReferenceSlotProps`      |
+| skillIcon      | 技能面板中每个技能前的图标，作用域参数为 item 与 index。                                                                                                          | `AIChatInputSkillIconSlotProps`      |
+| skillItem      | 自定义技能列表的每一项，作用域参数含 skill 和需要绑定到根元素的 id、class、role、aria-selected、onClick、onMouseenter。                                           | `AIChatInputSkillItemSlotProps`      |
+| suggestionItem | 自定义每个建议项，作用域参数含 suggestion 和需要绑定到根元素的 id、class、role、aria-selected、onClick、onMouseenter。                                            | `AIChatInputSuggestionItemSlotProps` |
+| template       | 模板面板的内容，作用域参数为当前技能 skill 与用传入内容替换输入框内容的 onTemplateClick。                                                                         | `AIChatInputTemplateSlotProps`       |
 | topSlot        | 自定义顶部区域，作用域参数含引用、上传内容、输入内容和删除方法。位置由 topSlotPosition 决定。                                                                     | `AIChatInputTopSlotProps`            |
 | uploadButton   | 自定义上传按钮内容，上传与粘贴上传逻辑仍由组件托管；作用域参数含 defaultNode、onOpenFileDialog、disabled、attachments。                                           | `AIChatInputUploadButtonSlotProps`   |
 | uploadTip      | 上传按钮提示的内容。                                                                                                                                              | `any`                                |
-| configureArea  | 底部配置区域，放置 AIChatInput.Configure 的各配置项。                                                                                                             | `any`                                |
-| actionArea     | 自定义底部操作区域，作用域参数 menuItem 为上传节点（showUploadButton 为 false 时是隐藏的 Upload，仍需渲染才能粘贴上传）与发送或停止按钮，class 为操作区域的类名。 | `AIChatInputActionAreaSlotProps`     |
-| suggestionItem | 自定义每个建议项，作用域参数含 suggestion 和需要绑定到根元素的 id、class、role、aria-selected、onClick、onMouseenter。                                            | `AIChatInputSuggestionItemSlotProps` |
-| skillItem      | 自定义技能列表的每一项，作用域参数含 skill 和需要绑定到根元素的 id、class、role、aria-selected、onClick、onMouseenter。                                           | `AIChatInputSkillItemSlotProps`      |
-| skillIcon      | 技能面板中每个技能前的图标，作用域参数为 item 与 index。                                                                                                          | `AIChatInputSkillIconSlotProps`      |
-| template       | 模板面板的内容，作用域参数为当前技能 skill 与用传入内容替换输入框内容的 onTemplateClick。                                                                         | `AIChatInputTemplateSlotProps`       |
 
 **Exposes**
 

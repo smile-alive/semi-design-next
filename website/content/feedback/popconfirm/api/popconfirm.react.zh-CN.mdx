@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | 对话框的 `aria-label`，传入后优先于标题。 | `string` | - |
 | aria-labelledby | 对话框的 `aria-labelledby`，缺省指向标题，没有标题时指向内容。 | `string` | - |
 | arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 `showArrow`，缺省为 `true`。 | `boolean` | - |
-| arrowStyle | 箭头的边框色、背景色与边框透明度。 | `ArrowStyle` | - |
+| arrowStyle | 箭头的边框色、背景色与边框透明度。 | <ApiType detail={"Pick\u003cReact.CSSProperties, 'backgroundColor' \u007c 'borderColor'> & { borderOpacity?: string \u007c number }"}>Type</ApiType> | - |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向，缺省为 `true`。 | `boolean` | - |
 | cancelButtonProps | 取消按钮的属性。`autoFocus` 为 `true` 时打开后聚焦该按钮，`className`、`style` 与其他属性落在按钮上。 | `ButtonProps` | - |
 | cancelText | 取消按钮文字，缺省取语言包 `Popconfirm.cancel`（zh_CN 为 `取消`，en_US 为 `Cancel`）。 | `string` | - |

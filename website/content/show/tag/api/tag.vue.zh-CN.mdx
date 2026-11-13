@@ -4,26 +4,26 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| tabindex | 标签的 tabindex；可交互的标签缺省为 0。 | `number` | `semiGlobalDefault("Tag", "tabindex")` |
-| tagKey | 标签的唯一标识，作为 close 事件的第二个参数。 | `string \| number` | `semiGlobalDefault("Tag", "tagKey")` |
-| size | 标签尺寸，可选 small、default 或 large。 | `"default" \| "large" \| "small"` | `"default"` |
-| color | 标签颜色，可选色板中的 16 种颜色和 white。 | <ApiType detail={"\"amber\" \u007c \"blue\" \u007c \"cyan\" \u007c \"green\" \u007c \"grey\" \u007c \"indigo\" \u007c \"light-blue\" \u007c \"light-green\" \u007c \"lime\" \u007c \"orange\" \u007c \"pink\" \u007c \"purple\" \u007c \"red\" \u007c \"teal\" \u007c \"violet\" \u007c \"white\" \u007c \"yellow\""}>Type</ApiType> | `"grey"` |
-| type | 样式类型，可选 light、ghost 或 solid。 | `"ghost" \| "light" \| "solid"` | `"light"` |
-| closable | 标签是否可以关闭。 | `boolean` | `false` |
-| visible | 标签是否可见，配合 v-model:visible 使用；传入后由该值决定显示。 | `boolean` | `semiGlobalDefault("Tag", "visible")` |
+| avatarShape | 头像标签中头像的形状，可选 square 或 circle。 | `AvatarShape` | `"square"` |
 | avatarSrc | 头像资源地址，设置后生成头像标签。 | `string` | `semiGlobalDefault("Tag", "avatarSrc")` |
+| closable | 标签是否可以关闭。 | `boolean` | `false` |
+| color | 标签颜色，可选色板中的 16 种颜色和 white。 | <ApiType detail={"\"amber\" \u007c \"blue\" \u007c \"cyan\" \u007c \"green\" \u007c \"grey\" \u007c \"indigo\" \u007c \"light-blue\" \u007c \"light-green\" \u007c \"lime\" \u007c \"orange\" \u007c \"pink\" \u007c \"purple\" \u007c \"red\" \u007c \"teal\" \u007c \"violet\" \u007c \"white\" \u007c \"yellow\""}>Type</ApiType> | `"grey"` |
 | colorful | 是否为多彩标签。 | `boolean` | `false` |
 | gradient | 多彩标签是否为渐变色，需 colorful 为 true。 | `boolean` | `false` |
-| avatarShape | 头像标签中头像的形状，可选 square 或 circle。 | `AvatarShape` | `"square"` |
 | shape | 标签形状，可选 square 或 circle。 | `TagShape` | `"square"` |
+| size | 标签尺寸，可选 small、default 或 large。 | `"default" \| "large" \| "small"` | `"default"` |
+| tabindex | 标签的 tabindex；可交互的标签缺省为 0。 | `number` | `semiGlobalDefault("Tag", "tabindex")` |
+| tagKey | 标签的唯一标识，作为 close 事件的第二个参数。 | `string \| number` | `semiGlobalDefault("Tag", "tagKey")` |
+| type | 样式类型，可选 light、ghost 或 solid。 | `"ghost" \| "light" \| "solid"` | `"light"` |
+| visible | 标签是否可见，配合 v-model:visible 使用；传入后由该值决定显示。 | `boolean` | `semiGlobalDefault("Tag", "visible")` |
 
 **Events**
 
 | 事件           | 说明                                                                                                                                  | 回调参数                                                        |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | close          | 关闭标签时触发；点击关闭图标时为 click 事件，按 Backspace 或 Delete 关闭时为 keydown 事件。对事件调用 preventDefault 可保持标签显示。 | `[event: TagCloseEvent, tagKey: string \| number \| undefined]` |
-| update:visible | 标签关闭使可见状态变化时触发，供 v-model:visible 回写。                                                                               | `[visible: boolean]`                                            |
 | keydown        | 标签上按下按键时触发。                                                                                                                | `[event: KeyboardEvent]`                                        |
+| update:visible | 标签关闭使可见状态变化时触发，供 v-model:visible 回写。                                                                               | `[visible: boolean]`                                            |
 
 **Slots**
 

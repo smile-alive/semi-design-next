@@ -2,10 +2,10 @@
 
 | Property      | Description                                                                                                                                    | Type                             | Default     |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- | ----------- |
+| error         | The error, a string array rendered after the content. Nothing shows when omitted.                                                              | `FieldError`                     | `undefined` |
 | label         | The text of the label, or a label configuration such as text, extra, align, width, required, optional and id. The label slot takes precedence. | `string \| number \| FieldLabel` | `undefined` |
 | labelPosition | Label position. Defaults to the Form's, and can be top or left.                                                                                | `"left" \| "top"`                | `undefined` |
 | noLabel       | Whether to render no label. When the Form sets both labelCol and wrapperCol, the label column is still kept.                                   | `boolean`                        | `undefined` |
-| error         | The error, a string array rendered after the content. Nothing shows when omitted.                                                              | `FieldError`                     | `undefined` |
 
 **Events**
 
@@ -18,9 +18,9 @@
 | Slot       | Description                                                                    | Scope parameters         |
 | ---------- | ------------------------------------------------------------------------------ | ------------------------ |
 | default    | The custom content.                                                            | `any`                    |
+| error      | Custom rendering of the error. The scope provides error.                       | `{ error: FieldError; }` |
 | label      | Content of the label. It takes precedence over the text in the label property. | `any`                    |
 | labelExtra | Content after the label text.                                                  | `any`                    |
-| error      | Custom rendering of the error. The scope provides error.                       | `{ error: FieldError; }` |
 
 **Exposes**
 

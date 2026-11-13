@@ -26,26 +26,26 @@
 
 | Event               | Description                                                                                                                                            | Callback parameters         |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
-| update:selectedKeys | Emitted when the selection changes. The payload holds only the selected item's key, and v-model:selectedKeys uses it.                                  | `[selectedKeys: ItemKey[]]` |
-| update:openKeys     | Emitted when the open sub navigations change, and v-model:openKeys uses it. Opening a submenu by hover in horizontal or collapsed mode emits it too.   | `[openKeys: ItemKey[]]`     |
-| update:isCollapsed  | Emitted when the collapsed state changes, and v-model:isCollapsed uses it.                                                                             | `[isCollapsed: boolean]`    |
-| select              | Emitted when a selectable item is selected for the first time. domEvent is the native event.                                                           | `[data: OnSelectedData]`    |
 | click               | Emitted when any item is clicked. The data carries text for an item, and openKeys and isOpen for a sub navigation title. domEvent is the native event. | `[data: NavClickData]`      |
-| openChange          | Emitted when a sub navigation opens or closes. domEvent is missing when a popup opens by hover.                                                        | `[data: NavOpenChangeData]` |
 | collapseChange      | Emitted when the collapsed state changes.                                                                                                              | `[isCollapsed: boolean]`    |
+| openChange          | Emitted when a sub navigation opens or closes. domEvent is missing when a popup opens by hover.                                                        | `[data: NavOpenChangeData]` |
+| select              | Emitted when a selectable item is selected for the first time. domEvent is the native event.                                                           | `[data: OnSelectedData]`    |
+| update:isCollapsed  | Emitted when the collapsed state changes, and v-model:isCollapsed uses it.                                                                             | `[isCollapsed: boolean]`    |
+| update:openKeys     | Emitted when the open sub navigations change, and v-model:openKeys uses it. Opening a submenu by hover in horizontal or collapsed mode emits it too.   | `[openKeys: ItemKey[]]`     |
+| update:selectedKeys | Emitted when the selection changes. The payload holds only the selected item's key, and v-model:selectedKeys uses it.                                  | `[selectedKeys: ItemKey[]]` |
 
 **Slots**
 
 | Slot       | Description                                                                                                                                                                                    | Scope parameters      |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
 | default    | Nav.Item, Nav.Sub, Nav.Header and Nav.Footer children, plus any other custom element. The Header and Footer move to the header and footer, and the rest follow the items generated from items. | `any`                 |
-| header     | Header content, rendered after the text configured by header.                                                                                                                                  | `any`                 |
+| expandIcon | Expand arrow of a sub navigation generated from items. Receives item and level.                                                                                                                | `NavItemSlotProps`    |
 | footer     | Footer content. It replaces the collapse button configured by footer.                                                                                                                          | `any`                 |
-| wrapper    | Wraps each item. Mount the item's li with `<component :is="itemElement" />`. Receives itemElement, isSubNav, isInSubNav and props.                                                             | `NavWrapperSlotProps` |
+| header     | Header content, rendered after the text configured by header.                                                                                                                                  | `any`                 |
 | icon       | Icon of an entry of items. Receives item and level.                                                                                                                                            | `NavItemSlotProps`    |
 | text       | Text node of an entry of items. Receives item and level. Without it the entry's text shows.                                                                                                    | `NavItemSlotProps`    |
 | toggleIcon | Icon at the toggle position of an entry of items. Receives item and level.                                                                                                                     | `NavItemSlotProps`    |
-| expandIcon | Expand arrow of a sub navigation generated from items. Receives item and level.                                                                                                                | `NavItemSlotProps`    |
+| wrapper    | Wraps each item. Mount the item's li with `<component :is="itemElement" />`. Receives itemElement, isSubNav, isInSubNav and props.                                                             | `NavWrapperSlotProps` |
 
 **Exposes**
 

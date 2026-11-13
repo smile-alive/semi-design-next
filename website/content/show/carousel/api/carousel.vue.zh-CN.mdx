@@ -24,8 +24,8 @@ import ApiType from '#/components/ApiType.astro';
 
 | 事件               | 说明                                             | 回调参数                            |
 | ------------------ | ------------------------------------------------ | ----------------------------------- |
-| update:activeIndex | 切换到新的一项时触发，用于 v-model:activeIndex。 | `[index: number]`                   |
 | change             | 切换到新的一项时触发，参数为新索引和上一个索引。 | `[index: number, preIndex: number]` |
+| update:activeIndex | 切换到新的一项时触发，用于 v-model:activeIndex。 | `[index: number]`                   |
 
 **Slots**
 
@@ -39,8 +39,8 @@ import ApiType from '#/components/ApiType.astro';
 
 | 名称 | 说明                                         | 类型                                                             |
 | ---- | -------------------------------------------- | ---------------------------------------------------------------- |
-| next | 切换到下一项。                               | <ApiType detail={"() => void"}>Type</ApiType>                    |
-| prev | 切换到上一项。                               | <ApiType detail={"() => void"}>Type</ApiType>                    |
 | goTo | 切换到指定索引，超出范围时循环。             | <ApiType detail={"(targetIndex: number) => void"}>Type</ApiType> |
+| next | 切换到下一项。                               | <ApiType detail={"() => void"}>Type</ApiType>                    |
 | play | 开始自动播放，autoPlay 为 false 时同样生效。 | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| prev | 切换到上一项。                               | <ApiType detail={"() => void"}>Type</ApiType>                    |
 | stop | 停止自动播放。                               | <ApiType detail={"() => void"}>Type</ApiType>                    |

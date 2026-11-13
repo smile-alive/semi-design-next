@@ -4,10 +4,10 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性        | 说明                              | 类型                     | 默认值                                         |
 | ----------- | --------------------------------- | ------------------------ | ---------------------------------------------- |
+| maxCount    | 显示的最大头像数，超出后显示 +N。 | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")` |
+| overlapFrom | 头像重叠方向，可选 start 或 end。 | `AvatarGroupOverlapFrom` | `"start"`                                      |
 | shape       | 组内头像的形状。                  | `AvatarShape`            | `"circle"`                                     |
 | size        | 组内头像的尺寸。                  | `string`                 | `"medium"`                                     |
-| overlapFrom | 头像重叠方向，可选 start 或 end。 | `AvatarGroupOverlapFrom` | `"start"`                                      |
-| maxCount    | 显示的最大头像数，超出后显示 +N。 | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")` |
 
 **Events**
 

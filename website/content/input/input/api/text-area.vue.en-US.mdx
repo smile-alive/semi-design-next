@@ -4,50 +4,50 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| modelValue | Content of the text area, for v-model. | `string` | `undefined` |
-| modelModifiers | The trim, number and lazy v-model modifiers, passed by Vue for the matching v-model modifier. With lazy, typing does not update the bound value; update:modelValue is emitted on the native change (blur). The change event still fires on every input. | `InputModelModifiers` | `undefined` |
-| defaultValue | Initial content when the text area is uncontrolled. | `string` | `semiGlobalDefault("TextArea", "defaultValue")` |
+| autofocus | Focuses the text area on mount. | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
 | autosize | Whether the height follows the content; pass `{ minRows, maxRows }` to limit the rows. | `boolean \| AutosizeRow` | `false` |
 | borderless | Borderless mode. | `boolean` | `false` |
-| rows | Number of visible text lines. | `number` | `4` |
 | cols | Visible width in average character widths. | `number` | `20` |
-| placeholder | Hint text shown while the text area is empty. | `string` | `semiGlobalDefault("TextArea", "placeholder")` |
-| maxCount | Maximum number of characters; setting it shows a counter, which turns red when exceeded. The input is not truncated. | `number` | `semiGlobalDefault("TextArea", "maxCount")` |
-| showCounter | Whether to show the counter; it is always shown when maxCount is set. | `boolean` | `false` |
-| showClear | Shows a clear button when the text area has content and the pointer or focus is inside the component. | `boolean` | `false` |
-| disabled | Whether the text area is disabled. | `boolean` | `undefined` |
-| readonly | Whether the text area is read-only. | `boolean` | `semiGlobalDefault("TextArea", "readonly")` |
-| autofocus | Focuses the text area on mount. | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
-| validateStatus | Validation status: default, error or warning; error outputs aria-invalid. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TextArea", "validateStatus")` |
 | composition | Whether to enable IME mode; change does not fire during a composition and fires once after it ends. | `boolean` | `false` |
+| defaultValue | Initial content when the text area is uncontrolled. | `string` | `semiGlobalDefault("TextArea", "defaultValue")` |
+| disabled | Whether the text area is disabled. | `boolean` | `undefined` |
 | disabledEnterStartNewLine | Internal property used by Chat: Enter does not start a new line, Shift + Enter does. | `boolean` | `semiGlobalDefault("TextArea", "disabledEnterStartNewLine")` |
-| showLineNumber | Whether to show line numbers. | `boolean` | `false` |
-| lineNumberStart | Starting line number. | `number` | `1` |
+| getValueLength | Custom string length calculation, used with maxlength, minlength and maxCount. | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
 | lineNumberClassName | Class name of the line number area. | `string` | `semiGlobalDefault("TextArea", "lineNumberClassName")` |
+| lineNumberStart | Starting line number. | `number` | `1` |
 | lineNumberStyle | Style of the line number area; numbers need a unit. | `StyleValue` | `semiGlobalDefault("TextArea", "lineNumberStyle")` |
-| textareaStyle | Style of the inner textarea element, such as its height; numbers need a unit. | `StyleValue` | `semiGlobalDefault("TextArea", "textareaStyle")` |
-| resize | Whether and in which direction the user may resize: none, both, horizontal, vertical, block or inline. It only takes effect when given and is ignored with autosize. | `"block" \| "both" \| "horizontal" \| "inline" \| "none" \| "vertical"` | `semiGlobalDefault("TextArea", "resize")` |
+| maxCount | Maximum number of characters; setting it shows a counter, which turns red when exceeded. The input is not truncated. | `number` | `semiGlobalDefault("TextArea", "maxCount")` |
 | maxlength | Maximum length. With getValueLength the length is measured and truncated by it; otherwise the native attribute applies. | `number` | `undefined` |
 | minlength | Minimum length. With getValueLength it is converted accordingly; otherwise the native attribute applies. | `number` | `undefined` |
-| getValueLength | Custom string length calculation, used with maxlength, minlength and maxCount. | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
+| modelModifiers | The trim, number and lazy v-model modifiers, passed by Vue for the matching v-model modifier. With lazy, typing does not update the bound value; update:modelValue is emitted on the native change (blur). The change event still fires on every input. | `InputModelModifiers` | `undefined` |
+| modelValue | Content of the text area, for v-model. | `string` | `undefined` |
+| placeholder | Hint text shown while the text area is empty. | `string` | `semiGlobalDefault("TextArea", "placeholder")` |
+| readonly | Whether the text area is read-only. | `boolean` | `semiGlobalDefault("TextArea", "readonly")` |
+| resize | Whether and in which direction the user may resize: none, both, horizontal, vertical, block or inline. It only takes effect when given and is ignored with autosize. | `"block" \| "both" \| "horizontal" \| "inline" \| "none" \| "vertical"` | `semiGlobalDefault("TextArea", "resize")` |
+| rows | Number of visible text lines. | `number` | `4` |
+| showClear | Shows a clear button when the text area has content and the pointer or focus is inside the component. | `boolean` | `false` |
+| showCounter | Whether to show the counter; it is always shown when maxCount is set. | `boolean` | `false` |
+| showLineNumber | Whether to show line numbers. | `boolean` | `false` |
+| textareaStyle | Style of the inner textarea element, such as its height; numbers need a unit. | `StyleValue` | `semiGlobalDefault("TextArea", "textareaStyle")` |
+| validateStatus | Validation status: default, error or warning; error outputs aria-invalid. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TextArea", "validateStatus")` |
 
 **Events**
 
 | Event             | Description                                                                                                                                              | Callback parameters                                        |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| resize            | Emitted when the size changes: with autosize the payload is the border-box height; when the user drags to resize it is the content-box height and width. | `[size: { height: number; width?: number \| undefined; }]` |
-| update:modelValue | Emitted when the content changes, for v-model to write back.                                                                                             | `[value: string]`                                          |
+| blur              | Emitted when focus leaves the component.                                                                                                                 | `[event: FocusEvent]`                                      |
 | change            | Emitted when the content changes, with the new value and the event; in IME mode it fires once after the composition ends.                                | `[value: string, event: TextAreaChangeEvent]`              |
 | clear             | Emitted when the clear button is activated.                                                                                                              | `[event: MouseEvent]`                                      |
+| compositionend    | Emitted when an IME composition ends.                                                                                                                    | `[event: CompositionEvent]`                                |
+| compositionstart  | Emitted when an IME composition starts.                                                                                                                  | `[event: CompositionEvent]`                                |
+| compositionupdate | Emitted when an IME composition updates.                                                                                                                 | `[event: CompositionEvent]`                                |
+| enterPress        | Emitted when Enter is pressed (keydown); the Enter that commits an IME composition does not fire it.                                                     | `[event: KeyboardEvent]`                                   |
 | focus             | Emitted when focus enters the component.                                                                                                                 | `[event: FocusEvent]`                                      |
-| blur              | Emitted when focus leaves the component.                                                                                                                 | `[event: FocusEvent]`                                      |
 | input             | The native input event.                                                                                                                                  | `[event: Event]`                                           |
 | keydown           | The native keydown event.                                                                                                                                | `[event: KeyboardEvent]`                                   |
 | keyup             | The native keyup event.                                                                                                                                  | `[event: KeyboardEvent]`                                   |
-| enterPress        | Emitted when Enter is pressed (keydown); the Enter that commits an IME composition does not fire it.                                                     | `[event: KeyboardEvent]`                                   |
-| compositionstart  | Emitted when an IME composition starts.                                                                                                                  | `[event: CompositionEvent]`                                |
-| compositionupdate | Emitted when an IME composition updates.                                                                                                                 | `[event: CompositionEvent]`                                |
-| compositionend    | Emitted when an IME composition ends.                                                                                                                    | `[event: CompositionEvent]`                                |
+| resize            | Emitted when the size changes: with autosize the payload is the border-box height; when the user drags to resize it is the content-box height and width. | `[size: { height: number; width?: number \| undefined; }]` |
+| update:modelValue | Emitted when the content changes, for v-model to write back.                                                                                             | `[value: string]`                                          |
 
 **Slots**
 
@@ -59,9 +59,9 @@ import ApiType from '#/components/ApiType.astro';
 
 | Name              | Description                                                              | Type                                                                                                                                                                          |
 | ----------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| focus             | Focuses the native textarea.                                             | <ApiType detail={"(options?: FocusOptions \u007c undefined) => void"}>Type</ApiType>                                                                                          |
 | blur              | Removes focus.                                                           | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| focus             | Focuses the native textarea.                                             | <ApiType detail={"(options?: FocusOptions \u007c undefined) => void"}>Type</ApiType>                                                                                          |
+| nativeElement     | The root element of the component, or null while it is not rendered.     | `HTMLElement \| null`                                                                                                                                                         |
 | select            | Selects all the text in the text area.                                   | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
 | setSelectionRange | Sets the selection, with the parameters of the native setSelectionRange. | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"backward\" \u007c \"forward\" \u007c \"none\" \u007c undefined) => void"}>Type</ApiType> |
 | textarea          | The native textarea element, or null while it is not rendered.           | `HTMLTextAreaElement \| null`                                                                                                                                                 |
-| nativeElement     | The root element of the component, or null while it is not rendered.     | `HTMLElement \| null`                                                                                                                                                         |

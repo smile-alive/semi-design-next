@@ -2,13 +2,13 @@
 
 | 属性        | 说明                                                                                            | 类型          | 默认值      |
 | ----------- | ----------------------------------------------------------------------------------------------- | ------------- | ----------- |
+| closable    | 是否显示关闭按钮。                                                                              | `boolean`     | `false`     |
+| disabled    | 是否禁用；禁用时点击、关闭按钮与 Enter、Space、Delete、Backspace 键均不生效，关闭按钮仍会显示。 | `boolean`     | `false`     |
 | itemKey     | 标签的唯一标识。                                                                                | `string`      | `""`        |
 | selected    | 是否为选中状态。                                                                                | `boolean`     | `false`     |
-| disabled    | 是否禁用；禁用时点击、关闭按钮与 Enter、Space、Delete、Backspace 键均不生效，关闭按钮仍会显示。 | `boolean`     | `false`     |
-| closable    | 是否显示关闭按钮。                                                                              | `boolean`     | `false`     |
 | size        | 尺寸，默认取所在 Tabs 的 size。                                                                 | `TabSize`     | `undefined` |
-| type        | 样式，默认取所在 Tabs 的 type，在 Tabs 之外为 line。                                            | `TabType`     | `undefined` |
 | tabPosition | 位置，默认取所在 Tabs 的 tabPosition，在 Tabs 之外为 top。                                      | `TabPosition` | `undefined` |
+| type        | 样式，默认取所在 Tabs 的 type，在 Tabs 之外为 line。                                            | `TabType`     | `undefined` |
 
 **Events**
 
@@ -20,8 +20,8 @@
 
 | 插槽 | 说明                               | 作用域参数 |
 | ---- | ---------------------------------- | ---------- |
-| tab  | 标签内容。                         | `any`      |
 | icon | 标签图标；返回空内容则不渲染图标。 | `any`      |
+| tab  | 标签内容。                         | `any`      |
 
 **Exposes**
 

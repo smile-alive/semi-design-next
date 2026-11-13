@@ -6,8 +6,8 @@ import ApiType from '#/components/ApiType.astro';
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------- |
 | field       | 要渲染的节点路径，默认为根；根对象不包 Section，其他对象渲染为以 title 为标题的 Section。                                                                              | `string`                                                                    | `semiGlobalDefault("SchemaField", "field")`       |
 | jsonSchema  | 要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的 JSON Schema；两者都没有时不渲染，开发模式下警告。                                                               | `JsonSchema`                                                                | `semiGlobalDefault("SchemaField", "jsonSchema")`  |
-| widgets     | 替换内置控件的字段组件，键是 JSON Schema 的 `format` 或控件种类（input、textarea、number、switch、select），先按 `format` 再按种类查找；组件收到与内置控件相同的属性。 | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType>           | `semiGlobalDefault("SchemaField", "widgets")`     |
 | renderField | 按节点路径接管渲染，数组的行写作 `[]`（如 `contacts[].email`），参数为 `{ node, field }`，返回 VNode；命中时由它渲染这个节点和它的子节点。                             | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaField", "renderField")` |
+| widgets     | 替换内置控件的字段组件，键是 JSON Schema 的 `format` 或控件种类（input、textarea、number、switch、select），先按 `format` 再按种类查找；组件收到与内置控件相同的属性。 | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType>           | `semiGlobalDefault("SchemaField", "widgets")`     |
 
 **Events**
 

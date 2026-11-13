@@ -24,23 +24,23 @@ import ApiType from '#/components/ApiType.astro';
 
 | Event          | Description                                                                                                                                                   | Callback parameters |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| update:current | Emitted with the new index when the step changes, for v-model:current to write back. It comes before change.                                                  | `[current: number]` |
-| update:visible | Emitted with false when the guide is skipped, Escape is pressed or the guide is finished, for v-model:visible to write back. It comes before skip and finish. | `[visible: false]`  |
 | change         | Emitted with the new index when the step changes.                                                                                                             | `[current: number]` |
+| finish         | Emitted when the finish button on the last step is clicked.                                                                                                   | `[]`                |
 | next           | Emitted with the new index when the next button is clicked. The last step emits finish instead.                                                               | `[current: number]` |
 | prev           | Emitted with the new index when the previous button is clicked.                                                                                               | `[current: number]` |
 | skip           | Emitted when the skip button is clicked or Escape is pressed.                                                                                                 | `[]`                |
-| finish         | Emitted when the finish button on the last step is clicked.                                                                                                   | `[]`                |
+| update:current | Emitted with the new index when the step changes, for v-model:current to write back. It comes before change.                                                  | `[current: number]` |
+| update:visible | Emitted with false when the guide is skipped, Escape is pressed or the guide is finished, for v-model:visible to write back. It comes before skip and finish. | `[visible: false]`  |
 
 **Slots**
 
 | Slot        | Description                                                                                                | Scope parameters         |
 | ----------- | ---------------------------------------------------------------------------------------------------------- | ------------------------ |
-| title       | Step title, with scope `{ item, index }`. When it renders nothing, item.title is used.                     | `UserGuideStepSlotProps` |
-| description | Step description, with scope `{ item, index }`. When it renders nothing, item.description is used.         | `UserGuideStepSlotProps` |
 | cover       | Step cover, with scope `{ item, index }`. Without it the step has no cover area.                           | `UserGuideStepSlotProps` |
+| description | Step description, with scope `{ item, index }`. When it renders nothing, item.description is used.         | `UserGuideStepSlotProps` |
 | nextText    | Text of the next button; the last step shows finishText. Without it the text from the locale pack is used. | `any`                    |
 | prevText    | Text of the previous button. Without it the text from the locale pack is used.                             | `any`                    |
+| title       | Step title, with scope `{ item, index }`. When it renders nothing, item.title is used.                     | `UserGuideStepSlotProps` |
 
 **Exposes**
 

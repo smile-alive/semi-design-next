@@ -37,7 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | needConfirm | Whether a confirm step is needed. Only effective for the dateTime and dateTimeRange types. | `boolean` | - |
 | onBlur | Called when the panel closes; not recommended for range selection. e is the native mousedown event only when a click outside closes the panel; confirming, selecting a date, Esc and the other ways pass none. | <ApiType detail={"(e?: MouseEvent) => void"}>Type</ApiType> | - |
 | onCancel | Called when the selection is cancelled, with the value of the last confirmed selection. Only effective for the dateTime and dateTimeRange types with needConfirm on. | `OnCancelType` | - |
-| onChange | Called when the value changes. Both arguments are arrays for range and multiple selection. | <ApiType detail={"(date: Date \u007c Date[], dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onChange | Called when the value changes. Both arguments are arrays for range and multiple selection. | <ApiType detail={"((date: Date, dateString: string) => void) \u007c ((date: Date[], dateString: string[]) => void)"}>Type</ApiType> | - |
 | onClear | Called when the clear button is clicked. | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
 | onClickOutSide | Called when a mousedown lands outside the popup and the trigger while the popup is open. It receives the native mousedown event. | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
 | onConfirm | Called when the selection is confirmed, with the current value. Only effective for the dateTime and dateTimeRange types with needConfirm on. | `OnConfirmType` | - |
@@ -70,7 +70,7 @@ import ApiType from '#/components/ApiType.astro';
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get `TZDate`s, and `dateString` and the today mark follow the zone too. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
 | topSlot | Renders an extra area at the top. Takes a JSX element. | `JSX.Element` | - |
 | triggerRender | Renders a custom trigger. It is called once. The props it receives are reactive, so read them inside the returned JSX. | <ApiType detail={"(props: TriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
-| type | Type, one of date, dateRange, dateTime, dateTimeRange, month, monthRange and year. | `Type` | `"date"` |
+| type | Type, one of date, dateRange, dateTime, dateTimeRange, month, monthRange and year. | <ApiType detail={"'date' \u007c 'dateRange' \u007c 'dateTime' \u007c 'dateTimeRange' \u007c 'month' \u007c 'monthRange' \u007c 'year'"}>Type</ApiType> | `"date"` |
 | validateStatus | Validation status, which only affects the display style. success looks the same as default. | `ValidateStatus` | - |
 | value | Controlled value. | `ValueType \| null` | - |
 | weekStartsOn | Day of the week that starts each week: 0 is Sunday, 1 is Monday, and so on. | `WeekStartNumber` | `0` |

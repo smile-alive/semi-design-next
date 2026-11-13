@@ -4,30 +4,30 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| jsonSchema | 要渲染的 JSON Schema，优先于从 `schema` 导出的 JSON Schema。Form 的事件原样传给内部的 Form。 | `JsonSchema` | `semiGlobalDefault("SchemaForm", "jsonSchema")` |
-| widgets | 同 SchemaField 的 widgets。 | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "widgets")` |
-| renderField | 同 SchemaField 的 renderField。 | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
-| initValues | 同 Form 的 initValues。 | <ApiType detail={"DeepPartial\u003cValues>"}>Type</ApiType> | `undefined` |
-| layout | 同 Form 的 layout。 | `"horizontal" \| "vertical"` | `undefined` |
-| labelPosition | 同 Form 的 labelPosition。 | `"inset" \| "left" \| "top"` | `undefined` |
-| labelWidth | 同 Form 的 labelWidth。 | `string \| number` | `undefined` |
-| labelAlign | 同 Form 的 labelAlign。 | `"left" \| "right"` | `undefined` |
-| labelCol | 同 Form 的 labelCol。 | `ColProps` | `undefined` |
-| wrapperCol | 同 Form 的 wrapperCol。 | `ColProps` | `undefined` |
-| extraTextPosition | 同 Form 的 extraTextPosition。 | `"bottom" \| "middle"` | `undefined` |
 | allowEmpty | 同 Form 的 allowEmpty。 | `boolean` | `undefined` |
 | autoScrollToError | 同 Form 的 autoScrollToError。 | `boolean \| Options` | `undefined` |
-| showValidateIcon | 同 Form 的 showValidateIcon。 | `boolean` | `undefined` |
 | disabled | 同 Form 的 disabled。 | `boolean` | `undefined` |
-| stopValidateWithError | 同 Form 的 stopValidateWithError。 | `boolean` | `undefined` |
-| trigger | 同 Form 的 trigger。 | `FieldValidateTriggerType` | `undefined` |
-| stopPropagation | 同 Form 的 stopPropagation。 | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `undefined` |
-| validator | Form 级别的校验函数，与 `schema` 互斥，用法同 Form 的 validator。 | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | `undefined` |
-| schema | 实现了 Standard Schema 的校验对象（如 Zod、Valibot、ArkType），用于校验，并在实现了 Standard JSON Schema 时导出要渲染的 JSON Schema。校验全部字段通过后，`submit` 事件拿到 schema 的输出。 | <ApiType detail={"FormSchema\u003cValues, Output>"}>Type</ApiType> | `undefined` |
-| schemaDebounce | 同 Form 的 schemaDebounce。 | `number` | `undefined` |
-| keepState | 同 Form 的 keepState。 | `boolean` | `undefined` |
+| extraTextPosition | 同 Form 的 extraTextPosition。 | `"bottom" \| "middle"` | `undefined` |
 | form | 同 Form 的 form。 | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | `undefined` |
 | id | 同 Form 的 id。 | `string` | `undefined` |
+| initValues | 同 Form 的 initValues。 | <ApiType detail={"DeepPartial\u003cValues>"}>Type</ApiType> | `undefined` |
+| jsonSchema | 要渲染的 JSON Schema，优先于从 `schema` 导出的 JSON Schema。Form 的事件原样传给内部的 Form。 | `JsonSchema` | `semiGlobalDefault("SchemaForm", "jsonSchema")` |
+| keepState | 同 Form 的 keepState。 | `boolean` | `undefined` |
+| labelAlign | 同 Form 的 labelAlign。 | `"left" \| "right"` | `undefined` |
+| labelCol | 同 Form 的 labelCol。 | `ColProps` | `undefined` |
+| labelPosition | 同 Form 的 labelPosition。 | `"inset" \| "left" \| "top"` | `undefined` |
+| labelWidth | 同 Form 的 labelWidth。 | `string \| number` | `undefined` |
+| layout | 同 Form 的 layout。 | `"horizontal" \| "vertical"` | `undefined` |
+| renderField | 同 SchemaField 的 renderField。 | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
+| schema | 实现了 Standard Schema 的校验对象（如 Zod、Valibot、ArkType），用于校验，并在实现了 Standard JSON Schema 时导出要渲染的 JSON Schema。校验全部字段通过后，`submit` 事件拿到 schema 的输出。 | <ApiType detail={"FormSchema\u003cValues, Output>"}>Type</ApiType> | `undefined` |
+| schemaDebounce | 同 Form 的 schemaDebounce。 | `number` | `undefined` |
+| showValidateIcon | 同 Form 的 showValidateIcon。 | `boolean` | `undefined` |
+| stopPropagation | 同 Form 的 stopPropagation。 | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `undefined` |
+| stopValidateWithError | 同 Form 的 stopValidateWithError。 | `boolean` | `undefined` |
+| trigger | 同 Form 的 trigger。 | `FieldValidateTriggerType` | `undefined` |
+| validator | Form 级别的校验函数，与 `schema` 互斥，用法同 Form 的 validator。 | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | `undefined` |
+| widgets | 同 SchemaField 的 widgets。 | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "widgets")` |
+| wrapperCol | 同 Form 的 wrapperCol。 | `ColProps` | `undefined` |
 
 **Events**
 

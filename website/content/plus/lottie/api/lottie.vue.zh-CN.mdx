@@ -4,9 +4,9 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| params | 传给 lottie-web loadAnimation 的参数。内容变化时重新加载，原地修改不会触发：请整体替换，较大的动画数据用 shallowRef 持有。 | <ApiType detail={"Partial\u003cAnimationConfigWithPath\u003cRendererType> \u007c AnimationConfigWithData\u003cRendererType>>"}>Type</ApiType> | `undefined` |
-| width | 容器宽度，需带单位，如 300px。 | `string` | `semiGlobalDefault("Lottie", "width")` |
 | height | 容器高度，需带单位，如 300px。 | `string` | `semiGlobalDefault("Lottie", "height")` |
+| params | 传给 lottie-web loadAnimation 的参数。内容变化时重新加载，原地修改不会触发：请整体替换，较大的动画数据用 shallowRef 持有。 | <ApiType detail={"Partial\u003cAnimationConfigWithData\u003cRendererType> \u007c AnimationConfigWithPath\u003cRendererType>>"}>Type</ApiType> | `undefined` |
+| width | 容器宽度，需带单位，如 300px。 | `string` | `semiGlobalDefault("Lottie", "width")` |
 
 **Events**
 

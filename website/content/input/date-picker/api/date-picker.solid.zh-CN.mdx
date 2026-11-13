@@ -37,7 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | needConfirm | 是否需要“确认选择”，仅 type 为 dateTime 或 dateTimeRange 时有效。 | `boolean` | - |
 | onBlur | 面板关闭时的回调，范围选择时不推荐使用。只有点击外部关闭时 e 为原生 mousedown 事件，确认、选中日期、Esc 等其他关闭方式不传。 | <ApiType detail={"(e?: MouseEvent) => void"}>Type</ApiType> | - |
 | onCancel | 取消选择时的回调，入参为上次确认的值，仅 type 为 dateTime 或 dateTimeRange 且 needConfirm 为 true 时有效。 | `OnCancelType` | - |
-| onChange | 值变化时的回调。范围与多选时两个参数都是数组。 | <ApiType detail={"(date: Date \u007c Date[], dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onChange | 值变化时的回调。范围与多选时两个参数都是数组。 | <ApiType detail={"((date: Date, dateString: string) => void) \u007c ((date: Date[], dateString: string[]) => void)"}>Type</ApiType> | - |
 | onClear | 点击清除按钮时的回调。 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
 | onClickOutSide | 弹出层展示时，在弹出层与触发器之外按下鼠标时的回调，参数为原生 mousedown 事件。 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
 | onConfirm | 确认选择时的回调，入参为当前选择的值，仅 type 为 dateTime 或 dateTimeRange 且 needConfirm 为 true 时有效。 | `OnConfirmType` | - |
@@ -70,7 +70,7 @@ import ApiType from '#/components/ApiType.astro';
 | timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，`dateString` 和今天的标记也按该时区。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | - |
 | topSlot | 渲染顶部额外区域，传入 JSX 元素。 | `JSX.Element` | - |
 | triggerRender | 自定义触发器的渲染函数，只调用一次。入参为触发器属性，其中每个键都是响应式的，需在返回的 JSX 中读取。 | <ApiType detail={"(props: TriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
-| type | 类型，可选值：date、dateRange、dateTime、dateTimeRange、month、monthRange、year。 | `Type` | `"date"` |
+| type | 类型，可选值：date、dateRange、dateTime、dateTimeRange、month、monthRange、year。 | <ApiType detail={"'date' \u007c 'dateRange' \u007c 'dateTime' \u007c 'dateTimeRange' \u007c 'month' \u007c 'monthRange' \u007c 'year'"}>Type</ApiType> | `"date"` |
 | validateStatus | 校验状态，仅影响展示样式，success 与 default 样式相同。 | `ValidateStatus` | - |
 | value | 受控的值。 | `ValueType \| null` | - |
 | weekStartsOn | 以周几作为每周第一天，0 代表周日，1 代表周一，以此类推。 | `WeekStartNumber` | `0` |

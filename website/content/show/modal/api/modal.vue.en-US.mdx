@@ -28,33 +28,33 @@ import ApiType from '#/components/ApiType.astro';
 | okButtonProps | Props of the ok button. autoFocus focuses it on open; class and style land on the button; onClick runs before the built-in ok handling, which still runs. | `ModalButtonProps` | `semiGlobalDefault("Modal", "okButtonProps")` |
 | okText | Ok button text. Defaults to the locale entry Modal.confirm. | `string` | `semiGlobalDefault("Modal", "okText")` |
 | okType | Type of the ok button. | `OKType` | `"primary"` |
+| onCancel | Called by the cancel button, the close button, the mask and Esc; the argument is a native KeyboardEvent for Esc. A returned Promise keeps the cancel button loading; v-model:visible updates once it fulfills, and a rejection keeps the dialog open. The parent's visible is still true while the callback runs. It remains a function prop so its result can be read, bound with @cancel as usual. | <ApiType detail={"((event: KeyboardEvent \u007c MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+| onOk | Called when the ok button is clicked. A returned Promise keeps the ok button loading until it settles. The component never closes itself on ok; the caller sets visible to false. It remains a function prop so its result can be read, bound with @ok as usual. | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
 | preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. | `boolean` | `semiGlobalDefault("Modal", "preventScroll")` |
 | size | Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px. | `Size` | `"small"` |
 | title | Plain-text title, which also names the dialog. The #title slot wins when both are given. It is a declared prop, so it never lands on an element as the native title attribute. | `string` | `semiGlobalDefault("Modal", "title")` |
 | visible | Whether the dialog is visible, used with v-model:visible. | `boolean` | `false` |
 | width | Width of the dialog. A number is in pixels; a string is any valid CSS length. When omitted, size decides. | `string \| number` | `semiGlobalDefault("Modal", "width")` |
 | zIndex | z-index of the outer layer. | `number` | `1000` |
-| onCancel | Called by the cancel button, the close button, the mask and Esc; the argument is a native KeyboardEvent for Esc. A returned Promise keeps the cancel button loading; v-model:visible updates once it fulfills, and a rejection keeps the dialog open. The parent's visible is still true while the callback runs. It remains a function prop so its result can be read, bound with @cancel as usual. | <ApiType detail={"((event: MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
-| onOk | Called when the ok button is clicked. A returned Promise keeps the ok button loading until it settles. The component never closes itself on ok; the caller sets visible to false. It remains a function prop so its result can be read, bound with @ok as usual. | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
 
 **Events**
 
 | Event          | Description                                                                                                                                                           | Callback parameters  |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| update:visible | Emitted with false once a cancel path (cancel button, close button, mask, Esc) completes, for v-model:visible to write back. Ok only calls onOk and never emits this. | `[visible: boolean]` |
 | afterClose     | Emitted after the dialog has fully closed. It is also emitted once when the dialog is unmounted while shown.                                                          | `[]`                 |
+| update:visible | Emitted with false once a cancel path (cancel button, close button, mask, Esc) completes, for v-model:visible to write back. Ok only calls onOk and never emits this. | `[visible: boolean]` |
 
 **Slots**
 
 | Slot      | Description                                                                                                                                          | Scope parameters                                                                                                  |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| default   | Body of the dialog.                                                                                                                                  | `any`                                                                                                             |
-| title     | Title. It wins over the title prop and names the dialog.                                                                                             | `any`                                                                                                             |
-| header    | Replaces the whole default header (icon, title and close button). An empty slot hides the header area.                                               | `any`                                                                                                             |
-| footer    | Replaces the default footer buttons. An empty slot hides the footer area.                                                                            | `any`                                                                                                             |
-| icon      | Icon before the title.                                                                                                                               | `any`                                                                                                             |
 | closeIcon | Icon inside the close button. An empty slot falls back to the default icon.                                                                          | `any`                                                                                                             |
+| default   | Body of the dialog.                                                                                                                                  | `any`                                                                                                             |
+| footer    | Replaces the default footer buttons. An empty slot hides the footer area.                                                                            | `any`                                                                                                             |
+| header    | Replaces the whole default header (icon, title and close button). An empty slot hides the header area.                                               | `any`                                                                                                             |
+| icon      | Icon before the title.                                                                                                                               | `any`                                                                                                             |
 | modal     | Custom rendering of the dialog itself. The scope parameter modal is the VNode of the role=dialog element; place it with `<component :is="modal" />`. | <ApiType detail={"{ modal: VNode\u003cRendererNode, RendererElement, { [key: string]: any; }>; }"}>Type</ApiType> |
+| title     | Title. It wins over the title prop and names the dialog.                                                                                             | `any`                                                                                                             |
 
 **Exposes**
 

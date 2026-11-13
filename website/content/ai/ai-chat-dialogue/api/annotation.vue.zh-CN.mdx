@@ -2,15 +2,15 @@
 
 | 属性        | 说明                                              | 类型                                    | 默认值      |
 | ----------- | ------------------------------------------------- | --------------------------------------- | ----------- |
-| maxCount    | 最多显示的来源图标数，超出部分显示为 +N。         | `number`                                | `undefined` |
 | annotation  | 参考来源列表，每项可含 title、logo、url、detail。 | `AnnotationItemProps[] \| Annotation[]` | `undefined` |
 | description | 来源图标后的描述文字，不传时显示来源数量。        | `string`                                | `undefined` |
+| maxCount    | 最多显示的来源图标数，超出部分显示为 +N。         | `number`                                | `undefined` |
 
 **Events**
 
 | 事件  | 说明                                                           | 回调参数                                                             |
 | ----- | -------------------------------------------------------------- | -------------------------------------------------------------------- |
-| click | 点击或用 Enter、空格激活时触发，参数为原生事件与参考来源列表。 | `[event: MouseEvent \| KeyboardEvent, items: AnnotationItemProps[]]` |
+| click | 点击或用 Enter、空格激活时触发，参数为原生事件与参考来源列表。 | `[event: KeyboardEvent \| MouseEvent, items: AnnotationItemProps[]]` |
 
 **Slots**
 

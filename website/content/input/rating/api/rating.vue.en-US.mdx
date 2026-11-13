@@ -4,29 +4,29 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property      | Description                                                                                                                                            | Type                             | Default                                        |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | ---------------------------------------------- |
-| modelValue    | Current value, used with v-model. When given, this value decides what is shown; back to undefined it returns to defaultValue and becomes uncontrolled. | `number`                         | `undefined`                                    |
-| defaultValue  | Initial value when uncontrolled.                                                                                                                       | `number`                         | `0`                                            |
-| count         | Total number of stars.                                                                                                                                 | `number`                         | `5`                                            |
-| allowHalf     | Whether half stars can be selected.                                                                                                                    | `boolean`                        | `false`                                        |
 | allowClear    | Whether clicking the selected star again clears the value.                                                                                             | `boolean`                        | `true`                                         |
+| allowHalf     | Whether half stars can be selected.                                                                                                                    | `boolean`                        | `false`                                        |
+| ariaLabel     | Accessible name of the radiogroup; without it the name summarizes the value.                                                                           | `string`                         | `semiGlobalDefault("Rating", "ariaLabel")`     |
+| autofocus     | Whether to focus on mount.                                                                                                                             | `boolean`                        | `semiGlobalDefault("Rating", "autofocus")`     |
+| count         | Total number of stars.                                                                                                                                 | `number`                         | `5`                                            |
+| defaultValue  | Initial value when uncontrolled.                                                                                                                       | `number`                         | `0`                                            |
 | disabled      | Read-only: no interaction and no focus.                                                                                                                | `boolean`                        | `false`                                        |
+| modelValue    | Current value, used with v-model. When given, this value decides what is shown; back to undefined it returns to defaultValue and becomes uncontrolled. | `number`                         | `undefined`                                    |
+| preventScroll | Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component.                             | `boolean`                        | `semiGlobalDefault("Rating", "preventScroll")` |
 | size          | Size: default or small, or a number for a custom size.                                                                                                 | `number \| "default" \| "small"` | `"default"`                                    |
 | tooltips      | Prompt text for each item.                                                                                                                             | `string[]`                       | `semiGlobalDefault("Rating", "tooltips")`      |
-| autofocus     | Whether to focus on mount.                                                                                                                             | `boolean`                        | `semiGlobalDefault("Rating", "autofocus")`     |
-| preventScroll | Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component.                             | `boolean`                        | `semiGlobalDefault("Rating", "preventScroll")` |
-| ariaLabel     | Accessible name of the radiogroup; without it the name summarizes the value.                                                                           | `string`                         | `semiGlobalDefault("Rating", "ariaLabel")`     |
 
 **Events**
 
 | Event             | Description                                                                                                                                                | Callback parameters                                   |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| update:modelValue | Emitted when the selection changes, for v-model to write back.                                                                                             | `[value: number]`                                     |
-| change            | Emitted when the selection changes, with the new value.                                                                                                    | `[value: number]`                                     |
-| hoverChange       | Emitted when the hovered value changes; receives undefined when the pointer leaves or a click clears the value.                                            | `[value: number \| undefined]`                        |
-| click             | Emitted when a star is clicked or selected with Enter or Space, with the event and the star index. It shadows a native click listener on the root element. | `[event: MouseEvent \| KeyboardEvent, index: number]` |
-| focus             | Emitted when focus enters the rating; moving between stars does not emit it.                                                                               | `[event: FocusEvent]`                                 |
 | blur              | Emitted when focus leaves the rating.                                                                                                                      | `[event: FocusEvent]`                                 |
+| change            | Emitted when the selection changes, with the new value.                                                                                                    | `[value: number]`                                     |
+| click             | Emitted when a star is clicked or selected with Enter or Space, with the event and the star index. It shadows a native click listener on the root element. | `[event: KeyboardEvent \| MouseEvent, index: number]` |
+| focus             | Emitted when focus enters the rating; moving between stars does not emit it.                                                                               | `[event: FocusEvent]`                                 |
+| hoverChange       | Emitted when the hovered value changes; receives undefined when the pointer leaves or a click clears the value.                                            | `[value: number \| undefined]`                        |
 | keydown           | Emitted only for an arrow key that moved the value.                                                                                                        | `[event: KeyboardEvent]`                              |
+| update:modelValue | Emitted when the selection changes, for v-model to write back.                                                                                             | `[value: number]`                                     |
 
 **Slots**
 
@@ -38,5 +38,5 @@ import ApiType from '#/components/ApiType.astro';
 
 | Name  | Description                                                                                                  | Type                                          |
 | ----- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
-| focus | Focuses the radio that Tab reaches, the same one autofocus uses. Does nothing when disabled.                 | <ApiType detail={"() => void"}>Type</ApiType> |
 | blur  | Blurs the focused element inside the rating. Does nothing when focus is elsewhere or the rating is disabled. | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | Focuses the radio that Tab reaches, the same one autofocus uses. Does nothing when disabled.                 | <ApiType detail={"() => void"}>Type</ApiType> |

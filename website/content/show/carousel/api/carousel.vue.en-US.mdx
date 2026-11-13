@@ -24,8 +24,8 @@ import ApiType from '#/components/ApiType.astro';
 
 | Event              | Description                                                                      | Callback parameters                 |
 | ------------------ | -------------------------------------------------------------------------------- | ----------------------------------- |
-| update:activeIndex | Emitted when the shown slide changes, backing v-model:activeIndex.               | `[index: number]`                   |
 | change             | Emitted when the shown slide changes, with the new index and the previous index. | `[index: number, preIndex: number]` |
+| update:activeIndex | Emitted when the shown slide changes, backing v-model:activeIndex.               | `[index: number]`                   |
 
 **Slots**
 
@@ -39,8 +39,8 @@ import ApiType from '#/components/ApiType.astro';
 
 | Name | Description                                                  | Type                                                             |
 | ---- | ------------------------------------------------------------ | ---------------------------------------------------------------- |
-| next | Goes to the next slide.                                      | <ApiType detail={"() => void"}>Type</ApiType>                    |
-| prev | Goes to the previous slide.                                  | <ApiType detail={"() => void"}>Type</ApiType>                    |
 | goTo | Goes to the given index; an out-of-range index wraps around. | <ApiType detail={"(targetIndex: number) => void"}>Type</ApiType> |
+| next | Goes to the next slide.                                      | <ApiType detail={"() => void"}>Type</ApiType>                    |
 | play | Starts autoplay, even when autoPlay is off.                  | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| prev | Goes to the previous slide.                                  | <ApiType detail={"() => void"}>Type</ApiType>                    |
 | stop | Stops autoplay.                                              | <ApiType detail={"() => void"}>Type</ApiType>                    |

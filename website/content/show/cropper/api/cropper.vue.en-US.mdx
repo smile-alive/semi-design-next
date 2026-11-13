@@ -4,21 +4,21 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| src | Address of the image to crop. | `string` | `semiGlobalDefault("Cropper", "src")` |
-| imgProps | Attributes passed to the img element being cropped. src and the layout style belong to the component; class and style are merged with its own, and onLoad is called after the component has handled it. alt defaults to an empty string and crossorigin to anonymous; both can be overridden. | `ImgHTMLAttributes` | `semiGlobalDefault("Cropper", "imgProps")` |
-| shape | Shape of the crop box. | `CropperShape` | `"rect"` |
 | aspectRatio | Fixed aspect ratio of the crop box. When it changes after loading, the box is laid out again at the new ratio. | `number` | `semiGlobalDefault("Cropper", "aspectRatio")` |
-| defaultAspectRatio | Initial aspect ratio of the crop box, which changes while dragging. | `number` | `1` |
-| zoom | Controlled zoom, applied on top of the initial scaling that fits the image into the cropper. | `number` | `semiGlobalDefault("Cropper", "zoom")` |
-| rotate | Image rotation angle. It is one-way: the component never changes it. | `number` | `semiGlobalDefault("Cropper", "rotate")` |
-| showResizeBox | Whether to show the resize handles on the corners of the crop box. | `boolean` | `true` |
-| cropperBoxStyle | Style of the crop box. | `StyleValue` | `semiGlobalDefault("Cropper", "cropperBoxStyle")` |
 | cropperBoxCls | Class name of the crop box. | `string` | `semiGlobalDefault("Cropper", "cropperBoxCls")` |
+| cropperBoxStyle | Style of the crop box. | `StyleValue` | `semiGlobalDefault("Cropper", "cropperBoxStyle")` |
+| defaultAspectRatio | Initial aspect ratio of the crop box, which changes while dragging. | `number` | `1` |
 | fill | Fill color of the parts of the result that are not the image. | `string` | `"rgba(0, 0, 0, 0)"` |
+| imgProps | Attributes passed to the img element being cropped. src and the layout style belong to the component; class and style are merged with its own, and onLoad is called after the component has handled it. alt defaults to an empty string and crossorigin to anonymous; both can be overridden. | `ImgHTMLAttributes` | `semiGlobalDefault("Cropper", "imgProps")` |
 | maxZoom | Maximum zoom factor. | `number` | `3` |
 | minZoom | Minimum zoom factor. | `number` | `0.1` |
-| zoomStep | Zoom change per wheel step. | `number` | `0.1` |
 | preview | Function returning the DOM element that mirrors the cropped area live. It may return null while the element is not mounted yet. | <ApiType detail={"(() => HTMLElement \u007c null \u007c undefined)"}>Type</ApiType> | `undefined` |
+| rotate | Image rotation angle. It is one-way: the component never changes it. | `number` | `semiGlobalDefault("Cropper", "rotate")` |
+| shape | Shape of the crop box. | `CropperShape` | `"rect"` |
+| showResizeBox | Whether to show the resize handles on the corners of the crop box. | `boolean` | `true` |
+| src | Address of the image to crop. | `string` | `semiGlobalDefault("Cropper", "src")` |
+| zoom | Controlled zoom, applied on top of the initial scaling that fits the image into the cropper. | `number` | `semiGlobalDefault("Cropper", "zoom")` |
+| zoomStep | Zoom change per wheel step. | `number` | `0.1` |
 
 **Events**
 
