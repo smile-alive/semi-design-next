@@ -33,6 +33,7 @@
         "vitest/*/hosts",
         "vitest/framework.ts",
         "vitest/index.ts",
+        "vitest/specs/__tests__",
         "vitest/*/index.ts",
         "vitest/solid/hydration-setup.ts",
         "vitest/solid/hydration-context.ts"
