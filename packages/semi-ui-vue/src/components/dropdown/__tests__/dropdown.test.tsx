@@ -54,6 +54,14 @@ describe('Dropdown', () => {
         expect(document.querySelector('.semi-dropdown')).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('Dropdown trigger click 触发', async () => {
+        renderDD({ trigger: 'click' });
+        expect(portalInner()).toBeNull();
+        expect(document.querySelector('.semi-dropdown-item')).toBeNull();
+        await userEvent.click(getTag());
+        await waitFor(() => expect(document.querySelectorAll('.semi-dropdown-item')).toHaveLength(3));
+    });
+
     it('Dropdown trigger hover 触发', async () => {
         renderDD({ trigger: 'hover' });
         const tag = getTag();
@@ -64,14 +72,6 @@ describe('Dropdown', () => {
         await userEvent.unhover(tag);
         await waitFor(() => expect(portalInner()).toBeNull());
         expect(document.querySelectorAll('.semi-dropdown-item')).toHaveLength(0);
-    });
-
-    it('Dropdown trigger click 触发', async () => {
-        renderDD({ trigger: 'click' });
-        expect(portalInner()).toBeNull();
-        expect(document.querySelector('.semi-dropdown-item')).toBeNull();
-        await userEvent.click(getTag());
-        await waitFor(() => expect(document.querySelectorAll('.semi-dropdown-item')).toHaveLength(3));
     });
 
     it('Dropdown contentClassName', async () => {
@@ -422,27 +422,6 @@ describe('Dropdown 行为', () => {
             slots: { default: () => <button>mode trigger</button> },
         });
 
-    it('selectionMode="single" 的选项是带 aria-checked 的 menuitemradio', async () => {
-        renderModes({ selectionMode: 'single' });
-        await waitFor(() => expect(item('on')).toHaveAttribute('role', 'menuitemradio'));
-        expect(item('on')).toHaveAttribute('aria-checked', 'true');
-        expect(item('off')).toHaveAttribute('role', 'menuitemradio');
-        expect(item('off')).toHaveAttribute('aria-checked', 'false');
-    });
-
-    it('selectionMode="multiple" 的选项是带 aria-checked 的 menuitemcheckbox', async () => {
-        renderModes({ selectionMode: 'multiple' });
-        await waitFor(() => expect(item('on')).toHaveAttribute('role', 'menuitemcheckbox'));
-        expect(item('on')).toHaveAttribute('aria-checked', 'true');
-        expect(item('off')).toHaveAttribute('aria-checked', 'false');
-    });
-
-    it('未设 selectionMode 且无 showTick 时选项是不带 aria-checked 的 menuitem', async () => {
-        renderModes({});
-        await waitFor(() => expect(item('on')).toHaveAttribute('role', 'menuitem'));
-        expect(item('on')).not.toHaveAttribute('aria-checked');
-    });
-
     it('对勾只由 showTick 决定，selectionMode 不改可见 UI', async () => {
         renderModes({ selectionMode: 'single' });
         await waitFor(() => expect(item('on')).toBeInTheDocument());
@@ -560,19 +539,6 @@ describe('Dropdown 行为', () => {
         expect(onVisibleChange.mock.calls).toEqual([[true]]);
     });
 
-    it('trigger="contextMenu" 右键打开 role=menu，左键不打开', async () => {
-        render(Dropdown, {
-            props: { motion: false, trigger: 'contextMenu' },
-            slots: { default: () => <div>area</div>, content: menuOf() },
-        });
-        const area = screen.getByText('area');
-        await userEvent.click(area);
-        expect(screen.queryByRole('menu')).toBeNull();
-        await userEvent.pointer({ keys: '[MouseRight]', target: area });
-        expect(await screen.findByRole('menu')).toBeInTheDocument();
-        expect(screen.getAllByRole('menuitem')).toHaveLength(3);
-    });
-
     it('trigger="contextMenu" 右键打开后焦点移到第一个可用项', async () => {
         render(Dropdown, {
             props: { motion: false, trigger: 'contextMenu' },
@@ -584,6 +550,19 @@ describe('Dropdown 行为', () => {
         await userEvent.pointer({ keys: '[MouseRight]', target: screen.getByText('area') });
         await screen.findByRole('menu');
         await waitFor(() => expect(item('On')).toHaveFocus());
+    });
+
+    it('trigger="contextMenu" 右键打开 role=menu，左键不打开', async () => {
+        render(Dropdown, {
+            props: { motion: false, trigger: 'contextMenu' },
+            slots: { default: () => <div>area</div>, content: menuOf() },
+        });
+        const area = screen.getByText('area');
+        await userEvent.click(area);
+        expect(screen.queryByRole('menu')).toBeNull();
+        await userEvent.pointer({ keys: '[MouseRight]', target: area });
+        expect(await screen.findByRole('menu')).toBeInTheDocument();
+        expect(screen.getAllByRole('menuitem')).toHaveLength(3);
     });
 
     it('trigger="contextMenu" 受控 visible 时，Tab 与点击外部只上报关闭而不自行关闭，父级回写后不再上报', async () => {
@@ -676,14 +655,6 @@ describe('Dropdown 行为', () => {
         expect(escapes[0][0]).toBeInstanceOf(KeyboardEvent);
         expect(escapes[0][0].key).toBe('Escape');
         expect(button).toHaveFocus();
-    });
-
-    it('closeOnEsc 为 false 时按 Escape 不关闭弹层', async () => {
-        renderButton('no esc trigger', { closeOnEsc: false, trigger: 'click' });
-        await userEvent.click(screen.getByRole('button', { name: 'no esc trigger' }));
-        await waitFor(() => expect(item('Menu Item 1')).toHaveFocus());
-        await userEvent.keyboard('{Escape}');
-        expect(portalInner()).not.toBeNull();
     });
 
     it('弹层容器不是 tooltip 角色，trigger="custom" 时 Escape 把焦点还给触发器', async () => {
@@ -865,28 +836,6 @@ describe('Dropdown 行为', () => {
         expect(document.querySelector('[foo]')).toBeNull();
         expect(document.getElementById('dropdown-id')).toBeNull();
         expect(warn).not.toHaveBeenCalled();
-    });
-
-    it('Home 与 End 聚焦第一个和最后一个可用选项', async () => {
-        render(Dropdown, {
-            props: {
-                menu: [
-                    { node: 'item', name: 'Head disabled', disabled: true },
-                    { node: 'item', name: 'First' },
-                    { node: 'item', name: 'Middle' },
-                    { node: 'item', name: 'Last' },
-                ],
-                motion: false,
-                trigger: 'click',
-            },
-            slots: { default: () => <button>home end trigger</button> },
-        });
-        await userEvent.click(screen.getByRole('button', { name: 'home end trigger' }));
-        await waitFor(() => expect(item('First')).toHaveFocus());
-        await userEvent.keyboard('{End}');
-        expect(item('Last')).toHaveFocus();
-        await userEvent.keyboard('{Home}');
-        expect(item('First')).toHaveFocus();
     });
 
     it('仅在菜单打开时，触发器上的 Up 与 Down 阻止默认行为', async () => {

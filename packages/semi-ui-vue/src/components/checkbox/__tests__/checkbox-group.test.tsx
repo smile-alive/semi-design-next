@@ -54,42 +54,6 @@ describe('CheckboxGroup', () => {
         expect(getWrappers()).toHaveLength(3);
     });
 
-    it('direction', () => {
-        const { container } = renderOptions({ direction: 'horizontal' });
-        expect(container.querySelector(`div.${groupCls}-horizontal`)).not.toBeNull();
-        expect(screen.getByRole('group')).not.toHaveClass(`${groupCls}-vertical`);
-    });
-
-    it('垂直方向', () => {
-        renderOptions({ direction: 'vertical' });
-        expect(screen.getByRole('group')).toHaveClass(`${groupCls}-vertical`);
-    });
-
-    it('name 下发给所有 input', () => {
-        render(CheckboxGroup, { props: { name: 'checkboxgroup', options: ['Yes', 'No'] } });
-        const checkboxes = screen.getAllByRole('checkbox');
-        expect(checkboxes).toHaveLength(2);
-        checkboxes.forEach((el) => expect(el).toHaveAttribute('name', 'checkboxgroup'));
-    });
-
-    it('未设置 name 的分组为其 checkbox 生成一个名称，且与其他分组不同', () => {
-        render({
-            render: () => (
-                <>
-                    <CheckboxGroup aria-label="one" options={['a', 'b']} />
-                    <CheckboxGroup aria-label="two" options={['a', 'b']} />
-                </>
-            ),
-        });
-        const names = ['one', 'two'].map((groupName) => {
-            const inputs = screen.getByRole('group', { name: groupName }).querySelectorAll('input');
-            expect(inputs[0]?.name).toBeTruthy();
-            expect(inputs[0]?.name).toBe(inputs[1]?.name);
-            return inputs[0]?.name;
-        });
-        expect(names[0]).not.toBe(names[1]);
-    });
-
     it('分组 change 报告新的数组，同时发出 update:modelValue', async () => {
         const change = vi.fn<GroupChange>();
         const update = vi.fn<GroupChange>();
@@ -103,6 +67,27 @@ describe('CheckboxGroup', () => {
         expect(change).toHaveBeenCalledTimes(3);
         expect(update).toHaveBeenLastCalledWith(['abc', 'hotsoon', 'pipixia']);
         expect(checkedStates()).toEqual([true, true, true, false]);
+    });
+
+    it('非受控分组可取消已选值', async () => {
+        const change = vi.fn<GroupChange>();
+        render(CheckboxGroup, { props: { defaultValue: ['a'], onChange: change, options: ['a', 'b'] } });
+        expect(checkedStates()).toEqual([true, false]);
+        await userEvent.click(getWrappers()[0] as HTMLElement);
+        expect(change).toHaveBeenLastCalledWith([]);
+        expect(checkedStates()).toEqual([false, false]);
+    });
+
+    it('受控分组只通知，modelValue 变为 undefined 时清空', async () => {
+        const change = vi.fn<GroupChange>();
+        const view = render(CheckboxGroup, { props: { modelValue: ['a'], onChange: change, options: ['a', 'b'] } });
+        await userEvent.click(getWrappers()[1] as HTMLElement);
+        expect(change).toHaveBeenLastCalledWith(['a', 'b']);
+        expect(checkedStates()).toEqual([true, false]);
+        await view.rerender({ modelValue: ['a', 'b'] });
+        expect(checkedStates()).toEqual([true, true]);
+        await view.rerender({ modelValue: undefined });
+        expect(checkedStates()).toEqual([false, false]);
     });
 
     it('禁用分组不触发任何 change', async () => {
@@ -272,27 +257,6 @@ describe('CheckboxGroup', () => {
         const [a, b] = getWrappers();
         expect(a).not.toHaveClass(`${prefixCls}-disabled`);
         expect(b).toHaveClass(`${prefixCls}-disabled`);
-    });
-
-    it('非受控分组可取消已选值', async () => {
-        const change = vi.fn<GroupChange>();
-        render(CheckboxGroup, { props: { defaultValue: ['a'], onChange: change, options: ['a', 'b'] } });
-        expect(checkedStates()).toEqual([true, false]);
-        await userEvent.click(getWrappers()[0] as HTMLElement);
-        expect(change).toHaveBeenLastCalledWith([]);
-        expect(checkedStates()).toEqual([false, false]);
-    });
-
-    it('受控分组只通知，modelValue 变为 undefined 时清空', async () => {
-        const change = vi.fn<GroupChange>();
-        const view = render(CheckboxGroup, { props: { modelValue: ['a'], onChange: change, options: ['a', 'b'] } });
-        await userEvent.click(getWrappers()[1] as HTMLElement);
-        expect(change).toHaveBeenLastCalledWith(['a', 'b']);
-        expect(checkedStates()).toEqual([true, false]);
-        await view.rerender({ modelValue: ['a', 'b'] });
-        expect(checkedStates()).toEqual([true, true]);
-        await view.rerender({ modelValue: undefined });
-        expect(checkedStates()).toEqual([false, false]);
     });
 
     it('单向受控分组被拒绝后，原生 input 恢复为受控值', async () => {

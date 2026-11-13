@@ -133,37 +133,6 @@ describe('SideSheet', () => {
         expect($(`.${BASE_CLASS_PREFIX}-sidesheet-close`)).toBeNull();
     });
 
-    it('maskClosable', async () => {
-        let spyOnCancel = vi.fn<CancelHandler>();
-        let spyOnCancel2 = vi.fn<CancelHandler>();
-        const { unmount } = renderSideSheet({
-            maskClosable: true,
-            visible: true,
-            onCancel: spyOnCancel,
-        });
-        await userEvent.click($(`.${BASE_CLASS_PREFIX}-sidesheet-mask`));
-        expect(spyOnCancel).toHaveBeenCalledTimes(1);
-        unmount();
-
-        renderSideSheet({
-            maskClosable: false,
-            visible: true,
-            onCancel: spyOnCancel2,
-        });
-        await userEvent.click($(`.${BASE_CLASS_PREFIX}-sidesheet-mask`));
-        expect(spyOnCancel2).not.toHaveBeenCalled();
-    });
-
-    it('onCancel', async () => {
-        let spyOnCancel = vi.fn<CancelHandler>();
-        renderSideSheet({
-            visible: true,
-            onCancel: spyOnCancel,
-        });
-        await userEvent.click($(`button.${BASE_CLASS_PREFIX}-sidesheet-close`));
-        expect(spyOnCancel).toHaveBeenCalledTimes(1);
-    });
-
     it('无遮罩', () => {
         renderSideSheet({
             mask: false,

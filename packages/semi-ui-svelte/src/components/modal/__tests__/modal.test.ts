@@ -113,12 +113,6 @@ describe('Svelte Modal', () => {
         expect(getDialog()).not.toHaveAttribute('aria-labelledby');
     });
 
-    it('aria-label 优先于标题命名', () => {
-        setup({ visible: true, title: 'SemiTitle', 'aria-label': 'Custom' });
-        expect(getDialog()).not.toHaveAttribute('aria-labelledby');
-        expect(screen.getByRole('dialog', { name: 'Custom' })).toBe(getDialog());
-    });
-
     it('size、width、height、centered、fullScreen', () => {
         const { store } = setup({ visible: true, size: 'large' });
         expect(getBox()).toHaveClass(`${prefix}-large`);

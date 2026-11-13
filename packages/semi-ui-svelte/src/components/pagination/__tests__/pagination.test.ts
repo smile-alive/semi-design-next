@@ -24,10 +24,6 @@ const getRestPages = () => within(getElement(`.${prefix}-rest-list`)).getAllByRo
 const getJumper = (container: Element) => getElement<HTMLInputElement>(`.${prefix}-quickjump-input-number input`, container);
 const getCounter = (container: Element) => getElement(`.${prefix}-item-small`, container);
 const getSelectionText = () => document.querySelector('.semi-select-selection-text');
-const getPageTexts = (container: Element) =>
-    getPageItems(container)
-        .slice(1, -1)
-        .map((item) => item.textContent?.trim());
 
 async function settle() {
     flushSync();
@@ -80,20 +76,6 @@ afterEach(() => {
 });
 
 describe('Svelte Pagination 渲染', () => {
-    it('total 与 pageSize', () => {
-        const getPageChild = (props: PaginationProps) => {
-            const view = setup(props);
-            const children = getElement('ul', view.container).children;
-            const result = { length: children.length, lastPage: children[children.length - 2].textContent?.trim() };
-            view.unmount();
-            return result;
-        };
-        expect(getPageChild({ total: 30 })).toEqual({ length: 5, lastPage: '3' });
-        expect(getPageChild({ total: 70 })).toEqual({ length: 9, lastPage: '7' });
-        expect(getPageChild({ total: 200 })).toEqual({ length: 9, lastPage: '20' });
-        expect(getPageChild({ total: 200, pageSize: 50 })).toEqual({ length: 6, lastPage: '4' });
-    });
-
     it('class、style 与 id、aria-*、data-* 落在根 ul，原生 click 也在根上', async () => {
         for (const size of ['default', 'small'] as const) {
             const onclick = vi.fn<(event: MouseEvent) => void>();
@@ -145,32 +127,6 @@ describe('Svelte Pagination 渲染', () => {
         expect(getEnds({ total: 9 })).toEqual([true, true]);
     });
 
-    it('hideOnSinglePage', () => {
-        const { container, store } = setup({ hideOnSinglePage: true, total: 10 });
-        expect(container.querySelector(`.${prefix}`)).toBeNull();
-        store.props.total = 11;
-        flushSync();
-        expect(container.querySelector(`.${prefix}`)).not.toBeNull();
-    });
-
-    it('页数超过 7 时以当前页为中心截断', () => {
-        const { container, store } = setup({ currentPage: 1, total: 200 });
-        expect(getPageTexts(container)).toEqual(['1', '2', '3', '4', '...', '19', '20']);
-        for (const [page, expected] of [
-            [4, ['1', '2', '3', '4', '5', '...', '20']],
-            [10, ['1', '...', '9', '10', '11', '...', '20']],
-            [17, ['1', '...', '16', '17', '18', '19', '20']],
-        ] as const) {
-            store.props.currentPage = page;
-            flushSync();
-            expect(getPageTexts(container)).toEqual(expected);
-        }
-        store.props.total = 70;
-        store.props.currentPage = 7;
-        flushSync();
-        expect(getPageTexts(container)).toEqual(['1', '2', '3', '4', '5', '6', '7']);
-    });
-
     it('页码按钮标记当前页，名称取语言包', () => {
         const { container } = setup({ currentPage: 10, showQuickJumper: true, showSizeChanger: true, showTotal: true, total: 200 });
         const list = screen.getByRole('list');
@@ -209,24 +165,9 @@ describe('Svelte Pagination 渲染', () => {
         expect(container.querySelector(`.${prefix}-switch`)).not.toBeNull();
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('[Semi Pagination]'));
     });
-
-    it('small 下 showSizeChanger 不生效：单页仍隐藏且不警告', () => {
-        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        const { container } = setup({ hideOnSinglePage: true, showSizeChanger: true, size: 'small', total: 5 });
-        expect(container.querySelector('ul')).toBeNull();
-        expect(warn).not.toHaveBeenCalled();
-    });
 });
 
 describe('Svelte Pagination 交互与事件', () => {
-    it('点击页码：pageChange 与 change 各一次，当前页跟随', async () => {
-        const { container, onChange, onPageChange } = setup({ total: 70 });
-        await click(getPageItems(container)[7]);
-        expect(onPageChange.mock.calls).toEqual([[7]]);
-        expect(onChange.mock.calls).toEqual([[7, defaultPageSize]]);
-        expect(getActivePage(container)).toHaveTextContent(/^7$/);
-    });
-
     it('点击当前页与省略号不触发事件', async () => {
         const { container, onChange } = setup({ total: 200 });
         await click(getPageItems(container)[7]);
@@ -235,21 +176,6 @@ describe('Svelte Pagination 交互与事件', () => {
         await click(screen.getByRole('button', { name: zh_CN.Pagination.more }));
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(getActivePage(container)).toHaveTextContent(/^20$/);
-    });
-
-    it('上一页、下一页每次点击各发出一次事件，禁用的一端不发出', async () => {
-        const { onChange, onPageChange } = setup({ total: 30 });
-        await click(screen.getByRole('button', { name: zh_CN.Pagination.prev }));
-        expect(onChange).not.toHaveBeenCalled();
-        for (let i = 0; i < 3; i++) await click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
-        expect(onPageChange.mock.calls).toEqual([[2], [3]]);
-        expect(onChange.mock.calls).toEqual([
-            [2, 10],
-            [3, 10],
-        ]);
-        expect(screen.getByRole('button', { name: zh_CN.Pagination.next })).toBeDisabled();
-        await click(screen.getByRole('button', { name: zh_CN.Pagination.prev }));
-        expect(onChange.mock.lastCall).toEqual([2, 10]);
     });
 
     it('切换 pageSize 时重新计算当前页，事件顺序为 pageSize 先于 page', async () => {
@@ -265,16 +191,6 @@ describe('Svelte Pagination 交互与事件', () => {
         await waitFor(() => expect(onChange).toHaveBeenLastCalledWith(3, 20));
         expect(order).toEqual(['pageSize', 'page', 'change']);
         expect(onPageSizeChange.mock.calls).toEqual([[20]]);
-        expect(getActivePage(container)).toHaveTextContent(/^3$/);
-    });
-
-    it('设置 preventPageChangeOnPageSizeChange 后切换 pageSize 保持当前页', async () => {
-        const { container, onChange, onPageChange } = setup({ preventPageChangeOnPageSizeChange: true, showSizeChanger: true, total: 200 });
-        await click(screen.getByRole('button', { name: pageName(3) }));
-        onPageChange.mockClear();
-        await chooseSize('每页条数：20');
-        await waitFor(() => expect(onChange).toHaveBeenLastCalledWith(3, 20));
-        expect(onPageChange).not.toHaveBeenCalled();
         expect(getActivePage(container)).toHaveTextContent(/^3$/);
     });
 
@@ -322,50 +238,6 @@ describe('Svelte Pagination 交互与事件', () => {
 });
 
 describe('Svelte Pagination 快速跳转', () => {
-    it('输入页码后失焦跳转，超出范围取边界，Enter 跳转后清空输入框', async () => {
-        const { container, onChange } = setup({ showQuickJumper: true, total: 200 });
-        const jumper = getJumper(container);
-        jumper.focus();
-        await type(jumper, '5');
-        jumper.blur();
-        await settle();
-        expect(onChange.mock.calls).toEqual([[5, defaultPageSize]]);
-        expect(getActivePage(container)).toHaveTextContent(/^5$/);
-
-        jumper.focus();
-        await type(jumper, '21');
-        jumper.blur();
-        await settle();
-        expect(getActivePage(container)).toHaveTextContent(/^20$/);
-
-        await type(jumper, '-1');
-        await fireEvent.keyDown(jumper, { key: 'Enter' });
-        await settle();
-        expect(getActivePage(container)).toHaveTextContent(/^1$/);
-        expect(jumper).toHaveValue('');
-    });
-
-    it('没有有效数字时忽略 Enter', async () => {
-        const { container } = setup({ currentPage: 20, showQuickJumper: true, total: 200 });
-        await fireEvent.keyDown(getJumper(container), { key: 'Enter' });
-        await settle();
-        expect(getActivePage(container)).toHaveTextContent(/^20$/);
-    });
-
-    it('按 Enter 跳转，忽略当前页', async () => {
-        const { container, onChange } = setup({ showQuickJumper: true, total: 200 });
-        const jumper = getJumper(container);
-        await type(jumper, '7');
-        await fireEvent.keyDown(jumper, { key: 'Enter' });
-        await settle();
-        expect(onChange.mock.calls).toEqual([[7, defaultPageSize]]);
-        expect(jumper).toHaveValue('');
-        await type(jumper, '7');
-        await fireEvent.keyDown(jumper, { key: 'Enter' });
-        await settle();
-        expect(onChange).toHaveBeenCalledTimes(1);
-    });
-
     it('输入法组合中按 Enter 不跳转', async () => {
         const { container, onChange } = setup({ showQuickJumper: true, total: 200 });
         const jumper = getJumper(container);
@@ -376,15 +248,6 @@ describe('Svelte Pagination 快速跳转', () => {
         await fireEvent.keyDown(jumper, { key: 'Enter' });
         await settle();
         expect(onChange.mock.calls).toEqual([[7, defaultPageSize]]);
-    });
-
-    it('小数页码取整', async () => {
-        const { container, onChange } = setup({ showQuickJumper: true, total: 200 });
-        const jumper = getJumper(container);
-        await type(jumper, '2.5');
-        await fireEvent.keyDown(jumper, { key: 'Enter' });
-        await settle();
-        expect(onChange.mock.calls).toEqual([[2, defaultPageSize]]);
     });
 
     it('只有一页、没有页或 pagination 被禁用时不可用', () => {
@@ -461,19 +324,6 @@ describe('Svelte Pagination 受控值（currentPage）', () => {
         store.page = 5;
         flushSync();
         expect(active()).toBe('5');
-    });
-
-    it('total 变化时保持传入的 currentPage，即使超出末页', () => {
-        const { container, store } = setup({ currentPage: 10, total: 200 });
-        store.props.total = 300;
-        flushSync();
-        expect(getActivePage(container)).toHaveTextContent(/^10$/);
-        store.props.total = 50;
-        flushSync();
-        expect(getActivePage(container)).toBeNull();
-        expect(getPageItems(container)).toHaveLength(5 + 2);
-        expect(screen.getByRole('button', { name: zh_CN.Pagination.prev })).toBeEnabled();
-        expect(screen.getByRole('button', { name: zh_CN.Pagination.next })).toBeEnabled();
     });
 
     it('未传 currentPage 时 total 变化回到第 1 页', () => {

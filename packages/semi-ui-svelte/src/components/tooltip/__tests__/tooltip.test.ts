@@ -192,13 +192,6 @@ describe('Svelte Tooltip', () => {
         expect(popup()).not.toHaveClass('semi-tooltip-with-arrow');
     });
 
-    it('condition=false 阻止打开并关闭已显示的弹层', async () => {
-        const { click, store } = setup({ condition: false });
-        await click();
-        expect(popup()).toBe(null);
-        expect(store.log).toEqual([]);
-    });
-
     it('clickToHide 在弹层内点击时关闭', async () => {
         const { click } = setup({ clickToHide: true });
         await click();

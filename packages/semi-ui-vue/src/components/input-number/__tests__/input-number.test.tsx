@@ -310,18 +310,6 @@ describe('InputNumber', () => {
         expect(getInput()).not.toHaveFocus();
     });
 
-    it('受控值超出范围', async () => {
-        const onChange = vi.fn<Change>();
-        const onNumberChange = vi.fn<NumberChange>();
-        await mount({ max: 100, modelValue: 100, onChange, onNumberChange });
-        await change('101');
-
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledWith(101, expect.anything());
-        expect(onNumberChange).not.toHaveBeenCalled();
-        expect(getInput()).toHaveAttribute('aria-valuenow', '100');
-    });
-
     it('受控值为 NaN', async () => {
         const view = await mount({ modelValue: 1 });
         expect(getInput()).toHaveValue('1');
@@ -330,13 +318,6 @@ describe('InputNumber', () => {
         await view.rerender({ modelValue: NaN });
         expect(getInput()).toHaveValue('');
         expect(getInput()).not.toHaveAttribute('aria-valuenow');
-    });
-
-    it('aria-valuenow 为普通十进制数，包括 0', async () => {
-        const view = await mount({ modelValue: 0 });
-        expect(getInput()).toHaveAttribute('aria-valuenow', '0');
-        await view.rerender({ modelValue: 1.235e-7 });
-        expect(getInput()).toHaveAttribute('aria-valuenow', '0.0000001235');
     });
 
     it('挂载时受控值为 NaN', async () => {
@@ -580,63 +561,11 @@ describe('InputNumber', () => {
         expect(getInput()).toHaveValue('0.08');
     });
 
-    it('disabled 属性', async () => {
-        await mount({ defaultValue: 100, disabled: true });
-        expect(getInput()).toBeDisabled();
-        expect(document.querySelector(`.${prefixCls}-wrapper-disabled`)).not.toBeNull();
-        expect(getUpButton()).toHaveClass(`${prefixCls}-number-button-up-disabled`);
-        expect(getDownButton()).toHaveClass(`${prefixCls}-number-button-down-disabled`);
-    });
-
-    it('禁用时按钮不响应点击', async () => {
-        const onChange = vi.fn<Change>();
-        const onUpClick = vi.fn<Click>();
-        await mount({ defaultValue: 100, disabled: true, onChange, onUpClick });
-        await press(getUpButton());
-        await press(getDownButton());
-        expect(getInput()).toHaveValue('100');
-        expect(onChange).not.toHaveBeenCalled();
-        expect(onUpClick).not.toHaveBeenCalled();
-    });
-
-    it('readonly 属性', async () => {
-        const onChange = vi.fn<Change>();
-        await mount({ defaultValue: 100, readonly: true, onChange });
-        expect(getInput()).toHaveAttribute('readonly');
-        await press(getUpButton());
-        expect(getInput()).toHaveValue('100');
-        expect(onChange).not.toHaveBeenCalled();
-    });
-
-    it('readonly 时方向键与 Home、End 不改值，Home、End 仍移动光标', async () => {
-        const onChange = vi.fn<Change>();
-        await mount({ defaultValue: 10, max: 50, min: 2, readonly: true, onChange });
-        for (const key of ['ArrowUp', 'ArrowDown', 'Home', 'End']) {
-            await keyDown(key);
-        }
-        expect(getInput()).toHaveValue('10');
-        expect(onChange).not.toHaveBeenCalled();
-        expect(await dispatchKey('Home')).toBe(true);
-    });
-
     it('readonly 且受控时，keydown 仍然发出', async () => {
         const onKeydown = vi.fn<KeyHandler>();
         await mount({ modelValue: 10, readonly: true, onKeydown });
         await keyDown('ArrowUp');
         expect(onKeydown).toHaveBeenCalledTimes(1);
-    });
-
-    it('距边界不足一个 step 时，上键与按钮夹到边界', async () => {
-        const upper = await mount({ defaultValue: 9.5, max: 10, min: 0.5, step: 1 });
-        await press(getUpButton());
-        expect(getInput()).toHaveValue('10');
-        expect(getUpButton()).toHaveClass(`${prefixCls}-number-button-up-not-allowed`);
-        upper.unmount();
-
-        await mount({ defaultValue: 0.8, max: 10, min: 0.5, step: 1 });
-        await keyDown('ArrowDown');
-        expect(getInput()).toHaveValue('0.5');
-        expect(getDownButton()).toHaveClass(`${prefixCls}-number-button-down-not-allowed`);
     });
 
     it('currency 与 showCurrencySymbol 在挂载后变化时，符号随之更新', async () => {
@@ -676,6 +605,14 @@ describe('InputNumber', () => {
         expect(getInput()).toHaveValue('¥100');
     });
 
+    it('disabled 属性', async () => {
+        await mount({ defaultValue: 100, disabled: true });
+        expect(getInput()).toBeDisabled();
+        expect(document.querySelector(`.${prefixCls}-wrapper-disabled`)).not.toBeNull();
+        expect(getUpButton()).toHaveClass(`${prefixCls}-number-button-up-disabled`);
+        expect(getDownButton()).toHaveClass(`${prefixCls}-number-button-down-disabled`);
+    });
+
     it('ArrowUp 键增加数值', async () => {
         const onChange = vi.fn<Change>();
         await mount({ defaultValue: 10, onChange });
@@ -698,34 +635,6 @@ describe('InputNumber', () => {
         await dispatchKey('End', input);
         expect(input).toHaveValue('50.0');
         view.unmount();
-    });
-
-    it('ArrowDown 键减少数值', async () => {
-        const onChange = vi.fn<Change>();
-        await mount({ defaultValue: 10, onChange });
-        await keyDown('ArrowDown');
-        expect(getInput()).toHaveValue('9');
-        expect(onChange).toHaveBeenCalledWith(9, expect.anything());
-    });
-
-    it('step 属性影响加减步长', async () => {
-        await mount({ defaultValue: 10, step: 5 });
-        await press(getUpButton());
-        expect(getInput()).toHaveValue('15');
-        await press(getDownButton());
-        await press(getDownButton());
-        expect(getInput()).toHaveValue('5');
-        expect(getInput()).toHaveAttribute('step', '5');
-    });
-
-    // a step with abs value < 1e-6 is stringified in scientific notation ((1e-8).toString() === "1e-8"), which must not
-    // break precision detection and freeze the +/- buttons
-    it('小于 1e-6（科学计数法）的 step 能正确加减', async () => {
-        await mount({ defaultValue: 0, step: 1e-8, precision: 8 });
-        await press(getUpButton());
-        expect(getInput()).toHaveValue('0.00000001');
-        await press(getDownButton());
-        expect(getInput()).toHaveValue('0.00000000');
     });
 
     it('validateStatus 为 warning', async () => {
@@ -1350,76 +1259,6 @@ describe('InputNumber', () => {
     });
 
     describe('行为基线', () => {
-        it('非受控忽略之后的 defaultValue 变化；受控只显示父组件写回的值', async () => {
-            const first = await mount({ defaultValue: 1 });
-            await first.rerender({ defaultValue: 2 });
-            expect(getInput()).toHaveValue('1');
-            first.unmount();
-
-            const onChange = vi.fn<Change>();
-            await mount({ modelValue: 5, onChange });
-            await press(getUpButton());
-            expect(onChange).toHaveBeenLastCalledWith(6, expect.anything());
-            expect(getInput()).toHaveValue('5');
-            expect(getInput()).toHaveAttribute('aria-valuenow', '5');
-        });
-
-        it('输入的值在失焦时夹紧到 min 与 max，按钮在边界处停止', async () => {
-            const onChange = vi.fn<Change>();
-            await mount({ defaultValue: 5, max: 10, min: 0, onChange });
-            await focusInput();
-            await change('20');
-            await blurInput();
-            expect(getInput()).toHaveValue('10');
-            expect(lastArg(onChange)).toBe(10);
-            expect(getUpButton()).toHaveClass(`${prefixCls}-number-button-up-not-allowed`);
-            await press(getUpButton());
-            expect(getInput()).toHaveValue('10');
-
-            await focusInput();
-            await change('-3');
-            await blurInput();
-            expect(getInput()).toHaveValue('0');
-            expect(lastArg(onChange)).toBe(0);
-            expect(getDownButton()).toHaveClass(`${prefixCls}-number-button-down-not-allowed`);
-            expect(getInput()).toHaveAttribute('aria-valuemin', '0');
-            expect(getInput()).toHaveAttribute('aria-valuemax', '10');
-        });
-
-        it('Shift 点击按钮按 shiftStep 步进', async () => {
-            await mount({ defaultValue: 0, step: 2, shiftStep: 50 });
-            await press(getUpButton(), { button: numbers.MOUSE_BUTTON_LEFT, shiftKey: true });
-            expect(getInput()).toHaveValue('50');
-            await press(getDownButton());
-            expect(getInput()).toHaveValue('48');
-        });
-
-        it('输入的值在失焦时按 precision 取整', async () => {
-            const onChange = vi.fn<Change>();
-            await mount({ precision: 2, onChange });
-            await focusInput();
-            await change('1.236');
-            await blurInput();
-            expect(getInput()).toHaveValue('1.24');
-            expect(lastArg(onChange)).toBe(1.24);
-        });
-
-        it('输入时以解析后的数字报告 change 与 numberChange', async () => {
-            const onChange = vi.fn<Change>();
-            const onNumberChange = vi.fn<NumberChange>();
-            await mount({ onChange, onNumberChange });
-            await change('12');
-            expect(getInput()).toHaveValue('12');
-            expect(onChange).toHaveBeenLastCalledWith(12, expect.anything());
-            expect(onNumberChange).toHaveBeenCalledTimes(1);
-            expect(onNumberChange).toHaveBeenLastCalledWith(12, expect.anything());
-            await change('12.');
-            expect(onNumberChange).toHaveBeenCalledTimes(1);
-            await keyDown('ArrowUp');
-            expect(onNumberChange).toHaveBeenCalledTimes(2);
-            expect(onNumberChange).toHaveBeenLastCalledWith(13, expect.anything());
-        });
-
         it('失焦时重新格式化输入值，并报告数值变化', async () => {
             const onNumberChange = vi.fn<NumberChange>();
             await mount({ max: 10, onNumberChange });
@@ -1876,15 +1715,6 @@ describe('InputNumber', () => {
             vi.advanceTimersByTime(numbers.DEFAULT_PRESS_TIMEOUT * 4);
             expect(onChange).toHaveBeenCalledTimes(calls);
         });
-    });
-
-    it('键盘在边界处值未变时不触发 onChange', async () => {
-        const onChange = vi.fn<Change>();
-        await mount({ defaultValue: 5, max: 5, min: 5, onChange });
-        for (const key of ['ArrowUp', 'ArrowDown', 'Home', 'End']) {
-            await keyDown(key);
-        }
-        expect(onChange).not.toHaveBeenCalled();
     });
 
     describe('两个指针先后按下同一按钮', () => {

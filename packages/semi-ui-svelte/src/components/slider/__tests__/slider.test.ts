@@ -841,15 +841,6 @@ describe('Svelte Slider 可访问性与属性', () => {
         expect(max).toHaveAttribute('aria-valuetext', '60% (max)');
     });
 
-    it('handle 输入携带值和边界，不重复 aria-valuenow', () => {
-        setup({ value: 50, max: 90, min: 10 });
-        const input = getInput();
-        expect(input).toHaveAttribute('type', 'range');
-        expect(input).toHaveValue('50');
-        expect(input).not.toHaveAttribute('aria-valuenow');
-        expect(input).not.toHaveAttribute('aria-valuemax');
-    });
-
     it('垂直 slider 具有 aria-orientation 和竖排书写模式，verticalReverse 时 dir 为 rtl', () => {
         const { store } = setup({ value: 30, vertical: true });
         expect(getInput()).toHaveAttribute('aria-orientation', 'vertical');

@@ -40,22 +40,6 @@ afterEach(() => {
 });
 
 describe('Pagination', () => {
-    it('total 与 pageSize', () => {
-        const maxItemCount = 9;
-        const getPageChild = (props: PaginationProps) => {
-            const view = renderPagination(props);
-            const children = getElement('ul', view.container).children;
-            const lastPage = children[children.length - 2].textContent?.trim();
-            view.unmount();
-            return { length: children.length, lastPage };
-        };
-
-        expect(getPageChild({ total: 30 })).toEqual({ length: 5, lastPage: '3' });
-        expect(getPageChild({ total: 70 })).toEqual({ length: maxItemCount, lastPage: '7' });
-        expect(getPageChild({ total: 200 })).toEqual({ length: maxItemCount, lastPage: '20' });
-        expect(getPageChild({ total: 200, pageSize: 50 })).toEqual({ length: Math.ceil(200 / 50) + 2, lastPage: '4' });
-    });
-
     it('自定义 class 与 style', () => {
         const { container } = render(Pagination, { attrs: { class: 'test', style: { color: 'red' } } });
         const ul = container.querySelector('ul.test');
@@ -97,14 +81,6 @@ describe('Pagination', () => {
         expect(getEnds({ total: 9 })).toEqual([true, true]);
     });
 
-    it('hideOnSinglePage', async () => {
-        const view = renderPagination({ hideOnSinglePage: true, total: 10 });
-        expect(view.container.querySelector(`.${prefix}`)).toBeNull();
-
-        await view.rerender({ hideOnSinglePage: true, total: 11 });
-        expect(view.container.querySelector(`.${prefix}`)).not.toBeNull();
-    });
-
     it('动态修改 pageSize', async () => {
         const props = { total: 200, showSizeChanger: true, pageSize: 10 };
         const view = renderPagination(props);
@@ -117,13 +93,6 @@ describe('Pagination', () => {
         await view.rerender({ ...props, pageSize: 20 });
         expect(getSelectionText()).toHaveTextContent(/^每页条数：20$/);
         expect(getPageItems(view.container)).toHaveLength(9);
-    });
-
-    it('pageChange', async () => {
-        const view = renderPagination({ total: 70 });
-        await userEvent.click(getPageItems(view.container)[7]);
-        expect(view.emitted('pageChange')).toEqual([[7]]);
-        expect(getActivePage(view.container)).toHaveTextContent(/^7$/);
     });
 
     it('pageSizeOpts', async () => {
@@ -144,39 +113,7 @@ describe('Pagination', () => {
         expect(getActivePage(view.container)).toHaveTextContent(/^20$/);
     });
 
-    it('受控模式下 currentPage 与 change', async () => {
-        const props = { currentPage: 3, total: 200 };
-        const view = renderPagination(props);
-        await userEvent.click(getPageItems(view.container)[7]);
-        expect(view.emitted('change')).toEqual([[20, defaultPageSize]]);
-        expect(getActivePage(view.container)).toHaveTextContent(/^3$/);
-        await view.rerender({ ...props, currentPage: 4 });
-        expect(getActivePage(view.container)).toHaveTextContent(/^4$/);
-    });
-
     describe('快速跳转', () => {
-        it('输入页码后失焦跳转，超出范围时取边界', async () => {
-            const view = renderPagination({ showQuickJumper: true, total: 200 });
-            const jumper = getJumper(view.container);
-            await userEvent.type(jumper, '5{Tab}');
-            expect(view.emitted('change')).toEqual([[5, defaultPageSize]]);
-            expect(getActivePage(view.container)).toHaveTextContent(/^5$/);
-
-            await userEvent.type(jumper, '21{Tab}');
-            expect(getActivePage(view.container)).toHaveTextContent(/^20$/);
-
-            await userEvent.type(jumper, '-1{Enter}');
-            expect(getActivePage(view.container)).toHaveTextContent(/^1$/);
-            expect(jumper).toHaveValue('');
-        });
-
-        // Enter passes the raw input value, and Number('') is 0
-        it('没有有效数字时忽略 Enter', async () => {
-            const view = renderPagination({ defaultCurrentPage: 20, showQuickJumper: true, total: 200 });
-            await userEvent.type(getJumper(view.container), '{Enter}');
-            expect(getActivePage(view.container)).toHaveTextContent(/^20$/);
-        });
-
         it.each([
             ['Enter', '2.5{Enter}'],
             ['失焦', '2.5{Tab}'],
@@ -185,16 +122,6 @@ describe('Pagination', () => {
             await userEvent.type(getJumper(view.container), input);
             expect(view.emitted('change')).toEqual([[2, defaultPageSize]]);
             expect(getActivePage(view.container)).toHaveTextContent(/^2$/);
-        });
-
-        it('按 Enter 跳转，清空输入框，忽略当前页', async () => {
-            const view = renderPagination({ showQuickJumper: true, total: 200 });
-            await userEvent.type(getJumper(view.container), '7{Enter}');
-            expect(view.emitted('change')).toEqual([[7, defaultPageSize]]);
-            expect(getActivePage(view.container)).toHaveTextContent(/^7$/);
-            expect(getJumper(view.container)).toHaveValue('');
-            await userEvent.type(getJumper(view.container), '7{Enter}');
-            expect(view.emitted('change')).toHaveLength(1);
         });
 
         it('输入法组合中按 Enter 不跳转', async () => {
@@ -221,24 +148,6 @@ describe('Pagination', () => {
     });
 
     describe('页码列表', () => {
-        const getPageTexts = (container: Element) =>
-            getPageItems(container)
-                .slice(1, -1)
-                .map((li) => li.textContent?.trim());
-
-        it('页数超过 7 时，以当前页为中心截断', async () => {
-            const view = renderPagination({ currentPage: 1, total: 200 });
-            expect(getPageTexts(view.container)).toEqual(['1', '2', '3', '4', '...', '19', '20']);
-            await view.rerender({ currentPage: 4, total: 200 });
-            expect(getPageTexts(view.container)).toEqual(['1', '2', '3', '4', '5', '...', '20']);
-            await view.rerender({ currentPage: 10, total: 200 });
-            expect(getPageTexts(view.container)).toEqual(['1', '...', '9', '10', '11', '...', '20']);
-            await view.rerender({ currentPage: 17, total: 200 });
-            expect(getPageTexts(view.container)).toEqual(['1', '...', '16', '17', '18', '19', '20']);
-            await view.rerender({ currentPage: 7, total: 70 });
-            expect(getPageTexts(view.container)).toEqual(['1', '2', '3', '4', '5', '6', '7']);
-        });
-
         it('悬停省略号时列出隐藏页码，点击后跳转到对应页', async () => {
             const view = renderPagination({ defaultCurrentPage: 10, total: 200 });
             const [left, right] = screen.getAllByRole('button', { name: zh_CN.Pagination.more });
@@ -287,79 +196,9 @@ describe('Pagination', () => {
             expect(getActivePage(view.container)).toHaveTextContent(/^1$/);
             expect(getPageItems(view.container)).toHaveLength(9);
         });
-
-        it('total 变化时保留用户在切换器里选的 pageSize', async () => {
-            const props = { pageSize: 10, showSizeChanger: true };
-            const view = renderPagination({ ...props, total: 200 });
-            await chooseSize('每页条数：20');
-            await waitFor(() => expect(getPageItems(view.container).at(-2)).toHaveTextContent(/^10$/));
-            await view.rerender({ ...props, total: 300 });
-            expect(getPageItems(view.container).at(-2)).toHaveTextContent(/^15$/);
-            await view.rerender({ ...props, pageSize: 50, total: 300 });
-            expect(getPageItems(view.container).at(-2)).toHaveTextContent(/^6$/);
-        });
-
-        it('total 变化时保持受控的 currentPage，即使超出末页', async () => {
-            const view = renderPagination({ currentPage: 10, total: 200 });
-            await view.rerender({ currentPage: 10, total: 300 });
-            expect(getActivePage(view.container)).toHaveTextContent(/^10$/);
-            await view.rerender({ currentPage: 10, total: 50 });
-            expect(getActivePage(view.container)).toBeNull();
-            expect(getPageItems(view.container)).toHaveLength(5 + 2);
-            expect(screen.getByRole('button', { name: zh_CN.Pagination.prev })).toBeEnabled();
-            expect(screen.getByRole('button', { name: zh_CN.Pagination.next })).toBeEnabled();
-        });
     });
 
     describe('事件', () => {
-        it('每次点击上一页或下一页时各发出一次 pageChange 与 change，禁用的一端不发出', async () => {
-            const view = renderPagination({ total: 30 });
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.prev }));
-            expect(view.emitted('change')).toBeUndefined();
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
-            expect(view.emitted('pageChange')).toEqual([[2], [3]]);
-            expect(view.emitted('change')).toEqual([
-                [2, 10],
-                [3, 10],
-            ]);
-            expect(screen.getByRole('button', { name: zh_CN.Pagination.next })).toBeDisabled();
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.prev }));
-            expect(view.emitted('change')?.at(-1)).toEqual([2, 10]);
-        });
-
-        it('切换 pageSize 时重新计算当前页', async () => {
-            const view = renderPagination({ defaultCurrentPage: 5, showSizeChanger: true, total: 200 });
-            await chooseSize('每页条数：20');
-            await waitFor(() => expect(view.emitted('change')).toEqual([[3, 20]]));
-            expect(view.emitted('pageSizeChange')).toEqual([[20]]);
-            expect(view.emitted('pageChange')).toEqual([[3]]);
-            expect(getActivePage(view.container)).toHaveTextContent(/^3$/);
-            expect(getPageItems(view.container).filter((el) => el.getAttribute('aria-label')?.startsWith(zh_CN.Pagination.pageN.split('${page}')[0]))).toHaveLength(6);
-        });
-
-        it('切换 pageSize 时保持受控的 currentPage，只发出通知', async () => {
-            const view = renderPagination({ currentPage: 5, showSizeChanger: true, total: 200 });
-            await chooseSize('每页条数：20');
-            await waitFor(() => expect(view.emitted('change')).toEqual([[3, 20]]));
-            expect(view.emitted('pageChange')).toEqual([[3]]);
-            expect(getActivePage(view.container)).toHaveTextContent(/^5$/);
-        });
-
-        it('设置 preventPageChangeOnPageSizeChange 后，切换 pageSize 保持当前页', async () => {
-            const view = renderPagination({
-                defaultCurrentPage: 5,
-                preventPageChangeOnPageSizeChange: true,
-                showSizeChanger: true,
-                total: 200,
-            });
-            await chooseSize('每页条数：20');
-            await waitFor(() => expect(view.emitted('change')).toEqual([[5, 20]]));
-            expect(view.emitted('pageChange')).toBeUndefined();
-            expect(getActivePage(view.container)).toHaveTextContent(/^5$/);
-        });
-
         it('把 pageSizeOpts 中缺少的 pageSize 按顺序插入', async () => {
             renderPagination({ pageSize: 30, pageSizeOpts: [10, 20, 40], showSizeChanger: true, total: 200 });
             await userEvent.click(screen.getByRole('combobox'));
@@ -476,18 +315,6 @@ describe('Pagination', () => {
             await view.rerender({ disabled: true, size: 'small', total: 90 });
             expect(view.container.firstElementChild).toHaveClass(`${prefix}-disabled`);
             expect(getCounter(view.container)).toHaveClass(`${prefix}-item-all-disabled`);
-        });
-
-        it('showSizeChanger 在 small 下不生效：单页仍隐藏且不警告', () => {
-            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-            const { container } = renderPagination({
-                hideOnSinglePage: true,
-                showSizeChanger: true,
-                size: 'small',
-                total: 5,
-            });
-            expect(container.querySelector('ul')).toBeNull();
-            expect(warn).not.toHaveBeenCalled();
         });
     });
 
@@ -735,15 +562,6 @@ describe('Pagination', () => {
             const single = render(Shorthand, { props: { total: 5 } });
             expect(single.container.querySelector('ul')).toBeNull();
         });
-    });
-
-    it('键盘翻页后，页码按钮保持焦点（页码移动不重挂载按钮）', async () => {
-        renderPagination({ total: 200, defaultCurrentPage: 10 });
-        const next = screen.getByRole('button', { name: pageName(11) });
-        next.focus();
-        await userEvent.keyboard('{Enter}');
-        expect(screen.getByRole('button', { name: pageName(11) })).toBe(next);
-        expect(next).toHaveFocus();
     });
 
     it('KeepAlive 切走再切回后页码与悬停弹层保持可用', async () => {

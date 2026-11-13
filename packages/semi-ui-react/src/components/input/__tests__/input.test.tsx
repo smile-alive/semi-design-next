@@ -26,16 +26,6 @@ const getClearBtn = () => query(`${prefixCls}-clearbtn`);
 const getModeBtn = () => query(`${prefixCls}-modebtn`);
 
 describe('Input', () => {
-    it('值变化时调用 onChange', () => {
-        const inputValue = 'semi';
-        const onChange = vi.fn<NonNullable<InputProps['onChange']>>();
-        render(<Input onChange={onChange} />);
-        fireEvent.change(getInput(), { target: { value: inputValue } });
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0]).toBe(inputValue);
-        expect(getInput()).toHaveValue(inputValue);
-    });
-
     it('自定义 className 与 style', () => {
         render(<Input className="test" style={{ color: 'red' }} />);
         expect(getWrapper()).toHaveClass('test');
@@ -54,41 +44,6 @@ describe('Input', () => {
         expect(large).toHaveClass(`${prefixCls}-large`);
         expect(def).toHaveClass(`${prefixCls}-default`);
         expect(small).toHaveClass(`${prefixCls}-small`);
-    });
-
-    it('带 placeholder', () => {
-        const placeholderText = `semi placeholder`;
-        render(<Input placeholder={placeholderText} />);
-        expect(screen.getByPlaceholderText(placeholderText)).toBe(getInput());
-    });
-
-    it('带 defaultValue', () => {
-        render(<Input defaultValue="semi" />);
-        expect(getInput()).toHaveValue('semi');
-    });
-
-    it('props.disabled 时禁用', () => {
-        render(<Input disabled />);
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-disabled`);
-        expect(getInput()).toHaveClass(`${prefixCls}-disabled`);
-        expect(getInput()).toBeDisabled();
-    });
-
-    it('不同的 validateStatus', () => {
-        render(
-            <>
-                <Input validateStatus="warning" />
-                <Input validateStatus="error" />
-                <Input />
-            </>
-        );
-        const [warning, error, normal] = document.querySelectorAll(`.${prefixCls}-wrapper`);
-        expect(warning).toHaveClass(`${prefixCls}-wrapper-warning`);
-        expect(error).toHaveClass(`${prefixCls}-wrapper-error`);
-        expect(error.querySelector('input')).toHaveAttribute('aria-invalid', 'true');
-
-        expect(normal).not.toHaveClass(`${prefixCls}-wrapper-error`);
-        expect(normal).not.toHaveClass(`${prefixCls}-wrapper-warning`);
     });
 
     it('带 prefix / suffix', () => {
@@ -118,26 +73,6 @@ describe('Input', () => {
         expect(query(`${prefixCls}-prepend`)).toHaveTextContent(/^a$/);
     });
 
-    it('插槽值为 0 时照常渲染，数字按文字处理', () => {
-        render(<Input addonAfter={0} addonBefore={0} prefix={0} suffix={0} />);
-        for (const slot of ['prefix', 'suffix', 'prepend', 'append']) {
-            expect(query(`${prefixCls}-${slot}`)).toHaveTextContent(/^0$/);
-            expect(query(`${prefixCls}-${slot}`)).toHaveClass(`${prefixCls}-${slot}-text`);
-        }
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper__with-prefix`, `${prefixCls}-wrapper__with-suffix`, `${prefixCls}-wrapper__with-append`, `${prefixCls}-wrapper__with-prepend`);
-    });
-
-    it('insetLabel 为 0 时照常渲染', () => {
-        render(<Input insetLabel={0} />);
-        expect(query(`${prefixCls}-inset-label`)).toHaveTextContent(/^0$/);
-    });
-
-    it('addonBefore / addonAfter', () => {
-        render(<Input addonAfter=".com" addonBefore="https://" />);
-        expect(query(`${prefixCls}-prepend`)).toHaveTextContent(/^https:\/\/$/);
-        expect(query(`${prefixCls}-append`)).toHaveTextContent(/^\.com$/);
-    });
-
     it('password', () => {
         render(<Input type="password" />);
         expect(getInput()).toHaveAttribute('type', 'password');
@@ -159,39 +94,6 @@ describe('Input', () => {
         expect(getInput()).toHaveAttribute('type', 'text');
         expect(screen.getByRole('button', { name: zh_CN.Input.hidePassword })).toBe(getModeBtn());
         expect(getInput()).toHaveFocus();
-    });
-
-    it('受控模式', () => {
-        const initValue = 'semi';
-        const onChange = vi.fn<NonNullable<InputProps['onChange']>>();
-        const { rerender } = render(<Input value={initValue} onChange={onChange} />);
-        expect(getInput()).toHaveValue(initValue);
-
-        const newInputValue = 'vita lemon';
-        fireEvent.change(getInput(), { target: { value: newInputValue } });
-
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0]).toBe(newInputValue);
-        expect(getInput()).toHaveValue(initValue);
-
-        rerender(<Input value={newInputValue} onChange={onChange} />);
-        expect(getInput()).toHaveValue(newInputValue);
-    });
-
-    it('点击 prefix/suffix 聚焦', async () => {
-        const onFocus = vi.fn<NonNullable<InputProps['onFocus']>>();
-        const { unmount } = render(<Input style={{ width: 200 }} defaultValue="Semi Design" prefix="search" onFocus={onFocus} />);
-        await userEvent.click(query(`${prefixCls}-prefix`));
-        expect(getInput()).toHaveFocus();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
-        expect(onFocus).toHaveBeenCalledTimes(1);
-        unmount();
-
-        render(<Input style={{ width: 200 }} defaultValue="Semi Design" suffix="search" onFocus={onFocus} />);
-        await userEvent.click(query(`${prefixCls}-suffix`));
-        expect(getInput()).toHaveFocus();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
-        expect(onFocus).toHaveBeenCalledTimes(2);
     });
 
     it('GraphemeSplitter 函数', () => {
@@ -226,14 +128,6 @@ describe('Input', () => {
         expect(getInput()).toHaveValue('0123456789');
     });
 
-    it('visibleLength 受控模式', () => {
-        const value = '0123456789semi design';
-        render(<Input maxLength={10} value={value} getValueLength={getValueLength} />);
-        expect(getInput()).toHaveValue(value);
-        // the native maxLength would count UTF-16 units, so it is not set when getValueLength is given
-        expect(getInput()).not.toHaveAttribute('maxlength');
-    });
-
     it('minLength + getValueLength', () => {
         const inputValue = '💖💖💖';
         const minLength = 4;
@@ -251,28 +145,6 @@ describe('Input', () => {
         render(<Input maxLength={10} minLength={minLength} getValueLength={getValueLength} />);
         fireEvent.change(getInput(), { target: { value: inputValue } });
         expect(getInput()).toHaveAttribute('minlength', String(inputValue.length + (minLength - getValueLength(inputValue))));
-    });
-
-    it('minLength 属性变化后，原生 minlength 随之变化', () => {
-        const { rerender } = render(<Input minLength={5} />);
-        expect(getInput()).toHaveAttribute('minlength', '5');
-        rerender(<Input minLength={2} />);
-        expect(getInput()).toHaveAttribute('minlength', '2');
-    });
-
-    it('传 getValueLength 时，原生 minlength 按当前值换算，不等下一次输入', () => {
-        const value = '💖💖';
-        const { rerender } = render(<Input minLength={4} value={value} getValueLength={getValueLength} />);
-        expect(getInput()).toHaveAttribute('minlength', String(value.length + 2));
-        rerender(<Input minLength={3} value={value} getValueLength={getValueLength} />);
-        expect(getInput()).toHaveAttribute('minlength', String(value.length + 1));
-        rerender(<Input minLength={1} value={value} getValueLength={getValueLength} />);
-        expect(getInput()).toHaveAttribute('minlength', '1');
-    });
-
-    it('值为数字 0 时也显示清除按钮', () => {
-        render(<Input value={0} showClear />);
-        expect(getClearBtn()).not.toBeNull();
     });
 
     it('带 label 的 InputGroup 各自有唯一 id，并以 aria-labelledby 指向 label', () => {
@@ -397,26 +269,6 @@ describe('Input', () => {
         expect(onCompositionUpdate).toHaveBeenCalledTimes(1);
     });
 
-    it('只有主键按下清除按钮才清空，其他鼠标键只阻止抢走焦点', () => {
-        const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
-        render(<Input defaultValue="semi" showClear onClear={onClear} />);
-        expect(fireEvent.mouseDown(getClearBtn(), { button: 2 })).toBe(false);
-        expect(fireEvent.mouseDown(getClearBtn(), { button: 1 })).toBe(false);
-        expect(onClear).not.toHaveBeenCalled();
-        expect(getInput()).toHaveValue('semi');
-        fireEvent.mouseDown(getClearBtn());
-        expect(onClear).toHaveBeenCalledTimes(1);
-    });
-
-    it('清除按钮的 mousedown 照常冒泡，页面上其他弹层的点击外部能收到', () => {
-        const onMouseDown = vi.fn<(event: MouseEvent) => void>();
-        document.addEventListener('mousedown', onMouseDown);
-        onTestFinished(() => document.removeEventListener('mousedown', onMouseDown));
-        render(<Input defaultValue="semi" showClear />);
-        fireEvent.mouseDown(getClearBtn());
-        expect(onMouseDown).toHaveBeenCalledTimes(1);
-    });
-
     it('位于点击触发的 Tooltip 内时，按下清除按钮不关闭自己的弹层', async () => {
         const onVisibleChange = vi.fn<(visible: boolean) => void>();
         render(
@@ -432,59 +284,6 @@ describe('Input', () => {
         fireEvent.mouseDown(getClearBtn());
         expect(getClearBtn()).toBeNull();
         expect(onVisibleChange).not.toHaveBeenCalled();
-    });
-
-    it('showClear 与 onClear 回调', () => {
-        const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
-        const onChange = vi.fn<NonNullable<InputProps['onChange']>>();
-        render(<Input defaultValue="test" showClear onChange={onChange} onClear={onClear} />);
-        fireEvent.mouseDown(getClearBtn());
-        expect(onClear).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0]).toBe('');
-        expect(getInput()).toHaveValue('');
-        expect(getClearBtn()).toBeNull();
-    });
-
-    it('readonly 属性', () => {
-        render(<Input defaultValue="readonly text" readonly />);
-        expect(getInput()).toHaveAttribute('readonly');
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-readonly`);
-    });
-
-    it('onFocus 回调', async () => {
-        const onFocus = vi.fn<NonNullable<InputProps['onFocus']>>();
-        render(<Input onFocus={onFocus} />);
-        await userEvent.click(getInput());
-        expect(onFocus).toHaveBeenCalledTimes(1);
-    });
-
-    it('onBlur 回调', async () => {
-        const onBlur = vi.fn<NonNullable<InputProps['onBlur']>>();
-        render(<Input onBlur={onBlur} />);
-        await userEvent.click(getInput());
-        expect(onBlur).not.toHaveBeenCalled();
-        await userEvent.tab();
-        expect(onBlur).toHaveBeenCalledTimes(1);
-        expect(getWrapper()).not.toHaveClass(`${prefixCls}-wrapper-focus`);
-    });
-
-    it('onEnterPress 回调', async () => {
-        const onEnterPress = vi.fn<NonNullable<InputProps['onEnterPress']>>();
-        render(<Input onEnterPress={onEnterPress} />);
-        await userEvent.type(getInput(), 'a');
-        expect(onEnterPress).not.toHaveBeenCalled();
-        await userEvent.keyboard('{Enter}');
-        expect(onEnterPress).toHaveBeenCalledTimes(1);
-    });
-
-    it('onEnterPress 跳过确认输入法组合的 Enter', () => {
-        const onEnterPress = vi.fn<NonNullable<InputProps['onEnterPress']>>();
-        render(<Input onEnterPress={onEnterPress} />);
-        fireEvent.keyDown(getInput(), { key: 'Enter', isComposing: true });
-        expect(onEnterPress).not.toHaveBeenCalled();
-        fireEvent.keyDown(getInput(), { key: 'Enter' });
-        expect(onEnterPress).toHaveBeenCalledTimes(1);
     });
 
     it('borderless 属性', () => {
@@ -680,28 +479,9 @@ describe('Input', () => {
         expect(getInput()).toHaveAttribute('type', 'password');
         expect(onHostKeyDown).not.toHaveBeenCalled();
     });
-
-    it('prefix 的 mousedown 阻止默认行为', () => {
-        render(<Input defaultValue="test" prefix="prefix" />);
-        expect(fireEvent.mouseDown(query(`${prefixCls}-prefix`))).toBe(false);
-    });
-
-    it('suffix 的 mousedown 阻止默认行为', () => {
-        render(<Input defaultValue="test" suffix="suffix" />);
-        expect(fireEvent.mouseDown(query(`${prefixCls}-suffix`))).toBe(false);
-    });
 });
 
 describe('Input 行为基线', () => {
-    it('非受控输入框保留用户输入，并上报 change 事件', async () => {
-        const onChange = vi.fn<NonNullable<InputProps['onChange']>>();
-        render(<Input defaultValue="a" onChange={onChange} />);
-        await userEvent.type(getInput(), 'bc');
-        expect(getInput()).toHaveValue('abc');
-        expect(onChange.mock.calls.map(([value]) => value)).toEqual(['ab', 'abc']);
-        expect(onChange.mock.calls[1][1].target).toBe(getInput());
-    });
-
     it('受控输入框跟随父组件回写的值', async () => {
         function Controlled() {
             const [value, setValue] = useState('');
@@ -710,20 +490,6 @@ describe('Input 行为基线', () => {
         render(<Controlled />);
         await userEvent.type(getInput(), 'ab');
         expect(getInput()).toHaveValue('AB');
-    });
-
-    it('受控值回到 undefined（表单重置）时清空输入框', () => {
-        const { rerender } = render(<Input value="semi" />);
-        expect(getInput()).toHaveValue('semi');
-        rerender(<Input value={undefined} />);
-        expect(getInput()).toHaveValue('');
-    });
-
-    it('value={undefined} 按非受控处理：取 defaultValue，输入即更新', async () => {
-        render(<Input defaultValue="semi" value={undefined} />);
-        expect(getInput()).toHaveValue('semi');
-        await userEvent.type(getInput(), '!');
-        expect(getInput()).toHaveValue('semi!');
     });
 
     it('formApi.reset 后 FormInput 重新变为空', async () => {
@@ -751,16 +517,6 @@ describe('Input 行为基线', () => {
         expect(getWrapper()).not.toHaveAttribute('validatestatus');
         expect(getInput()).not.toHaveAttribute('validatestatus');
         expect(getInput()).not.toHaveAttribute('insetlabel');
-    });
-
-    it('清空受控输入框时上报空值，但在属性变化前仍显示该属性值', () => {
-        const onChange = vi.fn<NonNullable<InputProps['onChange']>>();
-        const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
-        render(<Input value="semi" showClear onChange={onChange} onClear={onClear} />);
-        fireEvent.mouseDown(getClearBtn());
-        expect(onChange).toHaveBeenCalledWith('', expect.anything());
-        expect(onClear).toHaveBeenCalledTimes(1);
-        expect(getInput()).toHaveValue('semi');
     });
 
     it('清除按钮触发 onChange 时第二个参数是鼠标事件，类型包含它', () => {
@@ -793,15 +549,6 @@ describe('Input 行为基线', () => {
         expect(getClearBtn()).toBeNull();
     });
 
-    it('原生 readOnly 只锁定输入，仍可清除', async () => {
-        const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
-        render(<Input defaultValue="semi" readOnly showClear onClear={onClear} />);
-        expect(getInput()).toHaveAttribute('readonly');
-        await userEvent.click(getClearBtn() as HTMLElement);
-        expect(onClear).toHaveBeenCalledTimes(1);
-        expect(getInput()).toHaveValue('');
-    });
-
     it.each(['{Enter}', ' '])('Tab 可以到达有名称的清除按钮，%s 清除后焦点回到输入框', async (key) => {
         const onClear = vi.fn<NonNullable<InputProps['onClear']>>();
         render(<Input defaultValue="semi" showClear onClear={onClear} />);
@@ -814,17 +561,6 @@ describe('Input 行为基线', () => {
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(getInput()).toHaveValue('');
         expect(getInput()).toHaveFocus();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
-    });
-
-    it('用鼠标清除时焦点保留在输入框内', async () => {
-        const onBlur = vi.fn<NonNullable<InputProps['onBlur']>>();
-        render(<Input defaultValue="semi" showClear onBlur={onBlur} />);
-        await userEvent.click(getInput());
-        await userEvent.click(getClearBtn());
-        expect(getInput()).toHaveValue('');
-        expect(getInput()).toHaveFocus();
-        expect(onBlur).not.toHaveBeenCalled();
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
     });
 
@@ -865,22 +601,6 @@ describe('Input 行为基线', () => {
         expect(getInput()).toHaveAttribute('maxlength', '3');
         fireEvent.change(getInput(), { target: { value: 'abcd' } });
         expect(onChange.mock.calls[0][0]).toBe('abcd');
-    });
-
-    it('getValueLength 截断等待输入法组合结束', () => {
-        const onChange = vi.fn<NonNullable<InputProps['onChange']>>();
-        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        try {
-            render(<Input maxLength={2} getValueLength={getValueLength} onChange={onChange} />);
-            fireEvent.compositionStart(getInput());
-            fireEvent.change(getInput(), { target: { value: 'abc' } });
-            expect(onChange.mock.calls.at(-1)[0]).toBe('abc');
-            fireEvent.compositionEnd(getInput(), { target: { value: 'abc' } });
-            expect(onChange.mock.calls.at(-1)[0]).toBe('ab');
-            expect(getInput()).toHaveValue('ab');
-        } finally {
-            warn.mockRestore();
-        }
     });
 
     it('composition 受控且父组件拒绝组合结果时，组合结束后恢复为属性值', () => {

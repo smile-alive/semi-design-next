@@ -31,6 +31,27 @@ describe('Checkbox', () => {
         expect(wrapper).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('键盘 Enter 不切换，Space 切换', async () => {
+        const onChange = vi.fn<Change>();
+        render(() => <Checkbox onChange={onChange} />);
+        getInput().focus();
+        await userEvent.keyboard('{Enter}');
+        expect(onChange).not.toHaveBeenCalled();
+        await userEvent.keyboard(' ');
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].target.checked).toBe(true);
+    });
+
+    it('非受控 checkbox 可反复切换', async () => {
+        const onChange = vi.fn<Change>();
+        renderCb({ onChange });
+        await userEvent.click(getWrapper());
+        await userEvent.click(getWrapper());
+        expect(onChange.mock.calls.map(([event]) => event.target.checked)).toEqual([true, false]);
+        expect(getInput()).not.toBeChecked();
+        expect(getWrapper()).toHaveClass(`${prefixCls}-unChecked`);
+    });
+
     it('autofocus 在挂载后聚焦 input，不落到根元素', () => {
         render(() => <Checkbox autofocus>Semi Design</Checkbox>);
         expect(getInput()).toHaveFocus();
@@ -48,28 +69,6 @@ describe('Checkbox', () => {
         await userEvent.click(screen.getByRole('link', { name: 'extra link' }));
         expect(getInput()).not.toBeChecked();
         await userEvent.click(getElement(`.${prefixCls}-addon`));
-        expect(getInput()).toBeChecked();
-    });
-
-    it('基本功能与点击行为', async () => {
-        renderCb();
-        expect(getInput()).not.toBeChecked();
-        expect(getInput()).toBeEnabled();
-        await userEvent.click(getWrapper());
-        expect(getInput()).toBeChecked();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-checked`);
-    });
-
-    it('点击原生 input 只切换一次', async () => {
-        const onChange = vi.fn<Change>();
-        renderCb({ onChange });
-        await userEvent.click(getInput());
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(getInput()).toBeChecked();
-    });
-
-    it('defaultChecked 生效', () => {
-        renderCb({ defaultChecked: true });
         expect(getInput()).toBeChecked();
     });
 
@@ -109,25 +108,6 @@ describe('Checkbox', () => {
         expect(innerChecked()).toBeNull();
     });
 
-    it('禁用状态', () => {
-        const onChange = vi.fn<Change>();
-        renderCb({ disabled: true, onChange });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-disabled`);
-        expect(getInput()).not.toBeChecked();
-        fireEvent.click(getWrapper());
-        expect(getInput()).not.toBeChecked();
-        expect(onChange).not.toHaveBeenCalled();
-    });
-
-    it('onChange', async () => {
-        const onChange = vi.fn<Change>();
-        render(() => <Checkbox onChange={onChange} />);
-        await userEvent.click(getWrapper());
-        expect(onChange.mock.calls[0][0].target.checked).toEqual(true);
-        await userEvent.click(getWrapper());
-        expect(onChange.mock.calls[1][0].target.checked).toEqual(false);
-    });
-
     it('extra 属性', () => {
         renderCb({ extra: 'abcd' });
         const extra = getElement(`.${prefixCls}-extra`);
@@ -148,17 +128,6 @@ describe('Checkbox', () => {
         expect(getInput()).toBeChecked();
     });
 
-    it('键盘 Enter 不切换，Space 切换', async () => {
-        const onChange = vi.fn<Change>();
-        render(() => <Checkbox onChange={onChange} />);
-        getInput().focus();
-        await userEvent.keyboard('{Enter}');
-        expect(onChange).not.toHaveBeenCalled();
-        await userEvent.keyboard(' ');
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].target.checked).toBe(true);
-    });
-
     it('onMouseEnter 与 onMouseLeave', () => {
         const onMouseEnter = vi.fn<(event: MouseEvent) => void>();
         const onMouseLeave = vi.fn<(event: MouseEvent) => void>();
@@ -173,12 +142,6 @@ describe('Checkbox', () => {
         renderCb({ 'aria-labelledby': 'label-id' });
         expect(getInput().getAttribute('aria-labelledby')).toMatch(/^label-id \S+$/);
         expect(getWrapper()).not.toHaveAttribute('aria-labelledby');
-    });
-
-    it('card 类型', () => {
-        renderCb({ type: 'card' });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-cardType`);
-        expect(document.querySelector(`.${prefixCls}-inner-pureCardType`)).toBeNull();
     });
 
     it('pureCard 类型', () => {
@@ -241,12 +204,6 @@ describe('Checkbox', () => {
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onDocumentClick).not.toHaveBeenCalled();
     });
-
-    it('点击后聚焦原生 input', async () => {
-        renderCb();
-        await userEvent.click(getElement(`.${prefixCls}-addon`));
-        expect(getInput()).toHaveFocus();
-    });
 });
 
 describe('Checkbox 行为基线', () => {
@@ -263,16 +220,6 @@ describe('Checkbox 行为基线', () => {
         expect(event.nativeEvent).toBeInstanceOf(MouseEvent);
         expect(typeof event.stopPropagation).toBe('function');
         expect(typeof event.preventDefault).toBe('function');
-    });
-
-    it('非受控 checkbox 可反复切换', async () => {
-        const onChange = vi.fn<Change>();
-        renderCb({ onChange });
-        await userEvent.click(getWrapper());
-        await userEvent.click(getWrapper());
-        expect(onChange.mock.calls.map(([event]) => event.target.checked)).toEqual([true, false]);
-        expect(getInput()).not.toBeChecked();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-unChecked`);
     });
 
     it('受控 checkbox 只通知，原生 input 与类名保持不变，直到父组件更新 checked', async () => {
@@ -304,18 +251,6 @@ describe('Checkbox 行为基线', () => {
         expect(getInput()).not.toBeChecked();
         await userEvent.click(getWrapper());
         expect(getInput()).toBeChecked();
-    });
-
-    it('聚焦的 checkbox 上按 Space 切换', async () => {
-        const onChange = vi.fn<Change>();
-        renderCb({ onChange });
-        await userEvent.tab();
-        expect(getInput()).toHaveFocus();
-        await userEvent.keyboard(' ');
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(getInput()).toBeChecked();
-        await userEvent.keyboard(' ');
-        expect(getInput()).not.toBeChecked();
     });
 
     it('禁用的 checkbox 忽略 Enter', () => {
@@ -397,17 +332,6 @@ describe('Checkbox 行为基线', () => {
         outerLabel.remove();
     });
 
-    it('未声明属性落在根元素，tabIndex 落在原生 input', () => {
-        render(() => (
-            <Checkbox tabIndex={-1} title="tip">
-                label
-            </Checkbox>
-        ));
-        expect(getWrapper()).toHaveAttribute('title', 'tip');
-        expect(getWrapper()).not.toHaveAttribute('tabindex');
-        expect(getInput()).toHaveAttribute('tabindex', '-1');
-    });
-
     it('onFocus 与 onBlur 收到原生 input 的事件', async () => {
         const onFocus = vi.fn<(event: FocusEvent) => void>();
         const onBlur = vi.fn<(event: FocusEvent) => void>();
@@ -429,12 +353,6 @@ describe('Checkbox 行为基线', () => {
         }
     });
 
-    it('点击时聚焦原生 input', async () => {
-        renderCb();
-        await userEvent.click(getElement(`.${prefixCls}-addon`));
-        expect(getInput()).toHaveFocus();
-    });
-
     it('onClick 被调用且仍切换', async () => {
         const onClick = vi.fn<(event: MouseEvent) => void>();
         const onChange = vi.fn<Change>();
@@ -453,12 +371,6 @@ describe('Checkbox 行为基线', () => {
         setChecked(true);
         expect(getInput()).not.toBePartiallyChecked();
         expect(getInput()).toBeChecked();
-    });
-
-    it('点击后受控半选仍保持 indeterminate', async () => {
-        render(() => <Checkbox checked={false} indeterminate />);
-        await userEvent.click(getWrapper());
-        expect(getInput()).toBePartiallyChecked();
     });
 
     it('有 extra 时调用方的 aria-describedby 与 extra 都在描述中', () => {
@@ -499,12 +411,6 @@ describe('Checkbox 行为基线', () => {
         ));
         expect(getInput()).toHaveAttribute('value', 'apple');
         expect(new FormData(screen.getByTestId('form') as HTMLFormElement).get('fruit')).toBe('apple');
-    });
-
-    it('卸载后移除控件', () => {
-        const { unmount } = renderCb();
-        unmount();
-        expect(screen.queryByRole('checkbox')).toBeNull();
     });
 });
 

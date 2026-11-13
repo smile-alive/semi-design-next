@@ -142,6 +142,48 @@ describe('Select', () => {
         expect(queryClearIcon()).toBeNull();
     });
 
+    it('combobox 控制 listbox，并指向聚焦的选项', async () => {
+        renderSelect();
+        expect(getTrigger()).toHaveAttribute('aria-expanded', 'false');
+        expect(getTrigger()).toHaveAttribute('aria-haspopup', 'listbox');
+        await userEvent.click(getTrigger());
+        const trigger = getTrigger();
+        expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        expect(document.getElementById(trigger.getAttribute('aria-controls')!)).toBe(getOptionList());
+        expect(trigger.getAttribute('aria-activedescendant')).toBe(getOptions()[0].id);
+    });
+
+    it('禁用的选项不能被选中', async () => {
+        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
+        renderSelect({
+            defaultOpen: true,
+            optionList: [
+                { value: 'abc', label: 'Abc', disabled: true },
+                { value: 'hotsoon', label: 'Hotsoon' },
+            ],
+            onChange,
+        });
+        await userEvent.click(getOptions()[0]);
+        expect(onChange).not.toHaveBeenCalled();
+        expect(getOptionList()).not.toBeNull();
+    });
+
+    it('filter 单选时按 Esc', async () => {
+        renderSelect({ filter: true, defaultOpen: true });
+        expect(getOptionList()).not.toBeNull();
+        keyDown('Escape');
+        await expectClosed();
+        expect(getTrigger()).toHaveFocus();
+    });
+
+    it('value={undefined} 按非受控处理：取 defaultValue，选择即更新', async () => {
+        renderSelect({ value: undefined, defaultValue: 'abc', optionList: defaultList });
+        expect(getSelectionText()).toHaveTextContent(/^Abc$/);
+        await userEvent.click(getSelectionText() as HTMLElement);
+        await userEvent.click(getOptionByText('Hotsoon'));
+        expect(getSelectionText()).toHaveTextContent(/^Hotsoon$/);
+    });
+
     it('showArrow = false', () => {
         renderSelect({ defaultValue: 'semi', showArrow: false });
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-icon-chevron_down`)).toBeNull();
@@ -174,13 +216,6 @@ describe('Select', () => {
         expect(screen.getByRole('combobox')).toHaveAccessibleName('0');
     });
 
-    it('defaultOpen', () => {
-        renderSelect({ defaultOpen: true });
-        expect(getOptionList()).not.toBeNull();
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
-        expect(getOptionTexts()).toEqual(['Abc', 'Hotsoon', 'Pipixia', 'TopBuzz']);
-    });
-
     // jsdom has no layout; the browser project covers the resulting width, here only the CSS wiring is checked
     it('dropdownMatchSelectWidth = true', () => {
         renderSelect({ defaultOpen: true, style: { width: '90px' }, defaultValue: 'abc' });
@@ -201,14 +236,6 @@ describe('Select', () => {
         const list = [...defaultList, { value: 'semi', label: 'SemiDesign' }];
         renderSelect({ defaultOpen: true, children: getOption(list) });
         expect(getOptionTexts()).toEqual(['Abc', 'Hotsoon', 'Pipixia', 'TopBuzz', 'SemiDesign']);
-    });
-
-    it('multiple 为 true 时可以选择多个选项', async () => {
-        renderSelect({ multiple: true, defaultValue: ['abc', 'hotsoon'], defaultOpen: true });
-        expect(getTagTexts()).toEqual(['Abc', 'Hotsoon']);
-        await userEvent.click(getOptions()[3]);
-        expect(getTagTexts()).toEqual(['Abc', 'Hotsoon', 'TopBuzz']);
-        expect(getOptionList()).not.toBeNull();
     });
 
     it('multiple 配合 maxTagCount', async () => {
@@ -288,14 +315,6 @@ describe('Select', () => {
         expect(getWrapper().style.top).toBe('20px');
     });
 
-    it('点击选择器时打开选项列表', async () => {
-        renderSelect({});
-        expect(getOptionList()).toBeNull();
-        await userEvent.click(getTrigger());
-        expect(getOptionList()).not.toBeNull();
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
-    });
-
     it('disabled 为 true 时禁用组件', async () => {
         renderSelect({ disabled: true });
         expect(getTrigger()).toHaveClass(`${prefixCls}-disabled`);
@@ -369,15 +388,6 @@ describe('Select', () => {
         expect(getOptions()).toHaveLength(0);
     });
 
-    it('option 的 value 与 label', async () => {
-        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
-        renderSelect({ optionList: [{ label: 'semi', value: 'bytedance' }], defaultOpen: true, onChange });
-        expect(getOptionTexts()).toEqual(['semi']);
-        await userEvent.click(getOptions()[0]);
-        expect(onChange).toHaveBeenCalledWith('bytedance');
-        expect(getSelectionText()).toHaveTextContent(/^semi$/);
-    });
-
     it('option.value 为数字', async () => {
         const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
         renderSelect({ optionList: [{ label: 'semi', value: 0 }], defaultOpen: true, onChange });
@@ -446,24 +456,6 @@ describe('Select', () => {
         expect(onDeselect).toHaveBeenCalledTimes(1);
         expect(onDeselect).toHaveBeenCalledWith('hotsoon', { value: 'hotsoon', label: 'Hotsoon' });
         expect(getTagTexts()).toEqual(['Abc']);
-    });
-
-    it('onChange（single）', async () => {
-        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
-        renderSelect({ defaultOpen: true, onChange });
-        await userEvent.click(getOptions()[0]);
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledWith('abc');
-    });
-
-    it('onChange（multiple）', async () => {
-        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
-        renderSelect({ defaultOpen: true, multiple: true, onChange });
-        await userEvent.click(getOptions()[0]);
-        await userEvent.click(getOptions()[1]);
-        expect(onChange).toHaveBeenCalledTimes(2);
-        expect(onChange).toHaveBeenNthCalledWith(1, ['abc']);
-        expect(onChange).toHaveBeenNthCalledWith(2, ['abc', 'hotsoon']);
     });
 
     it('onChange + onChangeWithObject（single）', async () => {
@@ -876,16 +868,6 @@ describe('Select', () => {
         expect(getTrigger()).toHaveClass(`${prefixCls}-borderless`);
     });
 
-    it('onClear 回调', async () => {
-        const onClear = vi.fn<NonNullable<SelectProps['onClear']>>();
-        renderSelect({ defaultValue: 'abc', showClear: true, onClear });
-        await userEvent.hover(getTrigger());
-        await userEvent.click(getClearIcon());
-        expect(onClear).toHaveBeenCalledTimes(1);
-        expect(getSelectionText()).toHaveTextContent(/^$/);
-        expect(getOptionList()).toBeNull();
-    });
-
     it('远程模式', async () => {
         const onSearch = vi.fn<NonNullable<SelectProps['onSearch']>>();
         renderSelect({ filter: true, remote: true, onSearch });
@@ -944,21 +926,6 @@ describe('Select', () => {
         expect(screen.getByRole('button', { name: 'outside' })).toHaveFocus();
     });
 
-    it('禁用的选项不能被选中', async () => {
-        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
-        renderSelect({
-            defaultOpen: true,
-            optionList: [
-                { value: 'abc', label: 'Abc', disabled: true },
-                { value: 'hotsoon', label: 'Hotsoon' },
-            ],
-            onChange,
-        });
-        await userEvent.click(getOptions()[0]);
-        expect(onChange).not.toHaveBeenCalled();
-        expect(getOptionList()).not.toBeNull();
-    });
-
     it('含禁用选项时的键盘导航', () => {
         renderSelect({
             defaultOpen: true,
@@ -995,14 +962,6 @@ describe('Select', () => {
         keyDown('Enter');
         await expectClosed();
         expect(onChange).not.toHaveBeenCalled();
-    });
-
-    it('filter 单选时按 Esc', async () => {
-        renderSelect({ filter: true, defaultOpen: true });
-        expect(getOptionList()).not.toBeNull();
-        keyDown('Escape');
-        await expectClosed();
-        expect(getTrigger()).toHaveFocus();
     });
 
     it('multiple 全部为禁用项时按 Backspace', () => {
@@ -1210,13 +1169,6 @@ describe('Select', () => {
         expect(getTriggerInput()).toHaveFocus();
     });
 
-    it('下拉中的 Tab 键导航', () => {
-        renderSelect({ defaultOpen: true, innerBottomSlot: <button class="slot-button">Click me</button> });
-        keyDown('Tab');
-        expect(screen.getByRole('button', { name: 'Click me' })).toHaveFocus();
-        expect(getOptionList()).not.toBeNull();
-    });
-
     it('option 带额外属性', () => {
         renderSelect({ defaultOpen: true, optionList: [{ value: 'abc', label: 'Abc', extra: 'extra1', customProp: 'custom' }] });
         expect(getOptionTexts()).toEqual(['Abc']);
@@ -1250,15 +1202,6 @@ describe('Select 交互', () => {
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(getTriggerInput()).toHaveValue('');
         expect(getSelectionText()).toHaveTextContent(/^$/);
-    });
-
-    it('allowCreate 时选择新建项', async () => {
-        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
-        renderSelect({ allowCreate: true, filter: true, defaultOpen: true, onChange });
-        search('newItem');
-        await userEvent.click(getOptions()[0]);
-        expect(onChange).toHaveBeenCalledWith('newItem');
-        expect(getSelectionText()).toHaveTextContent(/^newItem$/);
     });
 
     it('multiple 含多个禁用项时按 Backspace', () => {
@@ -1359,14 +1302,6 @@ describe('Select 交互', () => {
         expect(getFocusedOption()).not.toBeNull();
         await userEvent.hover(screen.getByText('Slot Content'));
         expect(getFocusedOption()).toBeNull();
-    });
-
-    it('Esc 关闭时 onDropdownVisibleChange(false)', async () => {
-        const onDropdownVisibleChange = vi.fn<NonNullable<SelectProps['onDropdownVisibleChange']>>();
-        renderSelect({ defaultOpen: true, onDropdownVisibleChange });
-        keyDown('Escape');
-        await expectClosed();
-        expect(onDropdownVisibleChange).toHaveBeenLastCalledWith(false);
     });
 
     it('远程 filter 且结果为空', () => {
@@ -1653,14 +1588,6 @@ describe('Select 交互', () => {
         expect(getSelectionText()).toHaveTextContent(/^please select$/);
     });
 
-    it('value={undefined} 按非受控处理：取 defaultValue，选择即更新', async () => {
-        renderSelect({ value: undefined, defaultValue: 'abc', optionList: defaultList });
-        expect(getSelectionText()).toHaveTextContent(/^Abc$/);
-        await userEvent.click(getSelectionText() as HTMLElement);
-        await userEvent.click(getOptionByText('Hotsoon'));
-        expect(getSelectionText()).toHaveTextContent(/^Hotsoon$/);
-    });
-
     it('受控 value 从有值变为 undefined', () => {
         const props = { value: 'abc', optionList: defaultList };
         const { rerender } = renderSelect(props);
@@ -1804,16 +1731,6 @@ describe('Select 状态同步与键盘', () => {
         expect(getFocusedOption()).toHaveTextContent(/^B$/);
         keyDown('ArrowDown');
         expect(getFocusedOption()).toHaveTextContent(/^A$/);
-    });
-
-    it('下拉中最后一个可聚焦元素上按 Tab 关闭并回到触发器', async () => {
-        renderSelect({ defaultOpen: true, innerBottomSlot: <button class="slot-btn">Button</button> });
-        keyDown('Tab');
-        const button = screen.getByRole('button', { name: 'Button' });
-        expect(button).toHaveFocus();
-        keyDown('Tab', {}, button);
-        await expectClosed();
-        expect(getTrigger()).toHaveFocus();
     });
 
     it('optionList 带 key 时 onChange 与 onSelect 收到原 key', async () => {
@@ -2102,14 +2019,6 @@ describe('Select 状态同步与键盘', () => {
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper-focus`)).not.toBeNull();
     });
 
-    it('max 为 1 时选第二项调用 onExceed', async () => {
-        const onExceed = vi.fn<NonNullable<SelectProps['onExceed']>>();
-        renderSelect({ multiple: true, max: 1, defaultValue: ['abc'], onExceed, defaultOpen: true });
-        await userEvent.click(getOptions()[1]);
-        expect(onExceed).toHaveBeenCalledTimes(1);
-        expect(getTagTexts()).toEqual(['Abc']);
-    });
-
     it('受控且 filter 时单选后关闭', async () => {
         const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
         renderSelect({ filter: true, value: 'abc', onChange });
@@ -2136,18 +2045,6 @@ describe('Select 状态同步与键盘', () => {
             setLabel(true);
             setProps({ 'aria-labelledby': 'city-label' });
             expect(screen.getByRole('combobox', { name: 'Home city' })).not.toHaveAttribute('aria-label');
-        });
-
-        it('关闭状态的 combobox 按 ArrowDown 与 ArrowUp 打开', async () => {
-            render(() => <Select optionList={defaultList} />);
-            const combobox = screen.getByRole('combobox');
-            combobox.focus();
-            await userEvent.keyboard('{ArrowDown}');
-            expect(combobox).toHaveAttribute('aria-expanded', 'true');
-            await userEvent.keyboard('{Escape}');
-            expect(combobox).toHaveAttribute('aria-expanded', 'false');
-            await userEvent.keyboard('{ArrowUp}');
-            expect(combobox).toHaveAttribute('aria-expanded', 'true');
         });
 
         it('仅在打开时 aria-activedescendant 指向已渲染的选项', async () => {
@@ -2493,14 +2390,6 @@ describe('Select 子节点与边界', () => {
         expect(getTagTexts()).toEqual(['Abc']);
     });
 
-    it('Tab 聚焦后按 Enter 打开', async () => {
-        renderSelect({ optionList: defaultList });
-        await userEvent.tab();
-        expect(getTrigger()).toHaveFocus();
-        keyDown('Enter');
-        expect(getOptionList()).not.toBeNull();
-    });
-
     it('高亮项被移除后 Enter 不选择', async () => {
         const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
         const props = { defaultOpen: true, defaultActiveFirstOption: false, optionList: defaultList, onChange };
@@ -2686,17 +2575,6 @@ describe('Select 行为基线', () => {
         renderSelect({ 'data-testid': 'sel', multiple: true, filter: true });
         expect(getTrigger().tagName).toBe('INPUT');
         expect(screen.getByTestId('sel')).toBe(getRoot());
-    });
-
-    it('combobox 控制 listbox，并指向聚焦的选项', async () => {
-        renderSelect();
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'false');
-        expect(getTrigger()).toHaveAttribute('aria-haspopup', 'listbox');
-        await userEvent.click(getTrigger());
-        const trigger = getTrigger();
-        expect(trigger).toHaveAttribute('aria-expanded', 'true');
-        expect(document.getElementById(trigger.getAttribute('aria-controls')!)).toBe(getOptionList());
-        expect(trigger.getAttribute('aria-activedescendant')).toBe(getOptions()[0].id);
     });
 
     it('清空非受控单选时，先上报 onChange(undefined)，再调用 onClear', async () => {

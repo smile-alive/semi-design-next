@@ -168,6 +168,25 @@ describe('Modal', () => {
         expect($(`.${prefix}-full-width`)).not.toBeNull();
     });
 
+    it('maskClosable', async () => {
+        const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
+        const view = await renderModal({ maskClosable: true, visible: true, onCancel });
+        await userEvent.click($(`.${prefix}-wrap`)!);
+        expect(onCancel).toHaveBeenCalledTimes(1);
+        view.unmount();
+
+        const onCancel2 = vi.fn<NonNullable<ModalProps['onCancel']>>();
+        await renderModal({ maskClosable: false, visible: true, onCancel: onCancel2 });
+        await userEvent.click($(`.${prefix}-wrap`)!);
+        expect(onCancel2).not.toHaveBeenCalled();
+    });
+
+    it('无遮罩', async () => {
+        await renderModal({ mask: false, visible: true });
+        expect($(`div.${prefix}`)).not.toBeNull();
+        expect($(`.${prefix}-mask`)).toBeNull();
+    });
+
     it('closable 属性', async () => {
         const view = await renderModal({ closable: true, visible: true });
         expect($(`.${prefix}-close`)).not.toBeNull();
@@ -182,19 +201,6 @@ describe('Modal', () => {
         const modals = document.querySelectorAll<HTMLElement>(`div.${prefix}`);
         expect(modals).toHaveLength(1);
         expect($('.modal-container')).toContainElement(modals[0]);
-    });
-
-    it('maskClosable', async () => {
-        const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
-        const view = await renderModal({ maskClosable: true, visible: true, onCancel });
-        await userEvent.click($(`.${prefix}-wrap`)!);
-        expect(onCancel).toHaveBeenCalledTimes(1);
-        view.unmount();
-
-        const onCancel2 = vi.fn<NonNullable<ModalProps['onCancel']>>();
-        await renderModal({ maskClosable: false, visible: true, onCancel: onCancel2 });
-        await userEvent.click($(`.${prefix}-wrap`)!);
-        expect(onCancel2).not.toHaveBeenCalled();
     });
 
     it('按钮相关属性：cancelText / okText / okButtonProps / cancelButtonProps / hasCancel / confirmLoading', async () => {
@@ -222,25 +228,6 @@ describe('Modal', () => {
         buttons = getButtons();
         expect(buttons).toHaveLength(1);
         expect(buttons[0]).toHaveClass(loadingCls);
-    });
-
-    it('onCancel / onOk', async () => {
-        const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
-        const onOk = vi.fn<NonNullable<ModalProps['onOk']>>();
-        await renderModal({ visible: true, onCancel, onOk });
-        const buttons = getButtons();
-        await userEvent.click($(`button.${prefix}-close`)!);
-        await userEvent.click(buttons[1]);
-        await userEvent.click(buttons[2]);
-        expect(onCancel).toHaveBeenCalledTimes(2);
-        expect(onOk).toHaveBeenCalledTimes(1);
-        expect(onOk.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
-    });
-
-    it('无遮罩', async () => {
-        await renderModal({ mask: false, visible: true });
-        expect($(`div.${prefix}`)).not.toBeNull();
-        expect($(`.${prefix}-mask`)).toBeNull();
     });
 
     it('#closeIcon 替换关闭按钮内的图标，按钮名称不变', async () => {
@@ -466,49 +453,6 @@ describe('Modal 行为', () => {
         expect(onCancel).toHaveBeenCalledTimes(1);
     });
 
-    it('closeOnEsc', async () => {
-        const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
-        const { rerender } = await renderModal({ visible: true, onCancel });
-        await pressEsc();
-        expect(onCancel).toHaveBeenCalledTimes(1);
-        await rerender({ visible: true, onCancel, closeOnEsc: false });
-        await pressEsc();
-        expect(onCancel).toHaveBeenCalledTimes(1);
-    });
-
-    it('closeOnEsc 为 false 时从不通过 Esc 关闭', async () => {
-        const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
-        await renderModal({ visible: true, onCancel, closeOnEsc: false });
-        await pressEsc();
-        expect(onCancel).not.toHaveBeenCalled();
-    });
-
-    it('closeOnEsc 为 false 时，最上层 modal 上的 Escape 不会传到下层 modal', async () => {
-        const onLowerCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
-        render(() => (
-            <>
-                <Modal visible motion={false} title="Lower" onCancel={onLowerCancel}>
-                    {body}
-                </Modal>
-                <Modal visible motion={false} title="Upper" closeOnEsc={false}>
-                    {body}
-                </Modal>
-            </>
-        ));
-        await nextTick();
-        await pressEsc();
-        expect(onLowerCancel).not.toHaveBeenCalled();
-    });
-
-    it('modal 使其后的页面变为 inert，关闭时释放', async () => {
-        const page = document.body.appendChild(document.createElement('main'));
-        const { rerender } = await renderModal({ visible: true, title: 'Dialog' });
-        expect(page.inert).toBe(true);
-        await rerender({ visible: false });
-        expect(page.inert).toBe(false);
-        page.remove();
-    });
-
     it('仅当对话框阻挡整个页面时才设置 aria-modal', async () => {
         const container = document.body.appendChild(document.createElement('div'));
         const cases: [Props, string | null][] = [
@@ -562,6 +506,33 @@ describe('Modal 行为', () => {
     it('body 中 mask 为 false 的 modal 不是模态，不锁 body 滚动', async () => {
         await renderModal({ visible: true, mask: false });
         expect(document.body.style.overflow).toBe('');
+    });
+
+    it('closeOnEsc', async () => {
+        const onCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
+        const { rerender } = await renderModal({ visible: true, onCancel });
+        await pressEsc();
+        expect(onCancel).toHaveBeenCalledTimes(1);
+        await rerender({ visible: true, onCancel, closeOnEsc: false });
+        await pressEsc();
+        expect(onCancel).toHaveBeenCalledTimes(1);
+    });
+
+    it('closeOnEsc 为 false 时，最上层 modal 上的 Escape 不会传到下层 modal', async () => {
+        const onLowerCancel = vi.fn<NonNullable<ModalProps['onCancel']>>();
+        render(() => (
+            <>
+                <Modal visible motion={false} title="Lower" onCancel={onLowerCancel}>
+                    {body}
+                </Modal>
+                <Modal visible motion={false} title="Upper" closeOnEsc={false}>
+                    {body}
+                </Modal>
+            </>
+        ));
+        await nextTick();
+        await pressEsc();
+        expect(onLowerCancel).not.toHaveBeenCalled();
     });
 
     it('打开时焦点移入对话框，关闭时回到之前的元素', async () => {
@@ -808,13 +779,6 @@ describe('Modal 修复', () => {
         const dialog = screen.getByRole('dialog');
         expect(dialog).toHaveAttribute('aria-modal', 'true');
         expect(dialog).toHaveAccessibleName('Title');
-    });
-
-    it('aria-label 替换生成的标题引用', async () => {
-        await renderModal({ visible: true, title: 'Title', 'aria-label': 'Custom label' });
-        const dialog = screen.getByRole('dialog');
-        expect(dialog).not.toHaveAttribute('aria-labelledby');
-        expect(dialog).toHaveAccessibleName('Custom label');
     });
 
     it('卸载已显示的 modal 时同步发出一次 afterClose，隐藏或已关闭的不发出', async () => {

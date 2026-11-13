@@ -163,12 +163,6 @@ describe('SideSheet', () => {
         expect(view.emitted()['update:visible']).toEqual([[false]]);
     });
 
-    it('无遮罩', async () => {
-        await renderSideSheet({ mask: false, visible: true });
-        expect(getRoot()).not.toBeNull();
-        expect(getMask()).toBeNull();
-    });
-
     it('getPopupContainer：容器与抽屉同批挂载时渲染进容器，不锁 body', async () => {
         render(PopupContainer, { props: { visible: true } });
         await nextTick();
@@ -204,6 +198,12 @@ describe('SideSheet', () => {
 });
 
 describe('SideSheet 行为', () => {
+    it('无遮罩', async () => {
+        await renderSideSheet({ mask: false, visible: true });
+        expect(getRoot()).not.toBeNull();
+        expect(getMask()).toBeNull();
+    });
+
     beforeEach(() => {
         document.body.style.overflow = '';
         document.body.style.paddingInlineEnd = '';

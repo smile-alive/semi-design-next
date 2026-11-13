@@ -18,6 +18,7 @@
 | lint 目录隔离、作用域、导入边界与豁免                                      | [lint](.agents/references/lint.md)                                                                                    |
 | 组件的跨框架协议：语句顺序、foundation 与 adapter、属性透传与 ref、context | [components](.agents/references/components.md)                                                                        |
 | 角色、键盘、可访问名称、jsx-a11y 豁免                                      | [a11y](.agents/references/a11y.md)                                                                                    |
+| 跨框架的时序、属性合并、焦点与测试环境的坑                                 | [pitfalls](.agents/references/pitfalls.md)                                                                            |
 | 组件 SCSS、主题 token、逻辑属性、`@layer`                                  | [styles](.agents/references/styles.md)；主题插件协议见 styles 的「Sass 模块与 semi: importer」「主题 token 协议」两节 |
 | 测试写法、浏览器测试的坑、验证范围                                         | [testing](.agents/references/testing.md)                                                                              |
 | 文档站内容、demo、MDX、dev server                                          | [website](.agents/references/website.md)                                                                              |
@@ -99,11 +100,12 @@ export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH"
 | --- | --- |
 | 单元测试 | `vp test run --project <项目> <目录...>`，项目为 `common` 或框架名，`-t "<用例名>"` 只跑指定用例 |
 | 浏览器测试 | `vp test run --project <项目>-browser <目录...>`，项目为 `common` 或框架名 |
-| lint | `vp lint --deny-warnings <路径...>`，`pnpm lint:scopes`，`pnpm lint:private`，`pnpm lint:class-order`，`pnpm lint:component-order`，`pnpm lint:scss-variables`，`pnpm lint:style`，`pnpm lint:docs`（文档表格列数与 MDX 编译）；前五项合并为 `pnpm lint:rules`；反复重跑整条 lint 用 `vp run --cache lint`，没变的步骤直接回放结果，`lint:style` 每次都执行（stylelint 加载 TS 配置时会写临时文件）；各框架的专属检查 `pnpm lint:<框架>` 见其 lint.md |
+| lint | `vp lint --deny-warnings <路径...>`，`pnpm lint:scopes`，`pnpm lint:private`，`pnpm lint:layers`（foundation 的导入分层），`pnpm lint:class-order`，`pnpm lint:component-order`，`pnpm lint:scss-variables`，`pnpm lint:click-outside`（自管下拉不重复挂点外部监听），`pnpm lint:style`，`pnpm lint:docs`（文档表格列数与 MDX 编译）；前七项合并为 `pnpm lint:rules`；反复重跑整条 lint 用 `vp run --cache lint`，没变的步骤直接回放结果，`lint:style` 每次都执行（stylelint 加载 TS 配置时会写临时文件）；各框架的专属检查 `pnpm lint:<框架>` 见其 lint.md |
 | 格式 | `pnpm format:check` |
 | 类型 | `pnpm build && pnpm typecheck`（框架包和部分测试 tsconfig 读取 foundation 已构建的 dist，foundation 有改动时先 build） |
 | 覆盖率 | `pnpm test:coverage`（全局阈值在 `vitest/index.ts`，包级阈值在所属框架的 `vitest/<框架>/index.ts`；不含 SSR 与 hydration 项目，它们由 `pnpm test:ssr` 另跑；两者已在 `check:full` 中） |
 | 打包产物 | `pnpm build && pnpm test:packed` |
+| 入口体积 | `pnpm build && pnpm size`（`semi-ui-react` 每个运行时导出单独导入的 gzip 体积对照 `size-budget.json`，超 3% 即失败）；组件逻辑或依赖导致体积有意变化时用 `pnpm size --update` 更新预算；合入后跑一次 |
 | 宿主夹具 | `pnpm build && pnpm test:hosts [宿主...] [--full]`；改动构建插件、发布形态或宿主相关代码时跑，需要网络或预热的 pnpm store，写法见 [testing](.agents/references/testing.md#宿主夹具) |
 | 文档页面 | 见 [check-pages](.agents/skills/check-pages/SKILL.md) |
 | 提交前 | 日常 `pnpm check:changed`（相对 release 的改动，需要本地有 `release` 分支）；全量 `pnpm check`（不含浏览器测试）；完整校验 `pnpm check:full` |

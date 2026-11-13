@@ -1219,8 +1219,8 @@ describe('AIChatDialogue 已修复问题', () => {
     });
 
     it('卸载时移除外部 mousedown 监听', async () => {
-        const added = vi.spyOn(document, 'addEventListener');
-        const removed = vi.spyOn(document, 'removeEventListener');
+        const added = vi.spyOn(window, 'addEventListener');
+        const removed = vi.spyOn(window, 'removeEventListener');
         const { container, unmount } = renderDialogue();
         await click(getActionButton(getWrappers(container)[0], 'more_stroked'));
         await screen.findByText(text.delete);

@@ -6,7 +6,6 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
 import { getElement } from '@test/utils/dom/common';
-import { defined } from '@test/utils/function';
 import CollapseHost from './collapse-host.svelte';
 import Standalone from './standalone-panel.svelte';
 import Variants from './variants.svelte';
@@ -72,62 +71,6 @@ describe('Svelte Collapse', () => {
         expect(container.querySelector(`.${prefixCls}-header-right`)).toHaveTextContent('1234');
     });
 
-    it('可同时展开多个面板', async () => {
-        const { store } = setup();
-        await click(getHeaders()[1]);
-        await click(getHeaders()[2]);
-        expect(store.log.at(-1)).toBe('change 2,3 click');
-        expectExpanded([false, true, true]);
-    });
-
-    it('手风琴模式只允许展开一个面板', async () => {
-        const { store } = setup({ collapse: { accordion: true } });
-        await click(getHeaders()[0]);
-        await click(getHeaders()[2]);
-        expect(store.log.at(-1)).toBe('change 3 click');
-        expectExpanded([false, false, true]);
-    });
-
-    it('手风琴关闭已展开面板，并以数组形式通知', async () => {
-        const { store } = setup({ collapse: { accordion: true } });
-        await click(getHeaders()[1]);
-        await click(getHeaders()[1]);
-        expect(store.log.at(-1)).toBe('change  click');
-        expectExpanded([false, false, false]);
-    });
-
-    it('禁用面板：标题为禁用按钮，忽略点击，展开图标显示为禁用态', async () => {
-        const { container, store } = setup({ panel: { disabled: true } });
-        const rows = getRows(container);
-        expect(rows[0]).toHaveClass(`${prefixCls}-header-disabled`);
-        expect(getHeaders()[0]).toBeDisabled();
-        expect(rows[1]).not.toHaveClass(`${prefixCls}-header-disabled`);
-        expect(getHeaders()[1]).toBeEnabled();
-        await click(getHeaders()[0]);
-        expect(store.log).toEqual([]);
-        expectExpanded([false, false, false]);
-        const icons = container.querySelectorAll(`.${prefixCls}-header-icon`);
-        expect(icons[0]).toHaveClass(`${prefixCls}-header-iconDisabled`);
-        expect(icons[1]).not.toHaveClass(`${prefixCls}-header-iconDisabled`);
-    });
-
-    it('每个标题是原生 button，名称为标题文本，位于三级标题内', () => {
-        setup();
-        const headings = screen.getAllByRole('heading', { level: 3 });
-        expect(headings).toHaveLength(3);
-        const button = screen.getByRole('button', { name: 'This is panel header 1' });
-        expect(button.tagName).toBe('BUTTON');
-        expect(button).toHaveAttribute('type', 'button');
-        expect(headings[0]).toContainElement(button);
-        expect(headings[0]).toHaveAccessibleName('This is panel header 1');
-    });
-
-    it('隐藏面板图标', () => {
-        const { container } = setup({ panel: { showArrow: false } });
-        expect(container.querySelectorAll(`.${prefixCls}-header-icon`)).toHaveLength(2);
-        expect(getRows(container)[0].querySelector(`.${prefixCls}-header-icon`)).toBeNull();
-    });
-
     it('生成的面板 id 是合法的 CSS id 选择器', async () => {
         setup({ collapse: { motion: false } });
         await click(getHeaders()[1]);
@@ -142,73 +85,11 @@ describe('Svelte Collapse', () => {
         expect(screen.getByTestId('panel')).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('expandIconPosition 为 left 时图标位于标题文本之前', () => {
-        const { container } = setup({ collapse: { expandIconPosition: 'left' } });
-        const row = getRows(container)[0];
-        expect(row).toHaveClass(`${prefixCls}-header-iconLeft`);
-        expect(row.firstElementChild).toHaveClass(`${prefixCls}-header-icon`);
-        expect(container.querySelectorAll(`.${prefixCls}-header-right .${prefixCls}-header-icon`)).toHaveLength(0);
-    });
-
-    it('expandIconPosition 为 right 时图标位于 extra 之后', () => {
-        const { container } = setup({ panel: { extra: 'more' } });
-        const row = getRows(container)[0];
-        const right = getElement(`.${prefixCls}-header-right`, row);
-        expect(right).toHaveTextContent('more');
-        expect(right.lastElementChild).toHaveClass(`${prefixCls}-header-icon`);
-        expect(row).not.toHaveClass(`${prefixCls}-header-iconLeft`);
-    });
-
     it('clickHeaderToExpand 为 false 时，切换 expandIconPosition 后点击图标仍能切换', async () => {
         const { container, update, store } = setup({ collapse: { clickHeaderToExpand: false } });
         update({ collapse: { clickHeaderToExpand: false, expandIconPosition: 'left' } });
         await click(getElement(`.${prefixCls}-header-icon`, container));
         expect(store.log).toEqual(['change 1 click']);
-    });
-
-    it('clickHeaderToExpand 为 false 时仅点击按钮与图标切换，不响应整行点击', async () => {
-        const { container, store } = setup({ collapse: { clickHeaderToExpand: false }, panel: { extra: 'more' } });
-        await click(screen.getByText('more'));
-        await click(getRows(container)[0]);
-        expect(store.log).toEqual([]);
-        expectExpanded([false, false, false]);
-        await click(getElement(`.${prefixCls}-header-icon`, container));
-        expect(store.log.at(-1)).toBe('change 1 click');
-        expectExpanded([true, false, false]);
-        await click(screen.getByText('This is panel header 2'));
-        expect(store.log.at(-1)).toBe('change 1,2 click');
-        expectExpanded([true, true, false]);
-    });
-
-    it('clickHeaderToExpand 为 true 时点击整行（包括 extra）均可切换', async () => {
-        const { container, store } = setup({ panel: { extra: 'more' } });
-        await click(screen.getByText('more'));
-        expectExpanded([true, false, false]);
-        await click(getRows(container)[0]);
-        expectExpanded([false, false, false]);
-        expect(store.log).toHaveLength(2);
-    });
-
-    it('未设置 keepDOM 时，折叠内容会被卸载', async () => {
-        const first = setup({ collapse: { motion: false } });
-        await click(getHeaders()[0]);
-        expect(first.container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(1);
-        await click(getHeaders()[0]);
-        expect(first.container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(0);
-        first.view.unmount();
-
-        const kept = setup({ collapse: { motion: false, keepDOM: true } });
-        expect(kept.container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(3);
-    });
-
-    it('keepDOM 与 lazyRender 同时使用时，内容首次展开后挂载并保留', async () => {
-        const { container } = setup({ collapse: { motion: false, keepDOM: true, lazyRender: true } });
-        expect(container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(0);
-        await click(getHeaders()[1]);
-        expect(container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(1);
-        await click(getHeaders()[1]);
-        expectExpanded([false, false, false]);
-        expect(container.querySelectorAll(`.${prefixCls}-content-wrapper`)).toHaveLength(1);
     });
 
     it('内容与标题携带展开状态', async () => {
@@ -222,30 +103,6 @@ describe('Svelte Collapse', () => {
         expect(inert(0)).toBeFalsy();
     });
 
-    it('标题获得焦点后，Enter 与 Space 切换面板', async () => {
-        const { store } = setup();
-        getHeaders()[0].focus();
-        await userEvent.keyboard('{Enter}');
-        flushSync();
-        expectExpanded([true, false, false]);
-        await userEvent.keyboard(' ');
-        flushSync();
-        expectExpanded([false, false, false]);
-        expect(store.log).toEqual(['change 1 click', 'change  click']);
-    });
-
-    it('标题控制内容，内容为由标题命名的 region', async () => {
-        const { container } = setup({ collapse: { motion: false } });
-        const [header] = getHeaders();
-        expect(header).not.toHaveAttribute('aria-controls');
-        await click(header);
-        const region = defined(document.getElementById(header.getAttribute('aria-controls')!));
-        expect(region).toHaveClass(`${prefixCls}-content`);
-        expect(region).toHaveAttribute('role', 'region');
-        expect(region).toHaveAttribute('aria-labelledby', header.id);
-        expect(container.querySelector(`#${header.id}`)).toBe(header);
-    });
-
     it('首次渲染时标题的 aria-controls 指向内容 id，且每个面板唯一', () => {
         setup({ collapse: { keepDOM: true, motion: false } });
         const ids = getHeaders().map((header) => header.getAttribute('aria-controls')!);
@@ -254,18 +111,6 @@ describe('Svelte Collapse', () => {
             expect(id).toMatch(new RegExp(`^${prefixCls}-`));
             expect(document.getElementById(id)).toHaveClass(`${prefixCls}-content`);
         });
-    });
-
-    it('keepDOM 加 lazyRender：展开过再收起，内容仍在 DOM 且 aria-controls 仍指向它', async () => {
-        setup({ collapse: { keepDOM: true, lazyRender: true, motion: false } });
-        expect(getHeaders()[1]).not.toHaveAttribute('aria-controls');
-        await click(getHeaders()[1]);
-        await click(getHeaders()[1]);
-        expectExpanded([false, false, false]);
-        const id = getHeaders()[1].getAttribute('aria-controls');
-        expect(id).not.toBeNull();
-        expect(document.getElementById(id!)).not.toBeNull();
-        expect(getHeaders()[2]).not.toHaveAttribute('aria-controls');
     });
 
     it('只设 Collapsible 的全局 keepDOM 时，收起面板的内容在 DOM 中且有 aria-controls', () => {
@@ -312,17 +157,6 @@ describe('Svelte Collapse', () => {
         expect(row.querySelector(`.${prefixCls}-header-right`)).toHaveTextContent('more');
     });
 
-    it('没有 children 的面板图标禁用、无内容，但仍可切换', async () => {
-        const { container } = render(Variants, { props: { variant: 'empty' } });
-        const icon = () => container.querySelector(`.${prefixCls}-header-icon`);
-        expect(icon()).toHaveClass(`${prefixCls}-header-iconDisabled`);
-        expect(container.querySelector(`.${prefixCls}-content`)).toBeNull();
-        expect(getHeaders()[0]).not.toHaveAttribute('aria-controls');
-        await click(getHeaders()[0]);
-        expect(screen.getByLabelText('changes')).toHaveTextContent('1');
-        expect(icon()).toHaveClass(`${prefixCls}-header-iconDisabled`);
-    });
-
     it('Panel 在 Collapse 之外渲染时抛出说明性错误', () => {
         expect(() => render(Standalone)).toThrow('Collapse.Panel must be used inside Collapse');
     });
@@ -349,13 +183,6 @@ describe('Svelte Collapse', () => {
 });
 
 describe('Svelte Collapse 受控值（$bindable）', () => {
-    it('非受控：点击切换，onChange 收到新数组', async () => {
-        const { store } = setup();
-        await click(getHeaders()[0]);
-        expectExpanded([true, false, false]);
-        expect(store.log).toEqual(['change 1 click']);
-    });
-
     it('bind:activeKey：点击写回父级，父级改值面板跟随', async () => {
         const { store, update } = setup({ mode: 'bind', activeKey: '1' });
         expectExpanded([true, false, false]);

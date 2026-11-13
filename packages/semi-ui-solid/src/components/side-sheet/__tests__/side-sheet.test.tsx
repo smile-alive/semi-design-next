@@ -50,6 +50,47 @@ afterEach(() => {
 });
 
 describe('SideSheet', () => {
+    it('无遮罩', () => {
+        renderSideSheet({ mask: false, visible: true });
+        expect(getRoot()).not.toBeNull();
+        expect(getMask()).toBeNull();
+    });
+
+    it('有遮罩时打开后获取焦点，页面设为 inert，关闭后归还焦点', () => {
+        const opener = document.body.appendChild(document.createElement('button'));
+        opener.focus();
+        const { rerender } = renderSideSheet({ visible: true, motion: false, title: 'Sheet' });
+        const dialog = screen.getByRole('dialog', { name: 'Sheet' });
+        expect(dialog).toHaveAttribute('aria-modal', 'true');
+        expect(dialog).toContainElement(document.activeElement as HTMLElement);
+        expect(opener.inert).toBe(true);
+        rerender({ visible: false, motion: false, title: 'Sheet' });
+        expect(opener.inert).toBe(false);
+        expect(opener).toHaveFocus();
+        opener.remove();
+    });
+
+    it('无遮罩时获取焦点但页面仍可用，且仅从面板内部关闭时归还焦点', () => {
+        const opener = document.body.appendChild(document.createElement('button'));
+        const other = document.body.appendChild(document.createElement('button'));
+        opener.focus();
+        const props = { motion: false, mask: false, title: 'Sheet' };
+        const { rerender } = renderSideSheet({ visible: true, ...props });
+        const dialog = screen.getByRole('dialog', { name: 'Sheet' });
+        expect(dialog).not.toHaveAttribute('aria-modal');
+        expect(dialog).toContainElement(document.activeElement as HTMLElement);
+        expect(opener.inert).toBeFalsy();
+        rerender({ visible: false, ...props });
+        expect(opener).toHaveFocus();
+
+        rerender({ visible: true, ...props });
+        other.focus();
+        rerender({ visible: false, ...props });
+        expect(other).toHaveFocus();
+        opener.remove();
+        other.remove();
+    });
+
     it('class / style / maskStyle / bodyStyle / headerStyle / zIndex', () => {
         renderSideSheet({
             class: 'test',
@@ -155,32 +196,6 @@ describe('SideSheet', () => {
 
         renderSideSheet({ closable: false, visible: true });
         expect($(`.${prefix}-close`)).toBeNull();
-    });
-
-    it('maskClosable', async () => {
-        const spyOnCancel = vi.fn<CancelHandler>();
-        const spyOnCancel2 = vi.fn<CancelHandler>();
-        const { unmount } = renderSideSheet({ maskClosable: true, visible: true, onCancel: spyOnCancel });
-        await userEvent.click(getMask());
-        expect(spyOnCancel).toHaveBeenCalledTimes(1);
-        unmount();
-
-        renderSideSheet({ maskClosable: false, visible: true, onCancel: spyOnCancel2 });
-        await userEvent.click(getMask());
-        expect(spyOnCancel2).not.toHaveBeenCalled();
-    });
-
-    it('onCancel', async () => {
-        const spyOnCancel = vi.fn<CancelHandler>();
-        renderSideSheet({ visible: true, onCancel: spyOnCancel });
-        await userEvent.click($(`button.${prefix}-close`)!);
-        expect(spyOnCancel).toHaveBeenCalledTimes(1);
-    });
-
-    it('无遮罩', () => {
-        renderSideSheet({ mask: false, visible: true });
-        expect(getRoot()).not.toBeNull();
-        expect(getMask()).toBeNull();
     });
 
     it('getPopupContainer', () => {
@@ -666,41 +681,6 @@ describe('SideSheet 行为', () => {
         unmount();
         expect(document.body.style.overflow).toBe('auto');
         expect(document.querySelectorAll(`.${BASE_CLASS_PREFIX}-portal`)).toHaveLength(0);
-    });
-
-    it('有遮罩时打开后获取焦点，页面设为 inert，关闭后归还焦点', () => {
-        const opener = document.body.appendChild(document.createElement('button'));
-        opener.focus();
-        const { rerender } = renderSideSheet({ visible: true, motion: false, title: 'Sheet' });
-        const dialog = screen.getByRole('dialog', { name: 'Sheet' });
-        expect(dialog).toHaveAttribute('aria-modal', 'true');
-        expect(dialog).toContainElement(document.activeElement as HTMLElement);
-        expect(opener.inert).toBe(true);
-        rerender({ visible: false, motion: false, title: 'Sheet' });
-        expect(opener.inert).toBe(false);
-        expect(opener).toHaveFocus();
-        opener.remove();
-    });
-
-    it('无遮罩时获取焦点但页面仍可用，且仅从面板内部关闭时归还焦点', () => {
-        const opener = document.body.appendChild(document.createElement('button'));
-        const other = document.body.appendChild(document.createElement('button'));
-        opener.focus();
-        const props = { motion: false, mask: false, title: 'Sheet' };
-        const { rerender } = renderSideSheet({ visible: true, ...props });
-        const dialog = screen.getByRole('dialog', { name: 'Sheet' });
-        expect(dialog).not.toHaveAttribute('aria-modal');
-        expect(dialog).toContainElement(document.activeElement as HTMLElement);
-        expect(opener.inert).toBeFalsy();
-        rerender({ visible: false, ...props });
-        expect(opener).toHaveFocus();
-
-        rerender({ visible: true, ...props });
-        other.focus();
-        rerender({ visible: false, ...props });
-        expect(other).toHaveFocus();
-        opener.remove();
-        other.remove();
     });
 
     it('autofocus 的元素在打开时获得焦点', () => {

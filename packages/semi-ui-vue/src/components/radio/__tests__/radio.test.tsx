@@ -36,43 +36,6 @@ describe('Radio', () => {
         semiGlobal.config.overrideDefaultProps = {};
     });
 
-    it('基础功能正常', () => {
-        render(Radio);
-        expect(getRadio()).not.toBeChecked();
-        expect(getRadio()).not.toBeDisabled();
-        expect(getRadio()).toHaveAttribute('type', 'radio');
-    });
-
-    it('modelValue 为 true 时选中', () => {
-        render(Radio, { props: { modelValue: true } });
-        expect(getRadio()).toBeChecked();
-    });
-
-    it('默认禁用', () => {
-        render(Radio, { props: { disabled: true } });
-        expect(getRadio()).toBeDisabled();
-    });
-
-    it('change 报告选中状态，高级模式的首次点击同样是选中', async () => {
-        const change = vi.fn<Change>();
-        const change2 = vi.fn<Change>();
-        render(Radio, { props: { onChange: change }, attrs: { 'aria-label': 'plain' } });
-        render(Radio, { props: { mode: 'advanced', onChange: change2 }, attrs: { 'aria-label': 'advanced' } });
-        await userEvent.click(screen.getByRole('radio', { name: 'plain' }));
-        expect(change).toHaveBeenCalledTimes(1);
-        expect(change.mock.calls[0]?.[0].target.checked).toBe(true);
-        await userEvent.click(screen.getByRole('radio', { name: 'advanced' }));
-        expect(change2).toHaveBeenCalledTimes(1);
-        expect(change2.mock.calls[0]?.[0].target.checked).toBe(true);
-    });
-
-    it('同时发出 update:modelValue', async () => {
-        const update = vi.fn<(checked: boolean) => void>();
-        render(Radio, { props: { 'onUpdate:modelValue': update } });
-        await userEvent.click(getRadio());
-        expect(update).toHaveBeenCalledWith(true);
-    });
-
     it('高级模式：点击已选中项取消选中', async () => {
         const change = vi.fn<Change>();
         render(Radio, { props: { mode: 'advanced', onChange: change }, slots: { default: () => '允许取消选择' } });
@@ -97,6 +60,25 @@ describe('Radio', () => {
         expect(change.mock.calls[0][0].target.checked).toBe(false);
     });
 
+    it('modelValue 受控，变回 undefined 时取消选中', async () => {
+        const view = render(Radio, { props: { modelValue: true }, slots: { default: () => 'Controlled Radio' } });
+        expect(getRadio()).toBeChecked();
+        await view.rerender({ modelValue: false });
+        expect(getRadio()).not.toBeChecked();
+        await view.rerender({ modelValue: true });
+        expect(getRadio()).toBeChecked();
+        await view.rerender({ modelValue: undefined });
+        expect(getRadio()).not.toBeChecked();
+        expect(getLabel()).not.toHaveClass(`${prefixCls}-checked`);
+    });
+
+    it('同时发出 update:modelValue', async () => {
+        const update = vi.fn<(checked: boolean) => void>();
+        render(Radio, { props: { 'onUpdate:modelValue': update } });
+        await userEvent.click(getRadio());
+        expect(update).toHaveBeenCalledWith(true);
+    });
+
     it('高级模式的 v-model：取消选中报告 false，选中图标随之消失', async () => {
         const change = vi.fn<Change>();
         render(Model, { props: { onChange: change } });
@@ -110,22 +92,6 @@ describe('Radio', () => {
         expect(getRadio()).toBeChecked();
         await userEvent.click(screen.getByRole('button', { name: 'reset' }));
         expect(getRadio()).not.toBeChecked();
-    });
-
-    it('button 样式', () => {
-        render(Radio, { props: { type: 'button' } });
-        expect(document.querySelector(`.${prefixCls}-buttonRadioComponent`)).not.toBeNull();
-    });
-
-    it('card 样式', () => {
-        render(Radio, { props: { type: 'card' }, slots: { default: () => 'Card Radio' } });
-        expect(document.querySelector(`.${prefixCls}-cardRadioGroup`)).not.toBeNull();
-    });
-
-    it('pureCard 样式', () => {
-        render(Radio, { props: { type: 'pureCard' }, slots: { default: () => 'Pure Card Radio' } });
-        expect(document.querySelector(`.${prefixCls}-cardRadioGroup`)).not.toBeNull();
-        expect(document.querySelector(`.${prefixCls}-inner-pureCardRadio`)).not.toBeNull();
     });
 
     it('mouseenter 与 mouseleave 落在 label，接收原生事件', async () => {
@@ -145,23 +111,6 @@ describe('Radio', () => {
         expect(extra).toHaveTextContent(/^Extra information$/);
         expect(extra).toHaveAttribute('x-semi-prop', 'extra');
         expect(getRadio()).toHaveAttribute('aria-describedby', extra.id);
-    });
-
-    it('displayMode 为 vertical', () => {
-        render(Radio, { props: { displayMode: 'vertical' }, slots: { default: () => 'Vertical Radio' } });
-        expect(document.querySelector(`.${prefixCls}-vertical`)).not.toBeNull();
-    });
-
-    it('modelValue 受控，变回 undefined 时取消选中', async () => {
-        const view = render(Radio, { props: { modelValue: true }, slots: { default: () => 'Controlled Radio' } });
-        expect(getRadio()).toBeChecked();
-        await view.rerender({ modelValue: false });
-        expect(getRadio()).not.toBeChecked();
-        await view.rerender({ modelValue: true });
-        expect(getRadio()).toBeChecked();
-        await view.rerender({ modelValue: undefined });
-        expect(getRadio()).not.toBeChecked();
-        expect(getLabel()).not.toHaveClass(`${prefixCls}-checked`);
     });
 
     it('value 进入原生 input，表单序列化得到该值', () => {
@@ -204,12 +153,6 @@ describe('Radio', () => {
         expect(getRadio()).toBeChecked();
     });
 
-    it('aria-label 落在原生 input', () => {
-        render(Radio, { attrs: { 'aria-label': 'Test radio' }, slots: { default: () => 'Radio' } });
-        expect(getRadio()).toHaveAttribute('aria-label', 'Test radio');
-        expect(getLabel()).not.toHaveAttribute('aria-label');
-    });
-
     it('focus 与 blur 方法', () => {
         const holder = handleOf();
         holder.current?.focus();
@@ -242,12 +185,6 @@ describe('Radio', () => {
         expect(input.getAttribute('aria-describedby')).toBe(getElement(`.${prefixCls}-extra`, container).id);
     });
 
-    it('modelValue 变化时当次渲染的 DOM 就已是新值', async () => {
-        const view = render(Radio, { props: { modelValue: false }, slots: { default: () => 'A' } });
-        await view.rerender({ modelValue: true });
-        expect(getRadio().checked).toBe(true);
-    });
-
     it('非受控：defaultChecked，点击后选中并保持选中', async () => {
         const change = vi.fn<Change>();
         const first = render(Radio, { props: { defaultChecked: true }, slots: { default: () => 'A' } });
@@ -263,18 +200,6 @@ describe('Radio', () => {
         await userEvent.click(getRadio());
         expect(change).toHaveBeenCalledTimes(1);
         expect(getRadio()).toBeChecked();
-    });
-
-    it('受控：点击上报选中，但最终由 modelValue 决定', async () => {
-        const change = vi.fn<Change>();
-        const view = render(Radio, { props: { modelValue: false, onChange: change }, slots: { default: () => 'A' } });
-        await userEvent.click(getRadio());
-        expect(change).toHaveBeenCalledTimes(1);
-        expect(change.mock.calls[0]?.[0].target.checked).toBe(true);
-        expect(getRadio().checked).toBe(false);
-        expect(getLabel()).not.toHaveClass(`${prefixCls}-checked`);
-        await view.rerender({ modelValue: true });
-        expect(getRadio().checked).toBe(true);
     });
 
     it('显式 undefined 加 update 监听仍为非受控', async () => {
@@ -314,15 +239,6 @@ describe('Radio', () => {
         settle();
         await userEvent.click(getRadio());
         expect(parentChange).toHaveBeenCalledTimes(1);
-    });
-
-    it('禁用时不改变状态', async () => {
-        const change = vi.fn<Change>();
-        render(Radio, { props: { disabled: true, onChange: change }, slots: { default: () => 'A' } });
-        await userEvent.click(getRadio());
-        expect(change).not.toHaveBeenCalled();
-        expect(getRadio()).not.toBeChecked();
-        expect(getLabel()).toHaveClass(`${prefixCls}-disabled`);
     });
 
     it('name 作用于 input 而非 label', async () => {

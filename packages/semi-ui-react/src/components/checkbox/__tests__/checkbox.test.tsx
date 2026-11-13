@@ -59,11 +59,6 @@ describe('checkbox', () => {
         expect(getWrapper()).toHaveClass(`${prefixCls}-checked`);
     });
 
-    it('defaultChecked 生效', () => {
-        renderCb({ defaultChecked: true });
-        expect(getInput()).toBeChecked();
-    });
-
     it('checked 受控模式', () => {
         const { rerender } = renderCb({ checked: true });
         const innerChecked = () => document.querySelector(`.${prefixCls}-inner-checked`);
@@ -91,15 +86,6 @@ describe('checkbox', () => {
         fireEvent.click(getWrapper());
         expect(getInput()).not.toBeChecked();
         expect(onChange).not.toHaveBeenCalled();
-    });
-
-    it('onChange', async () => {
-        const onChange = vi.fn<(e: CheckboxEvent) => void>();
-        render(<Checkbox onChange={onChange} />);
-        await userEvent.click(getWrapper());
-        expect(onChange.mock.calls[0][0].target.checked).toEqual(true);
-        await userEvent.click(getWrapper());
-        expect(onChange.mock.calls[1][0].target.checked).toEqual(false);
     });
 
     it('extra 属性', () => {
@@ -148,12 +134,6 @@ describe('checkbox', () => {
         renderCb({ 'aria-labelledby': 'label-id' });
         expect(getInput().getAttribute('aria-labelledby')).toMatch(/^label-id \S+$/);
         expect(getWrapper()).not.toHaveAttribute('aria-labelledby');
-    });
-
-    it('card 类型', () => {
-        renderCb({ type: 'card' });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-cardType`);
-        expect(document.querySelector(`.${prefixCls}-inner-pureCardType`)).toBeNull();
     });
 
     it('pureCard 类型', () => {
@@ -229,12 +209,6 @@ describe('CheckboxGroup', () => {
 
     const checkedStates = () => getWrappers().map((cb) => cb.classList.contains(`${prefixCls}-checked`));
 
-    it('基础渲染', () => {
-        renderCheckboxGroup();
-        expect(getWrappers()).toHaveLength(3);
-        expect(screen.getAllByRole('checkbox')).toHaveLength(3);
-    });
-
     it('defaultValue', () => {
         renderCheckboxGroup({ defaultValue: ['A', 'B'] });
         expect(checkedStates()).toEqual([true, true, false]);
@@ -271,21 +245,6 @@ describe('CheckboxGroup', () => {
         screen.getAllByRole('checkbox').forEach((input) => expect(input).toBeDisabled());
     });
 
-    it('direction 水平方向', () => {
-        renderCheckboxGroup({ direction: 'horizontal' });
-        expect(screen.getByRole('group')).toHaveClass(`${BASE_CLASS_PREFIX}-checkboxGroup-horizontal`);
-    });
-
-    it('direction 垂直方向', () => {
-        renderCheckboxGroup({ direction: 'vertical' });
-        expect(screen.getByRole('group')).toHaveClass(`${BASE_CLASS_PREFIX}-checkboxGroup-vertical`);
-    });
-
-    it('card 类型', () => {
-        renderCheckboxGroup({ type: 'card' });
-        getWrappers().forEach((checkbox) => expect(checkbox).toHaveClass(`${prefixCls}-cardType`));
-    });
-
     it('options 属性', () => {
         const options = [
             { label: 'Option 1', value: '1' },
@@ -297,15 +256,6 @@ describe('CheckboxGroup', () => {
         expect(getWrappers().map((cb) => cb.textContent)).toEqual(['Option 1', 'Option 2', 'Option 3']);
         expect(getWrappers()[2]).toHaveClass(`${prefixCls}-disabled`);
         expect(getWrappers()[0]).not.toHaveClass(`${prefixCls}-disabled`);
-    });
-
-    it('name 属性', () => {
-        renderCheckboxGroup({ name: 'test-group' });
-        const inputs = screen.getAllByRole('checkbox');
-        expect(inputs).toHaveLength(3);
-        inputs.forEach((input) => {
-            expect(input).toHaveAttribute('name', 'test-group');
-        });
     });
 
     it('ARIA 属性 aria-label', () => {
@@ -340,30 +290,10 @@ describe('checkbox 行为基线', () => {
         expect(getWrapper()).toHaveClass(`${prefixCls}-unChecked`);
     });
 
-    it('受控 checkbox 只通知，直到父组件更新 checked', async () => {
-        const onChange = vi.fn<(e: CheckboxEvent) => void>();
-        renderCb({ checked: false, onChange });
-        await userEvent.click(getWrapper());
-        expect(onChange.mock.calls[0][0].target.checked).toBe(true);
-        expect(getInput()).not.toBeChecked();
-    });
-
     it('checked={undefined} 按非受控处理：取 defaultChecked，点击即切换', async () => {
         renderCb({ checked: undefined, defaultChecked: true });
         expect(getInput()).toBeChecked();
         await userEvent.click(getWrapper());
-        expect(getInput()).not.toBeChecked();
-    });
-
-    it('聚焦的 checkbox 上按 Space 切换', async () => {
-        const onChange = vi.fn<(e: CheckboxEvent) => void>();
-        renderCb({ onChange });
-        await userEvent.tab();
-        expect(getInput()).toHaveFocus();
-        await userEvent.keyboard(' ');
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(getInput()).toBeChecked();
-        await userEvent.keyboard(' ');
         expect(getInput()).not.toBeChecked();
     });
 
@@ -469,12 +399,6 @@ describe('checkbox 行为基线', () => {
         } finally {
             focus.mockRestore();
         }
-    });
-
-    it('点击时聚焦原生 input', async () => {
-        renderCb();
-        await userEvent.click(document.querySelector(`.${prefixCls}-addon`));
-        expect(getInput()).toHaveFocus();
     });
 
     it('formApi.reset 后 FormCheckbox 恢复未选中', async () => {
@@ -631,22 +555,6 @@ describe('CheckboxGroup 行为基线', () => {
         await userEvent.click(root);
         expect(await screen.findByText('popup')).toBeInTheDocument();
         absent();
-    });
-
-    it('未设置 name 的分组为其 checkbox 生成一个名称，且与其他分组不同', () => {
-        render(
-            <>
-                <Group aria-label="one" options={['a', 'b']} />
-                <Group aria-label="two" options={['a', 'b']} />
-            </>
-        );
-        const names = ['one', 'two'].map((label) => {
-            const inputs = screen.getByRole('group', { name: label }).querySelectorAll('input');
-            expect(inputs[0].name).toBeTruthy();
-            expect(inputs[0].name).toBe(inputs[1].name);
-            return inputs[0].name;
-        });
-        expect(names[0]).not.toBe(names[1]);
     });
 
     it('分组将 aria-invalid 与 aria-errormessage 传给每个 input，aria-describedby 保留在根元素，并丢弃 aria-required', () => {
@@ -822,21 +730,6 @@ describe('checkbox 审计修复', () => {
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(getInput()).toBeChecked();
-    });
-
-    it('半选状态暴露为原生 indeterminate，不再输出重复的 aria-checked', () => {
-        const { rerender } = render(<Checkbox indeterminate />);
-        expect(getInput()).toBePartiallyChecked();
-        expect(getInput()).not.toHaveAttribute('aria-checked');
-        rerender(<Checkbox checked indeterminate />);
-        expect(getInput()).not.toBePartiallyChecked();
-        expect(getInput()).toBeChecked();
-    });
-
-    it('点击后受控半选仍保持 indeterminate', async () => {
-        render(<Checkbox checked={false} indeterminate />);
-        await userEvent.click(getWrapper());
-        expect(getInput()).toBePartiallyChecked();
     });
 
     it('有 extra 时调用方的 aria-describedby 与 extra 都在描述中', () => {

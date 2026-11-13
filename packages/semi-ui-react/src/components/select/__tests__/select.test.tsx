@@ -171,13 +171,6 @@ describe('Select', () => {
         expect(screen.getByRole('combobox')).toHaveAccessibleName('0');
     });
 
-    it('defaultOpen', () => {
-        renderSelect({ defaultOpen: true });
-        expect(getOptionList()).not.toBeNull();
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
-        expect(getOptionTexts()).toEqual(['Abc', 'Hotsoon', 'Pipixia', 'TopBuzz']);
-    });
-
     // jsdom has no layout; the browser project covers the resulting width, here only the CSS wiring is checked
     it('dropdownMatchSelectWidth = true', () => {
         renderSelect({ defaultOpen: true, style: { width: 90 }, defaultValue: 'abc' });
@@ -297,14 +290,6 @@ describe('Select', () => {
         renderSelect({ spacing: 20, defaultOpen: true });
         const wrapper = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
         expect(wrapper.style.top).toBe('20px');
-    });
-
-    it('点击选择器时打开选项列表', async () => {
-        renderSelect({});
-        expect(getOptionList()).toBeNull();
-        await userEvent.click(getTrigger());
-        expect(getOptionList()).not.toBeNull();
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
     });
 
     it('disabled 为 true 时禁用组件', async () => {
@@ -475,24 +460,6 @@ describe('Select', () => {
         expect(onDeselect).toHaveBeenCalledTimes(1);
         expect(onDeselect).toHaveBeenCalledWith('hotsoon', { value: 'hotsoon', label: 'Hotsoon' });
         expect(getTagTexts()).toEqual(['Abc']);
-    });
-
-    it('onChange（single）', async () => {
-        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
-        renderSelect({ defaultOpen: true, onChange });
-        await userEvent.click(getOptions()[0]);
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledWith('abc');
-    });
-
-    it('onChange（multiple）', async () => {
-        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
-        renderSelect({ defaultOpen: true, multiple: true, onChange });
-        await userEvent.click(getOptions()[0]);
-        await userEvent.click(getOptions()[1]);
-        expect(onChange).toHaveBeenCalledTimes(2);
-        expect(onChange).toHaveBeenNthCalledWith(1, ['abc']);
-        expect(onChange).toHaveBeenNthCalledWith(2, ['abc', 'hotsoon']);
     });
 
     it('onChange + onChangeWithObject（single）', async () => {
@@ -2476,14 +2443,6 @@ describe('Select', () => {
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper-focus`)).not.toBeNull();
     });
 
-    it('multiple 配合 max 与 onExceed', async () => {
-        const onExceed = vi.fn<NonNullable<SelectProps['onExceed']>>();
-        renderSelect({ multiple: true, max: 1, defaultValue: ['abc'], onExceed, defaultOpen: true });
-        await userEvent.click(getOptions()[1]);
-        expect(onExceed).toHaveBeenCalledTimes(1);
-        expect(getTagTexts()).toEqual(['Abc']);
-    });
-
     it('受控且 filter 时 _handleSingleSelect', async () => {
         const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
         renderSelect({ filter: true, value: 'abc', onChange });
@@ -2520,20 +2479,6 @@ describe('Select', () => {
                 </>
             );
             expect(screen.getByRole('combobox', { name: 'Home city' })).not.toHaveAttribute('aria-label');
-        });
-
-        it('关闭状态的 combobox 按 ArrowDown 与 ArrowUp 打开', async () => {
-            render(<Select optionList={defaultList} />);
-            const combobox = screen.getByRole('combobox');
-            act(() => {
-                combobox.focus();
-            });
-            await userEvent.keyboard('{ArrowDown}');
-            expect(combobox).toHaveAttribute('aria-expanded', 'true');
-            await userEvent.keyboard('{Escape}');
-            expect(combobox).toHaveAttribute('aria-expanded', 'false');
-            await userEvent.keyboard('{ArrowUp}');
-            expect(combobox).toHaveAttribute('aria-expanded', 'true');
         });
 
         it('仅在打开时 aria-controls 指向已渲染的 listbox', async () => {

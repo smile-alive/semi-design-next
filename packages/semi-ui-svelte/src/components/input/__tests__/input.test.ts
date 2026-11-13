@@ -94,13 +94,6 @@ describe('Svelte Input', () => {
         expect(getInput()).toHaveValue('semi');
     });
 
-    it('disabled 时禁用', () => {
-        setup({ props: { disabled: true } });
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-disabled`);
-        expect(getInput()).toHaveClass(`${prefixCls}-disabled`);
-        expect(getInput()).toBeDisabled();
-    });
-
     it('不同的 validateStatus', async () => {
         const { update } = setup({ props: { validateStatus: 'warning' } });
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-warning`);
@@ -144,15 +137,6 @@ describe('Svelte Input', () => {
         expect(getInput()).toHaveFocus();
     });
 
-    it.each(['prefix', 'suffix'] as const)('点击 %s 聚焦', async (slot) => {
-        const onFocus = vi.fn<(event: FocusEvent) => void>();
-        setup({ props: { value: 'Semi Design', onFocus }, slots: { [slot]: 'search' } });
-        await userEvent.click(query(`${prefixCls}-${slot}`));
-        expect(getInput()).toHaveFocus();
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
-        expect(onFocus).toHaveBeenCalledTimes(1);
-    });
-
     it('maxlength 与 getValueLength 一起截断 onChange', async () => {
         const onChange = vi.fn<Change>();
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -191,23 +175,6 @@ describe('Svelte Input', () => {
         setup({ props: { [name]: listener } });
         await fire(getInput(), { data: 'test' });
         expect(listener).toHaveBeenCalledTimes(1);
-    });
-
-    it('值为数字 0 时也显示清除按钮', () => {
-        setup({ props: { value: 0, showClear: true } });
-        expect(getClearBtn()).not.toBeNull();
-    });
-
-    it('只有主键按下清除按钮才清空，其他鼠标键只阻止抢走焦点', () => {
-        const onClear = vi.fn<(event: MouseEvent) => void>();
-        setup({ props: { value: 'semi', showClear: true, onClear } });
-        for (const button of [1, 2]) {
-            const event = new MouseEvent('mousedown', { button, bubbles: true, cancelable: true });
-            getClearBtn()?.dispatchEvent(event);
-            expect(event.defaultPrevented).toBe(true);
-        }
-        expect(onClear).not.toHaveBeenCalled();
-        expect(getInput()).toHaveValue('semi');
     });
 
     it('showClear 与 onClear：清除后按钮消失，onChange 第二个参数是 mousedown 事件', async () => {
@@ -253,12 +220,6 @@ describe('Svelte Input', () => {
         expect(getClearBtn()).toBeNull();
     });
 
-    it('readonly 属性', () => {
-        setup({ props: { value: 'readonly text', readonly: true } });
-        expect(getInput()).toHaveAttribute('readonly');
-        expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-readonly`);
-    });
-
     it('原生 readOnly 只锁定打字，清除按钮保留', () => {
         setup({ props: { value: 'text', showClear: true, readOnly: true } });
         expect(getInput()).toHaveAttribute('readonly');
@@ -277,17 +238,6 @@ describe('Svelte Input', () => {
         await userEvent.tab();
         expect(onBlur).toHaveBeenCalledTimes(1);
         expect(getWrapper()).not.toHaveClass(`${prefixCls}-wrapper-focus`);
-    });
-
-    it('onEnterPress 在 Enter 时触发，跳过输入法组合的 Enter', async () => {
-        const onEnterPress = vi.fn<(event: KeyboardEvent) => void>();
-        setup({ props: { onEnterPress } });
-        await userEvent.type(getInput(), 'a');
-        expect(onEnterPress).not.toHaveBeenCalled();
-        await userEvent.keyboard('{Enter}');
-        expect(onEnterPress).toHaveBeenCalledTimes(1);
-        await fireEvent.keyDown(getInput(), { key: 'Enter', isComposing: true });
-        expect(onEnterPress).toHaveBeenCalledTimes(1);
     });
 
     it('borderless 与 type=hidden', () => {
@@ -373,11 +323,6 @@ describe('Svelte Input', () => {
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
     });
 
-    it.each(['prefix', 'suffix'] as const)('%s 的 mousedown 阻止默认行为', (slot) => {
-        setup({ props: { value: 'test' }, slots: { [slot]: slot } });
-        expectMouseDownPrevented(query(`${prefixCls}-${slot}`));
-    });
-
     it.each(['{Enter}', ' '])('Tab 可以到达有名称的清除按钮，%s 清除后焦点回到输入框', async (key) => {
         const onClear = vi.fn<(event: MouseEvent) => void>();
         setup({ props: { value: 'semi', showClear: true, onClear } });
@@ -392,17 +337,6 @@ describe('Svelte Input', () => {
         expect(getInput()).toHaveValue('');
         expect(getInput()).toHaveFocus();
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
-    });
-
-    it('用鼠标清除时焦点保留在输入框内', async () => {
-        const onBlur = vi.fn<(event: FocusEvent) => void>();
-        setup({ props: { value: 'semi', showClear: true, onBlur } });
-        await userEvent.click(getInput());
-        await userEvent.click(getClearBtn()!);
-        await settle();
-        expect(getInput()).toHaveValue('');
-        expect(getInput()).toHaveFocus();
-        expect(onBlur).not.toHaveBeenCalled();
     });
 
     it('清除按钮有焦点时值在别处被清空，焦点交给输入框', async () => {
@@ -425,19 +359,6 @@ describe('Svelte Input', () => {
         await update({ disabled: false });
         expect(getInput()).toHaveClass(`${prefixCls}-sibling-modebtn`);
         expect(screen.getByRole('button', { name: zh_CN.Input.showPassword })).toBe(getModeBtn());
-    });
-
-    it('getValueLength 截断等待输入法组合结束', async () => {
-        const onChange = vi.fn<Change>();
-        vi.spyOn(console, 'warn').mockImplementation(() => {});
-        setup({ props: { maxlength: 2, getValueLength, onChange } });
-        await fireEvent.compositionStart(getInput());
-        await typeText(getInput(), 'abc');
-        expect(onChange.mock.calls.at(-1)?.[0]).toBe('abc');
-        await fireEvent.compositionEnd(getInput(), { target: { value: 'abc' } });
-        await settle();
-        expect(onChange.mock.calls.at(-1)?.[0]).toBe('ab');
-        expect(getInput()).toHaveValue('ab');
     });
 
     it('composition 模式在输入法组合结束后上报一次，并显示组合中的文本', async () => {

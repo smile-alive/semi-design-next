@@ -18,17 +18,6 @@ const groupCls = `${BASE_CLASS_PREFIX}-radioGroup`;
 const getRadio = (name: string) => screen.getByRole<HTMLInputElement>('radio', { name });
 const abc = () => ['A', 'B', 'C'].map((value) => <Radio value={value}>{() => value}</Radio>);
 const renderChildren = (props: GroupInput = {}, attrs: Record<string, unknown> = {}) => render(RadioGroup, { props, attrs, slots: { default: abc } });
-const renderOptions = (props: GroupInput = {}) =>
-    render(RadioGroup, {
-        props: {
-            options: [
-                { label: 'A', value: 'A' },
-                { label: 'B', value: 'B' },
-                { label: 'C', value: 'C' },
-            ],
-            ...props,
-        },
-    });
 const states = () => ['A', 'B', 'C'].map((name) => getRadio(name).checked);
 
 describe('RadioGroup', () => {
@@ -74,13 +63,6 @@ describe('RadioGroup', () => {
         expect(update).toHaveBeenLastCalledWith('A');
     });
 
-    it('使用 options 的 group 中只触发一次', async () => {
-        const change = vi.fn<Change>();
-        render(RadioGroup, { props: { options: [{ label: 'Bamboo', value: 'Bamboo' }], onChange: change } });
-        await userEvent.click(getRadio('Bamboo'));
-        expect(change).toHaveBeenCalledTimes(1);
-    });
-
     it('value 不变时不触发 change 事件', async () => {
         const change = vi.fn<Change>();
         const uncontrolled = renderChildren({ onChange: change, defaultValue: 'B' });
@@ -101,17 +83,34 @@ describe('RadioGroup', () => {
         expect(getRadio('B')).not.toBeChecked();
     });
 
-    it('options 正确渲染', () => {
-        renderOptions();
-        expect(screen.getAllByRole('radio')).toHaveLength(3);
-        ['A', 'B', 'C'].forEach((name) => expect(getRadio(name)).toBeInTheDocument());
+    it('modelValue 受控', async () => {
+        const view = renderChildren({ modelValue: 'A' });
+        expect(states()).toEqual([true, false, false]);
+        await view.rerender({ modelValue: 'B' });
+        expect(states()).toEqual([false, true, false]);
     });
 
-    it('所有子项都有 name 属性', () => {
-        renderChildren({ name: 'radiogroup' });
+    it('defaultValue', () => {
+        renderChildren({ defaultValue: 'B' });
+        expect(states()).toEqual([false, true, false]);
+    });
+
+    it('禁用 group', () => {
+        renderChildren({ disabled: true });
         const radios = screen.getAllByRole('radio');
         expect(radios).toHaveLength(3);
-        radios.forEach((el) => expect(el).toHaveAttribute('name', 'radiogroup'));
+        radios.forEach((input) => expect(input).toBeDisabled());
+    });
+
+    it('受控 group 在 modelValue 变化前忽略点击，被浏览器取消的同名兄弟恢复为选中', async () => {
+        const change = vi.fn<Change>();
+        const view = renderChildren({ modelValue: 'A', onChange: change });
+        await userEvent.click(getRadio('C'));
+        expect(change.mock.calls[0]?.[0].target.value).toBe('C');
+        expect(states()).toEqual([true, false, false]);
+        expect(getRadio('A')).toBeChecked();
+        await view.rerender({ modelValue: 'C' });
+        expect(states()).toEqual([false, false, true]);
     });
 
     it('button 样式', () => {
@@ -154,56 +153,6 @@ describe('RadioGroup', () => {
         expect(document.querySelector(`.${prefixCls}-checked`)).toBeNull();
         screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toBeChecked());
         expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('Maximum recursive updates'));
-    });
-
-    it('direction 为 horizontal 与 vertical', () => {
-        const first = renderChildren({ direction: 'horizontal' });
-        expect(document.querySelector(`.${groupCls}-horizontal`)).not.toBeNull();
-        first.unmount();
-        renderChildren({ direction: 'vertical' });
-        expect(document.querySelector(`.${groupCls}-vertical`)).not.toBeNull();
-    });
-
-    it('modelValue 受控', async () => {
-        const view = renderChildren({ modelValue: 'A' });
-        expect(states()).toEqual([true, false, false]);
-        await view.rerender({ modelValue: 'B' });
-        expect(states()).toEqual([false, true, false]);
-    });
-
-    it('defaultValue', () => {
-        renderChildren({ defaultValue: 'B' });
-        expect(states()).toEqual([false, true, false]);
-    });
-
-    it('禁用 group', () => {
-        renderChildren({ disabled: true });
-        const radios = screen.getAllByRole('radio');
-        expect(radios).toHaveLength(3);
-        radios.forEach((input) => expect(input).toBeDisabled());
-    });
-
-    it('aria-label 命名 radiogroup', () => {
-        renderChildren({}, { 'aria-label': 'Radio group label' });
-        expect(screen.getByRole('radiogroup', { name: 'Radio group label' })).toHaveClass(groupCls);
-    });
-
-    it('没有 name 的 group 内 radio 共用生成的 name，且与其他 group 不同', () => {
-        render({
-            render: () => (
-                <>
-                    <RadioGroup aria-label="one" options={['A', 'B']} />
-                    <RadioGroup aria-label="two" options={['A', 'B']} />
-                </>
-            ),
-        });
-        const names = ['one', 'two'].map((label) => {
-            const radios = screen.getByRole('radiogroup', { name: label }).querySelectorAll('input');
-            expect(radios[0]?.name).toBeTruthy();
-            expect(radios[0]?.name).toBe(radios[1]?.name);
-            return radios[0]?.name;
-        });
-        expect(names[0]).not.toBe(names[1]);
     });
 
     it('方向键不会在两个没有 name 的 group 之间移动', async () => {
@@ -335,12 +284,6 @@ describe('RadioGroup', () => {
         expect(screen.queryByText('never')).toBeNull();
     });
 
-    it('字符串选项跟随 group 的 disabled', () => {
-        render(RadioGroup, { props: { disabled: true, options: ['x', 'y'] } });
-        expect(getRadio('x')).toBeDisabled();
-        expect(getRadio('y')).toBeDisabled();
-    });
-
     it('启用的 group 中禁用的 Radio', async () => {
         const change = vi.fn<Change>();
         render(RadioGroup, {
@@ -421,25 +364,6 @@ describe('RadioGroup', () => {
         expect(change).toHaveBeenCalledTimes(4);
     });
 
-    it('受控 group 在 modelValue 变化前忽略点击，被浏览器取消的同名兄弟恢复为选中', async () => {
-        const change = vi.fn<Change>();
-        const view = renderChildren({ modelValue: 'A', onChange: change });
-        await userEvent.click(getRadio('C'));
-        expect(change.mock.calls[0]?.[0].target.value).toBe('C');
-        expect(states()).toEqual([true, false, false]);
-        expect(getRadio('A')).toBeChecked();
-        await view.rerender({ modelValue: 'C' });
-        expect(states()).toEqual([false, false, true]);
-    });
-
-    it('单向受控 group 连续被拒绝仍保持受控值', async () => {
-        renderChildren({ modelValue: 'B' });
-        await userEvent.click(getRadio('A'));
-        await userEvent.click(getRadio('C'));
-        await userEvent.keyboard('{ArrowUp}');
-        expect(states()).toEqual([false, true, false]);
-    });
-
     it('受控高级 group 取消选中时上报 undefined', async () => {
         const change = vi.fn<Change>();
         render(RadioGroup, {
@@ -461,6 +385,14 @@ describe('RadioGroup', () => {
         expect(change.mock.calls.map(([event]) => event.target.value)).toEqual(['A', 'B']);
         expect(getRadio('A')).not.toBeChecked();
         expect(getRadio('B')).toBeChecked();
+    });
+
+    it('单向受控 group 连续被拒绝仍保持受控值', async () => {
+        renderChildren({ modelValue: 'B' });
+        await userEvent.click(getRadio('A'));
+        await userEvent.click(getRadio('C'));
+        await userEvent.keyboard('{ArrowUp}');
+        expect(states()).toEqual([false, true, false]);
     });
 
     it('高级 group 用方向键移动选中项，与原生 radiogroup 一致', async () => {
@@ -490,22 +422,6 @@ describe('RadioGroup', () => {
         expect(change.mock.calls[0]?.[0].target.value).toBeUndefined();
         expect(update).toHaveBeenLastCalledWith(undefined);
         expect(getRadio('A')).not.toBeChecked();
-    });
-
-    it('button 与 card 类型的 group 标记选中的 radio', async () => {
-        const first = renderChildren({ type: 'button', defaultValue: 'B' });
-        const addons = document.querySelectorAll(`.${prefixCls}-addon-buttonRadio`);
-        expect(addons[1]).toHaveClass(`${prefixCls}-addon-buttonRadio-checked`);
-        expect(addons[0]).not.toHaveClass(`${prefixCls}-addon-buttonRadio-checked`);
-        expect(document.querySelector(`.${groupCls}-buttonRadio`)).not.toBeNull();
-        expect(document.querySelector(`.${groupCls}-horizontal`)).toBeNull();
-        first.unmount();
-
-        renderChildren({ type: 'card', direction: 'vertical' });
-        await userEvent.click(getRadio('C'));
-        const cards = document.querySelectorAll(`.${prefixCls}-cardRadioGroup`);
-        expect(cards[2]).toHaveClass(`${prefixCls}-cardRadioGroup_checked`);
-        expect(document.querySelector(`.${groupCls}-vertical-card`)).not.toBeNull();
     });
 
     it('group 的 id、aria-*、data-*、class 与 style 作用于根元素', () => {

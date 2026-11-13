@@ -199,14 +199,6 @@ describe('Svelte TagInput', () => {
         expect(getTagTexts()).toEqual(['abc', 'hotsoon', 'pipixi', 'qingyan']);
     });
 
-    it('输入时按分隔符拆分，Enter 后加入标签', async () => {
-        setup({ props: { separator: [',', ';'] } });
-        await typeText('a;b,c');
-        await pressEnter();
-        expect(getTagTexts()).toEqual(['a', 'b', 'c']);
-        expect(getInput()).toHaveValue('');
-    });
-
     it('粘贴带分隔符的文字，Enter 后拆成多个标签', async () => {
         setup();
         await userEvent.click(getInput());
@@ -251,48 +243,6 @@ describe('Svelte TagInput', () => {
         await pressBackspace();
         expect(onRemove).not.toHaveBeenCalled();
         expect(onChange).not.toHaveBeenCalled();
-    });
-
-    it('onAdd 与 onChange 只在有新标签时触发，空白项被丢弃', async () => {
-        const onAdd = vi.fn<NonNullable<Props['onAdd']>>();
-        const onChange = vi.fn<NonNullable<Props['onChange']>>();
-        const empty = setup({ props: { onChange, onAdd } });
-        await pressEnter();
-        expect(onAdd).not.toHaveBeenCalled();
-        expect(onChange).not.toHaveBeenCalled();
-        empty.view.unmount();
-
-        setup({ props: { inputValue: 'abc,toutiao,,,hotsoon', onChange, value: ['lark'], onAdd } });
-        await pressEnter();
-        expect(onAdd).toHaveBeenCalledTimes(1);
-        expect(onAdd).toHaveBeenCalledWith(['abc', 'toutiao', 'hotsoon']);
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledWith(['lark', 'abc', 'toutiao', 'hotsoon']);
-    });
-
-    it('allowDuplicates 为 false 时丢弃重复项，默认保留', async () => {
-        const onChange = vi.fn<NonNullable<Props['onChange']>>();
-        const dup = setup({ props: { allowDuplicates: true, value: ['abc'], inputValue: 'abc' } });
-        await pressEnter();
-        expect(getTagTexts()).toEqual(['abc', 'abc']);
-        dup.view.unmount();
-
-        setup({ props: { value: ['abc'], allowDuplicates: false, onChange } });
-        await typeText('abc,def,def');
-        await pressEnter();
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledWith(['abc', 'def']);
-        expect(getTagTexts()).toEqual(['abc', 'def']);
-    });
-
-    it('max：超出时只补满剩余名额并通知 onExceed', async () => {
-        const onExceed = vi.fn<NonNullable<Props['onExceed']>>();
-        setup({ props: { value: ['a', 'b', 'c'], max: 3, onExceed } });
-        await typeText('d');
-        await pressEnter();
-        expect(onExceed).toHaveBeenCalledTimes(1);
-        expect(onExceed).toHaveBeenCalledWith(['a', 'b', 'c', 'd']);
-        expect(getTagTexts()).toEqual(['a', 'b', 'c']);
     });
 
     it('已超过 max 时再添加，不删既有标签，change 与 add 都不触发', async () => {

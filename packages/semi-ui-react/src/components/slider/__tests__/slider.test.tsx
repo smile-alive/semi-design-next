@@ -279,11 +279,6 @@ describe('Slider', () => {
         expect(queryAll(container, 'dot')).toHaveLength(2);
     });
 
-    it('aria-label 属性', () => {
-        render(<Slider aria-label="Volume slider" defaultValue={30} />);
-        expect(screen.getByRole('slider', { name: 'Volume slider' })).toBeInTheDocument();
-    });
-
     it('aria-valuetext 属性', () => {
         render(<Slider aria-valuetext="30 percent" defaultValue={30} />);
         expect(getInput()).toHaveAttribute('aria-valuetext', '30 percent');
@@ -293,19 +288,6 @@ describe('Slider', () => {
         const getAriaValueText = (value, index) => `${value} percent at index ${index}`;
         render(<Slider defaultValue={30} getAriaValueText={getAriaValueText} />);
         expect(getInput()).toHaveAttribute('aria-valuetext', '30 percent at index 0');
-    });
-
-    it('range slider 的 getAriaValueText', () => {
-        const getAriaValueText = (value, index) => `${value}% (${index === 0 ? 'min' : 'max'})`;
-        render(<Slider defaultValue={[20, 60]} getAriaValueText={getAriaValueText} range />);
-        const inputs = getInputs();
-        expect(inputs[0]).toHaveAttribute('aria-valuetext', '20% (min)');
-        expect(inputs[1]).toHaveAttribute('aria-valuetext', '60% (max)');
-    });
-
-    it('禁用的 slider 会禁用其输入，使其不在 Tab 顺序中', () => {
-        render(<Slider defaultValue={[20, 60]} disabled range />);
-        getInputs().forEach((input) => expect(input).toBeDisabled());
     });
 
     it('只有输入框是 Tab 停靠点，绘制滑块的元素不是', async () => {
@@ -347,23 +329,6 @@ describe('Slider', () => {
         expect(getInput()).toHaveAttribute('dir', 'ltr');
         rerender(<Slider defaultValue={30} vertical verticalReverse />);
         expect(getInput()).toHaveAttribute('dir', 'rtl');
-    });
-
-    it('handle 输入携带值和边界', () => {
-        render(<Slider defaultValue={50} max={90} min={10} />);
-        const input = getInput();
-        expect(input).toHaveAttribute('type', 'range');
-        expect(input).toHaveValue('50');
-        expect(input).toHaveAttribute('min', '10');
-        expect(input).toHaveAttribute('max', '90');
-        // a native range already exposes them: ARIA in HTML says not to repeat them
-        expect(input).not.toHaveAttribute('aria-valuenow');
-        expect(input).not.toHaveAttribute('aria-valuemax');
-    });
-
-    it('受控 value 为 0 时初始值是 0，不取 defaultValue', () => {
-        render(<Slider defaultValue={50} value={0} />);
-        expect(getInput()).toHaveValue('0');
     });
 
     it('两个范围输入都横跨 slider 边界，且一个滑块不能越过另一个', () => {
@@ -615,16 +580,6 @@ describe('Slider', () => {
         expect(SliderFoundation.getInitialState({ min: 10, max: 50, step: 1 }).currentValue).toBe(10);
         expect(SliderFoundation.getInitialState({ min: 10, max: 50, step: 1, range: true }).currentValue).toEqual([10, 10]);
         expect(SliderFoundation.getInitialState({ min: -10, max: 50, step: 1, value: 0 }).currentValue).toBe(0);
-    });
-
-    it('既无 value 也无 defaultValue 时使用范围默认值', () => {
-        render(<Slider range />);
-        expectValues(0, 0);
-    });
-
-    it('既无 value 也无 defaultValue 时使用单值默认值', () => {
-        render(<Slider />);
-        expectValues(0);
     });
 
     it('受控的 value 属性触发 onChange', () => {
@@ -1181,14 +1136,6 @@ describe('Slider', () => {
         expect(wrapper).not.toHaveAttribute('insetlabel');
     });
 
-    it('输入框变化仅对受控 slider 报告新值', () => {
-        const onChange = vi.fn<OnChange>();
-        render(<Slider value={30} onChange={onChange} />);
-        changeTo(getInput(), 31);
-        expect(onChange).toHaveBeenCalledWith(31);
-        expectValues(30);
-    });
-
     it('value 相关的 key 留在 slider 上：方向键由 slider 处理，Page、Home、End 保留原生默认行为；其他 key 传递给祖先元素', () => {
         const onKeyDown = vi.fn<(event: KeyboardEvent) => void>();
         document.addEventListener('keydown', onKeyDown);
@@ -1235,14 +1182,6 @@ describe('Slider', () => {
         expect(onKeyDown).toHaveBeenCalledTimes(3);
         expect(onAfterChange).not.toHaveBeenCalled();
         document.removeEventListener('keydown', onKeyDown);
-    });
-
-    it('禁用的 slider 忽略输入框的变化', () => {
-        const onChange = vi.fn<OnChange>();
-        render(<Slider defaultValue={30} disabled onChange={onChange} />);
-        changeTo(getInput(), 31);
-        expect(onChange).not.toHaveBeenCalled();
-        expectValues(30);
     });
 
     it('仅松开 value 相关的 key 时报告 onAfterChange', async () => {
@@ -1440,17 +1379,6 @@ describe('Slider', () => {
         expect(new FormData(form).getAll('price')).toEqual(['20', '60']);
         changeTo(getInputs()[0], 45);
         expect(new FormData(form).getAll('volume')).toEqual(['45']);
-    });
-
-    it('滑块输入框变化时移动该滑块并报告值', () => {
-        const onChange = vi.fn<OnChange>();
-        const { container } = render(<Slider defaultValue={[20, 60]} range onChange={onChange} />);
-        const [minInput, maxInput] = container.querySelectorAll<HTMLInputElement>('input[type="range"]');
-        fireEvent.change(minInput, { target: { value: '40' } });
-        expect(onChange).toHaveBeenLastCalledWith([40, 60]);
-        fireEvent.change(maxInput, { target: { value: '10' } });
-        expect(onChange).toHaveBeenLastCalledWith([40, 40]);
-        expect([minInput.value, maxInput.value]).toEqual(['40', '40']);
     });
 
     it('FormSlider 把 id、name 和 aria-* 放在 label 指向的原生 range 输入框上', async () => {

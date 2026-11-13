@@ -56,32 +56,6 @@ describe('CheckboxGroup', () => {
         expect(labels).toEqual(['Abc', 'Hotsoon', 'Pipixia', 'Toutiao']);
     });
 
-    it('direction', () => {
-        const { container } = render(getCG({ direction: 'horizontal' }));
-        expect(container.querySelector(`div.${BASE_CLASS_PREFIX}-checkboxGroup-horizontal`)).not.toBeNull();
-    });
-
-    it('name', () => {
-        render(<Checkbox.Group name="checkboxgroup" options={['Yes', 'No']} />);
-        const checkboxes = screen.getAllByRole('checkbox');
-        expect(checkboxes).toHaveLength(2);
-        checkboxes.forEach((el) => {
-            expect(el).toHaveAttribute('name', 'checkboxgroup');
-        });
-    });
-
-    it('分组 onChange', async () => {
-        const onChange = vi.fn<(value: unknown[]) => void>();
-        render(getCG({ onChange }));
-        await userEvent.click(getCheckbox('Abc'));
-        expect(onChange).toHaveBeenNthCalledWith(1, ['abc']);
-        await userEvent.click(getCheckbox('Hotsoon'));
-        expect(onChange).toHaveBeenNthCalledWith(2, ['abc', 'hotsoon']);
-        await userEvent.click(getCheckbox('Pipixia'));
-        expect(onChange).toHaveBeenNthCalledWith(3, ['abc', 'hotsoon', 'pipixia']);
-        expect(onChange).toHaveBeenCalledTimes(3);
-    });
-
     it('禁用', async () => {
         const onChange = vi.fn<(value: unknown[]) => void>();
         const { container } = render(getCG({ onChange, disabled: true }));

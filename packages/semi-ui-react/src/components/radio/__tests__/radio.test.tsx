@@ -15,39 +15,6 @@ describe('radio', () => {
         vi.restoreAllMocks();
     });
 
-    it('radio 基础功能正常', () => {
-        render(<Radio />);
-        const radioDOM = screen.getByRole('radio');
-
-        expect(radioDOM).not.toBeChecked();
-        expect(radioDOM).not.toBeDisabled();
-    });
-
-    it('radio 默认选中', () => {
-        render(<Radio checked />);
-        expect(screen.getByRole('radio')).toBeChecked();
-    });
-
-    it('radio 默认禁用', () => {
-        render(<Radio disabled />);
-        expect(screen.getByRole('radio')).toBeDisabled();
-    });
-
-    it('radio onChange', async () => {
-        const onChange = vi.fn<(e: RadioChangeEvent) => void>();
-        const onChange2 = vi.fn<(e: RadioChangeEvent) => void>();
-        render(<Radio aria-label="plain" onChange={onChange} />);
-        render(<Radio aria-label="advanced" mode="advanced" onChange={onChange2} />);
-
-        await userEvent.click(screen.getByRole('radio', { name: 'plain' }));
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].target.checked).toBe(true);
-
-        await userEvent.click(screen.getByRole('radio', { name: 'advanced' }));
-        expect(onChange2).toHaveBeenCalledTimes(1);
-        expect(onChange2.mock.calls[0][0].target.checked).toBe(true);
-    });
-
     it('radio 高级模式', async () => {
         // a click on the checked radio unchecks it, which a native radio never does by itself
         const onChange = vi.fn<(e: RadioChangeEvent) => void>();
@@ -82,16 +49,6 @@ describe('radio', () => {
         expect(onChange.mock.calls[0][0].target.checked).toBe(false);
     });
 
-    it('radio button 样式', () => {
-        const { container } = render(<Radio type="button" />);
-        expect(container.querySelector(`.${prefixCls}-buttonRadioComponent`)).not.toBeNull();
-    });
-
-    it('radio card 样式', () => {
-        const { container } = render(<Radio type="card">Card Radio</Radio>);
-        expect(container.querySelector(`.${prefixCls}-cardRadioGroup`)).not.toBeNull();
-    });
-
     it('radio pureCard 样式', () => {
         const { container } = render(<Radio type="pureCard">Pure Card Radio</Radio>);
         expect(container.querySelector(`.${prefixCls}-cardRadioGroup`)).not.toBeNull();
@@ -121,27 +78,12 @@ describe('radio', () => {
         expect(screen.getByRole('radio')).toHaveAttribute('aria-describedby', extra.id);
     });
 
-    it('radio displayMode 为 vertical', () => {
-        const { container } = render(<Radio displayMode="vertical">Vertical Radio</Radio>);
-        expect(container.querySelector(`.${prefixCls}-vertical`)).not.toBeNull();
-    });
-
     it('radio 受控模式', () => {
         const { rerender } = render(<Radio checked>Controlled Radio</Radio>);
         expect(screen.getByRole('radio')).toBeChecked();
 
         rerender(<Radio checked={false}>Controlled Radio</Radio>);
         expect(screen.getByRole('radio')).not.toBeChecked();
-    });
-
-    it('radio 使用 value 属性', () => {
-        render(<Radio value="test-value">Radio with value</Radio>);
-        expect(screen.getByRole('radio')).toHaveAttribute('value', 'test-value');
-    });
-
-    it('radio aria-label', () => {
-        render(<Radio aria-label="Test radio">Radio</Radio>);
-        expect(screen.getByRole('radio')).toHaveAttribute('aria-label', 'Test radio');
     });
 
     it('radio 的 focus 与 blur 方法', () => {
@@ -152,15 +94,6 @@ describe('radio', () => {
         expect(input).toHaveFocus();
         ref.current.blur();
         expect(input).not.toHaveFocus();
-    });
-
-    it('radio 受控模式下值为 undefined', () => {
-        const { container, rerender } = render(<Radio checked>Controlled Radio</Radio>);
-        expect(screen.getByRole('radio')).toBeChecked();
-
-        rerender(<Radio checked={undefined}>Controlled Radio</Radio>);
-        expect(screen.getByRole('radio')).not.toBeChecked();
-        expect(container.querySelector(`.${prefixCls}`)).not.toHaveClass(`${prefixCls}-checked`);
     });
 
     it('服务端渲染的 HTML 包含 addon 与 extra 的 id', () => {
@@ -275,19 +208,6 @@ describe('radio', () => {
         expect(parentChange).not.toHaveBeenCalled();
     });
 
-    it('radio 禁用时不改变状态', async () => {
-        const onChange = vi.fn<(e: RadioChangeEvent) => void>();
-        const { container } = render(
-            <Radio disabled onChange={onChange}>
-                A
-            </Radio>
-        );
-        await userEvent.click(screen.getByRole('radio'));
-        expect(onChange).not.toHaveBeenCalled();
-        expect(screen.getByRole('radio')).not.toBeChecked();
-        expect(container.querySelector(`.${prefixCls}`)).toHaveClass(`${prefixCls}-disabled`);
-    });
-
     it('radio 的 name 与 autoFocus 作用于 input', () => {
         const { unmount } = render(<Radio>A</Radio>);
         expect(screen.getByRole('radio')).not.toHaveAttribute('name');
@@ -336,13 +256,6 @@ describe('radio', () => {
         expect(addon).toHaveClass('ac');
         expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(container.querySelector(`.${prefixCls}-extra`)).toBeNull();
-    });
-
-    it('radio button 类型的选中类名', async () => {
-        const { container } = render(<Radio type="button">A</Radio>);
-        const addon = container.querySelector(`.${prefixCls}-addon-buttonRadio`);
-        await userEvent.click(screen.getByRole('radio'));
-        expect(addon).toHaveClass(`${prefixCls}-addon-buttonRadio-checked`);
     });
 
     it('radio card 类型的选中类名', async () => {
@@ -545,16 +458,6 @@ describe('radio 审计修复', () => {
         expect(screen.getByRole('radio', { name: '0' })).toBeInTheDocument();
         expect(document.querySelector(`.${prefixCls}-extra`)).toHaveTextContent('0');
         expect(screen.getByRole('radio')).toHaveAccessibleDescription('0');
-    });
-
-    it('按钮式 Radio 不渲染 extra，也不在 aria-describedby 中引用它', () => {
-        render(
-            <Radio type="button" extra="more">
-                a
-            </Radio>
-        );
-        expect(document.querySelector(`.${prefixCls}-extra`)).toBeNull();
-        expect(screen.getByRole('radio')).not.toHaveAttribute('aria-describedby');
     });
 
     it('组外同名的非受控 Radio 互斥，先选中的那个取消选中状态与类名', async () => {

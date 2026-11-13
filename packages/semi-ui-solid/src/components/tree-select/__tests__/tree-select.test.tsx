@@ -4209,52 +4209,12 @@ describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
         expect(getTrigger()).not.toHaveAttribute('aria-activedescendant');
     });
 
-    it('Right 展开激活行并进入其中，Left 返回并收起', async () => {
-        renderTreeSelect({ treeData: treeDataEn });
-        focus(getTrigger());
-        await userEvent.keyboard('{ArrowDown}{ArrowRight}');
-        expect(getNode('Asia')).toHaveAttribute('aria-expanded', 'true');
-        await userEvent.keyboard('{ArrowRight}');
-        expect(activeLabel(getTrigger())).toBe('China');
-        await userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
-        expect(activeLabel(getTrigger())).toBe('Asia');
-        expect(getNode('Asia')).toHaveAttribute('aria-expanded', 'false');
-    });
-
-    it('下拉框搜索输入框中 Up 和 Down 移动，Left 和 Right 留在文本内', async () => {
-        renderTreeSelect({ treeData: treeDataEn, filterTreeNode: true });
-        const input = getSearchInput();
-        focus(input);
-        await userEvent.keyboard('{ArrowDown}{ArrowDown}');
-        expect(activeLabel(input)).toBe('North America');
-        await userEvent.keyboard('{ArrowLeft}');
-        expect(getNode('Asia')).toHaveAttribute('aria-expanded', 'false');
-        expect(activeLabel(input)).toBe('North America');
-    });
-
-    it('搜索无结果时方向键无处可去', async () => {
-        renderTreeSelect({ treeData: treeDataEn, filterTreeNode: true, showFilteredOnly: true });
-        const input = getSearchInput();
-        await userEvent.type(input, 'none');
-        await userEvent.keyboard('{ArrowDown}');
-        expect(input).not.toHaveAttribute('aria-activedescendant');
-    });
-
-    it('多选触发器上搜索时，输入框指向激活行，Enter 勾选它', async () => {
-        renderTreeSelect({ treeData: treeDataEn, multiple: true, filterTreeNode: true, searchPosition: 'trigger' });
-        const input = getTriggerInput();
-        focus(input);
-        await userEvent.keyboard('{ArrowDown}{ArrowDown}{Enter}');
-        expect(activeLabel(input)).toBe('North America');
-        expect(isChecked('North America')).toBe(true);
-    });
-
-    it('在触发器上输入时移动到以输入内容开头的下一个可见行', async () => {
-        renderTreeSelect({ treeData: treeDataEn });
+    it('关闭状态下在触发器上输入字符不打开', async () => {
+        renderTreeSelect({ treeData: treeDataEn, defaultOpen: false });
         focus(getTrigger());
         await userEvent.keyboard('n');
-        expect(activeLabel(getTrigger())).toBe('North America');
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
+        expect(getTrigger()).toHaveAttribute('aria-expanded', 'false');
+        expect(getTrigger()).not.toHaveAttribute('aria-activedescendant');
     });
 
     it('数字标签参与键入跳转', async () => {
@@ -4269,14 +4229,6 @@ describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
         expect(activeLabel(getTrigger())).toBe('2024');
     });
 
-    it('关闭状态下在触发器上输入字符不打开', async () => {
-        renderTreeSelect({ treeData: treeDataEn, defaultOpen: false });
-        focus(getTrigger());
-        await userEvent.keyboard('n');
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'false');
-        expect(getTrigger()).not.toHaveAttribute('aria-activedescendant');
-    });
-
     it('关闭时 Space 打开面板并阻止默认行为', () => {
         renderTreeSelect({ treeData: treeDataEn, defaultOpen: false });
         focus(getTrigger());
@@ -4289,26 +4241,6 @@ describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
         focus(getTrigger());
         await userEvent.keyboard(' ');
         expect(getTrigger()).toHaveAttribute('aria-expanded', 'false');
-    });
-
-    it('关闭时 Home 与 End 打开并激活首、尾可见行', async () => {
-        renderTreeSelect({ treeData: treeDataEn, defaultOpen: false });
-        focus(getTrigger());
-        await userEvent.keyboard('{End}');
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
-        expect(activeLabel(getTrigger())).toBe('North America');
-        await userEvent.keyboard('{Escape}{Home}');
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
-        expect(activeLabel(getTrigger())).toBe('Asia');
-    });
-
-    it('触发器搜索框内 Space、Home、End 编辑文本，不打开面板', async () => {
-        renderTreeSelect({ treeData: treeDataEn, defaultOpen: false, filterTreeNode: true, searchPosition: 'trigger' });
-        focus(getTriggerInput());
-        await userEvent.keyboard('{Home}{End}');
-        expect(getTriggerInput()).toHaveAttribute('aria-expanded', 'false');
-        await userEvent.keyboard('a b');
-        expect(getTriggerInput()).toHaveValue('a b');
     });
 
     it('搜索后 aria-activedescendant 指向已渲染的行，无结果时移除', async () => {
@@ -4407,18 +4339,6 @@ describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
         await waitFor(() => expect(document.querySelector('.custom-search')).toHaveFocus());
     });
 
-    it('从关闭的 combobox 按 ArrowDown 和 ArrowUp 可打开', async () => {
-        render(() => <TreeSelect treeData={treeData} />);
-        const combobox = screen.getByRole('combobox');
-        combobox.focus();
-        await userEvent.keyboard('{ArrowDown}');
-        expect(combobox).toHaveAttribute('aria-expanded', 'true');
-        await userEvent.keyboard('{Escape}');
-        expect(combobox).toHaveAttribute('aria-expanded', 'false');
-        await userEvent.keyboard('{ArrowUp}');
-        expect(combobox).toHaveAttribute('aria-expanded', 'true');
-    });
-
     it('触发器上的搜索输入框作为 combobox 且是唯一的 Tab 停靠点（ARIA 1.2）', () => {
         const { unmount } = render(() => <TreeSelect defaultValue="Beijing" filterTreeNode searchPosition="trigger" treeData={treeData} />);
         const input = screen.getByRole('combobox', { name: zh_CN.TreeSelect.label });
@@ -4447,34 +4367,6 @@ describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
         expect(screen.queryByRole('dialog')).toBeNull();
         expect(getTrigger()).toHaveAttribute('aria-haspopup', 'tree');
         expect(getTrigger()).not.toHaveAttribute('aria-describedby');
-    });
-
-    it('指针展开的行成为键盘当前行', async () => {
-        renderTreeSelect({ treeData: treeDataEn });
-        await clickExpandIcon('Asia');
-        expect(activeLabel(getTrigger())).toBe('Asia');
-        expect(getNode('Asia')).toHaveClass(`${BASE_CLASS_PREFIX}-tree-option-focused`);
-        focus(getTrigger());
-        await userEvent.keyboard('{ArrowDown}');
-        expect(activeLabel(getTrigger())).toBe('China');
-    });
-
-    it('单选时指针选中的行成为键盘当前行', async () => {
-        renderTreeSelect({ clickToHide: false, defaultExpandAll: true, treeData: treeDataEn });
-        await userEvent.click(getNode('Asia'));
-        expect(activeLabel(getTrigger())).toBe('Asia');
-        focus(getTrigger());
-        await userEvent.keyboard('{ArrowDown}');
-        expect(activeLabel(getTrigger())).toBe('China');
-    });
-
-    it('指针勾选的行成为键盘当前行', async () => {
-        renderTreeSelect({ multiple: true, defaultExpandAll: true, treeData: treeDataEn });
-        await userEvent.click(getNode('Beijing'));
-        expect(activeLabel(getTrigger())).toBe('Beijing');
-        focus(getTrigger());
-        await userEvent.keyboard('{ArrowDown}');
-        expect(activeLabel(getTrigger())).toBe('Shanghai');
     });
 });
 

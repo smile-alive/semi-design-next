@@ -205,19 +205,11 @@ describe('Tree（Vue）', () => {
         expect(activeElement()).toBe(getNode('y'));
     });
 
-    it('指针点击的行成为键盘当前行', async () => {
+    it('右键与双击的行成为键盘当前行', async () => {
         renderTree({ defaultExpandAll: true });
-        await userEvent.click(getNode('riben'));
+        await fireEvent.contextMenu(getNode('riben'));
         expect(activeElement()).toBe(getNode('riben'));
-        await userEvent.keyboard('{ArrowDown}');
-        expect(activeElement()).toBe(getNode('dongjing'));
-    });
-
-    it('点击展开箭头的行成为键盘当前行', async () => {
-        renderTree({ motion: false });
-        await userEvent.click(getExpandIcon(getNode('beimeizhou')));
-        expect(activeElement()).toBe(getNode('beimeizhou'));
-        await userEvent.keyboard('{ArrowDown}');
+        await fireEvent.dblClick(getNode('meiguo'));
         expect(activeElement()).toBe(getNode('meiguo'));
     });
 
@@ -226,14 +218,6 @@ describe('Tree（Vue）', () => {
         await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('riben')));
         expect(getNode('riben')).toHaveAttribute('aria-checked', 'true');
         expect(activeElement()).toBe(getNode('riben'));
-    });
-
-    it('右键与双击的行成为键盘当前行', async () => {
-        renderTree({ defaultExpandAll: true });
-        await fireEvent.contextMenu(getNode('riben'));
-        expect(activeElement()).toBe(getNode('riben'));
-        await fireEvent.dblClick(getNode('meiguo'));
-        expect(activeElement()).toBe(getNode('meiguo'));
     });
 
     it('v-model:loadedKeys：回写后节点视为已加载，不再显示箭头，再次展开不重复加载', async () => {

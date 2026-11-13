@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import ConfigProvider, { type ConfigProviderProps } from '@fibrae/semi-ui-react/config-provider';
+import { checkPattern } from '@test/utils/apg';
 import { isWebKit, tab } from '@test/utils/browser';
 import Slider, { type SliderProps } from '../index';
 const prefixCls = `${BASE_CLASS_PREFIX}-slider`;
@@ -322,5 +323,30 @@ describe('slider', () => {
         } = renderHorizontalSliders();
         await userEvent.hover(handle);
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-handle-tooltip`)).toMatchTextContent(/^0$/));
+    });
+
+    // Vertical keys differ from the APG on purpose (release-notes, Slider): the arrow toward max, Down by default, raises the value
+    it.each([
+        ['垂直', false, { increase: 'ArrowDown', decrease: 'ArrowUp' }],
+        ['垂直 verticalReverse', true, { increase: 'ArrowUp', decrease: 'ArrowDown' }],
+    ])('遵循 APG slider 模式（按登记的键位）：%s', async (_, verticalReverse, sliderKeys) => {
+        const { container } = render(
+            <div style={{ height: 200 }}>
+                <Slider aria-label="Volume" defaultValue={50} vertical verticalReverse={verticalReverse} />
+            </div>
+        );
+        await expect(checkPattern('slider', container, { press: (key) => userEvent.keyboard(key.length === 1 ? key : `{${key}}`), sliderKeys })).resolves.toBeUndefined();
+    });
+
+    it.each([
+        ['水平', { direction: 'ltr' as const }, {}],
+        ['水平 RTL', { direction: 'rtl' as const }, { direction: 'rtl' as const }],
+    ])('遵循 APG slider 模式：%s', async (_, providerProps, options) => {
+        const { container } = render(
+            <ConfigProvider {...providerProps}>
+                <Slider aria-label="Volume" defaultValue={50} />
+            </ConfigProvider>
+        );
+        await expect(checkPattern('slider', container, { press: (key) => userEvent.keyboard(key.length === 1 ? key : `{${key}}`), ...options })).resolves.toBeUndefined();
     });
 });

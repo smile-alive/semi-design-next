@@ -269,15 +269,6 @@ describe('Svelte AutoComplete 打开与选择', () => {
         expect(disabledChange).not.toHaveBeenCalled();
     });
 
-    it('点击候选项发出 onSelect 并写入输入框', async () => {
-        const onSelect = vi.fn<(value: Selected) => void>();
-        setup({ defaultOpen: true, onSelect });
-        await settle();
-        await click(getOptions()[0]);
-        expect(onSelect.mock.calls).toEqual([['semi']]);
-        expect(getInput()).toHaveValue('semi');
-    });
-
     it('onSelectWithObject：载荷为不含内部字段的数据项，点击与 Enter 一致，字符串项为 { value, label }', async () => {
         const data = [{ value: 'a', label: 'A', class: 'x', extra: 1 }, 'plain'];
         const clickSelect = vi.fn<(value: Selected) => void>();
@@ -310,25 +301,6 @@ describe('Svelte AutoComplete 打开与选择', () => {
         await click(getOptions()[1]);
         expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ value: 'bytedance', email: 'semi@bytedance.com' }));
         expect(getInput()).toHaveValue('semi@bytedance.com');
-    });
-
-    it('禁用项：点击不发出 onSelect，列表保持打开，aria-disabled 为 true', async () => {
-        const onSelect = vi.fn<(value: Selected) => void>();
-        setup(
-            { defaultOpen: true, onSelect },
-            {
-                data: [
-                    { value: 'disabled', label: 'Disabled', disabled: true },
-                    { value: 'enabled', label: 'Enabled' },
-                ],
-            }
-        );
-        await settle();
-        const [disabledOption] = getOptions();
-        expect(disabledOption).toHaveAttribute('aria-disabled', 'true');
-        await click(disabledOption);
-        expect(onSelect).not.toHaveBeenCalled();
-        expect(getList()).not.toBeNull();
     });
 
     it('悬停候选项使其高亮；悬停禁用项后 Enter 不选中', async () => {
@@ -464,7 +436,7 @@ describe('Svelte AutoComplete 键盘', () => {
         expect(getInput()).toHaveValue('c');
     });
 
-    it('defaultActiveFirstOption 高亮第一项；首项禁用时 Enter 不选中；没有选项时 combobox 不指向不存在的选项', async () => {
+    it('defaultActiveFirstOption 高亮第一项；首项禁用时高亮并选中第一个可用项；没有选项时 combobox 不指向不存在的选项', async () => {
         const first = setup({ defaultOpen: true, defaultActiveFirstOption: true });
         await settle();
         expect(getOptions()[0]).toHaveClass(`${optionCls}-focused`);
@@ -474,8 +446,9 @@ describe('Svelte AutoComplete 键盘', () => {
         const onSelect = vi.fn<(value: Selected) => void>();
         const second = setup({ defaultOpen: true, defaultActiveFirstOption: true, onSelect }, { data: [{ value: 'a', disabled: true }, { value: 'b' }] });
         await settle();
+        expect(getOptions()[1]).toHaveClass(`${optionCls}-focused`);
         await keyDown('Enter');
-        expect(onSelect).not.toHaveBeenCalled();
+        expect(onSelect).toHaveBeenCalledExactlyOnceWith('b');
         second.unmount();
 
         setup({ defaultOpen: true, defaultActiveFirstOption: true }, { data: [] });

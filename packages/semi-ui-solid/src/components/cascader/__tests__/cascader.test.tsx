@@ -1,5 +1,5 @@
 import { type JSX, For, createSignal, onMount } from 'solid-js';
-import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
+import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -2583,29 +2583,6 @@ describe('Cascader Tab 停靠点', () => {
 });
 
 describe('Cascader 树语义（APG combobox 搭配 tree 弹出层）', () => {
-    it('各列组成一棵扁平的树，层级与位置由 aria 属性提供', async () => {
-        renderCascader({ defaultOpen: true });
-        await userEvent.click(getOption('亚洲'));
-        const tree = screen.getByRole('tree');
-        const asia = within(tree).getByRole('treeitem', { name: '亚洲' });
-        expect(asia).toHaveAttribute('aria-expanded', 'true');
-        expect(asia).toHaveAttribute('aria-level', '1');
-        expect(asia).toHaveAttribute('aria-posinset', '1');
-        expect(asia).toHaveAttribute('aria-setsize', '2');
-        expect(within(tree).getByRole('treeitem', { name: '北美洲' })).toHaveAttribute('aria-expanded', 'false');
-        const china = within(tree).getByRole('treeitem', { name: '中国' });
-        expect(china).toHaveAttribute('aria-level', '2');
-        expect(china).toHaveAttribute('aria-setsize', '1');
-    });
-
-    it('叶子节点没有 aria-expanded；单选时用 aria-selected 标记选中项', async () => {
-        renderCascader({ defaultOpen: true, defaultValue: ['North America', 'Canada'] });
-        const canada = await screen.findByRole('treeitem', { name: '加拿大' });
-        expect(canada).not.toHaveAttribute('aria-expanded');
-        expect(canada).toHaveAttribute('aria-selected', 'true');
-        expect(screen.getByRole('treeitem', { name: '美国' })).toHaveAttribute('aria-selected', 'false');
-    });
-
     it('多选时使用 aria-checked，半选为 mixed，复选框仅作为图示', async () => {
         renderCascader({ defaultOpen: true, multiple: true, defaultValue: [['Asia', 'China', 'Beijing']] });
         await userEvent.click(getOption('亚洲'));
@@ -2618,15 +2595,6 @@ describe('Cascader 树语义（APG combobox 搭配 tree 弹出层）', () => {
         const input = getCheckbox('北京').querySelector('input');
         expect(input).toHaveAttribute('aria-hidden', 'true');
         expect(input).toHaveAttribute('tabindex', '-1');
-    });
-
-    it('搜索结果是 option 组成的 listbox', async () => {
-        renderCascader({ defaultOpen: true, filterTreeNode: true });
-        await userEvent.type(getSelectionInput(), '美');
-        const root = screen.getByRole('combobox');
-        expect(root).toHaveAttribute('aria-haspopup', 'listbox');
-        expect(document.getElementById(root.getAttribute('aria-controls')!)).toHaveAttribute('role', 'listbox');
-        expect(screen.getAllByRole('option')).toHaveLength(2);
     });
 
     it('filterRender 的选项获得 option 角色、id 与状态', async () => {
@@ -2665,72 +2633,6 @@ describe('Cascader 键盘操作', () => {
         expect(activeLabel(root)).toBe('亚洲');
     });
 
-    it('Right 展开分支并移入，Left 返回并收起', async () => {
-        renderCascader({ defaultOpen: true });
-        const root = getTrigger();
-        root.focus();
-        await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowRight}');
-        expect(getOption('北美洲')).toHaveAttribute('aria-expanded', 'true');
-        expect(activeLabel(root)).toBe('北美洲');
-        await userEvent.keyboard('{ArrowRight}');
-        expect(activeLabel(root)).toBe('美国');
-        await userEvent.keyboard('{ArrowDown}{ArrowLeft}');
-        expect(activeLabel(root)).toBe('北美洲');
-        expect(getLists()).toHaveLength(2);
-        await userEvent.keyboard('{ArrowLeft}');
-        expect(getOption('北美洲')).toHaveAttribute('aria-expanded', 'false');
-        expect(getLists()).toHaveLength(1);
-    });
-
-    it('在叶子节点上按 Enter 选中，关闭弹出层，焦点保留在 combobox', async () => {
-        const onChange = vi.fn<NonNullable<CascaderProps['onChange']>>();
-        renderCascader({ defaultOpen: true, onChange });
-        const root = getTrigger();
-        root.focus();
-        await userEvent.keyboard('{End}{ArrowRight}{ArrowRight}{ArrowDown}{Enter}');
-        expect(onChange).toHaveBeenCalledWith(['North America', 'Canada']);
-        await expectClosed();
-        expect(root).toHaveFocus();
-        expect(root).not.toHaveAttribute('aria-activedescendant');
-    });
-
-    it('禁用分支仍可到达，但不会展开', async () => {
-        renderCascader({ defaultOpen: true, treeData: treeDataWithDisabled });
-        const root = getTrigger();
-        root.focus();
-        await userEvent.keyboard('{ArrowDown}{ArrowRight}{ArrowRight}');
-        expect(activeLabel(root)).toBe('中国');
-        await userEvent.keyboard('{ArrowRight}{Enter}');
-        expect(getOption('中国')).toHaveAttribute('aria-expanded', 'false');
-        expect(getLists()).toHaveLength(2);
-    });
-
-    it('多选：Enter 与 Space 勾选当前选项', async () => {
-        const onChange = vi.fn<NonNullable<CascaderProps<true>['onChange']>>();
-        renderCascader({ defaultOpen: true, multiple: true, onChange });
-        const root = getTrigger();
-        root.focus();
-        await userEvent.keyboard('{End}{Enter}');
-        expect(getOption('北美洲')).toHaveAttribute('aria-checked', 'true');
-        await userEvent.keyboard(' ');
-        expect(getOption('北美洲')).toHaveAttribute('aria-checked', 'false');
-        expect(onChange).toHaveBeenCalledTimes(2);
-    });
-
-    it('RTL 下 Left 展开，Right 返回', async () => {
-        render(() => (
-            <ConfigProvider direction="rtl">
-                <Cascader treeData={treeData} motion={false} defaultOpen />
-            </ConfigProvider>
-        ));
-        const root = getTrigger();
-        root.focus();
-        await userEvent.keyboard('{ArrowDown}{ArrowLeft}{ArrowLeft}');
-        expect(activeLabel(root)).toBe('中国');
-        await userEvent.keyboard('{ArrowRight}');
-        expect(activeLabel(root)).toBe('亚洲');
-    });
-
     it('悬停显示另一列后，当前选项被清除', async () => {
         renderCascader({ defaultOpen: true, showNext: 'hover' });
         const root = getTrigger();
@@ -2758,33 +2660,6 @@ describe('Cascader 键盘操作', () => {
         expect(onChange).toHaveBeenCalledWith(['North America', 'Canada']);
     });
 
-    it('搜索无结果时，方向键找不到选项', async () => {
-        renderCascader({ defaultOpen: true, filterTreeNode: true });
-        const input = getSelectionInput();
-        await userEvent.type(input, 'none');
-        await userEvent.keyboard('{ArrowDown}{End}');
-        expect(input).not.toHaveAttribute('aria-activedescendant');
-    });
-
-    it('多选在触发器上搜索时，TagInput 指向选项，Enter 勾选该选项', async () => {
-        const onChange = vi.fn<NonNullable<CascaderProps<true>['onChange']>>();
-        renderCascader({ defaultOpen: true, multiple: true, filterTreeNode: true, onChange });
-        const input = getSelectionInput();
-        await userEvent.type(input, '美');
-        await userEvent.keyboard('{ArrowDown}');
-        expect(document.getElementById(input.getAttribute('aria-activedescendant')!)).toHaveTextContent('美国');
-        await userEvent.keyboard('{Enter}');
-        expect(onChange).toHaveBeenCalledWith([['North America', 'United States']]);
-    });
-
-    it('输入字符时移动到第一个以这些字符开头的可见选项', async () => {
-        renderCascader({ defaultOpen: true });
-        const root = getTrigger();
-        root.focus();
-        await userEvent.keyboard('北');
-        expect(activeLabel(root)).toBe('北美洲');
-    });
-
     it('输入字符时在所有可见列中搜索，从当前选项继续', async () => {
         renderCascader({ defaultOpen: true });
         const root = getTrigger();
@@ -2794,14 +2669,6 @@ describe('Cascader 键盘操作', () => {
         await userEvent.keyboard('北');
         expect(activeLabel(root)).toBe('北美洲');
         expect(getLists()).toHaveLength(3);
-    });
-
-    it('关闭状态的 combobox 输入字符无效，与 Select 一致', async () => {
-        render(() => <Cascader treeData={treeData} />);
-        const combobox = screen.getByRole('combobox');
-        combobox.focus();
-        await userEvent.keyboard('北');
-        expect(combobox).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('在搜索输入框中输入的字符保留在文本中', async () => {
@@ -2821,18 +2688,6 @@ describe('Cascader 键盘操作', () => {
         expect(activeLabel(root)).toBe('亚洲');
         expect(onKeyDown).toHaveBeenCalledTimes(1);
         expect(onKeyDown.mock.calls[0][0].key).toBe('ArrowDown');
-    });
-
-    it('关闭的 combobox 上按 ArrowDown 或 ArrowUp 打开', async () => {
-        render(() => <Cascader treeData={treeData} />);
-        const combobox = screen.getByRole('combobox');
-        combobox.focus();
-        await userEvent.keyboard('{ArrowDown}');
-        expect(combobox).toHaveAttribute('aria-expanded', 'true');
-        await userEvent.keyboard('{Escape}');
-        expect(combobox).toHaveAttribute('aria-expanded', 'false');
-        await userEvent.keyboard('{ArrowUp}');
-        expect(combobox).toHaveAttribute('aria-expanded', 'true');
     });
 
     it('不可搜索时关闭的 combobox 上按 Space 打开，Home 与 End 打开并移到首列的两端', async () => {

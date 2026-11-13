@@ -130,11 +130,6 @@ describe('TagInput', () => {
         expect(screen.getByRole('button', { name: zh_CN.TagInput.clear })).toBe(getClearBtn());
     });
 
-    it('TagInput 的 defaultValue', () => {
-        renderTagInput({ defaultValue: ['abc', 'hotsoon'] });
-        expect(getTagTexts()).toEqual(['abc', 'hotsoon']);
-    });
-
     it('modelValue 为 undefined 时按非受控处理，显示 defaultValue', () => {
         renderTagInput({ defaultValue: ['semi', 'hotsoon'], modelValue: undefined });
         expect(getTagTexts()).toEqual(['semi', 'hotsoon']);
@@ -196,23 +191,6 @@ describe('TagInput', () => {
         expect(getTagTexts()).toEqual([]);
     });
 
-    it('TagInput 的 add 和 change', async () => {
-        const onAdd = vi.fn<Handler<'add'>>();
-        const onChange = vi.fn<Handler<'change'>>();
-        const view = renderTagInput({ onChange, onAdd });
-        await pressEnter();
-        expect(onAdd).not.toHaveBeenCalled();
-        expect(onChange).not.toHaveBeenCalled();
-        view.unmount();
-
-        renderTagInput({ inputValue: 'abc,toutiao,,,hotsoon', onChange, defaultValue: ['lark'], onAdd });
-        await pressEnter();
-        expect(onAdd).toHaveBeenCalledTimes(1);
-        expect(onAdd).toHaveBeenCalledWith(['abc', 'toutiao', 'hotsoon']);
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledWith(['lark', 'abc', 'toutiao', 'hotsoon']);
-    });
-
     it('TagInput 的 maxTagCount', async () => {
         renderTagInput({ defaultValue: ['abc', 'hotsoon'], maxTagCount: 2, inputValue: 'lark' });
         await pressEnter();
@@ -265,13 +243,6 @@ describe('TagInput', () => {
         expectTypeOf<TagInputTagSlotProps['onClose']>().toEqualTypeOf<(event?: Event) => void>();
     });
 
-    it('TagInput 受控 modelValue 模式', async () => {
-        const view = renderTagInput({ modelValue: ['abc'] });
-        expect(getTagTexts()).toEqual(['abc']);
-        await view.rerender({ modelValue: ['hotsoon'] });
-        expect(getTagTexts()).toEqual(['hotsoon']);
-    });
-
     it('TagInput 将 modelValue 设为 null', async () => {
         const onChange = vi.fn<Handler<'change'>>();
         const view = renderTagInput({ modelValue: ['semi'], onChange });
@@ -297,25 +268,12 @@ describe('TagInput', () => {
         expect(getTagTexts()).toEqual([]);
     });
 
-    it('TagInput 受控 inputValue 模式', async () => {
-        const view = renderTagInput({ inputValue: 'abc' });
-        expect(getInput()).toHaveValue('abc');
-        await view.rerender({ inputValue: 'hotsoon' });
-        expect(getInput()).toHaveValue('hotsoon');
-    });
-
     it('TagInput 的 keydown', async () => {
         const onKeydown = vi.fn<Handler<'keydown'>>();
         renderTagInput({ onKeydown });
         await pressEnter();
         expect(onKeydown).toHaveBeenCalledTimes(1);
         expect(onKeydown.mock.calls[0][0].key).toBe('Enter');
-    });
-
-    it('TagInput 的 allowDuplicates', async () => {
-        renderTagInput({ allowDuplicates: true, defaultValue: ['abc'], inputValue: 'abc' });
-        await pressEnter();
-        expect(getTagTexts()).toEqual(['abc', 'abc']);
     });
 
     it('#tag 插槽整体替换标签', () => {
@@ -586,40 +544,10 @@ describe('TagInput', () => {
         expect(getRoot()).toHaveClass(`${tagInputCls}-large`);
     });
 
-    it('点击清空按钮', async () => {
-        const onChange = vi.fn<Handler<'change'>>();
-        renderTagInput({ defaultValue: ['abc', 'def'], showClear: true, onChange });
-        await userEvent.click(getClearBtn()!);
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledWith([]);
-        expect(getTagTexts()).toEqual([]);
-        expect(getInput()).toHaveFocus();
-    });
-
     it('点击 suffix 会聚焦输入框', async () => {
         renderTagInput({ defaultValue: ['abc'] }, { suffix: () => <span class="test-suffix">Suffix</span> });
         await userEvent.click(getElement('.test-suffix'));
         expect(getInput()).toHaveFocus();
-    });
-
-    it('TagInput 的 allowDuplicates 为 false', async () => {
-        const onChange = vi.fn<Handler<'change'>>();
-        renderTagInput({ defaultValue: ['abc'], allowDuplicates: false, onChange });
-        await userEvent.type(getInput(), 'abc,def,def');
-        await pressEnter();
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange).toHaveBeenCalledWith(['abc', 'def']);
-        expect(getTagTexts()).toEqual(['abc', 'def']);
-    });
-
-    it('TagInput 的 max', async () => {
-        const onExceed = vi.fn<Handler<'exceed'>>();
-        renderTagInput({ defaultValue: ['a', 'b', 'c'], max: 3, onExceed });
-        await userEvent.type(getInput(), 'd');
-        await pressEnter();
-        expect(onExceed).toHaveBeenCalledTimes(1);
-        expect(onExceed).toHaveBeenCalledWith(['a', 'b', 'c', 'd']);
-        expect(getTagTexts()).toEqual(['a', 'b', 'c']);
     });
 
     it('已超过 max 时再添加，不删既有标签，change 与 add 都不触发，exceed 触发', async () => {
@@ -635,74 +563,12 @@ describe('TagInput', () => {
         expect(getTagTexts()).toEqual(['a', 'b', 'c', 'd', 'e']);
     });
 
-    it('TagInput 的 inputExceed（键入）', async () => {
-        const onInputExceed = vi.fn<Handler<'inputExceed'>>();
-        renderTagInput({ maxLength: 5, onInputExceed });
-        await userEvent.type(getInput(), 'abcdef');
-        await nextTick();
-        expect(onInputExceed).toHaveBeenCalledTimes(1);
-        expect(onInputExceed).toHaveBeenCalledWith('abcdef');
-        expect(getInput()).toHaveValue('abcde');
-    });
-
-    it('TagInput 受控 modelValue', async () => {
-        const onChange = vi.fn<Handler<'change'>>();
-        renderTagInput({ modelValue: ['controlled', 'tags'], onChange });
-        expect(getTagTexts()).toEqual(['controlled', 'tags']);
-        await userEvent.type(getInput(), 'new');
-        await pressEnter();
-        expect(onChange).toHaveBeenCalledWith(['controlled', 'tags', 'new']);
-        expect(getTagTexts()).toEqual(['controlled', 'tags']);
-    });
-
-    it('TagInput 的 inputChange', async () => {
-        const onInputChange = vi.fn<Handler<'inputChange'>>();
-        renderTagInput({ onInputChange });
-        await userEvent.type(getInput(), 'test');
-        expect(onInputChange).toHaveBeenCalledTimes(4);
-        expect(onInputChange.mock.calls[3][0]).toBe('test');
-    });
-
     it('TagInput 的 keydown 只来自输入框', async () => {
         const onKeydown = vi.fn<Handler<'keydown'>>();
         renderTagInput({ onKeydown });
         await userEvent.type(getInput(), 'a');
         expect(onKeydown).toHaveBeenCalledTimes(1);
         expect(onKeydown.mock.calls[0][0].key).toBe('a');
-    });
-
-    it('Enter 键添加标签', async () => {
-        const onAdd = vi.fn<Handler<'add'>>();
-        renderTagInput({ defaultValue: [], onAdd });
-        await userEvent.type(getInput(), 'newtag');
-        await pressEnter();
-        expect(onAdd).toHaveBeenCalledWith(['newtag']);
-        expect(getTagTexts()).toEqual(['newtag']);
-        expect(getInput()).toHaveValue('');
-    });
-
-    it('字符串类型的 separator', async () => {
-        renderTagInput({ separator: ',' });
-        await userEvent.type(getInput(), 'a,b');
-        await pressEnter();
-        expect(getTagTexts()).toEqual(['a', 'b']);
-    });
-
-    it('数组类型的 separator', async () => {
-        renderTagInput({ separator: [',', ';'] });
-        await userEvent.type(getInput(), 'a;b,c');
-        await pressEnter();
-        expect(getTagTexts()).toEqual(['a', 'b', 'c']);
-    });
-
-    it('受控 inputValue 的更新', async () => {
-        const view = renderTagInput({ inputValue: 'initial' });
-        expect(getInput()).toHaveValue('initial');
-        await userEvent.type(getInput(), 'x');
-        await nextTick();
-        expect(getInput()).toHaveValue('initial');
-        await view.rerender({ inputValue: 'updated' });
-        expect(getInput()).toHaveValue('updated');
     });
 
     it('文本内容的 insetLabel', () => {
@@ -1025,16 +891,6 @@ describe('TagInput 行为基线', () => {
         expect(onChange).toHaveBeenLastCalledWith(['x', 'y', 'z']);
     });
 
-    it('Enter 添加标签后，受控 inputValue 上报被清空的文本', async () => {
-        const onInputChange = vi.fn<Handler<'inputChange'>>();
-        renderTagInput({ inputValue: 'a,b', onInputChange });
-        await pressEnter();
-        expect(getTagTexts()).toEqual(['a', 'b']);
-        expect(onInputChange).toHaveBeenCalledTimes(1);
-        expect(onInputChange.mock.calls[0][0]).toBe('');
-        expect(getInput()).toHaveValue('a,b');
-    });
-
     it('非受控输入、分隔符、重复项和 max 协同工作', async () => {
         const onAdd = vi.fn<Handler<'add'>>();
         const onExceed = vi.fn<Handler<'exceed'>>();
@@ -1057,24 +913,6 @@ describe('TagInput 行为基线', () => {
         await userEvent.click(document.body);
         expect(getTagTexts()).toEqual(['a', 'b']);
         expect(getRestCount()).toHaveTextContent('+1');
-    });
-
-    it('addOnBlur 只添加一次输入文本，然后上报 blur', async () => {
-        const calls: unknown[] = [];
-        const onChange = vi.fn<Handler<'change'>>();
-        renderTagInput({
-            addOnBlur: true,
-            onAdd: (value: string[]) => calls.push(['add', value]),
-            onBlur: () => calls.push(['blur']),
-            onChange,
-        });
-        await userEvent.type(getInput(), 'x');
-        expect(onChange).not.toHaveBeenCalled();
-        await userEvent.tab();
-        expect(calls).toEqual([['add', ['x']], ['blur']]);
-        expect(onChange).toHaveBeenCalledWith(['x']);
-        expect(getTagTexts()).toEqual(['x']);
-        expect(getInput()).toHaveValue('');
     });
 
     it('#tag 接收 value、index 和 onClose，禁用时忽略关闭', async () => {

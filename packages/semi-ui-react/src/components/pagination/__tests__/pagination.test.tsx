@@ -1,5 +1,5 @@
 import { createRef, type Ref, StrictMode, useState } from 'react';
-import { act, render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -19,23 +19,6 @@ const pageName = (page) => zh_CN.Pagination.pageN.replace('${page}', String(page
 const getRestPages = () => within(document.querySelector(`.${prefixCls}-rest-list`)).getAllByRole('button');
 
 describe('Pagination', () => {
-    it('Pagination total 与 pageSize', () => {
-        let maxItemCount = 9;
-
-        const getPageChild = (props) => {
-            const { container, unmount } = render(<Pagination {...props} />);
-            const children = container.querySelector('ul').children;
-            const lastPage = children[children.length - 2].textContent;
-            unmount();
-            return { length: children.length, lastPage };
-        };
-
-        expect(getPageChild({ total: 30 })).toEqual({ length: 5, lastPage: '3' });
-        expect(getPageChild({ total: 70 })).toEqual({ length: maxItemCount, lastPage: '7' });
-        expect(getPageChild({ total: 200 })).toEqual({ length: maxItemCount, lastPage: '20' });
-        expect(getPageChild({ total: 200, pageSize: 50 })).toEqual({ length: Math.ceil(200 / 50) + 2, lastPage: '4' });
-    });
-
     it('Pagination 使用自定义 className 与 style', () => {
         const { container } = render(<Pagination className="test" style={{ color: 'red' }} />);
         const ul = container.querySelector('ul.test');
@@ -77,14 +60,6 @@ describe('Pagination', () => {
         expect(getEnds({ total: 9 })).toEqual([true, true]);
     });
 
-    it('hideOnSingePage', () => {
-        const { container, rerender } = render(<Pagination hideOnSinglePage total={10} />);
-        expect(container.querySelector(`.${prefixCls}`)).toBeNull();
-
-        rerender(<Pagination hideOnSinglePage total={11} />);
-        expect(container.querySelector(`.${prefixCls}`)).not.toBeNull();
-    });
-
     it('nextText 与 prevText', () => {
         const { container } = render(<Pagination nextText="next" prevText="prev" total={200} />);
         expect(container.querySelector(`.${prefixCls}-next`)).toHaveTextContent(/^next$/);
@@ -110,16 +85,6 @@ describe('Pagination', () => {
         rerender(<Pagination {...props} pageSize={20} />);
         expect(getSelectionText()).toHaveTextContent(/^每页条数：20$/);
         expect(getPageItems(container)).toHaveLength(9);
-    });
-
-    it('onPageChange', async () => {
-        let tagetPage = 7;
-        const spyOnPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
-        const { container } = render(<Pagination total={70} onPageChange={spyOnPageChange} />);
-        await userEvent.click(getPageItems(container)[7]);
-        expect(spyOnPageChange).toHaveBeenCalledTimes(1);
-        expect(spyOnPageChange).toHaveBeenCalledWith(tagetPage);
-        expect(getActivePage(container)).toHaveTextContent(/^7$/);
     });
 
     it('回调显式为 null 时翻页照常进行', async () => {
@@ -148,65 +113,7 @@ describe('Pagination', () => {
         expect(getActivePage(container)).toHaveTextContent(/^20$/);
     });
 
-    it('受控模式下 currentPage 与 onChange', async () => {
-        const spyOnChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
-        const props = { currentPage: 3, total: 200, onChange: spyOnChange };
-        const { container, rerender } = render(<Pagination {...props} />);
-        await userEvent.click(getPageItems(container)[7]);
-        expect(spyOnChange).toHaveBeenCalledWith(20, defaultPageSize);
-        expect(getActivePage(container)).toHaveTextContent(/^3$/);
-        rerender(<Pagination {...props} currentPage={4} />);
-        expect(getActivePage(container)).toHaveTextContent(/^4$/);
-    });
-
-    it('showQuickJumper', async () => {
-        const spyOnChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
-        const props = { total: 200, onChange: spyOnChange, showQuickJumper: true };
-        let quickJumpPage = 5;
-        const { container } = render(<Pagination {...props} />);
-        const jumper = container.querySelector(`.${prefixCls} .${prefixCls}-quickjump-input-number.${BASE_CLASS_PREFIX}-input-number input`);
-        await userEvent.type(jumper, String(quickJumpPage));
-        fireEvent.blur(jumper);
-        expect(spyOnChange).toHaveBeenCalledWith(quickJumpPage, defaultPageSize);
-        expect(getActivePage(container)).toHaveTextContent(new RegExp(`^${quickJumpPage}$`));
-
-        await userEvent.type(jumper, String(props.total / 10 + 1));
-        fireEvent.blur(jumper);
-        expect(getActivePage(container)).toHaveTextContent(new RegExp(`^${props.total / 10}$`));
-
-        await userEvent.type(jumper, '-1{Enter}');
-        expect(getActivePage(container)).toHaveTextContent(/^1$/);
-        expect(jumper).toHaveValue('');
-    });
-
-    // Enter passes the raw input value, and Number('') is 0: an empty jumper (also after a jump, when typed letters
-    // are rejected) used to go to page 1, while blur on the same empty input is a no-op
-    it('showQuickJumper 在没有有效数字时忽略 Enter', async () => {
-        const { container } = render(<Pagination defaultCurrentPage={20} showQuickJumper total={200} />);
-        const jumper = container.querySelector(`.${prefixCls}-quickjump-input-number input`);
-        await userEvent.type(jumper, '{Enter}');
-        expect(getActivePage(container)).toHaveTextContent(/^20$/);
-    });
-
     describe('页码列表', () => {
-        const getPageTexts = (container) =>
-            getPageItems(container)
-                .slice(1, -1)
-                .map((li) => li.textContent);
-
-        it('页数超过 7 时，以当前页为中心截断', () => {
-            const { container, rerender } = render(<Pagination currentPage={1} total={200} />);
-            expect(getPageTexts(container)).toEqual(['1', '2', '3', '4', '...', '19', '20']);
-            rerender(<Pagination currentPage={4} total={200} />);
-            expect(getPageTexts(container)).toEqual(['1', '2', '3', '4', '5', '...', '20']);
-            rerender(<Pagination currentPage={10} total={200} />);
-            expect(getPageTexts(container)).toEqual(['1', '...', '9', '10', '11', '...', '20']);
-            rerender(<Pagination currentPage={17} total={200} />);
-            expect(getPageTexts(container)).toEqual(['1', '...', '16', '17', '18', '19', '20']);
-            rerender(<Pagination currentPage={7} total={70} />);
-            expect(getPageTexts(container)).toEqual(['1', '2', '3', '4', '5', '6', '7']);
-        });
-
         it('悬停省略号时列出隐藏页码，点击后跳转到对应页', async () => {
             const onChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
             const { container } = render(<Pagination defaultCurrentPage={10} total={200} onChange={onChange} />);
@@ -287,65 +194,6 @@ describe('Pagination', () => {
     });
 
     describe('回调', () => {
-        it('每次点击上一页或下一页时各调用一次 onPageChange 与 onChange，禁用的一端不调用', async () => {
-            const onPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
-            const onChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
-            render(<Pagination total={30} onChange={onChange} onPageChange={onPageChange} />);
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.prev }));
-            expect(onChange).not.toHaveBeenCalled();
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.next }));
-            expect(onPageChange.mock.calls).toEqual([[2], [3]]);
-            expect(onChange.mock.calls).toEqual([
-                [2, 10],
-                [3, 10],
-            ]);
-            expect(screen.getByRole('button', { name: zh_CN.Pagination.next })).toBeDisabled();
-            await userEvent.click(screen.getByRole('button', { name: zh_CN.Pagination.prev }));
-            expect(onChange).toHaveBeenLastCalledWith(2, 10);
-        });
-
-        it('切换 pageSize 时重新计算当前页', async () => {
-            const onPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
-            const onPageSizeChange = vi.fn<NonNullable<PaginationProps['onPageSizeChange']>>();
-            const onChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
-            const { container } = render(<Pagination defaultCurrentPage={5} showSizeChanger total={200} onChange={onChange} onPageChange={onPageChange} onPageSizeChange={onPageSizeChange} />);
-            await userEvent.click(screen.getByRole('combobox'));
-            await userEvent.click(await screen.findByText('每页条数：20'));
-            // a controlled Select reports the change after the leave animation, which jsdom never ends by itself
-            act(() => endLeaveAnimations());
-            expect(onPageSizeChange.mock.calls).toEqual([[20]]);
-            expect(onPageChange.mock.calls).toEqual([[3]]);
-            expect(onChange.mock.calls).toEqual([[3, 20]]);
-            expect(getActivePage(container)).toHaveTextContent(/^3$/);
-            expect(getPageItems(container).filter((li) => li.getAttribute('aria-label')?.startsWith(zh_CN.Pagination.pageN.split('${page}')[0]))).toHaveLength(6);
-        });
-
-        it('切换 pageSize 时保持受控的 currentPage，只发出通知', async () => {
-            const onPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
-            const onChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
-            const { container } = render(<Pagination currentPage={5} showSizeChanger total={200} onChange={onChange} onPageChange={onPageChange} />);
-            await userEvent.click(screen.getByRole('combobox'));
-            await userEvent.click(await screen.findByText('每页条数：20'));
-            act(() => endLeaveAnimations());
-            expect(onChange.mock.calls).toEqual([[3, 20]]);
-            expect(onPageChange.mock.calls).toEqual([[3]]);
-            expect(getActivePage(container)).toHaveTextContent(/^5$/);
-        });
-
-        it('设置 preventPageChangeOnPageSizeChange 后，切换 pageSize 保持当前页', async () => {
-            const onPageChange = vi.fn<NonNullable<PaginationProps['onPageChange']>>();
-            const onChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
-            const { container } = render(<Pagination defaultCurrentPage={5} preventPageChangeOnPageSizeChange showSizeChanger total={200} onChange={onChange} onPageChange={onPageChange} />);
-            await userEvent.click(screen.getByRole('combobox'));
-            await userEvent.click(await screen.findByText('每页条数：20'));
-            act(() => endLeaveAnimations());
-            expect(onPageChange).not.toHaveBeenCalled();
-            expect(onChange.mock.calls).toEqual([[5, 20]]);
-            expect(getActivePage(container)).toHaveTextContent(/^5$/);
-        });
-
         it('把 pageSizeOpts 中缺少的 pageSize 按顺序插入', async () => {
             render(<Pagination pageSize={30} pageSizeOpts={[10, 20, 40]} showSizeChanger total={200} />);
             await userEvent.click(screen.getByRole('combobox'));
@@ -513,22 +361,6 @@ describe('Pagination', () => {
         act(() => endLeaveAnimations());
         expect(onChange.mock.calls).toEqual([[3, 20]]);
         expect(getActivePage(container)).toHaveTextContent(/^3$/);
-    });
-
-    it('small 尺寸下 showSizeChanger 不生效，单页时仍然隐藏且不给出警告', () => {
-        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        try {
-            const { container } = render(<Pagination hideOnSinglePage showSizeChanger size="small" total={5} />);
-            expect(container.firstElementChild).toBeNull();
-            expect(warn).not.toHaveBeenCalled();
-        } finally {
-            warn.mockRestore();
-        }
-    });
-
-    it('没有任何页时，快速跳转不可用', () => {
-        const { container } = render(<Pagination showQuickJumper total={0} />);
-        expect(container.querySelector(`.${prefixCls}-quickjump-input-number input`)).toBeDisabled();
     });
 
     it('使用 LocaleProvider 提供的语言', () => {

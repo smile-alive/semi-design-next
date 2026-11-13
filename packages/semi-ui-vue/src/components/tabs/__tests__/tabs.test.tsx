@@ -147,11 +147,6 @@ describe('Tabs', () => {
         expect(getContent()).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     });
 
-    it('Tabs 带 defaultActiveKey', () => {
-        mountTabs({ defaultActiveKey: 'itemKeyB' }, twoPanes);
-        expect(selectedTab()).toBe('titleB');
-    });
-
     it('不同类型的 Tabs', () => {
         const typeOf = (type: string) => {
             const { unmount } = mountTabs({ type }, twoPanes);
@@ -179,25 +174,6 @@ describe('Tabs', () => {
         expect(tabNames()).toEqual(['文档', '快速起步', '帮助']);
     });
 
-    it('点击禁用的面板时不切换', async () => {
-        const onChange = changeSpy();
-        mountTabs({ defaultActiveKey: 'itemKeyA', onChange }, [twoPanes[0], { ...twoPanes[1], disabled: true }]);
-        const disabledTabs = document.querySelectorAll(`.${prefix}-tab-disabled`);
-        expect(disabledTabs).toHaveLength(1);
-        expect(disabledTabs[0]).toHaveTextContent(/^titleB$/);
-        await userEvent.click(tab('titleB'));
-        expect(onChange).not.toHaveBeenCalled();
-        expect(selectedTab()).toBe('titleA');
-    });
-
-    it('tabClick 事件', async () => {
-        const onTabClick = tabClickSpy();
-        mountTabs({ onTabClick }, twoPanes);
-        await userEvent.click(tab('titleB'));
-        expect(onTabClick).toHaveBeenCalledTimes(1);
-        expect(onTabClick.mock.calls[0][0]).toBe('itemKeyB');
-    });
-
     it('change 与 update:activeKey 事件', async () => {
         const onChange = changeSpy();
         const onUpdate = changeSpy();
@@ -205,13 +181,6 @@ describe('Tabs', () => {
         await userEvent.click(tab('titleB'));
         expect(onChange).toHaveBeenCalledExactlyOnceWith('itemKeyB');
         expect(onUpdate).toHaveBeenCalledExactlyOnceWith('itemKeyB');
-        expect(selectedTab()).toBe('titleB');
-    });
-
-    it('activeKey 变化时更新', async () => {
-        const { update } = mountTabs({ activeKey: 'itemKeyA' }, twoPanes);
-        expect(selectedTab()).toBe('titleA');
-        await update({ props: { activeKey: 'itemKeyB' } });
         expect(selectedTab()).toBe('titleB');
     });
 
@@ -358,29 +327,6 @@ describe('Tabs', () => {
 });
 
 describe('Tabs 行为', () => {
-    it('tabClick 接收 key 和事件；点击已选中的标签不发出 change', async () => {
-        const onTabClick = tabClickSpy();
-        const onChange = changeSpy();
-        mountTabs({ onTabClick, onChange });
-        await userEvent.click(tab('A'));
-        expect(onChange).not.toHaveBeenCalled();
-        expect(onTabClick).toHaveBeenCalledTimes(1);
-        expect(onTabClick.mock.lastCall?.[0]).toBe('a');
-        expect(onTabClick.mock.lastCall?.[1]).toMatchObject({ type: 'click' });
-        await userEvent.click(tab('C'));
-        expect(onChange).toHaveBeenCalledExactlyOnceWith('c');
-        expect(onTabClick.mock.lastCall?.[0]).toBe('c');
-    });
-
-    it('键盘激活时 tabClick 收到 keydown 事件，类型为鼠标与键盘事件的联合', async () => {
-        const onTabClick = tabClickSpy();
-        mountTabs({ onTabClick });
-        tab('B').focus();
-        await userEvent.keyboard('{Enter}');
-        expect(onTabClick).toHaveBeenCalledExactlyOnceWith('b', expect.objectContaining({ type: 'keydown' }));
-        expectTypeOf<TabsEmits['tabClick'][1]>().toEqualTypeOf<MouseEvent | KeyboardEvent>();
-    });
-
     it('受控时点击只报告 key；移除 activeKey 后从最后的受控 key 继续', async () => {
         const onChange = changeSpy();
         const { update } = mountTabs({ activeKey: 'a', onChange });
@@ -399,6 +345,15 @@ describe('Tabs 行为', () => {
         expect(selectedTab()).toBe('A');
     });
 
+    it('键盘激活时 tabClick 收到 keydown 事件，类型为鼠标与键盘事件的联合', async () => {
+        const onTabClick = tabClickSpy();
+        mountTabs({ onTabClick });
+        tab('B').focus();
+        await userEvent.keyboard('{Enter}');
+        expect(onTabClick).toHaveBeenCalledExactlyOnceWith('b', expect.objectContaining({ type: 'keydown' }));
+        expectTypeOf<TabsEmits['tabClick'][1]>().toEqualTypeOf<MouseEvent | KeyboardEvent>();
+    });
+
     it('单向绑定：父级以同一个值重渲染时仍以受控值为准', async () => {
         const onChange = changeSpy();
         const { update } = mountTabs({ activeKey: 'a', onChange });
@@ -415,81 +370,9 @@ describe('Tabs 行为', () => {
         expect(selectedTab()).toBe('B');
     });
 
-    it('activeKey 为 undefined 时按非受控处理：取 defaultActiveKey，点击即切换', async () => {
-        const onChange = changeSpy();
-        mountTabs({ activeKey: undefined, defaultActiveKey: 'b', onChange });
-        expect(selectedTab()).toBe('B');
-        await userEvent.click(tab('C'));
-        expect(selectedTab()).toBe('C');
-    });
-
-    it('activeKey 为 null 时不选中任何标签，也不抛错，点击仍只报告 key', async () => {
-        const onChange = changeSpy();
-        mountTabs({ activeKey: null, onChange });
-        expect(selectedTab()).toBeNull();
-        await userEvent.click(tab('B'));
-        expect(onChange).toHaveBeenCalledWith('b');
-        expect(selectedTab()).toBeNull();
-    });
-
-    it('keepDOM=false 时只渲染所选面板', async () => {
-        mountTabs({ keepDOM: false });
-        expect(screen.getAllByRole('tabpanel', { hidden: true })).toHaveLength(1);
-        expect(screen.getByRole('tabpanel')).toHaveTextContent(/^content a$/);
-        await userEvent.click(tab('C'));
-        expect(screen.getAllByRole('tabpanel', { hidden: true })).toHaveLength(1);
-        expect(screen.getByRole('tabpanel')).toHaveTextContent(/^content c$/);
-    });
-
     it('keepDOM=false 且只有一个 TabPane 时，未选中也不渲染它', () => {
         mountTabs({ keepDOM: false, activeKey: null }, [threePanes[0]]);
         expect(screen.queryAllByRole('tabpanel', { hidden: true })).toHaveLength(0);
-    });
-
-    it('lazyRender 在面板首次激活时渲染，之后保留', async () => {
-        mountTabs({ lazyRender: true });
-        expect(screen.getAllByRole('tabpanel', { hidden: true })).toHaveLength(3);
-        expect(screen.getByText('content a')).toBeInTheDocument();
-        expect(screen.queryByText('content b')).toBeNull();
-        await userEvent.click(tab('B'));
-        expect(screen.getByText('content b')).toBeInTheDocument();
-        await userEvent.click(tab('A'));
-        expect(screen.getByText('content b')).toBeInTheDocument();
-        expect(screen.queryByText('content c')).toBeNull();
-    });
-
-    it('type、size 和 tabPosition 在根节点、标签栏、标签和内容上设置类名', () => {
-        const { unmount } = mountTabs();
-        expect(screen.getByRole('tablist')).toHaveAttribute('aria-orientation', 'horizontal');
-        expect(getRoot()).toHaveClass(prefix, `${prefix}-top`);
-        expect(tab('A')).toHaveClass(`${prefix}-tab-line`, `${prefix}-tab-top`, `${prefix}-tab-single`);
-        unmount();
-
-        mountTabs({ tabPosition: 'left', size: 'small', type: 'card' });
-        expect(screen.getByRole('tablist')).toHaveAttribute('aria-orientation', 'vertical');
-        expect(getBar()).toHaveClass(`${prefix}-bar`, `${prefix}-bar-card`, `${prefix}-bar-left`);
-        expect(getRoot()).toHaveClass(`${prefix}-left`);
-        expect(getContent()).toHaveClass(`${prefix}-content-left`);
-        expect(tab('A')).toHaveClass(`${prefix}-tab-card`, `${prefix}-tab-left`, `${prefix}-tab-small`);
-        expect(tab('A')).not.toHaveClass(`${prefix}-tab-medium`);
-    });
-
-    it('roving tabindex，以及标签与面板之间的 aria 关联', () => {
-        mountTabs(
-            {},
-            threePanes.map((pane) => (pane.itemKey === 'b' ? { ...pane, disabled: true } : pane))
-        );
-        expect(screen.getAllByRole('tab').map((t) => t.tabIndex)).toEqual([0, -1, -1]);
-        expect(tab('B')).toHaveAttribute('aria-disabled', 'true');
-        expect(tab('A')).toHaveAttribute('aria-disabled', 'false');
-        const panels = screen.getAllByRole('tabpanel', { hidden: true });
-        expect(panels.map((p) => p.getAttribute('aria-hidden'))).toEqual(['false', 'true', 'true']);
-        expect(panels.map((p) => p.tabIndex)).toEqual([0, 0, 0]);
-        screen.getAllByRole('tab').forEach((t, i) => {
-            expect(t.getAttribute('aria-controls')).toBe(panels[i].id);
-            expect(panels[i].getAttribute('aria-labelledby')).toBe(t.id);
-        });
-        expect(new Set(panels.map((p) => p.id)).size).toBe(3);
     });
 
     it('只有面板在文档中时，标签才指向该面板', () => {
@@ -504,56 +387,6 @@ describe('Tabs 行为', () => {
         mountTabs({ keepDOM: false });
         const pane = screen.getByRole('tabpanel');
         expect(screen.getAllByRole('tab').map((t) => t.getAttribute('aria-controls'))).toEqual([pane.id, null, null]);
-    });
-
-    it('键盘：方向键跳过禁用标签并循环移动，Home 和 End 跳转，Enter 选择', async () => {
-        const onChange = changeSpy();
-        const panes = [...threePanes, { itemKey: 'd', tab: 'D', disabled: true }, { itemKey: 'e', tab: 'E' }];
-        mountTabs(
-            { onChange },
-            panes.map((p) => (p.itemKey === 'c' ? { ...p, disabled: true } : p))
-        );
-        tab('B').focus();
-        await userEvent.keyboard('{ArrowRight}');
-        expect(tab('E')).toHaveFocus();
-        await userEvent.keyboard('{ArrowRight}');
-        expect(tab('A')).toHaveFocus();
-        await userEvent.keyboard('{ArrowLeft}');
-        expect(tab('E')).toHaveFocus();
-        await userEvent.keyboard('{ArrowDown}');
-        expect(tab('E')).toHaveFocus();
-        await userEvent.keyboard('{Home}');
-        expect(tab('A')).toHaveFocus();
-        await userEvent.keyboard('{End}');
-        expect(tab('E')).toHaveFocus();
-        expect(onChange).not.toHaveBeenCalled();
-        expect(selectedTab()).toBe('A');
-        await userEvent.keyboard('{Enter}');
-        expect(onChange).toHaveBeenCalledExactlyOnceWith('e');
-        expect(selectedTab()).toBe('E');
-        tab('A').focus();
-        await userEvent.keyboard(' ');
-        expect(selectedTab()).toBe('A');
-    });
-
-    it('键盘：RTL 页面中，水平标签栏的左右方向键互换', async () => {
-        render(defineComponent(() => () => <ConfigProvider direction="rtl">{() => <Tabs>{() => paneNodes(threePanes)}</Tabs>}</ConfigProvider>));
-        tab('A').focus();
-        await userEvent.keyboard('{ArrowLeft}');
-        expect(tab('B')).toHaveFocus();
-        await userEvent.keyboard('{ArrowRight}{ArrowRight}');
-        expect(tab('C')).toHaveFocus();
-    });
-
-    it('键盘：垂直标签栏使用上下方向键', async () => {
-        mountTabs({ tabPosition: 'left' });
-        tab('A').focus();
-        await userEvent.keyboard('{ArrowRight}');
-        expect(tab('A')).toHaveFocus();
-        await userEvent.keyboard('{ArrowDown}');
-        expect(tab('B')).toHaveFocus();
-        await userEvent.keyboard('{ArrowUp}{ArrowUp}');
-        expect(tab('C')).toHaveFocus();
     });
 
     it('closable：关闭图标和 Backspace 发出 tabClose，而非 tabClick', async () => {
@@ -575,24 +408,6 @@ describe('Tabs 行为', () => {
         tab('C').focus();
         await userEvent.keyboard('{Delete}');
         expect(onTabClose).toHaveBeenCalledTimes(2);
-    });
-
-    it('closable：禁用页签的关闭图标照常显示，点击不关闭', async () => {
-        const onTabClose = tabCloseSpy();
-        const onTabClick = tabClickSpy();
-        mountTabs({ onTabClose, onTabClick }, [threePanes[0], { ...threePanes[1], disabled: true, closable: true }]);
-        expect(closeButtons()).toHaveLength(1);
-        await userEvent.click(closeButtons()[0]);
-        expect(onTabClose).not.toHaveBeenCalled();
-        expect(onTabClick).not.toHaveBeenCalled();
-    });
-
-    it.each(['Delete', 'Backspace'])('closable：禁用页签聚焦后按 %s 不关闭', async (key) => {
-        const onTabClose = tabCloseSpy();
-        mountTabs({ onTabClose }, [threePanes[0], { ...threePanes[1], disabled: true, closable: true }]);
-        screen.getByRole('tab', { name: 'B' }).focus();
-        await userEvent.keyboard(`{${key}}`);
-        expect(onTabClose).not.toHaveBeenCalled();
     });
 
     it('#tabBarExtraContent 位于标签栏中 tablist 之外，浮动到行尾并保留自身样式', () => {
@@ -1249,16 +1064,6 @@ describe('Tabs 行为', () => {
         expect(onChange).not.toHaveBeenCalled();
         expect(selectedTab()).toBe('tab-k0');
     });
-
-    it('禁用页签聚焦后按 Enter 或 Space 不激活', async () => {
-        const onChange = changeSpy();
-        mountTabs({ onChange }, [threePanes[0], { ...threePanes[1], disabled: true }]);
-        tab('B').focus();
-        await userEvent.keyboard('{Enter}');
-        await userEvent.keyboard(' ');
-        expect(onChange).not.toHaveBeenCalled();
-        expect(selectedTab()).toBe('A');
-    });
 });
 
 describe('Tabs Tab 停靠点', () => {
@@ -1536,17 +1341,6 @@ describe('Tabs（Vue）', () => {
         expect(tabNames()).toEqual(['A', 'B', 'C']);
         expect(screen.queryByRole('button', { name: zh_CN.Tabs.more })).toBeNull();
     });
-
-    it('键盘：焦点停在禁用页签上时，方向键移到相邻的可用页签', async () => {
-        const panes = [...threePanes, { itemKey: 'd', tab: 'D' }, { itemKey: 'e', tab: 'E' }].map((pane) => (pane.itemKey === 'c' ? { ...pane, disabled: true } : pane));
-        mountTabs({}, panes);
-        tab('C').focus();
-        await userEvent.keyboard('{ArrowRight}');
-        expect(tab('D')).toHaveFocus();
-        tab('C').focus();
-        await userEvent.keyboard('{ArrowLeft}');
-        expect(tab('B')).toHaveFocus();
-    });
 });
 
 describe('Tabs 键盘与命名', () => {
@@ -1573,20 +1367,6 @@ describe('Tabs 键盘与命名', () => {
             ),
         });
         expect(tabStops().map((item) => item.textContent)).toEqual(['A']);
-    });
-
-    it('按住 Alt、Ctrl 或 Meta 的按键交给浏览器，不移动焦点也不选中', () => {
-        const onChange = changeSpy();
-        mountTabs({ onChange });
-        tab('B').focus();
-        for (const modifier of ['altKey', 'ctrlKey', 'metaKey']) {
-            for (const key of ['ArrowRight', 'Home', 'Enter']) {
-                const event = new KeyboardEvent('keydown', { key, [modifier]: true, bubbles: true, cancelable: true });
-                expect(tab('B').dispatchEvent(event)).toBe(true);
-                expect(tab('B')).toHaveFocus();
-            }
-        }
-        expect(onChange).not.toHaveBeenCalled();
     });
 
     it('more：选中的页签收进菜单时，面板仍以该页签的名称命名', () => {

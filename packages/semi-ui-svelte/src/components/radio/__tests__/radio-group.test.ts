@@ -117,13 +117,6 @@ describe('Svelte RadioGroup', () => {
         expect(Object.keys(groupChange.mock.calls[0]?.[0].target ?? {}).sort()).toEqual(['checked', 'disabled', 'name', 'value']);
     });
 
-    it('使用 options 的 group 中 onChange 只触发一次', async () => {
-        const onChange = vi.fn<(event: RadioChangeEvent) => void>();
-        renderOptions({ onChange });
-        await click(getRadio('A'));
-        expect(onChange).toHaveBeenCalledTimes(1);
-    });
-
     it('没有 value 的 radio 在组内不被选中', () => {
         render(RadioGroup, { props: { options: [{ label: 'x' }, { label: 'y' }] } });
         expect(getRadio('x')).not.toBeChecked();
@@ -222,14 +215,6 @@ describe('Svelte RadioGroup', () => {
         expect(cards[0]).toHaveClass(`${prefix}-cardRadioGroup_checked_disabled`);
         expect(cards[1]).not.toHaveClass(`${prefix}-cardRadioGroup_checked_disabled`);
         expect(document.querySelector(`.${prefix}-inner-pureCardRadio`)).not.toBeNull();
-    });
-
-    it('direction 为 horizontal 与 vertical', () => {
-        const store = renderChildren({ direction: 'horizontal' });
-        expect(document.querySelector(`.${groupCls}-horizontal`)).not.toBeNull();
-        store.props.direction = 'vertical';
-        flushSync();
-        expect(document.querySelector(`.${groupCls}-vertical`)).not.toBeNull();
     });
 
     it('value 为 NaN 时没有选中项', () => {

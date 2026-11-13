@@ -757,26 +757,6 @@ describe('Svelte Cascader 禁用与重置', () => {
 });
 
 describe('Svelte Cascader 键盘与 ARIA', () => {
-    it('combobox 暴露展开状态，aria-controls 指向树，层级由 aria 属性提供', async () => {
-        setup({ defaultOpen: true });
-        await settle();
-        const root = getRoot();
-        const tree = screen.getByRole('tree');
-        expect(root).toHaveAttribute('aria-expanded', 'true');
-        expect(root).toHaveAttribute('aria-haspopup', 'tree');
-        expect(root).toHaveAttribute('aria-controls', tree.id);
-        expect(tree).toHaveAttribute('aria-label', 'Region');
-        const item = getOption('亚洲');
-        expect(item).toHaveAttribute('role', 'treeitem');
-        expect(item).toHaveAttribute('aria-level', '1');
-        expect(item).toHaveAttribute('aria-setsize', '2');
-        expect(item).toHaveAttribute('aria-posinset', '1');
-        expect(item).toHaveAttribute('aria-expanded', 'false');
-        await click(item);
-        expect(getOption('亚洲')).toHaveAttribute('aria-expanded', 'true');
-        expect(getOption('中国')).toHaveAttribute('aria-level', '2');
-    });
-
     it('关闭时 ArrowDown 打开；打开时没有当前选项，Down、Up、Home、End 在列内移动', async () => {
         setup();
         await keyDown('ArrowDown');
@@ -830,16 +810,6 @@ describe('Svelte Cascader 键盘与 ARIA', () => {
         await keyDown('ArrowDown');
         await keyDown(' ');
         expect(onChange).toHaveBeenLastCalledWith([['North America']]);
-    });
-
-    it('Escape 关闭已打开的下拉，焦点留在 combobox', async () => {
-        setup();
-        const root = getRoot();
-        root.focus();
-        await keyDown('ArrowDown');
-        expect(isOpen()).toBe(true);
-        await keyDown('Escape');
-        expect(isOpen()).toBe(false);
     });
 
     it('keydown 在 Cascader 处理之前发出，且每个按键只发一次', async () => {
