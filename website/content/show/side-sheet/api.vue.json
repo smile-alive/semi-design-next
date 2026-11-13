@@ -74,8 +74,8 @@
                 "en-US": "Emitted with false before cancel when the close button, the mask or Esc closes the sheet, for v-model:visible to write back."
             },
             "afterVisibleChange": {
-                "zh-CN": "显示时在 visible 变为 true 的那次提交立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次；在 KeepAlive 中失活、重新激活时不触发。",
-                "en-US": "Emitted with true right after the commit that shows the sheet, without waiting for the enter animation. Emitted with false after the leave animation, and once with false if the sheet is unmounted while shown. Not emitted when a KeepAlive deactivates or reactivates it."
+                "zh-CN": "显示时在进场动画结束后以 true 触发，无动画时显示后立即触发；隐藏时在离场动画结束后以 false 触发；显示期间被卸载时以 false 触发一次；在 KeepAlive 中失活、重新激活时不触发。",
+                "en-US": "Emitted with true after the enter animation ends, or right after showing without motion. Emitted with false after the leave animation, and once with false if the sheet is unmounted while shown. Not emitted when a KeepAlive deactivates or reactivates it."
             }
         },
         "slots": {

@@ -272,7 +272,8 @@
 ### Modal、SideSheet
 
 - 破坏性：`Modal.info`、`success`、`error`、`warning`、`confirm`、`useModal`、`destroyAll` 改由 `modal/index` 挂载，深导入 `modal/modal` 的组件不再带这些静态方法；`cancelButtonProps.onClick`、`okButtonProps.onClick` 不再替换内置处理，先于 `onCancel`、`onOk` 调用，需替换的改在这两个回调里处理。
-- 行为变化：SideSheet 的 `visible` 变为 false 时把焦点还给打开前的元素（四个框架一致）。
+- 行为变化：SideSheet 关闭时与 Modal 一致，等离场动画结束（无动画时立即）才解除页面 inert、Tab 陷阱与 body 滚动锁，并把焦点还给打开前的元素（四个框架一致）。
+- 行为变化：SideSheet 的 `afterVisibleChange(true)` 改在进场动画结束后调用，无动画时显示后立即调用；进场中被关闭时先补报 `true` 再报 `false`。
 - 破坏性（类型）：`onCancel` 参数为 `React.MouseEvent | KeyboardEvent`（Esc 传原生事件）；Modal 的 `direction` 收窄为 `'ltr' | 'rtl'`，删除深路径导出的 `ConfirmType`、`Directions`；`Modal.useModal` 返回 `[ModalHookApi, ReactElement]`；`SideSheetState` 删除 `displayNone`；深路径 `side-sheet/index` 导出的 `SideSheetContentProps` 以 `sheetSize` 代替 `width`、`height`。
 - 行为变化：Modal 的 `footer={undefined}`、`header={undefined}` 与不传相同，隐藏传 `null`；SideSheet 隐藏关闭按钮用 `closable={false}`；Modal 新增 `role?: 'dialog' | 'alertdialog'`（确认框默认 `alertdialog`），组件版不再默认设 `aria-describedby`；模态判断统一为 Modal `mask && (容器在 body 内 || maskFixed)`、SideSheet `mask && 容器在 body 内`，`mask={false}` 时不再锁 body 滚动、不拦截页面点击，非模态不再把 Tab 锁在层内。
 - Vue：Modal 用 `v-model:visible`，仅取消路径更新，确定按钮只调 `onOk`；`title`、`header`、`footer`、`icon`、`closeIcon`、`modalRender` 改为 `#title`、`#header`、`#footer`、`#icon`、`#closeIcon`、`#modal="{ modal }"`；`useModal` 返回 `[api, Holder]` 并须渲染 `<Holder />`，静态方法读应用上下文时先 `app.use(Modal)`。SideSheet 的 `title`、`footer`、`closeIcon` 改同名插槽，`onCancel` 改 `cancel` 事件，`afterVisibleChange` 改同名事件，新增 `update:visible`，无 `defaultVisible`。

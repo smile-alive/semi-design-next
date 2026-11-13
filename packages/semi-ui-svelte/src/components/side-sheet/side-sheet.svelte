@@ -131,6 +131,7 @@
             displayNone = true;
         }
         animating = undefined;
+        foundation.handleAnimationEnd();
     };
 
     // Before the DOM updates, so the classes of the new run are in the first render. The initial run is the mount: shown
@@ -168,10 +169,19 @@
     useOverlayResources(
         foundation,
         () => visible,
-        () => Boolean(dialogEl && visible && rootEl)
+        () => Boolean(dialogEl && !hidden && rootEl)
     );
 
-    watch(() => hidden, foundation.handleHiddenChange);
+    watch(
+        () => hidden,
+        (isHidden) => {
+            foundation.handleHiddenChange(isHidden);
+            // no animation ends a showing without motion
+            if (!motion) {
+                foundation.handleAnimationEnd();
+            }
+        }
+    );
 
     onMount(() => () => foundation.handleHiddenChange(true));
 

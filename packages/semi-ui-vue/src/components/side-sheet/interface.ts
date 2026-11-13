@@ -29,7 +29,7 @@ export interface SideSheetEmits {
     /** Close button, mask click (native MouseEvent) and Escape (native KeyboardEvent); `update:visible` comes first. */
     cancel: [event: MouseEvent | KeyboardEvent];
     'update:visible': [visible: boolean];
-    /** true once shown; false once hidden, after the leave animation, or on unmount while shown. */
+    /** true once the enter animation ends; false once hidden, after the leave animation, or on unmount while shown. */
     afterVisibleChange: [visible: boolean];
 }
 

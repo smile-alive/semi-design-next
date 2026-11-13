@@ -131,6 +131,8 @@ describe('SideSheet', () => {
         const view = await renderSideSheet({ visible: true });
         expect(document.body.style.overflow).toBe('hidden');
         await update(view, { visible: false });
+        expect(document.body.style.overflow).toBe('hidden');
+        await endTransitions();
         expect(document.body.style.overflow).not.toBe('hidden');
         await update(view, { disableScroll: false, visible: true });
         expect(document.body.style.overflow).not.toBe('hidden');
@@ -233,10 +235,10 @@ describe('SideSheet 行为', () => {
         expect(view.emitted().afterVisibleChange).toEqual([[false]]);
 
         await update(view, { visible: true });
-        expect(view.emitted().afterVisibleChange).toEqual([[false], [true]]);
+        expect(view.emitted().afterVisibleChange).toEqual([[false]]);
         expect(getInner()).toHaveClass(`${prefix}-animation-content_show_right`);
         await endTransitions();
-        expect(view.emitted().afterVisibleChange).toHaveLength(2);
+        expect(view.emitted().afterVisibleChange).toEqual([[false], [true]]);
         expect(getInner()).not.toHaveClass(`${prefix}-animation-content_show_right`);
     });
 
@@ -348,6 +350,7 @@ describe('SideSheet 行为', () => {
         await update(view, { visible: false });
         await pressEsc();
         expect(view.emitted().cancel).toHaveLength(1);
+        await endTransitions();
 
         // emit() is a no-op after unmount, so a leaked layer is observed through its side effects instead
         const page = document.body.appendChild(document.createElement('main'));

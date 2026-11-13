@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-react/src/components/side-sheet/side-sheet.tsx",
         "props": {
             "afterVisibleChange": {
-                "zh-CN": "面板显示时在 `visible` 变为 `true` 的那次提交中立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载，或所在子树被 `Activity` 隐藏时以 `false` 触发一次。",
-                "en-US": "Called in the commit where `visible` becomes `true`, without waiting for the enter animation. When hiding, called after the leave animation ends; also called once with `false` when unmounted while shown, or when its subtree is hidden by `Activity`."
+                "zh-CN": "显示时在进场动画结束后以 `true` 触发，无动画时显示后立即触发；隐藏时在离场动画结束后以 `false` 触发；显示期间被卸载，或所在子树被 `Activity` 隐藏时以 `false` 触发一次。",
+                "en-US": "Called with `true` after the enter animation ends, or right after showing without motion; called with `false` after the leave animation ends, and once with `false` when unmounted while shown, or when its subtree is hidden by `Activity`."
             },
             "aria-label": {
                 "zh-CN": "对话框的可访问名称，传入后覆盖由 `title` 生成的名称。",

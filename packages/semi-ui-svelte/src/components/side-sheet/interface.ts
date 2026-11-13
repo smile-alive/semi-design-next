@@ -7,7 +7,7 @@ import type { Placement } from '@fibrae/semi-foundation/components/side-sheet/si
  * `.semi-sidesheet` element.
  */
 export interface SideSheetProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'style' | 'title'> {
-    /** true once shown; false once hidden, after the leave animation, or on unmount while shown */
+    /** true once the enter animation ends; false once hidden, after the leave animation, or on unmount while shown */
     afterVisibleChange?: (isVisible: boolean) => void;
     bodyStyle?: string;
     /** Lets `width` apply to a top or bottom sheet, which otherwise spans the full width. */
