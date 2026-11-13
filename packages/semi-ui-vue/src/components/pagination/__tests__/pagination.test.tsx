@@ -42,9 +42,9 @@ afterEach(() => {
 describe('Pagination', () => {
     it('自定义 class 与 style', () => {
         const { container } = render(Pagination, { attrs: { class: 'test', style: { color: 'red' } } });
-        const ul = container.querySelector('ul.test');
-        expect(ul).not.toBeNull();
-        expect(ul).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const nav = container.querySelector('nav.test');
+        expect(nav).not.toBeNull();
+        expect(nav).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
     it('渲染 mini pagination', () => {
@@ -279,7 +279,7 @@ describe('Pagination', () => {
     describe('small 尺寸', () => {
         it('显示当前页 / 总页数，并可通过上一页与下一页翻页', async () => {
             const view = renderPagination({ showQuickJumper: true, size: 'small', total: 90 });
-            const root = view.container.firstElementChild as HTMLElement;
+            const root = view.container.querySelector('nav > ul') as HTMLElement;
             expect(root.tagName).toBe('UL');
             expect(root).toHaveClass(prefix, `${prefix}-small`);
             expect(getCounter(view.container).textContent).toBe('1/9 ');
@@ -313,7 +313,7 @@ describe('Pagination', () => {
             const view = renderPagination({ hideOnSinglePage: true, size: 'small', total: 10 });
             expect(view.container.querySelector('ul')).toBeNull();
             await view.rerender({ disabled: true, size: 'small', total: 90 });
-            expect(view.container.firstElementChild).toHaveClass(`${prefix}-disabled`);
+            expect(view.container.querySelector('ul')).toHaveClass(`${prefix}-disabled`);
             expect(getCounter(view.container)).toHaveClass(`${prefix}-item-all-disabled`);
         });
     });
@@ -342,7 +342,7 @@ describe('Pagination', () => {
         it.each<[string, PaginationProps]>([
             ['default', { total: 200 }],
             ['small', { size: 'small', total: 200 }],
-        ])('%s 尺寸下 id、aria-*、data-*、class、style 与原生 click 都落到根 ul', async (_, props) => {
+        ])('%s 尺寸下 id、aria-*、data-*、class、style 与原生 click 都落到根 nav', async (_, props) => {
             const onClick = vi.fn<(event: MouseEvent) => void>();
             const view = render(Pagination, {
                 props,
@@ -355,19 +355,19 @@ describe('Pagination', () => {
                     onClick,
                 },
             });
-            const root = getElement('ul', view.container);
+            const root = getElement('nav', view.container);
             expect(view.container.querySelectorAll('[id="pager"]')).toHaveLength(1);
             expect(root).toHaveAttribute('id', 'pager');
             expect(root).toHaveAttribute('aria-label', 'Pages');
             expect(root).toHaveAttribute('data-foo', 'bar');
-            expect(root).toHaveClass('mine', prefix);
+            expect(root).toHaveClass('mine', `${prefix}-wrapper`);
             expect(root).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-            expect(screen.getByRole('list', { name: 'Pages' })).toBe(root);
+            expect(screen.getByRole('navigation', { name: 'Pages' })).toBe(root);
             await userEvent.click(root);
             expect(onClick).toHaveBeenCalledTimes(1);
         });
 
-        it('aria-labelledby 命名根列表', () => {
+        it('aria-labelledby 命名根 nav', () => {
             render({
                 render: () => (
                     <>
@@ -376,7 +376,7 @@ describe('Pagination', () => {
                     </>
                 ),
             });
-            expect(screen.getByRole('list', { name: 'Pager title' })).toBeInTheDocument();
+            expect(screen.getByRole('navigation', { name: 'Pager title' })).toBeInTheDocument();
         });
 
         it('隐藏时不产生 Vue 的多余属性警告', () => {
@@ -398,11 +398,11 @@ describe('Pagination', () => {
             expect(screen.getByRole('spinbutton')).toHaveAccessibleName(zh_CN.Pagination.jumpTo);
         });
 
-        it.each(['default', 'small'] as const)('模板 ref 的 $el 是根 ul（%s）', (size) => {
+        it.each(['default', 'small'] as const)('模板 ref 的 $el 是根 nav（%s）', (size) => {
             const pager = shallowRef<{ $el: HTMLElement }>();
             const view = render({ render: () => <Pagination ref={pager} total={200} size={size} /> });
-            expect(pager.value?.$el.tagName).toBe('UL');
-            expect(pager.value?.$el).toBe(view.container.querySelector('ul'));
+            expect(pager.value?.$el.tagName).toBe('NAV');
+            expect(pager.value?.$el).toBe(view.container.querySelector('nav'));
         });
     });
 

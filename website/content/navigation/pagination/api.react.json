@@ -2,9 +2,9 @@
     "pagination": {
         "source": "packages/semi-ui-react/src/components/pagination/pagination.tsx",
         "props": {
-            "className": { "zh-CN": "根元素 `ul` 的类名。", "en-US": "Class name of the root `ul` element." },
-            "style": { "zh-CN": "根元素 `ul` 的内联样式。", "en-US": "Inline style of the root `ul` element." },
-            "ref": { "zh-CN": "根元素 `ul` 的 ref，两种尺寸一致。", "en-US": "Ref of the root `ul` element, in both sizes." },
+            "className": { "zh-CN": "根元素 `nav` 的类名。", "en-US": "Class name of the root `nav` element." },
+            "style": { "zh-CN": "根元素 `nav` 的内联样式。", "en-US": "Inline style of the root `nav` element." },
+            "ref": { "zh-CN": "根元素 `nav` 的 ref，两种尺寸一致。", "en-US": "Ref of the root `nav` element, in both sizes." },
             "total": {
                 "zh-CN": "总条数。总条数变化时，非受控的分页器回到第 1 页；受控时页码以 `currentPage` 为准。",
                 "en-US": "Total number of items. When it changes, an uncontrolled pagination goes back to page 1; when controlled, the page follows `currentPage`."

@@ -76,16 +76,16 @@ afterEach(() => {
 });
 
 describe('Svelte Pagination 渲染', () => {
-    it('class、style 与 id、aria-*、data-* 落在根 ul，原生 click 也在根上', async () => {
+    it('class、style 与 id、aria-*、data-* 落在根 nav，原生 click 也在根上', async () => {
         for (const size of ['default', 'small'] as const) {
             const onclick = vi.fn<(event: MouseEvent) => void>();
             const view = setup({ total: 200, size, id: 'pager', 'aria-label': 'Pages', 'data-foo': 'bar', class: 'mine', style: 'color: red', onclick });
-            const root = getElement('ul', view.container);
-            expect(root).toHaveClass('mine', prefix);
+            const root = getElement('nav', view.container);
+            expect(root).toHaveClass('mine', `${prefix}-wrapper`);
             expect(root).toHaveAttribute('id', 'pager');
             expect(root).toHaveAttribute('data-foo', 'bar');
             expect(root).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-            expect(screen.getByRole('list', { name: 'Pages' })).toBe(root);
+            expect(screen.getByRole('navigation', { name: 'Pages' })).toBe(root);
             await click(root);
             expect(onclick).toHaveBeenCalledTimes(1);
             view.unmount();

@@ -16,6 +16,8 @@ export interface Locale {
     /** ISO 4217 code, passed to Intl.NumberFormat by InputNumber */
     currency: string;
     Pagination: {
+        /** name of the navigation landmark that wraps the page list */
+        label: string;
         pageSize: string;
         total: string;
         jumpTo: string;

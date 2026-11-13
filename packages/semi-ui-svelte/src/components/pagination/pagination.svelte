@@ -164,77 +164,79 @@
 {/snippet}
 
 {#if !view.hidden}
-    <ul {...rest} class={[prefix, rest.class, { [`${prefix}-small`]: size === 'small', [`${prefix}-disabled`]: disabled }]}>
-        {#if showTotal && size !== 'small'}
-            <li class={`${prefix}-total`}>{formatLocale(text.total, { total: view.totalPageNum })}</li>
-        {/if}
-        <li>
-            <StepButton disabled={disabledState.prevDisabled || disabled} kind="prev" label={text.prev} text={prevText} onclick={foundation.goPrev} />
-        </li>
-        {#if size === 'small'}
+    <nav {...rest} aria-label={rest['aria-label'] ?? text.label} class={[`${prefix}-wrapper`, rest.class]}>
+        <ul class={[prefix, { [`${prefix}-small`]: size === 'small', [`${prefix}-disabled`]: disabled }]}>
+            {#if showTotal && size !== 'small'}
+                <li class={`${prefix}-total`}>{formatLocale(text.total, { total: view.totalPageNum })}</li>
+            {/if}
             <li>
-                {#if hoverShowPageSelect && !disabled}
-                    <Popover>
-                        {#snippet child({ props })}
-                            <button {...props} class={`${prefix}-item ${prefix}-item-small`} type="button">{smallText}</button>
-                        {/snippet}
-                        {#snippet content()}
-                            <RestPages count={view.totalPageNum} onSelect={foundation.goPage} start={1} />
-                        {/snippet}
-                    </Popover>
-                {:else}
-                    <div class={[`${prefix}-item`, `${prefix}-item-small`, { [`${prefix}-item-all-disabled`]: disabled }]}>
-                        {smallText}
-                    </div>
-                {/if}
+                <StepButton disabled={disabledState.prevDisabled || disabled} kind="prev" label={text.prev} text={prevText} onclick={foundation.goPrev} />
             </li>
-        {:else}
-            {#each pageData.pageList as page, i (page === '...' ? (i < 3 ? 'rest-left' : 'rest-right') : page)}
+            {#if size === 'small'}
                 <li>
-                    {#if isRest(page)}
-                        <Popover position={popoverPosition} trigger="hover">
+                    {#if hoverShowPageSelect && !disabled}
+                        <Popover>
                             {#snippet child({ props })}
-                                {@render pageButton(page, props)}
+                                <button {...props} class={`${prefix}-item ${prefix}-item-small`} type="button">{smallText}</button>
                             {/snippet}
                             {#snippet content()}
-                                <RestPages {...i < 3 ? pageData.restLeftRange : pageData.restRightRange} onSelect={foundation.goPage} />
+                                <RestPages count={view.totalPageNum} onSelect={foundation.goPage} start={1} />
                             {/snippet}
                         </Popover>
                     {:else}
-                        {@render pageButton(page)}
+                        <div class={[`${prefix}-item`, `${prefix}-item-small`, { [`${prefix}-item-all-disabled`]: disabled }]}>
+                            {smallText}
+                        </div>
                     {/if}
                 </li>
-            {/each}
-        {/if}
-        <li>
-            <StepButton disabled={disabledState.nextDisabled || disabled} kind="next" label={text.next} text={nextText} onclick={foundation.goNext} />
-        </li>
-        {#if view.sizeChangerShown}
-            <li class={`${prefix}-switch`}>
-                <!-- changePageSize takes one number: global Select defaults must not make it search, create, multiple or object-valued, nor add a clear button -->
-                <Select
-                    allowCreate={false}
-                    aria-label={text.pageSizeSelector}
-                    clickToHide
-                    {disabled}
-                    dropdownClassName={`${prefix}-select-dropdown`}
-                    filter={false}
-                    multiple={false}
-                    onChange={changePageSize}
-                    onChangeWithObject={false}
-                    optionList={sizeOptions}
-                    position={view.switchPosition}
-                    showClear={false}
-                    value={states().pageSize}
-                />
+            {:else}
+                {#each pageData.pageList as page, i (page === '...' ? (i < 3 ? 'rest-left' : 'rest-right') : page)}
+                    <li>
+                        {#if isRest(page)}
+                            <Popover position={popoverPosition} trigger="hover">
+                                {#snippet child({ props })}
+                                    {@render pageButton(page, props)}
+                                {/snippet}
+                                {#snippet content()}
+                                    <RestPages {...i < 3 ? pageData.restLeftRange : pageData.restRightRange} onSelect={foundation.goPage} />
+                                {/snippet}
+                            </Popover>
+                        {:else}
+                            {@render pageButton(page)}
+                        {/if}
+                    </li>
+                {/each}
+            {/if}
+            <li>
+                <StepButton disabled={disabledState.nextDisabled || disabled} kind="next" label={text.next} text={nextText} onclick={foundation.goNext} />
             </li>
-        {/if}
-        {#if showQuickJumper}
-            <li class={[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: view.quickJumpDisabled }]}>
-                <span>{text.jumpTo}</span>
-                <InputNumber aria-label={text.jumpTo} class={`${prefix}-quickjump-input-number`} disabled={view.quickJumpDisabled} hideButtons onBlur={foundation.handleQuickJumpBlur} onChange={foundation.handleQuickJumpNumberChange} onKeyDown={onQuickJumpKeydown} showClear={false} value={states().quickJumpPage} />
-                <span>{text.page}</span>
-            </li>
-        {/if}
-    </ul>
+            {#if view.sizeChangerShown}
+                <li class={`${prefix}-switch`}>
+                    <!-- changePageSize takes one number: global Select defaults must not make it search, create, multiple or object-valued, nor add a clear button -->
+                    <Select
+                        allowCreate={false}
+                        aria-label={text.pageSizeSelector}
+                        clickToHide
+                        {disabled}
+                        dropdownClassName={`${prefix}-select-dropdown`}
+                        filter={false}
+                        multiple={false}
+                        onChange={changePageSize}
+                        onChangeWithObject={false}
+                        optionList={sizeOptions}
+                        position={view.switchPosition}
+                        showClear={false}
+                        value={states().pageSize}
+                    />
+                </li>
+            {/if}
+            {#if showQuickJumper}
+                <li class={[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: view.quickJumpDisabled }]}>
+                    <span>{text.jumpTo}</span>
+                    <InputNumber aria-label={text.jumpTo} class={`${prefix}-quickjump-input-number`} disabled={view.quickJumpDisabled} hideButtons onBlur={foundation.handleQuickJumpBlur} onChange={foundation.handleQuickJumpNumberChange} onKeyDown={onQuickJumpKeydown} showClear={false} value={states().quickJumpPage} />
+                    <span>{text.page}</span>
+                </li>
+            {/if}
+        </ul>
+    </nav>
 {/if}

@@ -77,6 +77,7 @@ const local: Locale = {
         stars: '星',
     },
     Pagination: {
+        label: '分页',
         more: '更多',
         pageN: '第 ${page} 页',
         prev: '上一页',

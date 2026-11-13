@@ -77,6 +77,7 @@ const local: Locale = {
         stars: 'stars',
     },
     Pagination: {
+        label: 'Pagination',
         more: 'More',
         pageN: 'Page ${page}',
         prev: 'Previous',

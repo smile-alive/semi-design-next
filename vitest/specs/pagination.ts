@@ -387,13 +387,19 @@ export function paginationSpec(mount: SpecMount<PaginationSpecProps>, options: S
             }
         });
 
-        test('未声明的属性落在根 ul 上，两种尺寸一致', async () => {
+        test('根是带名称的 nav，未声明的属性落在它上面，两种尺寸一致', async () => {
             await render({ attrs: { 'aria-label': 'Pages', 'data-testid': 'pager' } });
-            expect(view.getByRole('list')).toHaveAttribute('data-testid', 'pager');
-            expect(view.getByRole('list')).toHaveAccessibleName('Pages');
+            expect(view.getByRole('navigation')).toHaveAttribute('data-testid', 'pager');
+            expect(view.getByRole('navigation')).toHaveAccessibleName('Pages');
+            expect(view.getByRole('navigation')).toContainElement(view.getByRole('list'));
             await handle.update({ size: 'small' });
-            expect(view.getByRole('list')).toHaveAttribute('data-testid', 'pager');
-            expect(view.getByRole('list')).toHaveAccessibleName('Pages');
+            expect(view.getByRole('navigation')).toHaveAttribute('data-testid', 'pager');
+            expect(view.getByRole('navigation')).toHaveAccessibleName('Pages');
+        });
+
+        test('nav 的默认名称来自语言包', async () => {
+            await render();
+            expect(view.getByRole('navigation', { name: '分页' })).toBeTruthy();
         });
     });
 }

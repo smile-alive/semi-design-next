@@ -13,12 +13,12 @@ describe('Svelte Pagination 服务端首帧', () => {
         expect(body).toContain('aria-label="下一页"');
     });
 
-    it('small 尺寸首帧显示当前页/总页数，根属性落到 ul', () => {
+    it('small 尺寸首帧显示当前页/总页数，根属性落到 nav', () => {
         const { body } = render(Pagination, { props: { size: 'small', total: 90, 'aria-label': 'Pages', id: 'pager' } });
         expect(body).toContain('semi-page-small');
         expect(body).toMatch(/semi-page-item-small[^>]*>(<!--[^>]*-->)*\s*1\/9/);
-        expect(body).toMatch(/<ul[^>]*aria-label="Pages"/);
-        expect(body).toMatch(/<ul[^>]*id="pager"/);
+        expect(body).toMatch(/<nav[^>]*aria-label="Pages"/);
+        expect(body).toMatch(/<nav[^>]*id="pager"/);
     });
 
     it('hideOnSinglePage 单页时不输出', () => {
