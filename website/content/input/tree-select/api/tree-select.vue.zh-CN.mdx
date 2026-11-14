@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | 无边框模式。 | `boolean` | `false` |
 | changeWithObject | 布尔属性而不是事件：设为 true 时，modelValue 与 change 的载荷由 value 变为节点对象；受控时 modelValue 与 defaultValue 也要传对象，且必须含 value。 | `boolean` | `false` |
 | checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `"related"` |
+| classNames | 内部各部位的类名，键为 dropdown（下拉面板）、optionList（节点列表，即 role="tree" 的元素），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "classNames")` |
 | clickToHide | 单选时选中节点后是否关闭下拉面板。 | `boolean` | `true` |
 | clickTriggerToHide | 下拉面板打开时，点击选择框是否关闭面板。 | `boolean` | `true` |
 | defaultExpandAll | 初始化时展开所有节点。之后 treeData 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `false` |
@@ -18,9 +19,7 @@ import ApiType from '#/components/ApiType.astro';
 | defaultValue | 指定默认选中的条目，只在挂载时读取；多选时只接受数组。 | <ApiType detail={"ByMultiple\u003cMultiple, T \u007c undefined, T[]>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "defaultValue")` |
 | disabled | 是否禁用。 | `boolean` | `undefined` |
 | disableStrictly | 严格禁用：禁用的节点不能通过父级或子级的选中关系改变状态。 | `boolean` | `false` |
-| dropdownClassName | 下拉面板的类名。 | `string` | `semiGlobalDefault("TreeSelect", "dropdownClassName")` |
 | dropdownMatchSelectWidth | 下拉面板的最小宽度是否等于选择框的宽度。 | `boolean` | `true` |
-| dropdownStyle | 下拉面板的样式。 | `StyleValue` | `semiGlobalDefault("TreeSelect", "dropdownStyle")` |
 | expandAction | 展开逻辑：false 仅点击展开箭头时展开，click 单击节点展开，doubleClick 双击节点展开。键盘不触发该逻辑。 | `ExpandAction` | `false` |
 | expandAll | 展开所有节点，treeData 变化后仍然生效。 | `boolean` | `false` |
 | expandedKeys | 展开的节点，用 v-model:expandedKeys 绑定。传入后展开状态完全受控。 | `string[]` | `semiGlobalDefault("TreeSelect", "expandedKeys")` |
@@ -36,7 +35,6 @@ import ApiType from '#/components/ApiType.astro';
 | motion | 下拉面板是否有出现和消失的动画。 | `boolean` | `true` |
 | motionExpand | 是否开启节点展开收起的动画；虚拟化时动画关闭。 | `boolean` | `true` |
 | multiple | 是否多选。多选时所有子项都被选择会自动勾选其父项。 | `Multiple` | `undefined` |
-| optionListStyle | 节点列表（role="tree" 的元素）的样式。 | `StyleValue` | `semiGlobalDefault("TreeSelect", "optionListStyle")` |
 | placeholder | 选择框的占位文字。 | `string` | `semiGlobalDefault("TreeSelect", "placeholder")` |
 | position | 下拉面板的位置，可选值参考 Tooltip 的 position。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "position")` |
 | preventScroll | 聚焦时是否阻止浏览器滚动页面以显示新聚焦的元素。 | `boolean` | `semiGlobalDefault("TreeSelect", "preventScroll")` |
@@ -52,6 +50,7 @@ import ApiType from '#/components/ApiType.astro';
 | showSearchClear | 搜索框是否显示清除按钮。 | `boolean` | `true` |
 | size | 选择框尺寸，可选 small、default、large。 | `Size` | `undefined` |
 | stopPropagation | 是否阻止下拉面板上的点击事件冒泡；传入字符串时按布尔值处理。 | `string \| boolean` | `true` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "styles")` |
 | treeData | 节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。 | `TreeNodeData[]` | `[]` |
 | treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `"label"` |
 | treeNodeLabelProp | 作为选择框中显示文字的节点属性，默认 label。 | `string` | `"label"` |

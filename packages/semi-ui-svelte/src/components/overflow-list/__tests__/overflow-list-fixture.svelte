@@ -55,16 +55,16 @@
 {/snippet}
 
 <OverflowList
+    classNames={store.classNames}
     collapseFrom={store.collapseFrom}
     itemKey={store.itemKey}
     items={store.items}
     minVisibleItems={store.minVisibleItems}
     overflowRenderDirection={store.overflowRenderDirection}
     renderMode={store.renderMode}
+    styles={store.styles}
     threshold={store.threshold}
-    wrapperClassName={store.wrapperClassName}
     wrapperProps={store.wrapperProps}
-    wrapperStyle={store.wrapperStyle}
     {...store.attrs}
     item={itemKind === 'none' ? undefined : itemSnippet}
     onIntersect={hooks.onIntersect}

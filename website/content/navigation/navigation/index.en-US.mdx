@@ -205,25 +205,25 @@ Use `header` and `footer` to quickly define the navigation head and bottom. `col
 
 <Framework only="react">
 
-Navigation currently provides two parameters to define navigation styles:`style` and `bodyStyle`, in which `style` The style used to define the outermost layer of the navigation component, while `bodyStyle` The style used to define the navigation list. (Both the navigation head and the bottom of the navigation accept their respective `style` Parameters).
+Navigation currently provides two parameters to define navigation styles:`style` and `styles.body`, in which `style` defines the style of the outermost layer of the navigation component, while `styles.body` defines the style of the navigation list (its class name is `classNames.body`). (Both the navigation head and the bottom of the navigation accept their respective `style` Parameters).
 
 </Framework>
 
 <Framework only="vue">
 
-Navigation currently provides two ways to define navigation styles: `style` and `bodyStyle`. `style` is passed as an attr and lands on the outermost layer of the navigation component, while `bodyStyle` defines the style of the navigation list. (Both the navigation head and the bottom of the navigation accept their respective `style`).
+Navigation currently provides two ways to define navigation styles: `style` and `styles.body`. `style` is passed as an attr and lands on the outermost layer of the navigation component, while `styles.body` defines the style of the navigation list (its class name is `classNames.body`). (Both the navigation head and the bottom of the navigation accept their respective `style`).
 
 </Framework>
 
 <Framework only="solid">
 
-Navigation provides two parameters to define navigation styles: `style` and `bodyStyle`. `style` defines the style of the outermost layer of the navigation component, while `bodyStyle` defines the style of the navigation list. (Both the navigation head and the bottom accept their own `style` parameter.)
+Navigation provides two parameters to define navigation styles: `style` and `styles.body`. `style` defines the style of the outermost layer of the navigation component, while `styles.body` defines the style of the navigation list (its class name is `classNames.body`). (Both the navigation head and the bottom accept their own `style` parameter.)
 
 </Framework>
 
 <Framework only="svelte">
 
-Navigation provides two parameters to define navigation styles: `style` and `bodyStyle`. `style` lands on the outermost layer of the navigation component, while `bodyStyle` defines the style of the navigation list; both are strings. (Both the navigation head and the bottom accept their own `style`.)
+Navigation provides two parameters to define navigation styles: `style` and `styles.body`. `style` lands on the outermost layer of the navigation component, while `styles.body` defines the style of the navigation list (its class name is `classNames.body`); both are strings. (Both the navigation head and the bottom accept their own `style`.)
 
 </Framework>
 
@@ -634,24 +634,25 @@ Other native attributes (such as `id` and `aria-label`) land on the outermost `n
 
 `items` is `(string | NavItemConfig)[]`. A string entry is both the `text` and the `itemKey`. An entry with non-empty `items` renders as a Nav.Sub, any other entry as a Nav.Item. Entries hold data only; nodes are provided through the `#icon`, `#text`, `#toggleIcon` and `#expandIcon` scoped slots of Nav, whose parameters are `{ item, level }`.
 
-| Properties       | Description                                                                           | Type                        | Default |
-| ---------------- | ------------------------------------------------------------------------------------- | --------------------------- | ------- |
-| itemKey          | Unique item identifier                                                                | string \| number            |         |
-| text             | Navigation item copy                                                                  | string \| number            |         |
-| items            | Child entries; an entry with non-empty `items` renders as a Nav.Sub                   | (string \| NavItemConfig)[] |         |
-| disabled         | Disabled state                                                                        | boolean                     |         |
-| indent           | If there is no icon, keep its space or not. Only effective for first level navigation | boolean \| number           |         |
-| link             | Navigation item href link, Nav.Item only                                              | string                      |         |
-| linkOptions      | Parameters transparently passed to the a tag, Nav.Item only                           | AnchorHTMLAttributes        |         |
-| tooltipHideDelay | Delay for hiding the tooltip of this item, Nav.Item only                              | number                      |         |
-| tooltipShowDelay | Delay for showing the tooltip of this item, Nav.Item only                             | number                      |         |
-| dropdownProps    | Popup layer `dropdown` parameter configuration, Nav.Sub only                          | SubDropdownProps            |         |
-| dropdownStyle    | Style of dropdown layer, Nav.Sub only                                                 | StyleValue                  |         |
-| class            | Class name of the `li` of the item                                                    | string \| object \| array   |         |
-| style            | Custom style of the `li` of the item                                                  | StyleValue                  |         |
-| onMouseenter     | Callback of mouse enter event                                                         | (event: MouseEvent) => void |         |
-| onMouseleave     | Callback of mouse leave event                                                         | (event: MouseEvent) => void |         |
-| data-\*, aria-\* | `data-*` land on the `li`, `aria-*` on the link or button that takes focus            | unknown                     |         |
+| Properties       | Description                                                                           | Type                                      | Default |
+| ---------------- | ------------------------------------------------------------------------------------- | ----------------------------------------- | ------- |
+| itemKey          | Unique item identifier                                                                | string \| number                          |         |
+| text             | Navigation item copy                                                                  | string \| number                          |         |
+| items            | Child entries; an entry with non-empty `items` renders as a Nav.Sub                   | (string \| NavItemConfig)[]               |         |
+| disabled         | Disabled state                                                                        | boolean                                   |         |
+| indent           | If there is no icon, keep its space or not. Only effective for first level navigation | boolean \| number                         |         |
+| link             | Navigation item href link, Nav.Item only                                              | string                                    |         |
+| linkOptions      | Parameters transparently passed to the a tag, Nav.Item only                           | AnchorHTMLAttributes                      |         |
+| tooltipHideDelay | Delay for hiding the tooltip of this item, Nav.Item only                              | number                                    |         |
+| tooltipShowDelay | Delay for showing the tooltip of this item, Nav.Item only                             | number                                    |         |
+| dropdownProps    | Popup layer `dropdown` parameter configuration, Nav.Sub only                          | SubDropdownProps                          |         |
+| classNames       | Key `dropdown`: class name of the dropdown content, Nav.Sub only                      | `Partial<Record<'dropdown', ClassValue>>` |         |
+| styles           | Key `dropdown`: style of the dropdown content, Nav.Sub only                           | `Partial<Record<'dropdown', StyleValue>>` |         |
+| class            | Class name of the `li` of the item                                                    | string \| object \| array                 |         |
+| style            | Custom style of the `li` of the item                                                  | StyleValue                                |         |
+| onMouseenter     | Callback of mouse enter event                                                         | (event: MouseEvent) => void               |         |
+| onMouseleave     | Callback of mouse leave event                                                         | (event: MouseEvent) => void               |         |
+| data-\*, aria-\* | `data-*` land on the `li`, `aria-*` on the link or button that takes focus            | unknown                                   |         |
 
 Other fields (such as `path`) are ignored.
 
@@ -675,24 +676,25 @@ Other fields (such as `path`) are ignored.
 
 `items` is `(string | NavItemConfig)[]`. A string entry is both the `text` and the `itemKey`. An entry with non-empty `items` renders as a Nav.Sub, any other entry as a Nav.Item. Entries hold data only; nodes are provided through the `icon`, `text`, `toggleIcon` and `expandIcon` snippets of Nav, whose parameters include `{ item, level }`.
 
-| Properties       | Description                                                                           | Type                        | Default |
-| ---------------- | ------------------------------------------------------------------------------------- | --------------------------- | ------- |
-| itemKey          | Unique item identifier                                                                | string \| number            |         |
-| text             | Navigation item copy                                                                  | string \| number            |         |
-| items            | Child entries; an entry with non-empty `items` renders as a Nav.Sub                   | (string \| NavItemConfig)[] |         |
-| disabled         | Disabled state                                                                        | boolean                     |         |
-| indent           | If there is no icon, keep its space or not. Only effective for first level navigation | boolean \| number           |         |
-| link             | Navigation item href link, Nav.Item only                                              | string                      |         |
-| linkOptions      | Parameters transparently passed to the a tag, Nav.Item only                           | HTMLAnchorAttributes        |         |
-| tooltipHideDelay | Delay for hiding the tooltip of this item, Nav.Item only                              | number                      |         |
-| tooltipShowDelay | Delay for showing the tooltip of this item, Nav.Item only                             | number                      |         |
-| dropdownProps    | Popup layer `dropdown` parameter configuration, Nav.Sub only                          | SubDropdownProps            |         |
-| dropdownStyle    | Style of dropdown layer, Nav.Sub only                                                 | string                      |         |
-| class            | Class name of the `li` of the item                                                    | ClassValue                  |         |
-| style            | Custom style of the `li` of the item                                                  | string                      |         |
-| onmouseenter     | Callback of mouse enter event                                                         | (event: MouseEvent) => void |         |
-| onmouseleave     | Callback of mouse leave event                                                         | (event: MouseEvent) => void |         |
-| data-\*, aria-\* | `data-*` land on the `li`, `aria-*` on the link or button that takes focus            | unknown                     |         |
+| Properties       | Description                                                                           | Type                                      | Default |
+| ---------------- | ------------------------------------------------------------------------------------- | ----------------------------------------- | ------- |
+| itemKey          | Unique item identifier                                                                | string \| number                          |         |
+| text             | Navigation item copy                                                                  | string \| number                          |         |
+| items            | Child entries; an entry with non-empty `items` renders as a Nav.Sub                   | (string \| NavItemConfig)[]               |         |
+| disabled         | Disabled state                                                                        | boolean                                   |         |
+| indent           | If there is no icon, keep its space or not. Only effective for first level navigation | boolean \| number                         |         |
+| link             | Navigation item href link, Nav.Item only                                              | string                                    |         |
+| linkOptions      | Parameters transparently passed to the a tag, Nav.Item only                           | HTMLAnchorAttributes                      |         |
+| tooltipHideDelay | Delay for hiding the tooltip of this item, Nav.Item only                              | number                                    |         |
+| tooltipShowDelay | Delay for showing the tooltip of this item, Nav.Item only                             | number                                    |         |
+| dropdownProps    | Popup layer `dropdown` parameter configuration, Nav.Sub only                          | SubDropdownProps                          |         |
+| classNames       | Key `dropdown`: class name of the dropdown content, Nav.Sub only                      | `Partial<Record<'dropdown', ClassValue>>` |         |
+| styles           | Key `dropdown`: style of the dropdown content, Nav.Sub only                           | `Partial<Record<'dropdown', string>>`     |         |
+| class            | Class name of the `li` of the item                                                    | ClassValue                                |         |
+| style            | Custom style of the `li` of the item                                                  | string                                    |         |
+| onmouseenter     | Callback of mouse enter event                                                         | (event: MouseEvent) => void               |         |
+| onmouseleave     | Callback of mouse leave event                                                         | (event: MouseEvent) => void               |         |
+| data-\*, aria-\* | `data-*` land on the `li`, `aria-*` on the link or button that takes focus            | unknown                                   |         |
 
 Other fields (such as `path`) are ignored.
 

@@ -52,15 +52,14 @@
         inputReadOnly = defaults('inputReadOnly', false),
         validateStatus = defaults('validateStatus'),
         insetLabelId,
-        inputStyle = defaults('inputStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         autofocus = defaults('autofocus', false),
         focusOnOpen = defaults('focusOnOpen', false),
         preventScroll = defaults('preventScroll'),
         motion = defaults('motion', true),
         autoAdjustOverflow = defaults('autoAdjustOverflow', true),
         position = defaults('position'),
-        popupClassName = defaults('popupClassName'),
-        popupStyle = defaults('popupStyle'),
         stopPropagation = defaults('stopPropagation', true),
         // read below: ConfigProvider's timeZone comes before the global default
         timeZone,
@@ -178,7 +177,7 @@
 
     // class and style size the root; every other attribute names and identifies the input
     const attrs = $derived(trigger ? { root: rest as Record<string, unknown>, control: {} } : splitControlAttrs(rest, (key) => key !== 'class' && key !== 'style'));
-    const panelClass = $derived([...TimePickerFoundation.getPanelClassNames({ prefixCls, format, use12Hours, type }), `${prefixCls}-panel-${size}`, popupClassName]);
+    const panelClass = $derived([...TimePickerFoundation.getPanelClassNames({ prefixCls, format, use12Hours, type }), `${prefixCls}-panel-${size}`, classNames?.dropdown]);
 
     const triggerProps: TimePickerTriggerRenderProps = $derived({
         value: states().value,
@@ -208,15 +207,12 @@
             inputReadOnly,
             validateStatus,
             insetLabelId,
-            inputStyle,
             autofocus,
             focusOnOpen,
             preventScroll,
             motion,
             autoAdjustOverflow,
             position,
-            popupClassName,
-            popupStyle,
             stopPropagation,
             timeZone,
             scrollItemProps,
@@ -294,7 +290,7 @@
 {/snippet}
 
 <div bind:this={root} {...attrs.root} class={[prefixCls, rest.class]} role={trigger && (rest['aria-label'] || rest['aria-labelledby']) ? 'group' : undefined} onclick={handleRootClick}>
-    <Popover aria-label={locale().locale.panel[type]} {autoAdjustOverflow} {content} contentClassName={panelClass} {motion} onEscKeyDown={foundation.handleEscKeyDown} position={popupPosition} {stopPropagation} style={popupStyle} trigger="custom" visible={shown}>
+    <Popover aria-label={locale().locale.panel[type]} {autoAdjustOverflow} classNames={{ content: panelClass }} {content} {motion} onEscKeyDown={foundation.handleEscKeyDown} position={popupPosition} {stopPropagation} styles={{ content: styles?.dropdown }} trigger="custom" visible={shown}>
         {#snippet child({ props })}
             {#if trigger}
                 <!-- the wrapper is the Tab stop and the button only while the trigger has no focus target of its own -->
@@ -321,6 +317,7 @@
                         aria-haspopup="dialog"
                         {autofocus}
                         {borderless}
+                        class={classNames?.input}
                         {clearIcon}
                         {disabled}
                         {focusOnOpen}
@@ -337,7 +334,7 @@
                         role="combobox"
                         showClear={disabled ? false : showClear}
                         {size}
-                        style={inputStyle}
+                        style={styles?.input}
                         {validateStatus}
                         value={states().inputValue}
                     />

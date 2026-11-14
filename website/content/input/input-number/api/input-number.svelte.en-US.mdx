@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | addonBefore | Snippet of the leading addon. | `Snippet` | - |
 | autofocus | Focuses the input after mount. | `boolean` | - |
 | borderless | Borderless mode. | `boolean` | - |
+| classNames | Class names of the inner parts, keyed by input (the native input element); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Snippet of the custom clear button icon; valid when showClear is true. | `Snippet` | - |
 | composition | Whether to enable composition mode. When enabled, onChange is not called during IME composition and is called once after it ends. | `boolean` | - |
 | currency | Currency, such as CNY, EUR or USD. When true, uses defaultCurrency, or the currency of the locale pack when that is not set; a bare currency attribute equals true. | `boolean \| string` | - |
@@ -18,7 +19,6 @@ import ApiType from '#/components/ApiType.astro';
 | hideButtons | Hides the step buttons; with innerButtons also true, no built-in button is shown either. | `boolean` | `false` |
 | hideSuffix | Hides the suffix while the clear button is shown; by default the two sit side by side. | `boolean` | - |
 | innerButtons | Puts the step buttons inside the input, shown on hover or focus and temporarily replacing the suffix. | `boolean` | `false` |
-| inputStyle | Style of the native input. Accepts a string only. | `string` | - |
 | insetLabel | Snippet of the inset label. | `Snippet` | - |
 | insetLabelId | The id of the inset label. | `string` | - |
 | keepFocus | Keeps the input focused when a step button is clicked. | `boolean` | `false` |
@@ -58,6 +58,7 @@ import ApiType from '#/components/ApiType.astro';
 | showCurrencySymbol | Whether to show the currency symbol, code or name; only in currency mode. | `boolean` | `true` |
 | size | Input size: default, small or large. | `InputSize` | - |
 | step | Step of each change; may be a decimal. | `number` | `1` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, string>>"}>Type</ApiType> | - |
 | suffix | Snippet of the suffix content; replaced while the innerButtons buttons are shown. | `Snippet` | - |
 | validateStatus | Validation status: default, error, warning or success. | `ValidateStatus` | - |
 | value | Current value; bind it with `bind:value`. A partial or invalid text is a string and a cleared input is ''. `bind:value={get, set}` makes it fully controlled; a plain `value` is the initial value. | `number \| string` | - |

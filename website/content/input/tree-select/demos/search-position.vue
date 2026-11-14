@@ -59,8 +59,8 @@
 </script>
 
 <template>
-    <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" filterTreeNode placeholder="单选" searchPosition="trigger" style="width: 300px" :treeData="treeData" />
+    <TreeSelect filterTreeNode placeholder="单选" searchPosition="trigger" style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
     <br />
     <br />
-    <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" filterTreeNode :maxTagCount="2" multiple placeholder="多选" searchPosition="trigger" style="width: 300px" :treeData="treeData" />
+    <TreeSelect filterTreeNode :maxTagCount="2" multiple placeholder="多选" searchPosition="trigger" style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
 </template>

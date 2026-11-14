@@ -1,4 +1,5 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { ImagePart, ImagePreviewPart } from '@fibrae/semi-foundation/components/image/constants';
 import type { RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 
 export type { RatioType, RotateDirection, SwitchDirection } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
@@ -29,8 +30,8 @@ export interface ImagePreviewComponentProps {
     disableDownload?: boolean;
     initialZoom?: number;
     crossOrigin?: 'anonymous' | 'use-credentials';
-    previewCls?: string;
-    previewStyle?: StyleValue;
+    classNames?: Partial<Record<ImagePreviewPart, ClassValue>>;
+    styles?: Partial<Record<ImagePreviewPart, StyleValue>>;
     prevTip?: string;
     nextTip?: string;
     zoomInTip?: string;
@@ -70,8 +71,8 @@ export interface ImageProps {
     /** Image shown when loading fails; a custom node goes through the `fallback` slot, which wins */
     fallback?: string;
     preview?: boolean | ImagePreviewProps;
-    imgStyle?: StyleValue;
-    imgCls?: string;
+    classNames?: Partial<Record<ImagePart, ClassValue>>;
+    styles?: Partial<Record<ImagePart, StyleValue>>;
     setDownloadName?: (src: string) => string;
 }
 

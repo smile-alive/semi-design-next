@@ -7,9 +7,13 @@
                 "zh-CN": "多彩按钮，仅支持 primary 与 tertiary 类型。未设置时使用所在 ButtonGroup 的值，最终默认为 false。",
                 "en-US": "Colorful button, supported for the primary and tertiary types only. Falls back to the ButtonGroup it is in, and finally to false."
             },
-            "contentClassName": {
-                "zh-CN": "内容区域的类名。",
-                "en-US": "Class name of the content area."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 content，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by content; merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 content，值可传 CSS 对象（键为 kebab-case）或字符串。",
+                "en-US": "Styles of the inner parts, keyed by content, each a CSS object with kebab-case keys or a string."
             },
             "disabled": {
                 "zh-CN": "禁用状态，优先于 loading。未设置时使用所在 ButtonGroup 的值，最终默认为 false。",

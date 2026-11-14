@@ -10,17 +10,13 @@
                 "zh-CN": "根元素（`span`）的类名。",
                 "en-US": "Class name of the root `span` element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `count`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `count`; merged with the built-in classes."
+            },
             "count": {
                 "zh-CN": "徽章内容，数字和字符串按文字显示；其他 ReactNode 直接渲染，此时不带 `type` 与 `theme` 对应的样式类。",
                 "en-US": "Badge content. Numbers and strings are shown as text; other nodes are rendered as is, without the `type` and `theme` classes."
-            },
-            "countClassName": {
-                "zh-CN": "内容区域的类名。",
-                "en-US": "Class name of the count element."
-            },
-            "countStyle": {
-                "zh-CN": "内容区域的样式，仅在未设置 `style` 时生效。",
-                "en-US": "Style of the count element, used only when `style` is not set."
             },
             "dot": {
                 "zh-CN": "显示为小圆点，不展示 `count`。",
@@ -51,8 +47,12 @@
                 "en-US": "Reference to the root `span` element."
             },
             "style": {
-                "zh-CN": "内容区域的样式，设置后替代 `countStyle` 而不是与其合并；不作用于根元素。",
-                "en-US": "Style of the count element. When set, it replaces `countStyle` rather than merging with it; it is not applied to the root element."
+                "zh-CN": "根元素（`span`）的样式。",
+                "en-US": "Style of the root `span` element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "theme": {
                 "zh-CN": "徽章主题，可选 `solid`、`light`、`inverted`。",

@@ -1,4 +1,5 @@
 import type { ClassValue } from 'svelte/elements';
+import type { PopoverPart } from '@fibrae/semi-foundation/components/popover/constants';
 import type { TooltipProps } from '../tooltip/index.js';
 
 export interface ArrowStyle {
@@ -9,8 +10,9 @@ export interface ArrowStyle {
 
 export interface ArrowProps {
     position?: string;
+    class?: ClassValue;
     arrowStyle?: ArrowStyle;
-    /** The popup's style string; its `background-color` and `border-color` color the arrow without an arrowStyle */
+    /** The popup's style string; its `background-color` and `border-color` color the arrow without styles.arrow */
     popStyle?: string;
 }
 
@@ -40,11 +42,11 @@ export interface PopoverProps {
     mouseEnterDelay?: number;
     mouseLeaveDelay?: number;
     trigger?: TooltipProps['trigger'];
-    contentClassName?: ClassValue;
+    classNames?: Partial<Record<PopoverPart, ClassValue>>;
     showArrow?: boolean;
     spacing?: number | { x: number; y: number };
     stopPropagation?: boolean | string;
-    arrowStyle?: ArrowStyle;
+    styles?: { content?: string; arrow?: ArrowStyle };
     arrowPointAtCenter?: boolean;
     closeOnEsc?: boolean;
     guardFocus?: boolean;

@@ -94,7 +94,7 @@ export default function Switch(rawProps: SwitchProps) {
             })}
         >
             <Show when={local.loading} fallback={<div class={cssClasses.KNOB} aria-hidden="true" />}>
-                <Spin wrapperClassName={cssClasses.LOADING_SPIN} size={local.size === 'default' ? 'middle' : local.size} />
+                <Spin class={cssClasses.LOADING_SPIN} size={local.size === 'default' ? 'middle' : local.size} />
             </Show>
             <Show when={hasContent(checkedText())}>
                 <div class={cssClasses.CHECKED_TEXT} x-semi-prop="checkedText">

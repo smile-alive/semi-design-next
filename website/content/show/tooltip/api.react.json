@@ -32,6 +32,10 @@
                 "en-US": "The trigger. Use a DOM element, or a function component that forwards its props and `ref` to its root DOM node. Text and other content is wrapped in a span that serves as the trigger."
             },
             "className": { "zh-CN": "弹出层的样式名。", "en-US": "Class name of the popup." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `wrapper`（触发元素需要被 span 包裹时的该 span），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes."
+            },
             "clickToHide": {
                 "zh-CN": "点击弹出层及其内部任一元素时是否关闭弹出层。",
                 "en-US": "Whether a click on the popup or anything inside it closes the popup."
@@ -122,6 +126,10 @@
                 "zh-CN": "弹出层的内联样式；箭头颜色只读取对象形式中的 `background-color`。",
                 "en-US": "Inline style of the popup. The arrow color reads `background-color` of an object style only."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，写在 span 自带样式之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; applied after the span's built-in style."
+            },
             "trigger": {
                 "zh-CN": "触发显示的时机，可选 `hover`、`focus`、`click`、`contextMenu` 或 `custom`；`custom` 时显示与否完全由 `visible` 决定。",
                 "en-US": "When the popup shows: `hover`, `focus`, `click`, `contextMenu` or `custom`. With `custom`, `visible` alone decides."
@@ -129,10 +137,6 @@
             "visible": {
                 "zh-CN": "弹出层是否显示（受控）。传入后触发器、点击外部与 Esc 只通过 `onVisibleChange` 请求打开或关闭，使用方回写后才生效。",
                 "en-US": "Whether the popup is shown (controlled). When given, the trigger, outside clicks and Esc only request a change through `onVisibleChange`, which takes effect once the caller writes it back."
-            },
-            "wrapperClassName": {
-                "zh-CN": "触发元素需要被 span 包裹时，该 span 的类名。",
-                "en-US": "Class name of the span that wraps the trigger when a wrapper is needed."
             },
             "wrapperId": {
                 "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",

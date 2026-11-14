@@ -11,6 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | Extra content at the bottom of the dropdown. | `Snippet` | - |
 | changeOnSelect | Whether a non-leaf node can be selected in single mode. | `boolean` | `false` |
 | checkRelation | In multiple mode, how the checked states of the nodes relate: related links parents and children, unRelated keeps them independent. | `'related' \| 'unRelated'` | `"related"` |
+| classNames | Class names of the inner parts, keyed by dropdown; values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Custom icon of the clear button, effective when showClear is true; empty content keeps the default icon. | `Snippet` | - |
 | clickToSelect | In multiple mode, clicking any node selects it. Often used with showNext set to hover: hovering expands the submenu and clicking selects the node. | `boolean` | `false` |
 | defaultOpen | Whether the dropdown is open on mount. | `boolean` | `false` |
@@ -18,8 +19,6 @@ import ApiType from '#/components/ApiType.astro';
 | disableStrictly | Whether to disable strictly. A disabled node then does not change when its parent or children are checked or unchecked. | `boolean` | `false` |
 | display | The selected path shown in single mode, with `{ labels, path }`: `labels` holds the displayProp of each node and `path` the nodes, or the raw values when the value is not in treeData. Empty content shows the placeholder. | <ApiType detail={"Snippet\u003c[CascaderDisplaySnippetProps]>"}>Type</ApiType> | - |
 | displayProp | The node field shown in the trigger and the tags, label by default. | `string` | `"label"` |
-| dropdownClassName | Class of the dropdown. | `string` | - |
-| dropdownStyle | Style of the dropdown, as a CSS string. | `string` | - |
 | emptyContent | Content shown when there is no data to pick or the search has no result. The default text from the locale shows when it is not given, and null hides the empty state. | `Snippet \| null` | - |
 | enableLeafClick | In multiple mode, whether clicking the option of a leaf node checks it. | `boolean` | `false` |
 | expandIcon | Custom expand icon; empty content keeps the default icon. | `Snippet` | - |
@@ -63,6 +62,7 @@ import ApiType from '#/components/ApiType.astro';
 | showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `false` |
 | size | Size of the select box. | `CascaderSize` | - |
 | stopPropagation | Whether clicks on the dropdown stop bubbling. | `boolean \| string` | `true` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, string>>"}>Type</ApiType> | - |
 | suffix | Suffix content. | `Snippet` | - |
 | tag | Replaces each tag in multiple mode, with `{ entity, index, disabled, onClose }`; `onClose` unchecks the node. | <ApiType detail={"Snippet\u003c[CascaderTagSnippetProps]>"}>Type</ApiType> | - |
 | topSlot | Extra content at the top of the dropdown. | `Snippet` | - |

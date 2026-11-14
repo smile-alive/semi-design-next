@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
+import { cssClasses, strings, type CropperPart } from '@fibrae/semi-foundation/components/cropper/constants';
 import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
 import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
 import { namedRole } from '@fibrae/semi-foundation/utils';
@@ -32,8 +32,8 @@ export interface CropperProps extends ElementProps<'div'> {
     onZoomChange?: (zoom: number) => void;
     rotate?: number;
     showResizeBox?: boolean;
-    cropperBoxStyle?: React.CSSProperties;
-    cropperBoxCls?: string;
+    classNames?: Partial<Record<CropperPart, string>>;
+    styles?: Partial<Record<CropperPart, React.CSSProperties>>;
     fill?: string;
     maxZoom?: number;
     minZoom?: number;
@@ -56,7 +56,7 @@ const defaultProps = {
 
 export default function Cropper(rawProps: CropperProps) {
     const props = useDefaultProps('Cropper', rawProps, defaultProps);
-    const { ref, className, style, src, imgProps, shape, aspectRatio, defaultAspectRatio, zoom, onZoomChange, rotate: rotateProp, showResizeBox, cropperBoxStyle, cropperBoxCls, fill, maxZoom, minZoom, zoomStep, preview, ...rest } = props;
+    const { ref, className, style, src, imgProps, shape, aspectRatio, defaultAspectRatio, zoom, onZoomChange, rotate: rotateProp, showResizeBox, classNames, styles, fill, maxZoom, minZoom, zoomStep, preview, ...rest } = props;
 
     const { locale } = useLocale('Cropper');
 
@@ -110,11 +110,15 @@ export default function Cropper(rawProps: CropperProps) {
             </div>
             <div className={cssClasses.MASK} onLostPointerCapture={foundation.handleMaskLostPointerCapture} onPointerDown={foundation.handleMaskPointerDown} onPointerMove={foundation.handleMaskPointerMove} />
             <div
-                className={clsx(cssClasses.CROPPER_BOX, cropperBoxCls, {
-                    [cssClasses.CROPPER_VIEW_BOX_ROUND]: shape === 'round',
-                })}
+                className={clsx(
+                    cssClasses.CROPPER_BOX,
+                    {
+                        [cssClasses.CROPPER_VIEW_BOX_ROUND]: shape === 'round',
+                    },
+                    classNames?.cropperBox
+                )}
                 style={{
-                    ...cropperBoxStyle,
+                    ...styles?.cropperBox,
                     width: cropperBox.width,
                     height: cropperBox.height,
                     transform: `translate(${boxX}px, ${boxY}px)`,

@@ -7,15 +7,22 @@
                 "zh-CN": "暗色模式下的占位图，跟随 document.body 的 theme-mode 变化；取值同 image。",
                 "en-US": "Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 image，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by image; values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
             "description": { "zh-CN": "描述内容。", "en-US": "Description content." },
             "image": {
                 "zh-CN": "占位图：图片地址字符串、`{ id }` 形式的页面内 SVG sprite 符号，或任意内容的 snippet；空字符串视为没有图片。",
                 "en-US": "Placeholder image: an image URL, an in-page SVG sprite symbol as `{ id }`, or a snippet for any other content. An empty string counts as no image."
             },
-            "imageStyle": { "zh-CN": "占位图容器的样式字符串。", "en-US": "Style string of the placeholder image box." },
             "layout": {
                 "zh-CN": "布局模式，可选 vertical、horizontal。",
                 "en-US": "Layout mode: vertical or horizontal."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "title": {
                 "zh-CN": "标题，字符串或 snippet。",

@@ -81,10 +81,8 @@ export default function Chat(rawProps: ChatProps) {
         'mode',
         'showClearContext',
         'placeholder',
-        'inputBoxCls',
-        'inputBoxStyle',
-        'hintStyle',
-        'hintCls',
+        'classNames',
+        'styles',
         'uploadProps',
         'uploadTipProps',
         'sendHotKey',
@@ -249,7 +247,7 @@ export default function Chat(rawProps: ChatProps) {
                             <For each={keys()}>{renderRow}</For>
                         </ChatContext.Provider>
                         <Show when={local.hints?.length}>
-                            <Hint class={local.hintCls} style={local.hintStyle} value={local.hints ?? []} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
+                            <Hint class={local.classNames?.hint} style={local.styles?.hint} value={local.hints ?? []} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
                         </Show>
                     </div>
                     {/* outside the log: a toast inside it would be announced as one more log entry */}
@@ -269,8 +267,8 @@ export default function Chat(rawProps: ChatProps) {
                 </Show>
                 <InputBox
                     ref={(handle) => (inputBox = handle)}
-                    class={local.inputBoxCls}
-                    style={local.inputBoxStyle}
+                    class={local.classNames?.inputBox}
+                    style={local.styles?.inputBox}
                     placeholder={local.placeholder}
                     canSend={local.canSend}
                     clickUpload={upload().clickUpload}

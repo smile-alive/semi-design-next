@@ -1,12 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性          | 说明                                                                                                    | 类型                         | 默认值                                        |
-| ------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------- |
-| darkModeImage | 暗色模式下的占位图，跟随 document.body 的 theme-mode 变化；取值同 image。                               | `string \| EmptySvgNode`     | `semiGlobalDefault("Empty", "darkModeImage")` |
-| image         | 占位图的 URL，或 `{ id }` 形式的页面内 SVG sprite 符号；空字符串视为没有图片。其他内容使用 image 插槽。 | `string \| EmptySvgNode`     | `semiGlobalDefault("Empty", "image")`         |
-| imageStyle    | 占位图的样式。                                                                                          | `CSSProperties`              | `semiGlobalDefault("Empty", "imageStyle")`    |
-| layout        | 布局模式，可选 vertical、horizontal。                                                                   | `"horizontal" \| "vertical"` | `"vertical"`                                  |
-| title         | 纯文本标题；同时传入 title 插槽时以插槽为准。                                                           | `string`                     | `semiGlobalDefault("Empty", "title")`         |
+| 属性          | 说明                                                                                                    | 类型                                                                                | 默认值                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------- |
+| classNames    | 内部各部位的类名，键为 image，值的写法同 class，与组件自带的类名合并。                                  | <ApiType detail={"Partial\u003cRecord\u003c\"image\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Empty", "classNames")`    |
+| darkModeImage | 暗色模式下的占位图，跟随 document.body 的 theme-mode 变化；取值同 image。                               | `string \| EmptySvgNode`                                                            | `semiGlobalDefault("Empty", "darkModeImage")` |
+| image         | 占位图的 URL，或 `{ id }` 形式的页面内 SVG sprite 符号；空字符串视为没有图片。其他内容使用 image 插槽。 | `string \| EmptySvgNode`                                                            | `semiGlobalDefault("Empty", "image")`         |
+| layout        | 布局模式，可选 vertical、horizontal。                                                                   | `"horizontal" \| "vertical"`                                                        | `"vertical"`                                  |
+| styles        | 内部各部位的样式，键为 image，值的写法同 style。                                                        | <ApiType detail={"Partial\u003cRecord\u003c\"image\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Empty", "styles")`        |
+| title         | 纯文本标题；同时传入 title 插槽时以插槽为准。                                                           | `string`                                                                            | `semiGlobalDefault("Empty", "title")`         |
 
 **Events**
 

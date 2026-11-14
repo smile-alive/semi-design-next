@@ -1011,13 +1011,20 @@ describe('AIChatDialogue 消息操作', () => {
 });
 
 describe('AIChatDialogue 提示', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = renderDialogue({ hints: ['first'], classNames: { hint: 'my-hint' }, styles: { hint: { order: 1 } } });
+        const section = container.querySelector(`.${prefix}-hints`);
+        expect(section).toHaveClass('my-hint');
+        expect(section).toHaveStyle({ order: '1' });
+    });
+
     it('渲染提示，点击后追加一条用户消息', async () => {
         const onChatsChange = vi.fn<Emit<'chatsChange'>>();
         const onHintClick = vi.fn<Emit<'hintClick'>>();
         const { container } = renderDialogue({
             hints: ['first', 'second'],
-            hintCls: 'hint-cls',
-            hintStyle: { color: 'red' },
+            classNames: { hint: 'hint-cls' },
+            styles: { hint: { color: 'red' } },
             onChatsChange,
             onHintClick,
         });

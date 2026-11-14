@@ -1,5 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ChatAlign, ChatMode, ChatPart, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { Content, EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import type { AvatarProps } from '@fibrae/semi-ui-vue/avatar/index';
 import type { MarkdownRenderComponents, MarkdownRenderProps } from '@fibrae/semi-ui-vue/markdown-render/index';
@@ -61,10 +61,8 @@ export interface ChatProps {
     uploadTipProps?: Omit<TooltipProps, 'content'>;
     markdownRenderProps?: ChatMarkdownRenderProps;
     customMarkDownComponents?: MarkdownRenderComponents;
-    inputBoxCls?: string;
-    inputBoxStyle?: StyleValue;
-    hintCls?: string;
-    hintStyle?: StyleValue;
+    classNames?: Partial<Record<ChatPart, ClassValue>>;
+    styles?: Partial<Record<ChatPart, StyleValue>>;
 }
 
 export interface ChatInputChangeProps {

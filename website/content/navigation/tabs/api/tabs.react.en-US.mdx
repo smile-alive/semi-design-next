@@ -8,8 +8,8 @@ import ApiType from '#/components/ApiType.astro';
 | arrowPosition | Position of the scroll arrows in collapsible mode: `start`, `end` or `both`. | `TabBarProps['arrowPosition']` | `"both"` |
 | children | TabPane children, which must be direct children of Tabs; any other node renders as content in its original order. With tabList, TabPane children are ignored and the other nodes are the content of the active tab. | <ApiType detail={"ReactNode \u007c Array\u003cReactNode>"}>Type</ApiType> | `[]` |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `tabBar`, `content` (the outer content area) and `visibleTabs` (the whole scrolling area in collapsible mode); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTabsPart, string>>"}>Type</ApiType> | - |
 | collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). `auto` collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| 'auto'` | `false` |
-| contentStyle | Style of the outer content area. | `CSSProperties` | - |
 | defaultActiveKey | The itemKey selected initially when uncontrolled. Omitted, the first enabled tab with an itemKey is selected. | `string` | - |
 | dropdownProps | In collapsible mode, the Dropdown props passed to the start-side (`start`) and end-side (`end`) arrow menus. | `TabsDropdownProps` | - |
 | keepDOM | With TabPane children, whether to render the DOM of inactive panels. When `false`, only the active panel is rendered and panels switch without motion. | `boolean` | `true` |
@@ -26,11 +26,9 @@ import ApiType from '#/components/ApiType.astro';
 | showRestInDropdown | In collapsible mode, whether the collapsed tabs are listed in a dropdown menu. | `boolean` | `true` |
 | size | Size of the tab bar: `small`, `medium` or `large`. Currently only the `line` type supports it. | `TabSize` | `"large"` |
 | style | Style of the root element. | `CSSProperties` | - |
-| tabBarClassName | Class name of the tab bar. | `string` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTabsPart, CSSProperties>>"}>Type</ApiType> | - |
 | tabBarExtraContent | Extra content of the tab bar, placed outside the tablist. | `ReactNode` | - |
-| tabBarStyle | Style of the tab bar. | `CSSProperties` | - |
 | tabList | An array of tab data, each with `itemKey`, `tab`, `icon`, `disabled` and `closable`. Any array, even an empty one, makes `children` the content of the active tab and takes precedence over TabPane children. | `PlainTab[]` | - |
 | tabPaneMotion | Whether switching panels is animated. | `boolean` | `true` |
 | tabPosition | Position of the tab bar: `top` is horizontal, `left` is vertical. | `TabPosition` | `"top"` |
 | type | Style of the tab bar: `line`, `card`, `button` or `slash`. `slash` supports horizontal mode only. | `TabType` | `"line"` |
-| visibleTabsStyle | In collapsible mode, the style of the whole scrolling area. | `TabBarProps['visibleTabsStyle']` | - |

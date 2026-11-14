@@ -33,6 +33,7 @@
 
     let {
         canSend = defaults('canSend'),
+        classNames = defaults('classNames'),
         clearContentOnGenerating = defaults('clearContentOnGenerating', true),
         defaultContent = defaults('defaultContent'),
         dropdownMatchTriggerWidth = defaults('dropdownMatchTriggerWidth', true),
@@ -51,9 +52,8 @@
         showUploadFile = defaults('showUploadFile', true),
         skillHotKey = defaults('skillHotKey'),
         skills = defaults('skills'),
+        styles = defaults('styles'),
         suggestions = defaults('suggestions'),
-        templatesCls = defaults('templatesCls'),
-        templatesStyle = defaults('templatesStyle'),
         topSlotPosition = defaults('topSlotPosition', 'top'),
         transformer = defaults('transformer'),
         uploadProps = defaults('uploadProps'),
@@ -455,7 +455,7 @@
 
 {#snippet panel()}
     {#if states().templateVisible}
-        <div class={[`${prefix}-template`, templatesCls]} style={[`max-height: ${numbers.TEMPLATE_MAX_HEIGHT}px`, templatesStyle].filter(Boolean).join('; ')}>
+        <div class={[`${prefix}-template`, classNames?.templates]} style={[`max-height: ${numbers.TEMPLATE_MAX_HEIGHT}px`, styles?.templates].filter(Boolean).join('; ')}>
             {@render template?.({ onTemplateClick: setContent, skill: states().skill })}
         </div>
     {:else if states().skillVisible}

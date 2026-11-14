@@ -3,7 +3,7 @@ import { useCallback, useEffect, useImperativeHandle, useId, useLayoutEffect, us
 import clsx from 'clsx';
 import { throttle } from 'es-toolkit';
 import { type ValidateStatus, FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+import { cssClasses, type TextAreaPart } from '@fibrae/semi-foundation/components/input/constants';
 import TextAreaFoundation, { type TextAreaAdapter, type TextAreaBaseState } from '@fibrae/semi-foundation/components/input/textarea-foundation';
 import { syncLineNumberHeights } from '@fibrae/semi-foundation/components/input/util/line-number';
 import { joinIds } from '@fibrae/semi-foundation/utils';
@@ -74,9 +74,8 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
     getValueLength?: (value: string) => number;
     showLineNumber?: boolean;
     lineNumberStart?: number;
-    lineNumberClassName?: string;
-    lineNumberStyle?: CSSProperties;
-    textareaStyle?: CSSProperties;
+    classNames?: Partial<Record<TextAreaPart, string>>;
+    styles?: Partial<Record<TextAreaPart, CSSProperties>>;
     /** When enabled, onChange fires once after an IME composition ends, not during it */
     composition?: boolean;
     /**
@@ -143,7 +142,8 @@ export default function TextArea(rawProps: TextAreaProps) {
         defaultValue,
         value: valueProp,
         style,
-        textareaStyle,
+        classNames,
+        styles,
         getValueLength,
         maxLength,
         minLength,
@@ -153,8 +153,6 @@ export default function TextArea(rawProps: TextAreaProps) {
         autoFocus,
         showLineNumber,
         lineNumberStart,
-        lineNumberClassName,
-        lineNumberStyle,
         composition,
         disabledEnterStartNewLine,
         onChange,
@@ -258,10 +256,10 @@ export default function TextArea(rawProps: TextAreaProps) {
         lineNumbers = (
             <div
                 ref={lineNumberRef}
-                className={clsx(`${prefixCls}-textarea-lineNumber`, lineNumberClassName)}
+                className={clsx(`${prefixCls}-textarea-lineNumber`, classNames?.lineNumber)}
                 // capped at the textarea height so the panel does not expand it
                 style={{
-                    ...lineNumberStyle,
+                    ...styles?.lineNumber,
                     height: height ? `${height}px` : undefined,
                     maxHeight: height ? `${height}px` : undefined,
                 }}
@@ -294,14 +292,18 @@ export default function TextArea(rawProps: TextAreaProps) {
         [`${prefixCls}-textarea-wrapper-resizeY`]: isResizableY,
     });
 
-    const itemCls = clsx(`${prefixCls}-textarea`, {
-        [`${prefixCls}-textarea-disabled`]: disabled,
-        [`${prefixCls}-textarea-readonly`]: readonly,
-        [`${prefixCls}-textarea-autosize`]: Boolean(autosize),
-        [`${prefixCls}-textarea-showClear`]: showClear,
-    });
+    const itemCls = clsx(
+        `${prefixCls}-textarea`,
+        {
+            [`${prefixCls}-textarea-disabled`]: disabled,
+            [`${prefixCls}-textarea-readonly`]: readonly,
+            [`${prefixCls}-textarea-autosize`]: Boolean(autosize),
+            [`${prefixCls}-textarea-showClear`]: showClear,
+        },
+        classNames?.textarea
+    );
 
-    const mergedTextareaStyle: CSSProperties = { ...textareaStyle, ...TextAreaFoundation.getSizeStyle({ autosize, resize, rows: props.rows }) };
+    const mergedTextareaStyle: CSSProperties = { ...styles?.textarea, ...TextAreaFoundation.getSizeStyle({ autosize, resize, rows: props.rows }) };
     const current = showCounter || maxCount ? TextAreaFoundation.getValueCount(value, getValueLength) : 0;
     const exceeds = Boolean(maxCount) && current > maxCount;
 

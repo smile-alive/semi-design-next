@@ -1,6 +1,6 @@
 import { children, createMemo, createUniqueId, onCleanup, onMount, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { radioClasses as css, type strings } from '@fibrae/semi-foundation/components/radio/constants';
+import { radioClasses as css, type RadioPart, type strings } from '@fibrae/semi-foundation/components/radio/constants';
 import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import { joinIds } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/radio/radio.scss';
@@ -22,8 +22,8 @@ export interface RadioProps extends ElementProps<'label', 'onChange' | 'onFocus'
     onChange?: (event: RadioChangeEvent) => void;
     mode?: RadioMode;
     extra?: JSX.Element;
-    addonStyle?: JSX.CSSProperties | string;
-    addonClassName?: string;
+    classNames?: Partial<Record<RadioPart, string>>;
+    styles?: Partial<Record<RadioPart, JSX.CSSProperties | string>>;
     type?: RadioType;
     addonId?: string;
     extraId?: string;
@@ -58,7 +58,7 @@ const prefix = css.PREFIX;
 
 export default function Radio(rawProps: RadioProps) {
     const props = useDefaultProps('Radio', rawProps, defaultProps);
-    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'value', 'disabled', 'displayMode', 'onChange', 'onClick', 'mode', 'addonStyle', 'addonClassName', 'type', 'addonId', 'extraId', 'preventScroll']);
+    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'value', 'disabled', 'displayMode', 'onChange', 'onClick', 'mode', 'classNames', 'styles', 'type', 'addonId', 'extraId', 'preventScroll']);
 
     // The root is a label, so what names, identifies and focuses the radio belongs on the native input
     const [control, rest] = splitControlAttrs(attrs, isNativeInputKey);
@@ -212,9 +212,9 @@ export default function Radio(rawProps: RadioProps) {
                                     [`${prefix}-addon-buttonRadio-disabled`]: view().isButtonRadio && view().disabled,
                                     [`${prefix}-addon-buttonRadio-${view().buttonSize}`]: view().isButtonRadio && view().buttonSize,
                                 },
-                                local.addonClassName
+                                local.classNames?.addon
                             )}
-                            style={local.addonStyle}
+                            style={local.styles?.addon}
                             x-semi-prop="children"
                         >
                             {content()}

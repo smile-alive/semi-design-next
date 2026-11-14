@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLTdAttributes, HTMLThAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/components/table/constants';
+import type { ClassValue, HTMLAttributes, HTMLTdAttributes, HTMLThAttributes } from 'svelte/elements';
+import type { strings, TablePart } from '@fibrae/semi-foundation/components/table/constants';
 import type { BaseAlign, BaseChangeInfoFilter, BaseChangeInfoSorter, BaseEllipsis, BaseFixed, BaseIncludeGroupRecord, BasePageData, CheckRelation, OnChangeExtra } from '@fibrae/semi-foundation/components/table/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import type { CheckboxProps } from '../checkbox/interface.js';
@@ -277,6 +277,7 @@ export interface TableVirtualizedScrollArgs {
 export interface TableProps<R extends AnyRecord = AnyRecord> extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'onchange' | 'onscroll' | 'children'> {
     bordered?: boolean;
     childrenRecordName?: string;
+    classNames?: Partial<Record<TablePart, ClassValue>>;
     clickGroupedRowToExpand?: boolean;
     columns?: ColumnProps<R>[];
     components?: TableComponents;
@@ -301,7 +302,6 @@ export interface TableProps<R extends AnyRecord = AnyRecord> extends Omit<HTMLAt
     footer?: string | Snippet<[TableTitleSnippetProps<R>]>;
     groupBy?: TableGroupBy<R>;
     groupSectionColumn?: (groupKey: string | number, group: (string | number)[]) => Omit<ColumnProps<R>, 'title' | 'children' | 'dataIndex'>;
-    headerStyle?: string;
     hideExpandedColumn?: boolean;
     indentSize?: number;
     keepDOM?: boolean;
@@ -318,6 +318,7 @@ export interface TableProps<R extends AnyRecord = AnyRecord> extends Omit<HTMLAt
     showHeader?: boolean;
     size?: TableSize;
     sticky?: TableSticky;
+    styles?: Partial<Record<TablePart, string>>;
     title?: string | Snippet<[TableTitleSnippetProps<R>]>;
     virtualized?: TableVirtualized;
     onChange?: (changeInfo: TableChangeInfo<R>) => void;

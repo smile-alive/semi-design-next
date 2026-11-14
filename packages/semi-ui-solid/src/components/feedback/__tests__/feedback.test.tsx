@@ -481,6 +481,24 @@ describe('Feedback', () => {
         expect($(`.${BASE_CLASS_PREFIX}-modal`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('classNames 与 styles 按部位转发给当前模式的 SideSheet 或 Modal', () => {
+        const parts = ['mask', 'header', 'body'] as const;
+        const classNames = Object.fromEntries(parts.map((part) => [part, `my-${part}`]));
+        const styles = Object.fromEntries(parts.map((part) => [part, { order: parts.indexOf(part) + 1 }]));
+        const check = (component: string) => {
+            for (const part of parts) {
+                const el = $(`.${BASE_CLASS_PREFIX}-${component}-${part}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+        const { unmount } = render(() => <Feedback classNames={classNames} mask styles={styles} title="T" visible />);
+        check('sidesheet');
+        unmount();
+        render(() => <Feedback classNames={classNames} mode="modal" motion={false} styles={styles} title="T" visible />);
+        check('modal');
+    });
+
     it('从 semiGlobal 读取默认值', () => {
         semiGlobal.config.overrideDefaultProps = { Feedback: { mode: 'modal', type: 'text', motion: false } };
         render(() => <Feedback visible />);

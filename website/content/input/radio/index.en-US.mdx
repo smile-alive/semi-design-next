@@ -189,7 +189,7 @@ You can pass an array of options to `RadioGroup` using `options` property to cre
 
 <RadioGroupVueApi />
 
-Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style`, `addonId`, `addonStyle`, `addonClass` and `extraId`, and no `onChange`. Use the `#label` and `#extra` scoped slots for custom content. `class`, `style` and native attributes passed as attrs land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; the `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered.
+Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style`, `addonId`, `classNames`, `styles` and `extraId`, and no `onChange`. Use the `#label` and `#extra` scoped slots for custom content. `class`, `style` and native attributes passed as attrs land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; the `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered.
 
 </Framework>
 
@@ -197,7 +197,7 @@ Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`st
 
 <RadioGroupSolidApi />
 
-Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style`, `addonId`, `addonStyle`, `addonClassName` and `extraId`, and no `onChange`. Use `renderLabel(option, index)` and `renderExtra(option, index)` for custom content; a button radio never calls `renderExtra`. `class`, `style`, `ref`, `onBlur` and native attributes land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; `onBlur` fires only when focus leaves the whole group. The `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered.
+Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style`, `addonId`, `classNames`, `styles` and `extraId`, and no `onChange`. Use `renderLabel(option, index)` and `renderExtra(option, index)` for custom content; a button radio never calls `renderExtra`. `class`, `style`, `ref`, `onBlur` and native attributes land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; `onBlur` fires only when focus leaves the whole group. The `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered.
 
 </Framework>
 
@@ -205,7 +205,7 @@ Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`st
 
 <RadioGroupSvelteApi />
 
-Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style` (a string), `addonId`, `addonStyle` (a string), `addonClass` and `extraId`, and no `onChange`. Use the `label` and `extra` snippets, with the parameter `{ option, index }`, for custom content; a button radio does not render `extra`. `class`, `style` (a string), `onBlur` and native attributes land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; `onBlur` fires only when focus leaves the whole group. The `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered. `value` supports `bind:`, a function binding, a one-way value, or nothing, and there is no `defaultValue`.
+Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style` (a string), `addonId`, `classNames`, `styles` (each part's value is a string) and `extraId`, and no `onChange`. Use the `label` and `extra` snippets, with the parameter `{ option, index }`, for custom content; a button radio does not render `extra`. `class`, `style` (a string), `onBlur` and native attributes land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; `onBlur` fires only when focus leaves the whole group. The `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered. `value` supports `bind:`, a function binding, a one-way value, or nothing, and there is no `defaultValue`.
 
 </Framework>
 

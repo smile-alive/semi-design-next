@@ -18,6 +18,10 @@
                 "zh-CN": "`.semi-slider-wrapper` 元素的类名。",
                 "en-US": "Class name of the `.semi-slider-wrapper` element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `rail`（轨道），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `rail`; merged with the built-in classes."
+            },
             "defaultValue": {
                 "zh-CN": "非受控时的初始取值，未设置时为 `min`。",
                 "en-US": "Initial value when uncontrolled. Defaults to `min`."
@@ -78,10 +82,6 @@
                 "zh-CN": "拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时触发。",
                 "en-US": "Fires when the pointer (mouse, touch or pen) that dragged the handle is released or cancelled, and when a value key is released."
             },
-            "railStyle": {
-                "zh-CN": "滑块轨道的样式。",
-                "en-US": "Style of the slider rail."
-            },
             "range": {
                 "zh-CN": "是否支持两端同时可滑动。",
                 "en-US": "Whether both ends can be dragged."
@@ -129,6 +129,10 @@
             "style": {
                 "zh-CN": "`.semi-slider-wrapper` 元素的样式。",
                 "en-US": "Style of the `.semi-slider-wrapper` element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "title": {
                 "zh-CN": "落在 `.semi-slider-wrapper` 元素上的 title 属性。",

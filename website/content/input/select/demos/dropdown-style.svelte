@@ -9,4 +9,4 @@
     ];
 </script>
 
-<Select aria-label="业务线" dropdownClassName="test" dropdownStyle="width: 250px" {optionList} placeholder="自定义弹出层样式的" style="width: 180px" />
+<Select aria-label="业务线" classNames={{ dropdown: 'test' }} {optionList} placeholder="自定义弹出层样式的" style="width: 180px" styles={{ dropdown: 'width: 250px' }} />

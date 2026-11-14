@@ -2,20 +2,20 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性           | 说明                                                                                            | 类型               | 默认值                                         |
-| -------------- | ----------------------------------------------------------------------------------------------- | ------------------ | ---------------------------------------------- |
-| addonClassName | 包裹内容容器的类名。                                                                            | `string`           | `semiGlobalDefault("Radio", "addonClassName")` |
-| addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。                                | `string`           | `undefined`                                    |
-| addonStyle     | 包裹内容容器的内联样式。                                                                        | `StyleValue`       | `semiGlobalDefault("Radio", "addonStyle")`     |
-| defaultChecked | 初始是否选中，非受控使用；在 RadioGroup 中使用时无效。                                          | `boolean`          | `false`                                        |
-| disabled       | 是否禁用。                                                                                      | `boolean`          | `semiGlobalDefault("Radio", "disabled")`       |
-| displayMode    | 设为 vertical 时 Radio 以块级元素独占一行。                                                     | `RadioDisplayMode` | `semiGlobalDefault("Radio", "displayMode")`    |
-| extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。                               | `string`           | `undefined`                                    |
-| mode           | 设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中；在 RadioGroup 中以组的 mode 为准。 | `RadioMode`        | `""`                                           |
-| modelValue     | 是否选中，配合 v-model 受控使用；在 RadioGroup 中使用时无效。                                   | `boolean`          | `undefined`                                    |
-| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                                           | `boolean`          | `semiGlobalDefault("Radio", "preventScroll")`  |
-| type           | 样式类型，可选 default、button、card、pureCard；在 RadioGroup 中以组的 type 为准。              | `RadioType`        | `"default"`                                    |
-| value          | Radio 的值，RadioGroup 据此判断是否选中；同时作为原生 input 的 value 参与表单提交。             | `RadioValue`       | `undefined`                                    |
+| 属性           | 说明                                                                                            | 类型                                                                                | 默认值                                        |
+| -------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------- |
+| addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。                                | `string`                                                                            | `undefined`                                   |
+| classNames     | 内部各部位的类名，键为 addon（包裹内容的容器），值的写法同 class，与组件自带的类名合并。        | <ApiType detail={"Partial\u003cRecord\u003c\"addon\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Radio", "classNames")`    |
+| defaultChecked | 初始是否选中，非受控使用；在 RadioGroup 中使用时无效。                                          | `boolean`                                                                           | `false`                                       |
+| disabled       | 是否禁用。                                                                                      | `boolean`                                                                           | `semiGlobalDefault("Radio", "disabled")`      |
+| displayMode    | 设为 vertical 时 Radio 以块级元素独占一行。                                                     | `RadioDisplayMode`                                                                  | `semiGlobalDefault("Radio", "displayMode")`   |
+| extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。                               | `string`                                                                            | `undefined`                                   |
+| mode           | 设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中；在 RadioGroup 中以组的 mode 为准。 | `RadioMode`                                                                         | `""`                                          |
+| modelValue     | 是否选中，配合 v-model 受控使用；在 RadioGroup 中使用时无效。                                   | `boolean`                                                                           | `undefined`                                   |
+| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                                           | `boolean`                                                                           | `semiGlobalDefault("Radio", "preventScroll")` |
+| styles         | 内部各部位的样式，键为 addon（包裹内容的容器），值的写法同 style。                              | <ApiType detail={"Partial\u003cRecord\u003c\"addon\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Radio", "styles")`        |
+| type           | 样式类型，可选 default、button、card、pureCard；在 RadioGroup 中以组的 type 为准。              | `RadioType`                                                                         | `"default"`                                   |
+| value          | Radio 的值，RadioGroup 据此判断是否选中；同时作为原生 input 的 value 参与表单提交。             | `RadioValue`                                                                        | `undefined`                                   |
 
 **Events**
 

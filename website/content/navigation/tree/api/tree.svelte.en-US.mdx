@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoMergeValue | When a parent is selected the value leaves out its descendants; applies when leafOnly is false. | `boolean` | `true` |
 | blockNode | Shows each node as a whole row, highlighting the row on hover and selection; when off only the label is highlighted. | `boolean` | `true` |
 | checkRelation | How the checked states of nodes relate in a multiple tree: related links parents and children, unRelated keeps them independent. | `CheckRelation` | `"related"` |
+| classNames | Class names of the inner parts, keyed by search (the search box container); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTreePart, ClassValue>>"}>Type</ApiType> | - |
 | defaultExpandAll | Expands every node on mount. Later changes of treeData or treeDataSimpleJson do not affect it; use expandAll for that. | `boolean` | `false` |
 | directory | Directory mode with built-in folder icons, which the icon snippet can replace. | `boolean` | `false` |
 | disabled | Disables the whole tree. A node with disabled: false does not lift it. | `boolean` | `false` |
@@ -47,12 +48,11 @@ import ApiType from '#/components/ApiType.astro';
 | onSelect | Called when a node is selected or deselected, with its key, whether it is selected and its data. | <ApiType detail={"(selectedKey: string, selected: boolean, node: TreeNodeData) => void"}>Type</ApiType> | - |
 | renderDraggingNode | The element the browser shows while a node is dragged, with the node element nodeInstance and the node data node as arguments; on dragstart the snippet is rendered into a detached container and used as the drag image, so only app-level context reaches it. | <ApiType detail={"Snippet\u003c[TreeDraggingNodeSnippetProps]>"}>Type</ApiType> | - |
 | search | Replaces the search box, with `class`, `value`, `placeholder`, `showClear` and `onChange` as its argument; false hides the box while filterTreeNode still filters. | <ApiType detail={"Snippet\u003c[TreeSearchSnippetProps]> \u007c false"}>Type</ApiType> | - |
-| searchClassName | Class of the search box container. | `string` | - |
 | searchPlaceholder | Placeholder of the search box. | `string` | - |
-| searchStyle | Style string of the search box container. | `string` | - |
 | showClear | Whether the search box shows a clear button. | `boolean` | `true` |
 | showFilteredOnly | Shows only the filtered nodes while searching. | `boolean` | `false` |
 | showLine | Shows connecting lines between nodes. | `boolean` | `false` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTreePart, string>>"}>Type</ApiType> | - |
 | treeData | Node data; keys are unique across the tree. Only a new array updates the tree, changes made in place are not seen. A node's icon is drawn by the icon snippet, and its label is a string or number. | `TreeNodeData[]` | - |
 | treeDataSimpleJson | Node data as a plain JSON object; the value is a JSON object holding the selected nodes. | `TreeDataSimpleJson` | - |
 | treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `"label"` |

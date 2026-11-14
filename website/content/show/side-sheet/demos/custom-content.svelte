@@ -13,7 +13,7 @@
 </script>
 
 <Button onclick={() => (visible = true)}>More Information</Button>
-<SideSheet bind:visible bodyStyle={border} closable={false} headerStyle={border} title="创建资源包">
+<SideSheet bind:visible closable={false} styles={{ header: border, body: border }} title="创建资源包">
     {#snippet footer()}
         <div style="display: flex; justify-content: flex-end">
             <Button style="margin-inline-end: 8px">重置</Button>

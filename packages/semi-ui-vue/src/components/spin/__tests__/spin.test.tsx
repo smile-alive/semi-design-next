@@ -89,19 +89,26 @@ describe('Spin', () => {
         expect(vi.getTimerCount()).toBe(0);
     });
 
-    it('class 与 wrapperClassName 及 attrs 落在根元素', () => {
+    it('class 与 attrs 落在根元素', () => {
         const { container } = render(Spin, {
-            props: { wrapperClassName: 'wrap' },
             attrs: { class: 'custom', 'data-x': '1', style: { color: 'red' } },
         });
-        expect(container.firstElementChild).toHaveClass(prefixCls, 'wrap', 'custom');
+        expect(container.firstElementChild).toHaveClass(prefixCls, 'custom');
         expect(container.firstElementChild).toHaveAttribute('data-x', '1');
         expect(container.firstElementChild).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('渲染 indicator、tip、children、size 与 childStyle', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = render(Spin, { props: { classNames: { child: 'c' }, styles: { child: { opacity: 0.5 } } }, slots: { default: () => <p>content</p> } });
+        expect(container.firstElementChild).not.toHaveStyle({ opacity: '0.5' });
+        expect(container.firstElementChild).not.toHaveClass('c');
+        expect(container.querySelector(`.${prefixCls}-children`)).toHaveClass('c');
+        expect(container.querySelector(`.${prefixCls}-children`)).toHaveStyle({ opacity: '0.5' });
+    });
+
+    it('渲染 indicator、tip、children、size 与 styles.child', () => {
         const { container } = render(Spin, {
-            props: { size: 'large', childStyle: { opacity: 0.5 } },
+            props: { size: 'large', styles: { child: { opacity: 0.5 } } },
             slots: {
                 indicator: () => <i data-testid="indicator" />,
                 tip: () => <span>loading</span>,

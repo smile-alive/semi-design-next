@@ -1,7 +1,7 @@
 import type React from 'react';
 import { createElement, memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
+import { type HighlightPart, cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
 import { findAll, type HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
 import '@fibrae/semi-foundation/components/highlight/highlight.scss';
 import { useDefaultProps } from '../../base/index';
@@ -19,8 +19,8 @@ export interface HighlightProps {
     caseSensitive?: boolean;
     sourceString?: string;
     searchWords?: string | SearchWords;
-    highlightStyle?: React.CSSProperties;
-    highlightClassName?: string;
+    classNames?: Partial<Record<HighlightPart, string>>;
+    styles?: Partial<Record<HighlightPart, React.CSSProperties>>;
     component?: string;
 }
 
@@ -35,9 +35,9 @@ const defaultProps = {
 
 /** Renders the chunks inline with no wrapper, so there is no root for a ref or extra props */
 function Highlight(rawProps: HighlightProps): React.ReactNode[] {
-    const { searchWords = [], sourceString, component, highlightClassName, highlightStyle, caseSensitive, autoEscape } = useDefaultProps('Highlight', rawProps, defaultProps);
+    const { searchWords = [], sourceString, component, classNames, styles, caseSensitive, autoEscape } = useDefaultProps('Highlight', rawProps, defaultProps);
 
-    const tagCls = clsx(`${prefixCls}-tag`, highlightClassName);
+    const tagCls = clsx(`${prefixCls}-tag`, classNames?.highlight);
 
     // the foundation names a word's class `class`
     const words = typeof searchWords === 'string' ? searchWords : searchWords.map((word) => (word && typeof word === 'object' ? { text: word.text, class: word.className, style: word.style } : word));
@@ -46,7 +46,7 @@ function Highlight(rawProps: HighlightProps): React.ReactNode[] {
         if (!highlight) {
             return text;
         }
-        return createElement(component || 'mark', { style: { ...highlightStyle, ...style }, className: clsx(tagCls, className), key: index }, text);
+        return createElement(component || 'mark', { style: { ...styles?.highlight, ...style }, className: clsx(tagCls, className), key: index }, text);
     });
 }
 

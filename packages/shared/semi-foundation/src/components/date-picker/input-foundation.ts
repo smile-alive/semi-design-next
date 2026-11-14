@@ -54,6 +54,7 @@ export interface DateInputFoundationProps extends DateInputElementProps, DateInp
     type?: Type;
     showClear?: boolean;
     format?: string;
+    inputClassName?: string;
     inputStyle?: Record<string, any>;
     inputReadOnly?: boolean;
     validateStatus?: ValidateStatus;

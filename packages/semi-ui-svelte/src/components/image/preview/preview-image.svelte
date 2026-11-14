@@ -99,6 +99,6 @@
         />
     {/key}
     {#if states().loading}
-        <Spin size="large" wrapperClassName="{cls}-spin" />
+        <Spin class="{cls}-spin" size="large" />
     {/if}
 </div>

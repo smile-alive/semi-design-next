@@ -3,7 +3,7 @@ import { type CSSProperties, type ReactNode, useId, useImperativeHandle, useMemo
 import clsx from 'clsx';
 import { isEqualWith } from 'es-toolkit';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
-import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
+import { cssClasses, type AutoCompletePart } from '@fibrae/semi-foundation/components/auto-complete/constants';
 import AutoCompleteFoundation, { type AutoCompleteAdapter, type StateOptionItem, type DataItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { getOptionId, isInnerControlKey, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
@@ -46,8 +46,8 @@ export interface AutoCompleteProps<T extends AutoCompleteItems> extends ElementP
     defaultValue?: string | number;
     defaultActiveFirstOption?: boolean;
     dropdownMatchSelectWidth?: boolean;
-    dropdownClassName?: string;
-    dropdownStyle?: React.CSSProperties;
+    classNames?: Partial<Record<AutoCompletePart, string>>;
+    styles?: Partial<Record<AutoCompletePart, React.CSSProperties>>;
     emptyContent?: React.ReactNode;
     insetLabel?: React.ReactNode;
     insetLabelId?: string;
@@ -128,8 +128,8 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
         defaultValue,
         defaultActiveFirstOption,
         dropdownMatchSelectWidth,
-        dropdownClassName,
-        dropdownStyle,
+        classNames,
+        styles,
         emptyContent,
         insetLabel,
         insetLabelId,
@@ -333,8 +333,8 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
         <div
             ref={optionContainerEl}
             id={optionListId}
-            className={clsx(`${prefixCls}-option-list`, dropdownClassName)}
-            style={{ maxHeight, ...dropdownStyle }}
+            className={clsx(`${prefixCls}-option-list`, classNames?.dropdown)}
+            style={{ maxHeight, ...styles?.dropdown }}
             // the combobox's name source, never the input itself: accname would read its typed value
             {...nameProps}
             role="listbox"

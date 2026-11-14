@@ -18,3 +18,6 @@ export const strings = {
     TYPE_PURECARD: 'pureCard',
     BUTTON_SIZE: ['middle', 'small', 'large'],
 } as const;
+
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type RadioPart = 'addon';

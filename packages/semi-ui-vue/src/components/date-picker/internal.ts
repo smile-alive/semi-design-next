@@ -1,4 +1,4 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import type { DisabledTimeType, PresetType, Type, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInputValue, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
@@ -197,6 +197,7 @@ export interface DatePickerDateInputProps {
     showClear?: boolean;
     showClearIgnoreDisabled?: boolean;
     inputReadOnly?: boolean;
+    inputClassName?: ClassValue;
     inputStyle?: StyleValue;
     insetLabelId?: string;
     validateStatus?: ValidateStatus;

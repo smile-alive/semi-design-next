@@ -6,14 +6,13 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | autoAdjustOverflow | Whether the dropdown flips automatically when it would be clipped. | `boolean` | - |
 | autofocus | Whether to focus the input after mount. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by dropdown (the dropdown list, the role="listbox" element); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAutoCompletePart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Snippet for the custom clear icon, effective when showClear is true. | `Snippet` | - |
 | data | Data source of the candidates: an array of strings, numbers or objects. An object item uses value as the picked value and label as its text (value when label is missing); its disabled, class, style and data-\* fields go to the matching row, where class takes a string, array or object and style is a string. Use the item snippet for markup. | `T[]` | `[]` |
 | defaultActiveFirstOption | Whether the first candidate is highlighted when the panel opens, so that Enter picks it directly. | `boolean` | `false` |
 | defaultOpen | Whether the dropdown panel is open on mount; AutoComplete has no controlled open state. | `boolean` | - |
 | disabled | Whether the component is disabled. | `boolean` | - |
-| dropdownClassName | Class name of the dropdown list, applied to the role="listbox" element. | `string` | - |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown equals the width of the input. | `boolean` | `true` |
-| dropdownStyle | Inline style string of the dropdown list, applied to the role="listbox" element. | `string` | - |
 | emptyContent | Snippet for the content shown in the dropdown when data is empty. | `Snippet` | - |
 | insetLabel | Snippet for the inset label of the input; passing it counts as having content. It is not rendered, and does not name the component, when prefix or trigger is used. | `Snippet` | - |
 | insetLabelId | The id of the insetLabel element, which names the combobox and the listbox. When omitted, the component generates one while an insetLabel is rendered. | `string` | - |
@@ -36,6 +35,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | Whether to show the clear button when there is content. | `boolean` | `false` |
 | size | Size of the input. | `Size` | - |
 | stopPropagation | Whether click, mousedown and focus in/out events on the dropdown stop propagating. | `boolean \| string` | `true` |
+| styles | Style strings of the inner parts, keyed like classNames; dropdown is merged with maxHeight and applied to the role="listbox" element. | <ApiType detail={"Partial\u003cRecord\u003cAutoCompletePart, string>>"}>Type</ApiType> | - |
 | suffix | Snippet for the suffix of the input. | `Snippet` | - |
 | trigger | Snippet that replaces the input. Its parameters are value, inputValue, placeholder, disabled, autofocus, size, validateStatus, showClear, insetLabelId, onChange (updates the input text, calls onSearch and onChange and opens the list), onClear, onFocus, onBlur and controlAttrs (the aria-\* attributes given to the component, for the focusable element of the custom trigger). With it, id lands on the root element. | <ApiType detail={"Snippet\u003c[AutoCompleteTriggerSnippetProps]>"}>Type</ApiType> | - |
 | validateStatus | Validation status; it only affects the style. | `ValidateStatus` | `"default"` |

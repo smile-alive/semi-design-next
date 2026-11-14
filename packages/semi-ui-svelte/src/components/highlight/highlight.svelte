@@ -14,8 +14,8 @@
         caseSensitive = defaults('caseSensitive', false),
         autoEscape = defaults('autoEscape', true),
         component = defaults('component', 'mark'),
-        highlightClassName = defaults('highlightClassName'),
-        highlightStyle = defaults('highlightStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
     }: HighlightProps = $props();
 
     // plain-text chunks are never adjacent, so hydration cannot merge their text nodes
@@ -28,16 +28,15 @@
         })
     );
 
-    const toStyle = (...styles: (HighlightStyle | undefined)[]) =>
-        styles
-            .flatMap((style) => Object.entries(style ?? {}))
+    const toStyle = (style: HighlightStyle | undefined) =>
+        Object.entries(style ?? {})
             .map(([key, value]) => `${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}: ${value};`)
-            .join(' ') || undefined;
+            .join(' ');
 </script>
 
 {#each chunks as chunk, index (index)}
     {#if chunk.highlight}
-        <svelte:element this={component || 'mark'} class={[`${cssClasses.PREFIX}-tag`, highlightClassName, chunk.class]} style={toStyle(highlightStyle, chunk.style)}>{chunk.text}</svelte:element>
+        <svelte:element this={component || 'mark'} class={[`${cssClasses.PREFIX}-tag`, classNames?.highlight, chunk.class]} style={[styles?.highlight, toStyle(chunk.style)].filter(Boolean).join('; ') || undefined}>{chunk.text}</svelte:element>
     {:else}
         {chunk.text}
     {/if}

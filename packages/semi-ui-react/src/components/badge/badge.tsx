@@ -1,7 +1,7 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
+import { type BadgePart, cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
 import '@fibrae/semi-foundation/components/badge/badge.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
 import { useConfigContext } from '../config-provider/context';
@@ -25,8 +25,8 @@ export interface BadgeProps extends ElementProps<'span'> {
     onMouseLeave?: (e: React.MouseEvent) => any;
     onClick?: (e: React.MouseEvent) => any;
     children?: React.ReactNode;
-    countClassName?: string;
-    countStyle?: React.CSSProperties;
+    classNames?: Partial<Record<BadgePart, string>>;
+    styles?: Partial<Record<BadgePart, React.CSSProperties>>;
     /** Attached to the root element */
     ref?: React.Ref<HTMLSpanElement>;
 }
@@ -38,7 +38,7 @@ const defaultProps = {
 } satisfies Partial<BadgeProps>;
 
 function Badge(rawProps: BadgeProps) {
-    const { ref, count, dot, type, theme, position, overflowCount, children, className, countClassName, countStyle, ...rest } = useDefaultProps('Badge', rawProps, defaultProps);
+    const { ref, count, dot, type, theme, position, overflowCount, children, className, classNames, styles, ...rest } = useDefaultProps('Badge', rawProps, defaultProps);
 
     const { direction } = useConfigContext();
 
@@ -48,15 +48,18 @@ function Badge(rawProps: BadgeProps) {
     const custom = count && !(typeof count === 'number' || typeof count === 'string');
     const showBadge = count != null;
 
-    const wrapper = clsx(countClassName, {
-        [`${prefixCls}-${type}`]: !custom,
-        [`${prefixCls}-${theme}`]: !custom,
-        [`${prefixCls}-${badgePosition}`]: Boolean(badgePosition) && Boolean(children),
-        [`${prefixCls}-block`]: !children,
-        [`${prefixCls}-dot`]: dot,
-        [`${prefixCls}-count`]: !dot && !custom && showBadge,
-        [`${prefixCls}-custom`]: custom,
-    });
+    const wrapper = clsx(
+        {
+            [`${prefixCls}-${type}`]: !custom,
+            [`${prefixCls}-${theme}`]: !custom,
+            [`${prefixCls}-${badgePosition}`]: Boolean(badgePosition) && Boolean(children),
+            [`${prefixCls}-block`]: !children,
+            [`${prefixCls}-dot`]: dot,
+            [`${prefixCls}-count`]: !dot && !custom && showBadge,
+            [`${prefixCls}-custom`]: custom,
+        },
+        classNames?.count
+    );
 
     if (typeof count === 'number') {
         content = overflowCount && overflowCount < count ? `${overflowCount}+` : `${count}`;
@@ -67,7 +70,7 @@ function Badge(rawProps: BadgeProps) {
     return (
         <span {...rest} ref={ref} className={clsx(prefixCls, className)}>
             {children}
-            <span className={wrapper} style={countStyle} x-semi-prop="count">
+            <span className={wrapper} style={styles?.count} x-semi-prop="count">
                 {!dot && content}
             </span>
         </span>

@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | bordered | 是否展示外边框和列边框。 | `boolean` | `false` |
 | cell | 数据单元格的内容，对所有数据列调用，参数含 text、record、index、column、expandIcon、isHovering 等，用 column.dataIndex 或 column.key 区分列；不处理的列需要自己渲染 text。列设置 useFullRender 时 snippet 替换整个单元格，参数里的 selection、indentText、expandIcon 用于摆放选择框、缩进和展开按钮。 | <ApiType detail={"Snippet\u003c[TableCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | childrenRecordName | 树形表格中，数据项里表示子级数据的字段名。 | `string` | `"children"` |
+| classNames | 内部各部位的类名，键为 header（每个表头单元格 th，包括固定表头），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTablePart, ClassValue>>"}>Type</ApiType> | - |
 | clickGroupedRowToExpand | 点击分组行时展开或收起该组。 | `boolean` | `false` |
 | columns | 列配置，详见 Column。列只含数据，列内的节点用 Table 的 cell、headerCell、sortIcon、filterIcon、filterDropdown 等 snippet 渲染。 | <ApiType detail={"ColumnProps\u003cR>[]"}>Type</ApiType> | - |
 | components | 覆盖 Table 的组成元素，如 header 与 body 的 outer、wrapper、row、cell，值为标签名，该元素替换对应位置的默认标签。 | `TableComponents` | - |
@@ -34,7 +35,6 @@ import ApiType from '#/components/ApiType.astro';
 | groupSection | 分组行的内容，参数含 groupKey 与 group（该组的行 key）。 | <ApiType detail={"Snippet\u003c[TableGroupSectionSnippetProps]>"}>Type</ApiType> | - |
 | groupSectionColumn | 分组行唯一一列的列配置，返回值不含 title、children、dataIndex。 | <ApiType detail={"(groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, 'children' \u007c 'dataIndex' \u007c 'title'>"}>Type</ApiType> | - |
 | headerCell | 列标题的内容，参数含 column、title 与 sorter、filter、selection；不处理的列需要自己渲染 title。列设置 useFullRender 时 snippet 替换整个表头单元格，sorter、filter、selection 用于摆放排序、筛选与选择控件。 | <ApiType detail={"Snippet\u003c[TableHeaderCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
-| headerStyle | 所有表头单元格（包括固定表头）的内联样式字符串。 | `string` | - |
 | hideExpandedColumn | 表格可展开时，展开按钮默认与第一列内容渲染在同一个单元格；设为 false 时展开按钮单独占一列。 | `boolean` | `true` |
 | indentSize | 树形数据每一层的缩进宽度，单位为像素。 | `number` | `20` |
 | keepDOM | 折叠行时是否保留被折叠的 DOM。 | `boolean` | `false` |
@@ -64,6 +64,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | 表格尺寸，影响单元格的内边距。 | `TableSize` | `"default"` |
 | sortIcon | 排序图标，参数含 sortOrder 与 column。 | <ApiType detail={"Snippet\u003c[TableSortIconSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | sticky | 将表头固定在页面顶部，传对象时 top 为距离滚动容器顶部的距离。 | `TableSticky` | - |
+| styles | 内部各部位的内联样式字符串，键同 classNames；列的 onHeaderCell 返回的 style 优先级更高。 | <ApiType detail={"Partial\u003cRecord\u003cTablePart, string>>"}>Type</ApiType> | - |
 | title | 表格标题，可以是纯文本，或带参数 pageData（当前页数据）的 snippet。 | <ApiType detail={"string \u007c Snippet\u003c[TableTitleSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | virtualized | 开启虚拟化，需同时传 scroll.y（数字）。对象形式可配置行高 itemSize 与额外渲染的行数 overscanCount。 | `TableVirtualized` | - |
 

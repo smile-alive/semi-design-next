@@ -126,17 +126,17 @@
                 "zh-CN": "列表虚拟化，用于大量节点：height、width、itemSize（必传）。开启后动画关闭。",
                 "en-US": "List virtualization for many nodes: height, width and itemSize (required). Animation is off once enabled."
             },
-            "searchClassName": {
-                "zh-CN": "搜索框容器的类名。",
-                "en-US": "Class of the search box container."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 search（搜索框容器），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by search (the search box container); values take any class binding and merge with the built-in classes."
             },
             "searchPlaceholder": {
                 "zh-CN": "搜索框的占位文字。",
                 "en-US": "Placeholder of the search box."
             },
-            "searchStyle": {
-                "zh-CN": "搜索框容器的样式。",
-                "en-US": "Style of the search box container."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
             },
             "filterTreeNode": {
                 "zh-CN": "是否开启搜索。传 true 时按 treeNodeFilterProp 匹配；传函数时自定义匹配，data 为当前节点数据。",

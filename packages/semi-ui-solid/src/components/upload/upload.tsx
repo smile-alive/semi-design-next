@@ -1,6 +1,6 @@
 import { type Accessor, Index, type JSX, type Ref, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+import { cssClasses, strings, type UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
 import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
 import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
 import { joinIds, namedRole, toCssLength } from '@fibrae/semi-foundation/utils';
@@ -38,6 +38,7 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
     beforeRemove?: (file: FileItem, fileList: Array<FileItem>) => boolean | Promise<boolean>;
     capture?: boolean | 'user' | 'environment';
     children?: JSX.Element;
+    classNames?: Partial<Record<UploadPart, string>>;
     customRequest?: (object: UploadCustomRequestArgs) => void;
     data?: Record<string, any> | ((file: File) => Record<string, unknown>);
     defaultFileList?: Array<FileItem>;
@@ -52,8 +53,6 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
     fileName?: string;
     headers?: Record<string, any> | ((file: File) => Record<string, string>);
     hotSpotLocation?: 'start' | 'end';
-    /** Merged with `picWidth` and `picHeight` in the picture wall, so only an object */
-    itemStyle?: JSX.CSSProperties;
     limit?: number;
     listType?: UploadListType;
     maxSize?: number;
@@ -95,6 +94,8 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
     showReplace?: boolean;
     showRetry?: boolean;
     showUploadList?: boolean;
+    /** The `item` style is merged with `picWidth` and `picHeight` in the picture wall, so only an object */
+    styles?: Partial<Record<UploadPart, JSX.CSSProperties>>;
     timeout?: number;
     transformFile?: (file: File) => File;
     uploadTrigger?: 'auto' | 'custom';
@@ -157,6 +158,7 @@ export default function Upload(rawProps: UploadProps) {
         'capture',
         'children',
         'class',
+        'classNames',
         'customRequest',
         'data',
         'defaultFileList',
@@ -171,7 +173,6 @@ export default function Upload(rawProps: UploadProps) {
         'fileName',
         'headers',
         'hotSpotLocation',
-        'itemStyle',
         'limit',
         'listType',
         'maxSize',
@@ -211,6 +212,7 @@ export default function Upload(rawProps: UploadProps) {
         'showReplace',
         'showRetry',
         'showUploadList',
+        'styles',
         'timeout',
         'transformFile',
         'uploadTrigger',
@@ -368,8 +370,11 @@ export default function Upload(rawProps: UploadProps) {
                 get listType() {
                     return local.listType;
                 },
+                get class() {
+                    return local.classNames?.item;
+                },
                 get style() {
-                    return local.itemStyle;
+                    return local.styles?.item;
                 },
                 get disabled() {
                     return local.disabled;
@@ -626,7 +631,7 @@ export default function Upload(rawProps: UploadProps) {
             </Show>
             <Modal
                 {...local.cropModalProps}
-                bodyStyle={{ height: '400px', ...local.cropModalProps?.bodyStyle }}
+                styles={{ ...local.cropModalProps?.styles, body: { height: '400px', ...local.cropModalProps?.styles?.body } }}
                 style={{ height: '500px', ...local.cropModalProps?.style }}
                 title={cropConfig().modalTitle || locale().locale.cropTitle}
                 cancelText={cropConfig().modalCancelText}

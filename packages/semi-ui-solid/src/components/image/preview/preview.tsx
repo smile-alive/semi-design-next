@@ -69,7 +69,7 @@ export default function ImagePreview(rawProps: PreviewProps) {
     const props = useDefaultProps('ImagePreview', rawProps, defaultProps);
 
     // onChange stays out of the inner preview: the group reports each switch through setCurrentIndex
-    const [local, inner, rest] = splitProps(props, ['children', 'class', 'currentIndex', 'defaultCurrentIndex', 'defaultVisible', 'lazyLoad', 'lazyLoadMargin', 'onChange', 'onVisibleChange', 'previewCls', 'previewStyle', 'ref', 'setDownloadName', 'src', 'style', 'visible'], innerKeys);
+    const [local, inner, rest] = splitProps(props, ['children', 'class', 'currentIndex', 'defaultCurrentIndex', 'defaultVisible', 'lazyLoad', 'lazyLoadMargin', 'classNames', 'onChange', 'onVisibleChange', 'ref', 'setDownloadName', 'src', 'style', 'styles', 'visible'], innerKeys);
 
     let group: HTMLDivElement | undefined;
 
@@ -114,7 +114,7 @@ export default function ImagePreview(rawProps: PreviewProps) {
             <div {...rest} ref={untrack(() => mergeRefs(local.ref, (node: HTMLDivElement) => (group = node)))} role={namedRole(rest)} class={clsx(`${prefixCls}-preview-group`, local.class)} style={local.style}>
                 {local.children}
             </div>
-            <PreviewInner {...inner} class={local.previewCls} style={local.previewStyle} currentIndex={currentIndex()} src={list().srcList} visible={visible()} onVisibleChange={foundation.handleVisibleChange} />
+            <PreviewInner {...inner} class={local.classNames?.preview} style={local.styles?.preview} currentIndex={currentIndex()} src={list().srcList} visible={visible()} onVisibleChange={foundation.handleVisibleChange} />
         </PreviewContext.Provider>
     );
 }

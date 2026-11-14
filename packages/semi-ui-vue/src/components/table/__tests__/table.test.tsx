@@ -695,9 +695,10 @@ describe('Table 行为基线', () => {
         expect(getNames()).toEqual(['b', '1', 'c']);
     });
 
-    it('headerStyle 应用于表头单元格，列的 onHeaderCell style 优先级更高', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
         mountTable({
-            headerStyle: { color: 'red', fontWeight: 700 },
+            classNames: { header: 'custom-head' },
+            styles: { header: { color: 'red', fontWeight: 700 } },
             columns: [
                 { title: 'Name', dataIndex: 'name', onHeaderCell: () => ({ style: { color: 'blue' } }) },
                 { title: 'Age', dataIndex: 'age' },
@@ -706,6 +707,8 @@ describe('Table 行为基线', () => {
             pagination: false,
         });
         const heads = getHeads();
+        expect(heads[0]).toHaveClass('custom-head');
+        expect(heads[1]).toHaveClass('custom-head');
         expect(heads[0]).toHaveStyle({ color: 'rgb(0, 0, 255)', fontWeight: '700' });
         expect(heads[1]).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });

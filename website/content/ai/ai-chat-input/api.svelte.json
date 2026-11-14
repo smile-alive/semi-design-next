@@ -154,13 +154,13 @@
                 "zh-CN": "模板面板内容的 snippet，参数为当前技能 `skill` 与用传入内容替换输入框内容的 `onTemplateClick`。",
                 "en-US": "Snippet for the content of the template panel, with the current `skill` and `onTemplateClick`, which replaces the input content with the given content."
             },
-            "templatesCls": {
-                "zh-CN": "模板面板的类名。",
-                "en-US": "Class name of the template panel."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 templates（模板面板），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by templates (the template panel); values take anything class takes (string, array or object) and merge with the built-in classes."
             },
-            "templatesStyle": {
-                "zh-CN": "模板面板的样式字符串。",
-                "en-US": "Style string of the template panel."
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames；templates 与默认的最大高度合并。",
+                "en-US": "Style strings of the inner parts, keyed like classNames; templates is merged over the panel's default max height."
             },
             "topSlot": {
                 "zh-CN": "自定义顶部区域的 snippet，参数含引用、上传内容、输入内容和删除方法（`references`、`attachments`、`content`、`onUploadFileDelete`、`onReferenceDelete`）。位置由 topSlotPosition 决定。",

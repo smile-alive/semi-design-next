@@ -1,4 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { TabsPart } from '@fibrae/semi-foundation/components/tabs/constants';
 import type { DropdownProps } from '../dropdown/interface';
 
 export type TabType = 'line' | 'card' | 'button' | 'slash';
@@ -42,7 +43,7 @@ export interface TabsProps {
     arrowPosition?: 'both' | 'start' | 'end';
     // Boolean comes first: Vue reads the shorthand `<Tabs collapsible>` as true only when Boolean precedes String
     collapsible?: boolean | 'auto';
-    contentStyle?: StyleValue;
+    classNames?: Partial<Record<TabsPart, ClassValue>>;
     defaultActiveKey?: string;
     dropdownProps?: TabsDropdownProps;
     keepDOM?: boolean;
@@ -51,14 +52,12 @@ export interface TabsProps {
     preventScroll?: boolean;
     showRestInDropdown?: boolean;
     size?: TabSize;
-    tabBarClassName?: string;
-    tabBarStyle?: StyleValue;
+    styles?: Partial<Record<TabsPart, StyleValue>>;
     /** An array, even an empty one, makes the default slot plain content instead of TabPanes */
     tabList?: PlainTab[];
     tabPaneMotion?: boolean;
     tabPosition?: TabPosition;
     type?: TabType;
-    visibleTabsStyle?: StyleValue;
 }
 
 export interface TabsEmits {
@@ -80,9 +79,11 @@ export interface TabBarProps {
     showRestInDropdown: boolean;
     more?: number | TabsMore;
     arrowPosition: 'both' | 'start' | 'end';
-    visibleTabsStyle?: StyleValue;
+    /** Only `visibleTabs` is read: the scroll wrapper that holds the visible tabs */
+    classNames?: Partial<Record<'visibleTabs', ClassValue>>;
+    styles?: Partial<Record<'visibleTabs', StyleValue>>;
     dropdownProps?: TabsDropdownProps;
-    class?: string;
+    class?: ClassValue;
     style?: StyleValue;
 }
 

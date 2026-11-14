@@ -36,3 +36,6 @@ export const strings = {
 export const numbers = {
     PROGRESS_COEFFICIENT,
 };
+
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type UploadPart = 'item';

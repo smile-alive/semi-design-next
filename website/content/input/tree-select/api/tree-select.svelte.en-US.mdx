@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoMergeValue | Whether to merge the value: when on, selecting a parent node keeps its descendants out of the value. Works only when `leafOnly` is false. | `boolean` | `true` |
 | borderless | Whether to use the borderless style. | `boolean` | `false` |
 | checkRelation | In multiple mode, the relationship between the checked states of nodes: `related` or `unRelated`. With `unRelated`, the checked states of nodes do not affect each other. | `CheckRelation` | `"related"` |
+| classNames | Class names of the inner parts, keyed by dropdown (the dropdown panel) and optionList (the option list, the role="tree" element); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Snippet for the icon of the clear button, effective when `showClear` is true. | `Snippet` | - |
 | clickToHide | Whether the dropdown closes automatically after a selection; only works in single mode. | `boolean` | `true` |
 | clickTriggerToHide | When the panel is open, whether clicking the trigger closes it. | `boolean` | `true` |
@@ -17,9 +18,7 @@ import ApiType from '#/components/ApiType.astro';
 | defaultOpen | Whether the dropdown is open on mount. TreeSelect has no controlled open state; call `close()` to close it. | `boolean` | `false` |
 | disabled | Whether the component is disabled. | `boolean` | - |
 | disableStrictly | Strict disabling: when a node is disabled, its checked state cannot be changed through its parent or child nodes. | `boolean` | `false` |
-| dropdownClassName | Class name of the dropdown panel. | `string` | - |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown panel matches the width of the select box. | `boolean` | `true` |
-| dropdownStyle | Inline style string of the dropdown panel. | `string` | - |
 | emptyContent | Snippet for the empty state shown when there is no data or the search finds no result. Without it the locale text is shown; `null` hides it. | `Snippet \| null` | - |
 | expandAction | How a node expands: `false` (only the expand icon expands it), `click` or `doubleClick`. | `TreeSelectExpandAction` | `false` |
 | expandAll | Whether to expand all nodes by default. The expansion still follows this prop after `treeData` changes. | `boolean` | `false` |
@@ -50,7 +49,6 @@ import ApiType from '#/components/ApiType.astro';
 | onSearch | Called when the search value changes, with the search value, `filteredExpandedKeys` (keys of the nodes expanded by the search or by the value, useful when the expansion is controlled) and `filteredNodes` (the nodes that match the search). | <ApiType detail={"(input: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) => void"}>Type</ApiType> | - |
 | onSelect | Called when a node is selected or deselected, with the key of the node, whether it is selected, and the node data. | <ApiType detail={"(selectedKey: string, selected: boolean, node: TreeNodeData) => void"}>Type</ApiType> | - |
 | onVisibleChange | Called when the dropdown panel is shown or hidden, with whether it is visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
-| optionListStyle | Inline style string of the option list, applied to the `role="tree"` element. | `string` | - |
 | outerBottomSlot | Snippet rendered at the bottom of the dropdown panel, at the same level as the option list. | `Snippet` | - |
 | outerTopSlot | Snippet rendered at the top of the dropdown panel, at the same level as the option list. With `filterTreeNode` on, it replaces the search box; to customize the search, use the `search` method through `bind:this`. | `Snippet` | - |
 | placeholder | Placeholder of the input box. | `string` | - |
@@ -71,6 +69,7 @@ import ApiType from '#/components/ApiType.astro';
 | showSearchClear | Whether the search box in the dropdown can be cleared. | `boolean` | `true` |
 | size | Size of the input box: `large`, `small` or `default`. | `TreeSelectSize` | - |
 | stopPropagation | Whether click events on the dropdown panel stop bubbling. | `boolean \| string` | `true` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, string>>"}>Type</ApiType> | - |
 | suffix | Snippet for the content after the select box. | `Snippet` | - |
 | tag | Snippet that replaces each tag in multiple mode, with the same parameters as `selectedItem` and ahead of it. To get a close button, wire `onClose` to your own Tag. | <ApiType detail={"Snippet\u003c[TreeSelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
 | treeData | Node data; keys are unique across the tree. Only a new array updates the options, changes made in place are not seen. | `TreeNodeData[]` | `[]` |

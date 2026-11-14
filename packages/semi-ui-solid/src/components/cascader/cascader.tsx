@@ -1,6 +1,6 @@
 import { type JSX, type Ref, For, Index, Show, batch, children, createMemo, createUniqueId, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+import { cssClasses, strings, type CascaderPart } from '@fibrae/semi-foundation/components/cascader/constants';
 import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter, type Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/utils';
@@ -80,8 +80,8 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     expandIcon?: JSX.Element;
     defaultValue?: ModeValue<Multiple>;
     value?: ModeValue<Multiple>;
-    dropdownClassName?: string;
-    dropdownStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<CascaderPart, string>>;
+    styles?: Partial<Record<CascaderPart, JSX.CSSProperties | string>>;
     /** `null` hides the empty state */
     emptyContent?: JSX.Element;
     motion?: boolean;
@@ -251,8 +251,8 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
         'disabled',
         'displayProp',
         'displayRender',
-        'dropdownClassName',
-        'dropdownStyle',
+        'classNames',
+        'styles',
         'emptyContent',
         'enableLeafClick',
         'expandIcon',
@@ -868,7 +868,7 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
     );
 
     const renderContent = () => (
-        <div ref={setOptionContainer} class={clsx(local.dropdownClassName, `${prefixcls}-popover`)} style={local.dropdownStyle} onFocusIn={foundation.handleFocusEnter} onFocusOut={handleFocusLeave} onKeyDown={handleContentKeyDown} onMouseDown={handleContainerMouseDown}>
+        <div ref={setOptionContainer} class={clsx(`${prefixcls}-popover`, local.classNames?.dropdown)} style={local.styles?.dropdown} onFocusIn={foundation.handleFocusEnter} onFocusOut={handleFocusLeave} onKeyDown={handleContentKeyDown} onMouseDown={handleContainerMouseDown}>
             {local.topSlot}
             <Item
                 id={popupId}

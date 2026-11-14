@@ -15,7 +15,7 @@ export default function NavigationDemo() {
             defaultOpenKeys={['job']}
             defaultSelectedKeys={['信息录入']}
             defaultIsCollapsed
-            bodyStyle={{ height: 300 }}
+            styles={{ body: { height: 300 } }}
             items={items}
             header={{
                 logo: <IconSemiLogo style={{ height: '36px', fontSize: 36 }} />,

@@ -10,15 +10,14 @@ import ApiType from '#/components/ApiType.astro';
 | autoClearSearchValue | Whether the search keyword is cleared after an option is selected in multiple mode. | `boolean` | `true` |
 | autofocus | Whether to focus on mount. | `boolean` | `false` |
 | borderless | Whether the trigger has no border. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by dropdown (the dropdown layer); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Custom clear button icon, a snippet. | `Snippet` | - |
 | clickToHide | Whether the dropdown list closes after an option is clicked in multiple mode. | `boolean` | `false` |
 | createItem | Content of the row that creates an option, a snippet with `{ inputValue, focus, style }`; with virtualization apply `style` to the custom element. | <ApiType detail={"Snippet\u003c[SelectCreateItemSnippetProps]>"}>Type</ApiType> | - |
 | defaultActiveFirstOption | Whether the first enabled option is highlighted by default. | `boolean` | `true` |
 | defaultOpen | Whether the dropdown list opens on mount. Select has no controlled open state. | `boolean` | `false` |
 | disabled | Whether the component is disabled. | `boolean` | - |
-| dropdownClassName | Class name of the dropdown layer. | `string` | - |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown layer follows the trigger width. | `boolean` | `true` |
-| dropdownStyle | Style of the dropdown layer, a string. | `string` | - |
 | ellipsisTrigger | Whether overflowing tags adapt: when the width is short the last tag is truncated. It has a performance cost and is not recommended in large forms. | `boolean` | `false` |
 | emptyContent | Content when there are no options, a snippet; `null` hides the empty state. | `Snippet \| null` | - |
 | expandRestTagsOnClick | With `maxTagCount`, whether the collapsed tags expand while the dropdown list is open. | `boolean` | `false` |
@@ -68,6 +67,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size: `small`, `default` or `large`. | `SelectSize` | - |
 | spacing | Gap between the dropdown layer and the trigger. | `number \| { x: number; y: number }` | - |
 | stopPropagation | Whether clicks inside the dropdown layer are stopped from bubbling out. | `boolean` | `true` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, string>>"}>Type</ApiType> | - |
 | suffix | Suffix of the selection box, a snippet. The side padding is added when the content is text or an Icon. | `Snippet` | - |
 | tag | Replaces each tag in multiple mode, a snippet with the parameters of `selectedItem`; it takes precedence over `selectedItem`. | <ApiType detail={"Snippet\u003c[SelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
 | trigger | Replaces the trigger content, a snippet with `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`. | <ApiType detail={"Snippet\u003c[SelectTriggerSnippetProps]>"}>Type</ApiType> | - |

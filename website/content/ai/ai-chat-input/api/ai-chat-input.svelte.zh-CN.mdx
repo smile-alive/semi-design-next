@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | actionArea | 自定义底部操作区域的 snippet，参数 `upload` 为上传节点（showUploadButton 为 false 时是隐藏的 Upload，仍需渲染才能粘贴上传）、`send` 为发送或停止按钮，均是 snippet，用 `{@render}` 渲染；`class` 为操作区域的类名。 | <ApiType detail={"Snippet\u003c[AIChatInputActionAreaSnippetProps]>"}>Type</ApiType> | - |
 | canSend | 是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。 | `boolean` | - |
+| classNames | 内部各部位的类名，键为 templates（模板面板），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, ClassValue>>"}>Type</ApiType> | - |
 | clearContentOnGenerating | generating 从 false 变为 true 时，是否清空输入框内容和附件。设为 false 可保留输入内容（适用于无限画布等非对话场景）。 | `boolean` | `true` |
 | configureArea | 底部配置区域的 snippet，放置 `AIChatInput.Configure` 的各配置项。 | `Snippet` | - |
 | defaultContent | 输入框默认内容，支持 html string 以及 json 格式，同 Tiptap 的 Content；只在创建编辑器时读取。 | `TiptapContent` | - |
@@ -39,11 +40,10 @@ import ApiType from '#/components/ApiType.astro';
 | skillIcon | 技能面板中每个技能前的图标 snippet，参数为 `item` 与 `index`。 | <ApiType detail={"Snippet\u003c[AIChatInputSkillIconSnippetProps]>"}>Type</ApiType> | - |
 | skillItem | 自定义技能列表每一项的 snippet，参数含 `skill` 和需要展开到根元素上的 `id`、`class`、`role`、`aria-selected`、`onclick`、`onmouseenter`。 | <ApiType detail={"Snippet\u003c[AIChatInputSkillItemSnippetProps]>"}>Type</ApiType> | - |
 | skills | 技能列表。技能只含数据，图标使用 `skillIcon` snippet。 | `Skill[]` | - |
+| styles | 内部各部位的样式字符串，键同 classNames；templates 与默认的最大高度合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, string>>"}>Type</ApiType> | - |
 | suggestionItem | 自定义每个建议项的 snippet，参数含 `suggestion` 和需要展开到根元素上的 `id`、`class`、`role`、`aria-selected`、`onclick`、`onmouseenter`。 | <ApiType detail={"Snippet\u003c[AIChatInputSuggestionItemSnippetProps]>"}>Type</ApiType> | - |
 | suggestions | 建议列表，每项为字符串或带 content 的对象。 | `Suggestion[]` | - |
 | template | 模板面板内容的 snippet，参数为当前技能 `skill` 与用传入内容替换输入框内容的 `onTemplateClick`。 | <ApiType detail={"Snippet\u003c[AIChatInputTemplateSnippetProps]>"}>Type</ApiType> | - |
-| templatesCls | 模板面板的类名。 | `string` | - |
-| templatesStyle | 模板面板的样式字符串。 | `string` | - |
 | topSlot | 自定义顶部区域的 snippet，参数含引用、上传内容、输入内容和删除方法（`references`、`attachments`、`content`、`onUploadFileDelete`、`onReferenceDelete`）。位置由 topSlotPosition 决定。 | <ApiType detail={"Snippet\u003c[AIChatInputTopSlotSnippetProps]>"}>Type</ApiType> | - |
 | topSlotPosition | `topSlot` 的位置，相对于引用区域与上传文件区域。 | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | 自定义扩展的转换规则，键为节点名，值为把节点转换成 onContentChange 内容项的函数。 | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |

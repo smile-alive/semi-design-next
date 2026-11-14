@@ -1,7 +1,7 @@
 import type React from 'react';
 import { type ReactNode, cloneElement, isValidElement } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
+import { type ButtonPart, cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
 import { buttonClassList, colorfulFill, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/button/button.scss';
@@ -39,7 +39,8 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
     onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
     onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
     'aria-label'?: React.AriaAttributes['aria-label'];
-    contentClassName?: string;
+    classNames?: Partial<Record<ButtonPart, string>>;
+    styles?: Partial<Record<ButtonPart, React.CSSProperties>>;
     colorful?: boolean;
     /** Attached to the native button */
     ref?: React.Ref<HTMLButtonElement>;
@@ -64,7 +65,8 @@ export default function BaseButton({
     icon: rawIcon,
     iconPosition = strings.DEFAULT_ICON_POSITION,
     noHorizontalPadding = false,
-    contentClassName,
+    classNames,
+    styles,
     ref,
     onClick,
     'x-semi-children-alias': childrenAlias,
@@ -139,7 +141,7 @@ export default function BaseButton({
             }}
         >
             {/* React skips a disabled button's own onClick but not its ancestors'; stop the bubble here */}
-            <span className={clsx(`${prefixCls}-content`, contentClassName)} x-semi-prop={iconLayout ? undefined : slot} onClick={(e) => disabled && e.stopPropagation()}>
+            <span className={clsx(`${prefixCls}-content`, classNames?.content)} style={styles?.content} x-semi-prop={iconLayout ? undefined : slot} onClick={(e) => disabled && e.stopPropagation()}>
                 {content}
             </span>
         </button>

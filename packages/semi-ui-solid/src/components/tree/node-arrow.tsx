@@ -72,7 +72,7 @@ export default function NodeArrow(props: NodeArrowProps) {
         <Switch fallback={<span class={`${prefix}-empty-icon`} />}>
             <Match when={props.row.loading}>
                 {/* the row carries aria-busy; the spinner's own name would join the row's name */}
-                <Spin aria-hidden="true" wrapperClassName={`${prefix}-spin-icon`} />
+                <Spin aria-hidden="true" class={`${prefix}-spin-icon`} />
             </Match>
             <Match when={!isLeaf()}>
                 <ExpandArrow row={props.row} expandIcon={props.expandIcon} onExpand={props.onExpand} />

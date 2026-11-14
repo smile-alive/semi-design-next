@@ -35,5 +35,5 @@ const treeData = [
 
 export default function TreeSelectDemo() {
     const [value, setValue] = createSignal<string | undefined>('Shanghai');
-    return <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} value={value()} placeholder="请选择" onChange={(next) => setValue(next)} />;
+    return <TreeSelect style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} value={value()} placeholder="请选择" onChange={(next) => setValue(next)} />;
 }

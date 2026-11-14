@@ -25,7 +25,7 @@
         onVisibleTabsChange?: (visibleState: Map<string, boolean>) => void;
     }
 
-    let { activeKey, list, type, size, tabPosition, collapsible, showRestInDropdown, more, arrowPosition, visibleTabsStyle, dropdownProps, tablistAttrs, class: className, style, tab, icon, arrow, moreTrigger, moreContent, extra, onVisibleTabsChange }: Props = $props();
+    let { activeKey, list, type, size, tabPosition, collapsible, showRestInDropdown, more, arrowPosition, classNames, styles, dropdownProps, tablistAttrs, class: className, style, tab, icon, arrow, moreTrigger, moreContent, extra, onVisibleTabsChange }: Props = $props();
 
     const ctx = requireTabsContext('TabBar');
     const locale = useLocale('Tabs');
@@ -167,7 +167,17 @@
     {style}
 >
     {#if collapsed}
-        <OverflowList class="{prefix}-overflow-list" itemKey="key" items={overflowItems} onVisibleStateChange={foundation.handleVisibleStateChange} overflowRenderDirection={arrowPosition} renderMode="scroll" wrapperProps={tablistProps} wrapperStyle={visibleTabsStyle}>
+        <OverflowList
+            class="{prefix}-overflow-list"
+            classNames={{ wrapper: classNames?.visibleTabs }}
+            itemKey="key"
+            items={overflowItems}
+            onVisibleStateChange={foundation.handleVisibleStateChange}
+            overflowRenderDirection={arrowPosition}
+            renderMode="scroll"
+            styles={{ wrapper: styles?.visibleTabs }}
+            wrapperProps={tablistProps}
+        >
             {#snippet item({ item: overflowItem, index })}
                 {@render tabItem(list[index] ?? overflowItem, index)}
             {/snippet}

@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `true` |
 | autofocus | 挂载时让输入框获得焦点，同时打开面板。 | `boolean` | `false` |
 | borderless | 无边框模式。 | `boolean` | `false` |
+| classNames | 内部各部位的类名，键为 dropdown（弹出层的面板卡片）、input（输入框的根元素），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TimePicker", "classNames")` |
 | defaultOpen | 非受控时面板是否默认打开。 | `boolean` | `false` |
 | defaultValue | 非受控时的初始时间，形态同 modelValue。 | `(TimePickerValue \| undefined)[] \| TimePickerValue` | `semiGlobalDefault("TimePicker", "defaultValue")` |
 | disabled | 禁用全部操作。 | `boolean` | `undefined` |
@@ -19,15 +20,12 @@ import ApiType from '#/components/ApiType.astro';
 | hideDisabledOptions | 隐藏禁止选择的选项。 | `boolean` | `false` |
 | hourStep | 小时选项的间隔，必须是正整数。 | `number` | `semiGlobalDefault("TimePicker", "hourStep")` |
 | inputReadOnly | 输入框只读，避免在移动设备上打开虚拟键盘。 | `boolean` | `false` |
-| inputStyle | 输入框根元素的样式。 | `StyleValue` | `semiGlobalDefault("TimePicker", "inputStyle")` |
 | insetLabelId | insetLabel 的 id，用于 aria-labelledby 关联。 | `string` | `undefined` |
 | minuteStep | 分钟选项的间隔，必须是正整数。 | `number` | `semiGlobalDefault("TimePicker", "minuteStep")` |
 | modelValue | 当前时间，配合 v-model 使用；type 为 timeRange 时为数组。传 null 是受控的空值，undefined 视为非受控。 | `(TimePickerValue \| undefined)[] \| TimePickerValue \| null` | `undefined` |
 | motion | 是否展示弹出层动画。 | `boolean` | `true` |
 | open | 面板是否打开，配合 v-model:open 使用；undefined 视为非受控。 | `boolean` | `undefined` |
 | placeholder | 没有值时显示的提示，默认按 type 取语言包文案。 | `string` | `semiGlobalDefault("TimePicker", "placeholder")` |
-| popupClassName | 弹出层的类名。 | `string` | `semiGlobalDefault("TimePicker", "popupClassName")` |
-| popupStyle | 弹出层的样式。 | `StyleValue` | `semiGlobalDefault("TimePicker", "popupStyle")` |
 | position | 浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TimePicker", "position")` |
 | preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 方法。 | `boolean` | `semiGlobalDefault("TimePicker", "preventScroll")` |
 | rangeSeparator | 时间范围的分隔符。 | `string` | `strings.DEFAULT_RANGE_SEPARATOR` |
@@ -36,6 +34,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | 是否展示清除按钮。 | `boolean` | `true` |
 | size | 输入框的大小。 | `Size` | `undefined` |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("TimePicker", "styles")` |
 | timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，字符串为该时区的钟点。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | `undefined` |
 | type | 选择类型，time 为单个时间，timeRange 为时间范围。 | `TimePickerType` | `strings.DEFAULT_TYPE` |
 | use12Hours | 使用 12 小时制。 | `boolean` | `false` |

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { type CSSProperties, type ReactNode, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+import { cssClasses, type ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
 import ModalFoundation, { type ModalAdapter, type ModalProps, type ModalState } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/modal/modal.scss';
@@ -23,8 +23,9 @@ export interface ModalReactProps extends ModalProps {
     cancelButtonProps?: ButtonProps;
     children?: React.ReactNode;
     okButtonProps?: ButtonProps;
-    bodyStyle?: CSSProperties;
-    maskStyle?: CSSProperties;
+    /** Merged after the built-in class names of the part's element; replaces the global default as a whole */
+    classNames?: Partial<Record<ModalPart, string>>;
+    styles?: Partial<Record<ModalPart, CSSProperties>>;
     style?: CSSProperties;
     icon?: ReactNode;
     closeIcon?: ReactNode;
@@ -89,7 +90,8 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
     const {
         ref,
         afterClose,
-        bodyStyle,
+        classNames,
+        styles,
         cancelButtonProps,
         cancelText,
         centered,
@@ -105,7 +107,6 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
         height,
         mask,
         maskClosable,
-        maskStyle,
         maskFixed,
         motion,
         okButtonProps,
@@ -244,11 +245,11 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
                                     className={clsx(className, {
                                         [`${cssClasses.DIALOG}-displayNone`]: keepDOM && hidden,
                                     })}
+                                    classNames={classNames}
                                     contentClassName={clsx(animationClassName, modalContentClass)}
                                     maskClassName={maskAnimationClassName}
-                                    bodyStyle={bodyStyle}
-                                    maskStyle={maskStyle}
                                     style={style}
+                                    styles={styles}
                                     title={title}
                                     centered={centered}
                                     closable={closable}

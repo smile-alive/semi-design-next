@@ -28,7 +28,7 @@
 <template>
     <div>
         <p>outerBottomSlot:</p>
-        <Select aria-label="outerBottomSlot" :autoAdjustOverflow="false" defaultOpen :dropdownStyle="{ width: '180px' }" :maxHeight="150" placeholder="自定义外侧底部slot，始终显示" position="bottom" :style="{ width: '300px' }">
+        <Select aria-label="outerBottomSlot" :autoAdjustOverflow="false" defaultOpen :maxHeight="150" placeholder="自定义外侧底部slot，始终显示" position="bottom" :style="{ width: '300px' }" :styles="{ dropdown: { width: '180px' } }">
             <Select.Option value="video">短视频</Select.Option>
             <Select.Option value="camera">相机</Select.Option>
             <Select.Option value="editing">剪辑</Select.Option>
@@ -41,7 +41,7 @@
             </template>
         </Select>
         <p :style="{ marginTop: '200px' }">innerBottomSlot:</p>
-        <Select aria-label="innerBottomSlot" :dropdownStyle="{ width: '180px' }" :maxHeight="150" placeholder="自定义内侧底部slot，滚动至底部显示" :style="{ width: '300px' }">
+        <Select aria-label="innerBottomSlot" :maxHeight="150" placeholder="自定义内侧底部slot，滚动至底部显示" :style="{ width: '300px' }" :styles="{ dropdown: { width: '180px' } }">
             <Select.Option value="video">短视频</Select.Option>
             <Select.Option value="camera">相机</Select.Option>
             <Select.Option value="editing">剪辑</Select.Option>

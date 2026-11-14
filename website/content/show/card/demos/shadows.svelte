@@ -2,7 +2,7 @@
     import { IconInfoCircle } from '@fibrae/semi-icons-svelte';
     import { Avatar, Card, Popover } from '@fibrae/semi-ui-svelte';
 
-    const bodyStyle = 'display: flex; align-items: center; justify-content: space-between';
+    const styles = { body: 'display: flex; align-items: center; justify-content: space-between' };
 </script>
 
 {#snippet avatar()}
@@ -13,14 +13,14 @@
 {/snippet}
 
 <div>
-    <Card {bodyStyle} shadows="hover" style="max-width: 360px">
+    <Card shadows="hover" style="max-width: 360px" {styles}>
         <Card.Meta {avatar} title="Semi Doc" />
         <Popover {content} position="top" showArrow>
             <IconInfoCircle aria-label="信息" style="color: var(--semi-color-primary)" />
         </Popover>
     </Card>
     <br />
-    <Card {bodyStyle} shadows="always" style="max-width: 360px">
+    <Card shadows="always" style="max-width: 360px" {styles}>
         <Card.Meta {avatar} title="Semi Doc" />
         <Popover {content} position="top" showArrow>
             <IconInfoCircle aria-label="信息" style="color: var(--semi-color-primary)" />

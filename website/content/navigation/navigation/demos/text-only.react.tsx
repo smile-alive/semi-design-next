@@ -8,5 +8,5 @@ const items = [
 ];
 
 export default function NavigationDemo() {
-    return <Nav bodyStyle={{ height: 300 }} defaultOpenKeys={['task']} items={items} onSelect={(data) => console.log('trigger onSelect: ', data)} onClick={(data) => console.log('trigger onClick: ', data)} />;
+    return <Nav styles={{ body: { height: 300 } }} defaultOpenKeys={['task']} items={items} onSelect={(data) => console.log('trigger onSelect: ', data)} onClick={(data) => console.log('trigger onClick: ', data)} />;
 }

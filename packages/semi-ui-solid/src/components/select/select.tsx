@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
+import { cssClasses, numbers, strings, type SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
 import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
@@ -145,8 +145,8 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     position?: Position;
     /** `event` is what changed the keyword; none when called from triggerRender */
     onSearch?: (value: string, event?: InputChangeEvent | KeyboardEvent | MouseEvent) => void;
-    dropdownClassName?: string;
-    dropdownStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<SelectPart, string>>;
+    styles?: Partial<Record<SelectPart, JSX.CSSProperties | string>>;
     ellipsisTrigger?: boolean;
     outerTopSlot?: JSX.Element;
     innerTopSlot?: JSX.Element;
@@ -316,9 +316,9 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         'defaultOpen',
         'defaultValue',
         'disabled',
-        'dropdownClassName',
+        'classNames',
         'dropdownMatchSelectWidth',
-        'dropdownStyle',
+        'styles',
         'ellipsisTrigger',
         'emptyContent',
         'expandRestTagsOnClick',
@@ -1108,9 +1108,9 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                         // No padding when the list is empty and emptyContent is null: nothing is shown
                         [`${prefix}-option-list-wrapper`]: !(isEmpty() && emptyContent() === null),
                     },
-                    local.dropdownClassName
+                    local.classNames?.dropdown
                 )}
-                style={local.dropdownStyle}
+                style={local.styles?.dropdown}
                 onKeyDown={foundation.handleContainerKeyDown}
                 onMouseDown={handleContainerMouseDown}
             >

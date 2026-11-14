@@ -13,12 +13,12 @@ import ApiType from '#/components/ApiType.astro';
 | child | Snippet that renders the trigger element itself. Its `{ props }` argument must be spread on a focusable element, with `class` merged into your own (`class={[props.class, 'own']}`); use it for a button, a link, or the DropdownItem that is the parent in a nested menu. It wins over children. | <ApiType detail={"Snippet\u003c[{ props: DropdownTriggerProps }]>"}>Type</ApiType> | - |
 | children | The trigger, wrapped in a span that takes the trigger attributes and responds to the keyboard. | `Snippet` | - |
 | class | Class name of the popup `.semi-dropdown-wrapper`. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `content` (the dropdown menu root element `.semi-dropdown`) and `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, ClassValue>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click inside the popup closes it. | `boolean` | - |
 | clickTriggerToHide | Whether a click on the trigger closes an open popup. | `boolean` | - |
 | closeOnEsc | Whether Esc on the trigger or in the popup closes the menu. With trigger custom it only calls onEscKeyDown and the caller decides whether to close. | `boolean` | `true` |
 | condition | Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only calls onVisibleChange(false), and the popup closes once the caller writes back. | `boolean` | - |
 | content | Menu content made of DropdownMenu with DropdownItem, DropdownTitle and DropdownDivider. Once provided, even empty, it takes precedence over menu. | `Snippet` | - |
-| contentClassName | Class name of the dropdown menu root element `.semi-dropdown`. | `string` | - |
 | disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | - |
 | guardFocus | Whether Tab cycles inside the popup while focus is in it. | `boolean` | - |
 | keepDOM | Whether the popup content stays mounted while closed. | `boolean` | - |
@@ -40,9 +40,9 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu. | `number \| { x: number; y: number }` | - |
 | stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean` | - |
 | style | Inline style string of the popup `.semi-dropdown-wrapper`. | `string` | - |
+| styles | Inline style strings of the inner parts, keyed like `classNames`; `content` is applied after `style`. | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, string>>"}>Type</ApiType> | - |
 | trigger | What shows the menu: hover, focus, click, custom or contextMenu. With custom, visible alone decides. | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | Whether the menu is shown. Bindable with `bind:visible` and used with trigger custom; when given, this value decides, and binding undefined returns to uncontrolled. | `boolean` | - |
-| wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | - |
 | wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | - |
 
 **Methods**

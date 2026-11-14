@@ -12,18 +12,18 @@
     import type { ModalButtonProps, ModalEmits, ModalHandle, ModalProps, ModalSlots, ModalState } from './interface';
     import ModalContent from './modal-content.vue';
 
-    type FoundationProps = Omit<ModalProps, 'bodyStyle' | 'maskStyle'>;
+    type FoundationProps = Omit<ModalProps, 'classNames' | 'styles'>;
     type Foundation = ModalFoundation<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
     type Adapter = ModalAdapter<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
 
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<ModalProps>(), {
-        bodyStyle: semiGlobalDefault('Modal', 'bodyStyle'),
         cancelButtonProps: semiGlobalDefault('Modal', 'cancelButtonProps'),
         cancelLoading: semiGlobalDefault('Modal', 'cancelLoading'),
         cancelText: semiGlobalDefault('Modal', 'cancelText'),
         centered: () => semiDefault('Modal', 'centered', false),
+        classNames: semiGlobalDefault('Modal', 'classNames'),
         closable: () => semiDefault('Modal', 'closable', true),
         closeOnEsc: () => semiDefault('Modal', 'closeOnEsc', true),
         confirmLoading: semiGlobalDefault('Modal', 'confirmLoading'),
@@ -37,7 +37,6 @@
         mask: () => semiDefault('Modal', 'mask', true),
         maskClosable: () => semiDefault('Modal', 'maskClosable', true),
         maskFixed: () => semiDefault('Modal', 'maskFixed', false),
-        maskStyle: semiGlobalDefault('Modal', 'maskStyle'),
         modalContentClass: semiGlobalDefault('Modal', 'modalContentClass'),
         motion: () => semiDefault('Modal', 'motion', true),
         okButtonProps: semiGlobalDefault('Modal', 'okButtonProps'),
@@ -45,6 +44,7 @@
         okType: () => semiDefault('Modal', 'okType', 'primary'),
         preventScroll: semiGlobalDefault('Modal', 'preventScroll'),
         size: () => semiDefault('Modal', 'size', 'small'),
+        styles: semiGlobalDefault('Modal', 'styles'),
         title: semiGlobalDefault('Modal', 'title'),
         visible: () => semiDefault('Modal', 'visible', false),
         width: semiGlobalDefault('Modal', 'width'),
@@ -185,9 +185,9 @@
             <ModalContent
                 ref="content"
                 v-bind="$attrs"
-                :bodyStyle="props.bodyStyle"
                 :centered="props.centered"
                 :class="{ [`${prefix}-displayNone`]: props.keepDOM && hidden }"
+                :classNames="props.classNames"
                 :closable="props.closable"
                 :closeOnEsc="props.closeOnEsc"
                 :contentClass="props.modalContentClass"
@@ -198,10 +198,10 @@
                 :mask="props.mask"
                 :maskClosable="props.maskClosable"
                 :maskFixed="props.maskFixed"
-                :maskStyle="props.maskStyle"
                 :motion="props.motion"
                 :preventScroll="props.preventScroll"
                 :size="props.size"
+                :styles="props.styles"
                 :title="props.title"
                 :visible="props.visible"
                 :width="props.width"

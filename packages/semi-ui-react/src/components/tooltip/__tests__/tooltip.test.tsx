@@ -747,7 +747,7 @@ describe(`Tooltip`, () => {
 
     it('disabled 且 loading 的 Button 在 hover 触发时不加包裹元素', () => {
         const { container } = render(
-            <Tooltip wrapperClassName="probe" content="hint" motion={false}>
+            <Tooltip classNames={{ wrapper: 'probe' }} content="hint" motion={false}>
                 <Button disabled loading>
                     save
                 </Button>
@@ -940,9 +940,21 @@ describe(`Tooltip`, () => {
     });
 });
 
-it('wrapperClassName', () => {
+it('classNames 与 styles 按部位落到对应元素', () => {
+    const { container } = render(
+        <Tooltip classNames={{ wrapper: 'my-wrapper' }} styles={{ wrapper: { order: 3 } }} content="hi">
+            <Button>a</Button>
+            <Button>b</Button>
+        </Tooltip>
+    );
+    const wrapper = container.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
+    expect(wrapper).toHaveClass('my-wrapper');
+    expect(wrapper).toHaveStyle({ order: '3', display: 'inline-block' });
+});
+
+it('trigger wrapper 的类名', () => {
     const { container, unmount } = render(
-        <Tooltip wrapperClassName="test" content="hi bytedance">
+        <Tooltip classNames={{ wrapper: 'test' }} content="hi bytedance">
             <Button>正常的多个按钮</Button>
             <Button>正常的多个按钮</Button>
         </Tooltip>
@@ -952,7 +964,7 @@ it('wrapperClassName', () => {
 
     // hover reaches a disabled element directly (F4); click does not, so it still gets the wrapper
     const disabledHover = render(
-        <Tooltip wrapperClassName="test" content="hi bytedance">
+        <Tooltip classNames={{ wrapper: 'test' }} content="hi bytedance">
             <Button disabled>正常的多个按钮</Button>
         </Tooltip>
     );
@@ -960,7 +972,7 @@ it('wrapperClassName', () => {
     disabledHover.unmount();
 
     const disabledButton = render(
-        <Tooltip wrapperClassName="test" content="hi bytedance" trigger="click">
+        <Tooltip classNames={{ wrapper: 'test' }} content="hi bytedance" trigger="click">
             <Button disabled>正常的多个按钮</Button>
         </Tooltip>
     );
@@ -968,7 +980,7 @@ it('wrapperClassName', () => {
     disabledButton.unmount();
 
     const disabledSelect = render(
-        <Tooltip wrapperClassName="test" content="hi bytedance" trigger="click">
+        <Tooltip classNames={{ wrapper: 'test' }} content="hi bytedance" trigger="click">
             <Select style={{ width: 120 }} disabled placeholder="请选择业务线">
                 <Select.Option value="abc">抖音</Select.Option>
                 <Select.Option value="hotsoon">火山</Select.Option>
@@ -984,7 +996,7 @@ it('wrapperClassName', () => {
 
 it('wrapper span 内 loading 状态的 Button 保持唯一 Tab 停靠点和描述信息', async () => {
     const { container } = render(
-        <Tooltip wrapperClassName="loading-wrapper" content="Saving" motion={false} trigger="click">
+        <Tooltip classNames={{ wrapper: 'loading-wrapper' }} content="Saving" motion={false} trigger="click">
             <Button loading>Save</Button>
         </Tooltip>
     );

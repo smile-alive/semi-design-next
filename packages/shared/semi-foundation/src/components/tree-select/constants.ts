@@ -6,6 +6,9 @@ export const cssClasses = {
     PREFIX_OPTION: `${BASE_CLASS_PREFIX}-tree-select-option`,
 };
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type TreeSelectPart = 'dropdown' | 'optionList';
+
 export const strings = {
     SIZE_SET: ['small', 'large', 'default'],
     SEARCH_POSITION_DROPDOWN: 'dropdown',

@@ -16,3 +16,23 @@ describe('Card role', () => {
         expect(bare.container.firstElementChild).not.toHaveAttribute('role');
     });
 });
+
+describe('Card classNames 与 styles', () => {
+    it('按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'extra', 'cover', 'body', 'actions', 'footer'] as const;
+        const selectors = { header: 'header', title: 'header-wrapper-title', extra: 'header-wrapper-extra', cover: 'cover', body: 'body', actions: 'body-actions', footer: 'footer' };
+        const { container } = render(Card, {
+            props: {
+                title: 't',
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+            },
+            slots: { default: () => 'body', headerExtraContent: () => 'e', cover: () => 'c', actions: () => 'a', footer: () => 'f' },
+        });
+        for (const part of parts) {
+            const el = container.querySelector(`.semi-card-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+});

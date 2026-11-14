@@ -64,9 +64,13 @@
                 "zh-CN": "输入框只读，避免在移动设备上打开虚拟键盘；只读时清除按钮仍可用。",
                 "en-US": "Makes the input read-only, which avoids opening the virtual keyboard on mobile devices; the clear button stays usable."
             },
-            "inputStyle": {
-                "zh-CN": "输入框根元素的样式，接受对象（键用 kebab-case）或字符串。",
-                "en-US": "Style of the input's root element; an object (kebab-case keys) or a string."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（弹出层的面板卡片）、`input`（输入框的根元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the panel card of the popup) and `input` (the root element of the input); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; style objects use kebab-case CSS property names, and style strings work too."
             },
             "insetLabel": {
                 "zh-CN": "输入框内部的前缀标签，显示在输入框内。",
@@ -108,11 +112,6 @@
             "placeholder": {
                 "zh-CN": "没有值时显示的提示，默认取语言包中对应 type 的文案。",
                 "en-US": "Hint shown without a value; defaults to the locale text of type."
-            },
-            "popupClassName": { "zh-CN": "弹出层的类名。", "en-US": "Class name of the popup." },
-            "popupStyle": {
-                "zh-CN": "弹出层的样式，接受对象（键用 kebab-case）或字符串。",
-                "en-US": "Style of the popup; an object (kebab-case keys) or a string."
             },
             "position": {
                 "zh-CN": "浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft；RTL 方向下默认为 bottomRight。",

@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `true` |
 | autofocus | Focuses the input on mount, which opens the panel. | `boolean` | `false` |
 | borderless | Borderless mode. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by dropdown (the panel card of the popup) and input (the root element of the input); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Custom clear icon; effective when showClear is true. | `Snippet` | - |
 | disabled | Disables all interaction. | `boolean` | - |
 | disabledHours | Returns the hours that cannot be selected. | <ApiType detail={"() => number[]"}>Type</ApiType> | - |
@@ -18,7 +19,6 @@ import ApiType from '#/components/ApiType.astro';
 | hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `false` |
 | hourStep | Interval of the hour options; a positive integer. | `number` | - |
 | inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices. | `boolean` | `false` |
-| inputStyle | Style of the input's root element. | `string` | - |
 | insetLabel | Inset label of the input. | `Snippet` | - |
 | insetLabelId | id of the insetLabel, referenced through aria-labelledby. | `string` | - |
 | minuteStep | Interval of the minute options; a positive integer. | `number` | - |
@@ -35,8 +35,6 @@ import ApiType from '#/components/ApiType.astro';
 | panelFooter | Snippet for the content below the panel; index is the panel's position. | <ApiType detail={"Snippet\u003c[TimePickerPanelSnippetProps]>"}>Type</ApiType> | - |
 | panelHeader | Snippet for the content above the panel; index is the panel's position (0 for time, 0 or 1 for timeRange). Without it, a range shows the locale's start and end text. | <ApiType detail={"Snippet\u003c[TimePickerPanelSnippetProps]>"}>Type</ApiType> | - |
 | placeholder | Hint shown without a value; defaults to the locale text of type. | `string` | - |
-| popupClassName | Class name of the popup. | `ClassValue` | - |
-| popupStyle | Style of the popup, as a string. | `string` | - |
 | position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time. | `Position` | - |
 | prefix | Prefix content of the input. | `Snippet` | - |
 | preventScroll | Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component. | `boolean` | - |
@@ -46,6 +44,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | Whether to show the clear button. | `boolean` | `true` |
 | size | Size of the input. | `InputSize` | - |
 | stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, string>>"}>Type</ApiType> | - |
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
 | trigger | Snippet of a custom trigger that replaces the default input; a click anywhere in it opens the panel. Receives value (the unpicked side undefined), inputValue, placeholder, disabled, componentProps and onChange (updates the input text, as typing would). | <ApiType detail={"Snippet\u003c[TimePickerTriggerRenderProps]>"}>Type</ApiType> | - |
 | type | Selection type: time for a single time, timeRange for a range. | `TimePickerType` | `"time"` |

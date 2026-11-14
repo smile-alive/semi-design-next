@@ -602,13 +602,13 @@ describe('TreeSelect', () => {
     });
 
     it('disabledStrictly 属性', async () => {
-        const { unmount } = render(() => <TreeSelect dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} style={{ width: '300px' }} multiple defaultExpandAll defaultOpen disableStrictly leafOnly treeData={treeData} motion={false} motionExpand={false} />);
+        const { unmount } = render(() => <TreeSelect styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} style={{ width: '300px' }} multiple defaultExpandAll defaultOpen disableStrictly leafOnly treeData={treeData} motion={false} motionExpand={false} />);
         expect(getTags()).toHaveLength(0);
         await userEvent.click(getLevelNodes(1)[0]);
         expect(getTagTexts()).toEqual(['北京', '上海', '东京', '大阪']);
         unmount();
 
-        render(() => <TreeSelect dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} style={{ width: '300px' }} multiple defaultExpandAll defaultOpen disableStrictly treeData={treeDataWithDisabled} motion={false} motionExpand={false} />);
+        render(() => <TreeSelect styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} style={{ width: '300px' }} multiple defaultExpandAll defaultOpen disableStrictly treeData={treeDataWithDisabled} motion={false} motionExpand={false} />);
         expect(getTags()).toHaveLength(0);
         await userEvent.click(getLevelNodes(1)[0]);
         expect(getTagTexts()).toEqual(['日本']);

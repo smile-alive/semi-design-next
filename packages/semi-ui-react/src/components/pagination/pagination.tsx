@@ -258,7 +258,7 @@ export default function Pagination(rawProps: PaginationProps) {
         return (
             <li className={`${prefixCls}-switch`}>
                 <Select
-                    dropdownClassName={`${prefixCls}-select-dropdown`}
+                    classNames={{ dropdown: `${prefixCls}-select-dropdown` }}
                     aria-label={locale.pageSizeSelector}
                     disabled={disabled}
                     multiple={false}

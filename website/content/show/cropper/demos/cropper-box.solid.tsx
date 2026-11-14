@@ -19,7 +19,7 @@ export default function CropperDemo() {
     return (
         <>
             <strong>showResizeBox = false，并修改边框颜色</strong>
-            <Cropper ref={(node) => (cropper = node)} src="/assets/other/image.png" style={containerStyle} cropperBoxStyle={{ 'outline-color': 'var(--semi-color-bg-0)' }} showResizeBox={false} />
+            <Cropper ref={(node) => (cropper = node)} src="/assets/other/image.png" style={containerStyle} styles={{ cropperBox: { 'outline-color': 'var(--semi-color-bg-0)' } }} showResizeBox={false} />
             <Button onClick={onButtonClick}>裁切</Button>
             <br />
             <br />

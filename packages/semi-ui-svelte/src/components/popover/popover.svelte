@@ -29,10 +29,10 @@
         role = defaults('role'),
         mouseEnterDelay = defaults('mouseEnterDelay'),
         mouseLeaveDelay = defaults('mouseLeaveDelay'),
-        contentClassName = defaults('contentClassName'),
+        classNames = defaults('classNames'),
         spacing = defaults('spacing'),
         stopPropagation = defaults('stopPropagation'),
-        arrowStyle = defaults('arrowStyle'),
+        styles = defaults('styles'),
         arrowPointAtCenter = defaults('arrowPointAtCenter'),
         clickToHide = defaults('clickToHide'),
         disableArrowKeyDown = defaults('disableArrowKeyDown'),
@@ -75,7 +75,7 @@
 </script>
 
 {#snippet card(slotProps: RenderContentProps)}
-    <div class={[prefixCls, contentClassName]}>
+    <div class={[prefixCls, classNames?.content]} style={styles?.content}>
         <div class={`${prefixCls}-content`}>
             {@render content?.(slotProps)}
         </div>
@@ -83,7 +83,7 @@
 {/snippet}
 
 {#snippet popArrow()}
-    <Arrow {arrowStyle} popStyle={style} {position} />
+    <Arrow arrowStyle={styles?.arrow} class={classNames?.arrow} popStyle={style} {position} />
 {/snippet}
 
 <Tooltip

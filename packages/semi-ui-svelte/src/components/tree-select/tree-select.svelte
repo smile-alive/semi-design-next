@@ -89,10 +89,9 @@
         autoAdjustOverflow = defaults('autoAdjustOverflow', true),
         position = defaults('position'),
         stopPropagation = defaults('stopPropagation', true),
-        dropdownClassName = defaults('dropdownClassName'),
-        dropdownStyle = defaults('dropdownStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         dropdownMatchSelectWidth = defaults('dropdownMatchSelectWidth', true),
-        optionListStyle = defaults('optionListStyle'),
         preventScroll = defaults('preventScroll'),
         triggerTagWrap = defaults('triggerTagWrap', false),
         onChange,
@@ -808,7 +807,7 @@
 {/snippet}
 
 {#snippet panel()}
-    <div bind:this={content} class={[dropdownClassName, `${cls}-popover`]} style={dropdownStyle} onfocusin={foundation.handleTriggerFocus} onfocusout={handleFocusOut} onkeydown={handleContentKeyDown} onmousedown={keepFocusOnPress}>
+    <div bind:this={content} class={[`${cls}-popover`, classNames?.dropdown]} style={styles?.dropdown} onfocusin={foundation.handleTriggerFocus} onfocusout={handleFocusOut} onkeydown={handleContentKeyDown} onmousedown={keepFocusOnPress}>
         <div class={`${treeCls}-wrapper`}>
             {#if outerTopSlot}
                 {@render outerTopSlot()}
@@ -819,7 +818,7 @@
             {/if}
             {#if noData}
                 <!-- the combobox's aria-controls needs an element while there is no tree -->
-                <div class={listClass} id={treeId} role="none" style={optionListStyle}>
+                <div class={[listClass, classNames?.optionList]} id={treeId} role="none" style={styles?.optionList}>
                     {#if !emptyHidden}
                         <ul class={[`${treeCls}-option`, `${treeCls}-option-empty`]}>
                             <li class={[`${treeCls}-option-label`, `${treeCls}-option-label-empty`]} x-semi-prop="emptyContent">
@@ -833,7 +832,7 @@
                     {/if}
                 </div>
             {:else}
-                <ul id={treeId} {...nameAttrs} aria-multiselectable={multiple} class={listClass} role="tree" style={optionListStyle}>
+                <ul id={treeId} {...nameAttrs} aria-multiselectable={multiple} class={[listClass, classNames?.optionList]} role="tree" style={styles?.optionList}>
                     <NodeList bind:this={nodeList} flattenList={view.cachedFlattenNodes as FlattenNode[] | undefined} flattenNodes={view.flattenNodes as FlattenNode[]} motion={motionExpand} motionKeys={view.motionKeys} motionType={view.motionType} {searchTargetIsDeep} {virtualize}>
                         {#snippet children({ node, style })}
                             {@const row = rowProps(node)}

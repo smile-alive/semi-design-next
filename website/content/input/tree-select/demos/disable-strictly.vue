@@ -42,6 +42,6 @@
 
 <template>
     <div>
-        <TreeSelect :defaultValue="['Shanghai']" disableStrictly :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" multiple style="width: 300px" :treeData="treeData" />
+        <TreeSelect :defaultValue="['Shanghai']" disableStrictly multiple style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
     </div>
 </template>

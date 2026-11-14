@@ -8,7 +8,7 @@ export default function CardDemo() {
             headerExtraContent={<Typography.Text link>More</Typography.Text>}
             cover={<img alt="example" src="/assets/root-web-sites/card-cover-docs-demo.jpeg" />}
             footerLine
-            footerStyle={{ display: 'flex', 'justify-content': 'flex-end' }}
+            styles={{ footer: { display: 'flex', 'justify-content': 'flex-end' } }}
             footer={
                 <Space>
                     <Button theme="borderless" type="primary">

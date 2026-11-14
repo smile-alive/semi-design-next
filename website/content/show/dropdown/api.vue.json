@@ -2,9 +2,9 @@
     "dropdown": {
         "source": "packages/semi-ui-vue/src/components/dropdown/dropdown.vue",
         "props": {
-            "contentClassName": {
-                "zh-CN": "下拉菜单根元素的类名。",
-                "en-US": "Class name of the dropdown menu root element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（下拉菜单根元素）、`wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the dropdown menu root element) and `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes."
             },
             "menu": {
                 "zh-CN": "通过数据快速配置菜单，数据项见下方 DropdownMenuItem；提供了 content 插槽时以插槽为准。",
@@ -55,9 +55,9 @@
                 "zh-CN": "是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。",
                 "en-US": "Whether click, mousedown and focus in/out events on the popup stop propagating."
             },
-            "wrapperClassName": {
-                "zh-CN": "触发元素被 span 包裹时，该 span 的类名。",
-                "en-US": "Class name of the span that wraps the trigger when a wrapper is needed."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`content` 写在 `style` 之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `content` is applied after `style`."
             },
             "wrapperId": {
                 "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",

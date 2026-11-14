@@ -24,9 +24,9 @@
         overflowRenderDirection: () => semiDefault('OverflowList', 'overflowRenderDirection', 'both'),
         renderMode: () => semiDefault('OverflowList', 'renderMode', 'collapse'),
         threshold: () => semiDefault('OverflowList', 'threshold', 0.75),
-        wrapperClassName: semiGlobalDefault('OverflowList', 'wrapperClassName'),
+        classNames: semiGlobalDefault('OverflowList', 'classNames'),
+        styles: semiGlobalDefault('OverflowList', 'styles'),
         wrapperProps: semiGlobalDefault('OverflowList', 'wrapperProps'),
-        wrapperStyle: semiGlobalDefault('OverflowList', 'wrapperStyle'),
     });
 
     const emit = defineEmits<OverflowListEmits<T>>();
@@ -141,7 +141,7 @@
         <template v-if="isScroll">
             <slot v-if="props.overflowRenderDirection !== 'end'" :items="scrollOverflow[0]" name="overflow" position="start" />
             <slot v-if="props.overflowRenderDirection === 'start'" :items="scrollOverflow[1]" name="overflow" position="end" />
-            <div ref="wrapper" v-bind="props.wrapperProps" :class="[props.wrapperClassName, cssClasses.SCROLL_WRAPPER]" :style="props.wrapperStyle">
+            <div ref="wrapper" v-bind="props.wrapperProps" :class="[cssClasses.SCROLL_WRAPPER, props.classNames?.wrapper]" :style="props.styles?.wrapper">
                 <component :is="entry.node" v-for="entry in scrollItems()" :key="entry.key" v-bind="{ [SCROLL_KEY_ATTRIBUTE]: entry.key }" />
             </div>
             <slot v-if="props.overflowRenderDirection === 'end'" :items="scrollOverflow[0]" name="overflow" position="start" />

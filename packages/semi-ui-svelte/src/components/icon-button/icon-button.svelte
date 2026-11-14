@@ -11,14 +11,15 @@
 
     let {
         block = defaults('block', false),
+        classNames = defaults('classNames'),
         colorful,
-        contentClassName = defaults('contentClassName'),
         disabled,
         htmlType = defaults('htmlType', 'button'),
         iconPosition = defaults('iconPosition', strings.DEFAULT_ICON_POSITION),
         loading = defaults('loading', false),
         noHorizontalPadding = defaults('noHorizontalPadding', false),
         size,
+        styles = defaults('styles'),
         theme,
         type,
         ...rest
@@ -40,5 +41,5 @@
     );
 </script>
 
-<!-- An empty contentClassName stops the inner Button from falling back to its own global key -->
-<Button {...rest} {...looks} {block} contentClassName={contentClassName ?? ''} {htmlType} {iconPosition} {loading} {noHorizontalPadding} />
+<!-- Empty classNames and styles stop the inner Button from falling back to its own global keys -->
+<Button {...rest} {...looks} {block} classNames={classNames ?? {}} {htmlType} {iconPosition} {loading} {noHorizontalPadding} styles={styles ?? {}} />

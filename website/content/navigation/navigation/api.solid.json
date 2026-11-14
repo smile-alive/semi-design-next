@@ -2,9 +2,13 @@
     "nav": {
         "source": "packages/semi-ui-solid/src/components/navigation/nav.tsx",
         "props": {
-            "bodyStyle": {
-                "zh-CN": "导航项列表的自定义样式。",
-                "en-US": "Custom style of the navigation item list."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as style objects or strings."
             },
             "defaultIsCollapsed": {
                 "zh-CN": "默认是否处于收起状态，仅 `mode` 为 `vertical` 时有效。",
@@ -196,9 +200,13 @@
                 "zh-CN": "弹层 Dropdown 的参数，水平模式与收起状态下使用，优先于 `subDropdownProps`。",
                 "en-US": "Props of the popup Dropdown, used in horizontal mode and when collapsed. Takes precedence over `subDropdownProps`."
             },
-            "dropdownStyle": {
-                "zh-CN": "弹层的样式，优先于 `dropdownProps` 中的 `style`。",
-                "en-US": "Style of the popup. Takes precedence over the `style` in `dropdownProps`."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（弹层内容 `.semi-dropdown`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the popup content `.semi-dropdown`); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串；`dropdown` 优先于 `dropdownProps` 中的 `style`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as style objects or strings; `dropdown` takes precedence over the `style` in `dropdownProps`."
             },
             "expandIcon": {
                 "zh-CN": "展开收起箭头图标。",

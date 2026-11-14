@@ -1,7 +1,7 @@
 import { type JSX, For, Show, createMemo, createUniqueId, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
+import { cssClasses, type SliderPart } from '@fibrae/semi-foundation/components/slider/constants';
 import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
 import '@fibrae/semi-foundation/components/slider/slider.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -13,11 +13,12 @@ import { useSpecialTrigger } from '../tooltip/context';
 
 const prefixCls = cssClasses.PREFIX;
 
-export interface SliderProps extends Omit<BasicSliderProps, 'className' | 'style' | 'railStyle' | 'marks' | 'onMouseUp'>, ElementProps<'div', 'defaultValue' | 'onChange' | 'onMouseUp' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'children'> {
+export interface SliderProps extends Omit<BasicSliderProps, 'className' | 'style' | 'marks' | 'onMouseUp'>, ElementProps<'div', 'defaultValue' | 'onChange' | 'onMouseUp' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'children'> {
     marks?: Record<number, string | number>;
     /** A mark's label next to the mark and, with `tooltipOnMark`, in its tooltip; called once for each place. Defaults to the label */
     renderMark?: (value: number, label: string | number) => JSX.Element;
-    railStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<SliderPart, string>>;
+    styles?: Partial<Record<SliderPart, JSX.CSSProperties | string>>;
     autofocus?: boolean;
     onMouseUp?: (event: PointerEvent | KeyboardEvent) => void;
     /** Attached to the `.semi-slider-wrapper` div; fires for focus on either handle */
@@ -30,8 +31,8 @@ export interface SliderProps extends Omit<BasicSliderProps, 'className' | 'style
 
 export type { SliderState };
 
-// the foundation types `style` and `railStyle` as objects; here they may also be strings
-type FoundationProps = Omit<SliderProps, 'style' | 'railStyle'>;
+// the foundation types `style` as an object; here it may also be a string
+type FoundationProps = Omit<SliderProps, 'style'>;
 type Handle = 'min' | 'max';
 
 const defaultProps = {
@@ -77,7 +78,8 @@ export default function Slider(rawProps: SliderProps) {
         'tooltipVisible',
         'showArrow',
         'showBoundary',
-        'railStyle',
+        'classNames',
+        'styles',
         'verticalReverse',
         'aria-label',
         'aria-labelledby',
@@ -275,7 +277,7 @@ export default function Slider(rawProps: SliderProps) {
                 foundation.handleWrapperLeave();
             }}
         >
-            <div class={`${prefixCls}-rail`} style={local.railStyle} onClick={foundation.handleWrapClick} />
+            <div class={clsx(`${prefixCls}-rail`, local.classNames?.rail)} style={local.styles?.rail} onClick={foundation.handleWrapClick} />
             <div class={cssClasses.TRACK} style={trackStyle()} onClick={foundation.handleWrapClick} />
             <Show when={markKeys().length > 0}>
                 <div class={cssClasses.DOTS}>

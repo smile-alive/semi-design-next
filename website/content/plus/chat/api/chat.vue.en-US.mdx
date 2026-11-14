@@ -7,14 +7,11 @@ import ApiType from '#/components/ApiType.astro';
 | align | Conversation layout: leftRight or leftAlign. | `ChatAlign` | `"leftRight"` |
 | canSend | Whether the send button is usable. The internal logic decides by default; a given value overrides it. | `boolean` | `semiGlobalDefault("Chat", "canSend")` |
 | chats | The conversation list, used with v-model:chats. Only replacing the whole array counts as a change; pushing into the same array does not trigger scroll following. | `Message[]` | `semiGlobalDefault("Chat", "chats")` |
+| classNames | Class names of the inner parts, keyed by hint (the outermost hint area) and inputBox (the input box); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cChatPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Chat", "classNames")` |
 | customMarkDownComponents | Custom Markdown renderers keyed by element name, passed to the MarkdownRender of message content. | `MarkdownRenderComponents` | `semiGlobalDefault("Chat", "customMarkDownComponents")` |
 | enableUpload | Whether uploading is enabled. A boolean controls paste, click and drag upload together; an object sets pasteUpload, clickUpload and dragUpload separately, and unset items are true. | `boolean \| EnableUploadProps` | `true` |
 | escapeHtml | Whether to escape HTML tags in the user's messages, so the Markdown parser does not treat them as HTML and drop the content. | `boolean` | `true` |
-| hintCls | Class name of the outermost element of the hint area. | `string` | `semiGlobalDefault("Chat", "hintCls")` |
 | hints | The list of hints. Clicking one emits hintClick and the hint becomes a new user message. | `string[]` | `semiGlobalDefault("Chat", "hints")` |
-| hintStyle | Style of the outermost element of the hint area. | `StyleValue` | `semiGlobalDefault("Chat", "hintStyle")` |
-| inputBoxCls | Class name of the input box. | `string` | `semiGlobalDefault("Chat", "inputBoxCls")` |
-| inputBoxStyle | Style of the input box. | `StyleValue` | `semiGlobalDefault("Chat", "inputBoxStyle")` |
 | markdownRenderProps | Props passed to the MarkdownRender that renders message content; format defaults to md. raw and components cannot be set; use customMarkDownComponents for custom renderers. | `ChatMarkdownRenderProps` | `semiGlobalDefault("Chat", "markdownRenderProps")` |
 | mode | Conversation mode: bubble, noBubble or userBubble. | `ChatMode` | `"bubble"` |
 | placeholder | Placeholder of the input. | `string` | `semiGlobalDefault("Chat", "placeholder")` |
@@ -22,6 +19,7 @@ import ApiType from '#/components/ApiType.astro';
 | sendHotKey | Send hot key: enter or shift+enter. With enter, Enter sends and Shift+Enter inserts a line break; shift+enter is the reverse. | `SendHotKey` | `"enter"` |
 | showClearContext | Whether to show the clear context button in the input. | `boolean` | `false` |
 | showStopGenerate | Whether to show the stop button while the last message is generating. Sending is unavailable meanwhile, and clicking the stop button emits stopGenerator. | `boolean` | `false` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cChatPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Chat", "styles")` |
 | uploadProps | Props passed to Upload. Chat owns fileList and defaultFileList, and Upload events are given as onXxx. Chat handles onChange itself when an attachment is added or removed. | `ChatUploadProps` | `semiGlobalDefault("Chat", "uploadProps")` |
 | uploadTipProps | Props of the upload button's Tooltip, without content; use the uploadTip slot for the text. | <ApiType detail={"Omit\u003cTooltipProps, \"content\">"}>Type</ApiType> | `semiGlobalDefault("Chat", "uploadTipProps")` |
 

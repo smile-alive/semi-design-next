@@ -83,6 +83,6 @@
             @pointerdown="foundation.handleImagePointerDown"
             @pointermove="foundation.handleImageMove"
         />
-        <Spin v-if="state.loading" size="large" :wrapperClassName="`${cls}-spin`" />
+        <Spin v-if="state.loading" :class="`${cls}-spin`" size="large" />
     </div>
 </template>

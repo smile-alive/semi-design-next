@@ -97,13 +97,27 @@ describe('Modal', () => {
         expect(onCancel).toHaveBeenCalledTimes(1);
     });
 
-    it('class / style / maskStyle / bodyStyle / zIndex', async () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['mask', 'content', 'header', 'body', 'footer'] as const;
+        await renderModal({
+            visible: true,
+            title: 'T',
+            classNames: Object.fromEntries(parts.map((part) => [part, `my-${part}`])),
+            styles: Object.fromEntries(parts.map((part) => [part, { order: parts.indexOf(part) + 1 }])),
+        });
+        for (const part of parts) {
+            const el = $(`.${prefix}-${part}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('class / style / styles / zIndex', async () => {
         await renderModal({
             class: 'test',
             style: { color: 'red' },
             visible: true,
-            maskStyle: { color: 'grey' },
-            bodyStyle: { color: 'pink' },
+            styles: { mask: { color: 'grey' }, body: { color: 'pink' } },
             zIndex: 500,
         });
         expect($('div.test')).not.toBeNull();

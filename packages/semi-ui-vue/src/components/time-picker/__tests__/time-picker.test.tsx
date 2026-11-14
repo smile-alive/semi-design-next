@@ -938,13 +938,14 @@ describe('TimePicker', () => {
         expect(getInput()).not.toHaveClass('custom-timepicker');
     });
 
-    it('popupStyle 落在弹层上', async () => {
-        await renderTimePicker({
-            defaultValue: '10:23:15',
-            popupStyle: { backgroundColor: 'white' },
-            defaultOpen: true,
-        });
-        expect(document.querySelector('[x-placement]')).toHaveStyle({ backgroundColor: 'rgb(255, 255, 255)' });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        await renderTimePicker({ defaultValue: '10:23:15', classNames: { dropdown: 'my-dropdown', input: 'my-input' }, styles: { dropdown: { color: 'red' }, input: { color: 'blue' } }, defaultOpen: true });
+        const dropdown = document.querySelector('.my-dropdown');
+        expect(dropdown).toHaveClass(`${prefixCls}-panel`);
+        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const input = document.querySelector('.my-input');
+        expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper`);
+        expect(input).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     });
 
     it('快速开关面板', async () => {
@@ -1377,12 +1378,12 @@ describe('TimePicker', () => {
                     open: false,
                     timeZone: 'Asia/Shanghai',
                     disabledTime: () => ({}),
-                    popupStyle: { color: 'red' },
+                    styles: { dropdown: { color: 'red' } },
                     scrollItemProps: { cycled: false },
                 },
                 { panel: () => <span>a</span> }
             );
-            for (const attr of ['position', 'open', 'timezone', 'disabledtime', 'popupstyle', 'scrollitemprops']) {
+            for (const attr of ['position', 'open', 'timezone', 'disabledtime', 'styles', 'scrollitemprops']) {
                 expect(getInput()).not.toHaveAttribute(attr);
                 expect(getRoot()).not.toHaveAttribute(attr);
             }

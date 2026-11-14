@@ -1,6 +1,6 @@
 import { children, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
+import { cssClasses, type BadgePart } from '@fibrae/semi-foundation/components/badge/constants';
 import '@fibrae/semi-foundation/components/badge/badge.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
 import { hasContent } from '../../utils/index';
@@ -20,8 +20,8 @@ export interface BadgeProps extends ElementProps<'span'> {
     /** Defaults to `leftTop` in an RTL ConfigProvider and `rightTop` otherwise */
     position?: BadgePosition;
     overflowCount?: number;
-    countClassName?: string;
-    countStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<BadgePart, string>>;
+    styles?: Partial<Record<BadgePart, JSX.CSSProperties | string>>;
 }
 
 const defaultProps = {
@@ -32,7 +32,7 @@ const defaultProps = {
 
 export default function Badge(rawProps: BadgeProps) {
     const props = useDefaultProps('Badge', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['count', 'dot', 'type', 'theme', 'position', 'overflowCount', 'countClassName', 'countStyle', 'children', 'class']);
+    const [local, rest] = splitProps(props, ['count', 'dot', 'type', 'theme', 'position', 'overflowCount', 'classNames', 'styles', 'children', 'class']);
 
     const config = useConfig();
 
@@ -60,16 +60,19 @@ export default function Badge(rawProps: BadgeProps) {
         <span {...rest} class={clsx(prefixCls, local.class)}>
             {attached()}
             <span
-                class={clsx(local.countClassName, {
-                    [`${prefixCls}-${local.type}`]: !custom(),
-                    [`${prefixCls}-${local.theme}`]: !custom(),
-                    [`${prefixCls}-${position()}`]: hasAttached(),
-                    [`${prefixCls}-block`]: !hasAttached(),
-                    [`${prefixCls}-dot`]: local.dot,
-                    [`${prefixCls}-count`]: !local.dot && !custom() && showBadge(),
-                    [`${prefixCls}-custom`]: custom(),
-                })}
-                style={local.countStyle}
+                class={clsx(
+                    {
+                        [`${prefixCls}-${local.type}`]: !custom(),
+                        [`${prefixCls}-${local.theme}`]: !custom(),
+                        [`${prefixCls}-${position()}`]: hasAttached(),
+                        [`${prefixCls}-block`]: !hasAttached(),
+                        [`${prefixCls}-dot`]: local.dot,
+                        [`${prefixCls}-count`]: !local.dot && !custom() && showBadge(),
+                        [`${prefixCls}-custom`]: custom(),
+                    },
+                    local.classNames?.count
+                )}
+                style={local.styles?.count}
                 x-semi-prop="count"
             >
                 <Show when={!local.dot}>{content()}</Show>

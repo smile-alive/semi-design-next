@@ -65,10 +65,10 @@
 
 <template>
     <div>
-        <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" multiple placeholder="请选择" style="width: 300px" :treeData="treeData" />
+        <TreeSelect multiple placeholder="请选择" style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
         <br />
         <br />
-        <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" leafOnly multiple placeholder="只渲染叶子节点" style="width: 300px" :treeData="treeData" />
+        <TreeSelect leafOnly multiple placeholder="只渲染叶子节点" style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
         <br />
         <br />
     </div>

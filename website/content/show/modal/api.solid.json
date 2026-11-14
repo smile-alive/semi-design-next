@@ -6,7 +6,6 @@
                 "zh-CN": "对话框完全关闭后的回调；显示期间被卸载时也会调用一次。",
                 "en-US": "Called after the dialog has fully closed. It is also called once when the dialog is unmounted while shown."
             },
-            "bodyStyle": { "zh-CN": "对话框内容区的样式，接受对象或字符串。", "en-US": "Style of the dialog body, an object or a string." },
             "cancelButtonProps": {
                 "zh-CN": "取消按钮的属性。打开后默认聚焦取消按钮，autoFocus 为 false 时不聚焦；class、style 落在按钮上；onClick 先于内置的取消处理调用，不会替换内置处理。",
                 "en-US": "Props of the cancel button. It is focused on open by default; autoFocus set to false stops that. class and style land on the button; onClick runs before the built-in cancel handling, which still runs."
@@ -24,6 +23,10 @@
             "class": {
                 "zh-CN": "落在 portal 内最外层元素上的类名。",
                 "en-US": "Class name of the outermost element inside the portal."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与组件自带的类名合并；自定义 `header` 时没有 `header` 部位。",
+                "en-US": "Class names of the inner parts, keyed by `mask`, `content`, `header`, `body` and `footer`; merged with the built-in classes. There is no `header` part when `header` is customized."
             },
             "closable": {
                 "zh-CN": "是否显示右上角的关闭按钮。",
@@ -95,7 +98,6 @@
                 "zh-CN": "遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理（aria-modal、页面 inert、Tab 锁定、body 滚动锁定）。",
                 "en-US": "Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock)."
             },
-            "maskStyle": { "zh-CN": "遮罩的样式，接受对象或字符串。", "en-US": "Style of the mask, an object or a string." },
             "modalContentClass": {
                 "zh-CN": "对话框内容元素的类名。",
                 "en-US": "Class name of the dialog content element."
@@ -141,6 +143,10 @@
             "style": {
                 "zh-CN": "落在 `.semi-modal` 对话框盒子上的样式，接受对象或字符串。",
                 "en-US": "Style of the `.semi-modal` dialog box, an object or a string."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，每个值接受对象或字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; every value is an object or a string."
             },
             "title": {
                 "zh-CN": "标题，同时作为对话框的可访问名称。",

@@ -2,17 +2,9 @@
     "radio": {
         "source": "packages/semi-ui-react/src/components/radio/radio.tsx",
         "props": {
-            "addonClassName": {
-                "zh-CN": "包裹内容容器的类名。",
-                "en-US": "Class name of the container wrapping the content."
-            },
             "addonId": {
                 "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
                 "en-US": "Id of the addon node, which aria-labelledby points to. Generated when omitted."
-            },
-            "addonStyle": {
-                "zh-CN": "包裹内容容器的内联样式。",
-                "en-US": "Inline style of the container wrapping the content."
             },
             "autoFocus": {
                 "zh-CN": "挂载后自动获取焦点，作用于内部的原生 input。",
@@ -29,6 +21,10 @@
             "className": {
                 "zh-CN": "根 label 元素的类名。",
                 "en-US": "Class name of the root label element."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `addon`（包裹内容的容器），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `addon` (the container wrapping the content); merged with the built-in classes."
             },
             "defaultChecked": {
                 "zh-CN": "初始是否选中，非受控使用；在 RadioGroup 中使用时无效。",
@@ -73,6 +69,10 @@
             "style": {
                 "zh-CN": "根 label 元素的内联样式。",
                 "en-US": "Inline style of the root label element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "type": {
                 "zh-CN": "样式类型，可选 `default`、`button`、`card` 或 `pureCard`；在 RadioGroup 中以组的 type 为准。",
@@ -138,8 +138,8 @@
                 "en-US": "Called when the selected value changes, and on every click when `mode` is `advanced`. `event.target` contains `checked`, `value`, `name` and `disabled`."
             },
             "options": {
-                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, className, style, addonId, addonStyle, addonClassName, extraId }`，`label` 与 `extra` 可以是 ReactNode。",
-                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, className, style, addonId, addonStyle, addonClassName, extraId }`, where `label` and `extra` can be ReactNode."
+                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, className, style, classNames, styles, addonId, extraId }`，`label` 与 `extra` 可以是 ReactNode。",
+                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, className, style, classNames, styles, addonId, extraId }`, where `label` and `extra` can be ReactNode."
             },
             "ref": {
                 "zh-CN": "根 div 元素的引用。",

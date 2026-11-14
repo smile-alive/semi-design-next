@@ -2,7 +2,7 @@ import type React from 'react';
 import { useId } from 'react';
 import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/feedback/constants';
+import { cssClasses, type FeedbackPart, strings } from '@fibrae/semi-foundation/components/feedback/constants';
 import FeedbackFoundation, { type FeedbackAdapter, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/feedback/feedback.scss';
@@ -34,13 +34,16 @@ export interface BasicFeedbackProps {
     renderContent?: (content: React.ReactNode) => React.ReactNode;
     /** Attached to the Modal or SideSheet wrapper div inside the portal; null while nothing is rendered */
     ref?: React.Ref<HTMLDivElement>;
+    /** Forwarded to the Modal or SideSheet of the current mode */
+    classNames?: Partial<Record<FeedbackPart, string>>;
+    styles?: Partial<Record<FeedbackPart, React.CSSProperties>>;
 }
 
-export interface FeedbackModalProps extends ModalReactProps, BasicFeedbackProps {
+export interface FeedbackModalProps extends Omit<ModalReactProps, 'classNames' | 'styles'>, BasicFeedbackProps {
     mode: 'modal';
 }
 
-export interface FeedbackSideSheetProps extends Omit<SideSheetReactProps, 'onCancel'>, BasicFeedbackProps {
+export interface FeedbackSideSheetProps extends Omit<SideSheetReactProps, 'onCancel' | 'classNames' | 'styles'>, BasicFeedbackProps {
     mode?: 'popup';
     onOk?: (e: React.MouseEvent) => void | Promise<any>;
     onCancel?: (e: React.MouseEvent | KeyboardEvent) => void | Promise<any>;

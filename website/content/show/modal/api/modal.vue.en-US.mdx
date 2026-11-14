@@ -4,11 +4,11 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| bodyStyle | Style of the dialog body. | `StyleValue` | `semiGlobalDefault("Modal", "bodyStyle")` |
 | cancelButtonProps | Props of the cancel button. autoFocus focuses it on open; class and style land on the button; onClick runs before the built-in cancel handling, which still runs. | `ModalButtonProps` | `semiGlobalDefault("Modal", "cancelButtonProps")` |
 | cancelLoading | Whether the cancel button is loading. When omitted it follows the Promise returned by onCancel; pass false to turn that off. | `boolean` | `semiGlobalDefault("Modal", "cancelLoading")` |
 | cancelText | Cancel button text. Defaults to the locale entry Modal.cancel. | `string` | `semiGlobalDefault("Modal", "cancelText")` |
 | centered | Whether the dialog is vertically centered. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by mask, content, header, body and footer; values take anything class takes and merge with the built-in classes. There is no header part when the #header slot is used. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Modal", "classNames")` |
 | closable | Whether the close button in the corner is shown. | `boolean` | `true` |
 | closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `true` |
 | confirmLoading | Whether the ok button is loading. When omitted it follows the Promise returned by onOk; pass false to turn that off. | `boolean` | `semiGlobalDefault("Modal", "confirmLoading")` |
@@ -22,7 +22,6 @@ import ApiType from '#/components/ApiType.astro';
 | mask | Whether the mask is shown. | `boolean` | `true` |
 | maskClosable | Whether a click on the mask cancels the dialog. | `boolean` | `true` |
 | maskFixed | Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock). | `boolean` | `false` |
-| maskStyle | Style of the mask. | `StyleValue` | `semiGlobalDefault("Modal", "maskStyle")` |
 | modalContentClass | Class name of the dialog content element. | `string` | `semiGlobalDefault("Modal", "modalContentClass")` |
 | motion | Whether the enter and leave animations run. | `boolean` | `true` |
 | okButtonProps | Props of the ok button. autoFocus focuses it on open; class and style land on the button; onClick runs before the built-in ok handling, which still runs. | `ModalButtonProps` | `semiGlobalDefault("Modal", "okButtonProps")` |
@@ -32,6 +31,7 @@ import ApiType from '#/components/ApiType.astro';
 | onOk | Called when the ok button is clicked. A returned Promise keeps the ok button loading until it settles. The component never closes itself on ok; the caller sets visible to false. It remains a function prop so its result can be read, bound with @ok as usual. | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
 | preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. | `boolean` | `semiGlobalDefault("Modal", "preventScroll")` |
 | size | Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px. | `Size` | `"small"` |
+| styles | Inline styles of the inner parts, keyed like classNames; values take anything style takes. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Modal", "styles")` |
 | title | Plain-text title, which also names the dialog. The #title slot wins when both are given. It is a declared prop, so it never lands on an element as the native title attribute. | `string` | `semiGlobalDefault("Modal", "title")` |
 | visible | Whether the dialog is visible, used with v-model:visible. | `boolean` | `false` |
 | width | Width of the dialog. A number is in pixels; a string is any valid CSS length. When omitted, size decides. | `string \| number` | `semiGlobalDefault("Modal", "width")` |

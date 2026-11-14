@@ -51,7 +51,7 @@ function Descriptions(rawProps: DescriptionsProps) {
 
     // the item view reads key and value only when the item is shown, so a hidden item never calls the render functions
     const DataItem = (item: { data: Data; index: number; span?: number }) => (
-        <DescriptionsItemView hidden={item.data.hidden} span={item.span} keyStyle={item.data.keyStyle} itemKey={local.renderKey ? local.renderKey(item.data, item.index) : item.data.key}>
+        <DescriptionsItemView hidden={item.data.hidden} span={item.span} classNames={item.data.classNames} styles={item.data.styles} itemKey={local.renderKey ? local.renderKey(item.data, item.index) : item.data.key}>
             {local.renderValue ? local.renderValue(item.data, item.index) : item.data.value}
         </DescriptionsItemView>
     );

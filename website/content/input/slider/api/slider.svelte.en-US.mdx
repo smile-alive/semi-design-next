@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | Accessible name of the handle. In range mode, the locale's start and end texts are appended for the two handles. | `string \| null` | - |
 | aria-labelledby | The id of the labelling element, used as the handle's accessible name. In range mode each handle adds its start or end text. | `string \| null` | - |
 | aria-valuetext | A user-friendly name for the current value. | `string \| null` | - |
+| classNames | Class names of the inner parts, keyed by rail; values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, ClassValue>>"}>Type</ApiType> | - |
 | disabled | Whether the slider is disabled. | `boolean` | `false` |
 | getAriaValueText | Provides a user-friendly name for the current value, called with the handle's value and its index. | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |
 | handleDot | Dot on the handle: one object for a single handle, an array with one per handle for a range. | `HandleDot \| HandleDot[]` | - |
@@ -22,12 +23,12 @@ import ApiType from '#/components/ApiType.astro';
 | onFocus | Called when focus enters the Slider. It is the wrapper's focusin, so it is called each time focus moves between handles. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
 | onKeyDown | Called for keys on the handle inputs, before the Slider's own handling; `preventDefault()` keeps a value key from moving the handle. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
 | onMouseUp | Called when the pointer (mouse, touch, pen) dragging a handle is released or cancelled, and when a value key is released. | <ApiType detail={"(event: PointerEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
-| railStyle | Style of the slider rail. Accepts a string only. | `string` | - |
 | range | Whether both ends can be dragged. | `boolean` | `false` |
 | showArrow | Whether the tooltip has an arrow. | `boolean` | `true` |
 | showBoundary | Whether to show the maximum and minimum on hover. | `boolean` | `false` |
 | showMarkLabel | Whether to show the mark labels. | `boolean` | `true` |
 | step | Step, counted from min. | `number` | `1` |
+| styles | Style strings of the inner parts, keyed by rail. | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
 | tip | Snippet for custom handle tooltip content. Its parameter is `{ value, handle }`; value is the result of tipFormatter and handle is min or max. | <ApiType detail={"Snippet\u003c[SliderTipSnippetProps]>"}>Type</ApiType> | - |
 | tipFormatter | Format of the tooltip, called once per handle with that handle's value. Shows the current value by default; null hides the tooltip. | <ApiType detail={"((value: number) => string \u007c number) \u007c null"}>Type</ApiType> | <ApiType detail={"(tipValue: number) => tipValue"}>Type</ApiType> |
 | tooltipOnMark | Whether the marks on the rail have a tooltip. | `boolean` | `false` |

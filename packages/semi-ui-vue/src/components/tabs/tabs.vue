@@ -24,7 +24,7 @@
         activeKey: semiGlobalDefault('Tabs', 'activeKey'),
         arrowPosition: () => semiDefault('Tabs', 'arrowPosition', 'both'),
         collapsible: () => semiDefault('Tabs', 'collapsible', false),
-        contentStyle: semiGlobalDefault('Tabs', 'contentStyle'),
+        classNames: semiGlobalDefault('Tabs', 'classNames'),
         defaultActiveKey: semiGlobalDefault('Tabs', 'defaultActiveKey'),
         dropdownProps: semiGlobalDefault('Tabs', 'dropdownProps'),
         keepDOM: () => semiDefault('Tabs', 'keepDOM', true),
@@ -33,13 +33,11 @@
         preventScroll: semiGlobalDefault('Tabs', 'preventScroll'),
         showRestInDropdown: () => semiDefault('Tabs', 'showRestInDropdown', true),
         size: () => semiDefault('Tabs', 'size', 'large'),
-        tabBarClassName: semiGlobalDefault('Tabs', 'tabBarClassName'),
-        tabBarStyle: semiGlobalDefault('Tabs', 'tabBarStyle'),
+        styles: semiGlobalDefault('Tabs', 'styles'),
         tabList: semiGlobalDefault('Tabs', 'tabList'),
         tabPaneMotion: () => semiDefault('Tabs', 'tabPaneMotion', true),
         tabPosition: () => semiDefault('Tabs', 'tabPosition', 'top'),
         type: () => semiDefault('Tabs', 'type', 'line'),
-        visibleTabsStyle: semiGlobalDefault('Tabs', 'visibleTabsStyle'),
     });
 
     const emit = defineEmits<TabsEmits>();
@@ -126,10 +124,11 @@
         showRestInDropdown: props.showRestInDropdown,
         more: props.more,
         arrowPosition: props.arrowPosition,
-        visibleTabsStyle: props.visibleTabsStyle,
+        classNames: { visibleTabs: props.classNames?.visibleTabs },
+        styles: { visibleTabs: props.styles?.visibleTabs },
         dropdownProps: props.dropdownProps,
-        class: props.tabBarClassName,
-        style: props.tabBarStyle,
+        class: props.classNames?.tabBar,
+        style: props.styles?.tabBar,
     });
 
     const barBindings = () => ({
@@ -186,7 +185,7 @@
                 <slot name="tabBarExtraContent" />
             </template>
         </TabBar>
-        <div :class="[cssClasses.TABS_CONTENT, `${cssClasses.TABS_CONTENT}-${props.tabPosition}`]" :style="props.contentStyle" v-bind="tabListPanelAttrs()">
+        <div :class="[cssClasses.TABS_CONTENT, `${cssClasses.TABS_CONTENT}-${props.tabPosition}`, props.classNames?.content]" :style="props.styles?.content" v-bind="tabListPanelAttrs()">
             <slot v-if="Array.isArray(props.tabList)" />
             <template v-else>
                 <component :is="node" v-for="[node, key] in contentNodes()" :key="key" />

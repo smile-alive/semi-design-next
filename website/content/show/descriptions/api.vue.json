@@ -46,7 +46,14 @@
         "props": {
             "hidden": { "zh-CN": "是否隐藏该项。", "en-US": "Whether to hide the item." },
             "span": { "zh-CN": "单元格跨越的列数。", "en-US": "Number of columns the cell spans." },
-            "keyStyle": { "zh-CN": "key 的自定义样式。", "en-US": "Custom style of the key." }
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 key，值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by key; values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 key，值的写法同 style。",
+                "en-US": "Styles of the inner parts, keyed by key; values take any style binding."
+            }
         },
         "events": {},
         "slots": {

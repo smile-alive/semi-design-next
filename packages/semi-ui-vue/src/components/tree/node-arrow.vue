@@ -35,7 +35,7 @@
 
 <template>
     <!-- the row carries aria-busy; the spinner's own name would join the row's name -->
-    <Spin v-if="props.row.loading" aria-hidden="true" :wrapperClassName="`${prefix}-spin-icon`" />
+    <Spin v-if="props.row.loading" aria-hidden="true" :class="`${prefix}-spin-icon`" />
     <template v-else-if="!isLeaf()">
         <template v-for="(nodes, i) in [iconNodes()]" :key="i">
             <component :is="nodes[0][0]" v-if="nodes && isOneElement(nodes)" :class="iconClass" @click="handleClick" />

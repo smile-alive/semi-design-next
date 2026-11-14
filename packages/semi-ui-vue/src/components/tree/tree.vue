@@ -53,9 +53,9 @@
 
         labelEllipsis: semiGlobalDefault('Tree', 'labelEllipsis'),
         virtualize: semiGlobalDefault('Tree', 'virtualize'),
-        searchClassName: semiGlobalDefault('Tree', 'searchClassName'),
+        classNames: semiGlobalDefault('Tree', 'classNames'),
         searchPlaceholder: semiGlobalDefault('Tree', 'searchPlaceholder'),
-        searchStyle: semiGlobalDefault('Tree', 'searchStyle'),
+        styles: semiGlobalDefault('Tree', 'styles'),
         filterTreeNode: undefined,
         loadData: undefined,
     });
@@ -239,11 +239,11 @@
     <div v-bind="splitAttrs().root" :class="`${prefix}-wrapper`">
         <template v-if="filterTreeNode">
             <template v-for="(nodes, i) in $slots.search ? [searchNodes()] : []" :key="i">
-                <div v-if="nodes.length" :class="[`${prefix}-search-wrapper`, props.searchClassName]" :style="props.searchStyle">
+                <div v-if="nodes.length" :class="[`${prefix}-search-wrapper`, props.classNames?.search]" :style="props.styles?.search">
                     <component :is="node" v-for="[node, key] in nodes" :key="key" />
                 </div>
             </template>
-            <div v-if="!$slots.search" :class="[`${prefix}-search-wrapper`, props.searchClassName]" :style="props.searchStyle">
+            <div v-if="!$slots.search" :class="[`${prefix}-search-wrapper`, props.classNames?.search]" :style="props.styles?.search">
                 <Input :aria-label="locale.locale.filter" :class="`${prefix}-input`" :modelValue="view.inputValue" :placeholder="props.searchPlaceholder || locale.locale.searchPlaceholder" :showClear="props.showClear" @change="handleSearch">
                     <template #prefix>
                         <IconSearch />

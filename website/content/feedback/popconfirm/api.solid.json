@@ -30,10 +30,6 @@
                 "zh-CN": "箭头是否指向触发元素中心，需要同时开启 `showArrow`，缺省为 `true`。",
                 "en-US": "Whether the arrow points at the center of the trigger. Requires `showArrow`. Defaults to `true`."
             },
-            "arrowStyle": {
-                "zh-CN": "箭头的边框色、背景色与边框透明度。",
-                "en-US": "Border color, background color and border opacity of the arrow."
-            },
             "autoAdjustOverflow": {
                 "zh-CN": "弹出层被遮挡时是否自动调整方向，缺省为 `true`。",
                 "en-US": "Whether the popup flips automatically when it would be clipped. Defaults to `true`."
@@ -58,6 +54,10 @@
                 "zh-CN": "确认卡片（`.semi-popconfirm`）的类名，不落在弹出层上。",
                 "en-US": "Class name of the confirmation card (`.semi-popconfirm`), not of the popup."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（弹出层内的内容容器 `.semi-popover`）、`arrow`（箭头），与组件自带的类名合并；确认卡片 `.semi-popconfirm` 的类名用 `class`。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the content container `.semi-popover` inside the popup) and `arrow`; merged with the built-in classes. The class of the confirmation card `.semi-popconfirm` is set with `class`."
+            },
             "clickToHide": {
                 "zh-CN": "点击弹出层及其内部任一元素时是否关闭。",
                 "en-US": "Whether a click on the popup or anything inside it closes it."
@@ -69,10 +69,6 @@
             "content": {
                 "zh-CN": "确认框内容，可以是 JSX 元素，也可以是函数。函数的参数是 `{ initialFocusRef }`，把 `initialFocusRef` 作为 `ref` 绑定到打开时需要聚焦的元素上。",
                 "en-US": "Content of the card: a JSX element or a function. The function receives `{ initialFocusRef }`; pass `initialFocusRef` as the `ref` of the element that takes focus on open."
-            },
-            "contentClassName": {
-                "zh-CN": "内容容器的类名。",
-                "en-US": "Class name of the content container."
             },
             "condition": {
                 "zh-CN": "是否允许触发显示，缺省为 `true`；仅显式设为 `false` 时，`hover`、`click`、`focus` 等触发行为不生效。由 `true` 变为 `false` 时立即关闭已显示的确认框；`visible` 受控时只通过 `onVisibleChange` 请求关闭，使用方回写后才关闭。",
@@ -185,6 +181,10 @@
             "style": {
                 "zh-CN": "确认卡片的样式，接受对象（键为 kebab-case）或字符串。",
                 "en-US": "Style of the confirmation card, as an object with kebab-case keys or as a string."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。`content` 是内容容器的样式，接受对象（键为 kebab-case）或字符串；`arrow` 是箭头的 `borderColor`、`backgroundColor` 与 `borderOpacity`（驼峰键名的对象）。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. `content` styles the content container, as an object with kebab-case keys or as a string; `arrow` holds the arrow's `borderColor`, `backgroundColor` and `borderOpacity`, an object with camelCase keys."
             },
             "title": {
                 "zh-CN": "标题，可以是字符串或 JSX 元素。有标题时，对话框以标题命名（见 `aria-labelledby`）。",

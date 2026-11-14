@@ -1,4 +1,5 @@
 import type { JSX } from 'solid-js';
+import type { ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
 import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
 import type { BaseFileItem, AfterUploadResult as FoundationAfterUploadResult, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ModalProps } from '../modal';
@@ -71,6 +72,7 @@ export interface RenderFileItemProps extends FileItem {
     renderValidateMessage?: (fileItem: RenderFileItemProps) => JSX.Element;
     showRetry?: boolean;
     showReplace?: boolean;
+    class?: string;
     /** Merged with `picWidth` and `picHeight` in the picture wall, so only an object */
     style?: JSX.CSSProperties;
     disabled?: boolean;
@@ -110,9 +112,9 @@ export interface CropProps {
 }
 
 /** Props of the crop Modal; the visibility, title, button texts and handlers belong to Upload */
-export interface UploadCropModalProps extends Omit<ModalProps, 'visible' | 'title' | 'okText' | 'cancelText' | 'onOk' | 'onCancel' | 'style' | 'bodyStyle'> {
+export interface UploadCropModalProps extends Omit<ModalProps, 'visible' | 'title' | 'okText' | 'cancelText' | 'onOk' | 'onCancel' | 'style' | 'styles'> {
     /** Merged over the default height, so only an object */
     style?: JSX.CSSProperties;
-    /** Merged over the default height, so only an object */
-    bodyStyle?: JSX.CSSProperties;
+    /** `body` is merged over the default height, so only objects */
+    styles?: Partial<Record<ModalPart, JSX.CSSProperties>>;
 }

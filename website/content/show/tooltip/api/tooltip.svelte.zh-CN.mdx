@@ -15,6 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | child | 渲染触发元素本身的 snippet，参数 `{ props }` 要整体展开到触发元素上（`<button {...props}>`）；传了它则忽略 children。可聚焦的触发元素（Button、Input 等）都用这种写法。 | <ApiType detail={"Snippet\u003c[{ props: TooltipTriggerProps }]>"}>Type</ApiType> | - |
 | children | 触发元素，写在标签内；会被包进 Tooltip 自己的 span（`semi-tooltip-trigger-wrapper`），适合文本与不可聚焦的内容。 | `Snippet` | - |
 | class | 弹出层的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, ClassValue>>"}>Type</ApiType> | - |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭弹出层。 | `boolean` | - |
 | clickTriggerToHide | 点击触发元素时是否关闭已打开的弹出层。 | `boolean` | - |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只调用 onEscKeyDown，由使用方决定是否关闭。 | `boolean` | `true` |
@@ -39,9 +40,9 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number }` | `8` |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean` | - |
 | style | 弹出层的样式字符串，写在定位样式之前；其中的 `background-color` 同时给箭头着色。 | `string` | - |
+| styles | 内部各部位的内联样式字符串，键同 `classNames`，写在 span 自带样式之后。 | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, string>>"}>Type</ApiType> | - |
 | trigger | 触发显示的时机。custom 时显示与否完全由 visible 决定。 | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | 弹出层是否显示，可用 `bind:visible` 绑定；`bind:visible={get, set}` 时完全受控，传入后由该值决定显示。 | `boolean` | - |
-| wrapperClassName | 触发元素被 span 包裹时，该 span 的类名。 | `string` | - |
 | wrapperId | 弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。 | `string` | - |
 | wrapWhenSpecial | 默认的 span 里只有一个禁用或加载中的 Semi Button、Switch 或 Checkbox 时，是否让它的指针事件经 span 触发弹出层；false 则保持原样。 | `boolean` | `true` |
 

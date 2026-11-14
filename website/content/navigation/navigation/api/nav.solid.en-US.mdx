@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| bodyStyle | Custom style of the navigation item list. | `JSX.CSSProperties \| string` | - |
+| classNames | Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | defaultIsCollapsed | Whether the navigation starts collapsed. Applies only when `mode` is `vertical`. | `boolean` | - |
 | defaultOpenKeys | `itemKey`s of the sub navigations open initially. Applies only when `mode` is `vertical` and the sidebar is expanded. | `ItemKey[]` | - |
 | defaultSelectedKeys | `itemKey`s of the items selected initially. | `ItemKey[]` | - |
@@ -26,6 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderItemToggleIcon | Toggle icon of each item generated from `items`. It receives `{ item, level }`. | <ApiType detail={"(props: NavItemRenderProps) => JSX.Element"}>Type</ApiType> | - |
 | renderWrapper | Renders the wrapper around each navigation item. It receives `{ itemElement, isSubNav, isInSubNav, props }` and its return value goes into the list. Render `itemElement` exactly once. | <ApiType detail={"(data: RenderWrapperData) => JSX.Element"}>Type</ApiType> | - |
 | selectedKeys | Controlled `itemKey`s of the selected items. Use it with `onSelect`. | `ItemKey[]` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`, as style objects or strings. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | subDropdownProps | Dropdown props of the sub navigations generated from `items`, used in horizontal mode or when collapsed. A sub navigation's own `dropdownProps` or `subDropdownProps` takes precedence. | `DropdownProps` | - |
 | subNavCloseDelay | Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or in horizontal mode. | `number` | `100` |
 | subNavMotion | Whether sub navigations animate when they expand and collapse. | `boolean` | `true` |

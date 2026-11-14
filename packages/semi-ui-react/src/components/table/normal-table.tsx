@@ -256,7 +256,9 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
         ref,
         scroll,
         className,
+        classNames,
         style,
+        styles,
         bordered,
         id,
         pagination: propPagination,
@@ -294,7 +296,6 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
         renderGroupSection,
         onGroupedRow,
         clickGroupedRowToExpand,
-        headerStyle,
         rowSpanHover,
         direction,
         groupBy,
@@ -498,13 +499,14 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
             setBodyHasScrollbar: foundation.setBodyHasScrollbar,
             direction,
             handleRowSelection,
-            headerStyle,
+            classNames,
+            styles,
             rowSpanHover,
             splitTable,
             tableAria,
             headerRowCount,
         }),
-        [anyColumnFixed, flattenFnsColumns, foundation, cellWidthsOf, headWidths, handleRowExpanded, getVirtualizedListRef, direction, handleRowSelection, headerStyle, rowSpanHover, splitTable, tableAria, headerRowCount]
+        [anyColumnFixed, flattenFnsColumns, foundation, cellWidthsOf, headWidths, handleRowExpanded, getVirtualizedListRef, direction, handleRowSelection, classNames, styles, rowSpanHover, splitTable, tableAria, headerRowCount]
     );
 
     const tableLayout = flattenFnsColumns.some((column) => Boolean(column.ellipsis) || Boolean(column.fixed)) || fixedHeader ? 'fixed' : 'auto';

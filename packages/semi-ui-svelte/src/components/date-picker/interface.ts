@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { BaseValueType, DateOffsetType, DayStatusType, DensityType, DisabledDateOptions, DisabledDateType, DisabledTimeType, PresetPosition, PresetType, PresetsType, Type, ValueType, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import type { InsetInputProps, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { InputSize, ValidateStatus } from '../input/index.js';
@@ -76,7 +77,6 @@ interface DatePickerCommonProps extends Omit<HTMLAttributes<HTMLDivElement>, Nat
     borderless?: boolean;
     showClear?: boolean;
     inputReadOnly?: boolean;
-    inputStyle?: string;
     insetInput?: boolean | DatePickerInsetInputProps;
     insetLabelId?: string;
     validateStatus?: ValidateStatus;
@@ -102,8 +102,9 @@ interface DatePickerCommonProps extends Omit<HTMLAttributes<HTMLDivElement>, Nat
     /** Defaults to 1 for an `insetInput` panel over the trigger, else the Popover spacing */
     spacing?: number;
     stopPropagation?: boolean | string;
-    dropdownClassName?: string;
-    dropdownStyle?: string;
+    /** `dropdown` is the panel; `input` is the Input's root element (each of the two inputs of a range) */
+    classNames?: Partial<Record<DatePickerPart, ClassValue>>;
+    styles?: Partial<Record<DatePickerPart, string>>;
     onOpenChange?: (open: boolean) => void;
     /**
      * focusin of an input, or the click or key press on the trigger that focused the range start; `rangeType` is set

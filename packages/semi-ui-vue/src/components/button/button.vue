@@ -18,14 +18,15 @@
         block: () => semiDefault('Button', 'block', false),
         // size, type, theme, disabled and colorful resolve own value -> ButtonGroup -> global default in useButtonLooks;
         // a factory default would make every button look like it was given a value and hide the group's.
+        classNames: semiGlobalDefault('Button', 'classNames'),
         colorful: undefined,
-        contentClassName: semiGlobalDefault('Button', 'contentClassName'),
         disabled: undefined,
         htmlType: () => semiDefault('Button', 'htmlType', 'button'),
         iconPosition: () => semiDefault('Button', 'iconPosition', strings.DEFAULT_ICON_POSITION),
         loading: () => semiDefault('Button', 'loading', false),
         noHorizontalPadding: () => semiDefault('Button', 'noHorizontalPadding', false),
         size: undefined,
+        styles: semiGlobalDefault('Button', 'styles'),
         theme: undefined,
         type: undefined,
     });
@@ -75,7 +76,7 @@
         :style="paddingStyle()"
         :type="props.htmlType"
     >
-        <span :class="[`${prefix}-content`, props.contentClassName]" :x-semi-prop="iconLayout() ? undefined : 'children'">
+        <span :class="[`${prefix}-content`, props.classNames?.content]" :style="props.styles?.content" :x-semi-prop="iconLayout() ? undefined : 'children'">
             <template v-if="iconLayout()">
                 <template v-for="part in parts()" :key="part">
                     <span

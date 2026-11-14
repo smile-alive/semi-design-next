@@ -44,7 +44,7 @@
     const spanOf = (attrs: Record<string, unknown>, name: 'col' | 'row') => (attrs[`${name}Span`] ?? attrs[`${name}span`]) as number | undefined;
 
     const headerCells = (): HeaderCellView[] => {
-        const { direction, headerStyle, prefixCls, splitTable, components, queries } = table.view.value;
+        const { direction, classNames, styles, prefixCls, splitTable, components, queries } = table.view.value;
         const isRTL = direction === 'rtl';
         const slicedColumns = sliceColumnsByLevel(props.columns, props.index) as ColumnProps[];
         const headWidths = table.getCellWidths(slicedColumns);
@@ -94,6 +94,7 @@
                         ...attrs,
                         class: [
                             `${prefixCls}-row-head`,
+                            classNames?.header,
                             column.class,
                             customClass,
                             {
@@ -107,7 +108,7 @@
                                 [`${prefixCls}-row-head-clickSort`]: flags.clickToSort,
                             },
                         ],
-                        style: [headerStyle, customStyle as StyleValue, { textAlign }, sticky],
+                        style: [styles?.header, customStyle as StyleValue, { textAlign }, sticky],
 
                         // a role="none" table no longer gives colspan and rowspan their table meaning
                         'aria-colspan': splitTable && colSpan && colSpan > 1 ? colSpan : undefined,

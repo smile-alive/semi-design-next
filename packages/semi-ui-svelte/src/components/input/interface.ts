@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes, HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
+import type { InputPart, TextAreaPart } from '@fibrae/semi-foundation/components/input/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { LabelProps } from '../form/interface.js';
 
@@ -49,7 +50,8 @@ export interface InputProps extends Omit<HTMLInputAttributes, NativeInputKeys> {
     minlength?: number;
     placeholder?: string | number;
     validateStatus?: ValidateStatus;
-    inputStyle?: string;
+    classNames?: Partial<Record<InputPart, ClassValue>>;
+    styles?: Partial<Record<InputPart, string>>;
     insetLabelId?: string;
     getValueLength?: (value: string) => number;
     onChange?: (value: string, event: InputChangeEvent) => void;
@@ -101,9 +103,8 @@ export interface TextAreaProps extends Omit<HTMLTextareaAttributes, NativeTextAr
     disabledEnterStartNewLine?: boolean;
     showLineNumber?: boolean;
     lineNumberStart?: number;
-    lineNumberClassName?: string;
-    lineNumberStyle?: string;
-    textareaStyle?: string;
+    classNames?: Partial<Record<TextAreaPart, ClassValue>>;
+    styles?: Partial<Record<TextAreaPart, string>>;
     /** Only takes effect when given; ignored with autosize */
     resize?: 'none' | 'both' | 'horizontal' | 'vertical' | 'block' | 'inline';
     maxlength?: number;

@@ -130,7 +130,7 @@ describe('Descriptions', () => {
 
     it('不把 value 等数据项字段放到行上', () => {
         const { container } = renderDescriptions({
-            data: [{ key: 'a', value: '1', span: 2, keyStyle: { color: 'red' } }],
+            data: [{ key: 'a', value: '1', span: 2, classNames: { key: 'kk' }, styles: { key: { color: 'red' } } }],
         });
         for (const tr of container.querySelectorAll('tr')) {
             expect(tr.getAttributeNames()).toEqual([]);
@@ -168,15 +168,23 @@ describe('Descriptions', () => {
         expect(getKeys(container)[0]).toHaveTextContent(/^a:$/);
     });
 
-    it('keyStyle 作用于 key，#value 插槽提供 value', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = renderItems(() => [item({ classNames: { key: 'kk' }, styles: { key: { color: 'blue' } } }, 'b', 'v')]);
+        expect(container.querySelector('tr')).not.toHaveClass('kk');
+        expect(getKeys(container)[0]).toHaveClass(`${prefixCls}-key`, 'kk');
+        expect(getKeys(container)[0]).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+        expect(getValues(container)[0]).not.toHaveClass('kk');
+    });
+
+    it('数据项的 styles.key 作用于 key，Item 的 styles.key 作用于 Item 的 key，#value 插槽提供 value', () => {
         const { container } = render(Descriptions, {
-            props: { data: [{ key: 'a', value: 'raw', keyStyle: { color: 'red' } }] },
+            props: { data: [{ key: 'a', value: 'raw', classNames: { key: 'kk' }, styles: { key: { color: 'red' } } }] },
             slots: { value: () => 'from slot' },
         });
         expect(getKeys(container)[0]).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getValues(container)[0]).toHaveTextContent(/^from slot$/);
 
-        const jsx = renderItems(() => [item({ keyStyle: { color: 'blue' } }, 'b', 'from children')]);
+        const jsx = renderItems(() => [item({ styles: { key: { color: 'blue' } } }, 'b', 'from children')]);
         expect(getKeys(jsx.container)[0]).toHaveStyle({ color: 'rgb(0, 0, 255)' });
         expect(getValues(jsx.container)[0]).toHaveTextContent(/^from children$/);
     });

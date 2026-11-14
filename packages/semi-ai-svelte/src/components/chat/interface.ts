@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
-import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { ChatAlign, ChatMode, ChatPart, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { Content, EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import type { AvatarProps } from '@fibrae/semi-ui-svelte/avatar/interface';
 import type { MarkdownRenderComponents, MarkdownRenderProps } from '@fibrae/semi-ui-svelte/markdown-render/interface';
@@ -149,10 +149,8 @@ export interface ChatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' 
     uploadTipProps?: Omit<TooltipProps, 'content' | 'children' | 'child'>;
     markdownRenderProps?: ChatMarkdownRenderProps;
     customMarkDownComponents?: MarkdownRenderComponents;
-    inputBoxCls?: string;
-    inputBoxStyle?: string;
-    hintCls?: string;
-    hintStyle?: string;
+    classNames?: Partial<Record<ChatPart, ClassValue>>;
+    styles?: Partial<Record<ChatPart, string>>;
     onChatsChange?: (chats: ChatMessage[]) => void;
     onMessageSend?: (content: string, attachment?: FileItem[]) => void;
     onMessageCopy?: (message: ChatMessage) => void;

@@ -50,6 +50,6 @@
         <br />
         <br />
         <!-- Dropdown height 300 minus the search box and 8 * 2 padding; a set height fills the rest -->
-        <TreeSelect v-if="gData.length > 0" :dropdownStyle="{ overflow: 'hidden' }" filterTreeNode placeholder="Please select" showFilteredOnly style="width: 300px" :treeData="gData" :virtualize="{ itemSize: 28, height: 236 }" />
+        <TreeSelect v-if="gData.length > 0" filterTreeNode placeholder="Please select" showFilteredOnly style="width: 300px" :styles="{ dropdown: { overflow: 'hidden' } }" :treeData="gData" :virtualize="{ itemSize: 28, height: 236 }" />
     </div>
 </template>

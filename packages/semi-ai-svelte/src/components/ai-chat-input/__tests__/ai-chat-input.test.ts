@@ -660,8 +660,20 @@ describe('AIChatInput', () => {
             expect(onSkillChange).toHaveBeenLastCalledWith(undefined);
         });
 
+        it('classNames 与 styles 按部位落到对应元素', async () => {
+            const { container } = await setup({ skills, skillHotKey: '/', classNames: { templates: 'tpl-cls' }, styles: { templates: 'order: 3' } }, { template: true });
+            await keyDown(container, '/');
+            await waitFor(() => expect(skillItems()).toHaveLength(2));
+            await keyDown(container, 'Enter');
+            await fireEvent.click(templateButton(container));
+            await waitFor(() => expect(document.querySelector(`.${prefix}-template`)).not.toBeNull());
+            const panel = query(`.${prefix}-template`);
+            expect(panel).toHaveClass('tpl-cls');
+            expect(panel).toHaveStyle({ order: '3' });
+        });
+
         it('模板按钮打开 template，并传入 skill 与内容 setter', async () => {
-            const { container } = await setup({ skills, skillHotKey: '/', templatesCls: 'tpl-cls', templatesStyle: 'color: red' }, { template: true });
+            const { container } = await setup({ skills, skillHotKey: '/', classNames: { templates: 'tpl-cls' }, styles: { templates: 'color: red' } }, { template: true });
             await keyDown(container, '/');
             await waitFor(() => expect(skillItems()).toHaveLength(2));
             await keyDown(container, 'Enter');

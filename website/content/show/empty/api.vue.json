@@ -6,7 +6,14 @@
                 "zh-CN": "布局模式，可选 vertical、horizontal。",
                 "en-US": "Layout mode: vertical or horizontal."
             },
-            "imageStyle": { "zh-CN": "占位图的样式。", "en-US": "Style of the placeholder image." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 image，值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by image; values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 image，值的写法同 style。",
+                "en-US": "Styles of the inner parts, keyed by image; values take any style binding."
+            },
             "title": {
                 "zh-CN": "纯文本标题；同时传入 title 插槽时以插槽为准。",
                 "en-US": "Plain-text title. The title slot wins when both are given."

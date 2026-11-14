@@ -66,17 +66,17 @@
                 "zh-CN": "严格禁用：节点禁用时，它的选中状态不会因为父或子节点的变化而改变。",
                 "en-US": "Strict disabling: when a node is disabled, its checked state cannot be changed through its parent or child nodes."
             },
-            "dropdownClassName": {
-                "zh-CN": "下拉面板的类名。",
-                "en-US": "Class name of the dropdown panel."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（下拉面板）、`optionList`（选项列表，即 `role=\"tree\"` 元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown panel) and `optionList` (the option list, the `role=\"tree\"` element); merged with the built-in classes."
             },
             "dropdownMatchSelectWidth": {
                 "zh-CN": "下拉面板的最小宽度是否与选择框相同。",
                 "en-US": "Whether the minimum width of the dropdown panel matches the width of the select box."
             },
-            "dropdownStyle": {
-                "zh-CN": "下拉面板的样式。",
-                "en-US": "Style of the dropdown panel."
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 `classNames`，值可以是键为 kebab-case 的对象，也可以是字符串。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`; a value is an object with kebab-case keys or a string."
             },
             "emptyContent": {
                 "zh-CN": "无数据或搜索无结果时的空状态内容，未设置时显示语言包中的文案；传 `null` 时不显示。",
@@ -189,10 +189,6 @@
             "onVisibleChange": {
                 "zh-CN": "下拉面板显示或隐藏时的回调，入参为是否可见。",
                 "en-US": "Called when the dropdown panel is shown or hidden, with whether it is visible."
-            },
-            "optionListStyle": {
-                "zh-CN": "选项列表的样式。",
-                "en-US": "Style of the option list."
             },
             "outerBottomSlot": {
                 "zh-CN": "渲染在下拉面板底部的自定义内容，与选项列表同级。",

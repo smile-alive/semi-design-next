@@ -1,7 +1,7 @@
 import { type JSX, type Ref, Index, Show, createEffect, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { throttle } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+import { cssClasses, type TextAreaPart } from '@fibrae/semi-foundation/components/input/constants';
 import TextAreaFoundation, { type TextAreaAdapter } from '@fibrae/semi-foundation/components/input/textarea-foundation';
 import { syncLineNumberHeights } from '@fibrae/semi-foundation/components/input/util/line-number';
 import { joinIds } from '@fibrae/semi-foundation/utils';
@@ -63,9 +63,8 @@ export interface TextAreaProps extends ElementProps<'textarea', 'onChange' | 'on
     minLength?: number;
     showLineNumber?: boolean;
     lineNumberStart?: number;
-    lineNumberClassName?: string;
-    lineNumberStyle?: JSX.CSSProperties;
-    textareaStyle?: JSX.CSSProperties;
+    classNames?: Partial<Record<TextAreaPart, string>>;
+    styles?: Partial<Record<TextAreaPart, JSX.CSSProperties>>;
     /** When enabled, onChange fires once after an IME composition ends, not during it */
     composition?: boolean;
     /** Whether and in which direction the textarea is resizable; ignored with autosize, applied only when provided */
@@ -128,14 +127,13 @@ export default function TextArea(rawProps: TextAreaProps) {
         'autosize',
         'borderless',
         'class',
+        'classNames',
         'composition',
         'defaultValue',
         'disabled',
         'disabledEnterStartNewLine',
         'getValueLength',
-        'lineNumberClassName',
         'lineNumberStart',
-        'lineNumberStyle',
         'maxCount',
         'maxLength',
         'minLength',
@@ -159,8 +157,8 @@ export default function TextArea(rawProps: TextAreaProps) {
         'showCounter',
         'showLineNumber',
         'style',
+        'styles',
         'textareaRef',
-        'textareaStyle',
         'value',
     ]);
 
@@ -222,11 +220,11 @@ export default function TextArea(rawProps: TextAreaProps) {
 
     const observesSize = () => Boolean(local.autosize) || (local.resize !== undefined && local.resize !== 'none');
 
-    const textareaStyle = (): JSX.CSSProperties => ({ ...local.textareaStyle, ...TextAreaFoundation.getSizeStyle({ autosize: local.autosize, resize: local.resize, rows: props.rows }) });
+    const textareaStyle = (): JSX.CSSProperties => ({ ...local.styles?.textarea, ...TextAreaFoundation.getSizeStyle({ autosize: local.autosize, resize: local.resize, rows: props.rows }) });
 
     const lineNumberStyle = (): JSX.CSSProperties => {
         const { height } = lineLayout();
-        return { ...local.lineNumberStyle, height: height ? `${height}px` : undefined, 'max-height': height ? `${height}px` : undefined };
+        return { ...local.styles?.lineNumber, height: height ? `${height}px` : undefined, 'max-height': height ? `${height}px` : undefined };
     };
 
     const handleInput = (e: TextAreaElementEvent<InputEvent>) => {
@@ -270,12 +268,16 @@ export default function TextArea(rawProps: TextAreaProps) {
             {...rest}
             // called inside Show, whose memo would track this read; a spread props signal would recreate the textarea
             ref={untrack(() => mergeRefs(setElement, local.textareaRef))}
-            class={clsx(`${prefixCls}-textarea`, {
-                [`${prefixCls}-textarea-disabled`]: local.disabled,
-                [`${prefixCls}-textarea-readonly`]: local.readonly,
-                [`${prefixCls}-textarea-autosize`]: Boolean(local.autosize),
-                [`${prefixCls}-textarea-showClear`]: local.showClear,
-            })}
+            class={clsx(
+                `${prefixCls}-textarea`,
+                {
+                    [`${prefixCls}-textarea-disabled`]: local.disabled,
+                    [`${prefixCls}-textarea-readonly`]: local.readonly,
+                    [`${prefixCls}-textarea-autosize`]: Boolean(local.autosize),
+                    [`${prefixCls}-textarea-showClear`]: local.showClear,
+                },
+                local.classNames?.textarea
+            )}
             style={textareaStyle()}
             aria-describedby={joinIds(rest['aria-describedby'], hasCounter() && counterId)}
             aria-invalid={props.validateStatus === 'error' || exceeds() ? 'true' : rest['aria-invalid']}
@@ -352,7 +354,7 @@ export default function TextArea(rawProps: TextAreaProps) {
         >
             <Show when={local.showLineNumber} fallback={textareaNode()}>
                 {/* decorative: screen readers would read every number before the textarea */}
-                <div ref={(node) => (lineNumberPanel = node)} class={clsx(`${prefixCls}-textarea-lineNumber`, local.lineNumberClassName)} style={lineNumberStyle()} aria-hidden="true">
+                <div ref={(node) => (lineNumberPanel = node)} class={clsx(`${prefixCls}-textarea-lineNumber`, local.classNames?.lineNumber)} style={lineNumberStyle()} aria-hidden="true">
                     <Index each={lines()}>{(_, i) => <div class={`${prefixCls}-textarea-lineNumber-item`}>{(local.lineNumberStart ?? 1) + i}</div>}</Index>
                 </div>
                 <div class={`${prefixCls}-textarea-content`}>{textareaNode()}</div>

@@ -45,7 +45,7 @@ describe('Tabs', () => {
         expect(screen.getByRole('tab', { name: 'titleA' })).toHaveAttribute('aria-selected', 'true');
     });
 
-    it('Tabs 带自定义 className、style 和 contentStyle', () => {
+    it('Tabs 带自定义 className 和 style', () => {
         let props = {
             className: 'test',
             style: {
@@ -170,9 +170,16 @@ describe('Tabs', () => {
         expectTypeOf<import('../interface').TabPaneTransitionProps>().toBeAny();
     });
 
-    it('contentStyle', () => {
-        const { container } = render(getTabs({ contentStyle: { color: 'red' } }, defaultTabPane));
-        expect(container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-content`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        stubIntersectionObserver();
+        const parts = ['tabBar', 'content', 'visibleTabs'] as const;
+        const selectors = { tabBar: 'tabs-bar', content: 'tabs-content', visibleTabs: 'overflow-list-scroll-wrapper' };
+        const { container } = render(getTabs({ collapsible: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) }, threePanes));
+        for (const part of parts) {
+            const el = container.querySelector(`.${BASE_CLASS_PREFIX}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('tabpane 的 closable', async () => {
@@ -460,7 +467,7 @@ describe('Tabs 行为', () => {
                 <DefaultTabBar {...props} data-bar="custom" />
             </div>
         ));
-        const { container } = render(getTabs({ renderTabBar, onChange, tabBarClassName: 'bar', tabBarStyle: { color: 'red' } }, threePanes));
+        const { container } = render(getTabs({ renderTabBar, onChange, classNames: { tabBar: 'bar' }, styles: { tabBar: { color: 'red' } } }, threePanes));
         expect(renderTabBar.mock.lastCall[0]).toMatchObject({
             activeKey: 'a',
             className: 'bar',
@@ -578,7 +585,7 @@ describe('Tabs 行为', () => {
                     collapsible: true,
                     onVisibleTabsChange,
                     onChange,
-                    visibleTabsStyle: { color: 'red' },
+                    styles: { visibleTabs: { color: 'red' } },
                     dropdownProps: { end: { trigger: 'click' } },
                 },
                 panes

@@ -1,5 +1,5 @@
 import type { JSX, Ref } from 'solid-js';
-import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import type { ChatAlign, ChatMode, ChatPart, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import type { AvatarProps } from '@fibrae/semi-ui-solid/avatar/index';
 import type { ElementProps } from '@fibrae/semi-ui-solid/base';
@@ -57,15 +57,13 @@ export interface ChatProps extends CommonChatsProps, ElementProps<'div', 'childr
     onClear?: () => void;
     onInputChange?: (props: { inputValue: string; attachment: FileItem[] }) => void;
     onMessageSend?: (content: string, attachment?: FileItem[]) => void;
-    inputBoxStyle?: JSX.CSSProperties | string;
-    inputBoxCls?: string;
+    classNames?: Partial<Record<ChatPart, string>>;
+    styles?: Partial<Record<ChatPart, JSX.CSSProperties | string>>;
     renderInputArea?: (props: RenderInputAreaProps) => JSX.Element;
     placeholder?: string;
     topSlot?: JSX.Element;
     bottomSlot?: JSX.Element;
     showStopGenerate?: boolean;
-    hintStyle?: JSX.CSSProperties | string;
-    hintCls?: string;
     uploadProps?: Omit<UploadProps, 'fileList' | 'defaultFileList'>;
     uploadTipProps?: TooltipProps;
     showClearContext?: boolean;

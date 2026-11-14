@@ -1,5 +1,5 @@
-import type { ShallowRef, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
+import type { ClassValue, ShallowRef, StyleValue, VNode } from 'vue';
+import type { strings, TooltipPart } from '@fibrae/semi-foundation/components/tooltip/constants';
 import type { Position, TooltipBaseProps } from '@fibrae/semi-foundation/components/tooltip/foundation';
 
 export type { Position } from '@fibrae/semi-foundation/components/tooltip/foundation';
@@ -18,7 +18,9 @@ export interface TooltipProps extends TooltipBaseProps {
     arrowPointAtCenter?: boolean;
     wrapWhenSpecial?: boolean;
     stopPropagation?: boolean;
-    wrapperClassName?: string;
+    /** `wrapper` exists only when the trigger is wrapped: text, several nodes, or a disabled or loading trigger */
+    classNames?: Partial<Record<TooltipPart, ClassValue>>;
+    styles?: Partial<Record<TooltipPart, StyleValue>>;
     wrapperId?: string;
     keepDOM?: boolean;
 }

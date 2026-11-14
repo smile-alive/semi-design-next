@@ -28,7 +28,7 @@ describe('ButtonGroup 的子项', () => {
     it('被 Tooltip 包住的按钮拿到组的 disabled，Tooltip 仍能点击触发', async () => {
         const { container } = render(
             <ButtonGroup disabled>
-                <Tooltip wrapperClassName="wrap" content="tip" motion={false} trigger="click">
+                <Tooltip classNames={{ wrapper: 'wrap' }} content="tip" motion={false} trigger="click">
                     <Button>a</Button>
                 </Tooltip>
                 <IconButton aria-label="b" icon={<i />} />

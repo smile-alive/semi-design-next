@@ -7,6 +7,12 @@ export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-navigation`,
 };
 
+/** Keys of `classNames` and `styles` of Nav; the root element takes `className` and `style` */
+export type NavPart = 'body';
+
+/** Keys of `classNames` and `styles` of SubNav; the root element takes `className` and `style` */
+export type SubNavPart = 'dropdown';
+
 export const strings = {
     MODE_VERTICAL,
     MODE_HORIZONTAL,

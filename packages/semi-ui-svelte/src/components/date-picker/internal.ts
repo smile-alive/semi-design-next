@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+import type { ClassValue } from 'svelte/elements';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import type { DisabledTimeType, PresetType, Type, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInputValue, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
@@ -159,6 +160,7 @@ export interface DateInputProps {
     showClear?: boolean;
     showClearIgnoreDisabled?: boolean;
     inputReadOnly?: boolean;
+    inputClassName?: ClassValue;
     inputStyle?: string;
     insetLabelId?: string;
     validateStatus?: ValidateStatus;

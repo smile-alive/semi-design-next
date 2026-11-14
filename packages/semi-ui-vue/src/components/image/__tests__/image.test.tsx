@@ -42,8 +42,8 @@ afterEach(() => {
 });
 
 describe('Image', () => {
-    it('自定义 imgCls 与 imgStyle', () => {
-        const { container } = renderImage({ imgStyle: { maxWidth: '300px' }, imgCls: 'custom-img-cls' });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = renderImage({ styles: { img: { maxWidth: '300px' } }, classNames: { img: 'custom-img-cls' } });
         expect(thumb(container)).toHaveClass('custom-img-cls');
         expect(thumb(container)).toHaveStyle({ maxWidth: '300px' });
     });
@@ -281,15 +281,15 @@ describe('Image', () => {
         expect(preview()).toBeNull();
     });
 
-    it('preview 对象：src、previewCls、previewStyle、crossOrigin 与受控的 visible', async () => {
+    it('preview 对象：src、classNames.preview、styles.preview、crossOrigin 与受控的 visible', async () => {
         const onVisibleChange = vi.fn<(visible: boolean) => void>();
         const big = 'https://example.com/big.jpg';
         const previewOf = (visible: boolean) => ({
             src: big,
             visible,
             onVisibleChange,
-            previewCls: 'my-preview',
-            previewStyle: { color: 'red' },
+            classNames: { preview: 'my-preview' },
+            styles: { preview: { color: 'red' } },
         });
         const view = await loaded({ crossOrigin: 'use-credentials', preview: previewOf(false) });
         const { container } = view;
@@ -478,7 +478,7 @@ describe('Image', () => {
         expectTypeOf<ImagePreviewProp>().not.toHaveProperty('lazyLoadMargin');
         expectTypeOf<ImagePreviewProp>().not.toHaveProperty('class');
         expectTypeOf<ImagePreviewProp>().not.toHaveProperty('style');
-        expectTypeOf<ImagePreviewProp>().toHaveProperty('previewCls');
+        expectTypeOf<ImagePreviewProp>().toHaveProperty('classNames');
         expectTypeOf<ImagePreviewProp['previewTitle']>().toEqualTypeOf<string | undefined>();
     });
 });

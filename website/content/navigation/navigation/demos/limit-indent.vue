@@ -23,7 +23,7 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '300px' }" :defaultOpenKeys="['job', 'mission1']" :footer="{ collapseButton: true }" :items="items" :limitIndent="false" @select="(key) => console.log(key)">
+    <Nav :defaultOpenKeys="['job', 'mission1']" :footer="{ collapseButton: true }" :items="items" :limitIndent="false" :styles="{ body: { height: '300px' } }" @select="(key) => console.log(key)">
         <template #icon="renderProps">
             <component :is="iconOf(renderProps.item)" />
         </template>

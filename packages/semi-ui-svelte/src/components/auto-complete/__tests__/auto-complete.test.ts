@@ -367,8 +367,8 @@ describe('Svelte AutoComplete 打开与选择', () => {
         expect(getInput()).not.toHaveAttribute('aria-activedescendant');
     });
 
-    it('maxHeight 数字按 px、字符串原样；dropdownStyle 与 maxHeight 合并且 dropdownStyle 优先；dropdownClassName', async () => {
-        const first = setup({ defaultOpen: true, maxHeight: 400, dropdownClassName: 'ddc', dropdownStyle: 'color: red' });
+    it('classNames 与 styles 按部位落到对应元素；maxHeight 数字按 px、字符串原样，与 styles.dropdown 合并且 styles.dropdown 优先', async () => {
+        const first = setup({ defaultOpen: true, maxHeight: 400, classNames: { dropdown: 'ddc' }, styles: { dropdown: 'color: red' } });
         await settle();
         expect(getList()).toHaveClass('ddc');
         expect(getList()).toHaveStyle({ maxHeight: '400px', color: 'rgb(255, 0, 0)' });
@@ -379,7 +379,7 @@ describe('Svelte AutoComplete 打开与选择', () => {
         expect(getList()?.style.maxHeight).toBe('50vh');
         second.unmount();
 
-        setup({ defaultOpen: true, maxHeight: 100, dropdownStyle: 'max-height: 10px' });
+        setup({ defaultOpen: true, maxHeight: 100, styles: { dropdown: 'max-height: 10px' } });
         await settle();
         expect(getList()?.style.maxHeight).toBe('10px');
     });

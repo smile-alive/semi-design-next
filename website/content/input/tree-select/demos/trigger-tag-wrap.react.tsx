@@ -67,5 +67,5 @@ const treeData = [
 ];
 
 export default function TreeSelectDemo() {
-    return <TreeSelect searchPosition="trigger" triggerTagWrap style={{ width: 260 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} multiple filterTreeNode placeholder="请选择多个选项或输入长文本" defaultValue={['Beijing', 'Shanghai', 'Shenzhen', 'Guangzhou']} />;
+    return <TreeSelect searchPosition="trigger" triggerTagWrap style={{ width: 260 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} multiple filterTreeNode placeholder="请选择多个选项或输入长文本" defaultValue={['Beijing', 'Shanghai', 'Shenzhen', 'Guangzhou']} />;
 }

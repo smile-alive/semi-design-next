@@ -72,8 +72,8 @@
         autoAdjustOverflow: semiGlobalDefault('Cascader', 'autoAdjustOverflow'),
         position: semiGlobalDefault('Cascader', 'position'),
         stopPropagation: () => semiDefault('Cascader', 'stopPropagation', true),
-        dropdownClassName: semiGlobalDefault('Cascader', 'dropdownClassName'),
-        dropdownStyle: semiGlobalDefault('Cascader', 'dropdownStyle'),
+        classNames: semiGlobalDefault('Cascader', 'classNames'),
+        styles: semiGlobalDefault('Cascader', 'styles'),
         preventScroll: semiGlobalDefault('Cascader', 'preventScroll'),
         virtualizeInSearch: semiGlobalDefault('Cascader', 'virtualizeInSearch'),
     });
@@ -546,7 +546,7 @@
             </template>
         </div>
         <template #content>
-            <div ref="content" :class="[props.dropdownClassName, `${prefix}-popover`]" :style="props.dropdownStyle" @focusin="foundation.handleFocusEnter" @focusout="handleFocusOut" @keydown="handleContentKeyDown" @mousedown="keepFocusOnPress">
+            <div ref="content" :class="[`${prefix}-popover`, props.classNames?.dropdown]" :style="props.styles?.dropdown" @focusin="foundation.handleFocusEnter" @focusout="handleFocusOut" @keydown="handleContentKeyDown" @mousedown="keepFocusOnPress">
                 <slot name="topSlot" />
                 <Item
                     :id="popupId"

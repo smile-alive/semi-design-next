@@ -55,7 +55,7 @@ export default function TreeSelectDemo() {
                     filterTreeNode
                     showFilteredOnly
                     placeholder="Please select"
-                    dropdownStyle={{ overflow: 'hidden' }}
+                    styles={{ dropdown: { overflow: 'hidden' } }}
                     virtualize={{
                         itemSize: 28,
                         // Dropdown height 300 minus the search box and 8 * 2 padding; a set height fills the rest

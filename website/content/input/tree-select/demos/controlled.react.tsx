@@ -35,5 +35,5 @@ const treeData = [
 
 export default function TreeSelectDemo() {
     const [value, setValue] = useState<string | undefined>('Shanghai');
-    return <TreeSelect style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} value={value} placeholder="请选择" onChange={setValue} />;
+    return <TreeSelect style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} value={value} placeholder="请选择" onChange={setValue} />;
 }

@@ -2,7 +2,7 @@ import type React from 'react';
 import { Fragment, cloneElement, isValidElement, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useState, type CSSProperties, type FragmentInstance } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
-import { strings, cssClasses, numbers, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
+import { strings, cssClasses, numbers, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger, type TooltipPart } from '@fibrae/semi-foundation/components/tooltip/constants';
 import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState, type Position } from '@fibrae/semi-foundation/components/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed, POPUP_ID_ATTRIBUTE, type ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
@@ -67,7 +67,9 @@ export interface TooltipProps extends BaseProps {
     wrapWhenSpecial?: boolean;
     stopPropagation?: boolean;
     clickTriggerToHide?: boolean;
-    wrapperClassName?: string;
+    /** `wrapper` exists only when the trigger is wrapped: text, several nodes, or a disabled or loading trigger */
+    classNames?: Partial<Record<TooltipPart, string>>;
+    styles?: Partial<Record<TooltipPart, CSSProperties>>;
     closeOnEsc?: boolean;
     guardFocus?: boolean;
     returnFocusOnClose?: boolean;
@@ -262,7 +264,7 @@ function getSpecialStatus(elem: React.ReactNode, groupDisabled?: boolean): Speci
 }
 
 /** `focusInside`: the wrapped element keeps the Tab stop, so the span only takes the pointer events */
-export function wrapSpan(elem: React.ReactNode, wrapperClassName?: string, focusInside = false) {
+export function wrapSpan(elem: React.ReactNode, className?: string, wrapperStyle?: CSSProperties, focusInside = false) {
     const elementProps = isValidElement<{ style?: CSSProperties; block?: boolean }>(elem) ? elem.props : undefined;
     const style: React.CSSProperties = {};
     if (typeof elem !== 'string') {
@@ -272,7 +274,7 @@ export function wrapSpan(elem: React.ReactNode, wrapperClassName?: string, focus
         style.width = '100%';
     }
     return (
-        <span className={clsx(`${prefix}-trigger-wrapper`, wrapperClassName)} style={style} tabIndex={focusInside ? -1 : undefined}>
+        <span className={clsx(`${prefix}-trigger-wrapper`, className)} style={{ ...style, ...wrapperStyle }} tabIndex={focusInside ? -1 : undefined}>
             {elem}
         </span>
     );
@@ -292,7 +294,7 @@ export function canCarryPopupState(child: React.ReactElement<Record<string, any>
 
 export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<TooltipHandle> }) {
     const props = useDefaultProps('Tooltip', rawProps as TooltipInternalProps & { ref?: React.Ref<TooltipHandle> }, defaultProps);
-    const { wrapWhenSpecial, role, trigger, wrapperClassName, prefixCls, style, content, motion, className: propClassName } = props;
+    const { wrapWhenSpecial, role, trigger, classNames, styles, prefixCls, style, content, motion, className: propClassName } = props;
 
     const showArrow = useUnwrappedLazy(props.showArrow);
     const context = useConfigContext();
@@ -530,7 +532,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                     const inner = children as React.ReactElement<Record<string, any>>;
                     children = cloneElement(inner, withAria(inner));
                 }
-                children = wrapSpan(children, wrapperClassName, wrapsFocusTarget);
+                children = wrapSpan(children, classNames?.wrapper, styles?.wrapper, wrapsFocusTarget);
                 if (special === strings.STATUS_DISABLED) {
                     extraStyle = { cursor: 'not-allowed' };
                 }
@@ -540,7 +542,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
 
     if (!isValidElement(children)) {
         // text gets no pointer events through the Fragment (G1)
-        children = wrapSpan(children, wrapperClassName);
+        children = wrapSpan(children, classNames?.wrapper, styles?.wrapper);
     }
 
     const child = children as React.ReactElement<Record<string, any>>;

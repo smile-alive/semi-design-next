@@ -1,4 +1,5 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { DescriptionsItemPart } from '@fibrae/semi-foundation/components/descriptions/constants';
 
 export type DescriptionsAlign = 'center' | 'justify' | 'left' | 'plain';
 export type DescriptionsLayout = 'horizontal' | 'vertical';
@@ -9,7 +10,8 @@ export interface DescriptionsData {
     value?: string | number;
     hidden?: boolean;
     span?: number;
-    keyStyle?: StyleValue;
+    classNames?: Partial<Record<DescriptionsItemPart, ClassValue>>;
+    styles?: Partial<Record<DescriptionsItemPart, StyleValue>>;
 }
 
 export interface DescriptionsProps {
@@ -36,7 +38,8 @@ export interface DescriptionsSlots {
 export interface DescriptionsItemProps {
     hidden?: boolean;
     span?: number;
-    keyStyle?: StyleValue;
+    classNames?: Partial<Record<DescriptionsItemPart, ClassValue>>;
+    styles?: Partial<Record<DescriptionsItemPart, StyleValue>>;
 }
 
 export interface DescriptionsItemSlots {

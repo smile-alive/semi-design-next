@@ -10,14 +10,11 @@ import ApiType from '#/components/ApiType.astro';
 | chatBoxRenderConfig | 消息框各部分的自定义渲染函数，类型见 `ChatBoxRenderConfig`。 | `ChatBoxRenderConfig` | - |
 | chats | 受控的对话列表，配合 `onChatsChange` 回写。应整体替换数组，而不是就地修改同一数组。 | `Message[]` | - |
 | className | 根元素的类名，与组件自身的类名合并。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `hint`（提示区最外层）、`inputBox`（输入框），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cChatPart, string>>"}>Type</ApiType> | - |
 | customMarkDownComponents | 自定义 Markdown 渲染组件，键为元素名，透传给消息内容的 MarkdownRender。 | `OriginMarkdownRenderProps['components']` | - |
 | enableUpload | 是否启用上传。布尔值同时控制粘贴、点击和拖拽上传；传对象时分别设置 `pasteUpload`、`clickUpload`、`dragUpload`，未设置的项为 `true`。未设置本属性时三种上传都启用。 | `boolean \| EnableUploadProps` | - |
 | escapeHtml | 是否转义用户消息中的 HTML 标签，防止被 Markdown 解析器当作 HTML 处理导致内容丢失。只作用于用户消息。 | `boolean` | `true` |
-| hintCls | 提示区最外层的类名。 | `string` | - |
 | hints | 提示信息列表。点击某项后，该项作为新的用户消息加入对话，并触发 `onHintClick`。 | `string[]` | - |
-| hintStyle | 提示区最外层的样式。 | `React.CSSProperties` | - |
-| inputBoxCls | 输入框的类名。 | `string` | - |
-| inputBoxStyle | 输入框的样式。 | `React.CSSProperties` | - |
 | markdownRenderProps | 传给消息内容所用 MarkdownRender 的属性，默认 `format` 为 `md`。`raw` 与 `components` 由 Chat 设置，自定义渲染组件使用 `customMarkDownComponents`。 | `MarkdownRenderProps` | - |
 | mode | 对话模式，可选 `bubble`、`noBubble` 或 `userBubble`。 | `ChatMode` | `"bubble"` |
 | onChatsChange | 对话列表变化时触发，参数为新的列表。 | <ApiType detail={"(chats: Message[]) => void"}>Type</ApiType> | - |
@@ -41,6 +38,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClearContext | 是否在输入框中显示清除上下文按钮。 | `boolean` | `false` |
 | showStopGenerate | 是否在最后一条消息生成中时显示停止生成按钮。生成中发送按钮不可用，点击停止按钮触发 `onStopGenerator`。 | `boolean` | `false` |
 | style | 根元素的样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cChatPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | topSlot | 对话区域顶部的节点。 | `ReactNode \| ReactNode[]` | - |
 | uploadProps | 传给 Upload 的属性。`fileList` 与 `defaultFileList` 由 Chat 管理，`onChange` 由 Chat 处理，不会传给 Upload；`children` 替换默认的上传按钮，作为触发元素。 | <ApiType detail={"Omit\u003cUploadProps, 'defaultFileList' \u007c 'fileList'>"}>Type</ApiType> | - |
 | uploadTipProps | 上传按钮提示 Tooltip 的属性，`content` 为提示文字。 | `TooltipProps` | - |

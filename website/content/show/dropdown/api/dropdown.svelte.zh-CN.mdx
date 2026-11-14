@@ -13,12 +13,12 @@ import ApiType from '#/components/ApiType.astro';
 | child | 自己渲染触发元素的 snippet，参数 `{ props }` 要展开到可聚焦的元素上，`class` 需与自己的类合并（`class={[props.class, 'own']}`）；适用于按钮、链接，以及嵌套菜单里作为父项的 DropdownItem。优先于 children。 | <ApiType detail={"Snippet\u003c[{ props: DropdownTriggerProps }]>"}>Type</ApiType> | - |
 | children | 触发元素，被一个 span 包裹，span 带触发属性并响应键盘。 | `Snippet` | - |
 | class | 弹出层 `.semi-dropdown-wrapper` 的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `content`（下拉菜单根元素 `.semi-dropdown`）、`wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, ClassValue>>"}>Type</ApiType> | - |
 | clickToHide | 在弹出层内点击时是否自动关闭弹出层。 | `boolean` | - |
 | clickTriggerToHide | 点击触发元素时是否关闭已打开的弹出层。 | `boolean` | - |
 | closeOnEsc | 在触发元素或弹出层按 Esc 是否关闭菜单；trigger 为 custom 时只触发 onEscKeyDown，由使用方决定是否关闭。 | `boolean` | `true` |
 | condition | 是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的弹出层；visible 受控时只调用 onVisibleChange(false)，使用方回写后才关闭。 | `boolean` | - |
 | content | 菜单内容，由 DropdownMenu 及 DropdownItem、DropdownTitle、DropdownDivider 构成；提供后（即使为空）优先于 menu。 | `Snippet` | - |
-| contentClassName | 下拉菜单根元素 `.semi-dropdown` 的类名。 | `string` | - |
 | disableFocusListener | trigger 为 hover 时，是否不响应键盘聚焦打开菜单。 | `boolean` | - |
 | guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环。 | `boolean` | - |
 | keepDOM | 关闭时是否保留弹出层内容而不销毁。 | `boolean` | - |
@@ -40,9 +40,9 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | 弹出层与触发元素的距离，单位为像素；缺省时顶层菜单为 4，嵌套的子菜单为 2。 | `number \| { x: number; y: number }` | - |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean` | - |
 | style | 弹出层 `.semi-dropdown-wrapper` 的内联样式字符串。 | `string` | - |
+| styles | 内部各部位的内联样式字符串，键同 `classNames`；`content` 写在 `style` 之后。 | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, string>>"}>Type</ApiType> | - |
 | trigger | 触发菜单显示的行为，可选 hover、focus、click、custom、contextMenu；custom 时显示与否完全由 visible 决定。 | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | 菜单是否显示，可用 `bind:visible` 绑定，配合 trigger 为 custom 使用；传入后由该值决定显示，绑定 undefined 则回到非受控。 | `boolean` | - |
-| wrapperClassName | 触发元素被 span 包裹时，该 span 的类名。 | `string` | - |
 | wrapperId | 弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。 | `string` | - |
 
 **Methods**

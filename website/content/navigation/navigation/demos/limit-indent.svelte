@@ -29,7 +29,7 @@
     </Nav.Header>
 {/snippet}
 
-<Nav bodyStyle="height: 300px" footer={{ collapseButton: true }} {header} {items} limitIndent={false} onSelect={(key) => console.log(key)} openKeys={['job', 'mission1']}>
+<Nav footer={{ collapseButton: true }} {header} {items} limitIndent={false} onSelect={(key) => console.log(key)} openKeys={['job', 'mission1']} styles={{ body: 'height: 300px' }}>
     {#snippet icon(renderProps)}
         {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
         {#if Icon}

@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | canSend | Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count. | `boolean` | - |
+| classNames | Class names of the inner parts, keyed by templates (the template panel); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, string>>"}>Type</ApiType> | - |
 | clearContentOnGenerating | Whether the input content and attachments are cleared when generating turns on. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas). | `boolean` | `true` |
 | defaultContent | Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created. | `TiptapContent` | - |
 | dropdownMatchTriggerWidth | Whether the dropdown layer has the same width as the input. | `boolean` | `true` |
@@ -44,9 +45,8 @@ import ApiType from '#/components/ApiType.astro';
 | showUploadFile | Whether the uploaded file area is shown; use it together with renderTopSlot. | `boolean` | `true` |
 | skillHotKey | Key that opens the skill panel in the input. | `string` | - |
 | skills | Skill list. Each skill holds data only; its icon comes from renderSkillIcon. | `Skill[]` | - |
+| styles | Inline styles of the inner parts, keyed like classNames; templates is merged over the panel's default max height and only accepts an object. | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, JSX.CSSProperties>>"}>Type</ApiType> | - |
 | suggestions | Suggestion list, shown as the user types. | `Suggestion[]` | - |
-| templatesCls | Class name of the template panel. | `string` | - |
-| templatesStyle | Style of the template panel, merged over its default max height. Only an object is accepted. | `JSX.CSSProperties` | - |
 | topSlotPosition | Position of the top area relative to the reference area and the uploaded file area. | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | Conversion rules of custom extensions, so that the node data received by onContentChange matches what is expected. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
 | uploadProps | Upload settings, the Upload props without fileList and listType. | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'listType'>"}>Type</ApiType> | - |

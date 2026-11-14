@@ -46,9 +46,9 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
         'chats',
         'disabledFileItemClick',
         'escapeHtml',
-        'hintCls',
+        'classNames',
         'hints',
-        'hintStyle',
+        'styles',
         'selecting',
         'markdownRenderProps',
         'messageEditRender',
@@ -180,7 +180,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
                         }}
                     </For>
                     <Show when={hints().length > 0}>
-                        <Hint class={local.hintCls} style={local.hintStyle} hints={hints()} selecting={local.selecting} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
+                        <Hint class={local.classNames?.hint} style={local.styles?.hint} hints={hints()} selecting={local.selecting} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
                     </Show>
                 </AIChatDialogueContext.Provider>
             </div>

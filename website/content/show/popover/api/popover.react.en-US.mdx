@@ -10,15 +10,14 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | Name of the popup when its role is dialog. | `string` | - |
 | aria-labelledby | id of the element that names the popup when its role is dialog. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires `showArrow`. Unset, it is true. | `boolean` | - |
-| arrowStyle | `borderColor`, `backgroundColor` and `borderOpacity` of the arrow. Colors that are not set follow `backgroundColor` and `borderColor` in `style`. | <ApiType detail={"Pick\u003cReact.CSSProperties, 'backgroundColor' \u007c 'borderColor'> & { borderOpacity?: string \u007c number }"}>Type</ApiType> | - |
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
 | children | The trigger. Event listeners are applied to it and its real DOM node sets the position, so a component must pass its props and ref down to its root DOM node. | `React.ReactNode` | - |
 | className | Class name of the popup. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `content` (the content card) and `arrow`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cPopoverPart, string>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click on the popup or anything inside it closes the popup. | `TooltipProps['clickToHide']` | - |
 | closeOnEsc | Whether Esc closes the open popup. With trigger `custom` it only calls `onEscKeyDown`; with a controlled `visible` it only calls `onVisibleChange(false)` and the popup closes once the caller writes back. | `TooltipProps['closeOnEsc']` | `true` |
 | condition | Whether the popup may be triggered. Unset, it is true. Only an explicit false disables the hover, click and focus triggers; with trigger `custom`, `visible` still shows the popup. Changing it from true to false closes an open popup at once; with a controlled `visible` it only calls `onVisibleChange(false)` and the popup closes once the caller writes back. | `boolean` | - |
 | content | Content of the popup. Pass a ReactNode or a function; the function receives `{ initialFocusRef }`, and binding `initialFocusRef` as the `ref` of a focusable element focuses it when the popup opens. | `TooltipProps['content']` | - |
-| contentClassName | Class name of the content card in the popup. | `string \| any[]` | - |
 | disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the popup. | `TooltipProps['disableArrowKeyDown']` | - |
 | disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | - |
 | guardFocus | Whether Tab cycles inside the popup while focus is in it. | `TooltipProps['guardFocus']` | `true` |
@@ -38,6 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. Omitted, it is 4 without an arrow and 10 with one. | `number \| { x: number; y: number }` | - |
 | stopPropagation | Whether click events on the popup stop propagating. | `boolean \| string` | - |
 | style | Inline style of the popup. With the arrow shown, the arrow reads `backgroundColor` and `borderColor` from it. | `CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. `content` styles the content card; `arrow` holds the arrow's `borderColor`, `backgroundColor` and `borderOpacity`, and colors that are not set follow `backgroundColor` and `borderColor` in `style`. | <ApiType detail={"{ content?: React.CSSProperties; arrow?: Pick\u003cReact.CSSProperties, 'backgroundColor' \u007c 'borderColor'> & { borderOpacity?: string \u007c number } }"}>Type</ApiType> | - |
 | trigger | When the popup shows: `hover`, `focus`, `click`, `custom` or `contextMenu`. With `custom`, `visible` alone decides. | `Trigger` | `"hover"` |
 | visible | Whether the popup is shown (controlled). Once given, the trigger, outside clicks and Esc only request a change through `onVisibleChange` and take effect after the caller writes back. Use it with trigger `custom` when the trigger events are not wanted. | `boolean` | - |
 

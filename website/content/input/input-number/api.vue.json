@@ -109,7 +109,14 @@
                 "zh-CN": "校验状态，可选 default、error、warning、success。",
                 "en-US": "Validation status: default, error, warning or success."
             },
-            "inputStyle": { "zh-CN": "原生 input 的样式。", "en-US": "Style of the native input." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 input（原生 input 元素），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by input (the native input element); values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "insetLabelId": { "zh-CN": "内嵌标签的 id。", "en-US": "The id of the inset label." }
         },
         "events": {

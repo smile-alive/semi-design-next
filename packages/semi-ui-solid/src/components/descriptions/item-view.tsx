@@ -1,4 +1,5 @@
 import { type JSX, Show, splitProps } from 'solid-js';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
 import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
 import { useDescriptionsContext } from './context';
@@ -9,9 +10,11 @@ const keyCls = `${prefixCls}-key`;
 const valCls = `${prefixCls}-value`;
 
 export default function DescriptionsItemView(props: DescriptionsItemProps) {
-    const [local, rest] = splitProps(props, ['children', 'hidden', 'itemKey', 'keyStyle', 'span']);
+    const [local, rest] = splitProps(props, ['children', 'hidden', 'itemKey', 'classNames', 'styles', 'span']);
 
     const view = useDescriptionsContext();
+
+    const keyClass = () => clsx(keyCls, local.classNames?.key);
 
     // Solid calls a function child when it inserts it; the type only widens JSX.Element for the Methods docs and React parity
     const value = () => local.children as JSX.Element;
@@ -23,7 +26,7 @@ export default function DescriptionsItemView(props: DescriptionsItemProps) {
             fallback={
                 <>
                     <th class={`${prefixCls}-item ${prefixCls}-item-th`}>
-                        <span class={keyCls} style={local.keyStyle}>
+                        <span class={keyClass()} style={local.styles?.key}>
                             {local.itemKey}
                         </span>
                     </th>
@@ -34,7 +37,7 @@ export default function DescriptionsItemView(props: DescriptionsItemProps) {
             }
         >
             <td class={`${prefixCls}-item`} colSpan={local.span || 1}>
-                <span class={keyCls} style={local.keyStyle}>
+                <span class={keyClass()} style={local.styles?.key}>
                     {local.itemKey}:
                 </span>
                 <span class={valCls}>{value()}</span>

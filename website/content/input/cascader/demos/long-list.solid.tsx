@@ -38,5 +38,5 @@ const treeData = [
 ];
 
 export default function CascaderDemo() {
-    return <Cascader dropdownClassName="components-cascader-demo" style={{ width: '300px' }} treeData={treeData} placeholder="请选择所在地区" />;
+    return <Cascader classNames={{ dropdown: 'components-cascader-demo' }} style={{ width: '300px' }} treeData={treeData} placeholder="请选择所在地区" />;
 }

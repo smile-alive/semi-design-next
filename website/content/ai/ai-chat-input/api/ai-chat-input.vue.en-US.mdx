@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | canSend | Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count. | `boolean` | `semiGlobalDefault("AIChatInput", "canSend")` |
+| classNames | Class names of the inner parts, keyed by templates (the template panel); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"templates\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "classNames")` |
 | clearContentOnGenerating | Whether the input content and attachments are cleared when generating turns on. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas). | `boolean` | `true` |
 | defaultContent | Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created. | `Content` | `semiGlobalDefault("AIChatInput", "defaultContent")` |
 | dropdownMatchTriggerWidth | Whether the dropdown layer has the same width as the input. | `boolean` | `true` |
@@ -23,9 +24,8 @@ import ApiType from '#/components/ApiType.astro';
 | showUploadFile | Whether the uploaded files area is shown; use it together with #topSlot. | `boolean` | `true` |
 | skillHotKey | Hotkey that opens the skill panel in the input. | `string` | `semiGlobalDefault("AIChatInput", "skillHotKey")` |
 | skills | Skills. A skill holds data only; its icon goes through the #skillIcon slot. | `Skill[]` | `semiGlobalDefault("AIChatInput", "skills")` |
+| styles | Inline styles of the inner parts, keyed like classNames; templates is merged over the panel's default max height. | <ApiType detail={"Partial\u003cRecord\u003c\"templates\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "styles")` |
 | suggestions | Suggestions, each a string or an object with content. | `Suggestion[]` | `semiGlobalDefault("AIChatInput", "suggestions")` |
-| templatesCls | Class name of the template panel. | `string` | `semiGlobalDefault("AIChatInput", "templatesCls")` |
-| templatesStyle | Style of the template panel. | `StyleValue` | `semiGlobalDefault("AIChatInput", "templatesStyle")` |
 | topSlotPosition | Position of #topSlot relative to the reference area and the uploaded files area. | `"bottom" \| "middle" \| "top"` | `"top"` |
 | transformer | Transform rules of custom extensions: the key is the node name, the value turns the node into a contentChange item. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "transformer")` |
 | uploadProps | Upload settings, as Upload but without fileList and listType. AIChatInput calls onChange and onRemove itself; beforeRemove may return a Promise. | `AIChatInputUploadProps` | `semiGlobalDefault("AIChatInput", "uploadProps")` |

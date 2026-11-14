@@ -25,7 +25,7 @@ const highlightStyle = { borderRadius: 4 };
 export default function HighlightDemo() {
     return (
         <h2>
-            <Highlight component="span" sourceString={sourceString} searchWords={searchWords} highlightStyle={highlightStyle} />
+            <Highlight component="span" sourceString={sourceString} searchWords={searchWords} styles={{ highlight: highlightStyle }} />
         </h2>
     );
 }

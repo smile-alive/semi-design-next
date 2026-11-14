@@ -10,14 +10,13 @@ import ApiType from '#/components/ApiType.astro';
 | changeOnSelect | Whether a non-leaf node can be selected in single mode. | `boolean` | `false` |
 | changeWithObject | Whether the change event carries the data of each node instead of its value. A controlled modelValue and defaultValue must then be node data too, with a value. This is a boolean attribute, not an event: do not write it as @changeWithObject. | `boolean` | `false` |
 | checkRelation | In multiple mode, how the checked states of the nodes relate: related links parents and children, unRelated keeps them independent. | `"related" \| "unRelated"` | `strings.RELATED` |
+| classNames | Class names of the inner parts, keyed by dropdown; values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "classNames")` |
 | clickToSelect | In multiple mode, clicking any node selects it. Often used with showNext set to hover: hovering expands the submenu and clicking selects the node. | `boolean` | `false` |
 | defaultOpen | Whether the dropdown is open on mount. | `boolean` | `false` |
 | defaultValue | The initially selected entry, read once on mount. | <ApiType detail={"ByMultiple\u003cMultiple, CascaderSimpleValue[] \u007c CascaderSimpleValue, CascaderValue>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "defaultValue")` |
 | disabled | Whether the Cascader is disabled. A disabled Cascader cannot be reached with Tab. | `boolean` | `undefined` |
 | disableStrictly | Whether to disable strictly. A disabled node then does not change when its parent or children are checked or unchecked. | `boolean` | `false` |
 | displayProp | The node field shown in the trigger and the tags, label by default. | `string` | `"label"` |
-| dropdownClassName | Class of the dropdown. | `string` | `semiGlobalDefault("Cascader", "dropdownClassName")` |
-| dropdownStyle | Style of the dropdown. | `StyleValue` | `semiGlobalDefault("Cascader", "dropdownStyle")` |
 | enableLeafClick | In multiple mode, whether clicking the option of a leaf node checks it. | `boolean` | `false` |
 | filterLeafOnly | Whether the search results only show the paths of leaf nodes. | `boolean` | `true` |
 | filterSorter | Sorts the filtered results; it receives the two result paths (the node arrays from the root to the matched node) and the input. It remains a function prop because its result is read. | <ApiType detail={"((first: CascaderData[], second: CascaderData[], inputValue: string) => number)"}>Type</ApiType> | `undefined` |
@@ -44,6 +43,7 @@ import ApiType from '#/components/ApiType.astro';
 | showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `false` |
 | size | Size of the select box. | `Size` | `undefined` |
 | stopPropagation | Whether clicks on the dropdown stop bubbling. | `string \| boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "styles")` |
 | treeData | Node data. The label is text only, use the label slot for node content. Changes made in place to reactive data are noticed, and a new array with equal content keeps the expanded and selected state. | `CascaderData[]` | `[]` |
 | treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `"label"` |
 | validateStatus | Validation status of the trigger; it only affects the style. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Cascader", "validateStatus")` |

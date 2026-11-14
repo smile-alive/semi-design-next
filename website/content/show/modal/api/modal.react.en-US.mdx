@@ -5,13 +5,13 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | afterClose | Called after the dialog has fully closed. It is also called once when the dialog is unmounted while shown, or when a subtree holding it is hidden by `Activity`. | <ApiType detail={"() => void"}>Type</ApiType> | - |
-| bodyStyle | Style of the dialog body. | `CSSProperties` | - |
 | cancelButtonProps | Props of the cancel button, the same as Button. It is focused on open unless `autoFocus` is `false`. `onClick` runs before the built-in cancel handling, which still runs. | `ButtonProps` | - |
 | cancelLoading | Whether the cancel button is loading. When omitted it follows the Promise returned by `onCancel`; pass `false` to turn that off. | `boolean` | - |
 | cancelText | Cancel button text. Defaults to the locale entry `Modal.cancel`. | `string` | - |
 | centered | Whether the dialog is vertically centered. | `boolean` | `false` |
 | children | Body of the dialog. | `React.ReactNode` | - |
 | className | Class name of the outermost element inside the portal. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `mask`, `content`, `header`, `body` and `footer`; merged with the built-in classes. There is no `header` part when `header` is customized. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, string>>"}>Type</ApiType> | - |
 | closable | Whether the close button in the corner is shown. | `boolean` | `true` |
 | closeIcon | Icon of the close button. `null` falls back to the default icon; to hide the close button, use `closable={false}`. | `ReactNode` | - |
 | closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `true` |
@@ -31,7 +31,6 @@ import ApiType from '#/components/ApiType.astro';
 | mask | Whether the mask is shown. | `boolean` | `true` |
 | maskClosable | Whether a click on the mask cancels the dialog. | `boolean` | `true` |
 | maskFixed | Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock). | `boolean` | `false` |
-| maskStyle | Style of the mask. | `CSSProperties` | - |
 | modalContentClass | Class name of the dialog content element. | `string` | - |
 | modalRender | Custom rendering of the dialog itself. The argument is the `role="dialog"` element, which the returned node must contain, for example wrapped in `DragMove`. | <ApiType detail={"(node: ReactNode) => ReactNode"}>Type</ApiType> | - |
 | motion | Whether the enter and leave animations run. | `boolean` | `true` |
@@ -45,6 +44,7 @@ import ApiType from '#/components/ApiType.astro';
 | role | `role` of the dialog element, `dialog` by default. The imperative methods use `alertdialog`. | `'alertdialog' \| 'dialog'` | - |
 | size | Width preset of the dialog: `small` is 448px, `medium` 684px, `large` 920px, `full-width` `100vw - 64px`. | `Size` | `"small"` |
 | style | Style of the `.semi-modal` dialog box. | `CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, CSSProperties>>"}>Type</ApiType> | - |
 | title | Title of the dialog. Without `aria-label` or a custom `header`, the title names the dialog. | `ReactNode` | - |
 | visible | Whether the dialog is visible, controlled by the caller. | `boolean` | `false` |
 | width | Width of the dialog. A number is in pixels; a string is any valid CSS length. When omitted, `size` decides. | `string \| number` | - |

@@ -61,14 +61,22 @@ describe('Svelte Empty', () => {
         expect(root()).not.toHaveClass('semi-empty-vertical');
     });
 
-    it('image 的 snippet、URL 与 imageStyle', () => {
-        const node = setup({ props: { imageStyle: 'width: 150px' }, image: true });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { root } = setup({ props: { classNames: { image: 'my-image' }, styles: { image: 'order: 3' } } });
+        const image = root()?.querySelector('.semi-empty-image');
+        expect(image).toHaveClass('my-image');
+        expect(image).toHaveStyle({ order: '3' });
+        expect(root()).not.toHaveClass('my-image');
+    });
+
+    it('image 的 snippet、URL 与 styles.image', () => {
+        const node = setup({ props: { styles: { image: 'width: 150px' } }, image: true });
         const nodeImage = node.view.container.querySelector('.semi-empty-image');
         expect(nodeImage?.querySelector('[data-testid="light"]')).not.toBeNull();
         expect(nodeImage).toHaveStyle({ width: '150px' });
         node.view.unmount();
 
-        const url = setup({ props: { imageStyle: 'width: 150px', image: 'abc' } });
+        const url = setup({ props: { styles: { image: 'width: 150px' }, image: 'abc' } });
         expect(url.view.container.querySelector('.semi-empty-image img')).toHaveAttribute('src', 'abc');
     });
 

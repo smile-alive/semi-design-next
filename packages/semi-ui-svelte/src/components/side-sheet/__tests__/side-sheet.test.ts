@@ -49,8 +49,27 @@ afterEach(() => {
 });
 
 describe('Svelte SideSheet', () => {
-    it('class、style、maskStyle、bodyStyle、headerStyle 与 zIndex', () => {
-        setup({ class: 'test', style: 'color: red', visible: true, maskStyle: 'color: grey', headerStyle: 'color: green', bodyStyle: 'color: pink', zIndex: 500 });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['mask', 'content', 'header', 'body', 'footer'] as const;
+        const selectors = { mask: 'mask', content: 'inner', header: 'header', body: 'body', footer: 'footer' };
+        setup(
+            {
+                visible: true,
+                title: 'T',
+                classNames: Object.fromEntries(parts.map((part) => [part, `my-${part}`])),
+                styles: Object.fromEntries(parts.map((part) => [part, `order: ${parts.indexOf(part) + 1}`])),
+            },
+            { footer: true }
+        );
+        for (const part of parts) {
+            const el = $(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('class、style、styles 与 zIndex', () => {
+        setup({ class: 'test', style: 'color: red', visible: true, styles: { mask: 'color: grey', header: 'color: green', body: 'color: pink' }, zIndex: 500 });
         expect($(`.${prefix}.test`)).not.toBeNull();
         expect(getInner()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getRoot()).not.toHaveStyle({ color: 'rgb(255, 0, 0)' });

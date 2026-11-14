@@ -26,13 +26,13 @@
                 "zh-CN": "数字内容的最大展示值，超出后显示为 `${overflowCount}+`；只对数字生效，0 视为未设置。",
                 "en-US": "Maximum number shown; larger numbers display as `${overflowCount}+`. Applies to numbers only, and 0 counts as unset."
             },
-            "countClassName": {
-                "zh-CN": "内容区域的类名。",
-                "en-US": "Class name of the count element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 count，值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by count; values take any class binding and merge with the built-in classes."
             },
-            "countStyle": {
-                "zh-CN": "内容区域的样式。",
-                "en-US": "Style of the count element."
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 count，值的写法同 style。",
+                "en-US": "Styles of the inner parts, keyed by count; values take any style binding."
             }
         },
         "events": {},

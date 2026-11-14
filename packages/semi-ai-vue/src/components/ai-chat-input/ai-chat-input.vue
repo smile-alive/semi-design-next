@@ -31,6 +31,7 @@
 
     const props = withDefaults(defineProps<AIChatInputProps & /* @vue-ignore */ ElementProps<'div', keyof AIChatInputProps | EmitHandlers<AIChatInputEmits>>>(), {
         canSend: semiGlobalDefault('AIChatInput', 'canSend'),
+        classNames: semiGlobalDefault('AIChatInput', 'classNames'),
         clearContentOnGenerating: () => semiDefault('AIChatInput', 'clearContentOnGenerating', true),
         defaultContent: semiGlobalDefault('AIChatInput', 'defaultContent'),
         dropdownMatchTriggerWidth: () => semiDefault('AIChatInput', 'dropdownMatchTriggerWidth', true),
@@ -50,9 +51,8 @@
         showUploadFile: () => semiDefault('AIChatInput', 'showUploadFile', true),
         skillHotKey: semiGlobalDefault('AIChatInput', 'skillHotKey'),
         skills: semiGlobalDefault('AIChatInput', 'skills'),
+        styles: semiGlobalDefault('AIChatInput', 'styles'),
         suggestions: semiGlobalDefault('AIChatInput', 'suggestions'),
-        templatesCls: semiGlobalDefault('AIChatInput', 'templatesCls'),
-        templatesStyle: semiGlobalDefault('AIChatInput', 'templatesStyle'),
         topSlotPosition: () => semiDefault('AIChatInput', 'topSlotPosition', 'top'),
         transformer: semiGlobalDefault('AIChatInput', 'transformer'),
         uploadProps: semiGlobalDefault('AIChatInput', 'uploadProps'),
@@ -336,7 +336,7 @@
             </div>
         </div>
         <template #content>
-            <div v-if="state.templateVisible" :class="[`${prefix}-template`, props.templatesCls]" :style="[{ maxHeight: `${numbers.TEMPLATE_MAX_HEIGHT}px` }, props.templatesStyle]">
+            <div v-if="state.templateVisible" :class="[`${prefix}-template`, props.classNames?.templates]" :style="[{ maxHeight: `${numbers.TEMPLATE_MAX_HEIGHT}px` }, props.styles?.templates]">
                 <slot name="template" :onTemplateClick="foundation.setContent" :skill="state.skill" />
             </div>
             <div v-else-if="state.skillVisible" :id="skillListId" ref="skillPanel" :aria-labelledby="editorId" :class="`${prefix}-skill`" role="listbox" :style="{ maxHeight: `${numbers.SKILL_MAX_HEIGHT}px` }">

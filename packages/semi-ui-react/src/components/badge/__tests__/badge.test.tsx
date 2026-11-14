@@ -21,8 +21,8 @@ describe('badge', () => {
         const { container } = render(
             getBadge({
                 className: 'test',
-                countStyle: {
-                    color: 'red',
+                styles: {
+                    count: { color: 'red' },
                 },
                 count: 5,
             })
@@ -96,7 +96,7 @@ describe('badge', () => {
     });
 
     it('badge count 节点：class、slot 及默认 type 与 theme', () => {
-        const { container } = render(getBadge({ count: 5, countClassName: 'cc' }));
+        const { container } = render(getBadge({ count: 5, classNames: { count: 'cc' } }));
         const count = container.querySelector('[x-semi-prop="count"]');
         expect(count).toHaveClass('cc', 'semi-badge-primary', 'semi-badge-solid', 'semi-badge-count');
         expect(count).not.toHaveClass('semi-badge-block');
@@ -104,11 +104,13 @@ describe('badge', () => {
         expect(getBadgeRoot(container).lastChild).toBe(count);
     });
 
-    it('badge style 落在根元素，countStyle 落在 count 节点', () => {
-        const { container } = render(getBadge({ count: 5, style: { color: 'red' }, countStyle: { color: 'blue' } }));
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = render(getBadge({ count: 5, style: { color: 'red' }, styles: { count: { color: 'blue' } }, classNames: { count: 'cc' } }));
         const count = container.querySelector('[x-semi-prop="count"]');
         expect(getBadgeRoot(container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(count).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+        expect(count).toHaveClass('cc', 'semi-badge-count');
+        expect(getBadgeRoot(container)).not.toHaveClass('cc');
     });
 
     it('无 children 的 badge 为块级元素，不带位置类名', () => {

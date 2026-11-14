@@ -1,5 +1,7 @@
 import type { Snippet } from 'svelte';
+import type { ClassValue } from 'svelte/elements';
 import type { CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
+import type { FeedbackPart } from '@fibrae/semi-foundation/components/feedback/constants';
 import type { EmojiResult, FeedbackValue } from '@fibrae/semi-foundation/components/feedback/foundation';
 import type { CheckboxGroupOptionSnippetProps, CheckboxGroupProps } from '../checkbox/interface.js';
 import type { TextAreaChangeEvent, TextAreaProps } from '../input/interface.js';
@@ -30,6 +32,9 @@ export interface FeedbackContentSnippetProps {
 export interface FeedbackOwnProps {
     mode?: FeedbackMode;
     type?: FeedbackType;
+    /** Forwarded to the Modal or SideSheet of the current mode. */
+    classNames?: Partial<Record<FeedbackPart, ClassValue>>;
+    styles?: Partial<Record<FeedbackPart, string>>;
     /** Bindable. The cancel paths (cancel button, close button, Escape, and for a modal the mask click) write `false`; the ok button never closes. */
     visible?: boolean;
     /** Plain text or a snippet. A string is declared here so `title="x"` is not a native tooltip. */

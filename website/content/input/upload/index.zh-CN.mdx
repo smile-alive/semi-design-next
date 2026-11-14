@@ -1140,7 +1140,8 @@ interface RenderFileItemProps extends FileItem {
     index?: number; // 文件在列表中的位置
     listType?: 'picture' | 'list' | 'none';
     disabled?: boolean;
-    style?: CSSProperties; // 来自 itemStyle
+    className?: string; // 来自 classNames.item
+    style?: CSSProperties; // 来自 styles.item
     showRetry?: boolean;
     showReplace?: boolean;
     showPicInfo?: boolean;
@@ -1185,7 +1186,8 @@ interface RenderFileItemProps extends FileItem {
     index?: number; // 文件在列表中的位置
     listType?: 'picture' | 'list' | 'none';
     disabled?: boolean;
-    style?: JSX.CSSProperties; // 来自 itemStyle
+    class?: string; // 来自 classNames.item
+    style?: JSX.CSSProperties; // 来自 styles.item
     showRetry?: boolean;
     showReplace?: boolean;
     showPicInfo?: boolean;
@@ -1239,7 +1241,8 @@ interface UploadFileItemSlotProps {
     picWidth?: string | number;
     picHeight?: string | number;
     validateMessage?: string;
-    style?: StyleValue; // 来自 itemStyle
+    class?: ClassValue; // 来自 classNames.item
+    style?: StyleValue; // 来自 styles.item
     onRemove: () => void; // 移除该文件
     onRetry: () => void; // 重新上传该文件
     onReplace: () => void; // 替换该文件
@@ -1291,7 +1294,8 @@ interface UploadFileItemSlotProps {
     picWidth?: string | number;
     picHeight?: string | number;
     validateMessage?: string;
-    style?: string; // 来自 itemStyle
+    class?: ClassValue; // 来自 classNames.item
+    style?: string; // 来自 styles.item
     onRemove: () => void; // 移除该文件
     onRetry: () => void; // 重新上传该文件
     onReplace: () => void; // 替换该文件

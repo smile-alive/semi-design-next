@@ -68,8 +68,8 @@
         // no global default: a global id would repeat on every instance
         insetLabelId,
         inputProps = defaults('inputProps'),
-        dropdownClassName = defaults('dropdownClassName'),
-        dropdownStyle = defaults('dropdownStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         dropdownMatchSelectWidth = defaults('dropdownMatchSelectWidth', true),
         position = defaults('position'),
         spacing = defaults('spacing'),
@@ -305,8 +305,8 @@
         return `${group?.key ?? ''}:${rowKey(rows[0].option)}`;
     };
 
-    const joinStyles = (...styles: (string | undefined)[]) => {
-        return styles.filter(Boolean).join('; ') || undefined;
+    const joinStyles = (...parts: (string | undefined)[]) => {
+        return parts.filter(Boolean).join('; ') || undefined;
     };
 
     const handleInputChange = (keyword: string, event?: Event) => {
@@ -738,7 +738,7 @@
 {/snippet}
 
 {#snippet panel()}
-    <div bind:this={optionContainer} class={[{ [`${cls}-option-list-wrapper`]: !(visibleOptions.length === 0 && emptyHidden) }, dropdownClassName]} style={dropdownStyle} onkeydown={foundation.handleContainerKeyDown} onmousedown={keepFocusOnPress}>
+    <div bind:this={optionContainer} class={[{ [`${cls}-option-list-wrapper`]: !(visibleOptions.length === 0 && emptyHidden) }, classNames?.dropdown]} style={styles?.dropdown} onkeydown={foundation.handleContainerKeyDown} onmousedown={keepFocusOnPress}>
         {#if outerTopSlot}
             <div class={`${cls}-option-list-outer-top-slot`} onmouseenter={foundation.handleSlotMouseEnter}>
                 {@render outerTopSlot()}

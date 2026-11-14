@@ -10,7 +10,7 @@
     import type { ModalContentEmits, ModalContentProps, ModalSlots } from './interface';
     import ModalDialog from './modal-dialog.vue';
 
-    type FoundationProps = Omit<ModalContentProps, 'bodyStyle' | 'maskStyle'>;
+    type FoundationProps = Omit<ModalContentProps, 'classNames' | 'styles'>;
     type Foundation = ModalContentFoundation<FoundationProps, MouseEvent>;
     type Adapter = ModalContentAdapter<FoundationProps, MouseEvent>;
 
@@ -107,7 +107,8 @@
                     {
                         ...dialogAttrs(),
                         ref: setDialog,
-                        bodyStyle: props.bodyStyle,
+                        classNames: props.classNames,
+                        styles: props.styles,
                         closable: props.closable,
                         idPrefix,
                         title: props.title,
@@ -157,14 +158,14 @@
         }"
     >
         <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-mask-animate-show`" :leaveActiveClass="`${prefix}-mask-animate-hide`" :name="prefix" type="animation">
-            <div v-if="props.mask" v-show="props.visible" :class="`${prefix}-mask`" :style="props.maskStyle" />
+            <div v-if="props.mask" v-show="props.visible" :class="[`${prefix}-mask`, props.classNames?.mask]" :style="props.styles?.mask" />
         </Transition>
         <div :class="[`${prefix}-wrap`, { [`${prefix}-wrap-center`]: props.centered }]" role="none" @click="props.maskClosable && foundation.handleMaskClick($event)" @mouseup="props.maskClosable && foundation.handleMaskMouseUp()">
             <!-- marked only while the mask listens, since only its mouseup clears the mark -->
             <div :id="idPrefix" :class="[prefix, `${prefix}-${props.size}`, { [`${prefix}-centered`]: props.centered }]" :style="[$attrs.style as CSSProperties, sizeStyle()]" @mousedown="props.maskClosable && foundation.handleDialogMouseDown()">
                 <slot v-if="$slots.modal" :modal="dialogVNode()" name="modal" />
                 <Transition v-else v-bind="contentTransition()">
-                    <ModalDialog v-show="props.visible" :ref="setDialog" v-bind="dialogAttrs()" :bodyStyle="props.bodyStyle" :closable="props.closable" :idPrefix="idPrefix" :title="props.title" @close="close">
+                    <ModalDialog v-show="props.visible" :ref="setDialog" v-bind="dialogAttrs()" :classNames="props.classNames" :closable="props.closable" :idPrefix="idPrefix" :styles="props.styles" :title="props.title" @close="close">
                         <!-- forwarded only when given: ModalDialog renders a given #header even when empty, and a given #title replaces the title prop -->
                         <template v-if="$slots.header" #header>
                             <slot name="header" />

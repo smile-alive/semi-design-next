@@ -16,7 +16,7 @@
     <Nav.Footer collapseButton />
 {/snippet}
 
-<Nav bodyStyle="height: 300px" {footer} {header} onClick={(data) => console.log('trigger onClick: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)} openKeys={['user']}>
+<Nav {footer} {header} onClick={(data) => console.log('trigger onClick: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)} openKeys={['user']} styles={{ body: 'height: 300px' }}>
     <Nav.Item itemKey="union" text="活动管理">
         {#snippet icon(renderProps)}
             <IconForm size={renderProps.size} />

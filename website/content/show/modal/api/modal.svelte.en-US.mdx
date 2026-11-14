@@ -5,12 +5,12 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | afterClose | Called after the dialog has fully closed. It is also called once when the dialog is unmounted while shown. | <ApiType detail={"() => void"}>Type</ApiType> | - |
-| bodyStyle | Style of the dialog body, as a string. | `string` | - |
 | cancelButtonProps | Props of the cancel button. autoFocus focuses it on open; class and style land on the button; onclick runs before the built-in cancel handling, which still runs. | `ModalButtonProps` | - |
 | cancelLoading | Whether the cancel button is loading. When omitted it follows the Promise returned by onCancel; pass false to turn that off. | `boolean` | - |
 | cancelText | Cancel button text. Defaults to the locale entry Modal.cancel. | `string` | - |
 | centered | Whether the dialog is vertically centered. | `boolean` | `false` |
 | children | Body of the dialog, written inside the tag. | `Snippet` | - |
+| classNames | Class names of the inner parts, keyed by mask, content, header, body and footer; values take anything class takes (string, array or object) and merge with the built-in classes. There is no header part when header is customized. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, ClassValue>>"}>Type</ApiType> | - |
 | closable | Whether the close button in the corner is shown. | `boolean` | `true` |
 | closeIcon | Snippet for the icon inside the close button. | `Snippet` | - |
 | closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `true` |
@@ -28,7 +28,6 @@ import ApiType from '#/components/ApiType.astro';
 | mask | Whether the mask is shown. | `boolean` | `true` |
 | maskClosable | Whether a click on the mask cancels the dialog. | `boolean` | `true` |
 | maskFixed | Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock). | `boolean` | `false` |
-| maskStyle | Style of the mask, as a string. | `string` | - |
 | modal | Snippet for custom rendering of the dialog itself. Its argument is `{ modal }`, a snippet of the role=dialog element, placed with `{@render modal()}`. | <ApiType detail={"Snippet\u003c[{ modal: Snippet }]>"}>Type</ApiType> | - |
 | modalContentClass | Class name of the dialog content element. | `string` | - |
 | motion | Whether the enter and leave animations run. | `boolean` | `true` |
@@ -40,6 +39,7 @@ import ApiType from '#/components/ApiType.astro';
 | preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. | `boolean` | - |
 | role | role of the dialog element: dialog or alertdialog. | `'alertdialog' \| 'dialog'` | - |
 | size | Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px. | `Size` | `"small"` |
+| styles | Inline styles of the inner parts, keyed like classNames; every value is a style string. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, string>>"}>Type</ApiType> | - |
 | title | Title, plain text or a snippet, which also names the dialog. It is a declared prop, so it never lands on an element as the native title attribute. | `string \| Snippet` | - |
 | visible | Whether the dialog is visible, used with bind:visible. The cancel button, the close button, the mask and Esc write false once onCancel returns; ok only calls onOk and the caller sets visible to false. | `boolean` | - |
 | width | Width of the dialog. A number is in pixels; a string is any valid CSS length. When omitted, size decides. | `string \| number` | - |

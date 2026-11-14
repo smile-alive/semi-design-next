@@ -64,10 +64,10 @@
 </script>
 
 <div>
-    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" multiple placeholder="请选择" style="width: 300px" {treeData} />
+    <TreeSelect multiple placeholder="请选择" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />
     <br />
     <br />
-    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" leafOnly multiple placeholder="只渲染叶子节点" style="width: 300px" {treeData} />
+    <TreeSelect leafOnly multiple placeholder="只渲染叶子节点" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />
     <br />
     <br />
 </div>

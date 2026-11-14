@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { type strings, cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
+import { type EmptyPart, type strings, cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/empty/empty.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
@@ -17,7 +17,8 @@ interface SVGNode {
 
 export interface EmptyProps extends ElementProps<'div', 'title'> {
     layout?: ArrayElement<typeof strings.LAYOUT>;
-    imageStyle?: React.CSSProperties;
+    classNames?: Partial<Record<EmptyPart, string>>;
+    styles?: Partial<Record<EmptyPart, React.CSSProperties>>;
     title?: React.ReactNode;
     description?: React.ReactNode;
     image?: React.ReactNode | SVGNode;
@@ -55,7 +56,7 @@ function getNoThemeMode() {
 const defaultProps = { layout: 'vertical' } satisfies Partial<EmptyProps>;
 
 export default function Empty(rawProps: EmptyProps) {
-    const { ref, className, image, description, style, title, imageStyle, children, layout, darkModeImage, ...rest } = useDefaultProps('Empty', rawProps, defaultProps);
+    const { ref, className, image, description, style, title, classNames, styles, children, layout, darkModeImage, ...rest } = useDefaultProps('Empty', rawProps, defaultProps);
 
     const mode = useSyncExternalStore(darkModeImage ? subscribeThemeMode : subscribeNone, darkModeImage ? getThemeMode : getNoThemeMode, getNoThemeMode);
     let imageNode: React.ReactNode;
@@ -77,7 +78,7 @@ export default function Empty(rawProps: EmptyProps) {
 
     return (
         <div {...rest} ref={ref} className={clsx(className, prefixCls, { [`${prefixCls}-${layout}`]: layout })} style={style}>
-            <div className={`${prefixCls}-image`} style={imageStyle} x-semi-prop="image,darkModeImage">
+            <div className={clsx(`${prefixCls}-image`, classNames?.image)} style={styles?.image} x-semi-prop="image,darkModeImage">
                 {imageNode}
             </div>
             <div className={`${prefixCls}-content`}>

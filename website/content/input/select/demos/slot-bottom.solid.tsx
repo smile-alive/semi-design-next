@@ -30,7 +30,7 @@ export default function SelectDemo() {
             <Select
                 aria-label="outerBottomSlot"
                 style={{ width: '300px' }}
-                dropdownStyle={{ width: '180px' }}
+                styles={{ dropdown: { width: '180px' } }}
                 maxHeight={150}
                 outerBottomSlot={
                     <div style={outSlotStyle}>
@@ -49,7 +49,7 @@ export default function SelectDemo() {
                 <Select.Option value="movie">长视频</Select.Option>
             </Select>
             <p style={{ 'margin-top': '200px' }}>innerBottomSlot:</p>
-            <Select aria-label="innerBottomSlot" style={{ width: '300px' }} dropdownStyle={{ width: '180px' }} maxHeight={150} innerBottomSlot={<div style={innerSlotStyle}>点击加载更多</div>} placeholder="自定义内侧底部slot，滚动至底部显示">
+            <Select aria-label="innerBottomSlot" style={{ width: '300px' }} styles={{ dropdown: { width: '180px' } }} maxHeight={150} innerBottomSlot={<div style={innerSlotStyle}>点击加载更多</div>} placeholder="自定义内侧底部slot，滚动至底部显示">
                 <Select.Option value="video">短视频</Select.Option>
                 <Select.Option value="camera">相机</Select.Option>
                 <Select.Option value="editing">剪辑</Select.Option>

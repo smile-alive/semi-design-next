@@ -66,21 +66,13 @@
                 "zh-CN": "自定义 Markdown 渲染组件，键为元素名，透传给消息内容的 MarkdownRender。",
                 "en-US": "Custom Markdown renderers keyed by element name, passed to the MarkdownRender of message content."
             },
-            "inputBoxCls": {
-                "zh-CN": "输入框的类名。",
-                "en-US": "Class name of the input box."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 hint（提示区最外层）、inputBox（输入框），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by hint (the outermost hint area) and inputBox (the input box); merged with the built-in classes."
             },
-            "inputBoxStyle": {
-                "zh-CN": "输入框的样式。",
-                "en-US": "Style of the input box."
-            },
-            "hintCls": {
-                "zh-CN": "提示区最外层的类名。",
-                "en-US": "Class name of the outermost element of the hint area."
-            },
-            "hintStyle": {
-                "zh-CN": "提示区最外层的样式。",
-                "en-US": "Style of the outermost element of the hint area."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
             },
             "chatBoxRenderConfig": {
                 "zh-CN": "消息框各部分的自定义渲染函数，类型见 `ChatBoxRenderConfig`。",

@@ -34,4 +34,4 @@
     ];
 </script>
 
-<TreeSelect dropdownStyle="max-height: 400px; overflow: auto" placeholder="请选择" style="width: 300px" {treeData} />
+<TreeSelect placeholder="请选择" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />

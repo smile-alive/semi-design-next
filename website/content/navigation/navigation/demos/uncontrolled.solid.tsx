@@ -17,7 +17,7 @@ export default function NavigationDemo() {
             defaultOpenKeys={['job']}
             defaultSelectedKeys={['信息录入']}
             defaultIsCollapsed
-            bodyStyle={{ height: '300px' }}
+            styles={{ body: { height: '300px' } }}
             items={items}
             renderItemIcon={(renderProps) => <Dynamic component={icons[String(renderProps.item.itemKey)]} />}
             header={{

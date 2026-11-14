@@ -162,9 +162,15 @@
                 "zh-CN": "替换搜索框，参数含 `class`、`value`、`placeholder`、`showClear` 与 `onChange`；传 false 隐藏搜索框，filterTreeNode 仍然过滤。",
                 "en-US": "Replaces the search box, with `class`, `value`, `placeholder`, `showClear` and `onChange` as its argument; false hides the box while filterTreeNode still filters."
             },
-            "searchClassName": { "zh-CN": "搜索框容器的类名。", "en-US": "Class of the search box container." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 search（搜索框容器），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by search (the search box container); values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
             "searchPlaceholder": { "zh-CN": "搜索框的占位文字。", "en-US": "Placeholder of the search box." },
-            "searchStyle": { "zh-CN": "搜索框容器的样式字符串。", "en-US": "Style string of the search box container." },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
+            },
             "showClear": {
                 "zh-CN": "搜索框是否显示清除按钮。",
                 "en-US": "Whether the search box shows a clear button."

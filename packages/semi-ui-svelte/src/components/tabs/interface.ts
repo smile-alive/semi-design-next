@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { TabsPart } from '@fibrae/semi-foundation/components/tabs/constants';
 import type { DropdownProps } from '../dropdown/index.js';
 
 export type TabType = 'line' | 'card' | 'button' | 'slash';
@@ -50,9 +51,11 @@ export interface TabBarProps {
     showRestInDropdown: boolean;
     more?: number | TabsMore;
     arrowPosition: 'both' | 'start' | 'end';
-    visibleTabsStyle?: string;
+    /** Only `visibleTabs` is read: the scroll wrapper that holds the visible tabs */
+    classNames?: Partial<Record<'visibleTabs', ClassValue>>;
+    styles?: Partial<Record<'visibleTabs', string>>;
     dropdownProps?: TabsDropdownProps;
-    class?: string;
+    class?: ClassValue;
     style?: string;
 }
 
@@ -77,7 +80,7 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
     activeKey?: string | null;
     arrowPosition?: 'both' | 'start' | 'end';
     collapsible?: boolean | 'auto';
-    contentStyle?: string;
+    classNames?: Partial<Record<TabsPart, ClassValue>>;
     dropdownProps?: TabsDropdownProps;
     keepDOM?: boolean;
     lazyRender?: boolean;
@@ -85,13 +88,11 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
     preventScroll?: boolean;
     showRestInDropdown?: boolean;
     size?: TabSize;
-    tabBarClassName?: string;
-    tabBarStyle?: string;
+    styles?: Partial<Record<TabsPart, string>>;
     tabList?: PlainTab[];
     tabPaneMotion?: boolean;
     tabPosition?: TabPosition;
     type?: TabType;
-    visibleTabsStyle?: string;
     onChange?: (activeKey: string) => void;
     onTabClick?: (activeKey: string, event: MouseEvent | KeyboardEvent) => void;
     onTabClose?: (tabKey: string) => void;

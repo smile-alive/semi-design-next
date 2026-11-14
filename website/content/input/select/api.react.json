@@ -62,17 +62,17 @@
                 "zh-CN": "是否禁用。",
                 "en-US": "Whether the Select is disabled."
             },
-            "dropdownClassName": {
-                "zh-CN": "弹出层的类名。",
-                "en-US": "Class name of the dropdown."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（弹出层），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown popup); merged with the built-in classes."
             },
             "dropdownMatchSelectWidth": {
-                "zh-CN": "下拉菜单的最小宽度是否与选择框相同。宽度本身不会被写死，需要固定宽度时用 `dropdownStyle`。",
-                "en-US": "Whether the minimum width of the dropdown matches the Select. The width itself is not fixed; use `dropdownStyle` to set a fixed width."
+                "zh-CN": "下拉菜单的最小宽度是否与选择框相同。宽度本身不会被写死，需要固定宽度时用 `styles.dropdown`。",
+                "en-US": "Whether the minimum width of the dropdown matches the Select. The width itself is not fixed; use `styles.dropdown` to set a fixed width."
             },
-            "dropdownStyle": {
-                "zh-CN": "弹出层的样式，例如用 `width` 自定义弹出层的宽度。",
-                "en-US": "Style of the dropdown, for example `width` to set its width."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，例如用 `dropdown` 的 `width` 自定义弹出层的宽度。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, for example `width` on `dropdown` to set the popup width."
             },
             "ellipsisTrigger": {
                 "zh-CN": "同时设置 `maxTagCount` 且为多选时，是否对溢出的标签做自适应处理，宽度不足时截断最后一个标签的内容。开启后有一定性能损耗，大表单场景不推荐使用。",

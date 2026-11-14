@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { strings, UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
 import type { AfterUploadResult as FoundationAfterUploadResult, BaseFileItem, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult, CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/interface.js';
@@ -92,6 +92,7 @@ export interface UploadFileItemSlotProps {
     picWidth?: string | number;
     picHeight?: string | number;
     validateMessage?: string;
+    class?: ClassValue;
     style?: string;
     onRemove: () => void;
     onRetry: () => void;
@@ -147,6 +148,7 @@ export interface UploadProps extends Omit<HTMLAttributes<HTMLDivElement>, 'oncha
     beforeRemove?: (file: FileItem, fileList: FileItem[]) => boolean | Promise<boolean>;
     beforeUpload?: (object: BeforeUploadProps) => BeforeUploadObjectResult | Promise<BeforeUploadObjectResult> | boolean;
     capture?: boolean | 'user' | 'environment';
+    classNames?: Partial<Record<UploadPart, ClassValue>>;
     /** `true` crops with the defaults; an object configures the cropper */
     crop?: boolean | UploadCropProps;
     cropModalProps?: UploadCropModalProps;
@@ -162,7 +164,6 @@ export interface UploadProps extends Omit<HTMLAttributes<HTMLDivElement>, 'oncha
     headers?: Record<string, any> | ((file: File) => Record<string, string>);
     /** Where the picture wall's add button sits */
     hotSpotLocation?: 'start' | 'end';
-    itemStyle?: string;
     limit?: number;
     listType?: UploadListType;
     /** KB */
@@ -181,6 +182,7 @@ export interface UploadProps extends Omit<HTMLAttributes<HTMLDivElement>, 'oncha
     /** Tooltip of a truncated file name; its custom popup is the `ellipsisTooltip` snippet */
     showTooltip?: boolean | ShowTooltip;
     showUploadList?: boolean;
+    styles?: Partial<Record<UploadPart, string>>;
     transformFile?: (file: File) => File;
     uploadTrigger?: 'auto' | 'custom';
     validateStatus?: ValidateStatus;

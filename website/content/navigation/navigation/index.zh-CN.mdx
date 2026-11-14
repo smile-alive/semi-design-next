@@ -205,25 +205,25 @@ Svelte 的 `icon` snippet 始终保留图标列，不能用空内容去掉图标
 
 <Framework only="react">
 
-Navigation 目前提供了个两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 用于定义导航组件最外层的样式，而 `bodyStyle` 用于定义导航列表的样式。（导航头部和导航底部则都接受各自的 `style` 参数）。
+Navigation 目前提供了个两个参数用于定义导航样式：`style` 和 `styles.body`，其中 `style` 用于定义导航组件最外层的样式，而 `styles.body` 用于定义导航列表的样式（类名用 `classNames.body`）。（导航头部和导航底部则都接受各自的 `style` 参数）。
 
 </Framework>
 
 <Framework only="vue">
 
-Navigation 目前提供了个两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 作为 attrs 落在导航组件最外层，而 `bodyStyle` 用于定义导航列表的样式。（导航头部和导航底部则都接受各自的 `style`）。
+Navigation 目前提供了个两个参数用于定义导航样式：`style` 和 `styles.body`，其中 `style` 作为 attrs 落在导航组件最外层，而 `styles.body` 用于定义导航列表的样式（类名用 `classNames.body`）。（导航头部和导航底部则都接受各自的 `style`）。
 
 </Framework>
 
 <Framework only="solid">
 
-Navigation 目前提供了两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 用于定义导航组件最外层的样式，而 `bodyStyle` 用于定义导航列表的样式。（导航头部和导航底部则都接受各自的 `style` 参数）。
+Navigation 目前提供了两个参数用于定义导航样式：`style` 和 `styles.body`，其中 `style` 用于定义导航组件最外层的样式，而 `styles.body` 用于定义导航列表的样式（类名用 `classNames.body`）。（导航头部和导航底部则都接受各自的 `style` 参数）。
 
 </Framework>
 
 <Framework only="svelte">
 
-Navigation 目前提供了两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 落在导航组件最外层，而 `bodyStyle` 用于定义导航列表的样式，二者都是字符串。（导航头部和导航底部则都接受各自的 `style`）。
+Navigation 目前提供了两个参数用于定义导航样式：`style` 和 `styles.body`，其中 `style` 落在导航组件最外层，而 `styles.body` 用于定义导航列表的样式（类名用 `classNames.body`），二者都是字符串。（导航头部和导航底部则都接受各自的 `style`）。
 
 </Framework>
 
@@ -631,24 +631,25 @@ Navigation 组件提供了几个可绑定属性，使用 `bind:` 即可轻松地
 
 `items` 是 `(string | NavItemConfig)[]`，字符串项同时作为 `text` 和 `itemKey`。带有非空 `items` 的项渲染为 Nav.Sub，其余渲染为 Nav.Item。数据项只放数据，节点通过 Nav 的 `#icon`、`#text`、`#toggleIcon`、`#expandIcon` 作用域插槽提供，参数为 `{ item, level }`。
 
-| 属性             | 描述                                                       | 类型                        | 默认值 |
-| ---------------- | ---------------------------------------------------------- | --------------------------- | ------ |
-| itemKey          | 导航项目唯一标识                                           | string \| number            |        |
-| text             | 导航项目文案                                               | string \| number            |        |
-| items            | 子导航项，带有非空 `items` 时渲染为 Nav.Sub                | (string \| NavItemConfig)[] |        |
-| disabled         | 是否禁用                                                   | boolean                     |        |
-| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效             | boolean \| number           |        |
-| link             | 导航项 href 链接，仅 Nav.Item 生效                         | string                      |        |
-| linkOptions      | 透传给 a 标签的参数，仅 Nav.Item 生效                      | AnchorHTMLAttributes        |        |
-| tooltipHideDelay | 此导航项 tooltip 隐藏的延迟，仅 Nav.Item 生效              | number                      |        |
-| tooltipShowDelay | 此导航项 tooltip 显示的延迟，仅 Nav.Item 生效              | number                      |        |
-| dropdownProps    | 弹出层 `dropdown` 参数配置，仅 Nav.Sub 生效                | SubDropdownProps            |        |
-| dropdownStyle    | 弹出层的 style，仅 Nav.Sub 生效                            | StyleValue                  |        |
-| class            | 导航项 `li` 的类名                                         | string \| object \| array   |        |
-| style            | 导航项 `li` 的自定义样式                                   | StyleValue                  |        |
-| onMouseenter     | mouse enter 时触发                                         | (event: MouseEvent) => void |        |
-| onMouseleave     | mouse leave 时触发                                         | (event: MouseEvent) => void |        |
-| data-\*、aria-\* | `data-*` 落在 `li` 上，`aria-*` 落在获得焦点的链接或按钮上 | unknown                     |        |
+| 属性             | 描述                                                       | 类型                                      | 默认值 |
+| ---------------- | ---------------------------------------------------------- | ----------------------------------------- | ------ |
+| itemKey          | 导航项目唯一标识                                           | string \| number                          |        |
+| text             | 导航项目文案                                               | string \| number                          |        |
+| items            | 子导航项，带有非空 `items` 时渲染为 Nav.Sub                | (string \| NavItemConfig)[]               |        |
+| disabled         | 是否禁用                                                   | boolean                                   |        |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效             | boolean \| number                         |        |
+| link             | 导航项 href 链接，仅 Nav.Item 生效                         | string                                    |        |
+| linkOptions      | 透传给 a 标签的参数，仅 Nav.Item 生效                      | AnchorHTMLAttributes                      |        |
+| tooltipHideDelay | 此导航项 tooltip 隐藏的延迟，仅 Nav.Item 生效              | number                                    |        |
+| tooltipShowDelay | 此导航项 tooltip 显示的延迟，仅 Nav.Item 生效              | number                                    |        |
+| dropdownProps    | 弹出层 `dropdown` 参数配置，仅 Nav.Sub 生效                | SubDropdownProps                          |        |
+| classNames       | 键 `dropdown`：弹出层内容的类名，仅 Nav.Sub 生效           | `Partial<Record<'dropdown', ClassValue>>` |        |
+| styles           | 键 `dropdown`：弹出层内容的样式，仅 Nav.Sub 生效           | `Partial<Record<'dropdown', StyleValue>>` |        |
+| class            | 导航项 `li` 的类名                                         | string \| object \| array                 |        |
+| style            | 导航项 `li` 的自定义样式                                   | StyleValue                                |        |
+| onMouseenter     | mouse enter 时触发                                         | (event: MouseEvent) => void               |        |
+| onMouseleave     | mouse leave 时触发                                         | (event: MouseEvent) => void               |        |
+| data-\*、aria-\* | `data-*` 落在 `li` 上，`aria-*` 落在获得焦点的链接或按钮上 | unknown                                   |        |
 
 其余字段（如 `path`）会被忽略。
 
@@ -672,24 +673,25 @@ Navigation 组件提供了几个可绑定属性，使用 `bind:` 即可轻松地
 
 `items` 是 `(string | NavItemConfig)[]`，字符串项同时作为 `text` 和 `itemKey`。带有非空 `items` 的项渲染为 Nav.Sub，其余渲染为 Nav.Item。数据项只放数据，节点通过 Nav 的 `icon`、`text`、`toggleIcon`、`expandIcon` snippet 提供，参数含 `{ item, level }`。
 
-| 属性             | 描述                                                       | 类型                        | 默认值 |
-| ---------------- | ---------------------------------------------------------- | --------------------------- | ------ |
-| itemKey          | 导航项目唯一标识                                           | string \| number            |        |
-| text             | 导航项目文案                                               | string \| number            |        |
-| items            | 子导航项，带有非空 `items` 时渲染为 Nav.Sub                | (string \| NavItemConfig)[] |        |
-| disabled         | 是否禁用                                                   | boolean                     |        |
-| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效             | boolean \| number           |        |
-| link             | 导航项 href 链接，仅 Nav.Item 生效                         | string                      |        |
-| linkOptions      | 透传给 a 标签的参数，仅 Nav.Item 生效                      | HTMLAnchorAttributes        |        |
-| tooltipHideDelay | 此导航项 tooltip 隐藏的延迟，仅 Nav.Item 生效              | number                      |        |
-| tooltipShowDelay | 此导航项 tooltip 显示的延迟，仅 Nav.Item 生效              | number                      |        |
-| dropdownProps    | 弹出层 `dropdown` 参数配置，仅 Nav.Sub 生效                | SubDropdownProps            |        |
-| dropdownStyle    | 弹出层的 style，仅 Nav.Sub 生效                            | string                      |        |
-| class            | 导航项 `li` 的类名                                         | ClassValue                  |        |
-| style            | 导航项 `li` 的自定义样式                                   | string                      |        |
-| onmouseenter     | mouse enter 时触发                                         | (event: MouseEvent) => void |        |
-| onmouseleave     | mouse leave 时触发                                         | (event: MouseEvent) => void |        |
-| data-\*、aria-\* | `data-*` 落在 `li` 上，`aria-*` 落在获得焦点的链接或按钮上 | unknown                     |        |
+| 属性             | 描述                                                       | 类型                                      | 默认值 |
+| ---------------- | ---------------------------------------------------------- | ----------------------------------------- | ------ |
+| itemKey          | 导航项目唯一标识                                           | string \| number                          |        |
+| text             | 导航项目文案                                               | string \| number                          |        |
+| items            | 子导航项，带有非空 `items` 时渲染为 Nav.Sub                | (string \| NavItemConfig)[]               |        |
+| disabled         | 是否禁用                                                   | boolean                                   |        |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效             | boolean \| number                         |        |
+| link             | 导航项 href 链接，仅 Nav.Item 生效                         | string                                    |        |
+| linkOptions      | 透传给 a 标签的参数，仅 Nav.Item 生效                      | HTMLAnchorAttributes                      |        |
+| tooltipHideDelay | 此导航项 tooltip 隐藏的延迟，仅 Nav.Item 生效              | number                                    |        |
+| tooltipShowDelay | 此导航项 tooltip 显示的延迟，仅 Nav.Item 生效              | number                                    |        |
+| dropdownProps    | 弹出层 `dropdown` 参数配置，仅 Nav.Sub 生效                | SubDropdownProps                          |        |
+| classNames       | 键 `dropdown`：弹出层内容的类名，仅 Nav.Sub 生效           | `Partial<Record<'dropdown', ClassValue>>` |        |
+| styles           | 键 `dropdown`：弹出层内容的样式，仅 Nav.Sub 生效           | `Partial<Record<'dropdown', string>>`     |        |
+| class            | 导航项 `li` 的类名                                         | ClassValue                                |        |
+| style            | 导航项 `li` 的自定义样式                                   | string                                    |        |
+| onmouseenter     | mouse enter 时触发                                         | (event: MouseEvent) => void               |        |
+| onmouseleave     | mouse leave 时触发                                         | (event: MouseEvent) => void               |        |
+| data-\*、aria-\* | `data-*` 落在 `li` 上，`aria-*` 落在获得焦点的链接或按钮上 | unknown                                   |        |
 
 其余字段（如 `path`）会被忽略。
 

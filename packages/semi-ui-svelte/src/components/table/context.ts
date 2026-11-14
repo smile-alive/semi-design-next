@@ -29,7 +29,8 @@ export interface TableContextValue {
     readonly anyColumnFixed: boolean;
     readonly flattenedColumns: ColumnProps[];
     readonly headWidths: BaseHeadWidth[][];
-    readonly headerStyle?: string;
+    readonly classNames?: TableProps['classNames'];
+    readonly styles?: TableProps['styles'];
     readonly rowSpanHover: boolean;
     /** The header and the body are separate elements, so their container is the table */
     readonly splitTable: boolean;

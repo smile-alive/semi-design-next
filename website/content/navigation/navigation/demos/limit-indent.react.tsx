@@ -25,7 +25,7 @@ export default function NavigationDemo() {
         <Nav
             limitIndent={false}
             defaultOpenKeys={['job', 'mission1']}
-            bodyStyle={{ height: 300 }}
+            styles={{ body: { height: 300 } }}
             items={items}
             onSelect={(key) => console.log(key)}
             header={{

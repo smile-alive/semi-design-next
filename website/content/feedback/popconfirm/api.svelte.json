@@ -26,10 +26,6 @@
                 "zh-CN": "箭头是否指向触发元素中心，需要同时开启 showArrow。",
                 "en-US": "Whether the arrow points at the center of the trigger. Requires showArrow."
             },
-            "arrowStyle": {
-                "zh-CN": "箭头的边框色、背景色与边框透明度。",
-                "en-US": "borderColor, backgroundColor and borderOpacity of the arrow."
-            },
             "autoAdjustOverflow": {
                 "zh-CN": "弹出层被遮挡时是否自动调整方向。",
                 "en-US": "Whether the popup flips automatically when it would be clipped."
@@ -55,6 +51,10 @@
                 "zh-CN": "确认卡片的类名。",
                 "en-US": "Class name of the confirmation card."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（弹出层内的内容容器 `.semi-popover`）、`arrow`（箭头），与组件自带的类名合并；确认卡片 `.semi-popconfirm` 的类名用 `class`。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the content container `.semi-popover` inside the popup) and `arrow`; merged with the built-in classes. The class of the confirmation card `.semi-popconfirm` is set with `class`."
+            },
             "clickToHide": {
                 "zh-CN": "点击弹出层及其内部任一元素时是否关闭。",
                 "en-US": "Whether a click on the popup or anything inside it closes it."
@@ -70,10 +70,6 @@
             "content": {
                 "zh-CN": "确认框内容的 snippet，参数 `{ initialFocusRef }` 是回调，可直接写 `{@attach initialFocusRef}` 绑定到打开时需要聚焦的元素；不传时不渲染内容区。",
                 "en-US": "Snippet for the content of the card. Its argument `{ initialFocusRef }` is a callback; write `{@attach initialFocusRef}` to bind it to the element that receives focus on open. Omitted, no content area is rendered."
-            },
-            "contentClassName": {
-                "zh-CN": "内容容器的类名。",
-                "en-US": "Class name of the content container."
             },
             "disableArrowKeyDown": {
                 "zh-CN": "是否禁用在触发元素上按方向键把焦点移入确认框。",
@@ -169,6 +165,10 @@
             "style": {
                 "zh-CN": "确认卡片的样式字符串。",
                 "en-US": "Style string of the confirmation card."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。`content` 是内容容器的样式字符串；`arrow` 是箭头的 borderColor、backgroundColor 与 borderOpacity。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. `content` is the style string of the content container; `arrow` holds the arrow's borderColor, backgroundColor and borderOpacity."
             },
             "title": {
                 "zh-CN": "标题，可以是字符串或 snippet，同时作为对话框的可访问名称。",

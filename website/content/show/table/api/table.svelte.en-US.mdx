@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | bordered | Whether to show the outer border and the column borders. | `boolean` | `false` |
 | cell | The content of a data cell, called for every data column, with text, record, index, column, expandIcon, isHovering and more; tell the columns apart with column.dataIndex or column.key. Render text for the columns the snippet leaves alone. With useFullRender on a column the snippet replaces the whole cell, and the selection, indentText and expandIcon arguments place the checkbox, the indent and the expand button. | <ApiType detail={"Snippet\u003c[TableCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | childrenRecordName | The field of a record that holds its child records in a tree table. | `string` | `"children"` |
+| classNames | Class names of the inner parts, keyed by header (every header cell th, fixed headers included); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTablePart, ClassValue>>"}>Type</ApiType> | - |
 | clickGroupedRowToExpand | Clicking a group row expands or collapses the group. | `boolean` | `false` |
 | columns | The column configuration, see Column. A column holds data only; markup goes to the cell, headerCell, sortIcon, filterIcon, filterDropdown and other snippets of Table. | <ApiType detail={"ColumnProps\u003cR>[]"}>Type</ApiType> | - |
 | components | Replaces the elements Table renders, such as the outer, wrapper, row and cell of the header and the body, with a tag name that replaces the default tag of that part. | `TableComponents` | - |
@@ -34,7 +35,6 @@ import ApiType from '#/components/ApiType.astro';
 | groupSection | The content of a group row, with groupKey and group (the row keys of the group). | <ApiType detail={"Snippet\u003c[TableGroupSectionSnippetProps]>"}>Type</ApiType> | - |
 | groupSectionColumn | The column configuration of the single cell of a group row. The returned object has no title, children or dataIndex. | <ApiType detail={"(groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, 'children' \u007c 'dataIndex' \u007c 'title'>"}>Type</ApiType> | - |
 | headerCell | The content of a column title, with column, title and sorter, filter, selection. Render title for the columns the snippet leaves alone. With useFullRender on a column the snippet replaces the whole header cell, and sorter, filter and selection place the sort, filter and selection controls. | <ApiType detail={"Snippet\u003c[TableHeaderCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
-| headerStyle | Inline style string of every header cell, fixed headers included. | `string` | - |
 | hideExpandedColumn | In an expandable table the expand button shares the first cell by default; set false to render it as its own column. | `boolean` | `true` |
 | indentSize | The indent of each tree level, in pixels. | `number` | `20` |
 | keepDOM | Whether collapsing a row keeps its DOM. | `boolean` | `false` |
@@ -64,6 +64,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | The table size, which sets the padding of the cells. | `TableSize` | `"default"` |
 | sortIcon | The sort icon, with sortOrder and column. | <ApiType detail={"Snippet\u003c[TableSortIconSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | sticky | Sticks the header to the top of the page. With an object, top is the distance from the scroll container. | `TableSticky` | - |
+| styles | Inline style strings of the inner parts, keyed like classNames; the style returned by a column's onHeaderCell takes precedence. | <ApiType detail={"Partial\u003cRecord\u003cTablePart, string>>"}>Type</ApiType> | - |
 | title | The table title: plain text, or a snippet with the records of the current page as pageData. | <ApiType detail={"string \u007c Snippet\u003c[TableTitleSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | virtualized | Turns on virtualization, which needs scroll.y as a number. An object sets the row height itemSize and the extra rows overscanCount. | `TableVirtualized` | - |
 

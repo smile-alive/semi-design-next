@@ -228,7 +228,7 @@ export default function Pagination(rawProps: PaginationProps) {
                     <Show when={view().sizeChangerShown}>
                         <li class={`${prefixCls}-switch`}>
                             <Select<number, false>
-                                dropdownClassName={`${prefixCls}-select-dropdown`}
+                                classNames={{ dropdown: `${prefixCls}-select-dropdown` }}
                                 aria-label={text().pageSizeSelector}
                                 disabled={local.disabled}
                                 value={state().pageSize}

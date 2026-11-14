@@ -64,10 +64,10 @@ const treeData = [
 export default function TreeSelectDemo() {
     return (
         <div>
-            <TreeSelect style={{ width: 300 }} multiple dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} placeholder="请选择" />
+            <TreeSelect style={{ width: 300 }} multiple styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} placeholder="请选择" />
             <br />
             <br />
-            <TreeSelect style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} multiple leafOnly placeholder="只渲染叶子节点" />
+            <TreeSelect style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} multiple leafOnly placeholder="只渲染叶子节点" />
             <br />
             <br />
         </div>

@@ -91,12 +91,27 @@ describe('Svelte Modal', () => {
         expect(dialog).not.toHaveAttribute('data-foo');
     });
 
-    it('maskStyle、bodyStyle、zIndex、modalContentClass', () => {
-        setup({ visible: true, maskStyle: 'color: grey', bodyStyle: 'color: pink', zIndex: 500, modalContentClass: 'inner-class', title: 'T' });
+    it('styles、zIndex、modalContentClass', () => {
+        setup({ visible: true, styles: { mask: 'color: grey', body: 'color: pink' }, zIndex: 500, modalContentClass: 'inner-class', title: 'T' });
         expect(getMask()).toHaveStyle({ color: 'rgb(128, 128, 128)' });
         expect($(`.${prefix}-body`)).toHaveStyle({ color: 'rgb(255, 192, 203)' });
         expect($('.semi-portal')?.style.zIndex).toBe('500');
         expect(getDialog()).toHaveClass('inner-class');
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['mask', 'content', 'header', 'body', 'footer'] as const;
+        setup({
+            visible: true,
+            title: 'T',
+            classNames: Object.fromEntries(parts.map((part) => [part, `my-${part}`])),
+            styles: Object.fromEntries(parts.map((part) => [part, `order: ${parts.indexOf(part) + 1}`])),
+        });
+        for (const part of parts) {
+            const el = $(`.${prefix}-${part}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('title 字符串与 snippet 都命名对话框，没有标题时不设 aria-labelledby', () => {

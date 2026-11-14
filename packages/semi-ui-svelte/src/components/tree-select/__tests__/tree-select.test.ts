@@ -91,11 +91,12 @@ describe('Svelte TreeSelect 渲染', () => {
         expect(getRoot()).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('dropdownClassName、dropdownStyle 与 optionListStyle', async () => {
-        setup({ dropdownClassName: 'my-drop', dropdownStyle: 'color: red', optionListStyle: 'max-height: 100px' });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        setup({ classNames: { dropdown: 'my-drop', optionList: 'my-list' }, styles: { dropdown: 'color: red', optionList: 'max-height: 100px' } });
         await settle();
         expect(getPopover()).toHaveClass('my-drop');
         expect(getPopover()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(getTree()).toHaveClass('my-list');
         expect(getTree()).toHaveStyle({ maxHeight: '100px' });
     });
 

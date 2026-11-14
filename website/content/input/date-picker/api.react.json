@@ -62,13 +62,9 @@
                 "zh-CN": "是否禁止时间选择。",
                 "en-US": "Whether time selection is disabled."
             },
-            "dropdownClassName": {
-                "zh-CN": "下拉面板的类名。",
-                "en-US": "Class name of the dropdown panel."
-            },
-            "dropdownStyle": {
-                "zh-CN": "下拉面板的内联样式。",
-                "en-US": "Inline style of the dropdown panel."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（下拉面板）、`input`（输入框的根元素，范围选择的两个输入框都带），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown panel) and `input` (the root element of the input, on both inputs of a range); merged with the built-in classes."
             },
             "endDateOffset": {
                 "zh-CN": "type 为 dateRange 时，设置单击选择范围的结束日期。",
@@ -90,9 +86,9 @@
                 "zh-CN": "文本框是否为只读（readonly）。",
                 "en-US": "Whether the input is readonly."
             },
-            "inputStyle": {
-                "zh-CN": "输入框的内联样式。",
-                "en-US": "Inline style of the input."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "insetInput": {
                 "zh-CN": "面板中是否嵌入输入框。可传布尔值，或传入 InsetInputProps 对象配置内嵌输入框的 placeholder。",

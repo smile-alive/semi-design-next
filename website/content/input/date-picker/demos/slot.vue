@@ -13,7 +13,7 @@
 
 <template>
     <div>
-        <DatePicker v-model="date" :disabledDate="disabledDate" dropdownClassName="components-datepicker-demo-slot" placeholder="请选择排期">
+        <DatePicker v-model="date" :classNames="{ dropdown: 'components-datepicker-demo-slot' }" :disabledDate="disabledDate" placeholder="请选择排期">
             <template #topSlot>
                 <Tabs v-model:activeKey="activeTab" size="small" :style="{ padding: '12px 20px 0' }" @change="date = undefined">
                     <TabPane itemKey="1">
@@ -49,7 +49,7 @@
         </DatePicker>
         <br />
         <br />
-        <DatePicker density="compact" dropdownClassName="components-datepicker-demo-slot" placeholder="小尺寸">
+        <DatePicker :classNames="{ dropdown: 'components-datepicker-demo-slot' }" density="compact" placeholder="小尺寸">
             <template #topSlot>
                 <Tabs v-model:activeKey="activeTab" size="small" :style="{ padding: '8px 12px 0' }" @change="date = undefined">
                     <TabPane itemKey="1">

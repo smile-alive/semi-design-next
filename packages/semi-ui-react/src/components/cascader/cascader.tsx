@@ -1,7 +1,7 @@
 import React, { Fragment, useDeferredValue, useId, useImperativeHandle, useRef, type ReactNode, type CSSProperties, type MouseEvent } from 'react';
 import clsx from 'clsx';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+import { cssClasses, strings, type CascaderPart } from '@fibrae/semi-foundation/components/cascader/constants';
 import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter } from '@fibrae/semi-foundation/components/cascader/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils';
@@ -67,7 +67,8 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     clearIcon?: ReactNode;
     expandIcon?: ReactNode;
     defaultValue?: ModeValue<Multiple>;
-    dropdownStyle?: CSSProperties;
+    classNames?: Partial<Record<CascaderPart, string>>;
+    styles?: Partial<Record<CascaderPart, CSSProperties>>;
     emptyContent?: ReactNode;
     motion?: boolean;
     filterTreeNode?: ((inputValue: string, treeNodeString: string, data?: CascaderData) => boolean) | boolean;
@@ -181,7 +182,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         clearIcon,
         expandIcon,
         defaultValue,
-        dropdownStyle,
+        styles,
         emptyContent,
         motion,
         filterTreeNode,
@@ -217,7 +218,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         multiple,
         autoMergeValue,
         disabled,
-        dropdownClassName,
+        classNames,
         filterLeafOnly,
         placeholder,
         searchPlaceholder,
@@ -514,12 +515,12 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
 
     const renderContent = () => {
         const searchable = Boolean(filterTreeNode) && isSearching;
-        const popoverCls = clsx(dropdownClassName, `${prefixcls}-popover`);
+        const popoverCls = clsx(`${prefixcls}-popover`, classNames?.dropdown);
         return (
             <div
                 ref={optionContainerEl}
                 className={popoverCls}
-                style={dropdownStyle}
+                style={styles?.dropdown}
                 onBlur={handleFocusLeave}
                 onFocus={(e) => foundation.handleFocusEnter(e.nativeEvent)}
                 onKeyDown={handleKeyDown}
@@ -670,7 +671,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
 
     const renderSelection = () => {
         const useCustomTrigger = typeof triggerRender === 'function';
-        const classNames = useCustomTrigger
+        const triggerCls = useCustomTrigger
             ? clsx(className)
             : clsx(prefixcls, className, {
                   [`${prefixcls}-borderless`]: borderless,
@@ -704,7 +705,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 {...rest}
                 ref={triggerRef}
                 id={id}
-                className={classNames}
+                className={triggerCls}
                 style={style}
                 {...triggerAriaProps}
                 tabIndex={disabled || inputIsCombobox ? -1 : 0}

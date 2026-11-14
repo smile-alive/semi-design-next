@@ -1,3 +1,5 @@
+import type { ClassValue } from 'svelte/elements';
+import type { HighlightPart } from '@fibrae/semi-foundation/components/highlight/constants';
 import type { HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
 
 export type { HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
@@ -16,8 +18,7 @@ export interface HighlightProps {
     caseSensitive?: boolean;
     sourceString?: string;
     searchWords?: string | SearchWords;
-    /** Camel-case or kebab-case keys; numbers are written as-is, so lengths need a unit string */
-    highlightStyle?: HighlightStyle;
-    highlightClassName?: string;
+    classNames?: Partial<Record<HighlightPart, ClassValue>>;
+    styles?: Partial<Record<HighlightPart, string>>;
     component?: string;
 }

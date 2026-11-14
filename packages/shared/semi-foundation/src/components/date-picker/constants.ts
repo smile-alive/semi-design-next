@@ -36,6 +36,9 @@ export const cssClasses = {
     ...dayItemClasses,
 } as const;
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type DatePickerPart = 'dropdown' | 'input';
+
 const formatToken = {
     FORMAT_FULL_DATE: 'yyyy-MM-dd',
     FORMAT_TIME_PICKER: 'HH:mm:ss',

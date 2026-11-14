@@ -116,8 +116,8 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         renderSuggestionItem,
         skills,
         skillHotKey,
-        templatesStyle,
-        templatesCls,
+        classNames,
+        styles,
         onSkillChange,
         renderSkillItem,
         renderTemplate,
@@ -245,7 +245,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const renderPopoverContent = () => {
         if (templateVisible) {
             return (
-                <div className={clsx(`${prefixCls}-template`, { [templatesCls]: templatesCls })} style={{ maxHeight: numbers.TEMPLATE_MAX_HEIGHT, ...templatesStyle }}>
+                <div className={clsx(`${prefixCls}-template`, classNames?.templates)} style={{ maxHeight: numbers.TEMPLATE_MAX_HEIGHT, ...styles?.templates }}>
                     {renderTemplate?.(skill, foundation.setContent)}
                 </div>
             );

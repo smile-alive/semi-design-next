@@ -40,7 +40,8 @@
         showBoundary: () => semiDefault('Slider', 'showBoundary', false),
         vertical: () => semiDefault('Slider', 'vertical', false),
         verticalReverse: () => semiDefault('Slider', 'verticalReverse', false),
-        railStyle: semiGlobalDefault('Slider', 'railStyle'),
+        classNames: semiGlobalDefault('Slider', 'classNames'),
+        styles: semiGlobalDefault('Slider', 'styles'),
         handleDot: semiGlobalDefault('Slider', 'handleDot'),
         // no global default: a global id would repeat on every instance
         id: undefined,
@@ -204,7 +205,7 @@
             @mouseenter="foundation.handleWrapperEnter"
             @mouseleave="foundation.handleWrapperLeave"
         >
-            <div :class="`${prefix}-rail`" :style="props.railStyle" @click="foundation.handleWrapClick" />
+            <div :class="[`${prefix}-rail`, props.classNames?.rail]" :style="props.styles?.rail" @click="foundation.handleWrapClick" />
             <div :class="cssClasses.TRACK" :style="trackStyle" @click="foundation.handleWrapClick" />
             <div v-if="marks.length" :class="cssClasses.DOTS">
                 <component :is="props.tooltipOnMark ? Tooltip : SlotFragment" v-for="mark in shownMarks" :key="mark.key">

@@ -1,12 +1,13 @@
 <script lang="ts">
     import { onMount, type Snippet } from 'svelte';
+    import type { ClassValue } from 'svelte/elements';
     import type { FocusTarget, RenderContentProps } from '../tooltip/index.js';
     import { type DropdownContext, setDropdownContext } from './context.js';
 
     interface Props {
         context: DropdownContext;
         prefixCls: string;
-        contentClass?: string;
+        contentClass?: ClassValue;
         style?: string;
         initialFocusRef: RenderContentProps['initialFocusRef'];
         focusTarget: FocusTarget;

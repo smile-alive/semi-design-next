@@ -27,12 +27,14 @@
         afterVisibleChange = defaults('afterVisibleChange'),
         cancelButtonProps = defaults('cancelButtonProps'),
         checkboxGroupProps = defaults('checkboxGroupProps'),
+        classNames = defaults('classNames'),
         mode = defaults('mode', 'popup'),
         okButtonProps = defaults('okButtonProps'),
         onCancel = defaults('onCancel'),
         onOk = defaults('onOk'),
         onValueChange = defaults('onValueChange'),
         radioGroupProps = defaults('radioGroupProps'),
+        styles = defaults('styles'),
         textAreaProps = defaults('textAreaProps'),
         title = defaults('title'),
         type = defaults('type', 'emoji'),
@@ -185,6 +187,7 @@
         cancelButtonProps={modalCancelProps}
         children={body}
         class={[prefix, `${prefix}-${type}`, rest.class]}
+        {classNames}
         {closeIcon}
         {footer}
         {header}
@@ -193,6 +196,7 @@
         okButtonProps={modalOkProps}
         onCancel={foundation.handleModalCancel}
         onOk={foundation.handleModalOk}
+        {styles}
         {title}
     />
 {:else}
@@ -209,9 +213,11 @@
         bind:visible={() => open, () => {}}
         children={body}
         class={[prefix, `${prefix}-${type}`, rest.class]}
+        {classNames}
         {closeIcon}
         footer={footer === undefined ? popupFooter : (footer ?? undefined)}
         onCancel={foundation.handleCancel}
+        {styles}
         {title}
     />
 {/if}

@@ -8,6 +8,9 @@ export const cssClasses = {
     FOOTER_CONFIGURE: `${PREFIX}-footer-configure`,
 };
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type AIChatInputPart = 'templates';
+
 export const strings = {
     // Key of the status extension's editor storage, read by the foundation
     STATUS_EXTENSION_NAME: 'SemiAIChatInput' as const,

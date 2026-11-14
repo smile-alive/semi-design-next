@@ -10,6 +10,10 @@
                 "zh-CN": "树形表格中，数据项里表示子级数据的字段名。",
                 "en-US": "The field of a record that holds its child records in a tree table."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `header`（每个表头单元格 `<th>`，包括固定表头），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `header` (every header cell `<th>`, fixed headers included); merged with the built-in classes."
+            },
             "clickGroupedRowToExpand": {
                 "zh-CN": "点击分组行时展开或收起该组。",
                 "en-US": "Clicking a group row expands or collapses the group."
@@ -78,10 +82,6 @@
                 "zh-CN": "分组行唯一一列的列配置，返回值不含 title、children、dataIndex。",
                 "en-US": "The column configuration of the single cell of a group row. The returned object has no title, children or dataIndex."
             },
-            "headerStyle": {
-                "zh-CN": "所有表头单元格（包括固定表头）的内联样式。",
-                "en-US": "Inline style of every header cell, fixed headers included."
-            },
             "hideExpandedColumn": {
                 "zh-CN": "表格可展开时，展开按钮默认与第一列内容渲染在同一个单元格；设为 false 时展开按钮单独占一列。",
                 "en-US": "In an expandable table the expand button shares the first cell by default; set false to render it as its own column."
@@ -131,6 +131,10 @@
             "sticky": {
                 "zh-CN": "将表头固定在页面顶部，传对象时 top 为距离滚动容器顶部的距离。",
                 "en-US": "Sticks the header to the top of the page. With an object, top is the distance from the scroll container."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；列的 onHeaderCell 返回的 style 优先级更高。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; the style returned by a column's onHeaderCell takes precedence."
             },
             "title": {
                 "zh-CN": "纯文本表格标题，title 插槽优先。",

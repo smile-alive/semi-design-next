@@ -188,10 +188,11 @@ describe('Slider', () => {
         expect(queryAll(container, 'dot-active')).toHaveLength(0);
     });
 
-    it('railStyle 和 trackStyle 属性', () => {
-        const railStyle = { backgroundColor: '#ccc' };
+    it('classNames 与 styles 按部位落到对应元素，trackStyle 不是属性', () => {
+        const styles = { rail: { backgroundColor: '#ccc' } };
         const trackStyle = { backgroundColor: '#1890ff' };
-        const { container } = render(<Slider railStyle={railStyle} {...undeclared({ trackStyle })} defaultValue={30} />);
+        const { container } = render(<Slider classNames={{ rail: 'rail-cls' }} styles={styles} {...undeclared({ trackStyle })} defaultValue={30} />);
+        expect(query(container, 'rail')).toHaveClass('rail-cls');
         expect(query(container, 'rail')).toHaveStyle({ backgroundColor: 'rgb(204, 204, 204)' });
         // trackStyle is not a Slider prop: the track keeps only its computed geometry
         const track = query(container, 'track');

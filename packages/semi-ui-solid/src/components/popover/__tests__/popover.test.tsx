@@ -98,9 +98,9 @@ describe('Popover', () => {
         expect(onVisibleChange).not.toHaveBeenCalled();
     });
 
-    it('showArrow 按位置渲染 svg 箭头，并使用 arrowStyle 的颜色', async () => {
+    it('showArrow 按位置渲染 svg 箭头，并使用 styles.arrow 的颜色', async () => {
         const { unmount } = render(() => (
-            <Popover arrowStyle={{ backgroundColor: 'red', borderColor: 'green', borderOpacity: 0.5 }} content="left" position="left" showArrow trigger="custom" visible>
+            <Popover styles={{ arrow: { backgroundColor: 'red', borderColor: 'green', borderOpacity: 0.5 } }} content="left" position="left" showArrow trigger="custom" visible>
                 {(t) => <span {...t()}>left trigger</span>}
             </Popover>
         ));
@@ -141,10 +141,24 @@ describe('Popover', () => {
         expect(document.querySelector(arrowSelector)).toBeNull();
     });
 
-    it('content 为函数时接收 initialFocusRef；contentClassName 作用于卡片', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        render(() => (
+            <Popover classNames={{ content: 'my-content', arrow: 'my-arrow' }} styles={{ content: { order: 2 }, arrow: { backgroundColor: 'red' } }} content="c" showArrow trigger="custom" visible>
+                {(t) => <span {...t()}>trigger</span>}
+            </Popover>
+        ));
+        await waitFor(() => expect(document.querySelector(arrowSelector)).not.toBeNull());
+        const card = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover`);
+        expect(card).toHaveClass('my-content');
+        expect(card!.style.order).toBe('2');
+        expect(document.querySelector(arrowSelector)).toHaveClass('my-arrow');
+        expect(document.querySelectorAll<SVGPathElement>(`${arrowSelector} path`)[1].style.fill).toBe('red');
+    });
+
+    it('content 为函数时接收 initialFocusRef；classNames.content 作用于卡片', () => {
         const content = vi.fn<RenderContent>(({ initialFocusRef }) => <input ref={initialFocusRef} aria-label="inner" />);
         render(() => (
-            <Popover contentClassName="my-card" content={content} trigger="custom" visible>
+            <Popover classNames={{ content: 'my-card' }} content={content} trigger="custom" visible>
                 {(t) => <span {...t()}>fn trigger</span>}
             </Popover>
         ));

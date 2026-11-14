@@ -6,12 +6,12 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | autofocus | 挂载时自动获取焦点（使用 preventScroll），禁用时不聚焦。 | `boolean` | `semiGlobalDefault("Input", "autofocus")` |
 | borderless | 无边框模式。 | `boolean` | `false` |
+| classNames | 内部各部位的类名，键为 input（原生 input 元素），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"input\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Input", "classNames")` |
 | composition | 是否开启输入法模式，开启后输入法组合期间不触发 change，组合结束后触发一次。 | `boolean` | `false` |
 | defaultValue | 非受控时的初始内容。 | `string \| number` | `semiGlobalDefault("Input", "defaultValue")` |
 | disabled | 是否禁用。 | `boolean` | `undefined` |
 | getValueLength | 自定义计算字符串长度，搭配 maxlength、minlength 使用。 | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
 | hideSuffix | 清除按钮显示时隐藏后缀，默认两者并列。 | `boolean` | `false` |
-| inputStyle | 原生 input 元素的样式，数字需带单位。 | `StyleValue` | `semiGlobalDefault("Input", "inputStyle")` |
 | insetLabelId | insetLabel 所在元素的 id，供 aria-labelledby 引用。 | `string` | `undefined` |
 | maxlength | 最大长度。传入 getValueLength 时按它计算长度并截断，否则使用原生属性。 | `number` | `undefined` |
 | minlength | 最小长度。传入 getValueLength 时按它换算，否则使用原生属性。 | `number` | `undefined` |
@@ -24,6 +24,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | 有内容且悬停或焦点位于组件内时展示清除按钮。 | `boolean` | `false` |
 | showClearIgnoreDisabled | 内部属性，供 DatePicker 使用：禁用时仍可清除。 | `boolean` | `semiGlobalDefault("Input", "showClearIgnoreDisabled")` |
 | size | 输入框大小，可选 large、default、small。 | `Size` | `undefined` |
+| styles | 内部各部位的内联样式，键同 classNames，数字需带单位。 | <ApiType detail={"Partial\u003cRecord\u003c\"input\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Input", "styles")` |
 | type | 原生 input 的 type。 | `string` | `"text"` |
 | validateStatus | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。 | `"default" \| "error" \| "success" \| "warning"` | `"default"` |
 

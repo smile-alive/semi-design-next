@@ -2,6 +2,10 @@
     "slider": {
         "source": "packages/semi-ui-svelte/src/components/slider/slider.svelte",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 rail，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by rail; values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
             "aria-label": {
                 "zh-CN": "手柄的可访问名称；range 模式下两个手柄在其后分别追加语言包中的起点、终点。",
                 "en-US": "Accessible name of the handle. In range mode, the locale's start and end texts are appended for the two handles."
@@ -62,10 +66,6 @@
                 "zh-CN": "拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时的回调。",
                 "en-US": "Called when the pointer (mouse, touch, pen) dragging a handle is released or cancelled, and when a value key is released."
             },
-            "railStyle": {
-                "zh-CN": "滑块轨道的样式，只接受字符串。",
-                "en-US": "Style of the slider rail. Accepts a string only."
-            },
             "range": { "zh-CN": "是否支持两端同时可滑动。", "en-US": "Whether both ends can be dragged." },
             "showArrow": { "zh-CN": "提示是否带箭头。", "en-US": "Whether the tooltip has an arrow." },
             "showBoundary": {
@@ -73,6 +73,10 @@
                 "en-US": "Whether to show the maximum and minimum on hover."
             },
             "showMarkLabel": { "zh-CN": "是否显示刻度标签。", "en-US": "Whether to show the mark labels." },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键为 rail。",
+                "en-US": "Style strings of the inner parts, keyed by rail."
+            },
             "step": { "zh-CN": "步长，从 min 起计算。", "en-US": "Step, counted from min." },
             "tip": {
                 "zh-CN": "自定义手柄提示内容的 snippet；参数为 `{ value, handle }`，value 为 tipFormatter 的结果，handle 为 min 或 max。",

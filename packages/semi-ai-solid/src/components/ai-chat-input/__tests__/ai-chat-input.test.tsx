@@ -755,6 +755,22 @@ describe('AIChatInput', () => {
             expect(onSkillChange).toHaveBeenLastCalledWith(undefined);
         });
 
+        it('classNames 与 styles 按部位落到对应元素', async () => {
+            const { container } = await setup({
+                skills,
+                skillHotKey: '/',
+                renderTemplate: () => <div />,
+                classNames: { templates: 'tpl-cls' },
+                styles: { templates: { order: 3 } },
+            });
+            keyDown(container, '/');
+            keyDown(container, 'Enter');
+            fireEvent.click(el(container, `.${prefix}-footer-configure-button`));
+            const template = el(document, `.${prefix}-template`);
+            expect(template).toHaveClass('tpl-cls');
+            expect(template).toHaveStyle({ order: '3' });
+        });
+
         it('模板按钮打开 renderTemplate，并传入 skill 与内容 setter', async () => {
             const renderTemplate = vi.fn<NonNullable<Props['renderTemplate']>>((skill, onTemplateClick) => (
                 <button class="tpl" onClick={() => onTemplateClick('<p>from template</p>')}>
@@ -765,8 +781,8 @@ describe('AIChatInput', () => {
                 skills,
                 skillHotKey: '/',
                 renderTemplate,
-                templatesCls: 'tpl-cls',
-                templatesStyle: { color: 'red' },
+                classNames: { templates: 'tpl-cls' },
+                styles: { templates: { color: 'red' } },
             });
             keyDown(container, '/');
             keyDown(container, 'Enter');

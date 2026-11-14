@@ -1,4 +1,5 @@
 import type { Accessor, JSX, Ref } from 'solid-js';
+import type { TreePart } from '@fibrae/semi-foundation/components/tree/constants';
 import type { BasicExpandedOtherProps, BasicFlattenNode, BasicOnDragProps, BasicRenderFullLabelProps, BasicSearchRenderProps, BasicTreeNodeData, BasicTreeNodeProps, BasicTreeProps, KeyMapProps, ScrollAlign, TreeMotionType, Virtualize } from '@fibrae/semi-foundation/components/tree/foundation';
 import type { ElementProps } from '../../base/index';
 import type { VirtualListHandle } from '../../internal/index';
@@ -95,7 +96,8 @@ export interface TreeProps
     filterTreeNode?: boolean | ((inputValue: string, treeNodeString: string, data?: TreeNodeData) => boolean);
     /** `false` hides the search box */
     searchRender?: ((searchRenderProps: SearchRenderProps) => JSX.Element) | false;
-    searchStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<TreePart, string>>;
+    styles?: Partial<Record<TreePart, JSX.CSSProperties | string>>;
     style?: JSX.CSSProperties | string;
     treeData?: TreeNodeData[];
     value?: Value;

@@ -19,7 +19,7 @@
 
 <template>
     <strong>showResizeBox = false，并修改边框颜色</strong>
-    <Cropper ref="cropper" :cropperBoxStyle="{ outlineColor: 'var(--semi-color-bg-0)' }" :showResizeBox="false" src="/assets/other/image.png" :style="containerStyle" />
+    <Cropper ref="cropper" :showResizeBox="false" src="/assets/other/image.png" :style="containerStyle" :styles="{ cropperBox: { outlineColor: 'var(--semi-color-bg-0)' } }" />
     <Button @click="onButtonClick">裁切</Button>
     <br />
     <br />

@@ -1,4 +1,5 @@
 import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { CascaderPart } from '@fibrae/semi-foundation/components/cascader/constants';
 import type { BasicCascaderData, BasicEntity, BasicScrollPanelProps, KeyMapProps, Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { CheckboxEvent } from '../checkbox/interface';
@@ -89,8 +90,8 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     autoAdjustOverflow?: boolean;
     position?: Position;
     stopPropagation?: boolean | string;
-    dropdownClassName?: string;
-    dropdownStyle?: StyleValue;
+    classNames?: Partial<Record<CascaderPart, ClassValue>>;
+    styles?: Partial<Record<CascaderPart, StyleValue>>;
     preventScroll?: boolean;
     virtualizeInSearch?: CascaderVirtualize;
 }

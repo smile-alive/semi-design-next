@@ -10,6 +10,10 @@
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `image`（占位图区域），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `image` (the placeholder image area); merged with the built-in classes."
+            },
             "darkModeImage": {
                 "zh-CN": "暗色模式下的占位图，跟随 document.body 的 theme-mode 属性变化；取值同 image。",
                 "en-US": "Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image."
@@ -22,10 +26,6 @@
                 "zh-CN": "占位图，可以是 ReactNode（如插画组件）、图片地址字符串，或 `{ id }` 形式的页面内 SVG sprite 符号；空字符串视为没有图片。",
                 "en-US": "Placeholder image: a ReactNode such as an illustration component, an image URL string, or an in-page SVG sprite symbol as `{ id }`. An empty string counts as no image."
             },
-            "imageStyle": {
-                "zh-CN": "占位图区域的内联样式，类型为 `CSSProperties`。",
-                "en-US": "Inline style of the placeholder image area, typed as `CSSProperties`."
-            },
             "layout": {
                 "zh-CN": "布局模式，可选 `vertical` 或 `horizontal`。",
                 "en-US": "Layout mode: `vertical` or `horizontal`."
@@ -37,6 +37,10 @@
             "style": {
                 "zh-CN": "根元素的内联样式。",
                 "en-US": "Inline style of the root element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "title": {
                 "zh-CN": "标题，按标题样式渲染，可以是任意 ReactNode。",

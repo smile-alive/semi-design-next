@@ -36,12 +36,12 @@
 
 <template>
     <div>
-        <TreeSelect disabled :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" placeholder="禁用下拉菜单" style="width: 300px" :treeData="treeData" />
+        <TreeSelect disabled placeholder="禁用下拉菜单" style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
         <br />
         <br />
-        <TreeSelect defaultValue="Shanghai" disabled :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" style="width: 300px" :treeData="treeData" />
+        <TreeSelect defaultValue="Shanghai" disabled style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
         <br />
         <br />
-        <TreeSelect :defaultValue="['Shanghai', 'North America']" disabled :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" multiple style="width: 300px" :treeData="treeData" />
+        <TreeSelect :defaultValue="['Shanghai', 'North America']" disabled multiple style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
     </div>
 </template>

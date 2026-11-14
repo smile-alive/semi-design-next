@@ -49,6 +49,9 @@ export type ChatMode = (typeof MODE)[keyof typeof MODE];
 export type MessageStatus = (typeof MESSAGE_STATUS)[keyof typeof MESSAGE_STATUS];
 export type SendHotKey = (typeof SEND_HOT_KEY)[keyof typeof SEND_HOT_KEY];
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type ChatPart = 'hint' | 'inputBox';
+
 export const strings = {
     ROLE,
     CHAT_ALIGN,

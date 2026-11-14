@@ -2,17 +2,17 @@
     "radio": {
         "source": "packages/semi-ui-vue/src/components/radio/radio.vue",
         "props": {
-            "addonClassName": {
-                "zh-CN": "包裹内容容器的类名。",
-                "en-US": "Class name of the container wrapping the content."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 addon（包裹内容的容器），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by addon (the container wrapping the content); values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 addon（包裹内容的容器），值的写法同 style。",
+                "en-US": "Styles of the inner parts, keyed by addon (the container wrapping the content); values take any style binding."
             },
             "addonId": {
                 "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
                 "en-US": "Id of the addon node, which aria-labelledby points to. Generated when omitted."
-            },
-            "addonStyle": {
-                "zh-CN": "包裹内容容器的内联样式。",
-                "en-US": "Inline style of the container wrapping the content."
             },
             "defaultChecked": {
                 "zh-CN": "初始是否选中，非受控使用；在 RadioGroup 中使用时无效。",
@@ -102,8 +102,8 @@
                 "en-US": "The name of every native input in the group. A unique value is generated per group when omitted."
             },
             "options": {
-                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClass, extraId }`。",
-                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClass, extraId }`."
+                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, addonId, classNames, styles, extraId }`，其中 classNames、styles 的键为 addon，作用于对应 Radio。",
+                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, classNames, styles, extraId }`, where classNames and styles are keyed by addon and apply to the matching Radio."
             },
             "type": {
                 "zh-CN": "组内所有 Radio 的样式类型，可选 default、button、card、pureCard。",

@@ -48,9 +48,8 @@
         disabledEnterStartNewLine: semiGlobalDefault('TextArea', 'disabledEnterStartNewLine'),
         showLineNumber: () => semiDefault('TextArea', 'showLineNumber', false),
         lineNumberStart: () => semiDefault('TextArea', 'lineNumberStart', 1),
-        lineNumberClassName: semiGlobalDefault('TextArea', 'lineNumberClassName'),
-        lineNumberStyle: semiGlobalDefault('TextArea', 'lineNumberStyle'),
-        textareaStyle: semiGlobalDefault('TextArea', 'textareaStyle'),
+        classNames: semiGlobalDefault('TextArea', 'classNames'),
+        styles: semiGlobalDefault('TextArea', 'styles'),
         resize: semiGlobalDefault('TextArea', 'resize'),
         getValueLength: undefined,
     });
@@ -78,7 +77,7 @@
 
     const lineNumberPanelStyle = computed((): StyleValue => {
         const { height } = lineLayout.value;
-        return [props.lineNumberStyle, height ? { height: `${height}px`, maxHeight: `${height}px` } : undefined];
+        return [props.styles?.lineNumber, height ? { height: `${height}px`, maxHeight: `${height}px` } : undefined];
     });
 
     const sizeStyle = computed(() => TextAreaFoundation.getSizeStyle(props));
@@ -222,6 +221,7 @@
                     [`${prefix}-textarea-autosize`]: Boolean(props.autosize),
                     [`${prefix}-textarea-showClear`]: props.showClear,
                 },
+                props.classNames?.textarea,
             ],
             cols: props.cols,
             disabled: looks.disabled,
@@ -230,7 +230,7 @@
             placeholder: props.placeholder || undefined,
             readonly: props.readonly || isBooleanAttrOn(attrs.readOnly),
             rows: props.rows,
-            style: [props.textareaStyle, sizeStyle.value],
+            style: [props.styles?.textarea, sizeStyle.value],
             value: elementText(),
             onChange: commitDraft,
             onCompositionend: handleCompositionEnd,
@@ -279,7 +279,7 @@
     >
         <template v-if="props.showLineNumber">
             <!-- the numbers only mirror the text rows, so assistive technology skips them -->
-            <div ref="lineNumber" aria-hidden="true" :class="[`${prefix}-textarea-lineNumber`, props.lineNumberClassName]" :style="lineNumberPanelStyle">
+            <div ref="lineNumber" aria-hidden="true" :class="[`${prefix}-textarea-lineNumber`, props.classNames?.lineNumber]" :style="lineNumberPanelStyle">
                 <div v-for="(_, index) in lines" :key="index" :class="`${prefix}-textarea-lineNumber-item`">
                     {{ props.lineNumberStart + index }}
                 </div>

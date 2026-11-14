@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-labelledby | The id of the labelling element, used as the handle's accessible name. In range mode each handle adds its start or end text. | `string` | - |
 | aria-valuetext | A user-friendly name for the current value. | `string` | - |
 | autofocus | Focuses the first handle on mount. | `boolean` | - |
+| classNames | Class names of the inner parts, keyed by rail; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
 | defaultValue | Initial value when uncontrolled. Defaults to `min`. | `number \| number[]` | - |
 | disabled | Whether the slider is disabled. | `boolean` | `false` |
 | getAriaValueText | Provides a user-friendly name for the current value, called with the handle's value and its index. | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |
@@ -23,13 +24,13 @@ import ApiType from '#/components/ApiType.astro';
 | onFocus | Fires when either handle gets focus, attached to `.semi-slider-wrapper`. | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLDivElement, FocusEvent>"}>Type</ApiType> | - |
 | onKeyDown | Key handler on the handle's input, called before the slider handles the key. Calling `preventDefault` in it stops the slider from handling a value key. | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, KeyboardEvent>"}>Type</ApiType> | - |
 | onMouseUp | Fires when the pointer (mouse, touch or pen) that dragged the handle is released or cancelled, and when a value key is released. | <ApiType detail={"(event: PointerEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
-| railStyle | Style of the slider rail, an object keyed by CSS property names or a string. | `JSX.CSSProperties \| string` | - |
 | range | Whether both ends can be dragged. | `boolean` | `false` |
 | renderMark | Renders a mark label, called with (value, label); with tooltipOnMark it is called once for the label and once for the tooltip. Defaults to the label. | <ApiType detail={"(value: number, label: string \u007c number) => JSX.Element"}>Type</ApiType> | - |
 | showArrow | Whether the tooltip has an arrow. | `boolean` | `true` |
 | showBoundary | Whether to show the maximum and minimum on hover. | `boolean` | `false` |
 | showMarkLabel | Whether to show the mark labels. | `boolean` | `true` |
 | step | Step, counted from `min`. | `number` | `1` |
+| styles | Styles of the inner parts, keyed by rail, each an object keyed by CSS property names or a string. | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | tipFormatter | Format of the tooltip, called once per handle with that handle's value. Shows the current value by default; `null` hides the tooltip. | <ApiType detail={"((value: number) => any) \u007c null"}>Type</ApiType> | <ApiType detail={"(value: number) => value"}>Type</ApiType> |
 | tooltipOnMark | Whether the marks on the rail have a tooltip. | `boolean` | `false` |
 | tooltipVisible | Whether the tooltip is always visible. | `boolean` | - |

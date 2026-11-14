@@ -10,7 +10,8 @@
 
     const props = withDefaults(defineProps<EmptyProps & /* @vue-ignore */ ElementProps<'div', keyof EmptyProps>>(), {
         layout: () => semiDefault('Empty', 'layout', 'vertical'),
-        imageStyle: semiGlobalDefault('Empty', 'imageStyle'),
+        classNames: semiGlobalDefault('Empty', 'classNames'),
+        styles: semiGlobalDefault('Empty', 'styles'),
         title: semiGlobalDefault('Empty', 'title'),
         image: semiGlobalDefault('Empty', 'image'),
         darkModeImage: semiGlobalDefault('Empty', 'darkModeImage'),
@@ -43,7 +44,7 @@
 <template>
     <div :class="[prefixCls, { [`${prefixCls}-${props.layout}`]: props.layout }]">
         <template v-for="(view, i) in [resolve()]" :key="i">
-            <div :class="`${prefixCls}-image`" :style="props.imageStyle" x-semi-prop="image,darkModeImage">
+            <div :class="[`${prefixCls}-image`, props.classNames?.image]" :style="props.styles?.image" x-semi-prop="image,darkModeImage">
                 <component :is="node" v-for="[node, key] in view.image.nodes" :key="key" />
                 <img v-if="view.image.src" alt="" :src="view.image.src" />
                 <svg v-else-if="view.image.sprite" aria-hidden="true"><use :href="`#${view.image.sprite}`" /></svg>

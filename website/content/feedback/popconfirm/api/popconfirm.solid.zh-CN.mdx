@@ -10,18 +10,17 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | 对话框的 `aria-label`，传入后优先于标题。 | `string` | - |
 | aria-labelledby | 对话框的 `aria-labelledby`，缺省指向标题，没有标题时指向内容。 | `string` | - |
 | arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 `showArrow`，缺省为 `true`。 | `boolean` | - |
-| arrowStyle | 箭头的边框色、背景色与边框透明度。 | `ArrowStyle` | - |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向，缺省为 `true`。 | `boolean` | - |
 | cancelButtonProps | 取消按钮的属性。`autoFocus` 为 `true` 时打开后聚焦该按钮，`class`、`style` 与其他属性落在按钮上。 | `PopconfirmButtonProps` | - |
 | cancelText | 取消按钮文字，缺省取语言包 `Popconfirm.cancel`。 | `string` | - |
 | cancelType | 取消按钮类型，缺省为 `tertiary`。 | `ButtonType` | `"tertiary"` |
 | children | 触发元素，使用函数形式 `(getTriggerProps) => JSX.Element`，在触发元素上展开 `{...getTriggerProps()}`，让它获得聚焦、键盘与 ARIA 属性；其他写法会被包在 Tooltip 的 span 中。 | `TooltipProps['children']` | - |
 | class | 确认卡片（`.semi-popconfirm`）的类名，不落在弹出层上。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `content`（弹出层内的内容容器 `.semi-popover`）、`arrow`（箭头），与组件自带的类名合并；确认卡片 `.semi-popconfirm` 的类名用 `class`。 | <ApiType detail={"Partial\u003cRecord\u003cPopconfirmPart, string>>"}>Type</ApiType> | - |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭。 | `TooltipProps['clickToHide']` | - |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭确认框，与焦点位置无关，缺省为 `true`；`trigger` 为 `custom` 时只调用 `onEscKeyDown`，由使用方决定是否关闭。 | `TooltipProps['closeOnEsc']` | - |
 | condition | 是否允许触发显示，缺省为 `true`；仅显式设为 `false` 时，`hover`、`click`、`focus` 等触发行为不生效。由 `true` 变为 `false` 时立即关闭已显示的确认框；`visible` 受控时只通过 `onVisibleChange` 请求关闭，使用方回写后才关闭。 | `boolean` | - |
 | content | 确认框内容，可以是 JSX 元素，也可以是函数。函数的参数是 `{ initialFocusRef }`，把 `initialFocusRef` 作为 `ref` 绑定到打开时需要聚焦的元素上。 | `TooltipProps['content']` | - |
-| contentClassName | 内容容器的类名。 | `ClassValue` | - |
 | defaultVisible | 非受控时初始是否展示。 | `boolean` | - |
 | disableArrowKeyDown | 是否禁用在触发元素上按方向键把焦点移入确认框。 | `TooltipProps['disableArrowKeyDown']` | - |
 | disabled | 是否禁用，缺省为 `false`；禁用时只渲染触发元素，不弹出确认框。 | `boolean` | `false` |
@@ -50,6 +49,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number }` | - |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡，缺省为 `true`。确认卡片内的点击始终不会传到文档上的监听器。 | `boolean \| string` | `true` |
 | style | 确认卡片的样式，接受对象（键为 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。`content` 是内容容器的样式，接受对象（键为 kebab-case）或字符串；`arrow` 是箭头的 `borderColor`、`backgroundColor` 与 `borderOpacity`（驼峰键名的对象）。 | `{ content?: JSX.CSSProperties \| string; arrow?: ArrowStyle }` | - |
 | title | 标题，可以是字符串或 JSX 元素。有标题时，对话框以标题命名（见 `aria-labelledby`）。 | `JSX.Element` | - |
 | trigger | 触发展示的时机，可选 `hover`、`focus`、`click`、`contextMenu` 或 `custom`，缺省为 `click`。`visible` 受控时，触发器事件只通过 `onVisibleChange` 请求打开或关闭。 | `Trigger` | `"click"` |
 | visible | 受控的展示状态。传入后由该值决定是否显示；点击触发器、确认、取消、点击外部与 Esc 只通过 `onVisibleChange` 请求变化，由使用方回写 `visible` 后才生效。 | `boolean` | - |

@@ -2,10 +2,11 @@
     import { Descriptions, type DescriptionsData } from '@fibrae/semi-ui-svelte';
 
     const keyStyle = 'width: 120px; color: var(--semi-color-primary)';
+    const styles = { key: keyStyle };
     const data: DescriptionsData[] = [
-        { key: '姓名', value: '李四', keyStyle },
-        { key: '年龄', value: '28', keyStyle },
-        { key: '职业', value: '前端工程师', keyStyle },
+        { key: '姓名', value: '李四', styles },
+        { key: '年龄', value: '28', styles },
+        { key: '职业', value: '前端工程师', styles },
     ];
 </script>
 

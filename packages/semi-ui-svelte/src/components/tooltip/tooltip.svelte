@@ -52,7 +52,8 @@
         preventScroll = defaults('preventScroll'),
         // an id shared by every Tooltip would break the popup's references, so the global default is not read
         wrapperId,
-        wrapperClassName = defaults('wrapperClassName'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         wrapWhenSpecial = defaults('wrapWhenSpecial', true),
         'aria-label': ariaLabel = defaults('aria-label'),
         'aria-labelledby': ariaLabelledby = defaults('aria-labelledby'),
@@ -251,6 +252,9 @@
     // A loading Button keeps the description itself, as do components that route aria-describedby to their own control
     const describes = $derived(status === strings.STATUS_LOADING || Boolean(triggerState?.describes));
     const blockTrigger = $derived(Boolean(triggerState?.block || (inner && isBlockDisplay(inner.style.display))));
+
+    // one string rather than style: directives, which would beat the caller's styles.wrapper
+    const wrapperStyle = $derived([status === strings.STATUS_DISABLED && wrapsSpecial && 'cursor: not-allowed', !textOnly && 'display: inline-block', blockTrigger && 'width: 100%', styles?.wrapper].filter(Boolean).join('; ') || undefined);
     const spanTabindex = $derived(focusableInside || status === strings.STATUS_LOADING ? -1 : 0);
 
     // Popover and Dropdown hand their class prefix to this Tooltip only, not to Tooltips rendered in its trigger or content
@@ -484,16 +488,7 @@
 {#if child}
     {@render child({ props: triggerProps })}
 {:else}
-    <span
-        {@attach attachTrigger}
-        {...{ [POPUP_ID_ATTRIBUTE]: popupId }}
-        aria-describedby={describes ? undefined : describedBy}
-        class={[`${cssClasses.PREFIX}-trigger-wrapper`, wrapperClassName]}
-        style:cursor={status === strings.STATUS_DISABLED && wrapsSpecial ? 'not-allowed' : undefined}
-        style:display={textOnly ? undefined : 'inline-block'}
-        style:width={blockTrigger ? '100%' : undefined}
-        tabindex={spanTabindex}
-    >
+    <span {@attach attachTrigger} {...{ [POPUP_ID_ATTRIBUTE]: popupId }} aria-describedby={describes ? undefined : describedBy} class={[`${cssClasses.PREFIX}-trigger-wrapper`, classNames?.wrapper]} style={wrapperStyle} tabindex={spanTabindex}>
         {@render children?.()}
     </span>
 {/if}{#if portalTarget}

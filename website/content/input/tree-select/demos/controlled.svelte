@@ -35,4 +35,4 @@
     let value = $state<TreeSelectValue | undefined>('Shanghai');
 </script>
 
-<TreeSelect bind:value dropdownStyle="max-height: 400px; overflow: auto" placeholder="请选择" style="width: 300px" {treeData} />
+<TreeSelect bind:value placeholder="请选择" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />

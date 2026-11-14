@@ -25,7 +25,7 @@ const renderFileOperation = (fileItem: RenderFileItemProps) => (
 
 export default function UploadDemo() {
     return (
-        <Upload action={action} customRequest={mockUpload} defaultFileList={defaultFileList} itemStyle={{ width: '300px' }} renderFileOperation={renderFileOperation}>
+        <Upload action={action} customRequest={mockUpload} defaultFileList={defaultFileList} styles={{ item: { width: '300px' } }} renderFileOperation={renderFileOperation}>
             <Button icon={<IconUpload />} theme="light">
                 点击上传
             </Button>

@@ -19,7 +19,7 @@ async function settle() {
 }
 
 function setup(init: Partial<Store> = {}) {
-    const store = createStore<Store>({ kind: 'button', tip: { trigger: 'click', wrapperClassName: 'wrapper' }, props: {}, ...init });
+    const store = createStore<Store>({ kind: 'button', tip: { trigger: 'click', classNames: { wrapper: 'wrapper' } }, props: {}, ...init });
     render(Fixture, { props: { store } });
     flushSync();
     const span = () => getElement('.wrapper');
@@ -40,17 +40,17 @@ describe('Svelte Tooltip 的特殊触发器', () => {
     });
 
     it('禁用的 Button 在 hover 触发下不改指针与光标，custom 触发只让按钮忽略指针', () => {
-        const hover = setup({ tip: { trigger: 'hover', wrapperClassName: 'wrapper' }, props: { disabled: true } });
+        const hover = setup({ tip: { trigger: 'hover', classNames: { wrapper: 'wrapper' } }, props: { disabled: true } });
         expect(screen.getByRole('button')).not.toHaveStyle({ pointerEvents: 'none' });
         expect(hover.span().style.cursor).toBe('');
         document.body.replaceChildren();
-        const custom = setup({ tip: { trigger: 'custom', wrapperClassName: 'wrapper' }, props: { disabled: true } });
+        const custom = setup({ tip: { trigger: 'custom', classNames: { wrapper: 'wrapper' } }, props: { disabled: true } });
         expect(screen.getByRole('button')).toHaveStyle({ pointerEvents: 'none' });
         expect(custom.span().style.cursor).toBe('');
     });
 
     it('loading 的 Button：span 只有一个 Tab 停靠点，描述与弹层状态在按钮上，点 span 打开', async () => {
-        const { span } = setup({ tip: { trigger: 'click', role: 'dialog', 'aria-label': 'name', wrapperClassName: 'wrapper' }, props: { loading: true } });
+        const { span } = setup({ tip: { trigger: 'click', role: 'dialog', 'aria-label': 'name', classNames: { wrapper: 'wrapper' } }, props: { loading: true } });
         const button = screen.getByRole('button');
         expect(span()).toHaveAttribute('tabindex', '-1');
         expect(button).toHaveStyle({ pointerEvents: 'none' });
@@ -64,7 +64,7 @@ describe('Svelte Tooltip 的特殊触发器', () => {
     });
 
     it('loading 的 Button 在 tooltip 角色下由按钮持有描述，span 不重复', async () => {
-        const { span } = setup({ tip: { trigger: 'click', wrapperClassName: 'wrapper' }, props: { loading: true } });
+        const { span } = setup({ tip: { trigger: 'click', classNames: { wrapper: 'wrapper' } }, props: { loading: true } });
         await fireEvent.click(span());
         await settle();
         expect(screen.getByRole('button')).toHaveAttribute('aria-describedby', document.querySelector('.semi-tooltip-wrapper')?.id);
@@ -72,7 +72,7 @@ describe('Svelte Tooltip 的特殊触发器', () => {
     });
 
     it('loading 的 Button 在 hover 触发下也由 span 承接指针', () => {
-        setup({ tip: { trigger: 'hover', wrapperClassName: 'wrapper' }, props: { loading: true } });
+        setup({ tip: { trigger: 'hover', classNames: { wrapper: 'wrapper' } }, props: { loading: true } });
         expect(screen.getByRole('button')).toHaveStyle({ pointerEvents: 'none' });
     });
 
@@ -84,7 +84,7 @@ describe('Svelte Tooltip 的特殊触发器', () => {
     });
 
     it('同时 disabled 与 loading 的 Button 按禁用处理，hover 下不改指针', () => {
-        setup({ tip: { trigger: 'hover', wrapperClassName: 'wrapper' }, props: { disabled: true, loading: true } });
+        setup({ tip: { trigger: 'hover', classNames: { wrapper: 'wrapper' } }, props: { disabled: true, loading: true } });
         expect(screen.getByRole('button')).not.toHaveStyle({ pointerEvents: 'none' });
     });
 
@@ -97,7 +97,7 @@ describe('Svelte Tooltip 的特殊触发器', () => {
     });
 
     it('wrapWhenSpecial=false 时不处理禁用的 Button', () => {
-        const { span } = setup({ tip: { trigger: 'click', wrapWhenSpecial: false, wrapperClassName: 'wrapper' }, props: { disabled: true } });
+        const { span } = setup({ tip: { trigger: 'click', wrapWhenSpecial: false, classNames: { wrapper: 'wrapper' } }, props: { disabled: true } });
         expect(screen.getByRole('button')).not.toHaveStyle({ pointerEvents: 'none' });
         expect(span().style.cursor).toBe('');
     });
@@ -127,7 +127,7 @@ describe('Svelte Tooltip 的特殊触发器', () => {
     });
 
     it('Switch：输入框持有描述，span 不重复且只有输入框是 Tab 停靠点', async () => {
-        const { span } = setup({ kind: 'switch', tip: { trigger: 'click', wrapperClassName: 'wrapper' } });
+        const { span } = setup({ kind: 'switch', tip: { trigger: 'click', classNames: { wrapper: 'wrapper' } } });
         expect(span()).toHaveAttribute('tabindex', '-1');
         await fireEvent.click(screen.getByRole('switch'));
         await settle();
@@ -137,7 +137,7 @@ describe('Svelte Tooltip 的特殊触发器', () => {
     });
 
     it('Checkbox：输入框持有描述，span 不重复且只有输入框是 Tab 停靠点', async () => {
-        const { span } = setup({ kind: 'checkbox', tip: { trigger: 'click', wrapperClassName: 'wrapper' } });
+        const { span } = setup({ kind: 'checkbox', tip: { trigger: 'click', classNames: { wrapper: 'wrapper' } } });
         expect(span()).toHaveAttribute('tabindex', '-1');
         await fireEvent.click(screen.getByRole('checkbox'));
         await settle();

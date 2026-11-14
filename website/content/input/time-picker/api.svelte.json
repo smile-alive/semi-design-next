@@ -69,7 +69,11 @@
                 "zh-CN": "insetLabel 的 id，用于 aria-labelledby 关联。",
                 "en-US": "id of the insetLabel, referenced through aria-labelledby."
             },
-            "inputStyle": { "zh-CN": "输入框根元素的样式。", "en-US": "Style of the input's root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 dropdown（弹出层的面板卡片）、input（输入框的根元素），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by dropdown (the panel card of the popup) and input (the root element of the input); values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
+            "styles": { "zh-CN": "内部各部位的样式字符串，键同 classNames。", "en-US": "Style strings of the inner parts, keyed like classNames." },
             "autofocus": {
                 "zh-CN": "挂载时让输入框获得焦点，同时打开面板。",
                 "en-US": "Focuses the input on mount, which opens the panel."
@@ -91,8 +95,6 @@
                 "zh-CN": "浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft。",
                 "en-US": "Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time."
             },
-            "popupClassName": { "zh-CN": "弹出层的类名。", "en-US": "Class name of the popup." },
-            "popupStyle": { "zh-CN": "弹出层的样式，字符串。", "en-US": "Style of the popup, as a string." },
             "stopPropagation": {
                 "zh-CN": "是否阻止弹出层上的点击事件冒泡。",
                 "en-US": "Whether to stop click events on the popup from bubbling."

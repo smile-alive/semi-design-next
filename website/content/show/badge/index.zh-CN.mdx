@@ -122,7 +122,7 @@ Badge 的基本类型为 `count`。如果传入 `dot` 则显示为小圆点，�
 
 <BadgeVueApi />
 
-`class`、`style`、原生属性与 `@click`、`@mouseenter` 等原生事件经 attrs 落在根元素上。徽章内容区域只接收 `countClassName` 和 `countStyle`。默认插槽每次渲染只执行一次。
+`class`、`style`、原生属性与 `@click`、`@mouseenter` 等原生事件经 attrs 落在根元素上。徽章内容区域通过 `classNames.count` 和 `styles.count` 设置。默认插槽每次渲染只执行一次。
 
 </Framework>
 
@@ -130,7 +130,7 @@ Badge 的基本类型为 `count`。如果传入 `dot` 则显示为小圆点，�
 
 <BadgeSolidApi />
 
-`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`、`onMouseEnter`）落在根元素 `<span>` 上。`countClassName` 与 `countStyle` 只作用于内容区域。
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`、`onMouseEnter`）落在根元素 `<span>` 上。`classNames.count` 与 `styles.count` 只作用于内容区域。
 
 </Framework>
 
@@ -138,7 +138,7 @@ Badge 的基本类型为 `count`。如果传入 `dot` 则显示为小圆点，�
 
 <BadgeSvelteApi />
 
-`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`onclick`）落在根元素 `<span>` 上。`countClassName` 与 `countStyle` 只作用于内容区域。
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`onclick`）落在根元素 `<span>` 上。`classNames.count` 与 `styles.count` 只作用于内容区域。
 
 </Framework>
 

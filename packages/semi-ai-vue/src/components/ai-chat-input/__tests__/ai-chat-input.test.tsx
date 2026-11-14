@@ -731,13 +731,23 @@ describe('AIChatInput', () => {
             expect(onSkillChange).toHaveBeenLastCalledWith(undefined);
         });
 
+        it('classNames 与 styles 按部位落到对应元素', async () => {
+            const { container } = await setup({ skills, skillHotKey: '/', classNames: { templates: 'tpl-cls' }, styles: { templates: { order: 3 } } }, { template: () => 'tpl' });
+            await keyDown(container, '/');
+            await keyDown(container, 'Enter');
+            await fireEvent.click(templateButton(container));
+            const panel = query(`.${prefix}-template`);
+            expect(panel).toHaveClass('tpl-cls');
+            expect(panel).toHaveStyle({ order: '3' });
+        });
+
         it('模板按钮打开 #template，并传入 skill 与内容 setter', async () => {
             const template = vi.fn<(scope: AIChatInputTemplateSlotProps) => VNode>(({ skill, onTemplateClick }) => (
                 <button class="tpl" onClick={() => onTemplateClick('<p>from template</p>')}>
                     {skill?.label ?? 'none'}
                 </button>
             ));
-            const { container } = await setup({ skills, skillHotKey: '/', templatesCls: 'tpl-cls', templatesStyle: { color: 'red' } }, { template });
+            const { container } = await setup({ skills, skillHotKey: '/', classNames: { templates: 'tpl-cls' }, styles: { templates: { color: 'red' } } }, { template });
             await keyDown(container, '/');
             await keyDown(container, 'Enter');
             await fireEvent.click(templateButton(container));

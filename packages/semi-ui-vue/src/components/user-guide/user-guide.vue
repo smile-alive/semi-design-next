@@ -144,7 +144,6 @@
             <Modal
                 v-if="props.mode === 'modal'"
                 :aria-labelledby="view.hasTitle ? titleId : undefined"
-                :bodyStyle="{ padding: 0 }"
                 centered
                 :class="[modalPrefix, $attrs.class, step.class]"
                 :getPopupContainer="getContainer"
@@ -152,6 +151,7 @@
                 :maskClosable="false"
                 :onCancel="foundation.handleSkip"
                 :style="$attrs.style as never"
+                :styles="{ body: { padding: 0 } }"
                 :visible="props.visible"
                 :zIndex="props.zIndex"
             >

@@ -11,9 +11,17 @@
                 "en-US": "Popup content: an element, or a function returning one. The function receives `initialFocusRef` to name the element that takes focus once the popup opens."
             },
             "class": { "zh-CN": "弹出层的类名。", "en-US": "Class name of the popup." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes."
+            },
             "style": {
                 "zh-CN": "弹出层的内联样式；箭头颜色只读取对象形式中的 `background-color`。",
                 "en-US": "Inline style of the popup. The arrow color reads `background-color` of an object style only."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传 style 对象或字符串，写在 span 自带样式之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as a style object or a string; applied after the span's built-in style."
             },
             "motion": { "zh-CN": "是否展示弹出层动画。", "en-US": "Whether the popup is animated." },
             "autoAdjustOverflow": {
@@ -56,10 +64,6 @@
             "stopPropagation": {
                 "zh-CN": "是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。",
                 "en-US": "Whether click, mousedown and focus in/out events on the popup stop propagating."
-            },
-            "wrapperClassName": {
-                "zh-CN": "触发元素被 span 包裹时，该 span 的类名。",
-                "en-US": "Class name of the span that wraps the trigger when a wrapper is needed."
             },
             "wrapperId": {
                 "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",

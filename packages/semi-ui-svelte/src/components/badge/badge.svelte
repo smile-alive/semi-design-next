@@ -14,8 +14,8 @@
         theme = defaults('theme', 'solid'),
         position = defaults('position'),
         overflowCount = defaults('overflowCount'),
-        countClassName = defaults('countClassName'),
-        countStyle = defaults('countStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         children,
         ...rest
     }: BadgeProps = $props();
@@ -34,7 +34,6 @@
     {@render children?.()}
     <span
         class={[
-            countClassName,
             {
                 [`${prefixCls}-${type}`]: !custom,
                 [`${prefixCls}-${theme}`]: !custom,
@@ -44,8 +43,9 @@
                 [`${prefixCls}-count`]: !dot && !custom && count != null,
                 [`${prefixCls}-custom`]: custom,
             },
+            classNames?.count,
         ]}
-        style={countStyle}
+        style={styles?.count}
         x-semi-prop="count"
     >
         {#if !dot}

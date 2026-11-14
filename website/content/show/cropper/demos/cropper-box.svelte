@@ -13,7 +13,7 @@
 </script>
 
 <strong>showResizeBox = false，并修改边框颜色</strong>
-<Cropper bind:this={cropper} cropperBoxStyle="outline-color: var(--semi-color-bg-0)" showResizeBox={false} src="/assets/other/image.png" style={containerStyle} />
+<Cropper bind:this={cropper} showResizeBox={false} src="/assets/other/image.png" style={containerStyle} styles={{ cropperBox: 'outline-color: var(--semi-color-bg-0)' }} />
 <Button onclick={onButtonClick}>裁切</Button>
 <br />
 <br />

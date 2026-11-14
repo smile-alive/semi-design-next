@@ -178,8 +178,16 @@ describe('Svelte Radio', () => {
         expect(document.getElementById('my-addon')).toHaveTextContent('A');
     });
 
-    it('button 类型隐藏 extra，应用 addonClassName 与 addonStyle，选中后带选中类名', async () => {
-        fixture({ type: 'button', addonClassName: 'ac', addonStyle: 'color: red' }, 'A', 'more');
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        fixture({ classNames: { addon: 'my-addon' }, styles: { addon: 'order: 4' } }, 'A');
+        const addon = getElement(`.${prefix}-addon`);
+        expect(addon).toHaveClass('my-addon');
+        expect(addon).toHaveStyle({ order: '4' });
+        expect(getLabel()).not.toHaveClass('my-addon');
+    });
+
+    it('button 类型隐藏 extra，应用 classNames.addon 与 styles.addon，选中后带选中类名', async () => {
+        fixture({ type: 'button', classNames: { addon: 'ac' }, styles: { addon: 'color: red' } }, 'A', 'more');
         const addon = getElement(`.${prefix}-addon-buttonRadio`);
         expect(addon).toHaveClass('ac');
         expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });

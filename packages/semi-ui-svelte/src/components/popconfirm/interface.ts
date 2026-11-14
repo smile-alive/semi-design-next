@@ -1,4 +1,6 @@
 import type { Snippet } from 'svelte';
+import type { ClassValue } from 'svelte/elements';
+import type { PopconfirmPart } from '@fibrae/semi-foundation/components/popconfirm/constants';
 import type { ButtonProps, Type as ButtonType } from '../button/interface.js';
 import type { PopoverProps } from '../popover/index.js';
 import type { RenderContentProps } from '../tooltip/index.js';
@@ -15,6 +17,7 @@ export interface PopconfirmProps extends Omit<PopoverProps, 'content'> {
     cancelButtonProps?: PopconfirmButtonProps;
     cancelText?: string;
     cancelType?: ButtonType;
+    classNames?: Partial<Record<PopconfirmPart, ClassValue>>;
     disabled?: boolean;
     okButtonProps?: PopconfirmButtonProps;
     okText?: string;

@@ -127,7 +127,7 @@ describe('Popover', () => {
                 showArrow: true,
                 trigger: 'custom',
                 visible: true,
-                arrowStyle: { borderColor: 'green', borderOpacity: 0.5 },
+                styles: { arrow: { borderColor: 'green', borderOpacity: 0.5 } },
                 ariaLabel: 'Details',
             },
             attrs: { style: { backgroundColor: 'blue' } },
@@ -145,12 +145,31 @@ describe('Popover', () => {
         expect(popup.style.top).toBe(position === 'top' ? '190px' : '200px');
     });
 
-    it('class/style 只落弹层，contentClassName 落卡片，其余 attrs 丢弃', async () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
         render(Popover, {
             props: {
                 trigger: 'custom',
                 visible: true,
-                contentClassName: ['card'],
+                showArrow: true,
+                classNames: { content: ['my-content'], arrow: 'my-arrow' },
+                styles: { content: { order: 2 }, arrow: { backgroundColor: 'red' } },
+                ariaLabel: 'Details',
+            },
+            slots: { default: () => <button>trigger</button>, content: () => 'content' },
+        });
+        const popup = await screen.findByRole('dialog');
+        expect(popup.querySelector('.semi-popover')).toHaveClass('my-content');
+        expect(popup.querySelector('.semi-popover')).toHaveStyle({ order: '2' });
+        expect(popup.querySelector('.semi-popover-icon-arrow')).toHaveClass('my-arrow');
+        expect(popup.querySelectorAll<SVGPathElement>('path')[1].style.fill).toBe('red');
+    });
+
+    it('class/style 只落弹层，classNames.content 落卡片，其余 attrs 丢弃', async () => {
+        render(Popover, {
+            props: {
+                trigger: 'custom',
+                visible: true,
+                classNames: { content: ['card'] },
                 ariaLabel: 'Details',
             },
             attrs: { class: 'popup', style: { backgroundColor: 'red' }, 'data-unknown': 'discard' },

@@ -2,7 +2,7 @@ import { type JSX, type Ref, For, Show, createEffect, createMemo, createSignal, 
 import clsx from 'clsx';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
+import { strings, cssClasses, type PanelType, type TimePickerPart } from '@fibrae/semi-foundation/components/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
@@ -32,6 +32,9 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     borderless?: boolean;
     /** On the root element */
     class?: string;
+    /** `dropdown` is the panel card; `input` is the Input's root element */
+    classNames?: Partial<Record<TimePickerPart, string>>;
+    styles?: Partial<Record<TimePickerPart, JSX.CSSProperties | string>>;
     clearIcon?: JSX.Element;
     defaultOpen?: boolean;
     defaultValue?: BaseValueType | BaseValueType[];
@@ -56,7 +59,6 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     hideDisabledOptions?: boolean;
     hourStep?: number;
     inputReadOnly?: boolean;
-    inputStyle?: JSX.CSSProperties | string;
     insetLabel?: JSX.Element;
     insetLabelId?: string;
     /** Input takes the length limits as numbers only */
@@ -70,8 +72,6 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     /** Range mode only: item `i` is shown as both the header and the footer of panel `i`, over panelHeader and panelFooter */
     panels?: JSX.Element[];
     placeholder?: string;
-    popupClassName?: string;
-    popupStyle?: JSX.CSSProperties | string;
     position?: Position;
     prefix?: JSX.Element;
     preventScroll?: boolean;
@@ -184,6 +184,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
         'autoAdjustOverflow',
         'borderless',
         'class',
+        'classNames',
         'clearIcon',
         'dateFnsLocale',
         'defaultOpen',
@@ -198,7 +199,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
         'hideDisabledOptions',
         'hourStep',
         'inputReadOnly',
-        'inputStyle',
         'minuteStep',
         'motion',
         'onBlur',
@@ -210,8 +210,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
         'panelHeader',
         'panels',
         'placeholder',
-        'popupClassName',
-        'popupStyle',
         'position',
         'prefix',
         'preventScroll',
@@ -223,6 +221,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
         'size',
         'stopPropagation',
         'style',
+        'styles',
         'timeZone',
         'triggerRender',
         'type',
@@ -293,7 +292,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
 
     const position = () => TimePickerFoundation.getPosition(props, config().direction);
 
-    const popupClassName = () => clsx(TimePickerFoundation.getPanelClassNames({ ...props, prefixCls }), local.popupClassName);
+    const dropdownClassName = () => clsx(TimePickerFoundation.getPanelClassNames({ ...props, prefixCls }), local.classNames?.dropdown);
 
     const isTriggerButton = () => !customTriggerFocusable();
 
@@ -346,7 +345,8 @@ export default function TimePicker(rawProps: TimePickerProps) {
             {...rest}
             // APG combobox: the input opens the panel of lists and carries its state
             role="combobox"
-            style={local.inputStyle}
+            class={local.classNames?.input}
+            style={local.styles?.input}
             aria-controls={open() ? panelId : undefined}
             aria-expanded={open()}
             aria-haspopup="dialog"
@@ -439,8 +439,8 @@ export default function TimePicker(rawProps: TimePickerProps) {
                 }}
             >
                 <Popover
-                    contentClassName={popupClassName()}
-                    style={local.popupStyle}
+                    classNames={{ content: dropdownClassName() }}
+                    styles={{ content: local.styles?.dropdown }}
                     aria-label={locale().locale.panel[local.type]}
                     autoAdjustOverflow={local.autoAdjustOverflow}
                     content={renderPanel}

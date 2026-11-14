@@ -20,12 +20,12 @@ const searchWords = [
     },
 ];
 
-const highlightStyle = { 'border-radius': '4px' };
+const styles = { highlight: { 'border-radius': '4px' } };
 
 export default function HighlightDemo() {
     return (
         <h2>
-            <Highlight component="span" sourceString={sourceString} searchWords={searchWords} highlightStyle={highlightStyle} />
+            <Highlight component="span" sourceString={sourceString} searchWords={searchWords} styles={styles} />
         </h2>
     );
 }

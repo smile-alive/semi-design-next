@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | adaptiveTip | Tip of the fit-to-page button. | `string` | - |
 | children | The Image components to preview. | `JSX.Element` | - |
+| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
 | closable | Whether to show the close button. | `boolean` | `true` |
 | closeOnEsc | Whether pressing Esc closes the preview. | `boolean` | - |
 | crossOrigin | The crossorigin attribute passed to the preview img element. | `'anonymous' \| 'use-credentials'` | - |
@@ -37,8 +38,6 @@ import ApiType from '#/components/ApiType.astro';
 | originTip | Tip of the original-size button. | `string` | - |
 | preLoad | Whether to enable preloading. | `boolean` | - |
 | preLoadGap | Step size of preloading. | `number` | - |
-| previewCls | Custom class name of the preview layer. | `string` | - |
-| previewStyle | Custom style of the preview layer, as a style object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
 | previewTitle | Title at the top of the preview, also the accessible name of the preview dialog; the preview.previewTitle of an image in a group takes precedence. A function is called only once the preview opens; write a JSX title in the preview object of an Image as a function, or its node is created while the preview is closed and breaks hydration after server rendering. | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | - |
 | prevTip | Tip of the previous-image button, also its accessible name; without it the locale text is used. | `string` | - |
 | renderCloseIcon | Custom close icon: a JSX element, or a function that returns one. | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | - |
@@ -50,6 +49,7 @@ import ApiType from '#/components/ApiType.astro';
 | setDownloadName | Sets the download file name: receives the image URL and returns the file name. | <ApiType detail={"(src: string) => string"}>Type</ApiType> | - |
 | showTooltip | Whether to show tooltips on the bottom action area. | `boolean` | - |
 | src | Image URLs to preview. When wrapping Image components, it is merged with the preview images they register, with the src entries first. | `string \| string[]` | `[]` |
+| styles | Styles of the inner parts, keyed like `classNames`; each value is a style object (kebab-case keys) or a string. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | viewerVisibleDelay | Idle time in milliseconds before the preview action buttons hide. | `number` | - |
 | visible | Controlled visibility of the preview. | `boolean` | - |
 | zIndex | z-index of the preview layer. | `number` | - |

@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | Borderless mode. | `boolean` | `false` |
 | changeWithObject | A boolean attribute, not an event: when true the payload of modelValue and change is the node object instead of its value; a controlled modelValue and defaultValue must then be objects with a value. | `boolean` | `false` |
 | checkRelation | How the checked states of nodes relate in multiple mode: related links parents and children, unRelated keeps them independent. | `CheckRelation` | `"related"` |
+| classNames | Class names of the inner parts, keyed by dropdown (the dropdown panel) and optionList (the node list, the element with role="tree"); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "classNames")` |
 | clickToHide | Whether the dropdown closes after a node is selected in single mode. | `boolean` | `true` |
 | clickTriggerToHide | Whether clicking the select box closes the open dropdown. | `boolean` | `true` |
 | defaultExpandAll | Expands every node on mount. Later changes of treeData do not affect it; use expandAll for that. | `boolean` | `false` |
@@ -18,9 +19,7 @@ import ApiType from '#/components/ApiType.astro';
 | defaultValue | The initially selected items, read once on mount; an array only when multiple. | <ApiType detail={"ByMultiple\u003cMultiple, T \u007c undefined, T[]>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "defaultValue")` |
 | disabled | Whether the component is disabled. | `boolean` | `undefined` |
 | disableStrictly | Strict disabling: a disabled node cannot change state through the selection of its parent or children. | `boolean` | `false` |
-| dropdownClassName | Class of the dropdown. | `string` | `semiGlobalDefault("TreeSelect", "dropdownClassName")` |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown equals the width of the select box. | `boolean` | `true` |
-| dropdownStyle | Style of the dropdown. | `StyleValue` | `semiGlobalDefault("TreeSelect", "dropdownStyle")` |
 | expandAction | How a node expands: false only through the arrow, click on a click, doubleClick on a double click. The keyboard does not use it. | `ExpandAction` | `false` |
 | expandAll | Expands every node, and keeps doing so when treeData changes. | `boolean` | `false` |
 | expandedKeys | Expanded nodes, bound with v-model:expandedKeys. Passing it makes expansion fully controlled. | `string[]` | `semiGlobalDefault("TreeSelect", "expandedKeys")` |
@@ -36,7 +35,6 @@ import ApiType from '#/components/ApiType.astro';
 | motion | Whether the dropdown animates in and out. | `boolean` | `true` |
 | motionExpand | Whether expanding and collapsing nodes are animated; animation is off for a virtualized list. | `boolean` | `true` |
 | multiple | Whether several nodes can be selected. A parent is checked automatically once all its children are. | `Multiple` | `undefined` |
-| optionListStyle | Style of the node list, the element with role="tree". | `StyleValue` | `semiGlobalDefault("TreeSelect", "optionListStyle")` |
 | placeholder | Placeholder of the select box. | `string` | `semiGlobalDefault("TreeSelect", "placeholder")` |
 | position | Position of the dropdown; see the position of Tooltip. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "position")` |
 | preventScroll | Whether focusing stops the browser from scrolling the page to the newly focused element. | `boolean` | `semiGlobalDefault("TreeSelect", "preventScroll")` |
@@ -52,6 +50,7 @@ import ApiType from '#/components/ApiType.astro';
 | showSearchClear | Whether the search box shows a clear button. | `boolean` | `true` |
 | size | Size of the select box: small, default or large. | `Size` | `undefined` |
 | stopPropagation | Whether click events on the dropdown stop propagating; a string is treated as a boolean. | `string \| boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "styles")` |
 | treeData | Node data; keys are unique across the tree. Only a new array updates the options, changes made in place are not seen. | `TreeNodeData[]` | `[]` |
 | treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `"label"` |
 | treeNodeLabelProp | The node field shown in the trigger, label by default. | `string` | `"label"` |

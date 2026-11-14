@@ -99,7 +99,7 @@ function I18nComponent() {
             <br />
             <br />
             <h5>TreeSelect</h5>
-            <TreeSelect style={{ ...style, width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} filterTreeNode />
+            <TreeSelect style={{ ...style, width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} filterTreeNode />
             <h5>Table</h5>
             <Table columns={columns} dataSource={dataSource} scroll={{ y: 320 }} />
             <h5>Table - Empty</h5>
@@ -128,7 +128,7 @@ function I18nComponent() {
             </Form>
             <h5>Navigation</h5>
             <Nav
-                bodyStyle={{ height: 320 }}
+                styles={{ body: { height: 320 } }}
                 items={[
                     { itemKey: 'user', text: '用户管理', icon: <IconUser /> },
                     { itemKey: 'union', text: '活动管理', icon: <IconStar /> },

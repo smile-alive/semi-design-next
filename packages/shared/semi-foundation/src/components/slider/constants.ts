@@ -9,3 +9,6 @@ export const cssClasses = {
     HANDLE: `${BASE_CLASS_PREFIX}-slider-handle`,
     HANDLE_DOT: `${BASE_CLASS_PREFIX}-slider-handle-dot`,
 };
+
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type SliderPart = 'rail';

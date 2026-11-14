@@ -211,10 +211,8 @@ export interface BasicTreeProps {
     renderDraggingNode?: (nodeInstance: HTMLElement, node: BasicTreeNodeData) => HTMLElement;
     renderFullLabel?: (renderFullLabelProps: BasicRenderFullLabelProps) => any;
     renderLabel?: (label?: any, treeNode?: BasicTreeNodeData) => any;
-    searchClassName?: string;
     searchPlaceholder?: string;
     searchRender?: ((searchRenderProps: BasicSearchRenderProps) => any) | false;
-    searchStyle?: any;
     showClear?: boolean;
     showFilteredOnly?: boolean;
     showLine?: boolean;

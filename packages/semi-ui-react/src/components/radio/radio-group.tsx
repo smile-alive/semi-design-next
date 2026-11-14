@@ -1,7 +1,7 @@
 import type React from 'react';
 import { Children, isValidElement, useId } from 'react';
 import clsx from 'clsx';
-import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
+import { type RadioPart, radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
@@ -21,8 +21,8 @@ export interface OptionItem {
     style?: React.CSSProperties;
     className?: string;
     addonId?: string;
-    addonStyle?: React.CSSProperties;
-    addonClassName?: string;
+    classNames?: Partial<Record<RadioPart, string>>;
+    styles?: Partial<Record<RadioPart, React.CSSProperties>>;
     extraId?: string;
 }
 export type Options = string[] | Array<OptionItem>;
@@ -129,7 +129,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
                     {option}
                 </Radio>
             ) : (
-                <Radio key={index} addonClassName={option.addonClassName} className={option.className} addonStyle={option.addonStyle} style={option.style} disabled={option.disabled || disabled} value={option.value} addonId={option.addonId} extraId={option.extraId} extra={option.extra}>
+                <Radio key={index} className={option.className} classNames={option.classNames} style={option.style} styles={option.styles} disabled={option.disabled || disabled} value={option.value} addonId={option.addonId} extraId={option.extraId} extra={option.extra}>
                     {option.label}
                 </Radio>
             )

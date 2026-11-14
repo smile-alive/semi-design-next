@@ -1,5 +1,6 @@
 import type { ReactNode, ClipboardEvent as ReactClipboardEvent } from 'react';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
+import type { AIChatInputPart } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import type { BaseSkill, Reference, Suggestion, Attachment, Content, MessageContent, Setup } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ElementProps } from '@fibrae/semi-ui-react/base';
 import type { PopoverProps } from '@fibrae/semi-ui-react/popover/index';
@@ -72,8 +73,8 @@ export interface AIChatInputProps extends ElementProps<'div'> {
     renderSuggestionItem?: (props: RenderSuggestionItemProps) => ReactNode;
     skills?: Skill[];
     skillHotKey?: string;
-    templatesStyle?: React.CSSProperties;
-    templatesCls?: string;
+    classNames?: Partial<Record<AIChatInputPart, string>>;
+    styles?: Partial<Record<AIChatInputPart, React.CSSProperties>>;
     /** `skill` is undefined when the skill is removed */
     onSkillChange?: (skill?: Skill) => void;
     renderSkillItem?: (props: RenderSkillItemProps) => ReactNode;

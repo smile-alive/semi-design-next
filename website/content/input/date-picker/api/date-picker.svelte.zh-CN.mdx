@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoSwitchDate | 通过面板上方左右按钮、下拉菜单更改年月时，自动切换日期。仅对 date 类型生效。 | `boolean` | `true` |
 | borderless | 无边框模式。 | `boolean` | `false` |
 | bottomSlot | 面板底部的额外区域。 | `Snippet` | - |
+| classNames | 内部各部位的类名，键为 dropdown（浮层）、input（输入框的根元素，范围选择的两个输入框都带），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除图标，showClear 为 true 时有效。 | `Snippet` | - |
 | date | 自定义日期格子的内容，参数为 dayNumber 和 fullDate（yyyy-MM-dd）。 | <ApiType detail={"Snippet\u003c[DatePickerDateSnippetProps]>"}>Type</ApiType> | - |
 | defaultPickerValue | 没有值时面板显示的日期，dateTime 类型下也是底部时间的默认值。按内容比较，内容变化时面板回到该日期；每次渲染都传 `new Date()` 会被视为变化。 | `DatePickerValueType` | - |
@@ -17,15 +18,12 @@ import ApiType from '#/components/ApiType.astro';
 | disabledDate | 日期禁止判断方法，返回 true 时禁止该日期。第二个参数提供 rangeStart、rangeEnd 和 rangeInputFocus。type 为 year 时以每年的 1 月 1 日调用，返回 true 时禁止该年。 | `DatePickerDisabledDateType` | - |
 | disabledTime | 时间禁止配置，返回 disabledHours、disabledMinutes、disabledSeconds，参数为当前日期和面板位置。 | `DatePickerDisabledTimeType` | - |
 | disabledTimePicker | 是否禁止时间选择，仅 dateTime 与 dateTimeRange 类型有效。 | `boolean` | `false` |
-| dropdownClassName | 浮层的类名。 | `string` | - |
-| dropdownStyle | 浮层的样式字符串。 | `string` | - |
 | endDateOffset | type 为 dateRange 时，单击选择范围的结束日期。 | `DatePickerDateOffsetType` | - |
 | endYear | 年份滚轮的结束年，需要大于开始年，默认为当前年后 100 年。 | `number` | - |
 | format | 输入框内展示的日期串格式，默认值与 type 对应。不含时间 token 时，dateTime 按 date、dateTimeRange 按 dateRange 处理。 | `string` | - |
 | fullDate | 自定义整个日期格子，参数为 dayNumber、fullDate 和 dayStatus。日期格只保留基础类名和 active 类名。 | <ApiType detail={"Snippet\u003c[DatePickerFullDateSnippetProps]>"}>Type</ApiType> | - |
 | hideDisabledOptions | 隐藏被禁止选择的时间。 | `boolean` | `false` |
 | inputReadOnly | 输入框是否只读。 | `boolean` | `false` |
-| inputStyle | 输入框根元素的样式字符串。 | `string` | - |
 | insetInput | 把输入框嵌入面板，可传对象设置各输入框的占位文字。 | `boolean \| DatePickerInsetInputProps` | `false` |
 | insetLabel | 输入框的内嵌标签。 | `Snippet` | - |
 | insetLabelId | 内嵌标签元素的 id。 | `string` | - |
@@ -60,6 +58,7 @@ import ApiType from '#/components/ApiType.astro';
 | startDateOffset | type 为 dateRange 时，单击选择范围的开始日期。 | `DatePickerDateOffsetType` | - |
 | startYear | 年份滚轮的开始年，默认为当前年前 100 年。 | `number` | - |
 | stopPropagation | 是否阻止浮层上的点击事件冒泡。 | `boolean \| string` | `true` |
+| styles | 内部各部位的样式字符串，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, string>>"}>Type</ApiType> | - |
 | syncSwitchMonth | 范围选择时，同步切换双面板的月份。 | `boolean` | `false` |
 | timePickerOpts | 传给时间面板的参数：use12Hours、hourStep、minuteStep、secondStep、defaultIsAM、scrollItemProps。格式、值和禁用时间由面板设置。 | `DatePickerTimePickerOpts` | - |
 | timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，`dateString` 和今天的标记也按该时区。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | - |

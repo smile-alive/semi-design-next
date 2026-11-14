@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useCallback, useImperativeHandle, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/input-number/constants';
+import { cssClasses, numbers, strings, type InputNumberPart } from '@fibrae/semi-foundation/components/input-number/constants';
 import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/components/input-number/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/input-number/input-number.scss';
@@ -26,9 +26,11 @@ export interface InputNumberHandle {
     readonly nativeElement: HTMLElement | null;
 }
 
-export interface InputNumberProps extends Omit<InputProps, 'ref'> {
+export interface InputNumberProps extends Omit<InputProps, 'ref' | 'classNames' | 'styles'> {
     autofocus?: boolean;
     className?: string;
+    classNames?: Partial<Record<InputNumberPart, string>>;
+    styles?: Partial<Record<InputNumberPart, React.CSSProperties>>;
     clearIcon?: React.ReactNode;
     currency?: string | boolean;
     currencyDisplay?: 'code' | 'symbol' | 'name';
@@ -248,9 +250,11 @@ export default function InputNumber(rawProps: InputNumberProps) {
                     {...ariaProps}
                     {...rest}
                     ref={setInput}
+                    // InputNumber's own global defaults apply to the parts, adornments and showClear; the global Input ones must not
+                    classNames={rest.classNames ?? {}}
+                    styles={rest.styles ?? {}}
                     disabled={disabled}
                     value={value}
-                    // InputNumber's own global defaults apply to the adornments and showClear; the global Input ones must not
                     addonAfter={addonAfter ?? null}
                     addonBefore={addonBefore ?? null}
                     insetLabel={insetLabel ?? null}

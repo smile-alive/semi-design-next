@@ -34,4 +34,4 @@
     ];
 </script>
 
-<Cascader dropdownClassName="components-cascader-demo" placeholder="请选择所在地区" style="width: 300px" {treeData} />
+<Cascader classNames={{ dropdown: 'components-cascader-demo' }} placeholder="请选择所在地区" style="width: 300px" {treeData} />

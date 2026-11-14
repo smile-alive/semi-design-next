@@ -1,4 +1,5 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { RadioPart } from '@fibrae/semi-foundation/components/radio/constants';
 
 export type RadioValue = string | number | boolean;
 export type RadioType = 'default' | 'button' | 'card' | 'pureCard';
@@ -16,8 +17,8 @@ export interface RadioProps {
     displayMode?: RadioDisplayMode;
     mode?: RadioMode;
     type?: RadioType;
-    addonStyle?: StyleValue;
-    addonClassName?: string;
+    classNames?: Partial<Record<RadioPart, ClassValue>>;
+    styles?: Partial<Record<RadioPart, StyleValue>>;
     addonId?: string;
     extraId?: string;
     preventScroll?: boolean;
@@ -60,8 +61,8 @@ export interface RadioOptionItem {
     class?: string;
     style?: StyleValue;
     addonId?: string;
-    addonStyle?: StyleValue;
-    addonClass?: string;
+    classNames?: Partial<Record<RadioPart, ClassValue>>;
+    styles?: Partial<Record<RadioPart, StyleValue>>;
     extraId?: string;
 }
 

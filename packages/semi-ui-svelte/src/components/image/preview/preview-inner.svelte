@@ -32,8 +32,8 @@
         alts,
         previewTitle,
         titles,
-        previewCls,
-        previewStyle,
+        classNames,
+        styles,
         getPopupContainer,
         setDownloadName,
         crossOrigin,
@@ -189,9 +189,9 @@
                 aria-labelledby={hasTitle ? `${uid}-title` : undefined}
                 aria-modal={inBody ? 'true' : undefined}
                 bind:this={wrapEl}
-                class={[cls, { [`${cls}-popup`]: !inBody }, previewCls]}
+                class={[cls, { [`${cls}-popup`]: !inBody }, classNames?.preview]}
                 role="dialog"
-                style={previewStyle}
+                style={styles?.preview}
                 tabindex="-1"
                 onfocusin={foundation.handleKeyboardActivity}
                 onmousedown={foundation.handleMouseDown}

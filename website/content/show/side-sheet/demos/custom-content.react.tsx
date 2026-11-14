@@ -23,7 +23,7 @@ export default function SideSheetDemo() {
     return (
         <>
             <Button onClick={show}>More Information</Button>
-            <SideSheet title="创建资源包" headerStyle={{ borderBottom: '1px solid var(--semi-color-border)' }} bodyStyle={{ borderBottom: '1px solid var(--semi-color-border)' }} visible={visible} footer={footer} closable={false} onCancel={handleCancel}>
+            <SideSheet title="创建资源包" styles={{ header: { borderBottom: '1px solid var(--semi-color-border)' }, body: { borderBottom: '1px solid var(--semi-color-border)' } }} visible={visible} footer={footer} closable={false} onCancel={handleCancel}>
                 <Form>
                     <FormDatePicker field="date" type="dateTime" initValue={createTime} style={{ width: 272 }} label={{ text: '创建时间', required: true }} />
                     <FormRadioGroup field="type" label="目标操作系统" direction="horizontal" initValue="all">

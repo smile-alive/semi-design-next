@@ -2,7 +2,7 @@ import React, { Fragment, useDeferredValue, useId, useImperativeHandle, useLayou
 import clsx from 'clsx';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/tree-select/constants';
+import { cssClasses, strings, type TreeSelectPart } from '@fibrae/semi-foundation/components/tree-select/constants';
 import TreeSelectFoundation, { type Size, type BasicTriggerRenderProps, type BasicTreeSelectProps, type BasicTreeSelectInnerData, type TreeSelectAdapter } from '@fibrae/semi-foundation/components/tree-select/foundation';
 import { buildRowProps, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
 import { getValueOrKey } from '@fibrae/semi-foundation/components/tree/tree-util';
@@ -101,14 +101,13 @@ export interface TreeSelectProps<T extends TreeSelectNodeValue = TreeSelectNodeV
     clickToHide?: boolean;
     clearIcon?: React.ReactNode;
     defaultOpen?: boolean;
-    dropdownClassName?: string;
+    classNames?: Partial<Record<TreeSelectPart, string>>;
     dropdownMatchSelectWidth?: boolean;
-    dropdownStyle?: React.CSSProperties;
+    styles?: Partial<Record<TreeSelectPart, React.CSSProperties>>;
     insetLabel?: React.ReactNode;
     insetLabelId?: string;
     maxTagCount?: number;
     motionExpand?: boolean;
-    optionListStyle?: React.CSSProperties;
     outerBottomSlot?: React.ReactNode;
     outerTopSlot?: React.ReactNode;
     placeholder?: string;
@@ -216,14 +215,13 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         clickToHide,
         clearIcon,
         defaultOpen,
-        dropdownClassName,
+        classNames,
         dropdownMatchSelectWidth,
-        dropdownStyle,
+        styles,
         insetLabel,
         insetLabelId,
         maxTagCount,
         motionExpand,
-        optionListStyle,
         outerBottomSlot,
         outerTopSlot,
         placeholder,
@@ -622,14 +620,14 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     {!outerTopSlot && filterTreeNode && isDropdownPositionSearch && renderInput()}
                     {noData ? (
                         // the combobox's aria-controls needs an element while there is no tree
-                        <div id={treeId} className={listCls} style={optionListStyle} role="none">
+                        <div id={treeId} className={clsx(listCls, classNames?.optionList)} style={styles?.optionList} role="none">
                             {renderEmpty()}
                         </div>
                     ) : (
                         <div
                             id={treeId}
-                            className={listCls}
-                            style={optionListStyle}
+                            className={clsx(listCls, classNames?.optionList)}
+                            style={styles?.optionList}
                             // the combobox's name source, never the combobox itself: accname would read its value
                             {...nameProps}
                             aria-multiselectable={Boolean(multiple)}
@@ -647,8 +645,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const content = (
         <div
             ref={optionContainerEl}
-            className={clsx(dropdownClassName, `${prefixcls}-popover`)}
-            style={dropdownStyle}
+            className={clsx(`${prefixcls}-popover`, classNames?.dropdown)}
+            style={styles?.dropdown}
             onBlur={handleFocusLeave}
             onFocus={(e) => foundation.handleTriggerFocus(e.nativeEvent)}
             onKeyDown={(e) => {
@@ -822,7 +820,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         const useCustomTrigger = typeof triggerRender === 'function';
         const isEmptyTriggerSearch = isTriggerPositionSearch && !hasValue;
         const isValueTriggerSearch = isTriggerPositionSearch && hasValue;
-        const classNames = useCustomTrigger
+        const triggerCls = useCustomTrigger
             ? clsx(className)
             : clsx(
                   prefixcls,
@@ -867,7 +865,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             <div
                 {...rest}
                 ref={triggerRef}
-                className={classNames}
+                className={triggerCls}
                 style={style}
                 {...triggerAriaProps}
                 tabIndex={disabled || inputIsCombobox ? -1 : 0}

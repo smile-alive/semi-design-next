@@ -2,7 +2,7 @@ import { Select } from '@fibrae/semi-ui-react';
 
 export default function SelectDemo() {
     return (
-        <Select aria-label="业务线" placeholder="自定义弹出层样式的" style={{ width: 180 }} dropdownStyle={{ width: 250 }} dropdownClassName="test">
+        <Select aria-label="业务线" placeholder="自定义弹出层样式的" style={{ width: 180 }} classNames={{ dropdown: 'test' }} styles={{ dropdown: { width: 250 } }}>
             <Select.Option value="video">短视频</Select.Option>
             <Select.Option value="camera">相机</Select.Option>
             <Select.Option value="editing">剪辑</Select.Option>

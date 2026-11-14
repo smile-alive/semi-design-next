@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { Attachment } from 'svelte/attachments';
-import type { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
+import type { ClassValue } from 'svelte/elements';
+import type { strings, TooltipPart } from '@fibrae/semi-foundation/components/tooltip/constants';
 import type { Position, TooltipBaseProps } from '@fibrae/semi-foundation/components/tooltip/foundation';
 import type { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
 
@@ -53,7 +54,9 @@ export interface TooltipProps extends TooltipBaseProps {
     'aria-describedby'?: string;
     arrowPointAtCenter?: boolean;
     stopPropagation?: boolean;
-    wrapperClassName?: string;
+    /** `wrapper` exists only when the trigger is wrapped: text, several nodes, or a disabled or loading trigger */
+    classNames?: Partial<Record<TooltipPart, ClassValue>>;
+    styles?: Partial<Record<TooltipPart, string>>;
     wrapperId?: string;
     /**
      * Whether a disabled or loading Semi Button, Switch or Checkbox that fills the default span gets its pointer events

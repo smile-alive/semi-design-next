@@ -5,5 +5,5 @@
 </script>
 
 <template>
-    <TextArea aria-label="带行号的文本" :defaultValue="defaultValue" :lineNumberStart="1" :lineNumberStyle="{ color: 'var(--semi-color-text-2)' }" :rows="12" showLineNumber style="width: 420px" />
+    <TextArea aria-label="带行号的文本" :defaultValue="defaultValue" :lineNumberStart="1" :rows="12" showLineNumber style="width: 420px" :styles="{ lineNumber: { color: 'var(--semi-color-text-2)' } }" />
 </template>

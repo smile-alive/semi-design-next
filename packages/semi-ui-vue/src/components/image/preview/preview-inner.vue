@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { computed, nextTick, useId, useTemplateRef, type StyleValue } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import { computed, nextTick, useId, useTemplateRef, type ClassValue, type StyleValue } from 'vue';
+    import { cssClasses, type ImagePreviewPart } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-vue';
     import { useFoundation, useKeepAliveFoundation } from '../../../base/index';
@@ -24,8 +24,8 @@
         /** alt of a single Image's preview; a group passes the alts of its images by context */
         alt?: string;
         previewTitle?: string;
-        previewCls?: string;
-        previewStyle?: StyleValue;
+        classNames?: Partial<Record<ImagePreviewPart, ClassValue>>;
+        styles?: Partial<Record<ImagePreviewPart, StyleValue>>;
         getPopupContainer?: () => HTMLElement;
         setDownloadName?: (src: string) => string;
         crossOrigin?: 'anonymous' | 'use-credentials';
@@ -181,9 +181,9 @@
             :aria-label="hasTitle ? undefined : locale.locale.preview"
             :aria-labelledby="hasTitle ? titleId : undefined"
             :aria-modal="covers ? 'true' : undefined"
-            :class="[cls, { [`${cls}-popup`]: !covers }, props.previewCls]"
+            :class="[cls, { [`${cls}-popup`]: !covers }, props.classNames?.preview]"
             role="dialog"
-            :style="props.previewStyle"
+            :style="props.styles?.preview"
             tabindex="-1"
             @focusin="foundation.handleKeyboardActivity"
             @mousedown="foundation.handleMouseDown"

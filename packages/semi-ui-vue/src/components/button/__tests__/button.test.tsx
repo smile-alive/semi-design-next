@@ -280,12 +280,26 @@ describe('Button', () => {
         expect(lines()[0]).not.toHaveClass(`${prefixCls}-group-line-disabled`);
     });
 
-    it('无论是否带 icon，模板 ref 的 $el 都是原生 button，contentClassName 落在内容 span', async () => {
+    it('无论是否带 icon，模板 ref 的 $el 都是原生 button，classNames.content 落在内容 span', async () => {
         const view = render(Button, { slots: text });
         expect(view.container.firstElementChild).toBe(screen.getByRole('button'));
-        await view.rerender({ contentClassName: 'inner' });
-        expect(screen.getByRole('button')).not.toHaveAttribute('contentclassname');
+        await view.rerender({ classNames: { content: 'inner' } });
+        expect(screen.getByRole('button')).not.toHaveAttribute('classnames');
         expect(document.querySelector(`.${prefixCls}-content`)).toHaveClass('inner');
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        render(Button, { props: { classNames: { content: 'inner' }, styles: { content: { color: 'red' } } }, slots: text });
+        expect(screen.getByRole('button')).not.toHaveClass('inner');
+        expect(screen.getByRole('button')).not.toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(document.querySelector(`.${prefixCls}-content`)).toHaveClass(`${prefixCls}-content`, 'inner');
+        expect(document.querySelector(`.${prefixCls}-content`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+    });
+
+    it('IconButton 把 classNames 与 styles 转发给内部 Button', () => {
+        render(IconButton, { props: { classNames: { content: 'inner' }, styles: { content: { color: 'red' } } }, slots: text });
+        expect(document.querySelector(`.${prefixCls}-content`)).toHaveClass('inner');
+        expect(document.querySelector(`.${prefixCls}-content`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
     it('Props 类型不声明 iconSize、iconStyle、circle、prefixCls、icon、children', () => {

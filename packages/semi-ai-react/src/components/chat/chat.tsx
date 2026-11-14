@@ -65,10 +65,8 @@ export default function Chat(rawProps: ChatProps) {
         mode,
         showClearContext,
         placeholder,
-        inputBoxCls,
-        inputBoxStyle,
-        hintStyle,
-        hintCls,
+        classNames,
+        styles,
         uploadProps,
         uploadTipProps,
         sendHotKey,
@@ -190,7 +188,7 @@ export default function Chat(rawProps: ChatProps) {
                                 onMessageGoodFeedback={foundation.likeMessage}
                                 onMessageReset={foundation.resetMessage}
                             />
-                            {!!hints?.length && <Hint className={hintCls} style={hintStyle} value={hints} renderHintBox={renderHintBox} onHintClick={foundation.handleHintClick} />}
+                            {!!hints?.length && <Hint className={classNames?.hint} style={styles?.hint} value={hints} renderHintBox={renderHintBox} onHintClick={foundation.handleHintClick} />}
                         </div>
                     </ReactResizeObserver>
                     {/* outside the log: a toast inside it would be announced as one more log entry */}
@@ -210,8 +208,8 @@ export default function Chat(rawProps: ChatProps) {
                 )}
                 <InputBox
                     ref={inputBox}
-                    className={inputBoxCls}
-                    style={inputBoxStyle}
+                    className={classNames?.inputBox}
+                    style={styles?.inputBox}
                     placeholder={placeholder}
                     canSend={canSend}
                     clickUpload={clickUpload}

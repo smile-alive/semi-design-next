@@ -6,8 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | aspectRatio | Fixed aspect ratio of the crop box, kept while dragging. When it changes after loading, the box is laid out again at the new ratio. | `number` | - |
 | className | Class name of the root element. | `string` | - |
-| cropperBoxCls | Class name of the crop box. | `string` | - |
-| cropperBoxStyle | Style of the crop box, merged with the size and offset the component computes; the size and offset win. | `React.CSSProperties` | - |
+| classNames | Class names of the inner parts, keyed by `cropperBox` (the crop box); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cCropperPart, string>>"}>Type</ApiType> | - |
 | defaultAspectRatio | Initial aspect ratio of the crop box, which changes while dragging. | `number` | `1` |
 | fill | Fill color of the parts of the result that are not the image. | `string` | `"rgba(0, 0, 0, 0)"` |
 | imgProps | Attributes passed to the `img` element being cropped. `src` comes from the `src` prop; `className` is merged with the component's own class name; `style` sits under the component's layout, so the size and offset win; `onLoad` is called after the component has handled the load; `alt` defaults to an empty string and `crossOrigin` to `anonymous`, and both can be overridden. | <ApiType detail={"React.ImgHTMLAttributes\u003cHTMLImageElement>"}>Type</ApiType> | - |
@@ -21,6 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | showResizeBox | Whether to show the resize handles on the corners of the crop box. | `boolean` | `true` |
 | src | Address of the image to crop. | `string` | - |
 | style | Style of the root element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`; `cropperBox` is merged with the size and offset the component computes, and the size and offset win. | <ApiType detail={"Partial\u003cRecord\u003cCropperPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | zoom | Controlled zoom, applied on top of the initial scaling that fits the image into the cropper. | `number` | - |
 | zoomStep | Zoom change per wheel step. | `number` | `0.1` |
 

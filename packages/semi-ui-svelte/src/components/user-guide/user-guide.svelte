@@ -164,7 +164,21 @@
     {@const item = step}
     {@const args = { item, index: currentIndex }}
     {#if mode === 'modal'}
-        <Modal aria-labelledby={hasTitle ? titleId : undefined} bind:visible={() => true, () => {}} bodyStyle="padding: 0" centered class={[modalPrefix, className, item.class]} footer={null} {getPopupContainer} header={null} mask={showMask} maskClosable={false} onCancel={foundation.handleSkip} {style} {zIndex}>
+        <Modal
+            aria-labelledby={hasTitle ? titleId : undefined}
+            bind:visible={() => true, () => {}}
+            centered
+            class={[modalPrefix, className, item.class]}
+            footer={null}
+            {getPopupContainer}
+            header={null}
+            mask={showMask}
+            maskClosable={false}
+            onCancel={foundation.handleSkip}
+            {style}
+            styles={{ body: 'padding: 0' }}
+            {zIndex}
+        >
             {#if item.cover}
                 <div class={`${modalPrefix}-cover`} x-semi-prop="cover">{@render item.cover(args)}</div>
                 <div aria-hidden="true" class={`${modalPrefix}-indicator`}>

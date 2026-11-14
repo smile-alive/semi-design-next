@@ -10,3 +10,9 @@ export const strings = {
 } as const;
 
 export const numbers = {};
+
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type InputPart = 'input';
+
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type TextAreaPart = 'textarea' | 'lineNumber';

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '320px' }" :defaultOpenKeys="['user']">
+    <Nav :defaultOpenKeys="['user']" :styles="{ body: { height: '320px' } }">
         <NavHeader text="Semi 运营后台">
             <template #logo>bytedance_logo</template>
         </NavHeader>

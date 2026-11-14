@@ -11,14 +11,13 @@
     import type { CardProps, CardSlots } from './interface';
 
     const props = withDefaults(defineProps<CardProps & /* @vue-ignore */ ElementProps<'div', keyof CardProps>>(), {
-        bodyStyle: semiGlobalDefault('Card', 'bodyStyle'),
         bordered: () => semiDefault('Card', 'bordered', true),
+        classNames: semiGlobalDefault('Card', 'classNames'),
         footerLine: () => semiDefault('Card', 'footerLine', false),
-        footerStyle: semiGlobalDefault('Card', 'footerStyle'),
         headerLine: () => semiDefault('Card', 'headerLine', true),
-        headerStyle: semiGlobalDefault('Card', 'headerStyle'),
         loading: () => semiDefault('Card', 'loading', false),
         shadows: semiGlobalDefault('Card', 'shadows'),
+        styles: semiGlobalDefault('Card', 'styles'),
     });
 
     const slots = defineSlots<CardSlots>();
@@ -54,10 +53,10 @@
         :role="namedRole($attrs)"
     >
         <template v-for="header in [headerView()]" :key="String(header.show)">
-            <div v-if="header.show" :class="[`${prefixCls}-header`, { [`${prefixCls}-header-bordered`]: props.headerLine }]" :style="props.headerStyle">
+            <div v-if="header.show" :class="[`${prefixCls}-header`, { [`${prefixCls}-header-bordered`]: props.headerLine }, props.classNames?.header]" :style="props.styles?.header">
                 <slot v-if="header.hasHeader" name="header" />
                 <div v-else :class="`${prefixCls}-header-wrapper`">
-                    <div v-if="header.hasTitle" :class="[`${prefixCls}-header-wrapper-title`, { [`${prefixCls}-header-wrapper-spacing`]: header.hasExtra }]">
+                    <div v-if="header.hasTitle" :class="[`${prefixCls}-header-wrapper-title`, { [`${prefixCls}-header-wrapper-spacing`]: header.hasExtra }, props.classNames?.title]" :style="props.styles?.title">
                         <TypographyTitle v-if="header.titleText !== undefined" component="div" :ellipsis="{ showTooltip: true, rows: 1 }" :heading="6" x-semi-prop="title">
                             {{ header.titleText }}
                         </TypographyTitle>
@@ -65,16 +64,16 @@
                             <component :is="node" v-for="[node, key] in header.titleNodes" :key="key" />
                         </template>
                     </div>
-                    <div v-if="header.hasExtra" :class="`${prefixCls}-header-wrapper-extra`" x-semi-prop="headerExtraContent">
+                    <div v-if="header.hasExtra" :class="[`${prefixCls}-header-wrapper-extra`, props.classNames?.extra]" :style="props.styles?.extra" x-semi-prop="headerExtraContent">
                         <slot name="headerExtraContent" />
                     </div>
                 </div>
             </div>
         </template>
-        <div v-if="hasSlotContent($slots.cover)" :class="`${prefixCls}-cover`" x-semi-prop="cover">
+        <div v-if="hasSlotContent($slots.cover)" :class="[`${prefixCls}-cover`, props.classNames?.cover]" :style="props.styles?.cover" x-semi-prop="cover">
             <slot name="cover" />
         </div>
-        <div :class="`${prefixCls}-body`" :style="props.bodyStyle">
+        <div :class="[`${prefixCls}-body`, props.classNames?.body]" :style="props.styles?.body">
             <Skeleton v-if="hasSlotContent($slots.default)" active :loading="props.loading">
                 <template #placeholder>
                     <div>
@@ -85,7 +84,7 @@
                 </template>
                 <slot />
             </Skeleton>
-            <div v-if="$slots.actions" :class="`${prefixCls}-body-actions`">
+            <div v-if="$slots.actions" :class="[`${prefixCls}-body-actions`, props.classNames?.actions]" :style="props.styles?.actions">
                 <Space :spacing="12">
                     <div v-for="([node, key], index) in slotNodes($slots.actions())" :key="key" :class="`${prefixCls}-body-actions-item`" :x-semi-prop="`actions.${index}`">
                         <component :is="node" />
@@ -93,7 +92,7 @@
                 </Space>
             </div>
         </div>
-        <div v-if="hasSlotContent($slots.footer)" :class="[`${prefixCls}-footer`, { [`${prefixCls}-footer-bordered`]: props.footerLine }]" :style="props.footerStyle" x-semi-prop="footer">
+        <div v-if="hasSlotContent($slots.footer)" :class="[`${prefixCls}-footer`, { [`${prefixCls}-footer-bordered`]: props.footerLine }, props.classNames?.footer]" :style="props.styles?.footer" x-semi-prop="footer">
             <slot name="footer" />
         </div>
     </div>

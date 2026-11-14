@@ -385,8 +385,15 @@ describe('Svelte Slider', () => {
         expectValues(0.6);
     });
 
-    it('track 与 rail 的样式随 included、vertical、range、railStyle 变化', () => {
-        setup({ value: 30, included: true, railStyle: 'background-color: #ccc' });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        setup({ value: 30, classNames: { rail: 'my-rail' }, styles: { rail: 'order: 5' } });
+        expect(query('rail')).toHaveClass('semi-slider-rail', 'my-rail');
+        expect(query('rail')).toHaveStyle({ order: '5' });
+        expect(query('track')).not.toHaveClass('my-rail');
+    });
+
+    it('track 与 rail 的样式随 included、vertical、range、styles.rail 变化', () => {
+        setup({ value: 30, included: true, styles: { rail: 'background-color: #ccc' } });
         expect(query('track')).toHaveStyle({ width: '30%' });
         expect(query('rail')).toHaveStyle({ backgroundColor: 'rgb(204, 204, 204)' });
         setup({ value: 30, included: false });

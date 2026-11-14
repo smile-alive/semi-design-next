@@ -43,8 +43,8 @@
         disableDownload: () => semiDefault('ImagePreview', 'disableDownload', previewDefaults.disableDownload),
         initialZoom: semiGlobalDefault('ImagePreview', 'initialZoom'),
         crossOrigin: semiGlobalDefault('ImagePreview', 'crossOrigin'),
-        previewCls: semiGlobalDefault('ImagePreview', 'previewCls'),
-        previewStyle: semiGlobalDefault('ImagePreview', 'previewStyle'),
+        classNames: semiGlobalDefault('ImagePreview', 'classNames'),
+        styles: semiGlobalDefault('ImagePreview', 'styles'),
         prevTip: semiGlobalDefault('ImagePreview', 'prevTip'),
         nextTip: semiGlobalDefault('ImagePreview', 'nextTip'),
         zoomInTip: semiGlobalDefault('ImagePreview', 'zoomInTip'),
@@ -105,8 +105,8 @@
         'maxZoom',
         'minZoom',
         'initialZoom',
-        'previewCls',
-        'previewStyle',
+        'classNames',
+        'styles',
     ] as const satisfies readonly (keyof ImagePreviewComponentProps)[];
 
     const prefixCls = cssClasses.PREFIX;

@@ -82,8 +82,8 @@ describe('Svelte Highlight', () => {
         expect(texts(container)).toEqual(['Design']);
     });
 
-    it('在每个匹配上追加 highlightClassName 并应用 highlightStyle', () => {
-        const { container } = setup({ highlightClassName: 'kw', highlightStyle: { color: 'red' }, searchWords: ['Semi'], sourceString: 'Semi Design Semi' });
+    it('classNames 与 styles 按部位落到每个匹配上', () => {
+        const { container } = setup({ classNames: { highlight: 'kw' }, styles: { highlight: 'color: red' }, searchWords: ['Semi'], sourceString: 'Semi Design Semi' });
         const found = marks(container);
         expect(found).toHaveLength(2);
         for (const el of found) {
@@ -94,8 +94,8 @@ describe('Svelte Highlight', () => {
 
     it('每个词的 class 与 style 叠加在共享样式之上', () => {
         const { container } = setup({
-            highlightClassName: 'kw',
-            highlightStyle: { color: 'red', fontWeight: 'bold' },
+            classNames: { highlight: 'kw' },
+            styles: { highlight: 'color: red; font-weight: bold' },
             searchWords: [{ text: 'Semi', class: 'w1', style: { color: 'blue' } }, 'Design'],
             sourceString: 'Semi Design',
         });

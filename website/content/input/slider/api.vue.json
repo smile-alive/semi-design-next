@@ -40,7 +40,14 @@
                 "zh-CN": "反转垂直方向，即上大下小。",
                 "en-US": "Reverses the vertical direction, so the larger value is on top."
             },
-            "railStyle": { "zh-CN": "滑块轨道的样式。", "en-US": "Style of the slider rail." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 rail，值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by rail; values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 rail，值的写法同 style。",
+                "en-US": "Styles of the inner parts, keyed by rail; values take any style binding."
+            },
             "handleDot": {
                 "zh-CN": "滑块上的圆点，单个滑块传一个对象，range 时按手柄传数组。",
                 "en-US": "Dot on the handle: one object for a single handle, an array with one per handle for a range."

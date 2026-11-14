@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { cssClasses, strings, numbers, type DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import DatePickerFoundation, {
     getYearMonthFromValue,
     isRangeType,
@@ -48,6 +48,9 @@ export type TriggerRenderProps = {
 };
 
 interface DatePickerCommonProps extends Omit<DatePickerFoundationProps, 'dateFnsLocale' | 'customTrigger' | 'type' | 'multiple'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus'> {
+    /** `dropdown` is the panel; `input` is the Input's root element (each of the two inputs of a range) */
+    classNames?: Partial<Record<DatePickerPart, string>>;
+    styles?: Partial<Record<DatePickerPart, React.CSSProperties>>;
     clearIcon?: React.ReactNode;
     timePickerOpts?: DatePickerTimePickerOpts;
     bottomSlot?: React.ReactNode;
@@ -153,6 +156,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         borderless,
         bottomSlot,
         className,
+        classNames,
         clearIcon,
         dateFnsLocale,
         defaultOpen,
@@ -163,14 +167,11 @@ export default function DatePicker(rawProps: DatePickerProps) {
         disabledDate,
         disabledTime,
         disabledTimePicker,
-        dropdownClassName,
-        dropdownStyle,
         endDateOffset,
         endYear,
         format,
         hideDisabledOptions,
         inputReadOnly,
-        inputStyle,
         insetInput,
         insetLabel,
         insetLabelId,
@@ -208,6 +209,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         startYear,
         stopPropagation,
         style,
+        styles,
         syncSwitchMonth,
         // Tooltip adds it to its child: it belongs to the input, the Tab stop
         tabIndex,
@@ -337,7 +339,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
         onChange: foundation.handleInputChange,
         onEnterPress: (input: string) => foundation.handleInputComplete(input),
         block: true,
-        inputStyle,
+        inputClassName: classNames?.input,
+        inputStyle: styles?.input,
         showClear,
         insetLabel,
         insetLabelId,
@@ -470,9 +473,9 @@ export default function DatePicker(rawProps: DatePickerProps) {
                     [cssClasses.PANEL_YAM]: isYearOrMonth,
                     [`${cssClasses.PREFIX}-compact`]: density === 'compact',
                 },
-                dropdownClassName
+                classNames?.dropdown
             )}
-            style={dropdownStyle}
+            style={styles?.dropdown}
             x-type={type}
         >
             <div className={`${cssClasses.PREFIX}-container`}>

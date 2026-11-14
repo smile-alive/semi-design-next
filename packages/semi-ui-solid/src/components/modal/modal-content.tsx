@@ -1,6 +1,6 @@
 import { type JSX, Match, Show, Switch, children, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+import { cssClasses, type ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
 import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
 import type { Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import { isAriaKey, toCssLength } from '@fibrae/semi-foundation/utils';
@@ -28,8 +28,8 @@ export interface ModalContentProps extends JSX.AriaAttributes {
     maskRef?: (element: HTMLDivElement) => void;
     children?: JSX.Element;
     modalRender?: (node: JSX.Element) => JSX.Element;
-    bodyStyle?: JSX.CSSProperties | string;
-    maskStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<ModalPart, string>>;
+    styles?: Partial<Record<ModalPart, JSX.CSSProperties | string>>;
     /** On the `.semi-modal` box */
     style?: JSX.CSSProperties | string;
     centered?: boolean;
@@ -55,7 +55,7 @@ export interface ModalContentProps extends JSX.AriaAttributes {
 }
 
 // the foundation's style types are React's
-type FoundationProps = Omit<ModalContentProps, 'style' | 'bodyStyle' | 'maskStyle'>;
+type FoundationProps = Omit<ModalContentProps, 'style' | 'styles'>;
 type Foundation = ModalContentFoundation<FoundationProps, MouseEvent>;
 type Adapter = ModalContentAdapter<FoundationProps, MouseEvent>;
 
@@ -74,8 +74,8 @@ export default function ModalContent(props: ModalContentProps) {
         'maskRef',
         'children',
         'modalRender',
-        'bodyStyle',
-        'maskStyle',
+        'classNames',
+        'styles',
         'style',
         'centered',
         'closable',
@@ -169,7 +169,7 @@ export default function ModalContent(props: ModalContentProps) {
     );
 
     const bodyNode = () => (
-        <div class={clsx(`${prefix}-body`, { [`${prefix}-withIcon`]: hasIcon() })} style={local.bodyStyle} x-semi-prop="children">
+        <div class={clsx(`${prefix}-body`, { [`${prefix}-withIcon`]: hasIcon() }, local.classNames?.body)} style={local.styles?.body} x-semi-prop="children">
             {local.children}
         </div>
     );
@@ -178,10 +178,16 @@ export default function ModalContent(props: ModalContentProps) {
         <div
             {...dialogAria}
             ref={mergeRefs(local.contentRef, (node: HTMLDivElement) => (dialog = node))}
-            class={clsx(`${prefix}-content`, local.contentClassName, {
-                [`${prefix}-content-fullScreen`]: local.isFullScreen,
-                [`${prefix}-content-height-set`]: heightSet(),
-            })}
+            class={clsx(
+                `${prefix}-content`,
+                local.contentClassName,
+                {
+                    [`${prefix}-content-fullScreen`]: local.isFullScreen,
+                    [`${prefix}-content-height-set`]: heightSet(),
+                },
+                local.classNames?.content
+            )}
+            style={local.styles?.content}
             aria-labelledby={labelledBy()}
             aria-modal={dialogAria['aria-modal'] ?? (isModal(props) ? 'true' : undefined)}
             role={local.role ?? 'dialog'}
@@ -190,7 +196,7 @@ export default function ModalContent(props: ModalContentProps) {
             <Switch>
                 <Match when={hasHeaderProp()}>{header()}</Match>
                 <Match when={hasTitle()}>
-                    <div class={`${prefix}-header`}>
+                    <div class={clsx(`${prefix}-header`, local.classNames?.header)} style={local.styles?.header}>
                         {iconNode()}
                         {/* h5 look, h2 outline: the sheet's title is level 2 as well */}
                         <Typography.Title id={`${dialogId}-title`} component="h2" class={`${prefix}-title`} heading={5} x-semi-prop="title">
@@ -213,7 +219,7 @@ export default function ModalContent(props: ModalContentProps) {
                 {bodyNode()}
             </Show>
             <Show when={hasContent(footer())}>
-                <div class={`${prefix}-footer`} x-semi-prop="footer">
+                <div class={clsx(`${prefix}-footer`, local.classNames?.footer)} style={local.styles?.footer} x-semi-prop="footer">
                     {footer()}
                 </div>
             </Show>
@@ -235,7 +241,7 @@ export default function ModalContent(props: ModalContentProps) {
             })}
         >
             <Show when={local.mask}>
-                <div ref={(node) => local.maskRef?.(node)} class={clsx(`${prefix}-mask`, local.maskClassName)} style={local.maskStyle} />
+                <div ref={(node) => local.maskRef?.(node)} class={clsx(`${prefix}-mask`, local.maskClassName, local.classNames?.mask)} style={local.styles?.mask} />
             </Show>
             <div
                 class={clsx(`${prefix}-wrap`, { [`${prefix}-wrap-center`]: local.centered })}

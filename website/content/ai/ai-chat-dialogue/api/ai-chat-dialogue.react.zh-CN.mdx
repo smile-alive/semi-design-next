@@ -7,12 +7,11 @@ import ApiType from '#/components/ApiType.astro';
 | align | 对话布局方式，可选 `leftRight`（左右分布）或 `leftAlign`（左对齐）。 | `'leftAlign' \| 'leftRight'` | `"leftRight"` |
 | chats | 受控对话消息列表，配合 onChatsChange 使用。 | `Message[]` | - |
 | className | 根元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `hint`（提示区最外层），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, string>>"}>Type</ApiType> | - |
 | dialogueRenderConfig | 自定义各区块的渲染，可替换头像、标题、内容、操作栏或整条对话。 | `DialogueRenderConfig` | - |
 | disabledFileItemClick | 是否禁用文件卡片的点击。 | `boolean` | `false` |
 | escapeHtml | 是否转义用户消息中的 HTML 标签，防止被 Markdown 解析器当作 HTML 处理而丢失内容。 | `boolean` | `true` |
-| hintCls | 提示区最外层的类名。 | `string` | - |
 | hints | 提示信息。点击某条提示后，它成为新的用户消息，并触发 onHintClick。 | `string[]` | - |
-| hintStyle | 提示区最外层的样式。 | `React.CSSProperties` | - |
 | markdownRenderProps | 透传给每条消息所用 MarkdownRender 的属性，`raw` 与 `ref` 由消息决定，不可传入。`components` 与内置组件合并，同名的（如 `code`）覆盖内置组件，需要保留默认功能时可用 `AIChatDialogue.defaultComponents.code` 二次封装；代码块的高亮语言需先通过 `CodeHighlight.register` 注册。 | `MarkdownRenderProps` | - |
 | messageEditRender | 用户消息处于编辑状态时显示的编辑器，参数为消息转换得到的输入内容。 | <ApiType detail={"(props: MessageContent) => ReactNode"}>Type</ApiType> | - |
 | mode | 对话模式，可选 `bubble`、`noBubble` 或 `userBubble`。 | `'bubble' \| 'noBubble' \| 'userBubble'` | `"bubble"` |
@@ -38,6 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | showReference | 是否在文字或文件消息中展示可被引用的图标，仅对用户消息生效。 | `boolean` | `false` |
 | showReset | 是否展示重置操作。 | `boolean` | `true` |
 | style | 根元素的样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, React.CSSProperties>>"}>Type</ApiType> | - |
 
 **Methods**
 

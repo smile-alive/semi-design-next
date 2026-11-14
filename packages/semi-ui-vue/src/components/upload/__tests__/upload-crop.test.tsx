@@ -279,7 +279,7 @@ describe('Upload 裁剪', () => {
         expect(onPastingError).toHaveBeenCalledTimes(1);
     });
 
-    it('cropModalProps 的 width 生效，style、bodyStyle 与内置高度合并且使用方优先', async () => {
+    it('cropModalProps 的 width 生效，style、styles 与内置高度合并且使用方优先', async () => {
         const onOk = fn();
         mockCropperCanvas();
         const onFileChange = fn();
@@ -290,7 +290,7 @@ describe('Upload 裁剪', () => {
                 motion: false,
                 width: 800,
                 style: { height: '520px' },
-                bodyStyle: { color: 'red' },
+                styles: { body: { color: 'red' } },
                 onOk,
             },
         });

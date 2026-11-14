@@ -23,7 +23,7 @@
         activeKey = $bindable(),
         arrowPosition = defaults('arrowPosition', 'both'),
         collapsible = defaults('collapsible', false),
-        contentStyle = defaults('contentStyle'),
+        classNames = defaults('classNames'),
         dropdownProps = defaults('dropdownProps'),
         keepDOM = defaults('keepDOM', true),
         lazyRender = defaults('lazyRender', false),
@@ -31,13 +31,11 @@
         preventScroll = defaults('preventScroll'),
         showRestInDropdown = defaults('showRestInDropdown', true),
         size = defaults('size', 'large'),
-        tabBarClassName = defaults('tabBarClassName'),
-        tabBarStyle = defaults('tabBarStyle'),
+        styles = defaults('styles'),
         tabList = defaults('tabList', []),
         tabPaneMotion = defaults('tabPaneMotion', true),
         tabPosition = defaults('tabPosition', 'top'),
         type = defaults('type', 'line'),
-        visibleTabsStyle = defaults('visibleTabsStyle'),
         onChange,
         onTabClick,
         onTabClose,
@@ -136,10 +134,11 @@
         showRestInDropdown,
         more,
         arrowPosition,
-        visibleTabsStyle,
+        classNames: { visibleTabs: classNames?.visibleTabs },
+        styles: { visibleTabs: styles?.visibleTabs },
         dropdownProps,
-        class: tabBarClassName,
-        style: tabBarStyle,
+        class: classNames?.tabBar,
+        style: styles?.tabBar,
     });
 
     // Without `panel` the content area is the single panel; without a matching tab it has nothing to be labelled by
@@ -178,7 +177,7 @@
     {:else}
         {@render defaultBar()}
     {/if}
-    <div {...contentPanelAttrs} class={[cssClasses.TABS_CONTENT, `${cssClasses.TABS_CONTENT}-${tabPosition}`]} style={contentStyle}>
+    <div {...contentPanelAttrs} class={[cssClasses.TABS_CONTENT, `${cssClasses.TABS_CONTENT}-${tabPosition}`, classNames?.content]} style={styles?.content}>
         {#if panel}
             {#each tabList as item, index (item.itemKey)}
                 {#if keepDOM || item.itemKey === current}

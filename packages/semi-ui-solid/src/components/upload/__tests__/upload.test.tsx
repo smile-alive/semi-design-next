@@ -1071,11 +1071,14 @@ describe('Upload', () => {
         expect(document.querySelector(`.${prefixCls}-file-card-replace`)).not.toBeNull();
     });
 
-    it('itemStyle 属性', () => {
-        renderUpload({ defaultFileList, itemStyle: { 'background-color': 'red' } });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderUpload({ defaultFileList, classNames: { item: 'my-item' }, styles: { item: { 'background-color': 'red' } } });
         const cards = screen.getAllByRole('listitem');
         expect(cards).toHaveLength(2);
-        cards.forEach((card) => expect(card).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' }));
+        cards.forEach((card) => {
+            expect(card).toHaveClass('my-item');
+            expect(card).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' });
+        });
     });
 
     it('picHeight 与 picWidth 属性', () => {

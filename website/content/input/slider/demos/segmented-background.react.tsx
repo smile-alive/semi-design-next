@@ -24,5 +24,5 @@ export default function SliderDemo() {
 
     const railStyle = useMemo(() => getRailStyle(value), [value]);
 
-    return <Slider aria-label="Value range" range min={range[0]} max={range[1]} onChange={changeValue} railStyle={railStyle} value={value} />;
+    return <Slider aria-label="Value range" range min={range[0]} max={range[1]} onChange={changeValue} styles={{ rail: railStyle }} value={value} />;
 }

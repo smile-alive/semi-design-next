@@ -133,15 +133,15 @@
                 {#if extra}{@render extra({ option, index })}{:else}{option.extra}{/if}
             {/snippet}
             <Radio
-                addonClassName={option.addonClass}
                 addonId={option.addonId}
-                addonStyle={option.addonStyle}
                 children={option.label !== undefined || label ? optionLabel : undefined}
                 class={option.class}
+                classNames={option.classNames}
                 disabled={option.disabled || disabled}
                 extra={option.extra !== undefined || extra ? optionExtra : undefined}
                 extraId={option.extraId}
                 style={option.style}
+                styles={option.styles}
                 value={option.value}
             />
         {/each}

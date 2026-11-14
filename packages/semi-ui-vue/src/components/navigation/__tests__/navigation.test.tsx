@@ -98,7 +98,7 @@ describe('Navigation', () => {
         ];
         render(Nav, {
             props: {
-                bodyStyle: { height: '320px' },
+                styles: { body: { height: '320px' } },
                 defaultOpenKeys: ['job'],
                 footer: { collapseButton: true },
                 header: { text: 'Semi 运营后台' },
@@ -1032,18 +1032,30 @@ describe('Navigation 行为', () => {
             expect(getSubTitle('嵌套').closest('li')).not.toHaveClass(`${prefixCls}-sub-wrap`);
         });
 
-        it('dropdownStyle 优先于 dropdownProps.style，未给时不覆盖', async () => {
+        it('classNames 与 styles 按部位落到对应元素', async () => {
+            useFakeTimers();
+            renderMore({ classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: { color: 'green' } } }, { classNames: { body: 'my-body' }, styles: { body: { color: 'red' } } });
+            const body = document.querySelector(`.${prefixCls}-list-wrapper`);
+            expect(body).toHaveClass('my-body');
+            expect(body).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+            await hover(getSubTitle('更多'));
+            await vi.advanceTimersByTimeAsync(100);
+            expect(popupOf('文档')).toHaveClass('my-dropdown');
+            expect(popupOf('文档')).toHaveStyle({ color: 'rgb(0, 128, 0)' });
+        });
+
+        it('styles.dropdown 优先于 dropdownProps.style，未给时不覆盖', async () => {
             useFakeTimers();
             const view = renderMore({
                 dropdownProps: { style: { width: '200px' } },
-                dropdownStyle: { width: '240px' },
+                styles: { dropdown: { width: '240px' } },
             });
             await hover(getSubTitle('更多'));
             await vi.advanceTimersByTimeAsync(100);
             expect(popupOf('文档')).toHaveStyle({ width: '240px' });
             await unhover(getSubTitle('更多'));
             view.unmount();
-            renderMore({ dropdownProps: { style: { width: '200px' } }, dropdownStyle: undefined });
+            renderMore({ dropdownProps: { style: { width: '200px' } }, styles: undefined });
             await hover(getSubTitle('更多'));
             await vi.advanceTimersByTimeAsync(100);
             expect(popupOf('文档')).toHaveStyle({ width: '200px' });
@@ -1557,7 +1569,7 @@ describe('Navigation 的 Vue 用法', () => {
             expect(props).not.toHaveProperty('disabled');
             expect(props).not.toHaveProperty('indent');
             expect(props).not.toHaveProperty('isCollapsed');
-            expect(props).not.toHaveProperty('dropdownStyle');
+            expect(props).not.toHaveProperty('styles');
         }
     });
 

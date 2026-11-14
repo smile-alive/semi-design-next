@@ -1,4 +1,5 @@
 import type { JSX, Ref } from 'solid-js';
+import type { AIChatDialoguePart } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { AvatarProps } from '@fibrae/semi-ui-solid/avatar/index';
@@ -32,9 +33,9 @@ export interface AIChatDialogueProps extends ElementProps<'div', 'onSelect' | 'r
     chats?: Message[];
     disabledFileItemClick?: boolean;
     escapeHtml?: boolean;
-    hintCls?: string;
+    classNames?: Partial<Record<AIChatDialoguePart, string>>;
     hints?: string[];
-    hintStyle?: JSX.CSSProperties | string;
+    styles?: Partial<Record<AIChatDialoguePart, JSX.CSSProperties | string>>;
     selecting?: boolean;
     markdownRenderProps?: MarkdownRenderProps;
     messageEditRender?: (props: MessageContent) => JSX.Element;

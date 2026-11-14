@@ -39,5 +39,5 @@
 </script>
 
 <template>
-    <TreeSelect :defaultValue="['Beijing', 'Shanghai', 'Shenzhen', 'Guangzhou']" :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" filterTreeNode multiple placeholder="请选择多个选项或输入长文本" searchPosition="trigger" style="width: 260px" :treeData="treeData" triggerTagWrap />
+    <TreeSelect :defaultValue="['Beijing', 'Shanghai', 'Shenzhen', 'Guangzhou']" filterTreeNode multiple placeholder="请选择多个选项或输入长文本" searchPosition="trigger" style="width: 260px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" triggerTagWrap />
 </template>

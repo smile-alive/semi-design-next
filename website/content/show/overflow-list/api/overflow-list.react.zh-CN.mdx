@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | className | 根元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `wrapper`（scroll 模式下的滚动 wrapper），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cOverflowListPart, string>>"}>Type</ApiType> | - |
 | collapseFrom | collapse 模式的折叠方向，可选 `start` 或 `end`。 | `'end' \| 'start'` | `"end"` |
 | itemKey | 每项 key 的字段名，或取 key 的函数；默认读取 key 字段，没有时取该项在 items 中的位置。 | <ApiType detail={"string \u007c number \u007c ((item: T) => string \u007c number)"}>Type</ApiType> | - |
 | items | 渲染项目，只放数据，不放节点，节点由 visibleItemRenderer 渲染；scroll 模式要求每项含 key 字段（或由 itemKey 指定的字段）。 | <ApiType detail={"Array\u003cT>"}>Type</ApiType> | `[]` |
@@ -16,8 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | ref | 根元素的引用。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | renderMode | 渲染模式，可选 `collapse` 或 `scroll`。 | `'collapse' \| 'scroll'` | `"collapse"` |
 | style | 根元素的样式。 | `CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cOverflowListPart, CSSProperties>>"}>Type</ApiType> | - |
 | threshold | scroll 模式下触发相交回调的可见比例阈值。 | `number` | `0.75` |
 | visibleItemRenderer | 渲染单个可见项并返回该项的 React 元素，参数 index 为该项在 items 中的位置。scroll 模式下该元素会被观察，并写入 `data-scrollkey`。 | <ApiType detail={"(item: T, index: number) => ReactElement"}>Type</ApiType> | <ApiType detail={"(): ReactElement => null"}>Type</ApiType> |
-| wrapperClassName | scroll 模式下滚动 wrapper 的类名。 | `string` | - |
-| wrapperProps | scroll 模式下滚动 wrapper 的其他属性，例如承载可见项的 role；其中的 className 与 style 会被 wrapperClassName、wrapperStyle 覆盖。 | <ApiType detail={"HTMLAttributes\u003cHTMLDivElement>"}>Type</ApiType> | - |
-| wrapperStyle | scroll 模式下滚动 wrapper 的样式，传入样式对象。 | `CSSProperties` | - |
+| wrapperProps | scroll 模式下滚动 wrapper 的其他属性，例如承载可见项的 role；其中的 className 与 style 会被 `classNames.wrapper`、`styles.wrapper` 覆盖。 | <ApiType detail={"HTMLAttributes\u003cHTMLDivElement>"}>Type</ApiType> | - |

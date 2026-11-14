@@ -15,9 +15,9 @@ const tooltipShownSelector = `.${BASE_CLASS_PREFIX}-tooltip-wrapper-show`;
 const options = () => [<Select.Option value="abc">抖音</Select.Option>, <Select.Option value="hotsoon">火山</Select.Option>, <Select.Option value="xigua">西瓜视频</Select.Option>];
 
 describe('Select 与 Tooltip、Popover 的集成', () => {
-    it('disabled Select 是特殊触发器：外包 span 带 wrapperClassName 并作为停靠点', async () => {
+    it('disabled Select 是特殊触发器：外包 span 带 classNames.wrapper 并作为停靠点', async () => {
         render(() => (
-            <Tooltip wrapperClassName="probe" content="hint" motion={false} trigger="click">
+            <Tooltip classNames={{ wrapper: 'probe' }} content="hint" motion={false} trigger="click">
                 {(t) => (
                     <Select disabled motion={false} placeholder="请选择业务线" style={{ width: '120px' }} {...t()}>
                         {options()}
@@ -37,7 +37,7 @@ describe('Select 与 Tooltip、Popover 的集成', () => {
 
     it('未禁用的 Select 不被包裹', () => {
         render(() => (
-            <Tooltip wrapperClassName="probe" content="hint" motion={false} trigger="click">
+            <Tooltip classNames={{ wrapper: 'probe' }} content="hint" motion={false} trigger="click">
                 {(t) => (
                     <Select motion={false} {...t()}>
                         {options()}

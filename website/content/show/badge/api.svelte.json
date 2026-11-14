@@ -10,13 +10,9 @@
                 "zh-CN": "徽章内容，数字、字符串或 snippet；传 snippet 时直接渲染该 snippet，并去掉类型与主题样式类。",
                 "en-US": "Badge content as a number, string or snippet. A snippet is rendered as given and removes the type and theme classes."
             },
-            "countClassName": {
-                "zh-CN": "内容区域的类名。",
-                "en-US": "Class name of the count element."
-            },
-            "countStyle": {
-                "zh-CN": "内容区域的样式字符串。",
-                "en-US": "Style string of the count element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 count，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by count; values take anything class takes (string, array or object) and merge with the built-in classes."
             },
             "dot": {
                 "zh-CN": "显示为小圆点，不展示内容。",
@@ -29,6 +25,10 @@
             "position": {
                 "zh-CN": "徽章相对被包裹元素的位置；缺省时 RTL 的 ConfigProvider 下为 leftTop，否则为 rightTop。",
                 "en-US": "Badge position relative to the wrapped element. Defaults to leftTop under an RTL ConfigProvider and rightTop otherwise."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "theme": {
                 "zh-CN": "徽章主题，可选 solid、light、inverted。",

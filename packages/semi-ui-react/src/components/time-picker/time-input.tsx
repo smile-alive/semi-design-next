@@ -53,7 +53,7 @@ export type TimeInputProps = Pick<
 
 /** The Input that TimePicker shows as its trigger; keeps the caret in place while the text is re-formatted */
 export default function TimeInput(props: TimeInputProps) {
-    const { prefixCls, placeholder, inputReadOnly, type, locale, validateStatus, value, invalid, focusOnOpen, onChange, onFocus, onBlur, ...rest } = props;
+    const { prefixCls, className, placeholder, inputReadOnly, type, locale, validateStatus, value, invalid, focusOnOpen, onChange, onFocus, onBlur, ...rest } = props;
 
     const inputRef = useRef<InputHandle>(null);
 
@@ -79,7 +79,7 @@ export default function TimeInput(props: TimeInputProps) {
             <Input
                 {...rest}
                 ref={inputRef}
-                className={inputCls}
+                className={clsx(inputCls, className)}
                 placeholder={placeholder || locale.placeholder[type]}
                 readOnly={Boolean(inputReadOnly)}
                 value={value as string}

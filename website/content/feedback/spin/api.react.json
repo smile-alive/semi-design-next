@@ -2,13 +2,13 @@
     "spin": {
         "source": "packages/semi-ui-react/src/components/spin/spin.tsx",
         "props": {
-            "childStyle": {
-                "zh-CN": "内部子元素的内联样式。",
-                "en-US": "Inline style of the inner children element."
-            },
             "children": {
                 "zh-CN": "被包裹的内容。有内容时 Spin 作为包裹元素，加载中内容带 `inert`，不能聚焦和操作。",
                 "en-US": "Content to wrap. With content, Spin acts as a wrapper; while loading, the content is `inert` and cannot be focused or operated."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `child`（包裹内容的子元素），追加在自带类名之后。",
+                "en-US": "Class names of the inner parts, keyed by `child` (the element wrapping the content), appended after the built-in class names."
             },
             "delay": {
                 "zh-CN": "延迟显示加载效果的时间，单位毫秒。",
@@ -34,13 +34,13 @@
                 "zh-CN": "根元素的内联样式。",
                 "en-US": "Inline style of the root element."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键为 `child`（包裹内容的子元素）。",
+                "en-US": "Inline styles of the inner parts, keyed by `child` (the element wrapping the content)."
+            },
             "tip": {
                 "zh-CN": "加载中显示在指示符下方的描述文字，常在 Spin 作为包裹元素时使用，传入 ReactNode。",
                 "en-US": "Description text shown below the indicator while loading, often used when Spin wraps content. A ReactNode."
-            },
-            "wrapperClassName": {
-                "zh-CN": "根元素的额外类名，与 `className` 一并添加到根元素上。",
-                "en-US": "Extra class name added to the root element, together with `className`."
             }
         }
     }

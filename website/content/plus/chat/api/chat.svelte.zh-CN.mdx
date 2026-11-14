@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | 输入框下方内容的 snippet。 | `Snippet` | - |
 | canSend | 发送按钮是否可用。通常由内部逻辑决定，设置后以此值为准。 | `boolean` | - |
 | chats | 对话列表，可绑定：`bind:chats`。发送消息、点赞、重置、清除上下文、删除时，Chat 先把新列表写回，再触发 `onChatsChange`。列表的整体替换、`push` 和最后一条消息文本的就地增长都会被跟随，其他就地修改（如深层 content 改动、单独翻转 status）会渲染但不被跟随，建议整体替换数组。 | `ChatMessage[]` | - |
+| classNames | 内部各部位的类名，键为 hint（提示区最外层）、inputBox（输入框），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cChatPart, ClassValue>>"}>Type</ApiType> | - |
 | content | 自定义消息内容区域的 snippet，参数为 `message`、`role`、默认内容 `defaultContent`（snippet）和类名 `class`。 | <ApiType detail={"Snippet\u003c[ChatContentSnippetProps]>"}>Type</ApiType> | - |
 | customMarkDownComponents | 自定义 Markdown 渲染组件，键为元素名，传给消息内容的 MarkdownRender。 | `MarkdownRenderComponents` | - |
 | divider | 自定义清除上下文后的分割线的 snippet，参数为 `message`。 | <ApiType detail={"Snippet\u003c[ChatDividerSnippetProps]>"}>Type</ApiType> | - |
@@ -17,12 +18,8 @@ import ApiType from '#/components/ApiType.astro';
 | escapeHtml | 是否转义用户消息中的 HTML 标签，防止被 Markdown 解析器当作 HTML 处理导致内容丢失。 | `boolean` | `true` |
 | fullChatBox | 完全自定义整个消息框的 snippet，参数为 `message`、`role`、各部分默认节点 `defaultNodes`（snippet）和类名 `class`。 | <ApiType detail={"Snippet\u003c[ChatFullChatBoxSnippetProps]>"}>Type</ApiType> | - |
 | hintBox | 自定义提示项的 snippet，参数为 `content`、`index` 和点击处理函数 `onHintClick`。 | <ApiType detail={"Snippet\u003c[ChatHintBoxSnippetProps]>"}>Type</ApiType> | - |
-| hintCls | 提示区最外层的类名。 | `string` | - |
 | hints | 提示信息列表。点击某项后触发 `onHintClick`，并将该项作为新的用户消息。 | `string[]` | - |
-| hintStyle | 提示区最外层的样式，字符串。 | `string` | - |
 | inputArea | 自定义输入区域的 snippet，参数为 `defaultNode`、各部分节点（`clearContextNode`、`uploadNode`、`inputNode`、`sendNode`，均为 snippet）以及需要自行调用的 `onSend`、`onClear`、`onClick`。 | <ApiType detail={"Snippet\u003c[ChatInputAreaSnippetProps]>"}>Type</ApiType> | - |
-| inputBoxCls | 输入框的类名。 | `string` | - |
-| inputBoxStyle | 输入框的样式，字符串。 | `string` | - |
 | markdownRenderProps | 传给消息内容所用 MarkdownRender 的属性，默认 format 为 md。`raw` 与 `components` 不可设置，自定义渲染组件使用 `customMarkDownComponents`。 | `ChatMarkdownRenderProps` | - |
 | mode | 对话模式，可选 `bubble`、`noBubble` 或 `userBubble`。 | `ChatMode` | `"bubble"` |
 | onChatsChange | 对话列表变化时的回调，在 `chats` 写回之后触发。 | <ApiType detail={"(chats: ChatMessage[]) => void"}>Type</ApiType> | - |
@@ -42,6 +39,7 @@ import ApiType from '#/components/ApiType.astro';
 | sendHotKey | 发送快捷键，可选 `enter` 或 `shift+enter`。`enter` 时单独按 Enter 发送，Shift+Enter 换行；`shift+enter` 相反。 | `SendHotKey` | `"enter"` |
 | showClearContext | 是否在输入框中显示清除上下文按钮。 | `boolean` | `false` |
 | showStopGenerate | 是否在最后一条消息生成中时显示停止生成按钮。生成中发送按钮不可用，点击停止按钮触发 `onStopGenerator`。 | `boolean` | `false` |
+| styles | 内部各部位的样式字符串，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cChatPart, string>>"}>Type</ApiType> | - |
 | title | 自定义消息标题的 snippet，参数为 `message`、`role` 和默认标题 `defaultTitle`（snippet）。提供但渲染为空时不显示标题。 | <ApiType detail={"Snippet\u003c[ChatTitleSnippetProps]>"}>Type</ApiType> | - |
 | topSlot | 对话区域顶部内容的 snippet。 | `Snippet` | - |
 | uploadButton | 替换上传按钮的 snippet。 | `Snippet` | - |

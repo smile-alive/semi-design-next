@@ -7,6 +7,9 @@ export const cssClasses = {
     PREFIX_GROUP: `${BASE_CLASS_PREFIX}-select-group`,
 };
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type SelectPart = 'dropdown';
+
 export const strings = {
     SIZE_SET: ['small', 'large', 'default'],
     POSITION_SET: tooltipStrings.POSITION_SET,

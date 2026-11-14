@@ -481,8 +481,8 @@ validateStatus: default / warning / error
 
 ### 自定义弹出层样式
 
-你可以通过 dropdownClassName、dropdownStyle 控制弹出层的样式  
-例如当自定义弹出层的宽度时，可以通过 dropdownStyle 传入 width
+你可以通过 classNames、styles 的 dropdown 键控制弹出层的样式  
+例如当自定义弹出层的宽度时，可以通过 styles.dropdown 传入 width
 
 <Demo id="dropdown-style" />
 
@@ -807,7 +807,7 @@ interface SelectTriggerSnippetProps {
 
 <SelectReactApi />
 
-其他原生属性（如 `data-*`）落在触发器根元素上，`style` 不会传给下拉弹出层（用 `dropdownStyle`）。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。
+其他原生属性（如 `data-*`）落在触发器根元素上，`style` 不会传给下拉弹出层（用 `styles.dropdown`）。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。
 
 </Framework>
 
@@ -815,7 +815,7 @@ interface SelectTriggerSnippetProps {
 
 <SelectVueApi />
 
-`class`、`style`、`data-*` 与原生监听器落在根元素上，`style` 不会传给下拉弹出层（用 `dropdownStyle`）。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。
+`class`、`style`、`data-*` 与原生监听器落在根元素上，`style` 不会传给下拉弹出层（用 `styles.dropdown`）。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。
 
 </Framework>
 
@@ -823,7 +823,7 @@ interface SelectTriggerSnippetProps {
 
 <SelectSolidApi />
 
-`class`、`style`、`data-*` 与原生属性和事件落在根元素上，`style` 不会传给下拉弹出层（用 `dropdownStyle`）；设置 `triggerRender` 后根元素不再带有 Select 自身的样式类。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。`ref` 得到根元素，见下文 Methods。
+`class`、`style`、`data-*` 与原生属性和事件落在根元素上，`style` 不会传给下拉弹出层（用 `styles.dropdown`）；设置 `triggerRender` 后根元素不再带有 Select 自身的样式类。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。`ref` 得到根元素，见下文 Methods。
 
 </Framework>
 
@@ -831,7 +831,7 @@ interface SelectTriggerSnippetProps {
 
 <SelectSvelteApi />
 
-`class`、`style`、`data-*` 与原生属性和事件落在根元素上，`style` 不会传给下拉弹出层（用 `dropdownStyle`）；设置 `trigger` 后根元素不再带有 Select 自身的样式类。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。
+`class`、`style`、`data-*` 与原生属性和事件落在根元素上，`style` 不会传给下拉弹出层（用 `styles.dropdown`）；设置 `trigger` 后根元素不再带有 Select 自身的样式类。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。
 
 </Framework>
 
@@ -1175,7 +1175,7 @@ import { Select } from '@fibrae/semi-ui-solid';
 
 - **Select 会自动限制下拉菜单的宽度吗？**
 
-    - 会给 minWidth，但不会写死 width。如果有需要的话，可以自己通过 dropdownStyle 来添加。
+    - 会给 minWidth，但不会写死 width。如果有需要的话，可以自己通过 styles.dropdown 来添加。
 
 - **为什么单选选择选项后没有触发 blur 事件？**
     - Select 支持 A11y，单选选择后不会触发 Select 的 blur 事件。

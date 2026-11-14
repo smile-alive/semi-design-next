@@ -24,7 +24,6 @@ export interface ModalAdapter<P extends ModalProps = ModalProps, CE = unknown, O
 
 export interface ModalProps {
     afterClose?: () => void;
-    bodyStyle?: Record<string, any>;
     cancelButtonProps?: any;
     cancelText?: string;
     centered?: boolean;
@@ -40,7 +39,6 @@ export interface ModalProps {
     height?: string | number;
     mask?: boolean;
     maskClosable?: boolean;
-    maskStyle?: Record<string, any>;
     maskFixed?: boolean;
     motion?: boolean;
     okButtonProps?: any;

@@ -13,7 +13,7 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '320px' }" :footer="{ collapseButton: true }" :items="items" @click="(data) => console.log('trigger onClick: ', data)" @select="(data) => console.log('trigger onSelect: ', data)">
+    <Nav :footer="{ collapseButton: true }" :items="items" :styles="{ body: { height: '320px' } }" @click="(data) => console.log('trigger onClick: ', data)" @select="(data) => console.log('trigger onSelect: ', data)">
         <template #icon="renderProps">
             <component :is="iconOf(renderProps.item)" />
         </template>

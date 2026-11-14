@@ -187,17 +187,22 @@ describe('Descriptions', () => {
         expect(getKeys(container)[0]).toHaveTextContent(/^a:$/);
     });
 
-    it('keyStyle 作用于 key，Item 调用函数值', () => {
-        const { container } = render(() => <Descriptions data={[{ key: 'a', value: 'from data', keyStyle: { color: 'red' } }]} />);
+    it('classNames 与 styles 按部位落到 key，Item 调用函数值', () => {
+        const { container } = render(() => <Descriptions data={[{ key: 'a', value: 'from data', classNames: { key: 'my-key' }, styles: { key: { color: 'red' } } }]} />);
+        expect(getKeys(container)[0]).toHaveClass('semi-descriptions-key', 'my-key');
         expect(getKeys(container)[0]).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getValues(container)[0]).toHaveTextContent(/^from data$/);
 
         const { container: jsx } = render(() => (
             <Descriptions>
-                <Descriptions.Item itemKey="b">{() => 'from children'}</Descriptions.Item>
+                <Descriptions.Item itemKey="b" classNames={{ key: 'item-key' }} styles={{ key: { color: 'blue' } }}>
+                    {() => 'from children'}
+                </Descriptions.Item>
             </Descriptions>
         ));
         expect(getValues(jsx)[0]).toHaveTextContent(/^from children$/);
+        expect(getKeys(jsx)[0]).toHaveClass('item-key');
+        expect(getKeys(jsx)[0]).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     });
 
     it('跳过以 JSX 书写的隐藏项', () => {

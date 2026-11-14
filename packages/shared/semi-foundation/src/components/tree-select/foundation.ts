@@ -77,13 +77,10 @@ export interface BasicTreeSelectProps extends Pick<
     autoAdjustOverflow?: boolean;
     clickToHide?: boolean;
     defaultOpen?: boolean;
-    dropdownClassName?: string;
     dropdownMatchSelectWidth?: boolean;
-    dropdownStyle?: any;
     insetLabel?: any;
     maxTagCount?: number;
     motionExpand?: boolean;
-    optionListStyle?: any;
     outerBottomSlot?: any;
     outerTopSlot?: any;
     placeholder?: string;

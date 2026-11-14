@@ -102,13 +102,28 @@ describe('Modal', () => {
         expect(onCancel).toHaveBeenCalledTimes(1);
     });
 
-    it('class / style / maskStyle / bodyStyle / zIndex', () => {
-        renderModal({ class: 'test', style: { color: 'red' }, visible: true, maskStyle: { color: 'grey' }, bodyStyle: { color: 'pink' }, zIndex: 500 });
+    it('class / style / styles / zIndex', () => {
+        renderModal({ class: 'test', style: { color: 'red' }, visible: true, styles: { mask: { color: 'grey' }, body: { color: 'pink' } }, zIndex: 500 });
         expect($('div.test')).not.toBeNull();
         expect($(`.${p}`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect($(`.${p}-body`)).toHaveStyle({ color: 'rgb(255, 192, 203)' });
         expect($(`.${p}-mask`)).toHaveStyle({ color: 'rgb(128, 128, 128)' });
         expect($(`.${BASE_CLASS_PREFIX}-portal`).style.zIndex).toEqual('500');
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['mask', 'content', 'header', 'body', 'footer'] as const;
+        renderModal({
+            visible: true,
+            title: 'T',
+            classNames: Object.fromEntries(parts.map((part) => [part, `my-${part}`])),
+            styles: Object.fromEntries(parts.map((part) => [part, { order: parts.indexOf(part) + 1 }])),
+        });
+        for (const part of parts) {
+            const el = $(`.${p}-${part}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('style 为字符串时与尺寸合并', () => {

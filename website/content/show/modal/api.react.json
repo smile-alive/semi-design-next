@@ -6,7 +6,6 @@
                 "zh-CN": "对话框完全关闭后的回调；显示期间被卸载，或所在子树被 `Activity` 隐藏时也会调用一次。",
                 "en-US": "Called after the dialog has fully closed. It is also called once when the dialog is unmounted while shown, or when a subtree holding it is hidden by `Activity`."
             },
-            "bodyStyle": { "zh-CN": "对话框内容区的样式。", "en-US": "Style of the dialog body." },
             "cancelButtonProps": {
                 "zh-CN": "取消按钮的属性，类型同 Button。打开后默认聚焦取消按钮，`autoFocus` 为 `false` 时不聚焦；`onClick` 先于内置的取消处理调用，不会替换内置处理。",
                 "en-US": "Props of the cancel button, the same as Button. It is focused on open unless `autoFocus` is `false`. `onClick` runs before the built-in cancel handling, which still runs."
@@ -22,6 +21,10 @@
             "centered": { "zh-CN": "是否垂直居中显示。", "en-US": "Whether the dialog is vertically centered." },
             "children": { "zh-CN": "对话框的正文。", "en-US": "Body of the dialog." },
             "className": { "zh-CN": "落在 portal 内最外层元素上的类名。", "en-US": "Class name of the outermost element inside the portal." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与组件自带的类名合并；自定义 `header` 时没有 `header` 部位。",
+                "en-US": "Class names of the inner parts, keyed by `mask`, `content`, `header`, `body` and `footer`; merged with the built-in classes. There is no `header` part when `header` is customized."
+            },
             "closable": { "zh-CN": "是否显示右上角的关闭按钮。", "en-US": "Whether the close button in the corner is shown." },
             "closeIcon": {
                 "zh-CN": "关闭按钮的图标；传入 `null` 时回落到默认图标，隐藏关闭按钮请用 `closable={false}`。",
@@ -68,7 +71,6 @@
                 "zh-CN": "遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理（aria-modal、页面 inert、Tab 锁定、body 滚动锁定）。",
                 "en-US": "Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock)."
             },
-            "maskStyle": { "zh-CN": "遮罩的样式。", "en-US": "Style of the mask." },
             "modalContentClass": { "zh-CN": "对话框内容元素的类名。", "en-US": "Class name of the dialog content element." },
             "modalRender": {
                 "zh-CN": "自定义渲染对话框本身，参数是 `role=\"dialog\"` 元素，返回值必须包含它，例如用 `DragMove` 包裹。",
@@ -106,6 +108,7 @@
                 "en-US": "Width preset of the dialog: `small` is 448px, `medium` 684px, `large` 920px, `full-width` `100vw - 64px`."
             },
             "style": { "zh-CN": "落在 `.semi-modal` 对话框盒子上的样式。", "en-US": "Style of the `.semi-modal` dialog box." },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "title": {
                 "zh-CN": "对话框标题；未传入 `aria-label` 或自定义 `header` 时，标题用于命名对话框。",
                 "en-US": "Title of the dialog. Without `aria-label` or a custom `header`, the title names the dialog."

@@ -101,15 +101,22 @@ describe('Svelte Spin', () => {
         expect(vi.getTimerCount()).toBe(0);
     });
 
-    it('class 与 wrapperClassName 及其余属性落在根元素', () => {
-        const { root } = setup({ wrapperClassName: 'wrap', class: 'custom', 'data-x': '1', style: 'color: red' } as SpinProps);
-        expect(root()).toHaveClass(prefixCls, 'wrap', 'custom');
+    it('class 与其余属性落在根元素', () => {
+        const { root } = setup({ class: 'custom', 'data-x': '1', style: 'color: red' } as SpinProps);
+        expect(root()).toHaveClass(prefixCls, 'custom');
         expect(root()).toHaveAttribute('data-x', '1');
         expect(root()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('渲染 indicator、tip、children、size 与 childStyle', () => {
-        const { root, view } = setup({ size: 'large', childStyle: 'opacity: 0.5' }, { indicator: true, tip: 'loading', content: true });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { root } = setup({ classNames: { child: 'c' }, styles: { child: 'order: 6' } }, { content: true });
+        expect(root()).not.toHaveClass('c');
+        expect(screen.getByText('content').parentElement).toHaveClass(`${prefixCls}-children`, 'c');
+        expect(screen.getByText('content').parentElement).toHaveStyle({ order: '6' });
+    });
+
+    it('渲染 indicator、tip、children、size 与 styles.child', () => {
+        const { root, view } = setup({ size: 'large', styles: { child: 'opacity: 0.5' } }, { indicator: true, tip: 'loading', content: true });
         expect(root()).toHaveClass(`${prefixCls}-large`, `${prefixCls}-block`);
         expect(screen.getByTestId('indicator').parentElement).toHaveAttribute('x-semi-prop', 'indicator');
         expect(screen.getByText('loading').parentElement).toHaveAttribute('x-semi-prop', 'tip');

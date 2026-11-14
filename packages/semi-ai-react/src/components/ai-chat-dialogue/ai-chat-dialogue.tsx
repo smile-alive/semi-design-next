@@ -42,9 +42,9 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: R
         className,
         disabledFileItemClick,
         escapeHtml,
-        hintCls,
+        classNames,
         hints: hintsProp,
-        hintStyle,
+        styles,
         selecting,
         markdownRenderProps,
         messageEditRender,
@@ -152,7 +152,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: R
                         onSelectChange={foundation.handleSelectOrRemove}
                     />
                 ))}
-                {hints.length > 0 && <Hint className={hintCls} style={hintStyle} hints={hints} selecting={selecting} renderHintBox={renderHintBox} onHintClick={foundation.handleHintClick} />}
+                {hints.length > 0 && <Hint className={classNames?.hint} style={styles?.hint} hints={hints} selecting={selecting} renderHintBox={renderHintBox} onHintClick={foundation.handleHintClick} />}
             </div>
             {backBottomVisible && (
                 <span ref={handoverBackBottomFocus} className={`${prefix}-backBottom`}>

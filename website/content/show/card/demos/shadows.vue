@@ -2,12 +2,12 @@
     import { IconInfoCircle } from '@fibrae/semi-icons-vue';
     import { Avatar, Card, Popover } from '@fibrae/semi-ui-vue';
 
-    const bodyStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between' };
+    const styles = { body: { display: 'flex', alignItems: 'center', justifyContent: 'space-between' } };
 </script>
 
 <template>
     <div>
-        <Card :bodyStyle="bodyStyle" shadows="hover" :style="{ maxWidth: '360px' }">
+        <Card shadows="hover" :style="{ maxWidth: '360px' }" :styles="styles">
             <Card.Meta title="Semi Doc">
                 <template #avatar>
                     <Avatar alt="Card meta img" size="default" src="/assets/placeholder/logo.svg" />
@@ -21,7 +21,7 @@
             </Popover>
         </Card>
         <br />
-        <Card :bodyStyle="bodyStyle" shadows="always" :style="{ maxWidth: '360px' }">
+        <Card shadows="always" :style="{ maxWidth: '360px' }" :styles="styles">
             <Card.Meta title="Semi Doc">
                 <template #avatar>
                     <Avatar alt="Card meta img" size="default" src="/assets/placeholder/logo.svg" />

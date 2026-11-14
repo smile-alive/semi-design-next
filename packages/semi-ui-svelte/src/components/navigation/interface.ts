@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
+import type { NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { IconSize } from '@fibrae/semi-icons-svelte';
 import type { DropdownProps } from '../dropdown/index.js';
@@ -60,13 +61,14 @@ export interface SelectedData {
 export type SubDropdownProps = DropdownProps;
 
 export interface SubNavProps extends Omit<HTMLAttributes<HTMLLIElement>, 'children'> {
+    classNames?: Partial<Record<SubNavPart, ClassValue>>;
     disabled?: boolean;
     dropdownProps?: SubDropdownProps;
-    /** Wins over the style in dropdownProps */
-    dropdownStyle?: string;
     indent?: boolean;
     itemKey?: ItemKey;
     level?: number;
+    /** `dropdown` wins over the style in dropdownProps */
+    styles?: Partial<Record<SubNavPart, string>>;
     /** Applies when dropdownProps is not given */
     subDropdownProps?: SubDropdownProps;
     text?: string | number;
@@ -101,15 +103,16 @@ export interface NavCollapseButtonProps {
 }
 
 export interface NavItemConfig extends EntryAttributes {
+    classNames?: Partial<Record<SubNavPart, ClassValue>>;
     disabled?: boolean;
     dropdownProps?: SubDropdownProps;
-    dropdownStyle?: string;
     indent?: boolean;
     isCollapsed?: boolean;
     itemKey?: ItemKey;
     items?: (string | NavItemConfig)[];
     link?: string;
     linkOptions?: NavLinkOptions;
+    styles?: Partial<Record<SubNavPart, string>>;
     text?: string | number;
     tooltipHideDelay?: number;
     tooltipShowDelay?: number;
@@ -159,7 +162,8 @@ export interface NavItemRenderProps {
 }
 
 export interface NavProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
-    bodyStyle?: string;
+    classNames?: Partial<Record<NavPart, ClassValue>>;
+    styles?: Partial<Record<NavPart, string>>;
     /** Applies in vertical mode only; bindable */
     isCollapsed?: boolean;
     items?: NavItems;

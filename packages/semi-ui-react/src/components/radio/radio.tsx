@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { type strings, radioClasses as css } from '@fibrae/semi-foundation/components/radio/constants';
+import { type RadioPart, type strings, radioClasses as css } from '@fibrae/semi-foundation/components/radio/constants';
 import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import '@fibrae/semi-foundation/components/radio/radio.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -33,8 +33,8 @@ export interface RadioProps extends ElementProps<'label', 'onChange'> {
     extra?: React.ReactNode;
     style?: React.CSSProperties;
     className?: string;
-    addonStyle?: React.CSSProperties;
-    addonClassName?: string;
+    classNames?: Partial<Record<RadioPart, string>>;
+    styles?: Partial<Record<RadioPart, React.CSSProperties>>;
     type?: RadioType;
     addonId?: string;
     extraId?: string;
@@ -58,8 +58,8 @@ export default function Radio(rawProps: RadioProps) {
     const { ref, ...props } = useDefaultProps('Radio', rawProps, defaultProps);
 
     const {
-        addonClassName,
-        addonStyle,
+        classNames,
+        styles,
         id,
         onClick,
         style,
@@ -138,7 +138,7 @@ export default function Radio(rawProps: RadioProps) {
             [`${prefix}-addon-buttonRadio-disabled`]: isButtonRadio && disabled,
             [`${prefix}-addon-buttonRadio-${buttonSize}`]: isButtonRadio && buttonSize,
         },
-        addonClassName
+        classNames?.addon
     );
 
     const hasChildren = hasContent(children);
@@ -148,7 +148,7 @@ export default function Radio(rawProps: RadioProps) {
         hasChildren || hasExtra ? (
             <div className={clsx([`${prefix}-content`, { [`${prefix}-isCardRadioGroup_content`]: isCardRadio }])}>
                 {hasChildren && (
-                    <span id={addonId} className={addonCls} style={addonStyle} x-semi-prop="children">
+                    <span id={addonId} className={addonCls} style={styles?.addon} x-semi-prop="children">
                         {children}
                     </span>
                 )}

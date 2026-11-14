@@ -1,4 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { AutoCompletePart } from '@fibrae/semi-foundation/components/auto-complete/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ModelModifiers, ValidateStatus } from '../input/interface';
 import type { Position } from '../tooltip/interface';
@@ -26,9 +27,9 @@ export interface AutoCompleteProps<T extends AutoCompleteItems = AutoCompleteIte
     defaultActiveFirstOption?: boolean;
     defaultOpen?: boolean;
     disabled?: boolean;
-    dropdownClassName?: string;
+    classNames?: Partial<Record<AutoCompletePart, ClassValue>>;
     dropdownMatchSelectWidth?: boolean;
-    dropdownStyle?: StyleValue;
+    styles?: Partial<Record<AutoCompletePart, StyleValue>>;
     insetLabelId?: string;
     loading?: boolean;
     maxHeight?: string | number;

@@ -692,7 +692,7 @@ describe('Tooltip', () => {
     });
 
     it('禁用 click 包裹、禁用 hover 不包裹，block wrapper 占满宽度', async () => {
-        const view = renderTip({ trigger: 'click', wrapperClassName: 'wrapper' }, () => (
+        const view = renderTip({ trigger: 'click', classNames: { wrapper: 'wrapper' } }, () => (
             <button disabled style={{ display: 'block' }}>
                 disabled
             </button>
@@ -702,12 +702,24 @@ describe('Tooltip', () => {
         await fireEvent.click(screen.getByRole('button').parentElement!);
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
         view.unmount();
-        renderTip({ wrapperClassName: 'wrapper' }, () => <button disabled>disabled</button>);
+        renderTip({ classNames: { wrapper: 'wrapper' } }, () => <button disabled>disabled</button>);
         expect(document.querySelector('.wrapper')).toBeNull();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderTip({ classNames: { wrapper: ['my-wrapper'] }, styles: { wrapper: { order: 3 } } }, () => (
+            <>
+                <span>a</span>
+                <span>b</span>
+            </>
+        ));
+        const wrapper = screen.getByText('a').parentElement;
+        expect(wrapper).toHaveClass('semi-tooltip-trigger-wrapper', 'my-wrapper');
+        expect(wrapper).toHaveStyle({ order: '3', display: 'inline-block' });
+    });
+
     it('loading Button 的包装只有一个 Tab 停靠点且描述在按钮', async () => {
-        renderTip({ trigger: 'click', wrapperClassName: 'loading-wrapper' }, () => <Button loading />);
+        renderTip({ trigger: 'click', classNames: { wrapper: 'loading-wrapper' } }, () => <Button loading />);
         const button = screen.getByRole('button');
         await fireEvent.click(button.parentElement!);
         expect(button).toHaveAccessibleDescription('content');
@@ -726,7 +738,7 @@ describe('Tooltip', () => {
     });
 
     it('disabled 且 loading 的 Button 在 hover 触发时不加包裹元素', () => {
-        renderTip({ wrapperClassName: 'wrapper' }, () => <Button disabled loading />);
+        renderTip({ classNames: { wrapper: 'wrapper' } }, () => <Button disabled loading />);
         expect(document.querySelector('.wrapper')).toBeNull();
     });
 

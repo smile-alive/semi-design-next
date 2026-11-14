@@ -1,7 +1,7 @@
 import React, { useId, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
+import { cssClasses, type PopconfirmPart } from '@fibrae/semi-foundation/components/popconfirm/constants';
 import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
 import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
 import { IconClose, IconAlertTriangle } from '@fibrae/semi-icons-react';
@@ -23,6 +23,8 @@ export interface PopconfirmProps extends PopoverProps {
     cancelText?: string;
     cancelButtonProps?: ButtonProps;
     cancelType?: ButtonType;
+    classNames?: Partial<Record<PopconfirmPart, string>>;
+    styles?: PopoverProps['styles'];
     defaultVisible?: boolean;
     disabled?: boolean;
     icon?: React.ReactNode;

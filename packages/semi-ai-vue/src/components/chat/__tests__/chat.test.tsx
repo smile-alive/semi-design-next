@@ -391,12 +391,24 @@ describe('Chat', () => {
             expect(document.activeElement).toBe(textarea(container));
         });
 
-        it('应用 placeholder、inputBoxCls、inputBoxStyle、插槽、class 与 style', async () => {
+        it('classNames 与 styles 按部位落到对应元素', async () => {
+            const { container } = await renderChat({
+                hints: ['first'],
+                classNames: { hint: 'my-hint', inputBox: 'my-input' },
+                styles: { hint: { order: 1 }, inputBox: { order: 2 } },
+            });
+            expect(container.querySelector('.semi-chat-hints')).toHaveClass('my-hint');
+            expect(container.querySelector('.semi-chat-hints')).toHaveStyle({ order: '1' });
+            expect(container.querySelector('.semi-chat-inputBox')).toHaveClass('my-input');
+            expect(container.querySelector('.semi-chat-inputBox')).toHaveStyle({ order: '2' });
+        });
+
+        it('应用 placeholder、classNames.inputBox、styles.inputBox、插槽、class 与 style', async () => {
             const { container } = await renderChat(
                 {
                     placeholder: 'Ask me',
-                    inputBoxCls: 'my-input',
-                    inputBoxStyle: { color: 'red' },
+                    classNames: { inputBox: 'my-input' },
+                    styles: { inputBox: { color: 'red' } },
                     class: 'my-chat',
                     style: { width: '300px' },
                 },
@@ -727,8 +739,8 @@ describe('Chat', () => {
                 hints: ['first', 'second'],
                 onHintClick,
                 onChatsChange,
-                hintCls: 'my-hints',
-                hintStyle: { color: 'red' },
+                classNames: { hint: 'my-hints' },
+                styles: { hint: { color: 'red' } },
             });
             const section = container.querySelector('.semi-chat-hints');
             expect(section).toHaveClass('my-hints');

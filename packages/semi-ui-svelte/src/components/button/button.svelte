@@ -20,14 +20,15 @@
     // default below, and a fallback would make every button look like it was given a value and hide the group's
     let {
         block = defaults('block', false),
+        classNames = defaults('classNames'),
         colorful,
-        contentClassName = defaults('contentClassName'),
         disabled,
         htmlType = defaults('htmlType', 'button'),
         iconPosition = defaults('iconPosition', strings.DEFAULT_ICON_POSITION),
         loading = defaults('loading', false),
         noHorizontalPadding = defaults('noHorizontalPadding', false),
         size,
+        styles = defaults('styles'),
         theme,
         type,
         children,
@@ -129,7 +130,7 @@
     type={htmlType}
     onclickcapture={guardLoadingClick}
 >
-    <span class={[`${prefix}-content`, contentClassName]} x-semi-prop={iconLayout ? undefined : 'children'}>
+    <span class={[`${prefix}-content`, classNames?.content]} style={styles?.content} x-semi-prop={iconLayout ? undefined : 'children'}>
         {#if iconLayout}
             {#if iconPosition === 'left' || iconOnly}
                 {@render iconPart()}

@@ -1,4 +1,5 @@
-import type { AnchorHTMLAttributes, CSSProperties, StyleValue, VNode } from 'vue';
+import type { AnchorHTMLAttributes, ClassValue, CSSProperties, StyleValue, VNode } from 'vue';
+import type { NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { DropdownProps } from '../dropdown/interface';
 
@@ -66,13 +67,14 @@ export interface NavItemSlots {
 }
 
 export interface SubNavProps {
+    classNames?: Partial<Record<SubNavPart, ClassValue>>;
     disabled?: boolean;
     dropdownProps?: SubDropdownProps;
-    /** Wins over the style in dropdownProps */
-    dropdownStyle?: StyleValue;
     indent?: boolean;
     itemKey?: ItemKey;
     level?: number;
+    /** `dropdown` wins over the style in dropdownProps */
+    styles?: Partial<Record<SubNavPart, StyleValue>>;
     /** Applies when dropdownProps is not given */
     subDropdownProps?: SubDropdownProps;
     text?: string | number;
@@ -119,9 +121,9 @@ export interface NavCollapseButtonProps {
 }
 
 export interface NavItemConfig extends EntryAttributes {
+    classNames?: Partial<Record<SubNavPart, EntryAttributes['class']>>;
     disabled?: boolean;
     dropdownProps?: SubDropdownProps;
-    dropdownStyle?: EntryAttributes['style'];
     indent?: boolean;
     itemKey?: ItemKey;
     items?: (string | NavItemConfig)[];
@@ -129,6 +131,7 @@ export interface NavItemConfig extends EntryAttributes {
     linkOptions?: NavLinkOptions;
     onMouseenter?: (event: MouseEvent) => void;
     onMouseleave?: (event: MouseEvent) => void;
+    styles?: Partial<Record<SubNavPart, EntryAttributes['style']>>;
     text?: string | number;
     tooltipHideDelay?: number;
     tooltipShowDelay?: number;
@@ -142,7 +145,7 @@ export interface NavHeaderConfig extends NavHeaderProps, EntryAttributes {}
 export interface NavFooterConfig extends NavFooterProps, EntryAttributes {}
 
 export interface NavProps {
-    bodyStyle?: StyleValue;
+    classNames?: Partial<Record<NavPart, ClassValue>>;
     defaultIsCollapsed?: boolean;
     defaultOpenKeys?: ItemKey[];
     defaultSelectedKeys?: ItemKey[];
@@ -157,6 +160,7 @@ export interface NavProps {
     openKeys?: ItemKey[] | null;
     /** null is a controlled empty value */
     selectedKeys?: ItemKey[] | null;
+    styles?: Partial<Record<NavPart, StyleValue>>;
     subDropdownProps?: SubDropdownProps;
     subNavCloseDelay?: number;
     subNavMotion?: boolean;

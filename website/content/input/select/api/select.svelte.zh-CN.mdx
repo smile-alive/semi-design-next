@@ -10,15 +10,14 @@ import ApiType from '#/components/ApiType.astro';
 | autoClearSearchValue | 多选选中后是否自动清空搜索关键字。 | `boolean` | `true` |
 | autofocus | 挂载后是否自动聚焦。 | `boolean` | `false` |
 | borderless | 是否无边框。 | `boolean` | `false` |
+| classNames | 内部各部位的类名，键为 dropdown（下拉层），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮图标，snippet。 | `Snippet` | - |
 | clickToHide | 多选时点击选项后是否关闭下拉列表。 | `boolean` | `false` |
 | createItem | 创建选项那一行的内容，snippet，参数为 `{ inputValue, focus, style }`；虚拟化时要把 `style` 用在自定义元素上。 | <ApiType detail={"Snippet\u003c[SelectCreateItemSnippetProps]>"}>Type</ApiType> | - |
 | defaultActiveFirstOption | 是否默认高亮第一个可用选项。 | `boolean` | `true` |
 | defaultOpen | 挂载后是否展开下拉列表。Select 没有受控的展开状态。 | `boolean` | `false` |
 | disabled | 是否禁用。 | `boolean` | - |
-| dropdownClassName | 下拉层的类名。 | `string` | - |
 | dropdownMatchSelectWidth | 下拉层的最小宽度是否跟随触发器宽度。 | `boolean` | `true` |
-| dropdownStyle | 下拉层的样式，字符串。 | `string` | - |
 | ellipsisTrigger | 是否对溢出的标签做自适应处理，宽度不足时最后一个标签内容截断。有一定性能损耗，不推荐在大表单场景使用。 | `boolean` | `false` |
 | emptyContent | 没有选项时的内容，snippet；传 `null` 隐藏空状态。 | `Snippet \| null` | - |
 | expandRestTagsOnClick | 设置 `maxTagCount` 时，打开下拉列表后是否展开被折叠的标签。 | `boolean` | `false` |
@@ -68,6 +67,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | 尺寸，可选 `small`、`default`、`large`。 | `SelectSize` | - |
 | spacing | 下拉层与触发器的间距。 | `number \| { x: number; y: number }` | - |
 | stopPropagation | 是否阻止下拉层内的点击事件冒泡到外层。 | `boolean` | `true` |
+| styles | 内部各部位的样式字符串，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, string>>"}>Type</ApiType> | - |
 | suffix | 选择框后缀，snippet。内容为文本或 Icon 时自动带上左右间隔。 | `Snippet` | - |
 | tag | 多选时替换每个标签，snippet，参数同 `selectedItem`，同时提供时优先于 `selectedItem`。 | <ApiType detail={"Snippet\u003c[SelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
 | trigger | 替换触发器的内容，snippet，参数为 `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`。 | <ApiType detail={"Snippet\u003c[SelectTriggerSnippetProps]>"}>Type</ApiType> | - |

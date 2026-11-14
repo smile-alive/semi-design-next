@@ -56,7 +56,8 @@
         validateStatus = defaults('validateStatus'),
         maxlength = defaults('maxlength'),
         minlength = defaults('minlength'),
-        inputStyle = defaults('inputStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         // the global type leaves out per-instance ids, so there is no default to read
         insetLabelId,
         onChange,
@@ -261,11 +262,11 @@
         bind:this={input}
         bind:value={() => states().value ?? '', () => {}}
         {borderless}
+        classNames={classNames ?? {}}
         {clearIcon}
         {composition}
         disabled={isDisabled}
         {hideSuffix}
-        {inputStyle}
         {insetLabel}
         {insetLabelId}
         {maxlength}
@@ -278,6 +279,7 @@
         showClear={showClear ?? false}
         size={shownSize}
         {step}
+        styles={styles ?? {}}
         suffix={showInnerButtons ? innerButtonsSuffix : suffix}
         {validateStatus}
         {...valueNow}

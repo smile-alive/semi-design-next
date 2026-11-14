@@ -262,7 +262,7 @@ The `title` snippet, which receives `{ title, index }`, replaces the content of 
 
 `onLoad` and `onError` are called when the image loads successfully or fails, with a `SyntheticEvent<HTMLImageElement>`; other native attributes (such as `data-*` and `aria-*`) pass through to the inner img node.
 
-The `preview` object of a single Image accepts the ImagePreview props below, except `lazyLoad`, `lazyLoadMargin`, `children`, `className` and `style` (use `previewCls` and `previewStyle` to style the preview). When `preview.src` is an array, switching images returns to "fit to page".
+The `preview` object of a single Image accepts the ImagePreview props below, except `lazyLoad`, `lazyLoadMargin`, `children`, `className` and `style` (use `classNames.preview` and `styles.preview` to style the preview layer). When `preview.src` is an array, switching images returns to "fit to page".
 
 </Framework>
 
@@ -270,7 +270,7 @@ The `preview` object of a single Image accepts the ImagePreview props below, exc
 
 <ImageVueApi />
 
-A number for `width` or `height` is in px. `class` and `style` land on the root element; other undeclared native attributes and listeners land on the inner img. The `preview` object accepts the props and callbacks of ImagePreview (`onVisibleChange`, `onChange`, `onClose`, `onZoomIn`, `onZoomOut`, `onPrev`, `onNext`, `onRatioChange`, `onRotateLeft`, `onDownload`, `onDownloadError`), except `lazyLoad`, `lazyLoadMargin`, `class` and `style` (use `previewCls` and `previewStyle` to style the preview). Custom nodes do not go in `preview`; use the slots of Image. When `preview.src` is an array, switching images returns to "fit to page". An Image inside an ImagePreview ignores `#title`, `#previewMenu`, `#leftIcon`, `#rightIcon` and `#closeIcon`; the slots of the ImagePreview apply.
+A number for `width` or `height` is in px. `class` and `style` land on the root element; other undeclared native attributes and listeners land on the inner img. The `preview` object accepts the props and callbacks of ImagePreview (`onVisibleChange`, `onChange`, `onClose`, `onZoomIn`, `onZoomOut`, `onPrev`, `onNext`, `onRatioChange`, `onRotateLeft`, `onDownload`, `onDownloadError`), except `lazyLoad`, `lazyLoadMargin`, `class` and `style` (use `classNames.preview` and `styles.preview` to style the preview layer). Custom nodes do not go in `preview`; use the slots of Image. When `preview.src` is an array, switching images returns to "fit to page". An Image inside an ImagePreview ignores `#title`, `#previewMenu`, `#leftIcon`, `#rightIcon` and `#closeIcon`; the slots of the ImagePreview apply.
 
 </Framework>
 
@@ -286,7 +286,7 @@ A number for `width` or `height` is in px. `class` and `style` land on the root 
 
 <ImageSvelteApi />
 
-A number for `width` or `height` is in px. `class` and `style` land on the root element; other undeclared native attributes and event handlers land on the inner img. The `preview` object accepts the props and callbacks of ImagePreview (`onVisibleChange`, `onChange`, `onClose`, `onZoomIn`, `onZoomOut`, `onPrev`, `onNext`, `onRatioChange`, `onRotateLeft`, `onDownload`, `onDownloadError`), except `lazyLoad`, `lazyLoadMargin`, `class` and `style` (use `previewCls` and `previewStyle` to style the preview). Custom nodes do not go in `preview`; use the snippets of Image. When `preview.src` is an array, switching images returns to "fit to page". An Image inside an ImagePreview ignores the `title`, `previewMenu`, `leftIcon`, `rightIcon` and `closeIcon` snippets; the snippets of the ImagePreview apply.
+A number for `width` or `height` is in px. `class` and `style` land on the root element; other undeclared native attributes and event handlers land on the inner img. The `preview` object accepts the props and callbacks of ImagePreview (`onVisibleChange`, `onChange`, `onClose`, `onZoomIn`, `onZoomOut`, `onPrev`, `onNext`, `onRatioChange`, `onRotateLeft`, `onDownload`, `onDownloadError`), except `lazyLoad`, `lazyLoadMargin`, `class` and `style` (use `classNames.preview` and `styles.preview` to style the preview layer). Custom nodes do not go in `preview`; use the snippets of Image. When `preview.src` is an array, switching images returns to "fit to page". An Image inside an ImagePreview ignores the `title`, `previewMenu`, `leftIcon`, `rightIcon` and `closeIcon` snippets; the snippets of the ImagePreview apply.
 
 </Framework>
 

@@ -45,7 +45,14 @@
                 "zh-CN": "清除按钮显示时隐藏后缀，默认两者并列。",
                 "en-US": "Hides the suffix while the clear button is shown; by default the two sit side by side."
             },
-            "inputStyle": { "zh-CN": "原生 input 元素的内联样式。", "en-US": "Inline style of the native input." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `input`（原生 input 元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `input` (the native input element); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "insetLabel": {
                 "zh-CN": "内嵌标签，未设置 `prefix` 时渲染在前缀位置。",
                 "en-US": "Inset label rendered in the prefix position when `prefix` is not set."
@@ -159,9 +166,15 @@
                 "zh-CN": "自定义计算字符串长度，搭配 `maxLength`、`minLength` 与 `maxCount` 使用。",
                 "en-US": "Custom string length calculation, used with `maxLength`, `minLength` and `maxCount`."
             },
-            "lineNumberClassName": { "zh-CN": "行号区域的类名。", "en-US": "Class name of the line number area." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `textarea`（原生 textarea 元素）、`lineNumber`（行号区域），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `textarea` (the native textarea element) and `lineNumber` (the line number area); merged with the built-in classes."
+            },
             "lineNumberStart": { "zh-CN": "行号起始值。", "en-US": "Starting line number." },
-            "lineNumberStyle": { "zh-CN": "行号区域的内联样式。", "en-US": "Inline style of the line number area." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`textarea` 的尺寸由 `autosize`、`resize`、`rows` 决定，同名样式以后者为准。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; the size of `textarea` comes from `autosize`, `resize` and `rows`, which win on the same property."
+            },
             "maxCount": {
                 "zh-CN": "字数上限，设置后显示字数统计；超出时计数器标红，但不截断输入，需要限制输入时搭配 `maxLength`。",
                 "en-US": "Maximum number of characters; setting it shows a counter, which turns red when exceeded. The input is not truncated; use `maxLength` to limit input."
@@ -213,10 +226,6 @@
                 "en-US": "Whether to show the character counter; it is always shown when `maxCount` is set."
             },
             "showLineNumber": { "zh-CN": "是否展示行号。", "en-US": "Whether to show line numbers." },
-            "textareaStyle": {
-                "zh-CN": "内部 `textarea` 元素的内联样式，如高度、背景色。",
-                "en-US": "Inline style of the inner `textarea` element, such as its height or background color."
-            },
             "validateStatus": {
                 "zh-CN": "校验状态，可选 `default`、`error` 或 `warning`；`error` 时输出 `aria-invalid` 为 `true`。",
                 "en-US": "Validation status: `default`, `error` or `warning`; `error` sets `aria-invalid` to `true`."

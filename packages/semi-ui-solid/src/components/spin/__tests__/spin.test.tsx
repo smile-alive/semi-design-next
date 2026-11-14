@@ -117,18 +117,30 @@ describe('Spin', () => {
         expect(vi.getTimerCount()).toBe(0);
     });
 
-    it('class 与 wrapperClassName 同时落在根元素，ref 与未声明属性落在根元素', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = render(() => (
+            <Spin class="x" classNames={{ child: 'c' }} styles={{ child: { opacity: 0.5 } }}>
+                <p>content</p>
+            </Spin>
+        ));
+        expect(getSpin(container)).toHaveClass('x', prefixCls);
+        expect(getSpin(container)).not.toHaveClass('c');
+        expect(screen.getByText('content').parentElement).toHaveClass(`${prefixCls}-children`, 'c');
+        expect(screen.getByText('content').parentElement).toHaveStyle({ opacity: '0.5' });
+    });
+
+    it('class、ref 与未声明属性落在根元素', () => {
         let ref: HTMLDivElement | undefined;
-        const { container } = render(() => <Spin ref={(node) => (ref = node)} class="x" wrapperClassName="w" data-x="1" style={{ color: 'red' }} />);
-        expect(getSpin(container)).toHaveClass('x', 'w', prefixCls);
+        const { container } = render(() => <Spin ref={(node) => (ref = node)} class="x" data-x="1" style={{ color: 'red' }} />);
+        expect(getSpin(container)).toHaveClass('x', prefixCls);
         expect(getSpin(container)).toHaveAttribute('data-x', '1');
         expect(getSpin(container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(ref).toBe(getSpin(container));
     });
 
-    it('渲染 indicator、tip、children，以及 size 和 block 类名', () => {
+    it('渲染 indicator、tip、children，styles 按部位落到 child，以及 size 和 block 类名', () => {
         const { container } = render(() => (
-            <Spin childStyle={{ opacity: 0.5 }} indicator={<i data-testid="indicator" />} size="large" tip="loading">
+            <Spin styles={{ child: { opacity: 0.5 } }} indicator={<i data-testid="indicator" />} size="large" tip="loading">
                 <p>content</p>
             </Spin>
         ));

@@ -13,7 +13,7 @@ export default function NavigationDemo() {
     return (
         <div style={{ width: '100%' }}>
             <Nav
-                bodyStyle={{ height: 300 }}
+                styles={{ body: { height: 300 } }}
                 items={items}
                 onSelect={(key) => console.log(key)}
                 header={{

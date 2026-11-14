@@ -2,9 +2,13 @@
     "spin": {
         "source": "packages/semi-ui-solid/src/components/spin/spin.tsx",
         "props": {
-            "childStyle": {
-                "zh-CN": "内部子元素的样式，可以是对象（键使用 kebab-case）或字符串。",
-                "en-US": "Style of the inner children element, an object (kebab-case keys) or a string."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 child（包裹 children 的元素），追加在自带类名之后。",
+                "en-US": "Class names of the inner parts, keyed by child (the element wrapping the children), appended after the built-in class names."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 child（包裹 children 的元素），值可以是对象（键使用 kebab-case）或字符串。",
+                "en-US": "Styles of the inner parts, keyed by child (the element wrapping the children), each an object (kebab-case keys) or a string."
             },
             "delay": {
                 "zh-CN": "延迟显示加载效果的时间，单位毫秒。",
@@ -19,8 +23,7 @@
             "tip": {
                 "zh-CN": "当 Spin 作为包裹元素时，自定义描述文字，传入 JSX 元素。",
                 "en-US": "Description text when Spin acts as a wrapper, passed as a JSX element."
-            },
-            "wrapperClassName": { "zh-CN": "包裹元素的类名。", "en-US": "Class name of the wrapper element." }
+            }
         }
     }
 }

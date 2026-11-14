@@ -6,10 +6,6 @@
                 "zh-CN": "弹层完全关闭后的回调，两种模式都会调用。",
                 "en-US": "Called after the panel has fully closed, in both modes."
             },
-            "bodyStyle": {
-                "zh-CN": "内容区域的样式，透传给当前模式的 Modal 或 SideSheet。",
-                "en-US": "Style of the content area, passed through to the Modal or SideSheet of the current mode."
-            },
             "cancelButtonProps": {
                 "zh-CN": "取消按钮的属性。popup 模式下 loading 取内置挂起态与使用方的 loading 任一为真，onClick 先于内置处理调用。",
                 "en-US": "Props of the cancel button. In popup mode it is loading when either the built-in pending state or your loading says so, and onClick runs before the built-in handling."
@@ -25,6 +21,10 @@
             "class": {
                 "zh-CN": "根元素的类名，与内置类名合并。",
                 "en-US": "Class name of the root element, merged with the built-in class names."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `mask`、`header`、`body`，与组件自带的类名合并，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Class names of the inner parts, keyed by `mask`, `header` and `body`; merged with the built-in classes. Passed through to the Modal or SideSheet of the current mode."
             },
             "closable": {
                 "zh-CN": "是否显示关闭按钮，透传给当前模式的 Modal 或 SideSheet。",
@@ -61,10 +61,6 @@
             "maskClosable": {
                 "zh-CN": "点击遮罩是否关闭，透传给当前模式的 Modal 或 SideSheet。",
                 "en-US": "Whether a click on the mask closes the panel. Passed through to the Modal or SideSheet of the current mode."
-            },
-            "maskStyle": {
-                "zh-CN": "遮罩的样式，透传给当前模式的 Modal 或 SideSheet。",
-                "en-US": "Style of the mask. Passed through to the Modal or SideSheet of the current mode."
             },
             "mode": {
                 "zh-CN": "展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式透传给对应的 SideSheet 或 Modal。",
@@ -113,6 +109,10 @@
             "style": {
                 "zh-CN": "内联样式，落在弹层的内容盒子上，位置见下方说明。",
                 "en-US": "Inline style, applied to the content box of the panel; see the note below for where it lands."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，每个值可以是对象或字符串，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; every value is an object or a string. Passed through to the Modal or SideSheet of the current mode."
             },
             "textAreaProps": {
                 "zh-CN": "type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。",

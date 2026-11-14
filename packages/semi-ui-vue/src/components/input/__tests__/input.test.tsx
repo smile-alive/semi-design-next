@@ -613,11 +613,18 @@ describe('Input 行为基线', () => {
         expect(getInput()).not.toHaveFocus();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        render(Input, { props: { classNames: { input: 'my-input' }, styles: { input: { order: 2 } } } });
+        expect(getInput()).toHaveClass(`${prefixCls}`, 'my-input');
+        expect(getInput()).toHaveStyle({ order: '2' });
+        expect(getWrapper()).not.toHaveClass('my-input');
+    });
+
     it('未声明属性与监听器落到原生 input，class 与 style 保留在包裹层', async () => {
         const paste = vi.fn<(event: ClipboardEvent) => void>();
         const click = vi.fn<(event: MouseEvent) => void>();
         render(Input, {
-            props: { inputStyle: { color: 'blue' } },
+            props: { styles: { input: { color: 'blue' } } },
             attrs: {
                 id: 'name-id',
                 name: 'name',

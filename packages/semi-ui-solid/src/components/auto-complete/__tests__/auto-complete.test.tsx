@@ -88,15 +88,15 @@ describe('AutoComplete', () => {
         expect(screen.getByText('suffix content')).toHaveClass('suffix');
     });
 
-    it('自定义 dropdownClassName 与 dropdownStyle', () => {
-        renderAc({ dropdownClassName: 'ddc', dropdownStyle: { color: 'red' }, defaultOpen: true, ...commonProps });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderAc({ classNames: { dropdown: 'ddc' }, styles: { dropdown: { color: 'red' } }, defaultOpen: true, ...commonProps });
         const list = document.querySelector(`.${optionCls}-list.ddc`);
         expect(list).not.toBeNull();
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('字符串 dropdownStyle 与 maxHeight 合并', () => {
-        renderAc({ dropdownStyle: 'color: red', maxHeight: 120, defaultOpen: true, ...commonProps });
+    it('字符串 styles.dropdown 与 maxHeight 合并', () => {
+        renderAc({ styles: { dropdown: 'color: red' }, maxHeight: 120, defaultOpen: true, ...commonProps });
         expect(getList()).toHaveStyle({ color: 'rgb(255, 0, 0)', maxHeight: '120px' });
     });
 

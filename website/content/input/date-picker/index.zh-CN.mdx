@@ -495,7 +495,7 @@ type DayStatusType = { isToday?: boolean; // 当前日 isSelected?: boolean; // 
 
 <DatePickerSvelteApi />
 
-`value` 与 `open` 可以用 `bind:` 绑定，也可以只传值作为初始状态，没有 `defaultValue`、`defaultOpen`。`autofocus` 是小写，`triggerRender`、`renderDate`、`renderFullDate` 及各 ReactNode 属性改为同名 snippet（`trigger`、`date`、`fullDate`），分隔符的展示是 `rangeSeparatorNode` snippet。回调写作 `onChange` 等，不是原生事件。`style`、`inputStyle`、`dropdownStyle` 是字符串。
+`value` 与 `open` 可以用 `bind:` 绑定，也可以只传值作为初始状态，没有 `defaultValue`、`defaultOpen`。`autofocus` 是小写，`triggerRender`、`renderDate`、`renderFullDate` 及各 ReactNode 属性改为同名 snippet（`trigger`、`date`、`fullDate`），分隔符的展示是 `rangeSeparatorNode` snippet。回调写作 `onChange` 等，不是原生事件。`style` 与 `styles` 各部位的值是字符串。
 
 `class`、`style` 与 `id`、`title`、`data-*`、`aria-label` 等未声明的属性落在根元素上，带 `aria-label` 的根元素为 `role="group"`。`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 的落点：
 

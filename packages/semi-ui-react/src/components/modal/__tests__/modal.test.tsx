@@ -65,13 +65,12 @@ describe('modal', () => {
         expect(onCancel).toHaveBeenCalledTimes(1);
     });
 
-    it('className / style / maskStyle / bodyStyle / zIndex', () => {
+    it('className / style / styles / zIndex', () => {
         renderModal({
             className: 'test',
             style: { color: 'red' },
             visible: true,
-            maskStyle: { color: 'grey' },
-            bodyStyle: { color: 'pink' },
+            styles: { mask: { color: 'grey' }, body: { color: 'pink' } },
             zIndex: 500,
         });
         expect($('div.test')).not.toBeNull();
@@ -79,6 +78,22 @@ describe('modal', () => {
         expect($(`.${BASE_CLASS_PREFIX}-modal-body`)).toHaveStyle({ color: 'rgb(255, 192, 203)' });
         expect($(`.${BASE_CLASS_PREFIX}-modal-mask`)).toHaveStyle({ color: 'rgb(128, 128, 128)' });
         expect($(`.${BASE_CLASS_PREFIX}-portal`).style.zIndex).toEqual('500');
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['mask', 'content', 'header', 'body', 'footer'] as const;
+        const selectors = { mask: 'mask', content: 'content', header: 'header', body: 'body', footer: 'footer' };
+        renderModal({
+            visible: true,
+            title: 'T',
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+        });
+        for (const part of parts) {
+            const el = $(`.${BASE_CLASS_PREFIX}-modal-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('visible 属性', async () => {

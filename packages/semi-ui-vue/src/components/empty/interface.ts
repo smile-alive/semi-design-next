@@ -1,5 +1,5 @@
-import type { CSSProperties, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/components/empty/constants';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { EmptyPart, strings } from '@fibrae/semi-foundation/components/empty/constants';
 
 export type EmptyLayout = (typeof strings.LAYOUT)[number];
 
@@ -10,7 +10,8 @@ export interface EmptySvgNode {
 
 export interface EmptyProps {
     layout?: EmptyLayout;
-    imageStyle?: CSSProperties;
+    classNames?: Partial<Record<EmptyPart, ClassValue>>;
+    styles?: Partial<Record<EmptyPart, StyleValue>>;
     /** Plain-text title; the `title` slot wins when both are given */
     title?: string;
     /** Image URL or sprite symbol; use the `image` slot for other content */

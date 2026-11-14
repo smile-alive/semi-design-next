@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | \_sizeInvalid | Internal flag set by the component when the file size is out of range. Upload uses it to show the invalid size message; do not pass it manually. | `boolean` | - |
+| class | Class name of the card, from `classNames.item`. | `string` | - |
 | disabled | Whether the card is disabled. A disabled card shows no remove, retry or replace button. | `boolean` | - |
 | event | xhr event. | `Event` | - |
 | fileInstance | The File object the browser provides, which extends Blob. | `File` | - |
@@ -34,7 +35,7 @@ import ApiType from '#/components/ApiType.astro';
 | showTooltip | Whether a truncated file name shows a tooltip, or the tooltip type and the props passed to it. | `boolean \| ShowTooltip` | - |
 | size | File size in KB. | `string` | - |
 | status | File status: success, uploadFail, validateFail, validating, uploading or wait. | `FileItemStatus` | - |
-| style | Inline style of the card, as an object with CSS property names as keys. | `JSX.CSSProperties` | - |
+| style | Inline style of the card, as an object with CSS property names as keys, from `styles.item`. | `JSX.CSSProperties` | - |
 | uid | Unique identifier of the file. Must be unique in the list. | `string` | - |
 | url | File URL. The picture wall shows the image from it, and previews use it. | `string` | - |
 | validateMessage | Text of the validate message. Use renderValidateMessage for a node. | `string` | - |

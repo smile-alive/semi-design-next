@@ -1,6 +1,6 @@
 import { children, createSignal, Match, Show, splitProps, Switch, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, type strings } from '@fibrae/semi-foundation/components/empty/constants';
+import { cssClasses, type EmptyPart, type strings } from '@fibrae/semi-foundation/components/empty/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/empty/empty.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
@@ -17,7 +17,8 @@ export interface SVGNode {
 
 export interface EmptyProps extends ElementProps<'div', 'title'> {
     layout?: ArrayElement<typeof strings.LAYOUT>;
-    imageStyle?: JSX.CSSProperties | string;
+    styles?: Partial<Record<EmptyPart, JSX.CSSProperties | string>>;
+    classNames?: Partial<Record<EmptyPart, string>>;
     title?: JSX.Element;
     description?: JSX.Element;
     image?: JSX.Element | SVGNode;
@@ -36,7 +37,7 @@ const readThemeMode = () => document.body.getAttribute('theme-mode');
 
 export default function Empty(rawProps: EmptyProps) {
     const props = useDefaultProps('Empty', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['children', 'class', 'darkModeImage', 'description', 'image', 'imageStyle', 'layout', 'style', 'title']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'darkModeImage', 'description', 'image', 'layout', 'style', 'styles', 'title']);
 
     // the server has no body to read; the observer reads the mode once it starts, after mount
     const [mode, setMode] = createSignal<string | null>(null);
@@ -75,7 +76,7 @@ export default function Empty(rawProps: EmptyProps) {
 
     return (
         <div {...rest} class={clsx(local.class, prefixCls, { [`${prefixCls}-${local.layout}`]: local.layout })} style={local.style}>
-            <div class={`${prefixCls}-image`} style={local.imageStyle} x-semi-prop="image,darkModeImage">
+            <div class={clsx(`${prefixCls}-image`, local.classNames?.image)} style={local.styles?.image} x-semi-prop="image,darkModeImage">
                 <Switch fallback={image() as JSX.Element}>
                     <Match when={url()}>
                         {/* decorative: the title and description carry the meaning */}

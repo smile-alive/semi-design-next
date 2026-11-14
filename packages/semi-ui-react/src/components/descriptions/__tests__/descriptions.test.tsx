@@ -203,8 +203,9 @@ describe('Descriptions', () => {
         expect(getKeys(container)[0]).toHaveTextContent(/^a:$/);
     });
 
-    it('keyStyle 作用于 key，并调用函数值', () => {
-        const { container } = render(<Descriptions data={[{ key: 'a', value: () => 'from data', keyStyle: { color: 'red' } }]} />);
+    it('classNames 与 styles 按部位落到对应元素，并调用函数值', () => {
+        const { container } = render(<Descriptions data={[{ key: 'a', value: () => 'from data', classNames: { key: 'k1' }, styles: { key: { color: 'red' } } }]} />);
+        expect(getKeys(container)[0]).toHaveClass('semi-descriptions-key', 'k1');
         expect(getKeys(container)[0]).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getValues(container)[0]).toHaveTextContent(/^from data$/);
 

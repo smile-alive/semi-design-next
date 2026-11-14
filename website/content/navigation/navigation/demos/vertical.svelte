@@ -21,7 +21,7 @@
 {/snippet}
 
 <div style="width: 100%">
-    <Nav bodyStyle="height: 300px" footer={{ collapseButton: true }} {header} {items} onSelect={(key) => console.log(key)}>
+    <Nav footer={{ collapseButton: true }} {header} {items} onSelect={(key) => console.log(key)} styles={{ body: 'height: 300px' }}>
         {#snippet icon(renderProps)}
             {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
             {#if Icon}

@@ -46,5 +46,5 @@
 </script>
 
 <template>
-    <TreeSelect v-model:expandedKeys="expandedKeys" :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" filterTreeNode style="width: 300px" :treeData="treeData" @search="onSearch" />
+    <TreeSelect v-model:expandedKeys="expandedKeys" filterTreeNode style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" @search="onSearch" />
 </template>

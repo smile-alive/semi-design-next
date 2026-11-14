@@ -1,5 +1,5 @@
 import { flushSync } from 'svelte';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
@@ -48,6 +48,17 @@ afterEach(() => {
 });
 
 describe('Svelte Navigation', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const items: NavItems = [{ itemKey: 'user', text: '用户', dropdownProps: { trigger: 'click' }, classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: 'order: 2' }, items: [{ itemKey: 'list', text: '用户列表' }] }];
+        renderNav({ items, isCollapsed: true, classNames: { body: 'my-body' }, styles: { body: 'order: 1' } });
+        const body = getElement(`.${prefix}-list-wrapper`);
+        expect(body).toHaveClass('my-body');
+        expect(body).toHaveStyle({ order: '1' });
+        await click(getElement(`.${prefix}-sub-title`));
+        await waitFor(() => expect(document.querySelector('.my-dropdown')).toHaveStyle({ order: '2' }));
+        expect(document.querySelector('.my-dropdown')).toHaveClass('semi-dropdown');
+    });
+
     it('外观：header、footer 按钮、默认展开与列表项数', () => {
         const items = [...treeItems];
         renderNav({ items, openKeys: ['job'], footer: { collapseButton: true }, header: { text: 'Semi 运营后台' } });

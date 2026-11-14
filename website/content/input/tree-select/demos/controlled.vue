@@ -37,5 +37,5 @@
 </script>
 
 <template>
-    <TreeSelect v-model="value" :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择" style="width: 300px" :treeData="treeData" />
+    <TreeSelect v-model="value" placeholder="请选择" style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
 </template>

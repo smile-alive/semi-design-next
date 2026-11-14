@@ -11,14 +11,15 @@
 
     const props = withDefaults(defineProps<IconButtonProps & /* @vue-ignore */ ElementProps<'button', keyof IconButtonProps>>(), {
         block: () => semiDefault('IconButton', 'block', false),
+        classNames: semiGlobalDefault('IconButton', 'classNames'),
         colorful: undefined,
-        contentClassName: semiGlobalDefault('IconButton', 'contentClassName'),
         disabled: undefined,
         htmlType: () => semiDefault('IconButton', 'htmlType', 'button'),
         iconPosition: () => semiDefault('IconButton', 'iconPosition', strings.DEFAULT_ICON_POSITION),
         loading: () => semiDefault('IconButton', 'loading', false),
         noHorizontalPadding: () => semiDefault('IconButton', 'noHorizontalPadding', false),
         size: undefined,
+        styles: semiGlobalDefault('IconButton', 'styles'),
         theme: undefined,
         type: undefined,
     });
@@ -29,11 +30,12 @@
 
     const forwarded = computed(() => ({
         block: props.block,
-        contentClassName: props.contentClassName,
+        classNames: props.classNames,
         htmlType: props.htmlType,
         iconPosition: props.iconPosition,
         loading: props.loading,
         noHorizontalPadding: props.noHorizontalPadding,
+        styles: props.styles,
         ...looks.value,
     }));
 </script>

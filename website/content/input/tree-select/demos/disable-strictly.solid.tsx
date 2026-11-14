@@ -41,7 +41,7 @@ const treeData = [
 export default function TreeSelectDemo() {
     return (
         <div>
-            <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} disableStrictly multiple defaultValue={['Shanghai']} />
+            <TreeSelect style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} disableStrictly multiple defaultValue={['Shanghai']} />
         </div>
     );
 }

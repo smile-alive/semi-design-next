@@ -154,7 +154,7 @@
                 <span :class="`${info}-validate-message`">
                     <slot name="validateMessage" v-bind="slotProps()">
                         <template v-if="typeof message === 'string'">
-                            <Spin v-if="props.file.status === strings.FILE_STATUS_VALIDATING" size="small" :wrapperClassName="`${prefix}-file-card-icon-loading`" />
+                            <Spin v-if="props.file.status === strings.FILE_STATUS_VALIDATING" :class="`${prefix}-file-card-icon-loading`" size="small" />
                             <IconAlertCircle v-else :class="`${prefix}-file-card-icon-error`" />
                             {{ message }}
                         </template>

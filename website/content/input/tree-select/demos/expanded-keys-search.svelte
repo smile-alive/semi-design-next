@@ -44,4 +44,4 @@
     };
 </script>
 
-<TreeSelect bind:expandedKeys dropdownStyle="max-height: 400px; overflow: auto" filterTreeNode {onSearch} style="width: 300px" {treeData} />
+<TreeSelect bind:expandedKeys filterTreeNode {onSearch} style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />

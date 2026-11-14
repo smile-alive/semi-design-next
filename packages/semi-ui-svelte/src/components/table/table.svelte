@@ -32,6 +32,7 @@
     let {
         bordered = defaults('bordered', false),
         childrenRecordName = defaults('childrenRecordName', 'children'),
+        classNames = defaults('classNames'),
         clickGroupedRowToExpand = defaults('clickGroupedRowToExpand', false),
         columns = defaults('columns'),
         components = defaults('components'),
@@ -49,7 +50,6 @@
         footer = defaults('footer'),
         groupBy = defaults('groupBy'),
         groupSectionColumn = defaults('groupSectionColumn'),
-        headerStyle = defaults('headerStyle'),
         hideExpandedColumn = defaults('hideExpandedColumn', true),
         indentSize = defaults('indentSize', 20),
         keepDOM = defaults('keepDOM', false),
@@ -65,6 +65,7 @@
         showHeader = defaults('showHeader', true),
         size = defaults('size', 'default'),
         sticky = defaults('sticky'),
+        styles = defaults('styles'),
         title = defaults('title'),
         virtualized = defaults('virtualized'),
         onChange,
@@ -391,8 +392,11 @@
         get headWidths() {
             return view.headWidths ?? [];
         },
-        get headerStyle() {
-            return headerStyle;
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
         },
         get rowSpanHover() {
             return rowSpanHover;

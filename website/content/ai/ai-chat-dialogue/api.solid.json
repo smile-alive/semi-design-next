@@ -22,17 +22,17 @@
                 "zh-CN": "是否转义用户消息中的 HTML 标签，避免被 Markdown 解析器当作 HTML 处理而丢失内容。",
                 "en-US": "Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content."
             },
-            "hintCls": {
-                "zh-CN": "提示区最外层的类名。",
-                "en-US": "Class name of the outermost hint area element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 hint（提示区最外层），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by hint (the outermost hint area); merged with the built-in classes."
             },
             "hints": {
                 "zh-CN": "提示信息。点击某条提示后，它成为新的用户消息，并触发 onHintClick。",
                 "en-US": "Hint texts. Clicking a hint turns it into a new user message and calls onHintClick."
             },
-            "hintStyle": {
-                "zh-CN": "提示区最外层的样式。",
-                "en-US": "Style of the outermost hint area element."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
             },
             "markdownRenderProps": {
                 "zh-CN": "透传给每条消息所用 MarkdownRender 的属性，raw 由消息决定，不可传入；components 与内置组件合并，同名的（如 code）覆盖内置组件。",

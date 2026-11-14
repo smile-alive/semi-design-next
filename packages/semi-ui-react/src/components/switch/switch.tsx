@@ -101,7 +101,7 @@ export default function Switch(rawProps: SwitchProps) {
 
     return (
         <div {...rest} ref={ref} className={wrapperCls} style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-            {loading ? <Spin wrapperClassName={cssClasses.LOADING_SPIN} size={size === 'default' ? 'middle' : size} /> : <div className={cssClasses.KNOB} aria-hidden />}
+            {loading ? <Spin className={cssClasses.LOADING_SPIN} size={size === 'default' ? 'middle' : size} /> : <div className={cssClasses.KNOB} aria-hidden />}
             {showCheckedText && (
                 <div className={cssClasses.CHECKED_TEXT} x-semi-prop="checkedText">
                     {checkedText}

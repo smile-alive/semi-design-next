@@ -24,7 +24,7 @@
     </Nav.Header>
 {/snippet}
 
-<Nav bind:isCollapsed bind:openKeys bind:selectedKeys bodyStyle="height: 300px" footer={{ collapseButton: true }} {header} {items} onOpenChange={(data) => console.log('trigger onOpenChange: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)}>
+<Nav bind:isCollapsed bind:openKeys bind:selectedKeys footer={{ collapseButton: true }} {header} {items} onOpenChange={(data) => console.log('trigger onOpenChange: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)} styles={{ body: 'height: 300px' }}>
     {#snippet icon(renderProps)}
         {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
         {#if Icon}

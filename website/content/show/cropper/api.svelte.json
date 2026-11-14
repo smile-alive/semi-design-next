@@ -6,13 +6,13 @@
                 "zh-CN": "固定的裁切框宽高比；加载后改变时，裁切框按新比例重排。",
                 "en-US": "Fixed aspect ratio of the crop box. When it changes after loading, the box is laid out again at the new ratio."
             },
-            "cropperBoxCls": {
-                "zh-CN": "裁切框类名。",
-                "en-US": "Class name of the crop box."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `cropperBox`（裁切框），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `cropperBox` (the crop box); merged with the built-in classes."
             },
-            "cropperBoxStyle": {
-                "zh-CN": "裁切框样式字符串。",
-                "en-US": "Style string of the crop box."
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames；`cropperBox` 与组件计算的宽高和位移合并，宽高与位移以组件为准。",
+                "en-US": "Style strings of the inner parts, keyed like classNames; `cropperBox` is merged with the size and offset the component computes, and the size and offset win."
             },
             "defaultAspectRatio": {
                 "zh-CN": "裁切框的初始宽高比，拖动时会随之变化。",

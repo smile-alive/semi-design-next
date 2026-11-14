@@ -197,20 +197,20 @@ describe('Cropper', () => {
         expect(getCorners(container)).toEqual([]);
     });
 
-    it('cropperBoxStyle 与 cropperBoxCls 应用到裁剪框，并以其计算尺寸为准', async () => {
+    it('classNames 与 styles 按部位落到对应元素，裁剪框以其计算尺寸为准', async () => {
         const { container } = await renderLoaded({
-            cropperBoxCls: 'my-box',
-            cropperBoxStyle: { outlineColor: 'red', width: '10px' },
+            classNames: { cropperBox: 'my-box' },
+            styles: { cropperBox: { outlineColor: 'red', width: '10px' } },
         });
         expect(getBox(container)).toHaveClass('semi-cropper-box', 'my-box');
         expect(getBox(container).style.outlineColor).toBe('red');
         expect(getBox(container).style.width).toBe('300px');
     });
 
-    it('cropperBoxStyle 接受字符串与数组', async () => {
-        const { container: text } = await renderLoaded({ cropperBoxStyle: 'outline-color: red' });
+    it('styles 接受字符串与数组', async () => {
+        const { container: text } = await renderLoaded({ styles: { cropperBox: 'outline-color: red' } });
         expect(getBox(text).style.outlineColor).toBe('red');
-        const { container: list } = await renderLoaded({ cropperBoxStyle: [{ outlineColor: 'blue' }] });
+        const { container: list } = await renderLoaded({ styles: { cropperBox: [{ outlineColor: 'blue' }] } });
         expect(getBox(list).style.outlineColor).toBe('blue');
     });
 

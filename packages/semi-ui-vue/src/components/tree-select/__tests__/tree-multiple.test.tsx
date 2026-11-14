@@ -446,7 +446,7 @@ describe('TreeSelect 多选', () => {
 
     it('disableStrictly 属性', async () => {
         const base = {
-            dropdownStyle: { maxHeight: '400px', overflow: 'auto' },
+            styles: { dropdown: { maxHeight: '400px', overflow: 'auto' } },
             style: { width: '300px' },
             defaultExpandAll: true,
             disableStrictly: true,

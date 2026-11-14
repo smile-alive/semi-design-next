@@ -216,9 +216,9 @@
                     <Select
                         allowCreate={false}
                         aria-label={text.pageSizeSelector}
+                        classNames={{ dropdown: `${prefix}-select-dropdown` }}
                         clickToHide
                         {disabled}
-                        dropdownClassName={`${prefix}-select-dropdown`}
                         filter={false}
                         multiple={false}
                         onChange={changePageSize}

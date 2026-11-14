@@ -12,7 +12,7 @@ semi-ui-svelte 的 Svelte 5 组件写法。组件内语句顺序、foundation、
 
 ## 公开 API
 
-- prop 名与回调名以 semi-ui-react 为准（`checked`、`value`、`activeKey`，回调 `onChange(value, event)`、`onVisibleChange`），回调用 `onX?.()` 调用。`className` 改为 `class`（接受字符串、数组与对象，Svelte 内置 clsx 语义），Semi 自己的 `contentClassName`、`wrapperClassName` 保持原名；`style` 只接受字符串。
+- prop 名与回调名以 semi-ui-react 为准（`checked`、`value`、`activeKey`，回调 `onChange(value, event)`、`onVisibleChange`），回调用 `onX?.()` 调用。`className` 改为 `class`（接受字符串、数组与对象，Svelte 内置 clsx 语义），`classNames`、`styles` 保持原名；`style` 与 `styles` 的值只接受字符串。
 - 受控值是可绑定 prop 配同名回调。使用方有三种写法：`bind:checked={x}` 双向同步；`bind:checked={get, set}` 函数绑定，完全受控，setter 可以拒绝或改写；`checked={x}` 单向传值只作初值，组件内的交互在本地覆盖，父级再推新值时以父级为准。本地覆盖是 Svelte 的临时覆盖：组件上带展开属性时，展开对象一换，所有 prop 都重新求值，单向值回到父级的值（sveltejs/svelte#11286 已按不修关闭）。组件内不为此加同步层，文档引导使用方用 `bind:` 或回调写回；用例里要保持本地值时不要与会换新对象的展开属性混用。不提供 `defaultValue`、`defaultChecked`、`defaultVisible` 等 `default*` 属性。
 - ReactNode 属性与 render 函数改为 snippet，名字与 Vue 版插槽一致：去掉 `render` 前缀（`renderTabBar` -> `tabBar`），位置参数改为一个对象参数的具名字段，字段名与 Vue 插槽作用域相同；默认内容是 `children`。返回字符串的格式化函数仍是函数 prop。
 - 对外的方法写成组件脚本里的 `export function focus()`，使用方经 `bind:this` 取组件实例调用。

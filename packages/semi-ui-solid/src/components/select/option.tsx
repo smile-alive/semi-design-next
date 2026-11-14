@@ -100,7 +100,7 @@ export function OptionView(props: OptionViewProps) {
                 <Show when={text() !== undefined} fallback={content()}>
                     <div class={`${prefixCls()}-text`}>
                         <Show when={local.inputValue} fallback={text()}>
-                            {(keyword) => <Highlight highlightClassName={`${prefixCls()}-keyword`} searchWords={[keyword()]} sourceString={text()} />}
+                            {(keyword) => <Highlight classNames={{ highlight: `${prefixCls()}-keyword` }} searchWords={[keyword()]} sourceString={text()} />}
                         </Show>
                     </div>
                 </Show>

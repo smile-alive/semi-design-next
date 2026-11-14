@@ -10,7 +10,7 @@ import Fixture from './special-trigger.svelte';
 type Store = NonNullable<Parameters<typeof Fixture>[1]>['store'];
 
 function setup(init: Partial<Store>) {
-    const store = createStore<Store>({ kind: 'button', tip: { wrapperClassName: 'wrapper' }, props: {}, after: true, ...init });
+    const store = createStore<Store>({ kind: 'button', tip: { classNames: { wrapper: 'wrapper' } }, props: {}, after: true, ...init });
     render(Fixture, { props: { store } });
     flushSync();
     return store;
@@ -34,7 +34,7 @@ describe('Svelte Tooltip 的特殊触发器（浏览器）', () => {
     });
 
     it('禁用的 Button 在 click 触发下，真实点击落在 span 上并打开弹层', async () => {
-        setup({ tip: { trigger: 'click', wrapperClassName: 'wrapper' }, props: { disabled: true } });
+        setup({ tip: { trigger: 'click', classNames: { wrapper: 'wrapper' } }, props: { disabled: true } });
         await userEvent.click(screen.getByRole('button', { name: 'trigger' }), { force: true });
         await expect.element(await screen.findByRole('tooltip')).toBeVisible();
     });

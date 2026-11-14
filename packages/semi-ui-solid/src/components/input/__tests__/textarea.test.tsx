@@ -496,7 +496,7 @@ describe('TextArea', () => {
     });
 
     it('未知属性与 aria 属性透传到原生 textarea，class 与 style 作用于外层容器', () => {
-        render(() => <TextArea name="desc" class="custom" style={{ color: 'red' }} textareaStyle={{ color: 'blue' }} data-testid="desc" aria-label="Description" tabIndex={-1} />);
+        render(() => <TextArea name="desc" class="custom" style={{ color: 'red' }} styles={{ textarea: { color: 'blue' } }} data-testid="desc" aria-label="Description" tabIndex={-1} />);
         const textarea = getTextArea();
         expect(screen.getByTestId('desc')).toBe(textarea);
         expect(textarea).toHaveAttribute('aria-label', 'Description');
@@ -528,11 +528,20 @@ describe('TextArea', () => {
     });
 
     it('showLineNumber 从 lineNumberStart 开始，每行渲染一个行号', () => {
-        render(() => <TextArea lineNumberClassName="nums" defaultValue={'a\nb\nc'} lineNumberStart={3} showLineNumber />);
+        render(() => <TextArea classNames={{ lineNumber: 'nums' }} defaultValue={'a\nb\nc'} lineNumberStart={3} showLineNumber />);
         expect(getWrapper()).toHaveClass(`${prefixCls}-textarea-wrapper-withLineNumber`);
         const items = document.querySelectorAll(`.${prefixCls}-textarea-lineNumber-item`);
         expect([...items].map((item) => item.textContent)).toEqual(['3', '4', '5']);
         expect(document.querySelector('.nums')).toHaveClass(`${prefixCls}-textarea-lineNumber`);
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        render(() => <TextArea classNames={{ textarea: 'my-textarea', lineNumber: 'my-nums' }} styles={{ textarea: { order: '1' }, lineNumber: { order: '2' } }} defaultValue="a" showLineNumber />);
+        expect(getTextArea()).toHaveClass(`${prefixCls}-textarea`, 'my-textarea');
+        expect(getTextArea()).toHaveStyle({ order: '1' });
+        const panel = document.querySelector(`.${prefixCls}-textarea-lineNumber`);
+        expect(panel).toHaveClass('my-nums');
+        expect(panel).toHaveStyle({ order: '2' });
     });
 
     it('行号面板对辅助技术隐藏', () => {

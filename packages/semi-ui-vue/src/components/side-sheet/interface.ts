@@ -1,23 +1,24 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { SideSheetPart } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import type { Placement } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 
 export interface SideSheetProps {
-    bodyStyle?: StyleValue;
     /** Lets `width` apply to a top or bottom sheet, which otherwise spans the full width. */
     canVerticalSetWidth?: boolean;
+    /** `content` is the role="dialog" element. Merged after the built-in class names of the part's element. */
+    classNames?: Partial<Record<SideSheetPart, ClassValue>>;
     closable?: boolean;
     closeOnEsc?: boolean;
     disableScroll?: boolean;
     getPopupContainer?: () => HTMLElement;
-    headerStyle?: StyleValue;
     height?: number | string;
     keepDOM?: boolean;
     mask?: boolean;
     maskClosable?: boolean;
-    maskStyle?: StyleValue;
     motion?: boolean;
     placement?: Placement;
     size?: 'small' | 'medium' | 'large';
+    styles?: Partial<Record<SideSheetPart, StyleValue>>;
     /** Plain-text title; the `#title` slot wins when both are given. Declared so `title="x"` is not a native tooltip. */
     title?: string;
     visible?: boolean;

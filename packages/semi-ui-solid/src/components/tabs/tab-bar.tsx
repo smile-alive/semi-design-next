@@ -28,6 +28,7 @@ export default function TabBar(props: TabBarProps) {
         'aria-labelledby',
         'arrowPosition',
         'class',
+        'classNames',
         'collapsible',
         'deleteTabItem',
         'dropdownClassName',
@@ -44,10 +45,10 @@ export default function TabBar(props: TabBarProps) {
         'renderTab',
         'showRestInDropdown',
         'size',
+        'styles',
         'tabBarExtraContent',
         'tabPosition',
         'type',
-        'visibleTabsStyle',
     ]);
 
     const ctx = useTabsContext();
@@ -335,7 +336,8 @@ export default function TabBar(props: TabBarProps) {
                 >
                     <InternalOverflowList
                         class={`${cssClasses.TABS_BAR}-overflow-list`}
-                        wrapperStyle={local.visibleTabsStyle}
+                        classNames={{ wrapper: local.classNames?.visibleTabs }}
+                        styles={{ wrapper: local.styles?.visibleTabs }}
                         items={overflowKeys()}
                         overflowRenderDirection={local.arrowPosition}
                         overflowRenderer={([start, end]) => [renderArrowSide(overflowSide(start), 'start'), renderArrowSide(overflowSide(end), 'end')]}

@@ -256,8 +256,8 @@ describe('Cascader', () => {
         expect(wrapper().style.minWidth).toBe('');
     });
 
-    it('自定义 dropdownClassName 与 dropdownStyle', async () => {
-        await renderCascader({ dropdownClassName: 'test', dropdownStyle: { color: 'red' }, defaultOpen: true });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        await renderCascader({ classNames: { dropdown: 'test' }, styles: { dropdown: { color: 'red' } }, defaultOpen: true });
         const dropdown = document.querySelector(`.${prefixCls}-popover`);
         expect(dropdown).toHaveClass('test');
         expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
@@ -2676,7 +2676,7 @@ describe('Cascader Vue', () => {
             class: 'mine',
             style: { color: 'red' },
             mouseEnterDelay: 5,
-            dropdownClassName: 'drop',
+            classNames: { dropdown: 'drop' },
         });
         const root = getTrigger();
         expect(root).toHaveAttribute('id', 'region');

@@ -35,6 +35,10 @@
                 "zh-CN": "媒体拍摄的方式，可选 user、environment；传 true 输出空值属性，传 false 不输出该属性。",
                 "en-US": "How media is captured: user or environment. true renders the attribute with an empty value, false omits it."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`（每个文件卡片），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `item` (each file card); merged with the built-in classes."
+            },
             "children": {
                 "zh-CN": "触发区内容。拖拽模式下替换整个默认拖拽区内容。",
                 "en-US": "Trigger content. In draggable mode it replaces the whole default drag area content."
@@ -93,10 +97,6 @@
             "hotSpotLocation": {
                 "zh-CN": "照片墙添加按钮的位置，可选 start 或 end。",
                 "en-US": "Position of the picture wall add button: start or end."
-            },
-            "itemStyle": {
-                "zh-CN": "文件卡片的内联样式，对象形式，键使用 CSS 属性名。",
-                "en-US": "Inline style of the file cards, as an object with CSS property names as keys."
             },
             "limit": {
                 "zh-CN": "最多允许上传的文件个数。为 1 时始终用最新选择的文件替换当前文件，不触发 onExceed。",
@@ -226,6 +226,10 @@
                 "en-US": "Whether a truncated file name shows a tooltip. An object sets `type` (tooltip or popover), `opts` passed to the popup, and `renderTooltip` for a custom popup."
             },
             "showUploadList": { "zh-CN": "是否显示文件列表。", "en-US": "Whether to show the file list." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，对象形式，键使用 CSS 属性名；图片墙里 `item` 与 `picWidth`、`picHeight` 合并，宽高以后者为准。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as objects with CSS property names as keys; in the picture wall `item` is merged with `picWidth` and `picHeight`, and the latter win."
+            },
             "timeout": {
                 "zh-CN": "不生效：组件不读取该属性。",
                 "en-US": "Has no effect; the component does not read it."
@@ -295,8 +299,12 @@
                 "en-US": "Text of the validate message. Use renderValidateMessage for a node."
             },
             "style": {
-                "zh-CN": "文件卡片的内联样式，对象形式，键使用 CSS 属性名。",
-                "en-US": "Inline style of the card, as an object with CSS property names as keys."
+                "zh-CN": "文件卡片的内联样式，对象形式，键使用 CSS 属性名，来自 `styles.item`。",
+                "en-US": "Inline style of the card, as an object with CSS property names as keys, from `styles.item`."
+            },
+            "class": {
+                "zh-CN": "文件卡片的类名，来自 `classNames.item`。",
+                "en-US": "Class name of the card, from `classNames.item`."
             },
             "previewFile": {
                 "zh-CN": "自定义预览逻辑，返回的内容替换原缩略图，只在 list 模式下有效。",

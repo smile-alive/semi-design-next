@@ -35,13 +35,13 @@ const treeData = [
 export default function TreeSelectDemo() {
     return (
         <div>
-            <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} multiple size="small" placeholder="small" />
+            <TreeSelect style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} multiple size="small" placeholder="small" />
             <br />
             <br />
-            <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} multiple size="default" placeholder="default" />
+            <TreeSelect style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} multiple size="default" placeholder="default" />
             <br />
             <br />
-            <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} multiple size="large" placeholder="large" />
+            <TreeSelect style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} multiple size="large" placeholder="large" />
         </div>
     );
 }

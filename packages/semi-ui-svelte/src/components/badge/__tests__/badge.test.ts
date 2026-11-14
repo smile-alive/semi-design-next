@@ -22,8 +22,8 @@ afterEach(() => {
 });
 
 describe('Svelte Badge', () => {
-    it('class 落在根元素，countStyle 落在计数节点', () => {
-        const { container } = setup({ class: 'test', count: 5, countStyle: 'color: red' });
+    it('class 落在根元素，styles.count 落在计数节点', () => {
+        const { container } = setup({ class: 'test', count: 5, styles: { count: 'color: red' } });
         expect(getRoot(container)).toHaveClass('test');
         expect(container.querySelector('.test .semi-badge-count')).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
@@ -101,17 +101,25 @@ describe('Svelte Badge', () => {
     });
 
     it('计数节点的 class、x-semi-prop 以及默认 type 与 theme', () => {
-        const { container } = setup({ count: 5, countClassName: 'cc' });
+        const { container } = setup({ count: 5, classNames: { count: 'cc' } });
         const count = getCount(container);
         expect(count).toHaveClass('cc', 'semi-badge-primary', 'semi-badge-solid', 'semi-badge-count');
         expect(count).not.toHaveClass('semi-badge-block');
         expect(getRoot(container)?.lastElementChild).toBe(count);
     });
 
-    it('style 落在根元素，计数节点只吃 countStyle', () => {
-        const { container } = setup({ style: 'color: red', count: 5, countStyle: 'color: blue' });
+    it('style 落在根元素，计数节点只吃 styles.count', () => {
+        const { container } = setup({ style: 'color: red', count: 5, styles: { count: 'color: blue' } });
         expect(getRoot(container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getCount(container)).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = setup({ count: 5, classNames: { count: 'my-count' }, styles: { count: 'order: 1' } });
+        const count = getCount(container);
+        expect(count).toHaveClass('semi-badge-count', 'my-count');
+        expect(count).toHaveStyle({ order: '1' });
+        expect(getRoot(container)).not.toHaveClass('my-count');
     });
 
     it('没有默认内容时为块级元素，不带位置类名', () => {

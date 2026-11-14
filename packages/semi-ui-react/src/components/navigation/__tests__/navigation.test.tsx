@@ -40,7 +40,7 @@ describe(`Navigation`, () => {
 
         render(
             <Nav
-                bodyStyle={{ height: 320 }}
+                styles={{ body: { height: 320 } }}
                 defaultOpenKeys={['job']}
                 footer={{
                     collapseButton: true,
@@ -66,7 +66,7 @@ describe(`Navigation`, () => {
     it(`使用 JSX 定义的外观`, async () => {
         const defaultOpenKeys = ['user'];
         render(
-            <Nav bodyStyle={{ height: 320 }} defaultOpenKeys={defaultOpenKeys}>
+            <Nav styles={{ body: { height: 320 } }} defaultOpenKeys={defaultOpenKeys}>
                 <Nav.Header logo="bytedance_logo" text="Semi 运营后台" />
                 <Nav.Item itemKey="union" text="公会中心" icon="star" />
                 <Nav.Sub itemKey="user" text="用户管理" icon="user">
@@ -163,7 +163,7 @@ describe(`Navigation`, () => {
             const [isCollapsed, setIsCollapsed] = useState(false);
             return (
                 <Nav
-                    bodyStyle={{ height: 320 }}
+                    styles={{ body: { height: 320 } }}
                     footer={{
                         collapseButton: true,
                     }}
@@ -221,7 +221,7 @@ describe(`Navigation`, () => {
 
         render(
             <Nav
-                bodyStyle={{ height: 320 }}
+                styles={{ body: { height: 320 } }}
                 footer={{
                     collapseButton: true,
                 }}
@@ -263,7 +263,7 @@ describe(`Navigation`, () => {
 
         render(
             <Nav
-                bodyStyle={{ height: 320 }}
+                styles={{ body: { height: 320 } }}
                 footer={{
                     collapseButton: true,
                 }}
@@ -1543,6 +1543,22 @@ describe('Navigation 的收起与展开保持焦点', () => {
 });
 
 describe('Navigation 的透传与合并', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const { container } = render(
+            <Nav classNames={{ body: 'my-body' }} styles={{ body: { order: 1 } }} isCollapsed>
+                <Nav.Sub classNames={{ dropdown: 'my-dropdown' }} styles={{ dropdown: { order: 2 } }} dropdownProps={{ trigger: 'click' }} itemKey="a" text="A">
+                    <Nav.Item itemKey="a1" text="A1" />
+                </Nav.Sub>
+            </Nav>
+        );
+        const body = container.querySelector(`.${prefixCls}-list-wrapper`);
+        expect(body).toHaveClass('my-body');
+        expect(body).toHaveStyle({ order: '1' });
+        await userEvent.click(document.querySelector(`.${prefixCls}-sub-title`));
+        await waitFor(() => expect(document.querySelector('.my-dropdown')).toHaveStyle({ order: '2' }));
+        expect(document.querySelector('.my-dropdown')).toHaveClass('semi-dropdown');
+    });
+
     it('Sub 的 dropdownProps.className 追加到内置弹层类名之后', async () => {
         render(
             <Nav isCollapsed>

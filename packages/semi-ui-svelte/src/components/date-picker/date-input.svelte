@@ -173,6 +173,7 @@
             autofocus={props.autofocus}
             bind:value={() => rangeParts.start, () => {}}
             borderless={props.borderless}
+            class={props.inputClassName}
             disabled={props.disabled}
             onChange={(next, event) => props.onChange?.(rangeValue(next, rangeParts.end), event)}
             onEnterPress={(event) => foundation.handleRangeInputEnterPress(event, rangeValue(rangeParts.start, rangeParts.end))}
@@ -208,6 +209,7 @@
             {...rangeAttrs}
             bind:value={() => rangeParts.end, () => {}}
             borderless={props.borderless}
+            class={props.inputClassName}
             disabled={props.disabled}
             onChange={(next, event) => props.onChange?.(rangeValue(rangeParts.start, next), event)}
             onEnterPress={(event) => foundation.handleRangeInputEnterPress(event, rangeValue(rangeParts.start, rangeParts.end))}
@@ -240,7 +242,7 @@
         autofocus={props.autofocus}
         bind:value={() => text, () => {}}
         borderless={props.borderless}
-        class={inputClass}
+        class={[inputClass, props.inputClassName]}
         clearIcon={props.clearIcon}
         disabled={props.disabled}
         hideSuffix={props.showClear}

@@ -1,15 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property       | Description                                                                                                             | Type               | Default                                        |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------ | ---------------------------------------------- |
-| count          | Badge content as a number or string; use the count slot for other content.                                              | `string \| number` | `semiGlobalDefault("Badge", "count")`          |
-| countClassName | Class name of the count element.                                                                                        | `string`           | `semiGlobalDefault("Badge", "countClassName")` |
-| countStyle     | Style of the count element.                                                                                             | `CSSProperties`    | `semiGlobalDefault("Badge", "countStyle")`     |
-| dot            | Shows a small dot instead of the content.                                                                               | `boolean`          | `false`                                        |
-| overflowCount  | Maximum number shown; larger numbers display as `${overflowCount}+`. Applies to numbers only, and 0 counts as unset.    | `number`           | `semiGlobalDefault("Badge", "overflowCount")`  |
-| position       | Badge position relative to the wrapped element. Defaults to leftTop under an RTL ConfigProvider and rightTop otherwise. | `BadgePosition`    | `semiGlobalDefault("Badge", "position")`       |
-| theme          | Badge theme: solid, light or inverted.                                                                                  | `BadgeTheme`       | `"solid"`                                      |
-| type           | Badge type: primary, secondary, tertiary, danger, warning or success.                                                   | `BadgeType`        | `"primary"`                                    |
+| Property      | Description                                                                                                             | Type                                                                                | Default                                       |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------- |
+| classNames    | Class names of the inner parts, keyed by count; values take any class binding and merge with the built-in classes.      | <ApiType detail={"Partial\u003cRecord\u003c\"count\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Badge", "classNames")`    |
+| count         | Badge content as a number or string; use the count slot for other content.                                              | `string \| number`                                                                  | `semiGlobalDefault("Badge", "count")`         |
+| dot           | Shows a small dot instead of the content.                                                                               | `boolean`                                                                           | `false`                                       |
+| overflowCount | Maximum number shown; larger numbers display as `${overflowCount}+`. Applies to numbers only, and 0 counts as unset.    | `number`                                                                            | `semiGlobalDefault("Badge", "overflowCount")` |
+| position      | Badge position relative to the wrapped element. Defaults to leftTop under an RTL ConfigProvider and rightTop otherwise. | `BadgePosition`                                                                     | `semiGlobalDefault("Badge", "position")`      |
+| styles        | Styles of the inner parts, keyed by count; values take any style binding.                                               | <ApiType detail={"Partial\u003cRecord\u003c\"count\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Badge", "styles")`        |
+| theme         | Badge theme: solid, light or inverted.                                                                                  | `BadgeTheme`                                                                        | `"solid"`                                     |
+| type          | Badge type: primary, secondary, tertiary, danger, warning or success.                                                   | `BadgeType`                                                                         | `"primary"`                                   |
 
 **Events**
 

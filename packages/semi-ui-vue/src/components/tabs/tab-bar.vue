@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, h, normalizeStyle, onUpdated, Text, useTemplateRef, type CSSProperties, type HTMLAttributes, type StyleValue, type VNode } from 'vue';
+    import { computed, h, normalizeStyle, onUpdated, Text, useTemplateRef, type ClassValue, type CSSProperties, type HTMLAttributes, type StyleValue, type VNode } from 'vue';
     import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/components/tabs/constants';
     import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
     import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
@@ -33,7 +33,8 @@
         showRestInDropdown: boolean;
         more?: number | TabsMore;
         arrowPosition: 'both' | 'start' | 'end';
-        visibleTabsStyle?: StyleValue;
+        classNames?: Partial<Record<'visibleTabs', ClassValue>>;
+        styles?: Partial<Record<'visibleTabs', StyleValue>>;
         dropdownProps?: TabsDropdownProps;
         tablistAttrs: Record<string, unknown>;
     }>();
@@ -147,7 +148,18 @@
             },
         ]"
     >
-        <OverflowList v-if="collapsed" :class="`${prefix}-overflow-list`" itemKey="key" :items="overflowItems" :overflowRenderDirection="props.arrowPosition" renderMode="scroll" :wrapperProps="tablistAttrs()" :wrapperStyle="props.visibleTabsStyle" @visibleStateChange="foundation.handleVisibleStateChange">
+        <OverflowList
+            v-if="collapsed"
+            :class="`${prefix}-overflow-list`"
+            :classNames="{ wrapper: props.classNames?.visibleTabs }"
+            itemKey="key"
+            :items="overflowItems"
+            :overflowRenderDirection="props.arrowPosition"
+            renderMode="scroll"
+            :styles="{ wrapper: props.styles?.visibleTabs }"
+            :wrapperProps="tablistAttrs()"
+            @visibleStateChange="foundation.handleVisibleStateChange"
+        >
             <template #item="{ item }">
                 <template v-for="(entry, e) in [entryOf(item.itemKey)]" :key="e">
                     <TabItem v-bind="tabItemProps(item)">

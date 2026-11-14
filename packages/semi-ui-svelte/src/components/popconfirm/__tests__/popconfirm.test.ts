@@ -75,6 +75,16 @@ describe('Svelte Popconfirm', () => {
         expect(changes(store)).toEqual(['change true']);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        await setupOpen({ classNames: { content: 'my-content', arrow: 'my-arrow' }, styles: { content: 'order: 2', arrow: { backgroundColor: 'red' } }, showArrow: true });
+        const popover = document.querySelector('.semi-popover');
+        expect(popover).toHaveClass('my-content');
+        expect(popover).toHaveStyle({ order: '2' });
+        const arrow = document.querySelector('.semi-popover-icon-arrow');
+        expect(arrow).toHaveClass('my-arrow');
+        expect(arrow?.querySelectorAll<SVGPathElement>('path')[1].style.fill).toBe('red');
+    });
+
     it('disabled 时不渲染卡片，翻转后触发元素不重建且可打开', async () => {
         const store = setup({ disabled: true });
         expect(card()).toBe(null);

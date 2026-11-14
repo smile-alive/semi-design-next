@@ -206,13 +206,13 @@ Used for multi-line text. You can set `maxCount` to restrict text entering and d
 
 ### Setting TextArea Height
 
-You can set the style of the internal textarea element through `textareaStyle`, such as height, background color, etc.
+You can set the style of the internal textarea element through `styles.textarea`, such as height, background color, etc.
 
 <Demo id="textarea-height" />
 
 ### Line Numbers
 
-Set `showLineNumber` to display line numbers. You can use `lineNumberStart` to set the starting line number, and customize the line number area via `lineNumberStyle`/`lineNumberClassName`.
+Set `showLineNumber` to display line numbers. You can use `lineNumberStart` to set the starting line number, and customize the line number area via `styles.lineNumber` and `classNames.lineNumber`.
 
 <Demo id="line-number" />
 
@@ -350,7 +350,7 @@ Both Input and TextArea support this property.
 
 <TextAreaReactApi />
 
-`className` and `style` land on the outer wrapper `div`, and `textareaStyle` lands on the native `textarea`; other native attributes and events (such as `aria-*`, `id`, `name` and `onClick`) land on the native `textarea`. `onFocus` and `onBlur` are listened for on the outer `div`, so moving focus between the textarea and the clear button does not fire them. `onCompositionStart`, `onCompositionEnd` and `onCompositionUpdate` are called when an IME composition starts, ends and updates, with the native event.
+`className` and `style` land on the outer wrapper `div`, and `classNames.textarea` and `styles.textarea` land on the native `textarea`; other native attributes and events (such as `aria-*`, `id`, `name` and `onClick`) land on the native `textarea`. `onFocus` and `onBlur` are listened for on the outer `div`, so moving focus between the textarea and the clear button does not fire them. `onCompositionStart`, `onCompositionEnd` and `onCompositionUpdate` are called when an IME composition starts, ends and updates, with the native event.
 
 </Framework>
 

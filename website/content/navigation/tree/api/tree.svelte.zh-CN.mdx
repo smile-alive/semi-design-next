@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoMergeValue | 父节点被选中时，值不再包含它的子孙节点；leafOnly 为 false 时生效。 | `boolean` | `true` |
 | blockNode | 节点显示为整行，悬浮和选中高亮整行；关闭时只高亮节点的 label。 | `boolean` | `true` |
 | checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `"related"` |
+| classNames | 内部各部位的类名，键为 search（搜索框容器），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTreePart, ClassValue>>"}>Type</ApiType> | - |
 | defaultExpandAll | 初始化时展开所有节点。之后 treeData 或 treeDataSimpleJson 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `false` |
 | directory | 目录树模式，自带目录图标，可用 icon snippet 覆盖。 | `boolean` | `false` |
 | disabled | 禁用整棵树。节点数据中的 disabled: false 不会解除禁用。 | `boolean` | `false` |
@@ -47,12 +48,11 @@ import ApiType from '#/components/ApiType.astro';
 | onSelect | 节点被选中或取消选中时触发，参数为该节点的 key、是否选中和节点数据。 | <ApiType detail={"(selectedKey: string, selected: boolean, node: TreeNodeData) => void"}>Type</ApiType> | - |
 | renderDraggingNode | 拖拽时浏览器显示的元素，参数为节点元素 nodeInstance 与节点数据 node；snippet 在 dragstart 时渲染到游离的容器中作为拖拽图像，只能读到应用级的 context。 | <ApiType detail={"Snippet\u003c[TreeDraggingNodeSnippetProps]>"}>Type</ApiType> | - |
 | search | 替换搜索框，参数含 `class`、`value`、`placeholder`、`showClear` 与 `onChange`；传 false 隐藏搜索框，filterTreeNode 仍然过滤。 | <ApiType detail={"Snippet\u003c[TreeSearchSnippetProps]> \u007c false"}>Type</ApiType> | - |
-| searchClassName | 搜索框容器的类名。 | `string` | - |
 | searchPlaceholder | 搜索框的占位文字。 | `string` | - |
-| searchStyle | 搜索框容器的样式字符串。 | `string` | - |
 | showClear | 搜索框是否显示清除按钮。 | `boolean` | `true` |
 | showFilteredOnly | 搜索时只展示过滤后的结果。 | `boolean` | `false` |
 | showLine | 显示节点之间的连接线。 | `boolean` | `false` |
+| styles | 内部各部位的样式字符串，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cTreePart, string>>"}>Type</ApiType> | - |
 | treeData | 节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。节点的图标由 icon snippet 绘制，label 为字符串或数字。 | `TreeNodeData[]` | - |
 | treeDataSimpleJson | 简单 JSON 形式的节点数据，返回值为包含选中节点的 JSON 数据。 | `TreeDataSimpleJson` | - |
 | treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `"label"` |

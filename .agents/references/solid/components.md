@@ -9,7 +9,7 @@ semi-ui-solid 的写法。框架版本以其 `peerDependencies` 为准（Solid 1
 
 ## 公开 API
 
-- prop 名、回调签名与受控 prop 以 semi-ui-react 为准（`checked`、`value`、`activeKey`，回调 `onChange(value, event)`），只按 Solid 原生写法改：`className` 改为 `class`（Semi 自己的 `contentClassName`、`wrapperClassName` 等保持原名），`style` 接受对象（键用 kebab-case）或字符串，`ref` 是回调，React 的 `ReactNode` 改为 `JSX.Element`，render 类函数 prop 返回 `JSX.Element`。不照搬 Vue 的插槽、emit 与 `modelValue`。
+- prop 名、回调签名与受控 prop 以 semi-ui-react 为准（`checked`、`value`、`activeKey`，回调 `onChange(value, event)`），只按 Solid 原生写法改：`className` 改为 `class`（`classNames`、`styles` 保持原名），`style` 接受对象（键用 kebab-case）或字符串，`ref` 是回调，React 的 `ReactNode` 改为 `JSX.Element`，render 类函数 prop 返回 `JSX.Element`。不照搬 Vue 的插槽、emit 与 `modelValue`。
 - 目录与文件用 kebab-case，含 JSX 的文件写成 `.tsx`，不含 JSX 的（包括直接调用其他组件、不写 JSX 的组件）写成 `.ts`，`index.ts` 汇总导出组件与 `XxxProps` 等类型；包入口 `src/index.ts` 再导出。组件用 `function` 声明：`export default function Button(props: ButtonProps)`，子组件挂载用 `Object.assign(Tabs, { TabPane })`；Form 例外，字段与部件只有具名导出（F17）。
 - 不写 `elementType`：Solid 读不到子组件的类型（S-H4），识别子项见下文「子项」。
 

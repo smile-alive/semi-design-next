@@ -141,6 +141,18 @@ Props 类型等于原 Semi 的声明加上属性落点元素的原生属性（`E
 
 `semiGlobal` 只在应用启动时设置，按请求变化的配置用 ConfigProvider，不做按请求隔离。React、Solid 的 `semiGlobal` 是模块级单例，请求间共享；Vue 经 `app.provide` 按应用隔离；Svelte 默认是单例，可经根 context 的 `semiGlobalKey` 按应用隔离。
 
+**部位类名与样式**（2026-11-14）
+
+内部元素的样式只经 `classNames`、`styles` 两个属性设置，键为部位名，不再提供 `xxxClassName`、`xxxCls`、`xxxStyle` 这类单独属性（与 Ant Design v6、Mantine 一致，便于配合 Tailwind 工具类）。根元素仍用 `className`（Vue、Solid、Svelte 为 `class`）与 `style`。
+
+- 部位名清单写在 foundation 该组件的 `constants.ts`（`type CardPart = ...`），四个框架共用；部位名沿用原属性的前缀，弹出层统一叫 `dropdown`。
+- 值类型：React、Solid 的类名为 `string`，Vue、Svelte 为 `ClassValue`；样式沿用各框架的 style 类型（Svelte 为字符串）。Vue 的 props 会被 `ref()` 深度解包时（如 Dropdown 的菜单项），改用一层的 `string | Record<string, unknown> | unknown[]` 与 `string | CSSProperties`，避免 TS2589。Popover、Popconfirm 的 `styles.arrow` 是例外，仍是箭头颜色配置（`borderColor`、`backgroundColor`、`borderOpacity`）。
+- 部位类名追加在组件自带类名之后；部位样式写在部位元素上，与组件自身的内联样式合并时，使用方的值后写。
+- 全局默认值里的 `classNames`、`styles` 与其他属性一样整体替换，不逐键合并；复合组件向内部组件转发时只传它映射的键。
+- Form 字段的 `fieldClassName`、`fieldStyle` 保持原样：字段本身的 `classNames` 属于被包装的控件。
+- Resizable 的 `handleClass`、`handleStyle`、`handleWrapperStyle` 保持原样：它们按拖拽方向分键，已能写类名，不是单个部位。
+- 不输出 `data-*` 状态属性；需要时另行决定。
+
 **无根 DOM 的包装组件**（2026-10-09）
 
 Popover、Popconfirm、Dropdown、UserGuide 收到的未声明属性丢弃，与原 Semi 一致；需要自定义属性时写在触发元素上。

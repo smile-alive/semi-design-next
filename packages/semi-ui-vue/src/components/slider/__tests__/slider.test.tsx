@@ -228,8 +228,10 @@ describe('Slider', () => {
         expect(queryAll('dot-active')).toHaveLength(0);
     });
 
-    it('railStyle 属性', () => {
-        renderSlider({ defaultValue: 30, railStyle: { backgroundColor: '#ccc' } });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderSlider({ defaultValue: 30, classNames: { rail: 'rc' }, styles: { rail: { backgroundColor: '#ccc' } } });
+        expect(query('rail')).toHaveClass('rc');
+        expect(query('track')).not.toHaveClass('rc');
         expect(query('rail')).toHaveStyle({ backgroundColor: 'rgb(204, 204, 204)' });
         expect(query('track')).toHaveStyle({ width: '30%' });
     });

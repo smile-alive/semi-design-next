@@ -6,14 +6,13 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | autoAdjustOverflow | Whether the dropdown flips automatically when it would be clipped. | `boolean` | `semiGlobalDefault("AutoComplete", "autoAdjustOverflow")` |
 | autofocus | Whether to focus the input after mount. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by dropdown (the dropdown list, the role="listbox" element); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "classNames")` |
 | data | Data source of the candidates: an array of strings, numbers or objects. An object item uses value as the picked value and label as its text (value when label is missing); its disabled, class, style and data-\* fields go to the matching row. Use the item slot for markup. Changing the array in place updates the list as well. | `T[]` | `[]` |
 | defaultActiveFirstOption | Whether the first candidate is highlighted when the panel opens, so that Enter picks it directly. | `boolean` | `false` |
 | defaultOpen | Whether the dropdown panel is open on mount. | `boolean` | `semiGlobalDefault("AutoComplete", "defaultOpen")` |
 | defaultValue | Initial value of the input when uncontrolled. | `string \| number` | `semiGlobalDefault("AutoComplete", "defaultValue")` |
 | disabled | Whether the component is disabled. | `boolean` | `undefined` |
-| dropdownClassName | Class name of the dropdown list, applied to the role="listbox" element. | `string` | `semiGlobalDefault("AutoComplete", "dropdownClassName")` |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown equals the width of the input. | `boolean` | `true` |
-| dropdownStyle | Inline style of the dropdown list, applied to the role="listbox" element. | `StyleValue` | `semiGlobalDefault("AutoComplete", "dropdownStyle")` |
 | insetLabelId | The id of the insetLabel element, which names the combobox and the listbox. When omitted, the component generates one while an insetLabel is rendered. | `string` | `undefined` |
 | loading | Whether the dropdown shows a loading spinner in place of the candidates and the empty content. | `boolean` | `false` |
 | maxHeight | Maximum height of the dropdown list; a number is in px. | `string \| number` | `300` |
@@ -27,6 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | Whether to show the clear button when there is content. | `boolean` | `false` |
 | size | Size of the input. | `Size` | `undefined` |
 | stopPropagation | Whether click, mousedown and focus in/out events on the dropdown stop propagating. | `string \| boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like classNames; dropdown is merged with maxHeight and applied to the role="listbox" element. | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "styles")` |
 | validateStatus | Validation status; it only affects the style. | `"default" \| "error" \| "success" \| "warning"` | `"default"` |
 
 **Events**

@@ -12,7 +12,7 @@
     type Adapter = SpinAdapter<SpinProps>;
 
     const defaults = useDefaultProps('Spin');
-    let { size = defaults('size', 'middle'), spinning = defaults('spinning', true), delay = defaults('delay', 0), wrapperClassName = defaults('wrapperClassName'), childStyle = defaults('childStyle'), indicator = defaults('indicator'), tip = defaults('tip'), children, ...rest }: SpinProps = $props();
+    let { size = defaults('size', 'middle'), spinning = defaults('spinning', true), delay = defaults('delay', 0), classNames = defaults('classNames'), styles = defaults('styles'), indicator = defaults('indicator'), tip = defaults('tip'), children, ...rest }: SpinProps = $props();
 
     const locale = useLocale('Spin');
 
@@ -48,7 +48,6 @@
     aria-busy={blocked ? true : undefined}
     class={[
         prefixCls,
-        wrapperClassName,
         rest.class,
         {
             [`${prefixCls}-${size}`]: size,
@@ -70,7 +69,7 @@
             {/if}
         </output>
     {/if}
-    <div class={`${prefixCls}-children`} inert={blocked} style={childStyle} x-semi-prop="children">
+    <div class={[`${prefixCls}-children`, classNames?.child]} inert={blocked} style={styles?.child} x-semi-prop="children">
         {@render children?.()}
     </div>
 </div>

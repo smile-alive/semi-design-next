@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLInputAttributes } from 'svelte/elements';
 import type { TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
-import type { PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
+import type { PanelType, TimePickerPart } from '@fibrae/semi-foundation/components/time-picker/constants';
 import type { DisabledTimeFns } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import type { InputProps, InputSize, ValidateStatus } from '../input/index.js';
 import type { ScrollItemProps } from '../scroll-list/index.js';
@@ -57,7 +57,9 @@ export interface TimePickerProps extends Omit<HTMLInputAttributes, NativeInputKe
     inputReadOnly?: boolean;
     validateStatus?: ValidateStatus;
     insetLabelId?: string;
-    inputStyle?: string;
+    /** `dropdown` is the panel card; `input` is the Input's root element */
+    classNames?: Partial<Record<TimePickerPart, ClassValue>>;
+    styles?: Partial<Record<TimePickerPart, string>>;
     autofocus?: boolean;
     /** Focuses and selects the input once mounted */
     focusOnOpen?: boolean;
@@ -65,8 +67,6 @@ export interface TimePickerProps extends Omit<HTMLInputAttributes, NativeInputKe
     motion?: boolean;
     autoAdjustOverflow?: boolean;
     position?: Position;
-    popupClassName?: ClassValue;
-    popupStyle?: string;
     stopPropagation?: boolean;
     /** Falls back to ConfigProvider's timeZone */
     timeZone?: string | number;

@@ -19,9 +19,9 @@
             class: 'keyword3',
         },
     ];
-    const highlightStyle = { borderRadius: '4px' };
+    const highlightStyle = 'border-radius: 4px;';
 </script>
 
 <h2>
-    <Highlight component="span" {highlightStyle} {searchWords} {sourceString} />
+    <Highlight component="span" {searchWords} {sourceString} styles={{ highlight: highlightStyle }} />
 </h2>

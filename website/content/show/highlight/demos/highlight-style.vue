@@ -16,9 +16,9 @@
 
 <template>
     <h2>
-        <Highlight :highlightStyle="tealStyle" :searchWords="searchWords" :sourceString="sourceString" />
+        <Highlight :searchWords="searchWords" :sourceString="sourceString" :styles="{ highlight: tealStyle }" />
     </h2>
     <h2>
-        <Highlight :highlightStyle="primaryStyle" :searchWords="searchWords" :sourceString="sourceString" />
+        <Highlight :searchWords="searchWords" :sourceString="sourceString" :styles="{ highlight: primaryStyle }" />
     </h2>
 </template>

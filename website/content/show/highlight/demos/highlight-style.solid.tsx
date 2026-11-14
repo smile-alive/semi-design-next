@@ -16,10 +16,10 @@ export default function HighlightDemo() {
     return (
         <>
             <h2>
-                <Highlight sourceString={sourceString} searchWords={searchWords} highlightStyle={tealStyle} />
+                <Highlight sourceString={sourceString} searchWords={searchWords} styles={{ highlight: tealStyle }} />
             </h2>
             <h2>
-                <Highlight sourceString={sourceString} searchWords={searchWords} highlightStyle={primaryStyle} />
+                <Highlight sourceString={sourceString} searchWords={searchWords} styles={{ highlight: primaryStyle }} />
             </h2>
         </>
     );

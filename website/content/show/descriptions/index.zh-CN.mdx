@@ -159,7 +159,7 @@ Svelte 不提供 `Descriptions.Item`：数据只写在 `data` 中，自定义内
 
 ### 自定义 Key 样式
 
-可以通过 `keyStyle` 属性自定义 key 的样式，例如设置固定宽度实现对齐效果。该属性支持所有 CSS 样式，如 `width`、`maxWidth`、`textAlign`、`color` 等。
+可以通过 `styles.key` 自定义 key 的样式，例如设置固定宽度实现对齐效果。该属性支持所有 CSS 样式，如 `width`、`maxWidth`、`textAlign`、`color` 等。
 
 <Demo id="key-style" />
 
@@ -229,49 +229,53 @@ Svelte 不提供 `Descriptions.Item`：数据只写在 `data` 中，自定义内
 
 <Framework only="react">
 
-| 属性     | 说明                                         | 类型                           | 默认值 |
-| -------- | -------------------------------------------- | ------------------------------ | ------ |
-| key      | 键值                                         | ReactNode                      | -      |
-| value    | 属性值                                       | ReactNode \| (() => ReactNode) | -      |
-| hidden   | 该数据是否需要展示                           | boolean                        | -      |
-| span     | 单元格应跨越的列数                           | number                         | 1      |
-| keyStyle | key 的自定义样式，可用于设置宽度、对齐方式等 | CSSProperties                  | -      |
+| 属性       | 说明                                             | 类型                                    | 默认值 |
+| ---------- | ------------------------------------------------ | --------------------------------------- | ------ |
+| key        | 键值                                             | ReactNode                               | -      |
+| value      | 属性值                                           | ReactNode \| (() => ReactNode)          | -      |
+| hidden     | 该数据是否需要展示                               | boolean                                 | -      |
+| span       | 单元格应跨越的列数                               | number                                  | 1      |
+| classNames | 部位类名，键为 `key`，追加在自带类名之后         | `Partial<Record<'key', string>>`        | -      |
+| styles     | 部位样式，键为 `key`，可用于设置宽度、对齐方式等 | `Partial<Record<'key', CSSProperties>>` | -      |
 
 </Framework>
 
 <Framework only="vue">
 
-| 属性     | 说明                                         | 类型             | 默认值 |
-| -------- | -------------------------------------------- | ---------------- | ------ |
-| key      | 键值，自定义渲染使用 `#itemKey` 插槽         | string \| number | -      |
-| value    | 属性值，自定义渲染使用 `#value` 插槽         | string \| number | -      |
-| hidden   | 该数据是否需要展示                           | boolean          | -      |
-| span     | 单元格应跨越的列数                           | number           | 1      |
-| keyStyle | key 的自定义样式，可用于设置宽度、对齐方式等 | StyleValue       | -      |
+| 属性       | 说明                                             | 类型                                 | 默认值 |
+| ---------- | ------------------------------------------------ | ------------------------------------ | ------ |
+| key        | 键值，自定义渲染使用 `#itemKey` 插槽             | string \| number                     | -      |
+| value      | 属性值，自定义渲染使用 `#value` 插槽             | string \| number                     | -      |
+| hidden     | 该数据是否需要展示                               | boolean                              | -      |
+| span       | 单元格应跨越的列数                               | number                               | 1      |
+| classNames | 部位类名，键为 `key`，追加在自带类名之后         | `Partial<Record<'key', ClassValue>>` | -      |
+| styles     | 部位样式，键为 `key`，可用于设置宽度、对齐方式等 | `Partial<Record<'key', StyleValue>>` | -      |
 
 </Framework>
 
 <Framework only="solid">
 
-| 属性     | 说明                                         | 类型                        | 默认值 |
-| -------- | -------------------------------------------- | --------------------------- | ------ |
-| key      | 键值，自定义渲染使用 `renderKey`             | string \| number            | -      |
-| value    | 属性值，自定义渲染使用 `renderValue`         | string \| number            | -      |
-| hidden   | 该数据是否需要展示                           | boolean                     | -      |
-| span     | 单元格应跨越的列数                           | number                      | 1      |
-| keyStyle | key 的自定义样式，可用于设置宽度、对齐方式等 | JSX.CSSProperties \| string | -      |
+| 属性       | 说明                                             | 类型                                                  | 默认值 |
+| ---------- | ------------------------------------------------ | ----------------------------------------------------- | ------ |
+| key        | 键值，自定义渲染使用 `renderKey`                 | string \| number                                      | -      |
+| value      | 属性值，自定义渲染使用 `renderValue`             | string \| number                                      | -      |
+| hidden     | 该数据是否需要展示                               | boolean                                               | -      |
+| span       | 单元格应跨越的列数                               | number                                                | 1      |
+| classNames | 部位类名，键为 `key`，追加在自带类名之后         | `Partial<Record<'key', string>>`                      | -      |
+| styles     | 部位样式，键为 `key`，可用于设置宽度、对齐方式等 | `Partial<Record<'key', JSX.CSSProperties \| string>>` | -      |
 
 </Framework>
 
 <Framework only="svelte">
 
-| 属性     | 说明                                         | 类型             | 默认值 |
-| -------- | -------------------------------------------- | ---------------- | ------ |
-| key      | 键值，自定义渲染使用 `itemKey` snippet       | string \| number | -      |
-| value    | 属性值，自定义渲染使用 `value` snippet       | string \| number | -      |
-| hidden   | 该数据是否需要展示                           | boolean          | -      |
-| span     | 单元格应跨越的列数                           | number           | 1      |
-| keyStyle | key 的自定义样式，可用于设置宽度、对齐方式等 | string           | -      |
+| 属性       | 说明                                             | 类型                                 | 默认值 |
+| ---------- | ------------------------------------------------ | ------------------------------------ | ------ |
+| key        | 键值，自定义渲染使用 `itemKey` snippet           | string \| number                     | -      |
+| value      | 属性值，自定义渲染使用 `value` snippet           | string \| number                     | -      |
+| hidden     | 该数据是否需要展示                               | boolean                              | -      |
+| span       | 单元格应跨越的列数                               | number                               | 1      |
+| classNames | 部位类名，键为 `key`，追加在自带类名之后         | `Partial<Record<'key', ClassValue>>` | -      |
+| styles     | 部位样式，键为 `key`，可用于设置宽度、对齐方式等 | `Partial<Record<'key', string>>`     | -      |
 
 </Framework>
 

@@ -1,4 +1,5 @@
 import type { CSSProperties, VNode } from 'vue';
+import type { DropdownPart } from '@fibrae/semi-foundation/components/dropdown/constants';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import type { TooltipEmits, TooltipProps } from '../tooltip/interface';
 
@@ -7,8 +8,9 @@ export type { Position, Trigger } from '../tooltip/interface';
 export type Type = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';
 
 /** Arrow and arrow keys are fixed: no arrow, and the Dropdown alone moves focus with Up and Down. */
-export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPointAtCenter' | 'disableArrowKeyDown'> {
-    contentClassName?: string | unknown[];
+export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPointAtCenter' | 'disableArrowKeyDown' | 'classNames' | 'styles'> {
+    // one level deep: ref() over the recursive ClassValue/StyleValue with the menu items hits TS2589, as in Navigation
+    classNames?: Partial<Record<DropdownPart, string | Record<string, unknown> | unknown[]>>;
     menu?: DropdownMenuItem[];
     /**
      * How the items of this menu are selected (a submenu takes its own Dropdown's value); `active` marks the selected
@@ -19,6 +21,7 @@ export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPo
      */
     selectionMode?: DropdownSelectionMode;
     showTick?: boolean;
+    styles?: Partial<Record<DropdownPart, string | CSSProperties>>;
 }
 
 export interface DropdownEmits extends TooltipEmits {}

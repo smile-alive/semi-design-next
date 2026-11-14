@@ -1,5 +1,6 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
+import type { InputPart, TextAreaPart } from '@fibrae/semi-foundation/components/input/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { LabelProps } from '../form/interface';
 
@@ -57,7 +58,8 @@ export interface InputProps {
     minlength?: number;
     placeholder?: string | number;
     validateStatus?: ValidateStatus;
-    inputStyle?: StyleValue;
+    classNames?: Partial<Record<InputPart, ClassValue>>;
+    styles?: Partial<Record<InputPart, StyleValue>>;
     insetLabelId?: string;
     getValueLength?: (value: string) => number;
 }
@@ -132,9 +134,8 @@ export interface TextAreaProps {
     disabledEnterStartNewLine?: boolean;
     showLineNumber?: boolean;
     lineNumberStart?: number;
-    lineNumberClassName?: string;
-    lineNumberStyle?: StyleValue;
-    textareaStyle?: StyleValue;
+    classNames?: Partial<Record<TextAreaPart, ClassValue>>;
+    styles?: Partial<Record<TextAreaPart, StyleValue>>;
     /** Only takes effect when given; ignored with autosize */
     resize?: 'none' | 'both' | 'horizontal' | 'vertical' | 'block' | 'inline';
     maxlength?: number;

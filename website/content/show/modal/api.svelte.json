@@ -6,7 +6,6 @@
                 "zh-CN": "对话框完全关闭后触发；显示期间被卸载时也会触发一次。",
                 "en-US": "Called after the dialog has fully closed. It is also called once when the dialog is unmounted while shown."
             },
-            "bodyStyle": { "zh-CN": "对话框内容区的样式，字符串。", "en-US": "Style of the dialog body, as a string." },
             "cancelButtonProps": {
                 "zh-CN": "取消按钮的属性。autoFocus 为 true 时打开后聚焦该按钮；class、style 落在按钮上；onclick 先于内置的取消处理调用，不会替换内置处理。",
                 "en-US": "Props of the cancel button. autoFocus focuses it on open; class and style land on the button; onclick runs before the built-in cancel handling, which still runs."
@@ -20,6 +19,10 @@
                 "en-US": "Cancel button text. Defaults to the locale entry Modal.cancel."
             },
             "centered": { "zh-CN": "是否垂直居中显示。", "en-US": "Whether the dialog is vertically centered." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 mask、content、header、body、footer，值的写法同 class（字符串、数组或对象），与组件自带的类名合并；自定义 header 时没有 header 部位。",
+                "en-US": "Class names of the inner parts, keyed by mask, content, header, body and footer; values take anything class takes (string, array or object) and merge with the built-in classes. There is no header part when header is customized."
+            },
             "closable": {
                 "zh-CN": "是否显示右上角的关闭按钮。",
                 "en-US": "Whether the close button in the corner is shown."
@@ -69,7 +72,6 @@
                 "zh-CN": "遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理（aria-modal、页面 inert、Tab 锁定、body 滚动锁定）。",
                 "en-US": "Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock)."
             },
-            "maskStyle": { "zh-CN": "遮罩的样式，字符串。", "en-US": "Style of the mask, as a string." },
             "modalContentClass": {
                 "zh-CN": "对话框内容元素的类名。",
                 "en-US": "Class name of the dialog content element."
@@ -91,6 +93,10 @@
             "size": {
                 "zh-CN": "对话框宽度档位：small 为 448px，medium 为 684px，large 为 920px，full-width 为 100vw - 64px。",
                 "en-US": "Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames，每个值是样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; every value is a style string."
             },
             "visible": {
                 "zh-CN": "对话框是否可见，配合 bind:visible 使用。取消按钮、关闭按钮、遮罩和 Esc 在 onCancel 返回后写回 false；确认只调用 onOk，由使用方把 visible 设为 false。",

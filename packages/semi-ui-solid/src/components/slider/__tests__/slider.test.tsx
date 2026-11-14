@@ -387,13 +387,14 @@ describe('Slider', () => {
         expect(boundary).not.toHaveClass(`${prefix}-boundary-show`);
     });
 
-    it('class、style、railStyle 与 data-* 落在 wrapper', () => {
-        render(() => <Slider class="custom-slider" style={{ width: '300px' }} railStyle={{ 'background-color': '#ccc' }} data-testid="volume" title="Volume" defaultValue={30} />);
+    it('class、style 与 data-* 落在 wrapper，classNames 与 styles 按部位落到对应元素', () => {
+        render(() => <Slider class="custom-slider" style={{ width: '300px' }} classNames={{ rail: 'my-rail' }} styles={{ rail: { 'background-color': '#ccc' } }} data-testid="volume" title="Volume" defaultValue={30} />);
         const wrapper = screen.getByTestId('volume');
         expect(wrapper).toBe(document.querySelector('.custom-slider'));
         expect(wrapper).toHaveClass(`${prefix}-wrapper`);
         expect(wrapper).toHaveStyle({ width: '300px' });
         expect(wrapper).toHaveAttribute('title', 'Volume');
+        expect(query(document, 'rail')).toHaveClass('my-rail');
         expect(query(document, 'rail')).toHaveStyle({ backgroundColor: 'rgb(204, 204, 204)' });
         expect(getWrapper().parentElement).toHaveClass(prefix);
     });

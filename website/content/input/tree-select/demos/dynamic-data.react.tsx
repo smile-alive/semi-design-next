@@ -25,7 +25,7 @@ export default function TreeSelectDemo() {
 
     return (
         <>
-            <TreeSelect style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} placeholder="请选择" />
+            <TreeSelect style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} placeholder="请选择" />
             <br />
             <br />
             <Button onClick={add}>动态改变数据</Button>

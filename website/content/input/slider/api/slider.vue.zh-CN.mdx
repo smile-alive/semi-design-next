@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | ariaLabel | 手柄的可访问名称；range 模式下两个手柄在其后分别追加语言包中的起点、终点。 | `string` | `semiGlobalDefault("Slider", "ariaLabel")` |
 | ariaLabelledby | 引用标签元素的 id，作为手柄的可访问名称；range 模式下每个手柄再加上起点或终点。 | `string` | `semiGlobalDefault("Slider", "ariaLabelledby")` |
 | ariaValuetext | 为当前值提供用户友好的名称。 | `string` | `semiGlobalDefault("Slider", "ariaValuetext")` |
+| classNames | 内部各部位的类名，键为 rail，值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"rail\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Slider", "classNames")` |
 | defaultValue | 非受控时的初始取值。 | `number \| number[]` | `semiGlobalDefault("Slider", "defaultValue")` |
 | disabled | 滑块是否禁用。 | `boolean` | `false` |
 | getAriaValueText | 为当前值提供用户友好的名称，参数为滑块的值与滑块的顺序。 | <ApiType detail={"((value: number, index?: number \u007c undefined) => string)"}>Type</ApiType> | `undefined` |
@@ -17,12 +18,12 @@ import ApiType from '#/components/ApiType.astro';
 | max | 最大值。 | `number` | `100` |
 | min | 最小值。 | `number` | `0` |
 | modelValue | 当前取值，配合 v-model 使用；只传不回写时拖动、点击与方向键仅触发通知，滑块不移动。变回 undefined 时回到 defaultValue，没有则回到 min，且不触发 afterChange。 | `number \| number[]` | `undefined` |
-| railStyle | 滑块轨道的样式。 | `CSSProperties` | `semiGlobalDefault("Slider", "railStyle")` |
 | range | 是否支持两端同时可滑动。 | `boolean` | `false` |
 | showArrow | 提示是否带箭头。 | `boolean` | `true` |
 | showBoundary | 是否在悬停时展示最大值与最小值。 | `boolean` | `false` |
 | showMarkLabel | 是否显示刻度标签。 | `boolean` | `true` |
 | step | 步长，从 min 起计算。 | `number` | `1` |
+| styles | 内部各部位的样式，键为 rail，值的写法同 style。 | <ApiType detail={"Partial\u003cRecord\u003c\"rail\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Slider", "styles")` |
 | tipFormatter | 设置提示的展示格式，每个手柄单独调用，参数为该手柄的值；默认显示当前取值，null 隐藏提示。 | <ApiType detail={"((value: number) => string \u007c number) \u007c null"}>Type</ApiType> | `undefined` |
 | tooltipOnMark | 刻度上是否带有提示。 | `boolean` | `false` |
 | tooltipVisible | 是否始终显示提示。 | `boolean` | `semiGlobalDefault("Slider", "tooltipVisible")` |

@@ -61,6 +61,7 @@ export interface RenderFileItemProps extends FileItem {
     renderFileOperation?: (fileItem: RenderFileItemProps) => ReactNode;
     showRetry?: boolean;
     showReplace?: boolean;
+    className?: string;
     style?: CSSProperties;
     disabled?: boolean;
     onPreviewClick?: () => void;

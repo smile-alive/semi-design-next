@@ -84,7 +84,7 @@ function Option(props: OptionProps): React.ReactNode {
                     <IconTick />
                 </div>
             )}
-            {typeof children === 'string' ? <div className={`${prefixCls}-text`}>{inputValue ? <Highlight highlightClassName={`${prefixCls}-keyword`} searchWords={[inputValue]} sourceString={children} /> : children}</div> : children}
+            {typeof children === 'string' ? <div className={`${prefixCls}-text`}>{inputValue ? <Highlight classNames={{ highlight: `${prefixCls}-keyword` }} searchWords={[inputValue]} sourceString={children} /> : children}</div> : children}
         </div>
     );
 }

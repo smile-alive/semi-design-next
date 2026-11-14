@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { isEqualWith } from 'es-toolkit';
 import { type ValidateStatus, FocusTrapHandle } from '@fibrae/semi-foundation/base';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/select/constants';
+import { cssClasses, strings, numbers, type SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import SelectFoundation, { type SelectAdapter } from '@fibrae/semi-foundation/components/select/foundation';
 import { type OptionRecord, getOptionRuns, optionListToRecords } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
@@ -162,8 +162,8 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
      * `event` is what changed the keyword; none when called through the ref or triggerRender
      */
     onSearch?: (value: string, event?: InputChangeEvent | React.KeyboardEvent | React.MouseEvent | globalThis.MouseEvent) => void;
-    dropdownClassName?: string;
-    dropdownStyle?: React.CSSProperties;
+    classNames?: Partial<Record<SelectPart, string>>;
+    styles?: Partial<Record<SelectPart, React.CSSProperties>>;
     ellipsisTrigger?: boolean;
     outerTopSlot?: React.ReactNode;
     innerTopSlot?: React.ReactNode;
@@ -297,8 +297,8 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         onDropdownVisibleChange,
         position: positionProp,
         onSearch,
-        dropdownClassName,
-        dropdownStyle,
+        classNames,
+        styles,
         ellipsisTrigger,
         outerTopSlot,
         innerTopSlot,
@@ -841,9 +841,9 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                     {
                         [`${prefixcls}-option-list-wrapper`]: !(isEmpty && emptyContent === null),
                     },
-                    dropdownClassName
+                    classNames?.dropdown
                 )}
-                style={dropdownStyle}
+                style={styles?.dropdown}
                 onKeyDown={foundation.handleContainerKeyDown}
                 // A press would move the focus to the popup container, where the keys never reach the combobox; it
                 // stays on the trigger or the dropdown search input. A text field in a slot still takes the focus.

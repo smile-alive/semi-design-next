@@ -14,10 +14,6 @@
                 "zh-CN": "小三角是否指向触发元素中心，需要同时开启 `showArrow`。未设置时为 true。",
                 "en-US": "Whether the arrow points at the center of the trigger. Requires `showArrow`. Unset, it is true."
             },
-            "arrowStyle": {
-                "zh-CN": "小三角的 `borderColor`、`backgroundColor` 与 `borderOpacity`（驼峰键名的对象，不是 Solid 的 style 对象）；缺省跟随对象形式 `style` 中的 `background-color` 与 `border-color`。",
-                "en-US": "`borderColor`, `backgroundColor` and `borderOpacity` of the arrow, an object with camelCase keys rather than a Solid style object. They follow `background-color` and `border-color` of an object `style` by default."
-            },
             "aria-describedby": {
                 "zh-CN": "弹出层 role 为 dialog 时的 aria-describedby。",
                 "en-US": "aria-describedby of the popup when its role is dialog."
@@ -42,6 +38,10 @@
                 "zh-CN": "弹出层的类名。",
                 "en-US": "Class name of the popup."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（内容卡片）、`arrow`（箭头），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the content card) and `arrow`; merged with the built-in classes."
+            },
             "clickToHide": {
                 "zh-CN": "点击弹出层及其内部任一元素时是否关闭弹出层。",
                 "en-US": "Whether a click on the popup or anything inside it closes the popup."
@@ -57,10 +57,6 @@
             "content": {
                 "zh-CN": "弹出层内容。可传 JSX，也可传函数；函数的入参是 `{ initialFocusRef }`，把 `initialFocusRef` 作为 `ref` 绑定到可聚焦元素上，打开时会自动聚焦在该位置。",
                 "en-US": "Content of the popup. Pass JSX or a function; the function receives `{ initialFocusRef }`, and binding `initialFocusRef` as the `ref` of a focusable element focuses it when the popup opens."
-            },
-            "contentClassName": {
-                "zh-CN": "弹出层内容卡片的类名。",
-                "en-US": "Class name of the content card in the popup."
             },
             "disableArrowKeyDown": {
                 "zh-CN": "是否禁用在触发元素上按方向键把焦点移入弹出层。",
@@ -137,6 +133,10 @@
             "style": {
                 "zh-CN": "弹出层的内联样式，可传 style 对象或字符串。小三角只从对象形式中读取 `background-color` 与 `border-color`。",
                 "en-US": "Inline style of the popup, a style object or a string. The arrow reads `background-color` and `border-color` from an object only."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。`content` 是内容卡片的样式，可传 style 对象或字符串；`arrow` 是箭头的 `borderColor`、`backgroundColor` 与 `borderOpacity`（驼峰键名的对象，不是 Solid 的 style 对象），未设置的颜色跟随对象形式 `style` 中的 `background-color` 与 `border-color`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. `content` styles the content card, as a style object or a string; `arrow` holds the arrow's `borderColor`, `backgroundColor` and `borderOpacity`, an object with camelCase keys rather than a Solid style object, and colors that are not set follow `background-color` and `border-color` of an object `style`."
             },
             "trigger": {
                 "zh-CN": "触发显示的时机，可选 hover、focus、click、custom 或 contextMenu。custom 时显示与否完全由 `visible` 决定。",

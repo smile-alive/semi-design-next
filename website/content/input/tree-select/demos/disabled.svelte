@@ -35,11 +35,11 @@
 </script>
 
 <div>
-    <TreeSelect disabled dropdownStyle="max-height: 400px; overflow: auto" placeholder="禁用下拉菜单" style="width: 300px" {treeData} />
+    <TreeSelect disabled placeholder="禁用下拉菜单" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />
     <br />
     <br />
-    <TreeSelect disabled dropdownStyle="max-height: 400px; overflow: auto" style="width: 300px" {treeData} value="Shanghai" />
+    <TreeSelect disabled style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} value="Shanghai" />
     <br />
     <br />
-    <TreeSelect disabled dropdownStyle="max-height: 400px; overflow: auto" multiple style="width: 300px" {treeData} value={['Shanghai', 'North America']} />
+    <TreeSelect disabled multiple style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} value={['Shanghai', 'North America']} />
 </div>

@@ -174,13 +174,13 @@
                 "zh-CN": "建议列表。列表变化且不为空时显示建议面板，为空时隐藏。",
                 "en-US": "Suggestion list. The suggestion panel shows when the list changes to a non-empty one and hides when it is empty."
             },
-            "templatesCls": {
-                "zh-CN": "模版面板的类名。",
-                "en-US": "Class name of the template panel."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `templates`（模版面板），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `templates` (the template panel); merged with the built-in classes."
             },
-            "templatesStyle": {
-                "zh-CN": "模版面板的样式，与默认的最大高度合并。",
-                "en-US": "Style of the template panel, merged over its default max height."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`templates` 与默认的最大高度合并。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `templates` is merged over the panel's default max height."
             },
             "topSlotPosition": {
                 "zh-CN": "顶部区域相对于引用区域与上传文件区域的位置，可选 `top`、`middle` 或 `bottom`。",
@@ -293,9 +293,9 @@
                 "zh-CN": "Mcp 自行生成弹出内容，传入的 content 不生效。",
                 "en-US": "Mcp builds the popup content itself, so a content passed here has no effect."
             },
-            "contentClassName": {
-                "zh-CN": "下拉菜单容器 `.semi-dropdown` 的类名，可为字符串或数组。",
-                "en-US": "Class name of the menu container `.semi-dropdown`, a string or an array."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（下拉菜单容器 `.semi-dropdown`）、`wrapper`（触发元素被 `span` 包裹时的该 `span`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the menu container `.semi-dropdown`) and `wrapper` (the `span` that wraps the trigger when a wrapper is needed); merged with the built-in classes."
             },
             "disableFocusListener": {
                 "zh-CN": "trigger 为 hover 时，是否不响应键盘聚焦打开菜单，默认 false。",
@@ -397,6 +397,10 @@
                 "zh-CN": "下拉菜单容器 `.semi-dropdown` 的样式。",
                 "en-US": "Style of the menu container `.semi-dropdown`."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`content` 写在 `style` 之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `content` is applied after `style`."
+            },
             "trigger": {
                 "zh-CN": "触发菜单显示的行为，可选 hover、focus、click、custom、contextMenu，默认 hover；custom 时显示与否完全由 visible 决定。",
                 "en-US": "What shows the menu: hover, focus, click, custom or contextMenu. Defaults to hover. With custom, visible alone decides."
@@ -404,10 +408,6 @@
             "visible": {
                 "zh-CN": "菜单是否显示。配合 trigger 为 custom 使用；传入后由该值决定显示，触发器、点击外部与 Esc 只通过 onVisibleChange 请求打开或关闭。",
                 "en-US": "Whether the menu is shown. Used with trigger custom. When given, this value decides, and the trigger, a click outside and Esc only request a change through onVisibleChange."
-            },
-            "wrapperClassName": {
-                "zh-CN": "触发元素被 span 包裹时，该 span 的类名。",
-                "en-US": "Class name of the span that wraps the trigger when a wrapper is needed."
             },
             "wrapperId": {
                 "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",

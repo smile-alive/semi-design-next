@@ -439,15 +439,17 @@ describe('TreeSelect', () => {
         expect(getTrigger()).toHaveClass(`${BASE_CLASS_PREFIX}-tree-select-small`);
     });
 
-    it('自定义 dropdownClassName 和 dropdownStyle', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
         renderTreeSelect({
-            dropdownClassName: 'test',
-            dropdownStyle: {
-                color: 'red',
-            },
+            defaultOpen: true,
+            classNames: { dropdown: 'test', optionList: 'my-list' },
+            styles: { dropdown: { color: 'red' }, optionList: { height: '200px' } },
         });
         expect(getPopover()).toHaveClass('test');
         expect(getPopover()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const list = document.querySelector('.my-list');
+        expect(list).toHaveClass('semi-tree-option-list');
+        expect(list).toHaveStyle({ height: '200px' });
     });
 
     // jsdom has no layout, so only the trigger-width variable wiring on the popover wrapper is checked

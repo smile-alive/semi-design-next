@@ -390,21 +390,22 @@ npm install @dnd-kit/solid @dnd-kit/dom @dnd-kit/helpers
 
 `#tabBar` 插槽的 `tabBarProps`，是默认标签栏的数据。
 
-| 属性               | 说明                                               | 类型                                    |
-| ------------------ | -------------------------------------------------- | --------------------------------------- |
-| activeKey          | 当前激活的 itemKey，受控的空值为 null              | string \| null                          |
-| list               | 标签页数据；TabPane 的 `#tab` 为纯文本时才带 `tab` | PlainTab[]                              |
-| type               | 标签栏样式                                         | 'line' \| 'card' \| 'button' \| 'slash' |
-| size               | 尺寸                                               | 'small' \| 'medium' \| 'large'          |
-| tabPosition        | 位置                                               | 'top' \| 'left'                         |
-| collapsible        | 是否折叠                                           | boolean \| 'auto'                       |
-| showRestInDropdown | 折叠模式下，收起的标签是否展示在下拉菜单中         | boolean                                 |
-| more               | 收入「更多」菜单的配置                             | number \| TabsMore                      |
-| arrowPosition      | 折叠模式下箭头的位置                               | 'both' \| 'start' \| 'end'              |
-| visibleTabsStyle   | 折叠模式下整体滚动区域的样式                       | StyleValue                              |
-| dropdownProps      | 折叠模式下箭头下拉菜单的 Dropdown 属性             | TabsDropdownProps                       |
-| class              | tabBarClassName                                    | string                                  |
-| style              | tabBarStyle                                        | StyleValue                              |
+| 属性               | 说明                                               | 类型                                         |
+| ------------------ | -------------------------------------------------- | -------------------------------------------- |
+| activeKey          | 当前激活的 itemKey，受控的空值为 null              | string \| null                               |
+| list               | 标签页数据；TabPane 的 `#tab` 为纯文本时才带 `tab` | PlainTab[]                                   |
+| type               | 标签栏样式                                         | 'line' \| 'card' \| 'button' \| 'slash'      |
+| size               | 尺寸                                               | 'small' \| 'medium' \| 'large'               |
+| tabPosition        | 位置                                               | 'top' \| 'left'                              |
+| collapsible        | 是否折叠                                           | boolean \| 'auto'                            |
+| showRestInDropdown | 折叠模式下，收起的标签是否展示在下拉菜单中         | boolean                                      |
+| more               | 收入「更多」菜单的配置                             | number \| TabsMore                           |
+| arrowPosition      | 折叠模式下箭头的位置                               | 'both' \| 'start' \| 'end'                   |
+| classNames         | 键 `visibleTabs`：折叠模式下整体滚动区域的类名     | `Partial<Record<'visibleTabs', ClassValue>>` |
+| styles             | 键 `visibleTabs`：折叠模式下整体滚动区域的样式     | `Partial<Record<'visibleTabs', StyleValue>>` |
+| dropdownProps      | 折叠模式下箭头下拉菜单的 Dropdown 属性             | TabsDropdownProps                            |
+| class              | Tabs 的 `classNames.tabBar`                        | string                                       |
+| style              | Tabs 的 `styles.tabBar`                            | StyleValue                                   |
 
 </Framework>
 
@@ -448,21 +449,22 @@ npm install @dnd-kit/solid @dnd-kit/dom @dnd-kit/helpers
 
 `tabBar` snippet 的 `tabBarProps`，是默认标签栏的数据。
 
-| 属性               | 说明                                       | 类型                                    |
-| ------------------ | ------------------------------------------ | --------------------------------------- |
-| activeKey          | 当前激活的 itemKey，受控的空值为 null      | string \| null                          |
-| list               | 标签页数据                                 | PlainTab[]                              |
-| type               | 标签栏样式                                 | 'line' \| 'card' \| 'button' \| 'slash' |
-| size               | 尺寸                                       | 'small' \| 'medium' \| 'large'          |
-| tabPosition        | 位置                                       | 'top' \| 'left'                         |
-| collapsible        | 是否折叠                                   | boolean \| 'auto'                       |
-| showRestInDropdown | 折叠模式下，收起的标签是否展示在下拉菜单中 | boolean                                 |
-| more               | 收入「更多」菜单的配置                     | number \| TabsMore                      |
-| arrowPosition      | 折叠模式下箭头的位置                       | 'both' \| 'start' \| 'end'              |
-| visibleTabsStyle   | 折叠模式下整体滚动区域的样式               | string                                  |
-| dropdownProps      | 折叠模式下箭头下拉菜单的 Dropdown 属性     | TabsDropdownProps                       |
-| class              | tabBarClassName                            | string                                  |
-| style              | tabBarStyle                                | string                                  |
+| 属性               | 说明                                           | 类型                                         |
+| ------------------ | ---------------------------------------------- | -------------------------------------------- |
+| activeKey          | 当前激活的 itemKey，受控的空值为 null          | string \| null                               |
+| list               | 标签页数据                                     | PlainTab[]                                   |
+| type               | 标签栏样式                                     | 'line' \| 'card' \| 'button' \| 'slash'      |
+| size               | 尺寸                                           | 'small' \| 'medium' \| 'large'               |
+| tabPosition        | 位置                                           | 'top' \| 'left'                              |
+| collapsible        | 是否折叠                                       | boolean \| 'auto'                            |
+| showRestInDropdown | 折叠模式下，收起的标签是否展示在下拉菜单中     | boolean                                      |
+| more               | 收入「更多」菜单的配置                         | number \| TabsMore                           |
+| arrowPosition      | 折叠模式下箭头的位置                           | 'both' \| 'start' \| 'end'                   |
+| classNames         | 键 `visibleTabs`：折叠模式下整体滚动区域的类名 | `Partial<Record<'visibleTabs', ClassValue>>` |
+| styles             | 键 `visibleTabs`：折叠模式下整体滚动区域的样式 | `Partial<Record<'visibleTabs', string>>`     |
+| dropdownProps      | 折叠模式下箭头下拉菜单的 Dropdown 属性         | TabsDropdownProps                            |
+| class              | Tabs 的 `classNames.tabBar`                    | string                                       |
+| style              | Tabs 的 `styles.tabBar`                        | string                                       |
 
 </Framework>
 

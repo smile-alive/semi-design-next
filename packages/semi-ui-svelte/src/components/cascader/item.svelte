@@ -279,7 +279,7 @@
                             {#if isBranch(item)}
                                 {#if rowState.loading}
                                     <!-- the option carries the state as aria-busy; the spinner's own name would join the option's name -->
-                                    <span aria-hidden="true"><Spin wrapperClassName={`${prefix}-spin-icon ${prefix}-icon-left`} /></span>
+                                    <span aria-hidden="true"><Spin class={`${prefix}-spin-icon ${prefix}-icon-left`} /></span>
                                 {:else if expandIcon}
                                     {@render expandIcon()}
                                 {:else}

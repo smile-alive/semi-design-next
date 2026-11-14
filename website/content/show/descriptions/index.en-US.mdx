@@ -158,7 +158,7 @@ Set `row` to display the data to two-row, supporting three sizes: `small`, `medi
 
 ### Custom Key Style
 
-You can customize the style of key through `keyStyle` property, such as setting a fixed width to achieve alignment. This property supports all CSS styles, such as `width`, `maxWidth`, `textAlign`, `color`, etc.
+You can customize the style of key through `styles.key`, such as setting a fixed width to achieve alignment. This property supports all CSS styles, such as `width`, `maxWidth`, `textAlign`, `color`, etc.
 
 <Demo id="key-style" />
 
@@ -228,49 +228,53 @@ You can also use it with the `itemKey` and `value` snippets:
 
 <Framework only="react">
 
-| Properties | Instructions                                                    | type                           | Default |
-| ---------- | --------------------------------------------------------------- | ------------------------------ | ------- |
-| key        | Key value                                                       | ReactNode                      | -       |
-| value      | Data value                                                      | ReactNode \| (() => ReactNode) | -       |
-| hidden     | Toggle whether the data should be displayed                     | boolean                        | -       |
-| span       | The number of columns the cell should span                      | number                         | 1       |
-| keyStyle   | Custom style for key, can be used to set width, alignment, etc. | CSSProperties                  | -       |
+| Properties | Instructions                                                         | type                                    | Default |
+| ---------- | -------------------------------------------------------------------- | --------------------------------------- | ------- |
+| key        | Key value                                                            | ReactNode                               | -       |
+| value      | Data value                                                           | ReactNode \| (() => ReactNode)          | -       |
+| hidden     | Toggle whether the data should be displayed                          | boolean                                 | -       |
+| span       | The number of columns the cell should span                           | number                                  | 1       |
+| classNames | Part class names, key `key`, appended after the built-in class names | `Partial<Record<'key', string>>`        | -       |
+| styles     | Part styles, key `key`, can be used to set width, alignment, etc.    | `Partial<Record<'key', CSSProperties>>` | -       |
 
 </Framework>
 
 <Framework only="vue">
 
-| Properties | Instructions                                                    | type             | Default |
-| ---------- | --------------------------------------------------------------- | ---------------- | ------- |
-| key        | Key value; use the `#itemKey` slot to customize rendering       | string \| number | -       |
-| value      | Data value; use the `#value` slot to customize rendering        | string \| number | -       |
-| hidden     | Toggle whether the data should be displayed                     | boolean          | -       |
-| span       | The number of columns the cell should span                      | number           | 1       |
-| keyStyle   | Custom style for key, can be used to set width, alignment, etc. | StyleValue       | -       |
+| Properties | Instructions                                                         | type                                 | Default |
+| ---------- | -------------------------------------------------------------------- | ------------------------------------ | ------- |
+| key        | Key value; use the `#itemKey` slot to customize rendering            | string \| number                     | -       |
+| value      | Data value; use the `#value` slot to customize rendering             | string \| number                     | -       |
+| hidden     | Toggle whether the data should be displayed                          | boolean                              | -       |
+| span       | The number of columns the cell should span                           | number                               | 1       |
+| classNames | Part class names, key `key`, appended after the built-in class names | `Partial<Record<'key', ClassValue>>` | -       |
+| styles     | Part styles, key `key`, can be used to set width, alignment, etc.    | `Partial<Record<'key', StyleValue>>` | -       |
 
 </Framework>
 
 <Framework only="solid">
 
-| Properties | Instructions                                                    | type                        | Default |
-| ---------- | --------------------------------------------------------------- | --------------------------- | ------- |
-| key        | Key value; custom rendering uses `renderKey`                    | string \| number            | -       |
-| value      | Data value; custom rendering uses `renderValue`                 | string \| number            | -       |
-| hidden     | Toggle whether the data should be displayed                     | boolean                     | -       |
-| span       | The number of columns the cell should span                      | number                      | 1       |
-| keyStyle   | Custom style for key, can be used to set width, alignment, etc. | JSX.CSSProperties \| string | -       |
+| Properties | Instructions                                                         | type                                                  | Default |
+| ---------- | -------------------------------------------------------------------- | ----------------------------------------------------- | ------- |
+| key        | Key value; custom rendering uses `renderKey`                         | string \| number                                      | -       |
+| value      | Data value; custom rendering uses `renderValue`                      | string \| number                                      | -       |
+| hidden     | Toggle whether the data should be displayed                          | boolean                                               | -       |
+| span       | The number of columns the cell should span                           | number                                                | 1       |
+| classNames | Part class names, key `key`, appended after the built-in class names | `Partial<Record<'key', string>>`                      | -       |
+| styles     | Part styles, key `key`, can be used to set width, alignment, etc.    | `Partial<Record<'key', JSX.CSSProperties \| string>>` | -       |
 
 </Framework>
 
 <Framework only="svelte">
 
-| Properties | Instructions                                                    | type             | Default |
-| ---------- | --------------------------------------------------------------- | ---------------- | ------- |
-| key        | Key value; use the `itemKey` snippet to customize rendering     | string \| number | -       |
-| value      | Data value; use the `value` snippet to customize rendering      | string \| number | -       |
-| hidden     | Toggle whether the data should be displayed                     | boolean          | -       |
-| span       | The number of columns the cell should span                      | number           | 1       |
-| keyStyle   | Custom style for key, can be used to set width, alignment, etc. | string           | -       |
+| Properties | Instructions                                                         | type                                 | Default |
+| ---------- | -------------------------------------------------------------------- | ------------------------------------ | ------- |
+| key        | Key value; use the `itemKey` snippet to customize rendering          | string \| number                     | -       |
+| value      | Data value; use the `value` snippet to customize rendering           | string \| number                     | -       |
+| hidden     | Toggle whether the data should be displayed                          | boolean                              | -       |
+| span       | The number of columns the cell should span                           | number                               | 1       |
+| classNames | Part class names, key `key`, appended after the built-in class names | `Partial<Record<'key', ClassValue>>` | -       |
+| styles     | Part styles, key `key`, can be used to set width, alignment, etc.    | `Partial<Record<'key', string>>`     | -       |
 
 </Framework>
 

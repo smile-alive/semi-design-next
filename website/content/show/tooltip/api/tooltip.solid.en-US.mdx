@@ -13,6 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
 | children | The trigger. A function receives `getTriggerProps`; spread `getTriggerProps(ownProps)` on the element that takes focus. Anything else is wrapped in a span owned by Tooltip. | <ApiType detail={"JSX.Element \u007c ((getTriggerProps: GetTriggerProps) => JSX.Element)"}>Type</ApiType> | - |
 | class | Class name of the popup. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, string>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click on the popup or anything inside it closes the popup. | `boolean` | - |
 | clickTriggerToHide | Whether a click on the trigger closes an open popup. | `boolean` | - |
 | closeOnEsc | Whether Esc closes the open popup. With trigger custom it only calls onEscKeyDown and the caller decides whether to close. | `boolean` | `true` |
@@ -38,9 +39,9 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. | `number \| { x: number; y: number }` | `8` |
 | stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean` | - |
 | style | Inline style of the popup. The arrow color reads `background-color` of an object style only. | `JSX.CSSProperties \| string` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`, as a style object or a string; applied after the span's built-in style. | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | trigger | When the popup shows. With custom, visible alone decides. | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | Whether the popup is shown (controlled). When given, the trigger, outside clicks and Esc only request a change through onVisibleChange, which takes effect once the caller writes it back. | `boolean` | - |
-| wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | - |
 | wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | - |
 | wrapWhenSpecial | Whether a disabled or loading trigger is wrapped in a span so that it still triggers the popup. | `boolean` | `true` |
 

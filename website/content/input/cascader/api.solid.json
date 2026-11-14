@@ -66,13 +66,13 @@
                 "zh-CN": "自定义回填内容。单选时参数为路径上各级节点 label 的数组；多选时参数为节点的 Entity 与索引，返回每个标签的内容。",
                 "en-US": "Custom trigger content. In single mode it receives the array of labels on the path; in multiple mode it receives the Entity of a node and its index, and returns the content of its tag."
             },
-            "dropdownClassName": {
-                "zh-CN": "下拉菜单的 class。",
-                "en-US": "Class of the dropdown menu."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（下拉菜单），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown menu); merged with the built-in classes."
             },
-            "dropdownStyle": {
-                "zh-CN": "下拉菜单的样式，可以是键为 kebab-case 的对象，也可以是字符串。",
-                "en-US": "Style of the dropdown menu: an object with kebab-case keys, or a string."
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 `classNames`，值可以是键为 kebab-case 的对象，也可以是字符串。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`; a value is an object with kebab-case keys or a string."
             },
             "emptyContent": {
                 "zh-CN": "没有可选数据或搜索无结果时展示的内容，默认为「暂无数据」；传入 `null` 时不展示。",

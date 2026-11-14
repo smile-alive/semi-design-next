@@ -223,7 +223,7 @@ export default function TreeNode(props: TreeNodeProps) {
                                     {(render) => <>{render(label(), data(), keyword())}</>}
                                 </Match>
                                 <Match when={highlighted()}>
-                                    <Highlight component="span" highlightClassName={`${prefix}-highlight`} searchWords={[keyword()]} sourceString={String(label())} />
+                                    <Highlight component="span" classNames={{ highlight: `${prefix}-highlight` }} searchWords={[keyword()]} sourceString={String(label())} />
                                 </Match>
                             </Switch>
                         </span>

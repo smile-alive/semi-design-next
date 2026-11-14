@@ -1,3 +1,5 @@
+import type { ClassValue } from 'svelte/elements';
+import type { InputNumberPart } from '@fibrae/semi-foundation/components/input-number/constants';
 import type { BaseInputNumberState, ScientificNotationConfig } from '@fibrae/semi-foundation/components/input-number/foundation';
 import type { InputChangeEvent, InputProps } from '../input/interface.js';
 
@@ -8,10 +10,12 @@ export type InputNumberChangeEvent = InputChangeEvent | PointerEvent | KeyboardE
 
 // The listeners below replace Input's: the callbacks carry numbers, and the step buttons add their own. Every other
 // attribute reaches the native input; class and style stay on the number wrapper.
-type InputOnlyKeys = 'value' | 'type' | 'mode' | 'getValueLength' | 'showClearIgnoreDisabled' | 'onChange' | 'min' | 'max' | 'step';
+type InputOnlyKeys = 'value' | 'type' | 'mode' | 'getValueLength' | 'showClearIgnoreDisabled' | 'onChange' | 'min' | 'max' | 'step' | 'classNames' | 'styles';
 
 /** InputNumber's own props plus the Input props it passes on to the Input inside */
 export interface InputNumberProps extends Omit<InputProps, InputOnlyKeys> {
+    classNames?: Partial<Record<InputNumberPart, ClassValue>>;
+    styles?: Partial<Record<InputNumberPart, string>>;
     /** Bindable; leave it out for an uncontrolled input. `bind:value={get, set}` makes it fully controlled */
     value?: number | string;
     // boolean first, so that a bare `currency` attribute is read as true rather than ''

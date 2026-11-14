@@ -27,12 +27,14 @@ export default function TabBar(props: TabBarProps) {
     const {
         activeKey,
         className,
+        classNames,
         collapsible,
         list,
         onTabClick,
         showRestInDropdown,
         size,
         style,
+        styles,
         tabBarExtraContent: rawTabBarExtraContent,
         tabPosition,
         type,
@@ -42,7 +44,6 @@ export default function TabBar(props: TabBarProps) {
         handleKeyDown,
         more,
         onVisibleTabsChange: _onVisibleTabsChange,
-        visibleTabsStyle,
         arrowPosition,
         renderArrow,
         dropdownProps,
@@ -190,7 +191,8 @@ export default function TabBar(props: TabBarProps) {
         return (
             <InternalOverflowList
                 className={`${cssClasses.TABS_BAR}-overflow-list`}
-                wrapperStyle={visibleTabsStyle}
+                classNames={{ wrapper: classNames?.visibleTabs }}
+                styles={{ wrapper: styles?.visibleTabs }}
                 items={renderedList}
                 overflowRenderDirection={arrowPosition}
                 overflowRenderer={renderOverflow}

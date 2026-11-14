@@ -173,7 +173,7 @@ describe('Svelte Popover', () => {
         // away from the viewport edge, so the popup is not clamped back into it
         const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(200, 200, 0, 0));
         onTestFinished(() => rect.mockRestore());
-        setup({ position, showArrow: true, trigger: 'custom', arrowStyle: { borderColor: 'green', borderOpacity: 0.5 }, style: 'background-color: blue' }, { mode: 'one-way', value: true });
+        setup({ position, showArrow: true, trigger: 'custom', styles: { arrow: { borderColor: 'green', borderOpacity: 0.5 } }, style: 'background-color: blue' }, { mode: 'one-way', value: true });
         await settle();
         const dialog = screen.getByRole('dialog');
         const svg = dialog.querySelector('svg.semi-popover-icon-arrow');
@@ -189,8 +189,18 @@ describe('Svelte Popover', () => {
         expect(dialog.style.top).toBe(position === 'top' ? '190px' : '200px');
     });
 
-    it('class/style 只落弹层，contentClassName 落卡片', async () => {
-        const { trigger } = setup({ trigger: 'custom', contentClassName: ['card'], class: 'popup', style: 'background-color: red' }, { mode: 'one-way', value: true });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        setup({ trigger: 'custom', showArrow: true, classNames: { content: ['my-content'], arrow: 'my-arrow' }, styles: { content: 'order: 2', arrow: { backgroundColor: 'red' } } }, { mode: 'one-way', value: true });
+        await settle();
+        const dialog = screen.getByRole('dialog');
+        expect(dialog.querySelector('.semi-popover')).toHaveClass('my-content');
+        expect(dialog.querySelector('.semi-popover')).toHaveStyle({ order: '2' });
+        expect(dialog.querySelector('.semi-popover-icon-arrow')).toHaveClass('my-arrow');
+        expect(dialog.querySelectorAll<SVGPathElement>('path')[1].style.fill).toBe('red');
+    });
+
+    it('class/style 只落弹层，classNames.content 落卡片', async () => {
+        const { trigger } = setup({ trigger: 'custom', classNames: { content: ['card'] }, class: 'popup', style: 'background-color: red' }, { mode: 'one-way', value: true });
         await settle();
         const dialog = screen.getByRole('dialog');
         expect(dialog).toHaveClass('semi-popover-wrapper', 'popup');

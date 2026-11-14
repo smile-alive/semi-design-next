@@ -569,9 +569,16 @@ describe('Input 行为基线', () => {
         expect(getInput()).not.toHaveFocus();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        render(() => <Input classNames={{ input: 'my-input' }} styles={{ input: { order: '2' } }} />);
+        expect(getInput()).toHaveClass(`${prefixCls}`, 'my-input');
+        expect(getInput()).toHaveStyle({ order: '2' });
+        expect(getWrapper()).not.toHaveClass('my-input');
+    });
+
     it('未知属性、aria 属性与焦点属性透传到原生 input，class 与 style 保留在包裹层', () => {
         const onPaste = vi.fn<(e: ClipboardEvent) => void>();
-        render(() => <Input id="name-id" name="name" class="custom" inputStyle={{ color: 'blue' }} style={{ color: 'red' }} data-testid="name" aria-describedby="help" aria-label="Name" tabIndex={-1} title="tip" inputMode="numeric" onPaste={onPaste} />);
+        render(() => <Input id="name-id" name="name" class="custom" styles={{ input: { color: 'blue' } }} style={{ color: 'red' }} data-testid="name" aria-describedby="help" aria-label="Name" tabIndex={-1} title="tip" inputMode="numeric" onPaste={onPaste} />);
         const input = getInput();
         expect(screen.getByTestId('name')).toBe(input);
         expect(input).toHaveAttribute('aria-label', 'Name');

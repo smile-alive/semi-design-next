@@ -168,10 +168,10 @@ describe('Cropper', () => {
         expect(getCorners(container)).toEqual([]);
     });
 
-    it('cropperBoxStyle 与 cropperBoxCls 应用到裁剪框，并以其计算尺寸为准', () => {
+    it('classNames 与 styles 按部位落到对应元素，裁剪框以其计算尺寸为准', () => {
         const { container } = renderLoaded({
-            cropperBoxCls: 'my-box',
-            cropperBoxStyle: { outlineColor: 'red', width: 10 },
+            classNames: { cropperBox: 'my-box' },
+            styles: { cropperBox: { outlineColor: 'red', width: 10 } },
         });
         expect(getBox(container)).toHaveClass('semi-cropper-box', 'my-box');
         expect(getBox(container).style.outlineColor).toBe('red');

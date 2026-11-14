@@ -8,15 +8,14 @@ import ApiType from '#/components/ApiType.astro';
 | align | Conversation layout: leftRight or leftAlign. | `'leftAlign' \| 'leftRight'` | `"leftRight"` |
 | avatar | Snippet for a custom avatar, with the default avatar `defaultAvatar`, the message and the role. | <ApiType detail={"Snippet\u003c[AIChatDialogueAvatarSnippetProps]>"}>Type</ApiType> | - |
 | chats | List of conversation messages; bind it with `bind:chats`. Without a binding, changes made inside the component (such as deleting a message) stay local to it; `onChatsChange` is called once per change. | `Message[]` | - |
+| classNames | Class names of the inner parts, keyed by hint (the outermost hint area); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, ClassValue>>"}>Type</ApiType> | - |
 | content | Snippet for a custom content area, with the default content `defaultContent`, the message, the role and `class`. `defaultContent` matches the default rendering, including the reference list and the loading indicator. | <ApiType detail={"Snippet\u003c[AIChatDialogueContentSnippetProps]>"}>Type</ApiType> | - |
 | contentItem | Snippet for custom rendering by content item. Every item passes through it first, with `item`, `type`, `message`, `index`, `parent`, the built-in rendering `defaultItem` and the `class` a custom node should carry. A snippet's output cannot be inspected, so render the items it leaves alone with `{@render defaultItem()}`; empty output does not fall back to the built-in rendering. | <ApiType detail={"Snippet\u003c[AIChatDialogueContentItemSnippetProps]>"}>Type</ApiType> | - |
 | disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `false` |
 | escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `true` |
 | fullDialogue | Snippet that replaces a whole dialogue, with `defaultNodes` (avatar, title, content, action), the message, the role and `class`. | <ApiType detail={"Snippet\u003c[AIChatDialogueFullDialogueSnippetProps]>"}>Type</ApiType> | - |
 | hintBox | Snippet for a custom hint item, with the hint text `content`, the index and the click callback `onHintClick`. | <ApiType detail={"Snippet\u003c[AIChatDialogueHintBoxSnippetProps]>"}>Type</ApiType> | - |
-| hintCls | Class name of the outermost hint area element. | `string` | - |
 | hints | Hint texts. Clicking a hint turns it into a new user message and calls onHintClick. | `string[]` | - |
-| hintStyle | Style string of the outermost hint area element. | `string` | - |
 | markdownRenderProps | Props passed to the MarkdownRender of each message. raw is decided by the message and cannot be passed; components are merged with the built-in ones, and a component with the same name (such as code) replaces the built-in one. | `MarkdownRenderProps` | - |
 | messageEdit | Snippet for the editor shown while a user message is being edited; its parameters are the input content converted from the message. | <ApiType detail={"Snippet\u003c[AIChatDialogueMessageEditSnippetProps]>"}>Type</ApiType> | - |
 | messageText | Snippet that replaces the Markdown rendering of a message whose content is plain text, with the `text` and the `message`. | <ApiType detail={"Snippet\u003c[AIChatDialogueMessageTextSnippetProps]>"}>Type</ApiType> | - |
@@ -39,6 +38,7 @@ import ApiType from '#/components/ApiType.astro';
 | selecting | Whether multi-select mode is on. | `boolean` | `false` |
 | showReference | Whether to show the quote icon on text or file messages; it only applies to user messages. | `boolean` | `false` |
 | showReset | Whether to show the reset action. | `boolean` | `true` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, string>>"}>Type</ApiType> | - |
 | title | Snippet for a custom title, with the default title `defaultTitle`, the message and the role. | <ApiType detail={"Snippet\u003c[AIChatDialogueTitleSnippetProps]>"}>Type</ApiType> | - |
 
 **Methods**

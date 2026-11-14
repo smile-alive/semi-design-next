@@ -15,6 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | capture | 媒体拍摄的方式，可选 `user`、`environment`；传 `true` 输出空值属性，传 `false` 不输出该属性。 | `boolean \| 'environment' \| 'user'` | - |
 | children | 触发区内容。拖拽模式下替换整个默认拖拽区内容。 | `ReactNode` | - |
 | className | 根元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `item`（每个文件卡片），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cUploadPart, string>>"}>Type</ApiType> | - |
 | crop | 启用图片裁切。传 `true` 使用默认配置，传对象自定义裁切参数；点击选择、拖拽、粘贴、替换都会裁切。 | `boolean \| CropProps` | - |
 | cropModalProps | 裁切弹窗 Modal 的属性；visible、title、okText、cancelText、onOk、onCancel 由组件内置，width 缺省为 600。 | `UploadCropModalProps` | - |
 | customRequest | 替换内置 XMLHttpRequest 的自定义请求方法，需自行调用入参的 onProgress、onError、onSuccess 更新状态。 | <ApiType detail={"(object: UploadCustomRequestArgs) => void"}>Type</ApiType> | - |
@@ -31,7 +32,6 @@ import ApiType from '#/components/ApiType.astro';
 | fileName | 作用与 name 相同，主要在 FormUpload 中使用，避免与 Field 的 name 冲突。 | `string` | - |
 | headers | 上传时附带的 headers，或根据文件返回 headers 的函数。 | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | - |
 | hotSpotLocation | 照片墙添加按钮的位置，可选 `start` 或 `end`。 | `'end' \| 'start'` | `"end"` |
-| itemStyle | 文件卡片的内联样式。 | `CSSProperties` | - |
 | limit | 最多允许上传的文件个数。为 1 时始终用最新选择的文件替换当前文件，不触发 onExceed。 | `number` | - |
 | listType | 文件列表的展示类型，可选 `list`、`picture`、`none`；`none` 不渲染文件列表，只保留触发区。 | `UploadListType` | `"list"` |
 | maxSize | 文件体积上限，单位 KB。 | `number` | - |
@@ -73,6 +73,7 @@ import ApiType from '#/components/ApiType.astro';
 | showTooltip | 文件名过长时是否展示提示。传对象时可配置 `type`（`tooltip` 或 `popover`）、透传给浮层的 `opts`，以及自定义弹出层的 `renderTooltip`。 | `boolean \| ShowTooltip` | `true` |
 | showUploadList | 是否显示文件列表。 | `boolean` | `true` |
 | style | 根元素的样式。 | `CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`；图片墙里 `item` 与 `picWidth`、`picHeight` 合并，宽高以后者为准。 | <ApiType detail={"Partial\u003cRecord\u003cUploadPart, CSSProperties>>"}>Type</ApiType> | - |
 | timeout | 不生效：组件不读取该属性。 | `number` | - |
 | transformFile | 选中文件后、上传前的转换函数，返回要上传的 File。 | <ApiType detail={"(file: File) => File"}>Type</ApiType> | - |
 | uploadTrigger | 触发上传的时机，`auto` 选中后自动上传，`custom` 需调用 `ref` 上的 `upload` 方法。 | `'auto' \| 'custom'` | `"auto"` |

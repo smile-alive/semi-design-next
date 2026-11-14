@@ -16,3 +16,6 @@ export const numbers = {
 export const strings = {
     ...inputStrings,
 };
+
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type InputNumberPart = 'input';

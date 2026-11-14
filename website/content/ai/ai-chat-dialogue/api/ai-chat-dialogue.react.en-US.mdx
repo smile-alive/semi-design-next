@@ -7,12 +7,11 @@ import ApiType from '#/components/ApiType.astro';
 | align | Conversation layout: `leftRight` (both sides) or `leftAlign` (left-aligned). | `'leftAlign' \| 'leftRight'` | `"leftRight"` |
 | chats | Controlled list of conversation messages, used together with onChatsChange. | `Message[]` | - |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `hint` (the outermost hint area); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, string>>"}>Type</ApiType> | - |
 | dialogueRenderConfig | Custom rendering of the dialogue parts: avatar, title, content, action bar or the whole dialogue. | `DialogueRenderConfig` | - |
 | disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `false` |
 | escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `true` |
-| hintCls | Class name of the outermost hint area. | `string` | - |
 | hints | Hint texts. Clicking a hint turns it into a new user message and calls onHintClick. | `string[]` | - |
-| hintStyle | Style of the outermost hint area. | `React.CSSProperties` | - |
 | markdownRenderProps | Props passed to the MarkdownRender of each message. `raw` and `ref` are decided by the message and cannot be passed. `components` is merged with the built-in ones, and a component with the same name (such as `code`) replaces the built-in one, and `AIChatDialogue.defaultComponents.code` can be wrapped to keep the default behavior; highlight languages for code blocks must be registered with `CodeHighlight.register` first. | `MarkdownRenderProps` | - |
 | messageEditRender | The editor shown while a user message is being edited; its argument is the input content converted from the message. | <ApiType detail={"(props: MessageContent) => ReactNode"}>Type</ApiType> | - |
 | mode | Conversation mode: `bubble`, `noBubble` or `userBubble`. | `'bubble' \| 'noBubble' \| 'userBubble'` | `"bubble"` |
@@ -38,6 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | showReference | Whether to show the reference icon on text or file messages. Only user messages are affected. | `boolean` | `false` |
 | showReset | Whether to show the reset action. | `boolean` | `true` |
 | style | Style of the root element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, React.CSSProperties>>"}>Type</ApiType> | - |
 
 **Methods**
 

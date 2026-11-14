@@ -402,10 +402,19 @@ describe('Button', () => {
         const ref = createRef<HTMLButtonElement>();
         const { rerender } = render(<Button ref={ref}>x</Button>);
         expect(ref.current).toBe(screen.getByRole('button'));
-        rerender(<Button ref={ref} contentClassName="inner" icon={<IconEdit />} />);
+        rerender(<Button ref={ref} icon={<IconEdit />} />);
         expect(ref.current).toBe(screen.getByRole('button'));
-        expect(ref.current).not.toHaveAttribute('contentClassName');
-        expect(document.querySelector(`.${prefixCls}-content`)).toHaveClass('inner');
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        render(<Button classNames={{ content: 'inner' }} style={{ color: 'blue' }} styles={{ content: { color: 'red' } }} icon={<IconEdit />} />);
+        const button = screen.getByRole('button');
+        const content = document.querySelector(`.${prefixCls}-content`);
+        expect(content).toHaveClass(`${prefixCls}-content`, 'inner');
+        expect(content).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(button).not.toHaveClass('inner');
+        expect(button).not.toHaveAttribute('classNames');
+        expect(button).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     });
 
     it('split button group 将 ref 转发到根元素', () => {

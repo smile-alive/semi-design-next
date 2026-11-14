@@ -19,7 +19,16 @@
 </script>
 
 <template>
-    <Nav v-model:isCollapsed="isCollapsed" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" :bodyStyle="{ height: '300px' }" :footer="{ collapseButton: true }" :items="items" @openChange="(data) => console.log('trigger onOpenChange: ', data)" @select="(data) => console.log('trigger onSelect: ', data)">
+    <Nav
+        v-model:isCollapsed="isCollapsed"
+        v-model:openKeys="openKeys"
+        v-model:selectedKeys="selectedKeys"
+        :footer="{ collapseButton: true }"
+        :items="items"
+        :styles="{ body: { height: '300px' } }"
+        @openChange="(data) => console.log('trigger onOpenChange: ', data)"
+        @select="(data) => console.log('trigger onSelect: ', data)"
+    >
         <template #icon="renderProps">
             <component :is="iconOf(renderProps.item)" />
         </template>

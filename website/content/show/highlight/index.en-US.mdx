@@ -65,23 +65,23 @@ You can specify keywords to be highlighted with `searchWords` and source text wi
 
 By default, the highlighted text will have its own text style, the text color is black, and the background color is `--semi-yellow-4`.  
 In dark mode, the text color is white, and the background color is `--semi-yellow-2`.  
-When you need to customize different highlight styles, you can specify them through `highlightClassName`, `highlightStyle`
+When you need to customize different highlight styles, you can specify them through `classNames.highlight` and `styles.highlight`
 
 <Framework only="vue">
 
-Vue adds no `px` to numeric styles: write lengths as strings such as `'4px'` in `highlightStyle` and in a search word's `style`. Unitless properties such as `fontWeight: 600` still work.
+Vue adds no `px` to numeric styles: write lengths as strings such as `'4px'` in `styles.highlight` and in a search word's `style`. Unitless properties such as `fontWeight: 600` still work.
 
 </Framework>
 
 <Framework only="solid">
 
-Numbers get no `px`: write lengths in `highlightStyle` and in a search word's `style` as strings such as `'4px'`. Unitless properties such as `'font-weight': 600` still work. Keys must be CSS property names; camelCase keys such as `backgroundColor` have no effect.
+Numbers get no `px`: write lengths in `styles.highlight` and in a search word's `style` as strings such as `'4px'`. Unitless properties such as `'font-weight': 600` still work. Keys must be CSS property names; camelCase keys such as `backgroundColor` have no effect.
 
 </Framework>
 
 <Framework only="svelte">
 
-`highlightStyle` and a search word's `style` are style objects whose keys may be camelCase or kebab-case. Numbers get no `px`: write lengths as strings such as `'4px'`. Unitless properties such as `fontWeight: 600` still work.
+`styles.highlight` is a CSS string, and a search word's `style` is a style object whose keys may be camelCase or kebab-case. Numbers get no `px`: write lengths as strings such as `'4px'`. Unitless properties such as `fontWeight: 600` still work.
 
 </Framework>
 

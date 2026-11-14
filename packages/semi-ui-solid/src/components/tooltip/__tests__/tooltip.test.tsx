@@ -287,9 +287,9 @@ describe('Tooltip', () => {
     });
 
     describe('非函数 children', () => {
-        it('文本包进 span：tabindex=0，不设 inline-block，wrapperClassName 落在 span 上', async () => {
+        it('文本包进 span：tabindex=0，不设 inline-block，classNames.wrapper 落在 span 上', async () => {
             render(() => (
-                <Tooltip content="hint" motion={false} wrapperClassName="probe">
+                <Tooltip content="hint" motion={false} classNames={{ wrapper: 'probe' }}>
                     plain text
                 </Tooltip>
             ));
@@ -319,6 +319,18 @@ describe('Tooltip', () => {
             expect(screen.getByText('block').parentElement!.style.width).toBe('100%');
         });
 
+        it('classNames 与 styles 按部位落到对应元素', () => {
+            render(() => (
+                <Tooltip content="hint" classNames={{ wrapper: 'my-wrapper' }} styles={{ wrapper: { order: 3 } }}>
+                    <i>inline</i>
+                </Tooltip>
+            ));
+            const span = screen.getByText('inline').parentElement!;
+            expect(span).toHaveClass(`${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`, 'my-wrapper');
+            expect(span.style.order).toBe('3');
+            expect(span.style.display).toBe('inline-block');
+        });
+
         it('span 内有可聚焦元素时 span 为 -1 并告警一次，Tab 只停一次', async () => {
             const warned = spyWarn();
             render(() => (
@@ -335,10 +347,10 @@ describe('Tooltip', () => {
             expect(document.body).toHaveFocus();
         });
 
-        it('多个元素子节点包进同一个 span，wrapperClassName 落在 span 上', () => {
+        it('多个元素子节点包进同一个 span，classNames.wrapper 落在 span 上', () => {
             const warned = spyWarn();
             render(() => (
-                <Tooltip content="hint" wrapperClassName="probe">
+                <Tooltip content="hint" classNames={{ wrapper: 'probe' }}>
                     <Button>first</Button>
                     <Button>second</Button>
                 </Tooltip>
@@ -399,7 +411,7 @@ describe('Tooltip', () => {
     describe('特殊触发器', () => {
         it('disabled Button 配 click：外包 span 是停靠点并带描述，Button 不接收指针且元素身份不变', async () => {
             render(() => (
-                <Tooltip wrapperClassName="probe" content="hint" motion={false} trigger="click">
+                <Tooltip classNames={{ wrapper: 'probe' }} content="hint" motion={false} trigger="click">
                     {(t) => (
                         <Button disabled {...t()}>
                             save
@@ -424,7 +436,7 @@ describe('Tooltip', () => {
         it('ButtonGroup 禁用的 Button 配 click 同样包裹', () => {
             render(() => (
                 <ButtonGroup disabled>
-                    <Tooltip wrapperClassName="probe" content="hint" trigger="click">
+                    <Tooltip classNames={{ wrapper: 'probe' }} content="hint" trigger="click">
                         {(t) => <Button {...t()}>save</Button>}
                     </Tooltip>
                 </ButtonGroup>
@@ -434,7 +446,7 @@ describe('Tooltip', () => {
 
         it('loading Button 配 hover：span 为 -1，Button 带描述且是唯一停靠点', async () => {
             render(() => (
-                <Tooltip wrapperClassName="probe" content="Saving" motion={false}>
+                <Tooltip classNames={{ wrapper: 'probe' }} content="Saving" motion={false}>
                     {(t) => (
                         <Button loading {...t()}>
                             Save
@@ -458,14 +470,14 @@ describe('Tooltip', () => {
         it('disabled 且 loading 的 Button 配 hover 不包裹，disabled 配 hover 也不包裹', () => {
             render(() => (
                 <>
-                    <Tooltip wrapperClassName="probe" content="hint">
+                    <Tooltip classNames={{ wrapper: 'probe' }} content="hint">
                         {(t) => (
                             <Button disabled loading {...t()}>
                                 both
                             </Button>
                         )}
                     </Tooltip>
-                    <Tooltip wrapperClassName="probe" content="hint">
+                    <Tooltip classNames={{ wrapper: 'probe' }} content="hint">
                         {(t) => (
                             <Button disabled {...t()}>
                                 disabled
@@ -480,7 +492,7 @@ describe('Tooltip', () => {
 
         it('custom 不包裹但设 pointer-events: none，卸载后恢复原值', () => {
             const view = render(() => (
-                <Tooltip wrapperClassName="probe" content="hint" trigger="custom">
+                <Tooltip classNames={{ wrapper: 'probe' }} content="hint" trigger="custom">
                     {(t) => (
                         <Button loading style={{ 'pointer-events': 'auto' }} {...t()}>
                             custom
@@ -497,7 +509,7 @@ describe('Tooltip', () => {
 
         it('wrapWhenSpecial=false 时不包裹也不改 pointer-events', () => {
             render(() => (
-                <Tooltip wrapperClassName="probe" content="hint" trigger="click" wrapWhenSpecial={false}>
+                <Tooltip classNames={{ wrapper: 'probe' }} content="hint" trigger="click" wrapWhenSpecial={false}>
                     {(t) => (
                         <Button disabled {...t()}>
                             save
@@ -512,7 +524,7 @@ describe('Tooltip', () => {
         it('运行时切换 disabled：包裹出现又消失，监听随之转移，元素身份不变', async () => {
             const [disabled, setDisabled] = createSignal(false);
             render(() => (
-                <Tooltip wrapperClassName="probe" content="hint" motion={false} trigger="click">
+                <Tooltip classNames={{ wrapper: 'probe' }} content="hint" motion={false} trigger="click">
                     {(t) => (
                         <Button disabled={disabled()} {...t()}>
                             save
@@ -541,7 +553,7 @@ describe('Tooltip', () => {
         it('包裹期间 render 输出换了元素：span 里是新按钮，旧按钮离开文档', () => {
             const [busy, setBusy] = createSignal(false);
             render(() => (
-                <Tooltip wrapperClassName="probe" content="hint" trigger="click">
+                <Tooltip classNames={{ wrapper: 'probe' }} content="hint" trigger="click">
                     {(t) => (
                         <Show
                             when={busy()}
@@ -569,9 +581,9 @@ describe('Tooltip', () => {
         it('组合嵌套时外层先包裹、内层后包裹：按钮留在外层 span 中，不出现多余文本，内层仍能打开', async () => {
             const [status, setStatus] = createSignal<'disabled' | 'loading'>('disabled');
             render(() => (
-                <Tooltip wrapperClassName="outer" content="outer" trigger="click">
+                <Tooltip classNames={{ wrapper: 'outer' }} content="outer" trigger="click">
                     {(outer) => (
-                        <Tooltip wrapperClassName="inner" content="inner">
+                        <Tooltip classNames={{ wrapper: 'inner' }} content="inner">
                             {(inner) => (
                                 <Button disabled={status() === 'disabled'} loading={status() === 'loading'} {...inner(outer())}>
                                     btn

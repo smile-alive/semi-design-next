@@ -1,10 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性     | 说明               | 类型         | 默认值      |
-| -------- | ------------------ | ------------ | ----------- |
-| hidden   | 是否隐藏该项。     | `boolean`    | `false`     |
-| keyStyle | key 的自定义样式。 | `StyleValue` | `undefined` |
-| span     | 单元格跨越的列数。 | `number`     | `undefined` |
+| 属性       | 说明                                                                 | 类型                                                                              | 默认值      |
+| ---------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------- |
+| classNames | 内部各部位的类名，键为 key，值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"key\", ClassValue>>"}>Type</ApiType> | `undefined` |
+| hidden     | 是否隐藏该项。                                                       | `boolean`                                                                         | `false`     |
+| span       | 单元格跨越的列数。                                                   | `number`                                                                          | `undefined` |
+| styles     | 内部各部位的样式，键为 key，值的写法同 style。                       | <ApiType detail={"Partial\u003cRecord\u003c\"key\", StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

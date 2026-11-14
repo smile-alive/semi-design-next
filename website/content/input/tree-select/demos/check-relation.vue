@@ -35,5 +35,5 @@
 </script>
 
 <template>
-    <TreeSelect checkRelation="unRelated" :defaultValue="['Asia']" :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" multiple style="width: 300px" :treeData="treeData" />
+    <TreeSelect checkRelation="unRelated" :defaultValue="['Asia']" multiple style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
 </template>

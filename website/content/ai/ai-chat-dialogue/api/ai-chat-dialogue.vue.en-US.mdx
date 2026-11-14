@@ -6,17 +6,17 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | align | Conversation layout: leftRight or leftAlign. | `"leftAlign" \| "leftRight"` | `"leftRight"` |
 | chats | Controlled list of conversation messages; bind it with v-model:chats. | `Message[]` | `semiGlobalDefault("AIChatDialogue", "chats")` |
+| classNames | Class names of the inner parts, keyed by hint (the outermost hint area); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"hint\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatDialogue", "classNames")` |
 | disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `false` |
 | escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `true` |
-| hintCls | Class name of the outermost hint area element. | `string` | `semiGlobalDefault("AIChatDialogue", "hintCls")` |
 | hints | Hint texts. Clicking a hint turns it into a new user message and emits hintClick. | `string[]` | `semiGlobalDefault("AIChatDialogue", "hints")` |
-| hintStyle | Style of the outermost hint area element. | `StyleValue` | `semiGlobalDefault("AIChatDialogue", "hintStyle")` |
 | markdownRenderProps | Props passed to the MarkdownRender of each message. raw is decided by the message and cannot be passed; components are merged with the built-in ones, and a component with the same name (such as code) replaces the built-in one. | `MarkdownRenderProps` | `semiGlobalDefault("AIChatDialogue", "markdownRenderProps")` |
 | mode | Conversation mode: bubble, noBubble or userBubble. | `"bubble" \| "noBubble" \| "userBubble"` | `"bubble"` |
 | roleConfig | Name, avatar and avatar color of each role (user, assistant, system and so on). Required, and not read from the global defaults. | `RoleConfig` | `undefined` |
 | selecting | Whether multi-select mode is on. | `boolean` | `false` |
 | showReference | Whether to show the reference icon on text or file messages. Only user messages are affected. | `boolean` | `false` |
 | showReset | Whether to show the reset action. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003c\"hint\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatDialogue", "styles")` |
 
 **Events**
 

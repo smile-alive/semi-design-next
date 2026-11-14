@@ -29,8 +29,8 @@
         fallback = defaults('fallback'),
         placeholder = defaults('placeholder'),
         preview = defaults('preview', true),
-        imgStyle = defaults('imgStyle'),
-        imgCls = defaults('imgCls'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         setDownloadName = defaults('setDownloadName'),
         onLoad,
         onError,
@@ -123,12 +123,12 @@
         {...attrs.control}
         {@attach lazy}
         {alt}
-        class={[`${prefixCls}-img`, { [`${prefixCls}-img-preview`]: canOpen, [`${prefixCls}-img-error`]: loadStatus === 'error' }, imgCls]}
+        class={[`${prefixCls}-img`, { [`${prefixCls}-img-preview`]: canOpen, [`${prefixCls}-img-error`]: loadStatus === 'error' }, classNames?.img]}
         crossorigin={crossOrigin}
         data-src={src}
         {height}
         src={group?.lazyLoad ? undefined : src}
-        style={imgStyle}
+        style={styles?.img}
         {width}
         onerror={foundation.handleError}
         onload={foundation.handleLoaded}

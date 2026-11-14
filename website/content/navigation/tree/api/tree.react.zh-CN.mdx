@@ -12,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | checkRelation | 多选时节点之间选中状态的关系：`related` 为父子联动，`unRelated` 为互不影响。 | `CheckRelation` | `"related"` |
 | children | 当前实现不渲染 children，树节点请通过 treeData 提供。 | `ReactNode` | - |
 | className | 根元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `search`（搜索框容器），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTreePart, string>>"}>Type</ApiType> | - |
 | defaultExpandAll | 初始化时展开所有节点。之后 treeData 或 treeDataSimpleJson 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `false` |
 | defaultExpandedKeys | 默认展开的节点，显示其直接子级。 | `string[]` | - |
 | defaultValue | 指定默认选中的条目，只在挂载时读取。 | `Value` | - |
@@ -52,14 +53,13 @@ import ApiType from '#/components/ApiType.astro';
 | renderDraggingNode | 拖拽时浏览器显示的拖拽图像。参数为节点的 HTML 元素与节点数据，返回一个 `HTMLElement`。 | <ApiType detail={"(nodeInstance: HTMLElement, node: TreeNodeData) => HTMLElement"}>Type</ApiType> | - |
 | renderFullLabel | 接管整行的渲染，每行调用一次，参数为对象，含 `data`、`level`、`expandIcon`、`className`、`style`、`checkStatus`、`expandStatus`、`onClick`、`onCheck` 等。返回的元素会被 Tree 加上 `role="treeitem"`、无障碍状态属性与 `style`；返回文本、数组或 Fragment 时由 `li` 包裹。`className` 需由返回的元素自行绑定。 | <ApiType detail={"(renderFullLabelProps: RenderFullLabelProps) => ReactNode"}>Type</ApiType> | - |
 | renderLabel | 自定义节点 label 的渲染，参数为 label、节点数据和当前搜索词。设置后不再自动高亮搜索词；搜索仍按 treeData 中的 label 文本匹配。 | <ApiType detail={"(label?: ReactNode, treeNode?: TreeNodeData, searchWord?: string) => ReactNode"}>Type</ApiType> | - |
-| searchClassName | 搜索框容器的类名。 | `string` | - |
 | searchPlaceholder | 搜索框的占位文字，未设置时取语言包中的文案。 | `string` | - |
 | searchRender | 自定义搜索框，参数为对象，包含 `className`、`prefix`、`value`、`onChange`、`showClear` 和 `placeholder`，返回搜索框元素。`onChange` 的参数为输入的字符串。为 `false` 时隐藏内置搜索框。 | <ApiType detail={"((searchRenderProps: SearchRenderProps) => ReactNode) \u007c false"}>Type</ApiType> | - |
-| searchStyle | 搜索框容器的样式。 | `React.CSSProperties` | - |
 | showClear | 搜索框是否显示清除按钮。 | `boolean` | `true` |
 | showFilteredOnly | 搜索时只展示过滤后的结果。 | `boolean` | `false` |
 | showLine | 显示节点之间的连接线。 | `boolean` | `false` |
 | style | 根元素的样式，类型为 `CSSProperties`。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTreePart, React.CSSProperties>>"}>Type</ApiType> | - |
 | treeData | 节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。 | `TreeNodeData[]` | - |
 | treeDataSimpleJson | 简单 JSON 形式的节点数据，返回值为包含选中节点的 JSON 数据。 | `TreeDataSimpleJson` | - |
 | treeNodeFilterProp | 搜索时用于匹配输入的节点属性。 | `string` | `"label"` |

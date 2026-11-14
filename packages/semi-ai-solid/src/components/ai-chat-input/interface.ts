@@ -1,6 +1,7 @@
 import type { JSX, Ref } from 'solid-js';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import type { Node } from '@tiptap/pm/model';
+import type { AIChatInputPart } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import type { Attachment, Content, MessageContent, Reference, Setup, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ElementProps } from '@fibrae/semi-ui-solid/base';
 import type { PopoverProps } from '@fibrae/semi-ui-solid/popover/index';
@@ -76,9 +77,9 @@ export interface AIChatInputProps extends ElementProps<'div', 'onFocus' | 'onBlu
     renderSuggestionItem?: (props: RenderSuggestionItemProps) => JSX.Element;
     skills?: Skill[];
     skillHotKey?: string;
-    /** Merged over the default max height, so only an object */
-    templatesStyle?: JSX.CSSProperties;
-    templatesCls?: string;
+    classNames?: Partial<Record<AIChatInputPart, string>>;
+    /** `templates` is merged over the default max height, so only an object */
+    styles?: Partial<Record<AIChatInputPart, JSX.CSSProperties>>;
     /** `skill` is undefined when the skill is removed */
     onSkillChange?: (skill?: Skill) => void;
     renderSkillIcon?: (skill: Skill) => JSX.Element;

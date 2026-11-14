@@ -12,7 +12,7 @@ export default function NavigationDemo() {
     return (
         <Nav
             defaultOpenKeys={['task']}
-            bodyStyle={{ height: 300 }}
+            styles={{ body: { height: 300 } }}
             items={items}
             onSelect={(key) => console.log(key)}
             header={{

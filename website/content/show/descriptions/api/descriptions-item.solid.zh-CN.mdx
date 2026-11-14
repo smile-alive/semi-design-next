@@ -2,10 +2,11 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性     | 说明                                            | 类型                                                                      | 默认值 |
-| -------- | ----------------------------------------------- | ------------------------------------------------------------------------- | ------ |
-| children | 值，可以是 JSX 元素，也可以是渲染时调用的函数。 | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | -      |
-| hidden   | 是否隐藏该项。                                  | `boolean`                                                                 | -      |
-| itemKey  | 键，可以是 JSX 元素。                           | `JSX.Element`                                                             | -      |
-| keyStyle | key 的自定义样式，可以是样式对象或字符串。      | `JSX.CSSProperties \| string`                                             | -      |
-| span     | 单元格跨越的列数。                              | `number`                                                                  | -      |
+| 属性       | 说明                                                   | 类型                                                                                                                | 默认值 |
+| ---------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| children   | 值，可以是 JSX 元素，也可以是渲染时调用的函数。        | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType>                                           | -      |
+| classNames | 内部各部位的类名，键为 key，与组件自带的类名合并。     | <ApiType detail={"Partial\u003cRecord\u003cDescriptionsItemPart, string>>"}>Type</ApiType>                          | -      |
+| hidden     | 是否隐藏该项。                                         | `boolean`                                                                                                           | -      |
+| itemKey    | 键，可以是 JSX 元素。                                  | `JSX.Element`                                                                                                       | -      |
+| span       | 单元格跨越的列数。                                     | `number`                                                                                                            | -      |
+| styles     | 内部各部位的样式，键为 key，值可以是样式对象或字符串。 | <ApiType detail={"Partial\u003cRecord\u003cDescriptionsItemPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |

@@ -2,7 +2,7 @@ import type { BaseRowKeyType, BaseHeadWidth } from '@fibrae/semi-foundation/comp
 import { noop } from '@fibrae/semi-foundation/utils';
 import { createContext } from '../../base/index';
 import type { ContextValue } from '../config-provider/context';
-import type { ColumnProps, GetVirtualizedListRef } from './interface';
+import type { ColumnProps, GetVirtualizedListRef, TableProps } from './interface';
 
 export interface TableContextProps {
     anyColumnFixed?: boolean;
@@ -18,7 +18,8 @@ export interface TableContextProps {
     setBodyHasScrollbar?: (bodyHasScrollbar: boolean) => void;
     direction?: ContextValue['direction'];
     handleRowSelection?: (rowKey: BaseRowKeyType, selected: boolean, e: React.MouseEvent) => void;
-    headerStyle?: React.CSSProperties;
+    classNames?: TableProps['classNames'];
+    styles?: TableProps['styles'];
     rowSpanHover?: boolean;
     /**
      * The header and the body render as separate elements (fixed header, sticky or virtualized): their common

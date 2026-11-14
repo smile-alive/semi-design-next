@@ -1,4 +1,5 @@
 import type { Component, JSX } from 'solid-js';
+import type { TabsPart } from '@fibrae/semi-foundation/components/tabs/constants';
 import type { ElementProps } from '../../base/index';
 import type { DropdownProps, GetDropdownTriggerProps } from '../dropdown';
 
@@ -36,11 +37,14 @@ export interface TabBarProps extends ElementProps<'div'> {
     /** Names the tablist */
     'aria-label'?: string;
     'aria-labelledby'?: string;
+    /** Only `visibleTabs` is read: the scroll wrapper that holds the visible tabs */
+    classNames?: Partial<Record<'visibleTabs', string>>;
     collapsible?: boolean | 'auto';
     list?: PlainTab[];
     onTabClick?: (activeKey: string, event: MouseEvent | KeyboardEvent) => void;
     showRestInDropdown?: boolean;
     size?: TabSize;
+    styles?: Partial<Record<'visibleTabs', JSX.CSSProperties | string>>;
     tabBarExtraContent?: JSX.Element;
     tabPosition?: TabPosition;
     type?: TabType;
@@ -50,7 +54,6 @@ export interface TabBarProps extends ElementProps<'div'> {
     handleKeyDown?: (event: KeyboardEvent, itemKey: string, closable: boolean) => void;
     more?: TabsMore;
     onVisibleTabsChange?: (visibleState: Map<string, boolean>) => void;
-    visibleTabsStyle?: JSX.CSSProperties | string;
     arrowPosition?: 'both' | 'start' | 'end';
     /** `defaultNode` creates the default arrow; call it where the arrow is inserted */
     renderArrow?: (items: OverflowItem[], pos: 'start' | 'end', handleArrowClick: () => void, defaultNode: () => JSX.Element) => JSX.Element;
@@ -63,8 +66,8 @@ export interface TabBarProps extends ElementProps<'div'> {
 export interface TabsProps extends ElementProps<'div', 'onChange'> {
     activeKey?: string | null;
     children?: JSX.Element;
+    classNames?: Partial<Record<TabsPart, string>>;
     collapsible?: boolean | 'auto';
-    contentStyle?: JSX.CSSProperties | string;
     defaultActiveKey?: string;
     keepDOM?: boolean;
     lazyRender?: boolean;
@@ -76,9 +79,8 @@ export interface TabsProps extends ElementProps<'div', 'onChange'> {
     renderTabBar?: (tabBarProps: TabBarProps, DefaultTabBar: Component<TabBarProps>) => JSX.Element;
     showRestInDropdown?: boolean;
     size?: TabSize;
-    tabBarClassName?: string;
+    styles?: Partial<Record<TabsPart, JSX.CSSProperties | string>>;
     tabBarExtraContent?: JSX.Element;
-    tabBarStyle?: JSX.CSSProperties | string;
     tabList?: PlainTab[];
     /** The content of each `tabList` tab; without it the entry's `tab` shows */
     renderTab?: TabRender;
@@ -88,7 +90,6 @@ export interface TabsProps extends ElementProps<'div', 'onChange'> {
     type?: TabType;
     more?: TabsMore;
     onVisibleTabsChange?: TabBarProps['onVisibleTabsChange'];
-    visibleTabsStyle?: TabBarProps['visibleTabsStyle'];
     arrowPosition?: TabBarProps['arrowPosition'];
     renderArrow?: TabBarProps['renderArrow'];
     dropdownProps?: TabsDropdownProps;

@@ -38,4 +38,4 @@
     ];
 </script>
 
-<TreeSelect dropdownStyle="max-height: 400px; overflow: auto" filterTreeNode multiple placeholder="请选择多个选项或输入长文本" searchPosition="trigger" style="width: 260px" {treeData} triggerTagWrap value={['Beijing', 'Shanghai', 'Shenzhen', 'Guangzhou']} />
+<TreeSelect filterTreeNode multiple placeholder="请选择多个选项或输入长文本" searchPosition="trigger" style="width: 260px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} triggerTagWrap value={['Beijing', 'Shanghai', 'Shenzhen', 'Guangzhou']} />

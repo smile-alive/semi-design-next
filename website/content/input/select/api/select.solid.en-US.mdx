@@ -12,15 +12,14 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | Whether the Select is focused on mount. | `boolean` | - |
 | borderless | Whether to use the borderless style. | `boolean` | `false` |
 | children | The options. Direct children must be `Select.Option` or `Select.OptGroup`. A non-empty `optionList` takes precedence over children, and groups can only be declared with `Select.OptGroup`. | `JSX.Element` | - |
+| classNames | Class names of the inner parts, keyed by `dropdown` (the dropdown popup); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom icon of the clear button, effective when showClear is true. | `JSX.Element` | - |
 | clickToHide | Whether clicking the Select collapses the dropdown while it is open. | `boolean` | - |
 | defaultActiveFirstOption | With no value selected, whether opening the dropdown highlights the first enabled option (Enter selects it). With a value selected, the first selected option is always highlighted. | `boolean` | `true` |
 | defaultOpen | Whether the dropdown is open initially. | `boolean` | `false` |
 | defaultValue | The initially selected value, read on mount only; an array in multiple mode. With onChangeWithObject it is the option object, which must contain value and label. | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | - |
 | disabled | Whether the Select is disabled. Falls back to the InputGroup it is in. | `boolean` | - |
-| dropdownClassName | Class name of the dropdown popup. | `string` | - |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown popup equals the Select. | `boolean` | `true` |
-| dropdownStyle | Style of the dropdown popup, for example to set width. The `style` on the root is not passed to the popup. | `JSX.CSSProperties \| string` | - |
 | ellipsisTrigger | In multiple mode with maxTagCount set, whether the content of the last tag is truncated when the width is not enough. It has some performance cost and is not recommended in large forms. | `boolean` | `false` |
 | emptyContent | Content shown when there are no options; null shows no empty state in the dropdown. | `JSX.Element` | - |
 | expandRestTagsOnClick | In multiple mode with maxTagCount set, whether all tags are shown while the dropdown is open. | `boolean` | `false` |
@@ -70,6 +69,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size: small, default or large. The size of the InputGroup it is in takes precedence. | `SelectSize` | - |
 | spacing | Distance between the popup and the Select, in pixels. | `number \| { x: number; y: number }` | - |
 | stopPropagation | Whether click events on the popup are stopped from bubbling. | `boolean` | `true` |
+| styles | Styles of the inner parts, keyed like `classNames`; a value is an object with kebab-case keys or a string, for example width on `dropdown`. The `style` on the root is not passed to the popup. | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | suffix | Suffix of the Select. Text or an icon gets side spacing automatically; a custom element has none. | `JSX.Element` | - |
 | triggerRender | Customizes how the trigger renders. Its argument holds value, inputValue, onSearch, onClear, onRemove, disabled, placeholder and componentProps. | <ApiType detail={"(props: TriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
 | validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `ValidateStatus` | - |

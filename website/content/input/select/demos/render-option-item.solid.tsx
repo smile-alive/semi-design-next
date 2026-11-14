@@ -39,10 +39,10 @@ export default function SelectDemo() {
 
     return (
         <>
-            <Select aria-label="单选" filter placeholder="单选" onSearch={(v) => setInputValue(v)} dropdownClassName="components-select-demo-renderOptionItem" optionList={optionList} style={{ width: '180px' }} renderOptionItem={renderOptionItem} />
+            <Select aria-label="单选" filter placeholder="单选" onSearch={(v) => setInputValue(v)} classNames={{ dropdown: 'components-select-demo-renderOptionItem' }} optionList={optionList} style={{ width: '180px' }} renderOptionItem={renderOptionItem} />
             <br />
             <br />
-            <Select aria-label="多选" filter placeholder="多选" multiple onSearch={(v) => setInputValue(v)} dropdownClassName="components-select-demo-renderOptionItem" optionList={optionList} style={{ width: '320px' }} renderOptionItem={renderOptionItem} />
+            <Select aria-label="多选" filter placeholder="多选" multiple onSearch={(v) => setInputValue(v)} classNames={{ dropdown: 'components-select-demo-renderOptionItem' }} optionList={optionList} style={{ width: '320px' }} renderOptionItem={renderOptionItem} />
         </>
     );
 }

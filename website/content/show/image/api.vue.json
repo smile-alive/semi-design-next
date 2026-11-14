@@ -27,13 +27,13 @@
                 "zh-CN": "预览配置，为 false 时禁用预览；对象只放数据与回调，自定义内容使用 Image 的插槽。",
                 "en-US": "Preview options; false disables preview. The object carries data and callbacks only; use Image slots for custom content."
             },
-            "imgStyle": {
-                "zh-CN": "自定义样式，透传给 img 节点。",
-                "en-US": "Custom style passed to the img element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `img`（内部的 img 节点），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `img` (the inner img element); merged with the built-in classes."
             },
-            "imgCls": {
-                "zh-CN": "自定义样式类名，透传给 img 节点。",
-                "en-US": "Custom class name passed to the img element."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
             },
             "setDownloadName": {
                 "zh-CN": "设置图片下载名称。",
@@ -129,8 +129,14 @@
                 "zh-CN": "透传给预览图片的原生 img 标签的 crossorigin。",
                 "en-US": "The crossorigin attribute passed to the preview img element."
             },
-            "previewCls": { "zh-CN": "自定义预览样式类名。", "en-US": "Custom class name of the preview." },
-            "previewStyle": { "zh-CN": "自定义预览样式。", "en-US": "Custom style of the preview." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `preview`（预览层，即 `role=\"dialog\"` 元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `preview` (the preview layer, the `role=\"dialog\"` element); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "prevTip": { "zh-CN": "上一步操作按钮提示。", "en-US": "Tip of the previous button." },
             "nextTip": { "zh-CN": "下一步操作按钮提示。", "en-US": "Tip of the next button." },
             "zoomInTip": { "zh-CN": "放大操作按钮提示。", "en-US": "Tip of the zoom-in button." },

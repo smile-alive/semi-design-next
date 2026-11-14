@@ -10,16 +10,15 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | aria-label of the popup when its role is dialog. | `string` | - |
 | aria-labelledby | aria-labelledby of the popup when its role is dialog. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires showArrow. | `boolean` | - |
-| arrowStyle | borderColor, backgroundColor and borderOpacity of the arrow. They follow backgroundColor and borderColor of the card style by default. | `ArrowStyle` | - |
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
 | child | Snippet that renders the trigger element itself. Its argument `{ props }` must be spread whole onto the trigger; when `child` is passed, `children` has no effect. | `TooltipProps['child']` | - |
 | children | Snippet for the trigger. It is wrapped in Tooltip's own span, which receives the trigger attributes. | `TooltipProps['children']` | - |
 | class | Class name of the popup. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `content` (the content card) and `arrow`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cPopoverPart, ClassValue>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click on the popup or anything inside it closes the popup. | `boolean` | - |
 | closeOnEsc | Whether Esc closes the open popup. With trigger custom it only calls onEscKeyDown and the caller decides whether to close. | `boolean` | `true` |
 | condition | Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only calls onVisibleChange(false), and the popup closes once the caller writes back. | `boolean` | - |
 | content | Snippet for the card content. Its argument `{ initialFocusRef }` is a callback; write `{@attach initialFocusRef}` to bind it to the element that receives focus when the popup opens. | `TooltipProps['content']` | - |
-| contentClassName | Class name of the content card in the popup. | `ClassValue` | - |
 | disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the popup. | `boolean` | - |
 | disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | - |
 | guardFocus | Whether Tab cycles inside the popup while focus is in it. | `boolean` | `true` |
@@ -38,6 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. Omitted, it is 4 without an arrow and 10 with one. | `number \| { x: number; y: number }` | - |
 | stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean \| string` | - |
 | style | Style string of the popup; its background-color and border-color also color the arrow. | `string` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. `content` is the style string of the content card; `arrow` holds the arrow's borderColor, backgroundColor and borderOpacity, and colors that are not set follow background-color and border-color of the popup style. | `{ content?: string; arrow?: ArrowStyle }` | - |
 | trigger | When the popup shows. With custom, visible alone decides. | `TooltipProps['trigger']` | `"hover"` |
 | visible | Whether the popup is shown, used with trigger custom; bind it with `bind:visible`. When given, this value decides. | `boolean` | - |
 

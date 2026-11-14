@@ -13,6 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
 | children | 触发元素。传函数时参数为 `getTriggerProps`，把 `getTriggerProps(自有属性)` 的结果展开到接收焦点的元素上；其他内容会被 Tooltip 包进一个 span 作为触发元素。 | <ApiType detail={"JSX.Element \u007c ((getTriggerProps: GetTriggerProps) => JSX.Element)"}>Type</ApiType> | - |
 | class | 弹出层的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, string>>"}>Type</ApiType> | - |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭弹出层。 | `boolean` | - |
 | clickTriggerToHide | 点击触发元素时是否关闭已打开的弹出层。 | `boolean` | - |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只调用 onEscKeyDown，由使用方决定是否关闭。 | `boolean` | `true` |
@@ -38,9 +39,9 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number }` | `8` |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean` | - |
 | style | 弹出层的内联样式；箭头颜色只读取对象形式中的 `background-color`。 | `JSX.CSSProperties \| string` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`，可传 style 对象或字符串，写在 span 自带样式之后。 | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | trigger | 触发显示的时机。custom 时显示与否完全由 visible 决定。 | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | 弹出层是否显示（受控）。传入后触发器、点击外部与 Esc 只通过 onVisibleChange 请求打开或关闭，使用方回写后才生效。 | `boolean` | - |
-| wrapperClassName | 触发元素被 span 包裹时，该 span 的类名。 | `string` | - |
 | wrapperId | 弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。 | `string` | - |
 | wrapWhenSpecial | 触发元素禁用或加载中时，是否在外层包裹 span 以保证触发行为。 | `boolean` | `true` |
 

@@ -51,9 +51,9 @@
         condition: semiGlobalDefault('Popconfirm', 'condition'),
         mouseEnterDelay: semiGlobalDefault('Popconfirm', 'mouseEnterDelay'),
         mouseLeaveDelay: semiGlobalDefault('Popconfirm', 'mouseLeaveDelay'),
-        contentClassName: semiGlobalDefault('Popconfirm', 'contentClassName'),
+        classNames: semiGlobalDefault('Popconfirm', 'classNames'),
         spacing: semiGlobalDefault('Popconfirm', 'spacing'),
-        arrowStyle: semiGlobalDefault('Popconfirm', 'arrowStyle'),
+        styles: semiGlobalDefault('Popconfirm', 'styles'),
         ariaLabel: semiGlobalDefault('Popconfirm', 'ariaLabel'),
         ariaLabelledby: semiGlobalDefault('Popconfirm', 'ariaLabelledby'),
         ariaDescribedby: semiGlobalDefault('Popconfirm', 'ariaDescribedby'),
@@ -104,12 +104,11 @@
     const forwarded = computed<PopoverProps>(() => ({
         ariaLabel: props.ariaLabel,
         arrowPointAtCenter: props.arrowPointAtCenter,
-        arrowStyle: props.arrowStyle,
         autoAdjustOverflow: props.autoAdjustOverflow,
+        classNames: props.classNames,
         clickToHide: props.clickToHide,
         closeOnEsc: props.closeOnEsc,
         condition: props.condition,
-        contentClassName: props.contentClassName,
         disableArrowKeyDown: props.disableArrowKeyDown,
         disableFocusListener: props.disableFocusListener,
         guardFocus: props.guardFocus,
@@ -122,6 +121,7 @@
         showArrow: props.showArrow,
         spacing: props.spacing,
         stopPropagation: props.stopPropagation,
+        styles: props.styles,
     }));
 
     const prefixCls = cssClasses.PREFIX;

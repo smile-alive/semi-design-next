@@ -91,9 +91,14 @@ describe('Dropdown', () => {
         expect(document.querySelectorAll(itemSelector)).toHaveLength(0);
     });
 
-    it('Dropdown contentClassName', () => {
-        renderDD({ contentClassName: 'test', trigger: 'custom', visible: true });
-        expect(document.querySelector(`.${BASE_CLASS_PREFIX}-dropdown.test`)).not.toBeNull();
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderDD({ classNames: { content: 'my-content', wrapper: 'my-wrapper' }, styles: { content: { order: 2 }, wrapper: { order: 3 } }, trigger: 'custom', visible: true });
+        const menu = getElement(`.${BASE_CLASS_PREFIX}-dropdown`);
+        expect(menu).toHaveClass('my-content');
+        expect(menu.style.order).toBe('2');
+        const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
+        expect(wrapper).toHaveClass('my-wrapper');
+        expect(wrapper.style.order).toBe('3');
     });
 
     it('Dropdown showTick', () => {
@@ -900,7 +905,7 @@ describe('Dropdown 行为', () => {
 
     it('从 semiGlobal overrideDefaultProps 读取默认值', async () => {
         semiGlobal.config.overrideDefaultProps = {
-            Dropdown: { trigger: 'click', contentClassName: 'global-content', motion: false },
+            Dropdown: { trigger: 'click', classNames: { content: 'global-content' }, motion: false },
         } as OverrideDefaultProps;
         render(() => <Dropdown render={subMenu()}>{(t) => <button {...t()}>global trigger</button>}</Dropdown>);
         expect(portalInner()).toBeNull();

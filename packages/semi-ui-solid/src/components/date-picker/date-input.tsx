@@ -168,6 +168,7 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         inputRef={setRangeStartInput}
+                        class={props.inputClassName}
                         style={props.inputStyle}
                         autofocus={props.autofocus}
                         disabled={props.disabled}
@@ -207,6 +208,7 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         inputRef={props.rangeInputEndRef}
+                        class={props.inputClassName}
                         style={props.inputStyle}
                         disabled={props.disabled}
                         placeholder={placeholders()[1]}
@@ -307,7 +309,7 @@ export default function DateInput(rawProps: DateInputProps) {
             aria-invalid={props['aria-invalid']}
             aria-required={props['aria-required']}
             inputRef={props.inputRef}
-            class={inputCls()}
+            class={clsx(inputCls(), props.inputClassName)}
             style={props.inputStyle}
             autofocus={props.autofocus}
             borderless={props.borderless}

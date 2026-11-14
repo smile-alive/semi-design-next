@@ -206,7 +206,7 @@
                 {#if label}
                     {@render label({ item: row.data, label: row.label, searchWord: row.keyword })}
                 {:else if highlighted}
-                    <Highlight component="span" highlightClassName="{prefix}-highlight" searchWords={[row.keyword]} sourceString={String(row.label)} />
+                    <Highlight classNames={{ highlight: `${prefix}-highlight` }} component="span" searchWords={[row.keyword]} sourceString={String(row.label)} />
                 {:else}
                     {row.label}
                 {/if}

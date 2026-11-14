@@ -131,14 +131,22 @@ describe('Spin', () => {
         expect(vi.getTimerCount()).toBe(0);
     });
 
-    it('className 与 wrapperClassName 同时落在根元素', () => {
-        const { container } = render(<Spin className="x" wrapperClassName="w" />);
-        expect(getSpin(container)).toHaveClass('x', 'w', prefixCls);
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = render(
+            <Spin className="x" classNames={{ child: 'c' }} style={{ color: 'red' }} styles={{ child: { opacity: 0.5 } }}>
+                <p>content</p>
+            </Spin>
+        );
+        expect(getSpin(container)).toHaveClass('x', prefixCls);
+        expect(getSpin(container)).not.toHaveClass('c');
+        expect(getSpin(container)).not.toHaveStyle({ opacity: '0.5' });
+        expect(screen.getByText('content').parentElement).toHaveClass(`${prefixCls}-children`, 'c');
+        expect(screen.getByText('content').parentElement).toHaveStyle({ opacity: '0.5' });
     });
 
     it('渲染 indicator、tip、children，以及 size 和 block 类名', () => {
         const { container } = render(
-            <Spin wrapperClassName="wrap" childStyle={{ opacity: 0.5 }} style={{ color: 'red' }} data-x="1" indicator={<i data-testid="indicator" />} size="large" tip="loading">
+            <Spin className="wrap" style={{ color: 'red' }} styles={{ child: { opacity: 0.5 } }} data-x="1" indicator={<i data-testid="indicator" />} size="large" tip="loading">
                 <p>content</p>
             </Spin>
         );

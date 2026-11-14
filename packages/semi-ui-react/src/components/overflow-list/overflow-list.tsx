@@ -1,7 +1,7 @@
 import type React from 'react';
 import { cloneElement, isValidElement, useLayoutEffect, useState, type CSSProperties, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import clsx from 'clsx';
-import { cssClasses, SCROLL_KEY_ATTRIBUTE, strings } from '@fibrae/semi-foundation/components/overflow-list/constants';
+import { cssClasses, SCROLL_KEY_ATTRIBUTE, strings, type OverflowListPart } from '@fibrae/semi-foundation/components/overflow-list/constants';
 import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
 import { namedRole, isHTMLElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
@@ -31,8 +31,8 @@ interface OverflowListCommonProps<T> extends ElementProps<'div', 'children'> {
     style?: CSSProperties;
     threshold?: number;
     visibleItemRenderer?: (item: T, index: number) => ReactElement;
-    wrapperClassName?: string;
-    wrapperStyle?: CSSProperties;
+    classNames?: Partial<Record<OverflowListPart, string>>;
+    styles?: Partial<Record<OverflowListPart, CSSProperties>>;
     wrapperProps?: HTMLAttributes<HTMLDivElement>;
     itemKey?: Key | ((item: T) => Key);
     onVisibleStateChange?: (visibleState: Map<string, boolean>) => void;
@@ -77,7 +77,7 @@ const defaultProps = {
 export default function OverflowList<T = OverflowItem>(rawProps: OverflowListProps<T>): ReactElement;
 export default function OverflowList(rawProps: OverflowListProps) {
     const props = useDefaultProps('OverflowList', rawProps as OverflowListInternalProps, defaultProps);
-    const { ref, className, collapseFrom, items, minVisibleItems, onIntersect, onOverflow, overflowRenderer, renderMode, style, threshold, visibleItemRenderer, wrapperClassName, wrapperStyle, wrapperProps, itemKey, onVisibleStateChange, overflowRenderDirection, ...rest } = props;
+    const { ref, className, classNames, collapseFrom, items, minVisibleItems, onIntersect, onOverflow, overflowRenderer, renderMode, style, styles, threshold, visibleItemRenderer, wrapperProps, itemKey, onVisibleStateChange, overflowRenderDirection, ...rest } = props;
 
     // not a ref: the item ref callbacks go through mergeRefs during render, where the Compiler rejects ref access
     const [itemNodes] = useState(() => new Map<Key, Element>());
@@ -138,7 +138,7 @@ export default function OverflowList(rawProps: OverflowListProps) {
     // narrowed on props: the destructured renderer does not follow the renderMode check
     if (props.renderMode === RenderMode.SCROLL) {
         const scrollWrapper = (
-            <div {...wrapperProps} className={clsx(wrapperClassName, cssClasses.SCROLL_WRAPPER)} style={wrapperStyle}>
+            <div {...wrapperProps} className={clsx(cssClasses.SCROLL_WRAPPER, classNames?.wrapper)} style={styles?.wrapper}>
                 {renderedItems.map(({ element, key }) => {
                     return cloneElement(element as ReactElement<any>, {
                         // cloneElement replaces the ref, so keep the one the renderer put on its element

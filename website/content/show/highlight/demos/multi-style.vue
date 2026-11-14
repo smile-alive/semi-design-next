@@ -24,6 +24,6 @@
 
 <template>
     <h2>
-        <Highlight component="span" :highlightStyle="highlightStyle" :searchWords="searchWords" :sourceString="sourceString" />
+        <Highlight component="span" :searchWords="searchWords" :sourceString="sourceString" :styles="{ highlight: highlightStyle }" />
     </h2>
 </template>

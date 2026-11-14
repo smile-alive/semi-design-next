@@ -19,7 +19,7 @@
     let { items, level, subDropdownProps, icon, text, toggleIcon, expandIcon }: NavItemsProps = $props();
 
     const ITEM_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'link', 'linkOptions', 'tooltipShowDelay', 'tooltipHideDelay']);
-    const SUB_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'dropdownStyle', 'dropdownProps']);
+    const SUB_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'classNames', 'styles', 'dropdownProps']);
     const LI_KEYS = new Set(['class', 'style', 'onmouseenter', 'onmouseleave']);
 
     // An entry may carry app data (e.g. `path`); only the declared keys, li attributes, data-* and aria-* reach the item

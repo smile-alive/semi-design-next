@@ -5,6 +5,9 @@ export const cssClasses = {
     PREFIX_OPTION: `${BASE_CLASS_PREFIX}-cascader-option`,
 };
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type CascaderPart = 'dropdown';
+
 export const strings = {
     SHOW_NEXT_BY_CLICK: 'click',
     SHOW_NEXT_BY_HOVER: 'hover',

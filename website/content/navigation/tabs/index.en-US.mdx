@@ -388,21 +388,22 @@ The shape of `more` when it is an object.
 
 The `tabBarProps` of the `#tabBar` slot, the data of the default tab bar.
 
-| Property           | Description                                                                | Type                                    |
-| ------------------ | -------------------------------------------------------------------------- | --------------------------------------- |
-| activeKey          | The active itemKey; null for a controlled empty value                      | string \| null                          |
-| list               | Tab data; `tab` is present only when the `#tab` of a TabPane is plain text | PlainTab[]                              |
-| type               | Style of the tab bar                                                       | 'line' \| 'card' \| 'button' \| 'slash' |
-| size               | Size                                                                       | 'small' \| 'medium' \| 'large'          |
-| tabPosition        | Position                                                                   | 'top' \| 'left'                         |
-| collapsible        | Whether collapsible                                                        | boolean \| 'auto'                       |
-| showRestInDropdown | In collapsible mode, whether collapsed tabs are listed in a dropdown       | boolean                                 |
-| more               | Configuration of the More menu                                             | number \| TabsMore                      |
-| arrowPosition      | Position of the arrows in collapsible mode                                 | 'both' \| 'start' \| 'end'              |
-| visibleTabsStyle   | Style of the whole scrolling area in collapsible mode                      | StyleValue                              |
-| dropdownProps      | Dropdown props of the arrow menus in collapsible mode                      | TabsDropdownProps                       |
-| class              | tabBarClassName                                                            | string                                  |
-| style              | tabBarStyle                                                                | StyleValue                              |
+| Property           | Description                                                                   | Type                                         |
+| ------------------ | ----------------------------------------------------------------------------- | -------------------------------------------- |
+| activeKey          | The active itemKey; null for a controlled empty value                         | string \| null                               |
+| list               | Tab data; `tab` is present only when the `#tab` of a TabPane is plain text    | PlainTab[]                                   |
+| type               | Style of the tab bar                                                          | 'line' \| 'card' \| 'button' \| 'slash'      |
+| size               | Size                                                                          | 'small' \| 'medium' \| 'large'               |
+| tabPosition        | Position                                                                      | 'top' \| 'left'                              |
+| collapsible        | Whether collapsible                                                           | boolean \| 'auto'                            |
+| showRestInDropdown | In collapsible mode, whether collapsed tabs are listed in a dropdown          | boolean                                      |
+| more               | Configuration of the More menu                                                | number \| TabsMore                           |
+| arrowPosition      | Position of the arrows in collapsible mode                                    | 'both' \| 'start' \| 'end'                   |
+| classNames         | Key `visibleTabs`: class name of the whole scrolling area in collapsible mode | `Partial<Record<'visibleTabs', ClassValue>>` |
+| styles             | Key `visibleTabs`: style of the whole scrolling area in collapsible mode      | `Partial<Record<'visibleTabs', StyleValue>>` |
+| dropdownProps      | Dropdown props of the arrow menus in collapsible mode                         | TabsDropdownProps                            |
+| class              | `classNames.tabBar` of Tabs                                                   | string                                       |
+| style              | `styles.tabBar` of Tabs                                                       | StyleValue                                   |
 
 </Framework>
 
@@ -446,21 +447,22 @@ The shape of `more` when it is an object.
 
 The `tabBarProps` of the `tabBar` snippet, the data of the default tab bar.
 
-| Property           | Description                                                          | Type                                    |
-| ------------------ | -------------------------------------------------------------------- | --------------------------------------- |
-| activeKey          | The active itemKey; null for a controlled empty value                | string \| null                          |
-| list               | Tab data                                                             | PlainTab[]                              |
-| type               | Style of the tab bar                                                 | 'line' \| 'card' \| 'button' \| 'slash' |
-| size               | Size                                                                 | 'small' \| 'medium' \| 'large'          |
-| tabPosition        | Position                                                             | 'top' \| 'left'                         |
-| collapsible        | Whether collapsible                                                  | boolean \| 'auto'                       |
-| showRestInDropdown | In collapsible mode, whether collapsed tabs are listed in a dropdown | boolean                                 |
-| more               | Configuration of the More menu                                       | number \| TabsMore                      |
-| arrowPosition      | Position of the arrows in collapsible mode                           | 'both' \| 'start' \| 'end'              |
-| visibleTabsStyle   | Style of the whole scrolling area in collapsible mode                | string                                  |
-| dropdownProps      | Dropdown props of the arrow menus in collapsible mode                | TabsDropdownProps                       |
-| class              | tabBarClassName                                                      | string                                  |
-| style              | tabBarStyle                                                          | string                                  |
+| Property           | Description                                                                   | Type                                         |
+| ------------------ | ----------------------------------------------------------------------------- | -------------------------------------------- |
+| activeKey          | The active itemKey; null for a controlled empty value                         | string \| null                               |
+| list               | Tab data                                                                      | PlainTab[]                                   |
+| type               | Style of the tab bar                                                          | 'line' \| 'card' \| 'button' \| 'slash'      |
+| size               | Size                                                                          | 'small' \| 'medium' \| 'large'               |
+| tabPosition        | Position                                                                      | 'top' \| 'left'                              |
+| collapsible        | Whether collapsible                                                           | boolean \| 'auto'                            |
+| showRestInDropdown | In collapsible mode, whether collapsed tabs are listed in a dropdown          | boolean                                      |
+| more               | Configuration of the More menu                                                | number \| TabsMore                           |
+| arrowPosition      | Position of the arrows in collapsible mode                                    | 'both' \| 'start' \| 'end'                   |
+| classNames         | Key `visibleTabs`: class name of the whole scrolling area in collapsible mode | `Partial<Record<'visibleTabs', ClassValue>>` |
+| styles             | Key `visibleTabs`: style of the whole scrolling area in collapsible mode      | `Partial<Record<'visibleTabs', string>>`     |
+| dropdownProps      | Dropdown props of the arrow menus in collapsible mode                         | TabsDropdownProps                            |
+| class              | `classNames.tabBar` of Tabs                                                   | string                                       |
+| style              | `styles.tabBar` of Tabs                                                       | string                                       |
 
 </Framework>
 

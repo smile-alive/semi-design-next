@@ -194,10 +194,15 @@ describe('Svelte Button', () => {
         expect(onmouseenter).toHaveBeenCalledTimes(1);
     });
 
-    it('contentClassName 落在内容 span，且不进入 DOM 属性', () => {
-        setup({ props: { contentClassName: 'inner' }, text: 'x' });
-        expect(screen.getByRole('button')).not.toHaveAttribute('contentclassname');
-        expect(document.querySelector(`.${prefixCls}-content`)).toHaveClass('inner');
+    it('classNames 与 styles 按部位落到对应元素，且不进入 DOM 属性', () => {
+        setup({ props: { classNames: { content: 'inner' }, styles: { content: 'order: 2' } }, text: 'x' });
+        const button = screen.getByRole('button');
+        expect(button).not.toHaveAttribute('classnames');
+        expect(button).not.toHaveAttribute('styles');
+        const content = document.querySelector(`.${prefixCls}-content`);
+        expect(content).toHaveClass('inner');
+        expect(content).toHaveStyle({ order: '2' });
+        expect(button).not.toHaveClass('inner');
     });
 
     it('loading 与 icon 切换时原生 button 是同一个元素', () => {

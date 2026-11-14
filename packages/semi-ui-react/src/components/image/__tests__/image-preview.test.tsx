@@ -151,8 +151,8 @@ describe('ImagePreview', () => {
         expect(getPreview()).toBeNull();
     });
 
-    it('分组结构：className 与 style 在分组上，previewCls、previewStyle 与 zIndex 在预览上', () => {
-        const { container } = render(<Group className="g" previewStyle={{ color: 'blue' }} style={{ color: 'red' }} previewCls="p" zIndex={2000} />);
+    it('分组结构：className 与 style 在分组上，classNames.preview、styles.preview 与 zIndex 在预览上', () => {
+        const { container } = render(<Group className="g" classNames={{ preview: 'p' }} style={{ color: 'red' }} styles={{ preview: { color: 'blue' } }} zIndex={2000} />);
         const group = container.firstElementChild;
         expect(group).toHaveClass(`${previewCls}-group`, 'g');
         expect(group).toHaveStyle({ color: 'rgb(255, 0, 0)' });

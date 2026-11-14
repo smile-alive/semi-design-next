@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| bodyStyle | 导航项列表的自定义样式。 | `JSX.CSSProperties \| string` | - |
+| classNames | 内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | defaultIsCollapsed | 默认是否处于收起状态，仅 `mode` 为 `vertical` 时有效。 | `boolean` | - |
 | defaultOpenKeys | 初始展开的子导航 `itemKey` 数组，仅 `mode` 为 `vertical` 且侧边栏处于展开状态时有效。 | `ItemKey[]` | - |
 | defaultSelectedKeys | 初始选中的导航项 `itemKey` 数组。 | `ItemKey[]` | - |
@@ -26,6 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderItemToggleIcon | `items` 生成的导航项的切换图标，入参为 `{ item, level }`。 | <ApiType detail={"(props: NavItemRenderProps) => JSX.Element"}>Type</ApiType> | - |
 | renderWrapper | 包裹每个导航项的渲染函数，入参为 `{ itemElement, isSubNav, isInSubNav, props }`，返回值放进列表。`itemElement` 只能渲染一次。 | <ApiType detail={"(data: RenderWrapperData) => JSX.Element"}>Type</ApiType> | - |
 | selectedKeys | 选中的导航项 `itemKey` 数组的受控值，配合 `onSelect` 使用。 | `ItemKey[]` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | subDropdownProps | `items` 生成的子导航在水平模式或收起状态下弹层 Dropdown 的参数。子导航自己的 `dropdownProps` 或 `subDropdownProps` 优先。 | `DropdownProps` | - |
 | subNavCloseDelay | 子导航浮层关闭的延迟，单位为毫秒。收起或水平模式下有效。 | `number` | `100` |
 | subNavMotion | 子导航展开收起时是否有动画。 | `boolean` | `true` |

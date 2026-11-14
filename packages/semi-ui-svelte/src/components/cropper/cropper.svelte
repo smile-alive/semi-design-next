@@ -18,8 +18,7 @@
     let {
         zoom = $bindable(),
         aspectRatio = defaults('aspectRatio'),
-        cropperBoxCls = defaults('cropperBoxCls'),
-        cropperBoxStyle = defaults('cropperBoxStyle'),
+        classNames = defaults('classNames'),
         defaultAspectRatio = defaults('defaultAspectRatio', 1),
         fill = defaults('fill', 'rgba(0, 0, 0, 0)'),
         imgProps = defaults('imgProps'),
@@ -30,6 +29,7 @@
         shape = defaults('shape', 'rect'),
         showResizeBox = defaults('showResizeBox', true),
         src = defaults('src'),
+        styles = defaults('styles'),
         zoomStep = defaults('zoomStep', 0.1),
         onZoomChange,
         ...rest
@@ -130,9 +130,9 @@
         aria-describedby="{uid}-help"
         aria-label={locale().locale.cropArea}
         aria-roledescription={locale().locale.cropAreaRole}
-        class={[cssClasses.CROPPER_BOX, cropperBoxCls, { [cssClasses.CROPPER_VIEW_BOX_ROUND]: shape === 'round' }]}
+        class={[cssClasses.CROPPER_BOX, { [cssClasses.CROPPER_VIEW_BOX_ROUND]: shape === 'round' }, classNames?.cropperBox]}
         role="group"
-        style={[cropperBoxStyle, boxStyle].filter(Boolean).join('; ')}
+        style={[styles?.cropperBox, boxStyle].filter(Boolean).join('; ')}
         tabindex={states().loaded ? 0 : undefined}
         onkeydown={foundation.handleCropperBoxKeyDown}
         onlostpointercapture={foundation.handleCropperBoxLostPointerCapture}

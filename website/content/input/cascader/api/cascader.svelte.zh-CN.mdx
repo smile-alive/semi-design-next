@@ -11,6 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | 下拉底部的附加内容。 | `Snippet` | - |
 | changeOnSelect | 单选时是否允许选择非叶子节点。 | `boolean` | `false` |
 | checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `'related' \| 'unRelated'` | `"related"` |
+| classNames | 内部各部位的类名，键为 dropdown（下拉），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮的图标，showClear 为 true 时有效；内容为空时使用默认图标。 | `Snippet` | - |
 | clickToSelect | 多选时，点击任意节点即触发选中，常与 showNext 为 hover 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `false` |
 | defaultOpen | 是否在挂载时展开下拉。 | `boolean` | `false` |
@@ -18,8 +19,6 @@ import ApiType from '#/components/ApiType.astro';
 | disableStrictly | 是否严格禁用。开启后，禁用的节点不会因父级或子级的选中状态变化而改变。 | `boolean` | `false` |
 | display | 单选时已选路径的回显，参数为 `{ labels, path }`：`labels` 是各级节点的 displayProp，`path` 是节点数据，值不在 treeData 中时为原始值；内容为空时显示 placeholder。 | <ApiType detail={"Snippet\u003c[CascaderDisplaySnippetProps]>"}>Type</ApiType> | - |
 | displayProp | 回填选项和标签显示的节点属性，默认 label。 | `string` | `"label"` |
-| dropdownClassName | 下拉的 class。 | `string` | - |
-| dropdownStyle | 下拉的样式，为 CSS 字符串。 | `string` | - |
 | emptyContent | 没有可选数据或搜索无结果时展示的内容；未提供时显示语言包中的默认文案，传 null 隐藏空状态。 | `Snippet \| null` | - |
 | enableLeafClick | 多选时，点击叶子节点所在的选项是否触发勾选。 | `boolean` | `false` |
 | expandIcon | 自定义展开图标；内容为空时使用默认图标。 | `Snippet` | - |
@@ -63,6 +62,7 @@ import ApiType from '#/components/ApiType.astro';
 | showRestTagsPopover | 超出 maxTagCount 后，悬停 +N 时是否用 Popover 展示剩余标签。 | `boolean` | `false` |
 | size | 选择框的尺寸。 | `CascaderSize` | - |
 | stopPropagation | 是否阻止下拉上的点击事件冒泡。 | `boolean \| string` | `true` |
+| styles | 内部各部位的样式字符串，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, string>>"}>Type</ApiType> | - |
 | suffix | 后缀内容。 | `Snippet` | - |
 | tag | 多选时整体替换每个标签，参数为 `{ entity, index, disabled, onClose }`，`onClose` 取消该节点的选中。 | <ApiType detail={"Snippet\u003c[CascaderTagSnippetProps]>"}>Type</ApiType> | - |
 | topSlot | 下拉顶部的附加内容。 | `Snippet` | - |

@@ -202,7 +202,51 @@ Through the CSS Layer feature, priority setting of styles from different sources
 
 It means that `base` (including Preflight) has the lowest priority, followed by Semi, while Tailwind's `components` and the atomic classes set by the user (`p-0`, etc.) have the highest priority. A layer declared later wins regardless of selector specificity, so a single utility class can override Semi's root element styles without `!important`.
 
-### 2. Solve the problem of using Semi Token in Tailwind atomic class (optional)
+### 2. Atomic classes on a component's inner elements
+
+The root element takes atomic classes through `className` (`class` in Vue, Solid and Svelte). Inner elements, such as the body of a Card, the popup of a Select or the mask of a Modal, take them through `classNames`; `styles` sets their inline styles. Both are keyed by part name, and the API table of each component lists its parts. A part's classes go after the component's built-in classes, so utilities win through the layer order above.
+
+<Framework only="react">
+
+```jsx
+<Card className="w-80" classNames={{ header: 'bg-semi-color-fill-0', body: 'p-0' }} styles={{ footer: { textAlign: 'end' } }}>
+    ...
+</Card>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <Card class="w-80" :classNames="{ header: 'bg-semi-color-fill-0', body: 'p-0' }" :styles="{ footer: { textAlign: 'end' } }">...</Card>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<Card class="w-80" classNames={{ header: 'bg-semi-color-fill-0', body: 'p-0' }} styles={{ footer: { 'text-align': 'end' } }}>
+    ...
+</Card>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<Card class="w-80" classNames={{ header: 'bg-semi-color-fill-0', body: 'p-0' }} styles={{ footer: 'text-align: end' }}>...</Card>
+```
+
+</Framework>
+
+`classNames` and `styles` given in the global `overrideDefaultProps` are defaults: a value passed to the component replaces them as a whole instead of merging key by key.
+
+### 3. Solve the problem of using Semi Token in Tailwind atomic class (optional)
 
 Tailwind supports users to configure their own Token to implement themes. At the same time, Semi also provides its own theme solution and corresponding Token. If you want to use Semi Token directly in the project, for example, set the text color of a span to `--semi-color-text-0` to automatically switch between light and dark colors to be consistent with the theme, you need to set the css `color: var(--semi-color-text-0)` separately, which is very inconvenient.
 
@@ -417,7 +461,7 @@ Semi switches to dark mode with the `theme-mode` attribute, not with Tailwind's 
 
 This variant only matches `[theme-mode='dark']`; it does not include `.semi-always-dark`.
 
-### 3. Known differences
+### 4. Known differences
 
 With the layer order in place, Tailwind's Preflight still rewrites properties that Semi does not declare and leaves to the browser (UA) defaults. These components look different on a Tailwind page than on a blank page:
 

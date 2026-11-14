@@ -106,7 +106,7 @@
                     <br />
                     <br />
                     <h5>TreeSelect</h5>
-                    <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" filterTreeNode :style="{ margin: '10px', width: '300px' }" :treeData="treeData" />
+                    <TreeSelect filterTreeNode :style="{ margin: '10px', width: '300px' }" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
                     <h5>Table</h5>
                     <Table :columns="columns" :dataSource="dataSource" :scroll="{ y: 320 }" />
                     <h5>Table - Empty</h5>
@@ -136,7 +136,7 @@
                         <FormInput field="UserName" :label="{ text: '角色', optional: true }" :style="{ width: '200px' }" />
                     </Form>
                     <h5>Navigation</h5>
-                    <Nav :bodyStyle="{ height: '320px' }" :footer="{ collapseButton: true }" :items="navItems">
+                    <Nav :footer="{ collapseButton: true }" :items="navItems" :styles="{ body: { height: '320px' } }">
                         <template #icon="{ item }">
                             <component :is="navIconOf(item)" />
                         </template>

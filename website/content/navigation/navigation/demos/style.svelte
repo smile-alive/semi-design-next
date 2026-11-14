@@ -35,7 +35,7 @@
     </Nav.Header>
 {/snippet}
 
-<Nav bodyStyle="height: 300px" footer={{ collapseButton: true }} {header} {items} onSelect={(key) => console.log(key)} style="height: 520px">
+<Nav footer={{ collapseButton: true }} {header} {items} onSelect={(key) => console.log(key)} style="height: 520px" styles={{ body: 'height: 300px' }}>
     {#snippet icon(renderProps)}
         {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
         {#if Icon}

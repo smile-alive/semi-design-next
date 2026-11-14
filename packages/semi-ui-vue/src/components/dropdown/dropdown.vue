@@ -35,7 +35,7 @@
         role: () => semiDefault('Dropdown', 'role', 'presentation'),
         showTick: () => semiDefault('Dropdown', 'showTick', false),
         trigger: () => semiDefault('Dropdown', 'trigger', 'hover'),
-        contentClassName: semiGlobalDefault('Dropdown', 'contentClassName'),
+        classNames: semiGlobalDefault('Dropdown', 'classNames'),
         menu: semiGlobalDefault('Dropdown', 'menu'),
         selectionMode: semiGlobalDefault('Dropdown', 'selectionMode'),
         spacing: semiGlobalDefault('Dropdown', 'spacing'),
@@ -54,7 +54,7 @@
         preventScroll: semiGlobalDefault('Dropdown', 'preventScroll'),
         stopPropagation: semiGlobalDefault('Dropdown', 'stopPropagation'),
         wrapWhenSpecial: semiGlobalDefault('Dropdown', 'wrapWhenSpecial'),
-        wrapperClassName: semiGlobalDefault('Dropdown', 'wrapperClassName'),
+        styles: semiGlobalDefault('Dropdown', 'styles'),
         wrapperId: undefined,
     });
 
@@ -68,9 +68,11 @@
     const tooltip = useTemplateRef<TooltipHandle>('tooltip');
 
     const tooltipProps = computed<TooltipProps>(() => {
-        const { contentClassName: _class, menu: _menu, selectionMode: _mode, showTick: _tick, spacing, ...shared } = props;
+        const { classNames, styles, menu: _menu, selectionMode: _mode, showTick: _tick, spacing, ...shared } = props;
         return {
             ...shared,
+            classNames: { wrapper: classNames?.wrapper },
+            styles: { wrapper: styles?.wrapper },
             // the foundation handles Up and Down on the trigger; on a parent item they move within the parent menu
             disableArrowKeyDown: true,
             showArrow: false,
@@ -178,7 +180,7 @@
         @visibleChange="foundation.handleVisibleChange"
     >
         <template v-for="(nodes, i) in [triggerNodes()]" :key="i">
-            <span v-if="wrapsTrigger(nodes)" :class="[`${tooltipClasses.PREFIX}-trigger-wrapper`, props.wrapperClassName, showingClass()]" :style="{ display: nodes.length > 1 ? 'inline-block' : undefined }" @keydown="foundation.handleKeyDown($event, false)">
+            <span v-if="wrapsTrigger(nodes)" :class="[`${tooltipClasses.PREFIX}-trigger-wrapper`, props.classNames?.wrapper, showingClass()]" :style="[{ display: nodes.length > 1 ? 'inline-block' : undefined }, props.styles?.wrapper]" @keydown="foundation.handleKeyDown($event, false)">
                 <component :is="node" v-for="[node, key] in nodes" :key="key" />
             </span>
             <template v-else>
@@ -186,7 +188,7 @@
             </template>
         </template>
         <template #content="slotProps">
-            <DropdownPopup :contentClass="props.contentClassName" :context="context" :popStyle="$attrs.style as StyleValue" @vue:beforeMount="bindFocusTarget(slotProps.initialFocusRef)">
+            <DropdownPopup :contentClass="props.classNames?.content" :contentStyle="props.styles?.content" :context="context" :popStyle="$attrs.style as StyleValue" @vue:beforeMount="bindFocusTarget(slotProps.initialFocusRef)">
                 <slot v-if="$slots.content" name="content" />
                 <DropdownMenu v-else-if="Array.isArray(props.menu)">
                     <template v-for="(item, index) in props.menu" :key="menuKey(item, index)">

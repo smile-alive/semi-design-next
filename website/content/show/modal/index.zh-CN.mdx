@@ -150,7 +150,7 @@ import { Modal } from '@fibrae/semi-ui-solid';
 
 ### 自定义对话框的样式
 
-通过设置 `style` 可以自定义样式及位置如 `style.top`，也可以通过 `centered` 使对话框居中显示。也可以通过设置 `maskStyle` 自定义遮罩样式，及 `bodyStyle` 自定义对话框内容样式。
+通过设置 `style` 可以自定义样式及位置如 `style.top`，也可以通过 `centered` 使对话框居中显示。也可以通过设置 `styles` 自定义各部位（如 `styles.mask` 遮罩、`styles.body` 对话框内容）的样式，`classNames` 同理。
 
 <Demo id="custom-style" />
 
@@ -344,11 +344,11 @@ Svelte 的 DragMove 是 attachment `dragMove`。把 `{@attach dragMove(options)}
 
 | 属性              | 说明                                                                                        | 类型                                                             | 默认值  |
 | ----------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------- |
-| bodyStyle         | 对话框内容的样式                                                                            | CSSProperties                                                    | 无      |
 | cancelButtonProps | 取消按钮的 props                                                                            | [ButtonProps](/zh-CN/react/basic/button#API参考)                 | 无      |
 | cancelText        | 取消按钮的文字                                                                              | string                                                           | 无      |
 | centered          | 是否居中显示                                                                                | boolean                                                          | false   |
 | className         | 可用于设置样式类名                                                                          | string                                                           | 无      |
+| classNames        | 内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与自带类名合并        | Partial\<Record\<ModalPart, string>>                             | 无      |
 | closable          | 是否显示右上角的关闭按钮                                                                    | boolean                                                          | true    |
 | confirmLoading    | 确认按钮 loading；未设置时跟随 onOk 返回 Promise 的 pending 状态，显式传 `false` 关闭该行为 | boolean                                                          | -       |
 | content           | 对话框内容                                                                                  | ReactNode                                                        | 无      |
@@ -359,7 +359,6 @@ Svelte 的 DragMove 是 attachment `dragMove`。把 `{@attach dragMove(options)}
 | icon              | 自定义 icon                                                                                 | ReactNode                                                        | -       |
 | mask              | 是否显示遮罩                                                                                | boolean                                                          | true    |
 | maskClosable      | 是否允许通过点击遮罩来关闭对话框                                                            | boolean                                                          | true    |
-| maskStyle         | 遮罩的样式                                                                                  | CSSProperties                                                    | 无      |
 | modalContentClass | 可用于设置对话框内容的样式类名                                                              | string                                                           | 无      |
 | modalRender       | 自定义渲染 Modal                                                                            | (modal: ReactNode) => ReactNode                                  | -       |
 | motion            | 动画效果开关，`update` 中修改同样生效                                                       | boolean                                                          | true    |
@@ -367,6 +366,7 @@ Svelte 的 DragMove 是 attachment `dragMove`。把 `{@attach dragMove(options)}
 | okText            | 确认按钮的文字                                                                              | string                                                           | 无      |
 | okType            | 确认按钮的类型                                                                              | string                                                           | primary |
 | style             | 可用于设置样式                                                                              | CSSProperties                                                    | 无      |
+| styles            | 内部各部位的内联样式，键同 `classNames`                                                     | Partial\<Record\<ModalPart, CSSProperties>>                      | 无      |
 | title             | 对话框的标题                                                                                | ReactNode                                                        | 无      |
 | width             | 宽度，未设置时由 `size` 决定（`small` 为 448）                                              | string \| number                                                 | -       |
 | zIndex            | 遮罩的 z-index 值                                                                           | number                                                           | 1000    |
@@ -395,11 +395,11 @@ modal.destroy();
 | 属性              | 说明                                                                                                               | 类型                                                               | 默认值          |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ | --------------- |
 | afterClose        | 对话框完全关闭后的回调函数                                                                                         | () => void                                                         | -               |
-| bodyStyle         | 对话框内容的样式                                                                                                   | StyleValue                                                         | -               |
 | cancelButtonProps | 取消按钮的属性，其中的 `onClick` 先于内置处理调用，不会替换内置处理                                                | ModalButtonProps                                                   | -               |
 | cancelText        | 取消按钮的文字                                                                                                     | string                                                             | -               |
 | centered          | 是否居中显示                                                                                                       | boolean                                                            | false           |
 | class             | 可用于设置样式类名                                                                                                 | string \| object \| array                                          | -               |
+| classNames        | 内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与自带类名合并                               | Partial\<Record\<ModalPart, ClassValue>>                           | -               |
 | closable          | 是否显示右上角的关闭按钮                                                                                           | boolean                                                            | true            |
 | closeIcon         | 关闭按钮的 icon                                                                                                    | ModalNode                                                          | \<IconClose /\> |
 | confirmLoading    | 确认按钮 loading；未设置时跟随 onOk 返回 Promise 的 pending 状态，显式传 `false` 关闭该行为                        | boolean                                                            | -               |
@@ -412,7 +412,6 @@ modal.destroy();
 | icon              | 自定义 icon                                                                                                        | ModalNode                                                          | -               |
 | mask              | 是否显示遮罩                                                                                                       | boolean                                                            | true            |
 | maskClosable      | 是否允许通过点击遮罩来关闭对话框                                                                                   | boolean                                                            | true            |
-| maskStyle         | 遮罩的样式                                                                                                         | StyleValue                                                         | -               |
 | modalContentClass | 可用于设置对话框内容的样式类名                                                                                     | string                                                             | -               |
 | modalRender       | 自定义渲染 Modal，参数是 `role="dialog"` 元素的 VNode                                                              | (modal: VNode) => VNodeChild                                       | -               |
 | motion            | 动画效果开关，`update` 中修改同样生效                                                                              | boolean                                                            | true            |
@@ -420,6 +419,7 @@ modal.destroy();
 | okText            | 确认按钮的文字                                                                                                     | string                                                             | -               |
 | okType            | 确认按钮的类型                                                                                                     | OKType                                                             | primary         |
 | style             | 可用于设置样式                                                                                                     | StyleValue                                                         | -               |
+| styles            | 内部各部位的内联样式，键同 `classNames`                                                                            | Partial\<Record\<ModalPart, StyleValue>>                           | -               |
 | title             | 对话框的标题                                                                                                       | ModalNode                                                          | -               |
 | width             | 宽度，未设置时由 `size` 决定（`small` 为 448）                                                                     | string \| number                                                   | -               |
 | zIndex            | 遮罩的 z-index 值                                                                                                  | number                                                             | 1000            |
@@ -467,11 +467,11 @@ modal.destroy();
 | 属性              | 说明                                                                                                               | 类型                                                               | 默认值          |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ | --------------- |
 | afterClose        | 对话框完全关闭后的回调函数                                                                                         | () => void                                                         | -               |
-| bodyStyle         | 对话框内容的样式                                                                                                   | string                                                             | -               |
 | cancelButtonProps | 取消按钮的属性，其中的 `onclick` 先于内置处理调用，不会替换内置处理                                                | ModalButtonProps                                                   | -               |
 | cancelText        | 取消按钮的文字                                                                                                     | string                                                             | -               |
 | centered          | 是否居中显示                                                                                                       | boolean                                                            | false           |
 | class             | 可用于设置样式类名                                                                                                 | ClassValue                                                         | -               |
+| classNames        | 内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与自带类名合并                               | Partial\<Record\<ModalPart, ClassValue>>                           | -               |
 | closable          | 是否显示右上角的关闭按钮                                                                                           | boolean                                                            | true            |
 | closeIcon         | 关闭按钮的 icon                                                                                                    | ModalNode                                                          | \<IconClose /\> |
 | confirmLoading    | 确认按钮 loading；未设置时跟随 onOk 返回 Promise 的 pending 状态，显式传 `false` 关闭该行为                        | boolean                                                            | -               |
@@ -484,13 +484,13 @@ modal.destroy();
 | icon              | 自定义 icon，`null` 时不显示图标                                                                                   | ModalNode \| null                                                  | -               |
 | mask              | 是否显示遮罩                                                                                                       | boolean                                                            | true            |
 | maskClosable      | 是否允许通过点击遮罩来关闭对话框                                                                                   | boolean                                                            | true            |
-| maskStyle         | 遮罩的样式                                                                                                         | string                                                             | -               |
 | modalContentClass | 可用于设置对话框内容的样式类名                                                                                     | string                                                             | -               |
 | motion            | 动画效果开关，`update` 中修改同样生效                                                                              | boolean                                                            | true            |
 | okButtonProps     | 确认按钮的属性，其中的 `onclick` 先于内置处理调用，不会替换内置处理                                                | ModalButtonProps                                                   | -               |
 | okText            | 确认按钮的文字                                                                                                     | string                                                             | -               |
 | okType            | 确认按钮的类型                                                                                                     | OKType                                                             | primary         |
 | style             | 可用于设置样式                                                                                                     | string                                                             | -               |
+| styles            | 内部各部位的内联样式，键同 `classNames`                                                                            | Partial\<Record\<ModalPart, string>>                               | -               |
 | title             | 对话框的标题                                                                                                       | ModalNode                                                          | -               |
 | width             | 宽度，未设置时由 `size` 决定（`small` 为 448）                                                                     | string \| number                                                   | -               |
 | zIndex            | 遮罩的 z-index 值                                                                                                  | number                                                             | 1000            |

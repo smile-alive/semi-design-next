@@ -482,11 +482,11 @@ describe('Button', () => {
         expect(lines()[0]).not.toHaveClass(`${prefixCls}-group-line-disabled`);
     });
 
-    it('无论是否带 icon，ref 都指向原生 button，contentClassName 落在内容 span', () => {
+    it('无论是否带 icon，ref 都指向原生 button，classNames 与 styles 按部位落到对应元素', () => {
         const [icon, setIcon] = createSignal(false);
         let ref: HTMLButtonElement | undefined;
         render(() => (
-            <Button ref={(node) => (ref = node)} contentClassName="inner" icon={icon() ? <IconEdit /> : undefined}>
+            <Button ref={(node) => (ref = node)} classNames={{ content: 'inner' }} styles={{ content: { order: '2' } }} icon={icon() ? <IconEdit /> : undefined}>
                 x
             </Button>
         ));
@@ -494,8 +494,9 @@ describe('Button', () => {
         expect(ref).toBe(button);
         setIcon(true);
         expect(screen.getByRole('button')).toBe(button);
-        expect(button).not.toHaveAttribute('contentclassname');
+        expect(button).not.toHaveAttribute('classnames');
         expect(document.querySelector(`.${prefixCls}-content`)).toHaveClass('inner');
+        expect(document.querySelector(`.${prefixCls}-content`)).toHaveStyle({ order: '2' });
     });
 
     it('Props 类型不声明 iconSize、iconStyle、circle、prefixCls', () => {

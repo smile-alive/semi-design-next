@@ -44,7 +44,8 @@
         showBoundary = defaults('showBoundary', false),
         vertical = defaults('vertical', false),
         verticalReverse = defaults('verticalReverse', false),
-        railStyle = defaults('railStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         handleDot = defaults('handleDot'),
         // no global default: a global id would repeat on every instance
         id,
@@ -299,7 +300,7 @@
             foundation.handleWrapperLeave();
         }}
     >
-        <div class={`${prefix}-rail`} style={railStyle} onclick={foundation.handleWrapClick}></div>
+        <div class={[`${prefix}-rail`, classNames?.rail]} style={styles?.rail} onclick={foundation.handleWrapClick}></div>
         <div class={cssClasses.TRACK} style={trackStyle} onclick={foundation.handleWrapClick}></div>
         {#if markList.length}
             <div class={cssClasses.DOTS}>
