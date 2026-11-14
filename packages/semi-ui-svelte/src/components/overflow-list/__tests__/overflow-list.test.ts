@@ -326,7 +326,7 @@ describe('OverflowList', () => {
     it('scroll: items 渲染在 wrapper 中，两个 overflow 节点位于其两侧', () => {
         stubIntersectionObserver();
         const overflow = vi.fn<OverflowRecorder>();
-        const view = renderList({ renderMode: 'scroll', wrapperClassName: 'wrapper', wrapperStyle: 'gap: 4px', attrs: { class: 'custom', style: 'color: red' } }, { itemKind: 'div', overflowKind: 'sides', hooks: { overflow } });
+        const view = renderList({ renderMode: 'scroll', classNames: { wrapper: 'wrapper' }, styles: { wrapper: 'gap: 4px' }, attrs: { class: 'custom', style: 'color: red' } }, { itemKind: 'div', overflowKind: 'sides', hooks: { overflow } });
         const list = getList(view.container);
         expect(list).toHaveClass('custom');
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
@@ -409,7 +409,7 @@ describe('OverflowList', () => {
         const io = stubIntersectionObserver();
         const onIntersect = vi.fn<(res: Record<string, IntersectionObserverEntry>) => void>();
         const view = renderList({ renderMode: 'scroll' }, { itemKind: 'div', hooks: { onIntersect } });
-        await view.set({ wrapperClassName: 'changed' });
+        await view.set({ classNames: { wrapper: 'changed' } });
         expect(scrollWrapper(view.container)).toHaveClass('changed');
         expect(io.observers).toHaveLength(1);
         expect(io.observed().map((node) => node.dataset.scrollkey)).toEqual(keys);
@@ -588,6 +588,14 @@ describe('OverflowList', () => {
         expect(io.observed().map((node) => node.dataset.scrollkey)).toEqual(['a', 'b', 'c']);
         await io.intersect({ a: true });
         expect(overflow.mock.calls.slice(-1)[0][1].map((entry) => entry.id)).toEqual(['b', 'c']);
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        stubIntersectionObserver();
+        const view = renderList({ renderMode: 'scroll', classNames: { wrapper: 'my-wrapper' }, styles: { wrapper: 'order: 3' } }, { itemKind: 'div' });
+        const wrapper = scrollWrapper(view.container);
+        expect(wrapper).toHaveClass('my-wrapper');
+        expect(wrapper).toHaveStyle({ order: '3' });
     });
 
     it('scroll: wrapperProps 落在 wrapper 上', () => {

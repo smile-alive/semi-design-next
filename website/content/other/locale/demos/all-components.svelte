@@ -112,7 +112,7 @@
                     <br />
                     <br />
                     <h5>TreeSelect</h5>
-                    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" filterTreeNode style="margin: 10px; width: 300px" {treeData} />
+                    <TreeSelect filterTreeNode style="margin: 10px; width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />
                     <h5>Table</h5>
                     <Table {columns} {dataSource} scroll={{ y: 320 }} />
                     <h5>Table - Empty</h5>
@@ -144,7 +144,7 @@
                         <FormInput field="UserName" label={{ text: '角色', optional: true }} style="width: 200px" />
                     </Form>
                     <h5>Navigation</h5>
-                    <Nav bodyStyle="height: 320px" footer={{ collapseButton: true }} items={navItems}>
+                    <Nav footer={{ collapseButton: true }} items={navItems} styles={{ body: 'height: 320px' }}>
                         {#snippet header()}
                             <Nav.Header text="Semi 数据后台">
                                 {#snippet logo()}

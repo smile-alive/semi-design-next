@@ -1,7 +1,7 @@
 import type React from 'react';
 import { type ReactElement, type ReactNode, isValidElement, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigation/constants';
+import { cssClasses, numbers, type NavPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import NavigationFoundation, { type NavigationAdapter, type NavigationState, type NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { type ElementProps, type BaseProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -42,7 +42,7 @@ export interface NavItemPropsWithItems extends NavItemProps {
 export type NavItems = (string | SubNavPropsWithItems | NavItemPropsWithItems)[];
 
 export interface NavProps extends BaseProps, ElementProps<'nav', 'onClick' | 'onSelect'> {
-    bodyStyle?: React.CSSProperties;
+    classNames?: Partial<Record<NavPart, string>>;
     children?: React.ReactNode;
 
     defaultIsCollapsed?: boolean;
@@ -58,6 +58,7 @@ export interface NavProps extends BaseProps, ElementProps<'nav', 'onClick' | 'on
     mode?: Mode;
     openKeys?: (string | number)[];
     selectedKeys?: (string | number)[];
+    styles?: Partial<Record<NavPart, React.CSSProperties>>;
     subNavCloseDelay?: number;
     subNavMotion?: boolean;
     subNavOpenDelay?: number;
@@ -86,7 +87,7 @@ const defaultProps = {
 
 // items configs may carry app data (e.g. `path`), so only these keys, `data-*` and `aria-*` reach the item
 const ITEM_CONFIG_KEYS = new Set<keyof NavItemProps>(['text', 'itemKey', 'icon', 'toggleIcon', 'indent', 'isCollapsed', 'isSubNav', 'link', 'linkOptions', 'disabled', 'className', 'style', 'forwardRef', 'level', 'tabIndex', 'tooltipHideDelay', 'tooltipShowDelay', 'onClick', 'onMouseEnter', 'onMouseLeave']);
-const SUB_CONFIG_KEYS = new Set<keyof SubNavProps>(['text', 'itemKey', 'icon', 'indent', 'disabled', 'className', 'style', 'level', 'dropdownStyle', 'dropdownProps', 'subDropdownProps', 'expandIcon', 'onMouseEnter', 'onMouseLeave']);
+const SUB_CONFIG_KEYS = new Set<keyof SubNavProps>(['text', 'itemKey', 'icon', 'indent', 'disabled', 'className', 'style', 'level', 'classNames', 'styles', 'dropdownProps', 'subDropdownProps', 'expandIcon', 'onMouseEnter', 'onMouseLeave']);
 
 function pickConfigProps(config: Record<string, any>, allowed: ReadonlySet<string>): Record<string, any> {
     return Object.fromEntries(Object.entries(config).filter(([key]) => allowed.has(key) || /^(data|aria)-/.test(key)));
@@ -144,12 +145,13 @@ function Nav(rawProps: NavProps) {
         onClick,
         style,
         className,
+        classNames,
+        styles,
         subNavCloseDelay,
         subNavOpenDelay,
         subNavMotion,
         tooltipShowDelay,
         tooltipHideDelay,
-        bodyStyle,
         footer: rawFooter,
         header: rawHeader,
         toggleIconPosition,
@@ -301,7 +303,7 @@ function Nav(rawProps: NavProps) {
                 <div className={`${cssClasses.PREFIX}-inner`}>
                     <div className={headerListOuterCls}>
                         {headers}
-                        <div className={`${cssClasses.PREFIX}-list-wrapper`} style={bodyStyle}>
+                        <div className={clsx(`${cssClasses.PREFIX}-list-wrapper`, classNames?.body)} style={styles?.body}>
                             <ul className={`${cssClasses.PREFIX}-list`}>
                                 {renderItems(formattedItems, 0, expandIcon, subDropdownProps)}
                                 {children}

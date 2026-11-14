@@ -13,12 +13,12 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether the menu flips to another side when it would be clipped. Defaults to true. | `boolean` | - |
 | children | Replaces the menu under the header. When given, the menu is no longer built from options. | `React.ReactNode` | - |
 | className | Class name of the popup's outer `.semi-dropdown-wrapper` element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `content` (the menu container `.semi-dropdown`) and `wrapper` (the `span` that wraps the trigger when a wrapper is needed); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, string>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click inside the popup closes it. | `boolean` | - |
 | clickTriggerToHide | Whether a click on the trigger closes an open menu. | `boolean` | - |
 | closeOnEsc | Whether Esc on the trigger or in the popup closes the menu. Defaults to true. With trigger custom it only calls onEscKeyDown, and the caller decides whether to close. | `TooltipProps['closeOnEsc']` | - |
 | condition | Whether the trigger may show the menu. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the menu. Changing it from true to false closes an open menu at once. | `boolean` | - |
 | content | Mcp builds the popup content itself, so a content passed here has no effect. | `React.ReactNode \| RenderContent` | - |
-| contentClassName | Class name of the menu container `.semi-dropdown`, a string or an array. | `string \| any[]` | - |
 | disableFocusListener | Whether keyboard focus is ignored when trigger is hover. Defaults to false. | `boolean` | - |
 | guardFocus | Whether Tab cycles inside the popup while focus is in it. Defaults to false. | `boolean` | - |
 | keepDOM | Whether the menu's DOM is kept instead of destroyed when it closes. Defaults to false. | `boolean` | - |
@@ -45,8 +45,8 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu. | `number \| { x: number; y: number; }` | - |
 | stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. Defaults to false. | `boolean` | - |
 | style | Style of the menu container `.semi-dropdown`. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`; `content` is applied after `style`. | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | trigger | What shows the menu: hover, focus, click, custom or contextMenu. Defaults to hover. With custom, visible alone decides. | `Trigger` | - |
 | visible | Whether the menu is shown. Used with trigger custom. When given, this value decides, and the trigger, a click outside and Esc only request a change through onVisibleChange. | `boolean` | - |
-| wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | - |
 | wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | - |
 | wrapWhenSpecial | Whether a special trigger, such as a disabled or loading Button, is wrapped in a span so that it still triggers the menu. Defaults to true. | `boolean` | - |

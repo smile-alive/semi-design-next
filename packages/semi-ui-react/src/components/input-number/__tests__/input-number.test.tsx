@@ -65,6 +65,13 @@ describe(`InputNumber`, () => {
         vi.useRealTimers();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        render(<InputNumber classNames={{ input: 'my-input' }} styles={{ input: { order: 2 } }} />);
+        expect(getInput()).toHaveClass(`${prefixCls}`, 'my-input');
+        expect(getInput()).toHaveStyle({ order: '2' });
+        expect(getWrapper()).not.toHaveClass('my-input');
+    });
+
     it(`使用 'defaultValue'、'showClear'、'size'、'suffix'、'ref'`, () => {
         const defaultValue = 1020;
         const sizeEntries: Array<[NonNullable<InputNumberProps['size']>, string]> = [

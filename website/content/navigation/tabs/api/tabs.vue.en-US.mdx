@@ -6,8 +6,8 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | activeKey | The itemKey of the active tab, used with v-model:activeKey. null activates no tab and is still controlled; omitted or undefined means uncontrolled. | `string \| null` | `semiGlobalDefault("Tabs", "activeKey")` |
 | arrowPosition | Position of the scroll arrows in collapsible mode. | `"both" \| "end" \| "start"` | `"both"` |
+| classNames | Class names of the inner parts, keyed by `tabBar`, `content` (the outer content area) and `visibleTabs` (the whole scrolling area in collapsible mode); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTabsPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Tabs", "classNames")` |
 | collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). 'auto' collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `"auto" \| boolean` | `false` |
-| contentStyle | Style of the outer content area. | `StyleValue` | `semiGlobalDefault("Tabs", "contentStyle")` |
 | defaultActiveKey | The itemKey selected initially when uncontrolled. Defaults to the first enabled tab that has an itemKey. | `string` | `semiGlobalDefault("Tabs", "defaultActiveKey")` |
 | dropdownProps | In collapsible mode, the Dropdown props passed to the start-side and end-side arrow menus. | `TabsDropdownProps` | `semiGlobalDefault("Tabs", "dropdownProps")` |
 | keepDOM | With TabPane children, whether to render the DOM of inactive panels. When false only the active panel is rendered, without motion. | `boolean` | `true` |
@@ -16,13 +16,11 @@ import ApiType from '#/components/ApiType.astro';
 | preventScroll | Whether focus calls inside the component stop the browser from scrolling the document to the newly focused element. | `boolean` | `semiGlobalDefault("Tabs", "preventScroll")` |
 | showRestInDropdown | In collapsible mode, whether the collapsed tabs are listed in a dropdown menu. | `boolean` | `true` |
 | size | Size of the tab bar; currently only the line type supports it. | `TabSize` | `"large"` |
-| tabBarClassName | Class name of the tab bar. | `string` | `semiGlobalDefault("Tabs", "tabBarClassName")` |
-| tabBarStyle | Style of the tab bar. | `StyleValue` | `semiGlobalDefault("Tabs", "tabBarStyle")` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTabsPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Tabs", "styles")` |
 | tabList | An array of tab data, each with itemKey, tab, disabled and closable. Any array, even an empty one, makes the default slot the content of the active tab and takes precedence over TabPane children; tab markup goes in the tab and icon slots. | `PlainTab[]` | `semiGlobalDefault("Tabs", "tabList")` |
 | tabPaneMotion | Whether switching panels is animated. | `boolean` | `true` |
 | tabPosition | Position of the tab bar: top is horizontal, left is vertical. | `TabPosition` | `"top"` |
 | type | Style of the tab bar: line, card, button or slash. slash supports horizontal mode only. | `TabType` | `"line"` |
-| visibleTabsStyle | In collapsible mode, the style of the whole scrolling area. | `StyleValue` | `semiGlobalDefault("Tabs", "visibleTabsStyle")` |
 
 **Events**
 

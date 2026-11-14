@@ -111,12 +111,9 @@ export interface DatePickerFoundationProps extends ElementProps, RenderProps, Ev
     disabled?: boolean;
     disabledDate?: DisabledDateType;
     disabledTime?: DisabledTimeType;
-    dropdownClassName?: string;
-    dropdownStyle?: Record<string, any>;
     endDateOffset?: DateOffsetType;
     format?: string;
     inputReadOnly?: boolean;
-    inputStyle?: Record<string, any>;
     max?: number;
     motion?: boolean;
     multiple?: boolean;

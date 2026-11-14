@@ -1,6 +1,6 @@
 import { children, createMemo, createUniqueId, Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
+import { radioGroupClasses as css, type RadioPart, strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -16,8 +16,8 @@ export interface OptionItem {
     style?: JSX.CSSProperties | string;
     class?: string;
     addonId?: string;
-    addonStyle?: JSX.CSSProperties | string;
-    addonClassName?: string;
+    classNames?: Partial<Record<RadioPart, string>>;
+    styles?: Partial<Record<RadioPart, JSX.CSSProperties | string>>;
     extraId?: string;
 }
 export type Options = string[] | Array<OptionItem>;
@@ -164,9 +164,9 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
                                 // Radio reads each once, and skips extra for a button radio, so the render functions run only there
                                 return (
                                     <Radio
-                                        addonClassName={item().addonClassName}
+                                        classNames={item().classNames}
                                         class={item().class}
-                                        addonStyle={item().addonStyle}
+                                        styles={item().styles}
                                         style={item().style}
                                         disabled={item().disabled || local.disabled}
                                         value={item().value}

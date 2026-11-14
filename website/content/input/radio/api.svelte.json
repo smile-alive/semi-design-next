@@ -2,17 +2,9 @@
     "radio": {
         "source": "packages/semi-ui-svelte/src/components/radio/radio.svelte",
         "props": {
-            "addonClassName": {
-                "zh-CN": "包裹内容容器的类名。",
-                "en-US": "Class name of the container wrapping the content."
-            },
             "addonId": {
                 "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
                 "en-US": "Id of the addon node, which aria-labelledby points to. Generated when omitted."
-            },
-            "addonStyle": {
-                "zh-CN": "包裹内容容器的内联样式，只接受字符串。",
-                "en-US": "Inline style of the container wrapping the content. Accepts a string only."
             },
             "checked": {
                 "zh-CN": "是否选中，可用 `bind:checked` 双向绑定；在 RadioGroup 中使用时无效。`bind:checked={get, set}` 时完全受控；只传 `checked` 时作为初值，点击在组件内覆盖，父级再传新值时以父级为准。",
@@ -21,6 +13,10 @@
             "children": {
                 "zh-CN": "Radio 的文本内容 snippet，写在标签内的其余内容就是它。",
                 "en-US": "Label content snippet of the radio. The rest of the tag's content is this snippet."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 addon（包裹内容的容器），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by addon (the container wrapping the content); values take anything class takes (string, array or object) and merge with the built-in classes."
             },
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the radio is disabled." },
             "displayMode": {
@@ -46,6 +42,10 @@
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。",
                 "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the focus method."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "type": {
                 "zh-CN": "样式类型，可选 default、button、card、pureCard；在 RadioGroup 中以组的 type 为准。",
@@ -102,8 +102,8 @@
                 "en-US": "Called when the selected value changes. The event's `target.value` is the new value, or undefined when mode is advanced and the selected radio is unchecked."
             },
             "options": {
-                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClass, extraId }`，其中 `style`、`addonStyle` 为字符串。",
-                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClass, extraId }`, where `style` and `addonStyle` are strings."
+                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, classNames, styles, addonId, extraId }`，其中 `style` 为字符串；`classNames`、`styles` 的键为 addon，写法同 Radio 的同名属性。",
+                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, classNames, styles, addonId, extraId }`, where `style` is a string; `classNames` and `styles` are keyed by addon and written like the Radio props of the same name."
             },
             "type": {
                 "zh-CN": "组内所有 Radio 的样式类型，可选 default、button、card、pureCard。",

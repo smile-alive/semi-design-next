@@ -9,4 +9,4 @@
     ];
 </script>
 
-<Nav bodyStyle="height: 300px" {items} onClick={(data) => console.log('trigger onClick: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)} openKeys={['task']} />
+<Nav {items} onClick={(data) => console.log('trigger onClick: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)} openKeys={['task']} styles={{ body: 'height: 300px' }} />

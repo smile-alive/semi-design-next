@@ -1,4 +1,5 @@
 import React, { type ReactNode } from 'react';
+import type { AIChatDialoguePart } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { AvatarProps } from '@fibrae/semi-ui-react/avatar/index';
@@ -16,9 +17,9 @@ export interface AIChatDialogueProps extends ElementProps<'div', 'onSelect'> {
     className?: string;
     disabledFileItemClick?: boolean;
     escapeHtml?: boolean;
-    hintCls?: string;
+    classNames?: Partial<Record<AIChatDialoguePart, string>>;
     hints?: string[];
-    hintStyle?: React.CSSProperties;
+    styles?: Partial<Record<AIChatDialoguePart, React.CSSProperties>>;
     selecting?: boolean;
     markdownRenderProps?: MarkdownRenderProps;
     messageEditRender?: (props: MessageContent) => ReactNode;

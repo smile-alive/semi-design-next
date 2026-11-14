@@ -220,7 +220,7 @@
             </template>
             <span :class="`${prefix}-label-text`">
                 <slot v-if="$slots.label" :item="props.row.data" :label="props.row.label" name="label" :searchWord="props.row.keyword" />
-                <Highlight v-else-if="highlighted()" component="span" :highlightClassName="`${prefix}-highlight`" :searchWords="[props.row.keyword]" :sourceString="String(props.row.label)" />
+                <Highlight v-else-if="highlighted()" :classNames="{ highlight: `${prefix}-highlight` }" component="span" :searchWords="[props.row.keyword]" :sourceString="String(props.row.label)" />
                 <template v-else>{{ props.row.label }}</template>
             </span>
         </span>

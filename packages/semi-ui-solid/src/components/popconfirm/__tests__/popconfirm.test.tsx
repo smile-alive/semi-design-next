@@ -45,6 +45,17 @@ describe('Popconfirm', () => {
         await waitFor(() => expect(onVisibleChange).toHaveBeenLastCalledWith(true));
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        renderPopconfirm({ classNames: { content: 'my-content', arrow: 'my-arrow' }, styles: { content: { order: 2 }, arrow: { backgroundColor: 'red' } }, motion: false, showArrow: true, visible: true });
+        await waitFor(() => expect(getPopconfirm()).not.toBeNull());
+        const card = getElement(`.${BASE_CLASS_PREFIX}-popover`);
+        expect(card).toHaveClass('my-content');
+        expect(card.style.order).toBe('2');
+        const arrow = getElement(`.${BASE_CLASS_PREFIX}-popover-icon-arrow`);
+        expect(arrow).toHaveClass('my-arrow');
+        expect(arrow.querySelectorAll<SVGPathElement>('path')[1].style.fill).toBe('red');
+    });
+
     it('禁用状态的外观', () => {
         renderPopconfirm({ defaultVisible: true, disabled: true });
         expect(getPopconfirm()).toBeNull();

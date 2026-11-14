@@ -9,7 +9,7 @@
     type Foundation = TimeInputFoundation<TimeInputProps, FocusEvent>;
     type Adapter = TimeInputAdapter<TimeInputProps, FocusEvent>;
 
-    let { value, inputReadOnly = false, invalid = false, validateStatus, focusOnOpen = false, preventScroll, onChange, onFocus, onBlur, ...rest }: TimeInputProps = $props();
+    let { class: className, value, inputReadOnly = false, invalid = false, validateStatus, focusOnOpen = false, preventScroll, onChange, onFocus, onBlur, ...rest }: TimeInputProps = $props();
 
     let input = $state<Input>();
 
@@ -44,7 +44,7 @@
         bind:this={input}
         {...rest}
         bind:value={() => value, (next) => foundation.handleChange(String(next ?? ''))}
-        class={[`${prefix}-input`, { [`${prefix}-input-invalid`]: invalid, [`${prefix}-input-readonly`]: inputReadOnly }]}
+        class={[`${prefix}-input`, { [`${prefix}-input-invalid`]: invalid, [`${prefix}-input-readonly`]: inputReadOnly }, className]}
         hideSuffix
         onBlur={foundation.handleBlur}
         onFocus={foundation.handleFocus}

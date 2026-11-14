@@ -1,14 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性             | 说明                                                                                                                   | 类型                          | 默认值 |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------ |
-| disabled         | 是否禁用。                                                                                                             | `boolean`                     | -      |
-| dropdownProps    | 弹层 Dropdown 的参数，水平模式与收起状态下使用，优先于 `subDropdownProps`。                                            | `DropdownProps`               | -      |
-| dropdownStyle    | 弹层的样式，优先于 `dropdownProps` 中的 `style`。                                                                      | `JSX.CSSProperties \| string` | -      |
-| expandIcon       | 展开收起箭头图标。                                                                                                     | `JSX.Element`                 | -      |
-| icon             | 子导航图标。                                                                                                           | `JSX.Element`                 | -      |
-| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。                                                                       | `boolean`                     | -      |
-| itemKey          | 子导航的唯一标识，`openKeys` 与 `selectedKeys` 通过它匹配子导航。                                                      | `ItemKey`                     | -      |
-| level            | 当前项所在的嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 Nav.Sub 需要自己传入。 | `number`                      | -      |
-| subDropdownProps | 弹层 Dropdown 的参数，未传 `dropdownProps` 时使用。                                                                    | `DropdownProps`               | -      |
-| text             | 子导航标题文案，可以是字符串或 JSX。                                                                                   | `JSX.Element`                 | -      |
+| 属性             | 说明                                                                                                                   | 类型                                                                                                      | 默认值 |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------ |
+| classNames       | 内部各部位的类名，键为 `dropdown`（弹层内容 `.semi-dropdown`），与组件自带的类名合并。                                 | <ApiType detail={"Partial\u003cRecord\u003cSubNavPart, string>>"}>Type</ApiType>                          | -      |
+| disabled         | 是否禁用。                                                                                                             | `boolean`                                                                                                 | -      |
+| dropdownProps    | 弹层 Dropdown 的参数，水平模式与收起状态下使用，优先于 `subDropdownProps`。                                            | `DropdownProps`                                                                                           | -      |
+| expandIcon       | 展开收起箭头图标。                                                                                                     | `JSX.Element`                                                                                             | -      |
+| icon             | 子导航图标。                                                                                                           | `JSX.Element`                                                                                             | -      |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。                                                                       | `boolean`                                                                                                 | -      |
+| itemKey          | 子导航的唯一标识，`openKeys` 与 `selectedKeys` 通过它匹配子导航。                                                      | `ItemKey`                                                                                                 | -      |
+| level            | 当前项所在的嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 Nav.Sub 需要自己传入。 | `number`                                                                                                  | -      |
+| styles           | 内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串；`dropdown` 优先于 `dropdownProps` 中的 `style`。    | <ApiType detail={"Partial\u003cRecord\u003cSubNavPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |
+| subDropdownProps | 弹层 Dropdown 的参数，未传 `dropdownProps` 时使用。                                                                    | `DropdownProps`                                                                                           | -      |
+| text             | 子导航标题文案，可以是字符串或 JSX。                                                                                   | `JSX.Element`                                                                                             | -      |

@@ -6,7 +6,6 @@ export type Placement = 'top' | 'bottom' | 'left' | 'right';
 
 export interface SideSheetProps {
     afterVisibleChange?: (isVisible: boolean) => void;
-    bodyStyle?: Record<string, any>;
     className?: string;
     closable?: boolean;
     closeIcon?: any;
@@ -14,12 +13,10 @@ export interface SideSheetProps {
     disableScroll?: boolean;
     footer?: any;
     getPopupContainer?: () => HTMLElement;
-    headerStyle?: Record<string, any>;
     height?: number | string;
     keepDOM?: boolean;
     mask?: boolean;
     maskClosable?: boolean;
-    maskStyle?: Record<string, any>;
     motion?: boolean;
     onCancel?: (e: any) => void;
     placement?: Placement;

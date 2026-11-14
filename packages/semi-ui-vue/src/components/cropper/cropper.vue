@@ -16,8 +16,7 @@
 
     const props = withDefaults(defineProps<CropperProps & /* @vue-ignore */ ElementProps<'div', keyof CropperProps | EmitHandlers<CropperEmits>>>(), {
         aspectRatio: semiGlobalDefault('Cropper', 'aspectRatio'),
-        cropperBoxCls: semiGlobalDefault('Cropper', 'cropperBoxCls'),
-        cropperBoxStyle: semiGlobalDefault('Cropper', 'cropperBoxStyle'),
+        classNames: semiGlobalDefault('Cropper', 'classNames'),
         defaultAspectRatio: () => semiDefault('Cropper', 'defaultAspectRatio', 1),
         fill: () => semiDefault('Cropper', 'fill', 'rgba(0, 0, 0, 0)'),
         imgProps: semiGlobalDefault('Cropper', 'imgProps'),
@@ -29,6 +28,7 @@
         shape: () => semiDefault('Cropper', 'shape', 'rect'),
         showResizeBox: () => semiDefault('Cropper', 'showResizeBox', true),
         src: semiGlobalDefault('Cropper', 'src'),
+        styles: semiGlobalDefault('Cropper', 'styles'),
         zoom: semiGlobalDefault('Cropper', 'zoom'),
         zoomStep: () => semiDefault('Cropper', 'zoomStep', 0.1),
     });
@@ -116,9 +116,9 @@
             :aria-describedby="helpId"
             :aria-label="i18n.locale.cropArea"
             :aria-roledescription="i18n.locale.cropAreaRole"
-            :class="[cssClasses.CROPPER_BOX, props.cropperBoxCls, { [cssClasses.CROPPER_VIEW_BOX_ROUND]: props.shape === 'round' }]"
+            :class="[cssClasses.CROPPER_BOX, { [cssClasses.CROPPER_VIEW_BOX_ROUND]: props.shape === 'round' }, props.classNames?.cropperBox]"
             role="group"
-            :style="[props.cropperBoxStyle, { width: `${state.cropperBox.width}px`, height: `${state.cropperBox.height}px`, transform: `translate(${geometry.boxX}px, ${geometry.boxY}px)` }]"
+            :style="[props.styles?.cropperBox, { width: `${state.cropperBox.width}px`, height: `${state.cropperBox.height}px`, transform: `translate(${geometry.boxX}px, ${geometry.boxY}px)` }]"
             :tabindex="state.loaded ? 0 : undefined"
             @keydown="foundation.handleCropperBoxKeyDown"
             @lostpointercapture="foundation.handleCropperBoxLostPointerCapture"

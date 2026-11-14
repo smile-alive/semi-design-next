@@ -65,7 +65,7 @@ export default function PreviewImage(props: PreviewImageProps & { zoomEvent?: Wh
                 onPointerDown={foundation.handleImagePointerDown}
                 onPointerMove={foundation.handleImageMove}
             />
-            {loading && <Spin wrapperClassName={`${preViewImgPrefixCls}-spin`} size="large" />}
+            {loading && <Spin className={`${preViewImgPrefixCls}-spin`} size="large" />}
         </div>
     );
 }

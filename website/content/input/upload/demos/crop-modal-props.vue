@@ -14,7 +14,7 @@
         :cropModalProps="{
             width: 800,
             style: { height: '600px' },
-            bodyStyle: { height: '500px', backgroundColor: '#f5f5f5' },
+            styles: { body: { height: '500px', backgroundColor: '#f5f5f5' } },
         }"
         :customRequest="mockUpload"
         @success="(response, file) => console.log('上传成功:', response, file)"

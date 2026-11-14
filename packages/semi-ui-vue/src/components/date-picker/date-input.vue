@@ -24,6 +24,7 @@
         showClear: true,
         showClearIgnoreDisabled: false,
         inputReadOnly: false,
+        inputClassName: undefined,
         inputStyle: undefined,
         insetLabelId: undefined,
         validateStatus: undefined,
@@ -158,6 +159,7 @@
                 ref="rangeStartInput"
                 :autofocus="props.autofocus"
                 :borderless="props.borderless"
+                :class="props.inputClassName"
                 :disabled="props.disabled"
                 :modelValue="rangeParts.start"
                 :placeholder="rangePlaceholder[0]"
@@ -178,6 +180,7 @@
                 v-bind="rangeAttrs($attrs)"
                 ref="rangeEndInput"
                 :borderless="props.borderless"
+                :class="props.inputClassName"
                 :disabled="props.disabled"
                 :modelValue="rangeParts.end"
                 :placeholder="rangePlaceholder[1]"
@@ -207,7 +210,7 @@
         ref="single"
         :autofocus="props.autofocus"
         :borderless="props.borderless"
-        :class="inputClass"
+        :class="[inputClass, props.inputClassName]"
         :disabled="props.disabled"
         :hideSuffix="props.showClear"
         :insetLabelId="props.insetLabelId"

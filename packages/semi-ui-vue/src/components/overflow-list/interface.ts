@@ -1,4 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { OverflowListPart } from '@fibrae/semi-foundation/components/overflow-list/constants';
 
 export type OverflowListItem = Record<string, any>;
 
@@ -17,10 +18,10 @@ export interface OverflowListProps<T> {
     overflowRenderDirection?: 'both' | 'start' | 'end';
     renderMode?: 'collapse' | 'scroll';
     threshold?: number;
-    wrapperClassName?: string;
+    classNames?: Partial<Record<OverflowListPart, ClassValue>>;
+    styles?: Partial<Record<OverflowListPart, StyleValue>>;
     /** Attributes of the scroll-mode wrapper that holds the visible items, such as a role that owns them */
     wrapperProps?: HTMLAttributes & Record<string, unknown>;
-    wrapperStyle?: StyleValue;
 }
 
 export interface OverflowListEmits<T> {

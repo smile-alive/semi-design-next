@@ -16,7 +16,7 @@
     import type { SideSheetEmits, SideSheetHandle, SideSheetProps, SideSheetSlots } from './interface';
 
     // the foundation reads none of these, and Vue's StyleValue is wider than its Record type
-    type FoundationProps = Omit<SideSheetProps, 'bodyStyle' | 'headerStyle' | 'maskStyle'>;
+    type FoundationProps = Omit<SideSheetProps, 'classNames' | 'styles'>;
     type Foundation = SideSheetFoundation<FoundationProps>;
     type Adapter = SideSheetAdapter<FoundationProps>;
 
@@ -24,21 +24,20 @@
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<SideSheetProps>(), {
-        bodyStyle: semiGlobalDefault('SideSheet', 'bodyStyle'),
         canVerticalSetWidth: semiGlobalDefault('SideSheet', 'canVerticalSetWidth'),
+        classNames: semiGlobalDefault('SideSheet', 'classNames'),
         closable: () => semiDefault('SideSheet', 'closable', true),
         closeOnEsc: () => semiDefault('SideSheet', 'closeOnEsc', false),
         disableScroll: () => semiDefault('SideSheet', 'disableScroll', true),
         getPopupContainer: undefined,
-        headerStyle: semiGlobalDefault('SideSheet', 'headerStyle'),
         height: semiGlobalDefault('SideSheet', 'height'),
         keepDOM: () => semiDefault('SideSheet', 'keepDOM', false),
         mask: () => semiDefault('SideSheet', 'mask', true),
         maskClosable: () => semiDefault('SideSheet', 'maskClosable', true),
-        maskStyle: semiGlobalDefault('SideSheet', 'maskStyle'),
         motion: () => semiDefault('SideSheet', 'motion', true),
         placement: () => semiDefault('SideSheet', 'placement', 'right'),
         size: () => semiDefault('SideSheet', 'size', 'small'),
+        styles: semiGlobalDefault('SideSheet', 'styles'),
         title: semiGlobalDefault('SideSheet', 'title'),
         visible: semiGlobalDefault('SideSheet', 'visible'),
         width: semiGlobalDefault('SideSheet', 'width'),
@@ -188,7 +187,7 @@
                 :style="rootStyle()"
             >
                 <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-animation-mask_show`" :leaveActiveClass="`${prefix}-animation-mask_hide`" :name="prefix" type="animation">
-                    <div v-if="props.mask" v-show="props.visible" aria-hidden="true" :class="`${prefix}-mask`" :style="props.maskStyle" @click.self="onMaskClick" />
+                    <div v-if="props.mask" v-show="props.visible" aria-hidden="true" :class="[`${prefix}-mask`, props.classNames?.mask]" :style="props.styles?.mask" @click.self="onMaskClick" />
                 </Transition>
                 <Transition
                     appear
@@ -201,9 +200,9 @@
                     @afterLeave="onAfterLeave"
                     @enter="onEnter"
                 >
-                    <div v-show="props.visible" ref="dialog" v-bind="dialogAttrs(inBody)" :class="[`${prefix}-inner`, `${prefix}-inner-wrap`, `${prefix}-size-${props.size}`]" role="dialog" :style="[$attrs.style as StyleValue, dialogStyle()]" tabindex="-1">
+                    <div v-show="props.visible" ref="dialog" v-bind="dialogAttrs(inBody)" :class="[`${prefix}-inner`, `${prefix}-inner-wrap`, `${prefix}-size-${props.size}`, props.classNames?.content]" role="dialog" :style="[$attrs.style as StyleValue, props.styles?.content, dialogStyle()]" tabindex="-1">
                         <div :class="`${prefix}-content`">
-                            <div :class="`${prefix}-header`" :style="props.headerStyle">
+                            <div :class="[`${prefix}-header`, props.classNames?.header]" :style="props.styles?.header">
                                 <div v-if="hasTitle()" :id="titleId" aria-level="2" :class="`${prefix}-title`" role="heading" x-semi-prop="title">
                                     <slot name="title">{{ props.title }}</slot>
                                 </div>
@@ -215,10 +214,10 @@
                                     </template>
                                 </IconButton>
                             </div>
-                            <div :class="`${prefix}-body`" :style="props.bodyStyle" x-semi-prop="children">
+                            <div :class="[`${prefix}-body`, props.classNames?.body]" :style="props.styles?.body" x-semi-prop="children">
                                 <slot />
                             </div>
-                            <div v-if="hasSlotContent($slots.footer)" :class="`${prefix}-footer`" x-semi-prop="footer">
+                            <div v-if="hasSlotContent($slots.footer)" :class="[`${prefix}-footer`, props.classNames?.footer]" :style="props.styles?.footer" x-semi-prop="footer">
                                 <slot name="footer" />
                             </div>
                         </div>

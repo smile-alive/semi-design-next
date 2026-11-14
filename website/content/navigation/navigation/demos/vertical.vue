@@ -15,7 +15,7 @@
 
 <template>
     <div :style="{ width: '100%' }">
-        <Nav :bodyStyle="{ height: '300px' }" :footer="{ collapseButton: true }" :items="items" @select="(key) => console.log(key)">
+        <Nav :footer="{ collapseButton: true }" :items="items" :styles="{ body: { height: '300px' } }" @select="(key) => console.log(key)">
             <template #icon="renderProps">
                 <component :is="iconOf(renderProps.item)" />
             </template>

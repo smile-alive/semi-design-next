@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { ButtonPart } from '@fibrae/semi-foundation/components/button/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 
 export type HtmlType = 'button' | 'reset' | 'submit';
@@ -10,7 +11,7 @@ export type HorizontalPaddingType = 'left' | 'right';
 export interface ButtonProps {
     block?: boolean;
     colorful?: boolean;
-    contentClassName?: string;
+    classNames?: Partial<Record<ButtonPart, ClassValue>>;
     disabled?: boolean;
     htmlType?: HtmlType;
     iconPosition?: 'left' | 'right';
@@ -18,6 +19,7 @@ export interface ButtonProps {
     /** Only applies to a button that shows an icon or the loading spinner. */
     noHorizontalPadding?: boolean | HorizontalPaddingType | HorizontalPaddingType[];
     size?: Size;
+    styles?: Partial<Record<ButtonPart, StyleValue>>;
     theme?: Theme;
     type?: Type;
 }

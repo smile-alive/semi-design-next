@@ -28,14 +28,11 @@
         align: () => semiDefault('Chat', 'align', 'leftRight'),
         canSend: semiGlobalDefault('Chat', 'canSend'),
         chats: semiGlobalDefault('Chat', 'chats'),
+        classNames: semiGlobalDefault('Chat', 'classNames'),
         customMarkDownComponents: semiGlobalDefault('Chat', 'customMarkDownComponents'),
         enableUpload: () => semiDefault('Chat', 'enableUpload', true),
         escapeHtml: () => semiDefault('Chat', 'escapeHtml', true),
-        hintCls: semiGlobalDefault('Chat', 'hintCls'),
         hints: semiGlobalDefault('Chat', 'hints'),
-        hintStyle: semiGlobalDefault('Chat', 'hintStyle'),
-        inputBoxCls: semiGlobalDefault('Chat', 'inputBoxCls'),
-        inputBoxStyle: semiGlobalDefault('Chat', 'inputBoxStyle'),
         markdownRenderProps: semiGlobalDefault('Chat', 'markdownRenderProps'),
         mode: () => semiDefault('Chat', 'mode', 'bubble'),
         placeholder: semiGlobalDefault('Chat', 'placeholder'),
@@ -43,6 +40,7 @@
         sendHotKey: () => semiDefault('Chat', 'sendHotKey', 'enter'),
         showClearContext: () => semiDefault('Chat', 'showClearContext', false),
         showStopGenerate: () => semiDefault('Chat', 'showStopGenerate', false),
+        styles: semiGlobalDefault('Chat', 'styles'),
         uploadProps: semiGlobalDefault('Chat', 'uploadProps'),
         uploadTipProps: semiGlobalDefault('Chat', 'uploadTipProps'),
     });
@@ -158,7 +156,7 @@
                         </template>
                         <component :is="chatBoxNode(item, index)" v-else />
                     </template>
-                    <Hint v-if="props.hints?.length" :class="props.hintCls" :hints="props.hints" :style="props.hintStyle" @hintClick="foundation.handleHintClick">
+                    <Hint v-if="props.hints?.length" :class="props.classNames?.hint" :hints="props.hints" :style="props.styles?.hint" @hintClick="foundation.handleHintClick">
                         <template v-if="$slots.hintBox" #hintBox="p">
                             <slot name="hintBox" v-bind="p" />
                         </template>
@@ -188,8 +186,8 @@
                 :clickUpload="upload.clickUpload"
                 :disableSend="generating"
                 :dragUpload="upload.dragUpload"
-                :inputBoxCls="props.inputBoxCls"
-                :inputBoxStyle="props.inputBoxStyle"
+                :inputBoxClass="props.classNames?.inputBox"
+                :inputBoxStyle="props.styles?.inputBox"
                 :pasteUpload="upload.pasteUpload"
                 :placeholder="props.placeholder"
                 :sendHotKey="props.sendHotKey"

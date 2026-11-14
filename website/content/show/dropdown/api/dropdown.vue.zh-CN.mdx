@@ -8,11 +8,11 @@ import ApiType from '#/components/ApiType.astro';
 | ariaLabel | 弹出层 role 为 dialog 时的 aria-label。 | `string` | `semiGlobalDefault("Dropdown", "ariaLabel")` |
 | ariaLabelledby | 弹出层 role 为 dialog 时的 aria-labelledby。 | `string` | `semiGlobalDefault("Dropdown", "ariaLabelledby")` |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `semiGlobalDefault("Dropdown", "autoAdjustOverflow")` |
+| classNames | 内部各部位的类名，键为 `content`（下拉菜单根元素）、`wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, string \u007c unknown[] \u007c Record\u003cstring, unknown>>>"}>Type</ApiType> | `semiGlobalDefault("Dropdown", "classNames")` |
 | clickToHide | 在弹出层内点击时是否自动关闭弹出层。 | `boolean` | `semiGlobalDefault("Dropdown", "clickToHide")` |
 | clickTriggerToHide | 点击触发元素时是否关闭已打开的弹出层。 | `boolean` | `semiGlobalDefault("Dropdown", "clickTriggerToHide")` |
 | closeOnEsc | 在触发元素或弹出层按 Esc 是否关闭菜单；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。 | `boolean` | `true` |
 | condition | 是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的弹出层；visible 受控时只发出 update:visible 与 visibleChange(false)，使用方回写后才关闭。 | `boolean` | `semiGlobalDefault("Dropdown", "condition")` |
-| contentClassName | 下拉菜单根元素的类名。 | `string \| unknown[]` | `semiGlobalDefault("Dropdown", "contentClassName")` |
 | disableFocusListener | trigger 为 hover 时，是否不响应键盘聚焦打开菜单。 | `boolean` | `semiGlobalDefault("Dropdown", "disableFocusListener")` |
 | guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环。 | `boolean` | `semiGlobalDefault("Dropdown", "guardFocus")` |
 | keepDOM | 关闭时是否保留弹出层内容而不销毁。 | `boolean` | `semiGlobalDefault("Dropdown", "keepDOM")` |
@@ -28,9 +28,9 @@ import ApiType from '#/components/ApiType.astro';
 | showTick | 是否在 active 的 Dropdown.Item 左侧展示表示选中的勾；只作用于本 Dropdown 的菜单，嵌套的子菜单不继承。 | `boolean` | `false` |
 | spacing | 弹出层与触发元素的距离，单位为像素；缺省时顶层菜单为 4，嵌套的子菜单为 2。 | `number \| { x: number; y: number; }` | `semiGlobalDefault("Dropdown", "spacing")` |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean` | `semiGlobalDefault("Dropdown", "stopPropagation")` |
+| styles | 内部各部位的内联样式，键同 `classNames`；`content` 写在 `style` 之后。 | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, string \u007c CSSProperties>>"}>Type</ApiType> | `semiGlobalDefault("Dropdown", "styles")` |
 | trigger | 触发菜单显示的行为，可选 hover、focus、click、custom、contextMenu；custom 时显示与否完全由 visible 决定。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `"hover"` |
 | visible | 菜单是否显示，配合 trigger 为 custom 与 v-model:visible 使用；传入后由该值决定显示。 | `boolean` | `semiGlobalDefault("Dropdown", "visible")` |
-| wrapperClassName | 触发元素被 span 包裹时，该 span 的类名。 | `string` | `semiGlobalDefault("Dropdown", "wrapperClassName")` |
 | wrapperId | 弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。 | `string` | `undefined` |
 | wrapWhenSpecial | 触发元素禁用或加载中时，是否在外层包裹 span 以保证触发行为。 | `boolean` | `semiGlobalDefault("Dropdown", "wrapWhenSpecial")` |
 

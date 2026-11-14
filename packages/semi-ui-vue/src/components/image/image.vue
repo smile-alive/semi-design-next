@@ -28,8 +28,8 @@
         crossOrigin: semiGlobalDefault('Image', 'crossOrigin'),
         fallback: semiGlobalDefault('Image', 'fallback'),
         preview: () => semiDefault('Image', 'preview', true),
-        imgStyle: semiGlobalDefault('Image', 'imgStyle'),
-        imgCls: semiGlobalDefault('Image', 'imgCls'),
+        classNames: semiGlobalDefault('Image', 'classNames'),
+        styles: semiGlobalDefault('Image', 'styles'),
         setDownloadName: undefined,
     });
 
@@ -142,12 +142,12 @@
                     [`${prefixCls}-img-preview`]: canOpen,
                     [`${prefixCls}-img-error`]: loadStatus === 'error',
                 },
-                props.imgCls,
+                props.classNames?.img,
             ]"
             :crossorigin="props.crossOrigin"
             :data-src="props.src"
             :height="props.height"
-            :style="props.imgStyle"
+            :style="props.styles?.img"
             :width="props.width"
             @error="foundation.handleError"
             @load="foundation.handleLoaded"

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses as css } from '@fibrae/semi-foundation/components/spin/constants';
+import { type SpinPart, cssClasses as css } from '@fibrae/semi-foundation/components/spin/constants';
 import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
 import '@fibrae/semi-foundation/components/spin/spin.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -23,9 +23,9 @@ export interface SpinProps extends ElementProps<'div'> {
     indicator?: React.ReactNode;
     delay?: number;
     tip?: React.ReactNode;
-    wrapperClassName?: string;
+    classNames?: Partial<Record<SpinPart, string>>;
     style?: React.CSSProperties;
-    childStyle?: React.CSSProperties;
+    styles?: Partial<Record<SpinPart, React.CSSProperties>>;
     children?: React.ReactNode;
     /** Attached to the root element */
     ref?: React.Ref<HTMLDivElement>;
@@ -39,7 +39,7 @@ const defaultProps = {
 
 export default function Spin(rawProps: SpinProps) {
     const props = useDefaultProps('Spin', rawProps, defaultProps);
-    const { ref, children, style, className, wrapperClassName, childStyle, size, spinning, indicator, delay, tip, ...rest } = props;
+    const { ref, children, style, className, classNames, styles, size, spinning, indicator, delay, tip, ...rest } = props;
 
     const { locale } = useLocale('Spin');
 
@@ -63,7 +63,7 @@ export default function Spin(rawProps: SpinProps) {
             tabIndex={blocked ? -1 : undefined}
             {...rest}
             ref={mergedRef}
-            className={clsx(prefixCls, wrapperClassName, className, {
+            className={clsx(prefixCls, className, {
                 [`${prefixCls}-${size}`]: size,
                 [`${prefixCls}-block`]: hasContent(children),
                 [`${prefixCls}-hidden`]: !loading,
@@ -85,7 +85,7 @@ export default function Spin(rawProps: SpinProps) {
                     {hasContent(tip) && <div x-semi-prop="tip">{tip}</div>}
                 </output>
             )}
-            <div className={`${prefixCls}-children`} style={childStyle} inert={blocked} x-semi-prop="children">
+            <div className={clsx(`${prefixCls}-children`, classNames?.child)} style={styles?.child} inert={blocked} x-semi-prop="children">
                 {children}
             </div>
         </div>

@@ -28,7 +28,7 @@ function ItemsChange() {
     return (
         <>
             <Button onClick={change}>change items</Button>
-            <Nav bodyStyle={{ height: '150px' }} items={items()} />
+            <Nav styles={{ body: { height: '150px' } }} items={items()} />
         </>
     );
 }
@@ -120,7 +120,7 @@ describe('Navigation（浏览器）', () => {
     it('自动展开', async () => {
         render(() => (
             <Nav
-                bodyStyle={{ height: '480px' }}
+                styles={{ body: { height: '480px' } }}
                 defaultSelectedKeys={['人员管理']}
                 items={[
                     { itemKey: 'user', text: '用户管理' },

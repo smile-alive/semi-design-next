@@ -171,11 +171,21 @@ describe('Svelte DatePicker 外观属性', () => {
         expect(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-inset-label`)).toHaveTextContent('日期');
     });
 
-    it('dropdownClassName 与 dropdownStyle 落在面板上', async () => {
-        await setup({ open: true, props: { dropdownClassName: 'my-datePicker', dropdownStyle: 'color: red' } });
-        const dropdown = document.querySelector('.my-datePicker');
-        expect(dropdown).not.toBeNull();
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        await setup({ open: true, props: { classNames: { dropdown: 'my-dropdown', input: 'my-input' }, styles: { dropdown: 'color: red', input: 'color: blue' } } });
+        const dropdown = document.querySelector('.my-dropdown');
+        expect(dropdown).toHaveClass(dp);
         expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const input = getElement('.my-input', getRoot());
+        expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper`);
+        expect(input).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+    });
+
+    it('范围选择的两个输入框都带 input 部位', async () => {
+        await setup({ props: { type: 'dateRange', classNames: { input: 'my-input' }, styles: { input: 'color: blue' } } });
+        const inputs = getRoot().querySelectorAll('.my-input');
+        expect(inputs).toHaveLength(2);
+        inputs.forEach((el) => expect(el).toHaveStyle({ color: 'rgb(0, 0, 255)' }));
     });
 
     it('trigger snippet 的范围 placeholder 取自语言包且不改写它', async () => {

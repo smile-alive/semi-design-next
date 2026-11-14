@@ -10,15 +10,14 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | 弹出层 role 为 dialog 时的名称。 | `string` | - |
 | aria-labelledby | 弹出层 role 为 dialog 时，指向名称元素的 id。 | `string` | - |
 | arrowPointAtCenter | 小三角是否指向触发元素中心，需要同时开启 `showArrow`。未设置时为 true。 | `boolean` | - |
-| arrowStyle | 小三角的 `borderColor`、`backgroundColor` 与 `borderOpacity`（驼峰键名的对象，不是 Solid 的 style 对象）；缺省跟随对象形式 `style` 中的 `background-color` 与 `border-color`。 | `ArrowStyle` | - |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
 | children | 触发元素。传入以 `getTriggerProps` 为参数的函数时，把 `trigger()` 展开到接收焦点的元素上；其他内容会被包在 Tooltip 的 span 里作为触发元素。 | `TooltipProps['children']` | - |
 | class | 弹出层的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `content`（内容卡片）、`arrow`（箭头），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cPopoverPart, string>>"}>Type</ApiType> | - |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭弹出层。 | `TooltipProps['clickToHide']` | - |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只调用 `onEscKeyDown`，`visible` 受控时只调用 `onVisibleChange(false)`，使用方回写后才关闭。 | `TooltipProps['closeOnEsc']` | `true` |
 | condition | 是否允许触发显示。仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 `visible` 显示；由 true 变为 false 时立即关闭已显示的弹出层，`visible` 受控时只调用 `onVisibleChange(false)`，使用方回写后才关闭。 | `boolean` | - |
 | content | 弹出层内容。可传 JSX，也可传函数；函数的入参是 `{ initialFocusRef }`，把 `initialFocusRef` 作为 `ref` 绑定到可聚焦元素上，打开时会自动聚焦在该位置。 | `TooltipProps['content']` | - |
-| contentClassName | 弹出层内容卡片的类名。 | `ClassValue` | - |
 | disableArrowKeyDown | 是否禁用在触发元素上按方向键把焦点移入弹出层。 | `TooltipProps['disableArrowKeyDown']` | - |
 | disableFocusListener | trigger 为 hover 时，是否不响应键盘聚焦打开弹出层。 | `boolean` | - |
 | guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环。 | `TooltipProps['guardFocus']` | `true` |
@@ -38,6 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。不传时无小三角为 4，有小三角为 10。 | `number \| { x: number; y: number }` | - |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean \| string` | - |
 | style | 弹出层的内联样式，可传 style 对象或字符串。小三角只从对象形式中读取 `background-color` 与 `border-color`。 | `JSX.CSSProperties \| string` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。`content` 是内容卡片的样式，可传 style 对象或字符串；`arrow` 是箭头的 `borderColor`、`backgroundColor` 与 `borderOpacity`（驼峰键名的对象，不是 Solid 的 style 对象），未设置的颜色跟随对象形式 `style` 中的 `background-color` 与 `border-color`。 | `{ content?: JSX.CSSProperties \| string; arrow?: ArrowStyle }` | - |
 | trigger | 触发显示的时机，可选 hover、focus、click、custom 或 contextMenu。custom 时显示与否完全由 `visible` 决定。 | `Trigger` | `"hover"` |
 | visible | 是否显示弹出层（受控）。传入后触发器、点击外部与 Esc 只通过 `onVisibleChange` 请求打开或关闭，使用方回写后才生效；不需要触发器事件时配合 trigger 为 custom 使用。 | `boolean` | - |
 

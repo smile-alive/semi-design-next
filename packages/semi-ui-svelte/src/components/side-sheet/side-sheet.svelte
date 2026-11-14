@@ -23,25 +23,24 @@
     // No fallback on `visible`: a bound `undefined` would throw with one, and undefined means closed
     let {
         afterVisibleChange,
-        bodyStyle = defaults('bodyStyle'),
         canVerticalSetWidth = defaults('canVerticalSetWidth'),
+        classNames = defaults('classNames'),
         closable = defaults('closable', true),
         closeIcon = defaults('closeIcon'),
         closeOnEsc = defaults('closeOnEsc', false),
         disableScroll = defaults('disableScroll', true),
         footer = defaults('footer'),
         getPopupContainer = defaults('getPopupContainer'),
-        headerStyle = defaults('headerStyle'),
         height = defaults('height'),
         keepDOM = defaults('keepDOM', false),
         mask = defaults('mask', true),
         maskClosable = defaults('maskClosable', true),
-        maskStyle = defaults('maskStyle'),
         motion = defaults('motion', true),
         onCancel,
         placement = defaults('placement', 'right'),
         size = defaults('size', 'small'),
         style = defaults('style'),
+        styles = defaults('styles'),
         title = defaults('title'),
         visible = $bindable(),
         width = defaults('width'),
@@ -212,21 +211,21 @@
             >
                 {#if mask}
                     <!-- Pointer-only surface: the keyboard closes the sheet with its close button and Escape -->
-                    <div aria-hidden="true" class={[`${prefix}-mask`, maskAnimation]} style={maskStyle} onclick={onMaskClick}></div>
+                    <div aria-hidden="true" class={[`${prefix}-mask`, maskAnimation, classNames?.mask]} style={styles?.mask} onclick={onMaskClick}></div>
                 {/if}
                 <div
                     {...dialogAttrs(inBody)}
                     bind:this={dialogEl}
-                    class={[`${prefix}-inner`, `${prefix}-inner-wrap`, `${prefix}-size-${size}`, dialogAnimation]}
+                    class={[`${prefix}-inner`, `${prefix}-inner-wrap`, `${prefix}-size-${size}`, dialogAnimation, classNames?.content]}
                     role="dialog"
-                    {style}
+                    style={[style, styles?.content].filter(Boolean).join('; ') || undefined}
                     style:height={toCssLength(sheetSize.dialogHeight)}
                     style:width={toCssLength(sheetSize.dialogWidth)}
                     tabindex="-1"
                     onanimationend={onAnimationEnd}
                 >
                     <div class={`${prefix}-content`}>
-                        <div class={`${prefix}-header`} style={headerStyle}>
+                        <div class={[`${prefix}-header`, classNames?.header]} style={styles?.header}>
                             {#if hasTitle}
                                 <div aria-level="2" class={`${prefix}-title`} id={`${uid}-title`} role="heading" x-semi-prop="title">
                                     {#if typeof title === 'string'}{title}{:else}{@render title?.()}{/if}
@@ -240,11 +239,11 @@
                                 </IconButton>
                             {/if}
                         </div>
-                        <div class={`${prefix}-body`} style={bodyStyle} x-semi-prop="children">
+                        <div class={[`${prefix}-body`, classNames?.body]} style={styles?.body} x-semi-prop="children">
                             {@render body?.()}
                         </div>
                         {#if footer}
-                            <div class={`${prefix}-footer`} x-semi-prop="footer">
+                            <div class={[`${prefix}-footer`, classNames?.footer]} style={styles?.footer} x-semi-prop="footer">
                                 {@render footer()}
                             </div>
                         {/if}

@@ -66,7 +66,7 @@
             },
         ]"
     >
-        <Spin v-if="props.loading" :size="props.size === 'default' ? 'middle' : props.size" :wrapperClassName="cssClasses.LOADING_SPIN" />
+        <Spin v-if="props.loading" :class="cssClasses.LOADING_SPIN" :size="props.size === 'default' ? 'middle' : props.size" />
         <div v-else aria-hidden="true" :class="cssClasses.KNOB" />
         <div v-if="$slots.checkedText && checked && props.size !== 'small'" :class="cssClasses.CHECKED_TEXT" x-semi-prop="checkedText">
             <slot name="checkedText" />

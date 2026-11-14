@@ -603,13 +603,13 @@ describe('TreeSelect', () => {
     });
 
     it('disabledStrictly 属性', async () => {
-        const { unmount } = render(<TreeSelect dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} style={{ width: 300 }} multiple defaultExpandAll defaultOpen disableStrictly leafOnly treeData={treeData} {...commonProps} />);
+        const { unmount } = render(<TreeSelect style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} multiple defaultExpandAll defaultOpen disableStrictly leafOnly treeData={treeData} {...commonProps} />);
         expect(getTags()).toHaveLength(0);
         await userEvent.click(getLevelNodes(1)[0]);
         expect(getTagTexts()).toEqual(['北京', '上海', '东京', '大阪']);
         unmount();
 
-        render(<TreeSelect dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} style={{ width: 300 }} multiple defaultExpandAll defaultOpen disableStrictly treeData={treeDataWithDisabled} {...commonProps} />);
+        render(<TreeSelect style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} multiple defaultExpandAll defaultOpen disableStrictly treeData={treeDataWithDisabled} {...commonProps} />);
         expect(getTags()).toHaveLength(0);
         await userEvent.click(getLevelNodes(1)[0]);
         expect(getTagTexts()).toEqual(['日本']);

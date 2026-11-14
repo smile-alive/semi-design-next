@@ -1,4 +1,5 @@
 import type { JSX } from 'solid-js';
+import type { NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { ItemKey, SelectedItemProps } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import type { ElementProps } from '../../base/index';
@@ -35,8 +36,8 @@ export interface NavItemProps extends ElementProps<'li', 'onClick' | 'children' 
 }
 
 export interface SubNavProps extends ElementProps<'li', 'onClick'> {
+    classNames?: Partial<Record<SubNavPart, string>>;
     disabled?: boolean;
-    dropdownStyle?: JSX.CSSProperties | string;
     icon?: JSX.Element;
     indent?: boolean;
     itemKey?: ItemKey;
@@ -44,6 +45,8 @@ export interface SubNavProps extends ElementProps<'li', 'onClick'> {
     text?: JSX.Element;
     expandIcon?: JSX.Element;
     dropdownProps?: DropdownProps;
+    /** `dropdown` wins over the style in `dropdownProps` */
+    styles?: Partial<Record<SubNavPart, JSX.CSSProperties | string>>;
     /** Used when `dropdownProps` is not given */
     subDropdownProps?: DropdownProps;
 }
@@ -71,7 +74,7 @@ export interface OnOpenChangeData {
 }
 
 /** An entry of `items`: Item or Sub data, the attributes its li takes, and nested entries; Nav's `renderItem*` give its content */
-export interface NavItemConfig extends Omit<NavItemProps, 'icon' | 'level' | 'text' | 'toggleIcon'>, Pick<SubNavProps, 'dropdownProps' | 'dropdownStyle' | 'subDropdownProps'> {
+export interface NavItemConfig extends Omit<NavItemProps, 'icon' | 'level' | 'text' | 'toggleIcon'>, Pick<SubNavProps, 'classNames' | 'dropdownProps' | 'styles' | 'subDropdownProps'> {
     items?: (string | NavItemConfig)[];
     /** The entry's text and payload; `renderItemText` replaces what is shown */
     text?: string | number;
@@ -128,7 +131,8 @@ export interface CollapseButtonProps {
 }
 
 export interface NavProps extends ElementProps<'nav', 'onClick' | 'onSelect'> {
-    bodyStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<NavPart, string>>;
+    styles?: Partial<Record<NavPart, JSX.CSSProperties | string>>;
     defaultIsCollapsed?: boolean;
     defaultOpenKeys?: ItemKey[];
     defaultSelectedKeys?: ItemKey[];

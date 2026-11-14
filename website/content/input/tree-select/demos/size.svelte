@@ -23,11 +23,11 @@
 </script>
 
 <div>
-    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" multiple placeholder="small" size="small" style="width: 300px" {treeData} />
+    <TreeSelect multiple placeholder="small" size="small" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />
     <br />
     <br />
-    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" multiple placeholder="default" size="default" style="width: 300px" {treeData} />
+    <TreeSelect multiple placeholder="default" size="default" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />
     <br />
     <br />
-    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" multiple placeholder="large" size="large" style="width: 300px" {treeData} />
+    <TreeSelect multiple placeholder="large" size="large" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} />
 </div>

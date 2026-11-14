@@ -2974,13 +2974,15 @@ describe('Table 行为基线', () => {
         expect(rows[2]).not.toHaveClass(`${P}-table-row-hovered`);
     });
 
-    it('headerStyle 应用于表头单元格，列的 onHeaderCell style 优先级更高', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
         const columns = [
             { title: 'Name', dataIndex: 'name', onHeaderCell: () => ({ style: { color: 'blue' } }) },
             { title: 'Age', dataIndex: 'age' },
         ];
-        render(<Table headerStyle={{ color: 'red', fontWeight: 700 }} columns={columns} dataSource={smallData()} pagination={false} />);
+        render(<Table classNames={{ header: 'custom-head' }} styles={{ header: { color: 'red', fontWeight: 700 } }} columns={columns} dataSource={smallData()} pagination={false} />);
         const heads = queryAll(`.${P}-table-thead .${P}-table-row-head`);
+        expect(heads[0]).toHaveClass('custom-head', `${P}-table-row-head`);
+        expect(heads[1]).toHaveClass('custom-head');
         expect(heads[0]).toHaveStyle({ color: 'rgb(0, 0, 255)', fontWeight: '700' });
         expect(heads[1]).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });

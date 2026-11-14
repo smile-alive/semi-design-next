@@ -1,4 +1,5 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { BaseValueType, DateOffsetType, DayStatusType, DensityType, DisabledDateOptions, DisabledDateType, DisabledTimeType, PresetPosition, PresetType, PresetsType, Type, ValueType, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import type { InsetInputProps, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { InputSize, ValidateStatus } from '../input/interface';
@@ -73,7 +74,6 @@ export interface DatePickerProps<Kind extends DatePickerType | undefined = DateP
     borderless?: boolean;
     showClear?: boolean;
     inputReadOnly?: boolean;
-    inputStyle?: StyleValue;
     insetInput?: boolean | DatePickerInsetInputProps;
     insetLabelId?: string;
     validateStatus?: ValidateStatus;
@@ -101,8 +101,9 @@ export interface DatePickerProps<Kind extends DatePickerType | undefined = DateP
     /** Defaults to 1 for an `insetInput` panel over the trigger, else the Popover spacing */
     spacing?: number;
     stopPropagation?: boolean | string;
-    dropdownClassName?: string;
-    dropdownStyle?: StyleValue;
+    /** `dropdown` is the panel; `input` is the Input's root element (each of the two inputs of a range) */
+    classNames?: Partial<Record<DatePickerPart, ClassValue>>;
+    styles?: Partial<Record<DatePickerPart, StyleValue>>;
 }
 
 export interface DatePickerEmits<Kind extends DatePickerType | undefined = DatePickerType, Multiple extends boolean | undefined = boolean> {

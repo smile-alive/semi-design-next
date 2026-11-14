@@ -1,4 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { AIChatDialoguePart } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Annotation, ContentItem, InputFile, InputImage, InputMessage, InputText, Message, OutputMessage, OutputText, Reference, Refusal, Step } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { AvatarProps } from '@fibrae/semi-ui-vue/avatar/index';
@@ -31,9 +32,9 @@ export interface AIChatDialogueProps {
     chats?: Message[];
     disabledFileItemClick?: boolean;
     escapeHtml?: boolean;
-    hintCls?: string;
+    classNames?: Partial<Record<AIChatDialoguePart, ClassValue>>;
     hints?: string[];
-    hintStyle?: StyleValue;
+    styles?: Partial<Record<AIChatDialoguePart, StyleValue>>;
     selecting?: boolean;
     markdownRenderProps?: MarkdownRenderProps;
     mode?: 'bubble' | 'noBubble' | 'userBubble';

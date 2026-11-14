@@ -39,8 +39,8 @@
         disableDownload = defaults('disableDownload', previewDefaults.disableDownload),
         initialZoom = defaults('initialZoom'),
         crossOrigin = defaults('crossOrigin'),
-        previewCls = defaults('previewCls'),
-        previewStyle = defaults('previewStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         prevTip = defaults('prevTip'),
         nextTip = defaults('nextTip'),
         zoomInTip = defaults('zoomInTip'),
@@ -126,6 +126,7 @@
     <PreviewInner
         {adaptiveTip}
         {alts}
+        {classNames}
         {closable}
         {closeIcon}
         {closeOnEsc}
@@ -155,9 +156,7 @@
         {preLoad}
         {preLoadGap}
         {prevTip}
-        {previewCls}
         {previewMenu}
-        {previewStyle}
         {previewTitle}
         {rightIcon}
         {rotateTip}
@@ -165,6 +164,7 @@
         {setDownloadName}
         {showTooltip}
         src={srcList}
+        {styles}
         {title}
         {titles}
         {viewerVisibleDelay}

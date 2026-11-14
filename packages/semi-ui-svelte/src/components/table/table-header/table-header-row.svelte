@@ -78,6 +78,7 @@
                         rowspan,
                         class: [
                             `${table.prefixCls}-row-head`,
+                            table.classNames?.header,
                             column.class,
                             customClass,
                             {
@@ -91,7 +92,7 @@
                                 [`${table.prefixCls}-row-head-clickSort`]: flags.clickToSort,
                             },
                         ],
-                        style: joinStyles(table.headerStyle, customStyle as string | undefined, textAlign && `text-align: ${textAlign}`, stickyOffset && `position: sticky; ${stickyOffset.side}: ${toCssLength(stickyOffset.offset)}`),
+                        style: joinStyles(table.styles?.header, customStyle as string | undefined, textAlign && `text-align: ${textAlign}`, stickyOffset && `position: sticky; ${stickyOffset.side}: ${toCssLength(stickyOffset.offset)}`),
                         // a role="none" table no longer gives colspan and rowspan their table meaning
                         'aria-colspan': table.splitTable && colspan && colspan > 1 ? colspan : undefined,
                         'aria-rowspan': table.splitTable && rowspan && rowspan > 1 ? rowspan : undefined,

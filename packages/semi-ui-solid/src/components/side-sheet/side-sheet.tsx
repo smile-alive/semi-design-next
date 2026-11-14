@@ -1,7 +1,7 @@
 import { type JSX, Show, createMemo, createRenderEffect, createSignal, on, onCleanup, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+import { cssClasses, type SideSheetPart } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import SideSheetFoundation, { type Placement, type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
@@ -19,21 +19,21 @@ type Style = JSX.CSSProperties | string;
 export interface SideSheetProps extends ElementProps<'div', 'title' | 'onCancel'> {
     /** Reports the sheet as shown when its enter animation ends and as hidden when its leave animation ends */
     afterVisibleChange?: (isVisible: boolean) => void;
-    bodyStyle?: Style;
     /** Lets `width` apply to a top or bottom sheet */
     canVerticalSetWidth?: boolean;
+    /** `content` is the role="dialog" element */
+    classNames?: Partial<Record<SideSheetPart, string>>;
+    styles?: Partial<Record<SideSheetPart, Style>>;
     closable?: boolean;
     closeIcon?: JSX.Element;
     closeOnEsc?: boolean;
     disableScroll?: boolean;
     footer?: JSX.Element;
     getPopupContainer?: () => HTMLElement;
-    headerStyle?: Style;
     height?: number | string;
     keepDOM?: boolean;
     mask?: boolean;
     maskClosable?: boolean;
-    maskStyle?: Style;
     motion?: boolean;
     /** Escape closes through a document listener, so that path passes the native KeyboardEvent */
     onCancel?: (e: MouseEvent | KeyboardEvent) => void;
@@ -50,7 +50,7 @@ export interface SideSheetProps extends ElementProps<'div', 'title' | 'onCancel'
 export type { SideSheetState };
 
 // the foundation reads none of the style props, and a string style is wider than its Record type
-type FoundationProps = Omit<SideSheetProps, 'bodyStyle' | 'headerStyle' | 'maskStyle' | 'style'>;
+type FoundationProps = Omit<SideSheetProps, 'styles' | 'style'>;
 type Foundation = SideSheetFoundation<FoundationProps>;
 type Adapter = SideSheetAdapter<FoundationProps>;
 
@@ -74,9 +74,9 @@ export default function SideSheet(rawProps: SideSheetProps) {
 
     const [local, rest] = splitProps(props, [
         'afterVisibleChange',
-        'bodyStyle',
         'canVerticalSetWidth',
         'class',
+        'classNames',
         'closable',
         'closeIcon',
         'closeOnEsc',
@@ -84,18 +84,17 @@ export default function SideSheet(rawProps: SideSheetProps) {
         'children',
         'footer',
         'getPopupContainer',
-        'headerStyle',
         'height',
         'keepDOM',
         'mask',
         'maskClosable',
-        'maskStyle',
         'motion',
         'onCancel',
         'placement',
         'ref',
         'size',
         'style',
+        'styles',
         'title',
         'visible',
         'width',
@@ -197,11 +196,8 @@ export default function SideSheet(rawProps: SideSheetProps) {
                     {...rest}
                     ref={mergeRefs(local.ref, attachRoot)}
                     class={rootClass()}
-                    dialogClass={content.className()}
-                    maskClass={mask.className()}
-                    bodyStyle={local.bodyStyle}
-                    headerStyle={local.headerStyle}
-                    maskStyle={local.maskStyle}
+                    classNames={{ ...local.classNames, mask: clsx(mask.className(), local.classNames?.mask), content: clsx(content.className(), local.classNames?.content) }}
+                    styles={local.styles}
                     style={local.style}
                     title={local.title}
                     closable={local.closable}

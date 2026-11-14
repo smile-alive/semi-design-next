@@ -36,6 +36,7 @@
         beforeRemove = defaults('beforeRemove'),
         beforeUpload = defaults('beforeUpload'),
         capture = defaults('capture'),
+        classNames = defaults('classNames'),
         crop = defaults('crop', false),
         cropModalProps = defaults('cropModalProps'),
         customRequest = defaults('customRequest'),
@@ -46,7 +47,6 @@
         fileName = defaults('fileName'),
         headers = defaults('headers'),
         hotSpotLocation = defaults('hotSpotLocation', 'end'),
-        itemStyle = defaults('itemStyle'),
         limit = defaults('limit'),
         listType = defaults('listType', 'list'),
         maxSize = defaults('maxSize'),
@@ -63,6 +63,7 @@
         showRetry = defaults('showRetry', true),
         showTooltip = defaults('showTooltip', true),
         showUploadList = defaults('showUploadList', true),
+        styles = defaults('styles'),
         transformFile = defaults('transformFile'),
         uploadTrigger = defaults('uploadTrigger', 'auto'),
         validateStatus = defaults('validateStatus'),
@@ -240,7 +241,7 @@
 
     // `capture` works by presence, and Svelte writes `false` on a non-boolean attribute as the string "false"
     const captureAttr = $derived((capture === true ? '' : capture || undefined) as 'user' | 'environment' | undefined);
-    const cropModalRest = $derived(omit(cropModalProps ?? {}, ['style', 'bodyStyle', 'width']));
+    const cropModalRest = $derived(omit(cropModalProps ?? {}, ['style', 'styles', 'width']));
     const pictureAddStyle = $derived([picHeight !== undefined && `height: ${toCssLength(picHeight)}`, picWidth !== undefined && `width: ${toCssLength(picWidth)}`].filter(Boolean).join(';') || undefined);
 
     const dragListeners = {
@@ -283,7 +284,8 @@
         picWidth,
         picHeight,
         validateMessage: UploadFoundation.getFallbackValidateMessage(file, locale().locale),
-        style: itemStyle,
+        class: classNames?.item,
+        style: styles?.item,
         onRemove: () => foundation.handleRemove(file),
         onRetry: () => foundation.retry(file),
         onReplace: () => foundation.startReplace(file.uid),
@@ -482,12 +484,12 @@
     {/if}
     <Modal
         {...cropModalRest}
-        bodyStyle={['height: 400px', cropModalProps?.bodyStyle].filter(Boolean).join(';')}
         cancelText={cropConfig.modalCancelText}
         okText={cropConfig.modalOkText}
         onCancel={foundation.cancelCrop}
         onOk={foundation.confirmCrop}
         style={['height: 500px', cropModalProps?.style].filter(Boolean).join(';')}
+        styles={{ ...cropModalProps?.styles, body: ['height: 400px', cropModalProps?.styles?.body].filter(Boolean).join(';') }}
         title={cropConfig.modalTitle || locale().locale.cropTitle}
         visible={states().cropperVisible}
         width={cropModalProps?.width ?? 600}

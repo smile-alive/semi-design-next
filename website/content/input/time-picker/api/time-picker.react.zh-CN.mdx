@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoFocus | 挂载后将焦点交给输入框，透传给输入框的 `autoFocus`。 | `boolean` | - |
 | borderless | 无边框模式。 | `boolean` | `false` |
 | className | 根元素的类名。 | `string` | `""` |
+| classNames | 内部各部位的类名，键为 `dropdown`（弹出层的面板卡片）、`input`（输入框的根元素），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除图标，`showClear` 为 `true` 时有效。 | `React.ReactNode` | - |
 | defaultOpen | 非受控时面板是否默认打开。 | `boolean` | - |
 | defaultValue | 非受控时的初始时间，形态同 `value`；`type` 为 `timeRange` 时为数组。 | `BaseValueType \| BaseValueType[]` | - |
@@ -22,7 +23,6 @@ import ApiType from '#/components/ApiType.astro';
 | hourStep | 小时选项的间隔，必须是正整数，未设置时为 1。 | `number` | - |
 | id | 输入框的 `id`。 | `string` | - |
 | inputReadOnly | 输入框只读，避免在移动设备上打开虚拟键盘；只读时清除按钮仍可用。 | `boolean` | `false` |
-| inputStyle | 输入框的样式，对象的键用 camelCase。 | `React.CSSProperties` | - |
 | insetLabel | 输入框内部的前缀标签，显示在输入框内。 | `React.ReactNode` | - |
 | insetLabelId | `insetLabel` 的 `id`，用于 `aria-labelledby` 等关联。 | `string` | - |
 | minuteStep | 分钟选项的间隔，必须是正整数，未设置时为 1。 | `number` | - |
@@ -36,8 +36,6 @@ import ApiType from '#/components/ApiType.astro';
 | panelHeader | 面板头部的内容。范围模式下可传数组，第 `i` 项用于第 `i` 个面板；未设置时范围模式显示语言包中的起止文案。 | `React.ReactNode \| React.ReactNode[]` | - |
 | panels | 仅范围模式：第 `i` 项同时作为第 `i` 个面板的头部和底部，优先于 `panelHeader` 与 `panelFooter`。单选模式下忽略。 | `React.ReactNode[]` | - |
 | placeholder | 没有值时显示的提示，默认取语言包中对应 `type` 的文案。 | `string` | - |
-| popupClassName | 弹出层的类名。 | `string` | `""` |
-| popupStyle | 弹出层的样式，对象的键用 camelCase。 | `React.CSSProperties` | - |
 | position | 浮层位置。未设置时，`type` 为 `timeRange` 取 `bottom`，为 `time` 取 `bottomLeft`；RTL 方向下取 `bottomRight`。 | `Position` | - |
 | preventScroll | 聚焦时是否阻止浏览器滚动文档，直接作为 `focus()` 的 `preventScroll` 选项，作用于组件内部的聚焦调用。 | `boolean` | - |
 | rangeSeparator | 时间范围的分隔符。 | `string` | `" ~ "` |
@@ -48,6 +46,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | 输入框的大小，可选 `large`、`default` 或 `small`。 | `InputSize` | `"default"` |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
 | style | 根元素的样式。 | `React.CSSProperties` | `{}` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，字符串为该时区的钟点。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | - |
 | triggerRender | 自定义触发器的渲染函数。入参含 `disabled`、`placeholder`、`value`（`Date` 数组，未选的一侧为 `undefined`）、`inputValue`、`componentProps`（TimePicker 的属性，不含 `ref`）和 `onChange`（更新输入框文本，效果同键入）。 | <ApiType detail={"(props: TimePickerTriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
 | type | 选择类型，`time` 为单个时间，`timeRange` 为时间范围。 | `Type` | `"time"` |

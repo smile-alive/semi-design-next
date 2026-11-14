@@ -4,7 +4,7 @@ import { Nav } from '@fibrae/semi-ui-solid';
 
 export default function NavigationDemo() {
     return (
-        <Nav bodyStyle={{ height: '300px' }} defaultOpenKeys={['user']} onSelect={(data) => console.log('trigger onSelect: ', data)} onClick={(data) => console.log('trigger onClick: ', data)}>
+        <Nav styles={{ body: { height: '300px' } }} defaultOpenKeys={['user']} onSelect={(data) => console.log('trigger onSelect: ', data)} onClick={(data) => console.log('trigger onClick: ', data)}>
             <Nav.Header logo={<IconSemiLogo style={{ height: '36px', 'font-size': '36px' }} />} text="Semi 运营后台" />
             <Nav.Item itemKey="union" text="活动管理" icon={<IconForm />} />
             <Nav.Sub itemKey="user" text="用户管理" icon={<IconBadge />}>

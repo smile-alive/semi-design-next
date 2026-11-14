@@ -55,7 +55,7 @@ function triggerAttrs(aria: Attrs, popupId: string, keydown: EventListener | und
 
 /** `groupDisabled`: the enclosing ButtonGroup's `disabled`, which a Button or IconButton without its own inherits */
 export default function bindTrigger(nodes: VNode[], props: TooltipProps, popupId: string, popup: PopupState, keydown?: EventListener, groupDisabled?: boolean): TriggerBinding {
-    const wrapperClass = [`${cssClasses.PREFIX}-trigger-wrapper`, props.wrapperClassName];
+    const wrapperClass = [`${cssClasses.PREFIX}-trigger-wrapper`, props.classNames?.wrapper];
     const node = nodes.length === 1 && nodes[0].type !== Text ? nodes[0] : undefined;
     if (!node) {
         return {
@@ -63,7 +63,7 @@ export default function bindTrigger(nodes: VNode[], props: TooltipProps, popupId
             wrapperAttrs: {
                 ...triggerAttrs(ariaAttrs(undefined, props, popupId, popup), popupId, keydown, null),
                 class: wrapperClass,
-                style: { display: nodes.length > 1 ? 'inline-block' : undefined },
+                style: [{ display: nodes.length > 1 ? 'inline-block' : undefined }, props.styles?.wrapper],
             },
             childAttrs: {},
         };
@@ -95,11 +95,14 @@ export default function bindTrigger(nodes: VNode[], props: TooltipProps, popupId
             ...triggerAttrs(loading ? {} : aria, popupId, keydown, null),
             ...(loading && { tabindex: -1 }),
             class: wrapperClass,
-            style: {
-                display: 'inline-block',
-                width: isOn(node.props?.block) || isBlockDisplay(display) ? '100%' : undefined,
-                cursor: disabled ? 'not-allowed' : undefined,
-            },
+            style: [
+                {
+                    display: 'inline-block',
+                    width: isOn(node.props?.block) || isBlockDisplay(display) ? '100%' : undefined,
+                    cursor: disabled ? 'not-allowed' : undefined,
+                },
+                props.styles?.wrapper,
+            ],
         },
         childAttrs: {
             ...(loading && { ...aria, ...joinedDescription(aria, node.props) }),

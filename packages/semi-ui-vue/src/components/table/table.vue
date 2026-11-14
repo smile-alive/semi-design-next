@@ -11,6 +11,7 @@
     const props = withDefaults(defineProps<TableProps<R> & /* @vue-ignore */ ElementProps<'div', keyof TableProps<R> | EmitHandlers<TableEmits<R>>>>(), {
         bordered: () => semiDefault('Table', 'bordered', false),
         childrenRecordName: () => semiDefault('Table', 'childrenRecordName', 'children'),
+        classNames: semiGlobalDefault('Table', 'classNames'),
         clickGroupedRowToExpand: semiGlobalDefault('Table', 'clickGroupedRowToExpand'),
         columns: semiGlobalDefault('Table', 'columns'),
         components: semiGlobalDefault('Table', 'components'),
@@ -28,7 +29,6 @@
         footer: semiGlobalDefault('Table', 'footer'),
         groupBy: undefined,
         groupSectionColumn: undefined,
-        headerStyle: semiGlobalDefault('Table', 'headerStyle'),
         hideExpandedColumn: () => semiDefault('Table', 'hideExpandedColumn', true),
         indentSize: () => semiDefault('Table', 'indentSize', 20),
         keepDOM: semiGlobalDefault('Table', 'keepDOM'),
@@ -43,6 +43,7 @@
         showHeader: () => semiDefault('Table', 'showHeader', true),
         size: () => semiDefault('Table', 'size', 'default'),
         sticky: semiGlobalDefault('Table', 'sticky'),
+        styles: semiGlobalDefault('Table', 'styles'),
         title: semiGlobalDefault('Table', 'title'),
         virtualized: semiGlobalDefault('Table', 'virtualized'),
         onGroupedRow: undefined,

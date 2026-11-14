@@ -1,7 +1,7 @@
 import { type JSX, type Ref, Show, children, createRenderEffect, createUniqueId, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
-import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+import { cssClasses, type InputPart } from '@fibrae/semi-foundation/components/input/constants';
 import InputFoundation, { type InputAdapter } from '@fibrae/semi-foundation/components/input/foundation';
 import { stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/input/input.scss';
@@ -65,7 +65,8 @@ export interface InputProps extends ElementProps<'input', 'onChange' | 'prefix' 
     /** Listens on the wrapper: focus moving among the input and its buttons does not fire it */
     onFocus?: (e: FocusEvent) => void;
     onEnterPress?: (e: InputElementEvent<KeyboardEvent>) => void;
-    inputStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<InputPart, string>>;
+    styles?: Partial<Record<InputPart, JSX.CSSProperties | string>>;
     getValueLength?: (value: string) => number;
     maxLength?: number;
     minLength?: number;
@@ -138,6 +139,7 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
         'autofocus',
         'borderless',
         'class',
+        'classNames',
         'clearIcon',
         'composition',
         'defaultValue',
@@ -145,7 +147,6 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
         'getValueLength',
         'hideSuffix',
         'inputRef',
-        'inputStyle',
         'insetLabel',
         'insetLabelId',
         'maxLength',
@@ -172,6 +173,7 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
         'showClearIgnoreDisabled',
         'size',
         'style',
+        'styles',
         'suffix',
         'type',
         'validateStatus',
@@ -332,13 +334,17 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
                 {...rest}
                 ref={mergeRefs(setInput, local.inputRef)}
                 type={InputFoundation.getInputType(local.type, local.mode, state().eyeClosed)}
-                class={clsx(prefixCls, {
-                    [`${prefixCls}-${local.size}`]: Boolean(local.size),
-                    [`${prefixCls}-disabled`]: local.disabled,
-                    [`${prefixCls}-sibling-clearbtn`]: allowClear(),
-                    [`${prefixCls}-sibling-modebtn`]: local.mode === 'password',
-                })}
-                style={local.inputStyle}
+                class={clsx(
+                    prefixCls,
+                    {
+                        [`${prefixCls}-${local.size}`]: Boolean(local.size),
+                        [`${prefixCls}-disabled`]: local.disabled,
+                        [`${prefixCls}-sibling-clearbtn`]: allowClear(),
+                        [`${prefixCls}-sibling-modebtn`]: local.mode === 'password',
+                    },
+                    local.classNames?.input
+                )}
+                style={local.styles?.input}
                 aria-invalid={labelA11y().ariaInvalid}
                 aria-labelledby={labelA11y().ariaLabelledby}
                 disabled={local.disabled}

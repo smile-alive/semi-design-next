@@ -50,8 +50,8 @@
         // no global default: a global id would repeat on every instance
         insetLabelId: undefined,
         inputProps: semiGlobalDefault('Select', 'inputProps'),
-        dropdownClassName: semiGlobalDefault('Select', 'dropdownClassName'),
-        dropdownStyle: semiGlobalDefault('Select', 'dropdownStyle'),
+        classNames: semiGlobalDefault('Select', 'classNames'),
+        styles: semiGlobalDefault('Select', 'styles'),
         dropdownMatchSelectWidth: () => semiDefault('Select', 'dropdownMatchSelectWidth', true),
         position: semiGlobalDefault('Select', 'position'),
         spacing: semiGlobalDefault('Select', 'spacing'),

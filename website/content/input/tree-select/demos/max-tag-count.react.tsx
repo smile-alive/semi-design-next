@@ -67,9 +67,9 @@ export default function TreeSelectDemo() {
     return (
         <div>
             <h4 style={textStyle}>maxTagCount=2:</h4>
-            <TreeSelect multiple maxTagCount={2} style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} placeholder="当选中标签超过两个将折叠" defaultValue={['Beijing', 'Chengdu', 'Canada']} />
+            <TreeSelect multiple maxTagCount={2} style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} placeholder="当选中标签超过两个将折叠" defaultValue={['Beijing', 'Chengdu', 'Canada']} />
             <h4 style={textStyle}>maxTagCount=2, showRestTagsPopover:</h4>
-            <TreeSelect showRestTagsPopover restTagsPopoverProps={{ position: 'top' }} multiple maxTagCount={2} style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} placeholder="hover +N 查看" defaultValue={['Beijing', 'Chengdu', 'Canada']} />
+            <TreeSelect showRestTagsPopover restTagsPopoverProps={{ position: 'top' }} multiple maxTagCount={2} style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} placeholder="hover +N 查看" defaultValue={['Beijing', 'Chengdu', 'Canada']} />
         </div>
     );
 }

@@ -35,5 +35,5 @@
 </script>
 
 <template>
-    <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择" style="width: 300px" :treeData="treeData" />
+    <TreeSelect placeholder="请选择" style="width: 300px" :styles="{ dropdown: { maxHeight: '400px', overflow: 'auto' } }" :treeData="treeData" />
 </template>

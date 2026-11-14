@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | 无边框模式。 | `boolean` | `false` |
 | bottomSlot | 渲染底部额外区域，传入 JSX 元素。 | `JSX.Element` | - |
 | class | 根元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `dropdown`（下拉面板）、`input`（输入框的根元素，范围选择的两个输入框都带），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮的图标，showClear 为 true 时有效。传入 JSX 元素。 | `JSX.Element` | - |
 | defaultOpen | 面板默认显示或隐藏。 | `boolean` | `false` |
 | defaultPickerValue | 默认面板日期。按内容比较，内容变化时面板回到该日期；每次渲染都传 `new Date()` 会被视为变化。 | `ValueType` | - |
@@ -19,14 +20,11 @@ import ApiType from '#/components/ApiType.astro';
 | disabledDate | 日期禁止判断方法，返回 true 时禁止该日期。options 含范围选择已选的 rangeStart、rangeEnd 与当前聚焦的输入框 rangeInputFocus；type 为 year 时以每年的 1 月 1 日调用，返回 true 时禁止该年。 | `DisabledDateType` | - |
 | disabledTime | 时间禁止配置，返回值会透传给 TimePicker 组件。 | `DisabledTimeType` | - |
 | disabledTimePicker | 是否禁止时间选择。 | `MonthsGridFoundationProps['disabledTimePicker']` | - |
-| dropdownClassName | 下拉面板的类名。 | `string` | - |
-| dropdownStyle | 下拉面板的内联样式，可传对象（键为 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
 | endDateOffset | type 为 dateRange 时，设置单击选择范围的结束日期。 | `DateOffsetType` | - |
 | endYear | 年份滚轮的结束年，需大于 startYear。默认为当前年后 100 年。 | `number` | - |
 | format | 输入框中展示的日期字符串格式，默认值随 type 变化，见下方「日期时间格式」。 | `string` | - |
 | hideDisabledOptions | 隐藏禁止选择的时间选项。 | `MonthsGridFoundationProps['hideDisabledOptions']` | `false` |
 | inputReadOnly | 文本框是否为只读（readonly）。 | `boolean` | `false` |
-| inputStyle | 输入框的样式，可传对象（键为 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
 | insetInput | 面板中是否嵌入输入框。可传布尔值，或传入 InsetInputProps 对象配置内嵌输入框的 placeholder。 | `DateInputFoundationProps['insetInput']` | `false` |
 | insetLabel | 输入框内的标签，由 Form 字段注入；直接使用 DatePicker 时也会显示在输入框中。 | `JSX.Element` | - |
 | insetLabelId | 输入框内标签的元素 id，由 Form 字段注入，用于为输入框提供可访问名称。 | `string` | - |
@@ -65,6 +63,7 @@ import ApiType from '#/components/ApiType.astro';
 | startYear | 年份滚轮的开始年，默认为当前年前 100 年。 | `number` | - |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean \| string` | `true` |
 | style | 根元素的样式，可传对象（键为 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。 | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | syncSwitchMonth | 范围选择时，两个面板是否同步切换月份。 | `boolean` | `false` |
 | timePickerOpts | 传给时间面板的参数：use12Hours、hourStep、minuteStep、secondStep、defaultIsAM、scrollItemProps，含义见 TimePicker 的 API。格式、值和 onChange 由面板设置。 | `DatePickerTimePickerOpts` | - |
 | timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，`dateString` 和今天的标记也按该时区。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | - |

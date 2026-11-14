@@ -410,8 +410,16 @@ describe('Chat 输入框', () => {
         expect(document.activeElement).toBe(textarea(container));
     });
 
-    it('应用 placeholder、inputBoxCls、inputBoxStyle、snippet、class 与 style', () => {
-        const { container } = renderChat({ placeholder: 'Ask me', inputBoxCls: 'my-input', inputBoxStyle: 'color: red', class: 'my-chat', style: 'width: 300px' }, { topSlot: true, bottomSlot: true });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = renderChat({ classNames: { hint: 'my-hint', inputBox: 'my-input' }, styles: { hint: 'order: 1', inputBox: 'order: 2' } }, {}, { hints: ['first'] });
+        expect(container.querySelector('.semi-chat-hints')).toHaveClass('my-hint');
+        expect(container.querySelector('.semi-chat-hints')).toHaveStyle({ order: '1' });
+        expect(container.querySelector('.semi-chat-inputBox')).toHaveClass('my-input');
+        expect(container.querySelector('.semi-chat-inputBox')).toHaveStyle({ order: '2' });
+    });
+
+    it('应用 placeholder、classNames.inputBox、styles.inputBox、snippet、class 与 style', () => {
+        const { container } = renderChat({ placeholder: 'Ask me', classNames: { inputBox: 'my-input' }, styles: { inputBox: 'color: red' }, class: 'my-chat', style: 'width: 300px' }, { topSlot: true, bottomSlot: true });
         expect(textarea(container).placeholder).toBe('Ask me');
         expect(container.querySelector('.semi-chat-inputBox.my-input')).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(root(container)).toHaveClass('semi-chat', 'my-chat');
@@ -717,7 +725,7 @@ describe('Chat 提示', () => {
     it('点击提示会以用户消息发送', async () => {
         const onHintClick = vi.fn<Listener<'onHintClick'>>();
         const onChatsChange = vi.fn<Listener<'onChatsChange'>>();
-        const { container } = renderChat({ onHintClick, onChatsChange, hintCls: 'my-hints', hintStyle: 'color: red' }, {}, { hints: ['first', 'second'] });
+        const { container } = renderChat({ onHintClick, onChatsChange, classNames: { hint: 'my-hints' }, styles: { hint: 'color: red' } }, {}, { hints: ['first', 'second'] });
         const section = container.querySelector('.semi-chat-hints');
         expect(section).toHaveClass('my-hints');
         expect(section).toHaveStyle({ color: 'rgb(255, 0, 0)' });

@@ -166,8 +166,8 @@ describe('Svelte Cascader 渲染', () => {
         expect(screen.getByRole('tree')).toBeInTheDocument();
     });
 
-    it('dropdownClassName 与 dropdownStyle 落在弹层上', async () => {
-        setup({ dropdownClassName: 'my-dropdown', dropdownStyle: 'width: 321px' });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        setup({ classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: 'width: 321px' } });
         await openDropdown();
         const popup = getElement('.my-dropdown');
         expect(popup).toHaveClass(`${prefixCls}-popover`);

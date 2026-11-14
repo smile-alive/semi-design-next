@@ -92,8 +92,6 @@ export interface BasicCascaderProps {
     autoMergeValue?: boolean;
     defaultValue?: BasicValue;
     disabled?: boolean;
-    dropdownClassName?: string;
-    dropdownStyle?: any;
     emptyContent?: any;
     filterLeafOnly?: boolean;
     motion?: boolean;

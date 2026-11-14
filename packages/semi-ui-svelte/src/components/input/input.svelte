@@ -37,7 +37,8 @@
         minlength,
         placeholder = defaults('placeholder'),
         validateStatus = defaults('validateStatus', 'default'),
-        inputStyle = defaults('inputStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         insetLabelId,
         getValueLength = defaults('getValueLength'),
         onChange,
@@ -312,13 +313,14 @@
                 [`${prefixCls}-sibling-clearbtn`]: allowClear,
                 [`${prefixCls}-sibling-modebtn`]: mode === 'password',
             },
+            classNames?.input,
         ]}
         disabled={isDisabled}
         maxlength={InputFoundation.getNativeMaxLength({ maxLength: maxlength, getValueLength })}
         minlength={InputFoundation.getNativeMinLength({ minLength: minlength, getValueLength }, shown)}
         placeholder={placeholder?.toString()}
         readonly={readonly || readOnly}
-        style={inputStyle}
+        style={styles?.input}
         type={InputFoundation.getInputType(type, mode, states().eyeClosed)}
         value={text}
         oncompositionend={handleCompositionEnd}

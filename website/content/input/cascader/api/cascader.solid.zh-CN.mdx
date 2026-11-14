@@ -12,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | 下拉底部的插槽内容。 | `JSX.Element` | - |
 | changeOnSelect | 单选时是否允许选择非叶子节点。 | `boolean` | `false` |
 | checkRelation | 多选时节点之间的选中关系：`related` 为父子联动，`unRelated` 为互不影响。 | `'related' \| 'unRelated'` | `"related"` |
+| classNames | 内部各部位的类名，键为 `dropdown`（下拉菜单），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮的图标，`showClear` 为 true 时有效。 | `JSX.Element` | - |
 | clickToSelect | 多选时点击任意节点即选中，常与 `showNext="hover"` 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `false` |
 | defaultOpen | 是否在挂载时默认展开下拉。 | `boolean` | `false` |
@@ -20,8 +21,6 @@ import ApiType from '#/components/ApiType.astro';
 | disableStrictly | 是否开启严格禁用。开启后，禁用的节点不会因父级或子级的选中关系改变选中状态。 | `boolean` | `false` |
 | displayProp | 回填到触发器与标签中的节点属性。 | `string` | `"label"` |
 | displayRender | 自定义回填内容。单选时参数为路径上各级节点 label 的数组；多选时参数为节点的 Entity 与索引，返回每个标签的内容。 | <ApiType detail={"ByMultiple\u003cMultiple, (selected: Array\u003cstring \u007c number>) => JSX.Element, (selected: Entity, idx: number) => JSX.Element>"}>Type</ApiType> | - |
-| dropdownClassName | 下拉菜单的 class。 | `string` | - |
-| dropdownStyle | 下拉菜单的样式，可以是键为 kebab-case 的对象，也可以是字符串。 | `JSX.CSSProperties \| string` | - |
 | emptyContent | 没有可选数据或搜索无结果时展示的内容，默认为「暂无数据」；传入 `null` 时不展示。 | `JSX.Element` | - |
 | enableLeafClick | 多选时，点击叶子节点的选项是否触发勾选。 | `boolean` | `false` |
 | expandIcon | 自定义子菜单的展开图标。 | `JSX.Element` | - |
@@ -66,6 +65,7 @@ import ApiType from '#/components/ApiType.astro';
 | showRestTagsPopover | 超出 `maxTagCount` 后，悬停 `+N` 时是否用 Popover 展示剩余标签。 | `boolean` | `false` |
 | size | 选择框的尺寸，可选 `small`、`default`、`large`。在 InputGroup 中时以 InputGroup 的尺寸为准。 | `CascaderType` | - |
 | stopPropagation | 是否阻止下拉框上的点击事件冒泡。 | `boolean \| string` | `true` |
+| styles | 内部各部位的样式，键同 `classNames`，值可以是键为 kebab-case 的对象，也可以是字符串。 | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | suffix | 后缀标签，渲染在触发器内右侧。 | `JSX.Element` | - |
 | topSlot | 下拉顶部的插槽内容。 | `JSX.Element` | - |
 | treeData | 节点数据，结构见 CascaderData。 | <ApiType detail={"Array\u003cCascaderData>"}>Type</ApiType> | `[]` |

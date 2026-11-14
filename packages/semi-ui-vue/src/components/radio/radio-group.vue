@@ -98,7 +98,7 @@
         @focusout="foundation.handleBlur"
     >
         <template v-if="props.options">
-            <Radio v-for="(option, index) in items" :key="index" :addonClassName="option.addonClass" :addonId="option.addonId" :addonStyle="option.addonStyle" :class="option.class" :disabled="option.disabled || props.disabled" :extraId="option.extraId" :style="option.style" :value="option.value">
+            <Radio v-for="(option, index) in items" :key="index" :addonId="option.addonId" :class="option.class" :classNames="option.classNames" :disabled="option.disabled || props.disabled" :extraId="option.extraId" :style="option.style" :styles="option.styles" :value="option.value">
                 <template v-if="option.label !== undefined || $slots.label" #default>
                     <slot :index="index" name="label" :option="option">{{ option.label }}</slot>
                 </template>

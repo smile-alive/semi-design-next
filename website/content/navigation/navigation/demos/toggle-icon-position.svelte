@@ -19,7 +19,7 @@
     </Nav.Header>
 {/snippet}
 
-<Nav bodyStyle="height: 300px" footer={{ collapseButton: true }} {header} {items} onSelect={(key) => console.log(key)} openKeys={['job']} toggleIconPosition="left">
+<Nav footer={{ collapseButton: true }} {header} {items} onSelect={(key) => console.log(key)} openKeys={['job']} styles={{ body: 'height: 300px' }} toggleIconPosition="left">
     {#snippet icon(renderProps)}
         {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
         {#if Icon}

@@ -23,7 +23,7 @@
 {#snippet cells(item: DescriptionsData, index: number, span: number | undefined)}
     {#if align === 'plain'}
         <td class={`${prefixCls}-item`} colspan={span || 1}>
-            <span class={`${prefixCls}-key`} style={item.keyStyle}>
+            <span class={[`${prefixCls}-key`, item.classNames?.key]} style={item.styles?.key}>
                 {#if itemKey}{@render itemKey({ item, index })}{:else}{item.key}{/if}:</span
             >
             <span class={`${prefixCls}-value`}>
@@ -32,7 +32,7 @@
         </td>
     {:else}
         <th class={[`${prefixCls}-item`, `${prefixCls}-item-th`]}>
-            <span class={`${prefixCls}-key`} style={item.keyStyle}>
+            <span class={[`${prefixCls}-key`, item.classNames?.key]} style={item.styles?.key}>
                 {#if itemKey}{@render itemKey({ item, index })}{:else}{item.key}{/if}
             </span>
         </th>

@@ -158,13 +158,13 @@
                 "zh-CN": "是否阻止下拉上的点击事件冒泡。",
                 "en-US": "Whether clicks on the dropdown stop bubbling."
             },
-            "dropdownClassName": {
-                "zh-CN": "下拉的 class。",
-                "en-US": "Class of the dropdown."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 dropdown（下拉），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by dropdown; values take anything class takes (string, array or object) and merge with the built-in classes."
             },
-            "dropdownStyle": {
-                "zh-CN": "下拉的样式，为 CSS 字符串。",
-                "en-US": "Style of the dropdown, as a CSS string."
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "preventScroll": {
                 "zh-CN": "组件内的 focus 是否阻止浏览器滚动文档以显示获得焦点的元素。",

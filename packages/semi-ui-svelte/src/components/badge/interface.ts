@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { BadgePart } from '@fibrae/semi-foundation/components/badge/constants';
 
 export type BadgeType = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'warning' | 'success';
 export type BadgeTheme = 'solid' | 'light' | 'inverted';
@@ -14,7 +15,7 @@ export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'child
     /** Defaults to `leftTop` in an RTL ConfigProvider and `rightTop` otherwise */
     position?: BadgePosition;
     overflowCount?: number;
-    countClassName?: string;
-    countStyle?: string;
+    classNames?: Partial<Record<BadgePart, ClassValue>>;
+    styles?: Partial<Record<BadgePart, string>>;
     children?: Snippet;
 }

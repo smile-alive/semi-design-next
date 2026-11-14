@@ -525,11 +525,11 @@ describe('Image', () => {
         expect(img.getBoundingClientRect().top).toBe(document.querySelector(`.${prefixCls}`).getBoundingClientRect().top);
     });
 
-    it('previewCls 与 previewStyle', async () => {
+    it('classNames.preview 与 styles.preview', async () => {
         render(
             <>
-                <Image height={200} preview={{ previewCls: 'test-preview', previewStyle: { background: 'lightblue' } }} src={abstractLite} width={360} />
-                <Group previewStyle={{ background: 'lightgreen' }} previewCls="test-imagePreview" />
+                <Image height={200} preview={{ classNames: { preview: 'test-preview' }, styles: { preview: { background: 'lightblue' } } }} src={abstractLite} width={360} />
+                <Group classNames={{ preview: 'test-imagePreview' }} styles={{ preview: { background: 'lightgreen' } }} />
             </>
         );
         // the lone image only becomes a preview trigger once loaded; clicking earlier would hit the group's thumbnail

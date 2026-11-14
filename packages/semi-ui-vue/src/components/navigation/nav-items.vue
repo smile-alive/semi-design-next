@@ -10,7 +10,7 @@
     defineSlots<Pick<NavSlots, 'icon' | 'text' | 'toggleIcon' | 'expandIcon'>>();
 
     const ITEM_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'link', 'linkOptions', 'tooltipShowDelay', 'tooltipHideDelay']);
-    const SUB_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'dropdownStyle', 'dropdownProps']);
+    const SUB_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'classNames', 'styles', 'dropdownProps']);
     const LI_KEYS = new Set(['class', 'style', 'onMouseenter', 'onMouseleave']);
 
     // An entry may carry app data (e.g. `path`); only the declared keys, li attributes, data-* and aria-* reach the item

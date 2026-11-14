@@ -13,3 +13,6 @@ export const strings = {
         good: '😃',
     },
 } as const;
+
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style`. Forwarded to the Modal or SideSheet of the current mode */
+export type FeedbackPart = 'mask' | 'header' | 'body';

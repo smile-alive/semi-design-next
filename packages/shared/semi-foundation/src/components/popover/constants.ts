@@ -5,6 +5,9 @@ export const cssClasses = {
     ARROW: `${BASE_CLASS_PREFIX}-popover-icon-arrow`,
 };
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type PopoverPart = 'content' | 'arrow';
+
 export const strings = {
     POSITION_SET: ['top', 'topLeft', 'topRight', 'left', 'leftTop', 'leftBottom', 'right', 'rightTop', 'rightBottom', 'bottom', 'bottomLeft', 'bottomRight', 'leftTopOver', 'rightTopOver'],
     TRIGGER_SET: ['hover', 'focus', 'click', 'custom', 'contextMenu'],

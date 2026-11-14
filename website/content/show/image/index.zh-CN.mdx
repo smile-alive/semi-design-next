@@ -262,7 +262,7 @@ ImagePreview 的 `src` 数组决定组内有哪些图片及其顺序，Image 不
 
 `onLoad`、`onError` 分别在图片加载成功、失败时调用，参数为 `SyntheticEvent<HTMLImageElement>`；其他原生属性（如 `data-*`、`aria-*`）透传至底层的 img 节点。
 
-单个 Image 的 `preview` 对象接受下表 ImagePreview 的属性，但不含 `lazyLoad`、`lazyLoadMargin`、`children`、`className`、`style`（预览样式请用 `previewCls`、`previewStyle`）。`preview.src` 为数组时，切换图片后回到「适应页面」。
+单个 Image 的 `preview` 对象接受下表 ImagePreview 的属性，但不含 `lazyLoad`、`lazyLoadMargin`、`children`、`className`、`style`（预览层的样式请用 `classNames.preview`、`styles.preview`）。`preview.src` 为数组时，切换图片后回到「适应页面」。
 
 </Framework>
 
@@ -270,7 +270,7 @@ ImagePreview 的 `src` 数组决定组内有哪些图片及其顺序，Image 不
 
 <ImageVueApi />
 
-`width`、`height` 的数值按 px 处理。`class`、`style` 落在根元素上，其余未声明的原生属性与监听落在内部的 img 上。`preview` 对象接受 ImagePreview 的 props 与回调（`onVisibleChange`、`onChange`、`onClose`、`onZoomIn`、`onZoomOut`、`onPrev`、`onNext`、`onRatioChange`、`onRotateLeft`、`onDownload`、`onDownloadError`），但不含 `lazyLoad`、`lazyLoadMargin`、`class`、`style`（预览样式请用 `previewCls`、`previewStyle`）；自定义节点不放在 `preview` 里，使用 Image 的插槽。`preview.src` 为数组时，切换图片后回到「适应页面」。处于 ImagePreview 内的 Image 不使用 `#title`、`#previewMenu`、`#leftIcon`、`#rightIcon`、`#closeIcon`，以 ImagePreview 的插槽为准。
+`width`、`height` 的数值按 px 处理。`class`、`style` 落在根元素上，其余未声明的原生属性与监听落在内部的 img 上。`preview` 对象接受 ImagePreview 的 props 与回调（`onVisibleChange`、`onChange`、`onClose`、`onZoomIn`、`onZoomOut`、`onPrev`、`onNext`、`onRatioChange`、`onRotateLeft`、`onDownload`、`onDownloadError`），但不含 `lazyLoad`、`lazyLoadMargin`、`class`、`style`（预览层的样式请用 `classNames.preview`、`styles.preview`）；自定义节点不放在 `preview` 里，使用 Image 的插槽。`preview.src` 为数组时，切换图片后回到「适应页面」。处于 ImagePreview 内的 Image 不使用 `#title`、`#previewMenu`、`#leftIcon`、`#rightIcon`、`#closeIcon`，以 ImagePreview 的插槽为准。
 
 </Framework>
 
@@ -286,7 +286,7 @@ ImagePreview 的 `src` 数组决定组内有哪些图片及其顺序，Image 不
 
 <ImageSvelteApi />
 
-`width`、`height` 的数值按 px 处理。`class`、`style` 落在根元素上，其余未声明的原生属性与事件处理落在内部的 img 上。`preview` 对象接受 ImagePreview 的 props 与回调（`onVisibleChange`、`onChange`、`onClose`、`onZoomIn`、`onZoomOut`、`onPrev`、`onNext`、`onRatioChange`、`onRotateLeft`、`onDownload`、`onDownloadError`），但不含 `lazyLoad`、`lazyLoadMargin`、`class`、`style`（预览样式请用 `previewCls`、`previewStyle`）；自定义节点不放在 `preview` 里，使用 Image 的 snippet。`preview.src` 为数组时，切换图片后回到「适应页面」。处于 ImagePreview 内的 Image 不使用 `title`、`previewMenu`、`leftIcon`、`rightIcon`、`closeIcon` snippet，以 ImagePreview 的 snippet 为准。
+`width`、`height` 的数值按 px 处理。`class`、`style` 落在根元素上，其余未声明的原生属性与事件处理落在内部的 img 上。`preview` 对象接受 ImagePreview 的 props 与回调（`onVisibleChange`、`onChange`、`onClose`、`onZoomIn`、`onZoomOut`、`onPrev`、`onNext`、`onRatioChange`、`onRotateLeft`、`onDownload`、`onDownloadError`），但不含 `lazyLoad`、`lazyLoadMargin`、`class`、`style`（预览层的样式请用 `classNames.preview`、`styles.preview`）；自定义节点不放在 `preview` 里，使用 Image 的 snippet。`preview.src` 为数组时，切换图片后回到「适应页面」。处于 ImagePreview 内的 Image 不使用 `title`、`previewMenu`、`leftIcon`、`rightIcon`、`closeIcon` snippet，以 ImagePreview 的 snippet 为准。
 
 </Framework>
 

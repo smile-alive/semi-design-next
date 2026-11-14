@@ -1,7 +1,7 @@
 import type React from 'react';
 import { isValidElement, useId, useRef } from 'react';
 import clsx from 'clsx';
-import { strings, cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
+import { strings, cssClasses, type SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import { countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/components/navigation/sub-nav-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
@@ -21,8 +21,8 @@ type Foundation = SubNavFoundation;
 type Adapter = SubNavAdapter<SubNavProps>;
 
 export interface SubNavProps extends BaseProps, ElementProps<'li', 'onClick'> {
+    classNames?: Partial<Record<SubNavPart, string>>;
     disabled?: boolean;
-    dropdownStyle?: React.CSSProperties;
     icon?: React.ReactNode;
     indent?: boolean;
     itemKey?: string | number;
@@ -32,13 +32,14 @@ export interface SubNavProps extends BaseProps, ElementProps<'li', 'onClick'> {
     text?: React.ReactNode;
     expandIcon?: React.ReactNode;
     dropdownProps?: DropdownProps;
+    styles?: Partial<Record<SubNavPart, React.CSSProperties>>;
     subDropdownProps?: DropdownProps;
     /** Attached to the wrapper li */
     ref?: React.Ref<HTMLLIElement>;
 }
 
 export default function SubNav({ ref, ...props }: SubNavProps) {
-    const { text, icon: rawIcon, itemKey, indent = false, disabled = false, level = 0, expandIcon: rawExpandIcon, style, className, onMouseEnter, onMouseLeave, children, dropdownStyle, dropdownProps: userDropdownProps, subDropdownProps, ...restProps } = props;
+    const { text, icon: rawIcon, itemKey, indent = false, disabled = false, level = 0, expandIcon: rawExpandIcon, style, className, classNames, onMouseEnter, onMouseLeave, children, styles, dropdownProps: userDropdownProps, subDropdownProps, ...restProps } = props;
 
     const context = useNavContext();
     const icon = useUnwrappedLazy(rawIcon);
@@ -199,8 +200,11 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
     } else if (isPopup && !disabled) {
         // defaults first so the user's dropdownProps win; only what Nav controls is written after them
         const dropdownProps: DropdownProps = { trigger: 'hover', ...(userDropdownProps ?? subDropdownProps) };
-        if (dropdownStyle) {
-            dropdownProps.style = dropdownStyle;
+        if (styles?.dropdown) {
+            dropdownProps.style = styles.dropdown;
+        }
+        if (classNames?.dropdown) {
+            dropdownProps.classNames = { ...dropdownProps.classNames, content: clsx(dropdownProps.classNames?.content, classNames.dropdown) };
         }
         titleDiv = (
             <Dropdown

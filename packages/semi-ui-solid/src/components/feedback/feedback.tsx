@@ -1,7 +1,7 @@
 import { createMemo, createUniqueId, For, type JSX, Match, Show, splitProps, Switch } from 'solid-js';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/feedback/constants';
+import { cssClasses, type FeedbackPart, strings } from '@fibrae/semi-foundation/components/feedback/constants';
 import FeedbackFoundation, { type FeedbackAdapter, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
 import '@fibrae/semi-foundation/components/feedback/feedback.scss';
 import { useDefaultProps, useFoundation } from '../../base/index';
@@ -30,13 +30,16 @@ export interface BasicFeedbackProps {
     radioGroupProps?: Omit<RadioGroupProps, 'value'>;
     checkboxGroupProps?: Omit<CheckboxGroupProps, 'value'>;
     renderContent?: (content: JSX.Element) => JSX.Element;
+    /** Forwarded to the Modal or SideSheet of the current mode */
+    classNames?: Partial<Record<FeedbackPart, string>>;
+    styles?: Partial<Record<FeedbackPart, JSX.CSSProperties | string>>;
 }
 
-export interface FeedbackModalProps extends ModalProps, BasicFeedbackProps {
+export interface FeedbackModalProps extends Omit<ModalProps, 'classNames' | 'styles'>, BasicFeedbackProps {
     mode: 'modal';
 }
 
-export interface FeedbackSideSheetProps extends Omit<SideSheetProps, 'onCancel'>, BasicFeedbackProps {
+export interface FeedbackSideSheetProps extends Omit<SideSheetProps, 'onCancel' | 'classNames' | 'styles'>, BasicFeedbackProps {
     mode?: 'popup';
     /** A returned Promise keeps the button loading until it settles; any other return is ignored, such as a setter's */
     onOk?: (e: MouseEvent) => unknown;

@@ -6,6 +6,10 @@
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `wrapper`（scroll 模式下的滚动 wrapper），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `wrapper` (the scroll wrapper in scroll mode); merged with the built-in classes."
+            },
             "collapseFrom": {
                 "zh-CN": "collapse 模式的折叠方向，可选 `start` 或 `end`。",
                 "en-US": "Collapse direction in collapse mode: `start` or `end`."
@@ -50,6 +54,10 @@
                 "zh-CN": "根元素的样式。",
                 "en-US": "Style of the root element."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "threshold": {
                 "zh-CN": "scroll 模式下触发相交回调的可见比例阈值。",
                 "en-US": "Visible ratio at which scroll mode reports an item's intersection."
@@ -58,17 +66,9 @@
                 "zh-CN": "渲染单个可见项并返回该项的 React 元素，参数 index 为该项在 items 中的位置。scroll 模式下该元素会被观察，并写入 `data-scrollkey`。",
                 "en-US": "Renders one visible item and returns its React element; index is the item's position in items. In scroll mode the element is observed and gets a `data-scrollkey` attribute."
             },
-            "wrapperClassName": {
-                "zh-CN": "scroll 模式下滚动 wrapper 的类名。",
-                "en-US": "Class name of the scroll wrapper in scroll mode."
-            },
             "wrapperProps": {
-                "zh-CN": "scroll 模式下滚动 wrapper 的其他属性，例如承载可见项的 role；其中的 className 与 style 会被 wrapperClassName、wrapperStyle 覆盖。",
-                "en-US": "Other attributes of the scroll wrapper in scroll mode, such as a role that owns the visible items. Its className and style are overridden by wrapperClassName and wrapperStyle."
-            },
-            "wrapperStyle": {
-                "zh-CN": "scroll 模式下滚动 wrapper 的样式，传入样式对象。",
-                "en-US": "Style of the scroll wrapper in scroll mode, as a style object."
+                "zh-CN": "scroll 模式下滚动 wrapper 的其他属性，例如承载可见项的 role；其中的 className 与 style 会被 `classNames.wrapper`、`styles.wrapper` 覆盖。",
+                "en-US": "Other attributes of the scroll wrapper in scroll mode, such as a role that owns the visible items. Its className and style are overridden by `classNames.wrapper` and `styles.wrapper`."
             }
         }
     }

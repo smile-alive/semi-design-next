@@ -1,5 +1,5 @@
 import type { JSX, Ref } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/components/table/constants';
+import type { strings, TablePart } from '@fibrae/semi-foundation/components/table/constants';
 import type { BaseAlign, BaseChangeInfoFilter, BaseChangeInfoSorter, BaseEllipsis, BaseFilter, BaseFixed, BaseGroupBy, BaseGroupByFn, BaseIncludeGroupRecord, BasePageData, BaseRowKeyType, BaseSorter, BaseSortOrder, OnChangeExtra } from '@fibrae/semi-foundation/components/table/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
@@ -13,6 +13,7 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     bordered?: boolean;
     children?: JSX.Element;
     childrenRecordName?: string;
+    classNames?: Partial<Record<TablePart, string>>;
     clickGroupedRowToExpand?: boolean;
     columns?: ColumnProps<RecordType>[];
     components?: TableComponents;
@@ -31,7 +32,6 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     footer?: Footer<RecordType>;
     getVirtualizedListRef?: GetVirtualizedListRef;
     groupBy?: GroupBy<RecordType>;
-    headerStyle?: JSX.CSSProperties;
     hideExpandedColumn?: boolean;
     indentSize?: number;
     keepDOM?: boolean;
@@ -47,6 +47,7 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     scroll?: Scroll;
     showHeader?: boolean;
     size?: Size;
+    styles?: Partial<Record<TablePart, JSX.CSSProperties | string>>;
     title?: Title<RecordType>;
     virtualized?: Virtualized;
     onChange?: OnChange<RecordType>;

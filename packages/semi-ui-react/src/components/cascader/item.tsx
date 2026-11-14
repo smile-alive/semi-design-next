@@ -105,7 +105,7 @@ function renderIcon(type: 'child' | 'tick' | 'loading' | 'empty', expandIcon?: R
             // the option carries the state as aria-busy; the spinner's own name would join the option's name
             return (
                 <span aria-hidden>
-                    <Spin wrapperClassName={finalCls(`${prefixcls}-spin-icon`)} />
+                    <Spin className={finalCls(`${prefixcls}-spin-icon`)} />
                 </span>
             );
         default:

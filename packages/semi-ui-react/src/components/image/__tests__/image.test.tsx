@@ -19,8 +19,8 @@ afterEach(() => {
 });
 
 describe('Image', () => {
-    it('自定义 imgCls 与 imgStyle', () => {
-        const { container } = render(<Image imgStyle={{ maxWidth: 300 }} imgCls="custom-img-cls" src="https://example.com/abstract.jpg" />);
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = render(<Image classNames={{ img: 'custom-img-cls' }} styles={{ img: { maxWidth: 300 } }} src="https://example.com/abstract.jpg" />);
         const img = container.querySelector(`.${BASE_CLASS_PREFIX}-image-img`);
         expect(img).toHaveClass('custom-img-cls');
         expect(img).toHaveStyle({ maxWidth: '300px' });
@@ -239,7 +239,7 @@ describe('Image', () => {
         expect(preview()).toBeNull();
     });
 
-    it('preview 对象：src、previewCls、previewStyle、crossOrigin 与受控的 visible', () => {
+    it('preview 对象：src、classNames.preview、styles.preview、crossOrigin 与受控的 visible', () => {
         const onVisibleChange = vi.fn<(visible: boolean) => void>();
         const big = 'https://example.com/big.jpg';
         const renderImage = (visible) => (
@@ -249,8 +249,8 @@ describe('Image', () => {
                     src: big,
                     visible,
                     onVisibleChange,
-                    previewCls: 'my-preview',
-                    previewStyle: { color: 'red' },
+                    classNames: { preview: 'my-preview' },
+                    styles: { preview: { color: 'red' } },
                 }}
                 src={src}
             />
@@ -402,7 +402,7 @@ describe('Image', () => {
         expectTypeOf<ImagePreviewProp>().not.toHaveProperty('children');
         expectTypeOf<ImagePreviewProp>().not.toHaveProperty('className');
         expectTypeOf<ImagePreviewProp>().not.toHaveProperty('style');
-        expectTypeOf<ImagePreviewProp>().toHaveProperty('previewCls');
+        expectTypeOf<ImagePreviewProp>().toHaveProperty('classNames');
         expectTypeOf<PreviewImageProps>().not.toHaveProperty('clickZoom');
         expectTypeOf<PreviewImageProps>().not.toHaveProperty('setRatio');
         expectTypeOf<PreviewImageProps>().not.toHaveProperty('style');

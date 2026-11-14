@@ -19,7 +19,7 @@
     </Nav.Header>
 {/snippet}
 
-<Nav bodyStyle="height: 320px" footer={{ collapseButton: true }} {header} {items} onClick={(data) => console.log('trigger onClick: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)}>
+<Nav footer={{ collapseButton: true }} {header} {items} onClick={(data) => console.log('trigger onClick: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)} styles={{ body: 'height: 320px' }}>
     {#snippet icon(renderProps)}
         {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
         {#if Icon}

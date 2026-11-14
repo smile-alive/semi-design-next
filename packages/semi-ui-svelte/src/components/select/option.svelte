@@ -66,7 +66,7 @@
         {:else if label !== undefined}
             <div class={`${prefixCls}-text`}>
                 {#if inputValue}
-                    <Highlight highlightClassName={`${prefixCls}-keyword`} searchWords={[inputValue]} sourceString={String(label)} />
+                    <Highlight classNames={{ highlight: `${prefixCls}-keyword` }} searchWords={[inputValue]} sourceString={String(label)} />
                 {:else}
                     {label}
                 {/if}

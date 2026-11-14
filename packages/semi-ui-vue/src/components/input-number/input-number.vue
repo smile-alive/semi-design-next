@@ -58,7 +58,8 @@
         validateStatus: semiGlobalDefault('InputNumber', 'validateStatus'),
         maxlength: semiGlobalDefault('InputNumber', 'maxlength'),
         minlength: semiGlobalDefault('InputNumber', 'minlength'),
-        inputStyle: semiGlobalDefault('InputNumber', 'inputStyle'),
+        classNames: semiGlobalDefault('InputNumber', 'classNames'),
+        styles: semiGlobalDefault('InputNumber', 'styles'),
         insetLabelId: undefined,
     });
 
@@ -123,7 +124,9 @@
         validateStatus: props.validateStatus,
         maxlength: props.maxlength,
         minlength: props.minlength,
-        inputStyle: props.inputStyle,
+        // InputNumber's own global defaults apply to the parts; the global Input ones must not reach the inner Input
+        classNames: props.classNames ?? {},
+        styles: props.styles ?? {},
         insetLabelId: props.insetLabelId,
     }));
 

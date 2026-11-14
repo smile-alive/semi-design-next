@@ -118,13 +118,24 @@ describe('Tabs', () => {
         expect(tab('titleA')).toHaveAttribute('aria-selected', 'true');
     });
 
-    it('Tabs 带自定义 class、style 和 contentStyle', () => {
-        const { container } = renderTabs({ class: 'test', style: { color: 'red' }, contentStyle: { color: 'blue' } }, twoPanes);
+    it('Tabs 带自定义 class 和 style', () => {
+        const { container } = renderTabs({ class: 'test', style: { color: 'red' } }, twoPanes);
         const root = container.querySelector('div.test');
         expect(root).toBe(container.firstChild);
         expect(root).toHaveClass(prefix, `${prefix}-top`);
         expect(root).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(getContent(container)).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        stubIntersectionObserver();
+        const parts = ['tabBar', 'content', 'visibleTabs'] as const;
+        const selectors = { tabBar: `${prefix}-bar`, content: `${prefix}-content`, visibleTabs: `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper` };
+        const { container } = renderTabs({ collapsible: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) }, threePanes);
+        for (const part of parts) {
+            const el = getElement(`.${selectors[part]}`, container);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it.each([
@@ -605,7 +616,7 @@ describe('Tabs 行为', () => {
                 <DefaultTabBar {...barProps} data-bar="custom" />
             </div>
         ));
-        const { container } = renderTabs({ renderTabBar, onChange, tabBarClassName: 'bar', tabBarStyle: { color: 'red' } });
+        const { container } = renderTabs({ renderTabBar, onChange, classNames: { tabBar: 'bar' }, styles: { tabBar: { color: 'red' } } });
         const barProps = renderTabBar.mock.calls[0][0];
         expect(barProps).toMatchObject({ activeKey: 'a', class: 'bar', style: { color: 'red' }, size: 'large', type: 'line', tabPosition: 'top' });
         expect(barProps.list?.map((pane) => pane.itemKey)).toEqual(['a', 'b', 'c']);
@@ -1309,7 +1320,7 @@ describe('Tabs more 与 collapsible', () => {
         const onVisibleTabsChange = vi.fn<NonNullable<TabsProps['onVisibleTabsChange']>>();
         const onChange = vi.fn<Change>();
         const panes = keyPanes(['k0', 'k1', 'k2', 'k3', 'k4']);
-        const { container } = renderTabs({ collapsible: true, onVisibleTabsChange, onChange, visibleTabsStyle: { color: 'red' }, dropdownProps: { end: { trigger: 'click' } } }, panes);
+        const { container } = renderTabs({ collapsible: true, onVisibleTabsChange, onChange, styles: { visibleTabs: { color: 'red' } }, dropdownProps: { end: { trigger: 'click' } } }, panes);
         const arrowButton = (pos: string) => getElement<HTMLButtonElement>('button', arrow(container, pos));
         expect(getBar()).toHaveClass(`${prefix}-bar-collapse`);
         expect(screen.getByRole('tablist')).toBe(container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`));

@@ -193,7 +193,7 @@ Radio 不可用
 
 <RadioGroupVueApi />
 
-`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`、`addonId`、`addonStyle`、`addonClass`、`extraId`，没有 `onChange`；需要自定义内容时使用 `#label`、`#extra` 作用域插槽。`class`、`style` 与原生属性经 attrs 落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。
+`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`、`addonId`、`classNames`、`styles`、`extraId`，没有 `onChange`；需要自定义内容时使用 `#label`、`#extra` 作用域插槽。`class`、`style` 与原生属性经 attrs 落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。
 
 </Framework>
 
@@ -201,7 +201,7 @@ Radio 不可用
 
 <RadioGroupSolidApi />
 
-`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`、`addonId`、`addonStyle`、`addonClassName`、`extraId`，没有 `onChange`；需要自定义内容时使用 `renderLabel(option, index)`、`renderExtra(option, index)`，按钮型不调用 `renderExtra`。`class`、`style`、`ref`、`onBlur` 与原生属性落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；`onBlur` 只在焦点离开整个分组时触发。Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。
+`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`、`addonId`、`classNames`、`styles`、`extraId`，没有 `onChange`；需要自定义内容时使用 `renderLabel(option, index)`、`renderExtra(option, index)`，按钮型不调用 `renderExtra`。`class`、`style`、`ref`、`onBlur` 与原生属性落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；`onBlur` 只在焦点离开整个分组时触发。Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。
 
 </Framework>
 
@@ -209,7 +209,7 @@ Radio 不可用
 
 <RadioGroupSvelteApi />
 
-`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`（字符串）、`addonId`、`addonStyle`（字符串）、`addonClass`、`extraId`，没有 `onChange`；需要自定义内容时使用 `label`、`extra` snippet，参数为 `{ option, index }`，按钮型不渲染 `extra`。`class`、`style`（字符串）、`onBlur` 与原生属性落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；`onBlur` 只在焦点离开整个分组时触发。Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。`value` 支持 `bind:`、函数绑定、单向传值、不传四种写法，不提供 `defaultValue`。
+`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`（字符串）、`addonId`、`classNames`、`styles`（各部位的值为字符串）、`extraId`，没有 `onChange`；需要自定义内容时使用 `label`、`extra` snippet，参数为 `{ option, index }`，按钮型不渲染 `extra`。`class`、`style`（字符串）、`onBlur` 与原生属性落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；`onBlur` 只在焦点离开整个分组时触发。Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。`value` 支持 `bind:`、函数绑定、单向传值、不传四种写法，不提供 `defaultValue`。
 
 </Framework>
 

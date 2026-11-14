@@ -55,6 +55,25 @@ describe('Svelte Table 基本渲染', () => {
         expect(getHeads()[0].classList.contains(`${P}-align-right`)).toBe(true);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        mountTable({
+            classNames: { header: 'custom-head' },
+            styles: { header: 'color: red; font-weight: 700' },
+            columns: [
+                { title: 'Name', dataIndex: 'name', onHeaderCell: () => ({ style: 'color: blue' }) },
+                { title: 'Age', dataIndex: 'age' },
+            ],
+            dataSource: getData(),
+            pagination: false,
+        });
+        const heads = getHeads();
+        expect(heads[0].classList.contains('custom-head')).toBe(true);
+        expect(heads[1].classList.contains('custom-head')).toBe(true);
+        expect(heads[0].getAttribute('style')).toContain('font-weight: 700');
+        expect(heads[0].style.color).toBe('blue');
+        expect(heads[1].style.color).toBe('red');
+    });
+
     it('cell 与 headerCell snippet 按 column 分支，其余列显示原值', () => {
         mountTable({ columns: getColumns(), dataSource: getData(), pagination: false }, ['cell', 'headerCell']);
         expect(query('.custom-cell').textContent).toBe('John Brown!');

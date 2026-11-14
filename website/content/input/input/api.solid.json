@@ -42,9 +42,13 @@
                 "zh-CN": "接收原生 input 元素。",
                 "en-US": "Receives the native input element."
             },
-            "inputStyle": {
-                "zh-CN": "原生 input 元素的样式，对象键使用 kebab-case，数值需带单位。",
-                "en-US": "Style of the native input element; object keys are kebab-case and numbers need a unit."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 input（原生 input 元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by input (the native input element); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 classNames；值为对象（键使用 kebab-case，数值需带单位）或字符串。",
+                "en-US": "Styles of the inner parts, keyed like classNames; each value is an object (kebab-case keys, numbers need a unit) or a string."
             },
             "insetLabel": {
                 "zh-CN": "内嵌标签，未设置 prefix 时渲染在前缀位置；此时若未设置 aria-label 与 aria-labelledby，输入框通过 aria-labelledby 由它命名。",
@@ -163,17 +167,17 @@
                 "zh-CN": "自定义计算字符串长度，搭配 maxLength、minLength、maxCount 使用。",
                 "en-US": "Custom string length calculation, used with maxLength, minLength and maxCount."
             },
-            "lineNumberClassName": {
-                "zh-CN": "行号区域的类名。",
-                "en-US": "Class name of the line number area."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 textarea（原生 textarea 元素）、lineNumber（行号区域），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by textarea (the native textarea element) and lineNumber (the line number area); merged with the built-in classes."
             },
             "lineNumberStart": {
                 "zh-CN": "行号起始值。",
                 "en-US": "Starting line number."
             },
-            "lineNumberStyle": {
-                "zh-CN": "行号区域的样式，对象键使用 kebab-case，数值需带单位。",
-                "en-US": "Style of the line number area; object keys are kebab-case and numbers need a unit."
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 classNames，对象键使用 kebab-case，数值需带单位；textarea 的尺寸由 autosize、resize、rows 决定，同名样式以后者为准。",
+                "en-US": "Styles of the inner parts, keyed like classNames; object keys are kebab-case and numbers need a unit. The size of textarea comes from autosize, resize and rows, which win on the same property."
             },
             "maxCount": {
                 "zh-CN": "字数上限，设置后显示字数统计；超出时计数器标红，不截断输入。",
@@ -242,10 +246,6 @@
             "textareaRef": {
                 "zh-CN": "接收原生 textarea 元素；showLineNumber 切换时 textarea 会重新挂载，并再次调用。",
                 "en-US": "Receives the native textarea element; showLineNumber remounts the textarea, so it is called again with the new element."
-            },
-            "textareaStyle": {
-                "zh-CN": "内部 textarea 元素的样式，如高度；对象键使用 kebab-case，数值需带单位。",
-                "en-US": "Style of the inner textarea element, such as its height; object keys are kebab-case and numbers need a unit."
             },
             "validateStatus": {
                 "zh-CN": "校验状态，可选 default、error、warning；error 时输出 aria-invalid。",

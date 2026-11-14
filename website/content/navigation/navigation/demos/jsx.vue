@@ -5,7 +5,7 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '300px' }" :defaultOpenKeys="['user']" @click="(data) => console.log('trigger onClick: ', data)" @select="(data) => console.log('trigger onSelect: ', data)">
+    <Nav :defaultOpenKeys="['user']" :styles="{ body: { height: '300px' } }" @click="(data) => console.log('trigger onClick: ', data)" @select="(data) => console.log('trigger onSelect: ', data)">
         <Nav.Header text="Semi 运营后台">
             <template #logo>
                 <IconSemiLogo :style="{ height: '36px', fontSize: '36px' }" />

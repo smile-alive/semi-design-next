@@ -138,7 +138,7 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
     const renderArrow = () => {
         if (loading) {
             // the row carries aria-busy; the spinner's own name would join the row's name
-            return <Spin wrapperClassName={`${prefixcls}-spin-icon`} aria-hidden />;
+            return <Spin className={`${prefixcls}-spin-icon`} aria-hidden />;
         }
         if (!isLeaf) {
             if (expandIcon) {
@@ -186,7 +186,7 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
             return renderLabel(label, data, keyword);
         }
         if ((typeof label === 'string' || typeof label === 'number') && filtered && keyword) {
-            return <Highlight component="span" highlightClassName={`${prefixcls}-highlight`} searchWords={[keyword]} sourceString={String(label)} />;
+            return <Highlight component="span" classNames={{ highlight: `${prefixcls}-highlight` }} searchWords={[keyword]} sourceString={String(label)} />;
         }
         return label;
     };

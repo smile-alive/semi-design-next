@@ -6,10 +6,13 @@
                 "zh-CN": "显示时在进场动画结束后以 true 触发，无动画时显示后立即触发；隐藏时在离场动画结束后以 false 触发；显示期间被卸载时以 false 触发一次。",
                 "en-US": "Called with true after the enter animation ends, or right after showing without motion. Called with false after the leave animation, and once with false if the sheet is unmounted while shown."
             },
-            "bodyStyle": { "zh-CN": "面板内容区的样式，字符串。", "en-US": "Style of the panel body, as a string." },
             "canVerticalSetWidth": {
                 "zh-CN": "placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。",
                 "en-US": "Whether width applies when placement is top or bottom. By default those sheets span the full width."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 mask、content、header、body、footer，值的写法同 class（字符串、数组或对象），与组件自带的类名合并；content 落在对话框元素（.semi-sidesheet-inner）上。",
+                "en-US": "Class names of the inner parts, keyed by mask, content, header, body and footer; values take anything class takes (string, array or object) and merge with the built-in classes. content lands on the dialog element (.semi-sidesheet-inner)."
             },
             "closable": {
                 "zh-CN": "是否显示右上角的关闭按钮。",
@@ -27,7 +30,6 @@
                 "zh-CN": "指定弹层渲染到的父级 DOM。自定义容器需要设置 position: relative；这会改变浮层的 DOM 位置，不改变视图位置。",
                 "en-US": "Parent element the sheet is rendered into. A custom container needs position: relative; this changes where the sheet sits in the DOM, not where it is shown."
             },
-            "headerStyle": { "zh-CN": "面板头部的样式，字符串。", "en-US": "Style of the panel header, as a string." },
             "height": {
                 "zh-CN": "高度，placement 为 top、bottom 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时为 448。",
                 "en-US": "Height, used when placement is top or bottom. A number is in pixels; a string is any valid CSS length. 448 when omitted."
@@ -44,7 +46,6 @@
                 "zh-CN": "是否允许点击遮罩关闭面板。",
                 "en-US": "Whether clicking the mask closes the sheet."
             },
-            "maskStyle": { "zh-CN": "遮罩的样式，字符串。", "en-US": "Style of the mask, as a string." },
             "motion": { "zh-CN": "是否开启动画。", "en-US": "Whether animation is enabled." },
             "onCancel": {
                 "zh-CN": "用户通过关闭按钮、遮罩或 Esc 关闭面板时触发，visible 已先被写回 false；参数为原生 MouseEvent，按 Esc 时为原生 KeyboardEvent。",
@@ -61,6 +62,10 @@
             "style": {
                 "zh-CN": "落在 role=dialog 元素上的样式，字符串。",
                 "en-US": "Style that lands on the role=dialog element, as a string."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames，每个值是样式字符串；content 与 style 一样，与组件计算出的宽高合并，计算出的宽高优先。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; every value is a style string. Like style, content is merged with the computed width and height, which take precedence."
             },
             "title": {
                 "zh-CN": "标题，纯文本或 snippet，同时作为对话框的可访问名称。声明为 prop，不会作为原生 title 属性落到元素上。",

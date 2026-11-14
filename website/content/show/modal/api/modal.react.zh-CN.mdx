@@ -5,13 +5,13 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | afterClose | 对话框完全关闭后的回调；显示期间被卸载，或所在子树被 `Activity` 隐藏时也会调用一次。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
-| bodyStyle | 对话框内容区的样式。 | `CSSProperties` | - |
 | cancelButtonProps | 取消按钮的属性，类型同 Button。打开后默认聚焦取消按钮，`autoFocus` 为 `false` 时不聚焦；`onClick` 先于内置的取消处理调用，不会替换内置处理。 | `ButtonProps` | - |
 | cancelLoading | 取消按钮是否加载中；不传时跟随 `onCancel` 返回的 Promise，显式传入 `false` 关闭该行为。 | `boolean` | - |
 | cancelText | 取消按钮文字，缺省取语言包 `Modal.cancel`。 | `string` | - |
 | centered | 是否垂直居中显示。 | `boolean` | `false` |
 | children | 对话框的正文。 | `React.ReactNode` | - |
 | className | 落在 portal 内最外层元素上的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与组件自带的类名合并；自定义 `header` 时没有 `header` 部位。 | <ApiType detail={"Partial\u003cRecord\u003cModalPart, string>>"}>Type</ApiType> | - |
 | closable | 是否显示右上角的关闭按钮。 | `boolean` | `true` |
 | closeIcon | 关闭按钮的图标；传入 `null` 时回落到默认图标，隐藏关闭按钮请用 `closable={false}`。 | `ReactNode` | - |
 | closeOnEsc | 是否允许按 Esc 取消对话框。 | `boolean` | `true` |
@@ -31,7 +31,6 @@ import ApiType from '#/components/ApiType.astro';
 | mask | 是否显示遮罩。 | `boolean` | `true` |
 | maskClosable | 是否允许点击遮罩取消对话框。 | `boolean` | `true` |
 | maskFixed | 遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理（aria-modal、页面 inert、Tab 锁定、body 滚动锁定）。 | `boolean` | `false` |
-| maskStyle | 遮罩的样式。 | `CSSProperties` | - |
 | modalContentClass | 对话框内容元素的类名。 | `string` | - |
 | modalRender | 自定义渲染对话框本身，参数是 `role="dialog"` 元素，返回值必须包含它，例如用 `DragMove` 包裹。 | <ApiType detail={"(node: ReactNode) => ReactNode"}>Type</ApiType> | - |
 | motion | 是否启用进出场动画。 | `boolean` | `true` |
@@ -45,6 +44,7 @@ import ApiType from '#/components/ApiType.astro';
 | role | 对话框元素的 `role`，默认 `dialog`；命令式方法使用 `alertdialog`。 | `'alertdialog' \| 'dialog'` | - |
 | size | 对话框宽度档位：`small` 为 448px，`medium` 为 684px，`large` 为 920px，`full-width` 为 `100vw - 64px`。 | `Size` | `"small"` |
 | style | 落在 `.semi-modal` 对话框盒子上的样式。 | `CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cModalPart, CSSProperties>>"}>Type</ApiType> | - |
 | title | 对话框标题；未传入 `aria-label` 或自定义 `header` 时，标题用于命名对话框。 | `ReactNode` | - |
 | visible | 对话框是否可见，由使用方控制。 | `boolean` | `false` |
 | width | 对话框宽度，数字按像素处理，字符串为合法 CSS 长度；不传时由 `size` 决定。 | `string \| number` | - |

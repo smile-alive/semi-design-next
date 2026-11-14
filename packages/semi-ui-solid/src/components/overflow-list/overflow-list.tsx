@@ -1,6 +1,6 @@
 import { type Accessor, type JSX, type ResolvedChildren, For, Show, children, createComputed, createEffect, createMemo, createSignal, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/overflow-list/constants';
+import { cssClasses, type OverflowListPart } from '@fibrae/semi-foundation/components/overflow-list/constants';
 import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
@@ -25,8 +25,8 @@ interface OverflowListCommonProps<T> extends ElementProps<'div', 'children'> {
     threshold?: number;
     /** Scroll mode: the element it returns is observed, so it must be an element rather than text */
     visibleItemRenderer?: (item: T, index: number) => JSX.Element;
-    wrapperClassName?: string;
-    wrapperStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<OverflowListPart, string>>;
+    styles?: Partial<Record<OverflowListPart, JSX.CSSProperties | string>>;
     /** Attributes of the scroll-mode wrapper holding the visible items */
     wrapperProps?: JSX.HTMLAttributes<HTMLDivElement>;
     itemKey?: Key | ((item: T) => Key);
@@ -98,27 +98,7 @@ type Adapter = OverflowListAdapter<OverflowListBaseProps>;
 // reference to https://github.com/palantir/blueprint/blob/1aa71605/packages/core/src/components/overflow-list/overflowList.tsx#L34
 export default function OverflowList<T = OverflowItem>(rawProps: OverflowListProps<T>) {
     const props = useDefaultProps('OverflowList', rawProps as InternalProps, defaultProps);
-
-    const [local, rest] = splitProps(props, [
-        'collapseFrom',
-        'items',
-        'itemKey',
-        'minVisibleItems',
-        'onIntersect',
-        'onOverflow',
-        'onVisibleStateChange',
-        'overflowRenderDirection',
-        'overflowRenderer',
-        'ref',
-        'renderMode',
-        'class',
-        'style',
-        'threshold',
-        'visibleItemRenderer',
-        'wrapperClassName',
-        'wrapperProps',
-        'wrapperStyle',
-    ]);
+    const [local, rest] = splitProps(props, ['classNames', 'collapseFrom', 'items', 'itemKey', 'minVisibleItems', 'onIntersect', 'onOverflow', 'onVisibleStateChange', 'overflowRenderDirection', 'overflowRenderer', 'ref', 'renderMode', 'class', 'style', 'styles', 'threshold', 'visibleItemRenderer', 'wrapperProps']);
 
     const [root, setRoot] = createSignal<HTMLDivElement>();
 
@@ -239,7 +219,7 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
             <Show when={isScroll() && local.overflowRenderDirection !== 'end'}>{scrollSides()[0]}</Show>
             <Show when={isScroll() && local.overflowRenderDirection === 'start'}>{scrollSides()[1]}</Show>
             <Show when={isScroll()}>
-                <div {...local.wrapperProps} class={clsx(local.wrapperClassName, cssClasses.SCROLL_WRAPPER)} style={local.wrapperStyle}>
+                <div {...local.wrapperProps} class={clsx(cssClasses.SCROLL_WRAPPER, local.classNames?.wrapper)} style={local.styles?.wrapper}>
                     <For each={visibleKeys()}>{(key) => <ScrollItem scrollKey={String(key)} entry={entryOf(key)} render={visibleItemRenderer()} register={(node) => registerScrollNode(String(key), node)} />}</For>
                 </div>
             </Show>

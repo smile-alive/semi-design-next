@@ -194,21 +194,17 @@
                 "zh-CN": "是否阻止下拉面板上的点击事件冒泡；传入字符串时按布尔值处理。",
                 "en-US": "Whether click events on the dropdown stop propagating; a string is treated as a boolean."
             },
-            "dropdownClassName": {
-                "zh-CN": "下拉面板的类名。",
-                "en-US": "Class of the dropdown."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 dropdown（下拉面板）、optionList（节点列表，即 role=\"tree\" 的元素），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by dropdown (the dropdown panel) and optionList (the node list, the element with role=\"tree\"); values take any class binding and merge with the built-in classes."
             },
-            "dropdownStyle": {
-                "zh-CN": "下拉面板的样式。",
-                "en-US": "Style of the dropdown."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
             },
             "dropdownMatchSelectWidth": {
                 "zh-CN": "下拉面板的最小宽度是否等于选择框的宽度。",
                 "en-US": "Whether the minimum width of the dropdown equals the width of the select box."
-            },
-            "optionListStyle": {
-                "zh-CN": "节点列表（role=\"tree\" 的元素）的样式。",
-                "en-US": "Style of the node list, the element with role=\"tree\"."
             },
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动页面以显示新聚焦的元素。",

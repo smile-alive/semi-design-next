@@ -1,7 +1,7 @@
 import { type Accessor, type JSX, type Ref, Show, children, createComputed, createMemo, createSelector, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/tree-select/constants';
+import { cssClasses, strings, type TreeSelectPart } from '@fibrae/semi-foundation/components/tree-select/constants';
 import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/components/tree-select/foundation';
 import { buildRowProps, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/utils';
@@ -112,9 +112,7 @@ type RedefinedProps =
     | 'onSearch'
     | 'onLoad'
     | 'arrowIcon'
-    | 'dropdownStyle'
     | 'insetLabel'
-    | 'optionListStyle'
     | 'outerBottomSlot'
     | 'outerTopSlot'
     | 'prefix'
@@ -136,10 +134,10 @@ export interface TreeSelectProps<T extends TreeSelectNodeValue = TreeSelectNodeV
     /** `null` shows no arrow */
     arrowIcon?: JSX.Element;
     clearIcon?: JSX.Element;
-    dropdownStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<TreeSelectPart, string>>;
+    styles?: Partial<Record<TreeSelectPart, JSX.CSSProperties | string>>;
     insetLabel?: JSX.Element;
     insetLabelId?: string;
-    optionListStyle?: JSX.CSSProperties | string;
     outerBottomSlot?: JSX.Element;
     outerTopSlot?: JSX.Element;
     prefix?: JSX.Element;
@@ -276,9 +274,9 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         'defaultValue',
         'disableStrictly',
         'disabled',
-        'dropdownClassName',
+        'classNames',
         'dropdownMatchSelectWidth',
-        'dropdownStyle',
+        'styles',
         'emptyContent',
         'expandAction',
         'expandAll',
@@ -310,7 +308,6 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         'onSearch',
         'onSelect',
         'onVisibleChange',
-        'optionListStyle',
         'outerBottomSlot',
         'outerTopSlot',
         'placeholder',
@@ -1040,7 +1037,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         };
         const listClass = () => clsx(`${prefixTree}-option-list`, `${prefixTree}-option-list-block`, { [`${prefixTree}-option-list-hidden`]: emptyContent() === null && noData() });
         return (
-            <div ref={setOptionContainer} class={clsx(local.dropdownClassName, `${prefix}-popover`)} style={local.dropdownStyle} onFocusIn={handleFocusIn} onFocusOut={handleFocusLeave} onKeyDown={handleContainerKeyDown} onMouseDown={handleContainerMouseDown}>
+            <div ref={setOptionContainer} class={clsx(`${prefix}-popover`, local.classNames?.dropdown)} style={local.styles?.dropdown} onFocusIn={handleFocusIn} onFocusOut={handleFocusLeave} onKeyDown={handleContainerKeyDown} onMouseDown={handleContainerMouseDown}>
                 <TreeContext.Provider value={contextValue}>
                     <div class={`${prefixTree}-wrapper`}>
                         <Show when={hasContent(outerTop())} fallback={<Show when={filterable() && isDropdownPositionSearch()}>{<SearchInput />}</Show>}>
@@ -1050,7 +1047,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                             when={!noData()}
                             fallback={
                                 // the combobox's aria-controls needs an element while there is no tree
-                                <div id={treeId} class={listClass()} style={local.optionListStyle} role="none">
+                                <div id={treeId} class={clsx(listClass(), local.classNames?.optionList)} style={local.styles?.optionList} role="none">
                                     <Show when={emptyContent() !== null}>
                                         <ul class={clsx(`${prefixTree}-option`, `${prefixTree}-option-empty`)}>
                                             <li class={clsx(`${prefixTree}-option-label`, `${prefixTree}-option-label-empty`)} x-semi-prop="emptyContent">
@@ -1061,7 +1058,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                                 </div>
                             }
                         >
-                            <div id={treeId} class={listClass()} style={local.optionListStyle} aria-label={name()['aria-label']} aria-labelledby={name()['aria-labelledby']} aria-multiselectable={Boolean(local.multiple)} role="tree">
+                            <div id={treeId} class={clsx(listClass(), local.classNames?.optionList)} style={local.styles?.optionList} aria-label={name()['aria-label']} aria-labelledby={name()['aria-labelledby']} aria-multiselectable={Boolean(local.multiple)} role="tree">
                                 <NodeList
                                     flattenList={state().cachedFlattenNodes as FlattenNode[] | undefined}
                                     flattenNodes={rows()}

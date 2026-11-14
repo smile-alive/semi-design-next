@@ -8,12 +8,11 @@ import ApiType from '#/components/ApiType.astro';
 | ariaLabel | 弹出层 role 为 dialog 时的 aria-label。 | `string` | `semiGlobalDefault("Popover", "ariaLabel")` |
 | ariaLabelledby | 弹出层 role 为 dialog 时的 aria-labelledby。 | `string` | `semiGlobalDefault("Popover", "ariaLabelledby")` |
 | arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 showArrow。 | `boolean` | `semiGlobalDefault("Popover", "arrowPointAtCenter")` |
-| arrowStyle | 箭头的 borderColor、backgroundColor 与 borderOpacity；缺省跟随卡片 style 中的 backgroundColor 与 borderColor。 | `ArrowStyle` | `semiGlobalDefault("Popover", "arrowStyle")` |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| classNames | 内部各部位的类名，键为 `content`（内容卡片）、`arrow`（箭头），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cPopoverPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Popover", "classNames")` |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭弹出层。 | `boolean` | `semiGlobalDefault("Popover", "clickToHide")` |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。 | `boolean` | `true` |
 | condition | 是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的弹出层；visible 受控时只发出 update:visible 与 visibleChange(false)，使用方回写后才关闭。 | `boolean` | `semiGlobalDefault("Popover", "condition")` |
-| contentClassName | 弹出层内容卡片的类名。 | `string \| unknown[]` | `semiGlobalDefault("Popover", "contentClassName")` |
 | disableArrowKeyDown | 是否禁用在触发元素上按方向键把焦点移入弹出层。 | `boolean` | `semiGlobalDefault("Popover", "disableArrowKeyDown")` |
 | disableFocusListener | trigger 为 hover 时，是否不响应键盘聚焦打开弹出层。 | `boolean` | `semiGlobalDefault("Popover", "disableFocusListener")` |
 | guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环。 | `boolean` | `true` |
@@ -27,6 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | showArrow | 是否显示箭头三角形。 | `boolean` | `false` |
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。不传时无箭头为 4，有箭头为 10。 | `number \| { x: number; y: number; }` | `semiGlobalDefault("Popover", "spacing")` |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `string \| boolean` | `semiGlobalDefault("Popover", "stopPropagation")` |
+| styles | 内部各部位的内联样式，键同 `classNames`。`content` 是内容卡片的样式；`arrow` 是箭头的 borderColor、backgroundColor 与 borderOpacity，未设置的颜色跟随弹出层 style 中的 backgroundColor 与 borderColor。 | `{ content?: StyleValue; arrow?: ArrowStyle \| undefined; }` | `semiGlobalDefault("Popover", "styles")` |
 | trigger | 触发显示的时机。custom 时显示与否完全由 visible 决定。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `"hover"` |
 | visible | 弹出层是否显示，配合 trigger 为 custom 与 v-model:visible 使用；传入后由该值决定显示。 | `boolean` | `semiGlobalDefault("Popover", "visible")` |
 

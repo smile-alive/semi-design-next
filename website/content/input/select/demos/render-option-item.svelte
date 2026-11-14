@@ -42,7 +42,7 @@
     </div>
 {/snippet}
 
-<Select aria-label="单选" dropdownClassName="components-select-demo-renderOptionItem" filter onSearch={(value) => (inputValue = value)} {optionItem} {optionList} placeholder="单选" style="width: 180px" />
+<Select aria-label="单选" classNames={{ dropdown: 'components-select-demo-renderOptionItem' }} filter onSearch={(value) => (inputValue = value)} {optionItem} {optionList} placeholder="单选" style="width: 180px" />
 <br />
 <br />
-<Select aria-label="多选" dropdownClassName="components-select-demo-renderOptionItem" filter multiple onSearch={(value) => (inputValue = value)} {optionItem} {optionList} placeholder="多选" style="width: 320px" />
+<Select aria-label="多选" classNames={{ dropdown: 'components-select-demo-renderOptionItem' }} filter multiple onSearch={(value) => (inputValue = value)} {optionItem} {optionList} placeholder="多选" style="width: 320px" />

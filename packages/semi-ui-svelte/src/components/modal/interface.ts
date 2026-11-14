@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 import type { ConfirmType } from '@fibrae/semi-foundation/components/modal/confirm';
+import type { ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
 import type { OKType, Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import type { ButtonProps } from '../button/interface.js';
 
@@ -26,12 +27,13 @@ export interface ModalHandle {
 export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
     /** Called once the dialog has closed and its leave animation has ended, or when it unmounts while shown. */
     afterClose?: () => void;
-    bodyStyle?: string;
     cancelButtonProps?: ModalButtonProps;
     /** undefined: loading follows the Promise returned by onCancel */
     cancelLoading?: boolean;
     cancelText?: string;
     centered?: boolean;
+    /** Merged after the built-in class names of the part's element; replaces the global default as a whole */
+    classNames?: Partial<Record<ModalPart, ClassValue>>;
     closable?: boolean;
     closeOnEsc?: boolean;
     /** undefined: loading follows the Promise returned by onOk */
@@ -46,7 +48,6 @@ export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
     mask?: boolean;
     maskClosable?: boolean;
     maskFixed?: boolean;
-    maskStyle?: string;
     modalContentClass?: string;
     motion?: boolean;
     okButtonProps?: ModalButtonProps;
@@ -54,6 +55,7 @@ export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
     okType?: OKType;
     preventScroll?: boolean;
     size?: Size;
+    styles?: Partial<Record<ModalPart, string>>;
     /** Bindable. Cancel, close button, mask click and Escape write `false` once `onCancel` returns (or its Promise fulfills). */
     visible?: boolean;
     width?: string | number;

@@ -14,7 +14,7 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '300px' }" :defaultOpenKeys="['job']" :defaultSelectedKeys="['信息录入']" defaultIsCollapsed :footer="{ collapseButton: true }" :items="items">
+    <Nav :defaultOpenKeys="['job']" :defaultSelectedKeys="['信息录入']" defaultIsCollapsed :footer="{ collapseButton: true }" :items="items" :styles="{ body: { height: '300px' } }">
         <template #icon="renderProps">
             <component :is="iconOf(renderProps.item)" />
         </template>

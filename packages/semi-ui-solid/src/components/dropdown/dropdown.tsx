@@ -2,14 +2,14 @@ import { type JSX, type Ref, For, Show, children, createMemo, createSignal, merg
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { cssClasses, strings, type DropdownPart } from '@fibrae/semi-foundation/components/dropdown/constants';
 import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { cssClasses as tooltipClasses } from '@fibrae/semi-foundation/components/tooltip/constants';
 import { warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
 import { useDefaultProps, useFoundation } from '../../base/index';
-import { callHandler } from '../../utils/index';
+import { callHandler, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import Tooltip, { type GetTriggerProps, type RenderContentProps, type TooltipHandle, type TooltipInternalProps, type TooltipProps, type TooltipTriggerProps, type TriggerOwnProps, canCarryPopupState } from '../tooltip';
 import { DropdownContext, type DropdownContextValue, menuContext, menuItems, useDropdownContext } from './context';
@@ -41,7 +41,7 @@ export type DropdownTriggerProps = TooltipTriggerProps & {
 export type GetDropdownTriggerProps = <const P extends TriggerOwnProps = Record<never, never>>(own?: P) => Omit<P, keyof DropdownTriggerProps | 'tabindex'> & DropdownTriggerProps;
 
 // No ElementProps: Dropdown has no root DOM, so undeclared props are dropped (F11)
-export interface DropdownProps extends Omit<TooltipProps, 'children' | 'content' | 'disableArrowKeyDown'> {
+export interface DropdownProps extends Omit<TooltipProps, 'children' | 'classNames' | 'content' | 'disableArrowKeyDown' | 'styles'> {
     /**
      * A function (declare its parameter) gets getTriggerProps for the element that takes focus, such as a Button or
      * the Dropdown.Item of a submenu; anything else is wrapped in a span
@@ -50,10 +50,10 @@ export interface DropdownProps extends Omit<TooltipProps, 'children' | 'content'
     /** The popup content; takes precedence over `menu` */
     render?: JSX.Element;
     menu?: DropdownMenuItem[];
-    /** On the menu container `.semi-dropdown` */
-    contentClassName?: string;
+    classNames?: Partial<Record<DropdownPart, string>>;
     /** On the menu container `.semi-dropdown`; `class` goes on the popup */
     style?: JSX.CSSProperties | string;
+    styles?: Partial<Record<DropdownPart, JSX.CSSProperties | string>>;
     /**
      * How the items are selected (a submenu uses its own Dropdown's value); `active` marks selected items:
      * - 'single': role="menuitemradio" with aria-checked;
@@ -105,7 +105,7 @@ function renderMenuItem(item: DropdownMenuItem) {
 
 export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownHandle> }) {
     const props = useDefaultProps('Dropdown', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['ref', 'children', 'style', 'render', 'menu', 'contentClassName', 'selectionMode', 'showTick', 'spacing', 'condition', 'onVisibleChange']);
+    const [local, rest] = splitProps(props, ['ref', 'children', 'classNames', 'style', 'styles', 'render', 'menu', 'selectionMode', 'showTick', 'spacing', 'condition', 'onVisibleChange']);
 
     const parent = useDropdownContext();
     const config = useConfig();
@@ -197,10 +197,10 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
                 {...getTriggerProps({
                     ref: (node: HTMLSpanElement) => (wrapper = node),
                     get class() {
-                        return clsx(`${tooltipClasses.PREFIX}-trigger-wrapper`, props.wrapperClassName);
+                        return clsx(`${tooltipClasses.PREFIX}-trigger-wrapper`, local.classNames?.wrapper);
                     },
                     get style() {
-                        return { display: textOnly() ? undefined : 'inline-block' };
+                        return mergeStyles({ display: textOnly() ? undefined : 'inline-block' }, local.styles?.wrapper);
                     },
                     get tabIndex() {
                         return focusableInside() ? -1 : undefined;
@@ -216,7 +216,7 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     const renderMenu = () => {
         const render = children(() => local.render);
         return (
-            <div class={clsx(prefixCls, local.contentClassName)} style={local.style}>
+            <div class={clsx(prefixCls, local.classNames?.content)} style={mergeStyles(local.style, local.styles?.content)}>
                 <div class={`${prefixCls}-content`} x-semi-prop="render">
                     <Show when={render() == null && local.menu} fallback={render()}>
                         {(menu) => (
@@ -251,6 +251,8 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
         <InternalTooltip
             showArrow={false}
             {...rest}
+            classNames={{ wrapper: local.classNames?.wrapper }}
+            styles={{ wrapper: local.styles?.wrapper }}
             prefixCls={prefixCls}
             ref={(instance: TooltipHandle) => (tooltip = instance)}
             content={renderPopup}

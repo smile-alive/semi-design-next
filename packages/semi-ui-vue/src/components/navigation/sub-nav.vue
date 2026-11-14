@@ -24,8 +24,6 @@
     const props = withDefaults(defineProps<SubNavProps & /* @vue-ignore */ ElementProps<'li', keyof SubNavProps>>(), {
         // left undefined so that #wrapper receives only what was passed
         disabled: undefined,
-        // StyleValue admits false, so Vue would cast an absent prop to false
-        dropdownStyle: undefined,
         indent: undefined,
         level: undefined,
     });
@@ -81,7 +79,8 @@
             };
         }
         if (titleWrapper.value === SlotFragment) return {};
-        // Defaults first: user dropdownProps win, dropdownStyle beats their style, our onVisibleChange runs first
+        const user = props.dropdownProps ?? props.subDropdownProps;
+        // Defaults first: user dropdownProps win, styles.dropdown beats their style, our onVisibleChange runs first
         return mergeProps(
             {
                 class: { [`${prefix}-popover`]: view.value.isCollapsed },
@@ -91,8 +90,9 @@
                 trigger: 'hover',
                 onVisibleChange: (visible: boolean) => foundation.handleDropdownVisibleChange(visible),
             },
-            { ...(props.dropdownProps ?? props.subDropdownProps) },
-            props.dropdownStyle === undefined ? {} : { style: props.dropdownStyle }
+            { ...user },
+            props.styles?.dropdown === undefined ? {} : { style: props.styles.dropdown },
+            props.classNames?.dropdown === undefined ? {} : { classNames: { ...user?.classNames, content: [user?.classNames?.content, props.classNames.dropdown] } }
         );
     });
 

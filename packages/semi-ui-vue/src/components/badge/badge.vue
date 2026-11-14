@@ -14,8 +14,8 @@
         theme: () => semiDefault('Badge', 'theme', 'solid'),
         position: semiGlobalDefault('Badge', 'position'),
         overflowCount: semiGlobalDefault('Badge', 'overflowCount'),
-        countClassName: semiGlobalDefault('Badge', 'countClassName'),
-        countStyle: semiGlobalDefault('Badge', 'countStyle'),
+        classNames: semiGlobalDefault('Badge', 'classNames'),
+        styles: semiGlobalDefault('Badge', 'styles'),
     });
 
     const slots = defineSlots<BadgeSlots>();
@@ -37,7 +37,6 @@
             <component :is="node" v-for="[node, key] in nodes" :key="key" />
             <span
                 :class="[
-                    props.countClassName,
                     {
                         [`${prefixCls}-${props.type}`]: !$slots.count,
                         [`${prefixCls}-${props.theme}`]: !$slots.count,
@@ -47,8 +46,9 @@
                         [`${prefixCls}-count`]: !props.dot && !$slots.count && props.count != null,
                         [`${prefixCls}-custom`]: $slots.count,
                     },
+                    props.classNames?.count,
                 ]"
-                :style="props.countStyle"
+                :style="props.styles?.count"
                 x-semi-prop="count"
             >
                 <slot v-if="!props.dot" name="count">{{ content }}</slot>

@@ -29,7 +29,7 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '300px' }" :footer="{ collapseButton: true }" :items="items" :style="{ height: '520px' }" @select="(key) => console.log(key)">
+    <Nav :footer="{ collapseButton: true }" :items="items" :style="{ height: '520px' }" :styles="{ body: { height: '300px' } }" @select="(key) => console.log(key)">
         <template #icon="renderProps">
             <component :is="iconOf(renderProps.item)" />
         </template>

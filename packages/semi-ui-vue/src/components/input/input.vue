@@ -44,7 +44,8 @@
         autofocus: semiGlobalDefault('Input', 'autofocus'),
         placeholder: semiGlobalDefault('Input', 'placeholder'),
         validateStatus: () => semiDefault('Input', 'validateStatus', 'default'),
-        inputStyle: semiGlobalDefault('Input', 'inputStyle'),
+        classNames: semiGlobalDefault('Input', 'classNames'),
+        styles: semiGlobalDefault('Input', 'styles'),
         insetLabelId: undefined,
         getValueLength: undefined,
     });
@@ -259,13 +260,14 @@
                     [`${prefix}-sibling-clearbtn`]: allowClear,
                     [`${prefix}-sibling-modebtn`]: props.mode === 'password',
                 },
+                props.classNames?.input,
             ]"
             :disabled="looks.disabled"
             :maxlength="InputFoundation.getNativeMaxLength({ maxLength: props.maxlength, getValueLength: getLength })"
             :minlength="InputFoundation.getNativeMinLength({ minLength: props.minlength, getValueLength: getLength }, shown)"
             :placeholder="props.placeholder?.toString()"
             :readonly="props.readonly || isBooleanAttrOn(attrs.readOnly)"
-            :style="props.inputStyle"
+            :style="props.styles?.input"
             :type="InputFoundation.getInputType(props.type, props.mode, state.eyeClosed)"
             :value="elementText()"
             @change="commitDraft"

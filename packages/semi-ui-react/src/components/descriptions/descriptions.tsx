@@ -17,7 +17,8 @@ export interface Data {
     value?: (() => React.ReactNode) | React.ReactNode;
     hidden?: boolean;
     span?: number;
-    keyStyle?: React.CSSProperties;
+    classNames?: DescriptionsItemProps['classNames'];
+    styles?: DescriptionsItemProps['styles'];
 }
 export interface DescriptionsProps extends ElementProps<'div'> {
     align?: DescriptionsAlign;

@@ -2,7 +2,14 @@
     "nav": {
         "source": "packages/semi-ui-svelte/src/components/navigation/nav.svelte",
         "props": {
-            "bodyStyle": { "zh-CN": "导航项列表的自定义样式。", "en-US": "Custom style of the navigation item list." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式字符串，键同 `classNames`。",
+                "en-US": "Inline style strings of the inner parts, keyed like `classNames`."
+            },
             "isCollapsed": {
                 "zh-CN": "是否处于收起状态，仅 mode 为 vertical 时有效；可用 `bind:isCollapsed` 绑定，单向传值只作初值，`undefined` 表示不受控。",
                 "en-US": "Whether the navigation is collapsed. Applies only when mode is vertical. Bind it with `bind:isCollapsed`; a one-way value is only the initial one, and `undefined` means uncontrolled."
@@ -162,9 +169,13 @@
                 "zh-CN": "弹层 Dropdown 的参数，水平模式与收起状态下使用。",
                 "en-US": "Props of the popup Dropdown, used in horizontal mode and when collapsed."
             },
-            "dropdownStyle": {
-                "zh-CN": "弹层的样式，优先于 dropdownProps 中的 style。",
-                "en-US": "Style of the popup. Wins over the style in dropdownProps."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（弹层内容 `.semi-dropdown`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the popup content `.semi-dropdown`); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式字符串，键同 `classNames`；`dropdown` 优先于 dropdownProps 中的 style。",
+                "en-US": "Inline style strings of the inner parts, keyed like `classNames`; `dropdown` wins over the style in dropdownProps."
             },
             "indent": {
                 "zh-CN": "没有图标时是否保留其占位，仅对一级导航生效。",

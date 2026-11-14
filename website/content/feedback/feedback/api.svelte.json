@@ -14,10 +14,6 @@
                 "zh-CN": "取消按钮的属性。loading 取内置的挂起态与使用方的 loading 任一为真；onclick 先于内置处理调用，不会替换内置处理。",
                 "en-US": "Props of the cancel button. It is loading when either the built-in pending state or your loading says so. onclick runs before the built-in handling, which still runs."
             },
-            "bodyStyle": {
-                "zh-CN": "内容区的样式字符串，两种模式通用。",
-                "en-US": "Style string of the body, for both modes."
-            },
             "canVerticalSetWidth": {
                 "zh-CN": "仅 popup 模式：placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。",
                 "en-US": "Popup mode only: whether width applies when placement is top or bottom. By default those sheets span the full width."
@@ -33,6 +29,10 @@
             "centered": {
                 "zh-CN": "仅 modal 模式：是否垂直居中显示。",
                 "en-US": "Modal mode only: whether the dialog is vertically centered."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 mask、header、body，值的写法同 class（字符串、数组或对象），与组件自带的类名合并，传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Class names of the inner parts, keyed by mask, header and body; values take anything class takes (string, array or object) and merge with the built-in classes. Passed to the Modal or SideSheet of the current mode."
             },
             "closable": {
                 "zh-CN": "是否显示右上角的关闭按钮。",
@@ -66,10 +66,6 @@
                 "zh-CN": "仅 modal 模式：默认页脚是否显示取消按钮。",
                 "en-US": "Modal mode only: whether the default footer shows the cancel button."
             },
-            "headerStyle": {
-                "zh-CN": "仅 popup 模式：面板头部的样式字符串。",
-                "en-US": "Popup mode only: style string of the panel header."
-            },
             "height": {
                 "zh-CN": "高度，数字按像素处理，字符串为合法 CSS 长度；popup 模式仅 placement 为 top、bottom 时生效。",
                 "en-US": "Height. A number is in pixels; a string is any valid CSS length. In popup mode it applies only when placement is top or bottom."
@@ -93,10 +89,6 @@
             "maskFixed": {
                 "zh-CN": "仅 modal 模式：遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理。",
                 "en-US": "Modal mode only: whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal."
-            },
-            "maskStyle": {
-                "zh-CN": "遮罩的样式字符串。",
-                "en-US": "Style string of the mask."
             },
             "modalContentClass": {
                 "zh-CN": "仅 modal 模式：对话框内容元素的类名。",
@@ -133,6 +125,10 @@
             "style": {
                 "zh-CN": "样式字符串；落点见下方说明。",
                 "en-US": "Style string; see the note below for where it lands."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames，每个值是样式字符串，传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; every value is a style string. Passed to the Modal or SideSheet of the current mode."
             },
             "width": {
                 "zh-CN": "宽度，数字按像素处理，字符串为合法 CSS 长度；不传时由 size 决定。",

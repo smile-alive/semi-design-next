@@ -202,7 +202,51 @@ export default defineConfig({
 
 含义为：`base`（含 Preflight）优先级最低，Semi 次之，Tailwind 的 `components` 与用户设置的原子类（`p-0` 等）优先级最高。后声明的层优先级更高，与选择器权重无关，因此单个类名的工具类就能覆盖 Semi 的根元素样式，不需要 `!important`。
 
-### 2. 解决在 Tailwind 原子类中使用 Semi Token 的问题 (可选)
+### 2. 给组件内部元素写原子类
+
+根元素的原子类写在 `className`（Vue、Solid、Svelte 为 `class`）。内部元素（如 Card 的正文、Select 的弹出层、Modal 的遮罩）的原子类写在 `classNames`，内联样式写在 `styles`，两者的键都是部位名，各组件的 API 表格列出了它的部位。部位类名排在组件自带类名之后，按上面的层顺序，原子类能直接覆盖组件样式。
+
+<Framework only="react">
+
+```jsx
+<Card className="w-80" classNames={{ header: 'bg-semi-color-fill-0', body: 'p-0' }} styles={{ footer: { textAlign: 'end' } }}>
+    ...
+</Card>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <Card class="w-80" :classNames="{ header: 'bg-semi-color-fill-0', body: 'p-0' }" :styles="{ footer: { textAlign: 'end' } }">...</Card>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<Card class="w-80" classNames={{ header: 'bg-semi-color-fill-0', body: 'p-0' }} styles={{ footer: { 'text-align': 'end' } }}>
+    ...
+</Card>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<Card class="w-80" classNames={{ header: 'bg-semi-color-fill-0', body: 'p-0' }} styles={{ footer: 'text-align: end' }}>...</Card>
+```
+
+</Framework>
+
+全局 `overrideDefaultProps` 里的 `classNames`、`styles` 是默认值，组件传入时整体替换，不逐键合并。
+
+### 3. 解决在 Tailwind 原子类中使用 Semi Token 的问题 (可选)
 
 Tailwind 支持用户配置自己的 Token 来实现主题。同时 Semi 也提供了自己的主题方案与对应 Token 如果想在项目中直接使用 Semi Token，例如将一个 span 的文字颜色设置为 `--semi-color-text-0` 来实现亮暗色的颜色自动切换与主题保持一致，需要单独设置 css `color: var(--semi-color-text-0)`，很不方便。
 
@@ -417,7 +461,7 @@ Semi 的暗色开关是 `theme-mode` 属性，而不是 Tailwind 默认的 `pref
 
 该变体只认 `[theme-mode='dark']`，不包含 `.semi-always-dark`。
 
-### 3. 已知差异
+### 4. 已知差异
 
 层顺序正确时，Tailwind 的 Preflight 仍会改写 Semi 没有显式声明、依赖浏览器默认值（UA 默认值）的属性。以下组件在 Tailwind 页面中的表现与空白页不同：
 

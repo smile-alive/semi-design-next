@@ -1,6 +1,6 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
 import type { TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
-import type { PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
+import type { PanelType, TimePickerPart } from '@fibrae/semi-foundation/components/time-picker/constants';
 import type { DisabledTimeFns } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import type { InputSize, ValidateStatus } from '../input/interface';
 import type { ScrollItemProps } from '../scroll-list/interface';
@@ -49,7 +49,9 @@ export interface TimePickerProps {
     inputReadOnly?: boolean;
     validateStatus?: ValidateStatus;
     insetLabelId?: string;
-    inputStyle?: StyleValue;
+    /** `dropdown` is the panel card; `input` is the Input's root element */
+    classNames?: Partial<Record<TimePickerPart, ClassValue>>;
+    styles?: Partial<Record<TimePickerPart, StyleValue>>;
     /** Focuses the input on mount, which opens the panel */
     autofocus?: boolean;
     focusOnOpen?: boolean;
@@ -58,8 +60,6 @@ export interface TimePickerProps {
     motion?: boolean;
     autoAdjustOverflow?: boolean;
     position?: Position;
-    popupClassName?: string;
-    popupStyle?: StyleValue;
     stopPropagation?: boolean;
     timeZone?: string | number;
     scrollItemProps?: TimePickerScrollItemProps;

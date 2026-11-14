@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoSwitchDate | Switches the selected date automatically when the year or month is changed with the arrow buttons or the dropdown. Only for the date type. | `boolean` | `true` |
 | borderless | Removes the border of the input. | `boolean` | `false` |
 | bottomSlot | Extra area at the bottom of the panel. | `Snippet` | - |
+| classNames | Class names of the inner parts, keyed by dropdown (the panel) and input (the root element of the input, on both inputs of a range); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Custom clear icon, used when showClear is true. | `Snippet` | - |
 | date | Content of a day cell, with dayNumber and fullDate (yyyy-MM-dd). | <ApiType detail={"Snippet\u003c[DatePickerDateSnippetProps]>"}>Type</ApiType> | - |
 | defaultPickerValue | The date the panel shows while there is no value; for dateTime types it is also the default time at the bottom. Compared by content: when the content changes the panel moves back to it, so passing `new Date()` on every render counts as a change. | `DatePickerValueType` | - |
@@ -17,15 +18,12 @@ import ApiType from '#/components/ApiType.astro';
 | disabledDate | Returns true to disable a date. The second argument carries rangeStart, rangeEnd and rangeInputFocus. When type is year, it is called with January 1 of each year, and returning true disables that year. | `DatePickerDisabledDateType` | - |
 | disabledTime | Returns disabledHours, disabledMinutes and disabledSeconds for the current date and panel position. | `DatePickerDisabledTimeType` | - |
 | disabledTimePicker | Whether the time selection is disabled; for dateTime and dateTimeRange only. | `boolean` | `false` |
-| dropdownClassName | Class name of the panel. | `string` | - |
-| dropdownStyle | Style string of the panel. | `string` | - |
 | endDateOffset | For dateRange, the end date of a range chosen with one click. | `DatePickerDateOffsetType` | - |
 | endYear | Last year of the year wheel, which must be after the start year. Defaults to 100 years after this year. | `number` | - |
 | format | Format of the text in the input; the default depends on type. A format without time tokens turns dateTime into date and dateTimeRange into dateRange. | `string` | - |
 | fullDate | Replaces the whole day cell, with dayNumber, fullDate and dayStatus. The cell keeps only its base and active classes. | <ApiType detail={"Snippet\u003c[DatePickerFullDateSnippetProps]>"}>Type</ApiType> | - |
 | hideDisabledOptions | Hides the times that are disabled. | `boolean` | `false` |
 | inputReadOnly | Whether the input is read-only. | `boolean` | `false` |
-| inputStyle | Style string of the root element of the input. | `string` | - |
 | insetInput | Moves the inputs into the panel; pass an object to set the placeholders of the inputs. | `boolean \| DatePickerInsetInputProps` | `false` |
 | insetLabel | Inset label of the input. | `Snippet` | - |
 | insetLabelId | The id of the inset label element. | `string` | - |
@@ -60,6 +58,7 @@ import ApiType from '#/components/ApiType.astro';
 | startDateOffset | For dateRange, the start date of a range chosen with one click. | `DatePickerDateOffsetType` | - |
 | startYear | First year of the year wheel. Defaults to 100 years before this year. | `number` | - |
 | stopPropagation | Whether click events on the panel stop propagating. | `boolean \| string` | `true` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, string>>"}>Type</ApiType> | - |
 | syncSwitchMonth | Switches both panels of a range together. | `boolean` | `false` |
 | timePickerOpts | Options for the time panel: use12Hours, hourStep, minuteStep, secondStep, defaultIsAM and scrollItemProps. The panel owns the format, the value and the disabled times. | `DatePickerTimePickerOpts` | - |
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get `TZDate`s, and `dateString` and the today mark follow the zone too. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |

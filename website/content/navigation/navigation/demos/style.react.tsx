@@ -18,7 +18,7 @@ export default function NavigationDemo() {
     return (
         <Nav
             style={{ height: 520 }}
-            bodyStyle={{ height: 300 }}
+            styles={{ body: { height: 300 } }}
             items={items}
             onSelect={(key) => console.log(key)}
             header={{

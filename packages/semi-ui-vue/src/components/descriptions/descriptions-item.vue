@@ -8,9 +8,7 @@
 
     // horizontal layout renders cells only: attrs have no element to land on
     defineOptions({ inheritAttrs: false, elementType: 'Descriptions.Item' });
-
-    // StyleValue includes false, so keyStyle is Boolean-typed at runtime and needs a default key
-    const props = withDefaults(defineProps<DescriptionsItemProps & /* @vue-ignore */ ElementProps<'tr', keyof DescriptionsItemProps>>(), { hidden: false, keyStyle: undefined });
+    const props = withDefaults(defineProps<DescriptionsItemProps & /* @vue-ignore */ ElementProps<'tr', keyof DescriptionsItemProps>>(), { hidden: false });
     defineSlots<DescriptionsItemSlots>();
 
     const injected = useDescriptionsContext();
@@ -23,14 +21,14 @@
 <template>
     <component :is="horizontal ? SlotFragment : 'tr'" v-if="!props.hidden" v-bind="horizontal ? {} : $attrs">
         <td v-if="plain" :class="`${prefixCls}-item`" :colspan="props.span || 1">
-            <span :class="`${prefixCls}-key`" :style="props.keyStyle"><slot name="itemKey" />:</span>
+            <span :class="[`${prefixCls}-key`, props.classNames?.key]" :style="props.styles?.key"><slot name="itemKey" />:</span>
             <span :class="`${prefixCls}-value`">
                 <slot />
             </span>
         </td>
         <template v-else>
             <th :class="[`${prefixCls}-item`, `${prefixCls}-item-th`]">
-                <span :class="`${prefixCls}-key`" :style="props.keyStyle">
+                <span :class="[`${prefixCls}-key`, props.classNames?.key]" :style="props.styles?.key">
                     <slot name="itemKey" />
                 </span>
             </th>

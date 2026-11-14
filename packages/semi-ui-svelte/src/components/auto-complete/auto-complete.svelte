@@ -39,9 +39,9 @@
         defaultActiveFirstOption = defaults('defaultActiveFirstOption', false),
         defaultOpen = defaults('defaultOpen'),
         disabled: disabledProp,
-        dropdownClassName = defaults('dropdownClassName'),
+        classNames = defaults('classNames'),
         dropdownMatchSelectWidth = defaults('dropdownMatchSelectWidth', true),
-        dropdownStyle = defaults('dropdownStyle'),
+        styles = defaults('styles'),
         // no global default: a global id would repeat on every instance
         insetLabelId,
         loading = defaults('loading', false),
@@ -291,7 +291,7 @@
 {/snippet}
 
 {#snippet panel()}
-    <div bind:this={listbox} id={listId} {...nameAttrs} class={[`${prefixCls}-option-list`, dropdownClassName]} role="listbox" style={[`max-height: ${toCssLength(maxHeight)}`, dropdownStyle].filter(Boolean).join('; ')} onmousedown={keepFocusOnPress}>
+    <div bind:this={listbox} id={listId} {...nameAttrs} class={[`${prefixCls}-option-list`, classNames?.dropdown]} role="listbox" style={[`max-height: ${toCssLength(maxHeight)}`, styles?.dropdown].filter(Boolean).join('; ')} onmousedown={keepFocusOnPress}>
         {#if loading}
             <div class={`${prefixCls}-loading-wrapper`}>
                 <Spin />

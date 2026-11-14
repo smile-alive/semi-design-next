@@ -1,7 +1,7 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, on, onCleanup, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+import { cssClasses, type ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
 import ModalFoundation, { type ModalAdapter, type ModalProps as FoundationModalProps, type ModalState } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/modal/modal.scss';
@@ -19,11 +19,13 @@ export type { ModalButtonProps };
 
 type Style = JSX.CSSProperties | string;
 
-export interface ModalProps extends Omit<FoundationModalProps, 'className' | 'style' | 'bodyStyle' | 'maskStyle'>, ElementProps<'div', keyof FoundationModalProps | 'role' | 'style'> {
+export interface ModalProps extends Omit<FoundationModalProps, 'className' | 'style'>, ElementProps<'div', keyof FoundationModalProps | 'role' | 'style'> {
     /** On the outer element inside the portal; the role="dialog" element takes every aria-* (F12) */
     class?: string;
     ref?: Ref<HTMLDivElement>;
-    bodyStyle?: Style;
+    /** Merged after the built-in class names of the part's element; replaces the global default as a whole */
+    classNames?: Partial<Record<ModalPart, string>>;
+    styles?: Partial<Record<ModalPart, Style>>;
     cancelButtonProps?: ModalButtonProps;
     children?: JSX.Element;
     closeIcon?: JSX.Element;
@@ -31,7 +33,6 @@ export interface ModalProps extends Omit<FoundationModalProps, 'className' | 'st
     footer?: JSX.Element;
     header?: JSX.Element;
     icon?: JSX.Element;
-    maskStyle?: Style;
     /** Wraps the role="dialog" element, which must stay in the result */
     modalRender?: (node: JSX.Element) => JSX.Element;
     okButtonProps?: ModalButtonProps;
@@ -49,7 +50,7 @@ export interface ModalProps extends Omit<FoundationModalProps, 'className' | 'st
 }
 
 // the foundation reads none of the style props, and a string style is wider than its Record type
-type FoundationProps = Omit<ModalProps, 'style' | 'bodyStyle' | 'maskStyle'>;
+type FoundationProps = Omit<ModalProps, 'style' | 'styles'>;
 type Foundation = ModalFoundation<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
 type Adapter = ModalAdapter<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
 
@@ -78,13 +79,13 @@ export default function Modal(rawProps: ModalProps) {
 
     const [local, rest] = splitProps(props, [
         'afterClose',
-        'bodyStyle',
         'cancelButtonProps',
         'cancelLoading',
         'cancelText',
         'centered',
         'children',
         'class',
+        'classNames',
         'closable',
         'closeIcon',
         'closeOnEsc',
@@ -104,7 +105,6 @@ export default function Modal(rawProps: ModalProps) {
         'mask',
         'maskClosable',
         'maskFixed',
-        'maskStyle',
         'modalContentClass',
         'modalRender',
         'motion',
@@ -117,6 +117,7 @@ export default function Modal(rawProps: ModalProps) {
         'ref',
         'size',
         'style',
+        'styles',
         'title',
         'visible',
         'width',
@@ -247,8 +248,8 @@ export default function Modal(rawProps: ModalProps) {
                             contentRef={content.ref}
                             maskClassName={maskAnimation.className()}
                             maskRef={maskAnimation.ref}
-                            bodyStyle={local.bodyStyle}
-                            maskStyle={local.maskStyle}
+                            classNames={local.classNames}
+                            styles={local.styles}
                             style={local.style}
                             title={local.title}
                             centered={local.centered}

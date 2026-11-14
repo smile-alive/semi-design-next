@@ -29,17 +29,17 @@
     let {
         chats = $bindable(),
         align = defaults('align', 'leftRight'),
+        classNames = defaults('classNames'),
         disabledFileItemClick = defaults('disabledFileItemClick', false),
         escapeHtml = defaults('escapeHtml', true),
-        hintCls = defaults('hintCls'),
         hints = defaults('hints'),
-        hintStyle = defaults('hintStyle'),
         markdownRenderProps = defaults('markdownRenderProps'),
         mode = defaults('mode', 'bubble'),
         roleConfig,
         selecting = defaults('selecting', false),
         showReference = defaults('showReference', false),
         showReset = defaults('showReset', true),
+        styles = defaults('styles'),
         onChatsChange,
         onAnnotationClick,
         onFileClick,
@@ -201,7 +201,7 @@
             <Dialogue isLastChat={index === currentChats.length - 1} isSelected={states().selectedIds.has(chat.id)} message={chat} role={roleConfig[chat.role]} />
         {/each}
         {#if currentHints.length > 0}
-            <DialogueHint class={hintCls} {hintBox} hints={currentHints} onHintClick={foundation.handleHintClick} {selecting} style={hintStyle} />
+            <DialogueHint class={classNames?.hint} {hintBox} hints={currentHints} onHintClick={foundation.handleHintClick} {selecting} style={styles?.hint} />
         {/if}
     </div>
     {#if states().backBottomVisible}

@@ -64,7 +64,7 @@ export default function DatePickerDemo() {
 
     return (
         <div>
-            <DatePicker topSlot={<TopSlot activeKey={activeTab()} onChange={handleTabChange} />} disabledDate={disabledDate()} value={date()} onChange={handleDateChange} dropdownClassName="components-datepicker-demo-slot" placeholder="请选择排期" />
+            <DatePicker topSlot={<TopSlot activeKey={activeTab()} onChange={handleTabChange} />} disabledDate={disabledDate()} value={date()} onChange={handleDateChange} classNames={{ dropdown: 'components-datepicker-demo-slot' }} placeholder="请选择排期" />
             <br />
             <br />
             <DatePicker bottomSlot={<BottomSlot />} placeholder="请选择发版时间" />
@@ -73,7 +73,7 @@ export default function DatePickerDemo() {
             <DatePicker type="month" bottomSlot={<MonthBottomSlot />} placeholder="请选择年月" />
             <br />
             <br />
-            <DatePicker topSlot={<TopSlot activeKey={activeTab()} onChange={handleTabChange} style={{ padding: '8px 12px 0' }} />} bottomSlot={<BottomSlot style={{ padding: '8px 12px' }} />} density="compact" placeholder="小尺寸" dropdownClassName="components-datepicker-demo-slot" />
+            <DatePicker topSlot={<TopSlot activeKey={activeTab()} onChange={handleTabChange} style={{ padding: '8px 12px 0' }} />} bottomSlot={<BottomSlot style={{ padding: '8px 12px' }} />} density="compact" placeholder="小尺寸" classNames={{ dropdown: 'components-datepicker-demo-slot' }} />
             <br />
             <br />
             <DatePicker type="dateTimeRange" bottomSlot={<BottomSlot />} style={{ width: '400px' }} placeholder="请选择时间范围" />

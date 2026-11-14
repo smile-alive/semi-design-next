@@ -80,6 +80,12 @@ describe('Svelte Tooltip', () => {
         expect(span.style.display).toBe('');
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { trigger } = setup({ classNames: { wrapper: ['my-wrapper'] }, styles: { wrapper: 'order: 3' } });
+        expect(trigger()).toHaveClass('semi-tooltip-trigger-wrapper', 'my-wrapper');
+        expect(trigger()).toHaveStyle({ order: '3' });
+    });
+
     it('child snippet：触发属性展开到使用方元素上，没有包装 span', async () => {
         const { click, trigger } = setup({}, { child: true });
         expect(trigger().closest('.semi-tooltip-trigger-wrapper')).toBe(null);

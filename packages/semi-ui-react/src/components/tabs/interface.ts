@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { CSSProperties, KeyboardEvent, MouseEvent, ReactNode } from 'react';
+import type { TabsPart } from '@fibrae/semi-foundation/components/tabs/constants';
 import type { ElementProps } from '../../base/index';
 import type { DropdownProps } from '../dropdown';
 import type TabBar from './tab-bar';
@@ -27,7 +28,7 @@ export interface TabsProps extends ElementProps<'div', 'onChange'> {
     children?: ReactNode | Array<ReactNode>;
     className?: string;
     collapsible?: boolean | 'auto';
-    contentStyle?: CSSProperties;
+    classNames?: Partial<Record<TabsPart, string>>;
     defaultActiveKey?: string;
     keepDOM?: boolean;
     lazyRender?: boolean;
@@ -37,9 +38,8 @@ export interface TabsProps extends ElementProps<'div', 'onChange'> {
     showRestInDropdown?: boolean;
     size?: TabSize;
     style?: CSSProperties;
-    tabBarClassName?: string;
+    styles?: Partial<Record<TabsPart, CSSProperties>>;
     tabBarExtraContent?: ReactNode;
-    tabBarStyle?: CSSProperties;
     tabList?: PlainTab[];
     tabPaneMotion?: boolean;
     tabPosition?: TabPosition;
@@ -48,7 +48,6 @@ export interface TabsProps extends ElementProps<'div', 'onChange'> {
     preventScroll?: boolean;
     more?: number | { count: number; render?: () => ReactNode; dropdownProps?: DropdownProps };
     onVisibleTabsChange?: TabBarProps['onVisibleTabsChange'];
-    visibleTabsStyle?: TabBarProps['visibleTabsStyle'];
     arrowPosition?: TabBarProps['arrowPosition'];
     renderArrow?: TabBarProps['renderArrow'];
     dropdownProps?: TabsDropdownProps;
@@ -62,12 +61,15 @@ export interface TabBarProps extends ElementProps<'div'> {
     'aria-label'?: string;
     'aria-labelledby'?: string;
     className?: string;
+    /** Only `visibleTabs` is read: the scroll wrapper that holds the visible tabs */
+    classNames?: Partial<Record<'visibleTabs', string>>;
     collapsible?: boolean | 'auto';
     list?: Array<PlainTab>;
     onTabClick?: (activeKey: string, event: MouseEvent) => void;
     showRestInDropdown?: boolean;
     size?: TabSize;
     style?: CSSProperties;
+    styles?: Partial<Record<'visibleTabs', CSSProperties>>;
     tabBarExtraContent?: ReactNode;
     tabPosition?: TabPosition;
     type?: TabType;
@@ -77,7 +79,6 @@ export interface TabBarProps extends ElementProps<'div'> {
     handleKeyDown?: (event: React.KeyboardEvent, itemKey: string, closable: boolean) => void;
     more?: TabsProps['more'];
     onVisibleTabsChange?: (visibleState: Map<string, boolean>) => void;
-    visibleTabsStyle?: CSSProperties;
     arrowPosition?: 'both' | 'start' | 'end';
     renderArrow?: (items: OverflowItem[], pos: 'start' | 'end', handleArrowClick: () => void, defaultNode: ReactNode) => ReactNode;
     dropdownProps?: TabsDropdownProps;

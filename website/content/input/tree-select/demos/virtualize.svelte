@@ -49,6 +49,6 @@
     <br />
     {#if gData.length > 0}
         <!-- Dropdown height 300 minus the search box and 8 * 2 padding; a set height fills the rest -->
-        <TreeSelect dropdownStyle="overflow: hidden" filterTreeNode placeholder="Please select" showFilteredOnly style="width: 300px" treeData={gData} virtualize={{ itemSize: 28, height: 236 }} />
+        <TreeSelect filterTreeNode placeholder="Please select" showFilteredOnly style="width: 300px" styles={{ dropdown: 'overflow: hidden' }} treeData={gData} virtualize={{ itemSize: 28, height: 236 }} />
     {/if}
 </div>

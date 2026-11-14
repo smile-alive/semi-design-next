@@ -11,7 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | mode | When set to advanced, a checked radio can be unchecked by clicking it or pressing Space. | `RadioMode` | `""` |
 | name | The name of every native input in the group. A unique value is generated per group when omitted. | `string` | - |
 | onChange | Called when the selected value changes. event.target is `{ checked, value, name, disabled }`. | <ApiType detail={"(event: RadioChangeEvent) => void"}>Type</ApiType> | - |
-| options | Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClassName, extraId }`, where label and extra hold only a string or number; other content goes through renderLabel and renderExtra. Children are ignored when set. | `Options` | - |
+| options | Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, classNames, styles, extraId }`, where label and extra hold only a string or number; other content goes through renderLabel and renderExtra. Children are ignored when set. | `Options` | - |
 | renderExtra | Renders the extra text of an options item, given the item and its index. A button radio has no extra text and never calls it. | <ApiType detail={"(option: OptionItem, index: number) => JSX.Element"}>Type</ApiType> | - |
 | renderLabel | Renders the label of an options item, given the item and its index. | <ApiType detail={"(option: OptionItem, index: number) => JSX.Element"}>Type</ApiType> | - |
 | type | Style type of every Radio in the group: default, button, card or pureCard. | `RadioType` | `"default"` |

@@ -25,6 +25,8 @@
         mode: () => semiDefault('Feedback', 'mode', 'popup'),
         type: () => semiDefault('Feedback', 'type', 'emoji'),
         visible: () => semiDefault('Feedback', 'visible', false),
+        classNames: semiGlobalDefault('Feedback', 'classNames'),
+        styles: semiGlobalDefault('Feedback', 'styles'),
         title: semiGlobalDefault('Feedback', 'title'),
         textAreaProps: semiGlobalDefault('Feedback', 'textAreaProps'),
         radioGroupProps: semiGlobalDefault('Feedback', 'radioGroupProps'),
@@ -141,10 +143,12 @@
         :cancelButtonProps="modalCancelProps"
         :cancelText="locale.locale.cancel"
         :class="[prefix, `${prefix}-${props.type}`]"
+        :classNames="props.classNames"
         :okButtonProps="modalOkProps"
         :okText="locale.locale.submit"
         :onCancel="foundation.handleModalCancel"
         :onOk="foundation.handleModalOk"
+        :styles="props.styles"
         :title="props.title"
         :visible="props.visible"
         v-bind="definedAttrs()"
@@ -178,11 +182,13 @@
         ref="sheet"
         canVerticalSetWidth
         :class="[prefix, `${prefix}-${props.type}`]"
+        :classNames="props.classNames"
         closeOnEsc
         :disableScroll="false"
         height="auto"
         :mask="false"
         placement="bottom"
+        :styles="props.styles"
         :title="props.title"
         :visible="props.visible"
         v-bind="definedAttrs()"

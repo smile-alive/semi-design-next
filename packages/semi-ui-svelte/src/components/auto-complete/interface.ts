@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
+import type { AutoCompletePart } from '@fibrae/semi-foundation/components/auto-complete/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/index.js';
 import type { Position } from '../tooltip/index.js';
@@ -57,9 +58,9 @@ export interface AutoCompleteProps<T extends AutoCompleteItems = AutoCompleteIte
     /** Opens the list on mount; AutoComplete has no controlled open state */
     defaultOpen?: boolean;
     disabled?: boolean;
-    dropdownClassName?: string;
+    classNames?: Partial<Record<AutoCompletePart, ClassValue>>;
     dropdownMatchSelectWidth?: boolean;
-    dropdownStyle?: string;
+    styles?: Partial<Record<AutoCompletePart, string>>;
     insetLabelId?: string;
     loading?: boolean;
     maxHeight?: string | number;

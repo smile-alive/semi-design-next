@@ -1,5 +1,5 @@
-import type { Component, CSSProperties, HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/components/table/constants';
+import type { ClassValue, Component, HTMLAttributes, StyleValue, TdHTMLAttributes, ThHTMLAttributes, VNode } from 'vue';
+import type { strings, TablePart } from '@fibrae/semi-foundation/components/table/constants';
 import type { BaseAlign, BaseChangeInfoFilter, BaseChangeInfoSorter, BaseEllipsis, BaseFixed, BaseIncludeGroupRecord, BasePageData, CheckRelation, OnChangeExtra } from '@fibrae/semi-foundation/components/table/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import type { VirtualListAlign, VirtualListScrollArgs } from '../../internal/index';
@@ -181,6 +181,7 @@ export interface TableComponents {
 export interface TableProps<R extends Record<string, any> = Record<string, any>> {
     bordered?: boolean;
     childrenRecordName?: string;
+    classNames?: Partial<Record<TablePart, ClassValue>>;
     clickGroupedRowToExpand?: boolean;
     /** Takes precedence over `Table.Column` children whenever given, an empty array included */
     columns?: ColumnProps<R>[];
@@ -203,7 +204,6 @@ export interface TableProps<R extends Record<string, any> = Record<string, any>>
     footer?: string;
     groupBy?: TableGroupBy<R>;
     groupSectionColumn?: (groupKey: string | number, group: (string | number)[]) => Omit<ColumnProps<R>, 'title' | 'children' | 'dataIndex'>;
-    headerStyle?: CSSProperties;
     hideExpandedColumn?: boolean;
     indentSize?: number;
     keepDOM?: boolean;
@@ -218,6 +218,7 @@ export interface TableProps<R extends Record<string, any> = Record<string, any>>
     showHeader?: boolean;
     size?: TableSize;
     sticky?: TableSticky;
+    styles?: Partial<Record<TablePart, StyleValue>>;
     title?: string;
     virtualized?: TableVirtualized;
     onGroupedRow?: (record: { groupKey: string | number; records: R[] }, index: number) => TableRowAttrs;

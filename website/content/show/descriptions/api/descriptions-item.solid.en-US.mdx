@@ -2,10 +2,11 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property | Description                                               | Type                                                                      | Default |
-| -------- | --------------------------------------------------------- | ------------------------------------------------------------------------- | ------- |
-| children | Value: a JSX element, or a function called when rendered. | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | -       |
-| hidden   | Whether to hide the item.                                 | `boolean`                                                                 | -       |
-| itemKey  | Key, a JSX element.                                       | `JSX.Element`                                                             | -       |
-| keyStyle | Custom style of the key: a style object or a string.      | `JSX.CSSProperties \| string`                                             | -       |
-| span     | Number of columns the cell spans.                         | `number`                                                                  | -       |
+| Property   | Description                                                                     | Type                                                                                                                | Default |
+| ---------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------- |
+| children   | Value: a JSX element, or a function called when rendered.                       | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType>                                           | -       |
+| classNames | Class names of the inner parts, keyed by key; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cDescriptionsItemPart, string>>"}>Type</ApiType>                          | -       |
+| hidden     | Whether to hide the item.                                                       | `boolean`                                                                                                           | -       |
+| itemKey    | Key, a JSX element.                                                             | `JSX.Element`                                                                                                       | -       |
+| span       | Number of columns the cell spans.                                               | `number`                                                                                                            | -       |
+| styles     | Styles of the inner parts, keyed by key, each a style object or a string.       | <ApiType detail={"Partial\u003cRecord\u003cDescriptionsItemPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -       |

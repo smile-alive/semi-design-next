@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
+import type { SliderPart } from '@fibrae/semi-foundation/components/slider/constants';
 import type { HandleDot } from '@fibrae/semi-foundation/components/slider/foundation';
 
 export type { HandleDot, SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
@@ -38,7 +39,8 @@ export interface SliderProps extends Omit<HTMLAttributes<HTMLDivElement>, Native
     showBoundary?: boolean;
     vertical?: boolean;
     verticalReverse?: boolean;
-    railStyle?: string;
+    classNames?: Partial<Record<SliderPart, ClassValue>>;
+    styles?: Partial<Record<SliderPart, string>>;
     handleDot?: HandleDot | HandleDot[];
     /** Names the first handle's input, so a `<label for>` focuses the slider */
     id?: string;

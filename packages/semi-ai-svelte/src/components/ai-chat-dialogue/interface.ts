@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { AIChatDialoguePart } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Annotation, ContentItem, InputFile, InputImage, InputMessage, InputText, Message, OutputMessage, OutputText, Reference, Refusal, Step } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { AvatarProps } from '@fibrae/semi-ui-svelte/avatar/interface';
@@ -111,9 +112,9 @@ export interface AIChatDialogueProps extends Omit<HTMLAttributes<HTMLDivElement>
     chats?: Message[];
     disabledFileItemClick?: boolean;
     escapeHtml?: boolean;
-    hintCls?: string;
+    classNames?: Partial<Record<AIChatDialoguePart, ClassValue>>;
     hints?: string[];
-    hintStyle?: string;
+    styles?: Partial<Record<AIChatDialoguePart, string>>;
     selecting?: boolean;
     markdownRenderProps?: MarkdownRenderProps;
     mode?: 'bubble' | 'noBubble' | 'userBubble';

@@ -1,9 +1,10 @@
 <script lang="ts">
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { IconArrowRight } from '@fibrae/semi-icons-svelte';
     import type { ChatProps } from './interface.js';
 
-    let { hints, class: className, style, hintBox, onHintClick }: { hints: string[]; class?: string; style?: string; hintBox?: ChatProps['hintBox']; onHintClick: (hint: string) => void } = $props();
+    let { hints, class: className, style, hintBox, onHintClick }: { hints: string[]; class?: ClassValue; style?: string; hintBox?: ChatProps['hintBox']; onHintClick: (hint: string) => void } = $props();
 
     const { PREFIX_HINT } = cssClasses;
 </script>

@@ -41,8 +41,8 @@ export default function Tabs(rawProps: TabsProps) {
             'arrowPosition',
             'children',
             'class',
+            'classNames',
             'collapsible',
-            'contentStyle',
             'defaultActiveKey',
             'dropdownProps',
             'keepDOM',
@@ -59,14 +59,12 @@ export default function Tabs(rawProps: TabsProps) {
             'renderTabBar',
             'showRestInDropdown',
             'size',
-            'tabBarClassName',
+            'styles',
             'tabBarExtraContent',
-            'tabBarStyle',
             'tabList',
             'tabPaneMotion',
             'tabPosition',
             'type',
-            'visibleTabsStyle',
         ],
         ['aria-label', 'aria-labelledby']
     );
@@ -152,10 +150,16 @@ export default function Tabs(rawProps: TabsProps) {
             return panes();
         },
         get class() {
-            return local.tabBarClassName;
+            return local.classNames?.tabBar;
+        },
+        get classNames() {
+            return { visibleTabs: local.classNames?.visibleTabs };
         },
         get style() {
-            return local.tabBarStyle;
+            return local.styles?.tabBar;
+        },
+        get styles() {
+            return { visibleTabs: local.styles?.visibleTabs };
         },
         get size() {
             return local.size;
@@ -186,9 +190,6 @@ export default function Tabs(rawProps: TabsProps) {
         },
         get onVisibleTabsChange() {
             return local.onVisibleTabsChange;
-        },
-        get visibleTabsStyle() {
-            return local.visibleTabsStyle;
         },
         get arrowPosition() {
             return local.arrowPosition;
@@ -274,7 +275,7 @@ export default function Tabs(rawProps: TabsProps) {
                 <Show keyed when={local.renderTabBar} fallback={<TabBar {...tabBarProps} />}>
                     {(renderTabBar) => renderTabBar(tabBarProps, TabBar)}
                 </Show>
-                <div class={clsx(cssClasses.TABS_CONTENT, `${cssClasses.TABS_CONTENT}-${local.tabPosition}`)} style={local.contentStyle} role={tabListPanel() ? 'tabpanel' : undefined} id={tabListPanel()?.id} aria-labelledby={tabListPanel()?.labelledby}>
+                <div class={clsx(cssClasses.TABS_CONTENT, `${cssClasses.TABS_CONTENT}-${local.tabPosition}`, local.classNames?.content)} style={local.styles?.content} role={tabListPanel() ? 'tabpanel' : undefined} id={tabListPanel()?.id} aria-labelledby={tabListPanel()?.labelledby}>
                     <Show when={!isTabListMode()} fallback={resolved.toArray().filter((node) => !isPane(node))}>
                         <For each={content()}>{(node) => (isPane(node) ? renderPane(node) : node)}</For>
                     </Show>

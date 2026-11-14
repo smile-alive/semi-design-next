@@ -1,11 +1,12 @@
 <script setup lang="ts">
-    import type { StyleValue } from 'vue';
+    import type { ClassValue, StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import { provideDropdownContext, type DropdownContext } from './context';
 
     const props = defineProps<{
         context: DropdownContext;
-        contentClass?: string | unknown[];
+        contentClass?: ClassValue;
+        contentStyle?: StyleValue;
         popStyle?: StyleValue;
     }>();
 
@@ -16,7 +17,7 @@
 </script>
 
 <template>
-    <div :class="[cssClasses.PREFIX, props.contentClass]" :style="props.popStyle">
+    <div :class="[cssClasses.PREFIX, props.contentClass]" :style="[props.popStyle, props.contentStyle]">
         <div :class="`${cssClasses.PREFIX}-content`" x-semi-prop="content">
             <slot />
         </div>

@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { InputNumberPart } from '@fibrae/semi-foundation/components/input-number/constants';
 import type { BaseInputNumberState, ScientificNotationConfig } from '@fibrae/semi-foundation/components/input-number/foundation';
 import type { InputChangeEvent, InputProps } from '../input/interface';
 
@@ -17,7 +18,9 @@ export interface InputNumberHandle {
     readonly nativeElement: HTMLElement | null;
 }
 
-export interface InputNumberProps extends Omit<InputProps, 'modelValue' | 'defaultValue' | 'modelModifiers' | 'type' | 'mode' | 'getValueLength' | 'showClearIgnoreDisabled'> {
+export interface InputNumberProps extends Omit<InputProps, 'modelValue' | 'defaultValue' | 'modelModifiers' | 'type' | 'mode' | 'getValueLength' | 'showClearIgnoreDisabled' | 'classNames' | 'styles'> {
+    classNames?: Partial<Record<InputNumberPart, ClassValue>>;
+    styles?: Partial<Record<InputNumberPart, StyleValue>>;
     modelValue?: number | string;
     defaultValue?: number | string;
     // boolean first, so that a bare `currency` attribute is read as true rather than ''

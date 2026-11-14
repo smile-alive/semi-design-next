@@ -1,4 +1,4 @@
-import type { ComputedRef, CSSProperties } from 'vue';
+import type { ComputedRef } from 'vue';
 import type TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
 import type { BaseHeadWidth, BaseRowKeyType, TableBaseProps, TableBaseState, TableBaseStateRowSelection } from '@fibrae/semi-foundation/components/table/foundation';
 import { createContext } from '../../base/index';
@@ -32,7 +32,8 @@ export interface TableContextView {
     anyColumnFixed: boolean;
     flattenedColumns: ColumnProps[];
     headWidths: BaseHeadWidth[][];
-    headerStyle?: CSSProperties;
+    classNames?: TableProps['classNames'];
+    styles?: TableProps['styles'];
     rowSpanHover: boolean;
     /** The header and the body are separate elements, so their container is the table */
     splitTable: boolean;

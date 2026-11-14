@@ -50,10 +50,7 @@ function DirectorySvg(props: SVGProps<SVGSVGElement>) {
     );
 }
 
-export interface FileCardProps extends RenderFileItemProps {
-    className?: string;
-    style?: CSSProperties;
-}
+export type FileCardProps = RenderFileItemProps;
 
 const defaultProps = {
     listType: strings.FILE_LIST_DEFAULT,
@@ -76,7 +73,7 @@ function renderValidateMessage({ status, validateMessage }: FileCardProps): Reac
     if (typeof validateMessage === 'string' && status === strings.FILE_STATUS_VALIDATING) {
         return (
             <>
-                <Spin wrapperClassName={`${prefixCls}-file-card-icon-loading`} size="small" />
+                <Spin className={`${prefixCls}-file-card-icon-loading`} size="small" />
                 {validateMessage}
             </>
         );
@@ -133,19 +130,22 @@ function stopThen(callback?: () => void) {
 }
 
 function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPreview: boolean, onImageError: () => void): ReactNode {
-    const { url, percent, status, disabled, style, onPreviewClick, showPicInfo, renderPicInfo, renderPicClose, renderPicPreviewIcon, renderThumbnail, name, index, picHeight, picWidth } = props;
+    const { url, percent, status, disabled, className, style, onPreviewClick, showPicInfo, renderPicInfo, renderPicClose, renderPicPreviewIcon, renderThumbnail, name, index, picHeight, picWidth } = props;
     const onRemove = stopThen(props.onRemove);
     const { showRetry, showReplace, showPicProgress: showProgress, showPreview, failed } = UploadFoundation.getFileCardFlags(props, props);
     const customThumbnail = typeof renderThumbnail === 'function';
-    const filePicCardCls = clsx({
-        [`${prefixCls}-picture-file-card`]: true,
-        [`${prefixCls}-picture-file-card-preview-fallback`]: fallbackPreview,
-        [`${prefixCls}-picture-file-card-disabled`]: disabled,
-        [`${prefixCls}-picture-file-card-show-pointer`]: typeof onPreviewClick !== 'undefined',
-        [`${prefixCls}-picture-file-card-error`]: status === strings.FILE_STATUS_UPLOAD_FAIL,
-        [`${prefixCls}-picture-file-card-uploading`]: showProgress,
-        [`${prefixCls}-picture-file-card-custom-thumbnail`]: customThumbnail && picHeight && picWidth,
-    });
+    const filePicCardCls = clsx(
+        {
+            [`${prefixCls}-picture-file-card`]: true,
+            [`${prefixCls}-picture-file-card-preview-fallback`]: fallbackPreview,
+            [`${prefixCls}-picture-file-card-disabled`]: disabled,
+            [`${prefixCls}-picture-file-card-show-pointer`]: typeof onPreviewClick !== 'undefined',
+            [`${prefixCls}-picture-file-card-error`]: status === strings.FILE_STATUS_UPLOAD_FAIL,
+            [`${prefixCls}-picture-file-card-uploading`]: showProgress,
+            [`${prefixCls}-picture-file-card-custom-thumbnail`]: customThumbnail && picHeight && picWidth,
+        },
+        className
+    );
     const retry = (
         <button type="button" className={`${prefixCls}-picture-file-card-retry`} aria-label={locale.retry} onClick={stopThen(props.onRetry)}>
             <IconRefresh className={`${prefixCls}-picture-file-card-icon-retry`} />
@@ -198,13 +198,16 @@ function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPrevi
 }
 
 function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPreview: boolean, onImageError: () => void): ReactNode {
-    const { name, size, percent, url, disabled, preview, previewFile, style, onPreviewClick, renderFileOperation, showTooltip } = props;
+    const { name, size, percent, url, disabled, preview, previewFile, className, style, onPreviewClick, renderFileOperation, showTooltip } = props;
     const { showRetry, showReplace, showListProgress: showProgress, failed } = UploadFoundation.getFileCardFlags(props, props);
-    const fileCardCls = clsx({
-        [`${prefixCls}-file-card`]: true,
-        [`${prefixCls}-file-card-fail`]: failed,
-        [`${prefixCls}-file-card-show-pointer`]: typeof onPreviewClick !== 'undefined',
-    });
+    const fileCardCls = clsx(
+        {
+            [`${prefixCls}-file-card`]: true,
+            [`${prefixCls}-file-card-fail`]: failed,
+            [`${prefixCls}-file-card-show-pointer`]: typeof onPreviewClick !== 'undefined',
+        },
+        className
+    );
     const previewCls = clsx({
         [`${prefixCls}-file-card-preview`]: true,
         [`${prefixCls}-file-card-preview-placeholder`]: !preview || previewFile || fallbackPreview,

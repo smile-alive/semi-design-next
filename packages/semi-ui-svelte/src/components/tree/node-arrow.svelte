@@ -25,7 +25,7 @@
 
 <!-- the row carries aria-busy; the spinner's own name would join the row's name -->
 {#if row.loading}
-    <Spin aria-hidden="true" wrapperClassName="{prefix}-spin-icon" />
+    <Spin aria-hidden="true" class="{prefix}-spin-icon" />
 {:else if !isLeaf}
     {#if expandIcon}
         {@render expandIcon({ onClick: onExpand, class: iconClass, expanded: Boolean(row.expanded) })}

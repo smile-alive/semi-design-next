@@ -175,7 +175,7 @@
                         {@render fileValidateMessage(slotProps())}
                     {:else if typeof message === 'string'}
                         {#if file.status === strings.FILE_STATUS_VALIDATING}
-                            <Spin size="small" wrapperClassName={`${prefix}-file-card-icon-loading`} />
+                            <Spin class={`${prefix}-file-card-icon-loading`} size="small" />
                         {:else}
                             <IconAlertCircle class={`${prefix}-file-card-icon-error`} />
                         {/if}

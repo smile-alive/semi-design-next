@@ -9,8 +9,8 @@ import ApiType from '#/components/ApiType.astro';
 | aria-labelledby | The id of the element that names the tab bar, placed on the `role="tablist"` element. | `string` | - |
 | arrowPosition | Position of the scroll arrows in collapsible mode. | `TabBarProps['arrowPosition']` | `"both"` |
 | children | TabPane children, which must be direct children of Tabs; any other node renders as content in its original order. With tabList, TabPane children are ignored and the other nodes are the content of the active tab. | `JSX.Element` | - |
+| classNames | Class names of the inner parts, keyed by `tabBar`, `content` (the outer content area) and `visibleTabs` (the whole scrolling area in collapsible mode); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTabsPart, string>>"}>Type</ApiType> | - |
 | collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). 'auto' collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| 'auto'` | `false` |
-| contentStyle | Style of the outer content area, an object or a string. | `JSX.CSSProperties \| string` | - |
 | defaultActiveKey | The itemKey selected initially when uncontrolled. Defaults to the first enabled tab that has an itemKey. | `string` | - |
 | dropdownProps | In collapsible mode, the Dropdown props passed to the start-side (start) and end-side (end) arrow menus. | `TabsDropdownProps` | - |
 | keepDOM | With TabPane children, whether to render the DOM of inactive panels. When false only the active panel is rendered, without motion. | `boolean` | `true` |
@@ -27,11 +27,9 @@ import ApiType from '#/components/ApiType.astro';
 | renderTabBar | Replaces the whole tab bar; the same function is called once. tabBarProps is live, so read its fields inside the returned JSX; DefaultTabBar is the default tab bar component. | <ApiType detail={"(tabBarProps: TabBarProps, DefaultTabBar: Component\u003cTabBarProps>) => JSX.Element"}>Type</ApiType> | - |
 | showRestInDropdown | In collapsible mode, whether the collapsed tabs are listed in a dropdown menu. | `boolean` | `true` |
 | size | Size of the tab bar; currently only the line type supports it. | `TabSize` | `"large"` |
-| tabBarClassName | Class name of the tab bar. | `string` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`, as style objects or strings. | <ApiType detail={"Partial\u003cRecord\u003cTabsPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | tabBarExtraContent | Extra content of the tab bar, placed outside the tablist. | `JSX.Element` | - |
-| tabBarStyle | Style of the tab bar, an object or a string. | `JSX.CSSProperties \| string` | - |
 | tabList | An array of tab data. Each item holds data only (itemKey, the tab text, disabled and closable); markup goes to renderTab and renderIcon. Any array, even an empty one, makes children the content of the active tab and takes precedence over TabPane children. | `PlainTab[]` | - |
 | tabPaneMotion | Whether switching panels is animated. | `boolean` | `true` |
 | tabPosition | Position of the tab bar: top is horizontal, left is vertical. | `TabPosition` | `"top"` |
 | type | Style of the tab bar: line, card, button or slash. slash supports horizontal mode only. | `TabType` | `"line"` |
-| visibleTabsStyle | In collapsible mode, the style of the whole scrolling area, an object or a string. | `TabBarProps['visibleTabsStyle']` | - |

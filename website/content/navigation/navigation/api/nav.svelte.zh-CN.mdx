@@ -4,8 +4,8 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| bodyStyle | 导航项列表的自定义样式。 | `string` | - |
 | children | `NavItem` 与 `SubNav`，放在 items 生成的导航项之后。 | `Snippet` | - |
+| classNames | 内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, ClassValue>>"}>Type</ApiType> | - |
 | expandIcon | items 生成的子导航的展开收起箭头，参数含 item、level、size 与要放在图标元素上的 class。 | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavExpandIconArgs]>"}>Type</ApiType> | - |
 | footer | 底部区域：配置对象（collapseButton、class、style，以及 `data-*` 与 `aria-*` 属性），或放有 `NavFooter` 的 snippet。 | `NavFooterConfig \| Snippet` | - |
 | header | 头部区域：配置对象（text、link、linkOptions、logo、class、style，以及 `data-*` 与 `aria-*` 属性），或放有 `NavHeader` 的 snippet。 | `NavHeaderConfig \| Snippet` | - |
@@ -20,6 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | onSelect | 第一次选中某个可选中导航项时调用，selectedKeys 只含被选中项自身的 itemKey，domEvent 为原生事件。 | <ApiType detail={"(data: OnSelectedData) => void"}>Type</ApiType> | - |
 | openKeys | 展开的子导航 itemKey 数组，仅 mode 为 vertical 且侧边栏处于展开状态时有效；可用 `bind:openKeys` 绑定，单向传值只作初值，`null` 表示受控的空值。 | `ItemKey[] \| null` | - |
 | selectedKeys | 选中的导航项 itemKey 数组；可用 `bind:selectedKeys` 绑定，单向传值只作初值，`null` 表示受控的空值。 | `ItemKey[] \| null` | - |
+| styles | 内部各部位的内联样式字符串，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | subDropdownProps | items 生成的子导航在水平模式或竖直收起状态下弹层 Dropdown 的参数。 | `SubDropdownProps` | - |
 | subNavCloseDelay | 子导航浮层关闭的延迟，单位为毫秒，收起或水平模式下有效。 | `number` | `100` |
 | subNavMotion | 子导航折叠动画。 | `boolean` | `true` |

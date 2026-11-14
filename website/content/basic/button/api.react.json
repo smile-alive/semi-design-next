@@ -10,7 +10,10 @@
                 "zh-CN": "多彩按钮，仅支持 primary 与 tertiary 类型；图标元素会获得多彩填充。未设置时使用所在 ButtonGroup 的值，不在组内时为 `false`。",
                 "en-US": "Colorful button, supported for the primary and tertiary types only; the icon element receives the colorful fill. Falls back to the ButtonGroup it is in, and to `false` outside a group."
             },
-            "contentClassName": { "zh-CN": "内容区域的类名。", "en-US": "Class name of the content area." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（内容区域），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the content area); merged with the built-in classes."
+            },
             "disabled": {
                 "zh-CN": "禁用状态，优先于 loading。未设置时使用所在 ButtonGroup 的值，不在组内时为 `false`。",
                 "en-US": "Disabled state, which takes precedence over loading. Falls back to the ButtonGroup it is in, and to `false` outside a group."
@@ -37,6 +40,7 @@
                 "en-US": "Button size: `large`, `default` or `small`. Falls back to the ButtonGroup it is in, and to `default` outside a group."
             },
             "style": { "zh-CN": "原生 button 元素的样式。", "en-US": "Style of the native button element." },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "theme": {
                 "zh-CN": "按钮主题，可选 `solid`、`borderless`、`light` 或 `outline`。未设置时使用所在 ButtonGroup 的值，不在组内时为 `light`。",
                 "en-US": "Button theme: `solid`, `borderless`, `light` or `outline`. Falls back to the ButtonGroup it is in, and to `light` outside a group."

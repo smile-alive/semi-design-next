@@ -1,6 +1,6 @@
 import { children, createMemo, Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+import { cssClasses, type CardPart } from '@fibrae/semi-foundation/components/card/constants';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/card/card.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
@@ -18,19 +18,18 @@ type Style = JSX.CSSProperties | string;
 
 export interface CardProps extends ElementProps<'div', 'title'> {
     actions?: JSX.Element[];
-    bodyStyle?: Style;
     bordered?: boolean;
+    classNames?: Partial<Record<CardPart, string>>;
     cover?: JSX.Element;
     headerExtraContent?: JSX.Element;
     footer?: JSX.Element;
     footerLine?: boolean;
-    footerStyle?: Style;
     /** Replaces `title` and `headerExtraContent` */
     header?: JSX.Element;
     headerLine?: boolean;
-    headerStyle?: Style;
     loading?: boolean;
     shadows?: Shadows;
+    styles?: Partial<Record<CardPart, Style>>;
     title?: JSX.Element;
 }
 
@@ -43,7 +42,7 @@ const defaultProps = {
 
 function Card(rawProps: CardProps) {
     const props = useDefaultProps('Card', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['actions', 'bodyStyle', 'bordered', 'children', 'class', 'cover', 'footer', 'footerLine', 'footerStyle', 'header', 'headerExtraContent', 'headerLine', 'headerStyle', 'loading', 'shadows', 'title']);
+    const [local, rest] = splitProps(props, ['actions', 'bordered', 'children', 'class', 'classNames', 'cover', 'footer', 'footerLine', 'header', 'headerExtraContent', 'headerLine', 'loading', 'shadows', 'styles', 'title']);
 
     const header = children(() => local.header);
     const headerExtraContent = children(() => local.headerExtraContent);
@@ -75,13 +74,13 @@ function Card(rawProps: CardProps) {
             aria-busy={local.loading}
         >
             <Show when={hasContent(header()) || hasContent(headerExtraContent()) || hasContent(title())}>
-                <div class={clsx(`${prefixCls}-header`, { [`${prefixCls}-header-bordered`]: local.headerLine })} style={local.headerStyle}>
+                <div class={clsx(`${prefixCls}-header`, { [`${prefixCls}-header-bordered`]: local.headerLine }, local.classNames?.header)} style={local.styles?.header}>
                     <Show
                         when={hasContent(header())}
                         fallback={
                             <div class={`${prefixCls}-header-wrapper`}>
                                 <Show when={hasContent(title())}>
-                                    <div class={clsx(`${prefixCls}-header-wrapper-title`, { [`${prefixCls}-header-wrapper-spacing`]: hasContent(headerExtraContent()) })}>
+                                    <div class={clsx(`${prefixCls}-header-wrapper-title`, { [`${prefixCls}-header-wrapper-spacing`]: hasContent(headerExtraContent()) }, local.classNames?.title)} style={local.styles?.title}>
                                         <Show when={typeof title() === 'string'} fallback={title()}>
                                             <Typography.Title
                                                 // the title names the card; a heading here would break the page outline
@@ -96,7 +95,7 @@ function Card(rawProps: CardProps) {
                                     </div>
                                 </Show>
                                 <Show when={hasContent(headerExtraContent())}>
-                                    <div class={`${prefixCls}-header-wrapper-extra`} x-semi-prop="headerExtraContent">
+                                    <div class={clsx(`${prefixCls}-header-wrapper-extra`, local.classNames?.extra)} style={local.styles?.extra} x-semi-prop="headerExtraContent">
                                         {headerExtraContent()}
                                     </div>
                                 </Show>
@@ -108,11 +107,11 @@ function Card(rawProps: CardProps) {
                 </div>
             </Show>
             <Show when={hasContent(cover())}>
-                <div class={`${prefixCls}-cover`} x-semi-prop="cover">
+                <div class={clsx(`${prefixCls}-cover`, local.classNames?.cover)} style={local.styles?.cover} x-semi-prop="cover">
                     {cover()}
                 </div>
             </Show>
-            <div class={`${prefixCls}-body`} style={local.bodyStyle}>
+            <div class={clsx(`${prefixCls}-body`, local.classNames?.body)} style={local.styles?.body}>
                 <Show when={hasBody()}>
                     <Skeleton
                         placeholder={
@@ -130,7 +129,7 @@ function Card(rawProps: CardProps) {
                 </Show>
                 <Show when={actions()}>
                     {(items) => (
-                        <div class={`${prefixCls}-body-actions`}>
+                        <div class={clsx(`${prefixCls}-body-actions`, local.classNames?.actions)} style={local.styles?.actions}>
                             <Space spacing={12}>
                                 <Index each={items()}>
                                     {(item, index) => (
@@ -145,7 +144,7 @@ function Card(rawProps: CardProps) {
                 </Show>
             </div>
             <Show when={hasContent(footer())}>
-                <div class={clsx(`${prefixCls}-footer`, { [`${prefixCls}-footer-bordered`]: local.footerLine })} style={local.footerStyle} x-semi-prop="footer">
+                <div class={clsx(`${prefixCls}-footer`, { [`${prefixCls}-footer-bordered`]: local.footerLine }, local.classNames?.footer)} style={local.styles?.footer} x-semi-prop="footer">
                     {footer()}
                 </div>
             </Show>

@@ -34,4 +34,4 @@
     ];
 </script>
 
-<TreeSelect checkRelation="unRelated" dropdownStyle="max-height: 400px; overflow: auto" multiple style="width: 300px" {treeData} value={['Asia']} />
+<TreeSelect checkRelation="unRelated" multiple style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} value={['Asia']} />

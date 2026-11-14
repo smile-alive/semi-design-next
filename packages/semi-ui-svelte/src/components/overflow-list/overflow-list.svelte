@@ -22,9 +22,9 @@
         overflowRenderDirection = defaults('overflowRenderDirection', 'both'),
         renderMode = defaults('renderMode', 'collapse'),
         threshold = defaults('threshold', 0.75),
-        wrapperClassName = defaults('wrapperClassName'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         wrapperProps = defaults('wrapperProps'),
-        wrapperStyle = defaults('wrapperStyle'),
         item,
         overflow,
         onOverflow,
@@ -174,7 +174,7 @@
         {#if overflowRenderDirection === 'start'}
             {@render overflow?.({ items: scrollOverflow[1], position: 'end' })}
         {/if}
-        <div bind:this={wrapper} {...wrapperProps} class={[wrapperClassName, cssClasses.SCROLL_WRAPPER]} style={wrapperStyle}>
+        <div bind:this={wrapper} {...wrapperProps} class={[cssClasses.SCROLL_WRAPPER, classNames?.wrapper]} style={styles?.wrapper}>
             {#each scrollItems as entry (entry.key)}
                 {@const key = entry.key}
                 <span {@attach markScrollItem(key, onScrollElement)} style="display: contents">

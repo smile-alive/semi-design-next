@@ -14,7 +14,7 @@ export default function UploadDemo() {
             cropModalProps={{
                 width: 800,
                 style: { height: '600px' },
-                bodyStyle: { height: '500px', 'background-color': '#f5f5f5' },
+                styles: { body: { height: '500px', 'background-color': '#f5f5f5' } },
             }}
             onSuccess={(response, file) => {
                 console.log('上传成功:', response, file);

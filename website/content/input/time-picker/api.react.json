@@ -62,9 +62,13 @@
                 "zh-CN": "输入框只读，避免在移动设备上打开虚拟键盘；只读时清除按钮仍可用。",
                 "en-US": "Makes the input read-only, which avoids opening the virtual keyboard on mobile devices; the clear button stays usable."
             },
-            "inputStyle": {
-                "zh-CN": "输入框的样式，对象的键用 camelCase。",
-                "en-US": "Style of the input; an object with camelCase keys."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（弹出层的面板卡片）、`input`（输入框的根元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the panel card of the popup) and `input` (the root element of the input); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "insetLabel": {
                 "zh-CN": "输入框内部的前缀标签，显示在输入框内。",
@@ -98,11 +102,6 @@
             "placeholder": {
                 "zh-CN": "没有值时显示的提示，默认取语言包中对应 `type` 的文案。",
                 "en-US": "Hint shown without a value; defaults to the locale text of `type`."
-            },
-            "popupClassName": { "zh-CN": "弹出层的类名。", "en-US": "Class name of the popup." },
-            "popupStyle": {
-                "zh-CN": "弹出层的样式，对象的键用 camelCase。",
-                "en-US": "Style of the popup; an object with camelCase keys."
             },
             "position": {
                 "zh-CN": "浮层位置。未设置时，`type` 为 `timeRange` 取 `bottom`，为 `time` 取 `bottomLeft`；RTL 方向下取 `bottomRight`。",

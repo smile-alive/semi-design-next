@@ -37,6 +37,7 @@
         beforeRemove: undefined,
         beforeUpload: undefined,
         capture: semiGlobalDefault('Upload', 'capture'),
+        classNames: semiGlobalDefault('Upload', 'classNames'),
         crop: () => semiDefault('Upload', 'crop', false),
         cropModalProps: semiGlobalDefault('Upload', 'cropModalProps'),
         customRequest: undefined,
@@ -49,7 +50,6 @@
         fileName: semiGlobalDefault('Upload', 'fileName'),
         headers: undefined,
         hotSpotLocation: () => semiDefault('Upload', 'hotSpotLocation', 'end'),
-        itemStyle: semiGlobalDefault('Upload', 'itemStyle'),
         limit: semiGlobalDefault('Upload', 'limit'),
         listType: () => semiDefault('Upload', 'listType', 'list'),
         maxSize: semiGlobalDefault('Upload', 'maxSize'),
@@ -66,6 +66,7 @@
         showRetry: () => semiDefault('Upload', 'showRetry', true),
         showTooltip: () => semiDefault('Upload', 'showTooltip', true),
         showUploadList: () => semiDefault('Upload', 'showUploadList', true),
+        styles: semiGlobalDefault('Upload', 'styles'),
         transformFile: undefined,
         uploadTrigger: () => semiDefault('Upload', 'uploadTrigger', 'auto'),
         validateStatus: semiGlobalDefault('Upload', 'validateStatus'),
@@ -226,7 +227,8 @@
         picWidth: props.picWidth,
         picHeight: props.picHeight,
         validateMessage: UploadFoundation.getFallbackValidateMessage(file, i18n.value.locale),
-        style: props.itemStyle,
+        class: props.classNames?.item,
+        style: props.styles?.item,
         onRemove: () => foundation.handleRemove(file),
         onRetry: () => foundation.retry(file),
         onReplace: () => foundation.startReplace(file.uid),
@@ -236,7 +238,7 @@
     const fileItemNodes = (file: FileItem, index: number) => slotNodes(slots.fileItem?.(cardProps(file, index)) ?? []);
 
     // v-bind of an object merges listeners with the explicit ones, so keys Upload owns are dropped first
-    const cropModalRest = () => omit((props.cropModalProps ?? {}) as ModalProps & UploadCropModalProps, ['style', 'bodyStyle', 'width', 'visible', 'title', 'okText', 'cancelText', 'onOk', 'onCancel']);
+    const cropModalRest = () => omit((props.cropModalProps ?? {}) as ModalProps & UploadCropModalProps, ['style', 'styles', 'width', 'visible', 'title', 'okText', 'cancelText', 'onOk', 'onCancel']);
 
     onUpdated(() => listFocus.restore(cardsOf(), root.value?.querySelector<HTMLElement>(`.${prefix}-add, .${dragArea}`) ?? null));
 
@@ -396,12 +398,12 @@
         </AddArea>
         <Modal
             v-bind="cropModalRest()"
-            :bodyStyle="[{ height: '400px' }, props.cropModalProps?.bodyStyle]"
             :cancelText="cropConfig.modalCancelText"
             :okText="cropConfig.modalOkText"
             :onCancel="foundation.cancelCrop"
             :onOk="foundation.confirmCrop"
             :style="[{ height: '500px' }, props.cropModalProps?.style]"
+            :styles="{ ...props.cropModalProps?.styles, body: [{ height: '400px' }, props.cropModalProps?.styles?.body] }"
             :title="cropConfig.modalTitle || i18n.locale.cropTitle"
             :visible="state.cropperVisible"
             :width="props.cropModalProps?.width ?? 600"

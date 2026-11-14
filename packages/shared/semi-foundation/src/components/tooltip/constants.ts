@@ -4,6 +4,9 @@ export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-tooltip`,
 } as const;
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type TooltipPart = 'wrapper';
+
 export const strings = {
     POSITION_SET: ['top', 'topLeft', 'topRight', 'left', 'leftTop', 'leftBottom', 'right', 'rightTop', 'rightBottom', 'bottom', 'bottomLeft', 'bottomRight', 'leftTopOver', 'rightTopOver', 'leftBottomOver', 'rightBottomOver'],
     TRIGGER_SET: ['hover', 'focus', 'click', 'custom', 'contextMenu'],

@@ -626,9 +626,9 @@
                     {
                         [`${prefix}-option-list-wrapper`]: !(visibleOptions.length === 0 && emptyHidden()),
                     },
-                    props.dropdownClassName,
+                    props.classNames?.dropdown,
                 ]"
-                :style="props.dropdownStyle"
+                :style="props.styles?.dropdown"
                 @keydown="foundation.handleContainerKeyDown"
                 @mousedown="keepFocusOnPress"
             >

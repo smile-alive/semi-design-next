@@ -79,7 +79,7 @@
     style={[rest.style, tooltip?.pointerEventsNone && 'pointer-events: none'].filter(Boolean).join(';') || undefined}
 >
     {#if loading}
-        <Spin size={size === 'default' ? 'middle' : size} wrapperClassName={cssClasses.LOADING_SPIN} />
+        <Spin class={cssClasses.LOADING_SPIN} size={size === 'default' ? 'middle' : size} />
     {:else}
         <div aria-hidden="true" class={cssClasses.KNOB}></div>
     {/if}

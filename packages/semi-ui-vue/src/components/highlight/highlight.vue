@@ -14,8 +14,8 @@
         caseSensitive: () => semiDefault('Highlight', 'caseSensitive', false),
         autoEscape: () => semiDefault('Highlight', 'autoEscape', true),
         component: () => semiDefault('Highlight', 'component', 'mark'),
-        highlightClassName: semiGlobalDefault('Highlight', 'highlightClassName'),
-        highlightStyle: semiGlobalDefault('Highlight', 'highlightStyle'),
+        classNames: semiGlobalDefault('Highlight', 'classNames'),
+        styles: semiGlobalDefault('Highlight', 'styles'),
     });
 
     const prefixCls = cssClasses.PREFIX;
@@ -33,7 +33,7 @@
 
 <template>
     <template v-for="(chunk, index) in chunks" :key="index">
-        <component :is="props.component || 'mark'" v-if="chunk.highlight" :class="[`${prefixCls}-tag`, props.highlightClassName, chunk.class]" :style="{ ...props.highlightStyle, ...chunk.style }">
+        <component :is="props.component || 'mark'" v-if="chunk.highlight" :class="[`${prefixCls}-tag`, props.classNames?.highlight, chunk.class]" :style="[props.styles?.highlight, chunk.style]">
             {{ chunk.text }}
         </component>
         <template v-else>{{ chunk.text }}</template>

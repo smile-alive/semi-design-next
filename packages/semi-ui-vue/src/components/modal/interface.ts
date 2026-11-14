@@ -1,5 +1,6 @@
-import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { ConfirmType } from '@fibrae/semi-foundation/components/modal/confirm';
+import type { ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
 import type { OKType, Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import type { ButtonProps } from '../button/interface';
 
@@ -17,12 +18,13 @@ export interface ModalButtonProps extends ButtonProps {
 }
 
 export interface ModalProps {
-    bodyStyle?: StyleValue;
     cancelButtonProps?: ModalButtonProps;
     /** undefined: loading follows the Promise returned by onCancel */
     cancelLoading?: boolean;
     cancelText?: string;
     centered?: boolean;
+    /** Merged after the built-in class names of the part's element; replaces the global default as a whole */
+    classNames?: Partial<Record<ModalPart, ClassValue>>;
     closable?: boolean;
     closeOnEsc?: boolean;
     /** undefined: loading follows the Promise returned by onOk */
@@ -37,7 +39,6 @@ export interface ModalProps {
     mask?: boolean;
     maskClosable?: boolean;
     maskFixed?: boolean;
-    maskStyle?: StyleValue;
     modalContentClass?: string;
     motion?: boolean;
     okButtonProps?: ModalButtonProps;
@@ -45,6 +46,7 @@ export interface ModalProps {
     okType?: OKType;
     preventScroll?: boolean;
     size?: Size;
+    styles?: Partial<Record<ModalPart, StyleValue>>;
     /** Plain-text title; the `#title` slot wins. Declared so `title="x"` is not a native tooltip. */
     title?: string;
     visible?: boolean;
@@ -145,8 +147,8 @@ export interface ModalContentProps {
     /** The footer button that takes focus on open when the content has no autofocus element */
     initialFocus?: 'ok' | 'cancel';
     title?: string;
-    bodyStyle?: StyleValue;
-    maskStyle?: StyleValue;
+    classNames?: Partial<Record<ModalPart, ClassValue>>;
+    styles?: Partial<Record<ModalPart, StyleValue>>;
     centered: boolean;
     closable: boolean;
     closeOnEsc: boolean;
@@ -170,5 +172,6 @@ export interface ModalDialogProps {
     idPrefix: string;
     title?: string;
     closable: boolean;
-    bodyStyle?: StyleValue;
+    classNames?: Partial<Record<ModalPart, ClassValue>>;
+    styles?: Partial<Record<ModalPart, StyleValue>>;
 }

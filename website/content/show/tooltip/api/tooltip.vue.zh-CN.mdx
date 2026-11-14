@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | ariaLabelledby | 弹出层 role 为 dialog 时的 aria-labelledby。 | `string` | `semiGlobalDefault("Tooltip", "ariaLabelledby")` |
 | arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 showArrow。 | `boolean` | `true` |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| classNames | 内部各部位的类名，键为 `wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"wrapper\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Tooltip", "classNames")` |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭弹出层。 | `boolean` | `semiGlobalDefault("Tooltip", "clickToHide")` |
 | clickTriggerToHide | 点击触发元素时是否关闭已打开的弹出层。 | `boolean` | `semiGlobalDefault("Tooltip", "clickTriggerToHide")` |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。 | `boolean` | `true` |
@@ -27,9 +28,9 @@ import ApiType from '#/components/ApiType.astro';
 | showArrow | 是否显示箭头三角形。 | `boolean` | `true` |
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number; }` | `numbers.SPACING` |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean` | `semiGlobalDefault("Tooltip", "stopPropagation")` |
+| styles | 内部各部位的内联样式，键同 `classNames`，写在 span 自带样式之后。 | <ApiType detail={"Partial\u003cRecord\u003c\"wrapper\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Tooltip", "styles")` |
 | trigger | 触发显示的时机。custom 时显示与否完全由 visible 决定。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `"hover"` |
 | visible | 弹出层是否显示，配合 v-model:visible 使用；传入后由该值决定显示。 | `boolean` | `semiGlobalDefault("Tooltip", "visible")` |
-| wrapperClassName | 触发元素被 span 包裹时，该 span 的类名。 | `string` | `semiGlobalDefault("Tooltip", "wrapperClassName")` |
 | wrapperId | 弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。 | `string` | `undefined` |
 | wrapWhenSpecial | 触发元素禁用或加载中时，是否在外层包裹 span 以保证触发行为。 | `boolean` | `true` |
 

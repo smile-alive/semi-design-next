@@ -289,9 +289,20 @@ describe('Radio', () => {
         expect(getRadio()).toHaveAttribute('aria-describedby', 'outer ex');
     });
 
-    it('button 类型隐藏 extra，不引用它，并应用 addonClassName 与 addonStyle', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
         render(Radio, {
-            props: { type: 'button', addonClassName: 'ac', addonStyle: { color: 'red' } },
+            props: { classNames: { addon: 'ac' }, styles: { addon: { color: 'red' } } },
+            slots: { default: () => 'A' },
+        });
+        const addon = getElement(`.${prefixCls}-addon`);
+        expect(addon).toHaveClass('ac');
+        expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(getElement(`.${prefixCls}`)).not.toHaveClass('ac');
+    });
+
+    it('button 类型隐藏 extra，不引用它，并应用 classNames.addon 与 styles.addon', () => {
+        render(Radio, {
+            props: { type: 'button', classNames: { addon: 'ac' }, styles: { addon: { color: 'red' } } },
             slots: { default: () => 'A', extra: () => 'more' },
         });
         const addon = getElement(`.${prefixCls}-addon-buttonRadio`);

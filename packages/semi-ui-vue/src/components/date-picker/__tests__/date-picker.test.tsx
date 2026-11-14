@@ -432,16 +432,26 @@ describe(`DatePicker`, () => {
         expect(container.querySelector('input')).toHaveFocus();
     });
 
-    it('自定义 dropdownClassName 与 dropdownStyle', async () => {
-        await renderPicker({
-            dropdownClassName: 'my-datePicker',
-            dropdownStyle: { color: 'red' },
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const { container } = await renderPicker({
+            classNames: { dropdown: 'my-dropdown', input: 'my-input' },
+            styles: { dropdown: { color: 'red' }, input: { color: 'blue' } },
             defaultOpen: true,
             motion: false,
         });
-        const dropdown = document.querySelector('.my-datePicker');
-        expect(dropdown).not.toBeNull();
+        const dropdown = document.querySelector('.my-dropdown');
+        expect(dropdown).toHaveClass(dp);
         expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const input = container.querySelector('.my-input');
+        expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper`);
+        expect(input).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+    });
+
+    it('范围选择的两个输入框都带 input 部位', async () => {
+        const { container } = await renderPicker({ type: 'dateRange', classNames: { input: 'my-input' }, styles: { input: { color: 'blue' } }, motion: false });
+        const inputs = container.querySelectorAll('.my-input');
+        expect(inputs).toHaveLength(2);
+        inputs.forEach((el) => expect(el).toHaveStyle({ color: 'rgb(0, 0, 255)' }));
     });
 
     it('clear 事件', async () => {

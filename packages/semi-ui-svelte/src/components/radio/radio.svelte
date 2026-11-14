@@ -23,8 +23,8 @@
         displayMode = defaults('displayMode'),
         mode = defaults('mode', ''),
         type = defaults('type', 'default'),
-        addonStyle = defaults('addonStyle'),
-        addonClassName = defaults('addonClassName'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         addonId,
         extraId,
         preventScroll = defaults('preventScroll'),
@@ -210,7 +210,6 @@
             {#if children}
                 <span
                     class={[
-                        addonClassName,
                         {
                             [`${prefix}-addon`]: !view.isButtonRadio,
                             [`${prefix}-addon-buttonRadio`]: view.isButtonRadio,
@@ -218,9 +217,10 @@
                             [`${prefix}-addon-buttonRadio-disabled`]: view.isButtonRadio && view.disabled,
                             [`${prefix}-addon-buttonRadio-${view.buttonSize}`]: view.isButtonRadio && view.buttonSize,
                         },
+                        classNames?.addon,
                     ]}
                     id={addonDomId}
-                    style={addonStyle}
+                    style={styles?.addon}
                     x-semi-prop="children"
                 >
                     {@render children()}

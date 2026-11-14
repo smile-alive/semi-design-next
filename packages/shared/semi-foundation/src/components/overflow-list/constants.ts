@@ -6,6 +6,9 @@ export const cssClasses = {
     SCROLL_WRAPPER: BASE_CLASS_PREFIX + '-overflow-list-scroll-wrapper',
 };
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type OverflowListPart = 'wrapper';
+
 /** Attribute on the first element of each scroll-mode item that carries the item's key: the observer and Tabs find items by it */
 export const SCROLL_KEY_ATTRIBUTE = 'data-scrollkey';
 

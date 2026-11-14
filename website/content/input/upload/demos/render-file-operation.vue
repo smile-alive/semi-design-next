@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <Upload :action="action" :customRequest="mockUpload" :defaultFileList="defaultFileList" :itemStyle="{ width: '300px' }">
+    <Upload :action="action" :customRequest="mockUpload" :defaultFileList="defaultFileList" :styles="{ item: { width: '300px' } }">
         <template #fileOperation="fileItem">
             <div style="display: flex; column-gap: 8px; padding: 0 8px">
                 <Button aria-label="预览" size="small" theme="borderless" type="tertiary">

@@ -112,10 +112,10 @@ function Tree(rawProps: TreeProps) {
         renderDraggingNode,
         renderFullLabel,
         renderLabel,
-        searchClassName,
+        classNames,
+        styles,
         searchPlaceholder,
         searchRender,
-        searchStyle,
         showClear,
         showFilteredOnly,
         showLine,
@@ -269,7 +269,7 @@ function Tree(rawProps: TreeProps) {
             placeholder: searchPlaceholder || locale?.searchPlaceholder,
         };
         return (
-            <div className={clsx(`${prefixcls}-search-wrapper`, searchClassName)} style={searchStyle}>
+            <div className={clsx(`${prefixcls}-search-wrapper`, classNames?.search)} style={styles?.search}>
                 {typeof searchRender === 'function' ? searchRender(inputProps) : <Input aria-label={locale.filter} addonAfter={null} addonBefore={null} insetLabel={null} suffix={null} {...inputProps} />}
             </div>
         );

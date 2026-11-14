@@ -10,14 +10,13 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | Whether the Select takes focus after mounting. | `boolean` | `false` |
 | borderless | Whether the Select has no border. | `boolean` | `false` |
 | changeWithObject | A boolean attribute, not an event: when true, change, update:modelValue, modelValue and defaultValue use option objects, which must contain value and label. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by dropdown (the dropdown popup); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Select", "classNames")` |
 | clickToHide | Whether clicking the select box closes an open dropdown. | `boolean` | `false` |
 | defaultActiveFirstOption | Whether opening the dropdown highlights the first enabled option when nothing is selected (press Enter to select it). With a selected value, the first selected option is always highlighted. | `boolean` | `true` |
 | defaultOpen | Whether the dropdown is open when mounted. | `boolean` | `false` |
 | defaultValue | The initially selected value, read on mount only; an array in multiple mode. | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | `semiGlobalDefault("Select", "defaultValue")` |
 | disabled | Whether the Select is disabled. | `boolean` | `undefined` |
-| dropdownClassName | Class of the dropdown popup. | `string` | `semiGlobalDefault("Select", "dropdownClassName")` |
 | dropdownMatchSelectWidth | Whether the minimum width of the popup equals the select box. | `boolean` | `true` |
-| dropdownStyle | Style of the dropdown popup, for example width. The style on the root element does not reach the popup. | `StyleValue` | `semiGlobalDefault("Select", "dropdownStyle")` |
 | ellipsisTrigger | In multiple mode with maxTagCount, whether the last tag is truncated when the width is short. It costs some performance, so avoid it in large forms. | `boolean` | `false` |
 | expandRestTagsOnClick | In multiple mode with maxTagCount, whether all tags are shown while the dropdown is open. | `boolean` | `false` |
 | filter | Whether the Select is searchable. true turns search on with the default strategy, which matches options whose label (or group title) contains the input; a function receives the input value and the option and returns true for a match. | <ApiType detail={"boolean \u007c ((inputValue: string, option: SelectOptionProps) => boolean)"}>Type</ApiType> | `undefined` |
@@ -45,6 +44,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size: small, default or large. | `Size` | `undefined` |
 | spacing | The distance between the popup and the select box, in pixels. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Select", "spacing")` |
 | stopPropagation | Whether click events inside the popup stop propagating. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like classNames, for example width on dropdown. The style on the root element does not reach the popup. | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Select", "styles")` |
 | validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Select", "validateStatus")` |
 | virtualize | Turns on list virtualization for many options. itemSize is the height of every row and is required; height defaults to 270 and width to 100%. | `SelectVirtualize` | `semiGlobalDefault("Select", "virtualize")` |
 

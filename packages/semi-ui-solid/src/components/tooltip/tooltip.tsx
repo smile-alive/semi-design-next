@@ -2,12 +2,12 @@ import { type Accessor, type JSX, type Ref, Show, batch, children, createEffect,
 import { Portal, isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { COLOR_SCHEME_SELECTOR, TRIGGER_EVENT_NAMES, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
+import { COLOR_SCHEME_SELECTOR, TRIGGER_EVENT_NAMES, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger, type TooltipPart } from '@fibrae/semi-foundation/components/tooltip/constants';
 import TooltipFoundation, { type Position, type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '@fibrae/semi-foundation/components/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed, isEventInside, noop, POPUP_ID_ATTRIBUTE, warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
 import { PopupLayerContext, useDefaultProps, useFoundation } from '../../base/index';
-import { autofocus, callHandler } from '../../utils/index';
+import { autofocus, callHandler, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { SpecialTriggerContext, type SpecialTriggerState, TooltipDescriptionContext, type TooltipPopups, TooltipPopupsContext, useSpecialTriggers, useTooltipPopups } from './context';
 import TriangleArrow from './triangle-arrow';
@@ -98,7 +98,9 @@ export interface TooltipProps extends TooltipBaseProps {
     arrowPointAtCenter?: boolean;
     wrapWhenSpecial?: boolean;
     stopPropagation?: boolean;
-    wrapperClassName?: string;
+    /** `wrapper` exists only when the trigger is wrapped: text, several nodes, or a disabled or loading trigger */
+    classNames?: Partial<Record<TooltipPart, string>>;
+    styles?: Partial<Record<TooltipPart, JSX.CSSProperties | string>>;
     wrapperId?: string;
     onVisibleChange?: (visible: boolean) => void;
     /** Native mousedown from the window listener */
@@ -396,8 +398,8 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                 <Show when={wrapped()} fallback={output()}>
                     <span
                         ref={trackWrapper}
-                        class={clsx(`${prefix}-trigger-wrapper`, props.wrapperClassName)}
-                        style={{ display: 'inline-block', width: block() ? '100%' : undefined, cursor: special() === strings.STATUS_DISABLED ? 'not-allowed' : undefined }}
+                        class={clsx(`${prefix}-trigger-wrapper`, props.classNames?.wrapper)}
+                        style={mergeStyles({ display: 'inline-block', width: block() ? '100%' : undefined, cursor: special() === strings.STATUS_DISABLED ? 'not-allowed' : undefined }, props.styles?.wrapper)}
                         tabindex={special() === strings.STATUS_LOADING ? -1 : 0}
                         {...popupIdAttribute()}
                         aria-describedby={special() === strings.STATUS_DISABLED && props.role === 'tooltip' && state().isInsert ? popupId() : undefined}
@@ -420,8 +422,8 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
         return (
             <span
                 ref={trackWrapper}
-                class={clsx(`${prefix}-trigger-wrapper`, props.wrapperClassName)}
-                style={{ display: textOnly() ? undefined : 'inline-block', width: block() ? '100%' : undefined, cursor: special() === strings.STATUS_DISABLED && wrapsSpecial() ? 'not-allowed' : undefined }}
+                class={clsx(`${prefix}-trigger-wrapper`, props.classNames?.wrapper)}
+                style={mergeStyles({ display: textOnly() ? undefined : 'inline-block', width: block() ? '100%' : undefined, cursor: special() === strings.STATUS_DISABLED && wrapsSpecial() ? 'not-allowed' : undefined }, props.styles?.wrapper)}
                 tabindex={focusableInside() ? -1 : 0}
                 {...popupIdAttribute()}
                 aria-describedby={props.role === 'tooltip' && state().isInsert ? popupId() : undefined}

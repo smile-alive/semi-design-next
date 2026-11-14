@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/components/empty/constants';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { EmptyPart, strings } from '@fibrae/semi-foundation/components/empty/constants';
 
 export type EmptyLayout = (typeof strings.LAYOUT)[number];
 
@@ -14,7 +14,8 @@ export type EmptyImage = string | EmptySvgNode | Snippet;
 // `title` is the heading here, so the native tooltip attribute is not accepted
 export interface EmptyProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
     layout?: EmptyLayout;
-    imageStyle?: string;
+    classNames?: Partial<Record<EmptyPart, ClassValue>>;
+    styles?: Partial<Record<EmptyPart, string>>;
     title?: string | Snippet;
     image?: EmptyImage;
     /** Shown instead of `image` while the page is in dark mode */

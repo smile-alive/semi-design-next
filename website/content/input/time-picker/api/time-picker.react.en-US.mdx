@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoFocus | Focuses the input once mounted; passed through to the input's `autoFocus`. | `boolean` | - |
 | borderless | Borderless mode. | `boolean` | `false` |
 | className | Class name of the root element. | `string` | `""` |
+| classNames | Class names of the inner parts, keyed by `dropdown` (the panel card of the popup) and `input` (the root element of the input); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom clear icon; effective when `showClear` is `true`. | `React.ReactNode` | - |
 | defaultOpen | Whether the panel is open by default when uncontrolled. | `boolean` | - |
 | defaultValue | Initial time when uncontrolled, in the same forms as `value`; an array when `type` is `timeRange`. | `BaseValueType \| BaseValueType[]` | - |
@@ -22,7 +23,6 @@ import ApiType from '#/components/ApiType.astro';
 | hourStep | Interval of the hour options; a positive integer, 1 when unset. | `number` | - |
 | id | `id` of the input. | `string` | - |
 | inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices; the clear button stays usable. | `boolean` | `false` |
-| inputStyle | Style of the input; an object with camelCase keys. | `React.CSSProperties` | - |
 | insetLabel | Prefix label shown inside the input. | `React.ReactNode` | - |
 | insetLabelId | `id` of the `insetLabel`, referenced through `aria-labelledby` and similar attributes. | `string` | - |
 | minuteStep | Interval of the minute options; a positive integer, 1 when unset. | `number` | - |
@@ -36,8 +36,6 @@ import ApiType from '#/components/ApiType.astro';
 | panelHeader | Content above the panel. In range mode an array, whose item `i` is used for panel `i`; when unset, range mode shows the begin and end locale texts. | `React.ReactNode \| React.ReactNode[]` | - |
 | panels | Range mode only: item `i` is both the header and the footer of panel `i`, taking precedence over `panelHeader` and `panelFooter`. Ignored in single mode. | `React.ReactNode[]` | - |
 | placeholder | Hint shown without a value; defaults to the locale text of `type`. | `string` | - |
-| popupClassName | Class name of the popup. | `string` | `""` |
-| popupStyle | Style of the popup; an object with camelCase keys. | `React.CSSProperties` | - |
 | position | Popup position. Unset, it is `bottom` for `timeRange` and `bottomLeft` for `time`; `bottomRight` under RTL. | `Position` | - |
 | preventScroll | Whether focusing prevents the browser from scrolling the document; passed directly as the `preventScroll` option of `focus()`, for the focus calls inside the component. | `boolean` | - |
 | rangeSeparator | Separator between the two times of a range. | `string` | `" ~ "` |
@@ -48,6 +46,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size of the input: `large`, `default` or `small`. | `InputSize` | `"default"` |
 | stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
 | style | Style of the root element. | `React.CSSProperties` | `{}` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
 | triggerRender | Renders a custom trigger. The argument has `disabled`, `placeholder`, `value` (an array of `Date`, the unpicked side `undefined`), `inputValue`, `componentProps` (the props of the TimePicker, without `ref`) and `onChange` (updates the input text, as typing would). | <ApiType detail={"(props: TimePickerTriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
 | type | Selection type: `time` for a single time, `timeRange` for a time range. | `Type` | `"time"` |

@@ -1,6 +1,6 @@
 import { type JSX, Show, children, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+import { cssClasses, type SideSheetPart } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import type { SheetSize } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 import { isAriaKey, toCssLength } from '@fibrae/semi-foundation/utils';
 import { IconClose } from '@fibrae/semi-icons-solid';
@@ -19,18 +19,15 @@ export interface SideSheetContentProps extends ElementProps<'div', 'onClose' | '
     mask?: boolean;
     /** The sheet blocks the whole page (a mask in body); drives the default of aria-modal */
     modal?: boolean;
-    maskStyle?: Style;
     maskClosable?: boolean;
-    maskClass?: string;
     title?: JSX.Element;
     closable?: boolean;
-    headerStyle?: Style;
     sheetSize: SheetSize;
     /** On the role="dialog" element */
     style?: Style;
     size?: 'small' | 'medium' | 'large';
-    bodyStyle?: Style;
-    dialogClass?: string;
+    classNames?: Partial<Record<SideSheetPart, string>>;
+    styles?: Partial<Record<SideSheetPart, Style>>;
     footer?: JSX.Element;
     /** Attached to the mask */
     maskRef?: (element: HTMLDivElement) => void;
@@ -39,7 +36,7 @@ export interface SideSheetContentProps extends ElementProps<'div', 'onClose' | '
 }
 
 export default function SideSheetContent(props: SideSheetContentProps) {
-    const [local, others] = splitProps(props, ['bodyStyle', 'children', 'class', 'closable', 'closeIcon', 'dialogClass', 'dialogRef', 'footer', 'headerStyle', 'mask', 'maskClass', 'maskClosable', 'maskRef', 'maskStyle', 'modal', 'onClose', 'ref', 'sheetSize', 'size', 'style', 'title']);
+    const [local, others] = splitProps(props, ['children', 'class', 'classNames', 'closable', 'closeIcon', 'dialogRef', 'footer', 'mask', 'maskClosable', 'maskRef', 'modal', 'onClose', 'ref', 'sheetSize', 'size', 'style', 'styles', 'title']);
 
     // F12: aria-* name and describe the dialog, the rest stays on the outer element
     const [dialogAria, rest] = splitControlAttrs(others, isAriaKey);
@@ -61,7 +58,7 @@ export default function SideSheetContent(props: SideSheetContentProps) {
         const { dialogWidth, dialogHeight } = local.sheetSize;
         const size: JSX.CSSProperties = { ...(dialogWidth ? { width: toCssLength(dialogWidth) } : {}), height: toCssLength(dialogHeight) };
         // the computed size wins over the consumer's style
-        return mergeStyles(local.style, size);
+        return mergeStyles(local.style, local.styles?.content, size);
     };
 
     const onMaskClick = (event: MouseEvent) => {
@@ -81,12 +78,12 @@ export default function SideSheetContent(props: SideSheetContentProps) {
             style={rootStyle()}
         >
             <Show when={local.mask}>
-                <div ref={local.maskRef} class={clsx(`${prefixCls}-mask`, local.maskClass)} style={local.maskStyle} aria-hidden="true" onClick={onMaskClick} />
+                <div ref={local.maskRef} class={clsx(`${prefixCls}-mask`, local.classNames?.mask)} style={local.styles?.mask} aria-hidden="true" onClick={onMaskClick} />
             </Show>
             <div
                 {...dialogAria}
                 ref={local.dialogRef}
-                class={clsx(`${prefixCls}-inner`, `${prefixCls}-inner-wrap`, local.dialogClass, `${prefixCls}-size-${local.size}`)}
+                class={clsx(`${prefixCls}-inner`, `${prefixCls}-inner-wrap`, `${prefixCls}-size-${local.size}`, local.classNames?.content)}
                 style={dialogStyle()}
                 // a generated reference would shadow aria-label
                 aria-labelledby={dialogAria['aria-labelledby'] ?? (!dialogAria['aria-label'] && hasTitle() ? titleId : undefined)}
@@ -95,7 +92,7 @@ export default function SideSheetContent(props: SideSheetContentProps) {
                 tabIndex={-1}
             >
                 <div class={`${prefixCls}-content`}>
-                    <div class={`${prefixCls}-header`} style={local.headerStyle}>
+                    <div class={clsx(`${prefixCls}-header`, local.classNames?.header)} style={local.styles?.header}>
                         <Show when={hasTitle()}>
                             <div id={titleId} class={`${prefixCls}-title`} aria-level={2} role="heading" x-semi-prop="title">
                                 {title()}
@@ -105,11 +102,11 @@ export default function SideSheetContent(props: SideSheetContentProps) {
                             <IconButton type="tertiary" class={`${prefixCls}-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={closeIcon() || <IconClose />} onClick={local.onClose} />
                         </Show>
                     </div>
-                    <div class={`${prefixCls}-body`} style={local.bodyStyle} x-semi-prop="children">
+                    <div class={clsx(`${prefixCls}-body`, local.classNames?.body)} style={local.styles?.body} x-semi-prop="children">
                         {local.children}
                     </div>
                     <Show when={hasContent(footer())}>
-                        <div class={`${prefixCls}-footer`} x-semi-prop="footer">
+                        <div class={clsx(`${prefixCls}-footer`, local.classNames?.footer)} style={local.styles?.footer} x-semi-prop="footer">
                             {footer()}
                         </div>
                     </Show>

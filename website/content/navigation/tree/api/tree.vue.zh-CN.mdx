@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | blockNode | 节点显示为整行，悬浮和选中高亮整行；关闭时只高亮节点的 label。 | `boolean` | `true` |
 | changeWithObject | 布尔属性而不是事件：设为 true 时，change 的载荷由 value 变为包含 value、label 及其他属性的节点对象；受控时 modelValue 与 defaultValue 也要传对象，且必须含 value。 | `boolean` | `false` |
 | checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `"related"` |
+| classNames | 内部各部位的类名，键为 search（搜索框容器），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"search\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Tree", "classNames")` |
 | defaultExpandAll | 初始化时展开所有节点。之后 treeData 或 treeDataSimpleJson 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `false` |
 | defaultExpandedKeys | 默认展开的节点，显示其直接子级。 | `string[]` | `semiGlobalDefault("Tree", "defaultExpandedKeys")` |
 | defaultValue | 指定默认选中的条目，只在挂载时读取。 | `TreeValue` | `semiGlobalDefault("Tree", "defaultValue")` |
@@ -30,12 +31,11 @@ import ApiType from '#/components/ApiType.astro';
 | modelValue | 当前选中的节点的 value（没有 value 时为 key），用 v-model 绑定；多选时为数组。传入后即为受控组件。 | `TreeValue` | `undefined` |
 | motion | 是否开启展开收起的动画；虚拟化时动画关闭。 | `boolean` | `true` |
 | multiple | 是否多选。多选时所有子项都被选择会自动勾选其父项。 | `boolean` | `false` |
-| searchClassName | 搜索框容器的类名。 | `string` | `semiGlobalDefault("Tree", "searchClassName")` |
 | searchPlaceholder | 搜索框的占位文字。 | `string` | `semiGlobalDefault("Tree", "searchPlaceholder")` |
-| searchStyle | 搜索框容器的样式。 | `StyleValue` | `semiGlobalDefault("Tree", "searchStyle")` |
 | showClear | 搜索框是否显示清除按钮。 | `boolean` | `true` |
 | showFilteredOnly | 搜索时只展示过滤后的结果。 | `boolean` | `false` |
 | showLine | 显示节点之间的连接线。 | `boolean` | `false` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003c\"search\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Tree", "styles")` |
 | treeData | 节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。 | `TreeNodeData[]` | `semiGlobalDefault("Tree", "treeData")` |
 | treeDataSimpleJson | 简单 JSON 形式的节点数据，返回值为包含选中节点的 JSON 数据。 | `TreeDataSimpleJson` | `semiGlobalDefault("Tree", "treeDataSimpleJson")` |
 | treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `"label"` |

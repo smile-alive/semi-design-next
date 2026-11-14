@@ -151,7 +151,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
         return (
             <Modal
                 class={clsx(modalPrefixCls, local.class, step()!.class)}
-                bodyStyle={{ padding: '0' }}
+                styles={{ body: { padding: '0' } }}
                 style={local.style}
                 aria-labelledby={hasContent(title()) ? titleId : undefined}
                 centered

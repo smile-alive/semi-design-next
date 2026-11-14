@@ -58,6 +58,7 @@
 - 没有根元素的组件不做透传、不加 ref，返回类型要显式标注，否则 d.ts 生成时会引用不该暴露的类型。
 - Props 类型继承落点元素的原生属性（F6）：第一个参数是接收未声明属性的元素，第二个参数列出组件以不兼容签名重定义的属性；漏列时 `extends` 报错。必须写成 `interface ... extends`，不用交叉类型：交叉类型不检查冲突，同名属性会静默合并成两个签名的交叉。落点写法见各框架文件。
 - 需要命令式方法时导出 `XxxHandle` 接口，方法清单与 Methods 文档、demo、测试、组件间调用保持一致。
+- 内部元素的样式入口只有 `classNames`、`styles`（决策「部位类名与样式」），不新增 `xxxClassName`、`xxxStyle`。部位名清单写在 foundation 的 `constants.ts`（`export type XxxPart = 'header' | 'body'`），类型写成 `Partial<Record<XxxPart, 值类型>>`；每个部位元素写成 `clsx(自带类名, classNames?.part)` 与 `styles?.part`（Svelte 用 `class={[自带类名, classNames?.part]}`，不导入 clsx）。内部渲染另一个对外导出的组件并转发部位时，写 `classNames={own ?? {}}`、`styles={own ?? {}}`，否则内部组件会读到它自己的全局默认值（如 InputNumber 内的 Input）。参照 Card。
 
 ## 事件、焦点与 DOM 工具
 

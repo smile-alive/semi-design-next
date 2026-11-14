@@ -61,7 +61,7 @@ export default function PreviewImage(props: Props) {
                 )}
             </For>
             <Show when={state().loading}>
-                <Spin wrapperClassName={`${preViewImgPrefixCls}-spin`} size="large" />
+                <Spin class={`${preViewImgPrefixCls}-spin`} size="large" />
             </Show>
         </div>
     );

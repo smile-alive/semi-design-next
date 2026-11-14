@@ -23,4 +23,4 @@
     </Space>
 {/snippet}
 
-<Card {cover} {footer} footerLine footerStyle="display: flex; justify-content: flex-end" {headerExtraContent} style="max-width: 340px" {title}>Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。</Card>
+<Card {cover} {footer} footerLine {headerExtraContent} style="max-width: 340px" styles={{ footer: 'display: flex; justify-content: flex-end' }} {title}>Semi Design Next 是 Semi Design 的社区版设计系统，一套组件在 React、Vue、Solid、Svelte 中原生可用。</Card>

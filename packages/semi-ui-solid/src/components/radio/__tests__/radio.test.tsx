@@ -258,9 +258,9 @@ describe('Radio', () => {
         expect(screen.getByRole('radio')).not.toHaveAttribute('aria-describedby');
     });
 
-    it('button 类型下 addonClassName、addonStyle 生效而 extra 隐藏', () => {
+    it('classNames 与 styles 按部位落到 addon，button 类型下 extra 隐藏', () => {
         const { container } = render(() => (
-            <Radio type="button" addonClassName="ac" addonStyle={{ color: 'red' }} extra="more">
+            <Radio type="button" classNames={{ addon: 'ac' }} styles={{ addon: { color: 'red' } }} extra="more">
                 A
             </Radio>
         ));
@@ -349,7 +349,7 @@ describe('Radio', () => {
 
     it('disabled 的 Radio 配 click 的 Tooltip：外包 span 是停靠点', async () => {
         const { container } = render(() => (
-            <Tooltip wrapperClassName="probe" content="hint" motion={false} trigger="click">
+            <Tooltip classNames={{ wrapper: 'probe' }} content="hint" motion={false} trigger="click">
                 {(trigger) => (
                     <Radio disabled {...trigger()}>
                         A

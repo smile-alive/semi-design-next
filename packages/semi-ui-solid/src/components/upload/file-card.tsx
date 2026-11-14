@@ -108,14 +108,18 @@ export default function FileCard(props: FileCardProps) {
         return (
             <div
                 {...domAttrs}
-                class={clsx(`${prefixCls}-picture-file-card`, {
-                    [`${prefixCls}-picture-file-card-preview-fallback`]: fallbackPreview(),
-                    [`${prefixCls}-picture-file-card-disabled`]: props.disabled,
-                    [`${prefixCls}-picture-file-card-show-pointer`]: props.onPreviewClick !== undefined,
-                    [`${prefixCls}-picture-file-card-error`]: props.status === strings.FILE_STATUS_UPLOAD_FAIL,
-                    [`${prefixCls}-picture-file-card-uploading`]: flags().showPicProgress,
-                    [`${prefixCls}-picture-file-card-custom-thumbnail`]: Boolean(customThumbnail() && props.picHeight && props.picWidth),
-                })}
+                class={clsx(
+                    `${prefixCls}-picture-file-card`,
+                    {
+                        [`${prefixCls}-picture-file-card-preview-fallback`]: fallbackPreview(),
+                        [`${prefixCls}-picture-file-card-disabled`]: props.disabled,
+                        [`${prefixCls}-picture-file-card-show-pointer`]: props.onPreviewClick !== undefined,
+                        [`${prefixCls}-picture-file-card-error`]: props.status === strings.FILE_STATUS_UPLOAD_FAIL,
+                        [`${prefixCls}-picture-file-card-uploading`]: flags().showPicProgress,
+                        [`${prefixCls}-picture-file-card-custom-thumbnail`]: Boolean(customThumbnail() && props.picHeight && props.picWidth),
+                    },
+                    props.class
+                )}
                 style={{ ...props.style, ...sizeStyle() }}
                 role="listitem"
                 onClick={() => props.onPreviewClick?.()}
@@ -202,10 +206,14 @@ export default function FileCard(props: FileCardProps) {
         return (
             <div
                 {...domAttrs}
-                class={clsx(`${prefixCls}-file-card`, {
-                    [`${prefixCls}-file-card-fail`]: flags().failed,
-                    [`${prefixCls}-file-card-show-pointer`]: props.onPreviewClick !== undefined,
-                })}
+                class={clsx(
+                    `${prefixCls}-file-card`,
+                    {
+                        [`${prefixCls}-file-card-fail`]: flags().failed,
+                        [`${prefixCls}-file-card-show-pointer`]: props.onPreviewClick !== undefined,
+                    },
+                    props.class
+                )}
                 style={props.style}
                 role="listitem"
                 onClick={() => props.onPreviewClick?.()}
@@ -252,7 +260,7 @@ export default function FileCard(props: FileCardProps) {
                                 fallback={
                                     <Show when={props.validateMessage !== undefined}>
                                         <Show when={props.status === strings.FILE_STATUS_VALIDATING} fallback={<IconAlertCircle class={`${prefixCls}-file-card-icon-error`} />}>
-                                            <Spin wrapperClassName={`${prefixCls}-file-card-icon-loading`} size="small" />
+                                            <Spin class={`${prefixCls}-file-card-icon-loading`} size="small" />
                                         </Show>
                                         {props.validateMessage}
                                     </Show>

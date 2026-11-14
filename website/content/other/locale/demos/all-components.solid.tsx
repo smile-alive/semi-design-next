@@ -121,7 +121,7 @@ function I18nComponent() {
             <br />
             <br />
             <h5>TreeSelect</h5>
-            <TreeSelect style={{ ...style, width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} filterTreeNode />
+            <TreeSelect style={{ ...style, width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} filterTreeNode />
             <h5>Table</h5>
             <Table columns={columns} dataSource={dataSource} scroll={{ y: 320 }} />
             <h5>Table - Empty</h5>
@@ -147,7 +147,7 @@ function I18nComponent() {
                 <FormInput field="UserName" label={{ text: '角色', optional: true }} style={{ width: '200px' }} />
             </Form>
             <h5>Navigation</h5>
-            <Nav bodyStyle={{ height: '320px' }} items={navItems} renderItemIcon={({ item }) => <Dynamic component={navIcons[String(item.itemKey)]} />} header={navHeader} footer={{ collapseButton: true }} />
+            <Nav styles={{ body: { height: '320px' } }} items={navItems} renderItemIcon={({ item }) => <Dynamic component={navIcons[String(item.itemKey)]} />} header={navHeader} footer={{ collapseButton: true }} />
         </>
     );
 }

@@ -12,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | changeOnSelect | 单选时是否允许选择非叶子节点。 | `boolean` | `false` |
 | checkRelation | 多选时节点之间的选中关系：`related` 为父子联动，`unRelated` 为互不影响。 | `'related' \| 'unRelated'` | `"related"` |
 | className | 选择框根元素（触发器）的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `dropdown`（下拉菜单），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮的图标，`showClear` 为 true 时有效。 | `ReactNode` | - |
 | clickToSelect | 多选时点击任意节点即选中，常与 `showNext="hover"` 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `false` |
 | defaultOpen | 是否在挂载时默认展开下拉。 | `boolean` | `false` |
@@ -20,8 +21,6 @@ import ApiType from '#/components/ApiType.astro';
 | disableStrictly | 是否开启严格禁用。开启后，禁用的节点不会因父级或子级的选中关系改变选中状态。 | `boolean` | `false` |
 | displayProp | 回填到触发器与标签中的节点属性。 | `string` | `"label"` |
 | displayRender | 自定义回填内容。单选时参数为路径上各级节点 label 的数组，返回回填内容；多选时参数为节点的 Entity 与索引，返回该标签的内容。未设置时，单选以 `separator` 连接各级 label。 | <ApiType detail={"ByMultiple\u003cMultiple, (selected: Array\u003cReactNode>) => ReactNode, (selected: Entity, idx: number) => ReactNode>"}>Type</ApiType> | - |
-| dropdownClassName | 下拉菜单的类名。 | `string` | - |
-| dropdownStyle | 下拉菜单的内联样式。 | `CSSProperties` | - |
 | emptyContent | 没有可选数据或搜索无结果时展示的内容。未设置时使用语言包中的「暂无数据」，传入 `null` 则不显示。 | `ReactNode` | - |
 | enableLeafClick | 多选时，点击叶子节点的选项是否触发勾选。 | `boolean` | `false` |
 | expandIcon | 自定义子菜单的展开图标。 | `ReactNode` | - |
@@ -66,6 +65,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | 选择框的尺寸，可选 `small`、`default`、`large`。 | `CascaderType` | `"default"` |
 | stopPropagation | 是否阻止下拉框上的点击事件冒泡。 | `boolean \| string` | `true` |
 | style | 选择框根元素（触发器）的样式。 | `CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, CSSProperties>>"}>Type</ApiType> | - |
 | suffix | 后缀标签，渲染在触发器内右侧。 | `ReactNode` | - |
 | topSlot | 下拉顶部的插槽内容。 | `ReactNode` | - |
 | treeData | 节点数据，结构见 CascaderData。 | <ApiType detail={"Array\u003cCascaderData>"}>Type</ApiType> | `[]` |

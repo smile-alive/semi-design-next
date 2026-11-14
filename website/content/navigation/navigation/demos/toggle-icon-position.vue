@@ -13,7 +13,7 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '300px' }" :defaultOpenKeys="['job']" :footer="{ collapseButton: true }" :items="items" toggleIconPosition="left" @select="(key) => console.log(key)">
+    <Nav :defaultOpenKeys="['job']" :footer="{ collapseButton: true }" :items="items" :styles="{ body: { height: '300px' } }" toggleIconPosition="left" @select="(key) => console.log(key)">
         <template #icon="renderProps">
             <component :is="iconOf(renderProps.item)" />
         </template>

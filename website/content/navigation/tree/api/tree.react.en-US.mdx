@@ -12,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | checkRelation | How the checked states of nodes relate in a multiple tree: `related` links parents and children, `unRelated` keeps them independent. | `CheckRelation` | `"related"` |
 | children | Tree does not render children; provide the nodes through treeData. | `ReactNode` | - |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `search` (the search box container); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTreePart, string>>"}>Type</ApiType> | - |
 | defaultExpandAll | Expands every node on mount. Later changes of treeData or treeDataSimpleJson do not affect it; use expandAll for that. | `boolean` | `false` |
 | defaultExpandedKeys | Nodes expanded initially, showing their direct children. | `string[]` | - |
 | defaultValue | The initially selected items, read once on mount. | `Value` | - |
@@ -52,14 +53,13 @@ import ApiType from '#/components/ApiType.astro';
 | renderDraggingNode | The drag image the browser shows while a node is dragged. It receives the node's HTML element and its data, and returns an `HTMLElement`. | <ApiType detail={"(nodeInstance: HTMLElement, node: TreeNodeData) => HTMLElement"}>Type</ApiType> | - |
 | renderFullLabel | Renders the whole row, called once per row with an object holding `data`, `level`, `expandIcon`, `className`, `style`, `checkStatus`, `expandStatus`, `onClick`, `onCheck` and more. The returned element gets `role="treeitem"`, the accessibility state attributes and `style` from Tree; text, arrays and fragments are wrapped in an `li`. The element must apply `className` itself. | <ApiType detail={"(renderFullLabelProps: RenderFullLabelProps) => ReactNode"}>Type</ApiType> | - |
 | renderLabel | Renders a node's label from the label, the node data and the search word. Search words are no longer highlighted automatically; search still matches the label text in treeData. | <ApiType detail={"(label?: ReactNode, treeNode?: TreeNodeData, searchWord?: string) => ReactNode"}>Type</ApiType> | - |
-| searchClassName | Class of the search box container. | `string` | - |
 | searchPlaceholder | Placeholder of the search box; defaults to the text of the locale. | `string` | - |
 | searchRender | Renders a custom search box from an object with `className`, `prefix`, `value`, `onChange`, `showClear` and `placeholder`; `onChange` receives the input string. `false` hides the search box. | <ApiType detail={"((searchRenderProps: SearchRenderProps) => ReactNode) \u007c false"}>Type</ApiType> | - |
-| searchStyle | Style of the search box container. | `React.CSSProperties` | - |
 | showClear | Whether the search box shows a clear button. | `boolean` | `true` |
 | showFilteredOnly | Shows only the filtered nodes while searching. | `boolean` | `false` |
 | showLine | Shows connecting lines between nodes. | `boolean` | `false` |
 | style | Style of the root element, typed as `CSSProperties`. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTreePart, React.CSSProperties>>"}>Type</ApiType> | - |
 | treeData | Node data; keys are unique across the tree. Only a new array updates the tree, changes made in place are not seen. | `TreeNodeData[]` | - |
 | treeDataSimpleJson | Node data as a plain JSON object; the value is a JSON object holding the selected nodes. | `TreeDataSimpleJson` | - |
 | treeNodeFilterProp | The node field matched against the search input. | `string` | `"label"` |

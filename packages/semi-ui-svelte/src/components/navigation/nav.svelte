@@ -21,10 +21,11 @@
         isCollapsed = $bindable(),
         openKeys = $bindable(),
         selectedKeys = $bindable(),
-        bodyStyle = defaults('bodyStyle'),
+        classNames = defaults('classNames'),
         items = defaults('items'),
         limitIndent = defaults('limitIndent', true),
         mode = defaults('mode', 'vertical'),
+        styles = defaults('styles'),
         subDropdownProps = defaults('subDropdownProps'),
         subNavCloseDelay = defaults('subNavCloseDelay', numbers.DEFAULT_SUBNAV_CLOSE_DELAY),
         subNavMotion = defaults('subNavMotion', true),
@@ -200,7 +201,7 @@
             {:else if header}
                 <NavHeader {...header} />
             {/if}
-            <div class={`${prefix}-list-wrapper`} style={bodyStyle}>
+            <div class={[`${prefix}-list-wrapper`, classNames?.body]} style={styles?.body}>
                 <ul class={`${prefix}-list`}>
                     {#if formatted.formattedItems.length}
                         <NavItems {expandIcon} {icon} items={formatted.formattedItems} level={0} {subDropdownProps} {text} {toggleIcon} />

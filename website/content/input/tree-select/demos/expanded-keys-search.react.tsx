@@ -45,5 +45,5 @@ export default function TreeSelectDemo() {
         setExpandedKeys([...filteredExpandedKeys, ...expandedKeys]);
     };
 
-    return <TreeSelect style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} filterTreeNode expandedKeys={expandedKeys} onExpand={setExpandedKeys} onSearch={onSearch} />;
+    return <TreeSelect style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} filterTreeNode expandedKeys={expandedKeys} onExpand={setExpandedKeys} onSearch={onSearch} />;
 }

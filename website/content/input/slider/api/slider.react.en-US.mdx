@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-labelledby | The id of the labelling element, used as the handle's accessible name. In `range` mode each handle's name is that label plus its start or end text. | `string` | - |
 | aria-valuetext | A user-friendly name for the current value. `getAriaValueText` takes precedence when set. | `string` | - |
 | className | Class name of the `.semi-slider-wrapper` element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `rail`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
 | defaultValue | Initial value when uncontrolled. Defaults to `min`. | `number \| number[]` | - |
 | disabled | Whether the slider is disabled. | `boolean` | `false` |
 | getAriaValueText | Provides a user-friendly name for the current value, called with the handle's value and its index. Takes precedence over `aria-valuetext`. | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |
@@ -23,7 +24,6 @@ import ApiType from '#/components/ApiType.astro';
 | onFocus | Fires when either handle gets focus, attached to `.semi-slider-wrapper`. | <ApiType detail={"React.FocusEventHandler\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | onKeyDown | Key handler on the handle's input, called before the slider handles the key. Calling `preventDefault` in it stops the slider from handling a value key. | <ApiType detail={"React.KeyboardEventHandler\u003cHTMLInputElement>"}>Type</ApiType> | - |
 | onMouseUp | Fires when the pointer (mouse, touch or pen) that dragged the handle is released or cancelled, and when a value key is released. | <ApiType detail={"(e: any) => void"}>Type</ApiType> | - |
-| railStyle | Style of the slider rail. | `React.CSSProperties` | - |
 | range | Whether both ends can be dragged. | `boolean` | `false` |
 | ref | Reference to the `.semi-slider-wrapper` element. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | showArrow | Whether the tooltip has an arrow. | `boolean` | `true` |
@@ -31,6 +31,7 @@ import ApiType from '#/components/ApiType.astro';
 | showMarkLabel | Whether to show the mark labels. | `boolean` | `true` |
 | step | Step, counted from `min`. | `number` | `1` |
 | style | Style of the `.semi-slider-wrapper` element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | tipFormatter | Format of the tooltip, called once per handle with that handle's value. Pass `null` to hide the tooltip. | <ApiType detail={"((value: number) => any) \u007c null"}>Type</ApiType> | <ApiType detail={"(value: number) => value"}>Type</ApiType> |
 | title | The title attribute set on the `.semi-slider-wrapper` element. | `string` | - |
 | tooltipOnMark | Whether the marks on the rail have a tooltip. | `boolean` | `false` |

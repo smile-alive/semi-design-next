@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | canSend | Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count. | `boolean` | - |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `templates` (the template panel); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, string>>"}>Type</ApiType> | - |
 | clearContentOnGenerating | Whether the input content and attachments are cleared when generating turns from false to true. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas). | `boolean` | `true` |
 | defaultContent | Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created. | `TiptapContent` | - |
 | dropdownMatchTriggerWidth | Whether the dropdown layer has the same width as the input. | `boolean` | `true` |
@@ -46,9 +47,8 @@ import ApiType from '#/components/ApiType.astro';
 | skillHotKey | Key that opens the skill panel when the input is empty; it needs skills as well. | `string` | - |
 | skills | Skill list. The icon of each skill is a ReactNode. | `Skill[]` | - |
 | style | Style of the root element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`; `templates` is merged over the panel's default max height. | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | suggestions | Suggestion list. The suggestion panel shows when the list changes to a non-empty one and hides when it is empty. | `Suggestion[]` | - |
-| templatesCls | Class name of the template panel. | `string` | - |
-| templatesStyle | Style of the template panel, merged over its default max height. | `React.CSSProperties` | - |
 | topSlotPosition | Position of the top area relative to the reference area and the uploaded file area: `top`, `middle` or `bottom`. | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | Conversion rules of custom extensions, so that the node data received by onContentChange matches what is expected. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
 | uploadProps | Upload settings, the Upload props without fileList and listType. | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'listType'>"}>Type</ApiType> | - |

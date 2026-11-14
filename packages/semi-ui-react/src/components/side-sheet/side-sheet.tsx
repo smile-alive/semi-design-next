@@ -1,7 +1,7 @@
 import type React from 'react';
 import { type CSSProperties, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+import { cssClasses, type SideSheetPart } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
@@ -20,9 +20,9 @@ const prefixCls = cssClasses.PREFIX;
 export type { SideSheetContentProps } from './side-sheet-content';
 
 export interface SideSheetReactProps extends SideSheetProps {
-    bodyStyle?: CSSProperties;
-    headerStyle?: CSSProperties;
-    maskStyle?: CSSProperties;
+    /** `content` is the role="dialog" element */
+    classNames?: Partial<Record<SideSheetPart, string>>;
+    styles?: Partial<Record<SideSheetPart, CSSProperties>>;
     style?: CSSProperties;
     title?: React.ReactNode;
     footer?: React.ReactNode;
@@ -80,7 +80,7 @@ function SideSheetOpenEffects({ shown, foundation }: { shown: boolean; foundatio
 
 export default function SideSheet(rawProps: SideSheetReactProps) {
     const props = useDefaultProps('SideSheet', rawProps, defaultProps);
-    const { ref, placement, className, children, width, height, motion, visible, style, maskStyle, size, zIndex, getPopupContainer, keepDOM, canVerticalSetWidth, afterVisibleChange, closeOnEsc, disableScroll, onCancel, mask, maskClosable, closable, closeIcon, title, footer, headerStyle, bodyStyle, ...rest } = props;
+    const { ref, placement, className, children, width, height, motion, visible, style, classNames, styles, size, zIndex, getPopupContainer, keepDOM, canVerticalSetWidth, afterVisibleChange, closeOnEsc, disableScroll, onCancel, mask, maskClosable, closable, closeIcon, title, footer, ...rest } = props;
 
     const context = useConfigContext();
 
@@ -158,12 +158,9 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
                                     {...rest}
                                     ref={rootRef}
                                     className={classList}
-                                    dialogClassName={animationClassName}
-                                    maskClassName={maskAnimationClassName}
-                                    bodyStyle={bodyStyle}
-                                    headerStyle={headerStyle}
-                                    maskStyle={maskStyle}
+                                    classNames={{ ...classNames, mask: clsx(maskAnimationClassName, classNames?.mask), content: clsx(animationClassName, classNames?.content) }}
                                     style={{ ...animationStyle, ...style }}
+                                    styles={styles}
                                     title={title}
                                     closable={closable}
                                     closeIcon={closeIcon}

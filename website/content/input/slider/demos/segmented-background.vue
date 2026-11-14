@@ -25,5 +25,5 @@
 </script>
 
 <template>
-    <Slider aria-label="Value range" :max="range[1]" :min="range[0]" :modelValue="value" :railStyle="railStyle" range @change="changeValue" />
+    <Slider aria-label="Value range" :max="range[1]" :min="range[0]" :modelValue="value" range :styles="{ rail: railStyle }" @change="changeValue" />
 </template>

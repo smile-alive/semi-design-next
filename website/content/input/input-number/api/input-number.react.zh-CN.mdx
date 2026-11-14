@@ -15,6 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | 原生 `autofocus` 属性，落在原生 `input` 上。 | `boolean` | - |
 | borderless | 无边框模式。 | `boolean` | - |
 | className | 根元素（`.semi-input-number`）的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `input`（原生 input 元素），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 清除按钮的图标，可传 ReactNode。仅 `showClear` 为 `true` 时有效。 | `React.ReactNode` | - |
 | composition | 是否启用输入法组合模式。开启后组合输入期间不触发 `onChange`，组合结束后触发一次。 | `boolean` | - |
 | currency | 货币种类，可选值有 CNY、EUR、USD 等。设为 `true` 时使用 `defaultCurrency`，未设置时为语言包对应的货币。 | `string \| boolean` | - |
@@ -27,7 +28,6 @@ import ApiType from '#/components/ApiType.astro';
 | hideButtons | 隐藏步进按钮；与 `innerButtons` 同时为 `true` 时也不显示内置按钮。 | `boolean` | - |
 | hideSuffix | 清除按钮显示时隐藏后缀，默认两者并列。 | `boolean` | - |
 | innerButtons | 将步进按钮放在输入框内部，悬停或聚焦时显示，并临时替换 `suffix`。 | `boolean` | `false` |
-| inputStyle | 原生 `input` 的样式，类型为 `CSSProperties`。 | `React.CSSProperties` | - |
 | insetLabel | 内嵌标签，显示在输入框内部。 | `React.ReactNode` | - |
 | insetLabelId | 内嵌标签的 id。 | `string` | - |
 | keepFocus | 点击步进按钮时保持输入框聚焦。 | `boolean` | `false` |
@@ -64,6 +64,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | 输入框大小，可选 `default`、`small`、`large`。所在 `InputGroup` 设置了 `size` 时以其为准。 | `'default' \| 'large' \| 'small'` | `"default"` |
 | step | 每次改变的步长，可以为小数。 | `number` | `1` |
 | style | 根元素（`.semi-input-number`）的样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | suffix | 后缀内容，显示在输入框内部的右侧。 | `React.ReactNode` | - |
 | type | 原生 `input` 的 `type` 属性，默认为 `text`。 | `string` | - |
 | validateStatus | 校验状态，可选 `default`、`error`、`warning`、`success`。 | `ValidateStatus` | - |

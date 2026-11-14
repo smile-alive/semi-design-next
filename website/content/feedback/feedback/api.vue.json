@@ -18,6 +18,14 @@
                 "zh-CN": "纯文本标题，同时作为对话框的可访问名称；同时给出 title 插槽时以插槽为准。",
                 "en-US": "Plain-text title that also names the dialog. The title slot wins when both are given."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `mask`、`header`、`body`，与组件自带的类名合并，传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Class names of the inner parts, keyed by `mask`, `header` and `body`; merged with the built-in classes. Passed to the Modal or SideSheet of the current mode."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. Passed to the Modal or SideSheet of the current mode."
+            },
             "textAreaProps": {
                 "zh-CN": "type 为 text 与 emoji 时多行输入框的属性，不含 modelValue（值由 Feedback 管理）；其中的 onChange 在 Feedback 处理后调用。",
                 "en-US": "Props of the multi-line input for the text and emoji types, without modelValue (Feedback owns the value); its onChange is called after Feedback handles the change."

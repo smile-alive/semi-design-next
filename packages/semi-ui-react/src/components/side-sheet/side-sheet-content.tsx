@@ -2,7 +2,7 @@ import type React from 'react';
 import { type CSSProperties, type ReactNode, useId } from 'react';
 import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+import { cssClasses, type SideSheetPart } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import type { SheetSize, SideSheetProps } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import { IconClose } from '@fibrae/semi-icons-react';
@@ -18,18 +18,15 @@ export interface SideSheetContentProps extends React.AriaAttributes {
     mask?: boolean;
     /** The sheet blocks the whole page (a mask in body); drives the default of aria-modal */
     modal?: boolean;
-    maskStyle?: CSSProperties;
     maskClosable?: boolean;
-    maskClassName?: string;
     title?: React.ReactNode;
     closable?: boolean;
-    headerStyle?: CSSProperties;
     sheetSize: SheetSize;
     style: CSSProperties;
     size: SideSheetProps['size'];
-    bodyStyle?: CSSProperties;
     className: string;
-    dialogClassName?: string;
+    classNames?: Partial<Record<SideSheetPart, string>>;
+    styles?: Partial<Record<SideSheetPart, CSSProperties>>;
     children?: React.ReactNode;
     footer?: React.ReactNode;
     maskExtraProps?: { [key: string]: any };
@@ -47,18 +44,15 @@ export default function SideSheetContent({
     closeIcon,
     mask,
     modal,
-    maskStyle,
     maskClosable,
-    maskClassName,
     title,
     closable,
-    headerStyle,
     sheetSize,
     style,
     size,
-    bodyStyle,
     className,
-    dialogClassName,
+    classNames,
+    styles,
     children,
     footer,
     'aria-label': ariaLabel,
@@ -99,12 +93,12 @@ export default function SideSheetContent({
             })}
             style={{ width: sheetSize.rootWidth }}
         >
-            {mask && <div className={clsx(`${prefixCls}-mask`, maskClassName)} style={maskStyle} aria-hidden onClick={maskClosable ? onMaskClick : undefined} {...maskExtraProps} />}
+            {mask && <div className={clsx(`${prefixCls}-mask`, classNames?.mask)} style={styles?.mask} aria-hidden onClick={maskClosable ? onMaskClick : undefined} {...maskExtraProps} />}
             <div
                 {...dialogAria}
                 ref={dialogRef}
-                className={clsx(`${prefixCls}-inner`, `${prefixCls}-inner-wrap`, dialogClassName, `${prefixCls}-size-${size}`)}
-                style={{ ...style, ...dialogStyle }}
+                className={clsx(`${prefixCls}-inner`, `${prefixCls}-inner-wrap`, `${prefixCls}-size-${size}`, classNames?.content)}
+                style={{ ...style, ...styles?.content, ...dialogStyle }}
                 aria-describedby={ariaDescribedby}
                 aria-label={ariaLabel}
                 // a generated reference would shadow aria-label
@@ -115,7 +109,7 @@ export default function SideSheetContent({
                 {...wrapperExtraProps}
             >
                 <div className={`${prefixCls}-content`}>
-                    <div className={`${prefixCls}-header`} style={headerStyle}>
+                    <div className={clsx(`${prefixCls}-header`, classNames?.header)} style={styles?.header}>
                         {hasTitle && (
                             <div id={titleId} className={`${prefixCls}-title`} aria-level={2} role="heading" x-semi-prop="title">
                                 {title}
@@ -123,11 +117,11 @@ export default function SideSheetContent({
                         )}
                         {closable && <Button type="tertiary" className={`${prefixCls}-close`} aria-label={locale.close} size="small" theme="borderless" icon={closeIcon || <IconClose />} onClick={onClose} />}
                     </div>
-                    <div className={`${prefixCls}-body`} style={bodyStyle} x-semi-prop="children">
+                    <div className={clsx(`${prefixCls}-body`, classNames?.body)} style={styles?.body} x-semi-prop="children">
                         {children}
                     </div>
                     {hasFooter && (
-                        <div className={`${prefixCls}-footer`} x-semi-prop="footer">
+                        <div className={clsx(`${prefixCls}-footer`, classNames?.footer)} style={styles?.footer} x-semi-prop="footer">
                             {footer}
                         </div>
                     )}

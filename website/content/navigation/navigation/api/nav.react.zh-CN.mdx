@@ -4,9 +4,9 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| bodyStyle | 导航项列表的自定义样式。 | `React.CSSProperties` | - |
 | children | 导航的子元素。`Nav.Item` 与 `Nav.Sub` 渲染进列表，`Nav.Header` 与 `Nav.Footer` 分别放进头部与底部，其他节点包在 `li` 中渲染。 | `React.ReactNode` | - |
 | className | 最外层 `nav` 元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | defaultIsCollapsed | 默认是否处于收起状态，仅 `mode` 为 `vertical` 时有效。默认为 `false`。 | `boolean` | - |
 | defaultOpenKeys | 初始展开的子导航 `itemKey` 数组，仅 `mode` 为 `vertical` 且侧边栏处于展开状态时有效。未传入时，竖向模式下会展开初始选中项所在的子导航。默认为 `[]`。 | `(string \| number)[]` | - |
 | defaultSelectedKeys | 初始选中的导航项 `itemKey` 数组。默认为 `[]`。 | `(string \| number)[]` | - |
@@ -26,6 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderWrapper | 包裹每个导航项的渲染函数，入参为 `{ itemElement, isSubNav, isInSubNav, props }`，返回值放进列表。`itemElement` 只能渲染一次。 | <ApiType detail={"({ itemElement, isSubNav, isInSubNav, props }: { itemElement: ReactElement\u003cany>; isInSubNav: boolean; isSubNav: boolean; props: NavItemProps \u007c SubNavProps }) => ReactNode"}>Type</ApiType> | - |
 | selectedKeys | 选中的导航项 `itemKey` 数组的受控值，配合 `onSelect` 使用。 | `(string \| number)[]` | - |
 | style | 最外层 `nav` 元素的样式。 | `CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | subDropdownProps | `items` 生成的子导航在水平模式或收起状态下弹层 Dropdown 的参数。子导航自己的 `dropdownProps` 或 `subDropdownProps` 优先。 | `DropdownProps` | - |
 | subNavCloseDelay | 子导航浮层关闭的延迟，单位为毫秒。收起或水平模式下有效。 | `number` | `100` |
 | subNavMotion | 子导航展开收起时是否有动画。 | `boolean` | `true` |

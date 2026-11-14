@@ -1,5 +1,6 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
 import type { CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
+import type { FeedbackPart } from '@fibrae/semi-foundation/components/feedback/constants';
 import type { EmojiResult, FeedbackValue } from '@fibrae/semi-foundation/components/feedback/foundation';
 import type { CheckboxGroupOptionSlotProps, CheckboxGroupProps } from '../checkbox/interface';
 import type { TextAreaChangeEvent, TextAreaProps } from '../input/interface';
@@ -37,6 +38,9 @@ export interface FeedbackProps {
     mode?: FeedbackMode;
     type?: FeedbackType;
     visible?: boolean;
+    /** Forwarded to the Modal or SideSheet of the current mode. */
+    classNames?: Partial<Record<FeedbackPart, ClassValue>>;
+    styles?: Partial<Record<FeedbackPart, StyleValue>>;
     /** Plain-text title; the `#title` slot wins. Declared so `title="x"` is not a native tooltip. */
     title?: string;
     textAreaProps?: FeedbackTextAreaProps;

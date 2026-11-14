@@ -26,10 +26,6 @@
                 "zh-CN": "箭头是否指向触发元素中心，需要同时开启 showArrow。",
                 "en-US": "Whether the arrow points at the center of the trigger. Requires showArrow."
             },
-            "arrowStyle": {
-                "zh-CN": "箭头的 borderColor、backgroundColor 与 borderOpacity；缺省跟随卡片 style 中的 backgroundColor 与 borderColor。",
-                "en-US": "borderColor, backgroundColor and borderOpacity of the arrow. They follow backgroundColor and borderColor of the card style by default."
-            },
             "autoAdjustOverflow": {
                 "zh-CN": "弹出层被遮挡时是否自动调整方向。",
                 "en-US": "Whether the popup flips automatically when it would be clipped."
@@ -46,6 +42,10 @@
                 "zh-CN": "弹出层的类名。",
                 "en-US": "Class name of the popup."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（内容卡片）、`arrow`（箭头），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the content card) and `arrow`; merged with the built-in classes."
+            },
             "clickToHide": {
                 "zh-CN": "点击弹出层及其内部任一元素时是否关闭弹出层。",
                 "en-US": "Whether a click on the popup or anything inside it closes the popup."
@@ -61,10 +61,6 @@
             "content": {
                 "zh-CN": "卡片内容的 snippet，参数 `{ initialFocusRef }` 是回调，可直接写 `{@attach initialFocusRef}` 绑定到弹出层打开时需要聚焦的元素。",
                 "en-US": "Snippet for the card content. Its argument `{ initialFocusRef }` is a callback; write `{@attach initialFocusRef}` to bind it to the element that receives focus when the popup opens."
-            },
-            "contentClassName": {
-                "zh-CN": "弹出层内容卡片的类名。",
-                "en-US": "Class name of the content card in the popup."
             },
             "disableArrowKeyDown": {
                 "zh-CN": "是否禁用在触发元素上按方向键把焦点移入弹出层。",
@@ -131,6 +127,10 @@
             "style": {
                 "zh-CN": "弹出层的样式字符串；其中的 background-color 与 border-color 也给箭头着色。",
                 "en-US": "Style string of the popup; its background-color and border-color also color the arrow."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。`content` 是内容卡片的样式字符串；`arrow` 是箭头的 borderColor、backgroundColor 与 borderOpacity，未设置的颜色跟随弹出层 style 中的 background-color 与 border-color。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. `content` is the style string of the content card; `arrow` holds the arrow's borderColor, backgroundColor and borderOpacity, and colors that are not set follow background-color and border-color of the popup style."
             },
             "trigger": {
                 "zh-CN": "触发显示的时机。custom 时显示与否完全由 visible 决定。",

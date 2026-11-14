@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | Borderless mode. | `boolean` | `false` |
 | bottomSlot | Renders an extra area at the bottom. Takes a ReactNode. | `React.ReactNode` | - |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `dropdown` (the dropdown panel) and `input` (the root element of the input, on both inputs of a range); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom icon of the clear button, effective when showClear is true. | `React.ReactNode` | - |
 | defaultOpen | Whether the panel is open by default. | `boolean` | `false` |
 | defaultPickerValue | Default panel date. Compared by content: when the content changes the panel moves back to it, so passing `new Date()` on every render counts as a change. | `ValueType` | - |
@@ -19,14 +20,11 @@ import ApiType from '#/components/ApiType.astro';
 | disabledDate | Decides whether a date is disabled; returning true disables it. options carries the selected rangeStart and rangeEnd of a range and the focused input as rangeInputFocus. When type is year it is called with January 1 of each year, and returning true disables that year. | `DisabledDateType` | - |
 | disabledTime | Time restriction configuration. Its return value is passed through to the TimePicker. | `DisabledTimeType` | - |
 | disabledTimePicker | Whether time selection is disabled. | `MonthsGridFoundationProps['disabledTimePicker']` | - |
-| dropdownClassName | Class name of the dropdown panel. | `string` | - |
-| dropdownStyle | Inline style of the dropdown panel. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
 | endDateOffset | When type is dateRange, sets the end date of a one-click range selection. | `DateOffsetType` | - |
 | endYear | Last year of the year scroll panel, which must be greater than startYear. Defaults to 100 years after the current year. | `number` | - |
 | format | Date string format shown in the input. When not set it depends on type; see Date and Time Format below. | `string` | - |
 | hideDisabledOptions | Hides the disabled time options. | `MonthsGridFoundationProps['hideDisabledOptions']` | `false` |
 | inputReadOnly | Whether the input is readonly. | `boolean` | `false` |
-| inputStyle | Inline style of the input. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
 | insetInput | Whether the panel embeds input boxes. Takes a boolean, or an InsetInputProps object that sets the placeholders of the inset inputs. | `DateInputFoundationProps['insetInput']` | `false` |
 | insetLabel | Label shown in the input. The Form field injects it; used directly, DatePicker shows it in the input as well. | `React.ReactNode` | - |
 | insetLabelId | id of the label element inside the input. The Form field injects it to name the input. | `string` | - |
@@ -65,6 +63,7 @@ import ApiType from '#/components/ApiType.astro';
 | startYear | First year of the year scroll panel. Defaults to 100 years before the current year. | `number` | - |
 | stopPropagation | Whether clicks on the popup stop propagating. | `boolean \| string` | `true` |
 | style | Inline style of the root element. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | syncSwitchMonth | In range selection, whether the two panels switch months together. | `boolean` | `false` |
 | timePickerOpts | Options for the time panel: `use12Hours`, `hourStep`, `minuteStep`, `secondStep`, `defaultIsAM` and `scrollItemProps`, see [TimePicker API Reference](/en-US/react/input/time-picker#API%20Reference); the panel sets the format, the value and onChange. | `DatePickerTimePickerOpts` | - |
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get `TZDate`s, and `dateString` and the today mark follow the zone too. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |

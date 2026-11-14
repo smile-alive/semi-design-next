@@ -38,7 +38,7 @@ const ARIA_SORT: Record<string, 'ascending' | 'descending'> = {
 };
 
 export default function TableHeaderRow({ components, row, prefixCls = cssClasses.PREFIX, onHeaderRow, index, style, columns = EMPTY_COLUMNS, bodyHasScrollBar }: TableHeaderRowProps) {
-    const { getCellWidths, direction, headerStyle, setHeadWidths, splitTable } = useTableContext('Table.HeaderRow');
+    const { getCellWidths, direction, classNames, styles, setHeadWidths, splitTable } = useTableContext('Table.HeaderRow');
     const { locale } = useLocale('Table');
 
     const rowRef = useRef<HTMLElement>(null);
@@ -58,9 +58,9 @@ export default function TableHeaderRow({ components, row, prefixCls = cssClasses
             ...(typeof column.onHeaderCell === 'function' ? column.onHeaderCell(column, cellIndex, index) : {}),
         };
         // Merge order:
-        // - headerStyle provides a global default for header cells
+        // - styles.header provides a global default for header cells
         // - column.onHeaderCell().style can override it for a specific column
-        let cellStyle = { ...headerStyle, ...customProps.style };
+        let cellStyle = { ...styles?.header, ...customProps.style };
         if (column.align) {
             const textAlign = getRTLAlign(column.align, direction);
             cellStyle = { ...cellStyle, textAlign };
@@ -73,7 +73,7 @@ export default function TableHeaderRow({ components, row, prefixCls = cssClasses
             ? [isFixedRight(column), isFixedLeft(column), isFirstFixedRight(slicedColumns, column), isLastLeftFixed(slicedColumns, column)]
             : [isFixedLeft(column), isFixedRight(column), isLastLeftFixed(slicedColumns, column), isFirstFixedRight(slicedColumns, column)];
 
-        customProps.className = clsx(`${prefixCls}-row-head`, column.className, customProps.className, {
+        customProps.className = clsx(`${prefixCls}-row-head`, classNames?.header, column.className, customProps.className, {
             [`${prefixCls}-cell-fixed-left`]: fixedLeft,
             [`${prefixCls}-cell-fixed-left-last`]: fixedLeftLast,
             [`${prefixCls}-cell-fixed-right`]: fixedRight,

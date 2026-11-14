@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
+import type { RadioPart } from '@fibrae/semi-foundation/components/radio/constants';
 
 export type RadioValue = string | number | boolean;
 export type RadioType = 'default' | 'button' | 'card' | 'pureCard';
@@ -30,8 +31,8 @@ export interface RadioProps extends Omit<HTMLAttributes<HTMLLabelElement>, 'onch
     displayMode?: RadioDisplayMode;
     mode?: RadioMode;
     type?: RadioType;
-    addonStyle?: string;
-    addonClassName?: string;
+    classNames?: Partial<Record<RadioPart, ClassValue>>;
+    styles?: Partial<Record<RadioPart, string>>;
     addonId?: string;
     extraId?: string;
     preventScroll?: boolean;
@@ -48,8 +49,8 @@ export interface RadioOptionItem {
     class?: string;
     style?: string;
     addonId?: string;
-    addonStyle?: string;
-    addonClass?: string;
+    classNames?: Partial<Record<RadioPart, ClassValue>>;
+    styles?: Partial<Record<RadioPart, string>>;
     extraId?: string;
 }
 

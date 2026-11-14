@@ -6,15 +6,15 @@
 
 <template>
     <Descriptions align="center">
-        <Descriptions.Item :keyStyle="keyStyle">
+        <Descriptions.Item :styles="{ key: keyStyle }">
             <template #itemKey>姓名</template>
             李四
         </Descriptions.Item>
-        <Descriptions.Item :keyStyle="keyStyle">
+        <Descriptions.Item :styles="{ key: keyStyle }">
             <template #itemKey>年龄</template>
             28
         </Descriptions.Item>
-        <Descriptions.Item :keyStyle="keyStyle">
+        <Descriptions.Item :styles="{ key: keyStyle }">
             <template #itemKey>职业</template>
             前端工程师
         </Descriptions.Item>

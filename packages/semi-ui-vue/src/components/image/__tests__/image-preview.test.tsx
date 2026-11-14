@@ -173,12 +173,12 @@ describe('ImagePreview', () => {
         expect(getPreview()).toBeNull();
     });
 
-    it('分组结构：class 与 style 在分组上，previewCls、previewStyle 与 zIndex 在预览上', async () => {
+    it('分组结构：class 与 style 在分组上，classNames.preview、styles.preview 与 zIndex 在预览上', async () => {
         const { container } = renderGroup({
             class: 'g',
-            previewStyle: { color: 'blue' },
+            styles: { preview: { color: 'blue' } },
             style: { color: 'red' },
-            previewCls: 'p',
+            classNames: { preview: 'p' },
             zIndex: 2000,
         });
         const group = container.firstElementChild;

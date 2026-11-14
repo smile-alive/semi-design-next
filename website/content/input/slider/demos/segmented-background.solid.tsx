@@ -21,5 +21,5 @@ export default function SliderDemo() {
         }
     };
 
-    return <Slider aria-label="Value range" range min={range[0]} max={range[1]} onChange={changeValue} railStyle={getRailStyle(value())} value={value()} />;
+    return <Slider aria-label="Value range" range min={range[0]} max={range[1]} onChange={changeValue} styles={{ rail: getRailStyle(value()) }} value={value()} />;
 }

@@ -50,9 +50,13 @@
                 "zh-CN": "原生 `input` 元素的引用回调，接收 `HTMLInputElement`，可用于调用 `select()` 等原生方法。",
                 "en-US": "Callback ref for the native `input` element, which receives the `HTMLInputElement`; use it for native methods such as `select()`."
             },
-            "inputStyle": {
-                "zh-CN": "原生 `input` 的样式，可以是对象（键为 kebab-case）或字符串。",
-                "en-US": "Style of the native `input`, as an object (kebab-case keys) or a string."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `input`（原生 input 元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `input` (the native input element); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 `classNames`；值为对象（键为 kebab-case）或字符串。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`; each value is an object (kebab-case keys) or a string."
             },
             "insetLabel": { "zh-CN": "内嵌标签，显示在输入框内部。", "en-US": "Inset label, shown inside the input." },
             "insetLabelId": { "zh-CN": "内嵌标签的 id。", "en-US": "The id of the inset label." },

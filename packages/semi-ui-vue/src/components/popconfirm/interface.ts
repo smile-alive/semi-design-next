@@ -1,4 +1,5 @@
-import type { HTMLAttributes, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, VNode } from 'vue';
+import type { PopconfirmPart } from '@fibrae/semi-foundation/components/popconfirm/constants';
 import type { ButtonProps, Type as ButtonType } from '../button/interface';
 import type { PopoverEmits, PopoverProps } from '../popover/interface';
 import type { RenderContentProps } from '../tooltip/interface';
@@ -17,6 +18,7 @@ export interface PopconfirmProps extends PopoverProps {
     cancelButtonProps?: PopconfirmButtonProps;
     cancelText?: string;
     cancelType?: ButtonType;
+    classNames?: Partial<Record<PopconfirmPart, ClassValue>>;
     defaultVisible?: boolean;
     disabled?: boolean;
     okButtonProps?: PopconfirmButtonProps;

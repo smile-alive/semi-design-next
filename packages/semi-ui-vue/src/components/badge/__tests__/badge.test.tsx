@@ -13,10 +13,20 @@ const getRoot = (container: Element) => container.querySelector<HTMLElement>('.s
 const getCount = (container: Element) => container.querySelector<HTMLElement>('[x-semi-prop="count"]');
 
 describe('Badge', () => {
-    it('class 落在根元素，countStyle 落在计数节点', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const view = render(Badge, {
+            props: { count: 5, classNames: { count: 'cc' }, styles: { count: { color: 'red' } } },
+            slots: { default: child },
+        });
+        expect(getRoot(view.container)).not.toHaveClass('cc');
+        expect(getCount(view.container)).toHaveClass('cc', 'semi-badge-count');
+        expect(getCount(view.container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+    });
+
+    it('class 落在根元素，styles.count 落在计数节点', () => {
         const view = render(Badge, {
             attrs: { class: 'test' },
-            props: { count: 5, countStyle: { color: 'red' } },
+            props: { count: 5, styles: { count: { color: 'red' } } },
             slots: { default: child },
         });
         expect(getRoot(view.container)).toHaveClass('test');
@@ -87,17 +97,17 @@ describe('Badge', () => {
     });
 
     it('计数节点的 class、x-semi-prop 以及默认 type 与 theme', () => {
-        const view = render(Badge, { props: { count: 5, countClassName: 'cc' }, slots: { default: child } });
+        const view = render(Badge, { props: { count: 5, classNames: { count: 'cc' } }, slots: { default: child } });
         const count = getCount(view.container);
         expect(count).toHaveClass('cc', 'semi-badge-primary', 'semi-badge-solid', 'semi-badge-count');
         expect(count).not.toHaveClass('semi-badge-block');
         expect(getRoot(view.container)?.lastElementChild).toBe(count);
     });
 
-    it('style 落在根元素，计数节点只吃 countStyle', () => {
+    it('style 落在根元素，计数节点只吃 styles.count', () => {
         const view = render(Badge, {
             attrs: { style: 'color: red' },
-            props: { count: 5, countStyle: { color: 'blue' } },
+            props: { count: 5, styles: { count: { color: 'blue' } } },
             slots: { default: child },
         });
         expect(getRoot(view.container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });

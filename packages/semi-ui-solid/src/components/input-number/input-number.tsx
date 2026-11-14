@@ -1,6 +1,6 @@
 import { type JSX, type Ref, Show, createMemo, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/input-number/constants';
+import { cssClasses, numbers, strings, type InputNumberPart } from '@fibrae/semi-foundation/components/input-number/constants';
 import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/components/input-number/foundation';
 import '@fibrae/semi-foundation/components/input-number/input-number.scss';
 import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-solid';
@@ -16,7 +16,9 @@ export type { ScientificNotationConfig };
 export type InputNumberChangeEvent = InputChangeEvent | PointerEvent | InputElementEvent<KeyboardEvent> | FocusEvent;
 
 /** `class`, `style` and `ref` go to the root; other attributes go to the native input */
-export interface InputNumberProps extends Omit<InputProps, 'ref' | 'value' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
+export interface InputNumberProps extends Omit<InputProps, 'ref' | 'value' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'onKeyDown' | 'classNames' | 'styles'> {
+    classNames?: Partial<Record<InputNumberPart, string>>;
+    styles?: Partial<Record<InputNumberPart, JSX.CSSProperties | string>>;
     currency?: string | boolean;
     currencyDisplay?: 'code' | 'symbol' | 'name';
     defaultValue?: number | string;
@@ -235,7 +237,9 @@ export default function InputNumber(rawProps: InputNumberProps) {
                     inputRef={mergeRefs((node: HTMLInputElement) => (input = node), local.inputRef)}
                     disabled={local.disabled}
                     value={state().value}
-                    // InputNumber's own global defaults apply to the adornments and showClear; the global Input ones must not
+                    // InputNumber's own global defaults apply to the parts, adornments and showClear; the global Input ones must not
+                    classNames={rest.classNames ?? {}}
+                    styles={rest.styles ?? {}}
                     addonAfter={local.addonAfter ?? null}
                     addonBefore={local.addonBefore ?? null}
                     insetLabel={local.insetLabel ?? null}

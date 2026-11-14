@@ -40,12 +40,12 @@
                 "zh-CN": "纵向布局下外部 wrapper `tr` 的类名；横向布局下无效。",
                 "en-US": "Class name of the outer wrapper `tr` in vertical layout; ignored in horizontal layout."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `key`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `key`; merged with the built-in classes."
+            },
             "hidden": { "zh-CN": "是否隐藏该项。", "en-US": "Whether to hide the item." },
             "itemKey": { "zh-CN": "键，可以是 `ReactNode`。", "en-US": "Key, a `ReactNode`." },
-            "keyStyle": {
-                "zh-CN": "key 的自定义样式，可用于设置宽度、对齐方式等。",
-                "en-US": "Custom style of the key, such as its width or alignment."
-            },
             "ref": {
                 "zh-CN": "纵向布局下外部 wrapper `tr` 的引用；横向布局下无效。",
                 "en-US": "Reference to the outer wrapper `tr` in vertical layout; ignored in horizontal layout."
@@ -54,6 +54,10 @@
             "style": {
                 "zh-CN": "纵向布局下外部 wrapper `tr` 的样式；横向布局下无效。",
                 "en-US": "Style of the outer wrapper `tr` in vertical layout; ignored in horizontal layout."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可用于设置 key 的宽度、对齐方式等。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, such as the width or alignment of the key."
             }
         }
     }

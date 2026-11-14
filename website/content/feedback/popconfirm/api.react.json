@@ -30,10 +30,6 @@
                 "zh-CN": "箭头是否指向触发元素中心，需要同时开启 `showArrow`，缺省为 `true`。",
                 "en-US": "Whether the arrow points at the center of the trigger. Requires `showArrow`. Defaults to `true`."
             },
-            "arrowStyle": {
-                "zh-CN": "箭头的边框色、背景色与边框透明度。",
-                "en-US": "Border color, background color and border opacity of the arrow."
-            },
             "autoAdjustOverflow": {
                 "zh-CN": "弹出层被遮挡时是否自动调整方向，缺省为 `true`。",
                 "en-US": "Whether the popup flips automatically when it would be clipped. Defaults to `true`."
@@ -58,6 +54,10 @@
                 "zh-CN": "确认卡片（`.semi-popconfirm`）的类名，不落在弹出层上。",
                 "en-US": "Class name of the confirmation card (`.semi-popconfirm`), not of the popup."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（弹出层内的内容容器 `.semi-popover`）、`arrow`（箭头），与组件自带的类名合并；确认卡片 `.semi-popconfirm` 的类名用 `className`。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the content container `.semi-popover` inside the popup) and `arrow`; merged with the built-in classes. The class of the confirmation card `.semi-popconfirm` is set with `className`."
+            },
             "clickToHide": {
                 "zh-CN": "点击弹出层及其内部任一元素时是否关闭。",
                 "en-US": "Whether a click on the popup or anything inside it closes it."
@@ -73,10 +73,6 @@
             "content": {
                 "zh-CN": "确认框内容，可以是 ReactNode，也可以是函数。函数的参数是 `{ initialFocusRef }`，把 `initialFocusRef` 作为 `ref` 绑定到打开时需要聚焦的元素上。",
                 "en-US": "Content of the card: a ReactNode or a function. The function receives `{ initialFocusRef }`; pass `initialFocusRef` as the `ref` of the element that takes focus on open."
-            },
-            "contentClassName": {
-                "zh-CN": "弹出层内的内容容器（`.semi-popover`）的类名，与确认卡片的 `className` 分开设置。",
-                "en-US": "Class name of the content container (`.semi-popover`) inside the popup. It is set apart from the `className` of the confirmation card."
             },
             "defaultVisible": {
                 "zh-CN": "非受控时初始是否展示。",
@@ -185,6 +181,10 @@
             "style": {
                 "zh-CN": "确认卡片的内联样式。",
                 "en-US": "Inline style of the confirmation card."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。`content` 是内容容器的样式；`arrow` 是箭头的 `borderColor`、`backgroundColor` 与 `borderOpacity`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. `content` styles the content container; `arrow` holds the arrow's `borderColor`, `backgroundColor` and `borderOpacity`."
             },
             "title": {
                 "zh-CN": "标题，可以是字符串或 ReactNode。有标题时，对话框以标题命名（见 `aria-labelledby`）。",

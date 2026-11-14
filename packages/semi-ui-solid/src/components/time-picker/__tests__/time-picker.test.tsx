@@ -772,19 +772,22 @@ describe('TimePicker', () => {
         expect(getPanels()).toHaveLength(1);
     });
 
-    it('class 和 style 落在根元素，inputStyle 落在输入框外层', () => {
-        renderTimePicker({ defaultValue: '10:23:15', class: 'custom-timepicker', style: { width: '200px' }, inputStyle: { color: 'red' } });
+    it('class 和 style 落在根元素', () => {
+        renderTimePicker({ defaultValue: '10:23:15', class: 'custom-timepicker', style: { width: '200px' } });
 
         expect(getRoot()).toHaveClass('custom-timepicker');
         expect(getRoot()).toHaveStyle({ width: '200px' });
-        expect(document.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('popupStyle 与 popupClassName 属性', () => {
-        renderTimePicker({ defaultValue: '10:23:15', popupStyle: { 'background-color': 'white' }, popupClassName: 'my-popup', defaultOpen: true });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderTimePicker({ defaultValue: '10:23:15', classNames: { dropdown: 'my-dropdown', input: 'my-input' }, styles: { dropdown: { color: 'red' }, input: { color: 'blue' } }, defaultOpen: true });
 
-        expect(document.querySelector('[x-placement]')).toHaveStyle({ backgroundColor: 'rgb(255, 255, 255)' });
-        expect(document.querySelector(`.${prefixCls}-panel`)).toHaveClass('my-popup');
+        const dropdown = document.querySelector('.my-dropdown');
+        expect(dropdown).toHaveClass(`${prefixCls}-panel`);
+        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const input = document.querySelector('.my-input');
+        expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper`);
+        expect(input).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     });
 
     it('快速开关面板', async () => {

@@ -209,7 +209,7 @@ describe('RadioGroup', () => {
             <RadioGroup
                 defaultValue={2}
                 options={[
-                    { label: 'One', value: 1, extra: 'first', class: 'opt1', style: { color: 'red' }, addonId: 'a1', extraId: 'e1', addonClassName: 'ac1', addonStyle: { color: 'blue' } },
+                    { label: 'One', value: 1, extra: 'first', class: 'opt1', style: { color: 'red' }, addonId: 'a1', extraId: 'e1', classNames: { addon: 'ac1' }, styles: { addon: { color: 'blue' } } },
                     { label: 'Two', value: 2, disabled: true },
                 ]}
             />

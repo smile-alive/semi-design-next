@@ -1,18 +1,18 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { CardPart } from '@fibrae/semi-foundation/components/card/constants';
 import type { SpaceProps } from '../space/interface';
 
 export type Shadows = 'hover' | 'always';
 export type CardGroupType = 'grid';
 
 export interface CardProps {
-    bodyStyle?: StyleValue;
     bordered?: boolean;
+    classNames?: Partial<Record<CardPart, ClassValue>>;
     footerLine?: boolean;
-    footerStyle?: StyleValue;
     headerLine?: boolean;
-    headerStyle?: StyleValue;
     loading?: boolean;
     shadows?: Shadows;
+    styles?: Partial<Record<CardPart, StyleValue>>;
     /** Shorthand for the `title` slot, which wins when both are given */
     title?: string;
 }

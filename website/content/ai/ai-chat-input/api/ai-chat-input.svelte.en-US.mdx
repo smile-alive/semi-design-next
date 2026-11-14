@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | actionArea | Snippet that replaces the footer action area. `upload` is the upload node (a hidden Upload when showUploadButton is false; it must still be rendered for pasted files to upload) and `send` is the send or stop button, both snippets rendered with `{@render}`; `class` is the class name of the action area. | <ApiType detail={"Snippet\u003c[AIChatInputActionAreaSnippetProps]>"}>Type</ApiType> | - |
 | canSend | Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count. | `boolean` | - |
+| classNames | Class names of the inner parts, keyed by templates (the template panel); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, ClassValue>>"}>Type</ApiType> | - |
 | clearContentOnGenerating | Whether the input content and attachments are cleared when generating turns on. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas). | `boolean` | `true` |
 | configureArea | Snippet for the footer configure area, holding the `AIChatInput.Configure` items. | `Snippet` | - |
 | defaultContent | Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created. | `TiptapContent` | - |
@@ -39,11 +40,10 @@ import ApiType from '#/components/ApiType.astro';
 | skillIcon | Snippet for the icon before each skill in the skill panel, with the parameters `item` and `index`. | <ApiType detail={"Snippet\u003c[AIChatInputSkillIconSnippetProps]>"}>Type</ApiType> | - |
 | skillItem | Snippet that replaces each skill. Parameters: `skill`, and `id`, `class`, `role`, `aria-selected`, `onclick` and `onmouseenter` to spread onto the root element. | <ApiType detail={"Snippet\u003c[AIChatInputSkillItemSnippetProps]>"}>Type</ApiType> | - |
 | skills | Skills. A skill holds data only; its icon goes through the `skillIcon` snippet. | `Skill[]` | - |
+| styles | Style strings of the inner parts, keyed like classNames; templates is merged over the panel's default max height. | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, string>>"}>Type</ApiType> | - |
 | suggestionItem | Snippet that replaces each suggestion. Parameters: `suggestion`, and `id`, `class`, `role`, `aria-selected`, `onclick` and `onmouseenter` to spread onto the root element. | <ApiType detail={"Snippet\u003c[AIChatInputSuggestionItemSnippetProps]>"}>Type</ApiType> | - |
 | suggestions | Suggestions, each a string or an object with content. | `Suggestion[]` | - |
 | template | Snippet for the content of the template panel, with the current `skill` and `onTemplateClick`, which replaces the input content with the given content. | <ApiType detail={"Snippet\u003c[AIChatInputTemplateSnippetProps]>"}>Type</ApiType> | - |
-| templatesCls | Class name of the template panel. | `string` | - |
-| templatesStyle | Style string of the template panel. | `string` | - |
 | topSlot | Snippet for a custom top area, with the references, attachments, content and delete methods (`references`, `attachments`, `content`, `onUploadFileDelete`, `onReferenceDelete`) as parameters. Placed by topSlotPosition. | <ApiType detail={"Snippet\u003c[AIChatInputTopSlotSnippetProps]>"}>Type</ApiType> | - |
 | topSlotPosition | Position of `topSlot` relative to the reference area and the uploaded files area. | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | Transform rules of custom extensions: the key is the node name, the value turns the node into an onContentChange item. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |

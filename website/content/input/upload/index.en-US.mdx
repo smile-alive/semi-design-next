@@ -1125,7 +1125,8 @@ interface RenderFileItemProps extends FileItem {
     index?: number; // position of the file in the list
     listType?: 'picture' | 'list' | 'none';
     disabled?: boolean;
-    style?: CSSProperties; // from itemStyle
+    className?: string; // from classNames.item
+    style?: CSSProperties; // from styles.item
     showRetry?: boolean;
     showReplace?: boolean;
     showPicInfo?: boolean;
@@ -1170,7 +1171,8 @@ interface RenderFileItemProps extends FileItem {
     index?: number; // position of the file in the list
     listType?: 'picture' | 'list' | 'none';
     disabled?: boolean;
-    style?: JSX.CSSProperties; // from itemStyle
+    class?: string; // from classNames.item
+    style?: JSX.CSSProperties; // from styles.item
     showRetry?: boolean;
     showReplace?: boolean;
     showPicInfo?: boolean;
@@ -1224,7 +1226,8 @@ interface UploadFileItemSlotProps {
     picWidth?: string | number;
     picHeight?: string | number;
     validateMessage?: string;
-    style?: StyleValue; // from itemStyle
+    class?: ClassValue; // from classNames.item
+    style?: StyleValue; // from styles.item
     onRemove: () => void; // removes this file
     onRetry: () => void; // uploads this file again
     onReplace: () => void; // replaces this file
@@ -1276,7 +1279,8 @@ interface UploadFileItemSlotProps {
     picWidth?: string | number;
     picHeight?: string | number;
     validateMessage?: string;
-    style?: string; // from itemStyle
+    class?: ClassValue; // from classNames.item
+    style?: string; // from styles.item
     onRemove: () => void; // removes this file
     onRetry: () => void; // uploads this file again
     onReplace: () => void; // replaces this file

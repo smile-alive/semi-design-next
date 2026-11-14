@@ -182,9 +182,9 @@
                 "zh-CN": "自定义节点 label 的渲染，参数为 label、节点数据和当前搜索词，其中任一变化时重新调用。搜索仍按 treeData 中的 label 文本匹配。",
                 "en-US": "Renders a node's label with the label, the node data and the search word; called again when one of them changes. Search still matches the label text in treeData."
             },
-            "searchClassName": {
-                "zh-CN": "搜索框容器的类名。",
-                "en-US": "Class of the search box container."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `search`（搜索框容器），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `search` (the search box container); merged with the built-in classes."
             },
             "searchPlaceholder": {
                 "zh-CN": "搜索框的占位文字。",
@@ -194,9 +194,9 @@
                 "zh-CN": "自定义搜索框，参数为活对象，包含 `class`、`prefix`、`value`、`onChange`、`showClear` 和 `placeholder`，返回搜索框元素。为 `false` 时隐藏内置搜索框。",
                 "en-US": "Renders a custom search box from a live object with `class`, `prefix`, `value`, `onChange`, `showClear` and `placeholder`. `false` hides the search box."
             },
-            "searchStyle": {
-                "zh-CN": "搜索框容器的样式。",
-                "en-US": "Style of the search box container."
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 `classNames`，值可以是键为 kebab-case 的对象，也可以是字符串。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`; a value is an object with kebab-case keys or a string."
             },
             "showClear": {
                 "zh-CN": "搜索框是否显示清除按钮。",

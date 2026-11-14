@@ -40,6 +40,10 @@
                 "en-US": "Trigger content. In draggable mode it replaces the whole default drag area content."
             },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`（每个文件卡片），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `item` (each file card); merged with the built-in classes."
+            },
             "crop": {
                 "zh-CN": "启用图片裁切。传 `true` 使用默认配置，传对象自定义裁切参数；点击选择、拖拽、粘贴、替换都会裁切。",
                 "en-US": "Enables image cropping. `true` uses the defaults, an object configures the cropper. Selecting, dragging, pasting and replacing all crop."
@@ -94,10 +98,6 @@
             "hotSpotLocation": {
                 "zh-CN": "照片墙添加按钮的位置，可选 `start` 或 `end`。",
                 "en-US": "Position of the picture wall add button: `start` or `end`."
-            },
-            "itemStyle": {
-                "zh-CN": "文件卡片的内联样式。",
-                "en-US": "Inline style of the file cards."
             },
             "limit": {
                 "zh-CN": "最多允许上传的文件个数。为 1 时始终用最新选择的文件替换当前文件，不触发 onExceed。",
@@ -224,6 +224,10 @@
             },
             "showUploadList": { "zh-CN": "是否显示文件列表。", "en-US": "Whether to show the file list." },
             "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；图片墙里 `item` 与 `picWidth`、`picHeight` 合并，宽高以后者为准。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; in the picture wall `item` is merged with `picWidth` and `picHeight`, and the latter win."
+            },
             "timeout": {
                 "zh-CN": "不生效：组件不读取该属性。",
                 "en-US": "Has no effect; the component does not read it."
@@ -297,8 +301,8 @@
                 "en-US": "Inline style of the card."
             },
             "className": {
-                "zh-CN": "文件卡片的类名，不会应用到根元素。",
-                "en-US": "Class name of the card. It is not applied to the root element."
+                "zh-CN": "文件卡片的类名，来自 `classNames.item`。",
+                "en-US": "Class name of the card, from `classNames.item`."
             },
             "previewFile": {
                 "zh-CN": "自定义预览逻辑，返回的内容替换原缩略图，只在 `list` 模式下有效。",

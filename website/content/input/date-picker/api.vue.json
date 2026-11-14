@@ -38,8 +38,10 @@
                 "zh-CN": "是否禁止时间选择，仅 dateTime 与 dateTimeRange 类型有效。",
                 "en-US": "Whether the time selection is disabled; for dateTime and dateTimeRange only."
             },
-            "dropdownClassName": { "zh-CN": "浮层的类名。", "en-US": "Class name of the panel." },
-            "dropdownStyle": { "zh-CN": "浮层的内联样式。", "en-US": "Inline style of the panel." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 dropdown（浮层）、input（输入框的根元素，范围选择的两个输入框都带），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by dropdown (the panel) and input (the root element of the input, on both inputs of a range); values take any class binding and merge with the built-in classes."
+            },
             "endDateOffset": {
                 "zh-CN": "type 为 dateRange 时，单击选择范围的结束日期。",
                 "en-US": "For dateRange, the end date of a range chosen with one click."
@@ -57,7 +59,7 @@
                 "en-US": "Hides the times that are disabled."
             },
             "inputReadOnly": { "zh-CN": "输入框是否只读。", "en-US": "Whether the input is read-only." },
-            "inputStyle": { "zh-CN": "输入框根元素的样式。", "en-US": "Style of the root element of the input." },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 classNames。", "en-US": "Inline styles of the inner parts, keyed like classNames." },
             "insetInput": {
                 "zh-CN": "把输入框嵌入面板，可传对象设置各输入框的占位文字。",
                 "en-US": "Moves the inputs into the panel; pass an object to set the placeholders of the inputs."

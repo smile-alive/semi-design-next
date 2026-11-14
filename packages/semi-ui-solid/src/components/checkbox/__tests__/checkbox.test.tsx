@@ -431,7 +431,7 @@ describe('Checkbox 触发器与全局默认值', () => {
 
     it('disabled 的 checkbox 配 click 的 Tooltip：外包 span 是停靠点，checkbox 不接收指针', async () => {
         render(() => (
-            <Tooltip wrapperClassName="probe" content="hint" motion={false} trigger="click">
+            <Tooltip classNames={{ wrapper: 'probe' }} content="hint" motion={false} trigger="click">
                 {(trigger) => (
                     <Checkbox disabled {...trigger()}>
                         label

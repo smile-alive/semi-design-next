@@ -1,7 +1,7 @@
 import { type JSX, type Ref, For, Show, children, createMemo, createUniqueId, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
+import { cssClasses, type AutoCompletePart } from '@fibrae/semi-foundation/components/auto-complete/constants';
 import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type AutoCompleteBaseState, type DataItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { getOptionId, isInnerControlKey, toCssLength, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
@@ -73,8 +73,8 @@ export interface AutoCompleteProps<T extends AutoCompleteItems = AutoCompleteIte
     defaultValue?: string | number;
     defaultActiveFirstOption?: boolean;
     dropdownMatchSelectWidth?: boolean;
-    dropdownClassName?: string;
-    dropdownStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<AutoCompletePart, string>>;
+    styles?: Partial<Record<AutoCompletePart, JSX.CSSProperties | string>>;
     emptyContent?: JSX.Element;
     insetLabel?: JSX.Element;
     insetLabelId?: string;
@@ -172,9 +172,9 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
         'defaultOpen',
         'defaultValue',
         'disabled',
-        'dropdownClassName',
+        'classNames',
         'dropdownMatchSelectWidth',
-        'dropdownStyle',
+        'styles',
         'emptyContent',
         'id',
         'loading',
@@ -328,7 +328,7 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
 
     const listStyle = (): JSX.CSSProperties | string => {
         const maxHeight = toCssLength(local.maxHeight);
-        const own = local.dropdownStyle;
+        const own = local.styles?.dropdown;
         return typeof own === 'string' ? `max-height: ${maxHeight}; ${own}` : { 'max-height': maxHeight, ...own };
     };
 
@@ -425,7 +425,7 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
     );
 
     const renderList = () => (
-        <div ref={setListbox} id={listboxId} class={clsx(`${prefixCls}-option-list`, local.dropdownClassName)} style={listStyle()} aria-label={name()['aria-label']} aria-labelledby={name()['aria-labelledby']} role="listbox" onMouseDown={handleListMouseDown}>
+        <div ref={setListbox} id={listboxId} class={clsx(`${prefixCls}-option-list`, local.classNames?.dropdown)} style={listStyle()} aria-label={name()['aria-label']} aria-labelledby={name()['aria-labelledby']} role="listbox" onMouseDown={handleListMouseDown}>
             <Show
                 when={!local.loading}
                 fallback={

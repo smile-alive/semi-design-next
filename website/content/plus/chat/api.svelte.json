@@ -66,21 +66,13 @@
                 "zh-CN": "自定义 Markdown 渲染组件，键为元素名，传给消息内容的 MarkdownRender。",
                 "en-US": "Custom Markdown render components, keyed by element name, passed to the MarkdownRender of the message content."
             },
-            "inputBoxCls": {
-                "zh-CN": "输入框的类名。",
-                "en-US": "Class name of the input box."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 hint（提示区最外层）、inputBox（输入框），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by hint (the outermost hint area) and inputBox (the input box); values take anything class takes (string, array or object) and merge with the built-in classes."
             },
-            "inputBoxStyle": {
-                "zh-CN": "输入框的样式，字符串。",
-                "en-US": "Style of the input box, a string."
-            },
-            "hintCls": {
-                "zh-CN": "提示区最外层的类名。",
-                "en-US": "Class name of the outermost element of the hints area."
-            },
-            "hintStyle": {
-                "zh-CN": "提示区最外层的样式，字符串。",
-                "en-US": "Style of the outermost element of the hints area, a string."
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "onChatsChange": {
                 "zh-CN": "对话列表变化时的回调，在 `chats` 写回之后触发。",

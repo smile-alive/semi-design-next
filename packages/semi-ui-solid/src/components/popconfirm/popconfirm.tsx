@@ -1,6 +1,6 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
+import { cssClasses, type PopconfirmPart } from '@fibrae/semi-foundation/components/popconfirm/constants';
 import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
 import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
 import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-solid';
@@ -23,6 +23,7 @@ export interface PopconfirmProps extends PopoverProps {
     cancelType?: ButtonType;
     /** On the card (`.semi-popconfirm`), not the popup */
     class?: string;
+    classNames?: Partial<Record<PopconfirmPart, string>>;
     /** On the card (`.semi-popconfirm`), not the popup */
     style?: JSX.CSSProperties | string;
     defaultVisible?: boolean;

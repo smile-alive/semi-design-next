@@ -2,7 +2,7 @@ import type React from 'react';
 import { useCallback, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { type ValidateStatus, FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+import { cssClasses, type InputPart } from '@fibrae/semi-foundation/components/input/constants';
 import InputFoundation, { type InputAdapter, type InputBaseState } from '@fibrae/semi-foundation/components/input/foundation';
 import { stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/input/input.scss';
@@ -72,7 +72,8 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     onEnterPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-    inputStyle?: React.CSSProperties;
+    classNames?: Partial<Record<InputPart, string>>;
+    styles?: Partial<Record<InputPart, React.CSSProperties>>;
     getValueLength?: (value: string) => number;
     preventScroll?: boolean;
     /** When enabled, onChange fires once after an IME composition ends, not during it */
@@ -153,7 +154,8 @@ export default function Input(rawProps: InputProps) {
         onEnterPress,
         onClear,
         hideSuffix,
-        inputStyle,
+        classNames,
+        styles,
         maxLength,
         minLength,
         getValueLength,
@@ -240,12 +242,16 @@ export default function Input(rawProps: InputProps) {
         [`${prefixCls}-borderless`]: borderless,
     });
 
-    const inputCls = clsx(prefixCls, {
-        [`${prefixCls}-${size}`]: size,
-        [`${prefixCls}-disabled`]: disabled,
-        [`${prefixCls}-sibling-clearbtn`]: allowClear,
-        [`${prefixCls}-sibling-modebtn`]: mode === 'password',
-    });
+    const inputCls = clsx(
+        prefixCls,
+        {
+            [`${prefixCls}-${size}`]: size,
+            [`${prefixCls}-disabled`]: disabled,
+            [`${prefixCls}-sibling-clearbtn`]: allowClear,
+            [`${prefixCls}-sibling-modebtn`]: mode === 'password',
+        },
+        classNames?.input
+    );
 
     const prefixNode = hasContent(labelNode) && (
         <div
@@ -320,7 +326,7 @@ export default function Input(rawProps: InputProps) {
                     ref={inputRef}
                     type={InputFoundation.getInputType(type, mode, state.eyeClosed)}
                     className={inputCls}
-                    style={inputStyle}
+                    style={styles?.input}
                     aria-invalid={ariaInvalid}
                     aria-labelledby={ariaLabelledby}
                     disabled={disabled}

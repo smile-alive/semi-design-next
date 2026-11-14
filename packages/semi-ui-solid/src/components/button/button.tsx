@@ -1,7 +1,7 @@
 import { type Component, type JSX, For, Match, Show, Switch, children, createMemo, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
+import { cssClasses, strings, type ButtonPart } from '@fibrae/semi-foundation/components/button/constants';
 import { buttonClassList, colorfulFill, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/button/button.scss';
@@ -24,7 +24,7 @@ export type HorizontalPaddingType = 'left' | 'right';
 export interface ButtonProps extends ElementProps<'button', 'type'> {
     block?: boolean;
     colorful?: boolean;
-    contentClassName?: string;
+    classNames?: Partial<Record<ButtonPart, string>>;
     disabled?: boolean;
     htmlType?: HtmlType;
     /**
@@ -36,6 +36,7 @@ export interface ButtonProps extends ElementProps<'button', 'type'> {
     loading?: boolean;
     noHorizontalPadding?: boolean | HorizontalPaddingType | HorizontalPaddingType[];
     size?: Size;
+    styles?: Partial<Record<ButtonPart, JSX.CSSProperties | string>>;
     theme?: Theme;
     type?: Type;
 }
@@ -54,7 +55,7 @@ const prefix = cssClasses.PREFIX;
 // One native button for every state keeps it mounted, and focused, while loading or the icon toggles.
 export function renderButton(name: 'Button' | 'IconButton', rawProps: ButtonProps) {
     const props = useDefaultProps(name, rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['block', 'children', 'class', 'colorful', 'contentClassName', 'disabled', 'htmlType', 'icon', 'iconPosition', 'loading', 'noHorizontalPadding', 'ref', 'size', 'style', 'theme', 'type']);
+    const [local, rest] = splitProps(props, ['block', 'children', 'class', 'classNames', 'colorful', 'disabled', 'htmlType', 'icon', 'iconPosition', 'loading', 'noHorizontalPadding', 'ref', 'size', 'style', 'styles', 'theme', 'type']);
 
     const group = useButtonGroupContext();
     const layer = usePopupLayer();
@@ -146,7 +147,7 @@ export function renderButton(name: 'Button' | 'IconButton', rawProps: ButtonProp
             aria-disabled={looks().disabled || local.loading}
             disabled={looks().disabled}
         >
-            <span class={clsx(`${prefix}-content`, local.contentClassName)} x-semi-prop={iconLayout() ? undefined : 'children'}>
+            <span class={clsx(`${prefix}-content`, local.classNames?.content)} style={local.styles?.content} x-semi-prop={iconLayout() ? undefined : 'children'}>
                 <Show when={iconLayout()} fallback={text()}>
                     <For each={parts()}>{(part) => (part === 'icon' ? iconView() : textView())}</For>
                 </Show>

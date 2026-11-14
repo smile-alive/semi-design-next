@@ -14,7 +14,7 @@ export default function NavigationDemo() {
     return (
         <Nav
             defaultOpenKeys={['task']}
-            bodyStyle={{ height: '300px' }}
+            styles={{ body: { height: '300px' } }}
             items={items}
             renderItemIcon={(renderProps) => <Dynamic component={icons[String(renderProps.item.itemKey)]} />}
             onSelect={(key) => console.log(key)}

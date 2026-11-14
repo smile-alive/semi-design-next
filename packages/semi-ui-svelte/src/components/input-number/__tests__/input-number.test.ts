@@ -189,6 +189,13 @@ describe('Svelte InputNumber', () => {
         semiGlobal.config.overrideDefaultProps = {};
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        mount({ value: 1, classNames: { input: 'my-input' }, styles: { input: 'order: 2' } });
+        expect(getInput()).toHaveClass(`${prefixCls}`, 'my-input');
+        expect(getInput()).toHaveStyle({ order: '2' });
+        expect(getWrapper()).not.toHaveClass('my-input');
+    });
+
     it('size、showClear、hideButtons 与句柄', () => {
         for (const size of ['default', 'large', 'small'] as const) {
             const { unmount } = mount({ value: 1020, showClear: true, size });

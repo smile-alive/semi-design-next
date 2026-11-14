@@ -13,7 +13,7 @@ const icons: Record<string, typeof IconAvatar> = { user: IconAvatar, union: Icon
 export default function NavigationDemo() {
     return (
         <Nav
-            bodyStyle={{ height: '320px' }}
+            styles={{ body: { height: '320px' } }}
             items={items}
             renderItemIcon={(renderProps) => <Dynamic component={icons[String(renderProps.item.itemKey)]} />}
             header={{

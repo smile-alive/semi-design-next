@@ -404,7 +404,7 @@ describe('OverflowList', () => {
 
     it('scroll: items 渲染在 wrapper 中，两个 overflow 节点位于其两侧', () => {
         const overflowRenderer = vi.fn<ScrollRenderer>(sidesRenderer);
-        const { container } = render(<OverflowList className="custom" wrapperClassName="wrapper" style={{ color: 'red' }} wrapperStyle={{ gap: '4px' }} items={items} overflowRenderer={overflowRenderer} visibleItemRenderer={(item) => <div key={item.key}>{item.key}</div>} renderMode="scroll" />);
+        const { container } = render(<OverflowList className="custom" classNames={{ wrapper: 'wrapper' }} style={{ color: 'red' }} styles={{ wrapper: { gap: '4px' } }} items={items} overflowRenderer={overflowRenderer} visibleItemRenderer={(item) => <div key={item.key}>{item.key}</div>} renderMode="scroll" />);
         const list = getList(container);
         expect(list).toHaveClass('custom');
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
@@ -415,6 +415,13 @@ describe('OverflowList', () => {
         expect([...wrapper.children].map((child) => (child as HTMLElement).dataset.scrollkey)).toEqual(keys);
         expect([...list.children].map((child) => child.textContent)).toEqual(['overflow-0:0', keys.join(''), 'overflow-1:0']);
         expect(overflowRenderer.mock.lastCall[0]).toEqual([[], []]);
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = render(<OverflowList classNames={{ wrapper: 'my-wrapper' }} styles={{ wrapper: { order: 3 } }} items={items} overflowRenderer={sidesRenderer} visibleItemRenderer={(item) => <div key={item.key}>{item.key}</div>} renderMode="scroll" />);
+        const wrapper = container.querySelector(`.${prefixCls}-scroll-wrapper`);
+        expect(wrapper).toHaveClass(`${prefixCls}-scroll-wrapper`, 'my-wrapper');
+        expect(wrapper).toHaveStyle({ order: '3' });
     });
 
     it.each<[NonNullable<OverflowListInternalProps['overflowRenderDirection']>, string[]]>([

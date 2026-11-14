@@ -1070,10 +1070,15 @@ describe(`TimePicker`, () => {
         expect(root).toHaveStyle({ width: '200px' });
     });
 
-    it('popupStyle 属性', () => {
-        renderTimePicker({ defaultValue: '10:23:15', popupStyle: { backgroundColor: 'white' }, defaultOpen: true });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderTimePicker({ defaultValue: '10:23:15', classNames: { dropdown: 'my-dropdown', input: 'my-input' }, styles: { dropdown: { color: 'red' }, input: { color: 'blue' } }, defaultOpen: true });
 
-        expect(document.querySelector('[x-placement]')).toHaveStyle({ backgroundColor: 'rgb(255, 255, 255)' });
+        const dropdown = document.querySelector('.my-dropdown');
+        expect(dropdown).toHaveClass(`${prefixCls}-panel`);
+        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const input = document.querySelector('.my-input');
+        expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper`);
+        expect(input).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     });
 
     it('use12Hours 的 PM 模式下选择值为 5 的小时', () => {

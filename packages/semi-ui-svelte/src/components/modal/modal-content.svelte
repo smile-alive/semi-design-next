@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import type { HTMLAttributes } from 'svelte/elements';
+    import type { ClassValue, HTMLAttributes } from 'svelte/elements';
     import { isNil, omitBy } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+    import { cssClasses, type ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
     import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps as FoundationProps, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
     import type { Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
     import { cssClasses as typographyClasses } from '@fibrae/semi-foundation/components/typography/constants';
@@ -34,8 +34,8 @@
         footer?: Snippet | null;
         children?: Snippet;
         modal?: Snippet<[{ modal: Snippet }]>;
-        bodyStyle?: string;
-        maskStyle?: string;
+        classNames?: Partial<Record<ModalPart, ClassValue>>;
+        styles?: Partial<Record<ModalPart, string>>;
         centered: boolean;
         closable: boolean;
         closeOnEsc: boolean;
@@ -50,7 +50,7 @@
         contentClass?: string;
     }
 
-    let { visible, motion, inBody, onClose, onAfterLeave, initialFocus, title, header, icon, closeIcon, footer, children, modal, bodyStyle, maskStyle, centered, closable, closeOnEsc, mask, maskClosable, maskFixed, preventScroll, size, width, height, isFullScreen, contentClass, ...rest }: Props = $props();
+    let { visible, motion, inBody, onClose, onAfterLeave, initialFocus, title, header, icon, closeIcon, footer, children, modal, classNames, styles, centered, closable, closeOnEsc, mask, maskClosable, maskFixed, preventScroll, size, width, height, isFullScreen, contentClass, ...rest }: Props = $props();
 
     const locale = useLocale('Modal');
 
@@ -150,7 +150,7 @@
 {/snippet}
 
 {#snippet bodyPart()}
-    <div class={[`${prefix}-body`, { [`${prefix}-withIcon`]: icon }]} id={`${idPrefix}-body`} style={bodyStyle} x-semi-prop="children">
+    <div class={[`${prefix}-body`, { [`${prefix}-withIcon`]: icon }, classNames?.body]} id={`${idPrefix}-body`} style={styles?.body} x-semi-prop="children">
         {@render children?.()}
     </div>
 {/snippet}
@@ -179,8 +179,9 @@
             dialog = element;
         }}
         {@attach content.attach}
-        class={[`${prefix}-content`, contentClass, content.className, { [`${prefix}-content-fullScreen`]: isFullScreen, [`${prefix}-content-height-set`]: heightSet }]}
+        class={[`${prefix}-content`, contentClass, content.className, { [`${prefix}-content-fullScreen`]: isFullScreen, [`${prefix}-content-height-set`]: heightSet }, classNames?.content]}
         role={dialogRole}
+        style={styles?.content}
         style:display={content.displayed ? undefined : 'none'}
         tabindex="-1"
     >
@@ -188,7 +189,7 @@
             {@render header?.()}
             {@render bodyPart()}
         {:else if hasTitle}
-            <div class={`${prefix}-header`}>
+            <div class={[`${prefix}-header`, classNames?.header]} style={styles?.header}>
                 {@render iconPart()}
                 <!-- h5 look, h2 outline: the sheet's title is level 2 as well -->
                 <h2 class={[typographyClasses.PREFIX, `${typographyClasses.PREFIX}-h5`, `${prefix}-title`]} id={`${idPrefix}-title`} x-semi-prop="title">
@@ -209,7 +210,7 @@
             </div>
         {/if}
         {#if footer}
-            <div class={`${prefix}-footer`} x-semi-prop="footer">
+            <div class={[`${prefix}-footer`, classNames?.footer]} style={styles?.footer} x-semi-prop="footer">
                 {@render footer()}
             </div>
         {/if}
@@ -229,7 +230,7 @@
     ]}
 >
     {#if mask}
-        <div {@attach maskAnimation.attach} class={[`${prefix}-mask`, maskAnimation.className]} style={maskStyle} style:display={maskAnimation.displayed ? undefined : 'none'}></div>
+        <div {@attach maskAnimation.attach} class={[`${prefix}-mask`, maskAnimation.className, classNames?.mask]} style={styles?.mask} style:display={maskAnimation.displayed ? undefined : 'none'}></div>
     {/if}
     <div class={[`${prefix}-wrap`, { [`${prefix}-wrap-center`]: centered }]} role="none" onclick={maskClosable ? (event) => foundation.handleMaskClick(event) : undefined} onmouseup={maskClosable ? () => foundation.handleMaskMouseUp() : undefined}>
         <!-- marked only while the mask listens, since only its mouseup clears the mark -->

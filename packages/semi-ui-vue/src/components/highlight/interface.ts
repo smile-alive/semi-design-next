@@ -1,4 +1,5 @@
-import type { CSSProperties } from 'vue';
+import type { ClassValue, StyleValue } from 'vue';
+import type { HighlightPart } from '@fibrae/semi-foundation/components/highlight/constants';
 import type { HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
 
 export type { HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
@@ -17,8 +18,8 @@ export interface HighlightProps {
     caseSensitive?: boolean;
     sourceString?: string;
     searchWords?: string | SearchWords;
+    classNames?: Partial<Record<HighlightPart, ClassValue>>;
     /** Vue does not add `px` to numbers: write lengths as strings */
-    highlightStyle?: CSSProperties;
-    highlightClassName?: string;
+    styles?: Partial<Record<HighlightPart, StyleValue>>;
     component?: string;
 }

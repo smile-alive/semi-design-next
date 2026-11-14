@@ -485,8 +485,8 @@ But you can customize the rendering of the selection box through snippets, whose
 
 ### Custom pop-up layer style
 
-You can control the style of the pop-up layer through `dropdownClassName`, `dropdownStyle`  
-For example, when you customize the width of the pop-up layer, you can pass the width through `drowndownStyle`
+You can control the style of the pop-up layer through the `dropdown` key of `classNames` and `styles`  
+For example, when you customize the width of the pop-up layer, you can pass the width through `styles.dropdown`
 
 <Demo id="dropdown-style" />
 
@@ -802,7 +802,7 @@ The following is a more complex example: Reusing the drag-and-sort capability of
 
 <SelectReactApi />
 
-Other native attributes (such as `data-*`) land on the trigger root element, and `style` is not passed to the dropdown (use `dropdownStyle`). `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; when the search input mounts in a searchable Select, it becomes the combobox and these attributes move to it.
+Other native attributes (such as `data-*`) land on the trigger root element, and `style` is not passed to the dropdown (use `styles.dropdown`). `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; when the search input mounts in a searchable Select, it becomes the combobox and these attributes move to it.
 
 </Framework>
 
@@ -810,7 +810,7 @@ Other native attributes (such as `data-*`) land on the trigger root element, and
 
 <SelectVueApi />
 
-`class`, `style`, `data-*` and native listeners land on the root element, and `style` does not reach the dropdown popup (use `dropdownStyle`). `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it.
+`class`, `style`, `data-*` and native listeners land on the root element, and `style` does not reach the dropdown popup (use `styles.dropdown`). `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it.
 
 </Framework>
 
@@ -818,7 +818,7 @@ Other native attributes (such as `data-*`) land on the trigger root element, and
 
 <SelectSolidApi />
 
-`class`, `style`, `data-*` and native attributes and listeners land on the root element, and `style` does not reach the dropdown popup (use `dropdownStyle`); with `triggerRender` the root no longer carries the style classes of Select itself. `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it. `ref` receives the root element, see Methods below.
+`class`, `style`, `data-*` and native attributes and listeners land on the root element, and `style` does not reach the dropdown popup (use `styles.dropdown`); with `triggerRender` the root no longer carries the style classes of Select itself. `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it. `ref` receives the root element, see Methods below.
 
 </Framework>
 
@@ -826,7 +826,7 @@ Other native attributes (such as `data-*`) land on the trigger root element, and
 
 <SelectSvelteApi />
 
-`class`, `style`, `data-*` and native attributes and listeners land on the root element, and `style` does not reach the dropdown popup (use `dropdownStyle`); with `trigger` the root no longer carries the style classes of Select itself. `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it.
+`class`, `style`, `data-*` and native attributes and listeners land on the root element, and `style` does not reach the dropdown popup (use `styles.dropdown`); with `trigger` the root no longer carries the style classes of Select itself. `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it.
 
 </Framework>
 
@@ -1165,7 +1165,7 @@ import { Select } from '@fibrae/semi-ui-solid';
    You can turn off matching filtering on the current local data by turning on remote.
 
 - **Will Select automatically limit the width of the drop-down menu?**  
-  MinWidth will be given, but width will not be written dead. If necessary, you can add it yourself through dropdownStyle.
+  MinWidth will be given, but width will not be written dead. If necessary, you can add it yourself through styles.dropdown.
 
 - **Why is the blur event not fired after a radio selection option?**
 

@@ -99,10 +99,10 @@ export default function Tree(rawProps: TreeProps) {
         'renderDraggingNode',
         'renderFullLabel',
         'renderLabel',
-        'searchClassName',
+        'classNames',
         'searchPlaceholder',
         'searchRender',
-        'searchStyle',
+        'styles',
         'showClear',
         'showFilteredOnly',
         'showLine',
@@ -275,7 +275,7 @@ export default function Tree(rawProps: TreeProps) {
         <TreeContext.Provider value={contextValue}>
             <div {...rootAttrs} ref={setRoot} class={clsx(`${prefix}-wrapper`, local.class)} style={local.style}>
                 <Show when={local.filterTreeNode && local.searchRender !== false}>
-                    <div class={clsx(`${prefix}-search-wrapper`, local.searchClassName)} style={local.searchStyle}>
+                    <div class={clsx(`${prefix}-search-wrapper`, local.classNames?.search)} style={local.styles?.search}>
                         <Show
                             keyed
                             when={searchRender()}

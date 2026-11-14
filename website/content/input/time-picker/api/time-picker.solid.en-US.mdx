@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | Focuses the input once mounted; passed through to the input's `autofocus`. | `boolean` | - |
 | borderless | Borderless mode. | `boolean` | `false` |
 | class | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `dropdown` (the panel card of the popup) and `input` (the root element of the input); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom clear icon; effective when showClear is true. | `JSX.Element` | - |
 | defaultOpen | Whether the panel is open by default when uncontrolled. | `boolean` | - |
 | defaultValue | Initial time when uncontrolled, in the same forms as value; an array when type is timeRange. | `BaseValueType \| BaseValueType[]` | - |
@@ -21,7 +22,6 @@ import ApiType from '#/components/ApiType.astro';
 | hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `false` |
 | hourStep | Interval of the hour options; a positive integer. | `number` | - |
 | inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices; the clear button stays usable. | `boolean` | `false` |
-| inputStyle | Style of the input's root element; an object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
 | insetLabel | Prefix label shown inside the input. | `JSX.Element` | - |
 | insetLabelId | id of the insetLabel, referenced through aria-labelledby and similar attributes. | `string` | - |
 | maxLength | Maximum number of characters of the input, passed through to the input. | `number` | - |
@@ -37,8 +37,6 @@ import ApiType from '#/components/ApiType.astro';
 | panelHeader | Content above the panel. In range mode an array, whose item i is used for panel i. | `JSX.Element` | - |
 | panels | Range mode only: item i is used as both the header and the footer of panel i, taking precedence over panelHeader and panelFooter. Ignored in single mode. | `JSX.Element[]` | - |
 | placeholder | Hint shown without a value; defaults to the locale text of type. | `string` | - |
-| popupClassName | Class name of the popup. | `string` | - |
-| popupStyle | Style of the popup; an object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
 | position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time; bottomRight under RTL. | `Position` | - |
 | prefix | Prefix content of the input. | `JSX.Element` | - |
 | preventScroll | Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component. | `boolean` | - |
@@ -50,6 +48,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size of the input: large, default or small. | `InputSize` | `"default"` |
 | stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
 | style | Style of the root element; an object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`; style objects use kebab-case CSS property names, and style strings work too. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
 | triggerRender | Renders a custom trigger. It is called once, and its fields are live: read them in the returned JSX to update. The argument has disabled, placeholder, value (an array of Date, the unpicked side undefined), inputValue, componentProps (the props of the TimePicker, without ref) and onChange (updates the input text, as typing would). | <ApiType detail={"(props: TimePickerTriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
 | type | Selection type: time for a single time, timeRange for a range. | `Type` | `"time"` |

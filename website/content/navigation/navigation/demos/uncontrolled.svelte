@@ -20,7 +20,7 @@
     </Nav.Header>
 {/snippet}
 
-<Nav bodyStyle="height: 300px" footer={{ collapseButton: true }} {header} isCollapsed {items} openKeys={['job']} selectedKeys={['信息录入']}>
+<Nav footer={{ collapseButton: true }} {header} isCollapsed {items} openKeys={['job']} selectedKeys={['信息录入']} styles={{ body: 'height: 300px' }}>
     {#snippet icon(renderProps)}
         {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
         {#if Icon}

@@ -1,4 +1,5 @@
 import type { JSX } from 'solid-js';
+import type { ImagePart, ImagePreviewPart } from '@fibrae/semi-foundation/components/image/constants';
 import type { PreviewGroupImage } from '@fibrae/semi-foundation/components/image/preview-foundation';
 import type { RatioType, RotateDirection } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 import type { ElementProps } from '../../base/index';
@@ -20,13 +21,13 @@ export interface ImageProps extends ElementProps<'img', 'width' | 'height' | 'cr
     crossOrigin?: 'anonymous' | 'use-credentials';
     setDownloadName?: (src: string) => string;
     style?: Style;
-    imgStyle?: Style;
-    imgCls?: string;
+    classNames?: Partial<Record<ImagePart, string>>;
+    styles?: Partial<Record<ImagePart, Style>>;
     onLoad?: JSX.EventHandlerUnion<HTMLImageElement, Event>;
     onError?: JSX.EventHandlerUnion<HTMLImageElement, Event>;
 }
 
-/** The props a single Image reads; class and style are replaced by previewCls and previewStyle */
+/** The props a single Image reads; the preview's class and style are replaced by `classNames.preview` and `styles.preview` */
 export type ImagePreviewProps = Omit<PreviewProps, 'lazyLoad' | 'lazyLoadMargin' | 'children' | 'class' | 'style'>;
 
 export interface PreviewProps extends ElementProps<'div', 'onChange'> {
@@ -62,8 +63,8 @@ export interface PreviewProps extends ElementProps<'div', 'onChange'> {
     crossOrigin?: 'anonymous' | 'use-credentials';
     maxZoom?: number;
     minZoom?: number;
-    previewCls?: string;
-    previewStyle?: Style;
+    classNames?: Partial<Record<ImagePreviewPart, string>>;
+    styles?: Partial<Record<ImagePreviewPart, Style>>;
     initialZoom?: number;
     renderLeftIcon?: JSX.Element | ((index: number) => JSX.Element);
     renderRightIcon?: JSX.Element | ((index: number) => JSX.Element);
@@ -85,7 +86,7 @@ export interface PreviewProps extends ElementProps<'div', 'onChange'> {
     setDownloadName?: (src: string) => string;
 }
 
-export interface PreviewInnerProps extends Omit<PreviewProps, 'previewCls' | 'previewStyle'> {
+export interface PreviewInnerProps extends Omit<PreviewProps, 'classNames' | 'styles'> {
     /** alt of the previewed image, for a single Image; a group passes its images' alts by context */
     alt?: string;
 }

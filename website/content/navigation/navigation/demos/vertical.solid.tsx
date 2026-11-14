@@ -15,7 +15,7 @@ export default function NavigationDemo() {
     return (
         <div style={{ width: '100%' }}>
             <Nav
-                bodyStyle={{ height: '300px' }}
+                styles={{ body: { height: '300px' } }}
                 items={items}
                 renderItemIcon={(renderProps) => <Dynamic component={icons[String(renderProps.item.itemKey)]} />}
                 onSelect={(key) => console.log(key)}

@@ -477,6 +477,24 @@ describe('Feedback', () => {
         expect($('.className')).toBeNull();
     });
 
+    it('classNames 与 styles 按部位转发给当前模式的 SideSheet 或 Modal', () => {
+        const parts = ['mask', 'header', 'body'] as const;
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]));
+        const check = (component: string) => {
+            for (const part of parts) {
+                const el = $(`.${BASE_CLASS_PREFIX}-${component}-${part}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+        const { unmount } = render(<Feedback classNames={classNames} styles={styles} title="T" mask visible />);
+        check('sidesheet');
+        unmount();
+        render(<Feedback classNames={classNames} styles={styles} title="T" mode="modal" motion={false} visible />);
+        check('modal');
+    });
+
     it('popup：抽屉隐藏后与 afterVisibleChange 一起执行一次 afterClose', () => {
         const afterClose = vi.fn<() => void>();
         const afterVisibleChange = vi.fn<(visible: boolean) => void>();

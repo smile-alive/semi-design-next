@@ -72,7 +72,7 @@ export function NavNodes(props: { nodes: readonly unknown[] }) {
 
 /** The wrapper li of a sub, with its title and its list: inline, or inside a popup when the list is a Dropdown */
 export function SubView(props: SubNavProps) {
-    const [local, restProps] = splitProps(props, ['children', 'class', 'disabled', 'dropdownProps', 'dropdownStyle', 'expandIcon', 'icon', 'indent', 'itemKey', 'level', 'ref', 'style', 'subDropdownProps', 'text']);
+    const [local, restProps] = splitProps(props, ['children', 'class', 'classNames', 'disabled', 'dropdownProps', 'expandIcon', 'icon', 'indent', 'itemKey', 'level', 'ref', 'style', 'styles', 'subDropdownProps', 'text']);
     const [aria, rest] = splitControlAttrs(restProps, isAriaKey);
 
     const outer = useNavContext('Nav.Sub');
@@ -241,9 +241,10 @@ export function SubView(props: SubNavProps) {
                         </Dropdown.Menu>
                     }
                     {...dropdownOptions()}
-                    style={local.dropdownStyle ?? dropdownOptions().style}
+                    style={local.styles?.dropdown ?? dropdownOptions().style}
                     // the user's class adds to the built-in popover class, which carries the collapsed popup's styling
                     class={clsx({ [`${prefix}-popover`]: view().isCollapsed }, dropdownOptions().class)}
+                    classNames={local.classNames?.dropdown ? { ...dropdownOptions().classNames, content: clsx(dropdownOptions().classNames?.content, local.classNames.dropdown) } : dropdownOptions().classNames}
                     onVisibleChange={(visible) => {
                         foundation.handleDropdownVisibleChange(visible);
                         dropdownOptions().onVisibleChange?.(visible);

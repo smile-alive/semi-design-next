@@ -1,4 +1,5 @@
-import type { CSSProperties, VNode } from 'vue';
+import type { CSSProperties, ClassValue, StyleValue, VNode } from 'vue';
+import type { PopoverPart } from '@fibrae/semi-foundation/components/popover/constants';
 import type { Position, RenderContentProps, TooltipEmits, TooltipProps } from '../tooltip/interface';
 
 export interface ArrowStyle {
@@ -25,11 +26,11 @@ export interface PopoverProps {
     mouseEnterDelay?: number;
     mouseLeaveDelay?: number;
     trigger?: TooltipProps['trigger'];
-    contentClassName?: string | unknown[];
+    classNames?: Partial<Record<PopoverPart, ClassValue>>;
     showArrow?: boolean;
     spacing?: number | { x: number; y: number };
     stopPropagation?: boolean | string;
-    arrowStyle?: ArrowStyle;
+    styles?: { content?: StyleValue; arrow?: ArrowStyle };
     arrowPointAtCenter?: boolean;
     closeOnEsc?: boolean;
     guardFocus?: boolean;

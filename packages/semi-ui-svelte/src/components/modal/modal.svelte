@@ -22,11 +22,11 @@
     let {
         visible = $bindable(),
         afterClose,
-        bodyStyle = defaults('bodyStyle'),
         cancelButtonProps = defaults('cancelButtonProps'),
         cancelLoading = defaults('cancelLoading'),
         cancelText = defaults('cancelText'),
         centered = defaults('centered', false),
+        classNames = defaults('classNames'),
         closable = defaults('closable', true),
         closeOnEsc = defaults('closeOnEsc', true),
         confirmLoading = defaults('confirmLoading'),
@@ -40,7 +40,6 @@
         mask = defaults('mask', true),
         maskClosable = defaults('maskClosable', true),
         maskFixed = defaults('maskFixed', false),
-        maskStyle = defaults('maskStyle'),
         modalContentClass = defaults('modalContentClass'),
         motion = defaults('motion', true),
         okButtonProps = defaults('okButtonProps'),
@@ -50,6 +49,7 @@
         onOk = defaults('onOk'),
         preventScroll = defaults('preventScroll'),
         size = defaults('size', 'small'),
+        styles = defaults('styles'),
         title = defaults('title'),
         width = defaults('width'),
         zIndex = defaults('zIndex', 1000),
@@ -197,10 +197,10 @@
             <ModalContent
                 {...rest}
                 bind:this={contentRef}
-                {bodyStyle}
                 {centered}
                 children={body}
                 class={[rest.class, { [`${cssClasses.DIALOG}-displayNone`]: keepDOM && hidden }]}
+                {classNames}
                 {closable}
                 {closeIcon}
                 {closeOnEsc}
@@ -215,13 +215,13 @@
                 {mask}
                 {maskClosable}
                 {maskFixed}
-                {maskStyle}
                 {modal}
                 {motion}
                 onAfterLeave={() => (displayNone = true)}
                 onClose={cancel}
                 {preventScroll}
                 {size}
+                {styles}
                 {title}
                 visible={open}
                 {width}

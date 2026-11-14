@@ -73,11 +73,11 @@ describe('Highlight', () => {
         expect(texts(view.container)).toEqual(['Design']);
     });
 
-    it('在每个匹配上追加 highlightClassName 并应用 highlightStyle', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
         const view = render(Highlight, {
             props: {
-                highlightClassName: 'kw',
-                highlightStyle: { color: 'red' },
+                classNames: { highlight: 'kw' },
+                styles: { highlight: { color: 'red' } },
                 searchWords: ['Semi'],
                 sourceString: 'Semi Design Semi',
             },
@@ -93,8 +93,8 @@ describe('Highlight', () => {
     it('每个词的 class 与 style 叠加在共享样式之上', () => {
         const view = render(Highlight, {
             props: {
-                highlightClassName: 'kw',
-                highlightStyle: { color: 'red', fontWeight: 'bold' },
+                classNames: { highlight: 'kw' },
+                styles: { highlight: { color: 'red', fontWeight: 'bold' } },
                 searchWords: [{ text: 'Semi', class: 'w1', style: { color: 'blue' } }, 'Design'],
                 sourceString: 'Semi Design',
             },
@@ -152,7 +152,7 @@ describe('Highlight', () => {
     it('数值样式不补 px，无单位属性照常生效', () => {
         const view = render(Highlight, {
             props: {
-                highlightStyle: { padding: 4, fontWeight: 600 } as HighlightProps['highlightStyle'],
+                styles: { highlight: { padding: 4, fontWeight: 600 } as NonNullable<HighlightProps['styles']>['highlight'] },
                 searchWords: ['Semi'],
                 sourceString: 'Semi',
             },

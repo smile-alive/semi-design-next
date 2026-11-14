@@ -23,16 +23,16 @@
     const props = withDefaults(defineProps<AIChatDialogueProps & /* @vue-ignore */ ElementProps<'div', keyof AIChatDialogueProps | EmitHandlers<AIChatDialogueEmits>>>(), {
         align: () => semiDefault('AIChatDialogue', 'align', 'leftRight'),
         chats: semiGlobalDefault('AIChatDialogue', 'chats'),
+        classNames: semiGlobalDefault('AIChatDialogue', 'classNames'),
         disabledFileItemClick: () => semiDefault('AIChatDialogue', 'disabledFileItemClick', false),
         escapeHtml: () => semiDefault('AIChatDialogue', 'escapeHtml', true),
-        hintCls: semiGlobalDefault('AIChatDialogue', 'hintCls'),
         hints: semiGlobalDefault('AIChatDialogue', 'hints'),
-        hintStyle: semiGlobalDefault('AIChatDialogue', 'hintStyle'),
         markdownRenderProps: semiGlobalDefault('AIChatDialogue', 'markdownRenderProps'),
         mode: () => semiDefault('AIChatDialogue', 'mode', 'bubble'),
         selecting: () => semiDefault('AIChatDialogue', 'selecting', false),
         showReference: () => semiDefault('AIChatDialogue', 'showReference', false),
         showReset: () => semiDefault('AIChatDialogue', 'showReset', true),
+        styles: semiGlobalDefault('AIChatDialogue', 'styles'),
     });
 
     const emit = defineEmits<AIChatDialogueEmits>();
@@ -125,7 +125,7 @@
     <div :class="prefix" :role="namedRole(attrs)">
         <div ref="list" :aria-busy="streaming" :aria-label="locale.locale.messages" :class="`${prefix}-list`" role="log" tabindex="-1" @scroll="foundation.containerScroll">
             <component :is="dialogueNode(chat, index)" v-for="(chat, index) in chats" :key="chat.id" />
-            <DialogueHint v-if="hints.length > 0" :class="props.hintCls" :hints="hints" :selecting="props.selecting" :style="props.hintStyle" @hintClick="foundation.handleHintClick">
+            <DialogueHint v-if="hints.length > 0" :class="props.classNames?.hint" :hints="hints" :selecting="props.selecting" :style="props.styles?.hint" @hintClick="foundation.handleHintClick">
                 <template v-if="$slots.hintBox" #hintBox="slotProps">
                     <slot name="hintBox" v-bind="slotProps" />
                 </template>

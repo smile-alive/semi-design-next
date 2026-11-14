@@ -13,7 +13,7 @@ export default function NavigationDemo() {
         <Nav
             toggleIconPosition="left"
             defaultOpenKeys={['job']}
-            bodyStyle={{ height: 300 }}
+            styles={{ body: { height: 300 } }}
             items={items}
             onSelect={(key) => console.log(key)}
             header={{

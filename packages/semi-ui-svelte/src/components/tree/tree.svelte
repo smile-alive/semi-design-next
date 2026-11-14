@@ -55,9 +55,9 @@
         treeNodeFilterProp = defaults('treeNodeFilterProp', 'label'),
         labelEllipsis = defaults('labelEllipsis'),
         virtualize = defaults('virtualize'),
-        searchClassName = defaults('searchClassName'),
+        classNames = defaults('classNames'),
         searchPlaceholder = defaults('searchPlaceholder'),
-        searchStyle = defaults('searchStyle'),
+        styles = defaults('styles'),
         filterTreeNode = defaults('filterTreeNode', false),
         loadData = defaults('loadData'),
         onChange,
@@ -348,7 +348,7 @@
 
 <div {...attrs.root} class={[`${prefixCls}-wrapper`, rest.class]}>
     {#if filterTreeNode && searchBox !== false}
-        <div class={[`${prefixCls}-search-wrapper`, searchClassName]} style={searchStyle}>
+        <div class={[`${prefixCls}-search-wrapper`, classNames?.search]} style={styles?.search}>
             {#if searchBox}
                 {@render searchBox({ class: `${prefixCls}-input`, value: view.inputValue, placeholder, showClear, onChange: handleSearch })}
             {:else}

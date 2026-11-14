@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { TreeSelectPart } from '@fibrae/semi-foundation/components/tree-select/constants';
 import type { CheckRelation, ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/index.js';
@@ -136,11 +137,9 @@ export interface TreeSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     autoAdjustOverflow?: boolean;
     position?: Position;
     stopPropagation?: boolean | string;
-    dropdownClassName?: string;
-    dropdownStyle?: string;
+    classNames?: Partial<Record<TreeSelectPart, ClassValue>>;
+    styles?: Partial<Record<TreeSelectPart, string>>;
     dropdownMatchSelectWidth?: boolean;
-    /** Goes on the `role="tree"` element */
-    optionListStyle?: string;
     preventScroll?: boolean;
     triggerTagWrap?: boolean;
 

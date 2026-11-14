@@ -4,9 +4,9 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| bodyStyle | Custom style of the navigation item list. | `React.CSSProperties` | - |
 | children | Children of the navigation. `Nav.Item` and `Nav.Sub` render into the list, `Nav.Header` and `Nav.Footer` go to the header and the footer, and other nodes are wrapped in an `li`. | `React.ReactNode` | - |
 | className | Class name of the outermost `nav` element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | defaultIsCollapsed | Whether the navigation starts collapsed. Applies only when `mode` is `vertical`. Defaults to `false`. | `boolean` | - |
 | defaultOpenKeys | `itemKey`s of the sub navigations open initially. Applies only when `mode` is `vertical` and the sidebar is expanded. When not given, the sub navigations holding the initially selected items open in vertical mode. Defaults to `[]`. | `(string \| number)[]` | - |
 | defaultSelectedKeys | `itemKey`s of the items selected initially. Defaults to `[]`. | `(string \| number)[]` | - |
@@ -26,6 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderWrapper | Renders the wrapper around each navigation item. It receives `{ itemElement, isSubNav, isInSubNav, props }` and its return value goes into the list. Render `itemElement` exactly once. | <ApiType detail={"({ itemElement, isSubNav, isInSubNav, props }: { itemElement: ReactElement\u003cany>; isInSubNav: boolean; isSubNav: boolean; props: NavItemProps \u007c SubNavProps }) => ReactNode"}>Type</ApiType> | - |
 | selectedKeys | Controlled `itemKey`s of the selected items. Use it with `onSelect`. | `(string \| number)[]` | - |
 | style | Style of the outermost `nav` element. | `CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | subDropdownProps | Dropdown props of the sub navigations generated from `items`, used in horizontal mode or when collapsed. A sub navigation's own `dropdownProps` or `subDropdownProps` takes precedence. | `DropdownProps` | - |
 | subNavCloseDelay | Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or in horizontal mode. | `number` | `100` |
 | subNavMotion | Whether sub navigations animate when they expand and collapse. | `boolean` | `true` |

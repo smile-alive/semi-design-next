@@ -58,9 +58,9 @@
                 "zh-CN": "由 Dropdown 固定为菜单内容，传入的值无效；菜单内容请使用 `render` 或 `menu`。",
                 "en-US": "Dropdown sets this to the menu content, so a value passed here has no effect. Use `render` or `menu` for the content."
             },
-            "contentClassName": {
-                "zh-CN": "下拉菜单容器 `.semi-dropdown` 的类名。",
-                "en-US": "Class name of the menu container `.semi-dropdown`."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（下拉菜单容器 `.semi-dropdown`）、`wrapper`（触发元素被 `span` 包裹时的该 `span`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the menu container `.semi-dropdown`) and `wrapper` (the `span` that wraps the trigger when a wrapper is needed); merged with the built-in classes."
             },
             "disableFocusListener": {
                 "zh-CN": "`trigger` 为 `hover` 时，是否不响应键盘聚焦打开菜单，默认 `false`。",
@@ -154,6 +154,10 @@
                 "zh-CN": "下拉菜单容器 `.semi-dropdown` 的内联样式。",
                 "en-US": "Inline style of the menu container `.semi-dropdown`."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`content` 写在 `style` 之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `content` is applied after `style`."
+            },
             "trigger": {
                 "zh-CN": "触发菜单显示的行为，可选 `hover`、`focus`、`click`、`custom`、`contextMenu`；`custom` 时显示与否完全由 `visible` 决定。",
                 "en-US": "What shows the menu: `hover`, `focus`, `click`, `custom` or `contextMenu`. With `custom`, `visible` alone decides."
@@ -161,10 +165,6 @@
             "visible": {
                 "zh-CN": "菜单是否显示。配合 `trigger` 为 `custom` 使用；传入后由该值决定显示，触发器、点击外部与 Esc 只通过 `onVisibleChange` 请求打开或关闭。",
                 "en-US": "Whether the menu is shown. Used with `trigger` `custom`. When given, this value decides, and the trigger, a click outside and Esc only request a change through `onVisibleChange`."
-            },
-            "wrapperClassName": {
-                "zh-CN": "触发元素被 `span` 包裹时，该 `span` 的类名。",
-                "en-US": "Class name of the `span` that wraps the trigger when a wrapper is needed."
             },
             "wrapperId": {
                 "zh-CN": "弹出层节点的 id，触发元素的 ARIA 属性指向它；缺省时自动生成。",

@@ -1,6 +1,7 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import type { Node } from '@tiptap/pm/model';
+import type { AIChatInputPart } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import type { Attachment, Content, Setup, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { PopoverProps } from '@fibrae/semi-ui-vue/popover/index';
 import type { TooltipProps } from '@fibrae/semi-ui-vue/tooltip/index';
@@ -41,6 +42,7 @@ export interface AIChatInputHandle {
 export interface AIChatInputProps {
     /** Overrides the content and attachment check of the send button */
     canSend?: boolean;
+    classNames?: Partial<Record<AIChatInputPart, ClassValue>>;
     /** Whether the content and attachments are cleared when `generating` turns on */
     clearContentOnGenerating?: boolean;
     /** Read once, when the editor is created */
@@ -63,9 +65,8 @@ export interface AIChatInputProps {
     showUploadFile?: boolean;
     skillHotKey?: string;
     skills?: Skill[];
+    styles?: Partial<Record<AIChatInputPart, StyleValue>>;
     suggestions?: Suggestion[];
-    templatesCls?: string;
-    templatesStyle?: StyleValue;
     topSlotPosition?: 'top' | 'middle' | 'bottom';
     transformer?: Map<string, (obj: any) => any>;
     /** The tip text goes through the `uploadTip` slot */

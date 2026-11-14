@@ -11,14 +11,13 @@
     const defaults = useDefaultProps('Card');
 
     let {
-        bodyStyle = defaults('bodyStyle'),
         bordered = defaults('bordered', true),
+        classNames = defaults('classNames'),
         footerLine = defaults('footerLine', false),
-        footerStyle = defaults('footerStyle'),
         headerLine = defaults('headerLine', true),
-        headerStyle = defaults('headerStyle'),
         loading = defaults('loading', false),
         shadows = defaults('shadows'),
+        styles = defaults('styles'),
         title,
         headerExtraContent,
         header,
@@ -48,13 +47,13 @@
     role={namedRole(rest)}
 >
     {#if header || headerExtraContent || hasTitle}
-        <div class={[`${prefixCls}-header`, { [`${prefixCls}-header-bordered`]: headerLine }]} style={headerStyle}>
+        <div class={[`${prefixCls}-header`, { [`${prefixCls}-header-bordered`]: headerLine }, classNames?.header]} style={styles?.header}>
             {#if header}
                 {@render header()}
             {:else}
                 <div class={`${prefixCls}-header-wrapper`}>
                     {#if hasTitle}
-                        <div class={[`${prefixCls}-header-wrapper-title`, { [`${prefixCls}-header-wrapper-spacing`]: headerExtraContent }]}>
+                        <div class={[`${prefixCls}-header-wrapper-title`, { [`${prefixCls}-header-wrapper-spacing`]: headerExtraContent }, classNames?.title]} style={styles?.title}>
                             {#if typeof title === 'function'}
                                 {@render title()}
                             {:else}
@@ -64,16 +63,16 @@
                         </div>
                     {/if}
                     {#if headerExtraContent}
-                        <div class={`${prefixCls}-header-wrapper-extra`} x-semi-prop="headerExtraContent">{@render headerExtraContent()}</div>
+                        <div class={[`${prefixCls}-header-wrapper-extra`, classNames?.extra]} style={styles?.extra} x-semi-prop="headerExtraContent">{@render headerExtraContent()}</div>
                     {/if}
                 </div>
             {/if}
         </div>
     {/if}
     {#if cover}
-        <div class={`${prefixCls}-cover`} x-semi-prop="cover">{@render cover()}</div>
+        <div class={[`${prefixCls}-cover`, classNames?.cover]} style={styles?.cover} x-semi-prop="cover">{@render cover()}</div>
     {/if}
-    <div class={`${prefixCls}-body`} style={bodyStyle}>
+    <div class={[`${prefixCls}-body`, classNames?.body]} style={styles?.body}>
         {#if children}
             <Skeleton active {loading}>
                 {#snippet placeholder()}
@@ -87,7 +86,7 @@
             </Skeleton>
         {/if}
         {#if actions?.length}
-            <div class={`${prefixCls}-body-actions`}>
+            <div class={[`${prefixCls}-body-actions`, classNames?.actions]} style={styles?.actions}>
                 <Space spacing={12}>
                     {#each actions as action, index (index)}
                         <div class={`${prefixCls}-body-actions-item`} x-semi-prop={`actions.${index}`}>{@render action()}</div>
@@ -97,6 +96,6 @@
         {/if}
     </div>
     {#if footer}
-        <div class={[`${prefixCls}-footer`, { [`${prefixCls}-footer-bordered`]: footerLine }]} style={footerStyle} x-semi-prop="footer">{@render footer()}</div>
+        <div class={[`${prefixCls}-footer`, { [`${prefixCls}-footer-bordered`]: footerLine }, classNames?.footer]} style={styles?.footer} x-semi-prop="footer">{@render footer()}</div>
     {/if}
 </div>

@@ -1,6 +1,6 @@
 import React, { memo, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
+import { cssClasses, getPopoverRole, getPopoverSpacing, type PopoverPart } from '@fibrae/semi-foundation/components/popover/constants';
 import '@fibrae/semi-foundation/components/popover/popover.scss';
 import { type BaseProps, useDefaultProps } from '../../base/index';
 import Tooltip, { type Position, type TooltipHandle, type TooltipInternalProps, type TooltipProps, type Trigger, type RenderContentProps } from '../tooltip/index';
@@ -40,13 +40,13 @@ export interface PopoverProps extends BaseProps {
     mouseEnterDelay?: number;
     mouseLeaveDelay?: number;
     trigger?: Trigger;
-    contentClassName?: string | any[];
+    classNames?: Partial<Record<PopoverPart, string>>;
+    styles?: { content?: React.CSSProperties; arrow?: ArrowStyle };
     onVisibleChange?: (visible: boolean) => void;
     onClickOutSide?: TooltipProps['onClickOutSide'];
     showArrow?: boolean;
     spacing?: number | { x: number; y: number };
     stopPropagation?: boolean | string;
-    arrowStyle?: ArrowStyle;
     arrowPointAtCenter?: boolean;
     closeOnEsc?: TooltipProps['closeOnEsc'];
     guardFocus?: TooltipProps['guardFocus'];
@@ -79,17 +79,17 @@ const defaultProps = {
 } satisfies Partial<PopoverProps>;
 
 function Popover(rawProps: PopoverProps & { ref?: React.Ref<PopoverHandle> }) {
-    const { ref, children, showArrow, arrowStyle = {}, position, style, trigger, content, contentClassName, spacing: spacingProp, role: roleProp, ...attr } = useDefaultProps('Popover', rawProps, defaultProps);
+    const { ref, children, showArrow, classNames, styles, position, style, trigger, content, spacing: spacingProp, role: roleProp, ...attr } = useDefaultProps('Popover', rawProps, defaultProps);
 
     const tooltipRef = useRef<TooltipHandle>(null);
 
     const spacing = getPopoverSpacing(spacingProp, showArrow);
-    const arrow = showArrow ? <Arrow arrowStyle={arrowStyle} popStyle={style} position={position} /> : false;
+    const arrow = showArrow ? <Arrow className={classNames?.arrow} arrowStyle={styles?.arrow} popStyle={style} position={position} /> : false;
     const role = getPopoverRole(roleProp, trigger);
 
     const renderPopCard = ({ initialFocusRef }: RenderContentProps) => {
         return (
-            <div className={clsx(prefixCls, contentClassName)}>
+            <div className={clsx(prefixCls, classNames?.content)} style={styles?.content}>
                 <div className={`${prefixCls}-content`}>{typeof content === 'function' ? content({ initialFocusRef }) : content}</div>
             </div>
         );

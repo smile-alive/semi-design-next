@@ -4,6 +4,9 @@ export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-table`,
 } as const;
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type TablePart = 'header';
+
 export const strings = {
     SIZE_SMALL: 'small',
     SIZE_MIDDLE: 'middle',

@@ -246,9 +246,9 @@ describe('radio', () => {
         expect(screen.getByRole('radio')).not.toHaveAttribute('aria-describedby');
     });
 
-    it('button 类型下隐藏 addon 属性与 extra', () => {
+    it('classNames 与 styles 按部位落到对应元素，button 类型下隐藏 extra', () => {
         const { container } = render(
-            <Radio type="button" addonClassName="ac" addonStyle={{ color: 'red' }} extra="more">
+            <Radio type="button" classNames={{ addon: 'ac' }} styles={{ addon: { color: 'red' } }} extra="more">
                 A
             </Radio>
         );

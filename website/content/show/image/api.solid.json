@@ -18,13 +18,13 @@
                 "zh-CN": "图片显示高度，数值按 px 处理。",
                 "en-US": "Display height of the image; a number is in px."
             },
-            "imgCls": {
-                "zh-CN": "自定义样式类名，透传给 img 节点。",
-                "en-US": "Custom class name passed to the img element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `img`（内部的 img 节点），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `img` (the inner img element); merged with the built-in classes."
             },
-            "imgStyle": {
-                "zh-CN": "自定义样式，透传给 img 节点，可以是样式对象或字符串。",
-                "en-US": "Custom style passed to the img element, as a style object or a string."
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 `classNames`，值可以是样式对象（键用 kebab-case）或字符串。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`; each value is a style object (kebab-case keys) or a string."
             },
             "onError": {
                 "zh-CN": "图片加载失败时触发。",
@@ -39,8 +39,8 @@
                 "en-US": "Placeholder content shown until the image has loaded."
             },
             "preview": {
-                "zh-CN": "预览配置，为 false 时禁用预览。对象接受 ImagePreview 的属性，但不含 lazyLoad、lazyLoadMargin、children、class 与 style（预览样式请用 previewCls、previewStyle）。",
-                "en-US": "Preview options; false disables preview. The object accepts the ImagePreview props except lazyLoad, lazyLoadMargin, children, class and style (use previewCls and previewStyle to style the preview)."
+                "zh-CN": "预览配置，为 false 时禁用预览。对象接受 ImagePreview 的属性，但不含 lazyLoad、lazyLoadMargin、children、class 与 style（预览层的样式请用 `classNames.preview`、`styles.preview`）。",
+                "en-US": "Preview options; false disables preview. The object accepts the ImagePreview props except lazyLoad, lazyLoadMargin, children, class and style (use `classNames.preview` and `styles.preview` to style the preview layer)."
             },
             "setDownloadName": {
                 "zh-CN": "设置图片下载名称。",
@@ -195,13 +195,13 @@
                 "zh-CN": "预加载的步长。",
                 "en-US": "Step size of preloading."
             },
-            "previewCls": {
-                "zh-CN": "自定义预览层的类名。",
-                "en-US": "Custom class name of the preview layer."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `preview`（预览层，即 `role=\"dialog\"` 元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `preview` (the preview layer, the `role=\"dialog\"` element); merged with the built-in classes."
             },
-            "previewStyle": {
-                "zh-CN": "自定义预览层的样式，可以是样式对象（键用 kebab-case）或字符串。",
-                "en-US": "Custom style of the preview layer, as a style object (kebab-case keys) or a string."
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 `classNames`，值可以是样式对象（键用 kebab-case）或字符串。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`; each value is a style object (kebab-case keys) or a string."
             },
             "previewTitle": {
                 "zh-CN": "预览顶部标题，同时作为预览对话框的读屏名称；组内图片的 preview.previewTitle 优先。传函数时在预览打开后才调用；Image 的 preview 对象里的 JSX 标题写成函数，否则未打开预览时也会创建节点，服务端渲染下 hydration 出错。",

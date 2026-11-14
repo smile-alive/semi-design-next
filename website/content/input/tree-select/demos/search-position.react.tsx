@@ -59,10 +59,10 @@ const treeData = [
 export default function TreeSelectDemo() {
     return (
         <>
-            <TreeSelect searchPosition="trigger" style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} filterTreeNode placeholder="单选" />
+            <TreeSelect searchPosition="trigger" style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} filterTreeNode placeholder="单选" />
             <br />
             <br />
-            <TreeSelect searchPosition="trigger" style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} multiple filterTreeNode maxTagCount={2} placeholder="多选" />
+            <TreeSelect searchPosition="trigger" style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} multiple filterTreeNode maxTagCount={2} placeholder="多选" />
         </>
     );
 }

@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/popover/constants';
     import type { ArrowProps } from './interface.js';
 
-    let { position = '', arrowStyle, popStyle }: ArrowProps = $props();
+    let { position = '', arrowStyle, class: className, popStyle }: ArrowProps = $props();
 
     const vertical = $derived(position.startsWith('top') || position.startsWith('bottom'));
 
@@ -12,7 +12,7 @@
     const backgroundColor = $derived(arrowStyle?.backgroundColor ?? readStyle('background-color'));
 </script>
 
-<svg aria-hidden="true" class={cssClasses.ARROW} height="8" width="24" xmlns="http://www.w3.org/2000/svg">
+<svg aria-hidden="true" class={[cssClasses.ARROW, className]} height="8" width="24" xmlns="http://www.w3.org/2000/svg">
     {#if vertical}
         <path d="M0 0.5L0 1.5C4 1.5, 5.5 3, 7.5 5S10,8 12,8S14.5 7, 16.5 5S20,1.5 24,1.5L24 0.5L0 0.5z" style:fill={borderColor} style:opacity={arrowStyle?.borderOpacity} />
         <path d="M0 0L0 1C4 1, 5.5 2, 7.5 4S10,7 12,7S14.5  6, 16.5 4S20,1 24,1L24 0L0 0z" style:fill={backgroundColor} />

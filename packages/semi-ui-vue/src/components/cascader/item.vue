@@ -253,7 +253,7 @@
                     </span>
                     <template v-if="isBranch(item)">
                         <!-- the option carries the state as aria-busy; the spinner's own name would join the option's name -->
-                        <span v-if="state.loading" aria-hidden="true"><Spin :wrapperClassName="`${prefix}-spin-icon ${prefix}-icon-left`" /></span>
+                        <span v-if="state.loading" aria-hidden="true"><Spin :class="`${prefix}-spin-icon ${prefix}-icon-left`" /></span>
                         <slot v-else name="expandIcon">
                             <IconChevronRight :class="[`${prefix}-icon`, `${prefix}-icon-expand`, `${prefix}-icon-left`]" />
                         </slot>

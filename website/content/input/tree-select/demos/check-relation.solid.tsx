@@ -33,5 +33,5 @@ const treeData = [
 ];
 
 export default function TreeSelectDemo() {
-    return <TreeSelect multiple defaultValue={['Asia']} checkRelation="unRelated" style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} />;
+    return <TreeSelect multiple defaultValue={['Asia']} checkRelation="unRelated" style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} />;
 }

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useId, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
+import { type SliderPart, cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
 import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
 import '@fibrae/semi-foundation/components/slider/slider.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -27,7 +27,8 @@ export interface SliderProps extends BasicSliderProps, ElementProps<'div', 'defa
     /** Attached to each handle's native input */
     onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     style?: React.CSSProperties;
-    railStyle?: React.CSSProperties;
+    classNames?: Partial<Record<SliderPart, string>>;
+    styles?: Partial<Record<SliderPart, React.CSSProperties>>;
     /** Attached to the `.semi-slider-wrapper` div */
     ref?: React.Ref<HTMLDivElement>;
 }
@@ -76,7 +77,8 @@ export default function Slider(rawProps: SliderProps) {
         showArrow,
         className,
         showBoundary,
-        railStyle,
+        classNames,
+        styles,
         verticalReverse,
         'aria-label': ariaLabel,
         'aria-labelledby': ariaLabelledby,
@@ -228,7 +230,7 @@ export default function Slider(rawProps: SliderProps) {
             onMouseEnter={foundation.handleWrapperEnter}
             onMouseLeave={foundation.handleWrapperLeave}
         >
-            <div className={`${prefixCls}-rail`} style={railStyle} onClick={foundation.handleWrapClick} />
+            <div className={clsx(`${prefixCls}-rail`, classNames?.rail)} style={styles?.rail} onClick={foundation.handleWrapClick} />
             <div className={cssClasses.TRACK} style={trackStyle} onClick={foundation.handleWrapClick} />
             {markKeys.length > 0 && (
                 <div className={cssClasses.DOTS}>

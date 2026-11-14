@@ -10,10 +10,6 @@
                 "zh-CN": "对话框的可访问名称，传入后覆盖由 `title` 生成的名称。",
                 "en-US": "Accessible name of the dialog. When set, it takes the place of the name generated from `title`."
             },
-            "bodyStyle": {
-                "zh-CN": "内容区域的样式，类型为 `CSSProperties`，键使用 camelCase，如 `borderBottom`。",
-                "en-US": "Style of the content area, a `CSSProperties` object with camelCase keys such as `borderBottom`."
-            },
             "canVerticalSetWidth": {
                 "zh-CN": "`placement` 为 `top`、`bottom` 时 `width` 是否生效；默认这两种位置横向铺满。",
                 "en-US": "Whether `width` applies when `placement` is `top` or `bottom`. By default those sheets span the full width."
@@ -25,6 +21,10 @@
             "className": {
                 "zh-CN": "根元素的类名，根元素是 portal 内最外层的 `.semi-sidesheet` 元素。",
                 "en-US": "Class name of the root element, the outermost `.semi-sidesheet` element inside the portal."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与组件自带的类名合并；`content` 落在对话框元素（`.semi-sidesheet-inner`）上。",
+                "en-US": "Class names of the inner parts, keyed by `mask`, `content`, `header`, `body` and `footer`; merged with the built-in classes. `content` lands on the dialog element (`.semi-sidesheet-inner`)."
             },
             "closable": {
                 "zh-CN": "是否显示右上角的关闭按钮。",
@@ -50,10 +50,6 @@
                 "zh-CN": "指定弹层渲染到的父级 DOM，不传入时渲染到 `document.body`。自定义容器需要设置 `position: relative`；这会改变浮层的 DOM 位置，不改变视图位置。",
                 "en-US": "Parent element the sheet is rendered into. When omitted, it is rendered in `document.body`. A custom container needs `position: relative`; this changes where the sheet sits in the DOM, not where it is shown."
             },
-            "headerStyle": {
-                "zh-CN": "面板头部的样式，类型同 `bodyStyle`。",
-                "en-US": "Style of the header, of the same type as `bodyStyle`."
-            },
             "height": {
                 "zh-CN": "高度，`placement` 为 `top` 或 `bottom` 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时为 448。",
                 "en-US": "Height, used when `placement` is `top` or `bottom`. A number is in pixels; a string is any valid CSS length. 448 when omitted."
@@ -69,10 +65,6 @@
             "maskClosable": {
                 "zh-CN": "是否允许点击遮罩关闭面板。",
                 "en-US": "Whether clicking the mask closes the sheet."
-            },
-            "maskStyle": {
-                "zh-CN": "遮罩的样式，类型同 `bodyStyle`。",
-                "en-US": "Style of the mask, of the same type as `bodyStyle`."
             },
             "motion": {
                 "zh-CN": "是否开启动画。",
@@ -97,6 +89,10 @@
             "style": {
                 "zh-CN": "对话框元素（`.semi-sidesheet-inner`）的样式，与组件计算出的宽高合并，计算出的宽高优先。",
                 "en-US": "Style of the dialog element (`.semi-sidesheet-inner`), merged with the computed width and height, which take precedence."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`content` 与 `style` 一样，与组件计算出的宽高合并，计算出的宽高优先。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. Like `style`, `content` is merged with the computed width and height, which take precedence."
             },
             "title": {
                 "zh-CN": "面板标题；内容为空时不渲染标题，并作为对话框的可访问名称。",

@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import type { Node } from '@tiptap/pm/model';
+import type { AIChatInputPart } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import type { Attachment, Content, Setup, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { PopoverProps } from '@fibrae/semi-ui-svelte/popover/index';
 import type { TooltipProps } from '@fibrae/semi-ui-svelte/tooltip/index';
@@ -101,6 +102,7 @@ type NativeKeys = 'children' | 'placeholder' | 'onfocus' | 'onblur' | 'onpaste';
 export interface AIChatInputProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeKeys> {
     /** Overrides the content and attachment check of the send button */
     canSend?: boolean;
+    classNames?: Partial<Record<AIChatInputPart, ClassValue>>;
     /** Whether the content and attachments are cleared when `generating` turns on */
     clearContentOnGenerating?: boolean;
     /** Read once, when the editor is created */
@@ -123,9 +125,8 @@ export interface AIChatInputProps extends Omit<HTMLAttributes<HTMLDivElement>, N
     showUploadFile?: boolean;
     skillHotKey?: string;
     skills?: Skill[];
+    styles?: Partial<Record<AIChatInputPart, string>>;
     suggestions?: Suggestion[];
-    templatesCls?: string;
-    templatesStyle?: string;
     topSlotPosition?: 'top' | 'middle' | 'bottom';
     transformer?: Map<string, (obj: any) => any>;
     /** The tip text goes through the `uploadTip` snippet */

@@ -69,9 +69,13 @@
             },
             "insetLabel": { "zh-CN": "内嵌标签，显示在输入框内部。", "en-US": "Inset label, shown inside the input." },
             "insetLabelId": { "zh-CN": "内嵌标签的 id。", "en-US": "The id of the inset label." },
-            "inputStyle": {
-                "zh-CN": "原生 `input` 的样式，类型为 `CSSProperties`。",
-                "en-US": "Style of the native `input`, typed as `CSSProperties`."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `input`（原生 input 元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `input` (the native input element); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "keepFocus": { "zh-CN": "点击步进按钮时保持输入框聚焦。", "en-US": "Keeps the input focused when a step button is clicked." },
             "localeCode": {

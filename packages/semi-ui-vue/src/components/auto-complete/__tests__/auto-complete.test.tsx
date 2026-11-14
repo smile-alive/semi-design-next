@@ -120,8 +120,8 @@ describe('AutoComplete', () => {
         expect(screen.getByText('suffix content')).toHaveClass('suffix');
     });
 
-    it('【dropdownClassName & dropdownStyle】自定义 dropdownClassName 与 dropdownStyle', async () => {
-        await renderAc({ dropdownClassName: 'ddc', dropdownStyle: { color: 'red' }, defaultOpen: true });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        await renderAc({ classNames: { dropdown: 'ddc' }, styles: { dropdown: { color: 'red' } }, defaultOpen: true });
         const list = document.querySelector(`.${optionCls}-list.ddc`);
         expect(list).not.toBeNull();
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
@@ -1410,12 +1410,12 @@ describe('AutoComplete Vue 写法', () => {
         expect(getFocusedOption()).toBe(getOptions()[2]);
     });
 
-    it('maxHeight 字符串原样使用；dropdownStyle 与 maxHeight 合并且后者优先', async () => {
-        await renderAc({ data: stringData, defaultOpen: true, maxHeight: '50vh', dropdownStyle: { color: 'red' } });
+    it('maxHeight 字符串原样使用；styles.dropdown 与 maxHeight 合并且后者优先', async () => {
+        await renderAc({ data: stringData, defaultOpen: true, maxHeight: '50vh', styles: { dropdown: { color: 'red' } } });
         expect(getList()?.style.maxHeight).toBe('50vh');
         expect(getList()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         document.body.innerHTML = '';
-        await renderAc({ data: stringData, defaultOpen: true, maxHeight: 100, dropdownStyle: { maxHeight: '10px' } });
+        await renderAc({ data: stringData, defaultOpen: true, maxHeight: 100, styles: { dropdown: { maxHeight: '10px' } } });
         expect(getList()?.style.maxHeight).toBe('10px');
     });
 

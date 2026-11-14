@@ -31,7 +31,6 @@ export interface SliderProps {
     showArrow?: boolean;
     className?: string;
     showBoundary?: boolean;
-    railStyle?: Record<string, any>;
     verticalReverse?: boolean;
     'aria-label'?: string;
     'aria-labelledby'?: string;

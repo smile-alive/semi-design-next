@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | adaptiveTip | 适应页面操作按钮的提示。 | `string` | - |
 | children | 要预览的 Image 组件。 | `JSX.Element` | - |
+| classNames | 内部各部位的类名，键为 `preview`（预览层，即 `role="dialog"` 元素），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
 | closable | 是否显示关闭按钮。 | `boolean` | `true` |
 | closeOnEsc | 按下 Esc 键时是否关闭预览。 | `boolean` | - |
 | crossOrigin | 透传给预览图片的原生 img 标签的 crossorigin。 | `'anonymous' \| 'use-credentials'` | - |
@@ -37,8 +38,6 @@ import ApiType from '#/components/ApiType.astro';
 | originTip | 原始尺寸操作按钮的提示。 | `string` | - |
 | preLoad | 是否开启预加载。 | `boolean` | - |
 | preLoadGap | 预加载的步长。 | `number` | - |
-| previewCls | 自定义预览层的类名。 | `string` | - |
-| previewStyle | 自定义预览层的样式，可以是样式对象（键用 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
 | previewTitle | 预览顶部标题，同时作为预览对话框的读屏名称；组内图片的 preview.previewTitle 优先。传函数时在预览打开后才调用；Image 的 preview 对象里的 JSX 标题写成函数，否则未打开预览时也会创建节点，服务端渲染下 hydration 出错。 | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | - |
 | prevTip | 上一张操作按钮的提示，同时作为读屏名称；未设置时取语言包的文案。 | `string` | - |
 | renderCloseIcon | 自定义关闭图标，可以是 JSX 元素，或返回 JSX 元素的函数。 | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | - |
@@ -50,6 +49,7 @@ import ApiType from '#/components/ApiType.astro';
 | setDownloadName | 设置图片下载文件名，接收图片地址并返回文件名。 | <ApiType detail={"(src: string) => string"}>Type</ApiType> | - |
 | showTooltip | 是否展示底部操作区的提示。 | `boolean` | - |
 | src | 要预览的图片地址列表。包裹 Image 时与各 Image 登记的预览图合并，src 中的图片排在前面。 | `string \| string[]` | `[]` |
+| styles | 内部各部位的样式，键同 `classNames`，值可以是样式对象（键用 kebab-case）或字符串。 | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | viewerVisibleDelay | 隐藏预览操作按钮前的无操作时长，单位为毫秒。 | `number` | - |
 | visible | 受控属性，是否预览。 | `boolean` | - |
 | zIndex | 预览层层级。 | `number` | - |

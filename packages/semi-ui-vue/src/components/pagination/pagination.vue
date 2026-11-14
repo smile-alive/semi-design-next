@@ -186,9 +186,9 @@
                     :allowCreate="false"
                     :aria-label="text.pageSizeSelector"
                     :changeWithObject="false"
+                    :classNames="{ dropdown: `${prefix}-select-dropdown` }"
                     clickToHide
                     :disabled="props.disabled"
-                    :dropdownClassName="`${prefix}-select-dropdown`"
                     :filter="false"
                     :modelValue="state.pageSize"
                     :optionList="sizeOptions"

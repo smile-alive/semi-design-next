@@ -2,18 +2,18 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性            | 说明                                                                             | 类型                                                         | 默认值                                      |
-| --------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------- |
-| alt             | 图像描述，同时作为可预览缩略图的读屏名称。                                       | `string`                                                     | `semiGlobalDefault("Image", "alt")`         |
-| crossOrigin     | 透传给原生 img 标签的 crossorigin。                                              | `"anonymous" \| "use-credentials"`                           | `semiGlobalDefault("Image", "crossOrigin")` |
-| fallback        | 加载失败时显示的容错图片地址；自定义内容使用 fallback 插槽，插槽优先。           | `string`                                                     | `semiGlobalDefault("Image", "fallback")`    |
-| height          | 图片显示高度，数值按 px 处理。                                                   | `string \| number`                                           | `semiGlobalDefault("Image", "height")`      |
-| imgCls          | 自定义样式类名，透传给 img 节点。                                                | `string`                                                     | `semiGlobalDefault("Image", "imgCls")`      |
-| imgStyle        | 自定义样式，透传给 img 节点。                                                    | `StyleValue`                                                 | `semiGlobalDefault("Image", "imgStyle")`    |
-| preview         | 预览配置，为 false 时禁用预览；对象只放数据与回调，自定义内容使用 Image 的插槽。 | `boolean \| ImagePreviewProps`                               | `true`                                      |
-| setDownloadName | 设置图片下载名称。                                                               | <ApiType detail={"((src: string) => string)"}>Type</ApiType> | `undefined`                                 |
-| src             | 图片获取地址。                                                                   | `string`                                                     | `semiGlobalDefault("Image", "src")`         |
-| width           | 图片显示宽度，数值按 px 处理。                                                   | `string \| number`                                           | `semiGlobalDefault("Image", "width")`       |
+| 属性            | 说明                                                                             | 类型                                                                              | 默认值                                      |
+| --------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------- |
+| alt             | 图像描述，同时作为可预览缩略图的读屏名称。                                       | `string`                                                                          | `semiGlobalDefault("Image", "alt")`         |
+| classNames      | 内部各部位的类名，键为 `img`（内部的 img 节点），与组件自带的类名合并。          | <ApiType detail={"Partial\u003cRecord\u003c\"img\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Image", "classNames")`  |
+| crossOrigin     | 透传给原生 img 标签的 crossorigin。                                              | `"anonymous" \| "use-credentials"`                                                | `semiGlobalDefault("Image", "crossOrigin")` |
+| fallback        | 加载失败时显示的容错图片地址；自定义内容使用 fallback 插槽，插槽优先。           | `string`                                                                          | `semiGlobalDefault("Image", "fallback")`    |
+| height          | 图片显示高度，数值按 px 处理。                                                   | `string \| number`                                                                | `semiGlobalDefault("Image", "height")`      |
+| preview         | 预览配置，为 false 时禁用预览；对象只放数据与回调，自定义内容使用 Image 的插槽。 | `boolean \| ImagePreviewProps`                                                    | `true`                                      |
+| setDownloadName | 设置图片下载名称。                                                               | <ApiType detail={"((src: string) => string)"}>Type</ApiType>                      | `undefined`                                 |
+| src             | 图片获取地址。                                                                   | `string`                                                                          | `semiGlobalDefault("Image", "src")`         |
+| styles          | 内部各部位的内联样式，键同 classNames。                                          | <ApiType detail={"Partial\u003cRecord\u003c\"img\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Image", "styles")`      |
+| width           | 图片显示宽度，数值按 px 处理。                                                   | `string \| number`                                                                | `semiGlobalDefault("Image", "width")`       |
 
 **Events**
 

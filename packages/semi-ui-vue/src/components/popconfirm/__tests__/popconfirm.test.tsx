@@ -69,6 +69,17 @@ describe('Popconfirm', () => {
         expect(view.emitted()['update:visible']).toEqual([[true]]);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        renderPopconfirm({ classNames: { content: 'my-content', arrow: 'my-arrow' }, styles: { content: { order: 2 }, arrow: { backgroundColor: 'red' } }, showArrow: true, visible: true });
+        await cardShown();
+        const popover = document.querySelector('.semi-popover');
+        expect(popover).toHaveClass('my-content');
+        expect(popover).toHaveStyle({ order: '2' });
+        const arrow = document.querySelector('.semi-popover-icon-arrow');
+        expect(arrow).toHaveClass('my-arrow');
+        expect(arrow?.querySelectorAll<SVGPathElement>('path')[1].style.fill).toBe('red');
+    });
+
     it('disabled 时不渲染卡片，触发元素仍在，翻转后可打开', async () => {
         const view = renderPopconfirm({ defaultVisible: true, disabled: true });
         expect(card()).toBeNull();

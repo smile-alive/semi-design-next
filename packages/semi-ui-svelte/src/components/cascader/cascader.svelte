@@ -70,8 +70,8 @@
         autoAdjustOverflow = defaults('autoAdjustOverflow'),
         position = defaults('position'),
         stopPropagation = defaults('stopPropagation', true),
-        dropdownClassName = defaults('dropdownClassName'),
-        dropdownStyle = defaults('dropdownStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         preventScroll = defaults('preventScroll'),
         virtualizeInSearch = defaults('virtualizeInSearch'),
         onChange,
@@ -685,7 +685,7 @@
 {/snippet}
 
 {#snippet panel()}
-    <div bind:this={contentEl} class={[dropdownClassName, `${cls}-popover`]} style={dropdownStyle} onfocusin={foundation.handleFocusEnter} onfocusout={handleFocusOut} onkeydown={handleContentKeyDown} onmousedown={keepFocusOnPress}>
+    <div bind:this={contentEl} class={[`${cls}-popover`, classNames?.dropdown]} style={styles?.dropdown} onfocusin={foundation.handleFocusEnter} onfocusout={handleFocusOut} onkeydown={handleContentKeyDown} onmousedown={keepFocusOnPress}>
         {@render topSlot?.()}
         <Item
             activeKeys={view.activeKeys}

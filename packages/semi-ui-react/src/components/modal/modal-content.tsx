@@ -2,7 +2,7 @@ import type React from 'react';
 import { type CSSProperties, type ReactNode, useId, useState } from 'react';
 import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+import { cssClasses, type ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
 import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import { IconClose } from '@fibrae/semi-icons-react';
@@ -26,6 +26,8 @@ export interface ModalContentReactProps extends ModalContentProps, React.AriaAtt
     ref?: React.Ref<HTMLDivElement>;
     // role and every aria-* land on the dialog element (F12); the other unknown props land on the outer div
     role?: 'dialog' | 'alertdialog';
+    classNames?: Partial<Record<ModalPart, string>>;
+    styles?: Partial<Record<ModalPart, CSSProperties>>;
 }
 
 class ModalContentRuntime {
@@ -53,7 +55,8 @@ export default function ModalContent(props: ModalContentReactProps) {
         contentExtraProps,
         children,
         modalRender,
-        bodyStyle,
+        classNames,
+        styles,
         centered,
         className,
         closable,
@@ -66,7 +69,6 @@ export default function ModalContent(props: ModalContentReactProps) {
         mask,
         maskClosable,
         maskFixed,
-        maskStyle,
         inBody,
         preventScroll,
         size,
@@ -127,7 +129,7 @@ export default function ModalContent(props: ModalContentReactProps) {
         headerNode = header;
     } else if (hasTitle) {
         headerNode = (
-            <div className={`${cssClasses.DIALOG}-header`}>
+            <div className={clsx(`${cssClasses.DIALOG}-header`, classNames?.header)} style={styles?.header}>
                 {iconNode}
                 {/* h5 look, h2 outline: the sheet's title is level 2 as well */}
                 <Typography.Title id={`${dialogId}-title`} component="h2" className={`${cssClasses.DIALOG}-title`} heading={5} x-semi-prop="title">
@@ -138,10 +140,10 @@ export default function ModalContent(props: ModalContentReactProps) {
         );
     }
 
-    const bodyCls = clsx(`${cssClasses.DIALOG}-body`, { [`${cssClasses.DIALOG}-withIcon`]: icon });
+    const bodyCls = clsx(`${cssClasses.DIALOG}-body`, { [`${cssClasses.DIALOG}-withIcon`]: icon }, classNames?.body);
 
     const bodyNode = (
-        <div className={bodyCls} style={bodyStyle} x-semi-prop="children">
+        <div className={bodyCls} style={styles?.body} x-semi-prop="children">
             {children}
         </div>
     );
@@ -166,10 +168,16 @@ export default function ModalContent(props: ModalContentReactProps) {
         <div
             {...dialogAria}
             ref={attachDialog}
-            className={clsx(`${cssClasses.DIALOG}-content`, contentClassName, {
-                [`${cssClasses.DIALOG}-content-fullScreen`]: isFullScreen,
-                [`${cssClasses.DIALOG}-content-height-set`]: height || style?.height,
-            })}
+            className={clsx(
+                `${cssClasses.DIALOG}-content`,
+                contentClassName,
+                {
+                    [`${cssClasses.DIALOG}-content-fullScreen`]: isFullScreen,
+                    [`${cssClasses.DIALOG}-content-height-set`]: height || style?.height,
+                },
+                classNames?.content
+            )}
+            style={styles?.content}
             // no default description: a rich body would be read out whole
             aria-describedby={ariaDescribedby}
             aria-label={ariaLabel}
@@ -192,7 +200,7 @@ export default function ModalContent(props: ModalContentReactProps) {
                 </div>
             )}
             {hasContent(footer) && (
-                <div className={`${cssClasses.DIALOG}-footer`} x-semi-prop="footer">
+                <div className={clsx(`${cssClasses.DIALOG}-footer`, classNames?.footer)} style={styles?.footer} x-semi-prop="footer">
                     {footer}
                 </div>
             )}
@@ -211,7 +219,7 @@ export default function ModalContent(props: ModalContentReactProps) {
                 [`${cssClasses.DIALOG}-fixed`]: maskFixed,
             })}
         >
-            {mask && <div key="mask" {...maskExtraProps} className={clsx(`${cssClasses.DIALOG}-mask`, maskClassName)} style={maskStyle} />}
+            {mask && <div key="mask" {...maskExtraProps} className={clsx(`${cssClasses.DIALOG}-mask`, maskClassName, classNames?.mask)} style={styles?.mask} />}
             <div className={clsx(`${cssClasses.DIALOG}-wrap`, { [`${cssClasses.DIALOG}-wrap-center`]: centered })} role="none" onClick={maskClosable ? (e) => foundation.handleMaskClick(e) : undefined} onMouseUp={maskClosable ? () => foundation.handleMaskMouseUp() : undefined}>
                 <div
                     key="dialog-element"

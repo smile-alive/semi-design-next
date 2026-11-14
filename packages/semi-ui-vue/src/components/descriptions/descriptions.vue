@@ -61,7 +61,7 @@
                 <template v-if="props.layout === 'horizontal'">
                     <tr v-for="(columns, rowIndex) in horizontalRows()" :key="rowIndex">
                         <template v-for="column in columns" :key="column.key">
-                            <DescriptionsItem v-if="column.kind === 'data'" :keyStyle="column.data.keyStyle" :span="column.span">
+                            <DescriptionsItem v-if="column.kind === 'data'" :classNames="column.data.classNames" :span="column.span" :styles="column.data.styles">
                                 <template #itemKey>
                                     <slot :index="column.index" :item="column.data" name="itemKey">{{ column.data.key }}</slot>
                                 </template>
@@ -74,7 +74,7 @@
                     </tr>
                 </template>
                 <template v-else-if="props.data.length">
-                    <DescriptionsItem v-for="(item, index) in props.data" :key="index" :hidden="item.hidden" :keyStyle="item.keyStyle" :span="item.span">
+                    <DescriptionsItem v-for="(item, index) in props.data" :key="index" :classNames="item.classNames" :hidden="item.hidden" :span="item.span" :styles="item.styles">
                         <template #itemKey>
                             <slot :index="index" :item="item" name="itemKey">{{ item.key }}</slot>
                         </template>

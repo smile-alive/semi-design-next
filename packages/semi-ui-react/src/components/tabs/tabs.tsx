@@ -65,8 +65,8 @@ function Tabs(rawProps: TabsProps) {
         activeKey: propsActiveKey,
         children,
         className,
+        classNames,
         collapsible,
-        contentStyle,
         defaultActiveKey,
         keepDOM,
         lazyRender,
@@ -76,9 +76,8 @@ function Tabs(rawProps: TabsProps) {
         showRestInDropdown,
         size,
         style,
-        tabBarClassName,
+        styles,
         tabBarExtraContent,
-        tabBarStyle,
         tabList,
         tabPaneMotion,
         tabPosition,
@@ -87,7 +86,6 @@ function Tabs(rawProps: TabsProps) {
         preventScroll,
         more,
         onVisibleTabsChange,
-        visibleTabsStyle,
         arrowPosition,
         renderArrow,
         dropdownProps,
@@ -177,13 +175,15 @@ function Tabs(rawProps: TabsProps) {
 
     const tabBarProps: TabBarProps = {
         activeKey,
-        className: tabBarClassName,
+        className: classNames?.tabBar,
+        classNames: { visibleTabs: classNames?.visibleTabs },
         collapsible,
         list: panes,
         onTabClick: handleTabClick,
         showRestInDropdown,
         size,
-        style: tabBarStyle,
+        style: styles?.tabBar,
+        styles: { visibleTabs: styles?.visibleTabs },
         tabBarExtraContent,
         tabPosition,
         type,
@@ -191,7 +191,6 @@ function Tabs(rawProps: TabsProps) {
         handleKeyDown: foundation.handleKeyDown,
         more,
         onVisibleTabsChange,
-        visibleTabsStyle,
         arrowPosition,
         renderArrow,
         dropdownProps,
@@ -227,10 +226,14 @@ function Tabs(rawProps: TabsProps) {
             <TabsContext value={contextValue}>
                 {tabBar}
                 <div
-                    className={clsx(cssClasses.TABS_CONTENT, {
-                        [`${cssClasses.TABS_CONTENT}-${tabPosition}`]: tabPosition,
-                    })}
-                    style={contentStyle}
+                    className={clsx(
+                        cssClasses.TABS_CONTENT,
+                        {
+                            [`${cssClasses.TABS_CONTENT}-${tabPosition}`]: tabPosition,
+                        },
+                        classNames?.content
+                    )}
+                    style={styles?.content}
                     {...tabListPanelProps}
                 >
                     {content}

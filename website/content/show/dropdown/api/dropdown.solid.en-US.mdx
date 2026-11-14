@@ -13,11 +13,11 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether the menu flips to another side when it would be clipped. Defaults to true. | `boolean` | - |
 | children | The trigger. A function, such as `{(getTriggerProps) => <Button {...getTriggerProps()} />}`, receives getTriggerProps, whose result is spread onto the element. Other content is wrapped in a span, and text or several nodes respond to the keyboard as well. | <ApiType detail={"JSX.Element \u007c ((getTriggerProps: GetDropdownTriggerProps) => JSX.Element)"}>Type</ApiType> | - |
 | class | Class name of the popup's outer `.semi-dropdown-wrapper` element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `content` (the menu container `.semi-dropdown`) and `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, string>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click inside the popup closes it. | `boolean` | - |
 | clickTriggerToHide | Whether a click on the trigger closes an open menu. | `boolean` | - |
 | closeOnEsc | Whether Esc on the trigger or in the popup closes the menu. With trigger custom it only calls onEscKeyDown, and the caller decides whether to close. | `boolean` | `true` |
 | condition | Whether the trigger may show the menu. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the menu. Changing it from true to false closes an open menu at once. | `boolean` | - |
-| contentClassName | Class name of the menu container `.semi-dropdown`. | `string` | - |
 | disableFocusListener | Whether keyboard focus is ignored when trigger is hover. Defaults to false. | `boolean` | - |
 | guardFocus | Whether Tab cycles inside the popup while focus is in it. Defaults to false. | `boolean` | - |
 | keepDOM | Whether the menu's DOM is kept instead of destroyed when it closes. Defaults to false. | `boolean` | - |
@@ -41,9 +41,9 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu. | `number \| { x: number; y: number }` | - |
 | stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. Defaults to false. | `boolean` | - |
 | style | Style of the menu container `.semi-dropdown`, as an object with kebab-case keys such as `'margin-top'`, or a string. | `JSX.CSSProperties \| string` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`, as an object with kebab-case keys or a string; `content` is applied after `style`. | <ApiType detail={"Partial\u003cRecord\u003cDropdownPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | trigger | What shows the menu: hover, focus, click, custom or contextMenu. With custom, visible alone decides. | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | Whether the menu is shown. Used with trigger custom. When given, this value decides, and the trigger, a click outside and Esc only request a change through onVisibleChange. | `boolean` | - |
-| wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | - |
 | wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | - |
 | wrapWhenSpecial | Whether a special trigger, such as a disabled or loading Button, is wrapped in a span so that it still triggers the menu. Defaults to true. | `boolean` | - |
 

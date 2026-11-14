@@ -70,13 +70,13 @@ export default function TreeSelectDemo() {
             <Switch aria-labelledby="treeselect-searchable-filtered-only" checked={showFilteredOnly()} onChange={(checked) => setShowFilteredOnly(checked)} size="small" />
             <br />
             <br />
-            <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} filterTreeNode showFilteredOnly={showFilteredOnly()} placeholder="单选可搜索的" onSearch={onSearch} />
+            <TreeSelect style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} filterTreeNode showFilteredOnly={showFilteredOnly()} placeholder="单选可搜索的" onSearch={onSearch} />
             <br />
             <br />
-            <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} multiple filterTreeNode maxTagCount={2} showFilteredOnly={showFilteredOnly()} placeholder="多选可搜索的" searchPlaceholder="请输入关键字开始搜索" onSearch={onSearch} />
+            <TreeSelect style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} multiple filterTreeNode maxTagCount={2} showFilteredOnly={showFilteredOnly()} placeholder="多选可搜索的" searchPlaceholder="请输入关键字开始搜索" onSearch={onSearch} />
             <br />
             <br />
-            <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} multiple filterTreeNode maxTagCount={2} showFilteredOnly={showFilteredOnly()} placeholder="搜索框autofocus" searchPlaceholder="autofocus" searchAutoFocus onSearch={onSearch} />
+            <TreeSelect style={{ width: '300px' }} styles={{ dropdown: { 'max-height': '400px', overflow: 'auto' } }} treeData={treeData} multiple filterTreeNode maxTagCount={2} showFilteredOnly={showFilteredOnly()} placeholder="搜索框autofocus" searchPlaceholder="autofocus" searchAutoFocus onSearch={onSearch} />
         </>
     );
 }

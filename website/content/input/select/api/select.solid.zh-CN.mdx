@@ -12,15 +12,14 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | 挂载后是否自动聚焦。 | `boolean` | - |
 | borderless | 是否使用无边框样式。 | `boolean` | `false` |
 | children | 选项，直接子元素必须是 `Select.Option` 或 `Select.OptGroup`。`optionList` 非空时优先于 children；分组只能用 `Select.OptGroup` 声明。 | `JSX.Element` | - |
+| classNames | 内部各部位的类名，键为 `dropdown`（下拉弹出层），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮的图标，showClear 为 true 时有效。 | `JSX.Element` | - |
 | clickToHide | 下拉列表已展开时，点击选择框是否收起它。 | `boolean` | - |
 | defaultActiveFirstOption | 没有选中值时，打开下拉列表是否默认高亮第一个未禁用的选项（按 Enter 可直接选中）。已有选中值时总是高亮第一个已选的选项。 | `boolean` | `true` |
 | defaultOpen | 是否默认展开下拉列表。 | `boolean` | `false` |
 | defaultValue | 初始选中的值，只在挂载时读取；多选时为数组。设置 onChangeWithObject 时为选项对象，须含 value 与 label。 | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | - |
 | disabled | 是否禁用。未设置时使用所在 InputGroup 的值。 | `boolean` | - |
-| dropdownClassName | 下拉弹出层的类名。 | `string` | - |
 | dropdownMatchSelectWidth | 下拉弹出层的最小宽度是否等于选择框。 | `boolean` | `true` |
-| dropdownStyle | 下拉弹出层的样式，例如设置 width。根元素上的 `style` 不会传给弹出层。 | `JSX.CSSProperties \| string` | - |
 | ellipsisTrigger | 多选并设置 maxTagCount 时，宽度不足是否截断最后一个标签的内容。开启后有一定性能损耗，不建议在大表单中使用。 | `boolean` | `false` |
 | emptyContent | 没有选项可显示时的内容，传 null 则不显示下拉列表的空状态。 | `JSX.Element` | - |
 | expandRestTagsOnClick | 多选并设置 maxTagCount 时，下拉列表展开期间是否显示全部标签。 | `boolean` | `false` |
@@ -70,6 +69,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | 大小，可选 small、default、large。所在 InputGroup 的 size 优先于它。 | `SelectSize` | - |
 | spacing | 弹出层与选择框的距离，单位为像素。 | `number \| { x: number; y: number }` | - |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
+| styles | 内部各部位的样式，键同 `classNames`，值可以是键为 kebab-case 的对象，也可以是字符串，例如给 `dropdown` 设置 width。根元素上的 `style` 不会传给弹出层。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | suffix | 选择框的后缀。文本或图标会自动带上左右间隔，自定义元素的左右间隔为 0。 | `JSX.Element` | - |
 | triggerRender | 自定义触发器的渲染。参数含 value、inputValue、onSearch、onClear、onRemove、disabled、placeholder 与 componentProps。 | <ApiType detail={"(props: TriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
 | validateStatus | 校验状态，可选 default、warning、error，只影响背景色等样式。 | `ValidateStatus` | - |

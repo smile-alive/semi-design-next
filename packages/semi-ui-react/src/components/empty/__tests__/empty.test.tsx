@@ -38,11 +38,12 @@ describe('Empty', () => {
         expect(vertical).toHaveClass('semi-empty-vertical');
     });
 
-    it('image 与 imageStyle', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
         const imgUrl = 'abc';
         const props = {
             image: <div className="test-img">semi design</div>,
-            imageStyle: { width: '150px' },
+            classNames: { image: 'img-cls' },
+            styles: { image: { width: '150px' } },
         };
         const { container } = render(
             <div>
@@ -54,6 +55,7 @@ describe('Empty', () => {
         const [nodeImage, urlImage, illustrationImage] = container.querySelectorAll('.semi-empty-image');
         expect(nodeImage.querySelector('.test-img')).not.toBeNull();
         expect(nodeImage).toHaveStyle({ width: '150px' });
+        expect(nodeImage).toHaveClass('semi-empty-image', 'img-cls');
         expect(urlImage.querySelector('img')).toHaveAttribute('src', imgUrl);
         expect(illustrationImage.querySelector('svg')).not.toBeNull();
     });

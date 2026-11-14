@@ -24,10 +24,10 @@
         role: semiGlobalDefault('Popover', 'role'),
         mouseEnterDelay: semiGlobalDefault('Popover', 'mouseEnterDelay'),
         mouseLeaveDelay: semiGlobalDefault('Popover', 'mouseLeaveDelay'),
-        contentClassName: semiGlobalDefault('Popover', 'contentClassName'),
+        classNames: semiGlobalDefault('Popover', 'classNames'),
         spacing: semiGlobalDefault('Popover', 'spacing'),
         stopPropagation: semiGlobalDefault('Popover', 'stopPropagation'),
-        arrowStyle: semiGlobalDefault('Popover', 'arrowStyle'),
+        styles: semiGlobalDefault('Popover', 'styles'),
         arrowPointAtCenter: semiGlobalDefault('Popover', 'arrowPointAtCenter'),
         clickToHide: semiGlobalDefault('Popover', 'clickToHide'),
         disableArrowKeyDown: semiGlobalDefault('Popover', 'disableArrowKeyDown'),
@@ -45,7 +45,7 @@
     const tooltip = useTemplateRef('tooltip');
 
     const tooltipProps = computed<TooltipProps>(() => {
-        const { contentClassName: _class, arrowStyle: _arrow, role, spacing, stopPropagation, ...shared } = props;
+        const { classNames: _classNames, styles: _styles, role, spacing, stopPropagation, ...shared } = props;
         return {
             ...shared,
             role: getPopoverRole(role, props.trigger),
@@ -83,14 +83,14 @@
     >
         <slot />
         <template #content="slotProps">
-            <div :class="[cssClasses.PREFIX, props.contentClassName]">
+            <div :class="[cssClasses.PREFIX, props.classNames?.content]" :style="props.styles?.content">
                 <div :class="`${cssClasses.PREFIX}-content`">
                     <slot name="content" v-bind="slotProps" />
                 </div>
             </div>
         </template>
         <template #arrow>
-            <Arrow :arrowStyle="props.arrowStyle" :popStyle="popupStyle($attrs.style)" :position="props.position" />
+            <Arrow :arrowStyle="props.styles?.arrow" :class="props.classNames?.arrow" :popStyle="popupStyle($attrs.style)" :position="props.position" />
         </template>
     </Tooltip>
 </template>

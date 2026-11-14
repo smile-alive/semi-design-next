@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, h, type StyleValue, useTemplateRef } from 'vue';
+    import { type ClassValue, computed, h, type StyleValue, useTemplateRef } from 'vue';
     import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/components/chat/inputbox-foundation';
     import { useFoundation } from '@fibrae/semi-ui-vue/base';
     import type { FileItem } from '@fibrae/semi-ui-vue/upload/index';
@@ -22,7 +22,7 @@
         pasteUpload: boolean;
         uploadProps?: ChatProps['uploadProps'];
         uploadTipProps?: ChatProps['uploadTipProps'];
-        inputBoxCls?: string;
+        inputBoxClass?: ClassValue;
         inputBoxStyle?: StyleValue;
     }
 
@@ -100,7 +100,7 @@
     const slotProps = (): ChatInputAreaSlotProps => ({
         defaultNode: h(
             InputBoxLayout,
-            { class: props.inputBoxCls, style: props.inputBoxStyle, onInnerClick: focusInput },
+            { class: props.inputBoxClass, style: props.inputBoxStyle, onInnerClick: focusInput },
             {
                 clear: props.showClearContext ? clearNode : undefined,
                 upload: uploadMounted.value ? uploadNode : undefined,
@@ -122,7 +122,7 @@
 
 <template>
     <slot v-if="$slots.inputArea" name="inputArea" v-bind="slotProps()" />
-    <InputBoxLayout v-else :class="props.inputBoxCls" :style="props.inputBoxStyle" @innerClick="focusInput">
+    <InputBoxLayout v-else :class="props.inputBoxClass" :style="props.inputBoxStyle" @innerClick="focusInput">
         <template v-if="props.showClearContext" #clear>
             <ClearButton @click="clear" />
         </template>

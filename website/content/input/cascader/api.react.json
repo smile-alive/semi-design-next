@@ -66,13 +66,13 @@
                 "zh-CN": "自定义回填内容。单选时参数为路径上各级节点 label 的数组，返回回填内容；多选时参数为节点的 Entity 与索引，返回该标签的内容。未设置时，单选以 `separator` 连接各级 label。",
                 "en-US": "Custom trigger content. In single mode it receives the array of labels on the path and returns the trigger content; in multiple mode it receives the Entity of a node and its index, and returns the content of its tag. When not set, single mode joins the labels with `separator`."
             },
-            "dropdownStyle": {
-                "zh-CN": "下拉菜单的内联样式。",
-                "en-US": "Inline style of the dropdown menu."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（下拉菜单），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown menu); merged with the built-in classes."
             },
-            "dropdownClassName": {
-                "zh-CN": "下拉菜单的类名。",
-                "en-US": "Class name of the dropdown menu."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "emptyContent": {
                 "zh-CN": "没有可选数据或搜索无结果时展示的内容。未设置时使用语言包中的「暂无数据」，传入 `null` 则不显示。",

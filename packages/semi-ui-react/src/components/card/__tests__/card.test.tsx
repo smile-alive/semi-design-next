@@ -145,7 +145,7 @@ describe('Card', () => {
 
     it('按顺序渲染 header、cover、body 与 footer，并应用各自的样式', () => {
         const { container } = render(
-            <Card bodyStyle={{ color: 'blue' }} footerStyle={{ color: 'yellow' }} headerStyle={{ color: 'green' }} style={{ color: 'red' }} title="t" cover={<img alt="c" />} footer="f">
+            <Card style={{ color: 'red' }} styles={{ body: { color: 'blue' }, footer: { color: 'yellow' }, header: { color: 'green' } }} title="t" cover={<img alt="c" />} footer="f">
                 body
             </Card>
         );
@@ -156,6 +156,21 @@ describe('Card', () => {
         expect(card.children[2]).toHaveStyle({ color: 'rgb(0, 0, 255)' });
         expect(card.children[2]).toHaveTextContent(/^body$/);
         expect(card.children[3]).toHaveStyle({ color: 'rgb(255, 255, 0)' });
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'extra', 'cover', 'body', 'actions', 'footer'] as const;
+        const selectors = { header: 'header', title: 'header-wrapper-title', extra: 'header-wrapper-extra', cover: 'cover', body: 'body', actions: 'body-actions', footer: 'footer' };
+        const { container } = render(
+            <Card classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} title="t" actions={['a']} cover={<img alt="c" />} footer="f" headerExtraContent="e">
+                body
+            </Card>
+        );
+        for (const part of parts) {
+            const el = container.querySelector(`.${prefixCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('header 优先于 title 与 headerExtraContent', () => {

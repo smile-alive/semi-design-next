@@ -1,8 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| bodyStyle | 导航项列表的自定义样式。 | `StyleValue` | `semiGlobalDefault("Nav", "bodyStyle")` |
+| classNames | 内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"body\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Nav", "classNames")` |
 | defaultIsCollapsed | 默认是否处于收起状态，仅 mode 为 vertical 时有效。 | `boolean` | `semiGlobalDefault("Nav", "defaultIsCollapsed")` |
 | defaultOpenKeys | 初始展开的子导航 itemKey 数组，仅 mode 为 vertical 且侧边栏处于展开状态时有效。 | `ItemKey[]` | `semiGlobalDefault("Nav", "defaultOpenKeys")` |
 | defaultSelectedKeys | 初始选中的导航项 itemKey 数组。 | `ItemKey[]` | `semiGlobalDefault("Nav", "defaultSelectedKeys")` |
@@ -14,6 +16,7 @@
 | mode | 导航方向，可选 vertical 或 horizontal。 | `Mode` | `"vertical"` |
 | openKeys | 展开的子导航 itemKey 数组的受控值，配合 v-model:openKeys 使用，仅 mode 为 vertical 且侧边栏处于展开状态时有效；null 表示受控的空值。 | `ItemKey[] \| null` | `semiGlobalDefault("Nav", "openKeys")` |
 | selectedKeys | 选中的导航项 itemKey 数组的受控值，配合 v-model:selectedKeys 使用；null 表示受控的空值。 | `ItemKey[] \| null` | `semiGlobalDefault("Nav", "selectedKeys")` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003c\"body\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Nav", "styles")` |
 | subDropdownProps | items 生成的子导航在水平模式或竖直收起状态下弹层 Dropdown 的参数。 | `SubDropdownProps` | `semiGlobalDefault("Nav", "subDropdownProps")` |
 | subNavCloseDelay | 子导航浮层关闭的延迟，单位为毫秒，收起或水平模式下有效。 | `number` | `numbers.DEFAULT_SUBNAV_CLOSE_DELAY` |
 | subNavMotion | 子导航折叠动画。 | `boolean` | `true` |

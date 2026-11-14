@@ -56,9 +56,9 @@
         condition = defaults('condition'),
         mouseEnterDelay = defaults('mouseEnterDelay'),
         mouseLeaveDelay = defaults('mouseLeaveDelay'),
-        contentClassName = defaults('contentClassName'),
+        classNames = defaults('classNames'),
         spacing = defaults('spacing'),
-        arrowStyle = defaults('arrowStyle'),
+        styles = defaults('styles'),
         'aria-label': ariaLabel = defaults('aria-label'),
         'aria-labelledby': ariaLabelledby = defaults('aria-labelledby'),
         'aria-describedby': ariaDescribedby = defaults('aria-describedby'),
@@ -257,18 +257,17 @@
     aria-label={ariaLabel}
     aria-labelledby={labelledBy}
     {arrowPointAtCenter}
-    {arrowStyle}
     {autoAdjustOverflow}
     bind:this={popover}
     bind:visible={() => !disabled && popoverVisible, (next) => foundation.handleVisibleChange(Boolean(next))}
     {child}
     {children}
     class={cssClasses.POPOVER}
+    {classNames}
     {clickToHide}
     {closeOnEsc}
     {condition}
     content={card}
-    {contentClassName}
     {disableArrowKeyDown}
     {disableFocusListener}
     {guardFocus}
@@ -285,5 +284,6 @@
     {showArrow}
     {spacing}
     {stopPropagation}
+    {styles}
     trigger={disabled ? 'custom' : trigger}
 />

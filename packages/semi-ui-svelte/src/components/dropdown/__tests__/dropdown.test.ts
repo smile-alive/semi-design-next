@@ -52,8 +52,18 @@ afterEach(() => {
 });
 
 describe('Svelte Dropdown 渲染', () => {
-    it('class 落在弹层外壳，style 与 contentClassName 落在菜单容器，未声明的属性不落在任何节点', async () => {
-        setup({ trigger: 'custom', class: 'test', style: 'color: red', contentClassName: 'content', 'data-extra': 'x', id: 'dropdown-id' } as DropdownProps, { mode: 'bind', value: true });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        setup({ classNames: { content: 'my-content', wrapper: 'my-wrapper' }, styles: { content: 'order: 2', wrapper: 'order: 3' }, trigger: 'custom' }, { mode: 'bind', value: true, trigger: 'text' });
+        await settle();
+        expect(document.querySelector('.semi-dropdown')).toHaveClass('my-content');
+        expect(document.querySelector('.semi-dropdown')).toHaveStyle({ order: '2' });
+        const wrapper = screen.getByText('text trigger');
+        expect(wrapper).toHaveClass('my-wrapper');
+        expect(wrapper).toHaveStyle({ order: '3' });
+    });
+
+    it('class 落在弹层外壳，style 落在菜单容器，未声明的属性不落在任何节点', async () => {
+        setup({ trigger: 'custom', class: 'test', style: 'color: red', classNames: { content: 'content' }, 'data-extra': 'x', id: 'dropdown-id' } as DropdownProps, { mode: 'bind', value: true });
         await settle();
         expect(popup()).toHaveClass('semi-dropdown-wrapper', 'test');
         expect(document.querySelector('.semi-dropdown')).toHaveClass('content');
@@ -275,7 +285,7 @@ describe('Svelte Dropdown 触发器语义', () => {
     });
 
     it('文本触发器包在带 data-popupid 与 tabindex 的 span 里，不带 aria-haspopup，保持行内', () => {
-        setup({ wrapperClassName: 'own-wrapper' }, { trigger: 'text' });
+        setup({ classNames: { wrapper: 'own-wrapper' } }, { trigger: 'text' });
         const span = screen.getByText('text trigger');
         expect(span.tagName).toBe('SPAN');
         expect(span).toHaveClass('semi-tooltip-trigger-wrapper', 'own-wrapper');
@@ -474,7 +484,7 @@ describe('Svelte Dropdown 嵌套', () => {
 
 describe('Svelte Dropdown 其他', () => {
     it('从 semiGlobal overrideDefaultProps 读取默认值，显式 prop 优先；wrapperId 不读全局值', async () => {
-        semiGlobal.config = { overrideDefaultProps: { Dropdown: { trigger: 'custom', contentClassName: 'global-content', motion: false, role: 'group', wrapperId: 'popup-global' } as object } };
+        semiGlobal.config = { overrideDefaultProps: { Dropdown: { trigger: 'custom', classNames: { content: 'global-content' }, motion: false, role: 'group', wrapperId: 'popup-global' } as object } };
         const { store } = setup({ trigger: undefined }, { mode: 'bind', value: true });
         await settle();
         expect(document.querySelector('.semi-dropdown.global-content')).not.toBeNull();

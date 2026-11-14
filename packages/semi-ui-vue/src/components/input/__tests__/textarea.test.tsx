@@ -507,7 +507,7 @@ describe('TextArea', () => {
     it('未声明属性与监听器落到原生 textarea，class 与 style 作用于外层容器', async () => {
         const paste = vi.fn<(event: ClipboardEvent) => void>();
         render(TextArea, {
-            props: { textareaStyle: { color: 'blue' } },
+            props: { styles: { textarea: { color: 'blue' } } },
             attrs: {
                 name: 'desc',
                 class: 'custom',
@@ -604,9 +604,20 @@ describe('TextArea', () => {
         expect(getWrapper()).not.toHaveClass(`${prefixCls}-textarea-wrapper-resizeX`);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        render(TextArea, {
+            props: { classNames: { textarea: 'my-textarea', lineNumber: 'my-nums' }, styles: { textarea: { order: 1 }, lineNumber: { order: 2 } }, defaultValue: 'a', showLineNumber: true },
+        });
+        expect(getTextArea()).toHaveClass(`${prefixCls}-textarea`, 'my-textarea');
+        expect(getTextArea()).toHaveStyle({ order: '1' });
+        const panel = document.querySelector(`.${prefixCls}-textarea-lineNumber`);
+        expect(panel).toHaveClass('my-nums');
+        expect(panel).toHaveStyle({ order: '2' });
+    });
+
     it('showLineNumber 从 lineNumberStart 开始，每行一个行号，面板对辅助技术隐藏', () => {
         render(TextArea, {
-            props: { lineNumberClassName: 'nums', defaultValue: 'a\nb\nc', lineNumberStart: 3, showLineNumber: true },
+            props: { classNames: { lineNumber: 'nums' }, defaultValue: 'a\nb\nc', lineNumberStart: 3, showLineNumber: true },
         });
         expect(getWrapper()).toHaveClass(`${prefixCls}-textarea-wrapper-withLineNumber`);
         const items = document.querySelectorAll(`.${prefixCls}-textarea-lineNumber-item`);

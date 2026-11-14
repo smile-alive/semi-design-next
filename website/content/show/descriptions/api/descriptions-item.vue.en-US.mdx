@@ -1,10 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                       | Type         | Default     |
-| -------- | --------------------------------- | ------------ | ----------- |
-| hidden   | Whether to hide the item.         | `boolean`    | `false`     |
-| keyStyle | Custom style of the key.          | `StyleValue` | `undefined` |
-| span     | Number of columns the cell spans. | `number`     | `undefined` |
+| Property   | Description                                                                                                      | Type                                                                              | Default     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------- |
+| classNames | Class names of the inner parts, keyed by key; values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"key\", ClassValue>>"}>Type</ApiType> | `undefined` |
+| hidden     | Whether to hide the item.                                                                                        | `boolean`                                                                         | `false`     |
+| span       | Number of columns the cell spans.                                                                                | `number`                                                                          | `undefined` |
+| styles     | Styles of the inner parts, keyed by key; values take any style binding.                                          | <ApiType detail={"Partial\u003cRecord\u003c\"key\", StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

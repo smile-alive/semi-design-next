@@ -1749,9 +1749,9 @@ Native attributes such as `class`, `style`, `id` and `data-*` land on the outerm
 
 </Framework>
 
-### headerStyle Example
+### Header Style Example
 
-`headerStyle` will be applied to all header `<th>` elements, including fixed columns.
+`classNames.header` and `styles.header` are applied to all header `<th>` elements, including fixed columns.
 
 <Framework only="vue">
 
@@ -1777,7 +1777,7 @@ Native attributes such as `class`, `style`, `id` and `data-*` land on the outerm
 </script>
 
 <template>
-    <Table :columns="columns" :dataSource="dataSource" :scroll="{ x: 900 }" :headerStyle="{ backgroundColor: '#F5F6F7', fontWeight: 600 }" />
+    <Table :columns="columns" :dataSource="dataSource" :scroll="{ x: 900 }" :styles="{ header: { backgroundColor: '#F5F6F7', fontWeight: 600 } }" />
 </template>
 ```
 
@@ -1805,10 +1805,10 @@ Native attributes such as `class`, `style`, `id` and `data-*` land on the outerm
     }));
 </script>
 
-<Table {columns} {dataSource} scroll={{ x: 900 }} headerStyle="background-color: #F5F6F7; font-weight: 600" />
+<Table {columns} {dataSource} scroll={{ x: 900 }} styles={{ header: 'background-color: #F5F6F7; font-weight: 600' }} />
 ```
 
-`headerStyle` is a CSS string.
+The values of `styles` are CSS strings.
 
 </Framework>
 
@@ -1851,7 +1851,7 @@ const dataSource = Array.from({ length: 6 }).map((_, i) => ({
 }));
 
 export default function Demo() {
-    return <Table columns={columns} dataSource={dataSource} scroll={{ x: 900 }} headerStyle={{ backgroundColor: '#F5F6F7', fontWeight: 600 }} />;
+    return <Table columns={columns} dataSource={dataSource} scroll={{ x: 900 }} styles={{ header: { backgroundColor: '#F5F6F7', fontWeight: 600 } }} />;
 }
 ```
 

@@ -1,7 +1,7 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { cssClasses, numbers, strings, type DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import DatePickerFoundation, {
     getYearMonthFromValue,
     isRangeType,
@@ -35,28 +35,7 @@ import MonthsGrid, { type DatePickerTimePickerOpts, type MonthsGridHandle } from
 import QuickControl from './quick-control';
 import YearAndMonth, { type YearAndMonthOpts } from './year-and-month';
 
-type RedeclaredKeys =
-    | 'dateFnsLocale'
-    | 'customTrigger'
-    | 'className'
-    | 'style'
-    | 'autoFocus'
-    | 'inputStyle'
-    | 'dropdownStyle'
-    | 'bottomSlot'
-    | 'insetLabel'
-    | 'prefix'
-    | 'topSlot'
-    | 'renderDate'
-    | 'renderFullDate'
-    | 'rangeSeparatorNode'
-    | 'timePickerOpts'
-    | 'position'
-    | 'onBlur'
-    | 'onClear'
-    | 'onFocus'
-    | 'onPresetClick'
-    | 'onClickOutSide';
+type RedeclaredKeys = 'dateFnsLocale' | 'customTrigger' | 'className' | 'style' | 'autoFocus' | 'bottomSlot' | 'insetLabel' | 'prefix' | 'topSlot' | 'renderDate' | 'renderFullDate' | 'rangeSeparatorNode' | 'timePickerOpts' | 'position' | 'onBlur' | 'onClear' | 'onFocus' | 'onPresetClick' | 'onClickOutSide';
 
 /** Undeclared props (data-*, aria-label, id, title) go to the root element */
 interface DatePickerCommonProps extends Omit<DatePickerFoundationProps, RedeclaredKeys | 'type' | 'multiple'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'onCancel' | 'placeholder' | 'autofocus' | 'ref'> {
@@ -64,9 +43,10 @@ interface DatePickerCommonProps extends Omit<DatePickerFoundationProps, Redeclar
     bottomSlot?: JSX.Element;
     /** On the root element */
     class?: string;
+    /** `dropdown` is the panel; `input` is the Input's root element (each of the two inputs of a range) */
+    classNames?: Partial<Record<DatePickerPart, string>>;
+    styles?: Partial<Record<DatePickerPart, JSX.CSSProperties | string>>;
     clearIcon?: JSX.Element;
-    dropdownStyle?: JSX.CSSProperties | string;
-    inputStyle?: JSX.CSSProperties | string;
     insetLabel?: JSX.Element;
     insetLabelId?: string;
     leftSlot?: JSX.Element;
@@ -221,6 +201,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         'borderless',
         'bottomSlot',
         'class',
+        'classNames',
         'clearIcon',
         'dateFnsLocale',
         'defaultOpen',
@@ -231,14 +212,11 @@ export default function DatePicker(rawProps: DatePickerProps) {
         'disabledDate',
         'disabledTime',
         'disabledTimePicker',
-        'dropdownClassName',
-        'dropdownStyle',
         'endDateOffset',
         'endYear',
         'format',
         'hideDisabledOptions',
         'inputReadOnly',
-        'inputStyle',
         'insetInput',
         'leftSlot',
         'max',
@@ -276,6 +254,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         'startYear',
         'stopPropagation',
         'style',
+        'styles',
         'syncSwitchMonth',
         // Tooltip adds it to its child: it belongs to the input, the Tab stop
         'tabIndex',
@@ -501,8 +480,11 @@ export default function DatePicker(rawProps: DatePickerProps) {
         onChange: foundation.handleInputChange,
         onEnterPress: foundation.handleInputComplete,
         block: true,
+        get inputClassName() {
+            return local.classNames?.input;
+        },
         get inputStyle() {
-            return local.inputStyle;
+            return local.styles?.input;
         },
         get showClear() {
             return local.showClear;
@@ -721,9 +703,9 @@ export default function DatePicker(rawProps: DatePickerProps) {
                     [cssClasses.PANEL_YAM]: isYearOrMonth(),
                     [`${cssClasses.PREFIX}-compact`]: local.density === 'compact',
                 },
-                local.dropdownClassName
+                local.classNames?.dropdown
             )}
-            style={local.dropdownStyle}
+            style={local.styles?.dropdown}
             x-type={local.type}
             onMouseDown={markPressInside}
         >

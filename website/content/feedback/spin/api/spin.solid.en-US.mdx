@@ -1,11 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property         | Description                                                                   | Type                          | Default    |
-| ---------------- | ----------------------------------------------------------------------------- | ----------------------------- | ---------- |
-| childStyle       | Style of the inner children element, an object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | -          |
-| delay            | Delay in milliseconds before the loading effect is shown.                     | `number`                      | `0`        |
-| indicator        | Custom loading indicator, passed as a JSX element.                            | `JSX.Element`                 | -          |
-| size             | Component size.                                                               | `SpinSize`                    | `"middle"` |
-| spinning         | Whether it is loading.                                                        | `boolean`                     | `true`     |
-| tip              | Description text when Spin acts as a wrapper, passed as a JSX element.        | `JSX.Element`                 | -          |
-| wrapperClassName | Class name of the wrapper element.                                            | `string`                      | -          |
+| Property   | Description                                                                                                                  | Type                                                                                                    | Default    |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------- |
+| classNames | Class names of the inner parts, keyed by child (the element wrapping the children), appended after the built-in class names. | <ApiType detail={"Partial\u003cRecord\u003cSpinPart, string>>"}>Type</ApiType>                          | -          |
+| delay      | Delay in milliseconds before the loading effect is shown.                                                                    | `number`                                                                                                | `0`        |
+| indicator  | Custom loading indicator, passed as a JSX element.                                                                           | `JSX.Element`                                                                                           | -          |
+| size       | Component size.                                                                                                              | `SpinSize`                                                                                              | `"middle"` |
+| spinning   | Whether it is loading.                                                                                                       | `boolean`                                                                                               | `true`     |
+| styles     | Styles of the inner parts, keyed by child (the element wrapping the children), each an object (kebab-case keys) or a string. | <ApiType detail={"Partial\u003cRecord\u003cSpinPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -          |
+| tip        | Description text when Spin acts as a wrapper, passed as a JSX element.                                                       | `JSX.Element`                                                                                           | -          |

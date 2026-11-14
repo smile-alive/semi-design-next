@@ -1,4 +1,5 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { TreePart } from '@fibrae/semi-foundation/components/tree/constants';
 import type { BasicExpandedOtherProps, BasicFlattenNode, BasicOnDragProps, BasicTreeNodeData, BasicTreeNodeProps, CheckRelation, ExpandAction, KeyMapProps, ScrollAlign, TreeDataSimpleJson, TreeMotionType, Virtualize } from '@fibrae/semi-foundation/components/tree/foundation';
 
 export type { TreeDataSimpleJson } from '@fibrae/semi-foundation/components/tree/foundation';
@@ -81,9 +82,9 @@ export interface TreeProps {
     /** On by default for a virtualized tree */
     labelEllipsis?: boolean;
     virtualize?: TreeVirtualize;
-    searchClassName?: string;
+    classNames?: Partial<Record<TreePart, ClassValue>>;
+    styles?: Partial<Record<TreePart, StyleValue>>;
     searchPlaceholder?: string;
-    searchStyle?: StyleValue;
     filterTreeNode?: boolean | ((inputValue: string, treeNodeString: string, data?: TreeNodeData) => boolean);
     /** Loads a node's children; a node without `isLeaf` shows the expand arrow while it is set */
     loadData?: (treeNode?: TreeNodeData) => Promise<void>;

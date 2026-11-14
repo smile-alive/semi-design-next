@@ -10,14 +10,13 @@ import ApiType from '#/components/ApiType.astro';
 | changeOnSelect | 单选时是否允许选择非叶子节点。 | `boolean` | `false` |
 | changeWithObject | 是否让 change 事件携带每个节点的数据而不是它的 value。开启后受控的 modelValue 与 defaultValue 也要传节点数据，并含有 value。这是布尔属性，不是事件，不要写成 @changeWithObject。 | `boolean` | `false` |
 | checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `"related" \| "unRelated"` | `strings.RELATED` |
+| classNames | 内部各部位的类名，键为 dropdown（下拉），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "classNames")` |
 | clickToSelect | 多选时，点击任意节点即触发选中，常与 showNext 为 hover 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `false` |
 | defaultOpen | 是否在挂载时展开下拉。 | `boolean` | `false` |
 | defaultValue | 指定默认选中的条目，只在挂载时读取。 | <ApiType detail={"ByMultiple\u003cMultiple, CascaderSimpleValue[] \u007c CascaderSimpleValue, CascaderValue>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "defaultValue")` |
 | disabled | 是否禁用。禁用后不可 Tab 到达。 | `boolean` | `undefined` |
 | disableStrictly | 是否严格禁用。开启后，禁用的节点不会因父级或子级的选中状态变化而改变。 | `boolean` | `false` |
 | displayProp | 回填选项和标签显示的节点属性，默认 label。 | `string` | `"label"` |
-| dropdownClassName | 下拉的 class。 | `string` | `semiGlobalDefault("Cascader", "dropdownClassName")` |
-| dropdownStyle | 下拉的样式。 | `StyleValue` | `semiGlobalDefault("Cascader", "dropdownStyle")` |
 | enableLeafClick | 多选时，点击叶子节点所在的选项是否触发勾选。 | `boolean` | `false` |
 | filterLeafOnly | 搜索结果是否只展示叶子节点的路径。 | `boolean` | `true` |
 | filterSorter | 对筛选后的结果排序，参数为两条结果路径（从根节点到匹配节点的节点数组）与输入内容。保留为函数 prop，因为需要读取返回值。 | <ApiType detail={"((first: CascaderData[], second: CascaderData[], inputValue: string) => number)"}>Type</ApiType> | `undefined` |
@@ -44,6 +43,7 @@ import ApiType from '#/components/ApiType.astro';
 | showRestTagsPopover | 超出 maxTagCount 后，悬停 +N 时是否用 Popover 展示剩余标签。 | `boolean` | `false` |
 | size | 选择框的尺寸。 | `Size` | `undefined` |
 | stopPropagation | 是否阻止下拉上的点击事件冒泡。 | `string \| boolean` | `true` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "styles")` |
 | treeData | 节点数据，label 只接受文本，节点内容用 label 插槽。原地修改响应式数据也会被识别，内容相同的新数组不会重置展开和选中状态。 | `CascaderData[]` | `[]` |
 | treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `"label"` |
 | validateStatus | 触发器的校验状态，只影响样式。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Cascader", "validateStatus")` |

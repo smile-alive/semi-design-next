@@ -10,6 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | Snippet for the content below the input box. | `Snippet` | - |
 | canSend | Whether the send button is enabled. It is decided internally by default; when set, this value wins. | `boolean` | - |
 | chats | The conversation list, bindable with `bind:chats`. When a message is sent, liked, reset, cleared or deleted, Chat writes the new list back first and then calls `onChatsChange`. Replacing the list, a `push` and in-place growth of the last message's text are followed; other in-place edits (a deep content edit, a lone status flip) render but are not followed, so replace the array as a whole. | `ChatMessage[]` | - |
+| classNames | Class names of the inner parts, keyed by hint (the outermost hint area) and inputBox (the input box); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cChatPart, ClassValue>>"}>Type</ApiType> | - |
 | content | Snippet that customizes the message content area, with `message`, `role`, the built-in content `defaultContent` (a snippet) and the class name `class`. | <ApiType detail={"Snippet\u003c[ChatContentSnippetProps]>"}>Type</ApiType> | - |
 | customMarkDownComponents | Custom Markdown render components, keyed by element name, passed to the MarkdownRender of the message content. | `MarkdownRenderComponents` | - |
 | divider | Snippet that customizes the divider after the context is cleared, with `message`. | <ApiType detail={"Snippet\u003c[ChatDividerSnippetProps]>"}>Type</ApiType> | - |
@@ -17,12 +18,8 @@ import ApiType from '#/components/ApiType.astro';
 | escapeHtml | Whether to escape HTML tags in the user's messages, so the Markdown parser does not treat them as HTML and drop the content. | `boolean` | `true` |
 | fullChatBox | Snippet that customizes the whole message box, with `message`, `role`, the default nodes `defaultNodes` (snippets) and the class name `class`. | <ApiType detail={"Snippet\u003c[ChatFullChatBoxSnippetProps]>"}>Type</ApiType> | - |
 | hintBox | Snippet that customizes a hint, with `content`, `index` and the click handler `onHintClick`. | <ApiType detail={"Snippet\u003c[ChatHintBoxSnippetProps]>"}>Type</ApiType> | - |
-| hintCls | Class name of the outermost element of the hints area. | `string` | - |
 | hints | The list of hints. Clicking one calls `onHintClick` and sends it as a new user message. | `string[]` | - |
-| hintStyle | Style of the outermost element of the hints area, a string. | `string` | - |
 | inputArea | Snippet that customizes the input area, with `defaultNode`, the part nodes (`clearContextNode`, `uploadNode`, `inputNode`, `sendNode`, all snippets), and `onSend`, `onClear` and `onClick`, which you call yourself. | <ApiType detail={"Snippet\u003c[ChatInputAreaSnippetProps]>"}>Type</ApiType> | - |
-| inputBoxCls | Class name of the input box. | `string` | - |
-| inputBoxStyle | Style of the input box, a string. | `string` | - |
 | markdownRenderProps | Props passed to the MarkdownRender that renders the message content; the default format is md. `raw` and `components` cannot be set; use `customMarkDownComponents` for custom render components. | `ChatMarkdownRenderProps` | - |
 | mode | Conversation mode: `bubble`, `noBubble` or `userBubble`. | `ChatMode` | `"bubble"` |
 | onChatsChange | Called when the conversation list changes, after `chats` is written back. | <ApiType detail={"(chats: ChatMessage[]) => void"}>Type</ApiType> | - |
@@ -42,6 +39,7 @@ import ApiType from '#/components/ApiType.astro';
 | sendHotKey | Send hot key: `enter` or `shift+enter`. With `enter`, Enter sends and Shift+Enter inserts a line break; `shift+enter` is the reverse. | `SendHotKey` | `"enter"` |
 | showClearContext | Whether to show the clear context button in the input box. | `boolean` | `false` |
 | showStopGenerate | Whether to show the stop button while the last message is generating. Sending is disabled meanwhile, and clicking the stop button calls `onStopGenerator`. | `boolean` | `false` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cChatPart, string>>"}>Type</ApiType> | - |
 | title | Snippet that customizes the message title, with `message`, `role` and the built-in title `defaultTitle` (a snippet). Provided and rendering nothing, it hides the title. | <ApiType detail={"Snippet\u003c[ChatTitleSnippetProps]>"}>Type</ApiType> | - |
 | topSlot | Snippet for the content at the top of the conversation area. | `Snippet` | - |
 | uploadButton | Snippet that replaces the upload button. | `Snippet` | - |

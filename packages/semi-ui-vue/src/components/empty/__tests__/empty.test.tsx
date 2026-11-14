@@ -58,17 +58,25 @@ describe('Empty', () => {
         expect(fallback).toHaveClass('semi-empty-vertical');
     });
 
-    it('image 的插槽、URL、插画与 imageStyle', () => {
-        const imageStyle = { width: '150px' };
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const view = render(Empty, { props: { classNames: { image: 'img-cls' }, styles: { image: { width: '90px' } } } });
+        expect(getEmpty(view.container)).not.toHaveClass('img-cls');
+        const image = view.container.querySelector('.semi-empty-image');
+        expect(image).toHaveClass('semi-empty-image', 'img-cls');
+        expect(image).toHaveStyle({ width: '90px' });
+    });
+
+    it('image 的插槽、URL、插画与 styles.image', () => {
+        const styles = { image: { width: '150px' } };
         const view = render(() => (
             <div>
-                <Empty imageStyle={imageStyle}>
+                <Empty styles={styles}>
                     {{
                         image: () => <div class="test-img">semi design</div>,
                     }}
                 </Empty>
-                <Empty imageStyle={imageStyle} image="abc" />
-                <Empty imageStyle={imageStyle}>
+                <Empty styles={styles} image="abc" />
+                <Empty styles={styles}>
                     {{
                         image: () => <IllustrationConstruction />,
                         darkModeImage: () => <IllustrationConstructionDark />,

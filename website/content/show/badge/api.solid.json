@@ -6,13 +6,13 @@
                 "zh-CN": "徽章内容，数字或字符串按文字显示；传入 JSX 元素时直接渲染该元素，并去掉 type 与 theme 对应的样式类。",
                 "en-US": "Badge content: a number or string is shown as text; a JSX element is rendered as is, and the type and theme classes are removed."
             },
-            "countClassName": {
-                "zh-CN": "内容区域的类名。",
-                "en-US": "Class name of the count element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 count，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by count; merged with the built-in classes."
             },
-            "countStyle": {
-                "zh-CN": "内容区域的样式，可传 CSS 对象（键为 kebab-case）或字符串。",
-                "en-US": "Style of the count element, as a CSS object with kebab-case keys or a string."
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 count，值可传 CSS 对象（键为 kebab-case）或字符串。",
+                "en-US": "Styles of the inner parts, keyed by count, each a CSS object with kebab-case keys or a string."
             },
             "dot": {
                 "zh-CN": "显示为小圆点，不展示内容。",

@@ -35,7 +35,8 @@
         menu = defaults('menu'),
         class: className = defaults('class'),
         style = defaults('style'),
-        contentClassName = defaults('contentClassName'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         selectionMode = defaults('selectionMode'),
         showTick = defaults('showTick', false),
         motion = defaults('motion', true),
@@ -58,7 +59,6 @@
         stopPropagation = defaults('stopPropagation'),
         preventScroll = defaults('preventScroll'),
         wrapperId,
-        wrapperClassName = defaults('wrapperClassName'),
         'aria-label': ariaLabel = defaults('aria-label'),
         'aria-labelledby': ariaLabelledby = defaults('aria-labelledby'),
         'aria-describedby': ariaDescribedby = defaults('aria-describedby'),
@@ -140,7 +140,6 @@
         stopPropagation,
         preventScroll,
         wrapperId,
-        wrapperClassName,
         'aria-label': ariaLabel,
         'aria-labelledby': ariaLabelledby,
         'aria-describedby': ariaDescribedby,
@@ -246,14 +245,14 @@
         {@render child({ props })}
     {:else}
         <!-- Tooltip's own span would be out of reach of the keydown listener -->
-        <span {...props} class={[`${tooltipClasses.PREFIX}-trigger-wrapper`, wrapperClassName, props.class]} style:display={textOnly ? undefined : 'inline-block'} tabindex={focusableInside ? -1 : 0}>
+        <span {...props} class={[`${tooltipClasses.PREFIX}-trigger-wrapper`, classNames?.wrapper, props.class]} style={[textOnly ? undefined : 'display: inline-block', styles?.wrapper].filter(Boolean).join('; ') || undefined} tabindex={focusableInside ? -1 : 0}>
             {@render children?.()}
         </span>
     {/if}
 {/snippet}
 
 {#snippet popup({ initialFocusRef }: RenderContentProps)}
-    <DropdownPopup contentClass={contentClassName} {context} {focusTarget} {initialFocusRef} {prefixCls} {style}>
+    <DropdownPopup contentClass={classNames?.content} {context} {focusTarget} {initialFocusRef} {prefixCls} style={[style, styles?.content].filter(Boolean).join('; ') || undefined}>
         {#if content}
             {@render content()}
         {:else if menu}

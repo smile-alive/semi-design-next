@@ -42,17 +42,17 @@
                 "zh-CN": "自定义提示项的 snippet，参数含提示文本 `content`、序号 `index` 与点击回调 `onHintClick`。",
                 "en-US": "Snippet for a custom hint item, with the hint text `content`, the index and the click callback `onHintClick`."
             },
-            "hintCls": {
-                "zh-CN": "提示区最外层的类名。",
-                "en-US": "Class name of the outermost hint area element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 hint（提示区最外层），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by hint (the outermost hint area); values take anything class takes (string, array or object) and merge with the built-in classes."
             },
             "hints": {
                 "zh-CN": "提示信息。点击某条提示后，它成为新的用户消息，并触发 onHintClick。",
                 "en-US": "Hint texts. Clicking a hint turns it into a new user message and calls onHintClick."
             },
-            "hintStyle": {
-                "zh-CN": "提示区最外层的样式字符串。",
-                "en-US": "Style string of the outermost hint area element."
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "markdownRenderProps": {
                 "zh-CN": "透传给每条消息所用 MarkdownRender 的属性，raw 由消息决定，不可传入；components 与内置组件合并，同名的（如 code）覆盖内置组件。",

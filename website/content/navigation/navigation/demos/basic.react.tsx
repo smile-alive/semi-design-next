@@ -11,7 +11,7 @@ const items = [
 export default function NavigationDemo() {
     return (
         <Nav
-            bodyStyle={{ height: 320 }}
+            styles={{ body: { height: 320 } }}
             items={items}
             header={{
                 logo: <IconSemiLogo style={{ height: '36px', fontSize: 36 }} />,

@@ -28,8 +28,14 @@
                 "zh-CN": "是否展示裁切框边角的调整块。",
                 "en-US": "Whether to show the resize handles on the corners of the crop box."
             },
-            "cropperBoxStyle": { "zh-CN": "裁切框样式。", "en-US": "Style of the crop box." },
-            "cropperBoxCls": { "zh-CN": "裁切框类名。", "en-US": "Class name of the crop box." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `cropperBox`（裁切框），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `cropperBox` (the crop box); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；`cropperBox` 与组件计算的宽高和位移合并，宽高与位移以组件为准。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; `cropperBox` is merged with the size and offset the component computes, and the size and offset win."
+            },
             "fill": {
                 "zh-CN": "裁切结果中非图片部分的填充色。",
                 "en-US": "Fill color of the parts of the result that are not the image."

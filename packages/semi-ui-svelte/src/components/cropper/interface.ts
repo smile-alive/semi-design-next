@@ -1,4 +1,5 @@
-import type { HTMLAttributes, HTMLImgAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes, HTMLImgAttributes } from 'svelte/elements';
+import type { CropperPart } from '@fibrae/semi-foundation/components/cropper/constants';
 
 export type CropperShape = 'rect' | 'round' | 'roundRect';
 
@@ -15,8 +16,8 @@ export interface CropperProps extends HTMLAttributes<HTMLDivElement> {
     /** Image rotation angle; one-way, the cropper never changes it */
     rotate?: number;
     showResizeBox?: boolean;
-    cropperBoxStyle?: string;
-    cropperBoxCls?: string;
+    classNames?: Partial<Record<CropperPart, ClassValue>>;
+    styles?: Partial<Record<CropperPart, string>>;
     fill?: string;
     maxZoom?: number;
     minZoom?: number;

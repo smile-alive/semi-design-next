@@ -357,8 +357,8 @@ describe('TreeSelect', () => {
         expect(getTrigger()).toHaveClass(`${BASE_CLASS_PREFIX}-tree-select-small`);
     });
 
-    it('自定义 dropdownClassName 和 dropdownStyle', async () => {
-        await renderTreeSelect({ dropdownClassName: 'test', dropdownStyle: { color: 'red' } });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        await renderTreeSelect({ classNames: { dropdown: 'test' }, styles: { dropdown: { color: 'red' } } });
         expect(getPopover()).toHaveClass('test');
         expect(getPopover()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
@@ -3369,17 +3369,19 @@ describe('TreeSelect 行为', () => {
         expect(multipleTree).toHaveAccessibleName('Region');
     });
 
-    it('optionListStyle 在有数据和无数据时都落在 aria-controls 指向的元素上', async () => {
-        const { unmount } = await renderTreeSelect({ defaultOpen: false, optionListStyle: { height: '200px' } });
+    it('classNames.optionList 与 styles.optionList 在有数据和无数据时都落在 aria-controls 指向的元素上', async () => {
+        const { unmount } = await renderTreeSelect({ defaultOpen: false, classNames: { optionList: 'my-list' }, styles: { optionList: { height: '200px' } } });
         await click(getTrigger());
         const tree = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(tree).toHaveAttribute('role', 'tree');
+        expect(tree).toHaveClass('my-list');
         expect(tree).toHaveStyle({ height: '200px' });
         unmount();
-        await renderTreeSelect({ defaultOpen: false, treeData: [], optionListStyle: { height: '200px' } });
+        await renderTreeSelect({ defaultOpen: false, treeData: [], classNames: { optionList: 'my-list' }, styles: { optionList: { height: '200px' } } });
         await click(getTrigger());
         const empty = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(empty).not.toHaveAttribute('role', 'tree');
+        expect(empty).toHaveClass('my-list');
         expect(empty).toHaveStyle({ height: '200px' });
     });
 

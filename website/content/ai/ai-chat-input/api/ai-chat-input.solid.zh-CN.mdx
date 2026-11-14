@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | canSend | 是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。 | `boolean` | - |
+| classNames | 内部各部位的类名，键为 templates（模版面板），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, string>>"}>Type</ApiType> | - |
 | clearContentOnGenerating | generating 从 false 变为 true 时，是否清空输入框内容和附件。设为 false 可保留输入内容（适用于无限画布等非对话场景）。 | `boolean` | `true` |
 | defaultContent | 输入框默认内容，支持 html string 以及 json 格式，同 Tiptap 的 Content；只在创建编辑器时读取。 | `TiptapContent` | - |
 | dropdownMatchTriggerWidth | 下拉弹出层是否与输入框宽度一致。 | `boolean` | `true` |
@@ -44,9 +45,8 @@ import ApiType from '#/components/ApiType.astro';
 | showUploadFile | 是否展示上传文件区域，用于配合 renderTopSlot 使用。 | `boolean` | `true` |
 | skillHotKey | 输入框中唤起技能面板的热键。 | `string` | - |
 | skills | 技能列表，每项只含数据，图标由 renderSkillIcon 渲染。 | `Skill[]` | - |
+| styles | 内部各部位的内联样式，键同 classNames；templates 与默认的最大高度合并，只接受对象。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, JSX.CSSProperties>>"}>Type</ApiType> | - |
 | suggestions | 建议列表，输入内容时按输入的内容展示。 | `Suggestion[]` | - |
-| templatesCls | 模版面板的类名。 | `string` | - |
-| templatesStyle | 模版面板的样式，与默认的最大高度合并，只接受对象。 | `JSX.CSSProperties` | - |
 | topSlotPosition | 顶部区域相对于引用区域与上传文件区域的位置。 | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | 自定义扩展的转换规则，用于保证 onContentChange 得到的节点数据符合预期。 | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
 | uploadProps | 上传文件相关配置，取值同 Upload 的属性，不含 fileList 与 listType。 | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'listType'>"}>Type</ApiType> | - |

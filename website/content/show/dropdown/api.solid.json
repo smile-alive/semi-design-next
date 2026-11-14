@@ -42,9 +42,9 @@
                 "zh-CN": "是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的菜单。",
                 "en-US": "Whether the trigger may show the menu. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the menu. Changing it from true to false closes an open menu at once."
             },
-            "contentClassName": {
-                "zh-CN": "下拉菜单容器 `.semi-dropdown` 的类名。",
-                "en-US": "Class name of the menu container `.semi-dropdown`."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（下拉菜单容器 `.semi-dropdown`）、`wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the menu container `.semi-dropdown`) and `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes."
             },
             "disableFocusListener": {
                 "zh-CN": "trigger 为 hover 时，是否不响应键盘聚焦打开菜单，默认 false。",
@@ -150,6 +150,10 @@
                 "zh-CN": "下拉菜单容器 `.semi-dropdown` 的样式，接受对象（键用 kebab-case，如 `'margin-top'`）或字符串。",
                 "en-US": "Style of the menu container `.semi-dropdown`, as an object with kebab-case keys such as `'margin-top'`, or a string."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，接受对象（键用 kebab-case）或字符串；`content` 写在 `style` 之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as an object with kebab-case keys or a string; `content` is applied after `style`."
+            },
             "trigger": {
                 "zh-CN": "触发菜单显示的行为，可选 hover、focus、click、custom、contextMenu；custom 时显示与否完全由 visible 决定。",
                 "en-US": "What shows the menu: hover, focus, click, custom or contextMenu. With custom, visible alone decides."
@@ -157,10 +161,6 @@
             "visible": {
                 "zh-CN": "菜单是否显示。配合 trigger 为 custom 使用；传入后由该值决定显示，触发器、点击外部与 Esc 只通过 onVisibleChange 请求打开或关闭。",
                 "en-US": "Whether the menu is shown. Used with trigger custom. When given, this value decides, and the trigger, a click outside and Esc only request a change through onVisibleChange."
-            },
-            "wrapperClassName": {
-                "zh-CN": "触发元素被 span 包裹时，该 span 的类名。",
-                "en-US": "Class name of the span that wraps the trigger when a wrapper is needed."
             },
             "wrapperId": {
                 "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",

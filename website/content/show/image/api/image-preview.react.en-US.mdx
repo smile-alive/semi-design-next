@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | adaptiveTip | Tip of the fit-to-page button; without it, the locale text is used. | `string` | - |
 | children | The Image components to preview. | `ReactNode` | - |
 | className | Class name of the group root div. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
 | closable | Whether to show the close button. | `boolean` | `true` |
 | closeOnEsc | Whether pressing Esc closes the preview, `true` by default. | `boolean` | - |
 | crossOrigin | The crossOrigin passed to the native img element of the preview image, `anonymous` or `use-credentials`. | `'anonymous' \| 'use-credentials'` | - |
@@ -38,8 +39,6 @@ import ApiType from '#/components/ApiType.astro';
 | originTip | Tip of the original-size button; without it, the locale text is used. | `string` | - |
 | preLoad | Whether to enable preloading, `true` by default. | `boolean` | - |
 | preLoadGap | Step size of preloading, `2` by default. | `number` | - |
-| previewCls | Custom class name of the preview layer. | `string` | - |
-| previewStyle | Custom style of the preview layer. | `React.CSSProperties` | - |
 | previewTitle | Title at the top of the preview, also the accessible name of the preview dialog; the `preview.previewTitle` of an image in a group takes precedence. | `ReactNode` | - |
 | prevTip | Tip of the previous-image button, also its accessible name; without it, the locale text is used. | `string` | - |
 | ref | Reference to the group root div. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
@@ -53,6 +52,7 @@ import ApiType from '#/components/ApiType.astro';
 | showTooltip | Whether to show tooltips on the bottom action area, `false` by default. | `boolean` | - |
 | src | Image URLs to preview. When wrapping Image components, it is merged with the preview images they register, with the src entries first. | `string \| string[]` | `[]` |
 | style | Style of the group root div. | `CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | viewerVisibleDelay | Idle time in milliseconds before the preview action buttons hide, `10000` by default. | `number` | - |
 | visible | Controlled visibility of the preview. | `boolean` | - |
 | zIndex | z-index of the preview layer, `1070` by default. | `number` | - |

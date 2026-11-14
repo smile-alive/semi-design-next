@@ -792,6 +792,24 @@ describe('Svelte Feedback 透传', () => {
         expect($(`.${modalCls}`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('classNames 与 styles 按部位转发给当前模式的 SideSheet 或 Modal', async () => {
+        const parts = ['mask', 'header', 'body'] as const;
+        const classNames = Object.fromEntries(parts.map((part) => [part, `my-${part}`]));
+        const styles = Object.fromEntries(parts.map((part) => [part, `order: ${parts.indexOf(part) + 1}`]));
+        const check = (component: string) => {
+            for (const part of parts) {
+                const el = $(`.${BASE_CLASS_PREFIX}-${component}-${part}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+        const first = await setup({ classNames, mask: true, styles });
+        check('sidesheet');
+        first.view.unmount();
+        await setup({ classNames, mode: 'modal', motion: false, styles });
+        check('modal');
+    });
+
     it('两种模式下 class 都落在根元素上并与 semi-feedback 合并', async () => {
         const first = await setup({ class: 'mine' });
         expect($(`div.${sheetCls}`)).toHaveClass(prefix, 'mine');

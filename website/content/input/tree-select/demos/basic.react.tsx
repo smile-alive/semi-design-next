@@ -33,5 +33,5 @@ const treeData = [
 ];
 
 export default function TreeSelectDemo() {
-    return <TreeSelect style={{ width: 300 }} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} placeholder="请选择" />;
+    return <TreeSelect style={{ width: 300 }} styles={{ dropdown: { maxHeight: 400, overflow: 'auto' } }} treeData={treeData} placeholder="请选择" />;
 }

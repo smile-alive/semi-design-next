@@ -1,11 +1,12 @@
 <script lang="ts">
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { AIChatDialogueProps } from '../interface.js';
 
     interface DialogueHintProps {
         hints: string[];
         selecting: boolean;
-        class?: string;
+        class?: ClassValue;
         style?: string;
         hintBox?: AIChatDialogueProps['hintBox'];
         onHintClick: (hint: string) => void;

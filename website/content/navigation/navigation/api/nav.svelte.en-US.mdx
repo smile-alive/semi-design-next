@@ -4,8 +4,8 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| bodyStyle | Custom style of the navigation item list. | `string` | - |
 | children | `NavItem` and `SubNav`, placed after the entries generated from items. | `Snippet` | - |
+| classNames | Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, ClassValue>>"}>Type</ApiType> | - |
 | expandIcon | Expand arrow of a sub navigation generated from items. The parameter holds item, level, size and the class to put on the icon element. | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavExpandIconArgs]>"}>Type</ApiType> | - |
 | footer | Footer area: a config object (collapseButton, class, style, and `data-*` and `aria-*` attributes), or a snippet that holds a `NavFooter`. | `NavFooterConfig \| Snippet` | - |
 | header | Header area: a config object (text, link, linkOptions, logo, class, style, and `data-*` and `aria-*` attributes), or a snippet that holds a `NavHeader`. | `NavHeaderConfig \| Snippet` | - |
@@ -20,6 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | onSelect | Called when a selectable item is selected for the first time. selectedKeys holds only the key of the selected item, and domEvent is the native event. | <ApiType detail={"(data: OnSelectedData) => void"}>Type</ApiType> | - |
 | openKeys | itemKeys of the open sub navigations. Applies only when mode is vertical and the sidebar is expanded. Bind it with `bind:openKeys`; a one-way value is only the initial one, and `null` is a controlled empty value. | `ItemKey[] \| null` | - |
 | selectedKeys | itemKeys of the selected items. Bind it with `bind:selectedKeys`; a one-way value is only the initial one, and `null` is a controlled empty value. | `ItemKey[] \| null` | - |
+| styles | Inline style strings of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | subDropdownProps | Dropdown props for the sub navigations generated from items, used in horizontal mode or when the vertical navigation is collapsed. | `SubDropdownProps` | - |
 | subNavCloseDelay | Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or horizontal. | `number` | `100` |
 | subNavMotion | Whether the sub navigation animates when it expands and collapses. | `boolean` | `true` |

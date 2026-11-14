@@ -72,7 +72,7 @@ describe('Svelte Descriptions', () => {
     });
 
     it('不把 value 等数据项字段放到行上', () => {
-        const { container } = setup({ data: [{ key: 'a', value: '1', span: 2, keyStyle: 'color: red' }] });
+        const { container } = setup({ data: [{ key: 'a', value: '1', span: 2, styles: { key: 'color: red' } }] });
         for (const tr of container.querySelectorAll('tr')) {
             expect(tr.getAttributeNames()).toEqual([]);
         }
@@ -109,9 +109,11 @@ describe('Svelte Descriptions', () => {
         expect(getKeys(container)[0]).toHaveTextContent(/^a:$/);
     });
 
-    it('keyStyle 作用于 key', () => {
-        const { container } = setup({ data: [{ key: 'a', value: 'raw', keyStyle: 'color: red' }] });
-        expect(getKeys(container)[0]).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = setup({ data: [{ key: 'a', value: 'raw', classNames: { key: 'my-key' }, styles: { key: 'color: red' } }] });
+        const key = getKeys(container)[0];
+        expect(key).toHaveClass(`${prefixCls}-key`, 'my-key');
+        expect(key).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
     it('水平布局按 column 分行，跳过隐藏项，并拉伸最后一项', () => {

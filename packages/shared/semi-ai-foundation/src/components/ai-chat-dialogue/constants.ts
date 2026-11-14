@@ -88,6 +88,9 @@ const TOOL_CALL_TYPES = [MESSAGE_ITEM_TYPE.FUNCTION_CALL, MESSAGE_ITEM_TYPE.CUST
 // The kinds the dialogue has an icon for; ppt and audio files get the default icon
 const DIALOGUE_FILE_KINDS = ['word', 'image', 'pdf', 'excel', 'code', 'video'] as const;
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type AIChatDialoguePart = 'hint';
+
 export type DialogueFileKind = (typeof DIALOGUE_FILE_KINDS)[number];
 
 /** The kinds drawn as an icon; an image is drawn as a thumbnail */

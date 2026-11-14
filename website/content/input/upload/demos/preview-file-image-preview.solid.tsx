@@ -27,7 +27,7 @@ export default function UploadDemo() {
     );
 
     return (
-        <Upload action="/upload" customRequest={mockUpload} defaultFileList={defaultFileList} itemStyle={{ width: '300px' }} renderFileOperation={renderFileOperation}>
+        <Upload action="/upload" customRequest={mockUpload} defaultFileList={defaultFileList} styles={{ item: { width: '300px' } }} renderFileOperation={renderFileOperation}>
             <Button icon={<IconUpload />} theme="light">
                 点击上传
             </Button>

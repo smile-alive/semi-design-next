@@ -56,7 +56,8 @@
         inputReadOnly: () => semiDefault('TimePicker', 'inputReadOnly', false),
         validateStatus: semiGlobalDefault('TimePicker', 'validateStatus'),
         insetLabelId: undefined,
-        inputStyle: semiGlobalDefault('TimePicker', 'inputStyle'),
+        classNames: semiGlobalDefault('TimePicker', 'classNames'),
+        styles: semiGlobalDefault('TimePicker', 'styles'),
         autofocus: () => semiDefault('TimePicker', 'autofocus', false),
         focusOnOpen: () => semiDefault('TimePicker', 'focusOnOpen', false),
         preventScroll: semiGlobalDefault('TimePicker', 'preventScroll'),
@@ -64,8 +65,6 @@
         motion: () => semiDefault('TimePicker', 'motion', true),
         autoAdjustOverflow: () => semiDefault('TimePicker', 'autoAdjustOverflow', true),
         position: semiGlobalDefault('TimePicker', 'position'),
-        popupClassName: semiGlobalDefault('TimePicker', 'popupClassName'),
-        popupStyle: semiGlobalDefault('TimePicker', 'popupStyle'),
         stopPropagation: () => semiDefault('TimePicker', 'stopPropagation', true),
         timeZone: undefined,
         scrollItemProps: semiGlobalDefault('TimePicker', 'scrollItemProps'),
@@ -97,7 +96,7 @@
     const format = computed(() => TimePickerFoundation.getValidFormat(props));
     const position = computed(() => TimePickerFoundation.getPosition(props, config.value.direction));
     const placeholder = computed(() => props.placeholder ?? locale.value.locale.placeholder[props.type]);
-    const panelClass = computed(() => [...TimePickerFoundation.getPanelClassNames({ prefixCls: prefix, format: props.format, use12Hours: props.use12Hours, type: props.type }), `${prefix}-panel-${looks.size}`, props.popupClassName]);
+    const panelClass = computed(() => [...TimePickerFoundation.getPanelClassNames({ prefixCls: prefix, format: props.format, use12Hours: props.use12Hours, type: props.type }), `${prefix}-panel-${looks.size}`, props.classNames?.dropdown]);
 
     // the Input inside is part of this control, not a member of the group
     provideInputGroupContext(undefined);
@@ -204,11 +203,11 @@
         <Popover
             :ariaLabel="locale.locale.panel[props.type]"
             :autoAdjustOverflow="props.autoAdjustOverflow"
-            :contentClassName="panelClass"
+            :classNames="{ content: panelClass }"
             :motion="props.motion"
             :position="position"
             :stopPropagation="props.stopPropagation"
-            :style="props.popupStyle"
+            :styles="{ content: props.styles?.dropdown }"
             trigger="custom"
             :visible="open"
             @escKeyDown="foundation.handleEscKeyDown"
@@ -268,6 +267,7 @@
                     aria-haspopup="dialog"
                     :autofocus="props.autofocus"
                     :borderless="props.borderless"
+                    :class="props.classNames?.input"
                     :disabled="looks.disabled"
                     :focusOnOpen="props.focusOnOpen"
                     :inputReadOnly="props.inputReadOnly"
@@ -279,7 +279,7 @@
                     role="combobox"
                     :showClear="looks.disabled ? false : props.showClear"
                     :size="looks.size"
-                    :style="props.inputStyle"
+                    :style="props.styles?.input"
                     :validateStatus="props.validateStatus"
                     @blur="foundation.handleInputBlur"
                     @focus="foundation.handleFocus"

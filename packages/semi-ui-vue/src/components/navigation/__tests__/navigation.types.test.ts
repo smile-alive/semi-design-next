@@ -12,7 +12,7 @@ describe('Navigation 类型', () => {
                 text: 'User',
                 class: ['a', { b: true }],
                 style: { color: 'red' },
-                dropdownStyle: 'width: 200px',
+                styles: { dropdown: 'width: 200px' },
                 dropdownProps: {
                     class: 'popup',
                     style: { width: '200px' },
@@ -32,7 +32,7 @@ describe('Navigation 类型', () => {
         // @ts-expect-error entries take style one level deep, so an array of styles is rejected
         const item: NavItemConfig = { itemKey: 'a', style: [{ color: 'red' }] };
         // @ts-expect-error same for the popup style of a Sub entry
-        const sub: NavItemConfig = { itemKey: 'b', dropdownStyle: [{ color: 'red' }] };
+        const sub: NavItemConfig = { itemKey: 'b', styles: { dropdown: [{ color: 'red' }] } };
         // @ts-expect-error same for the header config
         const header: NavHeaderConfig = { style: [{ color: 'red' }] };
         expect([item.itemKey, sub.itemKey, header.style]).toHaveLength(3);

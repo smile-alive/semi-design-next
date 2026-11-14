@@ -1,4 +1,5 @@
 import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { InputProps, ValidateStatus } from '../input/interface';
 import type { PopoverProps } from '../popover/interface';
@@ -83,8 +84,8 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     showClear?: boolean;
     insetLabelId?: string;
     inputProps?: SelectInputProps;
-    dropdownClassName?: string;
-    dropdownStyle?: StyleValue;
+    classNames?: Partial<Record<SelectPart, ClassValue>>;
+    styles?: Partial<Record<SelectPart, StyleValue>>;
     dropdownMatchSelectWidth?: boolean;
     position?: Position;
     spacing?: TooltipProps['spacing'];

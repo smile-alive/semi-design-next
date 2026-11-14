@@ -28,7 +28,7 @@
 {/snippet}
 
 <div>
-    <DatePicker bind:value={date} {disabledDate} dropdownClassName="components-datepicker-demo-slot" placeholder="请选择排期">
+    <DatePicker bind:value={date} classNames={{ dropdown: 'components-datepicker-demo-slot' }} {disabledDate} placeholder="请选择排期">
         {#snippet topSlot()}{@render tabs('12px 20px 0')}{/snippet}
     </DatePicker>
     <br />
@@ -43,7 +43,7 @@
     </DatePicker>
     <br />
     <br />
-    <DatePicker density="compact" dropdownClassName="components-datepicker-demo-slot" placeholder="小尺寸">
+    <DatePicker classNames={{ dropdown: 'components-datepicker-demo-slot' }} density="compact" placeholder="小尺寸">
         {#snippet topSlot()}{@render tabs('8px 12px 0')}{/snippet}
         {#snippet bottomSlot()}{@render notice('8px 12px', '定版前请阅读', '发版须知')}{/snippet}
     </DatePicker>

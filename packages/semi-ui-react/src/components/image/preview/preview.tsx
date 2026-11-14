@@ -78,8 +78,8 @@ export default function ImagePreview(rawProps: PreviewProps & { ref?: React.Ref<
         lazyLoadMargin,
         setDownloadName,
         children,
-        previewCls,
-        previewStyle,
+        classNames,
+        styles,
         currentIndex: currentIndexProp,
         defaultCurrentIndex,
         visible: visibleProp,
@@ -137,7 +137,7 @@ export default function ImagePreview(rawProps: PreviewProps & { ref?: React.Ref<
             <div role={namedRole(others)} {...omit(others, innerKeys)} ref={mergedRef} className={clsx(`${prefixCls}-preview-group`, className)} style={style}>
                 {children}
             </div>
-            <PreviewInner {...pick(others, innerKeys)} className={previewCls} style={previewStyle} currentIndex={currentIndex} src={srcList} visible={visible} onVisibleChange={foundation.handleVisibleChange} />
+            <PreviewInner {...pick(others, innerKeys)} className={classNames?.preview} style={styles?.preview} currentIndex={currentIndex} src={srcList} visible={visible} onVisibleChange={foundation.handleVisibleChange} />
         </PreviewContext>
     );
 }

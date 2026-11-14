@@ -12,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | Whether to use the borderless style. | `boolean` | `false` |
 | checkRelation | In multiple mode, the relationship between the checked states of nodes: `related` or `unRelated`. With `unRelated`, the checked states of nodes do not affect each other. | `CheckRelation` | `"related"` |
 | className | Class name of the select box, applied to the trigger element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `dropdown` (the dropdown panel) and `optionList` (the option list, the `role="tree"` element); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom icon of the clear button, effective when `showClear` is true. | `React.ReactNode` | - |
 | clickToHide | Whether the dropdown closes automatically after a selection; only works in single mode. | `boolean` | `true` |
 | clickTriggerToHide | When the panel is open, whether clicking the trigger closes it. | `boolean` | `true` |
@@ -21,9 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | defaultValue | The initially selected value, read once on mount; an array in multiple mode. | <ApiType detail={"ModeValue\u003cT, Multiple>"}>Type</ApiType> | - |
 | disabled | Whether the component is disabled. | `boolean` | - |
 | disableStrictly | Strict disabling: when a node is disabled, its checked state cannot be changed through its parent or child nodes. | `boolean` | `false` |
-| dropdownClassName | Class name of the dropdown panel. | `string` | - |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown panel matches the width of the select box. | `boolean` | `true` |
-| dropdownStyle | Style of the dropdown panel. | `React.CSSProperties` | - |
 | emptyContent | Empty state shown when there is no data or the search finds no result. Without it the locale text is shown; `null` hides it. | `ReactNode` | - |
 | expandAction | How a node expands: `false` (only the expand icon expands it), `click` or `doubleClick`. | `ExpandAction` | `false` |
 | expandAll | Whether to expand all nodes by default. The expansion still follows this prop after `treeData` changes. | `boolean` | `false` |
@@ -51,7 +50,6 @@ import ApiType from '#/components/ApiType.astro';
 | onSearch | Called when the search value changes, with the search value, `filteredExpandedKeys` (keys of the nodes expanded by the search or by the value, useful when the expansion is controlled) and `filteredNodes` (the nodes that match the search). | <ApiType detail={"(searchValue: string, filteredExpandedKeys: string[], filteredNodes: BasicTreeNodeData[]) => void"}>Type</ApiType> | - |
 | onSelect | Called when a node is selected or deselected, with the key of the node, whether it is selected, and the node data. | <ApiType detail={"(selectedKey: string, selected: boolean, selectedNode: TreeNodeData) => void"}>Type</ApiType> | - |
 | onVisibleChange | Called when the dropdown panel is shown or hidden, with whether it is visible. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
-| optionListStyle | Style of the option list. | `React.CSSProperties` | - |
 | outerBottomSlot | Custom content rendered at the bottom of the dropdown panel, at the same level as the option list. | `React.ReactNode` | - |
 | outerTopSlot | Custom content rendered at the top of the dropdown panel, at the same level as the option list. With `filterTreeNode` on, it replaces the search box; to customize the search, use the `search` method through `ref`. | `React.ReactNode` | - |
 | placeholder | Placeholder of the input box. | `string` | - |
@@ -76,6 +74,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size of the input box: `large`, `small` or `default`. | `Size` | `"default"` |
 | stopPropagation | Whether click events on the dropdown panel stop bubbling. | `boolean \| string` | `true` |
 | style | Inline style of the select box, the trigger. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | suffix | Content after the select box. | `React.ReactNode` | - |
 | treeData | Node data; keys are unique across the tree. Only a new array updates the options, changes made in place are not seen. | `TreeNodeData[]` | - |
 | treeNodeFilterProp | Property of `TreeNodeData` matched by search. | `string` | `"label"` |

@@ -30,8 +30,8 @@
         displayMode: semiGlobalDefault('Radio', 'displayMode'),
         mode: () => semiDefault('Radio', 'mode', ''),
         type: () => semiDefault('Radio', 'type', 'default'),
-        addonStyle: semiGlobalDefault('Radio', 'addonStyle'),
-        addonClassName: semiGlobalDefault('Radio', 'addonClassName'),
+        classNames: semiGlobalDefault('Radio', 'classNames'),
+        styles: semiGlobalDefault('Radio', 'styles'),
         addonId: undefined,
         extraId: undefined,
         preventScroll: semiGlobalDefault('Radio', 'preventScroll'),
@@ -208,7 +208,6 @@
                 v-if="$slots.default"
                 :id="addonId"
                 :class="[
-                    props.addonClassName,
                     {
                         [`${prefix}-addon`]: !view.isButtonRadio,
                         [`${prefix}-addon-buttonRadio`]: view.isButtonRadio,
@@ -216,8 +215,9 @@
                         [`${prefix}-addon-buttonRadio-disabled`]: view.isButtonRadio && view.disabled,
                         [`${prefix}-addon-buttonRadio-${view.buttonSize}`]: view.isButtonRadio && view.buttonSize,
                     },
+                    props.classNames?.addon,
                 ]"
-                :style="props.addonStyle"
+                :style="props.styles?.addon"
                 x-semi-prop="children"
             >
                 <slot />

@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import type { strings } from '@fibrae/semi-foundation/components/table/constants';
+import type { strings, TablePart } from '@fibrae/semi-foundation/components/table/constants';
 import type { BaseRowKeyType, BaseSortOrder, BaseGroupBy, BaseGroupByFn, BaseFixed, BaseAlign, BaseChangeInfoSorter, BaseSorter, BaseFilter, BaseChangeInfoFilter, BaseIncludeGroupRecord, BaseEllipsis, BasePageData, OnChangeExtra } from '@fibrae/semi-foundation/components/table/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
@@ -15,6 +15,8 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     children?: ReactNode;
     childrenRecordName?: string;
     className?: string;
+    /** `header` lands on every header cell, before the column's own className */
+    classNames?: Partial<Record<TablePart, string>>;
     clickGroupedRowToExpand?: boolean;
     columns?: ColumnProps<RecordType>[];
     components?: TableComponents;
@@ -33,7 +35,6 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     footer?: Footer<RecordType>;
     getVirtualizedListRef?: GetVirtualizedListRef;
     groupBy?: GroupBy<RecordType>;
-    headerStyle?: React.CSSProperties;
     hideExpandedColumn?: boolean;
     id?: string;
     indentSize?: number;
@@ -52,6 +53,8 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     showHeader?: boolean;
     size?: Size;
     style?: React.CSSProperties;
+    /** `header` lands on every header cell, under the column's `onHeaderCell` style */
+    styles?: Partial<Record<TablePart, React.CSSProperties>>;
     title?: Title<RecordType>;
     virtualized?: Virtualized;
     onChange?: OnChange<RecordType>;

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { cloneElement, isValidElement, useImperativeHandle, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { cssClasses, strings, type DropdownPart } from '@fibrae/semi-foundation/components/dropdown/constants';
 import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
@@ -42,7 +42,7 @@ export interface DropdownMenuItemTitleType extends Omit<DropdownTitleProps, 'chi
 
 export type DropdownMenuItem = DropdownMenuItemType | DropdownMenuItemDividerType | DropdownMenuItemTitleType;
 
-export interface DropdownProps extends Omit<TooltipProps, 'disableArrowKeyDown'> {
+export interface DropdownProps extends Omit<TooltipProps, 'classNames' | 'disableArrowKeyDown' | 'styles'> {
     render?: React.ReactNode;
     children?: React.ReactNode;
     visible?: boolean;
@@ -53,8 +53,9 @@ export interface DropdownProps extends Omit<TooltipProps, 'disableArrowKeyDown'>
     trigger?: Trigger;
     motion?: boolean;
     className?: string;
-    contentClassName?: string | any[];
+    classNames?: Partial<Record<DropdownPart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<DropdownPart, React.CSSProperties>>;
     onVisibleChange?: (visible: boolean) => void;
     /**
      * How the items are selected (a submenu uses its own Dropdown's value); `active` marks selected items:
@@ -124,7 +125,7 @@ export interface DropdownHandle {
 
 function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> }) {
     const props = useDefaultProps('Dropdown', rawProps, defaultProps);
-    const { ref: _ref, children, position, trigger, onVisibleChange: _onVisibleChange, className, motion, style, render, menu, contentClassName, selectionMode, showTick, spacing, ...attr } = props;
+    const { ref: _ref, children, position, trigger, onVisibleChange: _onVisibleChange, className, motion, style, styles, render, menu, classNames, selectionMode, showTick, spacing, ...attr } = props;
 
     const parentContext = useDropdownContext();
     const { direction } = useConfigContext();
@@ -157,7 +158,7 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
     const focusTarget = useMemo(() => ({ focus: foundation.handleOpened }), [foundation]);
 
     // text or several nodes get the wrapper Tooltip would add, so onKeyDown reaches a real element
-    const child = (isValidElement(triggerNode) ? triggerNode : wrapSpan(triggerNode, props.wrapperClassName)) as React.ReactElement<Record<string, any>>;
+    const child = (isValidElement(triggerNode) ? triggerNode : wrapSpan(triggerNode, classNames?.wrapper, styles?.wrapper)) as React.ReactElement<Record<string, any>>;
     const { className: childClassName, onKeyDown: childKeyDown } = child.props;
     const menuButton = isMenuButton(child);
 
@@ -185,8 +186,8 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
                 ref={(node) => {
                     initialFocusRef.current = node && focusTarget;
                 }}
-                className={clsx(prefixCls, contentClassName)}
-                style={style}
+                className={clsx(prefixCls, classNames?.content)}
+                style={{ ...style, ...styles?.content }}
             >
                 <div className={`${prefixCls}-content`} x-semi-prop="render">
                     {content}
@@ -207,6 +208,8 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
     return (
         <InternalTooltip
             className={className}
+            classNames={{ wrapper: classNames?.wrapper }}
+            styles={{ wrapper: styles?.wrapper }}
             // the popup is an interactive menu, not a tooltip
             role="presentation"
             condition={disabledItem ? false : undefined}

@@ -10,6 +10,10 @@
                 "zh-CN": "缩略图根元素的类名。",
                 "en-US": "Class name of the thumbnail root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `img`（内部的 img 节点），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `img` (the inner img element); merged with the built-in classes."
+            },
             "crossOrigin": {
                 "zh-CN": "透传给原生 img 标签的 crossOrigin，可选 `anonymous` 或 `use-credentials`。设置后预览图片也使用同一值，未设置时预览图片取 `preview.crossOrigin`。",
                 "en-US": "The crossOrigin passed to the native img element, `anonymous` or `use-credentials`. When set, the preview image uses the same value; otherwise it uses `preview.crossOrigin`."
@@ -22,14 +26,6 @@
                 "zh-CN": "图片显示高度，数值按 px 处理。",
                 "en-US": "Display height of the image; a number is in px."
             },
-            "imgCls": {
-                "zh-CN": "自定义样式类名，透传给 img 节点。",
-                "en-US": "Custom class name passed to the img element."
-            },
-            "imgStyle": {
-                "zh-CN": "自定义样式，透传给 img 节点。",
-                "en-US": "Custom style passed to the img element."
-            },
             "onClick": {
                 "zh-CN": "点击图片时调用，绑定在内部的 img 节点上。",
                 "en-US": "Called when the image is clicked; bound to the inner img element."
@@ -39,8 +35,8 @@
                 "en-US": "Placeholder content shown until the image has loaded; without it, a skeleton is shown."
             },
             "preview": {
-                "zh-CN": "预览参数，为 false 时禁用预览。对象接受 ImagePreview 的属性，但不含 lazyLoad、lazyLoadMargin、children、className 与 style（预览样式请用 previewCls、previewStyle）。",
-                "en-US": "Preview options; false disables the preview. The object accepts the ImagePreview props except lazyLoad, lazyLoadMargin, children, className and style (use previewCls and previewStyle to style the preview)."
+                "zh-CN": "预览参数，为 false 时禁用预览。对象接受 ImagePreview 的属性，但不含 lazyLoad、lazyLoadMargin、children、className 与 style（预览层的样式请用 `classNames.preview`、`styles.preview`）。",
+                "en-US": "Preview options; false disables the preview. The object accepts the ImagePreview props except lazyLoad, lazyLoadMargin, children, className and style (use `classNames.preview` and `styles.preview` to style the preview layer)."
             },
             "ref": {
                 "zh-CN": "内部 img 元素的引用。",
@@ -57,6 +53,10 @@
             "style": {
                 "zh-CN": "缩略图根元素的样式。",
                 "en-US": "Style of the thumbnail root element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "width": {
                 "zh-CN": "图片显示宽度，数值按 px 处理。",
@@ -78,6 +78,10 @@
             "className": {
                 "zh-CN": "分组根 div 的类名。",
                 "en-US": "Class name of the group root div."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `preview`（预览层，即 `role=\"dialog\"` 元素），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `preview` (the preview layer, the `role=\"dialog\"` element); merged with the built-in classes."
             },
             "closable": {
                 "zh-CN": "是否显示关闭按钮。",
@@ -203,14 +207,6 @@
                 "zh-CN": "预加载的步长，默认 `2`。",
                 "en-US": "Step size of preloading, `2` by default."
             },
-            "previewCls": {
-                "zh-CN": "自定义预览层的类名。",
-                "en-US": "Custom class name of the preview layer."
-            },
-            "previewStyle": {
-                "zh-CN": "自定义预览层的样式。",
-                "en-US": "Custom style of the preview layer."
-            },
             "previewTitle": {
                 "zh-CN": "预览顶部标题，同时作为预览对话框的读屏名称；组内图片的 `preview.previewTitle` 优先。",
                 "en-US": "Title at the top of the preview, also the accessible name of the preview dialog; the `preview.previewTitle` of an image in a group takes precedence."
@@ -262,6 +258,10 @@
             "style": {
                 "zh-CN": "分组根 div 的样式。",
                 "en-US": "Style of the group root div."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "viewerVisibleDelay": {
                 "zh-CN": "隐藏预览操作按钮前的无操作时长，单位为毫秒，默认 `10000`。",

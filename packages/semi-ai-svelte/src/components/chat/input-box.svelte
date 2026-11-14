@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { ClassValue } from 'svelte/elements';
     import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/components/chat/inputbox-foundation';
     import { useFoundation } from '@fibrae/semi-ui-svelte/base';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';
@@ -21,7 +22,7 @@
         pasteUpload: boolean;
         uploadProps?: ChatProps['uploadProps'];
         uploadTipProps?: ChatProps['uploadTipProps'];
-        inputBoxCls?: string;
+        inputBoxClass?: ClassValue;
         inputBoxStyle?: string;
         inputArea?: ChatProps['inputArea'];
         uploadButton?: ChatProps['uploadButton'];
@@ -34,7 +35,7 @@
     type Foundation = InputBoxFoundation<InputBoxProps>;
     type Adapter = InputBoxAdapter<InputBoxProps>;
 
-    let { placeholder, showClearContext, sendHotKey, canSend, disableSend, clickUpload, dragUpload, pasteUpload, uploadProps, uploadTipProps, inputBoxCls, inputBoxStyle, inputArea, uploadButton, uploadTip, onSend, onClear, onInputChange }: InputBoxProps = $props();
+    let { placeholder, showClearContext, sendHotKey, canSend, disableSend, clickUpload, dragUpload, pasteUpload, uploadProps, uploadTipProps, inputBoxClass, inputBoxStyle, inputArea, uploadButton, uploadTip, onSend, onClear, onInputChange }: InputBoxProps = $props();
 
     // shortcut: one placement per node. A custom #inputArea that renders the same node twice (defaultNode and inputNode, or
     // uploadNode) leaves these refs on the last instance only; upgrade by registering each instance as Solid's input does.
@@ -101,7 +102,7 @@
 {/snippet}
 
 {#snippet defaultNode()}
-    <InputBoxLayout class={inputBoxCls} clear={showClearContext ? clearNode : undefined} input={inputNode} onInnerClick={focusInput} send={sendNode} style={inputBoxStyle} upload={uploadMounted ? uploadNode : undefined} />
+    <InputBoxLayout class={inputBoxClass} clear={showClearContext ? clearNode : undefined} input={inputNode} onInnerClick={focusInput} send={sendNode} style={inputBoxStyle} upload={uploadMounted ? uploadNode : undefined} />
 {/snippet}
 
 {#if inputArea}

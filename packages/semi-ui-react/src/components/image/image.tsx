@@ -25,7 +25,7 @@ const defaultProps = {
 
 export default function Image(rawProps: ImageProps) {
     const props = useDefaultProps('Image', rawProps, defaultProps);
-    const { ref, src, width, height, alt, style, className, crossOrigin, preview, fallback, placeholder, setDownloadName, imgCls, imgStyle, onLoad, onError, ...restProps } = props;
+    const { ref, src, width, height, alt, style, className, crossOrigin, preview, fallback, placeholder, setDownloadName, classNames, styles, onLoad, onError, ...restProps } = props;
 
     const context = usePreviewContext();
     const { locale } = useLocale('Image');
@@ -70,9 +70,9 @@ export default function Image(rawProps: ImageProps) {
     const previewProps =
         previewObject && canPreview
             ? {
-                  ...omit(previewObject, ['previewCls', 'previewStyle']),
-                  className: previewObject.previewCls,
-                  style: previewObject.previewStyle,
+                  ...omit(previewObject, ['classNames', 'styles']),
+                  className: previewObject.classNames?.preview,
+                  style: previewObject.styles?.preview,
               }
             : {};
 
@@ -114,12 +114,15 @@ export default function Image(rawProps: ImageProps) {
                 <HydratedImage
                     ref={ref}
                     {...restProps}
-                    className={clsx(`${prefixCls}-img`, {
-                        [`${prefixCls}-img-preview`]: canOpen,
-                        [`${prefixCls}-img-error`]: loadStatus === 'error',
-                        [imgCls]: Boolean(imgCls),
-                    })}
-                    style={imgStyle}
+                    className={clsx(
+                        `${prefixCls}-img`,
+                        {
+                            [`${prefixCls}-img-preview`]: canOpen,
+                            [`${prefixCls}-img-error`]: loadStatus === 'error',
+                        },
+                        classNames?.img
+                    )}
+                    style={styles?.img}
                     data-src={src}
                     alt={alt}
                     crossOrigin={crossOrigin}

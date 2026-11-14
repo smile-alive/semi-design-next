@@ -817,7 +817,7 @@ describe('DatePicker 可访问性', () => {
 
     it('禁用的 DatePicker 是 Tooltip 的特殊触发器：外包 span 接收点击，DatePicker 不接收指针', () => {
         const { container } = render(() => (
-            <Tooltip wrapperClassName="probe" content="tip" trigger="click">
+            <Tooltip classNames={{ wrapper: 'probe' }} content="tip" trigger="click">
                 {(t) => <DatePicker disabled {...t()} />}
             </Tooltip>
         ));

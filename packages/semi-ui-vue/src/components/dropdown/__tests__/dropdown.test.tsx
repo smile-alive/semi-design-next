@@ -74,10 +74,17 @@ describe('Dropdown', () => {
         expect(document.querySelectorAll('.semi-dropdown-item')).toHaveLength(0);
     });
 
-    it('Dropdown contentClassName', async () => {
-        renderDD({ contentClassName: 'test', trigger: 'custom', visible: true });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        render(Dropdown, {
+            props: { motion: false, classNames: { content: ['my-content'], wrapper: 'my-wrapper' }, styles: { content: { order: 2 }, wrapper: { order: 3 } }, trigger: 'custom', visible: true },
+            slots: { default: () => 'text trigger', content: menuOf() },
+        });
         await screen.findByRole('menu');
-        expect(document.querySelector('.semi-dropdown.test')).not.toBeNull();
+        expect(document.querySelector('.semi-dropdown')).toHaveClass('my-content');
+        expect(document.querySelector('.semi-dropdown')).toHaveStyle({ order: '2' });
+        const wrapper = document.querySelector('.semi-tooltip-trigger-wrapper');
+        expect(wrapper).toHaveClass('my-wrapper');
+        expect(wrapper).toHaveStyle({ order: '3' });
     });
 
     it('Dropdown showTick', async () => {
@@ -749,7 +756,7 @@ describe('Dropdown 行为', () => {
     it('从 semiGlobal overrideDefaultProps 读取默认值', async () => {
         semiGlobal.config = {
             overrideDefaultProps: {
-                Dropdown: { trigger: 'click', contentClassName: 'global-content', motion: false },
+                Dropdown: { trigger: 'click', classNames: { content: 'global-content' }, motion: false },
             },
         };
         render(Dropdown, { slots: { default: () => <button>global trigger</button>, content: menuOf() } });
@@ -1103,7 +1110,7 @@ describe('Dropdown Vue 受控与插槽', () => {
                 Dropdown: {
                     trigger: 'click',
                     motion: false,
-                    contentClassName: 'global-content',
+                    classNames: { content: 'global-content' },
                     role: 'group',
                     spacing: 12,
                     keepDOM: true,
@@ -1122,7 +1129,7 @@ describe('Dropdown Vue 受控与插槽', () => {
         expect(item('A')).toBeInTheDocument();
         document.body.innerHTML = '';
         render(Dropdown, {
-            props: { role: 'presentation', spacing: 3, contentClassName: 'own' },
+            props: { role: 'presentation', spacing: 3, classNames: { content: 'own' } },
             slots: { default: () => <button>global b</button>, content: menuOf([['B']]) },
         });
         await userEvent.click(screen.getByRole('button', { name: 'global b' }));
@@ -1191,7 +1198,7 @@ describe('Dropdown Vue 受控与插槽', () => {
 
     it('文本与多节点触发器包在 span 里，不带 aria-haspopup，仍响应键盘', async () => {
         render(Dropdown, {
-            props: { motion: false, trigger: 'click', wrapperClassName: 'own-wrapper' },
+            props: { motion: false, trigger: 'click', classNames: { wrapper: 'own-wrapper' } },
             slots: { default: () => 'text trigger', content: menuOf([['Text first'], ['Text last']]) },
         });
         render(Dropdown, {

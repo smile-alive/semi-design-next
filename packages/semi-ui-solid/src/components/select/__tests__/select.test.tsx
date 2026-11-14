@@ -98,8 +98,8 @@ describe('Select', () => {
         expect(getTrigger()).toHaveClass(`${prefixCls}-small`);
     });
 
-    it('自定义 dropdownClassName 与 dropdownStyle', () => {
-        renderSelect({ dropdownClassName: 'ddc', dropdownStyle: { color: 'red' }, defaultOpen: true });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderSelect({ classNames: { dropdown: 'ddc' }, styles: { dropdown: { color: 'red' } }, defaultOpen: true });
         const dropdown = document.querySelector('.ddc');
         expect(dropdown).not.toBeNull();
         expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });

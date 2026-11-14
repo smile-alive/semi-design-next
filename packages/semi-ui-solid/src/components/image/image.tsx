@@ -26,7 +26,7 @@ const defaultProps = {
 
 export default function Image(rawProps: ImageProps) {
     const props = useDefaultProps('Image', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['alt', 'children', 'class', 'crossOrigin', 'fallback', 'height', 'imgCls', 'imgStyle', 'onError', 'onLoad', 'placeholder', 'preview', 'setDownloadName', 'src', 'style', 'width']);
+    const [local, rest] = splitProps(props, ['alt', 'children', 'class', 'crossOrigin', 'fallback', 'classNames', 'height', 'onError', 'onLoad', 'placeholder', 'preview', 'setDownloadName', 'src', 'style', 'styles', 'width']);
 
     const group = usePreviewContext();
     const locale = useLocale('Image');
@@ -90,8 +90,8 @@ export default function Image(rawProps: ImageProps) {
         if (!object) {
             return {};
         }
-        const { previewCls, previewStyle, ...others } = object;
-        return { ...others, class: previewCls, style: previewStyle };
+        const { classNames, styles, ...others } = object;
+        return { ...others, class: classNames?.preview, style: styles?.preview };
     };
 
     const fallbackContent = () => {
@@ -145,9 +145,9 @@ export default function Image(rawProps: ImageProps) {
                             [`${prefixCls}-img-preview`]: canOpen(),
                             [`${prefixCls}-img-error`]: loadStatus() === 'error',
                         },
-                        local.imgCls
+                        local.classNames?.img
                     )}
-                    style={local.imgStyle}
+                    style={local.styles?.img}
                     data-src={local.src}
                     alt={local.alt}
                     crossOrigin={local.crossOrigin}

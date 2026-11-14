@@ -75,6 +75,7 @@ export default function DateInput(rawProps: DateInputProps) {
         type,
         value,
         inputValue,
+        inputClassName,
         inputStyle,
         disabled,
         showClear,
@@ -193,6 +194,7 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         ref={rangeInputStartRef}
+                        className={inputClassName}
                         style={inputStyle}
                         autoFocus={autofocus}
                         disabled={disabled}
@@ -226,6 +228,7 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         ref={rangeInputEndRef}
+                        className={inputClassName}
                         style={inputStyle}
                         disabled={disabled}
                         placeholder={rangeEndPlaceholder}
@@ -295,7 +298,7 @@ export default function DateInput(rawProps: DateInputProps) {
             <InternalInput
                 {...rest}
                 ref={inputRef}
-                className={inputCls}
+                className={clsx(inputCls, inputClassName)}
                 style={inputStyle}
                 autoFocus={autofocus}
                 disabled={disabled}

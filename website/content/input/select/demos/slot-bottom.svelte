@@ -14,7 +14,7 @@
 
 <div>
     <p>outerBottomSlot:</p>
-    <Select aria-label="outerBottomSlot" autoAdjustOverflow={false} defaultOpen dropdownStyle="width: 180px" maxHeight={150} {optionList} placeholder="自定义外侧底部slot，始终显示" position="bottom" style="width: 300px">
+    <Select aria-label="outerBottomSlot" autoAdjustOverflow={false} defaultOpen maxHeight={150} {optionList} placeholder="自定义外侧底部slot，始终显示" position="bottom" style="width: 300px" styles={{ dropdown: 'width: 180px' }}>
         {#snippet outerBottomSlot()}
             <div style={outSlotStyle}>
                 <span style="color: var(--semi-color-link)">未找到应用?</span>
@@ -22,7 +22,7 @@
         {/snippet}
     </Select>
     <p style="margin-top: 200px">innerBottomSlot:</p>
-    <Select aria-label="innerBottomSlot" dropdownStyle="width: 180px" maxHeight={150} {optionList} placeholder="自定义内侧底部slot，滚动至底部显示" style="width: 300px">
+    <Select aria-label="innerBottomSlot" maxHeight={150} {optionList} placeholder="自定义内侧底部slot，滚动至底部显示" style="width: 300px" styles={{ dropdown: 'width: 180px' }}>
         {#snippet innerBottomSlot()}
             <div style={innerSlotStyle}>点击加载更多</div>
         {/snippet}

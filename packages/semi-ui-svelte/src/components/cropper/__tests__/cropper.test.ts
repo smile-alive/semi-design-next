@@ -181,8 +181,8 @@ describe('Svelte Cropper', () => {
         expect(getCorners(container)).toEqual([]);
     });
 
-    it('cropperBoxStyle 与 cropperBoxCls 应用到裁剪框，并以其计算尺寸为准', async () => {
-        const { container } = await renderLoaded({ cropperBoxCls: 'my-box', cropperBoxStyle: 'outline-color: red; width: 10px' });
+    it('classNames 与 styles 按部位落到对应元素，裁剪框以其计算尺寸为准', async () => {
+        const { container } = await renderLoaded({ classNames: { cropperBox: 'my-box' }, styles: { cropperBox: 'outline-color: red; width: 10px' } });
         expect(getBox(container)).toHaveClass('semi-cropper-box', 'my-box');
         expect(getBox(container).style.outlineColor).toBe('red');
         expect(getBox(container).style.width).toBe('300px');

@@ -15,8 +15,8 @@
         size: () => semiDefault('Spin', 'size', 'middle'),
         spinning: () => semiDefault('Spin', 'spinning', true),
         delay: () => semiDefault('Spin', 'delay', 0),
-        wrapperClassName: semiGlobalDefault('Spin', 'wrapperClassName'),
-        childStyle: semiGlobalDefault('Spin', 'childStyle'),
+        classNames: semiGlobalDefault('Spin', 'classNames'),
+        styles: semiGlobalDefault('Spin', 'styles'),
     });
 
     defineSlots<SpinSlots>();
@@ -57,7 +57,6 @@
         :aria-busy="isBlocked() ? true : undefined"
         :class="[
             prefixCls,
-            props.wrapperClassName,
             {
                 [`${prefixCls}-${props.size}`]: props.size,
                 [`${prefixCls}-block`]: $slots.default,
@@ -75,7 +74,7 @@
                 <slot name="tip" />
             </div>
         </output>
-        <div :class="`${prefixCls}-children`" :inert="isBlocked()" :style="props.childStyle" x-semi-prop="children">
+        <div :class="[`${prefixCls}-children`, props.classNames?.child]" :inert="isBlocked()" :style="props.styles?.child" x-semi-prop="children">
             <slot />
         </div>
     </div>

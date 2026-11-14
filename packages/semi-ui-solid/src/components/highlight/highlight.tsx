@@ -1,7 +1,7 @@
 import { createMemo, type JSX, Index, Show } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
+import { cssClasses, type HighlightPart } from '@fibrae/semi-foundation/components/highlight/constants';
 import { findAll, type SearchWords as CoreSearchWords } from '@fibrae/semi-foundation/components/highlight/foundation';
 import '@fibrae/semi-foundation/components/highlight/highlight.scss';
 import { useDefaultProps } from '../../base/index';
@@ -20,8 +20,8 @@ export interface HighlightProps {
     caseSensitive?: boolean;
     sourceString?: string;
     searchWords?: string | SearchWords;
-    highlightStyle?: JSX.CSSProperties;
-    highlightClassName?: string;
+    classNames?: Partial<Record<HighlightPart, string>>;
+    styles?: Partial<Record<HighlightPart, JSX.CSSProperties>>;
     component?: string;
 }
 
@@ -52,7 +52,7 @@ export default function Highlight(rawProps: HighlightProps) {
         <Index each={chunks()}>
             {(chunk) => (
                 <Show when={chunk().highlight} fallback={chunk().text}>
-                    <Dynamic component={props.component || 'mark'} class={clsx(`${prefixCls}-tag`, props.highlightClassName, chunk().class)} style={{ ...props.highlightStyle, ...chunk().style }}>
+                    <Dynamic component={props.component || 'mark'} class={clsx(`${prefixCls}-tag`, props.classNames?.highlight, chunk().class)} style={{ ...props.styles?.highlight, ...chunk().style }}>
                         {chunk().text}
                     </Dynamic>
                 </Show>

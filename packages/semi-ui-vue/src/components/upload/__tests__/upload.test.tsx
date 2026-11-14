@@ -834,15 +834,18 @@ describe('Upload', () => {
         expect(document.querySelector(`button.${prefix}-file-card-replace`)).not.toBeNull();
     });
 
-    it('itemStyle 属性', () => {
-        renderUpload({ defaultFileList, itemStyle: { backgroundColor: 'red' } });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        renderUpload({ defaultFileList, classNames: { item: 'my-item' }, styles: { item: { backgroundColor: 'red' } } });
         const cards = screen.getAllByRole('listitem');
         expect(cards).toHaveLength(2);
-        cards.forEach((card) => expect(card).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' }));
+        cards.forEach((card) => {
+            expect(card).toHaveClass('my-item');
+            expect(card).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' });
+        });
     });
 
-    it('picture 模式只传 itemStyle 宽高时卡片保留该宽高', () => {
-        renderUpload({ listType: 'picture', defaultFileList, itemStyle: { width: '120px', height: '90px' } });
+    it('picture 模式只传 styles.item 宽高时卡片保留该宽高', () => {
+        renderUpload({ listType: 'picture', defaultFileList, styles: { item: { width: '120px', height: '90px' } } });
         getPicCards().forEach((card) => expect(card).toHaveStyle({ width: '120px', height: '90px' }));
     });
 

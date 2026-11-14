@@ -20,7 +20,7 @@ type Foundation = TimeInputFoundation<TimeInputProps, FocusEvent>;
 type Adapter = TimeInputAdapter<TimeInputProps, FocusEvent>;
 
 export default function TimeInput(props: TimeInputProps) {
-    const [local, rest] = splitProps(props, ['prefixCls', 'inputReadOnly', 'validateStatus', 'value', 'invalid', 'focusOnOpen', 'onChange', 'onFocus', 'onBlur', 'inputRef', 'prefix', 'insetLabel']);
+    const [local, rest] = splitProps(props, ['prefixCls', 'class', 'inputReadOnly', 'validateStatus', 'value', 'invalid', 'focusOnOpen', 'onChange', 'onFocus', 'onBlur', 'inputRef', 'prefix', 'insetLabel']);
 
     let input: HTMLInputElement | undefined;
 
@@ -46,10 +46,14 @@ export default function TimeInput(props: TimeInputProps) {
             <Input
                 {...rest}
                 inputRef={setInput}
-                class={clsx(`${local.prefixCls}-input`, {
-                    [`${local.prefixCls}-input-invalid`]: local.invalid,
-                    [`${local.prefixCls}-input-readonly`]: local.inputReadOnly,
-                })}
+                class={clsx(
+                    `${local.prefixCls}-input`,
+                    {
+                        [`${local.prefixCls}-input-invalid`]: local.invalid,
+                        [`${local.prefixCls}-input-readonly`]: local.inputReadOnly,
+                    },
+                    local.class
+                )}
                 readOnly={Boolean(local.inputReadOnly)}
                 value={local.value}
                 // the host's own values are forwarded; global Input defaults must not add the rest

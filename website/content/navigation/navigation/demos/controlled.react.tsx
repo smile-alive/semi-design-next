@@ -33,7 +33,7 @@ export default function NavigationDemo() {
             isCollapsed={isCollapsed}
             openKeys={openKeys}
             selectedKeys={selectedKeys}
-            bodyStyle={{ height: 300 }}
+            styles={{ body: { height: 300 } }}
             items={items}
             header={{
                 logo: <IconSemiLogo style={{ height: '36px', fontSize: 36 }} />,

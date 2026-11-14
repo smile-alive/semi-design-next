@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { CascaderPart } from '@fibrae/semi-foundation/components/cascader/constants';
 import type { BasicCascaderData, BasicEntity, BasicScrollPanelProps, KeyMapProps, Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { CheckboxEvent } from '../checkbox/index.js';
@@ -139,8 +140,8 @@ export interface CascaderProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
     autoAdjustOverflow?: boolean;
     position?: Position;
     stopPropagation?: boolean | string;
-    dropdownClassName?: string;
-    dropdownStyle?: string;
+    classNames?: Partial<Record<CascaderPart, ClassValue>>;
+    styles?: Partial<Record<CascaderPart, string>>;
     preventScroll?: boolean;
     virtualizeInSearch?: CascaderVirtualize;
     onChange?: (value: CascaderChangeValue) => void;

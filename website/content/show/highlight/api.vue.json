@@ -12,11 +12,14 @@
                 "zh-CN": "需要高亮的文本：字符串、字符串数组，或带 text、class、style 的对象数组。",
                 "en-US": "Text to highlight: a string, a string array, or an array of objects with text, class and style."
             },
-            "highlightStyle": {
-                "zh-CN": "高亮标签的内联样式；Vue 不会给数值补 px，长度要写成字符串。",
-                "en-US": "Inline style of the highlight tag. Vue adds no px to numbers, so write lengths as strings."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 highlight（每个高亮标签），值的写法同 class，与组件自带的类名合并；searchWords 中单项的 class 排在其后。",
+                "en-US": "Class names of the inner parts, keyed by highlight (every highlight tag); values take any class binding and merge with the built-in classes, followed by the class of a searchWords item."
             },
-            "highlightClassName": { "zh-CN": "高亮标签的类名。", "en-US": "Class name of the highlight tag." },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 highlight（每个高亮标签），值的写法同 style；searchWords 中单项的 style 覆盖同名属性。Vue 不会给数值补 px，长度要写成字符串。",
+                "en-US": "Styles of the inner parts, keyed by highlight (every highlight tag); values take any style binding, and the style of a searchWords item overrides the same properties. Vue adds no px to numbers, so write lengths as strings."
+            },
             "component": { "zh-CN": "高亮标签名。", "en-US": "Tag name of the highlight element." }
         },
         "events": {},

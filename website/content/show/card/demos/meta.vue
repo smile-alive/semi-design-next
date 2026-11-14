@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <Card :footerStyle="{ display: 'flex', justifyContent: 'flex-end' }" footerLine :style="{ maxWidth: '340px' }">
+    <Card footerLine :style="{ maxWidth: '340px' }" :styles="{ footer: { display: 'flex', justifyContent: 'flex-end' } }">
         <template #title>
             <Card.Meta title="Semi Doc">
                 <template #description>全面、易用、优质</template>

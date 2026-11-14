@@ -2,7 +2,7 @@ import type React from 'react';
 import { memo, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { type ValidateStatus, FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
+import { strings, cssClasses, type PanelType, type TimePickerPart } from '@fibrae/semi-foundation/components/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import { namedRole } from '@fibrae/semi-foundation/utils';
@@ -33,6 +33,9 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     autoFocus?: boolean;
     borderless?: boolean;
     className?: string;
+    /** `dropdown` is the panel card; `input` is the Input's root element */
+    classNames?: Partial<Record<TimePickerPart, string>>;
+    styles?: Partial<Record<TimePickerPart, React.CSSProperties>>;
     clearIcon?: React.ReactNode;
     defaultOpen?: boolean;
     defaultValue?: BaseValueType | BaseValueType[];
@@ -60,7 +63,6 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     hourStep?: number;
     id?: string;
     inputReadOnly?: boolean;
-    inputStyle?: React.CSSProperties;
     insetLabel?: React.ReactNode;
     insetLabelId?: string;
     minuteStep?: number;
@@ -71,8 +73,6 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     /** Range mode only: item `i` is shown as both the header and the footer of panel `i`, over panelHeader and panelFooter */
     panels?: React.ReactNode[];
     placeholder?: string;
-    popupClassName?: string;
-    popupStyle?: React.CSSProperties;
     position?: Position;
     preventScroll?: boolean;
     rangeSeparator?: string;
@@ -136,7 +136,6 @@ const defaultProps = {
     style: {},
     stopPropagation: true,
     className: '',
-    popupClassName: '',
     disabledHours: (): number[] => [],
     disabledMinutes: (): number[] => [],
     disabledSeconds: (): number[] => [],
@@ -186,6 +185,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         autoFocus,
         borderless,
         className,
+        classNames,
         clearIcon,
         dateFnsLocale: _dateFnsLocale,
         defaultOpen,
@@ -201,7 +201,6 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         hourStep,
         id,
         inputReadOnly,
-        inputStyle,
         insetLabel,
         insetLabelId,
         locale: _locale,
@@ -213,8 +212,6 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         panelHeader,
         panels,
         placeholder,
-        popupClassName: _popupClassName,
-        popupStyle,
         position: _position,
         preventScroll,
         rangeSeparator,
@@ -224,6 +221,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         size,
         stopPropagation,
         style,
+        styles,
         timeZone,
         triggerRender,
         type,
@@ -247,7 +245,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
     const position = TimePickerFoundation.getPosition(props, direction);
     const isRange = type === strings.TYPE_TIME_RANGE_PICKER;
     const useCustomTrigger = typeof triggerRender === 'function';
-    const popupClassName = clsx(TimePickerFoundation.getPanelClassNames({ ...props, prefixCls }), props.popupClassName);
+    const dropdownClassName = clsx(TimePickerFoundation.getPanelClassNames({ ...props, prefixCls }), classNames?.dropdown);
 
     // class props never carried ref; a triggerRender that spreads componentProps must not grab the handle
     const componentProps = { ...props };
@@ -375,8 +373,8 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
                 }}
             >
                 <Popover
-                    contentClassName={popupClassName}
-                    style={popupStyle}
+                    classNames={{ content: dropdownClassName }}
+                    styles={{ content: styles?.dropdown }}
                     aria-label={locale.panel[type]}
                     autoAdjustOverflow={autoAdjustOverflow}
                     content={panelContent}
@@ -397,7 +395,8 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
                                 {...rest}
                                 id={id}
                                 type={type}
-                                style={inputStyle}
+                                className={classNames?.input}
+                                style={styles?.input}
                                 aria-controls={open ? panelId : undefined}
                                 aria-describedby={ariaDescribedby}
                                 aria-errormessage={ariaErrormessage}

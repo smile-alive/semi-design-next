@@ -44,9 +44,9 @@
         defaultOpen: semiGlobalDefault('AutoComplete', 'defaultOpen'),
         // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
         disabled: undefined,
-        dropdownClassName: semiGlobalDefault('AutoComplete', 'dropdownClassName'),
+        classNames: semiGlobalDefault('AutoComplete', 'classNames'),
         dropdownMatchSelectWidth: () => semiDefault('AutoComplete', 'dropdownMatchSelectWidth', true),
-        dropdownStyle: semiGlobalDefault('AutoComplete', 'dropdownStyle'),
+        styles: semiGlobalDefault('AutoComplete', 'styles'),
         // A global id would repeat on every instance.
         insetLabelId: undefined,
         loading: () => semiDefault('AutoComplete', 'loading', false),
@@ -279,7 +279,7 @@
             </Input>
         </div>
         <template #content>
-            <div :id="listId" ref="listbox" v-bind="nameAttrs()" :class="[`${prefix}-option-list`, props.dropdownClassName]" role="listbox" :style="[{ maxHeight: toCssLength(props.maxHeight) }, props.dropdownStyle]" @mousedown.prevent>
+            <div :id="listId" ref="listbox" v-bind="nameAttrs()" :class="[`${prefix}-option-list`, props.classNames?.dropdown]" role="listbox" :style="[{ maxHeight: toCssLength(props.maxHeight) }, props.styles?.dropdown]" @mousedown.prevent>
                 <div v-if="props.loading" :class="`${prefix}-loading-wrapper`">
                     <Spin />
                 </div>

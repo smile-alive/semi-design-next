@@ -139,11 +139,22 @@ describe('Tabs', () => {
         expect(tab('titleA')).toHaveAttribute('aria-selected', 'true');
     });
 
-    it('Tabs 带自定义 class、style 和 contentStyle', () => {
-        setup({ class: 'test', style: 'color: red', contentStyle: 'color: blue' }, twoPanes);
+    it('Tabs 带自定义 class 和 style', () => {
+        setup({ class: 'test', style: 'color: red' }, twoPanes);
         expect(getRoot()).toHaveClass('test', prefix);
         expect(getRoot()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(getContent()).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        stubIntersectionObserver();
+        const parts = ['tabBar', 'content', 'visibleTabs'] as const;
+        const selectors = { tabBar: `${prefix}-bar`, content: `${prefix}-content`, visibleTabs: `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper` };
+        setup({ collapsible: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) }, threePanes);
+        for (const part of parts) {
+            const el = getElement(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('不同类型的 Tabs', () => {
@@ -583,7 +594,7 @@ describe('Tabs 自定义标签栏', () => {
 
     it('tabBar 接收只含数据的标签栏属性和默认标签栏', async () => {
         const onChange = vi.fn<(activeKey: string) => void>();
-        setup({ onChange, tabBarClassName: 'bar', tabBarStyle: 'color: red' }, threePanes, { snippets: ['wrap-bar'] });
+        setup({ onChange, classNames: { tabBar: 'bar' }, styles: { tabBar: 'color: red' } }, threePanes, { snippets: ['wrap-bar'] });
         const bar = document.querySelector(`.wrap .${prefix}-bar`);
         expect(bar).toHaveClass('bar');
         expect(bar).toHaveStyle({ color: 'rgb(255, 0, 0)' });
@@ -728,7 +739,7 @@ describe('Tabs collapsible', () => {
         const onVisibleTabsChange = vi.fn<(visibleState: Map<string, boolean>) => void>();
         const onChange = vi.fn<(activeKey: string) => void>();
         const panes = keyPanes(['k0', 'k1', 'k2', 'k3', 'k4']);
-        setup({ collapsible: true, onVisibleTabsChange, onChange, visibleTabsStyle: 'color: red', dropdownProps: { end: { trigger: 'click' } } }, panes);
+        setup({ collapsible: true, onVisibleTabsChange, onChange, styles: { visibleTabs: 'color: red' }, dropdownProps: { end: { trigger: 'click' } } }, panes);
         const wrapper = document.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`);
         expect(getBar()).toHaveClass(`${prefix}-bar-collapse`);
         expect(screen.getByRole('tablist')).toBe(wrapper);

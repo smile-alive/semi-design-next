@@ -294,6 +294,15 @@ describe('Svelte Select 搜索与新建', () => {
         expect(store.log).toEqual(['change "new"']);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        setup({ classNames: { dropdown: 'ddc' }, styles: { dropdown: 'color: red' } });
+        await clickTrigger();
+        const dropdown = getElement('.ddc');
+        expect(dropdown).toHaveClass(`${prefixCls}-option-list-wrapper`);
+        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(dropdown).toContainElement(screen.getByRole('listbox'));
+    });
+
     it('searchPosition 为 dropdown 时搜索框在下拉中，触发器仍是 combobox', async () => {
         setup({ filter: true, searchPosition: 'dropdown' });
         await clickTrigger();

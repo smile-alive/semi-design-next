@@ -1,4 +1,5 @@
-import type { ComponentPublicInstance, StyleValue, VNode } from 'vue';
+import type { ClassValue, ComponentPublicInstance, StyleValue, VNode } from 'vue';
+import type { TreeSelectPart } from '@fibrae/semi-foundation/components/tree-select/constants';
 import type { CheckRelation, ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/interface';
@@ -89,11 +90,9 @@ export interface TreeSelectProps<T = TreeSelectValue, Multiple extends boolean |
     autoAdjustOverflow?: boolean;
     position?: Position;
     stopPropagation?: boolean | string;
-    dropdownClassName?: string;
-    dropdownStyle?: StyleValue;
+    classNames?: Partial<Record<TreeSelectPart, ClassValue>>;
+    styles?: Partial<Record<TreeSelectPart, StyleValue>>;
     dropdownMatchSelectWidth?: boolean;
-    /** Goes on the `role="tree"` element */
-    optionListStyle?: StyleValue;
     preventScroll?: boolean;
     triggerTagWrap?: boolean;
 }

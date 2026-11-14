@@ -5,8 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | aspectRatio | 固定的裁切框宽高比；加载后改变时，裁切框按新比例重排。 | `number` | `semiGlobalDefault("Cropper", "aspectRatio")` |
-| cropperBoxCls | 裁切框类名。 | `string` | `semiGlobalDefault("Cropper", "cropperBoxCls")` |
-| cropperBoxStyle | 裁切框样式。 | `StyleValue` | `semiGlobalDefault("Cropper", "cropperBoxStyle")` |
+| classNames | 内部各部位的类名，键为 `cropperBox`（裁切框），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"cropperBox\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Cropper", "classNames")` |
 | defaultAspectRatio | 裁切框的初始宽高比，拖动时会随之变化。 | `number` | `1` |
 | fill | 裁切结果中非图片部分的填充色。 | `string` | `"rgba(0, 0, 0, 0)"` |
 | imgProps | 传给被裁切图片 img 标签的属性。src 与布局样式由组件决定，class、style 与组件自身的合并，onLoad 在组件处理完成后调用；alt 默认为空字符串，crossorigin 默认为 anonymous，均可覆盖。 | `ImgHTMLAttributes` | `semiGlobalDefault("Cropper", "imgProps")` |
@@ -17,6 +16,7 @@ import ApiType from '#/components/ApiType.astro';
 | shape | 裁切框形状。 | `CropperShape` | `"rect"` |
 | showResizeBox | 是否展示裁切框边角的调整块。 | `boolean` | `true` |
 | src | 被裁切图片的地址。 | `string` | `semiGlobalDefault("Cropper", "src")` |
+| styles | 内部各部位的内联样式，键同 classNames；`cropperBox` 与组件计算的宽高和位移合并，宽高与位移以组件为准。 | <ApiType detail={"Partial\u003cRecord\u003c\"cropperBox\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Cropper", "styles")` |
 | zoom | 受控的缩放比例，叠加在图片适应裁切区域的初始缩放之上。 | `number` | `semiGlobalDefault("Cropper", "zoom")` |
 | zoomStep | 滚轮缩放的步长。 | `number` | `0.1` |
 

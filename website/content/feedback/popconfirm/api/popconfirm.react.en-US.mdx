@@ -10,18 +10,17 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | `aria-label` of the dialog. When given, it takes precedence over the title. | `string` | - |
 | aria-labelledby | `aria-labelledby` of the dialog. Defaults to the title, or to the content without a title. | `string` | - |
 | arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires `showArrow`. Defaults to `true`. | `boolean` | - |
-| arrowStyle | Border color, background color and border opacity of the arrow. | <ApiType detail={"Pick\u003cReact.CSSProperties, 'backgroundColor' \u007c 'borderColor'> & { borderOpacity?: string \u007c number }"}>Type</ApiType> | - |
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. Defaults to `true`. | `boolean` | - |
 | cancelButtonProps | Props of the cancel button. `autoFocus` focuses it on open; `className`, `style` and other props land on the button. | `ButtonProps` | - |
 | cancelText | Cancel button text. Defaults to the locale entry `Popconfirm.cancel` (`取消` in zh_CN, `Cancel` in en_US). | `string` | - |
 | cancelType | Cancel button type. | `ButtonType` | `"tertiary"` |
 | children | The trigger. An element receives the trigger events and ARIA attributes. Other content such as text is wrapped in the span of Tooltip. | `React.ReactNode` | - |
 | className | Class name of the confirmation card (`.semi-popconfirm`), not of the popup. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `content` (the content container `.semi-popover` inside the popup) and `arrow`; merged with the built-in classes. The class of the confirmation card `.semi-popconfirm` is set with `className`. | <ApiType detail={"Partial\u003cRecord\u003cPopconfirmPart, string>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click on the popup or anything inside it closes it. | `TooltipProps['clickToHide']` | - |
 | closeOnEsc | Whether Esc closes the open card, wherever focus is; the topmost popup layer takes the key. Defaults to `true`. With `trigger` `custom` it only calls `onEscKeyDown`; with a controlled `visible` it also requests the close through `onVisibleChange(false)`, and the caller decides whether to close. | `TooltipProps['closeOnEsc']` | - |
 | condition | Whether it may be triggered. Defaults to `true`. Only an explicit `false` disables the `hover`, `click` and `focus` triggers. Changing it from `true` to `false` closes an open card at once; with a controlled `visible` it only requests the close through `onVisibleChange`, and the card closes once the caller writes back. | `boolean` | - |
 | content | Content of the card: a ReactNode or a function. The function receives `{ initialFocusRef }`; pass `initialFocusRef` as the `ref` of the element that takes focus on open. | `TooltipProps['content']` | - |
-| contentClassName | Class name of the content container (`.semi-popover`) inside the popup. It is set apart from the `className` of the confirmation card. | `string \| any[]` | - |
 | defaultVisible | Whether it is initially shown when uncontrolled. | `boolean` | - |
 | disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the card. Defaults to `false`. | `TooltipProps['disableArrowKeyDown']` | - |
 | disabled | Whether it is disabled. A disabled Popconfirm renders only the trigger and never opens. | `boolean` | `false` |
@@ -50,6 +49,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. Defaults to `4`, or `10` with `showArrow`. An object sets the horizontal and vertical distances. | `number \| { x: number; y: number }` | - |
 | stopPropagation | Whether click events on the popup stop bubbling. Clicks inside the card never reach document listeners. | `boolean \| string` | `true` |
 | style | Inline style of the confirmation card. | `CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. `content` styles the content container; `arrow` holds the arrow's `borderColor`, `backgroundColor` and `borderOpacity`. | `PopoverProps['styles']` | - |
 | title | Title, a string or a ReactNode. With a title, the dialog is named by it (see `aria-labelledby`). | `React.ReactNode` | - |
 | trigger | When it shows: `hover`, `focus`, `click`, `contextMenu` or `custom`. With a controlled `visible`, trigger events only request opening or closing through `onVisibleChange`. | `Trigger` | `"click"` |
 | visible | Controlled visibility. When given, this value decides whether it shows. Clicking the trigger, confirming, cancelling, clicking outside and Esc only request a change through `onVisibleChange`, which takes effect once the caller writes `visible` back. | `boolean` | - |

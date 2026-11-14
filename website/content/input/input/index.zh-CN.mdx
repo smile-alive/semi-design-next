@@ -214,13 +214,13 @@ import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-solid';
 
 ### 设置 TextArea 高度
 
-通过 `textareaStyle` 可以设置内部 textarea 元素的样式，如高度、背景色等。
+通过 `styles.textarea` 可以设置内部 textarea 元素的样式，如高度、背景色等。
 
 <Demo id="textarea-height" />
 
 ### 行号
 
-通过设置 `showLineNumber` 展示行号。可用 `lineNumberStart` 设置起始行号，或通过 `lineNumberStyle`/`lineNumberClassName` 自定义行号区样式。
+通过设置 `showLineNumber` 展示行号。可用 `lineNumberStart` 设置起始行号，或通过 `styles.lineNumber`、`classNames.lineNumber` 自定义行号区样式。
 
 <Demo id="line-number" />
 
@@ -359,7 +359,7 @@ Input 和 TextArea 均支持该属性。
 
 <TextAreaReactApi />
 
-`className`、`style` 落在外层 wrapper `div` 上，`textareaStyle` 落在原生 `textarea` 上；其余原生属性与事件（如 `aria-*`、`id`、`name`、`onClick`）落在原生 `textarea` 上。`onFocus`、`onBlur` 监听在外层 `div` 上，焦点在文本框与清除按钮之间移动时不触发。`onCompositionStart`、`onCompositionEnd`、`onCompositionUpdate` 为输入法组合开始、结束与更新时的回调，参数为原生事件。
+`className`、`style` 落在外层 wrapper `div` 上，`classNames.textarea`、`styles.textarea` 落在原生 `textarea` 上；其余原生属性与事件（如 `aria-*`、`id`、`name`、`onClick`）落在原生 `textarea` 上。`onFocus`、`onBlur` 监听在外层 `div` 上，焦点在文本框与清除按钮之间移动时不触发。`onCompositionStart`、`onCompositionEnd`、`onCompositionUpdate` 为输入法组合开始、结束与更新时的回调，参数为原生事件。
 
 </Framework>
 

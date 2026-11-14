@@ -15,7 +15,7 @@ export default function NavigationDemo() {
         <Nav
             toggleIconPosition="left"
             defaultOpenKeys={['job']}
-            bodyStyle={{ height: '300px' }}
+            styles={{ body: { height: '300px' } }}
             items={items}
             renderItemIcon={(renderProps) => <Dynamic component={icons[String(renderProps.item.itemKey)]} />}
             onSelect={(key) => console.log(key)}

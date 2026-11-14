@@ -21,4 +21,4 @@
     const railStyle = $derived(getRailStyle(value));
 </script>
 
-<Slider aria-label="Value range" max={range[1]} min={range[0]} onChange={changeValue} {railStyle} range {value} />
+<Slider aria-label="Value range" max={range[1]} min={range[0]} onChange={changeValue} range styles={{ rail: railStyle }} {value} />

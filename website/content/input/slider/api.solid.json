@@ -82,9 +82,13 @@
                 "zh-CN": "拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时触发。",
                 "en-US": "Fires when the pointer (mouse, touch or pen) that dragged the handle is released or cancelled, and when a value key is released."
             },
-            "railStyle": {
-                "zh-CN": "滑块轨道的样式，可传对象（键为 CSS 属性名）或字符串。",
-                "en-US": "Style of the slider rail, an object keyed by CSS property names or a string."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 rail，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by rail; merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键为 rail，值可传对象（键为 CSS 属性名）或字符串。",
+                "en-US": "Styles of the inner parts, keyed by rail, each an object keyed by CSS property names or a string."
             },
             "range": {
                 "zh-CN": "是否支持两端同时可滑动。",

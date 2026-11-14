@@ -12,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | Content at the bottom of the dropdown. | `JSX.Element` | - |
 | changeOnSelect | Whether a non-leaf node can be selected in single mode. | `boolean` | `false` |
 | checkRelation | In multiple mode, how checked states relate: `related` links parents and children, `unRelated` keeps them independent. | `'related' \| 'unRelated'` | `"related"` |
+| classNames | Class names of the inner parts, keyed by `dropdown` (the dropdown menu); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom icon of the clear button; effective when `showClear` is true. | `JSX.Element` | - |
 | clickToSelect | In multiple mode, clicking any node selects it. Often used with `showNext="hover"`: hovering expands the submenu and clicking selects the node. | `boolean` | `false` |
 | defaultOpen | Whether the dropdown is open on mount. | `boolean` | `false` |
@@ -20,8 +21,6 @@ import ApiType from '#/components/ApiType.astro';
 | disableStrictly | Whether strict disabling is on. A disabled node then does not change when its parent or children are checked. | `boolean` | `false` |
 | displayProp | The node field shown in the trigger and the tags. | `string` | `"label"` |
 | displayRender | Custom trigger content. In single mode it receives the array of labels on the path; in multiple mode it receives the Entity of a node and its index, and returns the content of its tag. | <ApiType detail={"ByMultiple\u003cMultiple, (selected: Array\u003cstring \u007c number>) => JSX.Element, (selected: Entity, idx: number) => JSX.Element>"}>Type</ApiType> | - |
-| dropdownClassName | Class of the dropdown menu. | `string` | - |
-| dropdownStyle | Style of the dropdown menu: an object with kebab-case keys, or a string. | `JSX.CSSProperties \| string` | - |
 | emptyContent | Content shown when there is no option or the search has no result; defaults to the locale text for no data, and `null` hides it. | `JSX.Element` | - |
 | enableLeafClick | In multiple mode, whether clicking the option of a leaf node checks it. | `boolean` | `false` |
 | expandIcon | Custom icon that marks a node with children. | `JSX.Element` | - |
@@ -66,6 +65,7 @@ import ApiType from '#/components/ApiType.astro';
 | showRestTagsPopover | Once `maxTagCount` is exceeded, whether hovering `+N` shows the remaining tags in a Popover. | `boolean` | `false` |
 | size | Size of the select box: `small`, `default` or `large`. Inside an InputGroup the group's size takes its place. | `CascaderType` | - |
 | stopPropagation | Whether clicks on the dropdown stop bubbling. | `boolean \| string` | `true` |
+| styles | Styles of the inner parts, keyed like `classNames`; a value is an object with kebab-case keys or a string. | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | suffix | Suffix shown on the right inside the trigger. | `JSX.Element` | - |
 | topSlot | Content at the top of the dropdown. | `JSX.Element` | - |
 | treeData | Node data; see CascaderData. | <ApiType detail={"Array\u003cCascaderData>"}>Type</ApiType> | `[]` |

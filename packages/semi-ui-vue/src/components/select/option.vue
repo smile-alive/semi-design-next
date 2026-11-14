@@ -79,7 +79,7 @@
         </div>
         <template v-for="(text, i) in [plainText()]" :key="i">
             <div v-if="text !== undefined" :class="`${prefixCls}-text`">
-                <Highlight v-if="props.inputValue" :highlightClassName="`${prefixCls}-keyword`" :searchWords="[props.inputValue]" :sourceString="text" />
+                <Highlight v-if="props.inputValue" :classNames="{ highlight: `${prefixCls}-keyword` }" :searchWords="[props.inputValue]" :sourceString="text" />
                 <template v-else>{{ text }}</template>
             </div>
             <slot v-else />

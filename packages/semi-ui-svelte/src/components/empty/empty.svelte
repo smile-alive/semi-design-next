@@ -6,7 +6,7 @@
     import type { EmptyProps } from './interface.js';
 
     const defaults = useDefaultProps('Empty');
-    const { layout = defaults('layout', 'vertical'), imageStyle = defaults('imageStyle'), title = defaults('title'), image = defaults('image'), darkModeImage = defaults('darkModeImage'), description, children, ...rest }: EmptyProps = $props();
+    const { layout = defaults('layout', 'vertical'), classNames = defaults('classNames'), styles = defaults('styles'), title = defaults('title'), image = defaults('image'), darkModeImage = defaults('darkModeImage'), description, children, ...rest }: EmptyProps = $props();
 
     // Read after mount only: server render and hydration see null, so the markup matches
     let themeMode = $state<string | null>(null);
@@ -33,7 +33,7 @@
 </script>
 
 <div {...rest} class={[prefixCls, rest.class, { [`${prefixCls}-${layout}`]: layout }]}>
-    <div class={`${prefixCls}-image`} style={imageStyle} x-semi-prop="image,darkModeImage">
+    <div class={[`${prefixCls}-image`, classNames?.image]} style={styles?.image} x-semi-prop="image,darkModeImage">
         {#if shownSnippet}
             {@render shownSnippet()}
         {:else if src}

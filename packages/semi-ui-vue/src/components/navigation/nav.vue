@@ -24,7 +24,7 @@
     defineOptions({ name: 'Nav' });
 
     const props = withDefaults(defineProps<NavProps & /* @vue-ignore */ ElementProps<'nav', keyof NavProps | EmitHandlers<NavEmits>>>(), {
-        bodyStyle: semiGlobalDefault('Nav', 'bodyStyle'),
+        classNames: semiGlobalDefault('Nav', 'classNames'),
         defaultIsCollapsed: semiGlobalDefault('Nav', 'defaultIsCollapsed'),
         defaultOpenKeys: semiGlobalDefault('Nav', 'defaultOpenKeys'),
         defaultSelectedKeys: semiGlobalDefault('Nav', 'defaultSelectedKeys'),
@@ -36,6 +36,7 @@
         mode: () => semiDefault('Nav', 'mode', 'vertical'),
         openKeys: semiGlobalDefault('Nav', 'openKeys'),
         selectedKeys: semiGlobalDefault('Nav', 'selectedKeys'),
+        styles: semiGlobalDefault('Nav', 'styles'),
         subDropdownProps: semiGlobalDefault('Nav', 'subDropdownProps'),
         subNavCloseDelay: () => semiDefault('Nav', 'subNavCloseDelay', numbers.DEFAULT_SUBNAV_CLOSE_DELAY),
         subNavMotion: () => semiDefault('Nav', 'subNavMotion', true),
@@ -190,7 +191,7 @@
                     <slot name="header" />
                 </NavHeader>
                 <component :is="node" v-for="[node, key] in parts.headers" :key="key" />
-                <div :class="`${prefix}-list-wrapper`" :style="props.bodyStyle">
+                <div :class="[`${prefix}-list-wrapper`, props.classNames?.body]" :style="props.styles?.body">
                     <ul :class="`${prefix}-list`">
                         <NavItems v-if="formatted.formattedItems.length" :items="formatted.formattedItems" :level="0" :subDropdownProps="props.subDropdownProps">
                             <template v-if="$slots.icon" #icon="p">

@@ -98,8 +98,8 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         'renderSuggestionItem',
         'skills',
         'skillHotKey',
-        'templatesStyle',
-        'templatesCls',
+        'classNames',
+        'styles',
         'onSkillChange',
         'renderSkillIcon',
         'renderSkillItem',
@@ -318,7 +318,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const renderPanel = () => (
         <Switch>
             <Match when={state().templateVisible}>
-                <div class={clsx(`${prefixCls}-template`, local.templatesCls)} style={{ 'max-height': `${numbers.TEMPLATE_MAX_HEIGHT}px`, ...local.templatesStyle }}>
+                <div class={clsx(`${prefixCls}-template`, local.classNames?.templates)} style={{ 'max-height': `${numbers.TEMPLATE_MAX_HEIGHT}px`, ...local.styles?.templates }}>
                     {templateNode()}
                 </div>
             </Match>

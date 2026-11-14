@@ -1,4 +1,5 @@
 import React, { type ReactNode, type MouseEvent, type DragEvent } from 'react';
+import type { TreePart } from '@fibrae/semi-foundation/components/tree/constants';
 import type {
     BasicTreeProps,
     BasicExpandedOtherProps,
@@ -62,7 +63,8 @@ export interface TreeProps extends BasicTreeProps, ElementProps<'div', 'defaultV
     emptyContent?: ReactNode;
     filterTreeNode?: boolean | ((inputValue: string, treeNodeString: string, data?: TreeNodeData) => boolean);
     searchRender?: ((searchRenderProps: SearchRenderProps) => ReactNode) | false;
-    searchStyle?: React.CSSProperties;
+    classNames?: Partial<Record<TreePart, string>>;
+    styles?: Partial<Record<TreePart, React.CSSProperties>>;
     style?: React.CSSProperties;
     treeData?: TreeNodeData[];
     value?: Value;

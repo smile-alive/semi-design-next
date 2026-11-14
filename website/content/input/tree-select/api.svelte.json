@@ -135,15 +135,17 @@
                 "en-US": "Position of the popup; the values follow the position of Tooltip. Defaults to `bottomLeft` (`bottomRight` in RTL)."
             },
             "stopPropagation": { "zh-CN": "是否阻止下拉面板上的点击事件冒泡。", "en-US": "Whether click events on the dropdown panel stop bubbling." },
-            "dropdownClassName": { "zh-CN": "下拉面板的类名。", "en-US": "Class name of the dropdown panel." },
-            "dropdownStyle": { "zh-CN": "下拉面板的内联样式字符串。", "en-US": "Inline style string of the dropdown panel." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 dropdown（下拉面板）、optionList（选项列表，即 role=\"tree\" 元素），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by dropdown (the dropdown panel) and optionList (the option list, the role=\"tree\" element); values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
+            },
             "dropdownMatchSelectWidth": {
                 "zh-CN": "下拉面板的最小宽度是否与选择框相同。",
                 "en-US": "Whether the minimum width of the dropdown panel matches the width of the select box."
-            },
-            "optionListStyle": {
-                "zh-CN": "选项列表的内联样式字符串，落在 `role=\"tree\"` 元素上。",
-                "en-US": "Inline style string of the option list, applied to the `role=\"tree\"` element."
             },
             "preventScroll": {
                 "zh-CN": "组件内部调用 `focus` 时是否阻止浏览器滚动文档以显示新聚焦的元素，不作用于用户传入的元素。",

@@ -41,5 +41,5 @@
 </script>
 
 <div>
-    <TreeSelect disableStrictly dropdownStyle="max-height: 400px; overflow: auto" multiple style="width: 300px" {treeData} value={['Shanghai']} />
+    <TreeSelect disableStrictly multiple style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} value={['Shanghai']} />
 </div>

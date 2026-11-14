@@ -10,5 +10,5 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '300px' }" :defaultOpenKeys="['task']" :items="items" @click="(data) => console.log('trigger onClick: ', data)" @select="(data) => console.log('trigger onSelect: ', data)" />
+    <Nav :defaultOpenKeys="['task']" :items="items" :styles="{ body: { height: '300px' } }" @click="(data) => console.log('trigger onClick: ', data)" @select="(data) => console.log('trigger onSelect: ', data)" />
 </template>

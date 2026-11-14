@@ -1,5 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { strings, UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
 import type { AfterUploadResult as FoundationAfterUploadResult, BaseFileItem, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult, CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/interface';
@@ -95,6 +95,7 @@ export interface UploadFileItemSlotProps {
     picWidth?: string | number;
     picHeight?: string | number;
     validateMessage?: string;
+    class?: ClassValue;
     style?: StyleValue;
     onRemove: () => void;
     onRetry: () => void;
@@ -136,6 +137,7 @@ export interface UploadProps {
     beforeRemove?: (file: FileItem, fileList: FileItem[]) => boolean | Promise<boolean>;
     beforeUpload?: (object: BeforeUploadProps) => BeforeUploadObjectResult | Promise<BeforeUploadObjectResult> | boolean;
     capture?: boolean | 'user' | 'environment';
+    classNames?: Partial<Record<UploadPart, ClassValue>>;
     /** `true` crops with the defaults; an object configures the cropper */
     crop?: boolean | UploadCropProps;
     cropModalProps?: UploadCropModalProps;
@@ -149,7 +151,6 @@ export interface UploadProps {
     fileName?: string;
     headers?: Record<string, any> | ((file: File) => Record<string, string>);
     hotSpotLocation?: 'start' | 'end';
-    itemStyle?: StyleValue;
     limit?: number;
     listType?: UploadListType;
     /** KB */
@@ -170,6 +171,7 @@ export interface UploadProps {
     /** Tooltip of a truncated file name; its custom popup is the `ellipsisTooltip` slot */
     showTooltip?: boolean | ShowTooltip;
     showUploadList?: boolean;
+    styles?: Partial<Record<UploadPart, StyleValue>>;
     transformFile?: (file: File) => File;
     uploadTrigger?: 'auto' | 'custom';
     validateStatus?: ValidateStatus;

@@ -7,15 +7,14 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | 挂载时自动获取焦点。 | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
 | autosize | 高度是否随内容自适应，可传 `{ minRows, maxRows }` 限制行数。 | `boolean \| AutosizeRow` | `false` |
 | borderless | 无边框模式。 | `boolean` | `false` |
+| classNames | 内部各部位的类名，键为 textarea（原生 textarea 元素）、lineNumber（行号区域），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTextAreaPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TextArea", "classNames")` |
 | cols | 默认列数。 | `number` | `20` |
 | composition | 是否开启输入法模式，开启后输入法组合期间不触发 change，组合结束后触发一次。 | `boolean` | `false` |
 | defaultValue | 非受控时的初始内容。 | `string` | `semiGlobalDefault("TextArea", "defaultValue")` |
 | disabled | 是否禁用。 | `boolean` | `undefined` |
 | disabledEnterStartNewLine | 内部属性，供 Chat 使用：Enter 不换行，Shift + Enter 换行。 | `boolean` | `semiGlobalDefault("TextArea", "disabledEnterStartNewLine")` |
 | getValueLength | 自定义计算字符串长度，搭配 maxlength、minlength、maxCount 使用。 | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
-| lineNumberClassName | 行号区域的类名。 | `string` | `semiGlobalDefault("TextArea", "lineNumberClassName")` |
 | lineNumberStart | 行号起始值。 | `number` | `1` |
-| lineNumberStyle | 行号区域的样式，数字需带单位。 | `StyleValue` | `semiGlobalDefault("TextArea", "lineNumberStyle")` |
 | maxCount | 字数上限，设置后显示字数统计；超出时计数器标红，不截断输入。 | `number` | `semiGlobalDefault("TextArea", "maxCount")` |
 | maxlength | 最大长度。传入 getValueLength 时按它计算长度并截断，否则使用原生属性。 | `number` | `undefined` |
 | minlength | 最小长度。传入 getValueLength 时按它换算，否则使用原生属性。 | `number` | `undefined` |
@@ -28,7 +27,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | 有内容且悬停或焦点位于组件内时展示清除按钮。 | `boolean` | `false` |
 | showCounter | 是否显示字数统计；设置 maxCount 时总是显示。 | `boolean` | `false` |
 | showLineNumber | 是否展示行号。 | `boolean` | `false` |
-| textareaStyle | 内部 textarea 元素的样式，可设置高度等，数字需带单位。 | `StyleValue` | `semiGlobalDefault("TextArea", "textareaStyle")` |
+| styles | 内部各部位的内联样式，键同 classNames，数字需带单位；textarea 的尺寸由 autosize、resize、rows 决定，同名样式以后者为准。 | <ApiType detail={"Partial\u003cRecord\u003cTextAreaPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("TextArea", "styles")` |
 | validateStatus | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TextArea", "validateStatus")` |
 
 **Events**

@@ -84,13 +84,28 @@ describe('Svelte Card', () => {
         expect(find(`.${prefixCls}-header-wrapper`)).toBeNull();
     });
 
-    it('headerLine、footerLine 控制分隔线类名，headerStyle、bodyStyle、footerStyle 落在各自容器', () => {
-        const { find } = setup({ headerLine: false, footerLine: true, title: 'T', headerStyle: 'color: red', bodyStyle: 'padding: 3px', footerStyle: 'color: blue' }, { body: true, footer: true });
+    it('headerLine、footerLine 控制分隔线类名', () => {
+        const { find } = setup({ headerLine: false, footerLine: true, title: 'T' }, { body: true, footer: true });
         expect(find(`.${prefixCls}-header`)).not.toHaveClass(`${prefixCls}-header-bordered`);
         expect(find(`.${prefixCls}-footer`)).toHaveClass(`${prefixCls}-footer-bordered`);
-        expect(find(`.${prefixCls}-header`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(find(`.${prefixCls}-body`)).toHaveStyle({ padding: '3px' });
-        expect(find(`.${prefixCls}-footer`)).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'extra', 'cover', 'body', 'actions', 'footer'] as const;
+        const selectors = { header: 'header', title: 'header-wrapper-title', extra: 'header-wrapper-extra', cover: 'cover', body: 'body', actions: 'body-actions', footer: 'footer' };
+        const { find } = setup(
+            {
+                title: 'T',
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            },
+            { body: true, extra: true, cover: true, actions: 1, footer: true }
+        );
+        for (const part of parts) {
+            const el = find(`.${prefixCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('cover 与 footer 只在提供时渲染', () => {

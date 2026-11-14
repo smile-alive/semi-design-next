@@ -13,15 +13,14 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | Whether to use the borderless style. | `boolean` | `false` |
 | children | Options. Direct children must be `Select.Option` or `Select.OptGroup`, and fragments are expanded. When `optionList` is passed, it is used and children are ignored. | `React.ReactNode` | - |
 | className | Class name, applied to the trigger root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `dropdown` (the dropdown popup); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom icon of the clear button, effective when `showClear` is `true`. | `React.ReactNode` | - |
 | clickToHide | When the dropdown is open, whether clicking the Select again closes the dropdown. | `boolean` | - |
 | defaultActiveFirstOption | Whether the first enabled option is highlighted when nothing is selected, so Enter selects it directly. When a value is selected, opening the dropdown highlights the first selected option. | `boolean` | `true` |
 | defaultOpen | Whether the dropdown is open by default. | `boolean` | `false` |
 | defaultValue | Initially selected value, for uncontrolled use. An array in multiple mode. | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | - |
 | disabled | Whether the Select is disabled. | `boolean` | `false` |
-| dropdownClassName | Class name of the dropdown. | `string` | - |
-| dropdownMatchSelectWidth | Whether the minimum width of the dropdown matches the Select. The width itself is not fixed; use `dropdownStyle` to set a fixed width. | `boolean` | `true` |
-| dropdownStyle | Style of the dropdown, for example `width` to set its width. | `React.CSSProperties` | - |
+| dropdownMatchSelectWidth | Whether the minimum width of the dropdown matches the Select. The width itself is not fixed; use `styles.dropdown` to set a fixed width. | `boolean` | `true` |
 | ellipsisTrigger | With `maxTagCount` set in multiple mode, whether overflowing tags adapt to the width, truncating the last tag when space runs short. It costs some performance, so it is not recommended for large forms. | `boolean` | `false` |
 | emptyContent | Content shown when there are no results. When unset, the locale's empty text is shown; `null` shows nothing in the dropdown. | `React.ReactNode` | - |
 | expandRestTagsOnClick | With `maxTagCount` set in multiple mode, whether all remaining tags are shown while the dropdown is open. | `boolean` | `false` |
@@ -74,6 +73,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in px between the dropdown and the Select. An `{ x, y }` object sets the horizontal and vertical distances separately. It is `8` when unset. | `number \| { x: number; y: number }` | - |
 | stopPropagation | Whether click events on the dropdown stop propagating. | `boolean` | `true` |
 | style | Style, applied to the trigger root element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`, for example `width` on `dropdown` to set the popup width. | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | suffix | Suffix of the trigger, as text or a ReactNode. The rules are the same as for `prefix`. | `React.ReactNode` | - |
 | triggerRender | Custom trigger of the Select. Its arguments include `value`, `inputValue`, `onSearch`, `onRemove`, `onClear`, `disabled`, `placeholder` and `componentProps`. To keep search without rendering an input, set `searchPosition` to `dropdown` as well. | <ApiType detail={"(props: TriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
 | validateStatus | Validation status, one of `warning`, `error` and `default`. It only changes styles such as the background color. `default` applies when unset. | `ValidateStatus` | - |

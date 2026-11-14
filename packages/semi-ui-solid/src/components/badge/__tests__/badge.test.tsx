@@ -19,9 +19,10 @@ describe('Badge', () => {
         semiGlobal.config.overrideDefaultProps = {};
     });
 
-    it('自定义 class 与 countStyle', () => {
-        const { container } = renderBadge({ class: 'test', countStyle: { color: 'red' }, count: 5 });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = renderBadge({ class: 'test', classNames: { count: 'cc' }, styles: { count: { color: 'red' } }, count: 5 });
         expect(getRoot(container)).toHaveClass('test');
+        expect(container.querySelector('.test .semi-badge-count')).toHaveClass('cc', 'semi-badge-primary');
         expect(container.querySelector('.test .semi-badge-count')).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
@@ -98,7 +99,7 @@ describe('Badge', () => {
     });
 
     it('count 节点：class、位置及默认 type 与 theme', () => {
-        const { container } = renderBadge({ count: 5, countClassName: 'cc' });
+        const { container } = renderBadge({ count: 5, classNames: { count: 'cc' } });
         const count = getCount(container);
         expect(count).toHaveClass('cc', 'semi-badge-primary', 'semi-badge-solid', 'semi-badge-count');
         expect(count).not.toHaveClass('semi-badge-block');
@@ -106,8 +107,8 @@ describe('Badge', () => {
         expect(getRoot(container).lastChild).toBe(count);
     });
 
-    it('style 落在根元素，countStyle 落在计数节点', () => {
-        const { container } = renderBadge({ count: 5, style: { color: 'red' }, countStyle: { color: 'blue' } });
+    it('style 落在根元素，styles.count 落在计数节点', () => {
+        const { container } = renderBadge({ count: 5, style: { color: 'red' }, styles: { count: { color: 'blue' } } });
         expect(getRoot(container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getCount(container)).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     });

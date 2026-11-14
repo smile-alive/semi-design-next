@@ -62,23 +62,23 @@ import { Highlight } from '@fibrae/semi-ui-solid';
 
 默认情况下，高亮文本会自带文本样式，背景颜色 --semi-yellow-4, 文本颜色为黑色  
 暗色模式下，背景颜色为 --semi-yellow-2，文本颜色为白色  
-当你需要自定义不同的高亮样式时，你可以通过 `highlightClassName`, `highlightStyle`来指定
+当你需要自定义不同的高亮样式时，你可以通过 `classNames.highlight`、`styles.highlight` 来指定
 
 <Framework only="vue">
 
-Vue 不会给数值样式补 `px`，`highlightStyle` 与高亮词的 `style` 中的长度要写成 `'4px'` 这样的字符串；`fontWeight: 600` 等无单位属性不受影响。
+Vue 不会给数值样式补 `px`，`styles.highlight` 与高亮词的 `style` 中的长度要写成 `'4px'` 这样的字符串；`fontWeight: 600` 等无单位属性不受影响。
 
 </Framework>
 
 <Framework only="solid">
 
-数值不会补 `px`，`highlightStyle` 与高亮词的 `style` 中的长度要写成 `'4px'` 这样的字符串；`'font-weight': 600` 等无单位属性不受影响。样式的键要写成 CSS 属性名，`backgroundColor` 这样的驼峰写法不会生效。
+数值不会补 `px`，`styles.highlight` 与高亮词的 `style` 中的长度要写成 `'4px'` 这样的字符串；`'font-weight': 600` 等无单位属性不受影响。样式的键要写成 CSS 属性名，`backgroundColor` 这样的驼峰写法不会生效。
 
 </Framework>
 
 <Framework only="svelte">
 
-`highlightStyle` 与高亮词的 `style` 是样式对象，键可用驼峰或 kebab-case；数值不会补 `px`，长度要写成 `'4px'` 这样的字符串，`fontWeight: 600` 等无单位属性不受影响。
+`styles.highlight` 是 CSS 字符串，高亮词的 `style` 是样式对象，键可用驼峰或 kebab-case；数值不会补 `px`，长度要写成 `'4px'` 这样的字符串，`fontWeight: 600` 等无单位属性不受影响。
 
 </Framework>
 

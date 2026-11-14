@@ -128,7 +128,7 @@ describe('Svelte RadioGroup', () => {
             props: {
                 value: 2,
                 options: [
-                    { label: 'One', value: 1, extra: 'first', class: 'opt1', style: 'color: red', addonId: 'a1', extraId: 'e1', addonClass: 'ac1', addonStyle: 'color: blue' },
+                    { label: 'One', value: 1, extra: 'first', class: 'opt1', style: 'color: red', addonId: 'a1', extraId: 'e1', classNames: { addon: 'ac1' }, styles: { addon: 'color: blue' } },
                     { label: 'Two', value: 2, disabled: true },
                 ],
             },
@@ -141,6 +141,7 @@ describe('Svelte RadioGroup', () => {
         expect(label).toHaveClass(prefix);
         expect(label).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(document.getElementById('a1')).toHaveClass('ac1');
+        expect(document.getElementById('a1')).toHaveStyle({ color: 'rgb(0, 0, 255)' });
         expect(getRadio('Two')).toBeDisabled();
         expect(getRadio('Two')).toBeChecked();
         expect(one).not.toBeDisabled();

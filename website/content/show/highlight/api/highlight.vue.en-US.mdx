@@ -1,14 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property           | Description                                                                                     | Type                    | Default                                                |
-| ------------------ | ----------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------ |
-| autoEscape         | Whether to escape regular expression characters in searchWords.                                 | `boolean`               | `true`                                                 |
-| caseSensitive      | Whether matching is case sensitive.                                                             | `boolean`               | `false`                                                |
-| component          | Tag name of the highlight element.                                                              | `string`                | `"mark"`                                               |
-| highlightClassName | Class name of the highlight tag.                                                                | `string`                | `semiGlobalDefault("Highlight", "highlightClassName")` |
-| highlightStyle     | Inline style of the highlight tag. Vue adds no px to numbers, so write lengths as strings.      | `CSSProperties`         | `semiGlobalDefault("Highlight", "highlightStyle")`     |
-| searchWords        | Text to highlight: a string, a string array, or an array of objects with text, class and style. | `string \| SearchWords` | `[]`                                                   |
-| sourceString       | Source text.                                                                                    | `string`                | `""`                                                   |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoEscape | Whether to escape regular expression characters in searchWords. | `boolean` | `true` |
+| caseSensitive | Whether matching is case sensitive. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by highlight (every highlight tag); values take any class binding and merge with the built-in classes, followed by the class of a searchWords item. | <ApiType detail={"Partial\u003cRecord\u003c\"highlight\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Highlight", "classNames")` |
+| component | Tag name of the highlight element. | `string` | `"mark"` |
+| searchWords | Text to highlight: a string, a string array, or an array of objects with text, class and style. | `string \| SearchWords` | `[]` |
+| sourceString | Source text. | `string` | `""` |
+| styles | Styles of the inner parts, keyed by highlight (every highlight tag); values take any style binding, and the style of a searchWords item overrides the same properties. Vue adds no px to numbers, so write lengths as strings. | <ApiType detail={"Partial\u003cRecord\u003c\"highlight\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Highlight", "styles")` |
 
 **Events**
 

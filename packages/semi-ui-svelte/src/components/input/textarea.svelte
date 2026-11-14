@@ -41,9 +41,8 @@
         disabledEnterStartNewLine = defaults('disabledEnterStartNewLine'),
         showLineNumber = defaults('showLineNumber', false),
         lineNumberStart = defaults('lineNumberStart', 1),
-        lineNumberClassName = defaults('lineNumberClassName'),
-        lineNumberStyle = defaults('lineNumberStyle'),
-        textareaStyle = defaults('textareaStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         resize = defaults('resize'),
         maxlength,
         minlength,
@@ -111,7 +110,7 @@
     const counterId = `${uid}-counter`;
     const hasCounter = $derived(showCounter || Boolean(maxCount));
     const attrs = $derived(splitControlAttrs(rest, isNotClassOrStyle));
-    const lineNumberPanelStyle = $derived([lineNumberStyle, lineLayout.height ? `height: ${lineLayout.height}px; max-height: ${lineLayout.height}px` : undefined].filter(Boolean).join(';') || undefined);
+    const lineNumberPanelStyle = $derived([styles?.lineNumber, lineLayout.height ? `height: ${lineLayout.height}px; max-height: ${lineLayout.height}px` : undefined].filter(Boolean).join(';') || undefined);
 
     const sizeStyle = $derived(
         Object.entries(TextAreaFoundation.getSizeStyle({ autosize, resize, rows }))
@@ -279,6 +278,7 @@
                 [`${prefixCls}-textarea-autosize`]: Boolean(autosize),
                 [`${prefixCls}-textarea-showClear`]: showClear,
             },
+            classNames?.textarea,
         ]}
         {cols}
         {disabled}
@@ -287,7 +287,7 @@
         placeholder={placeholder || undefined}
         {readonly}
         {rows}
-        style={[textareaStyle, sizeStyle].filter(Boolean).join(';') || undefined}
+        style={[styles?.textarea, sizeStyle].filter(Boolean).join(';') || undefined}
         value={text}
         oncompositionend={handleCompositionEnd}
         oncompositionstart={foundation.handleCompositionStart}
@@ -321,7 +321,7 @@
 >
     {#if showLineNumber}
         <!-- the numbers only mirror the text rows, so assistive technology skips them -->
-        <div aria-hidden="true" bind:this={lineNumber} class={[`${prefixCls}-textarea-lineNumber`, lineNumberClassName]} style={lineNumberPanelStyle}>
+        <div aria-hidden="true" bind:this={lineNumber} class={[`${prefixCls}-textarea-lineNumber`, classNames?.lineNumber]} style={lineNumberPanelStyle}>
             {#each lines as _, index (index)}
                 <div class={`${prefixCls}-textarea-lineNumber-item`}>{lineNumberStart + index}</div>
             {/each}

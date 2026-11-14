@@ -25,7 +25,7 @@ export default function NavigationDemo() {
         <Nav
             limitIndent={false}
             defaultOpenKeys={['job', 'mission1']}
-            bodyStyle={{ height: '300px' }}
+            styles={{ body: { height: '300px' } }}
             items={items}
             renderItemIcon={(renderProps) => <Dynamic component={icons[String(renderProps.item.itemKey)]} />}
             onSelect={(key) => console.log(key)}

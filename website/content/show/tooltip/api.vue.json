@@ -41,9 +41,13 @@
                 "zh-CN": "是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。",
                 "en-US": "Whether click, mousedown and focus in/out events on the popup stop propagating."
             },
-            "wrapperClassName": {
-                "zh-CN": "触发元素被 span 包裹时，该 span 的类名。",
-                "en-US": "Class name of the span that wraps the trigger when a wrapper is needed."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，写在 span 自带样式之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; applied after the span's built-in style."
             },
             "wrapperId": {
                 "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",

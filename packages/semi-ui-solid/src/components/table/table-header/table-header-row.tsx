@@ -214,7 +214,7 @@ function HeaderCellView(props: { cell: HeaderCell; cellIndex: number; rowIndex: 
         const sticky = getHeaderStickyOffset(column(), props.slicedColumns, props.headWidths, isRTL());
         const position: JSX.CSSProperties | undefined = sticky ? { position: 'sticky', [sticky.side]: toCssLength(sticky.offset) } : undefined;
         const align = textAlign() ? { 'text-align': textAlign() } : undefined;
-        return mergeStyles(table.props.headerStyle, custom().style, align, position);
+        return mergeStyles(table.props.styles?.header, custom().style, align, position);
     };
 
     const cls = () => {
@@ -222,7 +222,7 @@ function HeaderCellView(props: { cell: HeaderCell; cellIndex: number; rowIndex: 
         const [fixedLeft, fixedRight, fixedLeftLast, fixedRightFirst] = isRTL()
             ? [isFixedRight(column()), isFixedLeft(column()), isFirstFixedRight(props.slicedColumns, column()), isLastLeftFixed(props.slicedColumns, column())]
             : [isFixedLeft(column()), isFixedRight(column()), isLastLeftFixed(props.slicedColumns, column()), isFirstFixedRight(props.slicedColumns, column())];
-        return clsx(`${prefixCls()}-row-head`, column().class, custom().class, {
+        return clsx(`${prefixCls()}-row-head`, table.props.classNames?.header, column().class, custom().class, {
             [`${prefixCls()}-align-${align}`]: Boolean(align),
             [`${prefixCls()}-cell-fixed-left`]: fixedLeft,
             [`${prefixCls()}-cell-fixed-left-last`]: fixedLeftLast,

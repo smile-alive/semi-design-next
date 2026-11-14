@@ -43,9 +43,13 @@
                 "zh-CN": "将步进按钮放在输入框内部，悬停或聚焦时显示，并临时替换 suffix。",
                 "en-US": "Puts the step buttons inside the input, shown on hover or focus and temporarily replacing the suffix."
             },
-            "inputStyle": {
-                "zh-CN": "原生 input 的样式，只接受字符串。",
-                "en-US": "Style of the native input. Accepts a string only."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 input（原生 input 元素），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by input (the native input element); values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "insetLabel": { "zh-CN": "内嵌标签的 snippet。", "en-US": "Snippet of the inset label." },
             "insetLabelId": { "zh-CN": "内嵌标签的 id。", "en-US": "The id of the inset label." },

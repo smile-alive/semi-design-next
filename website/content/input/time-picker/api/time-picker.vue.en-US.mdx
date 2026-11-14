@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `true` |
 | autofocus | Focuses the input on mount, which opens the panel. | `boolean` | `false` |
 | borderless | Borderless mode. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by dropdown (the panel card of the popup) and input (the root element of the input); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TimePicker", "classNames")` |
 | defaultOpen | Whether the panel is open by default when uncontrolled. | `boolean` | `false` |
 | defaultValue | Initial time when uncontrolled, in the same forms as modelValue. | `(TimePickerValue \| undefined)[] \| TimePickerValue` | `semiGlobalDefault("TimePicker", "defaultValue")` |
 | disabled | Disables all interaction. | `boolean` | `undefined` |
@@ -19,15 +20,12 @@ import ApiType from '#/components/ApiType.astro';
 | hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `false` |
 | hourStep | Interval of the hour options; a positive integer. | `number` | `semiGlobalDefault("TimePicker", "hourStep")` |
 | inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices. | `boolean` | `false` |
-| inputStyle | Style of the input's root element. | `StyleValue` | `semiGlobalDefault("TimePicker", "inputStyle")` |
 | insetLabelId | id of the insetLabel, referenced through aria-labelledby. | `string` | `undefined` |
 | minuteStep | Interval of the minute options; a positive integer. | `number` | `semiGlobalDefault("TimePicker", "minuteStep")` |
 | modelValue | Current time, used with v-model; an array when type is timeRange. null is a controlled empty value, and undefined means uncontrolled. | `(TimePickerValue \| undefined)[] \| TimePickerValue \| null` | `undefined` |
 | motion | Whether the popup animates. | `boolean` | `true` |
 | open | Whether the panel is open, used with v-model:open; undefined means uncontrolled. | `boolean` | `undefined` |
 | placeholder | Hint shown without a value; defaults to the locale text of type. | `string` | `semiGlobalDefault("TimePicker", "placeholder")` |
-| popupClassName | Class name of the popup. | `string` | `semiGlobalDefault("TimePicker", "popupClassName")` |
-| popupStyle | Style of the popup. | `StyleValue` | `semiGlobalDefault("TimePicker", "popupStyle")` |
 | position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TimePicker", "position")` |
 | preventScroll | Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component. | `boolean` | `semiGlobalDefault("TimePicker", "preventScroll")` |
 | rangeSeparator | Separator between the two times of a range. | `string` | `strings.DEFAULT_RANGE_SEPARATOR` |
@@ -36,6 +34,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | Whether to show the clear button. | `boolean` | `true` |
 | size | Size of the input. | `Size` | `undefined` |
 | stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("TimePicker", "styles")` |
 | timeZone | Time zone: a number is the hour offset from UTC, a string an IANA time zone name or `GMT±HH:MM`. When set, a `Date` or timestamp is read as an instant and a string as a wall time of the zone; callbacks get a `TZDate` and the wall-time string of the zone. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | `undefined` |
 | type | Selection type: time for a single time, timeRange for a range. | `TimePickerType` | `strings.DEFAULT_TYPE` |
 | use12Hours | Uses the 12-hour clock. | `boolean` | `false` |

@@ -67,7 +67,7 @@
 
 <div>
     <h4 style={textStyle}>maxTagCount=2:</h4>
-    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" maxTagCount={2} multiple placeholder="当选中标签超过两个将折叠" style="width: 300px" {treeData} value={['Beijing', 'Chengdu', 'Canada']} />
+    <TreeSelect maxTagCount={2} multiple placeholder="当选中标签超过两个将折叠" style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} value={['Beijing', 'Chengdu', 'Canada']} />
     <h4 style={textStyle}>maxTagCount=2, showRestTagsPopover:</h4>
-    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" maxTagCount={2} multiple placeholder="hover +N 查看" restTagsPopoverProps={{ position: 'top' }} showRestTagsPopover style="width: 300px" {treeData} value={['Beijing', 'Chengdu', 'Canada']} />
+    <TreeSelect maxTagCount={2} multiple placeholder="hover +N 查看" restTagsPopoverProps={{ position: 'top' }} showRestTagsPopover style="width: 300px" styles={{ dropdown: 'max-height: 400px; overflow: auto' }} {treeData} value={['Beijing', 'Chengdu', 'Canada']} />
 </div>

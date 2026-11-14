@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
+import type { ButtonPart } from '@fibrae/semi-foundation/components/button/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 
 export type HtmlType = 'button' | 'reset' | 'submit';
@@ -15,8 +16,8 @@ export interface ButtonIconArgs {
 
 export interface ButtonProps extends Omit<HTMLButtonAttributes, 'children' | 'type'> {
     block?: boolean;
+    classNames?: Partial<Record<ButtonPart, ClassValue>>;
     colorful?: boolean;
-    contentClassName?: string;
     disabled?: boolean;
     htmlType?: HtmlType;
     iconPosition?: 'left' | 'right';
@@ -24,6 +25,7 @@ export interface ButtonProps extends Omit<HTMLButtonAttributes, 'children' | 'ty
     /** Only applies to a button that shows an icon or the loading spinner. */
     noHorizontalPadding?: boolean | HorizontalPaddingType | HorizontalPaddingType[];
     size?: Size;
+    styles?: Partial<Record<ButtonPart, string>>;
     theme?: Theme;
     type?: Type;
     children?: Snippet;

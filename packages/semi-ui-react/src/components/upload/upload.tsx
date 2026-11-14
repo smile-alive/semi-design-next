@@ -1,7 +1,7 @@
 import { memo, useCallback, useId, useImperativeHandle, useLayoutEffect, useRef, useState, type ReactNode, type CSSProperties, type ChangeEvent, type DragEvent, type FocusEvent, type KeyboardEvent } from 'react';
 import clsx from 'clsx';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
-import { strings, cssClasses } from '@fibrae/semi-foundation/components/upload/constants';
+import { strings, cssClasses, type UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
 import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState, type BeforeUploadObjectResult, type AfterUploadResult, type FileItemStatus } from '@fibrae/semi-foundation/components/upload/foundation';
 import { addAreaObservedAttributes, containsControl, containsName, ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
 import { joinIds, namedRole } from '@fibrae/semi-foundation/utils';
@@ -38,6 +38,7 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
     capture?: boolean | 'user' | 'environment';
     children?: ReactNode;
     className?: string;
+    classNames?: Partial<Record<UploadPart, string>>;
     customRequest?: (object: UploadCustomRequestArgs) => void;
     data?: Record<string, any> | ((file: File) => Record<string, unknown>);
     defaultFileList?: Array<FileItem>;
@@ -52,7 +53,6 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
     fileName?: string;
     headers?: Record<string, any> | ((file: File) => Record<string, string>);
     hotSpotLocation?: 'start' | 'end';
-    itemStyle?: CSSProperties;
     limit?: number;
     listType?: UploadListType;
     maxSize?: number;
@@ -93,6 +93,7 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
     showRetry?: boolean;
     showUploadList?: boolean;
     style?: CSSProperties;
+    styles?: Partial<Record<UploadPart, CSSProperties>>;
     timeout?: number;
     transformFile?: (file: File) => File;
     uploadTrigger?: 'auto' | 'custom';
@@ -191,7 +192,7 @@ class UploadRuntime {
     }
 }
 
-type FileCardSharedProps = Pick<RenderFileItemProps, 'showRetry' | 'showReplace' | 'previewFile' | 'listType' | 'style' | 'disabled' | 'showPicInfo' | 'renderPicInfo' | 'renderPicPreviewIcon' | 'renderPicClose' | 'renderFileOperation' | 'renderThumbnail' | 'picWidth' | 'picHeight' | 'showTooltip'>;
+type FileCardSharedProps = Pick<RenderFileItemProps, 'showRetry' | 'showReplace' | 'previewFile' | 'listType' | 'className' | 'style' | 'disabled' | 'showPicInfo' | 'renderPicInfo' | 'renderPicPreviewIcon' | 'renderPicClose' | 'renderFileOperation' | 'renderThumbnail' | 'picWidth' | 'picHeight' | 'showTooltip'>;
 
 interface ListedFileCardProps extends FileCardSharedProps {
     file: FileItem;
@@ -231,6 +232,7 @@ function Upload(rawProps: UploadProps) {
         capture,
         children,
         className,
+        classNames,
         customRequest,
         data,
         defaultFileList,
@@ -245,7 +247,6 @@ function Upload(rawProps: UploadProps) {
         fileName,
         headers,
         hotSpotLocation,
-        itemStyle,
         limit,
         listType,
         maxSize,
@@ -285,6 +286,7 @@ function Upload(rawProps: UploadProps) {
         showRetry,
         showUploadList,
         style,
+        styles,
         timeout,
         transformFile,
         uploadTrigger,
@@ -322,7 +324,7 @@ function Upload(rawProps: UploadProps) {
 
     const addAreaRole = addAreaHasControl ? undefined : 'button';
     const required = ariaRequired === true || ariaRequired === 'true';
-    const cardShared: FileCardSharedProps = { showRetry, showReplace, previewFile, listType, style: itemStyle, disabled, showPicInfo, renderPicInfo, renderPicPreviewIcon, renderPicClose, renderFileOperation, renderThumbnail, picWidth, picHeight, showTooltip };
+    const cardShared: FileCardSharedProps = { showRetry, showReplace, previewFile, listType, className: classNames?.item, style: styles?.item, disabled, showPicInfo, renderPicInfo, renderPicPreviewIcon, renderPicClose, renderFileOperation, renderThumbnail, picWidth, picHeight, showTooltip };
 
     // wrappers keep the runtime out of a ref position, which the React Compiler would treat as a ref
     const setInput = useCallback((node: HTMLInputElement | null) => runtime.setInput(node), [runtime]);
@@ -590,7 +592,7 @@ function Upload(rawProps: UploadProps) {
     }
 
     const cropConfig: CropProps = typeof crop === 'object' ? crop : {};
-    const { style: modalStyle, bodyStyle: modalBodyStyle, ...restModalProps } = cropModalProps || {};
+    const { style: modalStyle, styles: modalStyles, ...restModalProps } = cropModalProps || {};
 
     const uploadCls = clsx(
         prefixCls,
@@ -631,8 +633,8 @@ function Upload(rawProps: UploadProps) {
             {fileListNode}
             <Modal
                 {...restModalProps}
-                bodyStyle={{ height: 400, ...modalBodyStyle }}
                 style={{ height: 500, ...modalStyle }}
+                styles={{ ...modalStyles, body: { height: 400, ...modalStyles?.body } }}
                 title={cropConfig.modalTitle || locale.cropTitle}
                 cancelText={cropConfig.modalCancelText}
                 okText={cropConfig.modalOkText}

@@ -142,7 +142,7 @@ export default function Item(props: CascaderItemProps) {
             >
                 {/* the option carries the state as aria-busy; the spinner's own name would join the option's name */}
                 <span aria-hidden="true">
-                    <Spin wrapperClassName={`${prefixcls}-spin-icon ${prefixcls}-icon-left`} />
+                    <Spin class={`${prefixcls}-spin-icon ${prefixcls}-icon-left`} />
                 </span>
             </Show>
         );

@@ -18,8 +18,7 @@ export default function SideSheetDemo() {
             <Button onClick={show}>More Information</Button>
             <SideSheet
                 title="创建资源包"
-                headerStyle={{ 'border-bottom': '1px solid var(--semi-color-border)' }}
-                bodyStyle={{ 'border-bottom': '1px solid var(--semi-color-border)' }}
+                styles={{ header: { 'border-bottom': '1px solid var(--semi-color-border)' }, body: { 'border-bottom': '1px solid var(--semi-color-border)' } }}
                 visible={visible()}
                 footer={
                     <div style={{ display: 'flex', 'justify-content': 'flex-end' }}>

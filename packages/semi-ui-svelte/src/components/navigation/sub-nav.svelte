@@ -21,7 +21,7 @@
     type TitleTriggerProps = Omit<Partial<DropdownTriggerProps>, 'aria-haspopup' | 'aria-expanded'> & { 'aria-haspopup'?: 'menu' | 'dialog'; 'aria-expanded'?: boolean | 'true' | 'false' };
 
     // Left undefined when not passed, so `wrapper` receives only what the Sub was given
-    let { disabled, dropdownProps, dropdownStyle, indent, itemKey, level: ownLevel, subDropdownProps, text, children, label, icon, expandIcon, ...rest }: SubNavProps = $props();
+    let { classNames, disabled, dropdownProps, indent, itemKey, level: ownLevel, styles, subDropdownProps, text, children, label, icon, expandIcon, ...rest }: SubNavProps = $props();
 
     const outer = getNavContext('Nav.Sub');
 
@@ -68,7 +68,7 @@
     // A disabled Sub opens no Dropdown; collapsed, it shows its hidden text in a tooltip instead
     const titleWrapper = $derived(outer.isCollapsed && disabled ? 'tooltip' : isPopup && !disabled ? 'dropdown' : 'none');
 
-    // Defaults first: user dropdownProps win, dropdownStyle beats their style, our onVisibleChange runs first
+    // Defaults first: user dropdownProps win, styles.dropdown beats their style, our onVisibleChange runs first
     const dropdown: DropdownProps = $derived.by(() => {
         const user = dropdownProps ?? subDropdownProps;
         return {
@@ -78,7 +78,8 @@
             trigger: 'hover',
             ...user,
             class: [outer.isCollapsed ? `${prefix}-popover` : undefined, user?.class].filter(Boolean).join(' ') || undefined,
-            style: dropdownStyle ?? user?.style,
+            classNames: classNames?.dropdown ? { ...user?.classNames, content: [user?.classNames?.content, classNames.dropdown] } : user?.classNames,
+            style: styles?.dropdown ?? user?.style,
             onVisibleChange: (visible: boolean) => {
                 foundation.handleDropdownVisibleChange(visible);
                 user?.onVisibleChange?.(visible);
@@ -86,7 +87,7 @@
         };
     });
 
-    const given: NavWrapperArgs['props'] = $derived(Object.fromEntries(Object.entries({ disabled, dropdownProps, dropdownStyle, indent, itemKey, level: ownLevel, subDropdownProps, text }).filter(([, value]) => value !== undefined)));
+    const given: NavWrapperArgs['props'] = $derived(Object.fromEntries(Object.entries({ classNames, disabled, dropdownProps, indent, itemKey, level: ownLevel, styles, subDropdownProps, text }).filter(([, value]) => value !== undefined)));
 
     // aria-* describe the title, which takes focus; the rest reaches the wrapper li
     const attrs = $derived(splitControlAttrs(rest, isAriaKey));

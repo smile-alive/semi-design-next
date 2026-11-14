@@ -7,15 +7,14 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | Focuses the text area on mount. | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
 | autosize | Whether the height follows the content; pass `{ minRows, maxRows }` to limit the rows. | `boolean \| AutosizeRow` | `false` |
 | borderless | Borderless mode. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by textarea (the native textarea element) and lineNumber (the line number area); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTextAreaPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TextArea", "classNames")` |
 | cols | Visible width in average character widths. | `number` | `20` |
 | composition | Whether to enable IME mode; change does not fire during a composition and fires once after it ends. | `boolean` | `false` |
 | defaultValue | Initial content when the text area is uncontrolled. | `string` | `semiGlobalDefault("TextArea", "defaultValue")` |
 | disabled | Whether the text area is disabled. | `boolean` | `undefined` |
 | disabledEnterStartNewLine | Internal property used by Chat: Enter does not start a new line, Shift + Enter does. | `boolean` | `semiGlobalDefault("TextArea", "disabledEnterStartNewLine")` |
 | getValueLength | Custom string length calculation, used with maxlength, minlength and maxCount. | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
-| lineNumberClassName | Class name of the line number area. | `string` | `semiGlobalDefault("TextArea", "lineNumberClassName")` |
 | lineNumberStart | Starting line number. | `number` | `1` |
-| lineNumberStyle | Style of the line number area; numbers need a unit. | `StyleValue` | `semiGlobalDefault("TextArea", "lineNumberStyle")` |
 | maxCount | Maximum number of characters; setting it shows a counter, which turns red when exceeded. The input is not truncated. | `number` | `semiGlobalDefault("TextArea", "maxCount")` |
 | maxlength | Maximum length. With getValueLength the length is measured and truncated by it; otherwise the native attribute applies. | `number` | `undefined` |
 | minlength | Minimum length. With getValueLength it is converted accordingly; otherwise the native attribute applies. | `number` | `undefined` |
@@ -28,7 +27,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | Shows a clear button when the text area has content and the pointer or focus is inside the component. | `boolean` | `false` |
 | showCounter | Whether to show the counter; it is always shown when maxCount is set. | `boolean` | `false` |
 | showLineNumber | Whether to show line numbers. | `boolean` | `false` |
-| textareaStyle | Style of the inner textarea element, such as its height; numbers need a unit. | `StyleValue` | `semiGlobalDefault("TextArea", "textareaStyle")` |
+| styles | Inline styles of the inner parts, keyed like classNames; numbers need a unit. The size of textarea comes from autosize, resize and rows, which win on the same property. | <ApiType detail={"Partial\u003cRecord\u003cTextAreaPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("TextArea", "styles")` |
 | validateStatus | Validation status: default, error or warning; error outputs aria-invalid. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TextArea", "validateStatus")` |
 
 **Events**

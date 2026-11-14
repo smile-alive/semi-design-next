@@ -13,7 +13,7 @@
 </script>
 
 <template>
-    <Select aria-label="单选" dropdownClassName="components-select-demo-renderOptionItem" filter :optionList="optionList" placeholder="单选" style="width: 180px" @search="inputValue = $event">
+    <Select aria-label="单选" :classNames="{ dropdown: 'components-select-demo-renderOptionItem' }" filter :optionList="optionList" placeholder="单选" style="width: 180px" @search="inputValue = $event">
         <!--
             Put style on the outer DOM or the virtual list breaks; add selected/focused/disabled styles from the slot
             params; bind onMouseenter and class on the outer DOM or arrow keys display wrongly; put id there so screen
@@ -47,7 +47,7 @@
     </Select>
     <br />
     <br />
-    <Select aria-label="多选" dropdownClassName="components-select-demo-renderOptionItem" filter multiple :optionList="optionList" placeholder="多选" style="width: 320px" @search="inputValue = $event">
+    <Select aria-label="多选" :classNames="{ dropdown: 'components-select-demo-renderOptionItem' }" filter multiple :optionList="optionList" placeholder="多选" style="width: 320px" @search="inputValue = $event">
         <template #optionItem="item">
             <div
                 :id="item.id"

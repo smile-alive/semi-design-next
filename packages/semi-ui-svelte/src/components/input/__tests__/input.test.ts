@@ -445,6 +445,13 @@ describe('Svelte Input', () => {
         expect(getInput()).not.toHaveFocus();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        setup({ props: { classNames: { input: 'my-input' }, styles: { input: 'order: 2' } } });
+        expect(getInput()).toHaveClass(`${prefixCls}`, 'my-input');
+        expect(getInput()).toHaveStyle({ order: '2' });
+        expect(getWrapper()).not.toHaveClass('my-input');
+    });
+
     it('未声明属性与监听器落到原生 input，class 与 style 保留在包裹层', async () => {
         const onpaste = vi.fn<(event: ClipboardEvent) => void>();
         const onclick = vi.fn<(event: MouseEvent) => void>();
@@ -454,7 +461,7 @@ describe('Svelte Input', () => {
                 name: 'name',
                 class: 'custom',
                 style: 'color: red',
-                inputStyle: 'color: blue',
+                styles: { input: 'color: blue' },
                 'data-testid': 'name',
                 'aria-describedby': 'help',
                 'aria-label': 'Name',

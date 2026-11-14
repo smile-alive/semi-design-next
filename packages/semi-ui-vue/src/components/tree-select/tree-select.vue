@@ -96,10 +96,9 @@
         autoAdjustOverflow: () => semiDefault('TreeSelect', 'autoAdjustOverflow', true),
         position: semiGlobalDefault('TreeSelect', 'position'),
         stopPropagation: () => semiDefault('TreeSelect', 'stopPropagation', true),
-        dropdownClassName: semiGlobalDefault('TreeSelect', 'dropdownClassName'),
-        dropdownStyle: semiGlobalDefault('TreeSelect', 'dropdownStyle'),
+        classNames: semiGlobalDefault('TreeSelect', 'classNames'),
+        styles: semiGlobalDefault('TreeSelect', 'styles'),
         dropdownMatchSelectWidth: () => semiDefault('TreeSelect', 'dropdownMatchSelectWidth', true),
-        optionListStyle: semiGlobalDefault('TreeSelect', 'optionListStyle'),
         preventScroll: semiGlobalDefault('TreeSelect', 'preventScroll'),
         triggerTagWrap: () => semiDefault('TreeSelect', 'triggerTagWrap', false),
     });
@@ -664,7 +663,7 @@
             </div>
         </template>
         <template #content>
-            <div ref="content" :class="[props.dropdownClassName, `${prefix}-popover`]" :style="props.dropdownStyle" @focusin="foundation.handleTriggerFocus" @focusout="handleFocusOut" @keydown="handleContentKeyDown" @mousedown="keepFocusOnPress">
+            <div ref="content" :class="[`${prefix}-popover`, props.classNames?.dropdown]" :style="props.styles?.dropdown" @focusin="foundation.handleTriggerFocus" @focusout="handleFocusOut" @keydown="handleContentKeyDown" @mousedown="keepFocusOnPress">
                 <div :class="`${prefixTree}-wrapper`">
                     <slot name="outerTopSlot" />
                     <template v-if="!$slots.outerTopSlot && filterTreeNode && !triggerSearch">
@@ -682,14 +681,14 @@
                         </template>
                     </template>
                     <!-- the combobox's aria-controls needs an element while there is no tree -->
-                    <div v-if="noData()" :id="treeId" :class="listClass()" role="none" :style="props.optionListStyle">
+                    <div v-if="noData()" :id="treeId" :class="[listClass(), props.classNames?.optionList]" role="none" :style="props.styles?.optionList">
                         <ul v-if="!emptyHidden()" :class="[`${prefixTree}-option`, `${prefixTree}-option-empty`]">
                             <li :class="[`${prefixTree}-option-label`, `${prefixTree}-option-label-empty`]" x-semi-prop="emptyContent">
                                 <slot name="emptyContent">{{ treeLocale.locale.emptyText }}</slot>
                             </li>
                         </ul>
                     </div>
-                    <ul v-else :id="treeId" v-bind="nameAttrs()" :aria-multiselectable="multiple" :class="listClass()" role="tree" :style="props.optionListStyle">
+                    <ul v-else :id="treeId" v-bind="nameAttrs()" :aria-multiselectable="multiple" :class="[listClass(), props.classNames?.optionList]" role="tree" :style="props.styles?.optionList">
                         <NodeList ref="nodeList" :flattenList="cachedRows()" :flattenNodes="rows()" :motion="props.motionExpand" :motionKeys="view.motionKeys" :motionType="view.motionType" :searchTargetIsDeep="searchTargetIsDeep()" :virtualize="props.virtualize">
                             <template #default="{ node, style }">
                                 <template v-for="(row, r) in [rowProps(node)]" :key="r">

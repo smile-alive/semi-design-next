@@ -40,14 +40,11 @@
         chats = $bindable(),
         align = defaults('align', 'leftRight'),
         canSend = defaults('canSend'),
+        classNames = defaults('classNames'),
         customMarkDownComponents = defaults('customMarkDownComponents'),
         enableUpload = defaults('enableUpload', true),
         escapeHtml = defaults('escapeHtml', true),
-        hintCls = defaults('hintCls'),
         hints = defaults('hints'),
-        hintStyle = defaults('hintStyle'),
-        inputBoxCls = defaults('inputBoxCls'),
-        inputBoxStyle = defaults('inputBoxStyle'),
         markdownRenderProps = defaults('markdownRenderProps'),
         mode = defaults('mode', 'bubble'),
         placeholder = defaults('placeholder'),
@@ -55,6 +52,7 @@
         sendHotKey = defaults('sendHotKey', 'enter'),
         showClearContext = defaults('showClearContext', false),
         showStopGenerate = defaults('showStopGenerate', false),
+        styles = defaults('styles'),
         uploadProps = defaults('uploadProps'),
         uploadTipProps = defaults('uploadTipProps'),
         onChatsChange,
@@ -253,7 +251,7 @@
                     {/if}
                 {/each}
                 {#if hints?.length}
-                    <Hint class={hintCls} {hintBox} {hints} onHintClick={foundation.handleHintClick} style={hintStyle} />
+                    <Hint class={classNames?.hint} {hintBox} {hints} onHintClick={foundation.handleHintClick} style={styles?.hint} />
                 {/if}
             </div>
             <!-- outside the log: a toast inside it would be announced as one more log entry -->
@@ -287,8 +285,8 @@
             disableSend={generating}
             dragUpload={uploadWays.dragUpload}
             {inputArea}
-            {inputBoxCls}
-            {inputBoxStyle}
+            inputBoxClass={classNames?.inputBox}
+            inputBoxStyle={styles?.inputBox}
             onClear={foundation.clearContext}
             onInputChange={foundation.handleInputChange}
             onSend={foundation.sendMessage}

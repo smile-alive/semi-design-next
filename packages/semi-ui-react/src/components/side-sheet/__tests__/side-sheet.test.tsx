@@ -31,14 +31,12 @@ beforeEach(() => {
 });
 
 describe('SideSheet', () => {
-    it('className / style / maskStyle / bodyStyle / headerStyle / zIndex', () => {
+    it('className / style / styles / zIndex', () => {
         renderSideSheet({
             className: 'test',
             style: { color: 'red' },
             visible: true,
-            maskStyle: { color: 'grey' },
-            headerStyle: { color: 'green' },
-            bodyStyle: { color: 'pink' },
+            styles: { mask: { color: 'grey' }, header: { color: 'green' }, body: { color: 'pink' } },
             zIndex: 500,
         });
         expect($(`.${BASE_CLASS_PREFIX}-sidesheet.test`)).not.toBeNull();
@@ -47,6 +45,23 @@ describe('SideSheet', () => {
         expect($(`.${BASE_CLASS_PREFIX}-sidesheet-header`)).toHaveStyle({ color: 'rgb(0, 128, 0)' });
         expect($(`.${BASE_CLASS_PREFIX}-sidesheet-mask`)).toHaveStyle({ color: 'rgb(128, 128, 128)' });
         expect($(`.${BASE_CLASS_PREFIX}-portal`).style.zIndex).toEqual('500');
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['mask', 'content', 'header', 'body', 'footer'] as const;
+        const selectors = { mask: 'mask', content: 'inner', header: 'header', body: 'body', footer: 'footer' };
+        renderSideSheet({
+            visible: true,
+            title: 'T',
+            footer: 'F',
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+        });
+        for (const part of parts) {
+            const el = $(`.${BASE_CLASS_PREFIX}-sidesheet-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('visible 属性', () => {

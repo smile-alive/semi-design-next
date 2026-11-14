@@ -52,7 +52,6 @@
         borderless: () => semiDefault('DatePicker', 'borderless', false),
         showClear: () => semiDefault('DatePicker', 'showClear', true),
         inputReadOnly: () => semiDefault('DatePicker', 'inputReadOnly', false),
-        inputStyle: semiGlobalDefault('DatePicker', 'inputStyle'),
         insetInput: () => semiDefault('DatePicker', 'insetInput', false),
         insetLabelId: undefined,
         validateStatus: semiGlobalDefault('DatePicker', 'validateStatus'),
@@ -73,8 +72,8 @@
         position: semiGlobalDefault('DatePicker', 'position'),
         spacing: semiGlobalDefault('DatePicker', 'spacing'),
         stopPropagation: () => semiDefault('DatePicker', 'stopPropagation', true),
-        dropdownClassName: semiGlobalDefault('DatePicker', 'dropdownClassName'),
-        dropdownStyle: semiGlobalDefault('DatePicker', 'dropdownStyle'),
+        classNames: semiGlobalDefault('DatePicker', 'classNames'),
+        styles: semiGlobalDefault('DatePicker', 'styles'),
     });
 
     const emit = defineEmits<DatePickerEmits<Kind, Multiple>>();
@@ -135,7 +134,7 @@
     const disabledDate = computed(() => props.disabledDate ?? readSemiDefault(semi, 'DatePicker', 'disabledDate'));
     const disabledTime = computed(() => props.disabledTime ?? readSemiDefault(semi, 'DatePicker', 'disabledTime'));
 
-    // Vue's StyleValue (dropdownStyle) is wider than the foundation's Record<string, any>, so the props type does not match.
+    // Vue's StyleValue (styles) is wider than the foundation's Record<string, any>, so the props type does not match.
     const { foundation, state } = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerFoundationProps, DatePickerFoundationState>(
         DatePickerFoundation,
         props as Readonly<Partial<DatePickerFoundationProps>>,
@@ -313,7 +312,7 @@
             @open="foundation.handlePanelVisibleChange(true)"
         >
             <template #content>
-                <div :id="panelId" ref="panel" :class="[prefix, { [cssClasses.PANEL_YAM]: isYearOrMonth, [`${prefix}-compact`]: props.density === 'compact' }, props.dropdownClassName]" :style="props.dropdownStyle" :x-type="type">
+                <div :id="panelId" ref="panel" :class="[prefix, { [cssClasses.PANEL_YAM]: isYearOrMonth, [`${prefix}-compact`]: props.density === 'compact' }, props.classNames?.dropdown]" :style="props.styles?.dropdown" :x-type="type">
                     <div :class="`${prefix}-container`">
                         <div v-if="$slots.leftSlot" :class="`${prefix}-leftSlot`" x-semi-prop="leftSlot">
                             <slot name="leftSlot" />
@@ -436,8 +435,9 @@
                     :defaultPickerValue="props.defaultPickerValue"
                     :disabled="inputDisabled"
                     :format="props.format"
+                    :inputClassName="props.classNames?.input"
                     :inputReadOnly="props.inputReadOnly || Boolean(props.insetInput)"
-                    :inputStyle="props.inputStyle"
+                    :inputStyle="props.styles?.input"
                     :inputValue="state.inputValue"
                     :insetLabelId="props.insetLabelId"
                     :placeholder="placeholder"

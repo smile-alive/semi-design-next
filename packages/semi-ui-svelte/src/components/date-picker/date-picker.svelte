@@ -60,7 +60,6 @@
         borderless = defaults('borderless', false),
         showClear = defaults('showClear', true),
         inputReadOnly = defaults('inputReadOnly', false),
-        inputStyle = defaults('inputStyle'),
         insetInput = defaults('insetInput', false),
         insetLabelId,
         validateStatus = defaults('validateStatus'),
@@ -81,8 +80,8 @@
         position: positionProp = defaults('position'),
         spacing: spacingProp = defaults('spacing'),
         stopPropagation = defaults('stopPropagation', true),
-        dropdownClassName = defaults('dropdownClassName'),
-        dropdownStyle = defaults('dropdownStyle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         onChange,
         onOpenChange,
         onFocus,
@@ -323,7 +322,6 @@
             borderless,
             showClear,
             inputReadOnly,
-            inputStyle,
             insetInput,
             insetLabelId,
             validateStatus,
@@ -343,8 +341,6 @@
             position: positionProp,
             spacing: spacingProp,
             stopPropagation,
-            dropdownClassName,
-            dropdownStyle,
         },
         onChange: foundation.handleInputChange,
         onEnterPress: foundation.handleInputComplete,
@@ -423,7 +419,7 @@
 {/snippet}
 
 {#snippet content()}
-    <div bind:this={panelElement} {...{ 'x-type': type }} class={[prefixCls, { [cssClasses.PANEL_YAM]: isYearOrMonth, [`${prefixCls}-compact`]: density === 'compact' }, dropdownClassName]} id={panelId} style={dropdownStyle}>
+    <div bind:this={panelElement} {...{ 'x-type': type }} class={[prefixCls, { [cssClasses.PANEL_YAM]: isYearOrMonth, [`${prefixCls}-compact`]: density === 'compact' }, classNames?.dropdown]} id={panelId} style={styles?.dropdown}>
         <div class={`${prefixCls}-container`}>
             {#if leftSlot}
                 <div class={`${prefixCls}-leftSlot`} x-semi-prop="leftSlot">{@render leftSlot()}</div>
@@ -565,8 +561,9 @@
                         {defaultPickerValue}
                         disabled={inputDisabled}
                         {format}
+                        inputClassName={classNames?.input}
                         inputReadOnly={inputReadOnly || Boolean(insetInput)}
-                        {inputStyle}
+                        inputStyle={styles?.input}
                         inputValue={states().inputValue}
                         {insetLabel}
                         {insetLabelId}

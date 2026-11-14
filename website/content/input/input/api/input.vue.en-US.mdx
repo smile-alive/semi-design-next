@@ -6,12 +6,12 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | autofocus | Focuses the input on mount, using preventScroll; a disabled input is not focused. | `boolean` | `semiGlobalDefault("Input", "autofocus")` |
 | borderless | Borderless mode. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by input (the native input element); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"input\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Input", "classNames")` |
 | composition | Whether to enable IME mode; change does not fire during a composition and fires once after it ends. | `boolean` | `false` |
 | defaultValue | Initial content when the input is uncontrolled. | `string \| number` | `semiGlobalDefault("Input", "defaultValue")` |
 | disabled | Whether the input is disabled. | `boolean` | `undefined` |
 | getValueLength | Custom string length calculation, used with maxlength and minlength. | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
 | hideSuffix | Hides the suffix while the clear button is shown; by default the two sit side by side. | `boolean` | `false` |
-| inputStyle | Style of the native input element; numbers need a unit. | `StyleValue` | `semiGlobalDefault("Input", "inputStyle")` |
 | insetLabelId | The id of the element around the insetLabel slot, for aria-labelledby to point at. | `string` | `undefined` |
 | maxlength | Maximum length. With getValueLength the length is measured and truncated by it; otherwise the native attribute applies. | `number` | `undefined` |
 | minlength | Minimum length. With getValueLength it is converted accordingly; otherwise the native attribute applies. | `number` | `undefined` |
@@ -24,6 +24,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | Shows a clear button when the input has content and the pointer or focus is inside the component. | `boolean` | `false` |
 | showClearIgnoreDisabled | Internal property used by DatePicker: the clear button stays available while disabled. | `boolean` | `semiGlobalDefault("Input", "showClearIgnoreDisabled")` |
 | size | Input size: large, default or small. | `Size` | `undefined` |
+| styles | Inline styles of the inner parts, keyed like classNames; numbers need a unit. | <ApiType detail={"Partial\u003cRecord\u003c\"input\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Input", "styles")` |
 | type | The type of the native input. | `string` | `"text"` |
 | validateStatus | Validation status: default, error or warning; error outputs aria-invalid. | `"default" \| "error" \| "success" \| "warning"` | `"default"` |
 

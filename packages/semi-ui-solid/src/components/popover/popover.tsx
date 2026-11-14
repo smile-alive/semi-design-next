@@ -1,6 +1,6 @@
 import { type JSX, type Ref, splitProps } from 'solid-js';
-import clsx, { type ClassValue } from 'clsx';
-import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
+import clsx from 'clsx';
+import { cssClasses, getPopoverRole, getPopoverSpacing, type PopoverPart } from '@fibrae/semi-foundation/components/popover/constants';
 import '@fibrae/semi-foundation/components/popover/popover.scss';
 import { useDefaultProps } from '../../base/index';
 import Tooltip, { PopupContent, type Position, type RenderContentProps, type TooltipHandle, type TooltipInternalProps, type TooltipProps, type Trigger } from '../tooltip';
@@ -38,13 +38,13 @@ export interface PopoverProps {
     mouseEnterDelay?: number;
     mouseLeaveDelay?: number;
     trigger?: Trigger;
-    contentClassName?: ClassValue;
+    classNames?: Partial<Record<PopoverPart, string>>;
+    styles?: { content?: JSX.CSSProperties | string; arrow?: ArrowStyle };
     onVisibleChange?: (visible: boolean) => void;
     onClickOutSide?: TooltipProps['onClickOutSide'];
     showArrow?: boolean;
     spacing?: number | { x: number; y: number };
     stopPropagation?: boolean | string;
-    arrowStyle?: ArrowStyle;
     arrowPointAtCenter?: boolean;
     closeOnEsc?: TooltipProps['closeOnEsc'];
     guardFocus?: TooltipProps['guardFocus'];
@@ -82,7 +82,7 @@ const prefixCls = cssClasses.PREFIX;
 
 export default function Popover(rawProps: PopoverProps & { ref?: Ref<PopoverHandle> }) {
     const props = useDefaultProps('Popover', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['arrowStyle', 'children', 'class', 'content', 'contentClassName', 'position', 'ref', 'role', 'showArrow', 'spacing', 'style', 'trigger']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'content', 'position', 'ref', 'role', 'showArrow', 'spacing', 'style', 'styles', 'trigger']);
 
     let tooltip: TooltipHandle | undefined;
 
@@ -92,10 +92,10 @@ export default function Popover(rawProps: PopoverProps & { ref?: Ref<PopoverHand
 
     const role = () => getPopoverRole(local.role, local.trigger);
 
-    const arrow = () => (local.showArrow ? <Arrow arrowStyle={local.arrowStyle} popStyle={typeof local.style === 'object' ? local.style : undefined} position={local.position} /> : false);
+    const arrow = () => (local.showArrow ? <Arrow arrowStyle={local.styles?.arrow} class={local.classNames?.arrow} popStyle={typeof local.style === 'object' ? local.style : undefined} position={local.position} /> : false);
 
     const renderPopCard = (renderProps: RenderContentProps) => (
-        <div class={clsx(prefixCls, local.contentClassName)}>
+        <div class={clsx(prefixCls, local.classNames?.content)} style={local.styles?.content}>
             <div class={`${prefixCls}-content`}>
                 <PopupContent content={local.content} renderProps={renderProps} />
             </div>

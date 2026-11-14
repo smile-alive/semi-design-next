@@ -1,4 +1,5 @@
-import type { CSSProperties, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { BadgePart } from '@fibrae/semi-foundation/components/badge/constants';
 
 export type BadgeType = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'warning' | 'success';
 export type BadgeTheme = 'solid' | 'light' | 'inverted';
@@ -12,8 +13,8 @@ export interface BadgeProps {
     /** Defaults to `leftTop` in an RTL ConfigProvider and `rightTop` otherwise */
     position?: BadgePosition;
     overflowCount?: number;
-    countClassName?: string;
-    countStyle?: CSSProperties;
+    classNames?: Partial<Record<BadgePart, ClassValue>>;
+    styles?: Partial<Record<BadgePart, StyleValue>>;
 }
 
 export interface BadgeSlots {

@@ -81,7 +81,7 @@ describe('Navigation', () => {
             { text: '任务平台', itemKey: 'job', items: ['任务管理', '用户任务查询'] },
         ];
 
-        render(() => <Nav bodyStyle={{ height: '320px' }} defaultOpenKeys={['job']} footer={{ collapseButton: true }} header={{ logo: () => <img alt="" src={logo} />, text: 'Semi 运营后台' }} items={items} />);
+        render(() => <Nav styles={{ body: { height: '320px' } }} defaultOpenKeys={['job']} footer={{ collapseButton: true }} header={{ logo: () => <img alt="" src={logo} />, text: 'Semi 运营后台' }} items={items} />);
 
         expect(document.querySelector(`.${prefixCls}-header-logo img`)).toHaveAttribute('src', logo);
         expect(document.querySelector(`.${prefixCls}-header-text`)).toHaveTextContent('Semi 运营后台');
@@ -95,7 +95,7 @@ describe('Navigation', () => {
 
     it('使用 JSX 定义的外观', () => {
         render(() => (
-            <Nav bodyStyle={{ height: '320px' }} defaultOpenKeys={['user']}>
+            <Nav styles={{ body: { height: '320px' } }} defaultOpenKeys={['user']}>
                 <Nav.Header logo="bytedance_logo" text="Semi 运营后台" />
                 <Nav.Item itemKey="union" text="公会中心" icon="star" />
                 <Nav.Sub itemKey="user" text="用户管理" icon="user">
@@ -1194,6 +1194,22 @@ describe('Navigation 行为', () => {
             hover(getSubTitle('更多'));
             await waitFor(() => expect(onVisibleChange).toHaveBeenCalledWith(true));
             expect(onOpenChange).toHaveBeenCalledWith(expect.objectContaining({ itemKey: 'more', isOpen: true }));
+        });
+
+        it('classNames 与 styles 按部位落到对应元素', async () => {
+            const { container } = render(() => (
+                <Nav classNames={{ body: 'my-body' }} isCollapsed styles={{ body: { order: 1 } }}>
+                    <Nav.Sub classNames={{ dropdown: 'my-dropdown' }} dropdownProps={{ trigger: 'click' }} itemKey="a" styles={{ dropdown: { order: 2 } }} text="A">
+                        <Nav.Item itemKey="a1" text="A1" />
+                    </Nav.Sub>
+                </Nav>
+            ));
+            const body = getElement(`.${prefixCls}-list-wrapper`, container);
+            expect(body).toHaveClass('my-body');
+            expect(body).toHaveStyle({ order: '1' });
+            await userEvent.click(getElement(`.${prefixCls}-sub-title`));
+            await waitFor(() => expect(document.querySelector('.my-dropdown')).toHaveStyle({ order: '2' }));
+            expect(document.querySelector('.my-dropdown')).toHaveClass('semi-dropdown');
         });
 
         it('Sub 的 dropdownProps.class 追加到内置弹层类名之后', async () => {

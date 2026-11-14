@@ -338,7 +338,7 @@ describe('Pagination', () => {
     it('禁用的 Pagination 在 click 的 Tooltip 中被当作禁用触发器：外包 span 是停靠点，Pagination 不接收指针', async () => {
         const [disabled, setDisabled] = createSignal(true);
         const { container } = render(() => (
-            <Tooltip wrapperClassName="probe" content="hint" motion={false} trigger="click">
+            <Tooltip classNames={{ wrapper: 'probe' }} content="hint" motion={false} trigger="click">
                 {(trigger) => <Pagination disabled={disabled()} total={200} {...trigger()} />}
             </Tooltip>
         ));

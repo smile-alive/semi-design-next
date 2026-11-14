@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `wrapper` (the scroll wrapper in scroll mode); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cOverflowListPart, string>>"}>Type</ApiType> | - |
 | collapseFrom | Collapse direction in collapse mode: `start` or `end`. | `'end' \| 'start'` | `"end"` |
 | itemKey | Property name of each item's key, or a function returning it. Defaults to the key property, then the item's position in items. | <ApiType detail={"string \u007c number \u007c ((item: T) => string \u007c number)"}>Type</ApiType> | - |
 | items | Items to render. They are data, not nodes; visibleItemRenderer renders them. Scroll mode requires a key on each item, the field named by itemKey when it is set. | <ApiType detail={"Array\u003cT>"}>Type</ApiType> | `[]` |
@@ -16,8 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | ref | Reference to the root element. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | renderMode | Render mode: `collapse` or `scroll`. | `'collapse' \| 'scroll'` | `"collapse"` |
 | style | Style of the root element. | `CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cOverflowListPart, CSSProperties>>"}>Type</ApiType> | - |
 | threshold | Visible ratio at which scroll mode reports an item's intersection. | `number` | `0.75` |
 | visibleItemRenderer | Renders one visible item and returns its React element; index is the item's position in items. In scroll mode the element is observed and gets a `data-scrollkey` attribute. | <ApiType detail={"(item: T, index: number) => ReactElement"}>Type</ApiType> | <ApiType detail={"(): ReactElement => null"}>Type</ApiType> |
-| wrapperClassName | Class name of the scroll wrapper in scroll mode. | `string` | - |
-| wrapperProps | Other attributes of the scroll wrapper in scroll mode, such as a role that owns the visible items. Its className and style are overridden by wrapperClassName and wrapperStyle. | <ApiType detail={"HTMLAttributes\u003cHTMLDivElement>"}>Type</ApiType> | - |
-| wrapperStyle | Style of the scroll wrapper in scroll mode, as a style object. | `CSSProperties` | - |
+| wrapperProps | Other attributes of the scroll wrapper in scroll mode, such as a role that owns the visible items. Its className and style are overridden by `classNames.wrapper` and `styles.wrapper`. | <ApiType detail={"HTMLAttributes\u003cHTMLDivElement>"}>Type</ApiType> | - |

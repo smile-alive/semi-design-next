@@ -27,17 +27,17 @@
                 "en-US": "Whether the dropdown panel is open on mount; AutoComplete has no controlled open state."
             },
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the component is disabled." },
-            "dropdownClassName": {
-                "zh-CN": "下拉列表的类名，落在 role=\"listbox\" 元素上。",
-                "en-US": "Class name of the dropdown list, applied to the role=\"listbox\" element."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 dropdown（下拉列表，即 role=\"listbox\" 元素），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by dropdown (the dropdown list, the role=\"listbox\" element); values take anything class takes (string, array or object) and merge with the built-in classes."
             },
             "dropdownMatchSelectWidth": {
                 "zh-CN": "下拉面板的最小宽度是否等于输入框宽度。",
                 "en-US": "Whether the minimum width of the dropdown equals the width of the input."
             },
-            "dropdownStyle": {
-                "zh-CN": "下拉列表的内联样式字符串，落在 role=\"listbox\" 元素上。",
-                "en-US": "Inline style string of the dropdown list, applied to the role=\"listbox\" element."
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames；dropdown 与 maxHeight 合并后落在 role=\"listbox\" 元素上。",
+                "en-US": "Style strings of the inner parts, keyed like classNames; dropdown is merged with maxHeight and applied to the role=\"listbox\" element."
             },
             "insetLabelId": {
                 "zh-CN": "insetLabel 前缀元素的 id，combobox 与 listbox 的名称引用它；不传时组件在渲染 insetLabel 时生成。",

@@ -34,8 +34,8 @@ afterEach(() => {
 });
 
 describe('Svelte Image', () => {
-    it('自定义 imgCls 与 imgStyle', () => {
-        const { container } = renderImage({ imgStyle: 'max-width: 300px', imgCls: 'custom-img-cls' });
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = renderImage({ styles: { img: 'max-width: 300px' }, classNames: { img: 'custom-img-cls' } });
         expect(thumb(container)).toHaveClass('custom-img-cls');
         expect(thumb(container)).toHaveStyle({ maxWidth: '300px' });
     });
@@ -212,9 +212,9 @@ describe('Svelte Image', () => {
         expect(getPreview()).toBeNull();
     });
 
-    it('preview 对象：src、previewCls、previewStyle、crossOrigin 与受控的 visible', async () => {
+    it('preview 对象：src、classNames.preview、styles.preview、crossOrigin 与受控的 visible', async () => {
         const onVisibleChange = vi.fn<(visible: boolean) => void>();
-        const { container, store } = renderImage({ preview: { src: 'https://example.com/big.jpg', previewCls: 'custom-preview', previewStyle: 'color: red', crossOrigin: 'anonymous', visible: true, onVisibleChange } });
+        const { container, store } = renderImage({ preview: { src: 'https://example.com/big.jpg', classNames: { preview: 'custom-preview' }, styles: { preview: 'color: red' }, crossOrigin: 'anonymous', visible: true, onVisibleChange } });
         expect(getPreview()).toHaveClass('custom-preview');
         expect(getPreview()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(previewImg()).toHaveAttribute('src', 'https://example.com/big.jpg');
@@ -278,7 +278,7 @@ describe('Svelte Image', () => {
     });
 
     it('读取 semiGlobal overrideDefaultProps，实例的属性优先', () => {
-        semiGlobal.config.overrideDefaultProps = { Image: { alt: 'global alt', imgCls: 'global-cls' } };
+        semiGlobal.config.overrideDefaultProps = { Image: { alt: 'global alt', classNames: { img: 'global-cls' } } };
         const first = renderImage();
         expect(thumb(first.container)).toHaveAttribute('alt', 'global alt');
         expect(thumb(first.container)).toHaveClass('global-cls');

@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { InputProps, ValidateStatus } from '../input/index.js';
 import type { PopoverProps } from '../popover/index.js';
@@ -126,8 +127,8 @@ export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Native
     showClear?: boolean;
     insetLabelId?: string;
     inputProps?: SelectInputProps;
-    dropdownClassName?: string;
-    dropdownStyle?: string;
+    classNames?: Partial<Record<SelectPart, ClassValue>>;
+    styles?: Partial<Record<SelectPart, string>>;
     dropdownMatchSelectWidth?: boolean;
     position?: Position;
     spacing?: number | { x: number; y: number };

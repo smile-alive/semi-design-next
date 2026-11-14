@@ -1,7 +1,7 @@
 import type React from 'react';
 import { memo, type ReactNode, type CSSProperties } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+import { cssClasses, type CardPart } from '@fibrae/semi-foundation/components/card/constants';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/card/card.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
@@ -20,21 +20,20 @@ export type { CardGroupProps } from './card-group';
 
 export interface CardProps extends ElementProps<'div', 'title'> {
     actions?: ReactNode[];
-    bodyStyle?: CSSProperties;
     bordered?: boolean;
     className?: string;
+    classNames?: Partial<Record<CardPart, string>>;
     children?: React.ReactNode;
     cover?: ReactNode;
     headerExtraContent?: ReactNode;
     footer?: ReactNode;
     footerLine?: boolean;
-    footerStyle?: CSSProperties;
     header?: ReactNode;
     headerLine?: boolean;
-    headerStyle?: CSSProperties;
     loading?: boolean;
     shadows?: Shadows;
     style?: CSSProperties;
+    styles?: Partial<Record<CardPart, CSSProperties>>;
     title?: ReactNode;
     'aria-label'?: string;
     /** Attached to the root div */
@@ -57,7 +56,7 @@ const placeholder = (
 );
 
 function Card(rawProps: CardProps) {
-    const { ref, actions, bodyStyle, bordered, className, children, cover, headerExtraContent, footer, footerLine, footerStyle, header, headerLine, headerStyle, loading, shadows, style, title, ...rest } = useDefaultProps('Card', rawProps, defaultProps);
+    const { ref, actions, bordered, className, classNames, children, cover, headerExtraContent, footer, footerLine, header, headerLine, loading, shadows, style, styles, title, ...rest } = useDefaultProps('Card', rawProps, defaultProps);
 
     const cardCls = clsx(prefixcls, className, {
         [`${prefixcls}-bordered`]: bordered,
@@ -68,16 +67,21 @@ function Card(rawProps: CardProps) {
     return (
         <div role={namedRole(rest)} {...rest} ref={ref} className={cardCls} style={style} aria-busy={loading}>
             {(hasContent(header) || hasContent(headerExtraContent) || hasContent(title)) && (
-                <div className={clsx(`${prefixcls}-header`, { [`${prefixcls}-header-bordered`]: Boolean(headerLine) })} style={headerStyle}>
+                <div className={clsx(`${prefixcls}-header`, { [`${prefixcls}-header-bordered`]: Boolean(headerLine) }, classNames?.header)} style={styles?.header}>
                     {hasContent(header) ? (
                         header
                     ) : (
                         <div className={`${prefixcls}-header-wrapper`}>
                             {hasContent(title) && (
                                 <div
-                                    className={clsx(`${prefixcls}-header-wrapper-title`, {
-                                        [`${prefixcls}-header-wrapper-spacing`]: hasContent(headerExtraContent),
-                                    })}
+                                    className={clsx(
+                                        `${prefixcls}-header-wrapper-title`,
+                                        {
+                                            [`${prefixcls}-header-wrapper-spacing`]: hasContent(headerExtraContent),
+                                        },
+                                        classNames?.title
+                                    )}
+                                    style={styles?.title}
                                 >
                                     {typeof title === 'string' ? (
                                         <Typography.Title
@@ -95,7 +99,7 @@ function Card(rawProps: CardProps) {
                                 </div>
                             )}
                             {hasContent(headerExtraContent) && (
-                                <div className={`${prefixcls}-header-wrapper-extra`} x-semi-prop="headerExtraContent">
+                                <div className={clsx(`${prefixcls}-header-wrapper-extra`, classNames?.extra)} style={styles?.extra} x-semi-prop="headerExtraContent">
                                     {headerExtraContent}
                                 </div>
                             )}
@@ -104,18 +108,18 @@ function Card(rawProps: CardProps) {
                 </div>
             )}
             {hasContent(cover) && (
-                <div className={`${prefixcls}-cover`} x-semi-prop="cover">
+                <div className={clsx(`${prefixcls}-cover`, classNames?.cover)} style={styles?.cover} x-semi-prop="cover">
                     {cover}
                 </div>
             )}
-            <div className={`${prefixcls}-body`} style={bodyStyle}>
+            <div className={clsx(`${prefixcls}-body`, classNames?.body)} style={styles?.body}>
                 {hasContent(children) && (
                     <Skeleton placeholder={placeholder} active loading={loading}>
                         {children}
                     </Skeleton>
                 )}
                 {Array.isArray(actions) && (
-                    <div className={`${prefixcls}-body-actions`}>
+                    <div className={clsx(`${prefixcls}-body-actions`, classNames?.actions)} style={styles?.actions}>
                         <Space spacing={12}>
                             {actions.map((item, idx) => (
                                 <div key={idx} className={`${prefixcls}-body-actions-item`} x-semi-prop={`actions.${idx}`}>
@@ -127,7 +131,7 @@ function Card(rawProps: CardProps) {
                 )}
             </div>
             {hasContent(footer) && (
-                <div className={clsx(`${prefixcls}-footer`, { [`${prefixcls}-footer-bordered`]: footerLine })} style={footerStyle} x-semi-prop="footer">
+                <div className={clsx(`${prefixcls}-footer`, { [`${prefixcls}-footer-bordered`]: footerLine }, classNames?.footer)} style={styles?.footer} x-semi-prop="footer">
                     {footer}
                 </div>
             )}

@@ -121,13 +121,13 @@
                 "zh-CN": "开启搜索时，搜索框 Input 的额外属性，监听器用 Vue 的写法如 onFocus。不要传 modelValue、defaultValue 与 onChange，否则会覆盖 Select 自身的状态与搜索处理。",
                 "en-US": "Extra props of the search Input when search is on; listeners use Vue keys such as onFocus. Do not pass modelValue, defaultValue or onChange, which would override the Select's own state and search handling."
             },
-            "dropdownClassName": {
-                "zh-CN": "下拉弹出层的 class。",
-                "en-US": "Class of the dropdown popup."
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 dropdown（下拉弹出层），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by dropdown (the dropdown popup); values take any class binding and merge with the built-in classes."
             },
-            "dropdownStyle": {
-                "zh-CN": "下拉弹出层的样式，例如设置 width。根元素上的 style 不会传给弹出层。",
-                "en-US": "Style of the dropdown popup, for example width. The style on the root element does not reach the popup."
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames，例如给 dropdown 设置 width。根元素上的 style 不会传给弹出层。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames, for example width on dropdown. The style on the root element does not reach the popup."
             },
             "dropdownMatchSelectWidth": {
                 "zh-CN": "下拉弹出层的最小宽度是否等于选择框。",

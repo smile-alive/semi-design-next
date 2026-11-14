@@ -1745,9 +1745,9 @@ type OnCell = (record: RecordType, rowIndex: number) => TableCellAttrs;
 
 </Framework>
 
-### headerStyle 示例
+### 表头样式示例
 
-`headerStyle` 会应用到所有表头 `<th>` 元素，包括 fixed 表头。
+`classNames.header` 与 `styles.header` 会应用到所有表头 `<th>` 元素，包括 fixed 表头。
 
 <Framework only="vue">
 
@@ -1773,7 +1773,7 @@ type OnCell = (record: RecordType, rowIndex: number) => TableCellAttrs;
 </script>
 
 <template>
-    <Table :columns="columns" :dataSource="dataSource" :scroll="{ x: 900 }" :headerStyle="{ backgroundColor: '#F5F6F7', fontWeight: 600 }" />
+    <Table :columns="columns" :dataSource="dataSource" :scroll="{ x: 900 }" :styles="{ header: { backgroundColor: '#F5F6F7', fontWeight: 600 } }" />
 </template>
 ```
 
@@ -1801,10 +1801,10 @@ type OnCell = (record: RecordType, rowIndex: number) => TableCellAttrs;
     }));
 </script>
 
-<Table {columns} {dataSource} scroll={{ x: 900 }} headerStyle="background-color: #F5F6F7; font-weight: 600" />
+<Table {columns} {dataSource} scroll={{ x: 900 }} styles={{ header: 'background-color: #F5F6F7; font-weight: 600' }} />
 ```
 
-`headerStyle` 是 CSS 字符串。
+`styles` 的值是 CSS 字符串。
 
 </Framework>
 
@@ -1847,7 +1847,7 @@ const dataSource = Array.from({ length: 6 }).map((_, i) => ({
 }));
 
 export default function Demo() {
-    return <Table columns={columns} dataSource={dataSource} scroll={{ x: 900 }} headerStyle={{ backgroundColor: '#F5F6F7', fontWeight: 600 }} />;
+    return <Table columns={columns} dataSource={dataSource} scroll={{ x: 900 }} styles={{ header: { backgroundColor: '#F5F6F7', fontWeight: 600 } }} />;
 }
 ```
 

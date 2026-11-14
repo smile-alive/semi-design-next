@@ -1,12 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property         | Description                                               | Type            | Default                                         |
-| ---------------- | --------------------------------------------------------- | --------------- | ----------------------------------------------- |
-| childStyle       | Style of the inner children element.                      | `CSSProperties` | `semiGlobalDefault("Spin", "childStyle")`       |
-| delay            | Delay in milliseconds before the loading effect is shown. | `number`        | `0`                                             |
-| size             | Component size.                                           | `SpinSize`      | `"middle"`                                      |
-| spinning         | Whether it is loading.                                    | `boolean`       | `true`                                          |
-| wrapperClassName | Class name of the wrapper element.                        | `string`        | `semiGlobalDefault("Spin", "wrapperClassName")` |
+| Property   | Description                                                                                                                  | Type                                                                                | Default                                   |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------- |
+| classNames | Class names of the inner parts, keyed by child (the element wrapping the children), appended after the built-in class names. | <ApiType detail={"Partial\u003cRecord\u003c\"child\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Spin", "classNames")` |
+| delay      | Delay in milliseconds before the loading effect is shown.                                                                    | `number`                                                                            | `0`                                       |
+| size       | Component size.                                                                                                              | `SpinSize`                                                                          | `"middle"`                                |
+| spinning   | Whether it is loading.                                                                                                       | `boolean`                                                                           | `true`                                    |
+| styles     | Styles of the inner parts, keyed by child (the element wrapping the children); values take any style binding.                | <ApiType detail={"Partial\u003cRecord\u003c\"child\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Spin", "styles")`     |
 
 **Events**
 

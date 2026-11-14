@@ -1,10 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性          | 说明                                                                                                                    | 类型                          | 默认值       |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------------ |
-| darkModeImage | 暗色模式下的占位图，跟随 document.body 的 theme-mode 属性变化；取值同 image。                                           | `JSX.Element \| SVGNode`      | -            |
-| description   | 描述内容，显示在标题下方。                                                                                              | `JSX.Element`                 | -            |
-| image         | 占位图，可以是 JSX 元素（如插画组件）、图片地址字符串，或 `{ id }` 形式的页面内 SVG sprite 符号；空字符串视为没有图片。 | `JSX.Element \| SVGNode`      | -            |
-| imageStyle    | 占位图的样式，可以是样式对象（键用 kebab-case）或字符串。                                                               | `JSX.CSSProperties \| string` | -            |
-| layout        | 布局模式，可选 vertical、horizontal。                                                                                   | `'horizontal' \| 'vertical'`  | `"vertical"` |
-| title         | 标题，按标题样式渲染，可以是任意 JSX 内容。                                                                             | `JSX.Element`                 | -            |
+| 属性          | 说明                                                                                                                    | 类型                                                                                                     | 默认值       |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------ |
+| classNames    | 内部各部位的类名，键为 image，与组件自带的类名合并。                                                                    | <ApiType detail={"Partial\u003cRecord\u003cEmptyPart, string>>"}>Type</ApiType>                          | -            |
+| darkModeImage | 暗色模式下的占位图，跟随 document.body 的 theme-mode 属性变化；取值同 image。                                           | `JSX.Element \| SVGNode`                                                                                 | -            |
+| description   | 描述内容，显示在标题下方。                                                                                              | `JSX.Element`                                                                                            | -            |
+| image         | 占位图，可以是 JSX 元素（如插画组件）、图片地址字符串，或 `{ id }` 形式的页面内 SVG sprite 符号；空字符串视为没有图片。 | `JSX.Element \| SVGNode`                                                                                 | -            |
+| layout        | 布局模式，可选 vertical、horizontal。                                                                                   | `'horizontal' \| 'vertical'`                                                                             | `"vertical"` |
+| styles        | 内部各部位的样式，键为 image，值可以是样式对象（键用 kebab-case）或字符串。                                             | <ApiType detail={"Partial\u003cRecord\u003cEmptyPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -            |
+| title         | 标题，按标题样式渲染，可以是任意 JSX 内容。                                                                             | `JSX.Element`                                                                                            | -            |

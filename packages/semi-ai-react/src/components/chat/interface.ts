@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import type { ChatAlign, ChatMode, ChatPart, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import type { AvatarProps } from '@fibrae/semi-ui-react/avatar/index';
 import type { ElementProps } from '@fibrae/semi-ui-react/base';
@@ -51,15 +51,13 @@ export interface ChatProps extends CommonChatsProps, ElementProps<'div', 'childr
     onClear?: () => void;
     onInputChange?: (props: { inputValue: string; attachment: FileItem[] }) => void;
     onMessageSend?: (content: string, attachment?: FileItem[]) => void;
-    inputBoxStyle?: React.CSSProperties;
-    inputBoxCls?: string;
+    classNames?: Partial<Record<ChatPart, string>>;
+    styles?: Partial<Record<ChatPart, React.CSSProperties>>;
     renderInputArea?: (props?: RenderInputAreaProps) => ReactNode;
     placeholder?: string;
     topSlot?: ReactNode | ReactNode[];
     bottomSlot?: ReactNode | ReactNode[];
     showStopGenerate?: boolean;
-    hintStyle?: React.CSSProperties;
-    hintCls?: string;
     uploadProps?: Omit<UploadProps, 'fileList' | 'defaultFileList'>;
     uploadTipProps?: TooltipProps;
     showClearContext?: boolean;
