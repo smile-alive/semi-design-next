@@ -1,5 +1,11 @@
 # @fibrae/semi-icons-vue
 
+## 0.7.0
+
+### Patch Changes
+
+- @fibrae/semi-icons-core@0.7.0
+
 ## 0.6.0
 
 ### Minor Changes
