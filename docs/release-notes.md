@@ -903,6 +903,7 @@
 
 - 破坏性：OverflowList 删除 `wrapperClassName`、`wrapperStyle`，改用 `classNames.wrapper`、`styles.wrapper`，落在滚动容器上。
 - 破坏性：Select 删除 `dropdownClassName`、`dropdownStyle`，改用 `classNames.dropdown`、`styles.dropdown`，落在弹出层元素上。
+- Select 开启 `ellipsisTrigger` 的多选可搜索时，打开后搜索框留在标签所在行、紧跟最后一个标签（原来折叠区占满整行，光标换到下一行），放不下时由标签折叠让出位置。
 - 行为变化：Select、AutoComplete、Cascader、TreeSelect、DatePicker、TimePicker 的触发器与输入框不再处理带 Ctrl、Meta 的按键，以及 Alt 加 ArrowDown、ArrowUp 以外的按键（原来 Ctrl+ArrowDown 会打开、Ctrl+Enter 会选中），这些组合键交给浏览器与系统；Alt+ArrowDown、Alt+ArrowUp 仍作为开合键，Alt+Tab（Safari 的 Option+Tab）与 Tab 一样处理，可搜索模式下 Ctrl+A、Ctrl+C 等编辑快捷键照常工作。
 - 行为变化：Select 打开时按 Tab 关闭下拉，焦点移到触发器之后的可聚焦元素，Shift+Tab 反向；下拉里有可聚焦元素时也不再先进入下拉。焦点已在下拉内时，Tab 同样关闭并移到触发器之后，Shift+Tab 关闭并回到触发器。
 - TreeSelect 关闭时清空搜索值、开启 `insetInput` 的 DatePicker 关闭时恢复触发框可用，改在离场动画结束后执行。
