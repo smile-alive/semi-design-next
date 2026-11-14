@@ -206,10 +206,11 @@ $overflowList: #{$prefix}-overflow-list;
         overflow: hidden;
         white-space: nowrap;
 
+        // takes the row beside the search input, so the input stays on the tags' row and OverflowList folds into what is left
         &-collapse {
             display: inline-flex;
-            flex-shrink: 0;
-            width: 100%;
+            flex: 0 1 auto;
+            min-width: 0;
 
             .#{$overflowList}-overflow {
                 min-width: 50px;
@@ -250,9 +251,13 @@ $overflowList: #{$prefix}-overflow-list;
                 align-items: center;
             }
 
-            &-one-line {
+            // wrapping comes before shrinking, so the folded tags would push the search input onto a second row
+            &-one-line,
+            &:has(> .#{$module}-content-wrapper-collapse) {
                 flex-wrap: nowrap;
+            }
 
+            &-one-line {
                 .#{$prefix}-tag-group {
                     flex-shrink: 0;
                     flex-wrap: nowrap;
