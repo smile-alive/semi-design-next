@@ -1,5 +1,11 @@
 # @fibrae/semi-next
 
+## 0.8.0
+
+### Patch Changes
+
+- @fibrae/semi-webpack-plugin@0.8.0
+
 ## 0.7.0
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @fibrae/semi-nuxt
 
+## 0.8.0
+
+### Patch Changes
+
+- @fibrae/semi-vite-plugin@0.8.0
+
 ## 0.7.0
 
 ### Patch Changes
