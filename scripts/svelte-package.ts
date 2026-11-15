@@ -18,7 +18,7 @@ if (!bin) {
 
 // svelte-package never deletes stale output, so a removed component would linger in dist
 fs.rmSync(dist, { recursive: true, force: true });
-execFileSync(bin, ['-i', 'src', '-o', 'dist'], { cwd, stdio: 'inherit' });
+execFileSync(bin, ['-i', 'src', '-o', 'dist', '--tsconfig', 'tsconfig.lib.json'], { cwd, stdio: 'inherit' });
 
 // svelte-package leaves its type-generation scratch output behind, which the formatter and linters would pick up
 fs.rmSync(path.join(cwd, '.svelte-kit'), { recursive: true, force: true });

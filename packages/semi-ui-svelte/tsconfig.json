@@ -1,13 +1,6 @@
+// Container only: svelte-language-server reads the nearest tsconfig.json and its references, with no ancestor search,
+// so the test configs must be reachable from here; a config with input files cannot reference non-composite projects
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "rootDir": "src",
-        "strict": true,
-        "strictNullChecks": true,
-        "erasableSyntaxOnly": true,
-        "verbatimModuleSyntax": true,
-        "types": []
-    },
-    "include": ["src/**/*.ts", "src/**/*.svelte"],
-    "exclude": ["src/**/__tests__/**"]
+    "files": [],
+    "references": [{ "path": "./tsconfig.lib.json" }, { "path": "../../vitest/svelte/tsconfig.svelte.json" }, { "path": "../../vitest/svelte/tsconfig.svelte.browser.json" }]
 }
