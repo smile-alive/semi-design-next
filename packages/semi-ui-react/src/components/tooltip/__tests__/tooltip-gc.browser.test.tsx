@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { Select, Tooltip } from '@fibrae/semi-ui-react';
 
-declare const gc: () => void;
+declare const gc: (options: { type: 'major'; execution: 'async' }) => Promise<void>;
 
 async function frames(count: number) {
     for (let i = 0; i < count; i++) {
@@ -34,9 +34,9 @@ describe('Tooltip around a Select', () => {
             await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull());
         }
         await frames(5);
-        gc();
-        await frames(5);
-        gc();
+        // a synchronous gc() runs with this call on the stack, and Blink scans that stack conservatively, so a stale
+        // pointer there can keep a closed root alive at random; the async form collects from an empty stack
+        await gc({ type: 'major', execution: 'async' });
         const alive = roots.filter((ref) => ref.deref()).length;
         expect(alive).toBeLessThanOrEqual(1);
     });
