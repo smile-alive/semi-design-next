@@ -33,7 +33,7 @@
 - 指针：拖动、缩放与按住连发（Slider、DragMove、Cropper、Resizable、ColorPicker、ImagePreview、Table 列宽、AudioPlayer 与 VideoPlayer 进度条、InputNumber 步进按钮）只在主键按下（`button` 为 0）时开始，笔的侧键与橡皮擦不再触发；鼠标左键、触摸与笔尖不变。
 - 破坏性（样式）：`semi-` 前缀元素及其伪元素统一为 `box-sizing: border-box`（`@layer semi-base`），`style` 传入的宽高包含边框与内边距，部分组件小 1 到 2px；依赖 content-box 的自定义样式需调整。
 - 组件自绘的可聚焦元素键盘聚焦时统一显示主题焦点环（`$width-focus-ring`、`$color-focus-ring`）。Semi 元素统一为细滚动条（`$color-scrollbar-thumb`），可被覆盖；`.semi-light-scrollbar` 更名为 `.semi-scrollbar`。
-- 浮层统一入栈，Esc 只关闭栈顶浮层，在 document 冒泡阶段处理，模拟 Esc 需在焦点元素而非 window 上派发；带遮罩的 Modal、SideSheet、ImagePreview 打开时页面其余部分为 `inert`。锁定滚动时给 body 加 `padding-inline-end`，不再改写 `width`；`getPopupContainer` 返回 `null` 或 `undefined` 时 Portal 抛错。
+- 浮层统一入栈，Esc 只关闭栈顶浮层，在 document 冒泡阶段处理，模拟 Esc 需在焦点元素而非 window 上派发；带遮罩的 Modal、SideSheet、ImagePreview 打开时页面其余部分为 `inert`。锁定滚动时，页面有滚动条就给根元素设 `scrollbar-gutter: stable` 保留滚动条槽，`position: fixed` 的元素也不横移（不支持的浏览器改为给 body 加 `padding-inline-end`），不再改写 `width`；`getPopupContainer` 返回 `null` 或 `undefined` 时 Portal 抛错。
 - 破坏性：图标默认装饰性（`aria-hidden="true"`），不再输出 `role="img"` 与英文类型名的 `aria-label`；只有图标的按钮需传 `aria-label`，按 `getByRole('img', { name: 'close' })` 查询的测试需调整。图标不再用 `forwardRef`，判断图标改用 `elementType === 'Icon'`。
 - 虚拟列表由 `react-window` 换为 `@tanstack/react-virtual`。拖拽排序换为 `@dnd-kit/react` 0.5（`~0.5.1`）：TagInput、Transfer 拖动中实时重排，触摸按住 250ms 后才开始；删除深路径 `@fibrae/semi-ui-react/transfer/sortable-list`。
 - 破坏性（类型）：`BaseProps` 的 `children` 收紧为 `ReactNode`；每次都会传入的回调参数改为必填（如 Table 的 `sorter(a, b)`、Tree 的 `onChange(value)`）；回调事件参数改为运行时实际事件（点击外部为原生 `MouseEvent`，Esc 为原生 `KeyboardEvent`），读取 `e.nativeEvent`、`e.persist()` 会报错。

@@ -16,8 +16,10 @@ $module-icon: #{$module}-icon-arrow;
     @include focus-ring;
 }
 
-// utils/layer.ts marks a popup a modal layer covers: the top layer would otherwise paint it above the modal's mask
-[popover][data-semi-covered] {
+// utils/layer.ts marks a popup a modal layer covers: the top layer would otherwise paint it above the modal's mask. A
+// closed popover is not in the top layer and may be a box the page shows (a sidebar that is a drawer only on narrow
+// screens); the mask covers it already
+:popover-open[data-semi-covered] {
     visibility: hidden;
 }
 
