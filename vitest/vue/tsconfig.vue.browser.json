@@ -8,7 +8,7 @@
         "../../packages/semi-ui-vue/**/__tests__/**/*.browser.test.ts",
         "../../packages/semi-ui-vue/**/__tests__/**/*.browser.test.tsx",
         "../../packages/semi-ui-vue/**/__tests__/fixtures/**/*.vue",
-        "../../packages/*/__tests__/vue/*.browser.test.ts",
+        "../../packages/shared/*/__tests__/vue/*.browser.test.ts",
         "../../packages/semi-ui-vue/src/styles.d.ts",
         "../../packages/semi-ai-vue/**/__tests__/**/*.browser.test.ts",
         "../../packages/semi-ai-vue/**/__tests__/**/*.browser.test.tsx",

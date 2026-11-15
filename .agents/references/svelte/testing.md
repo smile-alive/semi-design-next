@@ -8,6 +8,7 @@
 - jsdom 项目设 `resolve: { conditions: ['browser'] }`，不设时解析到服务端构建，`mount()` 抛错。`vitest/svelte/svelte.setup.ts` 在每个用例后调用 `cleanup`：`@testing-library/svelte` 不自动清理。
 - hydration 项目经 `vitest/svelte/hydration-setup.ts` 起一个 SSR 模式的 Vite server，用 `svelte/server` 的 `render` 渲染服务端 HTML，经 `inject('svelteSsr')` 交给浏览器用例；浏览器用例写入 HTML 后调用 `hydrate`，断言没有 hydration 告警、两端 id 一致。
 - 测试与 fixture 的类型由 `vitest/svelte/tsconfig.svelte.json`、`tsconfig.svelte.browser.json` 的 `svelte-check` 检查。
+- Svelte 包的 `tsconfig.json` 只做容器（`files: []` 加 `references`），包源码的配置在 `tsconfig.lib.json`：svelte-language-server 只认离文件最近的 `tsconfig.json` 及其 `references`，不往上层找，夹具要靠这份容器才能找到测试配置；svelte-check、svelte-package 都显式传 `tsconfig.lib.json`。
 
 ## 写法
 
