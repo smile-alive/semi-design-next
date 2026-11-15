@@ -82,6 +82,10 @@
                 "zh-CN": "点击重置按钮或调用 `formApi.reset()` 时调用。",
                 "en-US": "Called when a reset button is clicked or `formApi.reset()` is called."
             },
+            "onRevealField": {
+                "zh-CN": "`formApi.scrollToField`、`formApi.focusField` 在该路径找不到已渲染的元素时调用（元素在 `inert` 或 `hidden` 的折叠内容里也算找不到），参数为路径；在这里展开包住它的折叠卡片，Form 最多等待一秒，挂载后再滚动与聚焦。",
+                "en-US": "Called when `formApi.scrollToField` or `formApi.focusField` finds nothing rendered at a path (an element inside `inert` or `hidden` collapsed content counts as not rendered), with the path. Expand the collapsed card that holds it here; the Form waits up to a second and scrolls and focuses once it mounts."
+            },
             "onSubmit": {
                 "zh-CN": "点击提交按钮或调用 `formApi.submitForm()` 且校验通过后调用，参数为 values 与提交事件。",
                 "en-US": "Called when a submit button is clicked or `formApi.submitForm()` is called and validation passes, with values and the submit event."
@@ -182,6 +186,10 @@
                 "zh-CN": "fieldset 元素的类名。",
                 "en-US": "Class name of the fieldset element."
             },
+            "extraText": {
+                "zh-CN": "显示在标题下方的说明，同时作为分组的无障碍描述（`aria-describedby`）。",
+                "en-US": "A description below the title, also the accessible description of the group (`aria-describedby`)."
+            },
             "ref": {
                 "zh-CN": "fieldset 元素的引用。",
                 "en-US": "Reference to the fieldset element."
@@ -246,6 +254,10 @@
             "text": {
                 "zh-CN": "Label 文本；不传时使用 children。",
                 "en-US": "Text of the label. children is used when it is not set."
+            },
+            "tooltip": {
+                "zh-CN": "label 旁问号按钮的 Tooltip 内容；设置后按钮在 label 元素之外，不计入字段的可访问名称，按钮名称取语言包。",
+                "en-US": "Tooltip content of the help button beside the label. The button sits outside the label element, so it is not part of the field's accessible name, and its name comes from the locale."
             },
             "width": {
                 "zh-CN": "Label 宽度，数字单位为 px。",
@@ -368,20 +380,20 @@
         "source": "packages/semi-ui-react/src/components/form/schema-form/schema-field.tsx",
         "props": {
             "field": {
-                "zh-CN": "要渲染的节点路径，默认为根；根对象不包 Section，其他对象与数组渲染为以 title 为标题的 Section。",
-                "en-US": "Path of the node to render, the root by default. The root object renders without a Section; other objects and arrays render as a Section titled by their title."
+                "zh-CN": "要渲染的节点路径，默认为根。",
+                "en-US": "Path of the node to render, the root by default."
             },
             "jsonSchema": {
                 "zh-CN": "要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的 JSON Schema；两者都没有时不渲染，开发模式下警告。",
                 "en-US": "The JSON Schema to render. It takes precedence over the JSON Schema exported from the Form's `schema`; with neither, nothing renders and a warning is logged in development."
             },
             "renderField": {
-                "zh-CN": "按节点路径接管渲染，数组的行写作 `[]`（如 `contacts[].email`），参数为 `{ node, field }`；命中时由它渲染这个节点和它的子节点。",
-                "en-US": "Renderers by node path, with array rows written as `[]` (such as `contacts[].email`), called with `{ node, field }`. A match renders the node and its subtree."
+                "zh-CN": "按节点路径替换 `renderers` 里对应种类的渲染函数，数组的行写作 `[]`（如 `contacts[].email`），参数与该种类的渲染函数相同。",
+                "en-US": "Replaces the `renderers` function of a node by its path, with array rows written as `[]` (such as `contacts[].email`). It receives what the function of that node's kind receives."
             },
-            "widgets": {
-                "zh-CN": "替换内置控件的字段组件，键是 JSON Schema 的 `format` 或控件种类（input、textarea、number、switch、select），先按 `format` 再按种类查找；组件收到与内置控件相同的属性。",
-                "en-US": "Field components in place of the built-in controls, keyed by the JSON Schema `format` or by kind (input, textarea, number, switch, select), looked up by `format` first. A component receives the props of the built-in control."
+            "renderers": {
+                "zh-CN": "各种类节点的渲染函数 `{ object, array, field }`，SchemaField 自身不渲染任何界面；传 `semiRenderers` 得到 Semi 表单控件的默认界面。缺少 `object` 时直接渲染对象的属性，缺少 `array`、`field` 时对应节点不渲染，开发模式下警告。各函数的参数见「按 Schema 渲染表单」。",
+                "en-US": "Render functions by node kind, `{ object, array, field }`; SchemaField itself renders no UI. Pass `semiRenderers` for the default UI built from Semi Form controls. Without `object` an object renders its properties as they are; without `array` or `field` those nodes render nothing and a warning is logged in development. See Render a form from a Schema for what each function receives."
             }
         }
     },
@@ -468,6 +480,10 @@
                 "zh-CN": "点击重置按钮或调用 `formApi.reset()` 时调用。",
                 "en-US": "Called when a reset button is clicked or `formApi.reset()` is called."
             },
+            "onRevealField": {
+                "zh-CN": "`formApi.scrollToField`、`formApi.focusField` 在该路径找不到已渲染的元素时调用（元素在 `inert` 或 `hidden` 的折叠内容里也算找不到），参数为路径；在这里展开包住它的折叠卡片，Form 最多等待一秒，挂载后再滚动与聚焦。",
+                "en-US": "Called when `formApi.scrollToField` or `formApi.focusField` finds nothing rendered at a path (an element inside `inert` or `hidden` collapsed content counts as not rendered), with the path. Expand the collapsed card that holds it here; the Form waits up to a second and scrolls and focuses once it mounts."
+            },
             "onSubmit": {
                 "zh-CN": "点击提交按钮或调用 `formApi.submitForm()` 且校验通过后调用，参数为 values（配置 `schema` 时为 schema 的输出）与提交事件。",
                 "en-US": "Called when a submit button is clicked or `formApi.submitForm()` is called and validation passes, with the values (the schema's output when `schema` is set) and the submit event."
@@ -525,12 +541,12 @@
                 "en-US": "The JSON Schema to render. It takes precedence over the JSON Schema exported from `schema`; with neither, no field renders and a warning is logged in development."
             },
             "renderField": {
-                "zh-CN": "同 SchemaField 的 `renderField`：按节点路径接管渲染，数组的行写作 `[]`，参数为 `{ node, field }`。",
-                "en-US": "Same as the `renderField` of SchemaField: renderers by node path, with array rows written as `[]`, called with `{ node, field }`."
+                "zh-CN": "同 SchemaField 的 `renderField`：按节点路径替换渲染函数，数组的行写作 `[]`。",
+                "en-US": "Same as the `renderField` of SchemaField: replaces the render function of a node by its path, with array rows written as `[]`."
             },
-            "widgets": {
-                "zh-CN": "同 SchemaField 的 `widgets`：按 JSON Schema 的 `format` 或控件种类替换内置控件。",
-                "en-US": "Same as the `widgets` of SchemaField: field components in place of the built-in controls, keyed by the JSON Schema `format` or by kind."
+            "renderers": {
+                "zh-CN": "同 SchemaField 的 `renderers`：各种类节点的渲染函数，传 `semiRenderers` 得到默认界面，不传时不渲染字段。",
+                "en-US": "Same as the `renderers` of SchemaField: render functions by node kind. Pass `semiRenderers` for the default UI; without it no field renders."
             }
         },
         "methods": {

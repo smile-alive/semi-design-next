@@ -221,7 +221,7 @@ describe('FormApi 路径类型', () => {
             api.setError('users[0].name', 'bad');
             api.setTouched('tags[0]', true);
             api.getFieldExist('matrix[0][1]');
-            api.scrollToField('users[1].name');
+            void api.scrollToField('users[1].name');
             expectTypeOf(api.validate(['users[0].name'])).toEqualTypeOf<Promise<ArrayValues>>();
             // @ts-expect-error a misspelled path
             api.setTouched('tagz[0]', true);

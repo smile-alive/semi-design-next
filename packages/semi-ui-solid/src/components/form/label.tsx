@@ -3,9 +3,11 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/form/form.scss';
+import { IconHelpCircle } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/index';
 import { hasContent, mergeStyles } from '../../utils/index';
 import useLocale from '../locale/use-locale';
+import Tooltip from '../tooltip';
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -20,11 +22,13 @@ export interface LabelProps extends ElementProps<'label'> {
     /** width of label, a number in px */
     width?: number | string;
     extra?: JSX.Element;
+    /** Shown in a Tooltip by a help button beside the label; the button is not part of the field's name */
+    tooltip?: JSX.Element;
     optional?: boolean;
 }
 
 export default function Label(props: LabelProps) {
-    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'disabled', 'extra', 'for', 'name', 'optional', 'required', 'style', 'text', 'width']);
+    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'disabled', 'extra', 'for', 'name', 'optional', 'required', 'style', 'text', 'tooltip', 'width']);
 
     const locale = useLocale('Form');
 
@@ -35,6 +39,7 @@ export default function Label(props: LabelProps) {
     });
 
     const extra = children(() => local.extra);
+    const tooltip = children(() => local.tooltip);
 
     const align = () => local.align ?? 'left';
 
@@ -45,7 +50,7 @@ export default function Label(props: LabelProps) {
         return mergeStyles(local.style, { width: toCssLength(local.width) });
     };
 
-    return (
+    const renderLabel = () => (
         <label
             {...rest}
             for={local.name || local.for || undefined}
@@ -56,7 +61,7 @@ export default function Label(props: LabelProps) {
                 [`${prefixCls}-field-label-disabled`]: local.disabled,
                 [`${prefixCls}-field-label-with-extra`]: hasContent(extra()),
             })}
-            style={style()}
+            style={hasContent(tooltip()) ? local.style : style()}
         >
             <div class={`${prefixCls}-field-label-text`} x-semi-prop="label">
                 {content()}
@@ -68,5 +73,20 @@ export default function Label(props: LabelProps) {
                 <div class={`${prefixCls}-field-label-extra`}>{extra()}</div>
             </Show>
         </label>
+    );
+
+    return (
+        <Show when={hasContent(tooltip())} fallback={renderLabel()}>
+            <div class={`${prefixCls}-field-label-with-tooltip`} style={local.width ? { width: toCssLength(local.width) } : undefined}>
+                {renderLabel()}
+                <Tooltip content={tooltip()}>
+                    {(getTriggerProps) => (
+                        <button {...getTriggerProps()} type="button" class={`${prefixCls}-field-label-tooltip`} aria-label={locale().locale.labelTooltip}>
+                            <IconHelpCircle />
+                        </button>
+                    )}
+                </Tooltip>
+            </div>
+        </Show>
     );
 }

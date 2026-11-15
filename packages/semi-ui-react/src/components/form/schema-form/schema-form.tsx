@@ -5,7 +5,7 @@ import Form from '../form';
 import type { AllFormProps } from '../interface';
 import SchemaField, { type SchemaFieldProps } from './schema-field';
 
-export interface SchemaFormOwnProps extends Pick<SchemaFieldProps, 'jsonSchema' | 'widgets' | 'renderField'> {
+export interface SchemaFormOwnProps extends Pick<SchemaFieldProps, 'jsonSchema' | 'renderers' | 'renderField'> {
     children?: React.ReactNode;
 }
 
@@ -15,11 +15,11 @@ export type SchemaFormProps<Values extends Record<string, any> = any, Output = V
 const defaultProps = {} satisfies Partial<SchemaFormProps>;
 
 export default function SchemaForm<Values extends Record<string, any> = any, Output = Values>(rawProps: SchemaFormProps<Values, Output>) {
-    const { jsonSchema, widgets, renderField, children, ...formProps } = useDefaultProps('SchemaForm', rawProps, defaultProps);
+    const { jsonSchema, renderers, renderField, children, ...formProps } = useDefaultProps('SchemaForm', rawProps, defaultProps);
 
     return (
         <Form<Values, Output> {...formProps}>
-            <SchemaField jsonSchema={jsonSchema} widgets={widgets} renderField={renderField} />
+            <SchemaField jsonSchema={jsonSchema} renderers={renderers} renderField={renderField} />
             {children}
         </Form>
     );

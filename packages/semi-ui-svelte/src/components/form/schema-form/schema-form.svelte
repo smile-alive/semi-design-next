@@ -5,7 +5,7 @@
     import SchemaField from './schema-field.svelte';
 
     const defaults = useDefaultProps('SchemaForm');
-    let { jsonSchema = defaults('jsonSchema'), widgets = defaults('widgets'), renderField = defaults('renderField'), children: content, ...rest }: SchemaFormProps<Values, Output> = $props();
+    let { jsonSchema = defaults('jsonSchema'), renderers = defaults('renderers'), renderField = defaults('renderField'), children: content, ...rest }: SchemaFormProps<Values, Output> = $props();
 
     let form = $state.raw<{ getFormApi: () => FormApi<Values, Output> }>();
 
@@ -16,7 +16,7 @@
 
 <Form bind:this={form} {...rest}>
     {#snippet children(renderProps)}
-        <SchemaField {jsonSchema} {renderField} {widgets} />
+        <SchemaField {jsonSchema} {renderField} {renderers} />
         {@render content?.(renderProps)}
     {/snippet}
 </Form>

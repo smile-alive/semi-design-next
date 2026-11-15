@@ -12,7 +12,7 @@ import Cascader from '@fibrae/semi-ui-react/cascader';
 import ColorPicker from '@fibrae/semi-ui-react/color-picker';
 import Cropper from '@fibrae/semi-ui-react/cropper';
 import DatePicker from '@fibrae/semi-ui-react/date-picker';
-import { Form, SchemaField } from '@fibrae/semi-ui-react/form';
+import { Form, FormInput, SchemaField, semiRenderers } from '@fibrae/semi-ui-react/form';
 import Image from '@fibrae/semi-ui-react/image';
 import Input from '@fibrae/semi-ui-react/input';
 import InputGroup from '@fibrae/semi-ui-react/input/input-group';
@@ -104,14 +104,24 @@ describe('可访问名称跟随语言包', () => {
     it('SchemaField 为数组行的移动、删除按钮与行标签命名，添加按钮文字本地化', () => {
         inEnglish(
             <Form initValues={{ tags: ['a', 'b'] }}>
-                <SchemaField jsonSchema={{ type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } }} />
+                <SchemaField jsonSchema={{ type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } }} renderers={semiRenderers} />
             </Form>
         );
-        expect(screen.getByRole('textbox', { name: en_US.Form.item.replace('${index}', '1') })).toHaveValue('a');
+        expect(screen.getByRole('textbox', { name: en_US.Form.arrayItem.replace('${title}', 'tags').replace('${index}', '1') })).toHaveValue('a');
         expect(screen.getByRole('button', { name: en_US.Form.moveUpItem.replace('${index}', '2') })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: en_US.Form.moveDownItem.replace('${index}', '1') })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: en_US.Form.removeItem.replace('${index}', '2') })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: en_US.Form.addItem })).toBeInTheDocument();
+    });
+
+    it('Form 标签的 tooltip 按钮有语言包名称，且不进入字段名称', () => {
+        inEnglish(
+            <Form>
+                <FormInput field="name" label={{ text: 'Name', tooltip: 'Your full name' }} />
+            </Form>
+        );
+        expect(screen.getByRole('button', { name: en_US.Form.labelTooltip })).toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: 'Name' })).toBeInTheDocument();
     });
 
     it('Pagination 为上一页与下一页按钮命名', () => {

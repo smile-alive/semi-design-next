@@ -52,7 +52,7 @@ describe('Form 滚动', () => {
         ));
         const api = formApi!;
         const target = document.querySelectorAll('.semi-form-field[x-field-id="b"]')[1];
-        api.scrollToField('b', { block: 'end' });
+        void api.scrollToField('b', { block: 'end' });
         expect(scrollIntoView).toHaveBeenLastCalledWith(target, { block: 'end' });
         await expect(api.validate()).rejects.toBeDefined();
         await flush();
@@ -82,7 +82,7 @@ describe('Form 滚动', () => {
         const field = 'a["b"]';
         const { api } = renderForm({}, () => <FormInput field={field} rules={required} />);
         const target = document.querySelector('.semi-form-field');
-        api().scrollToField(field);
+        void api().scrollToField(field);
         expect(scrollIntoView).toHaveBeenLastCalledWith(target, smooth);
         await expect(api().validate()).rejects.toBeDefined();
         await flush();

@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { untrack } from 'svelte';
-    import { describeSchemaField, resolveJsonSchema } from '@fibrae/semi-foundation/components/form/json-schema';
+    import { describeSchemaField, resolveJsonSchema, schemaFieldWarnings } from '@fibrae/semi-foundation/components/form/json-schema';
     import { warning } from '@fibrae/semi-foundation/utils';
     import { useDefaultProps } from '../../../base/index.js';
     import { getFormContext } from '../context.js';
@@ -8,7 +7,7 @@
     import SchemaNode from './schema-node.svelte';
 
     const defaults = useDefaultProps('SchemaField');
-    let { field = defaults('field', ''), jsonSchema = defaults('jsonSchema'), widgets = defaults('widgets'), renderField = defaults('renderField') }: SchemaFieldProps = $props();
+    let { field = defaults('field', ''), jsonSchema = defaults('jsonSchema'), renderers = defaults('renderers'), renderField = defaults('renderField') }: SchemaFieldProps = $props();
 
     const form = getFormContext();
 
@@ -21,11 +20,10 @@
     const node = $derived(root && describeSchemaField(root, field));
 
     $effect(() => {
-        const missing = !root;
-        untrack(() => warning(missing, '[Semi Form] SchemaField has no JSON Schema to render: pass jsonSchema, or give the Form a schema that exports one'));
+        warning(!root, schemaFieldWarnings.noSchema);
     });
 </script>
 
 {#if root && node}
-    <SchemaNode {node} {renderField} {root} {widgets} />
+    <SchemaNode {node} {renderField} {renderers} {root} />
 {/if}

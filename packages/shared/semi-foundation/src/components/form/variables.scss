@@ -32,6 +32,9 @@ $font-form_label-fontWeight: $font-weight-bold; // 表单项标签字重
 $color-form_label-text-default: var(--semi-color-text-0); // 表单项标签文字颜色
 $color-form_label_optional-text-default: var(--semi-color-tertiary); // 表单项标签可选标记颜色
 $color-form_label_extra-text-default: var(--semi-color-tertiary); // 表单项标签图标颜色
+$color-form_label_tooltip-icon-default: var(--semi-color-tertiary); // 表单项标签提示图标颜色
+$spacing-form_label_tooltip-marginLeft: $spacing-extra-tight; // 表单项标签与提示图标的间距
+$width-form_label_tooltip-icon: $width-icon-small; // 表单项标签提示图标大小
 $color-form_requiredMark-text-default: var(--semi-color-danger); // 必填标记颜色
 $font-form_requiredMark-fontWeight: $font-weight-bold; // 表单必填标识字重
 
@@ -48,5 +51,6 @@ $spacing-form_section_text-paddingBottom: $spacing-tight; // 表单分组标题�
 $spacing-form_section_text-marginBottom: $spacing-extra-tight; // 表单分组标题底部外边距
 $spacing-form_section_text-paddingTop: 0px; // 表单分组标题顶部内边距
 $spacing-form_section_text-marginTop: 0px; // 表单分组标题顶部外边距
+$spacing-form_section_extra-marginBottom: $spacing-extra-tight; // 表单分组说明文字底部外边距
 $spacing-form_schema_array_row-gap: $spacing-tight; // SchemaField 数组行内容与操作按钮的间距
 $spacing-form_schema_array_row_actions-gap: $spacing-extra-tight; // SchemaField 数组行操作按钮之间的间距

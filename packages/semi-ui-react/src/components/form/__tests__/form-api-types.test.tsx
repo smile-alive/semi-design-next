@@ -85,7 +85,7 @@ describe('FormApi 路径类型', () => {
             api.getTouched('users[0].name');
             api.getFieldExist('matrix[0][1]');
             api.getInitValue('users[0].name');
-            api.scrollToField('users[1].name');
+            void api.scrollToField('users[1].name');
             api.scrollToError({ field: 'users[0].name' });
             expectTypeOf(api.validate(['users[0].name'])).toEqualTypeOf<Promise<ArrayValues>>();
             void api.validate({ fields: ['tags[0]'], silent: true });

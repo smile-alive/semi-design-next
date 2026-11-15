@@ -36,7 +36,7 @@ describe('Svelte Form（ShadowRoot）', () => {
             api.scrollToError({ field: 'b', scrollOpts: toTop });
             expectInViewport(field);
             window.scrollTo(0, 0);
-            api.scrollToField('b', toTop);
+            await api.scrollToField('b', toTop);
             expectInViewport(field);
         } finally {
             view.unmount();

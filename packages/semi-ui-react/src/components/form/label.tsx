@@ -3,8 +3,11 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import '@fibrae/semi-foundation/components/form/form.scss';
+import { IconHelpCircle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 import useLocale from '../locale/use-locale';
+import Tooltip from '../tooltip';
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -20,6 +23,8 @@ export interface LabelProps extends ElementProps<'label'> {
     width?: number | string;
     style?: React.CSSProperties;
     extra?: React.ReactNode;
+    /** Shown in a Tooltip by a help button beside the label; the button is not part of the field's name */
+    tooltip?: React.ReactNode;
     optional?: boolean;
     /** Attached to the label element */
     ref?: React.Ref<HTMLLabelElement>;
@@ -31,7 +36,11 @@ function OptionalText() {
     return <span className={`${prefixCls}-field-label-optional-text`}>{locale.optional}</span>;
 }
 
-function Label({ children, required = false, text, disabled, name, width, align = 'left', style, className = '', extra, id, optional = false, ref, htmlFor, ...rest }: LabelProps) {
+function Label({ children, required = false, text, disabled, name, width, align = 'left', style, className = '', extra, tooltip, id, optional = false, ref, htmlFor, ...rest }: LabelProps) {
+    const { locale } = useLocale('Form');
+
+    const hasTooltip = hasContent(tooltip);
+
     const labelCls = clsx(className, {
         [`${prefixCls}-field-label`]: true,
         [`${prefixCls}-field-label-left`]: align === 'left',
@@ -50,8 +59,8 @@ function Label({ children, required = false, text, disabled, name, width, align 
         </div>
     );
 
-    return (
-        <label {...rest} ref={ref} id={id} htmlFor={name || htmlFor || undefined} className={labelCls} style={labelStyle}>
+    const labelElement = (
+        <label {...rest} ref={ref} id={id} htmlFor={name || htmlFor || undefined} className={labelCls} style={hasTooltip ? style : labelStyle}>
             {extra ? (
                 <>
                     {textContent}
@@ -61,6 +70,21 @@ function Label({ children, required = false, text, disabled, name, width, align 
                 textContent
             )}
         </label>
+    );
+
+    if (!hasTooltip) {
+        return labelElement;
+    }
+
+    return (
+        <div className={`${prefixCls}-field-label-with-tooltip`} style={width ? { width } : undefined}>
+            {labelElement}
+            <Tooltip content={tooltip}>
+                <button type="button" className={`${prefixCls}-field-label-tooltip`} aria-label={locale.labelTooltip}>
+                    <IconHelpCircle />
+                </button>
+            </Tooltip>
+        </div>
     );
 }
 

@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/form/form-api-proxy';
     import FormFoundation from '@fibrae/semi-foundation/components/form/foundation';
-    import type { AllErrors, BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/components/form/interface';
+    import type { AllErrors, BaseFormAdapter, FieldPath, FormFoundationState, FormState } from '@fibrae/semi-foundation/components/form/interface';
     import '@fibrae/semi-foundation/components/form/form.scss';
     import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
@@ -69,6 +69,7 @@
             notifyValueChange: (values, changedValues) => emit('valueChange', values, changedValues),
             notifyErrorChange: (errors, changedError) => emit('errorChange', errors, changedError),
             notifyReset: () => emit('reset'),
+            notifyRevealField: (field) => emit('revealField', field as FieldPath<Values>),
             getFormElement: () => formElement.value,
         }),
         { props: { validator: () => formProps.value.validator, schema: () => formProps.value.schema } }

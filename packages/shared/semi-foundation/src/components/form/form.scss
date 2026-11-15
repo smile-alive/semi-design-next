@@ -1,5 +1,6 @@
 @use 'semi:theme' as *;
 @use 'variables' as *;
+@use '../../base/mixin' as *;
 
 $form: #{$prefix}-form;
 $field: #{$prefix}-form-field;
@@ -102,8 +103,8 @@ $rating: #{$prefix}-rating;
 
         &-required {
             .#{$field}-label-text {
-                &::after {
-                    margin-inline-start: $spacing-form_label_required-marginLeft;
+                &::before {
+                    margin-inline-end: $spacing-form_label_required-marginLeft;
                     font-weight: $font-form_requiredMark-fontWeight;
                     color: $color-form_requiredMark-text-default;
                     content: '*';
@@ -126,6 +127,31 @@ $rating: #{$prefix}-rating;
         &-right {
             text-align: end;
         }
+    }
+
+    // The tooltip button sits beside the label element, not in it: a label's content names the control, and a
+    // button must not be nested in a label. The width of the label moves to this wrapper to keep columns aligned.
+    &-field-label-with-tooltip {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        max-width: 100%;
+        padding-inline-end: $spacing-form_label-paddingRight;
+
+        .#{$field}-label {
+            flex: 0 1 auto;
+            min-width: 0;
+            padding-inline-end: $spacing-form_label_tooltip-marginLeft;
+        }
+    }
+
+    &-field-label-tooltip {
+        @include bare-button;
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        font-size: $width-form_label_tooltip-icon;
+        color: $color-form_label_tooltip-icon-default;
     }
 
     &-field-error-message,
@@ -287,6 +313,12 @@ $rating: #{$prefix}-rating;
         border-bottom: $width-form_section-border solid $color-form_section-border-default;
     }
 
+    &-extra {
+        @include font-size-regular;
+        margin-bottom: $spacing-form_section_extra-marginBottom;
+        color: $color-form_label_extra-text-default;
+    }
+
     &:nth-of-type(1) {
         margin-top: 0;
     }
@@ -309,4 +341,14 @@ $rating: #{$prefix}-rating;
     gap: $spacing-form_schema_array_row_actions-gap;
     // aligns the buttons with the control of the row's last field, not with the field's bottom padding
     padding-block-end: $spacing-form_field_vertical-paddingBottom;
+}
+
+// a single-value row has no label: the buttons align with the control's top, so an error message below the control
+// only grows the row downward
+.#{$form}-schema-array-row-single {
+    align-items: flex-start;
+
+    .#{$form}-schema-array-row-actions {
+        padding-block: $spacing-form_field_vertical-paddingTop 0;
+    }
 }

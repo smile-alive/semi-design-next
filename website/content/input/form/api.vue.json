@@ -104,6 +104,10 @@
                 "zh-CN": "点击重置按钮或调用 formApi.reset 时触发。与原生 reset 事件同名，会遮住原生事件。",
                 "en-US": "Emitted when a reset button is clicked or formApi.reset is called. It has the name of the native reset event and hides it."
             },
+            "revealField": {
+                "zh-CN": "formApi.scrollToField、formApi.focusField 在该路径找不到已渲染的元素时触发（元素在 inert 或 hidden 的折叠内容里也算找不到），参数为路径；在这里展开包住它的折叠卡片，Form 最多等待一秒，挂载后再滚动与聚焦。",
+                "en-US": "Emitted when formApi.scrollToField or formApi.focusField finds nothing rendered at a path (an element inside inert or hidden collapsed content counts as not rendered). Receives the path. Expand the collapsed card that holds it here; the Form waits up to a second and scrolls and focuses once it mounts."
+            },
             "submit": {
                 "zh-CN": "点击提交按钮或调用 formApi.submitForm 且校验通过后触发，参数为 values 与提交事件；配置了 `schema` 时 values 是 schema 的输出。与原生 submit 事件同名，会遮住原生事件。",
                 "en-US": "Emitted when a submit button is clicked or formApi.submitForm is called and validation passes. Receives values and the submit event; with `schema`, values are the schema's output. It has the name of the native submit event and hides it."
@@ -186,6 +190,10 @@
                 "zh-CN": "Label 文本，默认插槽优先。",
                 "en-US": "Text of the label. The default slot takes precedence."
             },
+            "tooltip": {
+                "zh-CN": "label 旁问号按钮的 Tooltip 内容，tooltip 插槽优先；按钮在 label 元素之外，不计入字段的可访问名称，按钮名称取语言包。",
+                "en-US": "Tooltip content of the help button beside the label. The tooltip slot takes precedence. The button sits outside the label element, so it is not part of the field's accessible name, and its name comes from the locale."
+            },
             "width": {
                 "zh-CN": "Label 宽度，数字单位为 px。",
                 "en-US": "Width of the label. A number is in px."
@@ -200,6 +208,10 @@
             "extra": {
                 "zh-CN": "跟随在 label 文本后的内容，优先于 extra。",
                 "en-US": "Content after the label text. It takes precedence over extra."
+            },
+            "tooltip": {
+                "zh-CN": "label 旁问号按钮的 Tooltip 内容，优先于 tooltip 属性。",
+                "en-US": "Tooltip content of the help button beside the label. It takes precedence over the tooltip prop."
             }
         },
         "exposed": {}
@@ -253,6 +265,10 @@
             "default": {
                 "zh-CN": "分组内的字段。",
                 "en-US": "The fields in the group."
+            },
+            "extraText": {
+                "zh-CN": "显示在标题下方的说明，同时作为分组的无障碍描述（`aria-describedby`）。",
+                "en-US": "A description below the title, also the accessible description of the group (`aria-describedby`)."
             },
             "text": {
                 "zh-CN": "分组标题，没有内容时不渲染标题元素。",
@@ -355,12 +371,12 @@
                 "en-US": "The JSON Schema to render. It takes precedence over the JSON Schema exported from the Form's `schema`; with neither, nothing renders and a warning is logged in development."
             },
             "renderField": {
-                "zh-CN": "按节点路径接管渲染，数组的行写作 `[]`（如 `contacts[].email`），参数为 `{ node, field }`，返回 VNode；命中时由它渲染这个节点和它的子节点。",
-                "en-US": "Renderers by node path, with array rows written as `[]` (such as `contacts[].email`), called with `{ node, field }` and returning VNodes. A match renders the node and its subtree."
+                "zh-CN": "按节点路径替换 `renderers` 里对应种类的渲染函数，数组的行写作 `[]`（如 `contacts[].email`），参数与该种类的渲染函数相同，返回 VNode。",
+                "en-US": "Replaces the `renderers` function of a node by its path, with array rows written as `[]` (such as `contacts[].email`). It receives what the function of that node's kind receives and returns VNodes."
             },
-            "widgets": {
-                "zh-CN": "替换内置控件的字段组件，键是 JSON Schema 的 `format` 或控件种类（input、textarea、number、switch、select），先按 `format` 再按种类查找；组件收到与内置控件相同的属性。",
-                "en-US": "Field components in place of the built-in controls, keyed by the JSON Schema `format` or by kind (input, textarea, number, switch, select), looked up by `format` first. A component receives the props of the built-in control."
+            "renderers": {
+                "zh-CN": "各种类节点的渲染函数 `{ object, array, field }`，返回 VNode，SchemaField 自身不渲染任何界面；传 `semiRenderers` 得到 Semi 表单控件的默认界面。缺少 `object` 时直接渲染对象的属性，缺少 `array`、`field` 时对应节点不渲染，开发模式下警告。各函数的参数 `context` 带有 `node` 与 `render(field)`；对象还有 `content`（属性的 VNode），数组还有 `items`、`add`、`move`、`error`、`fieldProps` 等。",
+                "en-US": "Render functions by node kind, `{ object, array, field }`, returning VNodes; SchemaField itself renders no UI. Pass `semiRenderers` for the default UI built from Semi Form controls. Without `object` an object renders its properties as they are; without `array` or `field` those nodes render nothing and a warning is logged in development. Each function receives a `context` with `node` and `render(field)`; an object also has `content` (the VNode of its properties), an array also has `items`, `add`, `move`, `error`, `fieldProps` and so on."
             }
         },
         "events": {},
@@ -391,6 +407,10 @@
                 "zh-CN": "同 SchemaField 的 renderField。",
                 "en-US": "The renderField of SchemaField."
             },
+            "renderers": {
+                "zh-CN": "同 SchemaField 的 renderers，传 `semiRenderers` 得到默认界面，不传时不渲染字段。",
+                "en-US": "The renderers of SchemaField. Pass `semiRenderers` for the default UI; without it no field renders."
+            },
             "schema": {
                 "zh-CN": "实现了 Standard Schema 的校验对象（如 Zod、Valibot、ArkType），用于校验，并在实现了 Standard JSON Schema 时导出要渲染的 JSON Schema。校验全部字段通过后，`submit` 事件拿到 schema 的输出。",
                 "en-US": "A Standard Schema object (Zod, Valibot, ArkType and so on) that validates the form and, when it implements Standard JSON Schema, gives the JSON Schema to render. Once all fields pass, the `submit` event receives the schema's output."
@@ -403,10 +423,6 @@
             "validator": {
                 "zh-CN": "Form 级别的校验函数，与 `schema` 互斥，用法同 Form 的 validator。",
                 "en-US": "Form-level validation, exclusive with `schema`; works as the validator of Form."
-            },
-            "widgets": {
-                "zh-CN": "同 SchemaField 的 widgets。",
-                "en-US": "The widgets of SchemaField."
             },
             "wrapperCol": { "zh-CN": "同 Form 的 wrapperCol。", "en-US": "The wrapperCol of Form." }
         },

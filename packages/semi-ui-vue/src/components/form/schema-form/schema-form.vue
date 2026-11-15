@@ -8,7 +8,7 @@
     // The Form props and listeners stay attrs and fall through to the inner Form, which reads their global defaults
     const props = withDefaults(defineProps<SchemaFieldSharedProps & /* @vue-ignore */ FormProps<Values, Output> & /* @vue-ignore */ EmitProps<FormEmits<Values, Output>> & /* @vue-ignore */ ElementProps<'form', keyof FormProps<Values, Output> | EmitHandlers<FormEmits<Values, Output>>>>(), {
         jsonSchema: semiGlobalDefault('SchemaForm', 'jsonSchema'),
-        widgets: semiGlobalDefault('SchemaForm', 'widgets'),
+        renderers: semiGlobalDefault('SchemaForm', 'renderers'),
         renderField: semiGlobalDefault('SchemaForm', 'renderField'),
     });
 
@@ -30,7 +30,7 @@
 <template>
     <Form ref="form">
         <template #default="scope">
-            <SchemaField :jsonSchema="props.jsonSchema" :renderField="props.renderField" :widgets="props.widgets" />
+            <SchemaField :jsonSchema="props.jsonSchema" :renderField="props.renderField" :renderers="props.renderers" />
             <slot v-bind="slotScope(scope)" />
         </template>
     </Form>

@@ -2,10 +2,11 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性      | 说明                         | 类型                                                                   | 默认值 |
-| --------- | ---------------------------- | ---------------------------------------------------------------------- | ------ |
-| children  | 分组的内容。                 | `React.ReactNode`                                                      | -      |
-| className | fieldset 元素的类名。        | `string`                                                               | -      |
-| ref       | fieldset 元素的引用。        | <ApiType detail={"React.Ref\u003cHTMLFieldSetElement>"}>Type</ApiType> | -      |
-| style     | fieldset 元素的内联样式。    | `React.CSSProperties`                                                  | -      |
-| text      | 分组标题，为空时不渲染标题。 | `React.ReactNode`                                                      | -      |
+| 属性      | 说明                                                                   | 类型                                                                   | 默认值 |
+| --------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------ |
+| children  | 分组的内容。                                                           | `React.ReactNode`                                                      | -      |
+| className | fieldset 元素的类名。                                                  | `string`                                                               | -      |
+| extraText | 显示在标题下方的说明，同时作为分组的无障碍描述（`aria-describedby`）。 | `React.ReactNode`                                                      | -      |
+| ref       | fieldset 元素的引用。                                                  | <ApiType detail={"React.Ref\u003cHTMLFieldSetElement>"}>Type</ApiType> | -      |
+| style     | fieldset 元素的内联样式。                                              | `React.CSSProperties`                                                  | -      |
+| text      | 分组标题，为空时不渲染标题。                                           | `React.ReactNode`                                                      | -      |

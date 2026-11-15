@@ -1,7 +1,6 @@
-import type { ComponentProps } from 'solid-js';
 import * as z from 'zod';
 import { IconLink } from '@fibrae/semi-icons-solid';
-import { Button, Form, FormInput, FormRating, type SchemaFieldRenderContext, SchemaField, Toast } from '@fibrae/semi-ui-solid';
+import { Button, Form, FormInput, FormRating, SchemaField, type SchemaFieldProps, type SchemaFieldRenderers, semiRenderers, Toast } from '@fibrae/semi-ui-solid';
 
 const schema = z.object({
     title: z.string().min(2, '标题至少 2 个字符'),
@@ -14,19 +13,20 @@ const schema = z.object({
         .meta({ title: '资料' }),
 });
 
-function UrlInput(props: ComponentProps<typeof FormInput>) {
-    return <FormInput {...props} placeholder="https://" prefix={<IconLink />} />;
-}
+const renderers: SchemaFieldRenderers = {
+    ...semiRenderers,
+    field: (context) => (context.node.format === 'uri' ? <FormInput field={context.node.field} label={{ text: context.node.title, required: context.node.required }} placeholder="https://" prefix={<IconLink />} /> : semiRenderers.field(context)),
+};
 
-const renderField = {
-    'profile.score': (context: SchemaFieldRenderContext) => <FormRating field={context.field} label={{ text: context.node.title, required: context.node.required }} />,
+const renderField: SchemaFieldProps['renderField'] = {
+    'profile.score': (context) => <FormRating field={context.node.field} label={{ text: context.node.title, required: context.node.required }} />,
 };
 
 export default function FormDemo() {
     return (
         <Form schema={schema} style={{ width: '480px' }} onSubmit={(values) => Toast.success(JSON.stringify(values))}>
             <FormInput field="title" label={{ text: '标题', required: true }} />
-            <SchemaField field="profile" renderField={renderField} widgets={{ uri: UrlInput }} />
+            <SchemaField field="profile" renderers={renderers} renderField={renderField} />
             <Button type="primary" htmlType="submit">
                 提交
             </Button>

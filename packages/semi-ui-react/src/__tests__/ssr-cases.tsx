@@ -104,6 +104,7 @@ import {
     Row,
     SchemaField,
     SchemaForm,
+    semiRenderers,
     ScrollItem,
     ScrollList,
     Select,
@@ -497,7 +498,7 @@ export const ssrCases: SsrCase[] = [
         covers: ['SchemaField'],
         element: () => (
             <Form initValues={{ tags: ['t1'] }}>
-                <SchemaField jsonSchema={{ type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } }} />
+                <SchemaField jsonSchema={{ type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } }} renderers={semiRenderers} />
             </Form>
         ),
         html: ['value="t1"'],
@@ -505,7 +506,7 @@ export const ssrCases: SsrCase[] = [
     {
         name: 'form/SchemaForm',
         covers: ['SchemaForm'],
-        element: () => <SchemaForm initValues={{ name: 'semi' }} jsonSchema={{ type: 'object', properties: { name: { type: 'string', title: 'Name' } } }} />,
+        element: () => <SchemaForm initValues={{ name: 'semi' }} jsonSchema={{ type: 'object', properties: { name: { type: 'string', title: 'Name' } } }} renderers={semiRenderers} />,
         html: ['value="semi"', 'Name'],
     },
     {

@@ -12,7 +12,7 @@ import AvatarGroup from '../../avatar/avatar-group.vue';
 import Breadcrumb from '../../breadcrumb';
 import Cascader from '../../cascader';
 import Feedback from '../../feedback';
-import { Form, SchemaField } from '../../form';
+import { Form, FormInput, SchemaField, semiRenderers } from '../../form';
 import JsonViewer from '../../json-viewer';
 import Table from '../../table';
 import Transfer from '../../transfer';
@@ -326,14 +326,24 @@ describe('可访问名称跟随语言包', () => {
         const nth = (template: string) => template.replace('${index}', '1');
         render(LocaleProvider, {
             props: { locale: en_US },
-            slots: { default: () => <Form initValues={{ tags: ['a'] }}>{() => <SchemaField jsonSchema={jsonSchema} />}</Form> },
+            slots: { default: () => <Form initValues={{ tags: ['a'] }}>{() => <SchemaField jsonSchema={jsonSchema} renderers={semiRenderers} />}</Form> },
         });
         expect(en_US.Form.addItem).not.toBe(zh_CN.Form.addItem);
-        expect(screen.getByRole('textbox', { name: nth(en_US.Form.item) })).toHaveValue('a');
+        expect(screen.getByRole('textbox', { name: nth(en_US.Form.arrayItem).replace('${title}', 'tags') })).toHaveValue('a');
         expect(screen.getByRole('button', { name: nth(en_US.Form.moveUpItem) })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: nth(en_US.Form.moveDownItem) })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: nth(en_US.Form.removeItem) })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: en_US.Form.addItem })).toBeInTheDocument();
+    });
+
+    it('Form 标签的 tooltip 按钮使用语言包名称，且不进入字段名称', () => {
+        render(LocaleProvider, {
+            props: { locale: en_US },
+            slots: { default: () => <Form>{() => <FormInput field="name" label={{ text: 'Name', tooltip: 'Your full name' }} />}</Form> },
+        });
+        expect(en_US.Form.labelTooltip).not.toBe(zh_CN.Form.labelTooltip);
+        expect(screen.getByRole('button', { name: en_US.Form.labelTooltip })).toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: 'Name' })).toBeInTheDocument();
     });
 
     it('Feedback 的 emoji 评分组与选项使用语言包名称', async () => {

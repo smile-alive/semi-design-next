@@ -13,18 +13,19 @@
     import type { FormApi } from '../interface';
     import SchemaField from '../schema-form/schema-field.svelte';
     import SchemaForm from '../schema-form/schema-form.svelte';
+    import { semiRenderers } from '../schema-form/semi-renderers.svelte';
 
     let { store, onApi }: { store: SchemaFixtureStore; onApi?: (api: FormApi) => void } = $props();
 </script>
 
 <LocaleProvider locale={en_US}>
     {#if store.asForm}
-        <SchemaForm {...store.formProps} {...store.fieldProps} getFormApi={onApi}>
+        <SchemaForm renderers={semiRenderers} {...store.formProps} {...store.fieldProps} getFormApi={onApi}>
             <button type="submit">submit</button>
         </SchemaForm>
     {:else}
         <Form {...store.formProps} getFormApi={onApi}>
-            <SchemaField {...store.fieldProps} />
+            <SchemaField renderers={semiRenderers} {...store.fieldProps} />
         </Form>
     {/if}
 </LocaleProvider>

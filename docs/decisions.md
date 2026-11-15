@@ -374,7 +374,7 @@ API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生�
     - 有 Form `schema` 时不用字段的 `rules`、`validator` 与 Form 的 `validator`，必填星号只看 `label.required`；`schemaDebounce` 只作用于值变化触发的校验。
     - `keepState` 默认 true，ArrayField 保留整组。
     - 值类型区分输入与输出，`onSubmit` 与不带字段的 `validate()` 用输出类型。
-    - SchemaField 按 JSON Schema 渲染某个路径，SchemaForm 是 Form 加根 SchemaField；定制只用 `widgets` 与 `renderField`，不做 uiSchema 与 `x-` 扩展。
+    - SchemaField 按 JSON Schema 渲染某个路径，SchemaForm 是 Form 加根 SchemaField；两者是无头渲染器，只遍历 schema、绑定值与校验，界面由 `renderers`（按节点种类）与 `renderField`（按路径）提供，默认界面是需要显式传入的 `semiRenderers`，不做 uiSchema 与 `x-` 扩展（2026-11-15，理由：Form、Card、Collapse 已有样式规范，渲染器内置布局会让调用方难以定制；与 JSON Forms、Formily、uniforms 的无头核心加渲染器集一致）。
 - **决策** 导出方式（2026-11-06）：四个框架只有具名导出，`Form` 不挂静态成员，字段、部件、`ArrayField`、`SchemaField`、`SchemaForm`、`useForm` 各自导出。理由：用到 Form 时不再带上全部字段；Server Component 中点语法得到 `undefined`；具名导出可摇树。字段自身的子组件保留点语法（`FormSelect.Option`）。React、Vue、Solid 的 `field` 模块里每个字段由 `/* @__PURE__ */` 标注的调用创建，`Option`、`OptGroup` 用裸标识符引用（属性读取 `Select.Option` 会被当作副作用保留），否则打包器删不掉没用到的字段；`pnpm size` 守着各字段的体积。
 - **已知限制** React：表单状态每次变化都重渲染全部字段，只影响大表单的性能（出现可测的性能问题时，字段改为从实例读初值）。
 - **已知限制** `onSubmitFail` 的 `errors` 类型是错误树，Form `validator` 抛出或返回非对象时实际收到原值。

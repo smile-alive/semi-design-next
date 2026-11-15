@@ -1,4 +1,4 @@
-import type { Component } from 'solid-js';
+import type { Component, JSX } from 'solid-js';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import * as z from 'zod';
 import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/components/form/interface';
@@ -7,9 +7,14 @@ import {
     type ArrayFieldProps,
     type FieldProps,
     type RuleItem,
-    type SchemaFieldNode,
+    type SchemaArrayContext,
+    type SchemaArrayItem,
+    type SchemaFieldContext,
     type SchemaFieldProps,
+    type SchemaFieldRenderers,
     type SchemaFormProps,
+    type SchemaLeafContext,
+    type SchemaObjectContext,
     type FormApi,
     type FormCheckboxProps,
     type FormProps,
@@ -36,6 +41,8 @@ import {
     FormCascader,
     FormSelect,
     FormTreeSelect,
+    blankRow,
+    semiRenderers,
     withField,
 } from '..';
 import type { SimpleValueType } from '../../cascader';
@@ -88,7 +95,7 @@ describe('FormApi 路径类型', () => {
             expectTypeOf(api.getValue('users[0].name')).toEqualTypeOf<string>();
             api.setError('users[0].name', 'bad');
             api.setTouched('tags[0]', true);
-            api.scrollToField('users[1].name');
+            void api.scrollToField('users[1].name');
             api.scrollToError({ field: 'users[0].name' });
             expectTypeOf(api.validate(['users[0].name'])).toEqualTypeOf<Promise<ArrayValues>>();
             // @ts-expect-error a misspelled path
@@ -273,10 +280,17 @@ describe('Form Props 类型', () => {
 });
 
 describe('SchemaField 与 SchemaForm Props 类型', () => {
-    it('widgets 的值是字段组件，renderField 收到节点与路径', () => {
-        expectTypeOf<{ widgets: { uri: typeof FormInput } }>().toExtend<SchemaFieldProps>();
-        expectTypeOf<NonNullable<SchemaFieldProps['renderField']>[string]>().parameter(0).toEqualTypeOf<{ node: SchemaFieldNode; field: string }>();
+    it('renderers 的每一项收到对应种类的上下文，renderField 收到三种上下文的联合', () => {
+        expectTypeOf<SchemaFieldRenderers>().toHaveProperty('object').toEqualTypeOf<((context: SchemaObjectContext) => JSX.Element) | undefined>();
+        expectTypeOf<SchemaFieldRenderers>().toHaveProperty('array').toEqualTypeOf<((context: SchemaArrayContext) => JSX.Element) | undefined>();
+        expectTypeOf<SchemaFieldRenderers>().toHaveProperty('field').toEqualTypeOf<((context: SchemaLeafContext) => JSX.Element) | undefined>();
+        expectTypeOf<NonNullable<SchemaFieldProps['renderField']>[string]>().parameter(0).toEqualTypeOf<SchemaFieldContext>();
+        expectTypeOf<SchemaFieldContext>().toEqualTypeOf<SchemaObjectContext | SchemaArrayContext | SchemaLeafContext>();
+        expectTypeOf<SchemaArrayContext['items'][number]>().toEqualTypeOf<SchemaArrayItem>();
+        expectTypeOf<SchemaArrayContext['add']>().toEqualTypeOf<(index?: number | MouseEvent) => void>();
         expectTypeOf<SchemaFieldProps>().toHaveProperty('field').toEqualTypeOf<string | undefined>();
+        expectTypeOf(semiRenderers).toEqualTypeOf<Required<SchemaFieldRenderers>>();
+        expectTypeOf(blankRow).parameters.toEqualTypeOf<[Record<string, any>, string]>();
     });
 
     it('SchemaForm 接受 Form 的属性与 jsonSchema，schema 与 validator 仍互斥，不接受 render', () => {

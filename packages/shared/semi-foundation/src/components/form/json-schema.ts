@@ -1,4 +1,5 @@
 import { toPath } from 'es-toolkit/compat';
+import { formatLocale, type Locale } from '../../locale/index';
 import type { StandardSchema } from './interface';
 
 export type JsonSchema = Record<string, any>;
@@ -16,6 +17,10 @@ export interface SchemaFieldNode {
     /** `title`, else the property name; undefined for an array item */
     title?: string;
     description?: string;
+    /** Path segments from the schema root: 0 for the root, also when SchemaField starts below it */
+    depth: number;
+    /** Set on an array item: its row index and the array's title (undefined for an untitled array item) and key */
+    item?: { index: number; arrayTitle?: string; arrayKey: string | number };
     required: boolean;
     format?: string;
     default?: unknown;
@@ -117,13 +122,15 @@ const childPath = (field: string, name: string) => (IDENTIFIER.test(name) ? (fie
 
 const isRequired = (parent: JsonSchema, name: string) => Array.isArray(parent.required) && parent.required.includes(name);
 
-function buildNode(root: JsonSchema, { schema, seen }: Resolved, field: string, key: string | number, required: boolean, fallbackTitle?: string): SchemaFieldNode {
+function buildNode(root: JsonSchema, { schema, seen }: Resolved, field: string, key: string | number, required: boolean, fallbackTitle?: string, item?: SchemaFieldNode['item']): SchemaFieldNode {
     const base = {
         field,
         pattern: field.replaceAll(/\[\d+\]/g, '[]'),
         key,
         title: schema.title ?? fallbackTitle,
         description: schema.description,
+        depth: field === '' ? 0 : toPath(field).length,
+        item,
         required,
         format: schema.format,
         default: schema.default,
@@ -169,8 +176,17 @@ function buildNode(root: JsonSchema, { schema, seen }: Resolved, field: string, 
 
 /** Explicit wins; otherwise the Form schema's Standard JSON Schema input (target draft-2020-12); undefined when neither exists */
 export function resolveJsonSchema(jsonSchema?: JsonSchema, schema?: StandardSchema): JsonSchema | undefined {
-    return jsonSchema ?? schema?.['~standard'].jsonSchema?.input({ target: 'draft-2020-12' });
+    if (jsonSchema || !schema) return jsonSchema;
+    // every SchemaField under one Form (one per array row included) shares the conversion of its schema
+    let converted = convertedSchemas.get(schema);
+    if (!converted) {
+        converted = schema['~standard'].jsonSchema?.input({ target: 'draft-2020-12' });
+        if (converted) convertedSchemas.set(schema, converted);
+    }
+    return converted;
 }
+
+const convertedSchemas = new WeakMap<StandardSchema, JsonSchema>();
 
 /** The node at `field` ('' = root), walking properties and items; throws when the path is not in the schema */
 export function describeSchemaField(root: JsonSchema, field = '') {
@@ -179,6 +195,7 @@ export function describeSchemaField(root: JsonSchema, field = '') {
     let key: string | number = '';
     let required = false;
     let fallbackTitle: string | undefined;
+    let item: SchemaFieldNode['item'];
 
     for (const segment of field === '' ? [] : toPath(field)) {
         const parent = current.schema;
@@ -186,10 +203,12 @@ export function describeSchemaField(root: JsonSchema, field = '') {
         if (parent.type === 'array') {
             if (!/^\d+$/.test(segment)) throw fail();
             child = parent.items;
-            key = Number(segment);
+            item = { index: Number(segment), arrayTitle: parent.title ?? fallbackTitle, arrayKey: key };
+            key = item.index;
             required = false;
             fallbackTitle = undefined;
         } else {
+            item = undefined;
             if (parent.type !== 'object' || !isObject(parent.properties) || !Object.hasOwn(parent.properties, segment)) throw fail();
             child = parent.properties[segment];
             key = segment;
@@ -199,8 +218,47 @@ export function describeSchemaField(root: JsonSchema, field = '') {
         if (!isObject(child)) throw fail();
         current = resolve(root, child, current.seen);
     }
-    return buildNode(root, current, field, key, required, fallbackTitle);
+    return buildNode(root, current, field, key, required, fallbackTitle, item);
 }
+
+/**
+ * The semiRenderers name of a single-value array row, undefined for any other node. Such a row shows no label or
+ * description: the array's Section shows them once, and the row is named "<array title> item N".
+ */
+export function singleItemName({ item, kind }: SchemaFieldNode, messages: Pick<Locale['Form'], 'item' | 'arrayItem'>) {
+    if (!item || kind === 'object' || kind === 'array') return undefined;
+    const index = item.index + 1;
+    return item.arrayTitle === undefined ? formatLocale(messages.item, { index }) : formatLocale(messages.arrayItem, { title: item.arrayTitle, index });
+}
+
+/** What an array node allows with `count` rows; a fixed array (minItems === maxItems) neither adds nor removes */
+export function arrayState(node: SchemaFieldNode, count: number) {
+    const { minItems, maxItems } = node;
+    const fixed = Boolean(node.fixed);
+    return { count, minItems, maxItems, fixed, canAdd: !fixed && (maxItems === undefined || count < maxItems), canRemove: !fixed && count > (minItems ?? 0) };
+}
+
+/** The props semiRenderers gives the Form control of a leaf node, by kind */
+export function controlProps(node: SchemaFieldNode): Record<string, unknown> {
+    switch (node.kind) {
+        case 'input':
+            return { maxLength: node.maxLength };
+        case 'textarea':
+            return { maxCount: node.maxLength };
+        case 'number':
+            return { max: node.maximum, min: node.minimum, precision: node.integer ? 0 : undefined };
+        case 'select':
+            return { multiple: node.multiple, optionList: node.options };
+        default:
+            return {};
+    }
+}
+
+export const schemaFieldWarnings = {
+    noSchema: '[Semi Form] SchemaField has no JSON Schema: pass jsonSchema, or give the Form a schema that exports one',
+    noRenderer: (field: string, kind: string) => `[Semi Form] SchemaField renders nothing for "${field}": renderers has no ${kind} entry`,
+    unsupported: (field: string) => `[Semi Form] SchemaField renders nothing for "${field}": its schema maps to no control`,
+};
 
 function blankValue(root: JsonSchema, { schema, seen }: Resolved): unknown {
     if (schema.type === 'object') {
@@ -219,8 +277,11 @@ function blankValue(root: JsonSchema, { schema, seen }: Resolved): unknown {
     return undefined;
 }
 
-/** Value of a new array row: object -> {} with required nested objects and arrays prefilled (arrays with minItems blank rows), other -> undefined */
-export function blankRow(root: JsonSchema, arrayNode: SchemaFieldNode) {
-    const { items } = arrayNode.schema;
+/**
+ * Value of a new row of the array at `arrayField`: object -> {} with required nested objects and arrays prefilled
+ * (arrays with minItems blank rows), other -> undefined
+ */
+export function blankRow(root: JsonSchema, arrayField: string) {
+    const { items } = describeSchemaField(root, arrayField).schema;
     return isObject(items) ? blankValue(root, resolve(root, items, [])) : undefined;
 }

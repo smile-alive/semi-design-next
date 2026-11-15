@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/form/form-api-proxy';
 import FormFoundation from '@fibrae/semi-foundation/components/form/foundation';
-import type { AllErrors, BaseFormAdapter, FormFoundationState } from '@fibrae/semi-foundation/components/form/interface';
+import type { AllErrors, BaseFormAdapter, FieldPath, FormFoundationState } from '@fibrae/semi-foundation/components/form/interface';
 import { warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/form/form.scss';
 import { useDefaultProps, useFoundation } from '../../base/index';
@@ -52,6 +52,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
         'onChange',
         'onErrorChange',
         'onReset',
+        'onRevealField',
         'onSubmit',
         'onSubmitFail',
         'onValueChange',
@@ -85,6 +86,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
             notifyValueChange: (values, changedValues) => local.onValueChange?.(values, changedValues),
             notifyErrorChange: (errors, changedError) => local.onErrorChange?.(errors, changedError),
             notifyReset: () => local.onReset?.(),
+            notifyRevealField: (field) => local.onRevealField?.(field as FieldPath<Values>),
             getFormElement: () => formElement ?? null,
         })
     );

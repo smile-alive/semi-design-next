@@ -1,5 +1,6 @@
 /** @jsxImportSource vue */
 import { type ComponentPublicInstance } from 'vue';
+import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
@@ -102,6 +103,30 @@ describe('Form Label', () => {
             slots: { default: () => <Label optional text="name" /> },
         });
         expect(document.querySelector(`.${prefixCls}-optional-text`)).toHaveTextContent(en_US.Form.optional);
+    });
+
+    it('tooltip：按钮可聚焦并命名，悬停后说明出现，#tooltip 插槽优先，宽度落在外层', async () => {
+        const view = render(Label, { props: { text: 'name', tooltip: 'hint', width: 120 } });
+        const button = screen.getByRole('button', { name: zh_CN.Form.labelTooltip });
+        button.focus();
+        expect(button).toHaveFocus();
+        expect(getLabel()).not.toContainElement(button);
+        expect(button.closest(`.${prefixCls}-with-tooltip`)).toHaveStyle({ width: '120px' });
+        expect(getLabel().style.width).toBe('');
+        await userEvent.hover(button);
+        expect(await screen.findByText('hint')).toBeInTheDocument();
+        view.unmount();
+
+        render(Label, { props: { text: 'name', tooltip: 'prop' }, slots: { tooltip: () => 'slot hint' } });
+        await userEvent.hover(screen.getByRole('button', { name: zh_CN.Form.labelTooltip }));
+        expect(await screen.findByText('slot hint')).toBeInTheDocument();
+        expect(screen.queryByText('prop')).toBeNull();
+    });
+
+    it('没有 tooltip 时不渲染按钮与外层', () => {
+        render(Label, { props: { text: 'name' } });
+        expect(screen.queryByRole('button')).toBeNull();
+        expect(document.querySelector(`.${prefixCls}-with-tooltip`)).toBeNull();
     });
 
     it('disabled', () => {

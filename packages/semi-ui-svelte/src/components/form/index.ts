@@ -27,6 +27,7 @@ import FormInputGroup from './input-group.svelte';
 import FormLabel from './label.svelte';
 import SchemaField from './schema-form/schema-field.svelte';
 import SchemaForm from './schema-form/schema-form.svelte';
+import { semiRenderers } from './schema-form/semi-renderers.svelte';
 import FormSection from './section.svelte';
 import FormSlot from './slot.svelte';
 
@@ -61,8 +62,10 @@ export {
     FormUpload,
     SchemaField,
     SchemaForm,
+    semiRenderers,
     useForm,
 };
+export { blankRow } from '@fibrae/semi-foundation/components/form/json-schema';
 export { useFieldApi, useFieldState, useFormApi, useFormState } from './hooks/index.js';
 export type {
     ArrayFieldItem,
@@ -88,11 +91,16 @@ export type {
     OptionalFieldProps,
     RuleItem,
     RuleType,
+    SchemaArrayContext,
+    SchemaArrayItem,
+    SchemaFieldContext,
     SchemaFieldKind,
     SchemaFieldNode,
     SchemaFieldProps,
-    SchemaFieldRenderProps,
+    SchemaFieldRenderers,
     SchemaFormProps,
+    SchemaLeafContext,
+    SchemaObjectContext,
     ScrollOptions,
     SectionProps as FormSectionProps,
     SlotProps as FormSlotProps,

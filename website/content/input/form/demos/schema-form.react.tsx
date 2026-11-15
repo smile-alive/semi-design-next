@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as z from 'zod';
-import { Button, SchemaForm } from '@fibrae/semi-ui-react';
+import { Button, SchemaForm, semiRenderers } from '@fibrae/semi-ui-react';
 
 const schema = z.object({
     email: z.email('邮箱格式不正确').meta({ title: '邮箱' }),
@@ -30,7 +30,7 @@ export default function FormDemo() {
     const [output, setOutput] = useState<z.output<typeof schema>>();
 
     return (
-        <SchemaForm schema={schema} style={{ width: 480 }} onSubmit={(values) => setOutput(values)}>
+        <SchemaForm renderers={semiRenderers} schema={schema} style={{ width: 480 }} onSubmit={(values) => setOutput(values)}>
             <Button type="primary" htmlType="submit">
                 提交
             </Button>

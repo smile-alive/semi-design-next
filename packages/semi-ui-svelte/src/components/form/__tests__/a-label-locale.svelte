@@ -5,5 +5,5 @@
 </script>
 
 <LocaleProvider locale={en_US}>
-    <Label optional text="name" />
+    <Label optional text="name" tooltip="hint" />
 </LocaleProvider>

@@ -38,7 +38,7 @@ describe('Svelte Form 滚动', () => {
         renderForm({ id: 'other' }, [input('b')]);
         const { api } = renderForm({}, [input('b', { rules: required })]);
         const target = document.querySelectorAll('.semi-form-field[x-field-id="b"]')[1];
-        api().scrollToField('b', { block: 'end' });
+        await api().scrollToField('b', { block: 'end' });
         expect(scrollIntoView).toHaveBeenLastCalledWith(target, { block: 'end' });
         await expect(api().validate()).rejects.toBeDefined();
         await settle();
@@ -69,7 +69,7 @@ describe('Svelte Form 滚动', () => {
         const field = 'a["b"]';
         const { api } = renderForm({}, [input(field, { rules: required })]);
         const target = document.querySelector('.semi-form-field');
-        api().scrollToField(field);
+        await api().scrollToField(field);
         expect(scrollIntoView).toHaveBeenLastCalledWith(target, smooth);
         await expect(api().validate()).rejects.toBeDefined();
         await settle();

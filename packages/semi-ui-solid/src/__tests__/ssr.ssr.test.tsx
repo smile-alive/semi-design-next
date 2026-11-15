@@ -5,7 +5,7 @@ import { ssrCases } from './ssr-cases';
 
 const [entrySource] = Object.values(import.meta.glob<string>('../index.ts', { eager: true, query: '?raw', import: 'default' }));
 
-const nonComponents = ['semiGlobal', 'useConfig', 'defaultResponsiveMap', 'useFieldApi', 'useFieldState', 'useForm', 'useFormApi', 'useFormState', 'withField', 'useLocale', 'ToastFactory'];
+const nonComponents = ['semiGlobal', 'useConfig', 'defaultResponsiveMap', 'useFieldApi', 'useFieldState', 'useForm', 'useFormApi', 'useFormState', 'withField', 'useLocale', 'ToastFactory', 'semiRenderers', 'blankRow'];
 
 it('守卫：用例表覆盖入口的全部组件导出', () => {
     expect(uncoveredExports(entrySource, ssrCases, nonComponents)).toEqual({ uncovered: [], stale: [] });

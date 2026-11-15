@@ -36,6 +36,12 @@ describe('Svelte Form 字段', () => {
         expect(document.querySelector(`.${prefix}-field-label-extra`)).toHaveTextContent('提示');
     });
 
+    it('label 配置的 tooltip 按钮在标签之外，字段名称仍只是标签文字', () => {
+        renderForm({}, [input('name', { label: { text: '用户名', tooltip: '说明' } })]);
+        expect(screen.getByRole('button', { name: '更多说明' })).toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: '用户名' })).not.toBeNull();
+    });
+
     it('noLabel 不渲染标签，控件不引用不存在的 id', () => {
         const { container } = renderForm({}, [input('name', { noLabel: true })]);
         expect(container.querySelector(labelSelector)).toBeNull();

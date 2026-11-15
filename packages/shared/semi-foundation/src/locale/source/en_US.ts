@@ -308,6 +308,7 @@ const local: Locale = {
     },
     Form: {
         optional: '(optional)',
+        labelTooltip: 'More information',
         required: 'This field is required',
         invalid: 'Invalid value',
         stringLen: 'Must be exactly ${len} characters',
@@ -324,6 +325,7 @@ const local: Locale = {
         moveUpItem: 'Move item ${index} up',
         moveDownItem: 'Move item ${index} down',
         item: 'Item ${index}',
+        arrayItem: '${title} item ${index}',
     },
     Image: {
         fallback: 'fallback',

@@ -98,6 +98,10 @@
                 "zh-CN": "点击重置按钮或调用 formApi.reset 时的回调。",
                 "en-US": "Called when the reset button or formApi.reset resets the form."
             },
+            "onRevealField": {
+                "zh-CN": "formApi.scrollToField、formApi.focusField 在该路径找不到已渲染的元素时的回调（元素在 inert 或 hidden 的折叠内容里也算找不到），参数为路径；在这里展开包住它的折叠卡片，Form 最多等待一秒，挂载后再滚动与聚焦。",
+                "en-US": "Called when formApi.scrollToField or formApi.focusField finds nothing rendered at a path (an element inside inert or hidden collapsed content counts as not rendered), with the path. Expand the collapsed card that holds it here; the Form waits up to a second and scrolls and focuses once it mounts."
+            },
             "onChange": {
                 "zh-CN": "表单状态更新时的回调，包括字段挂载、卸载、值变更、blur、校验状态与错误信息变更，参数为 formState。",
                 "en-US": "Called when the form state updates, including field mount, unmount, value change, blur, and changes of validation status and errors, with the formState."
@@ -154,13 +158,13 @@
                 "zh-CN": "要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的结果；两者都没有时不渲染字段，开发模式下警告。",
                 "en-US": "The JSON Schema to render, which takes precedence over the one exported from the Form's `schema`. With neither, no field renders and a development warning is logged."
             },
-            "widgets": {
-                "zh-CN": "替换控件的字段组件，键是 JSON Schema 的 `format`（如 `uri`）或控件种类（`input`、`textarea`、`number`、`switch`、`select`），先按 `format` 查找。",
-                "en-US": "Field components that replace controls, keyed by JSON Schema `format` (such as `uri`) or control kind (`input`, `textarea`, `number`, `switch`, `select`); `format` is looked up first."
+            "renderers": {
+                "zh-CN": "各种类节点的渲染 snippet `{ object, array, field }`，SchemaField 自身不渲染任何界面；传 `semiRenderers` 得到 Semi 表单控件的默认界面，替换某一种类时写 `{ ...semiRenderers, field: mySnippet }`。缺少 `object` 时直接渲染对象的属性，缺少 `array`、`field` 时对应节点不渲染，开发模式下警告。每个 snippet 的参数 `context` 带有 `node` 与 `render` snippet：`{@render context.render(field)}` 渲染 `field` 处的节点，列表里用 `{#each}` 的 key 区分行；对象还有 `content` snippet，数组还有 `items`、`add`、`move`、`error`、`fieldProps` 等。",
+                "en-US": "Render snippets by node kind, `{ object, array, field }`; SchemaField itself renders no UI. Pass `semiRenderers` for the default UI built from Semi Form controls, and replace one kind with `{ ...semiRenderers, field: mySnippet }`. Without `object` an object renders its properties as they are; without `array` or `field` those nodes render nothing and a warning is logged in development. Each snippet receives a `context` with `node` and a `render` snippet: `{@render context.render(field)}` renders the node at `field`, and a list keys its rows with the `{#each}` key. An object also has a `content` snippet, an array also has `items`, `add`, `move`, `error`, `fieldProps` and so on."
             },
             "renderField": {
-                "zh-CN": "按字段路径接管渲染的 snippet，数组的行写作 `[]`（如 `contacts[].email`），参数为 `{ node, field }`；命中时由它渲染这个节点和它的子节点。",
-                "en-US": "Snippets that take over rendering by field path, with array rows written as `[]` (such as `contacts[].email`), receiving `{ node, field }`; a match renders the node and its children."
+                "zh-CN": "按节点路径替换 `renderers` 里对应种类的 snippet，数组的行写作 `[]`（如 `contacts[].email`），参数与该种类的 snippet 相同。",
+                "en-US": "Replaces the `renderers` snippet of a node by its path, with array rows written as `[]` (such as `contacts[].email`). It receives what the snippet of that node's kind receives."
             },
             "children": {
                 "zh-CN": "渲染在字段之后的内容，参数同 Form 的 children，适合放提交按钮。",
@@ -262,6 +266,10 @@
                 "zh-CN": "点击重置按钮或调用 formApi.reset 时的回调。",
                 "en-US": "Called when the reset button or formApi.reset resets the form."
             },
+            "onRevealField": {
+                "zh-CN": "formApi.scrollToField、formApi.focusField 在该路径找不到已渲染的元素时的回调（元素在 inert 或 hidden 的折叠内容里也算找不到），参数为路径；在这里展开包住它的折叠卡片，Form 最多等待一秒，挂载后再滚动与聚焦。",
+                "en-US": "Called when formApi.scrollToField or formApi.focusField finds nothing rendered at a path (an element inside inert or hidden collapsed content counts as not rendered), with the path. Expand the collapsed card that holds it here; the Form waits up to a second and scrolls and focuses once it mounts."
+            },
             "onChange": {
                 "zh-CN": "表单状态更新时的回调，包括字段挂载、卸载、值变更、blur、校验状态与错误信息变更，参数为 formState。",
                 "en-US": "Called when the form state updates, including field mount, unmount, value change, blur, and changes of validation status and errors, with the formState."
@@ -297,13 +305,13 @@
                 "zh-CN": "要渲染的 JSON Schema，优先于从所在 Form 的 `schema` 导出的结果；两者都没有时不渲染，开发模式下警告。",
                 "en-US": "The JSON Schema to render, which takes precedence over the one exported from the enclosing Form's `schema`. With neither, nothing renders and a development warning is logged."
             },
-            "widgets": {
-                "zh-CN": "替换控件的字段组件，键是 JSON Schema 的 `format`（如 `uri`）或控件种类（`input`、`textarea`、`number`、`switch`、`select`），先按 `format` 查找。",
-                "en-US": "Field components that replace controls, keyed by JSON Schema `format` (such as `uri`) or control kind (`input`, `textarea`, `number`, `switch`, `select`); `format` is looked up first."
+            "renderers": {
+                "zh-CN": "同 SchemaForm 的 renderers：各种类节点的渲染 snippet，传 `semiRenderers` 得到默认界面，不传时不渲染字段。",
+                "en-US": "Same as the renderers of SchemaForm: render snippets by node kind. Pass `semiRenderers` for the default UI; without it no field renders."
             },
             "renderField": {
-                "zh-CN": "按字段路径接管渲染的 snippet，数组的行写作 `[]`（如 `contacts[].email`），参数为 `{ node, field }`；命中时由它渲染这个节点和它的子节点。",
-                "en-US": "Snippets that take over rendering by field path, with array rows written as `[]` (such as `contacts[].email`), receiving `{ node, field }`; a match renders the node and its children."
+                "zh-CN": "同 SchemaForm 的 renderField：按节点路径替换对应种类的 snippet，数组的行写作 `[]`。",
+                "en-US": "Same as the renderField of SchemaForm: replaces the snippet of a node by its path, with array rows written as `[]`."
             }
         }
     },
@@ -345,6 +353,10 @@
             "extra": {
                 "zh-CN": "跟随在 label 文本后的内容。",
                 "en-US": "Content that follows the label text."
+            },
+            "tooltip": {
+                "zh-CN": "label 旁问号按钮的 Tooltip 内容，可以是 snippet、字符串或数字；设置后按钮在 label 元素之外，不计入字段的可访问名称，按钮名称取语言包。",
+                "en-US": "Tooltip content of the help button beside the label, a snippet, string or number. The button sits outside the label element, so it is not part of the field's accessible name, and its name comes from the locale."
             }
         }
     },
@@ -388,6 +400,10 @@
     "form-section": {
         "source": "packages/semi-ui-svelte/src/components/form/section.svelte",
         "props": {
+            "extraText": {
+                "zh-CN": "显示在标题下方的说明 snippet，同时作为分组的无障碍描述（`aria-describedby`）。",
+                "en-US": "A description snippet below the title, also the accessible description of the group (`aria-describedby`)."
+            },
             "text": {
                 "zh-CN": "分组标题，没有内容时不渲染标题元素。",
                 "en-US": "Title of the section; without content the title element is not rendered."

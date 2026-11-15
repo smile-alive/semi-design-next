@@ -1,8 +1,9 @@
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { FormLabel } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormLabel } from '@fibrae/semi-ui-react';
 
 const Label = FormLabel;
 const labelSelector = `.${BASE_CLASS_PREFIX}-form-field-label`;
@@ -74,6 +75,24 @@ describe('FormLabel', () => {
         expect(container.querySelector('label')).toHaveAttribute('for', 'x');
         rerender(<Label name="n" htmlFor="x" text="a" />);
         expect(container.querySelector('label')).toHaveAttribute('for', 'n');
+    });
+
+    it('tooltip：按钮可聚焦并命名，悬停后说明出现，不进入字段名称，宽度落在外层', async () => {
+        render(
+            <Form>
+                <FormInput field="name" label={{ text: '用户名', tooltip: '说明文字', width: 120 }} />
+            </Form>
+        );
+        const button = screen.getByRole('button', { name: '更多说明' });
+        expect(button).not.toHaveAttribute('tabindex', '-1');
+        button.focus();
+        expect(button).toHaveFocus();
+        expect(screen.getByRole('textbox', { name: '用户名' })).toBeInTheDocument();
+        expect(button.closest(`.${BASE_CLASS_PREFIX}-form-field-label-with-tooltip`)).toHaveStyle({ width: '120px' });
+        expect(document.querySelector('label')).not.toContainElement(button);
+
+        await userEvent.hover(button);
+        expect(await screen.findByText('说明文字')).toBeInTheDocument();
     });
 
     it('disabled', () => {
