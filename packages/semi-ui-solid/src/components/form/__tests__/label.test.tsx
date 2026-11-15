@@ -1,7 +1,8 @@
 import { type JSX, createSignal } from 'solid-js';
-import { render, screen } from '@solidjs/testing-library';
+import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { type LabelProps, FormLabel } from '..';
 
 const Label = FormLabel;
@@ -81,6 +82,25 @@ describe('FormLabel', () => {
         const { container } = render(() => <Label extra={0} text="a" />);
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field-label-extra`)).toHaveTextContent(/^0$/);
         expect(container.querySelector('label')).toHaveClass(`${BASE_CLASS_PREFIX}-form-field-label-with-extra`);
+    });
+
+    it('tooltip：按钮可聚焦并命名，悬停后说明出现，宽度落在外层', async () => {
+        const { container } = render(() => <Label text="name" tooltip="hint" width={120} />);
+        const button = screen.getByRole('button', { name: zh_CN.Form.labelTooltip });
+        button.focus();
+        expect(button).toHaveFocus();
+        expect(container.querySelector('label')).not.toContainElement(button);
+        expect(button.closest(`.${BASE_CLASS_PREFIX}-form-field-label-with-tooltip`)).toHaveStyle({ width: '120px' });
+        expect(container.querySelector('label')?.style.width).toBe('');
+
+        fireEvent.mouseEnter(button);
+        expect(await screen.findByText('hint')).toBeInTheDocument();
+    });
+
+    it('没有 tooltip 时不渲染按钮与外层', () => {
+        const { container } = render(() => <Label text="name" />);
+        expect(screen.queryByRole('button')).toBeNull();
+        expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field-label-with-tooltip`)).toBeNull();
     });
 
     it('disabled', () => {

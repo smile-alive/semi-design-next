@@ -3,7 +3,7 @@ import type { HTMLAttributes, HTMLFieldsetAttributes, HTMLFormAttributes, HTMLLa
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import type { FieldError } from '@fibrae/semi-foundation/components/form/errors';
 import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
-import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
+import type { arrayState, JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 import type { RuleItem } from '@fibrae/semi-foundation/components/form/rules';
 import type { ColProps } from '../grid/interface.js';
 import type { InputGroupProps as BaseInputGroupProps, ValidateStatus } from '../input/interface.js';
@@ -31,10 +31,14 @@ export interface LabelProps extends Omit<HTMLLabelAttributes, 'children'> {
     width?: number | string;
     children?: Snippet;
     extra?: Snippet;
+    /** Shown in a Tooltip by a help button beside the label, which is not part of the field's name */
+    tooltip?: Snippet | string | number;
 }
 
 /** A label configured by data; nodes go in the `fieldLabel` and `labelExtra` snippets */
 export interface FieldLabel {
+    /** Shown in a Tooltip by a help button beside the label, which is not part of the field's name */
+    tooltip?: string | number;
     /** The id of the label element, which the control's aria-labelledby references; generated when missing */
     id?: string;
     text?: string | number;
@@ -90,6 +94,8 @@ export interface AllFormProps<Values extends Record<string, any> = any, Output =
     onChange?: (formState: FormState<Values>) => void;
     onValueChange?: (values: Values, changedValues: Partial<Values>) => void;
     onErrorChange?: (errors: AllErrors<Values>, changedError?: Partial<Record<FieldPath<Values>, FieldError>>) => void;
+    /** scrollToField or focusField found nothing rendered at `field`: expand the collapsed container that holds it */
+    onRevealField?: (field: FieldPath<Values>) => void;
     /** Called once when the Form mounts, to save the formApi reference */
     getFormApi?: (formApi: FormApi<Values, Output>) => void;
     children?: Snippet<[FormRenderProps<Values, Output>]>;
@@ -230,6 +236,8 @@ export interface ErrorMessageProps extends Omit<HTMLAttributes<HTMLDivElement>, 
 
 export interface SectionProps extends Omit<HTMLFieldsetAttributes, 'children'> {
     text?: Snippet;
+    /** Shown below the title and describes the fieldset */
+    extraText?: Snippet;
     children?: Snippet;
 }
 
@@ -250,23 +258,66 @@ export interface InputGroupProps extends Omit<BaseInputGroupProps, 'label'> {
     extraText?: Snippet;
 }
 
-export interface SchemaFieldRenderProps {
+interface SchemaNodeContext {
     node: SchemaFieldNode;
+    /** Renders the node at `field` through the same renderers; key the result when rendering a list */
+    render: Snippet<[string]>;
+}
+
+export interface SchemaObjectContext extends SchemaNodeContext {
+    kind: 'object';
+    /** The property nodes rendered in schema order */
+    content: Snippet;
+}
+
+export interface SchemaArrayItem {
+    /** Stable across moves: key the row with it, not with `index` */
+    key: string;
     field: string;
+    index: number;
+    node: SchemaFieldNode;
+    /** The row's current value, such as the field a card title reads */
+    value: unknown;
+    remove: () => void;
+}
+
+export interface SchemaArrayContext extends SchemaNodeContext, ReturnType<typeof arrayState> {
+    kind: 'array';
+    items: SchemaArrayItem[];
+    /** Inserts the schema's blank row before `index`, or appends it; an event argument counts as no index */
+    add: (index?: number | Event) => void;
+    addWithInitValue: (value: Record<string, any>, index?: number) => void;
+    move: (from: number, to: number) => void;
+    /** The error of the array itself (a schema's minItems), not those of its rows */
+    error?: FieldError;
+    /** Spread on the element that contains the rows, so scrollToField and focusField reach the array */
+    fieldProps: { 'x-field-id': string };
+}
+
+/** Any node that is neither an object nor an array: `node.item` is set when it is a row of an array */
+export interface SchemaLeafContext extends SchemaNodeContext {
+    kind: 'field';
+}
+
+export type SchemaFieldContext = SchemaObjectContext | SchemaArrayContext | SchemaLeafContext;
+
+export interface SchemaFieldRenderers {
+    /** Without it an object renders its properties with no wrapper */
+    object?: Snippet<[SchemaObjectContext]>;
+    array?: Snippet<[SchemaArrayContext]>;
+    /** Also receives the nodes of kind `unsupported` */
+    field?: Snippet<[SchemaLeafContext]>;
 }
 
 export interface SchemaFieldProps {
-    /** Path of the node to render; the root by default, which renders without a Section */
+    /** Path of the node to render; '' is the root */
     field?: string;
     /** Takes precedence over the JSON Schema exported from the Form's `schema` */
     jsonSchema?: JsonSchema;
-    /**
-     * Field components by `format`, then by kind (`input`, `number`, `select` ...); they receive the props of the built-in
-     * control they replace
-     */
-    widgets?: Record<string, Component<any, any, any>>;
-    /** Snippets by node pattern (`contacts[].email`); one renders the node and everything under it */
-    renderField?: Record<string, Snippet<[SchemaFieldRenderProps]>>;
+    /** How each kind of node renders; SchemaField itself renders no UI. `semiRenderers` renders Semi Form controls */
+    renderers?: SchemaFieldRenderers;
+    /** Replaces the renderer of the node whose `pattern` (array rows as `[]`) is the key */
+    renderField?: Record<string, Snippet<[SchemaFieldContext]>>;
 }
 
 export type SchemaFormProps<Values extends Record<string, any> = any, Output = Values> = FormProps<Values, Output> & Omit<SchemaFieldProps, 'field'>;

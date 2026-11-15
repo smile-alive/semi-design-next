@@ -1,74 +1,125 @@
 import type React from 'react';
 import { Fragment, useEffect, useMemo } from 'react';
-import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { get } from 'es-toolkit/compat';
+import { type FieldError, isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
 import type { StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
-import { blankRow, describeSchemaField, resolveJsonSchema, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
-import { formatLocale } from '@fibrae/semi-foundation/locale';
+import { arrayState, blankRow, describeSchemaField, resolveJsonSchema, schemaFieldWarnings, type JsonSchema, type SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 import { warning } from '@fibrae/semi-foundation/utils';
-import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-react';
 import { useDefaultProps } from '../../../base/index';
-import Button from '../../button';
-import useLocale from '../../locale/use-locale';
 import ArrayField from '../array-field';
 import { useFieldBridgeContext } from '../context';
-import { FormInput, FormInputNumber, FormSelect, FormSwitch, FormTextArea } from '../field';
-import Section from '../section';
+import useFormState from '../hooks/use-form-state';
 
 export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 
-export type SchemaFieldRenderer = (context: { node: SchemaFieldNode; field: string }) => React.ReactNode;
+interface SchemaNodeContext {
+    node: SchemaFieldNode;
+    /** Renders the node at `field` through the same renderers; key the result when rendering a list */
+    render: (field: string) => React.ReactNode;
+}
+
+export interface SchemaObjectContext extends SchemaNodeContext {
+    kind: 'object';
+    /** The property nodes rendered in schema order, keyed by property name */
+    content: React.ReactNode;
+}
+
+export interface SchemaArrayItem {
+    /** Stable across moves: key the row with it, not with `index` */
+    key: string;
+    field: string;
+    index: number;
+    node: SchemaFieldNode;
+    /** The row's current value, such as the field a card title reads */
+    value: unknown;
+    remove: () => void;
+}
+
+export interface SchemaArrayContext extends SchemaNodeContext, ReturnType<typeof arrayState> {
+    kind: 'array';
+    items: SchemaArrayItem[];
+    /** Inserts the schema's blank row before `index`, or appends it; a click event counts as no index */
+    add: (index?: number | React.MouseEvent) => void;
+    addWithInitValue: (value: Record<string, any>, index?: number) => void;
+    move: (from: number, to: number) => void;
+    /** The error of the array itself (a schema's minItems), not those of its rows */
+    error?: FieldError;
+    /** Spread on the element that contains the rows, so scrollToField and focusField reach the array */
+    fieldProps: { 'x-field-id': string };
+}
+
+/** Any node that is neither an object nor an array: `node.item` is set when it is a row of an array */
+export interface SchemaLeafContext extends SchemaNodeContext {
+    kind: 'field';
+}
+
+export type SchemaFieldContext = SchemaObjectContext | SchemaArrayContext | SchemaLeafContext;
+
+export interface SchemaFieldRenderers {
+    /** Without it an object renders its properties with no wrapper */
+    object?: (context: SchemaObjectContext) => React.ReactNode;
+    array?: (context: SchemaArrayContext) => React.ReactNode;
+    /** Also receives the nodes of kind `unsupported` */
+    field?: (context: SchemaLeafContext) => React.ReactNode;
+}
 
 export interface SchemaFieldProps {
-    /** Path of the node to render; '' is the root, whose properties render without a Section */
+    /** Path of the node to render; '' is the root */
     field?: string;
     /** Wins over the JSON Schema the Form `schema` exports */
     jsonSchema?: JsonSchema;
-    /** Field components by `format` or by kind, given the props of the built-in control; `widgets[format]` wins over `widgets[kind]` */
-    widgets?: Record<string, React.ComponentType<any>>;
-    /** Renders the node whose `pattern` (array items as `[]`) is the key, its subtree included */
-    renderField?: Record<string, SchemaFieldRenderer>;
+    /** How each kind of node renders; SchemaField itself renders no UI. `semiRenderers` renders Semi Form controls */
+    renderers?: SchemaFieldRenderers;
+    /** Replaces the renderer of the node whose `pattern` (array rows as `[]`) is the key */
+    renderField?: Record<string, (context: SchemaFieldContext) => React.ReactNode>;
 }
 
-const rowClass = `${cssClasses.PREFIX}-schema-array-row`;
-
-const builtinWidgets: Partial<Record<SchemaFieldKind, React.ComponentType<any>>> = {
-    input: FormInput,
-    textarea: FormTextArea,
-    number: FormInputNumber,
-    switch: FormSwitch,
-    select: FormSelect,
-};
-
-function controlProps(node: SchemaFieldNode) {
-    switch (node.kind) {
-        case 'input':
-            return { maxLength: node.maxLength };
-        case 'textarea':
-            return { maxCount: node.maxLength };
-        case 'number':
-            return { max: node.maximum, min: node.minimum, precision: node.integer ? 0 : undefined };
-        case 'select':
-            return { multiple: node.multiple, optionList: node.options };
-        default:
-            return {};
-    }
+interface ArrayNodeProps {
+    node: SchemaFieldNode;
+    root: JsonSchema;
+    render: (field: string) => React.ReactNode;
+    renderArray: (context: SchemaArrayContext) => React.ReactNode;
 }
 
-function UnsupportedField({ field }: { field: string }) {
-    useEffect(() => {
-        warning(true, `[Semi Form] SchemaField renders nothing for "${field}": its schema maps to no control`);
-    }, [field]);
+function ArrayNode({ node, root, render, renderArray }: ArrayNodeProps) {
+    const { values, errors } = useFormState();
 
-    return null;
+    const ownError = get(errors, node.field);
+
+    return (
+        <ArrayField field={node.field}>
+            {({ arrayFields, add, addWithInitValue, move }) =>
+                renderArray({
+                    kind: 'array',
+                    node,
+                    render,
+                    ...arrayState(node, arrayFields.length),
+                    items: arrayFields.map(({ key, field, remove }, index) => ({ key, field, index, node: describeSchemaField(root, field), value: get(values, field), remove })),
+                    add: (index) => {
+                        const row = blankRow(root, node.field);
+                        const at = typeof index === 'number' ? index : undefined;
+                        if (row === undefined) {
+                            add(at);
+                        } else {
+                            addWithInitValue(row as Record<string, any>, at);
+                        }
+                    },
+                    addWithInitValue,
+                    move,
+                    error: isErrorLeaf(ownError) ? ownError : undefined,
+                    fieldProps: { 'x-field-id': node.field },
+                })
+            }
+        </ArrayField>
+    );
 }
 
 const defaultProps = { field: '' } satisfies Partial<SchemaFieldProps>;
 
 export default function SchemaField(rawProps: SchemaFieldProps) {
-    const { field, jsonSchema, widgets, renderField } = useDefaultProps('SchemaField', rawProps, defaultProps);
+    const { field, jsonSchema, renderers, renderField } = useDefaultProps('SchemaField', rawProps, defaultProps);
 
     const fieldBridge = useFieldBridgeContext();
-    const { locale } = useLocale('Form');
 
     if (!fieldBridge) {
         throw new Error('SchemaField must be used inside Form');
@@ -79,67 +130,40 @@ export default function SchemaField(rawProps: SchemaFieldProps) {
     const node = useMemo(() => root && describeSchemaField(root, field), [root, field]);
     const missing = !root;
 
-    const withIndex = (text: string, index: number) => formatLocale(text, { index: index + 1 });
-
-    const titleOf = (target: SchemaFieldNode) => target.title ?? withIndex(locale.item, Number(target.key));
-
-    const renderArray = (arrayNode: SchemaFieldNode) => (
-        <ArrayField field={arrayNode.field}>
-            {({ arrayFields, add, addWithInitValue, move }) => {
-                const count = arrayFields.length;
-                const canAdd = arrayNode.maxItems === undefined || count < arrayNode.maxItems;
-                const canRemove = count > (arrayNode.minItems ?? 0);
-                const handleAdd = () => {
-                    const row = blankRow(root, arrayNode);
-                    if (row === undefined) {
-                        add();
-                    } else {
-                        addWithInitValue(row as Record<string, any>);
-                    }
-                };
-                return (
-                    <>
-                        {arrayFields.map(({ key, field: rowField, remove }, index) => (
-                            <div key={key} className={rowClass}>
-                                <div className={`${rowClass}-content`}>{renderNode(describeSchemaField(root, rowField))}</div>
-                                <div className={`${rowClass}-actions`}>
-                                    <Button type="tertiary" aria-label={withIndex(locale.moveUpItem, index)} disabled={index === 0} theme="borderless" icon={<IconArrowUp />} onClick={() => move(index, index - 1)} />
-                                    <Button type="tertiary" aria-label={withIndex(locale.moveDownItem, index)} disabled={index === count - 1} theme="borderless" icon={<IconArrowDown />} onClick={() => move(index, index + 1)} />
-                                    {!arrayNode.fixed && <Button type="tertiary" aria-label={withIndex(locale.removeItem, index)} disabled={!canRemove} theme="borderless" icon={<IconDelete />} onClick={remove} />}
-                                </div>
-                            </div>
-                        ))}
-                        {!arrayNode.fixed && (
-                            <Button disabled={!canAdd} icon={<IconPlus />} onClick={handleAdd}>
-                                {locale.addItem}
-                            </Button>
-                        )}
-                    </>
-                );
-            }}
-        </ArrayField>
-    );
-
-    // Children are keyed by property name, not by path: a moved row keeps its fields mounted
-    const renderNode = (target: SchemaFieldNode): React.ReactNode => {
-        const custom = renderField?.[target.pattern];
-        if (custom) {
-            return custom({ node: target, field: target.field });
-        }
-        const Widget = (target.format !== undefined ? widgets?.[target.format] : undefined) ?? widgets?.[target.kind] ?? builtinWidgets[target.kind];
-        if (Widget) {
-            return <Widget extraText={target.description} field={target.field} initValue={target.default} label={{ text: titleOf(target), required: target.required }} {...controlProps(target)} />;
-        }
-        if (target.kind === 'object' || target.kind === 'array') {
-            const content = target.kind === 'array' ? renderArray(target) : target.children.map((child) => <Fragment key={child.key}>{renderNode(child)}</Fragment>);
-            return target.field === '' ? content : <Section text={titleOf(target)}>{content}</Section>;
-        }
-        return <UnsupportedField field={target.field} />;
-    };
-
     useEffect(() => {
-        warning(missing, '[Semi Form] SchemaField has no JSON Schema: pass jsonSchema, or give the Form a schema that exports one');
+        warning(missing, schemaFieldWarnings.noSchema);
     }, [missing]);
 
-    return node ? renderNode(node) : null;
+    return node ? renderNode({ root, renderers, renderField }, node) : null;
+}
+
+interface RenderScope extends Pick<SchemaFieldProps, 'renderers' | 'renderField'> {
+    root: JsonSchema;
+}
+
+function renderNode(scope: RenderScope, target: SchemaFieldNode): React.ReactNode {
+    const { root, renderers } = scope;
+    const custom = scope.renderField?.[target.pattern];
+    const render = (field: string) => renderNode(scope, describeSchemaField(root, field));
+    if (target.kind === 'object') {
+        const context: SchemaObjectContext = { kind: 'object', node: target, render, content: target.children.map((child) => <Fragment key={child.key}>{renderNode(scope, child)}</Fragment>) };
+        const renderObject = custom ?? renderers?.object;
+        return renderObject ? renderObject(context) : context.content;
+    }
+    if (target.kind === 'array') {
+        const renderArray = custom ?? renderers?.array;
+        if (!renderArray) return <MissingRenderer field={target.field} kind="array" />;
+        return <ArrayNode node={target} render={render} root={root} renderArray={renderArray} />;
+    }
+    const renderLeaf = custom ?? renderers?.field;
+    if (!renderLeaf) return <MissingRenderer field={target.field} kind="field" />;
+    return renderLeaf({ kind: 'field', node: target, render });
+}
+
+function MissingRenderer({ field, kind }: { field: string; kind: string }) {
+    useEffect(() => {
+        warning(true, schemaFieldWarnings.noRenderer(field, kind));
+    }, [field, kind]);
+
+    return null;
 }

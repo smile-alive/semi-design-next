@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as z from 'zod';
-    import { Button, Form, FormInput, FormRating, SchemaField, Toast, type SchemaFieldRenderProps } from '@fibrae/semi-ui-svelte';
-    import UrlField from './parts/url-field.svelte';
+    import { IconLink } from '@fibrae/semi-icons-svelte';
+    import { Button, Form, FormInput, FormRating, SchemaField, semiRenderers, Toast, type SchemaFieldContext, type SchemaLeafContext } from '@fibrae/semi-ui-svelte';
 
     const schema = z.object({
         title: z.string().min(2, '标题至少 2 个字符'),
@@ -15,12 +15,24 @@
     });
 </script>
 
-{#snippet score(context: SchemaFieldRenderProps)}
-    <FormRating field={context.field} label={{ text: context.node.title, required: context.node.required }} />
+{#snippet prefix()}
+    <IconLink />
+{/snippet}
+
+{#snippet field(context: SchemaLeafContext)}
+    {#if context.node.format === 'uri'}
+        <FormInput field={context.node.field} label={{ text: context.node.title, required: context.node.required }} placeholder="https://" {prefix} />
+    {:else}
+        {@render semiRenderers.field(context)}
+    {/if}
+{/snippet}
+
+{#snippet score(context: SchemaFieldContext)}
+    <FormRating field={context.node.field} label={{ text: context.node.title, required: context.node.required }} />
 {/snippet}
 
 <Form onSubmit={(values) => Toast.success(JSON.stringify(values))} {schema} style="width: 480px">
     <FormInput field="title" label={{ text: '标题', required: true }} />
-    <SchemaField field="profile" renderField={{ 'profile.score': score }} widgets={{ uri: UrlField }} />
+    <SchemaField field="profile" renderField={{ 'profile.score': score }} renderers={{ ...semiRenderers, field }} />
     <Button htmlType="submit" type="primary">提交</Button>
 </Form>

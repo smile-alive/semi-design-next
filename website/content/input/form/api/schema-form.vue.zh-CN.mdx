@@ -18,7 +18,8 @@ import ApiType from '#/components/ApiType.astro';
 | labelPosition | 同 Form 的 labelPosition。 | `"inset" \| "left" \| "top"` | `undefined` |
 | labelWidth | 同 Form 的 labelWidth。 | `string \| number` | `undefined` |
 | layout | 同 Form 的 layout。 | `"horizontal" \| "vertical"` | `undefined` |
-| renderField | 同 SchemaField 的 renderField。 | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
+| renderers | 同 SchemaField 的 renderers，传 `semiRenderers` 得到默认界面，不传时不渲染字段。 | `SchemaFieldRenderers` | `semiGlobalDefault("SchemaForm", "renderers")` |
+| renderField | 同 SchemaField 的 renderField。 | <ApiType detail={"Record\u003cstring, (context: SchemaFieldContext) => VNodeChild>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
 | schema | 实现了 Standard Schema 的校验对象（如 Zod、Valibot、ArkType），用于校验，并在实现了 Standard JSON Schema 时导出要渲染的 JSON Schema。校验全部字段通过后，`submit` 事件拿到 schema 的输出。 | <ApiType detail={"FormSchema\u003cValues, Output>"}>Type</ApiType> | `undefined` |
 | schemaDebounce | 同 Form 的 schemaDebounce。 | `number` | `undefined` |
 | showValidateIcon | 同 Form 的 showValidateIcon。 | `boolean` | `undefined` |
@@ -26,7 +27,6 @@ import ApiType from '#/components/ApiType.astro';
 | stopValidateWithError | 同 Form 的 stopValidateWithError。 | `boolean` | `undefined` |
 | trigger | 同 Form 的 trigger。 | `FieldValidateTriggerType` | `undefined` |
 | validator | Form 级别的校验函数，与 `schema` 互斥，用法同 Form 的 validator。 | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | `undefined` |
-| widgets | 同 SchemaField 的 widgets。 | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "widgets")` |
 | wrapperCol | 同 Form 的 wrapperCol。 | `ColProps` | `undefined` |
 
 **Events**

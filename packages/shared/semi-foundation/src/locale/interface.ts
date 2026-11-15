@@ -366,6 +366,8 @@ export interface Locale {
     };
     Form: {
         optional: string;
+        /** name of the button that shows the tooltip of a label */
+        labelTooltip: string;
         /** Default rule messages; `${len}`, `${min}`, `${max}` are the rule's bounds */
         required: string;
         invalid: string;
@@ -384,6 +386,8 @@ export interface Locale {
         moveUpItem: string;
         moveDownItem: string;
         item: string;
+        /** Name of a single-value row, which shows no label; `${title}` is the array's title */
+        arrayItem: string;
     };
     Image: {
         preview: string;

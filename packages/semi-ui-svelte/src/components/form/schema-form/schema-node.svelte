@@ -1,116 +1,98 @@
 <script lang="ts">
-    import { type Component, untrack } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
-    import { blankRow, describeSchemaField, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
-    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import type { Snippet } from 'svelte';
+    import { get } from 'es-toolkit/compat';
+    import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
+    import { arrayState, blankRow, describeSchemaField, schemaFieldWarnings, type JsonSchema, type SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
     import { warning } from '@fibrae/semi-foundation/utils';
-    import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-svelte';
-    import Button from '../../button/button.svelte';
-    import useLocale from '../../locale/use-locale.svelte.js';
     import ArrayField from '../array-field.svelte';
-    import FormInputNumber from '../fields/form-input-number.svelte';
-    import FormInput from '../fields/form-input.svelte';
-    import FormSelect from '../fields/form-select.svelte';
-    import FormSwitch from '../fields/form-switch.svelte';
-    import FormTextArea from '../fields/form-text-area.svelte';
-    import type { SchemaFieldProps } from '../interface.js';
-    import FormSection from '../section.svelte';
+    import { getFormContext } from '../context.js';
+    import type { ArrayFieldSnippetProps, SchemaArrayContext, SchemaFieldContext, SchemaFieldProps, SchemaLeafContext, SchemaObjectContext } from '../interface.js';
     import SchemaNode from './schema-node.svelte';
 
-    interface SchemaNodeProps extends Pick<SchemaFieldProps, 'widgets' | 'renderField'> {
+    interface SchemaNodeProps extends Pick<SchemaFieldProps, 'renderers' | 'renderField'> {
         root: JsonSchema;
         node: SchemaFieldNode;
     }
 
-    let { root, node, widgets, renderField }: SchemaNodeProps = $props();
+    let { root, node, renderers, renderField }: SchemaNodeProps = $props();
 
-    const locale = useLocale('Form');
+    const form = getFormContext();
 
-    const rowClass = `${cssClasses.PREFIX}-schema-array-row`;
-    const builtins: Partial<Record<SchemaFieldKind, Component<any, any, any>>> = { input: FormInput, textarea: FormTextArea, number: FormInputNumber, switch: FormSwitch, select: FormSelect };
-    const renderer = $derived(renderField?.[node.pattern]);
-    const Control = $derived((node.format !== undefined && widgets?.[node.format]) || widgets?.[node.kind] || builtins[node.kind]);
-    const label = $derived({ text: node.title ?? itemText('item', Number(node.key)), required: node.required });
-
-    const controlProps = $derived.by((): Record<string, unknown> => {
-        switch (node.kind) {
-            case 'input':
-                return { maxLength: node.maxLength };
-            case 'textarea':
-                return { maxCount: node.maxLength };
-            case 'number':
-                return { min: node.minimum, max: node.maximum, precision: node.integer ? 0 : undefined };
-            case 'select':
-                return { optionList: node.options, multiple: node.multiple };
-            default:
-                return {};
-        }
-    });
-
-    function itemText(key: 'item' | 'removeItem' | 'moveUpItem' | 'moveDownItem', index: number) {
-        return formatLocale(locale().locale[key], { index: index + 1 });
+    if (!form) {
+        throw new Error('[Semi Form] SchemaField must be used inside <Form>');
     }
 
-    untrack(() => warning(node.kind === 'unsupported' && !renderer && !Control, `[Semi Form] SchemaField cannot render "${node.field}": its JSON Schema maps to no control; give it a renderField entry or a widget`));
+    const rendererKind = $derived(node.kind === 'object' || node.kind === 'array' ? node.kind : 'field');
+    const renderer = $derived((renderField?.[node.pattern] ?? renderers?.[rendererKind]) as Snippet<[SchemaFieldContext]> | undefined);
+    const objectContext = $derived<SchemaObjectContext>({ kind: 'object', node, render, content });
+    const leafContext = $derived<SchemaLeafContext>({ kind: 'field', node, render });
+
+    // A getter reads the form state where the renderer uses it, so typing in a row does not rebuild the context
+    const arrayContext = ({ arrayFields, onAdd, onAddWithInitValue, onMove }: ArrayFieldSnippetProps): SchemaArrayContext => {
+        return {
+            kind: 'array',
+            node,
+            render,
+            ...arrayState(node, arrayFields.length),
+            items: arrayFields.map(({ key, field, onRemove }, index) => ({
+                key,
+                field,
+                index,
+                node: describeSchemaField(root, field),
+                get value() {
+                    return get(form.formState.values, field);
+                },
+                remove: onRemove,
+            })),
+            add: (index) => {
+                const row = blankRow(root, node.field);
+                const at = typeof index === 'number' ? index : undefined;
+                if (row === undefined) {
+                    onAdd(at);
+                } else {
+                    onAddWithInitValue(row, at);
+                }
+            },
+            addWithInitValue: onAddWithInitValue,
+            move: onMove,
+            get error() {
+                const own = get(form.formState.errors, node.field);
+                return isErrorLeaf(own) ? own : undefined;
+            },
+            fieldProps: { 'x-field-id': node.field },
+        };
+    };
+
+    $effect(() => {
+        warning(node.kind !== 'object' && !renderer, schemaFieldWarnings.noRenderer(node.field, rendererKind));
+    });
 </script>
 
-{#snippet description()}{node.description}{/snippet}
+{#snippet render(field: string)}
+    <SchemaNode node={describeSchemaField(root, field)} {renderField} {renderers} {root} />
+{/snippet}
 
-{#snippet sectionText()}{label.text}{/snippet}
-
-{#snippet properties()}
-    {#each node.children ?? [] as child (child.field)}
-        <SchemaNode node={child} {renderField} {root} {widgets} />
+{#snippet content()}
+    {#each node.children as child (child.key)}
+        <SchemaNode node={child} {renderField} {renderers} {root} />
     {/each}
 {/snippet}
 
-{#if renderer}
-    {@render renderer({ node, field: node.field })}
-{:else if Control}
-    <Control {...controlProps} extraText={node.description ? description : undefined} field={node.field} initValue={node.default} {label} />
-{:else if node.kind === 'object'}
-    {#if node.field === ''}
-        {@render properties()}
+{#if node.kind === 'object'}
+    {#if renderer}
+        {@render renderer(objectContext)}
     {:else}
-        <FormSection text={sectionText}>{@render properties()}</FormSection>
+        {@render content()}
     {/if}
-{:else if node.kind === 'array'}
-    {#if node.field === ''}
-        {@render arrayField()}
+{:else if renderer}
+    {#if node.kind === 'array'}
+        <ArrayField field={node.field}>
+            {#snippet children(rows)}
+                {@const context = arrayContext(rows)}
+                {@render renderer(context)}
+            {/snippet}
+        </ArrayField>
     {:else}
-        <FormSection text={sectionText}>{@render arrayField()}</FormSection>
+        {@render renderer(leafContext)}
     {/if}
 {/if}
-
-{#snippet arrayField()}
-    <ArrayField field={node.field}>
-        {#snippet children({ arrayFields, onAddWithInitValue, onMove })}
-            {#each arrayFields as item, index (item.key)}
-                <div class={rowClass}>
-                    <div class="{rowClass}-content">
-                        <SchemaNode node={describeSchemaField(root, item.field)} {renderField} {root} {widgets} />
-                    </div>
-                    <div class="{rowClass}-actions">
-                        <Button aria-label={itemText('moveUpItem', index)} disabled={index === 0} theme="borderless" type="tertiary" onclick={() => onMove(index, index - 1)}>
-                            {#snippet icon()}<IconArrowUp />{/snippet}
-                        </Button>
-                        <Button aria-label={itemText('moveDownItem', index)} disabled={index === arrayFields.length - 1} theme="borderless" type="tertiary" onclick={() => onMove(index, index + 1)}>
-                            {#snippet icon()}<IconArrowDown />{/snippet}
-                        </Button>
-                        {#if !node.fixed}
-                            <Button aria-label={itemText('removeItem', index)} disabled={node.minItems !== undefined && arrayFields.length <= node.minItems} theme="borderless" type="tertiary" onclick={item.onRemove}>
-                                {#snippet icon()}<IconDelete />{/snippet}
-                            </Button>
-                        {/if}
-                    </div>
-                </div>
-            {/each}
-            {#if !node.fixed}
-                <Button disabled={node.maxItems !== undefined && arrayFields.length >= node.maxItems} onclick={() => onAddWithInitValue(blankRow(root, node), arrayFields.length)}>
-                    {#snippet icon()}<IconPlus />{/snippet}
-                    {locale().locale.addItem}
-                </Button>
-            {/if}
-        {/snippet}
-    </ArrayField>
-{/snippet}

@@ -106,6 +106,7 @@ import {
     ScrollList,
     Select,
     semiGlobal,
+    semiRenderers,
     SideSheet,
     Skeleton,
     Slider,
@@ -729,6 +730,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
                         contacts: { type: 'array', title: 'Contacts', items: { type: 'object', properties: { email: { type: 'string' } } } },
                     },
                 }}
+                renderers={semiRenderers}
             >
                 <Button htmlType="submit">Submit</Button>
             </SchemaForm>

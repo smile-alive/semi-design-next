@@ -2,10 +2,11 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property  | Description                                                      | Type                                                                   | Default |
-| --------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------- | ------- |
-| children  | Content of the section.                                          | `React.ReactNode`                                                      | -       |
-| className | Class name of the fieldset element.                              | `string`                                                               | -       |
-| ref       | Reference to the fieldset element.                               | <ApiType detail={"React.Ref\u003cHTMLFieldSetElement>"}>Type</ApiType> | -       |
-| style     | Inline style of the fieldset element.                            | `React.CSSProperties`                                                  | -       |
-| text      | The title of the section. No title is rendered when it is empty. | `React.ReactNode`                                                      | -       |
+| Property  | Description                                                                                       | Type                                                                   | Default |
+| --------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------- |
+| children  | Content of the section.                                                                           | `React.ReactNode`                                                      | -       |
+| className | Class name of the fieldset element.                                                               | `string`                                                               | -       |
+| extraText | A description below the title, also the accessible description of the group (`aria-describedby`). | `React.ReactNode`                                                      | -       |
+| ref       | Reference to the fieldset element.                                                                | <ApiType detail={"React.Ref\u003cHTMLFieldSetElement>"}>Type</ApiType> | -       |
+| style     | Inline style of the fieldset element.                                                             | `React.CSSProperties`                                                  | -       |
+| text      | The title of the section. No title is rendered when it is empty.                                  | `React.ReactNode`                                                      | -       |

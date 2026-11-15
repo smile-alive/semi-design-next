@@ -379,6 +379,8 @@ export {
     ArrayField,
     SchemaField,
     SchemaForm,
+    semiRenderers,
+    blankRow,
 } from './components/form';
 export type {
     BaseFormProps as FormProps,
@@ -406,7 +408,12 @@ export type {
     SlotProps as FormSlotProps,
     InputGroupProps as FormInputGroupProps,
     SchemaFieldProps,
-    SchemaFieldRenderer,
+    SchemaFieldRenderers,
+    SchemaFieldContext,
+    SchemaObjectContext,
+    SchemaArrayContext,
+    SchemaArrayItem,
+    SchemaLeafContext,
     SchemaFieldNode,
     SchemaFieldKind,
     JsonSchema,

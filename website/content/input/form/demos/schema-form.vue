@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { shallowRef } from 'vue';
     import * as z from 'zod';
-    import { Button, SchemaForm } from '@fibrae/semi-ui-vue';
+    import { Button, SchemaForm, semiRenderers } from '@fibrae/semi-ui-vue';
 
     const schema = z.object({
         email: z.email('邮箱格式不正确').meta({ title: '邮箱' }),
@@ -31,7 +31,7 @@
 </script>
 
 <template>
-    <SchemaForm :schema="schema" :style="{ width: '480px' }" @submit="(values: z.output<typeof schema>) => (output = values)">
+    <SchemaForm :renderers="semiRenderers" :schema="schema" :style="{ width: '480px' }" @submit="(values: z.output<typeof schema>) => (output = values)">
         <Button htmlType="submit" type="primary">提交</Button>
         <pre v-if="output" :style="{ marginBlockStart: '12px' }">{{ JSON.stringify(output, null, 2) }}</pre>
     </SchemaForm>

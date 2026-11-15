@@ -2,12 +2,12 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性        | 说明                                                                                                                                                                   | 类型                                                                        | 默认值                                            |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------- |
-| field       | 要渲染的节点路径，默认为根；根对象不包 Section，其他对象渲染为以 title 为标题的 Section。                                                                              | `string`                                                                    | `semiGlobalDefault("SchemaField", "field")`       |
-| jsonSchema  | 要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的 JSON Schema；两者都没有时不渲染，开发模式下警告。                                                               | `JsonSchema`                                                                | `semiGlobalDefault("SchemaField", "jsonSchema")`  |
-| renderField | 按节点路径接管渲染，数组的行写作 `[]`（如 `contacts[].email`），参数为 `{ node, field }`，返回 VNode；命中时由它渲染这个节点和它的子节点。                             | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaField", "renderField")` |
-| widgets     | 替换内置控件的字段组件，键是 JSON Schema 的 `format` 或控件种类（input、textarea、number、switch、select），先按 `format` 再按种类查找；组件收到与内置控件相同的属性。 | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType>           | `semiGlobalDefault("SchemaField", "widgets")`     |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| field | 要渲染的节点路径，默认为根；根对象不包 Section，其他对象渲染为以 title 为标题的 Section。 | `string` | `semiGlobalDefault("SchemaField", "field")` |
+| jsonSchema | 要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的 JSON Schema；两者都没有时不渲染，开发模式下警告。 | `JsonSchema` | `semiGlobalDefault("SchemaField", "jsonSchema")` |
+| renderers | 各种类节点的渲染函数 `{ object, array, field }`，返回 VNode，SchemaField 自身不渲染任何界面；传 `semiRenderers` 得到 Semi 表单控件的默认界面。缺少 `object` 时直接渲染对象的属性，缺少 `array`、`field` 时对应节点不渲染，开发模式下警告。各函数的参数 `context` 带有 `node` 与 `render(field)`；对象还有 `content`（属性的 VNode），数组还有 `items`、`add`、`move`、`error`、`fieldProps` 等。 | `SchemaFieldRenderers` | `semiGlobalDefault("SchemaField", "renderers")` |
+| renderField | 按节点路径替换 `renderers` 里对应种类的渲染函数，数组的行写作 `[]`（如 `contacts[].email`），参数与该种类的渲染函数相同，返回 VNode。 | <ApiType detail={"Record\u003cstring, (context: SchemaFieldContext) => VNodeChild>"}>Type</ApiType> | `semiGlobalDefault("SchemaField", "renderField")` |
 
 **Events**
 

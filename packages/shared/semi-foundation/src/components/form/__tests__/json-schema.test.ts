@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vite-plus/test';
 import * as z from 'zod';
 import type { StandardSchema } from '../interface';
-import { blankRow, describeSchemaField, resolveJsonSchema, type JsonSchema } from '../json-schema';
+import { blankRow, describeSchemaField, resolveJsonSchema, singleItemName, type JsonSchema } from '../json-schema';
 
 const describeProperty = (property: JsonSchema, root: JsonSchema = {}) => describeSchemaField({ type: 'object', properties: { value: property }, ...root }, 'value');
 
@@ -128,6 +128,27 @@ describe('describeSchemaField array 与 object', () => {
         expect(describeSchemaField(node.schema, 'user["first-name"]').key).toBe('first-name');
     });
 
+    it('数组项带出序号、数组标题与键，项自己的 title、description 原样保留', () => {
+        const root = {
+            type: 'object',
+            properties: { body: { type: 'array', title: '正文', description: '段落', items: { type: 'string', title: '段', description: '一段' } }, grid: { type: 'array', items: { type: 'array', items: { type: 'number' } } }, rows: { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } } },
+        };
+        expect(describeSchemaField(root, 'body')).toMatchObject({ description: '段落', depth: 1, item: undefined });
+        expect(describeSchemaField(root, 'body[1]')).toMatchObject({ title: '段', description: '一段', depth: 2, item: { index: 1, arrayTitle: '正文', arrayKey: 'body' } });
+        expect(describeSchemaField(root, 'grid[0][2]').item).toEqual({ index: 2, arrayTitle: undefined, arrayKey: 0 });
+        expect(describeSchemaField(root, 'rows[0].a')).toMatchObject({ depth: 3, item: undefined });
+    });
+
+    it('singleItemName 只为单值项命名', () => {
+        const root = { type: 'object', properties: { body: { type: 'array', title: '正文', items: { type: 'string' } }, grid: { type: 'array', items: { type: 'array', items: { type: 'number' } } }, rows: { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } } } };
+        const messages = { item: '第 ${index} 项', arrayItem: '${title} 第 ${index} 项' };
+        expect(singleItemName(describeSchemaField(root, 'body[1]'), messages)).toBe('正文 第 2 项');
+        expect(singleItemName(describeSchemaField(root, 'grid[0]'), messages)).toBeUndefined();
+        expect(singleItemName(describeSchemaField(root, 'grid[0][0]'), messages)).toBe('第 1 项');
+        expect(singleItemName(describeSchemaField(root, 'rows[0]'), messages)).toBeUndefined();
+        expect(singleItemName(describeSchemaField(root, 'body'), messages)).toBeUndefined();
+    });
+
     it('description、default 与 schema 原样带出', () => {
         const property = { type: 'string', description: '说明', default: 'x' };
         const node = describeProperty(property);
@@ -239,7 +260,7 @@ describe('describeSchemaField 路径', () => {
 
 describe('blankRow', () => {
     const rows = (items: JsonSchema, minItems?: number) => ({ type: 'object', properties: { rows: { type: 'array', items, minItems } } });
-    const blank = (root: JsonSchema) => blankRow(root, describeSchemaField(root, 'rows'));
+    const blank = (root: JsonSchema) => blankRow(root, 'rows');
 
     it('对象行为 {}，必填的嵌套对象与数组预填，选填的跳过', () => {
         const root = rows({
@@ -304,6 +325,10 @@ describe('resolveJsonSchema', () => {
         expect(resolveJsonSchema(undefined, schema)).toEqual({ type: 'string', target: 'draft-2020-12' });
     });
 
+    it('同一个 schema 只转换一次', () => {
+        expect(resolveJsonSchema(undefined, schema)).toBe(resolveJsonSchema(undefined, schema));
+    });
+
     it('两者都没有时返回 undefined', () => {
         expect(resolveJsonSchema(undefined, undefined)).toBeUndefined();
         expect(resolveJsonSchema(undefined, { '~standard': { version: 1, vendor: 'test', validate: () => ({ value: 1 }) } })).toBeUndefined();
@@ -344,6 +369,6 @@ describe('zod 导出的 JSON Schema', () => {
         expect(describeSchemaField(root, 'contacts')).toMatchObject({ minItems: 1, fixed: false });
         expect(describeSchemaField(root, 'contacts[0].email')).toMatchObject({ kind: 'input', format: 'email', pattern: 'contacts[].email', required: true });
         expect(describeSchemaField(root, 'role')).toMatchObject({ default: 'guest' });
-        expect(blankRow(root, describeSchemaField(root, 'contacts'))).toEqual({});
+        expect(blankRow(root, 'contacts')).toEqual({});
     });
 });

@@ -14,11 +14,14 @@ export default function FormDemo() {
                             <>
                                 <For each={arrayField.arrayFields}>
                                     {(item, index) => (
-                                        <div style={{ display: 'flex', 'align-items': 'flex-end', gap: '4px' }}>
+                                        <div style={{ display: 'flex', 'align-items': 'flex-start', gap: '4px' }}>
                                             <FormInput field={`${item.field}.name`} label={`第 ${index() + 1} 步`} style={{ width: '280px' }} />
-                                            <IconButton aria-label={`上移第 ${index() + 1} 步`} disabled={index() === 0} icon={<IconArrowUp />} theme="borderless" onClick={() => arrayField.move(index(), index() - 1)} />
-                                            <IconButton aria-label={`下移第 ${index() + 1} 步`} disabled={index() === arrayField.arrayFields.length - 1} icon={<IconArrowDown />} theme="borderless" onClick={() => arrayField.move(index(), index() + 1)} />
-                                            <IconButton aria-label={`删除第 ${index() + 1} 步`} icon={<IconDelete />} theme="borderless" type="danger" onClick={item.remove} />
+                                            {/* the field's top padding and the label sit above the input; an error message only grows the field downward */}
+                                            <div style={{ display: 'flex', gap: '4px', 'padding-block-start': '36px' }}>
+                                                <IconButton aria-label={`上移第 ${index() + 1} 步`} disabled={index() === 0} icon={<IconArrowUp />} theme="borderless" onClick={() => arrayField.move(index(), index() - 1)} />
+                                                <IconButton aria-label={`下移第 ${index() + 1} 步`} disabled={index() === arrayField.arrayFields.length - 1} icon={<IconArrowDown />} theme="borderless" onClick={() => arrayField.move(index(), index() + 1)} />
+                                                <IconButton aria-label={`删除第 ${index() + 1} 步`} icon={<IconDelete />} theme="borderless" type="danger" onClick={item.remove} />
+                                            </div>
                                         </div>
                                     )}
                                 </For>

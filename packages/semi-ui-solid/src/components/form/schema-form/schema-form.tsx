@@ -11,7 +11,7 @@ import SchemaField, { type SchemaFieldProps } from './schema-field';
  */
 export type SchemaFormProps<Values extends Record<string, any> = any, Output = Values> = Omit<FormProps<Values, Output>, 'children' | 'component' | 'render'> &
     ExclusiveFormValidation &
-    Pick<SchemaFieldProps, 'jsonSchema' | 'renderField' | 'widgets'> & {
+    Pick<SchemaFieldProps, 'jsonSchema' | 'renderers' | 'renderField'> & {
         /** Rendered after the fields, such as the submit button */
         children?: JSX.Element;
     };
@@ -21,11 +21,11 @@ const defaultProps = {} satisfies Partial<SchemaFormProps>;
 /** A Form rendering the fields of its JSON Schema, then its children */
 export default function SchemaForm<Values extends Record<string, any> = any, Output = Values>(rawProps: SchemaFormProps<Values, Output>) {
     const props = useDefaultProps('SchemaForm', rawProps, defaultProps);
-    const [local, formProps] = splitProps(props, ['children', 'jsonSchema', 'renderField', 'widgets']);
+    const [local, formProps] = splitProps(props, ['children', 'jsonSchema', 'renderers', 'renderField']);
 
     return (
         <Form {...(formProps as FormProps<Values, Output>)}>
-            <SchemaField jsonSchema={local.jsonSchema} renderField={local.renderField} widgets={local.widgets} />
+            <SchemaField jsonSchema={local.jsonSchema} renderers={local.renderers} renderField={local.renderField} />
             {local.children}
         </Form>
     );

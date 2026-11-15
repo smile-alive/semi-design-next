@@ -1,7 +1,7 @@
 import { isEqual, isPlainObject } from 'es-toolkit';
 import { toPath } from 'es-toolkit/compat';
 import scrollIntoViewIfNeeded, { type Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import { BaseFoundation } from '../../base/index';
+import { BaseFoundation, FocusTrapHandle } from '../../base/index';
 import { isPromise, warning } from '../../utils/index';
 import * as ObjectUtil from '../../utils/object';
 import { cssClasses } from './constants';
@@ -13,6 +13,9 @@ import { validateRules } from './rules';
 import { isValid, nextUpdateKey, pickFormProps, schemaIssuePath, validationSchema } from './utils';
 
 const SILENT: CallOpts = { skipNotify: true, skipRender: true };
+// How long scrollToField and focusField wait for a field the caller was asked to reveal
+const REVEAL_TIMEOUT = 1000;
+const HIDDEN_SELECTOR = '[inert], [hidden]';
 
 const prefix = cssClasses.PREFIX;
 const ERROR_SELECTOR = `.${prefix}-field-error-message`;
@@ -97,6 +100,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     #latestSchemaRun?: Promise<SchemaRun>;
     // Written by the last batch validation, so that the next one reports them to onErrorChange when they clear
     #detachedErrorPaths: string[] = [];
+    // Ends the wait of the pending scrollToField or focusField for its field to mount
+    #cancelReveal?: () => void;
 
     constructor(adapter: BaseFormAdapter<Record<string, any>, any, E>) {
         super(adapter);
@@ -1195,12 +1200,60 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return errorDOM && errorField(errorDOM);
     }
 
+    /**
+     * A field root, or the element a SchemaField renderer gave the `x-field-id` of an array or object node. One inside
+     * collapsed content kept in the DOM (Collapsible keepDOM marks it inert) counts as not rendered.
+     */
+    #findRendered(field: string) {
+        const element = this.adapter.getFormElement()?.querySelector(`[x-field-id="${CSS.escape(field)}"]`);
+        return element && !element.closest(HIDDEN_SELECTOR) ? element : null;
+    }
+
+    /**
+     * Asks the caller to reveal `field` (expand a collapsed card) and resolves with its element once mounted, or null
+     * after REVEAL_TIMEOUT; a newer call or unmounting cancels the wait.
+     * shortcut: the element is scrolled to as soon as it mounts, so a container still running an expand animation can
+     * leave it short of the target; wait for transitionend if callers report that.
+     */
+    #reveal(field: string) {
+        const formElement = this.adapter.getFormElement();
+        if (!formElement) return Promise.resolve(null);
+        return new Promise<Element | null>((resolve) => {
+            const finish = (element: Element | null) => {
+                observer.disconnect();
+                clearTimeout(timer);
+                this.#cancelReveal = undefined;
+                resolve(element);
+            };
+            const observer = new MutationObserver(() => {
+                const element = this.#findRendered(field);
+                if (element) finish(element);
+            });
+            const timer = setTimeout(() => finish(null), REVEAL_TIMEOUT);
+            this.#cancelReveal = () => finish(null);
+            observer.observe(formElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['x-field-id', 'inert', 'hidden'] });
+            this.adapter.notifyRevealField(field);
+        });
+    }
+
+    // Scrolls synchronously when the element is already rendered
     #scrollToField(field: string, scrollOpts: ScrollIntoViewOptions = { behavior: 'smooth', block: 'start' }) {
-        // a pure field or one inside FormInputGroup has no field root
-        const fieldDOM = this.#getFieldExist(field) ? this.#getFieldDOM(field) : null;
-        if (fieldDOM) {
-            scrollIntoView(fieldDOM, scrollOpts);
-        }
+        this.#cancelReveal?.();
+        const scroll = (element: Element | null) => {
+            if (element) {
+                scrollIntoView(element, scrollOpts);
+            }
+            return element;
+        };
+        const found = this.#findRendered(field);
+        return found ? Promise.resolve(scroll(found)) : this.#reveal(field).then(scroll);
+    }
+
+    async #focusField(field: string, scrollOpts?: ScrollIntoViewOptions) {
+        const element = await this.#scrollToField(field, scrollOpts);
+        // the control, not a tooltip trigger beside the label text
+        const control = element && FocusTrapHandle.getFocusableElements(element as HTMLElement).find((candidate) => !candidate.closest(`.${prefix}-field-label, .${prefix}-field-label-with-tooltip`));
+        control?.focus({ preventScroll: true });
     }
 
     #scrollToError(config?: ScrollToErrorOpts) {
@@ -1249,6 +1302,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
 
     override destroy() {
         this.#destroyed = true;
+        this.#cancelReveal?.();
         this.#cancelDebouncedValidation();
         this.#unregistered = [];
     }
@@ -1370,7 +1424,10 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             setValues: (values: any, opts?: SetValuesConfig) => this.#setValues(values, opts ?? { isOverride: false }),
             submitForm: () => this.submit(),
             getFieldExist: (field: string) => this.#getFieldExist(field),
-            scrollToField: (field: string, scrollOpts?: ScrollIntoViewOptions) => this.#scrollToField(field, scrollOpts),
+            scrollToField: async (field: string, scrollOpts?: ScrollIntoViewOptions) => {
+                await this.#scrollToField(field, scrollOpts);
+            },
+            focusField: (field: string, scrollOpts?: ScrollIntoViewOptions) => this.#focusField(field, scrollOpts),
             scrollToError: (opts?: ScrollToErrorOpts) => this.#scrollToError(opts),
         };
     };

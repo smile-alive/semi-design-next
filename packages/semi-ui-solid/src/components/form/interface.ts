@@ -103,6 +103,8 @@ interface AllFormProps<Values extends Record<string, any> = any, Output = Values
     onValueChange?: (values: Values, changedValue: Partial<Values>) => void;
     onErrorChange?: (errors: AllErrors<Values>, changedError?: Partial<Record<FieldPath<Values>, FieldError>>) => void;
     onChange?: (formState: FormState<Values>) => void;
+    /** scrollToField or focusField found nothing rendered at `field`: expand the collapsed container that holds it */
+    onRevealField?: (field: FieldPath<Values>) => void;
     allowEmpty?: boolean;
     /** Form-level validation returning errors nested like the values; when set, it replaces the fields' own validation */
     validator?: FormValidator<Values>;

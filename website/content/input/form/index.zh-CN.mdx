@@ -812,11 +812,13 @@ ArrayField 支持多级嵌套，如下是一个两级嵌套的例子
 
 ### 按 Schema 渲染表单
 
-SchemaForm 按 schema 直接渲染整个表单。传入 Form 的 `schema` 后，SchemaForm 从中导出 JSON Schema，按属性顺序为每个属性渲染字段。导出要求校验库实现了 [Standard JSON Schema](https://standardschema.dev/json-schema)（如 Zod 4）；其他来源的 JSON Schema 可以直接传给 `jsonSchema`，它优先于导出的结果。SchemaForm 接受 Form 的全部属性，children 渲染在字段之后，适合放提交按钮。
+SchemaForm 按 schema 渲染整个表单。传入 Form 的 `schema` 后，SchemaForm 从中导出 JSON Schema，按属性顺序为每个属性渲染字段。导出要求校验库实现了 [Standard JSON Schema](https://standardschema.dev/json-schema)（如 Zod 4）；其他来源的 JSON Schema 可以直接传给 `jsonSchema`，它优先于导出的结果。SchemaForm 接受 Form 的全部属性，children 渲染在字段之后，适合放提交按钮。
+
+SchemaForm 和 SchemaField 自身不渲染任何界面：它们遍历 schema、绑定字段的值与校验，再把每个节点交给 `renderers` 里对应种类的渲染函数。`semiRenderers` 是用 Semi 表单控件写好的一套渲染函数，传给 `renderers` 后得到下面的界面；不传 `renderers` 时只渲染对象的属性，字段与数组不渲染，开发模式下警告。
 
 <Demo id="schema-form" />
 
-JSON Schema 与控件的对应：
+`semiRenderers` 中 JSON Schema 与控件的对应：
 
 | JSON Schema                                      | 控件                                                                                              |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
@@ -828,14 +830,31 @@ JSON Schema 与控件的对应：
 | 带 `properties` 的 `object`                      | Section，标题取 `title`                                                                           |
 | 其他 `array`                                     | ArrayField，每行有上移、下移、删除按钮，列表下方有添加按钮；`minItems` 等于 `maxItems` 时行数固定 |
 
-标签取 `title`（没有时取属性名），说明文字取 `description`，初值取 `default`，列在 `required` 中的属性显示必填星号。对应不上控件的节点不渲染，开发模式下警告。
+标签取 `title`（没有时取属性名），说明文字取 `description`，初值取 `default`，列在 `required` 中的属性显示必填星号。单值数组（项不是对象或数组）的行不显示标签和说明，以「数组标题 第 N 项」作为可访问名称，数组的说明显示在它的 Section 里。对应不上控件的节点不渲染，开发模式下警告。
 
-SchemaField 在已有的 Form 里渲染 schema 的一部分：`field` 指定路径（默认为根），可以和手写的字段混用。两者都可以用 `widgets` 和 `renderField` 定制：
+SchemaField 在已有的 Form 里渲染 schema 的一部分：`field` 指定路径（默认为根），可以和手写的字段混用。两者都可以分两层定制：
 
-- `widgets`：键是 JSON Schema 的 `format`（如 `uri`、`email`）或控件种类（`input`、`textarea`、`number`、`switch`、`select`），值是字段组件（如 FormInput 或用 withField 包装的组件）。先按 `format` 查找，再按种类查找。
-- `renderField`：键是字段路径，数组的行写作 `[]`（如 `contacts[].email`），命中时由它渲染这个节点和它的子节点。
+- `renderers`：替换某一种类节点的渲染函数，在 `semiRenderers` 基础上展开后覆盖其中一项，如 `{ ...semiRenderers, field: myField }`，其余仍用默认界面。
+- `renderField`：键是节点路径，数组的行写作 `[]`（如 `contacts[].email`），命中时替换这个节点的渲染函数，参数与该种类的渲染函数相同。
 
 <Demo id="schema-field" />
+
+#### 自己拼装界面
+
+渲染函数（Svelte 中为 snippet）收到节点信息与行为，界面全部由调用方用 Semi 组件拼装：
+
+- 所有种类都收到 `kind`、`node` 与 `render(field)`。`node` 含 `field`、`title`、`description`、`required`、`depth` 与数组行的 `item: { index, arrayTitle, arrayKey }`（项序号、所属数组的标题与属性名）。`depth` 是从 schema 根算起的层级，根为 0，SchemaField 从子路径开始渲染时也从根算起。`render(field)` 用同一套渲染函数渲染该路径的节点。
+- `object` 另收到 `content`，即按属性顺序渲染好的属性。
+- `array` 另收到 `items`，每项为 `{ key, field, index, node, value, remove }`；`key` 在移动后不变，用它作为行的 key。
+- `array` 的行为：`add` 按 schema 生成新行，点击事件不当作插入位置；另有 `addWithInitValue`、`move`。
+- `array` 的状态：`count`、`minItems`、`maxItems`、`fixed`、`canAdd`、`canRemove`，以及数组自身的错误 `error`（如违反 `minItems`）。
+- `array` 的 `fieldProps` 要挂到包住行的元素上，`formApi.scrollToField` 才能定位到数组。
+
+项自己在 schema 里写的 `title`、`description` 原样交出，渲染器不合并也不丢弃。`formApi.scrollToField`、`formApi.focusField` 支持任意路径，包括数组和对象节点：路径上的元素没有渲染（或在 `inert`、`hidden` 的折叠内容里）时，Form 调用 `onRevealField(field)`，由调用方展开包住它的折叠卡片，挂载后再滚动；`focusField` 聚焦其中第一个可聚焦的控件，跳过标签旁的提示按钮。
+
+下面的例子把联系人做成可折叠的卡片，卡片标题取每行的姓名，点击按钮定位到折叠卡片里的邮箱。
+
+<Demo id="schema-field-headless" />
 
 ### Hooks 的使用
 
@@ -1331,7 +1350,8 @@ FormState 存储了所有 Form 内部的状态值，包括各表单控件的值�
 | setError | 修改某个 field 的错误信息。传字符串时转为单元素数组，传空字符串、空数组或 undefined 时清除错误；给父路径传对象或数组时按结构写入各子字段 | formApi.setError(field: string, error: string \| string[]) |
 | getError | 获取 Field 的错误信息（字符串数组），父路径返回子字段的错误对象，没有错误时为 undefined | formApi.getError(field: string) |
 | getFieldExist | 获取 Form 中是否存在对应的 field | formApi.getFieldExist(field: string) |
-| scrollToField | 滚动至指定的 field, 第二个入参将透传至scroll-into-view-if-needed | formApi.scrollToField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
+| scrollToField | 滚动至指定路径的字段、数组或对象节点，第二个入参透传至 scroll-into-view-if-needed；路径未渲染时先调用 Form 的 `onRevealField`，最多等待一秒。返回 Promise，滚动后 resolve | formApi.scrollToField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
+| focusField | 同 scrollToField，滚动后聚焦其中第一个可聚焦的控件，跳过标签旁的提示按钮 | formApi.focusField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
 | scrollToError | 滚动至校验错误的field，可传指定 field 或者 index，传入 index 则滚动到第 index 个错误的 DOM，若不传参则滚动到DOM树中第一个校验出错的位置。 | formApi.scrollToError(<ApiType detail='{field?: string; index?: number; scrollOpts?: ScrollIntoViewOptions }'>ScrollToErrorOptions</ApiType>) |
 
 ### 如何获取 formApi

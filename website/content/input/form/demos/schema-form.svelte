@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as z from 'zod';
-    import { Button, SchemaForm } from '@fibrae/semi-ui-svelte';
+    import { Button, SchemaForm, semiRenderers } from '@fibrae/semi-ui-svelte';
 
     const schema = z.object({
         email: z.email('邮箱格式不正确').meta({ title: '邮箱' }),
@@ -29,7 +29,7 @@
     let output = $state<z.output<typeof schema>>();
 </script>
 
-<SchemaForm onSubmit={(values) => (output = values)} {schema} style="width: 480px">
+<SchemaForm onSubmit={(values) => (output = values)} renderers={semiRenderers} {schema} style="width: 480px">
     <Button htmlType="submit" type="primary">提交</Button>
     {#if output}
         <pre style="margin-block-start: 12px">{JSON.stringify(output, null, 2)}</pre>

@@ -308,6 +308,7 @@ const local: Locale = {
     },
     Form: {
         optional: '（可选）',
+        labelTooltip: '更多说明',
         required: '此项为必填项',
         invalid: '格式不正确',
         stringLen: '长度须为 ${len} 个字符',
@@ -324,6 +325,7 @@ const local: Locale = {
         moveUpItem: '上移第 ${index} 项',
         moveDownItem: '下移第 ${index} 项',
         item: '第 ${index} 项',
+        arrayItem: '${title} 第 ${index} 项',
     },
     Image: {
         fallback: '占位图',

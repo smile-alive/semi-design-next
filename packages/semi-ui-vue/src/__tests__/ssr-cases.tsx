@@ -112,6 +112,7 @@ import {
     Row,
     SchemaField,
     SchemaForm,
+    semiRenderers,
     ScrollItem,
     ScrollList,
     Select,
@@ -348,9 +349,9 @@ export const ssrCases: SsrCase[] = [
     {
         name: 'form/SchemaForm',
         covers: ['SchemaForm'],
-        render: () => <SchemaForm initValues={{ tags: ['a'] }} jsonSchema={{ type: 'object', properties: { name: { type: 'string', title: '姓名' }, tags: { type: 'array', items: { type: 'string' } } }, required: ['name'] }} />,
+        render: () => <SchemaForm initValues={{ tags: ['a'] }} renderers={semiRenderers} jsonSchema={{ type: 'object', properties: { name: { type: 'string', title: '姓名' }, tags: { type: 'array', items: { type: 'string' } } }, required: ['name'] }} />,
     },
-    { name: 'form/SchemaField', covers: ['SchemaField'], render: () => <Form initValues={{ age: 3 }}>{() => <SchemaField jsonSchema={{ type: 'object', properties: { age: { type: 'integer', minimum: 0 }, agree: { type: 'boolean' } } }} />}</Form> },
+    { name: 'form/SchemaField', covers: ['SchemaField'], render: () => <Form initValues={{ age: 3 }}>{() => <SchemaField renderers={semiRenderers} jsonSchema={{ type: 'object', properties: { age: { type: 'integer', minimum: 0 }, agree: { type: 'boolean' } } }} />}</Form> },
     { name: 'breadcrumb/基本', covers: ['Breadcrumb', 'BreadcrumbItem'], render: () => <Breadcrumb>{() => [<BreadcrumbItem>{() => 'a'}</BreadcrumbItem>, <BreadcrumbItem>{() => 'b'}</BreadcrumbItem>]}</Breadcrumb> },
     { name: 'anchor/基本', covers: ['Anchor', 'AnchorLink'], render: () => <Anchor>{() => <AnchorLink href="#a" title="a" />}</Anchor> },
     {
@@ -513,4 +514,4 @@ export const ssrCases: SsrCase[] = [
 
 // Exports that are not components, hooks of the form API and plain objects. Toast and Notification are imperative
 // APIs that mount into the document, covered by imperative.ssr.test.ts
-export const nonComponentExports = new Set(['BaseFoundation', 'semiGlobal', 'semiGlobalKey', 'Toast', 'Notification', 'useConfig', 'useLocale', 'defaultResponsiveMap', 'ToastFactory', 'useForm', 'useFieldApi', 'useFieldState', 'useFormApi', 'useFormState']);
+export const nonComponentExports = new Set(['BaseFoundation', 'semiGlobal', 'semiGlobalKey', 'Toast', 'Notification', 'useConfig', 'useLocale', 'defaultResponsiveMap', 'ToastFactory', 'useForm', 'useFieldApi', 'useFieldState', 'useFormApi', 'useFormState', 'semiRenderers', 'blankRow']);

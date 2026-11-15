@@ -7,6 +7,8 @@ export { default as FormSlot } from './slot';
 export { default as FormInputGroup } from './input-group';
 export { default as SchemaField } from './schema-form/schema-field';
 export { default as SchemaForm } from './schema-form/schema-form';
+export { semiRenderers } from './schema-form/semi-renderers';
+export { blankRow } from '@fibrae/semi-foundation/components/form/json-schema';
 export { default as withField } from './with-field';
 export { useFieldApi, useFieldState, useForm, useFormApi, useFormState } from './primitives';
 export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormPinCode, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTransfer, FormTreeSelect, FormUpload } from './field';
@@ -17,7 +19,7 @@ export type { FormCheckboxProps, FormRadioProps, FormSelectProps, FormUploadProp
 export type { InputGroupProps } from './input-group';
 export type { CommonFieldProps, FieldError, FieldErrorInput, FieldProps, FieldValidateTriggerType, FieldValidator, FormApi, FormElement, FormHandle, FormProps, FormRenderProps, FormState, FormValidator, OptionalFieldProps, RuleItem, RuleType, ScrollOptions } from './interface';
 export type { LabelProps } from './label';
-export type { JsonSchema, SchemaFieldKind, SchemaFieldNode, SchemaFieldProps, SchemaFieldRenderContext } from './schema-form/schema-field';
+export type { JsonSchema, SchemaArrayContext, SchemaArrayItem, SchemaFieldContext, SchemaFieldKind, SchemaFieldNode, SchemaFieldProps, SchemaFieldRenderers, SchemaLeafContext, SchemaObjectContext } from './schema-form/schema-field';
 export type { SchemaFormProps } from './schema-form/schema-form';
 export type { SectionProps } from './section';
 export type { SlotProps } from './slot';

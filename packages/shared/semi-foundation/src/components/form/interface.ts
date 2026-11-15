@@ -66,6 +66,8 @@ export interface BaseFormAdapter<P = Record<string, any>, Values extends object 
     notifyValueChange: (values: any, changedValues: any) => void;
     notifyErrorChange: (errors: any, changedError: any) => void;
     notifyReset: () => void;
+    /** scrollToField or focusField found nothing rendered at `field`: the caller expands what hides it */
+    notifyRevealField: (field: string) => void;
     /** The rendered form element; null before mount and after unmount */
     getFormElement: () => Element | null;
 }
@@ -167,7 +169,13 @@ export interface BaseFormApi<T extends object = any, O = T> {
     getInitValues: () => any;
     getValues: () => T;
     setValues: (fieldsValue: Partial<T>, config?: SetValuesConfig) => void;
-    scrollToField: <K extends FieldPath<T>>(field: K, scrollConfig?: ScrollIntoViewOptions) => void;
+    /**
+     * Scrolls to the field, ArrayField container or SchemaField node at `field`. When nothing is rendered there, calls
+     * the Form's onRevealField and waits up to a second for it to mount.
+     */
+    scrollToField: <K extends FieldPath<T>>(field: K, scrollConfig?: ScrollIntoViewOptions) => Promise<void>;
+    /** scrollToField, then focuses the first focusable element inside, a tooltip trigger in a label excepted */
+    focusField: <K extends FieldPath<T>>(field: K, scrollConfig?: ScrollIntoViewOptions) => Promise<void>;
     scrollToError: <K extends FieldPath<T>>(config?: ScrollToErrorOptions<K>) => void;
 }
 

@@ -4,6 +4,8 @@ import * as z from 'zod';
 import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/components/form/interface';
 import {
     FormInput,
+    blankRow,
+    semiRenderers,
     type FormAutoComplete,
     type FormCascader,
     type FormCheckbox,
@@ -27,8 +29,11 @@ import {
     type ArrayFieldProps,
     type ArrayFieldSnippetProps,
     type JsonSchema,
+    type SchemaArrayContext,
+    type SchemaArrayItem,
+    type SchemaFieldContext,
     type SchemaFieldProps,
-    type SchemaFieldRenderProps,
+    type SchemaFieldRenderers,
     type SchemaFormProps,
     type CommonFieldProps,
     type FieldProps,
@@ -218,7 +223,7 @@ describe('Svelte FormApi 路径类型', () => {
             api.setError('users[0].name', 'bad');
             api.setTouched('tags[0]', true);
             api.getFieldExist('matrix[0][1]');
-            api.scrollToField('users[1].name');
+            void api.scrollToField('users[1].name');
             expectTypeOf(api.validate(['users[0].name'])).toEqualTypeOf<Promise<ArrayValues>>();
             // @ts-expect-error a misspelled path
             api.setTouched('tagz[0]', true);
@@ -318,9 +323,15 @@ describe('Svelte 字段校验与新组件类型', () => {
         expectTypeOf<{ keepState: false; schemaDebounce: 300 }>().toExtend<FormProps>();
     });
 
-    it('SchemaField 的 renderField 是按路径的 snippet，SchemaForm 接受 Form 与 SchemaField 的属性', () => {
-        expectTypeOf<NonNullable<SchemaFieldProps['renderField']>[string]>().toEqualTypeOf<Snippet<[SchemaFieldRenderProps]>>();
-        expectTypeOf<{ field: 'contacts'; widgets: { uri: typeof FormInput } }>().toExtend<SchemaFieldProps>();
+    it('SchemaField 的 renderers 按节点种类给 snippet，renderField 按路径覆盖，SchemaForm 接受 Form 与 SchemaField 的属性', () => {
+        expectTypeOf<NonNullable<SchemaFieldProps['renderField']>[string]>().toEqualTypeOf<Snippet<[SchemaFieldContext]>>();
+        expectTypeOf<NonNullable<SchemaFieldRenderers['array']>>().toEqualTypeOf<Snippet<[SchemaArrayContext]>>();
+        expectTypeOf<SchemaArrayContext['items']>().toEqualTypeOf<SchemaArrayItem[]>();
+        expectTypeOf<SchemaArrayContext['add']>().toEqualTypeOf<(index?: number | Event) => void>();
+        expectTypeOf(semiRenderers).toEqualTypeOf<Required<SchemaFieldRenderers>>();
+        expectTypeOf(blankRow).parameters.toEqualTypeOf<[root: JsonSchema, arrayField: string]>();
+        expectTypeOf<{ field: 'contacts'; renderers: SchemaFieldRenderers }>().toExtend<SchemaFieldProps>();
+        expectTypeOf<NonNullable<FormProps<Values>['onRevealField']>>().parameter(0).toEqualTypeOf<FieldPath<Values>>();
         expectTypeOf<{ jsonSchema: JsonSchema; labelPosition: 'left'; keepState: false }>().toExtend<SchemaFormProps>();
         expectTypeOf<ComponentProps<typeof SchemaField>>().toEqualTypeOf<SchemaFieldProps>();
     });

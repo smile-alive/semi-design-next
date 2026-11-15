@@ -1,7 +1,7 @@
-import type { Component, IntrinsicElementAttributes, StyleValue, VNode, VNodeChild } from 'vue';
+import type { IntrinsicElementAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
-import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
+import type { arrayState, JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 import type { ColProps } from '../grid/interface';
 import type { ValidateStatus } from '../input/interface';
 
@@ -13,6 +13,8 @@ export interface LabelProps {
     text?: string | number;
     /** Extra content after the label; the `extra` slot takes precedence */
     extra?: string | number;
+    /** Shown in a Tooltip by a help button beside the label, which is not part of the field's name; the `tooltip` slot takes precedence */
+    tooltip?: string | number;
     align?: string;
     disabled?: boolean;
     /** Whether to display the required * symbol; hidden while `optional` is true */
@@ -27,6 +29,7 @@ export interface LabelProps {
 export interface LabelSlots {
     default?: () => VNode[];
     extra?: () => VNode[];
+    tooltip?: () => VNode[];
 }
 
 /** Values is what the fields edit, Output what a validation of the whole form resolves with (a schema's output) */
@@ -84,6 +87,8 @@ export interface FormEmits<Values extends Record<string, any> = any, Output = Va
     valueChange: [values: Values, changedValues: Partial<Values>];
     errorChange: [errors: AllErrors<Values>, changedError?: Partial<Record<FieldPath<Values>, FieldError | undefined>>];
     getFormApi: [formApi: FormApi<Values, Output>];
+    /** scrollToField or focusField found nothing rendered at `field`: expand the collapsed container that holds it */
+    revealField: [field: FieldPath<Values>];
 }
 
 export interface FormDefaultSlotProps<Values extends Record<string, any> = any, Output = Values> {
@@ -231,6 +236,8 @@ export interface FormErrorMessageSlots {
 export interface FormSectionSlots {
     default?: () => VNode[];
     text?: () => VNode[];
+    /** Shown below the title and describes the fieldset */
+    extraText?: () => VNode[];
 }
 
 export interface FormSlotProps {
@@ -263,22 +270,65 @@ export interface FormInputGroupSlots {
     extraText?: () => VNode[];
 }
 
-export interface SchemaFieldRenderContext {
+export interface SchemaNodeContext {
     node: SchemaFieldNode;
-    field: string;
+    /** Renders the node at `field` through the same renderers; wrap the result in a keyed element when rendering a list */
+    render: (field: string) => VNode;
 }
 
-/** Renders a schema node in place of the built-in control, its subtree included */
-export type SchemaFieldRenderer = (context: SchemaFieldRenderContext) => VNodeChild;
+export interface SchemaObjectContext extends SchemaNodeContext {
+    kind: 'object';
+    /** The property nodes rendered in schema order, keyed by property name */
+    content: VNode;
+}
+
+export interface SchemaArrayItem {
+    /** Stable across moves: key the row with it, not with `index` */
+    key: string;
+    field: string;
+    index: number;
+    node: SchemaFieldNode;
+    /** The row's current value, such as the field a card title reads */
+    value: unknown;
+    remove: () => void;
+}
+
+export interface SchemaArrayContext extends SchemaNodeContext, ReturnType<typeof arrayState> {
+    kind: 'array';
+    items: SchemaArrayItem[];
+    /** Inserts the schema's blank row before `index`, or appends it; a click event counts as no index */
+    add: (index?: number | Event) => void;
+    addWithInitValue: (row: unknown, index?: number) => void;
+    move: (from: number, to: number) => void;
+    /** The error of the array itself (a schema's minItems), not those of its rows */
+    error?: FieldError;
+    /** Bind on the element that contains the rows, so scrollToField and focusField reach the array */
+    fieldProps: { 'x-field-id': string };
+}
+
+/** Any node that is neither an object nor an array: `node.item` is set when it is a row of an array */
+export interface SchemaLeafContext extends SchemaNodeContext {
+    kind: 'field';
+}
+
+export type SchemaFieldContext = SchemaObjectContext | SchemaArrayContext | SchemaLeafContext;
+
+export interface SchemaFieldRenderers {
+    /** Without it an object renders its properties with no wrapper */
+    object?: (context: SchemaObjectContext) => VNodeChild;
+    array?: (context: SchemaArrayContext) => VNodeChild;
+    /** Also receives the nodes of kind `unsupported` */
+    field?: (context: SchemaLeafContext) => VNodeChild;
+}
 
 /** The props SchemaForm passes on to its SchemaField */
 export interface SchemaFieldSharedProps {
-    /** Takes precedence over the JSON Schema exported from the Form `schema` */
+    /** Wins over the JSON Schema the Form `schema` exports */
     jsonSchema?: JsonSchema;
-    /** Field components by `format`, then by `SchemaFieldKind`; they receive the props of the built-in control */
-    widgets?: Record<string, Component>;
-    /** Renderers by node pattern, array items as `[]`: `contacts[].email` */
-    renderField?: Record<string, SchemaFieldRenderer>;
+    /** How each kind of node renders; SchemaField itself renders no UI. `semiRenderers` renders Semi Form controls */
+    renderers?: SchemaFieldRenderers;
+    /** Replaces the renderer of the node whose `pattern` (array rows as `[]`) is the key */
+    renderField?: Record<string, (context: SchemaFieldContext) => VNodeChild>;
 }
 
 export interface SchemaFieldProps extends SchemaFieldSharedProps {

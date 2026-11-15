@@ -1,6 +1,6 @@
 import { Show, createSignal } from 'solid-js';
 import * as z from 'zod';
-import { Button, SchemaForm } from '@fibrae/semi-ui-solid';
+import { Button, SchemaForm, semiRenderers } from '@fibrae/semi-ui-solid';
 
 const schema = z.object({
     email: z.email('邮箱格式不正确').meta({ title: '邮箱' }),
@@ -30,7 +30,7 @@ export default function FormDemo() {
     const [output, setOutput] = createSignal<z.output<typeof schema>>();
 
     return (
-        <SchemaForm schema={schema} style={{ width: '480px' }} onSubmit={(values) => setOutput(values)}>
+        <SchemaForm renderers={semiRenderers} schema={schema} style={{ width: '480px' }} onSubmit={(values) => setOutput(values)}>
             <Button type="primary" htmlType="submit">
                 提交
             </Button>

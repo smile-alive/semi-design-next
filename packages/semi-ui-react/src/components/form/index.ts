@@ -8,6 +8,8 @@ export { default as FormInputGroup } from './group';
 export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormPinCode, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTransfer, FormTreeSelect, FormUpload } from './field';
 export { default as SchemaField } from './schema-form/schema-field';
 export { default as SchemaForm } from './schema-form/schema-form';
+export { semiRenderers } from './schema-form/semi-renderers';
+export { blankRow } from '@fibrae/semi-foundation/components/form/json-schema';
 
 export { useFormApi, useFormState, useFieldApi, useFieldState, useForm } from './hooks';
 
@@ -21,6 +23,6 @@ export type { ErrorMessageProps } from './error-message';
 export type { InputGroupProps } from './group';
 export type { LabelProps } from './label';
 export type { SectionProps } from './section';
-export type { JsonSchema, SchemaFieldKind, SchemaFieldNode, SchemaFieldProps, SchemaFieldRenderer } from './schema-form/schema-field';
+export type { JsonSchema, SchemaArrayContext, SchemaArrayItem, SchemaFieldContext, SchemaFieldKind, SchemaFieldNode, SchemaFieldProps, SchemaFieldRenderers, SchemaLeafContext, SchemaObjectContext } from './schema-form/schema-field';
 export type { SchemaFormProps, SchemaFormOwnProps } from './schema-form/schema-form';
 export type { SlotProps } from './slot';

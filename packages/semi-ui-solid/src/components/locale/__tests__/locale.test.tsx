@@ -6,6 +6,7 @@ import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { en_US, zh_CN, type Locale, type LocaleInput } from '@fibrae/semi-ui-solid/locale';
 import Calendar from '../../calendar';
 import ConfigProvider from '../../config-provider';
+import { Form, FormInput, SchemaField, semiRenderers } from '../../form';
 import { useLocaleContext } from '../context';
 import { type LocaleComponentName, LocaleConsumer, type LocaleConsumerProps, LocaleProvider, type LocaleResult, useLocale } from '../index';
 
@@ -46,6 +47,34 @@ describe('locale', () => {
             currency: 'USD',
         });
         expect(screen.getByTestId('hook').textContent).toBe(consumer().textContent);
+    });
+
+    it('SchemaField 为数组行的移动、删除按钮与行标签命名，添加按钮文字本地化', () => {
+        render(() => (
+            <LocaleProvider locale={en_US}>
+                <Form initValues={{ tags: ['a', 'b'] }}>
+                    <SchemaField jsonSchema={{ type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } }} renderers={semiRenderers} />
+                </Form>
+            </LocaleProvider>
+        ));
+        expect(screen.getByRole('textbox', { name: en_US.Form.arrayItem.replace('${title}', 'tags').replace('${index}', '1') })).toHaveValue('a');
+        expect(screen.getByRole('button', { name: en_US.Form.moveUpItem.replace('${index}', '2') })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Form.moveDownItem.replace('${index}', '1') })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Form.removeItem.replace('${index}', '2') })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: en_US.Form.addItem })).toBeInTheDocument();
+    });
+
+    it('Form 标签的 tooltip 按钮使用语言包名称，且不进入字段名称', () => {
+        render(() => (
+            <LocaleProvider locale={en_US}>
+                <Form>
+                    <FormInput field="name" label={{ text: 'Name', tooltip: 'Your full name' }} />
+                </Form>
+            </LocaleProvider>
+        ));
+        expect(en_US.Form.labelTooltip).not.toBe(zh_CN.Form.labelTooltip);
+        expect(screen.getByRole('button', { name: en_US.Form.labelTooltip })).toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: 'Name' })).toBeInTheDocument();
     });
 
     it('没有任何 provider 时回退到 zh_CN', () => {

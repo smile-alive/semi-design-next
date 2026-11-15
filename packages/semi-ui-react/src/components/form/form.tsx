@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/form/form-api-proxy';
 import FormFoundation, { type BaseFormAdapter } from '@fibrae/semi-foundation/components/form/foundation';
-import type { AllErrors, FieldBridge, FormFoundationState } from '@fibrae/semi-foundation/components/form/interface';
+import type { AllErrors, FieldBridge, FieldPath, FormFoundationState } from '@fibrae/semi-foundation/components/form/interface';
 import { pickFormProps } from '@fibrae/semi-foundation/components/form/utils';
 import { warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/form/form.scss';
@@ -37,6 +37,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
         onErrorChange,
         onValueChange,
         onReset,
+        onRevealField,
         component,
         render,
         validator,
@@ -85,6 +86,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
             notifyValueChange: (values, changedValues) => base.getProps().onValueChange?.(values, changedValues),
             notifyErrorChange: (errors, changedError) => base.getProps().onErrorChange?.(errors, changedError),
             notifyReset: () => base.getProps().onReset?.(),
+            notifyRevealField: (field) => base.getProps().onRevealField?.(field as FieldPath<Values>),
             getFormElement: () => formRef.current,
         }),
         { locale }

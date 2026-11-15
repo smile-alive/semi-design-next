@@ -2,7 +2,7 @@ import { type JSX } from 'solid-js';
 import { render } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { getElement } from '@test/utils/solid';
-import { type FormApi, type FormProps, Form, FormInput } from '..';
+import { type FormApi, type FormElement, type FormProps, Form, FormInput, SchemaField, semiRenderers } from '..';
 
 // Real scrolling instead of a mocked scroll-into-view-if-needed: semi-ui-solid does not depend on that package
 const toTop = { behavior: 'auto', block: 'start' } as const;
@@ -80,7 +80,7 @@ describe('Form 滚动', () => {
             </>
         ));
         const target = fieldDOM('b', 1);
-        formApi?.scrollToField('b', toTop);
+        await formApi?.scrollToField('b', toTop);
         expect(Math.abs(topOf(target))).toBeLessThan(2);
         window.scrollTo(0, 0);
         await expect(formApi?.validate()).rejects.toBeDefined();
@@ -89,6 +89,19 @@ describe('Form 滚动', () => {
         window.scrollTo(0, 0);
         formApi?.scrollToError({ index: 0, scrollOpts: toTop });
         expect(Math.abs(topOf(target))).toBeLessThan(2);
+    });
+
+    it('scrollToField 能到达数组路径上 semiRenderers 渲染的 Section', async () => {
+        render(() => (
+            <Form>
+                {spacer()}
+                <SchemaField jsonSchema={{ type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } }} renderers={semiRenderers} />
+                {spacer()}
+            </Form>
+        ));
+        const form = getElement('form');
+        await (form as FormElement).formApi.scrollToField('tags', toTop);
+        expect(Math.abs(topOf(getElement('fieldset[x-field-id="tags"]')))).toBeLessThan(2);
     });
 
     it('栅格布局下滚动到字段根节点，而不是内容列', async () => {
@@ -126,7 +139,7 @@ describe('Form 滚动', () => {
             </>
         ));
         const target = getElement('.semi-form-field');
-        api().scrollToField(field, toTop);
+        await api().scrollToField(field, toTop);
         expect(Math.abs(topOf(target))).toBeLessThan(2);
         window.scrollTo(0, 0);
         await expect(api().validate()).rejects.toBeDefined();

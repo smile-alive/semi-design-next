@@ -1,5 +1,5 @@
 import { createRawSnippet } from 'svelte';
-import { render, screen } from '@testing-library/svelte';
+import { fireEvent, render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { getElement } from '@test/utils/dom/common';
@@ -85,6 +85,35 @@ describe('FormLabel', () => {
         view.unmount();
         render(ALabelLocale);
         expect(document.querySelector(`.${prefixCls}-optional-text`)).toHaveTextContent(en_US.Form.optional);
+    });
+
+    it('tooltip 按钮的名称来自语言包', () => {
+        render(ALabelLocale);
+        expect(en_US.Form.labelTooltip).not.toBe(zh_CN.Form.labelTooltip);
+        expect(screen.getByRole('button', { name: en_US.Form.labelTooltip })).toBeInTheDocument();
+    });
+
+    it('tooltip：按钮可聚焦并命名，悬停后说明出现，宽度落在外层，snippet 同样可用', async () => {
+        const view = render(Label, { props: { text: 'name', tooltip: 'hint', width: 120 } });
+        const button = screen.getByRole('button', { name: zh_CN.Form.labelTooltip });
+        button.focus();
+        expect(button).toHaveFocus();
+        expect(getLabel()).not.toContainElement(button);
+        expect(button.closest(`.${prefixCls}-with-tooltip`)).toHaveStyle({ width: '120px' });
+        expect(getLabel().style.width).toBe('');
+        await fireEvent.mouseEnter(button);
+        expect(await screen.findByText('hint')).toBeInTheDocument();
+        view.unmount();
+
+        render(Label, { props: { text: 'name', tooltip: html('<b>rich</b>') } });
+        await fireEvent.mouseEnter(screen.getByRole('button', { name: zh_CN.Form.labelTooltip }));
+        expect(await screen.findByText('rich')).toBeInTheDocument();
+    });
+
+    it('没有 tooltip 时不渲染按钮与外层', () => {
+        render(Label, { props: { text: 'name' } });
+        expect(screen.queryByRole('button')).toBeNull();
+        expect(document.querySelector(`.${prefixCls}-with-tooltip`)).toBeNull();
     });
 
     it('disabled', () => {

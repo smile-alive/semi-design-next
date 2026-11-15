@@ -7,6 +7,8 @@ export { default as FormSlot } from './form-slot.vue';
 export { default as FormInputGroup } from './input-group.vue';
 export { default as SchemaField } from './schema-form/schema-field.vue';
 export { default as SchemaForm } from './schema-form/schema-form.vue';
+export { semiRenderers } from './schema-form/semi-renderers';
+export { blankRow } from '@fibrae/semi-foundation/components/form/json-schema';
 
 export { default as withField } from './with-field';
 export { useFieldApi, useFieldState, useForm, useFormApi, useFormState } from './composables';
@@ -50,11 +52,15 @@ export type {
     LabelSlots as FormLabelSlots,
     RuleItem,
     RuleType,
+    SchemaArrayContext,
+    SchemaArrayItem,
+    SchemaFieldContext,
     SchemaFieldKind,
     SchemaFieldNode,
     SchemaFieldProps,
-    SchemaFieldRenderContext,
-    SchemaFieldRenderer,
+    SchemaFieldRenderers,
     SchemaFormProps,
+    SchemaLeafContext,
+    SchemaObjectContext,
     WithFieldOptions,
 } from './interface';

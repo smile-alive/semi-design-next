@@ -24,6 +24,7 @@ function createHost(props: Record<string, unknown> = {}) {
         notifyValueChange: vi.fn<Notify>(),
         notifyErrorChange: vi.fn<Notify>(),
         notifyReset: vi.fn<Notify>(),
+        notifyRevealField: vi.fn<Notify>(),
         notifySubmit: vi.fn<Notify>(),
         notifySubmitFail: vi.fn<Notify>(),
         getLocale: () => enUS.Form,
@@ -332,13 +333,40 @@ describe('FormFoundation 契约', () => {
         expect(adapter.notifyChange).not.toHaveBeenCalled();
     });
 
-    it('scrollToField 找不到字段根节点时不滚动', () => {
-        const { adapter, api, addField } = createHost();
-        Object.assign(adapter, { getFormElement: () => document.createElement('form') });
-        addField('name');
+    it('scrollToField 找不到节点时请调用方展开，等它挂载后再滚动', async () => {
+        const { adapter, api } = createHost();
+        const form = document.createElement('form');
+        const card = document.createElement('div');
+        card.setAttribute('x-field-id', 'rows[0]');
+        Object.assign(adapter, { getFormElement: () => form });
+        adapter.notifyRevealField.mockImplementation(() => form.append(card));
         vi.mocked(scrollIntoView).mockClear();
-        api.scrollToField('name');
+        await api.scrollToField('rows[0]');
+        expect(adapter.notifyRevealField).toHaveBeenCalledWith('rows[0]');
+        expect(scrollIntoView).toHaveBeenCalledWith(card, expect.anything());
+    });
+
+    it('节点在 inert 的折叠内容里时也请调用方展开，去掉 inert 后再滚动', async () => {
+        const { adapter, api } = createHost();
+        const form = document.createElement('form');
+        form.innerHTML = '<div inert><div x-field-id="rows[0]"></div></div>';
+        Object.assign(adapter, { getFormElement: () => form });
+        adapter.notifyRevealField.mockImplementation(() => form.firstElementChild.removeAttribute('inert'));
+        vi.mocked(scrollIntoView).mockClear();
+        await api.scrollToField('rows[0]');
+        expect(scrollIntoView).toHaveBeenCalledWith(form.querySelector('[x-field-id]'), expect.anything());
+    });
+
+    it('展开后仍找不到节点时不滚动', async () => {
+        vi.useFakeTimers();
+        const { adapter, api } = createHost();
+        Object.assign(adapter, { getFormElement: () => document.createElement('form') });
+        vi.mocked(scrollIntoView).mockClear();
+        const done = api.scrollToField('name');
+        await vi.runAllTimersAsync();
+        await done;
         expect(scrollIntoView).not.toHaveBeenCalled();
+        vi.useRealTimers();
     });
 });
 

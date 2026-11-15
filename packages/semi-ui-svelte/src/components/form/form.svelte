@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/form/form-api-proxy';
     import FormFoundation from '@fibrae/semi-foundation/components/form/foundation';
-    import type { BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/components/form/interface';
+    import type { BaseFormAdapter, FieldPath, FormFoundationState, FormState } from '@fibrae/semi-foundation/components/form/interface';
     import '@fibrae/semi-foundation/components/form/form.scss';
     import { useDefaultProps, useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
@@ -43,6 +43,7 @@
         onChange,
         onValueChange,
         onErrorChange,
+        onRevealField,
         getFormApi: notifyFormApi,
         children,
         ...rest
@@ -132,6 +133,7 @@
             notifyValueChange: (values, changedValues) => onValueChange?.(values, changedValues),
             notifyErrorChange: (errors, changedError) => onErrorChange?.(errors, changedError),
             notifyReset: () => onReset?.(),
+            notifyRevealField: (field) => onRevealField?.(field as FieldPath<Values>),
             getFormElement: () => formElement ?? null,
         })
     );

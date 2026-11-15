@@ -22,6 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | onChange | 表单状态更新时的回调，包括字段挂载、卸载、值变更、blur、校验状态与错误信息变更，参数为 formState。 | <ApiType detail={"(formState: FormState\u003cValues>) => void"}>Type</ApiType> | - |
 | onErrorChange | 校验状态更新时的回调，参数为全部错误和本次变化的字段错误。validate、submit、reset 等批量操作只触发一次，静默校验不触发。 | <ApiType detail={"(errors: AllErrors\u003cValues>, changedError?: Partial\u003cRecord\u003cFieldPath\u003cValues>, FieldError>>) => void"}>Type</ApiType> | - |
 | onReset | 点击重置按钮或调用 formApi.reset 时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onRevealField | formApi.scrollToField、formApi.focusField 在该路径找不到已渲染的元素时的回调（元素在 inert 或 hidden 的折叠内容里也算找不到），参数为路径；在这里展开包住它的折叠卡片，Form 最多等待一秒，挂载后再滚动与聚焦。 | <ApiType detail={"(field: FieldPath\u003cValues>) => void"}>Type</ApiType> | - |
 | onSubmit | 点击提交按钮或调用 formApi.submitForm 且校验通过后的回调，参数为 values 与提交事件；配置了 `schema` 时 values 是 schema 的输出。 | <ApiType detail={"(values: Output, e?: SubmitEvent) => void"}>Type</ApiType> | - |
 | onSubmitFail | 点击提交按钮或调用 formApi.submitForm 且校验失败后的回调，参数为 errors、values 与提交事件。errors 的每个错误是字符串数组；校验函数抛出的异常原样传入。 | <ApiType detail={"(errors: Partial\u003cAllErrors\u003cValues>> \u007c unknown, values: Partial\u003cValues>, e?: SubmitEvent) => void"}>Type</ApiType> | - |
 | onValueChange | 字段的值变化时的回调，参数为全部 values 与本次变化的字段值。 | <ApiType detail={"(values: Values, changedValues: Partial\u003cValues>) => void"}>Type</ApiType> | - |

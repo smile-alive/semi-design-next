@@ -811,9 +811,11 @@ If you don't use ArrayField, you can use the provided formApi to manually add or
 
 SchemaForm renders a whole form directly from a schema. With the Form `schema` passed in, SchemaForm derives a JSON Schema from it and renders a field for each property in property order. Deriving requires the validation library to implement [Standard JSON Schema](https://standardschema.dev/json-schema) (such as Zod 4); a JSON Schema from any other source can be passed directly to `jsonSchema`, which takes precedence over the derived result. SchemaForm accepts all Form props, and renders children after the fields, which suits a submit button.
 
+SchemaForm and SchemaField render no UI themselves: they walk the schema, bind each field's value and validation, and hand every node to the render function of its kind in `renderers`. `semiRenderers` is a set of render functions built from Semi Form controls; pass it to `renderers` for the UI below. Without `renderers`, only the properties of objects render; fields and arrays render nothing, and a warning is shown in development.
+
 <Demo id="schema-form" />
 
-How JSON Schema maps to controls:
+How `semiRenderers` maps JSON Schema to controls:
 
 | JSON Schema                                                 | Control                                                                                                                                                     |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -825,14 +827,31 @@ How JSON Schema maps to controls:
 | `object` with `properties`                                  | Section; the heading comes from `title`                                                                                                                     |
 | Any other `array`                                           | ArrayField; each row has move up, move down and remove buttons, with an add button below the list; the row count is fixed when `minItems` equals `maxItems` |
 
-The label comes from `title` (the property name when absent), the help text from `description`, the initial value from `default`, and properties listed in `required` show the required asterisk. A node that maps to no control is not rendered, and a warning is shown in development.
+The label comes from `title` (the property name when absent), the help text from `description`, the initial value from `default`, and properties listed in `required` show the required asterisk. Rows of a single-value array (items that are neither objects nor arrays) show no label or help text and are named "array title item N"; the array's description shows in its Section. A node that maps to no control is not rendered, and a warning is shown in development.
 
-SchemaField renders part of a schema inside an existing Form: `field` sets the path (the root by default), and it can be mixed with hand-written fields. Both can be customized with `widgets` and `renderField`:
+SchemaField renders part of a schema inside an existing Form: `field` sets the path (the root by default), and it can be mixed with hand-written fields. Both can be customized at two levels:
 
-- `widgets`: the key is a JSON Schema `format` (such as `uri`, `email`) or a control kind (`input`, `textarea`, `number`, `switch`, `select`), and the value is a field component (such as FormInput, or a component wrapped with withField). `format` is looked up first, then the control kind.
-- `renderField`: the key is a field path, with array rows written as `[]` (such as `contacts[].email`); when it matches, it renders that node and its children.
+- `renderers`: replaces the render function of one kind of node. Spread `semiRenderers` and override one entry, such as `{ ...semiRenderers, field: myField }`; the rest keep the default UI.
+- `renderField`: the key is a node path, with array rows written as `[]` (such as `contacts[].email`). A match replaces the render function of that node and receives what the function of its kind receives.
 
 <Demo id="schema-field" />
+
+#### Build your own UI
+
+A render function (a snippet in Svelte) receives the node's information and behavior, and the caller builds the whole UI from Semi components:
+
+- Every kind receives `kind`, `node` and `render(field)`. `node` holds `field`, `title`, `description`, `required`, `depth` and, on an array row, `item: { index, arrayTitle, arrayKey }` (the row index and the owning array's title and property name). `depth` counts levels from the schema root, 0 for the root, also when SchemaField starts at a sub-path. `render(field)` renders the node at that path with the same render functions.
+- `object` also receives `content`, the properties rendered in schema order.
+- `array` also receives `items`, each `{ key, field, index, node, value, remove }`; `key` survives moves, so use it as the row key.
+- Array behavior: `add` inserts a row the schema prefills, and a click event is not taken as a position; `addWithInitValue` and `move` are also given.
+- Array state: `count`, `minItems`, `maxItems`, `fixed`, `canAdd`, `canRemove`, and `error`, the error of the array itself (such as a broken `minItems`).
+- Spread the array's `fieldProps` on the element holding the rows so that `formApi.scrollToField` can reach the array.
+
+The `title` and `description` an item declares in the schema are passed through as they are, neither merged nor dropped. `formApi.scrollToField` and `formApi.focusField` accept any path, array and object nodes included: when nothing is rendered at the path (or it sits inside `inert` or `hidden` collapsed content), the Form calls `onRevealField(field)` so that the caller expands the collapsed card holding it, and scrolls once it mounts. `focusField` then focuses the first focusable control inside, skipping the tooltip button beside the label.
+
+The example below renders contacts as collapsible cards titled by each row's name; the button locates the email inside a collapsed card.
+
+<Demo id="schema-field-headless" />
 
 ### Use of Hook
 
@@ -1334,7 +1353,8 @@ Semi will automatically execute deepClone once for input parameters of `formApi.
 | setError | Modify the error information of a field. A string is converted to a single-item array; an empty string, an empty array or undefined clears the error; passing an object or array to a parent path writes the errors of its child fields by structure | formApi.setError(field: string, error: string \| string[]) |
 | getError | Get the error information of a Field (an array of strings); a parent path returns an object of the errors of its child fields, and undefined when there is no error | formApi.getError(field: string) |
 | getFieldExist | Get whether the field exists in the Form | formApi.getFieldExist(field: string) |
-| scrollToField | Scroll to the specified field, the second input parameter will be passed to scroll-into-view-if-needed | formApi.scrollToField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
+| scrollToField | Scroll to the field, array or object node at a path; the second parameter is passed to scroll-into-view-if-needed. When the path is not rendered, the Form's `onRevealField` is called first and the Form waits up to a second. Returns a Promise that resolves after scrolling | formApi.scrollToField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
+| focusField | Same as scrollToField, then focuses the first focusable control inside, skipping the tooltip button beside the label | formApi.focusField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
 | scrollToError | Scroll to the field with validation error. You can pass a specified field or index. If you pass index, scroll to the index-th error DOM. If you do not pass any parameters, scroll to the first validation error position in the DOM tree. | formApi.scrollToError(<ApiType detail='{field?: string; index?: number; scrollOpts?: ScrollIntoViewOptions }'>ScrollToErrorOptions</ApiType>) |
 
 ### How to access formApi

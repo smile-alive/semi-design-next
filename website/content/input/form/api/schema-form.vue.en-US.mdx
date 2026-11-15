@@ -18,7 +18,8 @@ import ApiType from '#/components/ApiType.astro';
 | labelPosition | The labelPosition of Form. | `"inset" \| "left" \| "top"` | `undefined` |
 | labelWidth | The labelWidth of Form. | `string \| number` | `undefined` |
 | layout | The layout of Form. | `"horizontal" \| "vertical"` | `undefined` |
-| renderField | The renderField of SchemaField. | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
+| renderers | The renderers of SchemaField. Pass `semiRenderers` for the default UI; without it no field renders. | `SchemaFieldRenderers` | `semiGlobalDefault("SchemaForm", "renderers")` |
+| renderField | The renderField of SchemaField. | <ApiType detail={"Record\u003cstring, (context: SchemaFieldContext) => VNodeChild>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "renderField")` |
 | schema | A Standard Schema object (Zod, Valibot, ArkType and so on) that validates the form and, when it implements Standard JSON Schema, gives the JSON Schema to render. Once all fields pass, the `submit` event receives the schema's output. | <ApiType detail={"FormSchema\u003cValues, Output>"}>Type</ApiType> | `undefined` |
 | schemaDebounce | The schemaDebounce of Form. | `number` | `undefined` |
 | showValidateIcon | The showValidateIcon of Form. | `boolean` | `undefined` |
@@ -26,7 +27,6 @@ import ApiType from '#/components/ApiType.astro';
 | stopValidateWithError | The stopValidateWithError of Form. | `boolean` | `undefined` |
 | trigger | The trigger of Form. | `FieldValidateTriggerType` | `undefined` |
 | validator | Form-level validation, exclusive with `schema`; works as the validator of Form. | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | `undefined` |
-| widgets | The widgets of SchemaField. | <ApiType detail={"Record\u003cstring, Component>"}>Type</ApiType> | `semiGlobalDefault("SchemaForm", "widgets")` |
 | wrapperCol | The wrapperCol of Form. | `ColProps` | `undefined` |
 
 **Events**
