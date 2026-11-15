@@ -818,7 +818,7 @@ describe('Tooltip 顶层弹层（浏览器）', () => {
     });
 
     it('弹层不在触发器所在的 DOM 里：表单内回车不提交外层表单，label 内点击不切换复选框，不继承触发器处的文字样式', async () => {
-        const onSubmit = vi.fn<(e: React.FormEvent) => void>((e) => e.preventDefault());
+        const onSubmit = vi.fn<(e: React.SubmitEvent) => void>((e) => e.preventDefault());
         render(
             <form onSubmit={onSubmit}>
                 <label style={{ whiteSpace: 'nowrap', fontWeight: 700 }}>
