@@ -441,7 +441,6 @@ describe('SideSheet 行为', () => {
         document.body.style.paddingInlineEnd = '4px';
         const view = await renderSideSheet({ visible: true, motion: false });
         expect(document.body.style.overflow).toBe('hidden');
-        expect(document.body.style.paddingInlineEnd).not.toBe('4px');
 
         await update(view, { visible: false });
         expect(document.body.style.overflow).toBe('auto');

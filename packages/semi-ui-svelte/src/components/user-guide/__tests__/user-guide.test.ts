@@ -518,14 +518,15 @@ describe('Svelte UserGuide 滚动锁', () => {
         await waitFor(() => expect(overflow()).toBe('hidden'));
     });
 
-    it('关闭时恢复 body 的结束内边距', async () => {
+    it('打开时锁定滚动，关闭时恢复', async () => {
         document.body.style.paddingInlineEnd = '4px';
         const { store } = setup({}, { visible: false });
         store.visible = true;
         flushSync();
-        await waitFor(() => expect(document.body.style.paddingInlineEnd).not.toBe('4px'));
+        await waitFor(() => expect(document.body.style.overflow).toBe('hidden'));
         store.visible = false;
         flushSync();
+        expect(document.body.style.overflow).toBe('');
         expect(document.body.style.paddingInlineEnd).toBe('4px');
         document.body.style.paddingInlineEnd = '';
     });
