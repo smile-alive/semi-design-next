@@ -4,9 +4,10 @@ import { lockBodyScroll } from '../scroll-lock';
 describe('lockBodyScroll', () => {
     afterEach(() => {
         document.body.removeAttribute('style');
+        document.documentElement.removeAttribute('style');
     });
 
-    it('只有最后一个锁释放时才恢复页面滚动', () => {
+    it('只有最后一个锁释放时才恢复页面滚动，锁定期间保留滚动条槽', () => {
         // a 15px scrollbar
         const clientWidth = vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(window.innerWidth - 15);
         onTestFinished(() => clientWidth.mockRestore());
@@ -14,9 +15,8 @@ describe('lockBodyScroll', () => {
         const releaseFirst = lockBodyScroll();
         const releaseSecond = lockBodyScroll();
         expect(document.body.style.overflow).toBe('hidden');
-        // jsdom folds the calc and has no layout, so only check that the padding grew
-        expect(document.body.style.paddingInlineEnd).toMatch(/^calc\(\d+px\)$/);
-        expect(document.body.style.paddingInlineEnd).not.toBe('calc(4px)');
+        expect(document.documentElement.style.scrollbarGutter).toBe('stable');
+        expect(document.body.style.paddingInlineEnd).toBe('4px');
 
         releaseFirst();
         releaseFirst();
@@ -24,6 +24,7 @@ describe('lockBodyScroll', () => {
 
         releaseSecond();
         expect(document.body.style.overflow).toBe('');
+        expect(document.documentElement.style.scrollbarGutter).toBe('');
         expect(document.body.style.paddingInlineEnd).toBe('4px');
     });
 

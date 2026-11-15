@@ -1,23 +1,29 @@
+import { supportsScrollbarGutter } from './supports';
+
 let lockCount = 0;
-// body styles from before the first lock; null when the page had already hidden the overflow, which is then left alone
-let restore: { overflow: string; paddingInlineEnd: string } | null = null;
+// page styles from before the first lock; null when the page had already hidden the overflow, which is then left alone
+let restore: { overflow: string; paddingInlineEnd: string; scrollbarGutter: string } | null = null;
 
 /**
- * Locks are counted, so stacked overlays release the page only when the last one closes. The body's end padding grows
- * by the scrollbar width, so the page does not shift sideways when its scrollbar disappears; padding rather than width
- * keeps the body's own margin and any width set by the page's stylesheet.
+ * Locks are counted, so stacked overlays release the page only when the last one closes. While the page shows a
+ * scrollbar, the root keeps its gutter, so nothing shifts sideways when the scrollbar disappears, fixed elements
+ * included. Without scrollbar-gutter the body's end padding grows by the scrollbar width instead, which fixed elements
+ * do not follow; padding rather than width keeps the body's own margin and any width set by the page's stylesheet.
  */
 export function lockBodyScroll() {
     if (lockCount === 0) {
-        const { style } = document.body;
-        if (style.overflow === 'hidden') {
+        const { body, documentElement: root } = document;
+        if (body.style.overflow === 'hidden') {
             restore = null;
         } else {
-            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-            const padding = getComputedStyle(document.body).paddingInlineEnd;
-            restore = { overflow: style.overflow, paddingInlineEnd: style.paddingInlineEnd };
-            style.overflow = 'hidden';
-            style.paddingInlineEnd = `calc(${padding} + ${scrollbarWidth}px)`;
+            const scrollbarWidth = window.innerWidth - root.clientWidth;
+            restore = { overflow: body.style.overflow, paddingInlineEnd: body.style.paddingInlineEnd, scrollbarGutter: root.style.scrollbarGutter };
+            body.style.overflow = 'hidden';
+            if (scrollbarWidth > 0 && supportsScrollbarGutter()) {
+                root.style.scrollbarGutter = 'stable';
+            } else if (scrollbarWidth > 0) {
+                body.style.paddingInlineEnd = `calc(${getComputedStyle(body).paddingInlineEnd} + ${scrollbarWidth}px)`;
+            }
         }
     }
     lockCount++;
@@ -31,6 +37,7 @@ export function lockBodyScroll() {
         if (lockCount === 0 && restore) {
             document.body.style.overflow = restore.overflow;
             document.body.style.paddingInlineEnd = restore.paddingInlineEnd;
+            document.documentElement.style.scrollbarGutter = restore.scrollbarGutter;
             restore = null;
         }
     };

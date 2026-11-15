@@ -4,6 +4,13 @@
 
 let containerOption: boolean | undefined;
 let focusVisibleOption: boolean | undefined;
+let scrollbarGutter: boolean | undefined;
+
+/** CSS `scrollbar-gutter`. Removable once the oldest supported Safari is 18.2. */
+export function supportsScrollbarGutter() {
+    scrollbarGutter ??= CSS.supports('scrollbar-gutter', 'stable');
+    return scrollbarGutter;
+}
 
 /**
  * `scrollIntoView({ container: 'nearest' })` limits scrolling to the nearest scroller.
