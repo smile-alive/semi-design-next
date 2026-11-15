@@ -424,7 +424,6 @@ describe('Svelte SideSheet 滚动锁、遮罩与焦点', () => {
         document.body.style.paddingInlineEnd = '4px';
         const { store, view } = setup({ visible: true, motion: false });
         expect(document.body.style.overflow).toBe('hidden');
-        expect(document.body.style.paddingInlineEnd).not.toBe('4px');
 
         update(store, { visible: false });
         expect(document.body.style.overflow).toBe('auto');

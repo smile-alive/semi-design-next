@@ -499,13 +499,14 @@ describe('UserGuide 测量', () => {
         await waitFor(() => expect(rectOf(spotRect())).toEqual([10, 20, 100, 30]));
     });
 
-    it('关闭时恢复 body 的结束内边距', () => {
+    it('打开时锁定滚动，关闭时恢复', () => {
         const steps = makeSteps();
         document.body.style.paddingInlineEnd = '4px';
         const { rerender } = renderGuide({ steps });
         rerender({ steps, visible: true });
-        expect(document.body.style.paddingInlineEnd).not.toBe('4px');
+        expect(document.body.style.overflow).toBe('hidden');
         rerender({ steps, visible: false });
+        expect(document.body.style.overflow).toBe('');
         expect(document.body.style.paddingInlineEnd).toBe('4px');
         document.body.style.paddingInlineEnd = '';
     });

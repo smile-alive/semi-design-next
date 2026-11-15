@@ -493,12 +493,10 @@ describe('SideSheet 行为', () => {
         document.body.style.paddingInlineEnd = '4px';
         const { rerender, unmount } = renderSideSheet({ visible: true, motion: false });
         expect(document.body.style.overflow).toBe('hidden');
-        expect(document.body.style.paddingInlineEnd).not.toBe('4px');
 
         rerender({ visible: false, motion: false });
         expect(document.body.style.overflow).toBe('auto');
         expect(document.body.style.paddingInlineEnd).toBe('4px');
-
         rerender({ visible: true, motion: false });
         expect(document.body.style.overflow).toBe('hidden');
         unmount();

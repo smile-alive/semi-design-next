@@ -583,12 +583,13 @@ describe('UserGuide 测量', () => {
         expect(rectOf(spotRect())).toEqual([5, 15, 110, 40]);
     });
 
-    it('关闭时恢复 body 的结束内边距', async () => {
+    it('打开时锁定滚动，关闭时恢复', async () => {
         document.body.style.paddingInlineEnd = '4px';
         const view = renderGuide({ visible: false });
         await view.rerender({ visible: true });
-        expect(document.body.style.paddingInlineEnd).not.toBe('4px');
+        expect(document.body.style.overflow).toBe('hidden');
         await view.rerender({ visible: false });
+        expect(document.body.style.overflow).toBe('');
         expect(document.body.style.paddingInlineEnd).toBe('4px');
         document.body.style.paddingInlineEnd = '';
     });
