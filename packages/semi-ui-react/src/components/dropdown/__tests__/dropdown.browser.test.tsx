@@ -1,4 +1,4 @@
-import type { FormEvent, MouseEvent as ReactMouseEvent } from 'react';
+import type { MouseEvent as ReactMouseEvent, SubmitEvent } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
@@ -68,7 +68,7 @@ describe('Dropdown 键盘操作（浏览器）', () => {
     });
 
     it('文本输入框作触发器时，Enter 照常隐式提交表单而不打开菜单', async () => {
-        const onSubmit = vi.fn<(event: FormEvent) => void>((event) => event.preventDefault());
+        const onSubmit = vi.fn<(event: SubmitEvent) => void>((event) => event.preventDefault());
         render(
             <form onSubmit={onSubmit}>
                 <Dropdown menu={[{ node: 'item', name: 'Alpha' }]} motion={false} trigger="click">

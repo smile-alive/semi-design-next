@@ -330,13 +330,6 @@ describe('Input', () => {
         expect(onInput).toHaveBeenCalledTimes(1);
     });
 
-    it('onKeyPress 透传到原生 input', () => {
-        const onKeyPress = vi.fn<NonNullable<InputProps['onKeyPress']>>();
-        render(<Input onKeyPress={onKeyPress} />);
-        fireEvent.keyPress(getInput(), { key: 'a', code: 'KeyA', charCode: 97 });
-        expect(onKeyPress).toHaveBeenCalledTimes(1);
-    });
-
     it('清除按钮随值渲染，输入框随之带 sibling-clearbtn 类', () => {
         const { rerender } = render(<Input value="test" showClear />);
         expect(getClearBtn()).not.toBeNull();

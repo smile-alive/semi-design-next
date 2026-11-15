@@ -4,7 +4,7 @@
     const gradientId = `linearGradient-${uid}`;
 </script>
 
-<svg aria-hidden="true" data-icon="spin" height="48" version="1.1" viewBox="0 0 36 36" width="48" xmlns="http://www.w3.org/2000/svg">
+<svg aria-hidden="true" data-icon="spin" height="48" viewBox="0 0 36 36" width="48" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <linearGradient id={gradientId} x1="0%" x2="100%" y1="100%" y2="100%">
             <stop offset="0%" stop-color="currentColor" stop-opacity="0" />
