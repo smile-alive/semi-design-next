@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffectEvent, useLayoutEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
@@ -146,9 +147,10 @@ export default function TableHeaderRow({ components, row, prefixCls = cssClasses
         return headerCellNode;
     });
 
-    // The measured widths give the sticky offsets of fixed columns. Measured when the columns change, not on every
-    // render, since reading layout after a DOM update forces a reflow; the cells of this row are the columns at its level
-    useLayoutEffect(() => {
+    // The measured widths give the sticky offsets of fixed columns. Measured when the columns change or the row resizes
+    // (a column without a number width follows the table's width), not on every render, since reading layout after a
+    // DOM update forces a reflow; the cells of this row are the columns at its level
+    const measureHeadWidths = useEffectEvent(() => {
         const node = rowRef.current;
         if (node && setHeadWidths) {
             const levelColumns = getColumnsByLevel(columns, index);
@@ -167,7 +169,21 @@ export default function TableHeaderRow({ components, row, prefixCls = cssClasses
                 index
             );
         }
-    }, [columns, bodyHasScrollBar, setHeadWidths, prefixCls, index]);
+    });
+
+    useLayoutEffect(() => measureHeadWidths(), [columns, bodyHasScrollBar, setHeadWidths, prefixCls, index]);
+
+    useLayoutEffect(() => {
+        // a custom components.header.row may not pass the ref on
+        if (!rowRef.current) {
+            return undefined;
+        }
+        // an update from a ResizeObserver callback renders in a later task, so the browser would first paint frames with
+        // the old offsets; flushSync commits it before this frame paints
+        const observer = new ResizeObserver(() => flushSync(() => measureHeadWidths()));
+        observer.observe(rowRef.current);
+        return () => observer.disconnect();
+    }, []);
 
     return (
         <HeaderRow role="row" {...rowProps} ref={rowRef} style={style}>

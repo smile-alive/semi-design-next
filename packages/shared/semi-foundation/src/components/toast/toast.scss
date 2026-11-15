@@ -86,7 +86,8 @@ $icon: #{$prefix}-toast-icon;
         justify-content: center;
         padding-block: $spacing-toast_content-paddingTop $spacing-toast_content-paddingBottom;
         padding-inline: $spacing-toast_content-paddingLeft $spacing-toast_content-paddingRight;
-        margin: $spacing-toast_content-margin;
+        // no bottom margin: the gap between stacked toasts equals the first toast's distance from the top
+        margin: $spacing-toast_content-margin $spacing-toast_content-margin 0;
         font-weight: $font-toast_content-fontWeight;
         color: $color-toast-text-default;
         pointer-events: all;

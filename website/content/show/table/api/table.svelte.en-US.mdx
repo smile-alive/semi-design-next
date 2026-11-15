@@ -57,7 +57,7 @@ import ApiType from '#/components/ApiType.astro';
 | rowKey | The row key: a record field name, or a function that returns a string or a number. | <ApiType detail={"TableRowKey\u003cR>"}>Type</ApiType> | `"key"` |
 | rowSelection | The row selection configuration. Pass true for the defaults, see rowSelection. | <ApiType detail={"boolean \u007c RowSelectionProps\u003cR>"}>Type</ApiType> | - |
 | rowSpanHover | Hovering a cell with rowspan highlights every row the cell spans. | `boolean` | `false` |
-| scroll | The scroll area: x is the width and y the height, see scroll. | `TableScroll` | - |
+| scroll | The scroll area: x is the width and y the maximum height, header included, see scroll. | `TableScroll` | - |
 | selectedRowKeys | The keys of the selected rows, bound with `bind:selectedRowKeys` and written back when the selection changes. It wins over `rowSelection.selectedRowKeys`. Pass `rowSelection` as well to show the selection column. | `(string \| number)[]` | - |
 | selectionCell | A cell of the selection column, called for the header and the rows, with selected, inHeader, originNode (the default checkbox) and more. Render originNode to keep the default checkbox. | <ApiType detail={"Snippet\u003c[TableSelectionCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | showHeader | Whether to show the header. | `boolean` | `true` |

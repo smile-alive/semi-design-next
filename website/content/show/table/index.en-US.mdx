@@ -2503,7 +2503,7 @@ Table follows the [WAI-ARIA Table](https://www.w3.org/WAI/ARIA/apg/patterns/tabl
 - The sort button is a native `button` in the header cell, named by the column title. The sort direction is `aria-sort` on the header cell (`ascending` or `descending`); unsorted columns do not carry it. The `showSortTip` tip shows when the button is focused
 - The expand button is a native `button` named "Expand this row", with `aria-expanded` telling whether the row is expanded
 - The row selection checkboxes have accessible names such as "Select this row" and "Select all rows"
-- With a fixed header (`scroll.y`, `sticky`) or virtualization, the header and the body render as two table elements; their common container has the table role and the inner tables have role none, so cells stay associated with their column headers
+- With `sticky` or virtualization, the header and the body render as two table elements; their common container has the table role and the inner tables have role none, so cells stay associated with their column headers
 - In a virtualized table `aria-rowcount` is the header row count plus the total data row count, and data rows' `aria-rowindex` continues after the header rows, so screen readers announce rows that are not in the DOM
 
 <Framework only="react">

@@ -124,8 +124,9 @@
         return { ...custom, class: [customClass, `${table.prefixCls}-row`] };
     });
 
-    // The measured widths give the sticky offsets of fixed columns; measured when the columns change, not on every
-    // render, since reading layout after a DOM update forces a reflow
+    // The measured widths give the sticky offsets of fixed columns; measured when the columns change or the row resizes
+    // (a column without a number width follows the table's width), not on every render, since reading layout after a
+    // DOM update forces a reflow
     const measure = (node: HTMLElement) => {
         const levelColumns = getColumnsByLevel(columns, index) as ColumnProps[];
         const heads = node.querySelectorAll(`.${table.prefixCls}-row-head`);
@@ -171,6 +172,16 @@
         if (row) {
             untrack(() => measure(row));
         }
+    });
+
+    $effect(() => {
+        const row = rowElement;
+        if (!row) {
+            return;
+        }
+        const observer = new ResizeObserver(() => measure(row));
+        observer.observe(row);
+        return () => observer.disconnect();
     });
 </script>
 

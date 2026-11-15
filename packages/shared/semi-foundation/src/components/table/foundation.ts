@@ -158,6 +158,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     // Without `scroll-state` container queries (Chrome < 133) the fixed-column shadows follow data attributes written by
     // syncScrollEdges. Removable once Firefox and Safari support `container-type: scroll-state`.
     #trackScrollEdges: boolean | undefined;
+    #headerFollowsInCss: boolean | undefined;
     // Shift+click works like Finder: the anchor is the last row clicked without Shift, and each Shift+click replaces the
     // previous range, so the selection from before the first Shift+click is kept to apply the new range to. When the
     // selection no longer matches the last range's result, something else changed it and it becomes the new base.
@@ -1150,6 +1151,19 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         if (body) {
             TableFoundation.#syncScrollableEdges(body);
         }
+    };
+
+    /**
+     * Whether a sticky header follows the body through a scroll-driven animation, which the compositor runs in the
+     * frame it scrolls the body, rather than through scrollLeft writes a frame late. Probed after mount, like
+     * syncScrollEdges. Removable with the scrollLeft path once Chrome 116, Firefox 159 and Safari 26 are the minimum.
+     */
+    headerFollowsInCss = () => (this.#headerFollowsInCss ??= CSS.supports('timeline-scope', '--semi-table-body-x'));
+
+    /** Hosts call it after commits and body resizes of a sticky table: the distance the header's animation spans */
+    syncHeaderScrollRange = () => {
+        const body = this.headerFollowsInCss() ? this.adapter.getBodyWrapper() : null;
+        body?.parentElement?.style.setProperty('--semi-table-scroll-range', `${body.scrollWidth - body.clientWidth}px`);
     };
 
     /** `index` is the header row the widths were measured in */

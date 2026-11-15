@@ -46,6 +46,11 @@ export interface VirtualListProps<T> extends ElementProps<'div', 'children' | 'r
     /** Identity of a row: a row keeps its DOM nodes while its key stays in view. The index when absent */
     itemKey?: (index: number, data: T) => PropertyKey;
     overscan?: number;
+    /**
+     * Height of content the outer element renders above the inner element, such as a sticky header: rows start this
+     * far down, and a row scrolled to the start lands below it
+     */
+    scrollMargin?: number;
     /** Receives `ref`, `style`, `onScroll` and `children` and must land them on its scroll element */
     outerElementType?: ValidComponent;
     /** Receives `style` and `children` (the rows) */
@@ -62,7 +67,7 @@ export interface VirtualListProps<T> extends ElementProps<'div', 'children' | 'r
  * only stop.
  */
 export default function VirtualList<T>(props: VirtualListProps<T>) {
-    const [local, rest] = splitProps(props, ['ref', 'outerRef', 'height', 'width', 'itemCount', 'itemSize', 'itemData', 'itemKey', 'overscan', 'outerElementType', 'innerElementType', 'onScroll', 'style', 'children']);
+    const [local, rest] = splitProps(props, ['ref', 'outerRef', 'height', 'width', 'itemCount', 'itemSize', 'itemData', 'itemKey', 'overscan', 'scrollMargin', 'outerElementType', 'innerElementType', 'onScroll', 'style', 'children']);
 
     let scroller: HTMLDivElement | undefined;
     let reportRect: ((rect: Rect) => void) | undefined;
@@ -78,6 +83,12 @@ export default function VirtualList<T>(props: VirtualListProps<T>) {
         estimateSize: (index) => (typeof local.itemSize === 'number' ? local.itemSize : local.itemSize(index)),
         get overscan() {
             return local.overscan ?? 2;
+        },
+        get scrollMargin() {
+            return local.scrollMargin ?? 0;
+        },
+        get scrollPaddingStart() {
+            return local.scrollMargin ?? 0;
         },
         // The viewport size is the height prop: measuring reads 0 in jsdom and needs a ResizeObserver to follow a change
         get initialRect() {

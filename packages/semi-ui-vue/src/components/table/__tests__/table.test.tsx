@@ -495,7 +495,7 @@ describe('Table 回归用例', () => {
             onHeaderRow: () => ({ onClick: onHeaderRowClick, class: 'test-header-row' }),
         });
         const headerRow = screen.getByText('标题').closest('tr');
-        expect(headerRow?.closest(`.${P}-header`)).not.toBeNull();
+        expect(headerRow?.closest(`.${P}-body`)).not.toBeNull();
         expect(headerRow).toHaveClass('test-header-row');
         await userEvent.click(screen.getByText('标题'));
         expect(onHeaderRowClick).toHaveBeenCalledTimes(1);
@@ -504,14 +504,14 @@ describe('Table 回归用例', () => {
     it('全局注册 Table 时内部的 table 元素不解析为 Table 组件', () => {
         const columns = [{ title: 'Name', dataIndex: 'name' }];
         render(Table, { props: { columns, dataSource: smallData() }, global: { components: { Table } } });
-        render(Table, { props: { columns, dataSource: smallData(), scroll: { y: 300 } }, global: { components: { Table } } });
+        render(Table, { props: { columns, dataSource: smallData(), sticky: true }, global: { components: { Table } } });
         expect(queryAll(`table.${P}`)).toHaveLength(3);
     });
 
     it('全局注册 Col 时 colgroup 里渲染原生 col', () => {
         const columns = [{ title: 'Name', dataIndex: 'name', width: 100 }];
         render(Table, { props: { columns, dataSource: smallData() }, global: { components: { Col } } });
-        render(Table, { props: { columns, dataSource: smallData(), scroll: { y: 300 } }, global: { components: { Col } } });
+        render(Table, { props: { columns, dataSource: smallData(), sticky: true }, global: { components: { Col } } });
         expect(queryAll(`colgroup > col.${P}-col`)).toHaveLength(3);
         expect(queryAll(`.${P}-colgroup div`)).toHaveLength(0);
     });
@@ -530,7 +530,7 @@ describe('Table 回归用例', () => {
 describe('Table 行为基线', () => {
     const getNames = () => getBodyRows().map((row) => row.querySelector(`.${P}-row-cell`)?.textContent);
 
-    it('固定列和固定表头获得 sticky 偏移，表体滚动同步到表头', async () => {
+    it('scroll.y 时表头在表体的滚动容器里，固定列获得 sticky 偏移', async () => {
         const { container } = mountTable({
             columns: getColumns(),
             dataSource: getData(3),
@@ -538,16 +538,31 @@ describe('Table 行为基线', () => {
             scroll: { x: 1200, y: 300 },
         });
         expect(container.querySelector(`.${P}-wrapper`)).toHaveAttribute('data-column-fixed', 'true');
-        expect(container.querySelector(`.${P}-header`)).toBeInTheDocument();
+        expect(container.querySelector(`.${P}-header`)).not.toBeInTheDocument();
         const body = getElement(`.${P}-body`, container);
         expect(body).toHaveStyle({ maxHeight: '300px' });
+        expect(body.querySelector(`.${P}-thead`)).toBeInTheDocument();
         await nextTick();
         const heads = getHeads();
         expect(heads[0]).toHaveStyle({ position: 'sticky', left: '0px' });
         expect(heads[heads.length - 1]).toHaveStyle({ position: 'sticky', right: '0px' });
+    });
+
+    it('sticky 表头在不支持滚动驱动动画时由表体滚动同步', async () => {
+        vi.spyOn(CSS, 'supports').mockReturnValue(false);
+        const { container } = mountTable({
+            columns: getColumns(),
+            dataSource: getData(3),
+            pagination: false,
+            scroll: { x: 1200 },
+            sticky: true,
+        });
+        const header = container.querySelector(`.${P}-header`);
+        expect(header).toBeInTheDocument();
+        const body = getElement(`.${P}-body`, container);
         Object.defineProperty(body, 'scrollLeft', { value: 1200, configurable: true });
         await fireEvent.scroll(body);
-        expect(container.querySelector(`.${P}-header`)?.scrollLeft).toBe(1200);
+        expect(header?.scrollLeft).toBe(1200);
     });
 
     it('virtualized 只渲染一段行窗口，并通过 expose 滚动', async () => {
@@ -582,7 +597,7 @@ describe('Table 行为基线', () => {
         expect(getBodyRows()[1]).toHaveStyle({ top: '80px', height: '80px' });
     });
 
-    it('virtualized 关闭再打开后，虚拟表体横向滚动仍同步到表头', async () => {
+    it('virtualized 关闭再打开后，表头仍在虚拟表体的滚动容器里', async () => {
         const { container, update } = mountTable({
             columns: getColumns(),
             dataSource: getData(50),
@@ -595,9 +610,8 @@ describe('Table 行为基线', () => {
         await update({ props: { virtualized: true } });
         await waitFor(() => expect(getBodyRows().length).toBeGreaterThan(0));
         const body = getElement(`.${P}-body`, container);
-        Object.defineProperty(body, 'scrollLeft', { value: 600, configurable: true });
-        await fireEvent.scroll(body);
-        expect(container.querySelector(`.${P}-header`)?.scrollLeft).toBe(600);
+        expect(container.querySelector(`.${P}-header`)).toBeNull();
+        expect(body.querySelector(`.${P}-list-header`)).toBeInTheDocument();
     });
 
     it('sticky 表头使用顶部偏移', () => {
@@ -797,7 +811,6 @@ describe('Table 语义', () => {
     });
 
     it.each([
-        ['scroll.y', { scroll: { y: 200 } }],
         ['sticky', { sticky: true }],
         ['virtualized', { scroll: { y: 200 }, virtualized: true }],
     ])('%s 时，分开的表头和 body 表格构成一个 ARIA table', async (_name, extra) => {
@@ -826,7 +839,7 @@ describe('Table 语义', () => {
         expect(within(body).getAllByRole('cell').length).toBeGreaterThan(0);
     });
 
-    it('固定表头的合并单元格带有 aria-colspan 和 aria-rowspan', () => {
+    it('拆分表头的合并单元格带有 aria-colspan 和 aria-rowspan', () => {
         mountTable({
             columns: [
                 { title: 'Name', dataIndex: 'name', width: 200 },
@@ -840,7 +853,7 @@ describe('Table 语义', () => {
             ],
             dataSource: getData(3),
             pagination: false,
-            scroll: { y: 200 },
+            sticky: true,
         });
         const name = screen.getByRole('columnheader', { name: 'Name' });
         const detail = screen.getByRole('columnheader', { name: 'Detail' });
@@ -1257,7 +1270,7 @@ describe('Table Vue 写法', () => {
             columns,
             dataSource: getData(1),
             pagination: false,
-            scroll: { y: 200 },
+            sticky: true,
         });
         expect(screen.getByRole('table', { name: 'People' })).toHaveClass(`${P}-container`);
         expect(split.container.querySelector(`.${P}-wrapper`)).not.toHaveAttribute('aria-label');
@@ -1405,7 +1418,7 @@ describe('Table showHeader 为 false 且表头拆分', () => {
     const columns = (): ColumnProps[] => [{ title: 'Name', dataIndex: 'name', width: 200, sorter: (a, b) => a.name.localeCompare(b.name) }];
 
     it('隐藏的表头 inert，排序按钮在 inert 子树内', async () => {
-        mountTable({ columns: columns(), dataSource: getData(3), pagination: false, rowSelection: {}, scroll: { y: 300 }, showHeader: false });
+        mountTable({ columns: columns(), dataSource: getData(3), pagination: false, rowSelection: {}, showHeader: false, sticky: true });
         await nextTick();
         expect(document.querySelector(`.${P}-header`)).toHaveAttribute('inert');
         // jsdom ignores inert; the browser test checks the Tab order

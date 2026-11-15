@@ -36,6 +36,11 @@
             itemSize: number | ((index: number) => number);
             itemKey?: (index: number) => PropertyKey;
             overscan?: number;
+            /**
+             * Height of content the scroll container renders above the rows (the `before` slot), such as a sticky header:
+             * rows start this far down, and a row scrolled to the start lands below it
+             */
+            scrollMargin?: number;
             /** Element that holds the rows, such as `ul` for `li` rows, since a list's content model admits only items */
             innerTag?: string;
             innerAttrs?: Record<string, unknown>;
@@ -45,13 +50,15 @@
              */
             wrapperAttrs?: Record<string, unknown>;
         }>(),
-        { width: '100%', itemKey: undefined, overscan: 2, innerTag: 'div', innerAttrs: undefined, wrapperAttrs: undefined }
+        { width: '100%', itemKey: undefined, overscan: 2, scrollMargin: 0, innerTag: 'div', innerAttrs: undefined, wrapperAttrs: undefined }
     );
 
     const emit = defineEmits<{ scroll: [args: VirtualListScrollArgs] }>();
 
     defineSlots<{
         default(props: { index: number; style: CSSProperties }): unknown;
+        /** Content inside the scroll container before the rows, such as a sticky header; its height goes to `scrollMargin` */
+        before?(): unknown;
         /** Content inside the scroll container after the rows, such as an empty state */
         after?(): unknown;
     }>();
@@ -66,6 +73,8 @@
             getScrollElement: () => scroller.value,
             estimateSize: (index: number) => (typeof props.itemSize === 'number' ? props.itemSize : props.itemSize(index)),
             overscan: props.overscan,
+            scrollMargin: props.scrollMargin,
+            scrollPaddingStart: props.scrollMargin,
             // The viewport size is the height prop: measuring would read 0 in jsdom and needs a ResizeObserver to follow a
             // prop change
             initialRect: { width: 0, height: props.height },
@@ -134,6 +143,7 @@
 
 <template>
     <div ref="scroller" :style="{ position: 'relative', height: toCssLength(props.height), width: toCssLength(props.width), overflow: 'auto' }" @scroll="handleScroll">
+        <slot name="before" />
         <component :is="props.wrapperAttrs ? 'div' : SlotFragment" v-bind="props.wrapperAttrs">
             <component :is="props.innerTag" v-bind="props.innerAttrs" :style="{ height: toCssLength(virtualizer.getTotalSize()), width: '100%' }">
                 <template v-for="item in virtualizer.getVirtualItems()" :key="props.itemKey ? props.itemKey(item.index) : item.index">

@@ -166,7 +166,13 @@
     const showExpandIcon = $derived(expandIcon !== false);
     const fixedHeader = $derived(Boolean(scroll?.y) || Boolean(sticky));
     const isVirtualized = $derived(Boolean(virtualized));
-    const splitTable = $derived(fixedHeader || isVirtualized);
+
+    /**
+     * Elsewhere the header sits in the body's scroller, so the compositor moves both in the same frame. A header stuck
+     * to the page would be trapped by the body's overflow, so it renders as a separate table above the body
+     */
+    const headerApart = $derived(Boolean(sticky));
+    const splitTable = $derived(headerApart || isVirtualized);
     const mergedComponents = $derived(mergeComponents(components, isVirtualized));
     const paginationPosition = $derived(paginationOptions?.position ?? 'bottom');
     const formatPageText = $derived(paginationOptions?.formatPageText);
@@ -343,8 +349,13 @@
             return;
         }
         const scroller = body?.element();
-        if (target.scrollLeft !== lastScrollLeft) {
-            if (target === scroller && head) {
+        if (target === head && scroller && foundation.headerFollowsInCss()) {
+            // focus scrolled the clipped header to reveal a cell; the body takes the distance, and the header's
+            // animation follows it
+            scroller.scrollLeft += target.scrollLeft;
+            target.scrollLeft = 0;
+        } else if (target.scrollLeft !== lastScrollLeft) {
+            if (target === scroller && head && !foundation.headerFollowsInCss()) {
                 head.scrollLeft = target.scrollLeft;
             } else if (target === head && scroller) {
                 scroller.scrollLeft = target.scrollLeft;
@@ -591,6 +602,21 @@
         return () => observer.disconnect();
     });
 
+    // the content-box size changes with the body's scrollbar too; columns or rows that widen the table without
+    // resizing the body are caught after the update
+    $effect(() => {
+        void tableColumns;
+        void view.dataSource;
+        const node = body?.element();
+        if (!headerApart || !node) {
+            return;
+        }
+        untrack(foundation.syncHeaderScrollRange);
+        const observer = new ResizeObserver(foundation.syncHeaderScrollRange);
+        observer.observe(node);
+        return () => observer.disconnect();
+    });
+
     export function getCurrentPageData(): ReturnType<TableHandle['getCurrentPageData']> {
         return cloneDeep(foundation.getCurrentPageData());
     }
@@ -627,7 +653,7 @@
                 </div>
             {/if}
             <div {...splitTable ? nameAttrs : {}} aria-rowcount={isVirtualized ? headerRowCount + virtualizedData.length : undefined} class="{prefixCls}-container" role={splitTable ? 'table' : undefined}>
-                {#if fixedHeader}
+                {#if headerApart}
                     <HeadTable bind:element={head} columns={tableColumns} />
                 {/if}
                 <Body
@@ -636,7 +662,7 @@
                     dataSource={view.dataSource ?? []}
                     expandedRowKeys={view.expandedRowKeys ?? []}
                     groups={view.groups}
-                    includeHeader={!fixedHeader}
+                    includeHeader={!headerApart}
                     {onScroll}
                     pageDisabledRowKeysSet={view.pageDisabledRowKeysSet ?? EMPTY_KEYS}
                     tableAttrs={splitTable ? undefined : nameAttrs}

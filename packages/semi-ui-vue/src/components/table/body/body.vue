@@ -61,13 +61,18 @@
     // A function ref, not a string ref: under the one-item v-for Vue collects a string ref into an array and pushes into
     // it in place when the list remounts (virtualized off and on), so the watch sources below would never see the new list
     const listRef = shallowRef<InstanceType<typeof VirtualList> | null>(null);
+
+    // function ref: the header sits under the one-item v-for below, which collects a string ref into an array
+    const listHeaderElement = shallowRef<HTMLElement | null>(null);
+    const listHeaderHeight = shallowRef(0);
     const hoveredRowKey = shallowRef<BaseRowKeyType | null>(null);
     const highlighted = shallowRef<Set<string>>(new Set());
 
     // itemSize runs for every row on each measure; one warning is enough
     let itemSizeWarned = false;
 
-    // with scroll.y the header is a separate table that reserves the width of a vertical scrollbar the body shows
+    // a separate header reserves the width of a vertical scrollbar the body shows (#1219); any header re-measures the
+    // fixed-column offsets once the scrollbar narrows the columns
     const scheduleFrame = useRaf();
 
     const expandBtnInRow = computed(() => {
@@ -113,6 +118,10 @@
         listRef.value = instance as InstanceType<typeof VirtualList> | null;
     };
 
+    const setListHeader = (element: unknown) => {
+        listHeaderElement.value = element as HTMLElement | null;
+    };
+
     const bodyElement = () => bodyRef.value ?? toElement(listRef.value);
 
     const handleRowHover = (hovered: boolean, rowKey: BaseRowKeyType) => {
@@ -146,16 +155,16 @@
 
     const virtualBody = () => {
         const { scroll, virtualizedProps, size, prefixCls, direction } = table.view.value;
+        // the header measures the widths, so it renders before the rows have any
         const cellWidths = table.getCellWidths(props.columns);
-        if (!cellWidths.length) {
-            return null;
-        }
+        const hasWidths = cellWidths.length > 0;
         const yIsNumber = typeof scroll?.y === 'number';
         const y = yIsNumber ? (scroll?.y as number) : numbers.DEFAULT_VIRTUALIZED_BODY_HEIGHT;
-        const rowWidth = arrayAdd(cellWidths, 0, props.columns.length);
+        const rowWidth = hasWidths ? arrayAdd(cellWidths, 0, props.columns.length) : 0;
         const hasRows = props.virtualizedData.length > 0;
         return {
             rowWidth,
+            itemCount: hasWidths ? props.virtualizedData.length : 0,
             height: hasRows ? y : 0,
             // null, which StyleValue does not type, removes the list's own height; undefined would remove it too
             style: (hasRows ? { direction } : { direction, height: null }) as StyleValue,
@@ -197,8 +206,9 @@
     // a scrolling body must be keyboard reachable even without a focusable cell
     const scrollable = () => Boolean(table.view.value.scroll?.y) || overflows.value;
 
+    // a separate (sticky) header reserves the width of a vertical scrollbar the body shows (#1219)
     useResizeObserver(
-        () => (table.view.value.scroll?.y ? bodyElement() : null),
+        () => (table.view.value.scroll?.y && !props.includeHeader ? bodyElement() : null),
         () =>
             scheduleFrame(() => {
                 const node = bodyElement();
@@ -207,6 +217,10 @@
                 }
             })
     );
+
+    useResizeObserver(listHeaderElement, () => {
+        listHeaderHeight.value = listHeaderElement.value?.offsetHeight ?? 0;
+    });
 
     // a scroll.y body scrolls anyway; the table is observed too, as new columns or rows can overflow the body without
     // resizing it
@@ -243,20 +257,29 @@
     <template v-if="table.view.value.virtualized">
         <template v-for="(list, listIndex) in [virtualBody()]" :key="listIndex">
             <VirtualList
-                v-if="list"
                 :ref="setList"
                 :class="`${table.view.value.prefixCls}-body`"
                 :height="list.height"
                 :innerAttrs="{ class: `${table.view.value.prefixCls}-tbody`, role: 'rowgroup' }"
-                :itemCount="props.virtualizedData.length"
+                :itemCount="list.itemCount"
                 :itemKey="virtualKey"
                 :itemSize="list.itemSize"
                 :overscan="table.view.value.virtualizedProps?.overscanCount"
+                :scrollMargin="props.includeHeader ? listHeaderHeight : 0"
                 :style="list.style"
                 tabindex="0"
                 :wrapperAttrs="list.wrapperAttrs"
                 @scroll="(...args) => emit('scroll', ...args)"
             >
+                <!-- a hidden header stays for its column widths; inert keeps its controls out of the Tab order and the a11y tree -->
+                <template v-if="props.includeHeader" #before>
+                    <div :ref="setListHeader" :class="`${table.view.value.prefixCls}-list-header`" :inert="!table.view.value.showHeader">
+                        <component :is="table.view.value.components.header.outer" :class="[table.view.value.prefixCls, `${table.view.value.prefixCls}-fixed`]" role="none" :style="{ width: toCssLength(table.view.value.scroll?.x), minWidth: toCssLength(getColumnsMinWidth(table.view.value.flattenedColumns)) }">
+                            <ColGroup :columns="props.columns" :prefixCls="table.view.value.prefixCls" />
+                            <TableHeader :columns="props.columns" :hidden="!table.view.value.showHeader" />
+                        </component>
+                    </div>
+                </template>
                 <template #default="{ index, style }">
                     <template v-for="item in [virtualItem(index)]" :key="item.key">
                         <SectionRow v-if="item.sectionRow" :expanded="Boolean(item.expanded)" :group="item.group!" :groupKey="item.groupKey!" :index="index" :records="groupRecords(item.group!)" :style="{ ...style, width: toCssLength(list.rowWidth) }" />

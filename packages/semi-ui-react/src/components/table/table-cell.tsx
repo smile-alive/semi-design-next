@@ -112,8 +112,6 @@ function TableCell({
      * be compatible with object-path's behavior, we return the record object instead.
      */
     let text: any;
-    let colSpan: number;
-    let rowSpan: number;
 
     if (typeof dataIndex === 'number') {
         text = get(record, dataIndex);
@@ -148,13 +146,12 @@ function TableCell({
             const { className: renderedClassName, ...renderedProps } = text.props ?? {};
             renderClassName = renderedClassName;
             tdProps = merge(tdProps, renderedProps);
-            colSpan = tdProps.colSpan;
-            rowSpan = tdProps.rowSpan;
             text = text.children;
         }
     }
 
-    if (rowSpan === 0 || colSpan === 0) {
+    // a 0 span from onCell or from render's props leaves out the cell another cell spans over
+    if (tdProps.rowSpan === 0 || tdProps.colSpan === 0) {
         return null;
     }
 

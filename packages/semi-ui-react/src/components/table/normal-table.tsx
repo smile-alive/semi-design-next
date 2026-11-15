@@ -356,9 +356,13 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
     const view: NormalTableState<RecordType> = derived ? { ...state, ...derived } : state;
     const { queries, rowSelection, pagination, expandedRowKeys, headWidths, bodyHasScrollBar } = view;
     const bothColumnsGiven = Boolean(propColumns && children);
-
-    // the header renders as a separate table above the body
     const fixedHeader = Boolean(scroll?.y) || Boolean(sticky);
+
+    /**
+     * Elsewhere the header sits in the body's scroller, so the compositor moves both in the same frame. A header stuck
+     * to the page would be trapped by the body's overflow, so it renders as a separate table above the body
+     */
+    const headerApart = Boolean(sticky);
     const hasExpandIcon = expandIcon !== false;
 
     // a new object on every render; the memo below follows its fields, so an inline rowSelection keeps the columns
@@ -390,7 +394,7 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
 
     // Screen readers associate cells with column headers only within one table: when the header and the body are
     // separate elements, their common container is the table
-    const splitTable = fixedHeader || Boolean(virtualized);
+    const splitTable = headerApart || Boolean(virtualized);
     const titleNode = typeof title === 'function' ? title(view.dataSource) : title;
 
     // the visible title names the table unless the user names it
@@ -434,8 +438,13 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
             const { target } = e;
             const headTable = headerWrapRef.current;
             const bodyTable = bodyWrapRef.current;
-            if (target.scrollLeft !== lastScrollLeft.current) {
-                if (target === bodyTable && headTable) {
+            if (target === headTable && bodyTable && foundation.headerFollowsInCss()) {
+                // focus scrolled the clipped header to reveal a cell; the body takes the distance, and the header's
+                // animation follows it
+                bodyTable.scrollLeft += target.scrollLeft;
+                target.scrollLeft = 0;
+            } else if (target.scrollLeft !== lastScrollLeft.current) {
+                if (target === bodyTable && headTable && !foundation.headerFollowsInCss()) {
                     headTable.scrollLeft = target.scrollLeft;
                 } else if (target === headTable && bodyTable) {
                     bodyTable.scrollLeft = target.scrollLeft;
@@ -520,6 +529,16 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
 
     useResizeObserver(rootWrapRef, foundation.syncScrollEdges, { enabled: anyColumnFixed });
 
+    // the content-box size changes with the body's scrollbar too; columns or rows that widen the table without
+    // resizing the body are caught by the commit
+    useLayoutEffect(() => {
+        if (headerApart) {
+            foundation.syncHeaderScrollRange();
+        }
+    });
+
+    useResizeObserver(bodyWrapRef, foundation.syncHeaderScrollRange, { enabled: headerApart });
+
     useEffect(() => {
         warning(bothColumnsGiven, '[Semi Table] columns should not given by object and children at the same time');
     }, [bothColumnsGiven]);
@@ -598,7 +617,7 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
                                 </div>
                             )}
                             <div className={`${prefixCls}-container`} aria-rowcount={virtualized ? headerRowCount + virtualizedData.length : undefined} role={splitTable ? 'table' : undefined} {...(splitTable ? tableAria : null)}>
-                                {fixedHeader && (
+                                {headerApart && (
                                     <HeadTable
                                         ref={headerWrapRef as React.Ref<HTMLDivElement>}
                                         bodyHasScrollBar={bodyHasScrollBar}
@@ -629,7 +648,7 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
                                     groups={view.groups}
                                     headerRef={headerWrapRef}
                                     hideExpandedColumn={hideExpandedColumn}
-                                    includeHeader={!fixedHeader}
+                                    includeHeader={!headerApart}
                                     indentSize={indentSize}
                                     keepDOM={keepDOM}
                                     pageDisabledRowKeysSet={view.pageDisabledRowKeysSet}

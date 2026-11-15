@@ -206,18 +206,24 @@ describe('Svelte Table 固定列与固定表头', () => {
         expect(cells[2].getAttribute('style')).toContain('right: 0px');
     });
 
-    it('scroll.y 把表头拆成单独的表，容器是 table，表体可滚动并可聚焦', () => {
-        mountTable({ columns: getColumns(), dataSource: getData(), pagination: false, scroll: { y: 200 }, 'aria-label': '用户' });
+    it('scroll.y 时表头在表体的滚动容器里，表体可滚动并可聚焦', () => {
+        mountTable({ columns: getColumns(), dataSource: getData(), pagination: false, scroll: { y: 200 } });
+        expect(query(`.${P}-header`)).toBeNull();
+        const body = query(`.${P}-body`);
+        expect(body.querySelector(`.${P}-thead`)).not.toBeNull();
+        expect(body.style.maxHeight).toBe('200px');
+        expect(body.tabIndex).toBe(0);
+        expect(query(`.${P}-fixed-header`)).not.toBeNull();
+    });
+
+    it('sticky 把表头拆成单独的表，容器是 table', () => {
+        mountTable({ columns: getColumns(), dataSource: getData(), pagination: false, sticky: true, 'aria-label': '用户' });
         const container = query(`.${P}-container`);
         expect(container.getAttribute('role')).toBe('table');
         expect(container.getAttribute('aria-label')).toBe('用户');
         expect(query(`.${P}-header table`).getAttribute('role')).toBe('none');
         expect(query(`.${P}-body table`).getAttribute('role')).toBe('none');
         expect(query(`.${P}-thead`).getAttribute('role')).toBe('rowgroup');
-        const body = query(`.${P}-body`);
-        expect(body.style.maxHeight).toBe('200px');
-        expect(body.tabIndex).toBe(0);
-        expect(query(`.${P}-fixed-header`)).not.toBeNull();
     });
 
     it('sticky 表头使用顶部偏移', () => {

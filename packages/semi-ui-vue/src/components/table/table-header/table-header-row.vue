@@ -4,6 +4,7 @@
     import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { SlotFragment } from '../../../base/index';
+    import { useResizeObserver } from '../../../composables/index';
     import type { KeyedNode } from '../../../utils/index';
     import useLocale from '../../locale/use-locale';
     import Tooltip from '../../tooltip';
@@ -145,8 +146,9 @@
         return { ...custom, class: [custom.class, `${table.view.value.prefixCls}-row`] };
     };
 
-    // The measured widths give the sticky offsets of fixed columns. Measured when the columns change, not on every
-    // render, since reading layout after a DOM update forces a reflow; the cells of this row are the columns at its level
+    // The measured widths give the sticky offsets of fixed columns. Measured when the columns change or the row resizes
+    // (a column without a number width follows the table's width), not on every render, since reading layout after a
+    // DOM update forces a reflow; the cells of this row are the columns at its level
     const measure = () => {
         const node = toElement(rowRef.value);
         if (!node) {
@@ -165,6 +167,8 @@
         measure();
         watch([() => props.columns, () => table.view.value.bodyHasScrollbar], measure, { flush: 'post' });
     });
+
+    useResizeObserver(() => toElement(rowRef.value), measure);
 </script>
 
 <template>

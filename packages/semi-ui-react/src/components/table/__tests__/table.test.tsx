@@ -411,7 +411,7 @@ describe(`Table`, () => {
             />
         );
         expect(queryAll(`.${BASE_CLASS_PREFIX}-table-row-section`)).toHaveLength(4);
-        expect(queryAll(`.${BASE_CLASS_PREFIX}-table-body .${BASE_CLASS_PREFIX}-table-row`)).toHaveLength(0);
+        expect(queryAll(`.${BASE_CLASS_PREFIX}-table-tbody .${BASE_CLASS_PREFIX}-table-row`)).toHaveLength(0);
         await userEvent.click(queryAll(`.${BASE_CLASS_PREFIX}-table-row-section`)[0]);
         expect(groupedRowClick).toHaveBeenCalledTimes(1);
         expect(queryAll(`.${BASE_CLASS_PREFIX}-table-row`).length).toBeGreaterThan(0);
@@ -1474,7 +1474,7 @@ describe(`Table`, () => {
         rerender(renderTable(newData));
         expect(queryAll(`.${BASE_CLASS_PREFIX}-table-row-section`)).toHaveLength(4);
         expect(screen.getByText('Jobs in Tianjin:')).toBeInTheDocument();
-        expect(queryAll(`.${BASE_CLASS_PREFIX}-table-body .${BASE_CLASS_PREFIX}-table-row`)).toHaveLength(0);
+        expect(queryAll(`.${BASE_CLASS_PREFIX}-table-tbody .${BASE_CLASS_PREFIX}-table-row`)).toHaveLength(0);
         await userEvent.click(queryAll(`.${BASE_CLASS_PREFIX}-table-row-section`)[0]);
         expect(queryAll(`.${BASE_CLASS_PREFIX}-table-row`).length).toBeGreaterThan(0);
     });
@@ -2128,7 +2128,7 @@ describe('Table 回归用例', () => {
         ];
         render(<Table columns={columns} dataSource={getFileData(46)} rowSelection={{ fixed: true }} scroll={{ y: 300, x: 1200 }} onHeaderRow={() => ({ onClick: onHeaderRowClick, className: 'test-header-row' })} />);
         const headerRow = screen.getByText('标题').closest('tr');
-        expect(headerRow.closest(`.${BASE_CLASS_PREFIX}-table-header`)).not.toBeNull();
+        expect(headerRow.closest(`.${BASE_CLASS_PREFIX}-table-body`)).not.toBeNull();
         expect(headerRow).toHaveClass('test-header-row');
         await userEvent.click(screen.getByText('标题'));
         expect(onHeaderRowClick).toHaveBeenCalledTimes(1);
@@ -2844,19 +2844,28 @@ describe('Table 行为基线', () => {
         expect(childCell.querySelector(`.${P}-table-row-indent`)).toHaveStyle({ paddingInlineStart: '60px' });
     });
 
-    it('固定列和固定表头获得 sticky 偏移，表体滚动同步到表头', () => {
+    it('scroll.y 时表头在表体的滚动容器里，固定列获得 sticky 偏移', () => {
         const { container } = render(<Table columns={getColumns()} dataSource={getData(3)} pagination={false} scroll={{ x: 1200, y: 300 }} />);
         const root = container.querySelector(`.${P}-table-wrapper`);
         expect(root).toHaveAttribute('data-column-fixed', 'true');
-        expect(container.querySelector(`.${P}-table-header`)).toBeInTheDocument();
-        expect(container.querySelector(`.${P}-table-body`)).toHaveStyle({ maxHeight: '300px' });
+        expect(container.querySelector(`.${P}-table-header`)).not.toBeInTheDocument();
+        const body = container.querySelector(`.${P}-table-body`);
+        expect(body).toHaveStyle({ maxHeight: '300px' });
+        expect(body.querySelector(`.${P}-table-thead`)).toBeInTheDocument();
         const heads = queryAll(`.${P}-table-thead .${P}-table-row-head`);
         expect(heads[0]).toHaveStyle({ position: 'sticky', left: '0px' });
         expect(heads[heads.length - 1]).toHaveStyle({ position: 'sticky', right: '0px' });
+    });
+
+    it('sticky 表头在不支持滚动驱动动画时由表体滚动同步', () => {
+        vi.spyOn(CSS, 'supports').mockReturnValue(false);
+        const { container } = render(<Table columns={getColumns()} dataSource={getData(3)} pagination={false} scroll={{ x: 1200 }} sticky />);
+        const header = container.querySelector(`.${P}-table-header`);
+        expect(header).toBeInTheDocument();
         const body = container.querySelector(`.${P}-table-body`);
         Object.defineProperty(body, 'scrollLeft', { value: 1200, configurable: true });
         fireEvent.scroll(body);
-        expect(container.querySelector(`.${P}-table-header`).scrollLeft).toBe(1200);
+        expect(header.scrollLeft).toBe(1200);
     });
 
     it('virtualized 只渲染一段行窗口，并暴露 list ref', async () => {
@@ -3432,7 +3441,6 @@ describe('Table 语义', () => {
     });
 
     it.each([
-        ['scroll.y', { scroll: { y: 200 } }],
         ['sticky', { sticky: true }],
         ['virtualized', { scroll: { y: 200 }, virtualized: true }],
     ])('%s 时，分开的表头和 body 表格构成一个 ARIA table', async (_name, extra) => {
@@ -3463,7 +3471,7 @@ describe('Table 语义', () => {
         expect(within(body).getAllByRole('cell').length).toBeGreaterThan(0);
     });
 
-    it('固定表头的合并单元格带有 aria-colspan 和 aria-rowspan', () => {
+    it('拆分表头的合并单元格带有 aria-colspan 和 aria-rowspan', () => {
         render(
             <Table
                 columns={[
@@ -3478,7 +3486,7 @@ describe('Table 语义', () => {
                 ]}
                 dataSource={getData(3)}
                 pagination={false}
-                scroll={{ y: 200 }}
+                sticky
             />
         );
         const name = screen.getByRole('columnheader', { name: 'Name' });
@@ -3992,7 +4000,7 @@ describe('Table 非元素内容与可访问名称', () => {
         expect(table).toHaveAccessibleDescription('about');
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-table-wrapper`)).not.toHaveAttribute('aria-label');
 
-        rerender(<Table aria-label="split" columns={nameColumns} dataSource={rows} scroll={{ y: 200 }} />);
+        rerender(<Table aria-label="split" columns={nameColumns} dataSource={rows} sticky />);
         expect(screen.getByRole('table', { name: 'split' })).toHaveClass(`${BASE_CLASS_PREFIX}-table-container`);
 
         rerender(
@@ -4279,7 +4287,7 @@ describe('Table showHeader 为 false 且表头拆分', () => {
     const columns = [{ title: 'Name', dataIndex: 'name', width: 200, sorter: (a, b) => a.name.localeCompare(b.name) }];
 
     it('隐藏的表头 inert，排序按钮不可聚焦，也不暴露给辅助技术', () => {
-        render(<Table columns={columns} dataSource={getData(3)} pagination={false} rowSelection={{}} scroll={{ y: 300 }} showHeader={false} />);
+        render(<Table columns={columns} dataSource={getData(3)} pagination={false} rowSelection={{}} showHeader={false} sticky />);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-table-header`)).toHaveAttribute('inert');
         // jsdom ignores inert; the browser test checks the Tab order
         expect(screen.getByRole('button', { name: 'Name' }).closest('[inert]')).not.toBeNull();
