@@ -120,8 +120,8 @@
                 "en-US": "Hovering a cell with rowSpan highlights every row the cell spans."
             },
             "scroll": {
-                "zh-CN": "滚动区域配置，x 为横向宽度，y 为纵向高度，详见 scroll。",
-                "en-US": "The scroll area: x is the width and y the height, see scroll."
+                "zh-CN": "滚动区域配置，x 为横向宽度，y 为纵向最大高度（含表头），详见 scroll。",
+                "en-US": "The scroll area: x is the width and y the maximum height, header included, see scroll."
             },
             "showHeader": { "zh-CN": "是否显示表头。", "en-US": "Whether to show the header." },
             "size": {

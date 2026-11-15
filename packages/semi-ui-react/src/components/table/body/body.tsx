@@ -81,6 +81,8 @@ interface VirtualizedBodyContextValue {
     prefixCls: string;
     tableWidth: number;
     emptySlot: ReactNode;
+    /** Rendered in the list's scroller above the rows, so the browser moves it with them in the same frame */
+    header: ReactNode;
     onBodyScroll?: (e: BodyScrollEvent) => void;
 }
 
@@ -94,7 +96,7 @@ function VirtualizedTbody({ className, ...rest }: React.ComponentProps<'div'>) {
 }
 
 function VirtualizedOuter({ children, onScroll, ...rest }: React.ComponentProps<'div'>) {
-    const { prefixCls, tableWidth, emptySlot, onBodyScroll } = useVirtualizedBodyContext('Table.VirtualizedOuter');
+    const { prefixCls, tableWidth, emptySlot, header, onBodyScroll } = useVirtualizedBodyContext('Table.VirtualizedOuter');
 
     return (
         <div
@@ -106,6 +108,7 @@ function VirtualizedOuter({ children, onScroll, ...rest }: React.ComponentProps<
                 onScroll?.(e);
             }}
         >
+            {header}
             <div
                 className={clsx(prefixCls, `${prefixCls}-fixed`)}
                 style={{ width: tableWidth }}
@@ -144,6 +147,7 @@ const EMPTY_FLATTEN_DATA: Array<FlattenData | GroupFlattenData> = [];
 // into render-time memo dependencies, which would read a null body element during render
 const elementOverflows = (node: HTMLElement) => node.scrollWidth > node.clientWidth || node.scrollHeight > node.clientHeight;
 const elementHasScrollbar = (node: HTMLElement) => node.clientWidth < node.offsetWidth;
+const elementHeight = (node: HTMLElement) => node.offsetHeight;
 
 export default function Body(props: BodyProps) {
     const {
@@ -184,6 +188,8 @@ export default function Body(props: BodyProps) {
     // kept in state so the observers below follow the elements
     const [bodyElement, setBodyElement] = useState<HTMLDivElement>(null);
     const [tableElement, setTableElement] = useState<HTMLElement>(null);
+    const [listHeaderElement, setListHeaderElement] = useState<HTMLDivElement>(null);
+    const [listHeaderHeight, setListHeaderHeight] = useState(0);
 
     // whether the body overflows, so it takes keyboard focus to scroll; known after mount
     const [overflows, setOverflows] = useState(false);
@@ -215,8 +221,8 @@ export default function Body(props: BodyProps) {
     const itemSizeOption = typeof virtualized === 'object' ? virtualized.itemSize : undefined;
     const scrollYIsNumber = typeof scrollY === 'number';
 
-    // with scroll.y the separate header reserves the width of a vertical scrollbar the body shows (#1219)
-    const observeScrollbar = Boolean(scrollY);
+    // a separate (sticky) header reserves the width of a vertical scrollbar the body shows (#1219)
+    const observeScrollbar = Boolean(scrollY) && !includeHeader;
 
     const setBodyNode = useCallback((node: HTMLDivElement | null) => {
         bodyNode.current = node;
@@ -419,6 +425,7 @@ export default function Body(props: BodyProps) {
     );
 
     useLayoutEffect(() => () => window.cancelAnimationFrame(scrollbarFrameRef.current), [bodyElement, observeScrollbar]);
+    useResizeObserver(listHeaderElement, () => setListHeaderHeight(elementHeight(listHeaderElement)), { enabled: isVirtualized });
 
     // a scroll.y body scrolls anyway; the table is observed too, as new columns or rows can overflow the body without
     // resizing it
@@ -436,15 +443,23 @@ export default function Body(props: BodyProps) {
     }, [isVirtualized, scrollYIsNumber]);
 
     if (virtualized) {
+        // the header measures the widths, so it renders before the rows have any
         const cellWidths = getCellWidths(columns);
-
-        if (!(cellWidths?.length ?? 0)) {
-            return null;
-        }
+        const hasWidths = (cellWidths?.length ?? 0) > 0;
 
         const y = scrollYIsNumber ? scrollY : numbers.DEFAULT_VIRTUALIZED_BODY_HEIGHT;
 
-        const rowWidth = arrayAdd(cellWidths, 0, columns?.length ?? 0);
+        const rowWidth = hasWidths ? arrayAdd(cellWidths, 0, columns?.length ?? 0) : 0;
+        const HeaderTable = components?.header?.outer ?? 'table';
+        const listHeader = includeHeader && (
+            // a hidden header stays for its column widths; inert keeps its controls out of the Tab order and the a11y tree
+            <div ref={setListHeaderElement} className={`${prefixCls}-list-header`} inert={!showHeader}>
+                <HeaderTable className={clsx(prefixCls, `${prefixCls}-fixed`)} style={{ width: scroll?.x, minWidth: getColumnsMinWidth(flattenedColumns) }} role="none">
+                    <ColGroup columns={columns} prefixCls={prefixCls} />
+                    <TableHeader ref={headerRef} hidden={!showHeader} columns={columns} components={components} prefixCls={prefixCls} onHeaderRow={props.onHeaderRow} />
+                </HeaderTable>
+            </div>
+        );
 
         const renderRow = (index: number, style: React.CSSProperties) => {
             const { key, expandedRow, sectionRow, ...rest }: any = virtualizedData[index] ?? {};
@@ -469,6 +484,7 @@ export default function Body(props: BodyProps) {
                     prefixCls,
                     tableWidth: rowWidth,
                     emptySlot: (dataSource?.length ?? 0) === 0 && emptySlot,
+                    header: listHeader,
                     onBodyScroll: handleBodyScroll,
                 }}
             >
@@ -484,13 +500,14 @@ export default function Body(props: BodyProps) {
                     }}
                     height={virtualizedData?.length ? y : 0}
                     innerElementType={VirtualizedTbody}
-                    itemCount={virtualizedData.length}
+                    itemCount={hasWidths ? virtualizedData.length : 0}
                     itemData={{ items: virtualizedData, renderRow }}
                     itemKey={getVirtualizedItemKey}
                     itemSize={itemSize}
                     outerElementType={VirtualizedOuter}
                     outerRef={attachBody}
                     overscan={typeof virtualized === 'object' ? virtualized.overscanCount : undefined}
+                    scrollMargin={includeHeader ? listHeaderHeight : 0}
                     width="100%"
                     onScroll={handleVirtualizedScroll}
                 >

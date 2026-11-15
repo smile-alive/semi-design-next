@@ -5,6 +5,11 @@
 
 $module: #{$prefix}-table;
 
+// an RTL body scrolls toward its left end, so the sticky header's table moves right
+.#{$module}-container:dir(rtl) {
+    --semi-table-scroll-sign: 1;
+}
+
 .#{$module}-align-left:dir(rtl) .#{$module}-operate-wrapper {
     justify-content: flex-end;
 }

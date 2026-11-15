@@ -42,6 +42,11 @@ export interface VirtualListProps<T> extends Omit<React.ComponentProps<'div'>, '
     itemKey?: (index: number, data: T) => React.Key;
     /** Rows rendered beyond each edge of the viewport */
     overscan?: number;
+    /**
+     * Height of content the outer element renders above the inner element, such as a sticky header: rows start this
+     * far down, and a row scrolled to the start lands below it
+     */
+    scrollMargin?: number;
     outerElementType?: React.ElementType;
     innerElementType?: React.ElementType;
     /** Called when the scroll offset changes */
@@ -55,7 +60,7 @@ export interface VirtualListProps<T> extends Omit<React.ComponentProps<'div'>, '
  * make the scroll container a tab stop of its own, while the widget, which scrolls the active row into view, is the
  * only stop.
  */
-export default function VirtualList<T>({ ref, outerRef, height, width = '100%', itemCount, itemSize, itemData, itemKey, overscan = 2, outerElementType: Outer = 'div', innerElementType: Inner = 'div', onScroll, children: Row, style, ...rest }: VirtualListProps<T>) {
+export default function VirtualList<T>({ ref, outerRef, height, width = '100%', itemCount, itemSize, itemData, itemKey, overscan = 2, scrollMargin = 0, outerElementType: Outer = 'div', innerElementType: Inner = 'div', onScroll, children: Row, style, ...rest }: VirtualListProps<T>) {
     // useVirtualizer returns one mutable instance for the component's life; memoized reads of it would go stale
     'use no memo';
 
@@ -72,6 +77,8 @@ export default function VirtualList<T>({ ref, outerRef, height, width = '100%', 
         getScrollElement: () => scrollRef.current,
         estimateSize: typeof itemSize === 'number' ? () => itemSize : itemSize,
         overscan,
+        scrollMargin,
+        scrollPaddingStart: scrollMargin,
         // viewport = height prop: measuring reads 0 in jsdom and needs a ResizeObserver to follow prop changes
         initialRect: { width: 0, height },
         observeElementRect: (_instance, report) => {

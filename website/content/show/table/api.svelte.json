@@ -212,8 +212,8 @@
                 "en-US": "Hovering a cell with rowspan highlights every row the cell spans."
             },
             "scroll": {
-                "zh-CN": "滚动区域配置，x 为横向宽度，y 为纵向高度，详见 scroll。",
-                "en-US": "The scroll area: x is the width and y the height, see scroll."
+                "zh-CN": "滚动区域配置，x 为横向宽度，y 为纵向最大高度（含表头），详见 scroll。",
+                "en-US": "The scroll area: x is the width and y the maximum height, header included, see scroll."
             },
             "selectedRowKeys": {
                 "zh-CN": "选中行的 key 数组，可用 `bind:selectedRowKeys` 双向绑定，勾选时写回。与 `rowSelection.selectedRowKeys` 同时传入时以它为准；需要同时传 `rowSelection` 才显示选择列。",

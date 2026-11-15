@@ -2526,7 +2526,7 @@ Table 按 [WAI-ARIA Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/) 输�
 
 </Framework>
 
-- 固定表头（`scroll.y`、`sticky`）或虚拟化时，表头和表体渲染为两个 table 元素，二者的共同容器是 role 为 table 的元素，内部 table 为 role none，单元格仍与列头关联
+- 设置 `sticky` 或虚拟化时，表头和表体渲染为两个 table 元素，二者的共同容器是 role 为 table 的元素，内部 table 为 role none，单元格仍与列头关联
 - 虚拟化表格的 `aria-rowcount` 为表头行数加数据总行数，数据行的 `aria-rowindex` 接在表头行之后，屏幕阅读器据此报出不在 DOM 中的行
 
 已知限制：

@@ -451,18 +451,26 @@ describe('Table 行为基线', () => {
         expect(childCell.querySelector(`.${P}-row-indent`)).toHaveStyle({ paddingInlineStart: '60px' });
     });
 
-    it('固定列和固定表头获得 sticky 偏移，表体滚动同步到表头', () => {
+    it('scroll.y 时表头在表体的滚动容器里，固定列获得 sticky 偏移', () => {
         const { container } = render(() => <Table columns={getColumns()} dataSource={getData(3)} pagination={false} scroll={{ x: 1200, y: 300 }} />);
         expect(container.querySelector(`.${P}-wrapper`)).toHaveAttribute('data-column-fixed', 'true');
-        expect(container.querySelector(`.${P}-header`)).toBeInTheDocument();
+        expect(container.querySelector(`.${P}-header`)).not.toBeInTheDocument();
         const body = getElement(`.${P}-body`, container);
         expect(body).toHaveStyle({ maxHeight: '300px' });
+        expect(body.querySelector(`.${P}-thead`)).toBeInTheDocument();
         const heads = queryAll(`.${P}-thead .${P}-row-head`);
         expect(heads[0]).toHaveStyle({ position: 'sticky', left: '0px' });
         expect(heads[heads.length - 1]).toHaveStyle({ position: 'sticky', right: '0px' });
+    });
+
+    it('sticky 表头在不支持滚动驱动动画时由表体滚动同步', () => {
+        vi.spyOn(CSS, 'supports').mockReturnValue(false);
+        const { container } = render(() => <Table columns={getColumns()} dataSource={getData(3)} pagination={false} scroll={{ x: 1200 }} sticky />);
+        const header = getElement(`.${P}-header`, container);
+        const body = getElement(`.${P}-body`, container);
         Object.defineProperty(body, 'scrollLeft', { value: 1200, configurable: true });
         fireEvent.scroll(body);
-        expect(getElement(`.${P}-header`, container).scrollLeft).toBe(1200);
+        expect(header.scrollLeft).toBe(1200);
     });
 
     it('sticky 表头使用顶部偏移', () => {
@@ -851,10 +859,7 @@ describe('Table 语义', () => {
         expect(container.querySelector('[aria-colspan], [aria-rowspan]')).toBeNull();
     });
 
-    it.each([
-        ['scroll.y', { scroll: { y: 200 } }],
-        ['sticky', { sticky: true }],
-    ] as const)('%s 时，分开的表头和 body 表格构成一个 ARIA table', (_name, extra) => {
+    it.each([['sticky', { sticky: true }]] as const)('%s 时，分开的表头和 body 表格构成一个 ARIA table', (_name, extra) => {
         const { container } = render(() => (
             <Table
                 columns={[
@@ -881,7 +886,7 @@ describe('Table 语义', () => {
         expect(within(body).getAllByRole('cell').length).toBeGreaterThan(0);
     });
 
-    it('固定表头的合并单元格带有 aria-colspan 和 aria-rowspan', () => {
+    it('拆分表头的合并单元格带有 aria-colspan 和 aria-rowspan', () => {
         render(() => (
             <Table
                 columns={[
@@ -896,7 +901,7 @@ describe('Table 语义', () => {
                 ]}
                 dataSource={getData(3)}
                 pagination={false}
-                scroll={{ y: 200 }}
+                sticky
             />
         ));
         const name = screen.getByRole('columnheader', { name: 'Name' });
@@ -1223,7 +1228,7 @@ describe('Table 非元素内容与可访问名称', () => {
         expect(query(`.${P}-wrapper`)).not.toHaveAttribute('aria-label');
         first.unmount();
 
-        const second = render(() => <Table aria-label="split" columns={nameColumns} dataSource={rows} scroll={{ y: 200 }} />);
+        const second = render(() => <Table aria-label="split" columns={nameColumns} dataSource={rows} sticky />);
         expect(screen.getByRole('table', { name: 'split' })).toHaveClass(`${P}-container`);
         second.unmount();
 
@@ -1411,7 +1416,7 @@ describe('Table scrollToFirstRowOnChange 与 pagination.onChange', () => {
 
 describe('Table showHeader 为 false 且表头拆分', () => {
     it('隐藏的表头 inert，排序按钮不可聚焦，也不暴露给辅助技术', () => {
-        render(() => <Table columns={[{ title: 'Name', dataIndex: 'name', width: 200, sorter: (a, b) => a.name.localeCompare(b.name) }]} dataSource={getData(3)} pagination={false} rowSelection={{}} scroll={{ y: 300 }} showHeader={false} />);
+        render(() => <Table columns={[{ title: 'Name', dataIndex: 'name', width: 200, sorter: (a, b) => a.name.localeCompare(b.name) }]} dataSource={getData(3)} pagination={false} rowSelection={{}} showHeader={false} sticky />);
         // Solid writes inert as a property, which jsdom neither reflects nor applies; the browser test checks the Tab order
         const header = query(`.${P}-header`);
         expect(header.inert).toBe(true);

@@ -5,6 +5,7 @@ import { strings } from '@fibrae/semi-foundation/components/table/constants';
 import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
 import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, shouldShowEllipsisTitle, sliceColumnsByLevel } from '@fibrae/semi-foundation/components/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils';
+import { useResizeObserver } from '../../../primitives/index';
 import { callHandler, hasContent, mergeStyles } from '../../../utils/index';
 import useLocale from '../../locale/use-locale';
 import Tooltip from '../../tooltip';
@@ -318,30 +319,32 @@ export default function TableHeaderRow(props: TableHeaderRowProps) {
         return <HeaderCellView cell={entry().cell} cellIndex={entry().cellIndex} headWidths={headWidths()} rowIndex={props.index} slicedColumns={slicedColumns()} />;
     };
 
-    // The measured widths give the sticky offsets of fixed columns. Measured when the columns change, not on every
-    // update, since reading layout after a DOM update forces a reflow; the cells of this row are the columns at its level
-    createEffect(
-        on([() => props.columns, () => table.state().bodyHasScrollBar], () => {
-            if (!rowElement) {
-                return;
-            }
-            const levelColumns = getColumnsByLevel(props.columns, props.index) as ColumnProps[];
-            const heads = rowElement.querySelectorAll(`.${table.view().prefixCls}-row-head`);
-            // the same span rule as HeaderCellView, which renders nothing for a span of 0
-            const renderedKeys = new Set<unknown>(
-                props.row
-                    .filter(({ column, colSpan, rowSpan }, cellIndex) => {
-                        const attrs: Record<string, any> = { colSpan, rowSpan, ...column.onHeaderCell?.(column, cellIndex, props.index) };
-                        return (attrs.colSpan ?? attrs.colspan) !== 0 && (attrs.rowSpan ?? attrs.rowspan) !== 0;
-                    })
-                    .map(({ column }) => column.key)
-            );
-            table.setHeadWidths(
-                getHeadWidths(levelColumns, renderedKeys, (headIndex) => heads[headIndex]?.getBoundingClientRect().width || 0),
-                props.index
-            );
-        })
-    );
+    // The measured widths give the sticky offsets of fixed columns. Measured when the columns change or the row resizes
+    // (a column without a number width follows the table's width), not on every update, since reading layout after a
+    // DOM update forces a reflow; the cells of this row are the columns at its level
+    const measure = () => {
+        if (!rowElement) {
+            return;
+        }
+        const levelColumns = getColumnsByLevel(props.columns, props.index) as ColumnProps[];
+        const heads = rowElement.querySelectorAll(`.${table.view().prefixCls}-row-head`);
+        // the same span rule as HeaderCellView, which renders nothing for a span of 0
+        const renderedKeys = new Set<unknown>(
+            props.row
+                .filter(({ column, colSpan, rowSpan }, cellIndex) => {
+                    const attrs: Record<string, any> = { colSpan, rowSpan, ...column.onHeaderCell?.(column, cellIndex, props.index) };
+                    return (attrs.colSpan ?? attrs.colspan) !== 0 && (attrs.rowSpan ?? attrs.rowspan) !== 0;
+                })
+                .map(({ column }) => column.key)
+        );
+        table.setHeadWidths(
+            getHeadWidths(levelColumns, renderedKeys, (headIndex) => heads[headIndex]?.getBoundingClientRect().width || 0),
+            props.index
+        );
+    };
+
+    createEffect(on([() => props.columns, () => table.state().bodyHasScrollBar], measure));
+    useResizeObserver(() => rowElement, measure);
 
     return (
         <Dynamic component={table.view().components.header.row} role="row" {...restRowProps()} ref={(node: HTMLElement) => (rowElement = node)} class={clsx(customRowProps().class, `${table.view().prefixCls}-row`)}>

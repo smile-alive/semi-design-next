@@ -56,6 +56,15 @@ $module: #{$prefix}-table;
 
     &-container {
         position: relative;
+
+        // scoped here so the sticky header, a sibling of the body, can follow the body's timeline
+        @supports (timeline-scope: --semi-table-body-x) {
+            timeline-scope: --semi-table-body-x;
+
+            & > .#{$module}-body {
+                scroll-timeline: --semi-table-body-x x;
+            }
+        }
     }
 
     &-header {
@@ -84,6 +93,63 @@ $module: #{$prefix}-table;
 
             .#{$module}-thead > .#{$module}-row > .#{$module}-row-head {
                 background-color: $color-table-bg-default;
+            }
+
+            // The header stuck to the page sits outside the body's scroller. A scroll-driven animation on the body's
+            // timeline shifts it, and holds its fixed cells in place, in the frame the compositor scrolls the body; the
+            // foundation writes the range. Elsewhere the host copies scrollLeft a frame late. Removable together with
+            // the foundation's headerFollowsInCss.
+            @supports (timeline-scope: --semi-table-body-x) {
+                // the header never scrolls itself, so its scroll state says nothing; the edges follow the body's timeline
+                container-type: normal;
+
+                & > .#{$module} {
+                    animation: #{$module}-header-follow linear both;
+                    animation-timeline: --semi-table-body-x;
+
+                    & > .#{$module}-thead > .#{$module}-row {
+                        & > .#{$module}-cell-fixed-left,
+                        & > .#{$module}-cell-fixed-right {
+                            animation: #{$module}-header-pin linear both;
+                            animation-timeline: --semi-table-body-x;
+                        }
+
+                        & > .#{$module}-cell-fixed-left-last::after,
+                        & > .#{$module}-cell-fixed-right-first::after {
+                            animation: #{$module}-header-edge-start linear both;
+                            animation-timeline: --semi-table-body-x;
+                        }
+
+                        // physical sides like the shadows: in RTL the body scrolls from its right end
+                        & > .#{$module}-cell-fixed-right-first::after,
+                        &:dir(rtl) > .#{$module}-cell-fixed-left-last::after {
+                            animation-name: #{$module}-header-edge-end;
+                        }
+
+                        &:dir(rtl) > .#{$module}-cell-fixed-right-first::after {
+                            animation-name: #{$module}-header-edge-start;
+                        }
+
+                        // without `bordered` the edge lines show only with the shadows
+                        &:where(:not(.#{$module}-bordered *)) {
+                            & > .#{$module}-cell-fixed-left-last {
+                                animation-name: #{$module}-header-pin, #{$module}-header-line-left-start;
+                            }
+
+                            & > .#{$module}-cell-fixed-right-first {
+                                animation-name: #{$module}-header-pin, #{$module}-header-line-right-end;
+                            }
+
+                            &:dir(rtl) > .#{$module}-cell-fixed-left-last {
+                                animation-name: #{$module}-header-pin, #{$module}-header-line-left-end;
+                            }
+
+                            &:dir(rtl) > .#{$module}-cell-fixed-right-first {
+                                animation-name: #{$module}-header-pin, #{$module}-header-line-right-start;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -133,6 +199,23 @@ $module: #{$prefix}-table;
         &:focus-visible {
             @include focus-ring(-2px);
         }
+
+        // scroll.y keeps the header in the body's scroller, so the compositor moves both in the same frame; above the
+        // fixed body cells, and the fixed head cells inside stack above the other head cells
+        .#{$module}-fixed-header > .#{$module}-container > & > .#{$module} > .#{$module}-thead {
+            position: sticky;
+            top: 0;
+            z-index: $z-table_fixed_column + 1;
+        }
+    }
+
+    // the virtual list's header, in the list's scroller above the rows
+    &-list-header {
+        position: sticky;
+        top: 0;
+        z-index: $z-table_fixed_column + 1;
+        inline-size: fit-content;
+        min-inline-size: 100%;
     }
 
     // the scrolling body would clip an outside ring on a row focusable for drag sorting
@@ -552,7 +635,16 @@ $module: #{$prefix}-table;
             }
         }
 
+        // the container's side borders run down past a horizontal scrollbar; the body's bottom border closes the box
+        // below it, so the last row and the empty placeholder drop their own
         :where(& > .#{$module}-container > .#{$module}-body) {
+            border-bottom: $width-table_base_border $border-table_base-borderStyle $color-table-border-default;
+
+            & > .#{$module} > .#{$module}-tbody > :last-child > .#{$module}-row-cell,
+            & > .#{$module}-placeholder {
+                border-bottom: 0;
+            }
+
             & > .#{$module} > .#{$module}-thead > .#{$module}-row > .#{$module}-row-head {
                 .#{$module}-resize-handle {
                     background-color: transparent;
@@ -777,6 +869,88 @@ $module: #{$prefix}-table;
         overflow-y: auto;
     }
 }
+
+// the sticky header's table moves against the body's scroll, and its fixed cells move back by as much
+@keyframes #{$module}-header-follow {
+    to {
+        translate: calc(var(--semi-table-scroll-range, 0px) * var(--semi-table-scroll-sign, -1)) 0;
+    }
+}
+
+@keyframes #{$module}-header-pin {
+    to {
+        translate: calc(var(--semi-table-scroll-range, 0px) * var(--semi-table-scroll-sign, -1) * -1) 0;
+    }
+}
+
+// a fixed edge shows while content hides behind it: past the scroll start, or short of the end
+@keyframes #{$module}-header-edge-start {
+    from {
+        opacity: 0;
+    }
+
+    0.01%,
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes #{$module}-header-edge-end {
+    from,
+    99.99% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+// stylelint-disable property-disallowed-list -- physical sides like the fixed-cell class names
+@keyframes #{$module}-header-line-left-start {
+    from {
+        border-right-color: transparent;
+    }
+
+    0.01%,
+    to {
+        border-right-color: $color-table_shadow-border-default;
+    }
+}
+
+@keyframes #{$module}-header-line-left-end {
+    from,
+    99.99% {
+        border-right-color: $color-table_shadow-border-default;
+    }
+
+    to {
+        border-right-color: transparent;
+    }
+}
+
+@keyframes #{$module}-header-line-right-start {
+    from {
+        border-left-color: transparent;
+    }
+
+    0.01%,
+    to {
+        border-left-color: $color-table_shadow-border-default;
+    }
+}
+
+@keyframes #{$module}-header-line-right-end {
+    from,
+    99.99% {
+        border-left-color: $color-table_shadow-border-default;
+    }
+
+    to {
+        border-left-color: transparent;
+    }
+}
+// stylelint-enable property-disallowed-list
 
 .#{$module}-column-filter-footer {
     display: flex;

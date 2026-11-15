@@ -46,7 +46,7 @@ describe('Table（浏览器）', () => {
                 <Table bordered columns={columns} dataSource={data} pagination={false} scroll={{ y: 300 }} />
             </div>
         );
-        expect(container.querySelector(`.${prefix}-header table`)).toHaveStyle({ tableLayout: 'fixed' });
+        expect(container.querySelector(`.${prefix}-body table`)).toHaveStyle({ tableLayout: 'fixed' });
         const headerCells = [...container.querySelectorAll(`.${prefix}-thead .${prefix}-row-head`)];
         const bodyCells = [...container.querySelector(`.${prefix}-tbody .${prefix}-row`).children];
         expect(headerCells).toHaveLength(columns.length);
@@ -59,7 +59,6 @@ describe('Table（浏览器）', () => {
     });
 
     it.skipIf(!isChromium).each([
-        ['scroll.y', { scroll: { y: 300 } }],
         ['sticky', { sticky: true }],
         ['virtualized', { scroll: { y: 300 }, virtualized: true }],
     ])('%s Chrome 中表头与表体行作为一个 table 暴露', async (_name, extra) => {
@@ -652,16 +651,18 @@ describe('table', () => {
             { fixed: 'right', width: 250, render: () => 'Show Info' },
         ];
         render(<Table style={{ width: 800 }} columns={columns} dataSource={getData(100)} pagination={false} scroll={{ y: 300, x: 1600 }} virtualized />);
-        const header = document.querySelector(`.${prefix}-header`);
         const body = getBody();
+        const ageHead = screen.getByRole('columnheader', { name: 'Age' });
+        const ageLeftOf = (text: string) => screen.getByText(text).closest('[role="row"]').children[1].getBoundingClientRect().left;
+        await waitFor(() => expect(screen.getByText('Edward King 0')).toBeInTheDocument());
         body.scrollLeft = 300;
-        await waitFor(() => expect(header.scrollLeft).toBe(300));
+        await waitFor(() => expect(ageHead.getBoundingClientRect().left).toBeCloseTo(ageLeftOf('Edward King 0'), 0));
 
         body.scrollTop = 56 * 50;
         await waitFor(() => expect(screen.getByText('Edward King 50')).toBeInTheDocument());
         expect(screen.queryByText('Edward King 0')).not.toBeInTheDocument();
         expect(body.scrollLeft).toBe(300);
-        expect(header.scrollLeft).toBe(300);
+        expect(ageHead.getBoundingClientRect().left).toBeCloseTo(ageLeftOf('Edward King 50'), 0);
     });
 
     it('调整大小', async () => {
@@ -898,7 +899,7 @@ describe('table', () => {
             { title: '更新日期', dataIndex: 'key', fixed: 'right', width: 150 },
         ];
         render(<Table style={{ width: 750, margin: '0 auto' }} columns={columns} dataSource={getFileData(1000)} pagination={false} scroll={{ y: 400, x: 900 }} showHeader={false} virtualized />);
-        const headers = document.querySelectorAll(`.${prefix}-header`);
+        const headers = document.querySelectorAll(`.${prefix}-list-header`);
         expect(headers).toHaveLength(1);
         expect(getComputedStyle(headers[0]).height).toBe('0px');
     });

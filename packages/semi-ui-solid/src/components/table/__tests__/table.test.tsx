@@ -1101,7 +1101,7 @@ describe('Table 回归用例', () => {
         ];
         render(() => <Table columns={fixedColumns} dataSource={getFileData(46)} rowSelection={{ fixed: true }} scroll={{ y: 300, x: 1200 }} onHeaderRow={() => ({ onClick: onHeaderRowClick, class: 'test-header-row' })} />);
         const headerRow = defined(screen.getByText('标题').closest<HTMLElement>('tr'));
-        expect(headerRow.closest(`.${P}-header`)).not.toBeNull();
+        expect(headerRow.closest(`.${P}-body`)).not.toBeNull();
         expect(headerRow).toHaveClass('test-header-row');
         await userEvent.click(screen.getByText('标题'));
         expect(onHeaderRowClick).toHaveBeenCalledTimes(1);

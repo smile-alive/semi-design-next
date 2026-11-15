@@ -587,7 +587,8 @@ API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生�
 #### Table
 
 - **已知限制** `virtualized` 且有列没声明数值 `width` 时，服务端 HTML 与首帧没有表体行。
-- **已知限制** 固定表头或虚拟化时，可聚焦的滚动容器在 `role="table"` 内，axe 报 `aria-required-children`；加 `role="group"` 会把表格与行隔开，所以不加。
+- **已知限制** `sticky` 或虚拟化时，可聚焦的滚动容器在 `role="table"` 内，axe 报 `aria-required-children`；加 `role="group"` 会把表格与行隔开，所以不加。
+- **已知限制** `sticky` 表头在 Chrome 116、Firefox 159、Safari 26 以下由 scroll 事件同步，横向滚动时晚一帧（这三个版本成为最低支持版本后删除该回退）。
 - **已知限制** 列既无 `key` 也无 `dataIndex` 时，拖拽列宽按位置存，列顺序变化后跟着位置走。
 - **已知限制** Solid：`expandIcon` 的显示、隐藏类挂载后才加到使用方的节点上。
 - **已知限制** Svelte：行高只取自 `itemSize`，不测量；`table.svelte` 不是泛型组件，行类型为 `Record<string, any>`；`components` 只接受标签名；`onScroll` 没有方向。

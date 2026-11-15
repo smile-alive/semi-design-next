@@ -66,7 +66,7 @@ describe('Svelte Table（浏览器）', () => {
     it('修复 #247：所有列都没有宽度时，表头与表体列对齐', () => {
         const columns = ['name', 'age', 'address', 'description'].map((dataIndex) => ({ title: dataIndex, dataIndex }));
         const { container } = mountTable({ bordered: true, columns, dataSource: getData(8), pagination: false, scroll: { y: 300 } }, [], 'width: 800px');
-        expect(getComputedStyle(query(`.${P}-header table`, container)).tableLayout).toBe('fixed');
+        expect(getComputedStyle(query(`.${P}-body table`, container)).tableLayout).toBe('fixed');
         const headerCells = queryAll(`.${P}-thead .${P}-row-head`, container);
         const bodyCells = Array.from(query(`.${P}-tbody .${P}-row`, container).children);
         expect(headerCells).toHaveLength(columns.length);
@@ -80,7 +80,6 @@ describe('Svelte Table（浏览器）', () => {
 
     // Reads Chrome's accessibility tree over CDP
     it.skipIf(!isChromium).each([
-        ['scroll.y', { scroll: { y: 300 } }],
         ['sticky', { sticky: true }],
         ['virtualized', { scroll: { y: 300 }, virtualized: true }],
     ])('%s Chrome 中表头与表体行作为一个 table 暴露', async (_name, extra) => {
@@ -427,16 +426,18 @@ describe('Svelte Table（浏览器）', () => {
             scroll: { y: 300, x: 1600 },
             virtualized: true,
         });
-        const header = await findElement(() => document.querySelector<HTMLElement>(`.${P}-header`));
         const body = getBody();
+        const ageHead = screen.getByRole('columnheader', { name: 'Age' });
+        const ageLeftOf = (text: string) => screen.getByText(text).closest('[role="row"]')!.children[1].getBoundingClientRect().left;
+        await waitFor(() => expect(screen.getByText('Edward King 0')).toBeInTheDocument());
         body.scrollLeft = 300;
-        await waitFor(() => expect(header.scrollLeft).toBe(300));
+        await waitFor(() => expect(ageHead.getBoundingClientRect().left).toBeCloseTo(ageLeftOf('Edward King 0'), 0));
 
         body.scrollTop = 56 * 50;
         await waitFor(() => expect(screen.getByText('Edward King 50')).toBeInTheDocument());
         expect(screen.queryByText('Edward King 0')).not.toBeInTheDocument();
         expect(body.scrollLeft).toBe(300);
-        expect(header.scrollLeft).toBe(300);
+        expect(ageHead.getBoundingClientRect().left).toBeCloseTo(ageLeftOf('Edward King 50'), 0);
     });
 
     describe('省略标题', () => {
@@ -526,7 +527,7 @@ describe('Svelte Table（浏览器）', () => {
             showHeader: false,
             virtualized: true,
         });
-        const headers = queryAll(`.${P}-header`);
+        const headers = queryAll(`.${P}-list-header`);
         expect(headers).toHaveLength(1);
         expect(getComputedStyle(headers[0]).height).toBe('0px');
     });

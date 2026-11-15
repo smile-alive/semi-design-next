@@ -52,7 +52,7 @@ describe('Table 分组', () => {
         );
         await nextTick();
         expect(getSections()).toHaveLength(4);
-        expect(queryAll(`.${P}-body .${P}-row`)).toHaveLength(0);
+        expect(queryAll(`.${P}-tbody .${P}-row`)).toHaveLength(0);
         await userEvent.click(getSections()[0]);
         expect(groupedRowClick).toHaveBeenCalledTimes(1);
         expect(queryAll(`.${P}-row`).length).toBeGreaterThan(0);
@@ -84,7 +84,7 @@ describe('Table 分组', () => {
         await table.update({ props: { dataSource: newData } });
         expect(getSections()).toHaveLength(4);
         expect(screen.getByText('Jobs in Tianjin:')).toBeInTheDocument();
-        expect(queryAll(`.${P}-body .${P}-row`)).toHaveLength(0);
+        expect(queryAll(`.${P}-tbody .${P}-row`)).toHaveLength(0);
         await userEvent.click(getSections()[0]);
         expect(queryAll(`.${P}-row`).length).toBeGreaterThan(0);
     });

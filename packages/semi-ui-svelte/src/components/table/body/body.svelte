@@ -54,6 +54,8 @@
     let bodyElement = $state<HTMLDivElement>();
     let listElement = $state<HTMLElement>();
     let list = $state<ReturnType<typeof VirtualList>>();
+    let listHeader = $state<HTMLDivElement>();
+    let listHeaderHeight = $state(0);
     let hoveredRowKey = $state<BaseRowKeyType | null>(null);
 
     // whether the body overflows, so it takes keyboard focus to scroll; known after mount
@@ -98,13 +100,12 @@
         if (!table.virtualized) {
             return null;
         }
+        // the header measures the widths, so it renders before the rows have any
         const cellWidths = table.getCellWidths(columns);
-        if (!cellWidths.length) {
-            return null;
-        }
+        const hasWidths = cellWidths.length > 0;
         const y = typeof table.scroll?.y === 'number' ? table.scroll.y : numbers.DEFAULT_VIRTUALIZED_BODY_HEIGHT;
-        const rowWidth = arrayAdd(cellWidths, 0, columns.length);
-        return { rowWidth, height: virtualizedData.length ? y : 0 };
+        const rowWidth = hasWidths ? arrayAdd(cellWidths, 0, columns.length) : 0;
+        return { rowWidth, itemCount: hasWidths ? virtualizedData.length : 0, height: virtualizedData.length ? y : 0 };
     });
 
     // a scrolling body must be keyboard reachable even without a focusable cell
@@ -185,10 +186,10 @@
         untrack(() => list?.measure());
     });
 
-    // with scroll.y the header is a separate table that reserves the width of a vertical scrollbar the body shows
+    // a separate (sticky) header reserves the width of a vertical scrollbar the body shows (#1219)
     $effect(() => {
         const node = scrollElement();
-        if (!table.scroll?.y || !node) {
+        if (!table.scroll?.y || includeHeader || !node) {
             return;
         }
         const observer = new ResizeObserver(() => {
@@ -232,15 +233,27 @@
             class="{table.prefixCls}-body"
             height={virtualBody.height}
             innerAttrs={{ class: `${table.prefixCls}-tbody`, role: 'rowgroup' }}
-            itemCount={virtualizedData.length}
+            itemCount={virtualBody.itemCount}
             itemKey={virtualKey}
             {itemSize}
             overscan={table.virtualizedProps?.overscanCount}
+            scrollMargin={includeHeader ? listHeaderHeight : 0}
             style="direction: {table.direction}{virtualizedData.length ? '' : '; height: auto'}"
             tabindex={0}
             wrapperAttrs={{ class: [table.prefixCls, `${table.prefixCls}-fixed`], role: 'none', style: rowStyle }}
             onscroll={handleListScroll}
         >
+            {#snippet before()}
+                {#if includeHeader}
+                    <!-- a hidden header stays for its column widths; inert keeps its controls out of the Tab order and the a11y tree; rendered in the list's scroller above the rows, so the browser moves it with them in the same frame -->
+                    <div {@attach observeResize(() => (listHeaderHeight = listHeader?.offsetHeight ?? 0))} bind:this={listHeader} class="{table.prefixCls}-list-header" inert={!table.showHeader}>
+                        <svelte:element this={table.components.header.outer} class={[table.prefixCls, `${table.prefixCls}-fixed`]} role="none" style={joinStyles(table.scroll?.x != null && `width: ${toCssLength(table.scroll.x)}`, minWidth !== undefined && `min-width: ${toCssLength(minWidth)}`)}>
+                            <ColGroup {columns} prefixCls={table.prefixCls} />
+                            <TableHeader {columns} hidden={!table.showHeader} />
+                        </svelte:element>
+                    </div>
+                {/if}
+            {/snippet}
             {#snippet children({ index, style })}
                 {@const item = virtualItem(index)}
                 {#if item.sectionRow}

@@ -242,13 +242,19 @@ export default function NormalTable(props: TableProps) {
 
     const fixedHeader = () => Boolean(local.scroll?.y) || Boolean(local.sticky);
 
+    /**
+     * Elsewhere the header sits in the body's scroller, so the compositor moves both in the same frame. A header stuck
+     * to the page would be trapped by the body's overflow, so it renders as a separate table above the body
+     */
+    const headerApart = () => Boolean(local.sticky);
+
     const view = createMemo(() => ({
         prefixCls,
         direction: local.direction,
         anyColumnFixed: anyColumnFixed(),
         // Screen readers associate cells with column headers only within one table: when the header and the body
         // are separate elements, their common container is the table
-        splitTable: fixedHeader() || isVirtualized(),
+        splitTable: headerApart() || isVirtualized(),
         // a hidden header is inert, so its rows are not rows of the table
         headerRowCount: local.showHeader ? getHeaderRowCount(columns()) : 0,
         components: components(),
@@ -272,8 +278,13 @@ export default function NormalTable(props: TableProps) {
         if (e.currentTarget !== target || !(target instanceof HTMLElement)) {
             return;
         }
-        if (target.scrollLeft !== lastScrollLeft) {
-            if (target === bodyWrap && headerWrap) {
+        if (target === headerWrap && bodyWrap && foundation.headerFollowsInCss()) {
+            // focus scrolled the clipped header to reveal a cell; the body takes the distance, and the header's
+            // animation follows it
+            bodyWrap.scrollLeft += target.scrollLeft;
+            target.scrollLeft = 0;
+        } else if (target.scrollLeft !== lastScrollLeft) {
+            if (target === bodyWrap && headerWrap && !foundation.headerFollowsInCss()) {
                 headerWrap.scrollLeft = target.scrollLeft;
             } else if (target === headerWrap && bodyWrap) {
                 bodyWrap.scrollLeft = target.scrollLeft;
@@ -360,6 +371,18 @@ export default function NormalTable(props: TableProps) {
         })
     );
 
+    // the content-box size changes with the body's scrollbar too; columns or rows that widen the table without
+    // resizing the body are caught after the update
+    createEffect(
+        on([headerApart, columns, () => state().dataSource], () => {
+            if (headerApart()) {
+                foundation.syncHeaderScrollRange();
+            }
+        })
+    );
+
+    useResizeObserver(() => (headerApart() ? bodyWrap : null), foundation.syncHeaderScrollRange);
+
     return (
         <div
             dir={local.direction}
@@ -389,10 +412,10 @@ export default function NormalTable(props: TableProps) {
                             </div>
                         </Show>
                         <div class={`${prefixCls}-container`} aria-rowcount={isVirtualized() ? view().headerRowCount + virtualizedData().length : undefined} role={view().splitTable ? 'table' : undefined} {...(view().splitTable ? tableAria() : {})}>
-                            <Show when={fixedHeader()}>
+                            <Show when={headerApart()}>
                                 <HeadTable ref={(node) => (headerWrap = node)} columns={columns()} />
                             </Show>
-                            <Body ref={(node) => (bodyWrap = node)} columns={columns()} emptySlot={emptySlot()} headerRef={(node) => (headerWrap = node)} includeHeader={!fixedHeader()} />
+                            <Body ref={(node) => (bodyWrap = node)} columns={columns()} emptySlot={emptySlot()} headerRef={(node) => (headerWrap = node)} includeHeader={!headerApart()} />
                             <Show when={hasContent(footerNode())}>
                                 <div class={`${prefixCls}-footer`} x-semi-prop="footer">
                                     {footerNode()}

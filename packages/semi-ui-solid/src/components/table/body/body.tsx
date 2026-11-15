@@ -56,6 +56,8 @@ export default function Body(props: BodyProps) {
     const [hoveredRowKey, setHoveredRowKey] = createSignal<BaseRowKeyType | null>(null);
     const [bodyElement, setBodyElement] = createSignal<HTMLDivElement>();
     const [tableElement, setTableElement] = createSignal<HTMLElement>();
+    const [listHeaderElement, setListHeaderElement] = createSignal<HTMLDivElement>();
+    const [listHeaderHeight, setListHeaderHeight] = createSignal(0);
 
     // whether the body overflows, so it takes keyboard focus to scroll; known after mount
     const [overflows, setOverflows] = createSignal(false);
@@ -240,7 +242,10 @@ export default function Body(props: BodyProps) {
         props.ref?.(node);
     };
 
-    const rowWidth = () => arrayAdd(cellWidths(), 0, props.columns.length);
+    // the header measures the widths, so it renders before the rows have any
+    const hasWidths = () => cellWidths().length > 0;
+
+    const rowWidth = () => (hasWidths() ? arrayAdd(cellWidths(), 0, props.columns.length) : 0);
 
     const itemSize = (index: number) =>
         untrack(() => {
@@ -265,6 +270,16 @@ export default function Body(props: BodyProps) {
                     callHandler(own.onScroll, e);
                 }}
             >
+                {/* in the list's scroller above the rows, so the browser moves it with them in the same frame */}
+                <Show when={props.includeHeader}>
+                    {/* a hidden header stays for its column widths; inert keeps its controls out of the Tab order and the a11y tree */}
+                    <div ref={setListHeaderElement} class={`${prefixCls()}-list-header`} inert={!table.props.showHeader || undefined}>
+                        <Dynamic component={table.view().components.header.outer} class={clsx(prefixCls(), `${prefixCls()}-fixed`)} style={{ width: toCssLength(table.props.scroll?.x), 'min-width': toCssLength(getColumnsMinWidth(table.flattenedColumns())) }} role="none">
+                            <ColGroup columns={props.columns} prefixCls={prefixCls()} />
+                            <TableHeader ref={(element) => props.headerRef?.(element)} hidden={!table.props.showHeader} columns={props.columns} />
+                        </Dynamic>
+                    </div>
+                </Show>
                 <div
                     class={clsx(prefixCls(), `${prefixCls()}-fixed`)}
                     style={{ width: toCssLength(rowWidth()) }}
@@ -294,12 +309,14 @@ export default function Body(props: BodyProps) {
     // a scrolling body must be keyboard reachable even without a focusable cell
     const scrollable = () => Boolean(table.props.scroll?.y) || overflows();
 
-    /**
-     * Observes the body size when scroll.y is set: the separate header reserves the width of a vertical scrollbar
-     * the body shows (#1219)
-     */
     useResizeObserver(
-        () => (table.props.scroll?.y ? bodyElement() : null),
+        () => (virtualized() ? listHeaderElement() : null),
+        () => setListHeaderHeight(listHeaderElement()?.offsetHeight ?? 0)
+    );
+
+    // a separate (sticky) header reserves the width of a vertical scrollbar the body shows (#1219)
+    useResizeObserver(
+        () => (table.props.scroll?.y && !props.includeHeader ? bodyElement() : null),
         () => {
             const element = bodyElement();
             scheduleScrollbarCheck(() => {
@@ -366,37 +383,35 @@ export default function Body(props: BodyProps) {
                 </div>
             }
         >
-            {/* the rows are sized by the header's measured widths, so the list waits for them */}
-            <Show when={cellWidths().length}>
-                <VirtualList<BodyRow[]>
-                    ref={(handle) => {
-                        list = handle;
-                        if (handle) {
-                            table.props.getVirtualizedListRef?.(handle);
-                        }
-                    }}
-                    class={`${prefixCls()}-body`}
-                    // an empty table drops the list height so the empty slot shows
-                    style={{ width: '100%', 'overflow-x': 'auto', 'overflow-y': 'auto', direction: table.view().direction, ...(rows().length ? {} : { height: undefined }) }}
-                    height={rows().length ? (typeof table.props.scroll?.y === 'number' ? table.props.scroll.y : numbers.DEFAULT_VIRTUALIZED_BODY_HEIGHT) : 0}
-                    innerElementType={VirtualizedTbody}
-                    itemCount={rows().length}
-                    itemData={rows()}
-                    itemKey={(index, data) => data[index]?.id ?? index}
-                    itemSize={itemSize}
-                    outerElementType={VirtualizedOuter}
-                    outerRef={(node) => attachBody(node)}
-                    overscan={virtualizedOptions()?.overscanCount}
-                    onScroll={(args) => virtualizedOptions()?.onScroll?.(args)}
-                >
-                    {(row) =>
-                        renderRow(
-                            untrack(() => row.data[row.index].id),
-                            () => mergeStyles(row.style, { width: toCssLength(rowWidth()) }) as JSX.CSSProperties
-                        )
+            <VirtualList<BodyRow[]>
+                ref={(handle) => {
+                    list = handle;
+                    if (handle) {
+                        table.props.getVirtualizedListRef?.(handle);
                     }
-                </VirtualList>
-            </Show>
+                }}
+                class={`${prefixCls()}-body`}
+                // an empty table drops the list height so the empty slot shows
+                style={{ width: '100%', 'overflow-x': 'auto', 'overflow-y': 'auto', direction: table.view().direction, ...(rows().length ? {} : { height: undefined }) }}
+                height={rows().length ? (typeof table.props.scroll?.y === 'number' ? table.props.scroll.y : numbers.DEFAULT_VIRTUALIZED_BODY_HEIGHT) : 0}
+                innerElementType={VirtualizedTbody}
+                itemCount={hasWidths() ? rows().length : 0}
+                itemData={rows()}
+                itemKey={(index, data) => data[index]?.id ?? index}
+                itemSize={itemSize}
+                outerElementType={VirtualizedOuter}
+                outerRef={(node) => attachBody(node)}
+                overscan={virtualizedOptions()?.overscanCount}
+                scrollMargin={props.includeHeader ? listHeaderHeight() : 0}
+                onScroll={(args) => virtualizedOptions()?.onScroll?.(args)}
+            >
+                {(row) =>
+                    renderRow(
+                        untrack(() => row.data[row.index].id),
+                        () => mergeStyles(row.style, { width: toCssLength(rowWidth()) }) as JSX.CSSProperties
+                    )
+                }
+            </VirtualList>
         </Show>
     );
 }

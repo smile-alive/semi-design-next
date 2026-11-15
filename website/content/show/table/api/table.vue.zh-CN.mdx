@@ -37,7 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | rowKey | 行 key 的取值：数据项的字段名，或返回字符串、数字的函数。 | <ApiType detail={"TableRowKey\u003cR>"}>Type</ApiType> | `undefined` |
 | rowSelection | 行选择配置，传 true 使用默认配置，详见 rowSelection。 | <ApiType detail={"boolean \u007c RowSelectionProps\u003cR>"}>Type</ApiType> | `semiGlobalDefault("Table", "rowSelection")` |
 | rowSpanHover | 悬停在带 rowSpan 的单元格上时，高亮它跨越的所有行。 | `boolean` | `false` |
-| scroll | 滚动区域配置，x 为横向宽度，y 为纵向高度，详见 scroll。 | `TableScroll` | `semiGlobalDefault("Table", "scroll")` |
+| scroll | 滚动区域配置，x 为横向宽度，y 为纵向最大高度（含表头），详见 scroll。 | `TableScroll` | `semiGlobalDefault("Table", "scroll")` |
 | showHeader | 是否显示表头。 | `boolean` | `true` |
 | size | 表格尺寸，影响单元格的内边距。 | `"default" \| "middle" \| "small"` | `"default"` |
 | sticky | 将表头固定在页面顶部，传对象时 top 为距离滚动容器顶部的距离。 | `TableSticky` | `semiGlobalDefault("Table", "sticky")` |

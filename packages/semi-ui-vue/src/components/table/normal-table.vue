@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
-    import { computed, normalizeStyle, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
+    import { computed, normalizeStyle, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
     import { cloneDeep } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
     import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/components/table/foundation';
@@ -80,7 +80,13 @@
 
     const fixedHeader = computed(() => Boolean(props.scroll?.y) || Boolean(props.sticky));
     const virtualized = computed(() => Boolean(props.virtualized));
-    const splitTable = computed(() => fixedHeader.value || virtualized.value);
+
+    /**
+     * Elsewhere the header sits in the body's scroller, so the compositor moves both in the same frame. A header stuck
+     * to the page would be trapped by the body's overflow, so it renders as a separate table above the body
+     */
+    const headerApart = computed(() => Boolean(props.sticky));
+    const splitTable = computed(() => headerApart.value || virtualized.value);
 
     const built = computed(() => {
         const origins = new WeakMap<ColumnProps, ColumnProps>();
@@ -134,8 +140,13 @@
         }
         const head = toElement(heads.value?.[0]);
         const body = bodies.value?.[0]?.element();
-        if (target.scrollLeft !== lastScrollLeft) {
-            if (target === body && head) {
+        if (target === head && body && foundation.headerFollowsInCss()) {
+            // focus scrolled the clipped header to reveal a cell; the body takes the distance, and the header's
+            // animation follows it
+            body.scrollLeft += target.scrollLeft;
+            target.scrollLeft = 0;
+        } else if (target.scrollLeft !== lastScrollLeft) {
+            if (target === body && head && !foundation.headerFollowsInCss()) {
                 head.scrollLeft = target.scrollLeft;
             } else if (target === head && body) {
                 body.scrollLeft = target.scrollLeft;
@@ -148,6 +159,12 @@
     const syncTableWidth = () => {
         const root = roots.value?.[0];
         root?.style.setProperty('--semi-table-section-width', `${amendTableWidth(root.getBoundingClientRect().width)}px`);
+    };
+
+    const syncHeaderRange = () => {
+        if (headerApart.value) {
+            foundation.syncHeaderScrollRange();
+        }
     };
 
     const isNameKey = (key: string) => key === 'aria-label' || key === 'aria-labelledby' || key === 'aria-describedby';
@@ -328,11 +345,18 @@
 
     useResizeObserver(() => (anyColumnFixed.value ? (roots.value?.[0] ?? null) : null), foundation.syncScrollEdges);
 
+    // the content-box size changes with the body's scrollbar too; columns or rows that widen the table without
+    // resizing the body are caught after the patch
+    useResizeObserver(() => (headerApart.value ? (bodies.value?.[0]?.element() ?? null) : null), foundation.syncHeaderScrollRange);
+
+    onMounted(syncHeaderRange);
+
     // content width changes without a wrapper resize (columns, data) are caught after the patch
     onUpdated(() => {
         if (anyColumnFixed.value) {
             foundation.syncScrollEdges();
         }
+        syncHeaderRange();
     });
 
     defineExpose<TableHandle<R>>({
@@ -370,14 +394,14 @@
                         <component :is="node" v-for="[node, key] in frame.title" v-else :key="key" />
                     </div>
                     <div :aria-rowcount="virtualized ? headerRowCount + virtualizedData.length : undefined" :class="`${prefixCls}-container`" :role="splitTable ? 'table' : undefined" v-bind="splitTable ? frame.nameAttrs : {}">
-                        <HeadTable v-if="fixedHeader" ref="head" :columns="built.columns" />
+                        <HeadTable v-if="headerApart" ref="head" :columns="built.columns" />
                         <Body
                             ref="body"
                             :columns="built.columns"
                             :data-source="view.dataSource ?? []"
                             :expandedRowKeys="view.expandedRowKeys ?? []"
                             :groups="view.groups"
-                            :includeHeader="!fixedHeader"
+                            :includeHeader="!headerApart"
                             :pageDisabledRowKeysSet="view.pageDisabledRowKeysSet ?? new Set()"
                             :tableAttrs="splitTable ? undefined : frame.nameAttrs"
                             :virtualizedData="virtualizedData"

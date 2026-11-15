@@ -18,12 +18,19 @@
         /** Key of a row; the index when absent */
         itemKey?: (index: number) => PropertyKey;
         overscan?: number;
+        /**
+         * Height of content rendered in `before`, such as a sticky header: rows start this far down, and a row scrolled
+         * to the start lands below it
+         */
+        scrollMargin?: number;
         /** Attributes of the element that holds the rows */
         innerAttrs?: HTMLAttributes<HTMLElement>;
         /** Tag of the element that holds the rows; `ul` when the rows are `li` */
         innerTag?: 'div' | 'ul';
         /** Attributes of a div between the scroll container and the row holder, for styles that select the row holder as its direct child */
         wrapperAttrs?: HTMLAttributes<HTMLDivElement>;
+        /** Rendered inside the scroll container before the rows */
+        before?: Snippet;
         /** Rendered inside the scroll container after the rows, such as an empty placeholder */
         after?: Snippet;
         /** Renders one row; `style` positions it and goes on the row's element */
@@ -34,7 +41,7 @@
      * Attributes land on the scroll container; lists whose rows take no focus pass `tabindex={-1}` so Chrome does not
      * make the container a second tab stop.
      */
-    let { height, width = '100%', itemCount, itemSize, itemKey, overscan = 2, innerAttrs, innerTag = 'div', wrapperAttrs, after, children, ...rest }: VirtualListProps = $props();
+    let { height, width = '100%', itemCount, itemSize, itemKey, overscan = 2, scrollMargin = 0, innerAttrs, innerTag = 'div', wrapperAttrs, before, after, children, ...rest }: VirtualListProps = $props();
 
     let scroller = $state<HTMLDivElement>();
     let reportRect: ((rect: Rect) => void) | null = null;
@@ -44,6 +51,8 @@
         getScrollElement: () => scroller ?? null,
         estimateSize: (index: number) => (typeof itemSize === 'number' ? itemSize : itemSize(index)),
         overscan,
+        scrollMargin,
+        scrollPaddingStart: scrollMargin,
         // The viewport size is the height prop: measuring would read 0 in jsdom and needs a ResizeObserver to follow a
         // prop change
         initialRect: { width: 0, height },
@@ -97,6 +106,7 @@
 </script>
 
 <div bind:this={scroller} {...rest} style="position: relative; height: {toCssLength(height)}; width: {toCssLength(width)}; overflow: auto;{rest.style ?? ''}">
+    {@render before?.()}
     {#snippet rows()}
         <svelte:element this={innerTag} {...innerAttrs} style="height: {$virtualizer.getTotalSize()}px; width: 100%">
             {#each $virtualizer.getVirtualItems() as item (itemKey ? itemKey(item.index) : item.index)}
