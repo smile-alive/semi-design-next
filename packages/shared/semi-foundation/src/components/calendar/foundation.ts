@@ -248,12 +248,12 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
         };
         arm();
         // waking up shows the page again, and the capped delay catches the rest
-        document.addEventListener('visibilitychange', onChange);
-        window.addEventListener('focus', onChange);
+        const controller = new AbortController();
+        document.addEventListener('visibilitychange', onChange, { signal: controller.signal });
+        window.addEventListener('focus', onChange, { signal: controller.signal });
         return () => {
             clearTimeout(timer);
-            document.removeEventListener('visibilitychange', onChange);
-            window.removeEventListener('focus', onChange);
+            controller.abort();
         };
     }
 

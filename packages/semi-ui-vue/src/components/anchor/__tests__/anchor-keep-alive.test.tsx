@@ -2,7 +2,7 @@
 import { KeepAlive, defineComponent } from 'vue';
 import { fireEvent, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { countLiveListeners, render } from '@test/utils/vue';
 import Anchor, { AnchorLink } from '../index';
 
 const Host = defineComponent({
@@ -14,8 +14,7 @@ describe('Anchor KeepAlive', () => {
     it('失活后释放窗口上的 scroll 监听，激活后恢复', async () => {
         const add = vi.spyOn(window, 'addEventListener');
         const remove = vi.spyOn(window, 'removeEventListener');
-        // the same handlers are added again on activation, so listeners are counted by add minus remove calls
-        const live = () => add.mock.calls.filter(([type]) => type === 'scroll').length - remove.mock.calls.filter(([type]) => type === 'scroll').length;
+        const live = () => countLiveListeners(add, remove, 'scroll');
         const view = render(Host, { props: { active: true } });
         // one throttled listener for the active link and one debounced listener for the end of a click scroll
         expect(live()).toBe(2);

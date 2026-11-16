@@ -8,6 +8,7 @@ import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import type { TooltipProps } from '@fibrae/semi-ui-react/tooltip';
 import { semiGlobal } from '@fibrae/semi-ui-react/utils';
+import { countLiveListeners } from '@test/utils/react';
 import Anchor, { type AnchorProps } from '../index';
 
 const { Link } = Anchor;
@@ -40,8 +41,6 @@ const scroll = (target: Window | Element = window) =>
         fireEvent.scroll(target);
         vi.advanceTimersByTime(200);
     });
-
-const scrollListeners = (spy) => spy.mock.calls.filter(([type]) => type === 'scroll').length;
 
 describe('Anchor', () => {
     afterEach(() => {
@@ -492,9 +491,9 @@ describe('Anchor', () => {
             const add = vi.spyOn(window, 'addEventListener');
             const remove = vi.spyOn(window, 'removeEventListener');
             const { unmount } = renderAnchor();
-            expect(scrollListeners(add)).toBeGreaterThan(0);
+            expect(countLiveListeners(add, remove, 'scroll')).toBeGreaterThan(0);
             unmount();
-            expect(scrollListeners(remove)).toBe(scrollListeners(add));
+            expect(countLiveListeners(add, remove, 'scroll')).toBe(0);
         });
 
         it('getContainer 返回其他元素时迁移监听', () => {
@@ -512,12 +511,10 @@ describe('Anchor', () => {
             const { rerender } = render(<Demo id="one" />);
             const one = document.getElementById('one');
             const two = document.getElementById('two');
-            const removeFromOne = vi.spyOn(one, 'removeEventListener');
             setTop('a', -50);
             setTop('b', 40);
 
             rerender(<Demo id="two" />);
-            expect(scrollListeners(removeFromOne)).toBeGreaterThan(0);
             scroll(one);
             expect(document.querySelector(`.${activeCls}`)).toBeNull();
             scroll(two);
@@ -639,7 +636,7 @@ describe('Anchor', () => {
                 </Anchor>
             </StrictMode>
         );
-        expect(scrollListeners(add) - scrollListeners(remove)).toBe(2);
+        expect(countLiveListeners(add, remove, 'scroll')).toBe(2);
         fireEvent.click(link('a'));
         expect(onChange).toHaveBeenCalledExactlyOnceWith('#a', '');
     });

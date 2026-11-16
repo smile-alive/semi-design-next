@@ -38,6 +38,7 @@ export interface AnchorBaseState {
 
 export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProps, E = unknown> extends BaseFoundation<AnchorAdapter<P, E>, P, AnchorBaseState> {
     #container: HTMLElement | Window | null = null;
+    #scrollController: AbortController | null = null;
     #slideBarTop: number | null = null;
     #activeFromScroll = false;
     #throttledScroll = throttle(() => this.handleScroll(), 100);
@@ -54,13 +55,14 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     #bind() {
         const container = this.#getContainer();
         this.#container = container;
-        container.addEventListener('scroll', this.#throttledScroll);
-        container.addEventListener('scroll', this.#debouncedScrollEnd);
+        this.#scrollController = new AbortController();
+        container.addEventListener('scroll', this.#throttledScroll, { signal: this.#scrollController.signal });
+        container.addEventListener('scroll', this.#debouncedScrollEnd, { signal: this.#scrollController.signal });
     }
 
     #unbind() {
-        this.#container?.removeEventListener('scroll', this.#throttledScroll);
-        this.#container?.removeEventListener('scroll', this.#debouncedScrollEnd);
+        this.#scrollController?.abort();
+        this.#scrollController = null;
         this.#container = null;
     }
 
