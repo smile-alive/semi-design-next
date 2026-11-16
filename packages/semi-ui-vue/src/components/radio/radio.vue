@@ -2,7 +2,7 @@
     import { computed, nextTick, onBeforeUnmount, onMounted, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
     import { radioClasses } from '@fibrae/semi-foundation/components/radio/constants';
     import RadioFoundation, { type RadioAdapter, type RadioBaseState } from '@fibrae/semi-foundation/components/radio/radio-foundation';
-    import { joinIds } from '@fibrae/semi-foundation/utils';
+    import { isAriaInvalid, joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-vue';
     import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
@@ -90,7 +90,7 @@
 
     const labelledby = (a: Record<string, unknown>) => joinIds(a['aria-labelledby'], slots.default ? addonId.value : undefined);
 
-    const describedby = (a: Record<string, unknown>) => joinIds(a['aria-describedby'], hasExtra() ? extraId.value : undefined, a['aria-invalid'] ? a['aria-errormessage'] : undefined);
+    const describedby = (a: Record<string, unknown>) => joinIds(a['aria-describedby'], hasExtra() ? extraId.value : undefined, isAriaInvalid(a['aria-invalid']) ? a['aria-errormessage'] : undefined);
 
     const inputName = () => group?.view.value.name ?? (attrs.name as string | undefined);
 

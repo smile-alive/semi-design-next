@@ -36,6 +36,11 @@ export function joinIds(...ids: unknown[]): string | undefined {
     return ids.filter((id) => typeof id === 'string' && id !== '').join(' ') || undefined;
 }
 
+/** aria-invalid is a token: the string 'false' is truthy but means valid */
+export function isAriaInvalid(value: unknown) {
+    return Boolean(value) && value !== 'false';
+}
+
 /** An explicit role wins; otherwise a generic div given a name becomes a group, since a div without a role cannot carry one */
 export function namedRole<A extends object>(attrs: A): RoleOf<A> | 'group' | undefined {
     const { role, 'aria-label': label, 'aria-labelledby': labelledby } = attrs as { role?: RoleOf<A> | null; 'aria-label'?: unknown; 'aria-labelledby'?: unknown };
