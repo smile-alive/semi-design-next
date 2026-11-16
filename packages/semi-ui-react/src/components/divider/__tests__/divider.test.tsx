@@ -6,7 +6,7 @@ describe('Divider', () => {
     it('Divider 自定义 className 与 style', () => {
         const { container } = render(<Divider className="test" style={{ color: 'red' }} />);
         const divider = container.querySelector('.semi-divider');
-        expect(divider).toHaveClass('test');
+        expect(divider).toHaveClass('probe-should-fail');
         expect(divider).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 

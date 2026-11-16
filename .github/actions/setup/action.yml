@@ -1,4 +1,5 @@
 name: Setup
+# probe: forces a full CI run, do not merge
 description: Install the toolchain and dependencies, and provide the packages' dist
 
 inputs:
