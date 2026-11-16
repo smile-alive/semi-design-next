@@ -1,8 +1,8 @@
 name: Deploy site
 
-# main deploys the production site, release a preview at release.<project>.pages.dev. CI calls this after a push to
-# release passes, Release after publishing; a push to main by hand (docs between releases) and a manual run deploy the
-# branch pushed or picked in "Use workflow from"
+# main deploys the production site, release a preview at release.<project>.pages.dev. Deploy preview calls this after
+# CI passes on a push to release, Release after publishing; a push to main by hand (docs between releases) and a manual
+# run deploy the branch pushed or picked in "Use workflow from"
 on:
     workflow_call:
         inputs:
