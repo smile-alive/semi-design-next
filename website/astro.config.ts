@@ -8,6 +8,7 @@ import solid from '@astrojs/solid-js';
 import svelte from '@astrojs/svelte';
 import vue from '@astrojs/vue';
 import { semiCssLayer, semiInlineJsonWorker, semiScssOptions, semiSourceAliases } from '../vite.semi.ts';
+import agentDocs from './plugins/agent-docs.ts';
 import frameworkMdx from './plugins/framework-mdx.ts';
 import rehypeAnchorIds from './plugins/rehype-anchor-ids.ts';
 import rehypeTableContainer from './plugins/rehype-table-container.ts';
@@ -45,7 +46,7 @@ export default defineConfig({
     // Compiling demos and semi-ui-react source (via semiSourceAliases) matches what consumers get with the compiler on.
     // exclude feeds compiler and Fast Refresh alike: Vue and Solid package .tsx also resolve to source; neither handles their JSX.
     // Svelte package .ts resolve to source too, and the compiler would rewrite their `use*` functions into React hooks.
-    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons)-(vue|svelte)\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), svelte(), mdx(), sitemap({ filter: (page) => !redirectPage.test(new URL(page).pathname) })],
+    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons)-(vue|svelte)\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), svelte(), mdx(), agentDocs(), sitemap({ filter: (page) => !redirectPage.test(new URL(page).pathname) })],
     vite: {
         plugins: [frameworkMdx(), semiInlineJsonWorker],
         build: {
