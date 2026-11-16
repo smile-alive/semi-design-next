@@ -273,7 +273,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                 {
                     [`${prefixCls}-textarea-disabled`]: local.disabled,
                     [`${prefixCls}-textarea-readonly`]: local.readonly,
-                    [`${prefixCls}-textarea-autosize`]: Boolean(local.autosize),
+                    [`${prefixCls}-textarea-autosize`]: local.autosize,
                     [`${prefixCls}-textarea-showClear`]: local.showClear,
                 },
                 local.classNames?.textarea
@@ -341,7 +341,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                 [`${prefixCls}-textarea-borderless`]: local.borderless,
                 [`${prefixCls}-textarea-wrapper-disabled`]: local.disabled,
                 [`${prefixCls}-textarea-wrapper-readonly`]: local.readonly,
-                [`${prefixCls}-textarea-wrapper-${props.validateStatus}`]: Boolean(props.validateStatus),
+                [`${prefixCls}-textarea-wrapper-${props.validateStatus}`]: props.validateStatus,
                 [`${prefixCls}-textarea-wrapper-focus`]: state().isFocus,
                 [`${prefixCls}-textarea-wrapper-withLineNumber`]: local.showLineNumber,
                 [`${prefixCls}-textarea-wrapper-resizeX`]: resizableIn(['horizontal', 'both', 'inline']),

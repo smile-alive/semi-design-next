@@ -66,7 +66,7 @@ export default function TableHeaderRow({ components, row, prefixCls = cssClasses
             const textAlign = getRTLAlign(column.align, direction);
             cellStyle = { ...cellStyle, textAlign };
             customProps.className = clsx(customProps.className, {
-                [`${prefixCls}-align-${textAlign}`]: Boolean(textAlign),
+                [`${prefixCls}-align-${textAlign}`]: textAlign,
             });
         }
 

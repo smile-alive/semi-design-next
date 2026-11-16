@@ -32,7 +32,7 @@ export default function Divider(rawProps: DividerProps) {
     const dividerClassNames = clsx(prefixCls, className, {
         [`${prefixCls}-horizontal`]: layout === 'horizontal',
         [`${prefixCls}-vertical`]: layout === 'vertical',
-        [`${prefixCls}-dashed`]: !!dashed,
+        [`${prefixCls}-dashed`]: dashed,
         [`${prefixCls}-with-text`]: hasText,
         [`${prefixCls}-with-text-${align}`]: hasText,
     });

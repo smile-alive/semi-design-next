@@ -209,7 +209,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     #updateSelectedFromProps(values: (Date | null)[]) {
         const type: Type = this.getProp('type');
         const { selected, rangeStart, rangeEnd } = this.getStates();
-        if (values && values?.length) {
+        if (values?.length) {
             switch (type) {
                 case 'date':
                     this.#initDatePickerFromValue(values);

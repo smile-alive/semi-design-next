@@ -345,7 +345,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
                     this.#handleBeforeUploadResultInObject(newResult, file);
                     break;
                 }
-                case buResult && isPromise(buResult): {
+                case isPromise(buResult): {
                     Promise.resolve(buResult as Promise<BeforeUploadObjectResult>).then(
                         (resolveData) => {
                             let newResult = { shouldUpload: true };

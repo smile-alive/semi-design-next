@@ -22,7 +22,7 @@ function SelectionCell(props: SelectionCellProps) {
     const prefixCls = () => props.prefixCls ?? cssClasses.PREFIX;
 
     return (
-        <span class={clsx(`${prefixCls()}-selection-wrap`, { [`${prefixCls()}-selection-disabled`]: Boolean(props.disabled) }, props.class)}>
+        <span class={clsx(`${prefixCls()}-selection-wrap`, { [`${prefixCls()}-selection-disabled`]: props.disabled }, props.class)}>
             <Checkbox aria-label={props['aria-label']} disabled={Boolean(props.disabled)} indeterminate={props.indeterminate} checked={props.selected} onKeyUp={props.onKeyUp} onChange={(e) => props.onChange?.(e.target.checked, e)} {...props.getCheckboxProps?.()} />
         </span>
     );

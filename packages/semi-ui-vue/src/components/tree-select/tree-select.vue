@@ -363,13 +363,13 @@
                       [`${prefix}-multiple`]: multiple.value,
                       [`${prefix}-multiple-tagInput-empty`]: multiple.value && triggerSearch.value && !hasValue.value,
                       [`${prefix}-multiple-tagInput-notEmpty`]: multiple.value && triggerSearch.value && hasValue.value,
-                      [`${prefix}-filterable`]: Boolean(filterTreeNode.value),
+                      [`${prefix}-filterable`]: filterTreeNode.value,
                       [`${prefix}-error`]: props.validateStatus === 'error',
                       [`${prefix}-warning`]: props.validateStatus === 'warning',
                       [`${prefix}-small`]: looks.size === 'small',
                       [`${prefix}-large`]: looks.size === 'large',
-                      [`${prefix}-with-prefix`]: Boolean(k.prefix || k.insetLabel),
-                      [`${prefix}-with-suffix`]: Boolean(k.suffix),
+                      [`${prefix}-with-prefix`]: k.prefix || k.insetLabel,
+                      [`${prefix}-with-suffix`]: k.suffix,
                       [`${prefix}-triggerTagWrap`]: props.triggerTagWrap && multiple.value && triggerSearch.value,
                   },
               ];
@@ -552,7 +552,7 @@
                     <div
                         v-if="parts.kinds.prefix || parts.kinds.insetLabel"
                         :id="prefixId()"
-                        :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: Boolean(parts.kinds.insetLabel), [`${prefix}-prefix-text`]: (parts.kinds.prefix ?? parts.kinds.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (parts.kinds.prefix ?? parts.kinds.insetLabel) === 'icon' }]"
+                        :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: parts.kinds.insetLabel, [`${prefix}-prefix-text`]: (parts.kinds.prefix ?? parts.kinds.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (parts.kinds.prefix ?? parts.kinds.insetLabel) === 'icon' }]"
                         x-semi-prop="prefix,insetLabel"
                     >
                         <slot v-if="parts.kinds.prefix" name="prefix" />

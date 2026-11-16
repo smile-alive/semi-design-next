@@ -100,7 +100,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
         let _zoom = 1;
 
         this.#syncInitialZoomFlagWithSrc();
-        if (!this.#initialZoomApplied && typeof initialZoom === 'number' && Number.isFinite(initialZoom) && initialZoom > 0) {
+        if (!this.#initialZoomApplied && Number.isFinite(initialZoom) && initialZoom > 0) {
             this.#initialZoomApplied = true;
             return this.#clampZoom(initialZoom);
         }

@@ -22,12 +22,12 @@
 
 <div
     bind:this={element}
-    class={[`${table.prefixCls}-header`, { [`${table.prefixCls}-header-sticky`]: Boolean(table.sticky), [`${table.prefixCls}-header-hidden`]: !table.showHeader }]}
+    class={[`${table.prefixCls}-header`, { [`${table.prefixCls}-header-sticky`]: table.sticky, [`${table.prefixCls}-header-hidden`]: !table.showHeader }]}
     inert={!table.showHeader}
     style={joinStyles(table.bodyHasScrollbar && 'overflow-y: scroll', `top: ${toCssLength(top)}`)}
     onscroll={table.handleBodyScroll}
 >
-    <svelte:element this={table.components.header.outer} class={[table.prefixCls, { [`${table.prefixCls}-fixed`]: table.tableLayout === 'fixed' }]} role="none" style={joinStyles(table.scroll?.x != null && `width: ${toCssLength(table.scroll.x)}`, minWidth !== undefined && `min-width: ${toCssLength(minWidth)}`)}>
+    <svelte:element this={table.components.header.outer} class={[table.prefixCls, { [`${table.prefixCls}-fixed`]: table.tableLayout === 'fixed' }]} role="none" style:min-width={toCssLength(minWidth)} style:width={toCssLength(table.scroll?.x)}>
         <ColGroup {columns} prefixCls={table.prefixCls} />
         <TableHeader {columns} />
     </svelte:element>

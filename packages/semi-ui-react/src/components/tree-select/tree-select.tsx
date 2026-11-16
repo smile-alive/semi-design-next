@@ -832,14 +832,14 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                       [`${prefixcls}-multiple`]: multiple,
                       [`${prefixcls}-multiple-tagInput-empty`]: multiple && isEmptyTriggerSearch,
                       [`${prefixcls}-multiple-tagInput-notEmpty`]: multiple && isValueTriggerSearch,
-                      [`${prefixcls}-filterable`]: Boolean(filterTreeNode),
+                      [`${prefixcls}-filterable`]: filterTreeNode,
                       [`${prefixcls}-error`]: validateStatus === 'error',
                       [`${prefixcls}-warning`]: validateStatus === 'warning',
                       [`${prefixcls}-small`]: size === 'small',
                       [`${prefixcls}-large`]: size === 'large',
                       [`${prefixcls}-with-prefix`]: hasPrefix,
                       [`${prefixcls}-with-suffix`]: hasContent(suffix),
-                      [`${prefixcls}-triggerTagWrap`]: Boolean(triggerTagWrap) && multiple && isTriggerPositionSearch,
+                      [`${prefixcls}-triggerTagWrap`]: triggerTagWrap && multiple && isTriggerPositionSearch,
                   },
                   className
               );

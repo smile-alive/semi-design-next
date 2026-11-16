@@ -24,7 +24,7 @@
 
     // a rendered label names the slot, so the slot becomes a group its content belongs to
     const labelShown = $derived(!noLabel && ((labelConfig.text != null && labelConfig.text !== '') || Boolean(fieldLabel)));
-    const labelledby = $derived(joinIds(rest['aria-labelledby'] ?? undefined, labelShown && labelId));
+    const labelledby = $derived(joinIds(rest['aria-labelledby'], labelShown && labelId));
 </script>
 
 {#snippet labelView()}

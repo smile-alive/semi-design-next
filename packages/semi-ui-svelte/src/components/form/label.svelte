@@ -40,7 +40,7 @@
 {/snippet}
 
 {#if hasTooltip}
-    <div class={`${prefix}-with-tooltip`} style={width === undefined ? undefined : `width: ${toCssLength(width)}`}>
+    <div class={`${prefix}-with-tooltip`} style:width={toCssLength(width)}>
         {@render labelView()}
         <Tooltip>
             {#snippet child({ props })}{@render tooltipButton(props)}{/snippet}

@@ -27,16 +27,7 @@ export interface ContentProps extends ElementProps<'div', 'onChange' | 'onClick'
 
 function Content({ info = [], activeKey, onChange, onClick, style, className, renderItem, ...rest }: ContentProps) {
     return (
-        <Collapse
-            {...rest}
-            className={clsx(collapseCls, {
-                [className]: className,
-            })}
-            style={style}
-            activeKey={activeKey}
-            clickHeaderToExpand={false}
-            onChange={onChange}
-        >
+        <Collapse {...rest} className={clsx(collapseCls, className)} style={style} activeKey={activeKey} clickHeaderToExpand={false} onChange={onChange}>
             {info.map((item) => (
                 <Collapse.Panel
                     key={item.key}

@@ -24,7 +24,7 @@ function SkillItem({ skill, onClick, isActive, renderSkillItem, onMouseEnter, in
 
     const handleMouseEnter = () => onMouseEnter?.(index);
 
-    if (renderSkillItem && typeof renderSkillItem === 'function') {
+    if (typeof renderSkillItem === 'function') {
         return renderSkillItem({
             skill: skill,
             className,

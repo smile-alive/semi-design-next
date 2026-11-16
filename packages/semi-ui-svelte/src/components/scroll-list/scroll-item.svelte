@@ -81,7 +81,7 @@
                 class: {
                     [`${prefix}-item-sel`]: selected && !isWheel,
                     [cssClasses.SELECTED]: isWheel && key === states().highlightedKey,
-                    [`${prefix}-item-disabled`]: Boolean(item.disabled),
+                    [`${prefix}-item-disabled`]: item.disabled,
                 },
                 text: ItemFoundation.getItemText(item, selected, transform),
             };

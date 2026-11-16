@@ -150,7 +150,7 @@ function TableRow({
         if (expandableRow && columnIndex === firstIndex) {
             expandableProps.renderExpandIcon = renderTreeExpandIcon;
             if (hideExpandedColumn || isSection) {
-                expandableProps.expandIcon = expandIcon != null ? expandIcon : true;
+                expandableProps.expandIcon = expandIcon ?? true;
             }
         }
 

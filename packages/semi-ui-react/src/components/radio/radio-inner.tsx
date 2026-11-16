@@ -56,7 +56,7 @@ export default function RadioInner({
 
     const wrapper = clsx({
         [`${prefix}-inner`]: true,
-        [`${prefix}-inner-checked`]: Boolean(checked),
+        [`${prefix}-inner-checked`]: checked,
         [`${prefix}-inner-buttonRadio`]: isButtonRadio,
         [`${prefix}-inner-pureCardRadio`]: isPureCardRadio,
     });

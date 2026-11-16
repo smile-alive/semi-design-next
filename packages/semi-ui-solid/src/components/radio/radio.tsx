@@ -161,7 +161,7 @@ export default function Radio(rawProps: RadioProps) {
             class={clsx(prefix, local.class, {
                 [`${prefix}-disabled`]: view().disabled,
                 [`${prefix}-checked`]: view().checked,
-                [`${prefix}-${local.displayMode}`]: Boolean(local.displayMode),
+                [`${prefix}-${local.displayMode}`]: local.displayMode,
                 [`${prefix}-buttonRadioComponent`]: !view().inGroup && view().isButtonRadio,
                 [`${prefix}-buttonRadioGroup`]: view().isButtonRadio,
                 [`${prefix}-buttonRadioGroup-${view().buttonSize}`]: view().isButtonRadio && view().buttonSize,

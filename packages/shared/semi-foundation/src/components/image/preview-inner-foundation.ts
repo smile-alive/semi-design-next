@@ -139,10 +139,8 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     }
 
     #clearTimer() {
-        if (this.#timer) {
-            clearTimeout(this.#timer);
-            this.#timer = null;
-        }
+        clearTimeout(this.#timer);
+        this.#timer = null;
     }
 
     #onWheel(e: WheelEvent) {

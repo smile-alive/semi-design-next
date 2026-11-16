@@ -607,7 +607,7 @@
                         `${cls}-selection-text`,
                         {
                             [`${cls}-selection-placeholder`]: !hasSingleContent,
-                            [`${cls}-selection-text-hide`]: Boolean(states().inputValue) && states().showInput && searchInTrigger,
+                            [`${cls}-selection-text-hide`]: states().inputValue && states().showInput && searchInTrigger,
                             [`${cls}-selection-text-inactive`]: !states().inputValue && states().showInput && searchInTrigger,
                         },
                     ]}
@@ -670,8 +670,8 @@
                       [`${cls}-error`]: validateStatus === 'error',
                       [`${cls}-warning`]: validateStatus === 'warning',
                       [`${cls}-no-arrow`]: !showArrow,
-                      [`${cls}-with-prefix`]: Boolean(prefix || insetLabel),
-                      [`${cls}-with-suffix`]: Boolean(suffix),
+                      [`${cls}-with-prefix`]: prefix || insetLabel,
+                      [`${cls}-with-suffix`]: suffix,
                   },
               ]}
         id={selectId}

@@ -641,7 +641,7 @@
                 [`${prefixCls}-${strings.SIZE_MIDDLE}`]: size === strings.SIZE_MIDDLE,
                 [`${prefixCls}-virtualized`]: isVirtualized,
                 [`${prefixCls}-bordered`]: bordered,
-                [`${prefixCls}-fixed-header`]: Boolean(scroll?.y),
+                [`${prefixCls}-fixed-header`]: scroll?.y,
             }}
         >
             {#if mergedPagination && (paginationPosition === 'top' || paginationPosition === 'both')}

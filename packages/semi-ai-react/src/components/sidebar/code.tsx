@@ -62,7 +62,7 @@ export const CollapseExpandButton = React.memo(function CollapseExpandButton({ c
 
 function CodeContent({ activeKey, codes = [], onExpand, style, className, onChange, ...rest }: CodeContentProps) {
     return (
-        <Collapse {...rest} className={clsx(collapseCls, `${collapseCls}-code`, { [className]: className })} style={style} activeKey={activeKey} clickHeaderToExpand={false} onChange={onChange}>
+        <Collapse {...rest} className={clsx(collapseCls, `${collapseCls}-code`, className)} style={style} activeKey={activeKey} clickHeaderToExpand={false} onChange={onChange}>
             {codes.map((code) => {
                 const { key, ...item } = code;
                 return (

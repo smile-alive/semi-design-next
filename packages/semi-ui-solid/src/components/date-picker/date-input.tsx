@@ -192,7 +192,7 @@ export default function DateInput(rawProps: DateInputProps) {
                 </div>
                 <span
                     class={clsx(`${cssClasses.PREFIX}-range-input-separator`, {
-                        [`${cssClasses.PREFIX}-range-input-separator-active`]: Boolean(parts().rangeStart || parts().rangeEnd) && !props.disabled,
+                        [`${cssClasses.PREFIX}-range-input-separator-active`]: (parts().rangeStart || parts().rangeEnd) && !props.disabled,
                     })}
                     onClick={focusFromWrapper('rangeStart')}
                 >

@@ -132,7 +132,7 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
 
     const nodes: Record<DialogueActionKey, ReactNode> = { copyNode, likeNode, dislikeNode, resetNode, shareNode, editNode, moreNode };
 
-    if (customRenderFunc && typeof customRenderFunc === 'function') {
+    if (typeof customRenderFunc === 'function') {
         const keys = getDialogueActionKeys(flags, true);
         const actionNodeObj: DefaultActionNodeObj = Object.fromEntries(keys.map((key) => [key, nodes[key]]));
         return customRenderFunc({

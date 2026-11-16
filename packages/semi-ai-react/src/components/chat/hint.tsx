@@ -14,12 +14,7 @@ interface HintProps {
 
 function Hint({ value, onHintClick, renderHintBox, className, style }: HintProps) {
     return (
-        <section
-            className={clsx(`${PREFIX_HINT}s`, {
-                [className]: !!className,
-            })}
-            style={style}
-        >
+        <section className={clsx(`${PREFIX_HINT}s`, className)} style={style}>
             {value.map((item, index) => {
                 if (renderHintBox) {
                     return (

@@ -169,10 +169,10 @@ export default function BaseRow(props: BaseRowProps) {
                           props.class,
                           `${prefixCls()}-row`,
                           {
-                              [`${prefixCls()}-row-selected`]: Boolean(props.selected),
-                              [`${prefixCls()}-row-expanded`]: Boolean(props.expanded),
-                              [`${prefixCls()}-row-hovered`]: Boolean(props.hovered),
-                              [`${prefixCls()}-row-hidden`]: Boolean(props.displayNone),
+                              [`${prefixCls()}-row-selected`]: props.selected,
+                              [`${prefixCls()}-row-expanded`]: props.expanded,
+                              [`${prefixCls()}-row-hovered`]: props.hovered,
+                              [`${prefixCls()}-row-hidden`]: props.displayNone,
                           },
                           rowProps().class
                       )

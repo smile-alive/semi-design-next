@@ -116,19 +116,22 @@ export default function Radio(rawProps: RadioProps) {
     const extraId = extraIdProp || `extra-${generatedId}`;
     const prefix = css.PREFIX;
 
-    const wrapper = clsx(prefix, {
-        [`${prefix}-disabled`]: disabled,
-        [`${prefix}-checked`]: checked,
-        [`${prefix}-${displayMode}`]: Boolean(displayMode),
-        [`${prefix}-buttonRadioComponent`]: isButtonRadioComponent,
-        [`${prefix}-buttonRadioGroup`]: isButtonRadio,
-        [`${prefix}-buttonRadioGroup-${buttonSize}`]: isButtonRadio && buttonSize,
-        [`${prefix}-cardRadioGroup`]: isCardRadio,
-        [`${prefix}-cardRadioGroup_disabled`]: disabled && isCardRadio,
-        [`${prefix}-cardRadioGroup_checked`]: isCardRadio && checked && !disabled,
-        [`${prefix}-cardRadioGroup_checked_disabled`]: isCardRadio && checked && disabled,
-        [className]: Boolean(className),
-    });
+    const wrapper = clsx(
+        prefix,
+        {
+            [`${prefix}-disabled`]: disabled,
+            [`${prefix}-checked`]: checked,
+            [`${prefix}-${displayMode}`]: displayMode,
+            [`${prefix}-buttonRadioComponent`]: isButtonRadioComponent,
+            [`${prefix}-buttonRadioGroup`]: isButtonRadio,
+            [`${prefix}-buttonRadioGroup-${buttonSize}`]: isButtonRadio && buttonSize,
+            [`${prefix}-cardRadioGroup`]: isCardRadio,
+            [`${prefix}-cardRadioGroup_disabled`]: disabled && isCardRadio,
+            [`${prefix}-cardRadioGroup_checked`]: isCardRadio && checked && !disabled,
+            [`${prefix}-cardRadioGroup_checked_disabled`]: isCardRadio && checked && disabled,
+        },
+        className
+    );
 
     const addonCls = clsx(
         {

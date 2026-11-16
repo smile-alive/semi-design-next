@@ -62,9 +62,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     #restoreController: AbortController | undefined;
 
     #clearTimer() {
-        if (this.#controlsTimer) {
-            clearTimeout(this.#controlsTimer);
-        }
+        clearTimeout(this.#controlsTimer);
     }
 
     #handleMouseMove = throttle(() => {

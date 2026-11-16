@@ -30,10 +30,7 @@ function Mcp({ className, style, options = [], num, children, onConfigureButtonC
 
     return (
         <Dropdown
-            className={clsx({
-                [className]: className,
-                [`${cssClasses.PREFIX}-footer-configure-mcp`]: true,
-            })}
+            className={clsx(className, `${cssClasses.PREFIX}-footer-configure-mcp`)}
             style={style}
             {...rest}
             render={

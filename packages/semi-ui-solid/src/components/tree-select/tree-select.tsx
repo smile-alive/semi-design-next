@@ -627,9 +627,9 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                     [`${prefix}-warning`]: props.validateStatus === 'warning',
                     [`${prefix}-small`]: local.size === 'small',
                     [`${prefix}-large`]: local.size === 'large',
-                    [`${prefix}-with-prefix`]: Boolean(labelKind()),
-                    [`${prefix}-with-suffix`]: Boolean(suffixKind()),
-                    [`${prefix}-triggerTagWrap`]: Boolean(local.triggerTagWrap) && local.multiple && isTriggerPositionSearch(),
+                    [`${prefix}-with-prefix`]: labelKind(),
+                    [`${prefix}-with-suffix`]: suffixKind(),
+                    [`${prefix}-triggerTagWrap`]: local.triggerTagWrap && local.multiple && isTriggerPositionSearch(),
                 },
                 local.class
             );
@@ -964,7 +964,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                 <div
                     id={prefixId()}
                     class={clsx(`${prefix}-prefix`, {
-                        [`${prefix}-inset-label`]: Boolean(insetLabelKind()),
+                        [`${prefix}-inset-label`]: insetLabelKind(),
                         [`${prefix}-prefix-text`]: labelKind() === 'text',
                         [`${prefix}-prefix-icon`]: labelKind() === 'icon',
                     })}

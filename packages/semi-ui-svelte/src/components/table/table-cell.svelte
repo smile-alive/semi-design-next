@@ -74,7 +74,7 @@
                     [`${table.prefixCls}-cell-fixed-right`]: right,
                     [`${table.prefixCls}-cell-fixed-right-first`]: rightFirst,
                     [`${table.prefixCls}-cell-last`]: columnsToEnd != null && (colspan ?? 1) >= columnsToEnd,
-                    [`${table.prefixCls}-row-cell-ellipsis`]: Boolean(column.ellipsis),
+                    [`${table.prefixCls}-row-cell-ellipsis`]: column.ellipsis,
                 },
             ],
             // a role="none" table no longer gives colspan and rowspan their table meaning

@@ -35,7 +35,7 @@ export default function HeadTable(props: HeadTableProps) {
         <div
             ref={(element) => props.ref?.(element)}
             class={clsx(`${prefixCls()}-header`, {
-                [`${prefixCls()}-header-sticky`]: Boolean(table.props.sticky),
+                [`${prefixCls()}-header-sticky`]: table.props.sticky,
                 [`${prefixCls()}-header-hidden`]: !table.props.showHeader,
             })}
             style={headStyle()}

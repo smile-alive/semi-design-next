@@ -585,13 +585,13 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
                       [`${prefixcls}-focus`]: view.isOpen,
                       [`${prefixcls}-disabled`]: local.disabled,
                       [`${prefixcls}-single`]: true,
-                      [`${prefixcls}-filterable`]: Boolean(local.filterTreeNode),
+                      [`${prefixcls}-filterable`]: local.filterTreeNode,
                       [`${prefixcls}-error`]: props.validateStatus === 'error',
                       [`${prefixcls}-warning`]: props.validateStatus === 'warning',
                       [`${prefixcls}-small`]: local.size === 'small',
                       [`${prefixcls}-large`]: local.size === 'large',
-                      [`${prefixcls}-with-prefix`]: Boolean(labelKind()),
-                      [`${prefixcls}-with-suffix`]: Boolean(suffixKind()),
+                      [`${prefixcls}-with-prefix`]: labelKind(),
+                      [`${prefixcls}-with-suffix`]: suffixKind(),
                   });
         },
         get style() {
@@ -827,7 +827,7 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
                 <div
                     id={prefixId()}
                     class={clsx(`${prefixcls}-prefix`, {
-                        [`${prefixcls}-inset-label`]: Boolean(insetLabelKind()),
+                        [`${prefixcls}-inset-label`]: insetLabelKind(),
                         [`${prefixcls}-prefix-text`]: labelKind() === 'text',
                         [`${prefixcls}-prefix-icon`]: labelKind() === 'icon',
                     })}

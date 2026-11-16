@@ -595,13 +595,13 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
         const records: BaseIncludeGroupRecord<RecordType>[] = [];
 
-        if (keysSet.size && Array.isArray(dataSource) && dataSource.length) {
+        if (keysSet.size && Array.isArray(dataSource)) {
             records.push(...dataSource.filter((data) => keysSet.has(this.getRecordKey(data))));
 
             if (records.length < keys.length) {
                 for (const item of dataSource) {
                     const children = get(item, childrenRecordName);
-                    if (Array.isArray(children) && children.length) {
+                    if (Array.isArray(children)) {
                         records.push(...this.getRecordsByKeys(children, keys, keysSet));
                     }
                 }

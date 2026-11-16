@@ -11,7 +11,7 @@ interface DialogueTitleProps extends RenderTitleProps {
 function DialogueTitle({ role, message, customRenderFunc }: DialogueTitleProps) {
     const title = <span className={`${prefix}-title`}>{role?.name}</span>;
 
-    if (customRenderFunc && typeof customRenderFunc === 'function') {
+    if (typeof customRenderFunc === 'function') {
         return customRenderFunc({
             role,
             message,

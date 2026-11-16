@@ -224,7 +224,7 @@ function buildColumns(queries: ColumnProps[], cachedColumns: ColumnProps[], pref
     let columns: ColumnProps[] = cloneDeep(cachedColumns);
 
     const addFns = (cols: ColumnProps[] = []) => {
-        if (Array.isArray(cols) && cols.length) {
+        if (Array.isArray(cols)) {
             cols.forEach((column, index, originColumns) => {
                 const newColumn = addFnsInColumn(column, queries, prefixCls, foundation);
                 const children = column[childrenColumnName];
@@ -578,9 +578,9 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
     const wrapCls = clsx({
         [`${prefixCls}-${strings.SIZE_SMALL}`]: size === strings.SIZE_SMALL,
         [`${prefixCls}-${strings.SIZE_MIDDLE}`]: size === strings.SIZE_MIDDLE,
-        [`${prefixCls}-virtualized`]: Boolean(virtualized),
+        [`${prefixCls}-virtualized`]: virtualized,
         [`${prefixCls}-bordered`]: bordered,
-        [`${prefixCls}-fixed-header`]: Boolean(scroll?.y),
+        [`${prefixCls}-fixed-header`]: scroll?.y,
     });
 
     const tablePagination =

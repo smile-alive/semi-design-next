@@ -21,7 +21,7 @@ function Skeleton(rawProps: SkeletonProps) {
 
     return (
         <Show when={local.loading} fallback={local.children}>
-            <div {...rest} class={clsx(prefixCls, { [`${prefixCls}-active`]: Boolean(local.active) }, local.class)} aria-busy="true" x-semi-prop="placeholder">
+            <div {...rest} class={clsx(prefixCls, { [`${prefixCls}-active`]: local.active }, local.class)} aria-busy="true" x-semi-prop="placeholder">
                 {local.placeholder}
             </div>
         </Show>

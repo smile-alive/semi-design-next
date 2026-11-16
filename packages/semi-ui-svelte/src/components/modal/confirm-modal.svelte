@@ -91,8 +91,8 @@
     closeIcon={closeIcon ? closeIconSlot : undefined}
     {confirmLoading}
     {dir}
-    footer={footer === undefined ? undefined : footer === null ? null : footerSlot}
-    header={header === undefined ? undefined : header === null ? null : headerSlot}
+    footer={footer == null ? footer : footerSlot}
+    header={header == null ? header : headerSlot}
     icon={icon === null ? undefined : iconSlot}
     role="alertdialog"
     title={title == null ? undefined : titleSlot}

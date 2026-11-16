@@ -182,7 +182,7 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         // shortcut: content under a mask confined to a custom container stays Tab-reachable, upgrade to inert on the
         // container's other children if it must become unreachable.
         this.#resources.hold({ modal, layer: this.adapter.getRoot(), onEscape: this.#handleEscape, lockScroll: disableScroll && modal, focus: dialog, preventScroll: true });
-        warnIfDialogUnnamed(dialog ?? null, 'SideSheet');
+        warnIfDialogUnnamed(dialog, 'SideSheet');
     };
 
     // a user who moved on to the page next to a non-modal sheet keeps that focus

@@ -678,7 +678,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                   [`${prefixcls}-focus`]: isOpen,
                   [`${prefixcls}-disabled`]: disabled,
                   [`${prefixcls}-single`]: true,
-                  [`${prefixcls}-filterable`]: Boolean(filterTreeNode),
+                  [`${prefixcls}-filterable`]: filterTreeNode,
                   [`${prefixcls}-error`]: validateStatus === 'error',
                   [`${prefixcls}-warning`]: validateStatus === 'warning',
                   [`${prefixcls}-small`]: size === 'small',

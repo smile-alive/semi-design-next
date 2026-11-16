@@ -280,13 +280,13 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
         <div
             ref={mergeRefs(setRoot, local.ref)}
             class={clsx(wrapper, local.class, {
-                [`${wrapper}__with-prefix`]: Boolean(labelKind()),
-                [`${wrapper}__with-suffix`]: Boolean(suffixKind()),
+                [`${wrapper}__with-prefix`]: labelKind(),
+                [`${wrapper}__with-suffix`]: suffixKind(),
                 [`${wrapper}__with-suffix-hidden`]: allowClear() && Boolean(local.hideSuffix),
                 [`${wrapper}__with-suffix-icon`]: suffixKind() === 'icon',
-                [`${wrapper}__with-append`]: Boolean(beforeKind()),
-                [`${wrapper}__with-prepend`]: Boolean(afterKind()),
-                [`${wrapper}__with-append-only`]: Boolean(beforeKind()) && !afterKind(),
+                [`${wrapper}__with-append`]: beforeKind(),
+                [`${wrapper}__with-prepend`]: afterKind(),
+                [`${wrapper}__with-append-only`]: beforeKind() && !afterKind(),
                 [`${wrapper}__with-prepend-only`]: !beforeKind() && Boolean(afterKind()),
                 [`${wrapper}-readonly`]: local.readonly,
                 [`${wrapper}-disabled`]: local.disabled,
@@ -296,7 +296,7 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
                 [`${wrapper}-clearable`]: local.showClear,
                 [`${wrapper}-modebtn`]: local.mode === 'password',
                 [`${wrapper}-hidden`]: local.type === 'hidden',
-                [`${wrapper}-${local.size}`]: Boolean(local.size),
+                [`${wrapper}-${local.size}`]: local.size,
                 [`${prefixCls}-borderless`]: local.borderless,
             })}
             style={local.style}
@@ -319,7 +319,7 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
                 <div
                     id={labelA11y().labelId}
                     class={clsx(`${prefixCls}-prefix`, {
-                        [`${prefixCls}-inset-label`]: Boolean(insetLabelKind()),
+                        [`${prefixCls}-inset-label`]: insetLabelKind(),
                         [`${prefixCls}-prefix-text`]: labelKind() === 'text',
                         [`${prefixCls}-prefix-icon`]: labelKind() === 'icon',
                     })}
@@ -337,7 +337,7 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
                 class={clsx(
                     prefixCls,
                     {
-                        [`${prefixCls}-${local.size}`]: Boolean(local.size),
+                        [`${prefixCls}-${local.size}`]: local.size,
                         [`${prefixCls}-disabled`]: local.disabled,
                         [`${prefixCls}-sibling-clearbtn`]: allowClear(),
                         [`${prefixCls}-sibling-modebtn`]: local.mode === 'password',

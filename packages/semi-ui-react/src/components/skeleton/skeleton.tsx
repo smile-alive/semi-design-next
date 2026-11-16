@@ -30,7 +30,7 @@ function Skeleton(rawProps: SkeletonProps): ReactNode {
     }
 
     return (
-        <div {...rest} ref={ref} className={clsx(prefixCls, { [`${prefixCls}-active`]: Boolean(active) }, className)} style={style} aria-busy="true" x-semi-prop="placeholder">
+        <div {...rest} ref={ref} className={clsx(prefixCls, { [`${prefixCls}-active`]: active }, className)} style={style} aria-busy="true" x-semi-prop="placeholder">
             {placeholder}
         </div>
     );

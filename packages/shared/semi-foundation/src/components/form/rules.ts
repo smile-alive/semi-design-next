@@ -52,7 +52,7 @@ const typeCheckers: Record<RuleType, (value: unknown) => boolean> = {
     string: (value) => typeof value === 'string',
     number: (value) => typeof value === 'number' && !Number.isNaN(value),
     integer: (value) => Number.isInteger(value),
-    float: (value) => typeof value === 'number' && Number.isFinite(value) && !Number.isInteger(value),
+    float: (value) => Number.isFinite(value) && !Number.isInteger(value),
     boolean: (value) => typeof value === 'boolean',
     array: (value) => Array.isArray(value),
     object: (value) => typeof value === 'object' && value !== null && !Array.isArray(value),

@@ -214,7 +214,7 @@ export class CompleteWidget {
             rangeLength: endOffset - startOffset,
             rangeOffset: startOffset,
             oldText: this.#jsonModel.getValueInRange(range),
-            newText: textEdit?.newText || '',
+            newText: textEdit.newText || '',
         };
         this.#jsonModel.applyOperation(op);
         this.hide();

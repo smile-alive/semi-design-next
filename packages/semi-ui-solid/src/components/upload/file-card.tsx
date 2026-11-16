@@ -116,7 +116,7 @@ export default function FileCard(props: FileCardProps) {
                         [`${prefixCls}-picture-file-card-show-pointer`]: props.onPreviewClick !== undefined,
                         [`${prefixCls}-picture-file-card-error`]: props.status === strings.FILE_STATUS_UPLOAD_FAIL,
                         [`${prefixCls}-picture-file-card-uploading`]: flags().showPicProgress,
-                        [`${prefixCls}-picture-file-card-custom-thumbnail`]: Boolean(customThumbnail() && props.picHeight && props.picWidth),
+                        [`${prefixCls}-picture-file-card-custom-thumbnail`]: customThumbnail() && props.picHeight && props.picWidth,
                     },
                     props.class
                 )}

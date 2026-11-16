@@ -20,8 +20,7 @@ function ConfigureButton({ value, onChange, className, onClick, ...rest }: Confi
     return (
         <Button
             type="tertiary"
-            className={clsx(`${cssClasses.PREFIX}-footer-configure-button`, {
-                [className]: className,
+            className={clsx(`${cssClasses.PREFIX}-footer-configure-button`, className, {
                 [`${cssClasses.PREFIX}-footer-configure-button-active`]: value,
             })}
             aria-pressed={Boolean(value)}

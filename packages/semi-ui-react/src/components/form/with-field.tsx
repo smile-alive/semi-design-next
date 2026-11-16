@@ -268,8 +268,8 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
 
             const fieldCls = clsx({
                 [`${prefix}-field`]: true,
-                [`${prefix}-field-${name}`]: Boolean(name),
-                [fieldClassName]: Boolean(fieldClassName),
+                [`${prefix}-field-${name}`]: name,
+                [fieldClassName]: fieldClassName,
             });
 
             if (insetShown) {
@@ -284,8 +284,8 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             if (pure) {
                 newProps.className = clsx(rest.className, {
                     [`${prefix}-field-pure`]: true,
-                    [`${prefix}-field-${name}`]: Boolean(name),
-                    [fieldClassName]: Boolean(fieldClassName),
+                    [`${prefix}-field-${name}`]: name,
+                    [fieldClassName]: fieldClassName,
                 });
                 return <Control {...newProps} />;
             }

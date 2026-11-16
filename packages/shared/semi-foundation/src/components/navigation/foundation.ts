@@ -82,13 +82,11 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
 
     static getZeroParentKeys(itemKeysMap: ItemKey2ParentKeysMap = {}, ...itemKeys: ItemKey[]) {
         const willAddKeys = [];
-        if (itemKeys.length) {
-            for (const itemKey of itemKeys) {
-                if (Array.isArray(itemKeysMap[itemKey]) && itemKeysMap[itemKey].length) {
-                    const levelZeroParentKey = itemKeysMap[itemKey][0];
-                    if (levelZeroParentKey != null) {
-                        willAddKeys.push(levelZeroParentKey);
-                    }
+        for (const itemKey of itemKeys) {
+            if (Array.isArray(itemKeysMap[itemKey])) {
+                const levelZeroParentKey = itemKeysMap[itemKey][0];
+                if (levelZeroParentKey != null) {
+                    willAddKeys.push(levelZeroParentKey);
                 }
             }
         }
@@ -97,7 +95,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
     }
 
     static buildItemKeysMap(items: NavItemType[] = [], keysMap = {}, parentKeys: (string | number)[] = [], keyPropName = 'itemKey') {
-        if (Array.isArray(items) && items.length) {
+        if (Array.isArray(items)) {
             for (const item of items) {
                 if (Array.isArray(item)) {
                     NavigationFoundation.buildItemKeysMap(item, keysMap, [...parentKeys], keyPropName);
@@ -108,7 +106,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
                     }
                     if (itemKey != null) {
                         keysMap[itemKey] = [...parentKeys];
-                        if (Array.isArray(item.items) && item.items.length) {
+                        if (Array.isArray(item.items)) {
                             NavigationFoundation.buildItemKeysMap(item.items, keysMap, [...parentKeys, itemKey], keyPropName);
                         }
                     }
@@ -139,7 +137,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
     static getShouldOpenKeys(itemKeysMap: ItemKey2ParentKeysMap = {}, selectedKeys: ItemKey[] = []) {
         const willOpenKeySet = new Set<ItemKey>();
 
-        if (Array.isArray(selectedKeys) && selectedKeys.length) {
+        if (Array.isArray(selectedKeys)) {
             selectedKeys.forEach((item) => {
                 if (item != null) {
                     const parentKeys = itemKeysMap[item];

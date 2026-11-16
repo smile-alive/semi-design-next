@@ -421,7 +421,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
             <div
                 role={namedRole(rest)}
                 {...rest}
-                className={clsx(prefixCls, { [className]: className })}
+                className={clsx(prefixCls, className)}
                 style={style}
                 // the textbox is the Tab stop; Tooltip would add tabIndex 0 here
                 tabIndex={-1}

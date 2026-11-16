@@ -213,7 +213,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                     return local.name;
                 },
                 get class() {
-                    return local.pure && !group ? clsx(rest.class, `${prefix}-field-pure`, { [`${prefix}-field-${local.name}`]: Boolean(local.name) }, local.fieldClassName) : rest.class;
+                    return local.pure && !group ? clsx(rest.class, `${prefix}-field-pure`, { [`${prefix}-field-${local.name}`]: local.name }, local.fieldClassName) : rest.class;
                 },
                 get prefix() {
                     return prefixContent();
@@ -320,7 +320,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
 
         return (
             <Show when={!group && !local.pure} fallback={control()}>
-                <div class={clsx(`${prefix}-field`, { [`${prefix}-field-${local.name}`]: Boolean(local.name) }, local.fieldClassName)} style={local.fieldStyle} x-extra-pos={merged().extraTextPosition} x-field-id={local.field} x-label-pos={labelPosition()}>
+                <div class={clsx(`${prefix}-field`, { [`${prefix}-field-${local.name}`]: local.name }, local.fieldClassName)} style={local.fieldStyle} x-extra-pos={merged().extraTextPosition} x-field-id={local.field} x-label-pos={labelPosition()}>
                     <FieldGrid
                         label={
                             <Show when={!local.noLabel && labelPosition() !== 'inset'}>

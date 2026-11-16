@@ -58,7 +58,7 @@ function ChatBox({ message, isLast, align, toast, mode, roleConfig, onMessageBad
         [`${PREFIX_CHAT_BOX}-right`]: message.role === ROLE.USER && align === CHAT_ALIGN.LEFT_RIGHT,
     });
 
-    if (renderFullChatBox && typeof renderFullChatBox === 'function') {
+    if (typeof renderFullChatBox === 'function') {
         return renderFullChatBox({
             message,
             role: info,

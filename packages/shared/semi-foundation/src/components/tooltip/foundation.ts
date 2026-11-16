@@ -516,10 +516,8 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     }
 
     #clearDelayTimer() {
-        if (this.#timer) {
-            clearTimeout(this.#timer);
-            this.#timer = null;
-        }
+        clearTimeout(this.#timer);
+        this.#timer = null;
     }
 
     /** Under a controlled `visible` that differs, a trigger only asks the owner (D-1); returns whether it asked */

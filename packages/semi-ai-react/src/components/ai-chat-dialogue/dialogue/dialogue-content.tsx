@@ -305,7 +305,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
         </>
     );
 
-    if (customRenderFunc && typeof customRenderFunc === 'function') {
+    if (typeof customRenderFunc === 'function') {
         return customRenderFunc({
             message,
             role: roleInfo,

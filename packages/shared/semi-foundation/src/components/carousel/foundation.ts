@@ -84,9 +84,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     }
 
     #play(interval: number) {
-        if (this.#interval) {
-            clearInterval(this.#interval);
-        }
+        clearInterval(this.#interval);
         this.#interval = setInterval(() => {
             this.next();
         }, interval);

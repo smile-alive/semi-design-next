@@ -27,7 +27,7 @@ function DialogueAvatar({ role, customRenderFunc, continueSend, message }: Dialo
         );
     }, [continueSend, role]);
 
-    if (customRenderFunc && typeof customRenderFunc === 'function') {
+    if (typeof customRenderFunc === 'function') {
         return customRenderFunc({
             role,
             defaultAvatar: node,

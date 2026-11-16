@@ -82,17 +82,7 @@ interface ConfigureButtonProps extends ButtonProps {
 // elementType lets a Dropdown tell this is a button and put aria-haspopup and aria-expanded on it
 const ConfigureButton = Object.assign(
     function ConfigureButton({ active, className, ...rest }: ConfigureButtonProps) {
-        return (
-            <Button
-                {...rest}
-                type="tertiary"
-                className={clsx(`${prefixCls}-menu-bar-btn`, {
-                    [`${prefixCls}-menu-bar-btn-active`]: active,
-                    [className]: className,
-                })}
-                theme="borderless"
-            />
-        );
+        return <Button {...rest} type="tertiary" className={clsx(`${prefixCls}-menu-bar-btn`, { [`${prefixCls}-menu-bar-btn-active`]: active }, className)} theme="borderless" />;
     },
     { elementType: 'Button' }
 );
@@ -267,7 +257,7 @@ export const FileItem = React.memo(function FileItem({ editable = true, name, co
     }
 
     return (
-        <div {...rest} className={clsx(prefixCls, { [className]: className })} style={style}>
+        <div {...rest} className={clsx(prefixCls, className)} style={style}>
             {editable && <MenuBar className={`${prefixCls}-menu-bar`} canUpload={canUpload} editor={editor} />}
             <EditorContent className={`${prefixCls}-editor`} editor={editor} />
         </div>
@@ -281,7 +271,7 @@ export interface FileContentProps extends SideBarCollapseProps {
 
 function FileContent({ activeKey, files = [], onExpand, style, className, onChange, ...rest }: FileContentProps) {
     return (
-        <Collapse {...rest} className={clsx(collapseCls, `${collapseCls}-file`, { [className]: className })} style={style} activeKey={activeKey} clickHeaderToExpand={false} onChange={onChange}>
+        <Collapse {...rest} className={clsx(collapseCls, `${collapseCls}-file`, className)} style={style} activeKey={activeKey} clickHeaderToExpand={false} onChange={onChange}>
             {files.map((file) => {
                 const { key, ...item } = file;
                 return (

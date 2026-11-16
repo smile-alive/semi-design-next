@@ -195,7 +195,7 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
                         loading={cancelLoading === undefined ? state.onCancelReturnPromiseStatus === 'pending' : cancelLoading}
                         {...footerButtonProps(cancelButtonProps, handleCancel)}
                         style={{
-                            ...(footerFill ? { marginInlineStart: 'unset' } : {}),
+                            marginInlineStart: footerFill ? 'unset' : undefined,
                             ...cancelButtonProps?.style,
                         }}
                         data-type="cancel"

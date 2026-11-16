@@ -12,7 +12,7 @@ export default function messageToChatInput(message: Message): MessageContent {
             attachments,
             inputContents: [{ type: 'text', text: message.content }],
         };
-    } else if (message.content && Array.isArray(message.content)) {
+    } else if (Array.isArray(message.content)) {
         message.content.forEach((messageItem: ContentItem) => {
             if (messageItem.type === 'message') {
                 const { content } = messageItem as InputMessage;

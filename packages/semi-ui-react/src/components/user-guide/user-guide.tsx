@@ -256,7 +256,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
                 className={clsx(`${prefixCls}-popover`, className, step.className)}
                 style={{
                     padding: 0,
-                    ...(isPrimaryTheme ? { backgroundColor: 'var(--semi-color-primary)' } : {}),
+                    backgroundColor: isPrimaryTheme ? 'var(--semi-color-primary)' : undefined,
                     ...style,
                 }}
                 aria-labelledby={title ? titleId : undefined}

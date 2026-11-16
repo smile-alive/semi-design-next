@@ -516,8 +516,8 @@
     <span
         class={{
             [`${cls}-selection-placeholder`]: !selection,
-            [`${cls}-selection-text-hide`]: Boolean(view.showInput && view.inputValue),
-            [`${cls}-selection-text-inactive`]: Boolean(view.showInput && !view.inputValue),
+            [`${cls}-selection-text-hide`]: view.showInput && view.inputValue,
+            [`${cls}-selection-text-inactive`]: view.showInput && !view.inputValue,
         }}
         {id}
     >
@@ -660,13 +660,13 @@
                       [`${cls}-focus`]: view.isOpen,
                       [`${cls}-disabled`]: disabled,
                       [`${cls}-single`]: true,
-                      [`${cls}-filterable`]: Boolean(filterTreeNode),
+                      [`${cls}-filterable`]: filterTreeNode,
                       [`${cls}-error`]: validateStatus === 'error',
                       [`${cls}-warning`]: validateStatus === 'warning',
                       [`${cls}-small`]: size === 'small',
                       [`${cls}-large`]: size === 'large',
-                      [`${cls}-with-prefix`]: Boolean(prefix || insetLabel),
-                      [`${cls}-with-suffix`]: Boolean(suffix),
+                      [`${cls}-with-prefix`]: prefix || insetLabel,
+                      [`${cls}-with-suffix`]: suffix,
                   },
               ]}
         tabindex={disabled || inputIsCombobox ? -1 : 0}

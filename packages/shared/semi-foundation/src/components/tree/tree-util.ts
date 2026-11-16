@@ -546,12 +546,8 @@ export function calcCheckedKeysForUnchecked(key: string, keyEntities: BasicKeyEn
     const descendantKeys = findDescendantKeys([key], keyEntities, true);
     const nodeItem = keyEntities[key];
     descendantKeys.forEach((descendantKey) => {
-        if (checkedKeys.has(descendantKey)) {
-            checkedKeys.delete(descendantKey);
-        }
-        if (halfCheckedKeys.has(descendantKey)) {
-            halfCheckedKeys.delete(descendantKey);
-        }
+        checkedKeys.delete(descendantKey);
+        halfCheckedKeys.delete(descendantKey);
     });
     const calcCurrLevel = (node: BasicKeyEntity) => {
         const par = node.parent;
@@ -573,12 +569,8 @@ export function calcCheckedKeysForUnchecked(key: string, keyEntities: BasicKeyEn
                 }
             });
         } else {
-            if (checkedKeys.has(par.key)) {
-                checkedKeys.delete(par.key);
-            }
-            if (halfCheckedKeys.has(par.key)) {
-                halfCheckedKeys.delete(par.key);
-            }
+            checkedKeys.delete(par.key);
+            halfCheckedKeys.delete(par.key);
             calcCurrLevel(par);
         }
     };
