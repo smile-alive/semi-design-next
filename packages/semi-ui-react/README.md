@@ -4,13 +4,17 @@
 
 The React component library of Semi Design Next, for React 19 applications. It is a community fork of [Semi Design](https://github.com/DouyinFE/semi-design), unaffiliated with ByteDance and the Semi Design team. It does not sync with upstream or keep backward compatibility.
 
+## For coding agents
+
+This package ships documentation for coding agents that matches the installed version. Start with `node_modules/@fibrae/semi-ui-react/docs/llms.txt`: it lists the rules for using the library, then one Markdown page per component with props, types, defaults and runnable examples. The same docs are online at https://semi-design-next.pages.dev/en-US/react/llms.txt.
+
 ## Installation
 
 ```sh
 pnpm add @fibrae/semi-ui-react
 ```
 
-Peer dependencies: `react` and `react-dom` ^19.3.0. For browser, module format, Node.js and build plugin requirements, see the [requirements in Getting Started](../../website/content/start/getting-started/index.en-US.mdx#requirements).
+Peer dependencies: `react` and `react-dom` ^19.3.0. For browser, module format, Node.js and build plugin requirements, see the [requirements in Getting Started](https://semi-design-next.pages.dev/en-US/react/start/getting-started/#requirements).
 
 ## Usage
 
@@ -58,7 +62,7 @@ import { en_US } from '@fibrae/semi-ui-react/locale';
 </LocaleProvider>;
 ```
 
-Without `locale`, it inherits from the outer provider. For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
+Without `locale`, it inherits from the outer provider. For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 
@@ -72,7 +76,7 @@ Components support server rendering such as `renderToString` and `prerender`, an
 
 ### Documentation
 
-Component docs are in [website/content](../../website/content). To get started, read [Getting Started](../../website/content/start/getting-started/index.en-US.mdx).
+Component docs are in [the documentation site](https://semi-design-next.pages.dev/en-US/react/start/overview/). To get started, read [Quick Start](https://semi-design-next.pages.dev/en-US/react/start/getting-started/).
 
 ## Related packages
 
@@ -84,4 +88,4 @@ Component docs are in [website/content](../../website/content). To get started, 
 
 `pnpm --filter @fibrae/semi-ui-react build` runs `vp pack`: the TS/TSX under `src` emits ESM and type declarations file by file into `dist`, along with component CSS and the full `styles.css` and `tailwind.css`. Type checks in this package read the types built in the foundation, so build it first.
 
-For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root. For how to write components, see [components](../../.agents/references/react/components.md). For the bug fix process, see [fix-component-bug](../../.agents/skills/fix-component-bug/SKILL.md). For changes relative to upstream, see [release-notes](../../docs/release-notes.md). For the time zone contract of DatePicker and TimePicker, see [time-zone.md](../shared/semi-foundation/src/components/date-picker/time-zone.md).
+For general commands, see [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令) at the repository root. For how to write components, see [components](https://github.com/smile-alive/semi-design-next/blob/release/.agents/references/react/components.md). For the bug fix process, see [fix-component-bug](https://github.com/smile-alive/semi-design-next/blob/release/.agents/skills/fix-component-bug/SKILL.md). For changes relative to upstream, see [release-notes](https://github.com/smile-alive/semi-design-next/blob/release/docs/release-notes.md). For the time zone contract of DatePicker and TimePicker, see [time-zone.md](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-foundation/src/components/date-picker/time-zone.md).

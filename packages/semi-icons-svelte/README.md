@@ -4,6 +4,10 @@
 
 The Svelte icon and illustration components of Semi Design Next, sharing the data and styles of `@fibrae/semi-icons-core` with the icon packages of other frameworks, for Svelte applications and `@fibrae/semi-ui-svelte`.
 
+## For coding agents
+
+This package ships documentation for coding agents that matches the installed version. Start with `node_modules/@fibrae/semi-icons-svelte/docs/llms.txt`: it lists the rules for using the library, then one Markdown page per component with props, types, defaults and runnable examples. The same docs are online at https://semi-design-next.pages.dev/en-US/svelte/llms.txt.
+
 ## Installation
 
 ```shell
@@ -70,7 +74,7 @@ import { IconAnchor } from '@fibrae/semi-icons-svelte/lab';
 | `@fibrae/semi-icons-svelte/illustrations`         | Illustrations `IllustrationXxx` and `IllustrationXxxDark`                                    |
 | `@fibrae/semi-icons-svelte/components/svg.svelte` | Component that renders icon or illustration data as a plain `svg`                            |
 
-Component docs are in [website/content/basic/icon](../../website/content/basic/icon) and [website/content/show/empty](../../website/content/show/empty).
+Component docs are in [Icon](https://semi-design-next.pages.dev/en-US/svelte/basic/icon/) and [Empty](https://semi-design-next.pages.dev/en-US/svelte/show/empty/).
 
 ## Related packages
 
@@ -80,5 +84,5 @@ Component docs are in [website/content/basic/icon](../../website/content/basic/i
 
 ## Development
 
-- `src/icons`, `src/lab` and `src/illustrations` are generated source, so do not edit them by hand. To add an icon or illustration, follow [Adding icons](../shared/semi-icons-core/README.md#adding-icons) or [Adding illustrations](../shared/semi-icons-core/README.md#adding-illustrations) in semi-icons-core and run `pnpm build:icon` at the repository root to regenerate.
-- For build and test commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.
+- `src/icons`, `src/lab` and `src/illustrations` are generated source, so do not edit them by hand. To add an icon or illustration, follow [Adding icons](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-icons-core/README.md#adding-icons) or [Adding illustrations](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-icons-core/README.md#adding-illustrations) in semi-icons-core and run `pnpm build:icon` at the repository root to regenerate.
+- For build and test commands, see [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令) at the repository root.

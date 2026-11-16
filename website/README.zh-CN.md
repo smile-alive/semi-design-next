@@ -20,13 +20,13 @@ pnpm site:stop       # 停止 dev server 与 preview
 
 ## 目录
 
-| 路径              | 内容                                                                                             |
-| ----------------- | ------------------------------------------------------------------------------------------------ |
-| `content/`        | 文档正文，按 `<分类>/<页面>/index.<语言>.mdx` 组织，语言为 `zh-CN` 与 `en-US`                    |
-| `src/`            | 页面、布局、组件、样式；`content.config.ts` 校验 frontmatter，`lib/docs.ts` 定义分类顺序         |
-| `plugins/`        | Markdown 管线插件：`remark-demo`、`framework-mdx`、`rehype-anchor-ids`、`rehype-table-container` |
-| `scripts/`        | 页面检查、API 表生成、MDX 表格检查、React Compiler 检查、布局对比                                |
-| `astro.config.ts` | i18n、Markdown 管线、各框架与 `mdx` 的集成，以及直接读取各 UI 包源码的别名                       |
+| 路径              | 内容                                                                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `content/`        | 文档正文，按 `<分类>/<页面>/index.<语言>.mdx` 组织，语言为 `zh-CN` 与 `en-US`                                                              |
+| `src/`            | 页面、布局、组件、样式；`content.config.ts` 校验 frontmatter，`lib/categories.ts` 定义分类顺序                                             |
+| `plugins/`        | Markdown 管线插件：`remark-demo`、`framework-mdx`、`rehype-anchor-ids`、`rehype-table-container`；构建结束时写出 agent 文档的 `agent-docs` |
+| `scripts/`        | 页面检查、API 表生成、MDX 表格检查、React Compiler 检查、布局对比、agent 文档与类型声明 JSDoc 生成                                         |
+| `astro.config.ts` | i18n、Markdown 管线、各框架与 `mdx` 的集成，以及直接读取各 UI 包源码的别名                                                                 |
 
 页面路径为 `/{语言}/{框架}/{分类}/{页面}`，框架为框架包名里的框架名（如 `react`），页面只为有 demo 的框架生成路由。
 

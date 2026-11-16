@@ -64,6 +64,7 @@
 
 ### 构建与宿主
 
+- UI、AI、图标包的发布物新增 `docs/`：给编码 agent 读的文档，与安装版本一致，入口为 `node_modules/<包名>/docs/llms.txt`；类型声明中的组件属性带英文 JSDoc 说明。文档站另提供 `/llms.txt`、`/en-US/<框架>/llms.txt` 与每页的 `.md` 版本。
 - `@fibrae/semi-json-viewer-core` 把 `jsonc-parser` 打进自身 `dist`，不再作为运行时依赖，Next Pages Router 的 webpack 不再解析其 UMD 入口。
 - `@fibrae/semi-foundation` 新增依赖 `@shikijs/core`，代码高亮改从它导入，不再导入 `shiki/core`（`shiki` 仍提供 engine 与主题）。
 - `@fibrae/semi-webpack-plugin` 的 peer `webpack` 标为可选：插件运行时经 `compiler.webpack` 取宿主自带的 webpack（如 Next.js），无需单独安装；类型声明仍引用 `webpack`。

@@ -22,7 +22,8 @@
         "./*": "./dist/components/*.js"
     },
     "files": [
-        "dist"
+        "dist",
+        "docs"
     ],
     "sideEffects": [
         "*.scss",

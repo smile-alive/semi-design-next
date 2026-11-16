@@ -4,6 +4,10 @@
 
 The Vue AI components of Semi Design Next: `AIChatInput`, `AIChatDialogue`, `Chat` and `Sidebar`, for Vue 3.5+ applications. The components build on `@fibrae/semi-ui-vue`, take their logic from `@fibrae/semi-ai-foundation`, and behave the same as the AI packages of other frameworks.
 
+## For coding agents
+
+This package ships documentation for coding agents that matches the installed version. Start with `node_modules/@fibrae/semi-ai-vue/docs/llms.txt`: it lists the rules for using the library, then one Markdown page per component with props, types, defaults and runnable examples. The same docs are online at https://semi-design-next.pages.dev/en-US/vue/llms.txt.
+
 ## Installation
 
 ```sh
@@ -29,12 +33,12 @@ Peer dependency: `vue` (3.5+). `@fibrae/semi-ui-vue` is a dependency of this pac
 - Props carry data only, and custom DOM comes through scoped slots. Types are exported as `*Props`, `*Emits`, `*Slots` and `*SlotProps`, for example `ChatSlots` and `AIChatDialogueSlots`.
 - Global defaults go through `semiGlobal` and can be set by component name.
 
-Component docs and examples are in [website/content/ai](../../website/content/ai):
+Component docs and examples are in [AI components](https://semi-design-next.pages.dev/en-US/vue/ai/ai-component/):
 
-- [AIChatInput](../../website/content/ai/ai-chat-input)
-- [AIChatDialogue](../../website/content/ai/ai-chat-dialogue)
-- [Sidebar](../../website/content/ai/sidebar)
-- [AI components overview](../../website/content/ai/ai-component)
+- [AIChatInput](https://semi-design-next.pages.dev/en-US/vue/ai/ai-chat-input/)
+- [AIChatDialogue](https://semi-design-next.pages.dev/en-US/vue/ai/ai-chat-dialogue/)
+- [Sidebar](https://semi-design-next.pages.dev/en-US/vue/ai/sidebar/)
+- [AI components overview](https://semi-design-next.pages.dev/en-US/vue/ai/ai-component/)
 
 ## Related packages
 
@@ -44,4 +48,4 @@ Component docs and examples are in [website/content/ai](../../website/content/ai
 
 ## Development
 
-`pnpm build` runs `vp pack` in this package directory and produces `dist` (file-by-file ESM, type declarations and `styles.css`). The `CONFIGURATION_FIELD_CONFLICT` warning during the build is expected. For tests, lint and type checks, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.
+`pnpm build` runs `vp pack` in this package directory and produces `dist` (file-by-file ESM, type declarations and `styles.css`). The `CONFIGURATION_FIELD_CONFLICT` warning during the build is expected. For tests, lint and type checks, see [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令) at the repository root.

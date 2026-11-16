@@ -4,6 +4,10 @@
 
 Semi Design Next 的 React 图标与插画组件，含单色图标、彩色 lab 图标与插画，供 React 应用和 `@fibrae/semi-ui-react` 使用。
 
+## 给编码 agent
+
+本包附带与安装版本一致的 agent 文档。从 `node_modules/@fibrae/semi-icons-react/docs/llms.txt` 读起：先是使用规则，然后每个组件一页 Markdown，列出属性、类型、默认值和可运行示例。线上版本见 https://semi-design-next.pages.dev/en-US/react/llms.txt。
+
 ## 安装
 
 ```shell
@@ -61,7 +65,7 @@ createRoot(container).render(<Empty image={<IllustrationIdle />} darkModeImage={
 | `@fibrae/semi-icons-react/illustrations`          | 插画 `IllustrationXxx` 与 `IllustrationXxxDark`                             |
 | `@fibrae/semi-icons-react/components/create-icon` | `createSvgComponent`，把图标或插画数据渲染成不带外壳的 `svg`                |
 
-组件文档见 [website/content/basic/icon](../../website/content/basic/icon) 与 [website/content/show/empty](../../website/content/show/empty)。
+组件文档见 [图标](https://semi-design-next.pages.dev/zh-CN/react/basic/icon/) 与 [空状态](https://semi-design-next.pages.dev/zh-CN/react/show/empty/)。
 
 ## 与其他包的关系
 
@@ -72,5 +76,5 @@ createRoot(container).render(<Empty image={<IllustrationIdle />} darkModeImage={
 ## 开发
 
 - `src/icons`、`src/lab`、`src/illustrations` 整个目录是生成源码，不要手改：每个图标模块把一个图标的数据交给 `createIcon`（`src/components/create-icon.ts`），渲染成 `Icon` 内的 `svg`；每个插画模块把数据交给同一文件的 `createSvgComponent`。
-- 新增图标：按 [semi-icons-core 的「新增图标」](../shared/semi-icons-core/README.zh-CN.md#新增图标)添加 SVG，在仓库根目录运行 `pnpm build:icon` 重新生成本包组件，再用 `pnpm site:dev` 打开图标页检查。插画同理，见[「新增插画」](../shared/semi-icons-core/README.zh-CN.md#新增插画)。
-- 构建与测试命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。
+- 新增图标：按 [semi-icons-core 的「新增图标」](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-icons-core/README.zh-CN.md#新增图标)添加 SVG，在仓库根目录运行 `pnpm build:icon` 重新生成本包组件，再用 `pnpm site:dev` 打开图标页检查。插画同理，见[「新增插画」](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-icons-core/README.zh-CN.md#新增插画)。
+- 构建与测试命令见根目录 [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令)。

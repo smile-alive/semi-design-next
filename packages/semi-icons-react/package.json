@@ -26,7 +26,8 @@
         "./*": "./dist/*.js"
     },
     "files": [
-        "dist"
+        "dist",
+        "docs"
     ],
     "sideEffects": false,
     "scripts": {

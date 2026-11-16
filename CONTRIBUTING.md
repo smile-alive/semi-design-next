@@ -61,7 +61,7 @@ pnpm site:dev
 | `.agents/references/<框架>/` | 各框架的组件、测试、lint 与 website 写法，框架无关的写法见 `.agents/references/` 下的共享文件 |
 | [`website/`](website/README.zh-CN.md) | Astro 文档站，正文在 `website/content/<分类>/<页面>/index.<语言>.mdx` |
 
-各包的源码在 `src/`，`vp pack` 的产物在 `dist/`，含逐文件的 ESM、类型声明和组件 CSS，UI 包另有整包样式 `styles.css` 与 `tailwind.css`。组件包的 `src/` 按职责分目录：
+各包的源码在 `src/`，`vp pack` 的产物在 `dist/`，含逐文件的 ESM、类型声明和组件 CSS，UI 包另有整包样式 `styles.css` 与 `tailwind.css`。UI、AI、图标包另有构建生成的 `docs/`（给编码 agent 读的文档，不入库，随包发布）。组件包的 `src/` 按职责分目录：
 
 | 目录                 | foundation 包                         | UI 包与 AI 包                                                                                                 |
 | -------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
@@ -104,7 +104,8 @@ pnpm format                  # oxfmt 格式化
 pnpm format:check            # 检查格式
 pnpm typecheck               # 逐个检查 tsconfig.node.json、各包、website 与 vitest 的配置（Vue 配置用 vue-tsc，其余用 tsc）并运行 `astro check`，输出每个配置的结果与耗时；semi-ui-react 读取 semi-foundation 已构建的类型，需先 build
 
-pnpm build                   # 构建所有包到各自的 dist/，UI 包同时产出整包样式 styles.css 与 tailwind.css
+pnpm build                   # 构建所有包到各自的 dist/，UI 包同时产出整包样式 styles.css 与 tailwind.css，最后运行 build:agent-docs
+pnpm build:agent-docs        # 生成 UI、AI、图标包的 docs/，并把 API 表的英文说明写进 dist 的类型声明，需先构建各包
 pnpm build:icon              # 由 SVG 重新生成 core 数据及各框架的图标和插画组件
 pnpm test:packed             # 在临时 Vite + React 19 应用中安装并构建打包产物，需先运行 build
 pnpm test:plugins            # 各插件包的冒烟测试，需先运行 build

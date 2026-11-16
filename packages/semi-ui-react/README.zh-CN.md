@@ -4,13 +4,17 @@
 
 Semi Design Next 的 React 组件库，面向 React 19 应用。它是上游 [Semi Design](https://github.com/DouyinFE/semi-design) 的社区 fork，与字节跳动及 Semi Design 官方团队无关，不与上游同步，也不保留向后兼容。
 
+## 给编码 agent
+
+本包附带与安装版本一致的 agent 文档。从 `node_modules/@fibrae/semi-ui-react/docs/llms.txt` 读起：先是使用规则，然后每个组件一页 Markdown，列出属性、类型、默认值和可运行示例。线上版本见 https://semi-design-next.pages.dev/en-US/react/llms.txt。
+
 ## 安装
 
 ```sh
 pnpm add @fibrae/semi-ui-react
 ```
 
-peer 依赖：`react`、`react-dom` ^19.3.0。浏览器、模块格式、Node.js 与构建插件的版本要求见[快速开始的环境要求](../../website/content/start/getting-started/index.zh-CN.mdx#环境要求)。
+peer 依赖：`react`、`react-dom` ^19.3.0。浏览器、模块格式、Node.js 与构建插件的版本要求见[快速开始的环境要求](https://semi-design-next.pages.dev/zh-CN/react/start/getting-started/#环境要求)。
 
 ## 使用
 
@@ -58,7 +62,7 @@ import { en_US } from '@fibrae/semi-ui-react/locale';
 </LocaleProvider>;
 ```
 
-不传 `locale` 时继承外层。其他语言传入自己的 `LocaleInput` 语言包：`code` 必填，没写的文案回退到 `en_US`。语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
+不传 `locale` 时继承外层。其他语言传入自己的 `LocaleInput` 语言包：`code` 必填，没写的文案回退到 `en_US`。语言包的结构见 [@fibrae/semi-foundation](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-foundation/README.zh-CN.md#语言包)。
 
 ### 服务端渲染
 
@@ -72,7 +76,7 @@ import { en_US } from '@fibrae/semi-ui-react/locale';
 
 ### 文档
 
-组件文档在 [website/content](../../website/content)，入门见 [快速开始](../../website/content/start/getting-started/index.zh-CN.mdx)。
+组件文档在 [文档站](https://semi-design-next.pages.dev/zh-CN/react/start/overview/)，入门见 [快速开始](https://semi-design-next.pages.dev/zh-CN/react/start/getting-started/)。
 
 ## 与其他包的关系
 
@@ -84,4 +88,4 @@ import { en_US } from '@fibrae/semi-ui-react/locale';
 
 `pnpm --filter @fibrae/semi-ui-react build` 执行 `vp pack`：`src` 下的 TS/TSX 逐文件输出 ESM 与类型声明到 `dist`，并产出组件 CSS 与整包 `styles.css`、`tailwind.css`。本包的类型检查读取 foundation 已构建的类型，需先构建。
 
-通用命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。组件写法见 [components](../../.agents/references/react/components.md)，修组件缺陷的流程见 [fix-component-bug](../../.agents/skills/fix-component-bug/SKILL.md)，相对上游的变化见 [release-notes](../../docs/release-notes.md)。DatePicker、TimePicker 的时区约定见 [time-zone.md](../shared/semi-foundation/src/components/date-picker/time-zone.md)。
+通用命令见根目录 [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令)。组件写法见 [components](https://github.com/smile-alive/semi-design-next/blob/release/.agents/references/react/components.md)，修组件缺陷的流程见 [fix-component-bug](https://github.com/smile-alive/semi-design-next/blob/release/.agents/skills/fix-component-bug/SKILL.md)，相对上游的变化见 [release-notes](https://github.com/smile-alive/semi-design-next/blob/release/docs/release-notes.md)。DatePicker、TimePicker 的时区约定见 [time-zone.md](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-foundation/src/components/date-picker/time-zone.md)。

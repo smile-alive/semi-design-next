@@ -30,6 +30,10 @@
 
 > Semi Design Next is an unofficial community fork of [Semi Design](https://github.com/DouyinFE/semi-design). It is not affiliated with or endorsed by ByteDance, DouyinFE or the Semi Design team. The name "Semi Design" belongs to its rights holders.
 
+## For coding agents
+
+The site index at https://semi-design-next.pages.dev/llms.txt lists the agent docs for each framework. Installed packages ship the same docs, matching the installed version, at `node_modules/<package>/docs/llms.txt`.
+
 ## Features
 
 - **Native in four frameworks.** Component logic lives in a framework-agnostic core, and each framework connects to it in its own idiom.

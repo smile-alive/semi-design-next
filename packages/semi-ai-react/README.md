@@ -4,6 +4,10 @@
 
 The React AI components of Semi Design Next: `AIChatInput`, `AIChatDialogue`, `Chat` and `Sidebar`, for building conversational interfaces in React 19 applications. The components build on `@fibrae/semi-ui-react`, take their logic from `@fibrae/semi-ai-foundation`, and behave the same as the AI packages of other frameworks.
 
+## For coding agents
+
+This package ships documentation for coding agents that matches the installed version. Start with `node_modules/@fibrae/semi-ai-react/docs/llms.txt`: it lists the rules for using the library, then one Markdown page per component with props, types, defaults and runnable examples. The same docs are online at https://semi-design-next.pages.dev/en-US/react/llms.txt.
+
 ## Installation
 
 ```sh
@@ -27,14 +31,14 @@ export default function App() {
 - Code block highlighting bundles no languages. Register the shiki grammars you need with `CodeHighlight.register({ languages: [...] })` from `@fibrae/semi-ui-react`.
 - Global defaults go through `semiGlobal`. `AIChatDialogue`, `AIChatInput`, `Annotation`, `Chat`, `MCPConfigure` and `Sidebar` can each be set by component name.
 
-Component docs and examples are in [website/content/ai](../../website/content/ai):
+Component docs and examples are in [AI components](https://semi-design-next.pages.dev/en-US/react/ai/ai-component/):
 
-- [AIChatInput](../../website/content/ai/ai-chat-input)
-- [AIChatDialogue](../../website/content/ai/ai-chat-dialogue)
-- [Sidebar](../../website/content/ai/sidebar)
-- [AI components overview](../../website/content/ai/ai-component)
+- [AIChatInput](https://semi-design-next.pages.dev/en-US/react/ai/ai-chat-input/)
+- [AIChatDialogue](https://semi-design-next.pages.dev/en-US/react/ai/ai-chat-dialogue/)
+- [Sidebar](https://semi-design-next.pages.dev/en-US/react/ai/sidebar/)
+- [AI components overview](https://semi-design-next.pages.dev/en-US/react/ai/ai-component/)
 
-Known issues are in the AIChatInput section of [docs/decisions.md](../../docs/decisions.md).
+Known issues are in the AIChatInput section of [docs/decisions.md](https://github.com/smile-alive/semi-design-next/blob/release/docs/decisions.md).
 
 ## Related packages
 
@@ -44,4 +48,4 @@ Known issues are in the AIChatInput section of [docs/decisions.md](../../docs/de
 
 ## Development
 
-`pnpm build` runs `vp pack` in this package directory and produces `dist` (file-by-file ESM, type declarations and `styles.css`). For tests, lint and type checks, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.
+`pnpm build` runs `vp pack` in this package directory and produces `dist` (file-by-file ESM, type declarations and `styles.css`). For tests, lint and type checks, see [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令) at the repository root.

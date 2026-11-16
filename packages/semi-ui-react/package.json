@@ -34,7 +34,8 @@
         "build": "vp pack"
     },
     "files": [
-        "dist"
+        "dist",
+        "docs"
     ],
     "dependencies": {
         "@dnd-kit/react": "catalog:",

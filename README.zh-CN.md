@@ -30,6 +30,10 @@
 
 > Semi Design Next 是 [Semi Design](https://github.com/DouyinFE/semi-design) 的非官方社区 fork，与字节跳动、DouyinFE 及 Semi Design 官方团队没有关联，也未获得其认可。「Semi Design」名称归其权利人所有。
 
+## 给编码 agent
+
+站点索引 https://semi-design-next.pages.dev/llms.txt 按框架列出 agent 文档。安装后的包在 `node_modules/<包名>/docs/llms.txt` 带有与版本一致的同一份文档。
+
 ## 特性
 
 - **四个框架原生接入**：组件逻辑放在与框架无关的核心里，各框架用自己的写法接入。

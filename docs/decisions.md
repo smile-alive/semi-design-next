@@ -281,6 +281,10 @@ Toast、Notification、Modal 的静态方法在服务端抛出说明性错误，
 
 API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生成双语片段 `api/<组件>.<框架>.<语言>.mdx`；缺说明或说明过时时 `check:full` 报错。Vue 用 vue-component-meta，其余框架用 TS compiler API（`website/scripts/ts-api.ts`）。表格不设版本列：本仓库不跟上游发版。细则见各框架的 `website.md`。
 
+**Agent 文档**（2026-11-16）
+
+给编码 agent 的文档同时放进 npm 包（`docs/llms.txt` 起步，与安装版本一致）和文档站（`/llms.txt` 与每页 `.md`），只出 en-US，从文档页生成，不手写。`.d.ts` 只注入属性的 JSDoc；Vue 的事件、插槽与方法说明只在 `docs/` 的表格里（要写进声明时扩展 `website/scripts/dts-jsdoc.ts`）。细则见 `.agents/references/website.md`。
+
 ## 跨组件的已知限制
 
 - **已知限制** 依赖测量的内容首帧缺失：下列内容要测量或挂载后才写入，服务端 HTML 与 hydration 前没有。需要首帧即正确时，按 props 推算初值。

@@ -393,6 +393,27 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
 }
 
 {
+    // Coding agents start from docs/llms.txt (written by `pnpm build:agent-docs`); relative links must resolve inside the package
+    const scope = path.join(appDir, 'node_modules/@fibrae');
+    for (const name of ['ui', 'ai', 'icons'].flatMap((pkg) => ['react', 'vue', 'solid', 'svelte'].map((framework) => `semi-${pkg}-${framework}`))) {
+        const docs = path.join(scope, name, 'docs');
+        assert.ok(fs.existsSync(path.join(docs, 'llms.txt')), `${name} ships docs/llms.txt`);
+        for (const file of fs.globSync('**/*.{md,txt}', { cwd: docs })) {
+            const prose = fs.readFileSync(path.join(docs, file), 'utf-8').replace(/```[\s\S]*?```/g, '');
+            for (const [, url] of prose.matchAll(/\]\(([^)\s#]*)(?:#[^)\s]*)?\)/g)) {
+                if (url && !/^https?:/.test(url)) assert.ok(fs.existsSync(path.join(docs, path.dirname(file), url)), `${name}/docs/${file} links to ${url}, which ships`);
+            }
+        }
+    }
+    // `pnpm build:agent-docs` also writes the API table descriptions into the declarations as JSDoc
+    for (const framework of ['react', 'vue', 'solid', 'svelte']) {
+        const dist = path.join(scope, `semi-ui-${framework}/dist`);
+        const documented = fs.globSync('components/button/*.d.ts', { cwd: dist }).some((file) => fs.readFileSync(path.join(dist, file), 'utf-8').includes('/** Renders the button as a block-level button. */'));
+        assert.ok(documented, `semi-ui-${framework} declares the Button props with their JSDoc descriptions`);
+    }
+}
+
+{
     // Module specifiers only: bundler region comments and strings may still name a bundled dependency
     const specifiersOf = (distDir: string, pattern: string) => fs.globSync(pattern, { cwd: distDir }).flatMap((file) => [...fs.readFileSync(path.join(distDir, file), 'utf-8').matchAll(/(?:\bfrom\s*|\bimport\s*\(?\s*|\brequire\s*\(\s*)["']([^"']+)["']/g)].map(([, specifier]) => specifier));
     const scope = path.join(appDir, 'node_modules/@fibrae');
