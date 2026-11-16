@@ -46,6 +46,8 @@ export class View {
     #measuredHeights: { [index: number]: number } = {};
     #emitter: Emitter<GlobalEvents> = getEmitter();
     #lineHeight: number;
+    // every DOM listener of the view and its widgets, removed together on dispose
+    #listeners = new AbortController();
     startLineNumber: number = 1;
     visibleLineCount: number = 0;
     prefixCls: string;
@@ -100,23 +102,34 @@ export class View {
             this.#root = root;
         }
 
-        this.#jsonViewerDom.addEventListener('scroll', () => {
-            this.onScroll(this.#jsonViewerDom.scrollTop);
-        });
+        this.#jsonViewerDom.addEventListener(
+            'scroll',
+            () => {
+                this.onScroll(this.#jsonViewerDom.scrollTop);
+            },
+            { signal: this.signal }
+        );
         if (this.#options?.readOnly) return;
-        this.#jsonViewerDom.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.#selectionModel.toLastPosition();
-        });
-
-        this.#contentDom.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.#completeWidget.hide();
-            this.#selectionModel.isSelectedAll = false;
-            this.#selectionModel.isSelecting = false;
-            this.#selectionModel.updateFromSelection();
-        });
+        this.#jsonViewerDom.addEventListener(
+            'click',
+            (e) => {
+                e.preventDefault();
+                this.#selectionModel.toLastPosition();
+            },
+            { signal: this.signal }
+        );
+        this.#contentDom.addEventListener(
+            'click',
+            (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.#completeWidget.hide();
+                this.#selectionModel.isSelectedAll = false;
+                this.#selectionModel.isSelecting = false;
+                this.#selectionModel.updateFromSelection();
+            },
+            { signal: this.signal }
+        );
 
         this.#emitter.on('contentChanged', () => {
             this.resetScalingManagerConfigAndCell(0);
@@ -390,6 +403,11 @@ export class View {
         return this.#tokenizationJsonModelPart;
     }
 
+    /** Aborted by dispose; the widgets register their DOM listeners with it */
+    get signal() {
+        return this.#listeners.signal;
+    }
+
     get contentDom() {
         return this.#contentDom;
     }
@@ -427,6 +445,7 @@ export class View {
     }
 
     dispose() {
+        this.#listeners.abort();
         this.#hoverWidget?.dispose();
         this.#container.removeChild(this.#jsonViewerDom);
     }

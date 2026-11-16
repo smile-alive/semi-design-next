@@ -19,40 +19,53 @@ export class HoverWidget {
     }
 
     #attachEventListeners() {
-        this.#view.contentDom.addEventListener('mousemove', (e) => {
-            if (e.target instanceof HTMLSpanElement && e.target.classList.contains(`${this.#view.prefixCls}-${TOKEN_VALUE_STRING}`)) {
-                if (this.#hoverDom === e.target) {
-                    return;
-                }
-                this.#clearHoverTimer();
-                this.#hideTooltip();
-
-                this.#hoverDom = e.target;
-                this.#hoverTimer = window.setTimeout(() => {
-                    if (this.#hoverDom) {
-                        this.#emitter.emit('hoverNode', {
-                            value: this.#hoverDom.textContent ?? '',
-                            target: this.#hoverDom,
-                        });
+        const { signal } = this.#view;
+        this.#view.contentDom.addEventListener(
+            'mousemove',
+            (e) => {
+                if (e.target instanceof HTMLSpanElement && e.target.classList.contains(`${this.#view.prefixCls}-${TOKEN_VALUE_STRING}`)) {
+                    if (this.#hoverDom === e.target) {
+                        return;
                     }
-                }, 700);
-            }
-        });
+                    this.#clearHoverTimer();
+                    this.#hideTooltip();
 
-        this.#view.contentDom.addEventListener('mouseout', (e) => {
-            const relatedTarget = e.relatedTarget as Node;
-            if (!this.#tooltipDom.contains(relatedTarget)) {
-                this.#clearHoverTimer();
-                this.#hideTooltip();
-            }
-        });
+                    this.#hoverDom = e.target;
+                    this.#hoverTimer = window.setTimeout(() => {
+                        if (this.#hoverDom) {
+                            this.#emitter.emit('hoverNode', {
+                                value: this.#hoverDom.textContent ?? '',
+                                target: this.#hoverDom,
+                            });
+                        }
+                    }, 700);
+                }
+            },
+            { signal }
+        );
 
-        this.#tooltipDom.addEventListener('mouseleave', (e) => {
-            const relatedTarget = e.relatedTarget as Node;
-            if (!this.#hoverDom?.contains(relatedTarget)) {
-                this.#hideTooltip();
-            }
-        });
+        this.#view.contentDom.addEventListener(
+            'mouseout',
+            (e) => {
+                const relatedTarget = e.relatedTarget as Node;
+                if (!this.#tooltipDom.contains(relatedTarget)) {
+                    this.#clearHoverTimer();
+                    this.#hideTooltip();
+                }
+            },
+            { signal }
+        );
+
+        this.#tooltipDom.addEventListener(
+            'mouseleave',
+            (e) => {
+                const relatedTarget = e.relatedTarget as Node;
+                if (!this.#hoverDom?.contains(relatedTarget)) {
+                    this.#hideTooltip();
+                }
+            },
+            { signal }
+        );
 
         this.#emitter.on('renderHoverNode', (e) => {
             this.render(e.el);

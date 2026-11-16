@@ -38,37 +38,66 @@ export class EditWidget {
             });
         });
 
-        this.#view.contentDom.addEventListener('beforeinput', (e: InputEvent) => {
-            this.#handleBeforeInput(e);
-        });
+        const { signal } = this.#view;
+        this.#view.contentDom.addEventListener(
+            'beforeinput',
+            (e: InputEvent) => {
+                this.#handleBeforeInput(e);
+            },
+            { signal }
+        );
 
-        this.#view.contentDom.addEventListener('compositionstart', (e: CompositionEvent) => {
-            this.#handleCompositionStart(e);
-        });
+        this.#view.contentDom.addEventListener(
+            'compositionstart',
+            (e: CompositionEvent) => {
+                this.#handleCompositionStart(e);
+            },
+            { signal }
+        );
 
-        this.#view.contentDom.addEventListener('compositionend', (e: CompositionEvent) => {
-            this.#handleCompositionEnd(e);
-        });
+        this.#view.contentDom.addEventListener(
+            'compositionend',
+            (e: CompositionEvent) => {
+                this.#handleCompositionEnd(e);
+            },
+            { signal }
+        );
 
-        this.#view.contentDom.addEventListener('keydown', (e: KeyboardEvent) => {
-            this.#handleKeyDown(e);
-        });
+        this.#view.contentDom.addEventListener(
+            'keydown',
+            (e: KeyboardEvent) => {
+                this.#handleKeyDown(e);
+            },
+            { signal }
+        );
 
-        this.#view.contentDom.addEventListener('mousedown', (e) => {
-            if (e.button !== 0) return;
-            this.#selectionModel.isSelecting = true;
-            this.#selectionModel.updateFromSelectingStart();
-        });
+        this.#view.contentDom.addEventListener(
+            'mousedown',
+            (e) => {
+                if (e.button !== 0) return;
+                this.#selectionModel.isSelecting = true;
+                this.#selectionModel.updateFromSelectingStart();
+            },
+            { signal }
+        );
 
-        this.#view.contentDom.addEventListener('mousemove', (e) => {
-            if (!this.#selectionModel.isSelecting) return;
-            if (e.button !== 0) return;
-        });
+        this.#view.contentDom.addEventListener(
+            'mousemove',
+            (e) => {
+                if (!this.#selectionModel.isSelecting) return;
+                if (e.button !== 0) return;
+            },
+            { signal }
+        );
 
-        this.#view.contentDom.addEventListener('mouseup', (e) => {
-            if (e.button !== 0) return;
-            this.#selectionModel.updateFromSelectingEnd();
-        });
+        this.#view.contentDom.addEventListener(
+            'mouseup',
+            (e) => {
+                if (e.button !== 0) return;
+                this.#selectionModel.updateFromSelectingEnd();
+            },
+            { signal }
+        );
     }
 
     #buildBaseOperation(type: IModelContentChangeEvent['type'] = 'insert') {

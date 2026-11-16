@@ -52,10 +52,21 @@ export class CompleteWidget {
         };
 
         // keeps focus on the content area, which is where the caret is restored after the completion is applied
-        this.#suggestionsContainer.addEventListener('mousedown', (e) => e.preventDefault());
-        this.#suggestionsContainer.addEventListener('click', (e) => {
-            this.#handleSuggestionClick(e);
-        });
+        const { signal } = this.#view;
+        this.#suggestionsContainer.addEventListener(
+            'mousedown',
+            (e) => {
+                e.preventDefault();
+            },
+            { signal }
+        );
+        this.#suggestionsContainer.addEventListener(
+            'click',
+            (e) => {
+                this.#handleSuggestionClick(e);
+            },
+            { signal }
+        );
 
         this.#emitter.on('contentChanged', (e) => {
             if (Array.isArray(e)) {
