@@ -1509,63 +1509,31 @@ FormState 存储了所有 Form 内部的状态值，包括各表单控件的值�
 
 <Framework only="react">
 
-```jsx
-import React from 'react';
-import { Form, FormInput, Button } from '@fibrae/semi-ui-react';
+```tsx
+import { useRef } from 'react';
+import { Button, Form } from '@fibrae/semi-ui-react';
+import type { FormApi, FormHandle } from '@fibrae/semi-ui-react';
 
-() => {
-    // 函数式组件通过useRef存储formApi
-    const api = useRef();
+function FormApiDemo() {
+    const formApiA = useRef<FormApi>(null);
+    const formB = useRef<FormHandle>(null);
+
+    const changeValues = () => {
+        // 使用 FormA 的 formApi，获取到 formApi 后，你可以使用它来对表单进行任何你想做的修改 ~
+        formApiA.current?.setValues({ a: 1 });
+        // 使用 FormB 的 formApi
+        formB.current?.formApi.setValues({ b: 2 });
+    };
 
     return (
-        <Form getFormApi={(formApi) => (api.current = formApi)}>
-            <FormInput field="a" />
-            <Button
-                onClick={() => {
-                    console.log(api);
-                }}
-            >
-                log
-            </Button>
-        </Form>
+        <>
+            {/* 通过 getFormApi 回调获取并保存 formApi */}
+            <Form getFormApi={(formApi) => (formApiA.current = formApi)} />
+            {/* 通过 ref 直接获取 Form 组件实例上的 formApi */}
+            <Form ref={formB} />
+            <Button onClick={changeValues}>Change</Button>
+        </>
     );
-};
-```
-
-```jsx
-import React from 'react';
-import { Form, Button } from '@fibrae/semi-ui-react';
-
-class FormApiDemo extends React.Component {
-    constructor() {
-        super();
-        this.getFormApi = this.getFormApi.bind(this);
-        this.formBRef = React.createRef();
-    }
-
-    getFormApi(formApi) {
-        this.formApi = formApi;
-        // 获取到formApi对象后，你可以使用它来对表单进行任何你想做的修改 ~
-    }
-
-    changeValues() {
-        // 使用 FormA的 formApi
-        this.formApi.setValues({ a: 1 });
-        // 使用 FormB的 formApi
-        this.formBRef.current.formApi.setValues({ b: 2 });
-    }
-
-    render() {
-        return (
-            <>
-                {/* 通过getFormApi回调获取并保存formApi */}
-                <Form getFormApi={this.getFormApi} />
-                {/* 通过ref直接获取Form组件实例上的formApi */}
-                <Form ref={this.formBRef} />
-                <Button onClick={() => this.changeValues()}>Change</Button>
-            </>
-        );
-    }
 }
 ```
 

@@ -88,6 +88,11 @@
         "mdast-util-mdxjs-esm": "^2.0.1",
         "oxc-transform-react": "0.152.0",
         "playwright": "catalog:",
+        "remark-gfm": "catalog:",
+        "remark-mdx": "catalog:",
+        "remark-parse": "catalog:",
+        "remark-stringify": "catalog:",
+        "unified": "catalog:",
         "unist-util-visit": "^5.2.0",
         "vfile": "^6.0.3",
         "vue-component-meta": "^3.3.14"

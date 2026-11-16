@@ -1508,63 +1508,32 @@ When using formApi created by `useForm()` before the Form component mounts, a wa
 
 <Framework only="react">
 
-```jsx
-import React from 'react';
-import { Form, Button } from '@fibrae/semi-ui-react';
+```tsx
+import { useRef } from 'react';
+import { Button, Form } from '@fibrae/semi-ui-react';
+import type { FormApi, FormHandle } from '@fibrae/semi-ui-react';
 
-class FormApiDemo extends React.Component {
-    constructor() {
-        super();
-        this.getFormApi = this.getFormApi.bind(this);
-        this.formBRef = React.createRef();
-    }
-    getFormApi(formApi) {
-        this.formApi = formApi;
-        // After getting the formApi object, you can use it to make any changes you want to the form
-    }
+function FormApiDemo() {
+    const formApiA = useRef<FormApi>(null);
+    const formB = useRef<FormHandle>(null);
 
-    changeValues() {
-        // use formApi to update formA
-        this.formApi.setValues({ a: 1 });
+    const changeValues = () => {
+        // use formApi to update formA. After getting the formApi object, you can use it to make any changes you want to the form
+        formApiA.current?.setValues({ a: 1 });
         // use formApi to update formB
-        this.formBRef.current.formApi.setValues({ b: 2 });
-    }
-
-    render() {
-        return (
-            <>
-                <Form getFormApi={this.getFormApi} />
-                <Form ref={this.formBRef} />
-                <Button onClick={() => this.changeValues()}>Change</Button>
-            </>
-        );
-    }
-}
-```
-
-```jsx
-import React from 'react';
-import { Form, FormInput, Button } from '@fibrae/semi-ui-react';
-
-() => {
-    // functional compoentn usage
-    const api = useRef();
+        formB.current?.formApi.setValues({ b: 2 });
+    };
 
     return (
         <>
-            <Form getFormApi={(formApi) => (api.current = formApi)}>
-                <FormInput field="a" />
-                <Button
-                    onClick={() => {
-                        console.log(api);
-                    }}
-                >
-                    log
-                </Button>
-            </Form>
+            {/* save the formApi from the getFormApi callback */}
+            <Form getFormApi={(formApi) => (formApiA.current = formApi)} />
+            {/* read the formApi of the Form through a ref */}
+            <Form ref={formB} />
+            <Button onClick={changeValues}>Change</Button>
         </>
     );
-};
+}
 ```
 
 </Framework>

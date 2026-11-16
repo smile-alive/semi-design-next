@@ -2,6 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { translate } from '#/i18n';
 import { locales, type Locale } from '#/i18n/locales';
 import type { ComponentEntry } from '#/lib/component-search';
+import { categories } from './categories';
 import { type Framework, availableFrameworks, validateFrameworkLocales } from './frameworks';
 
 export { asLocale, locales, type Locale } from '#/i18n/locales';
@@ -40,9 +41,6 @@ export function docUrl(locale: Locale, framework: Framework, category: string, p
     return `/${locale}/${framework}/${category}/${page}/`;
 }
 
-// sidebar group order; labels are category_<folder> in src/i18n
-const categories = ['start', 'advanced', 'experience', 'ecosystem', 'ai', 'basic', 'plus', 'input', 'navigation', 'show', 'feedback', 'other'] as const;
-
 // header search indexes component categories only
 const componentCategories: ReadonlySet<string> = new Set(['ai', 'basic', 'plus', 'input', 'navigation', 'show', 'feedback', 'other']);
 
@@ -55,7 +53,7 @@ export const docIconUrl = (name?: string) => (name ? docIcons[`../assets/doc-ico
 
 export function categoryLabel(locale: Locale, key: string) {
     const category = categories.find((c) => c === key);
-    if (!category) throw new Error(`Content folder "${key}" is missing from the sidebar categories in src/lib/docs.ts`);
+    if (!category) throw new Error(`Content folder "${key}" is missing from the sidebar categories in src/lib/categories.ts`);
     return translate(locale)(`category_${category}`);
 }
 
