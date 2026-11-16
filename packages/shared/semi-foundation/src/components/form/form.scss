@@ -130,18 +130,23 @@ $rating: #{$prefix}-rating;
     }
 
     // The tooltip button sits beside the label element, not in it: a label's content names the control, and a
-    // button must not be nested in a label. The width of the label moves to this wrapper to keep columns aligned.
+    // button must not be nested in a label. The width of the label moves to this wrapper to keep columns aligned, and
+    // so do the label's outer margins: align-items centers margin boxes, so a bottom margin left on the label would
+    // drop the button below the text's center line.
     &-field-label-with-tooltip {
         display: flex;
         flex-shrink: 0;
         align-items: center;
         max-width: 100%;
         padding-inline-end: $spacing-form_label-paddingRight;
+        margin-top: $spacing-form_label-marginTop;
+        margin-bottom: $spacing-form_label-marginBottom;
 
         .#{$field}-label {
             flex: 0 1 auto;
             min-width: 0;
             padding-inline-end: $spacing-form_label_tooltip-marginLeft;
+            margin: 0;
         }
     }
 
@@ -201,6 +206,14 @@ $rating: #{$prefix}-rating;
             padding-bottom: $spacing-form_label-paddingTop;
             margin-inline-end: $spacing-form_label_posLeft-marginRight;
             margin-bottom: $spacing-form_label_posLeft-marginBottom;
+        }
+        .#{$field}-label-with-tooltip {
+            margin-inline-end: $spacing-form_label_posLeft-marginRight;
+            margin-bottom: $spacing-form_label_posLeft-marginBottom;
+
+            .#{$field}-label {
+                margin: 0;
+            }
         }
         .#{$field}-label-with-extra {
             display: flex;
@@ -286,6 +299,14 @@ $rating: #{$prefix}-rating;
             padding-bottom: $spacing-form_label-paddingTop;
             margin-inline-end: $spacing-form_label_posLeft-marginRight;
             margin-bottom: $spacing-form_label_posLeft-marginBottom;
+        }
+        .#{$field}-label-with-tooltip {
+            margin-inline-end: $spacing-form_label_posLeft-marginRight;
+            margin-bottom: $spacing-form_label_posLeft-marginBottom;
+
+            .#{$field}-label {
+                margin: 0;
+            }
         }
     }
 }
