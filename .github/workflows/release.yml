@@ -1,9 +1,11 @@
 name: Release
 
-# Runs after CI passes on a push to release: with changesets pending it keeps the version PR current, otherwise it
-# publishes what the version commit bumped and moves main to the published commit. npm Trusted Publishing matches this
-# file as the top-level workflow, so publishing stays here rather than in a reusable workflow
+# A push to release with changesets pending opens or updates the version PR right away, since versioning needs no CI
+# result. After CI passes on the version commit it publishes what that commit bumped and moves main to it. npm Trusted
+# Publishing matches this file as the top-level workflow, so publishing stays here rather than in a reusable workflow
 on:
+    push:
+        branches: [release]
     workflow_run:
         workflows: [CI]
         types: [completed]
@@ -14,10 +16,12 @@ permissions:
 
 jobs:
     release:
-        if: github.repository == 'smile-alive/semi-design-next' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
+        if: github.repository == 'smile-alive/semi-design-next' && (github.event_name == 'push' || github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success')
         runs-on: ubuntu-latest
         timeout-minutes: 30
-        concurrency: release
+        # Versioning and publishing never act on the same commit; one shared group would let a queued push run replace a
+        # pending publish
+        concurrency: release-${{ github.event_name }}
         permissions:
             contents: write
             pull-requests: write
@@ -31,16 +35,20 @@ jobs:
               with:
                   fetch-depth: 0
             # Under workflow_run github.sha is the branch tip, which the checkout follows; a newer push gets its own run,
-            # so this one must not build code that CI did not pass. Nothing to version or publish skips the build
+            # so this one must not publish code that CI did not pass
             - id: pending
               env:
                   TESTED: ${{ github.event.workflow_run.head_sha }}
                   MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
               run: |
-                  if [ "$TESTED" != "$GITHUB_SHA" ]; then
+                  pending=$(find .changeset -name '*.md' ! -name README.md)
+                  if [ "$GITHUB_EVENT_NAME" = push ]; then
+                      if [ -n "$pending" ]; then
+                          echo "run=true" >> "$GITHUB_OUTPUT"
+                      fi
                       exit 0
                   fi
-                  if [ -n "$(find .changeset -name '*.md' ! -name README.md)" ] || [ "${MESSAGE#chore: 发布新版本}" != "$MESSAGE" ]; then
+                  if [ "$TESTED" = "$GITHUB_SHA" ] && [ -z "$pending" ] && [ "${MESSAGE#chore: 发布新版本}" != "$MESSAGE" ]; then
                       echo "run=true" >> "$GITHUB_OUTPUT"
                   fi
             - if: steps.pending.outputs.run == 'true'
@@ -48,7 +56,7 @@ jobs:
               with:
                   dist: none
             # Published files are always built from this commit, never restored from a cache
-            - if: steps.pending.outputs.run == 'true'
+            - if: steps.pending.outputs.run == 'true' && github.event_name == 'workflow_run'
               run: pnpm build
             # v1 finds published packages by parsing "New tag:" lines that Changesets CLI v3 no longer prints, so it
             # skipped tags and GitHub releases; v2 reads the CLI's CHANGESETS_OUTPUT file. v2 has no floating major tag.
