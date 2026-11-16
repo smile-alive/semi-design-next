@@ -11,7 +11,7 @@
 
 <template>
     <div>
-        <span :data-name="name">{{ seen }}</span>
+        <span :data-name="props.name">{{ seen }}</span>
         <slot />
     </div>
 </template>

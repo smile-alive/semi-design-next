@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import Timeline, { type TimelineData } from '../../index';
 
-    defineProps<{ dataSource: TimelineData[] }>();
+    const props = defineProps<{ dataSource: TimelineData[] }>();
 </script>
 
 <template>
-    <Timeline :dataSource="dataSource">
+    <Timeline :dataSource="props.dataSource">
         <template #content="{ item, index }">
             <strong v-if="index === 1" class="rich">{{ item.content }}</strong>
             <template v-else>{{ item.content }}</template>

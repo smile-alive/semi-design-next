@@ -67,7 +67,7 @@
 <template>
     <FloatButton v-if="state.visible" ref="button" v-bind="$attrs" :aria-label="ariaLabel()" :badge="props.badge" :class="prefix" :colorful="props.colorful" :shape="props.shape" :size="props.size" x-semi-prop="children" @click="foundation.onClick">
         <template #icon>
-            <slot v-if="hasSlotContent(slots.default)" />
+            <slot v-if="hasSlotContent($slots.default)" />
             <slot v-else name="icon">
                 <IconBackTop />
             </slot>

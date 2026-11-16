@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    defineProps<{ fill?: string | string[] }>();
+    const props = defineProps<{ fill?: string | string[] }>();
 </script>
 
 <template>
-    <span :data-fill="JSON.stringify(fill ?? null)" data-testid="icon" />
+    <span :data-fill="JSON.stringify(props.fill ?? null)" data-testid="icon" />
 </template>

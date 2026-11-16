@@ -24,7 +24,7 @@
 </script>
 
 <template>
-    <button data-host :data-suffix="suffix" @click="foundation.update()">{{ state.value }}</button>
+    <button data-host :data-suffix="props.suffix" @click="foundation.update()">{{ state.value }}</button>
     <button @click="foundation.repeat()">重复</button>
-    <output aria-label="对象身份">{{ state.identity === identity ? 'same' : 'different' }}</output>
+    <output aria-label="对象身份">{{ state.identity === props.identity ? 'same' : 'different' }}</output>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import Table from '../..';
 
-    withDefaults(
+    const props = withDefaults(
         defineProps<{
             sortIconFor?: string;
             columnSlots?: boolean;
@@ -21,19 +21,19 @@
 <template>
     <Table :dataSource="dataSource" :pagination="false">
         <Table.Column dataIndex="name" :filters="nameFilters" :sorter="byName" title="Name">
-            <template v-if="columnSlots" #sortIcon>
+            <template v-if="props.columnSlots" #sortIcon>
                 <i class="column-sort-icon" />
             </template>
-            <template v-if="columnSlots" #filterIcon>
+            <template v-if="props.columnSlots" #filterIcon>
                 <i class="column-filter-icon" />
             </template>
-            <template v-if="columnSlots" #filterDropdown>
+            <template v-if="props.columnSlots" #filterDropdown>
                 <p>column panel</p>
             </template>
         </Table.Column>
         <Table.Column dataIndex="age" :filters="ageFilters" :sorter="byAge" title="Age" />
         <template #sortIcon="{ column }">
-            <i v-if="sortIconFor === 'all' || column.dataIndex === sortIconFor" class="table-sort-icon" />
+            <i v-if="props.sortIconFor === 'all' || column.dataIndex === props.sortIconFor" class="table-sort-icon" />
         </template>
         <template #filterIcon>
             <i class="table-filter-icon" />

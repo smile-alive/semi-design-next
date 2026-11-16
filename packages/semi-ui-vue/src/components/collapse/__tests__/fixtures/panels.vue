@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import Collapse from '../..';
 
-    defineProps<{ disabled?: boolean; extra?: string; panelAttrs?: Record<string, unknown> }>();
+    const props = defineProps<{ disabled?: boolean; extra?: string; panelAttrs?: Record<string, unknown> }>();
 </script>
 
 <template>
@@ -12,9 +12,9 @@
         <template v-if="$slots.collapseIcon" #collapseIcon>
             <slot name="collapseIcon" />
         </template>
-        <Collapse.Panel v-bind="panelAttrs" :disabled="disabled" itemKey="1">
+        <Collapse.Panel v-bind="props.panelAttrs" :disabled="props.disabled" itemKey="1">
             <template #header>This is panel header 1</template>
-            <template v-if="extra !== undefined" #extra>{{ extra }}</template>
+            <template v-if="props.extra !== undefined" #extra>{{ props.extra }}</template>
             <p>Hi, bytedance dance dance. This is the docsite of Semi UI.</p>
         </Collapse.Panel>
         <Collapse.Panel itemKey="2">

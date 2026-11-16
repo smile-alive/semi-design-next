@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import List, { ListItem } from '../..';
 
-    defineProps<{ dataSource: { id: string; ok: boolean }[] }>();
+    const props = defineProps<{ dataSource: { id: string; ok: boolean }[] }>();
 </script>
 
 <template>
-    <List :dataSource="dataSource">
+    <List :dataSource="props.dataSource">
         <template #item="{ item }">
             <ListItem v-if="item.ok">{{ item.id }}</ListItem>
             <ListItem v-else>{{ item.id }}!</ListItem>

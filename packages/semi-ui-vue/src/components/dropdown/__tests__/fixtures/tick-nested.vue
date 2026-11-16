@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import Dropdown, { DropdownItem, DropdownMenu, type DropdownProps } from '../..';
 
-    withDefaults(
+    const props = withDefaults(
         defineProps<{
             outerTick?: boolean;
             innerTick?: boolean;
@@ -14,11 +14,11 @@
 </script>
 
 <template>
-    <Dropdown :motion="false" :selectionMode="outerMode" :showTick="outerTick" trigger="custom" visible>
+    <Dropdown :motion="false" :selectionMode="props.outerMode" :showTick="props.outerTick" trigger="custom" visible>
         <button type="button">tick trigger</button>
         <template #content>
             <DropdownMenu>
-                <Dropdown :motion="false" position="rightTop" :selectionMode="innerMode" :showTick="innerTick" trigger="custom" visible>
+                <Dropdown :motion="false" position="rightTop" :selectionMode="props.innerMode" :showTick="props.innerTick" trigger="custom" visible>
                     <DropdownItem active @click="emit('parentClick', $event)">tick parent</DropdownItem>
                     <template #content>
                         <DropdownMenu>

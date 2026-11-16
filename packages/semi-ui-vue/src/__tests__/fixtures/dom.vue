@@ -24,6 +24,6 @@
 
 <template>
     <div v-bind="splitControlAttrs($attrs, isControlKey).root">
-        <button ref="target" v-bind="splitControlAttrs($attrs, isControlKey).control">{{ value }}</button>
+        <button ref="target" v-bind="splitControlAttrs($attrs, isControlKey).control">{{ props.value }}</button>
     </div>
 </template>

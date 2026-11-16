@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, onActivated, onDeactivated, shallowRef, useAttrs, useId } from 'vue';
+    import { computed, onActivated, onDeactivated, shallowRef, useId } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
     import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
@@ -42,7 +42,6 @@
 
     const emit = defineEmits<UserGuideEmits>();
     const slots = defineSlots<UserGuideSlots>();
-    const attrs = useAttrs();
 
     const semi = useSemiGlobal();
     const config = useConfig();
@@ -198,7 +197,7 @@
                             padding: 0,
                             backgroundColor: primary && 'var(--semi-color-primary)',
                         },
-                        attrs.style,
+                        $attrs.style,
                     ]"
                     trigger="custom"
                     :visible="props.visible && active"

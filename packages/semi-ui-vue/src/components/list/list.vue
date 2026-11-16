@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T = any">
-    import { computed, Comment, Fragment, useAttrs, type VNode } from 'vue';
+    import { computed, Comment, Fragment, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
     import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/list/list.scss';
@@ -24,7 +24,6 @@
     });
 
     const slots = defineSlots<ListSlots<T>>();
-    const attrs = useAttrs();
 
     const semi = useSemiGlobal();
     const locale = useLocale('List');
@@ -75,7 +74,7 @@
                 [`${prefixCls}-bordered`]: props.bordered,
             },
         ]"
-        :role="namedRole(attrs)"
+        :role="namedRole($attrs)"
     >
         <div v-if="hasSlotContent($slots.header)" :class="`${prefixCls}-header`" x-semi-prop="header">
             <slot name="header" />

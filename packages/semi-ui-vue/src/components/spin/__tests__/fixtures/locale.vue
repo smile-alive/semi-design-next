@@ -3,9 +3,9 @@
     import type { Locale } from '@fibrae/semi-ui-vue/locale';
     import Spin from '../..';
 
-    defineProps<{ locale?: Locale }>();
+    const props = defineProps<{ locale?: Locale }>();
 </script>
 
 <template>
-    <ConfigProvider :locale="locale"><Spin /></ConfigProvider>
+    <ConfigProvider :locale="props.locale"><Spin /></ConfigProvider>
 </template>

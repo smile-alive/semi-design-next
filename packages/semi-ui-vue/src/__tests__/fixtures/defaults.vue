@@ -14,6 +14,6 @@
 </script>
 
 <template>
-    <button :disabled="disabled">{{ label }}</button>
+    <button :disabled="props.disabled">{{ props.label }}</button>
     <output aria-label="默认值结果">{{ output }}</output>
 </template>

@@ -1,12 +1,9 @@
 <script setup lang="ts">
-    import { type VNode, Text, useAttrs } from 'vue';
+    import { type VNode, Text } from 'vue';
     import { childSlots, toVNodes, slotNodes, type KeyedNode } from '../../../utils/index';
     import Table, { type ColumnAlign, type ColumnProps } from '../../table';
 
     defineOptions({ inheritAttrs: false });
-
-    // `$attrs` in the template makes the component's type refer to itself (TS7022)
-    const attrs = useAttrs();
 
     const nodesOf = (children: unknown): KeyedNode[] => slotNodes(toVNodes(children as VNode[]));
 
@@ -51,7 +48,7 @@
 </script>
 
 <template>
-    <Table v-for="(t, index) in [parse($slots.default)]" :key="index" :columns="t.columns" :dataSource="t.dataSource" :pagination="false" v-bind="attrs">
+    <Table v-for="(t, index) in [parse($slots.default)]" :key="index" :columns="t.columns" :dataSource="t.dataSource" :pagination="false" v-bind="$attrs">
         <template #headerCell="{ column }">
             <component :is="node" v-for="[node, key] in t.head[Number(column.dataIndex)]" :key="key" />
         </template>

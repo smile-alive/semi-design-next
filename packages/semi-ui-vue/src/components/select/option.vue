@@ -73,7 +73,7 @@
         <slot />
     </div>
     <!-- keyboard selection stays on the combobox through aria-activedescendant, so the option takes no focus -->
-    <div v-else :id="props.semiOptionId" v-bind="getDataAttr(attrs)" :aria-disabled="props.disabled ? 'true' : 'false'" :aria-selected="props.selected || props.current ? 'true' : 'false'" :class="rowClass()" role="option" :style="attrs.style as never" @click="handleClick" @mouseenter="emit('mouseenter', $event)">
+    <div v-else :id="props.semiOptionId" v-bind="getDataAttr($attrs)" :aria-disabled="props.disabled ? 'true' : 'false'" :aria-selected="props.selected || props.current ? 'true' : 'false'" :class="rowClass()" role="option" :style="$attrs.style as never" @click="handleClick" @mouseenter="emit('mouseenter', $event)">
         <div v-if="props.showTick" :class="`${prefixCls}-icon`">
             <IconTick />
         </div>

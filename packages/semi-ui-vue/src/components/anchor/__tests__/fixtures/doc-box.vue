@@ -2,7 +2,7 @@
     import AnchorLink from '../../anchor-link.vue';
     import Anchor from '../../anchor.vue';
 
-    withDefaults(defineProps<{ scrollMotion?: boolean; targetOffset?: number; fixedBar?: boolean }>(), {
+    const props = withDefaults(defineProps<{ scrollMotion?: boolean; targetOffset?: number; fixedBar?: boolean }>(), {
         scrollMotion: false,
         targetOffset: 0,
         fixedBar: false,
@@ -12,7 +12,7 @@
 
 <template>
     <div>
-        <Anchor :getContainer="getContainer" :scrollMotion="scrollMotion" :style="{ position: 'absolute', right: 0, top: fixedBar ? '100px' : undefined }" :targetOffset="targetOffset">
+        <Anchor :getContainer="getContainer" :scrollMotion="props.scrollMotion" :style="{ position: 'absolute', right: 0, top: props.fixedBar ? '100px' : undefined }" :targetOffset="props.targetOffset">
             <AnchorLink href="#welcome" title="welcome" />
             <AnchorLink href="#api" title="api too much to show">
                 <AnchorLink href="#docs" title="docs">
@@ -22,8 +22,8 @@
             </AnchorLink>
             <AnchorLink href="#contact" title="contact" />
         </Anchor>
-        <div id="box" :style="{ height: '500px', overflow: 'scroll', border: fixedBar ? '1px solid #eee' : undefined }">
-            <template v-if="fixedBar">
+        <div id="box" :style="{ height: '500px', overflow: 'scroll', border: props.fixedBar ? '1px solid #eee' : undefined }">
+            <template v-if="props.fixedBar">
                 <div :style="{ position: 'fixed', border: '1px solid red', height: '100px', width: '100%' }">这是 fixed 的一段话</div>
                 <h1 :style="{ height: '300px' }">whatever</h1>
             </template>

@@ -2,11 +2,11 @@
     import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import Badge from '../../badge.vue';
 
-    defineProps<{ direction?: 'ltr' | 'rtl' }>();
+    const props = defineProps<{ direction?: 'ltr' | 'rtl' }>();
 </script>
 
 <template>
-    <ConfigProvider :direction="direction">
+    <ConfigProvider :direction="props.direction">
         <Badge :count="5">Semi</Badge>
     </ConfigProvider>
 </template>

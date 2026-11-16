@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import Table from '../..';
 
-    defineProps<{ dataSource: Record<string, unknown>[] }>();
+    const props = defineProps<{ dataSource: Record<string, unknown>[] }>();
 </script>
 
 <template>
-    <Table :dataSource="dataSource">
+    <Table :dataSource="props.dataSource">
         <Table.Column key="name" dataIndex="name" title="Name">
             <template #cell="{ text }">
                 <a href="https://semi.design">{{ text }}</a>

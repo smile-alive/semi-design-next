@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import Collapsible from '../..';
 
-    defineProps<{ isOpen: boolean }>();
+    const props = defineProps<{ isOpen: boolean }>();
     const emit = defineEmits<{ updated: [height: string, duration: string] }>();
 
     const handleUpdated = () => {
@@ -11,7 +11,7 @@
 </script>
 
 <template>
-    <Collapsible :isOpen="isOpen" @vue:updated="handleUpdated">
+    <Collapsible :isOpen="props.isOpen" @vue:updated="handleUpdated">
         <div>hello</div>
     </Collapsible>
 </template>

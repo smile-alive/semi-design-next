@@ -2,7 +2,7 @@
     import { onMounted, useTemplateRef } from 'vue';
     import List, { ListItem } from '../..';
 
-    defineProps<{ grid?: boolean }>();
+    const props = defineProps<{ grid?: boolean }>();
     const emit = defineEmits<{ els: [list: Element, item: Element] }>();
     const list = useTemplateRef('list');
     const item = useTemplateRef('item');
@@ -11,7 +11,7 @@
 </script>
 
 <template>
-    <List ref="list" :grid="grid ? { span: 12 } : undefined">
+    <List ref="list" :grid="props.grid ? { span: 12 } : undefined">
         <ListItem ref="item" />
     </List>
 </template>

@@ -4,13 +4,13 @@
     import type { UserGuideStepItem } from '../../interface';
     import UserGuide from '../../user-guide.vue';
 
-    defineProps<{ steps: UserGuideStepItem[]; mode?: 'popup' | 'modal'; ownContainer?: () => HTMLElement }>();
+    const props = defineProps<{ steps: UserGuideStepItem[]; mode?: 'popup' | 'modal'; ownContainer?: () => HTMLElement }>();
     const container = useTemplateRef<HTMLDivElement>('container');
 </script>
 
 <template>
     <div ref="container" class="config-container" />
     <ConfigProvider :getPopupContainer="() => container!">
-        <UserGuide :getPopupContainer="ownContainer" :mode="mode" :steps="steps" visible />
+        <UserGuide :getPopupContainer="props.ownContainer" :mode="props.mode" :steps="props.steps" visible />
     </ConfigProvider>
 </template>

@@ -4,7 +4,7 @@
     import Calendar from '../../calendar.vue';
     import type { CalendarMode, EventObject } from '../../interface';
 
-    defineProps<{ displayValue: Date; events: EventObject[] }>();
+    const props = defineProps<{ displayValue: Date; events: EventObject[] }>();
     const mode = ref<CalendarMode>('week');
     const clickDate = ref<string | number>('?');
     const rangeDates = [new Date(2019, 6, 23), new Date(2019, 6, 26)];
@@ -17,7 +17,7 @@
         <Radio value="month">月视图</Radio>
         <Radio value="range">多日视图</Radio>
     </RadioGroup>
-    <Calendar :displayValue="displayValue" :events="events" :height="400" :mode="mode" :range="mode === 'range' ? rangeDates : undefined" @click="(_event, date) => (clickDate = date.getDate())">
+    <Calendar :displayValue="props.displayValue" :events="props.events" :height="400" :mode="mode" :range="mode === 'range' ? rangeDates : undefined" @click="(_event, date) => (clickDate = date.getDate())">
         <template #event="{ event }">
             <div style="height: 100%; overflow: hidden">{{ event.children }}</div>
         </template>

@@ -2,12 +2,12 @@
     import AnchorLink from '../../anchor-link.vue';
     import Anchor from '../../anchor.vue';
 
-    withDefaults(defineProps<{ shown?: boolean }>(), { shown: true });
+    const props = withDefaults(defineProps<{ shown?: boolean }>(), { shown: true });
 </script>
 
 <template>
     <Anchor autoCollapse>
-        <template v-if="shown">
+        <template v-if="props.shown">
             <AnchorLink href="#p" title="p">
                 <div class="group">
                     <AnchorLink href="#c1" title="c1" />

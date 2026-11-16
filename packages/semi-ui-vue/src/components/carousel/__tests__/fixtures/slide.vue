@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    defineProps<{ label: string }>();
+    const props = defineProps<{ label: string }>();
 </script>
 
 <template>
-    <section class="own-slide">{{ label }}</section>
+    <section class="own-slide">{{ props.label }}</section>
 </template>

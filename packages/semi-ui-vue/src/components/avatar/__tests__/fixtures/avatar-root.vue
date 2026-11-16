@@ -3,7 +3,7 @@
     import Avatar from '../../avatar.vue';
     import type { AvatarProps } from '../../interface';
 
-    withDefaults(defineProps<{ alt?: string; border?: AvatarProps['border']; top?: boolean }>(), { top: false });
+    const props = withDefaults(defineProps<{ alt?: string; border?: AvatarProps['border']; top?: boolean }>(), { top: false });
     const emit = defineEmits<{ root: [element: Element]; click: [event: MouseEvent] }>();
     const avatar = useTemplateRef('avatar');
     const notifyRoot = () => emit('root', avatar.value?.$el);
@@ -12,9 +12,9 @@
 </script>
 
 <template>
-    <Avatar ref="avatar" :alt="alt" :border="border" @click="emit('click', $event)">
+    <Avatar ref="avatar" :alt="props.alt" :border="props.border" @click="emit('click', $event)">
         U
         <template #hoverMask>mask</template>
-        <template v-if="top" #topSlotText>直播</template>
+        <template v-if="props.top" #topSlotText>直播</template>
     </Avatar>
 </template>

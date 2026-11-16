@@ -46,6 +46,16 @@ export function vueEslint(overlappingRules: Linter.Config[]): Linter.Config[] {
                 'vue/require-macro-variable-name': 'error',
                 'vue/define-macros-order': ['error', { order: ['defineOptions', 'defineProps', 'defineEmits', 'defineSlots', 'defineModel'], defineExposeLast: true }],
                 'vue/prefer-use-template-ref': 'error',
+                // One name per value: templates read the macro bindings for props and emit, and Vue's $attrs and $slots for
+                // what callers pass through; the attrs and slots bindings exist only for the script
+                'vue/no-restricted-syntax': [
+                    'error',
+                    { selector: 'Identifier[name=/^\\$(props|emit)$/]:not(MemberExpression[computed=false] > Identifier.property)', message: 'Use props.x and emit() in templates.' },
+                    {
+                        selector: 'Identifier[name=/^(attrs|slots)$/]:not(MemberExpression[computed=false] > Identifier.property, Property[computed=false] > Identifier.key, TSTypeQuery > Identifier.exprName)',
+                        message: 'Use $attrs and $slots in templates; the attrs and slots bindings are for the script.',
+                    },
+                ],
             },
         },
         ...vueExemptions.map(({ files, templateOff = [] }) => ({

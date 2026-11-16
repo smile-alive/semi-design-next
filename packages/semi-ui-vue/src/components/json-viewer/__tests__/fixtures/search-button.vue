@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import JsonViewer from '../..';
 
-    withDefaults(defineProps<{ show?: 'open' | 'always' | 'never' }>(), { show: 'open' });
+    const props = withDefaults(defineProps<{ show?: 'open' | 'always' | 'never' }>(), { show: 'open' });
 </script>
 
 <template>
@@ -24,7 +24,7 @@
                 <button type="button" @click="onNextSearch">next</button>
                 <button type="button" @click="onReplace('x')">replace</button>
                 <button type="button" @click="onReplaceAll('y')">replace all</button>
-                <component :is="defaultButton" v-if="show === 'always' || (show === 'open' && showSearchBar)" />
+                <component :is="defaultButton" v-if="props.show === 'always' || (props.show === 'open' && showSearchBar)" />
             </div>
         </template>
     </JsonViewer>
