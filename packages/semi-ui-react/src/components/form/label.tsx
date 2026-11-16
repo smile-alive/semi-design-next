@@ -3,7 +3,7 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import '@fibrae/semi-foundation/components/form/form.scss';
-import { IconHelpCircle } from '@fibrae/semi-icons-react';
+import { IconHelpCircleStroked } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/index';
 import { hasContent } from '../../utils/index';
 import useLocale from '../locale/use-locale';
@@ -81,7 +81,7 @@ function Label({ children, required = false, text, disabled, name, width, align 
             {labelElement}
             <Tooltip content={tooltip}>
                 <button type="button" className={`${prefixCls}-field-label-tooltip`} aria-label={locale.labelTooltip}>
-                    <IconHelpCircle size="inherit" />
+                    <IconHelpCircleStroked size="inherit" />
                 </button>
             </Tooltip>
         </div>

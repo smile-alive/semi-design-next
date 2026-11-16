@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/form/form.scss';
-import { IconHelpCircle } from '@fibrae/semi-icons-solid';
+import { IconHelpCircleStroked } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/index';
 import { hasContent, mergeStyles } from '../../utils/index';
 import useLocale from '../locale/use-locale';
@@ -82,7 +82,7 @@ export default function Label(props: LabelProps) {
                 <Tooltip content={tooltip()}>
                     {(getTriggerProps) => (
                         <button {...getTriggerProps()} type="button" class={`${prefixCls}-field-label-tooltip`} aria-label={locale().locale.labelTooltip}>
-                            <IconHelpCircle size="inherit" />
+                            <IconHelpCircleStroked size="inherit" />
                         </button>
                     )}
                 </Tooltip>

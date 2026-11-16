@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import { IconHelpCircle } from '@fibrae/semi-icons-svelte';
+    import { IconHelpCircleStroked } from '@fibrae/semi-icons-svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { TooltipTriggerProps } from '../tooltip/interface.js';
     import Tooltip from '../tooltip/tooltip.svelte';
@@ -35,7 +35,7 @@
 
 {#snippet tooltipButton(triggerProps: Partial<TooltipTriggerProps>)}
     <button {...triggerProps} aria-label={locale().locale.labelTooltip} class={`${prefix}-tooltip`} type="button">
-        <IconHelpCircle size="inherit" />
+        <IconHelpCircleStroked size="inherit" />
     </button>
 {/snippet}
 
