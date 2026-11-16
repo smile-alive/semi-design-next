@@ -1,5 +1,11 @@
 # @fibrae/semi-icons-svelte
 
+## 0.9.1
+
+### Patch Changes
+
+- @fibrae/semi-icons-core@0.9.1
+
 ## 0.9.0
 
 ### Patch Changes
