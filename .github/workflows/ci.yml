@@ -26,7 +26,6 @@ jobs:
             build: ${{ steps.scope.outputs.build }}
             typecheck: ${{ steps.scope.outputs.typecheck }}
             tests: ${{ steps.scope.outputs.tests }}
-            site: ${{ steps.scope.outputs.site }}
             changed: ${{ steps.scope.outputs.changed }}
         steps:
             - uses: actions/checkout@v5
@@ -39,7 +38,7 @@ jobs:
               run: |
                   all='react vue solid svelte common'
                   full() {
-                      printf '%s\n' "lint=full" "build=true" "typecheck=full" "tests=$all" "site=true" "changed=" >> "$GITHUB_OUTPUT"
+                      printf '%s\n' "lint=full" "build=true" "typecheck=full" "tests=$all" "changed=" >> "$GITHUB_OUTPUT"
                   }
                   # A new branch has no `before`; after a force push `before` is no ancestor and the diff means nothing
                   if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
@@ -76,10 +75,10 @@ jobs:
                       full
                       exit 0
                   fi
-                  lint='' build='' typecheck='' tests='' site=''
-                  # The site reads packages/ for demos and API tables
+                  lint='' build='' typecheck='' tests=''
+                  # The site reads packages/ for demos and API tables; Deploy preview reads `build` as "the site changed"
                   if [ -n "$pkg$shared$web" ]; then
-                      lint=full build=true site=true
+                      lint=full build=true
                   elif [ -n "$fmt" ]; then
                       lint=fmt
                   fi
@@ -95,7 +94,7 @@ jobs:
                       tests="$frameworks${websrc:+ common}"
                       tests="${tests# }"
                   fi
-                  printf '%s\n' "lint=$lint" "build=$build" "typecheck=$typecheck" "tests=$tests" "site=$site" "changed=$BASE" >> "$GITHUB_OUTPUT"
+                  printf '%s\n' "lint=$lint" "build=$build" "typecheck=$typecheck" "tests=$tests" "changed=$BASE" >> "$GITHUB_OUTPUT"
 
     # Package exports point at dist, which lint, typecheck and the tests all resolve, so one job builds it for the others
     build:
@@ -162,9 +161,3 @@ jobs:
                   dist: required
             - if: env.PICKED == 'true'
               run: pnpm exec vp test run --silent --project '${{ matrix.project }}' --project '${{ matrix.project }}-ssr' ${CHANGED:+--changed "$CHANGED" --passWithNoTests}
-
-    preview:
-        if: ${{ !cancelled() && github.repository == 'smile-alive/semi-design-next' && github.event_name == 'push' && github.ref == 'refs/heads/release' && needs.gate.outputs.site == 'true' && !contains(needs.*.result, 'failure') }}
-        needs: [gate, lint, typecheck, test]
-        uses: ./.github/workflows/site.yml
-        secrets: inherit

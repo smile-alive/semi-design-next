@@ -1,0 +1,39 @@
+name: Deploy preview
+
+# Deploys release's preview site after CI passes on a push. Not a CI job: Release waits for the whole CI run to complete,
+# and the site build would hold up every publish
+on:
+    workflow_run:
+        workflows: [CI]
+        types: [completed]
+        branches: [release]
+
+permissions:
+    contents: read
+
+jobs:
+    # CI runs `build` exactly when the change reaches the site
+    affected:
+        if: github.repository == 'smile-alive/semi-design-next' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions:
+            actions: read
+        outputs:
+            build: ${{ steps.build.outputs.conclusion }}
+        steps:
+            - id: build
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  RUN: ${{ github.event.workflow_run.id }}
+              run: |
+                  conclusion=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs?per_page=100" --jq '.jobs[] | select(.name == "build") | .conclusion')
+                  echo "conclusion=$conclusion" >> "$GITHUB_OUTPUT"
+
+    site:
+        needs: affected
+        if: needs.affected.outputs.build == 'success'
+        uses: ./.github/workflows/site.yml
+        with:
+            branch: release
+        secrets: inherit
