@@ -35,7 +35,7 @@
 
 {#snippet tooltipButton(triggerProps: Partial<TooltipTriggerProps>)}
     <button {...triggerProps} aria-label={locale().locale.labelTooltip} class={`${prefix}-tooltip`} type="button">
-        <IconHelpCircle />
+        <IconHelpCircle size="inherit" />
     </button>
 {/snippet}
 

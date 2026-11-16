@@ -82,7 +82,7 @@ export default function Label(props: LabelProps) {
                 <Tooltip content={tooltip()}>
                     {(getTriggerProps) => (
                         <button {...getTriggerProps()} type="button" class={`${prefixCls}-field-label-tooltip`} aria-label={locale().locale.labelTooltip}>
-                            <IconHelpCircle />
+                            <IconHelpCircle size="inherit" />
                         </button>
                     )}
                 </Tooltip>
