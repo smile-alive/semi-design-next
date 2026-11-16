@@ -9,5 +9,5 @@
 </script>
 
 <template>
-    <Feedback ref="feedback" :mode="mode" :motion="false" title="Feedback" :visible="visible" />
+    <Feedback ref="feedback" :mode="props.mode" :motion="false" title="Feedback" :visible="props.visible" />
 </template>

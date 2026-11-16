@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { useAttrs, useId } from 'vue';
+    import { useId } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/form/form.scss';
@@ -9,8 +9,7 @@
 
     defineOptions({ inheritAttrs: false });
     defineProps</* @vue-ignore */ ElementProps<'fieldset'>>();
-    const slots = defineSlots<FormSectionSlots>();
-    const attrs = useAttrs();
+    defineSlots<FormSectionSlots>();
 
     const extraId = useId();
 
@@ -18,12 +17,12 @@
 </script>
 
 <template>
-    <fieldset v-bind="$attrs" :aria-describedby="joinIds(attrs['aria-describedby'], hasSlotContent(slots.extraText) && extraId)" :class="`${prefix}-section`">
+    <fieldset v-bind="$attrs" :aria-describedby="joinIds($attrs['aria-describedby'], hasSlotContent($slots.extraText) && extraId)" :class="`${prefix}-section`">
         <!-- an empty legend would still draw its divider -->
         <legend v-if="hasSlotContent($slots.text)" :class="`${prefix}-section-text`">
             <slot name="text" />
         </legend>
-        <div v-if="hasSlotContent(slots.extraText)" :id="extraId" :class="`${prefix}-section-extra`">
+        <div v-if="hasSlotContent($slots.extraText)" :id="extraId" :class="`${prefix}-section-extra`">
             <slot name="extraText" />
         </div>
         <slot />

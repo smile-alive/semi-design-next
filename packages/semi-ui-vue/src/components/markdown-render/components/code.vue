@@ -19,8 +19,8 @@
 </script>
 
 <template>
-    <CodeHighlight v-if="language() && isPlainText()" :code="codeText(slots.default?.() ?? [])" :language="language() ?? ''" lineNumber />
-    <code v-else-if="language()" :class="attrs.class">
+    <CodeHighlight v-if="language() && isPlainText()" :code="codeText($slots.default?.() ?? [])" :language="language() ?? ''" lineNumber />
+    <code v-else-if="language()" :class="$attrs.class">
         <slot />
     </code>
     <code v-else :class="`${cssClasses.PREFIX}-simple-code`">

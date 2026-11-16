@@ -2,7 +2,7 @@
     import { DropdownItem } from '@fibrae/semi-ui-vue/dropdown/index';
     import Table, { type ColumnProps, type TableChangeInfo } from '../..';
 
-    defineProps<{ onChange?: (info: TableChangeInfo) => void }>();
+    const props = defineProps<{ onChange?: (info: TableChangeInfo) => void }>();
     const dataSource = [
         { key: '1', name: 'b' },
         { key: '2', name: 'a' },
@@ -22,7 +22,7 @@
 </script>
 
 <template>
-    <Table :columns="columns" :dataSource="dataSource" :pagination="false" @change="onChange?.($event)">
+    <Table :columns="columns" :dataSource="dataSource" :pagination="false" @change="props.onChange?.($event)">
         <template #filterDropdownItem="{ text, value, checked, filteredValue, filterMultiple, level, onChange: toggle }">
             <DropdownItem @click="toggle">
                 <span>

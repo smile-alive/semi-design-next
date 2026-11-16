@@ -5,7 +5,7 @@
     import '@fibrae/semi-icons-core/styles/icons.scss';
 
     defineOptions({ name: 'Icon', inheritAttrs: false, elementType: 'Icon' });
-    withDefaults(defineProps<IconProps>(), { size: 'default', spin: false });
+    const props = withDefaults(defineProps<IconProps>(), { size: 'default', spin: false });
     defineSlots<IconSlots>();
 
     const attrs = useAttrs();
@@ -20,15 +20,15 @@
         :class="[
             prefix,
             {
-                [`${prefix}-${size}`]: size !== 'inherit',
-                [`${prefix}-spinning`]: spin,
-                [`${prefix}-${type}`]: type,
+                [`${prefix}-${props.size}`]: props.size !== 'inherit',
+                [`${prefix}-spinning`]: props.spin,
+                [`${prefix}-${props.type}`]: props.type,
             },
         ]"
         :role="exposed() ? 'img' : undefined"
-        :style="Number.isSafeInteger(rotate) ? { transform: `rotate(${rotate}deg)` } : undefined"
+        :style="Number.isSafeInteger(props.rotate) ? { transform: `rotate(${props.rotate}deg)` } : undefined"
         v-bind="$attrs"
     >
-        <component :is="node" v-for="(node, index) in $slots.default?.() ?? []" :key="node.key ?? index" v-bind="fill ? { fill } : {}" />
+        <component :is="node" v-for="(node, index) in $slots.default?.() ?? []" :key="node.key ?? index" v-bind="props.fill ? { fill: props.fill } : {}" />
     </span>
 </template>

@@ -2,7 +2,7 @@
     import { ref } from 'vue';
     import HotKeys from '../../index';
 
-    defineProps<{ mode: 'basic' | 'combo' | 'target' }>();
+    const props = defineProps<{ mode: 'basic' | 'combo' | 'target' }>();
     const count = ref(0);
     const onHotKey = () => {
         count.value++;
@@ -12,8 +12,8 @@
 
 <template>
     <div>
-        <HotKeys v-if="mode === 'basic'" :content="['Control', 'K']" :hotKeys="[HotKeys.Keys.Control, 'k']" @hotKey="onHotKey" />
-        <template v-else-if="mode === 'combo'">
+        <HotKeys v-if="props.mode === 'basic'" :content="['Control', 'K']" :hotKeys="[HotKeys.Keys.Control, 'k']" @hotKey="onHotKey" />
+        <template v-else-if="props.mode === 'combo'">
             <HotKeys :hotKeys="[HotKeys.Keys.Meta, HotKeys.Keys.Alt, 'k']" @hotKey="onHotKey" />
             <HotKeys :hotKeys="['Meta', 'Shift', 'k']" @hotKey="onHotKey" />
         </template>

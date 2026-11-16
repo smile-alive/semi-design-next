@@ -4,15 +4,15 @@
     import Spin from '@fibrae/semi-ui-vue/spin/index';
     import LocaleProvider from '../../locale-provider.vue';
 
-    defineProps<{
+    const props = defineProps<{
         locale?: Locale;
         configLocale?: Locale | null;
     }>();
 </script>
 
 <template>
-    <LocaleProvider :locale="locale">
-        <ConfigProvider :locale="configLocale">
+    <LocaleProvider :locale="props.locale">
+        <ConfigProvider :locale="props.configLocale">
             <Spin />
         </ConfigProvider>
     </LocaleProvider>

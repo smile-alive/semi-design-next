@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import Numeral from '../../numeral.vue';
 
-    defineProps<{ parser?: (value: string) => string }>();
+    const props = defineProps<{ parser?: (value: string) => string }>();
 </script>
 
 <template>
@@ -11,7 +11,7 @@
             <b>Currency symbols: $</b>
         </div>
     </Numeral>
-    <Numeral :parser="parser" :precision="2" rule="exponential" truncate="floor">
+    <Numeral :parser="props.parser" :precision="2" rule="exponential" truncate="floor">
         <div class="total">Total revenue: <b>$ 1992.15</b></div>
     </Numeral>
 </template>

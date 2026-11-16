@@ -3,7 +3,7 @@
     import { ArrayField, Form, type FormApi } from '../..';
     import { FormInput } from './fields';
 
-    withDefaults(defineProps<{ initValues?: Record<string, unknown> }>(), {
+    const props = withDefaults(defineProps<{ initValues?: Record<string, unknown> }>(), {
         initValues: () => ({ tasks: [{ name: 'task-0' }, { name: 'task-1' }, { name: 'task-2' }] }),
     });
     const formApi = ref<FormApi>();
@@ -14,7 +14,7 @@
 </script>
 
 <template>
-    <Form :initValues="initValues" @getFormApi="formApi = $event">
+    <Form :initValues="props.initValues" @getFormApi="formApi = $event">
         <ArrayField #default="{ arrayFields, onAdd, onAddWithInitValue }" field="tasks">
             <button data-testid="add-default" type="button" @click="onAdd()">add()</button>
             <button data-testid="add-at-0" type="button" @click="onAdd(0)">add(0)</button>

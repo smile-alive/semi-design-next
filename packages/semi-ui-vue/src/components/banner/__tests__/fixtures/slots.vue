@@ -1,15 +1,15 @@
 <script setup lang="ts">
     import Banner from '../../banner.vue';
 
-    defineProps<{ icon?: boolean; closeIcon?: boolean }>();
+    const props = defineProps<{ icon?: boolean; closeIcon?: boolean }>();
 </script>
 
 <template>
     <Banner type="danger">
-        <template v-if="icon" #icon>
+        <template v-if="props.icon" #icon>
             <span data-testid="my-icon" />
         </template>
-        <template v-if="closeIcon" #closeIcon>
+        <template v-if="props.closeIcon" #closeIcon>
             <span data-testid="my-close" />
         </template>
     </Banner>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
     import Collapse from '../..';
 
-    defineProps<{ variant: 'none' | 'comment' }>();
+    const props = defineProps<{ variant: 'none' | 'comment' }>();
 </script>
 
 <template>
     <Collapse defaultActiveKey="1" keepDOM>
-        <Collapse.Panel v-if="variant === 'none'" itemKey="1">
+        <Collapse.Panel v-if="props.variant === 'none'" itemKey="1">
             <template #header>empty</template>
         </Collapse.Panel>
         <Collapse.Panel v-else itemKey="1">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, h, useAttrs, useTemplateRef } from 'vue';
+    import { computed, h, useTemplateRef } from 'vue';
     import { followChats, followHints } from '@fibrae/semi-ai-foundation/base';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
@@ -37,7 +37,6 @@
 
     const emit = defineEmits<AIChatDialogueEmits>();
     const slots = defineSlots<AIChatDialogueSlots>();
-    const attrs = useAttrs();
 
     const locale = useLocale('AIChatDialogue');
 
@@ -122,7 +121,7 @@
 </script>
 
 <template>
-    <div :class="prefix" :role="namedRole(attrs)">
+    <div :class="prefix" :role="namedRole($attrs)">
         <div ref="list" :aria-busy="streaming" :aria-label="locale.locale.messages" :class="`${prefix}-list`" role="log" tabindex="-1" @scroll="foundation.containerScroll">
             <component :is="dialogueNode(chat, index)" v-for="(chat, index) in chats" :key="chat.id" />
             <DialogueHint v-if="hints.length > 0" :class="props.classNames?.hint" :hints="hints" :selecting="props.selecting" :style="props.styles?.hint" @hintClick="foundation.handleHintClick">

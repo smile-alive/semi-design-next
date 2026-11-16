@@ -11,7 +11,7 @@
 </script>
 
 <template>
-    <Popconfirm v-model:visible="visible" :motion="false" :trigger="trigger">
+    <Popconfirm v-model:visible="visible" :motion="false" :trigger="props.trigger">
         <Button @click="toggle">trigger</Button>
         <template #title>Delete?</template>
     </Popconfirm>

@@ -14,10 +14,10 @@
 
 <template>
     <AvatarGroup v-bind="groupProps">
-        <Avatar v-for="value in values" :key="value" :ref="(instance) => emit('avatarRef', value, instance)" :alt="value" class="own" shape="circle" size="large">{{ value }}</Avatar>
-        <template v-if="custom" #more="{ restNumber }">
+        <Avatar v-for="value in props.values" :key="value" :ref="(instance) => emit('avatarRef', value, instance)" :alt="value" class="own" shape="circle" size="large">{{ value }}</Avatar>
+        <template v-if="props.custom" #more="{ restNumber }">
             <div>
-                <Avatar :size="explicitMoreSize">+{{ restNumber }}</Avatar>
+                <Avatar :size="props.explicitMoreSize">+{{ restNumber }}</Avatar>
             </div>
         </template>
     </AvatarGroup>

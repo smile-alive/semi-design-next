@@ -2,7 +2,7 @@
     import { onMounted, useTemplateRef } from 'vue';
     import { Step, default as Steps, type StepsType } from '../../index';
 
-    defineProps<{ type?: StepsType }>();
+    const props = defineProps<{ type?: StepsType }>();
     const emit = defineEmits<{ els: [steps: Element, step: Element] }>();
     const steps = useTemplateRef('steps');
     const step = useTemplateRef('step');
@@ -10,7 +10,7 @@
 </script>
 
 <template>
-    <Steps ref="steps" :type="type">
+    <Steps ref="steps" :type="props.type">
         <Step ref="step">
             <template #title>A</template>
         </Step>

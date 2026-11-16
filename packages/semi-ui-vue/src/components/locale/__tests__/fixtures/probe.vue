@@ -18,7 +18,7 @@
 
 <template>
     <span data-testid="hook">{{ JSON.stringify(result) }}</span>
-    <LocaleConsumer :componentName="componentName">
+    <LocaleConsumer :componentName="props.componentName">
         <template #default="value">
             <span data-testid="consumer">{{ JSON.stringify(value) }}</span>
         </template>

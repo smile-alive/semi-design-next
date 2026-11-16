@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import { Step } from '../../index';
 
-    defineProps<{ title: string }>();
+    const props = defineProps<{ title: string }>();
 </script>
 
 <template>
     <Step>
-        <template #title>{{ title }}</template>
+        <template #title>{{ props.title }}</template>
     </Step>
 </template>

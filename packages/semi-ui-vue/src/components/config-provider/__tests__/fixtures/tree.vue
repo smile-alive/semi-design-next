@@ -5,7 +5,7 @@
     import Probe from './probe.vue';
     import Subscriber from './subscriber.vue';
 
-    withDefaults(
+    const props = withDefaults(
         defineProps<{
             outer?: ConfigProviderProps;
             inner?: ConfigProviderProps;
@@ -18,14 +18,14 @@
 </script>
 
 <template>
-    <ConfigProvider v-bind="outer">
-        <ConfigProvider v-if="nested" v-bind="inner">
-            <Probe :onSeen="onSeen" />
-            <Subscriber v-for="(args, index) in subscribers" :key="index" :args="args" />
+    <ConfigProvider v-bind="props.outer">
+        <ConfigProvider v-if="props.nested" v-bind="props.inner">
+            <Probe :onSeen="props.onSeen" />
+            <Subscriber v-for="(args, index) in props.subscribers" :key="index" :args="args" />
         </ConfigProvider>
         <template v-else>
-            <Probe :onSeen="onSeen" />
-            <Subscriber v-for="(args, index) in subscribers" :key="index" :args="args" />
+            <Probe :onSeen="props.onSeen" />
+            <Subscriber v-for="(args, index) in props.subscribers" :key="index" :args="args" />
         </template>
     </ConfigProvider>
 </template>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import Paragraph from '../../paragraph.vue';
 
-    withDefaults(defineProps<{ text: string; tick?: number }>(), { tick: 0 });
+    const props = withDefaults(defineProps<{ text: string; tick?: number }>(), { tick: 0 });
 </script>
 
 <template>
-    <Paragraph :data-tick="tick" :ellipsis="{ expandable: true, expandText: 'EX' }" :style="{ lineHeight: '20px' }">
-        {{ text }}
+    <Paragraph :data-tick="props.tick" :ellipsis="{ expandable: true, expandText: 'EX' }" :style="{ lineHeight: '20px' }">
+        {{ props.text }}
     </Paragraph>
 </template>

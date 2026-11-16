@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import Descriptions, { type DescriptionsData, type DescriptionsLayout } from '../../index';
 
-    defineProps<{ data: DescriptionsData[]; layout?: DescriptionsLayout; column?: number }>();
+    const props = defineProps<{ data: DescriptionsData[]; layout?: DescriptionsLayout; column?: number }>();
 </script>
 
 <template>
-    <Descriptions :column="column" :data="data" :layout="layout">
+    <Descriptions :column="props.column" :data="props.data" :layout="props.layout">
         <template #itemKey="{ item, index }">
             <strong v-if="index === 0" class="rich-key">{{ item.key }}</strong>
             <template v-else>{{ index }}:{{ item.key }}</template>

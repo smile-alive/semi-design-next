@@ -3,7 +3,7 @@
     import Rating from '@fibrae/semi-ui-vue/rating/index';
     import JsonViewer, { type JsonViewerOptions } from '../..';
 
-    defineProps<{ value: string }>();
+    const props = defineProps<{ value: string }>();
 
     const options: JsonViewerOptions = {
         readOnly: true,
@@ -15,7 +15,7 @@
 </script>
 
 <template>
-    <JsonViewer :height="200" :modelValue="value" :options="options" :width="700">
+    <JsonViewer :height="200" :modelValue="props.value" :options="options" :width="700">
         <template #customRender="{ item, content }">
             <Popover v-if="item.name === 'name'" ariaLabel="Name details" trigger="click">
                 <span class="name-token">{{ content }}</span>

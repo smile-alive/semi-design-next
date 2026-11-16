@@ -15,10 +15,10 @@
 
 <template>
     <Avatar v-bind="avatarProps" @click="emit('click', $event)">
-        <b v-if="node">{{ label }}</b>
-        <template v-else>{{ label }}</template>
-        <template #hoverMask>{{ hover }}</template>
-        <template v-if="top" #topSlotText>直播</template>
-        <template v-if="bottom" #bottomSlotText>NEW</template>
+        <b v-if="props.node">{{ props.label }}</b>
+        <template v-else>{{ props.label }}</template>
+        <template #hoverMask>{{ props.hover }}</template>
+        <template v-if="props.top" #topSlotText>直播</template>
+        <template v-if="props.bottom" #bottomSlotText>NEW</template>
     </Avatar>
 </template>

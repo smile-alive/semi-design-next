@@ -1,36 +1,36 @@
 <script setup lang="ts">
     import Card, { CardMeta } from '../..';
 
-    defineProps<{ show: boolean }>();
+    const props = defineProps<{ show: boolean }>();
 </script>
 
 <template>
     <Card>
         <template #title>
-            <span v-if="show">title</span>
+            <span v-if="props.show">title</span>
         </template>
         <template #headerExtraContent>
-            <span v-if="show">extra</span>
+            <span v-if="props.show">extra</span>
         </template>
         <template #cover>
-            <img v-if="show" alt="cover" />
+            <img v-if="props.show" alt="cover" />
         </template>
         <template #footer>
-            <span v-if="show">footer</span>
+            <span v-if="props.show">footer</span>
         </template>
-        <template v-if="show" #actions>
+        <template v-if="props.show" #actions>
             <span>action</span>
         </template>
-        <span v-if="show">body</span>
+        <span v-if="props.show">body</span>
         <CardMeta>
             <template #avatar>
-                <span v-if="show">avatar</span>
+                <span v-if="props.show">avatar</span>
             </template>
             <template #title>
-                <span v-if="show">meta title</span>
+                <span v-if="props.show">meta title</span>
             </template>
             <template #description>
-                <span v-if="show">description</span>
+                <span v-if="props.show">description</span>
             </template>
         </CardMeta>
     </Card>

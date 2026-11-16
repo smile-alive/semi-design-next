@@ -17,5 +17,5 @@
     <Button id="tour-a" @click="visible = true">Start</Button>
     <Button id="tour-b">Second</Button>
     <Button @click="visible = false">Elsewhere</Button>
-    <UserGuide v-model:visible="visible" :mask="mask" :mode="mode" :steps="steps" />
+    <UserGuide v-model:visible="visible" :mask="props.mask" :mode="props.mode" :steps="steps" />
 </template>
