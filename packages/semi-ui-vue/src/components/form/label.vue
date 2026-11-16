@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import { IconHelpCircle } from '@fibrae/semi-icons-vue';
+    import { IconHelpCircleStroked } from '@fibrae/semi-icons-vue';
     import type { ElementProps } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip';
@@ -49,7 +49,7 @@
                 <slot name="tooltip">{{ props.tooltip }}</slot>
             </template>
             <button :aria-label="locale.locale.labelTooltip" :class="`${prefix}-tooltip`" type="button">
-                <IconHelpCircle size="inherit" />
+                <IconHelpCircleStroked size="inherit" />
             </button>
         </Tooltip>
     </div>

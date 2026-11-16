@@ -984,7 +984,7 @@
 - Vue、Svelte：字段 `label` 配置新增 `id`，作为 label 元素的 id（控件的 `aria-labelledby` 指向它），不传时自动生成；FormSlot 同样采用配置里的 `id`。
 - Svelte：Form 的 `onsubmit`、`onreset` 在 Form 处理提交、重置之后调用使用方传入的回调（原来被吞掉）。
 - 破坏性（类型）：foundation `form/interface` 的 `setValuesConfig` 改名 `SetValuesConfig`；Solid、Svelte 的 `useFieldState` 返回值中 `error`、`touched` 改为可选属性。
-- 新增标签属性 `tooltip`（FormLabel 的 prop，字段 `label` 对象里的同名配置）：label 旁显示问号按钮，悬停或聚焦时用 Tooltip 显示说明。按钮在 `<label>` 元素之外，不进入字段的可访问名称，名称取语言包 `Form.labelTooltip`；设了 `width` 时宽度落在外层容器上。类型：React、Solid 为节点，Vue 为 `string | number` 加 `#tooltip` 插槽（只在 FormLabel 上），Svelte 的 FormLabel 为 snippet 或 `string | number`、字段 `label` 配置为 `string | number`。
+- 新增标签属性 `tooltip`（FormLabel 的 prop，字段 `label` 对象里的同名配置）：label 旁显示问号按钮（描边图标，与标签文字同大），悬停或聚焦时用 Tooltip 显示说明。按钮在 `<label>` 元素之外，不进入字段的可访问名称，名称取语言包 `Form.labelTooltip`；设了 `width` 时宽度落在外层容器上。类型：React、Solid 为节点，Vue 为 `string | number` 加 `#tooltip` 插槽（只在 FormLabel 上），Svelte 的 FormLabel 为 snippet 或 `string | number`、字段 `label` 配置为 `string | number`。
 - 行为变化：必填星号由标签文字之后移到文字之前（`.semi-form-field-label-required` 的 `::before`），`optional`、`extra`、tooltip 的位置不变；按旧位置写的样式覆盖需调整。
 
 ### Button
