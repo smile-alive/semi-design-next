@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import { radioClasses } from '@fibrae/semi-foundation/components/radio/constants';
     import RadioFoundation, { type RadioAdapter, type RadioBaseProps, type RadioBaseState } from '@fibrae/semi-foundation/components/radio/radio-foundation';
-    import { joinIds } from '@fibrae/semi-foundation/utils';
+    import { isAriaInvalid, joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-svelte';
     import { useDefaultProps, useFoundation } from '../../base/index.js';
@@ -111,7 +111,7 @@
 
     const view = $derived(RadioFoundation.deriveView(foundationProps, states(), groupView()));
     const hasExtra = $derived(Boolean(extra) && !view.isButtonRadio);
-    const describedby = $derived(joinIds(rest['aria-describedby'], hasExtra ? extraDomId : undefined, rest['aria-invalid'] ? rest['aria-errormessage'] : undefined));
+    const describedby = $derived(joinIds(rest['aria-describedby'], hasExtra ? extraDomId : undefined, isAriaInvalid(rest['aria-invalid']) ? rest['aria-errormessage'] : undefined));
 
     // A native radio checks itself and unchecks its same-name siblings on click. Svelte does not patch a value that did
     // not change, so when the owner refuses the change the DOM is written back by hand.

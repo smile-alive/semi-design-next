@@ -2,7 +2,7 @@ import { children, createMemo, createUniqueId, onCleanup, onMount, Show, splitPr
 import clsx from 'clsx';
 import { radioClasses as css, type RadioPart, type strings } from '@fibrae/semi-foundation/components/radio/constants';
 import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
-import { joinIds } from '@fibrae/semi-foundation/utils';
+import { isAriaInvalid, joinIds } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/radio/radio.scss';
 import { IconRadio } from '@fibrae/semi-icons-solid';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -184,7 +184,7 @@ export default function Radio(rawProps: RadioProps) {
                     ref={(node) => (input = node)}
                     type="radio"
                     name={group?.view().radioGroup?.name ?? control.name}
-                    aria-describedby={joinIds(control['aria-describedby'], hasExtra() ? extraId() : undefined, unsupported['aria-invalid'] ? unsupported['aria-errormessage'] : undefined)}
+                    aria-describedby={joinIds(control['aria-describedby'], hasExtra() ? extraId() : undefined, isAriaInvalid(unsupported['aria-invalid']) ? unsupported['aria-errormessage'] : undefined)}
                     aria-labelledby={joinIds(control['aria-labelledby'], hasChildren() ? addonId() : undefined)}
                     checked={view().checked}
                     disabled={view().disabled}

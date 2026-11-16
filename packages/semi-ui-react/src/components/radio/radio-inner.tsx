@@ -1,7 +1,7 @@
 import type React from 'react';
 import clsx from 'clsx';
 import { radioClasses as css } from '@fibrae/semi-foundation/components/radio/constants';
-import { joinIds } from '@fibrae/semi-foundation/utils';
+import { isAriaInvalid, joinIds } from '@fibrae/semi-foundation/utils';
 import { IconRadio } from '@fibrae/semi-icons-react';
 
 export interface RadioInnerProps {
@@ -65,7 +65,7 @@ export default function RadioInner({
 
     // The radio role supports no aria-invalid/errormessage/required (radiogroup does),
     // so the error goes in the description
-    const describedby = joinIds(ariaDescribedby, extraId, ariaInvalid ? ariaErrormessage : undefined);
+    const describedby = joinIds(ariaDescribedby, extraId, isAriaInvalid(ariaInvalid) ? ariaErrormessage : undefined);
 
     return (
         <span className={wrapper}>
