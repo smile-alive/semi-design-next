@@ -51,6 +51,13 @@ jobs:
                   fi
                   git fetch --depth=1 origin "$BASE" || { full; exit 0; }
 
+                  # An empty diff (git failed) counts as more than a version bump
+                  version_only() {
+                      local diff
+                      diff=$(git diff -U0 "$BASE" HEAD -- "$1")
+                      [ -n "$diff" ] && ! grep -E '^[-+][^-+]' <<< "$diff" | grep -Evq '^[-+]    "version": "[^"]*",?$'
+                  }
+
                   infra='' pkg='' shared='' web='' websrc='' fmt='' frameworks=''
                   while IFS= read -r file; do
                       case "$file" in
@@ -58,6 +65,15 @@ jobs:
                           *.md | docs/* | .agents/* | .claude/* | .changeset/* | .github/workflows/*) fmt=1 ;;
                           website/src/*) web=1 websrc=1 ;;
                           website/*) web=1 ;;
+                          # The version PR only bumps "version"; the push that merges it still runs everything, and Release
+                          # publishes only after that run passes
+                          packages/*/package.json)
+                              if [ "$GITHUB_EVENT_NAME" = pull_request ] && version_only "$file"; then
+                                  fmt=1
+                              else
+                                  infra=1
+                              fi
+                              ;;
                           *)
                               if [[ $file =~ ^packages/semi-[a-z-]+-(react|vue|solid|svelte)/(src|__tests__)/ ]]; then
                                   pkg=1
