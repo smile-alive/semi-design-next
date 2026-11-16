@@ -258,6 +258,7 @@
 - 行为变化：hover、focus 触发的提示（`role="tooltip"`，含 hover 触发的 Popover）同一时间只显示一组：一个打开时关闭其他已打开的，几个在延迟内先后请求显示时只显示最后一个，嵌套在其触发器或弹层中的除外（参照 Radix Tooltip、React Aria）；Dropdown 等其他 role 的弹层不参与。hover 触发的弹层（含 Dropdown）只在触发器 `:focus-visible` 时随聚焦打开，点击或鼠标关闭 Modal 后由脚本还回的焦点不再打开。
 - React：指针从触发器直接移入紧挨着的 hover 弹层（含 Dropdown 菜单）时，弹层不再在 `mouseLeaveDelay` 后关闭（弹层的 React `onMouseEnter` 先于触发器的原生 `mouseleave` 执行）。
 - 行为变化：hover 触发的弹层（含 Popover、Dropdown 及其子菜单、Navigation 弹出的子菜单）有指针宽限：鼠标离开触发器后，只要朝弹层一侧移动、且在离开点与弹层近侧两角围成的三角区内，弹层就保持打开，途中经过的其他 hover 触发器也不打开，最长 300ms（参照 Radix Menu）。离开三角区、反向移动或超时后，照常按 `mouseLeaveDelay` 关闭，指针此时停留的触发器再按 `mouseEnterDelay` 打开。默认开启，没有开关；只在主指针可悬停（`(hover: hover)`）时生效，键盘焦点打开的弹层不受影响。
+- 行为变化：Tooltip、Popover、Dropdown 的弹层在关闭动画期间不响应指针（参照 Ant Design 的 leave motion）。原来指针扫过正在淡出、已经透明的弹层会让它重新打开，打开后又因触发器未被悬停而立即关闭，表现为菜单闪现。
 - 行为变化：hover 触发的弹层在隐藏后重新显示时，若指针与焦点都已离开触发器与弹层则关闭；隐藏期间受控 `visible` 变为 false 或 `condition` 变为 false，重新显示时关闭。React 的 `<Activity>` 隐藏不再误发 `afterClose`；Svelte 无出场动画的关闭，`afterClose` 推迟一个微任务。
 - Vue：内容用 `#content="{ initialFocusRef }"`，触发器用默认插槽，可见性用 `visible`、`update:visible`、`visibleChange`；`class`、`style` 落在弹层，其他未声明属性丢弃；可访问名称键为 `ariaLabel`、`ariaLabelledby`，另有 `ariaDescribedby`（React、Solid 写作 `aria-describedby`）。
 - Solid：触发器写成函数 children `(getTriggerProps) => JSX`，把 `getTriggerProps(own)` 的结果展开到触发元素上；要与注入值合并的 `ref`、`tabIndex`、`aria-*`、`data-popupid` 作为 `own` 传入，写在展开之后会整体覆盖。退出描述写 `getTriggerProps({ 'aria-describedby': null })`，后代经 `useTooltipDescription()` 取弹层 id。
