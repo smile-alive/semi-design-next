@@ -136,8 +136,9 @@ jobs:
             - if: needs.gate.outputs.typecheck == 'website'
               run: pnpm --filter semi-website check
 
-    # A job-level `if` cannot read `matrix`, so a leg that gate did not pick skips its steps instead
-    test:
+    # A job-level `if` cannot read `matrix`, so a leg that gate did not pick skips its steps instead. Three shards keep
+    # one run at 17 concurrent jobs, under the account's limit of 20
+    shard:
         needs: [gate, build]
         if: needs.gate.outputs.tests != ''
         runs-on: ubuntu-latest
@@ -146,6 +147,7 @@ jobs:
             fail-fast: false
             matrix:
                 project: [react, vue, solid, svelte, common]
+                shard: [1, 2, 3]
         env:
             PICKED: ${{ contains(needs.gate.outputs.tests, matrix.project) }}
             CHANGED: ${{ needs.gate.outputs.changed }}
@@ -160,4 +162,25 @@ jobs:
               with:
                   dist: required
             - if: env.PICKED == 'true'
-              run: pnpm exec vp test run --silent --project '${{ matrix.project }}' --project '${{ matrix.project }}-ssr' ${CHANGED:+--changed "$CHANGED" --passWithNoTests}
+              run: pnpm exec vp test run --silent --shard ${{ matrix.shard }}/3 --project '${{ matrix.project }}' --project '${{ matrix.project }}-ssr' ${CHANGED:+--changed "$CHANGED" --passWithNoTests}
+
+    # main's ruleset requires one check per project, `test (<project>)`; `needs.shard.result` only covers all shards at once
+    test:
+        needs: [gate, shard]
+        if: ${{ !cancelled() && needs.gate.outputs.tests != '' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions:
+            actions: read
+        strategy:
+            fail-fast: false
+            matrix:
+                project: [react, vue, solid, svelte, common]
+        steps:
+            - env:
+                  GH_TOKEN: ${{ github.token }}
+                  PROJECT: ${{ matrix.project }}
+              run: |
+                  conclusions=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --jq '.jobs[] | select(.name | startswith("shard (" + env.PROJECT + ",")) | .conclusion')
+                  echo "$conclusions"
+                  [ -n "$conclusions" ] && ! grep -vqx success <<< "$conclusions"
