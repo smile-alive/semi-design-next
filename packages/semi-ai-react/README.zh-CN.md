@@ -4,6 +4,10 @@
 
 Semi Design Next 的 React AI 组件库，包含 `AIChatInput`、`AIChatDialogue`、`Chat` 和 `Sidebar`，面向在 React 19 应用中构建对话界面的使用方。组件基于 `@fibrae/semi-ui-react`，逻辑来自 `@fibrae/semi-ai-foundation`，与其他框架的 AI 包行为对齐。
 
+## 给编码 agent
+
+本包附带与安装版本一致的 agent 文档。从 `node_modules/@fibrae/semi-ai-react/docs/llms.txt` 读起：先是使用规则，然后每个组件一页 Markdown，列出属性、类型、默认值和可运行示例。线上版本见 https://semi-design-next.pages.dev/en-US/react/llms.txt。
+
 ## 安装
 
 ```sh
@@ -27,14 +31,14 @@ export default function App() {
 - 代码块高亮不内置任何语言，用 `@fibrae/semi-ui-react` 的 `CodeHighlight.register({ languages: [...] })` 注册所需的 shiki 语法。
 - 全局默认值经 `semiGlobal` 配置，`AIChatDialogue`、`AIChatInput`、`Annotation`、`Chat`、`MCPConfigure`、`Sidebar` 都可以按组件名设置。
 
-组件文档与示例见 [website/content/ai](../../website/content/ai)：
+组件文档与示例见 [AI 组件](https://semi-design-next.pages.dev/zh-CN/react/ai/ai-component/)：
 
-- [AIChatInput](../../website/content/ai/ai-chat-input)
-- [AIChatDialogue](../../website/content/ai/ai-chat-dialogue)
-- [Sidebar](../../website/content/ai/sidebar)
-- [AI 组件概览](../../website/content/ai/ai-component)
+- [AIChatInput](https://semi-design-next.pages.dev/zh-CN/react/ai/ai-chat-input/)
+- [AIChatDialogue](https://semi-design-next.pages.dev/zh-CN/react/ai/ai-chat-dialogue/)
+- [Sidebar](https://semi-design-next.pages.dev/zh-CN/react/ai/sidebar/)
+- [AI 组件概览](https://semi-design-next.pages.dev/zh-CN/react/ai/ai-component/)
 
-已知问题见 [docs/decisions.md](../../docs/decisions.md) 的 AIChatInput 章节。
+已知问题见 [docs/decisions.md](https://github.com/smile-alive/semi-design-next/blob/release/docs/decisions.md) 的 AIChatInput 章节。
 
 ## 与其他包的关系
 
@@ -44,4 +48,4 @@ export default function App() {
 
 ## 开发
 
-`pnpm build` 在本包目录运行 `vp pack`，产出 `dist`（逐文件 ESM、类型声明和 `styles.css`）。其余测试、lint、类型检查命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。
+`pnpm build` 在本包目录运行 `vp pack`，产出 `dist`（逐文件 ESM、类型声明和 `styles.css`）。其余测试、lint、类型检查命令见根目录 [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令)。

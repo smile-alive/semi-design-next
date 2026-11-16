@@ -4,6 +4,10 @@
 
 Semi Design Next 的 Solid 图标与插画组件，与其他框架的图标包共用 `@fibrae/semi-icons-core` 的数据和样式，供 Solid 应用和 `@fibrae/semi-ui-solid` 使用。
 
+## 给编码 agent
+
+本包附带与安装版本一致的 agent 文档。从 `node_modules/@fibrae/semi-icons-solid/docs/llms.txt` 读起：先是使用规则，然后每个组件一页 Markdown，列出属性、类型、默认值和可运行示例。线上版本见 https://semi-design-next.pages.dev/en-US/solid/llms.txt。
+
 ## 安装
 
 ```shell
@@ -55,9 +59,9 @@ import { Empty } from '@fibrae/semi-ui-solid';
 | `@fibrae/semi-icons-solid/illustrations`          | 插画 `IllustrationXxx` 与 `IllustrationXxxDark`              |
 | `@fibrae/semi-icons-solid/components/create-icon` | `createSvgComponent`，把图标或插画数据渲染成不带外壳的 `svg` |
 
-每个入口有 DOM 版与 `solid` 条件下保留 JSX 的版本，说明见 [@fibrae/semi-ui-solid](../semi-ui-solid/README.zh-CN.md#入口)。
+每个入口有 DOM 版与 `solid` 条件下保留 JSX 的版本，说明见 [@fibrae/semi-ui-solid](https://github.com/smile-alive/semi-design-next/blob/release/packages/semi-ui-solid/README.zh-CN.md#入口)。
 
-组件文档见 [website/content/basic/icon](../../website/content/basic/icon) 与 [website/content/show/empty](../../website/content/show/empty)。
+组件文档见 [图标](https://semi-design-next.pages.dev/zh-CN/solid/basic/icon/) 与 [空状态](https://semi-design-next.pages.dev/zh-CN/solid/show/empty/)。
 
 ## 与其他包的关系
 
@@ -67,5 +71,5 @@ import { Empty } from '@fibrae/semi-ui-solid';
 
 ## 开发
 
-- `src/icons`、`src/lab`、`src/illustrations` 整个目录是生成源码，不要手改。新增图标或插画按 semi-icons-core 的[「新增图标」](../shared/semi-icons-core/README.zh-CN.md#新增图标)或[「新增插画」](../shared/semi-icons-core/README.zh-CN.md#新增插画)操作，在仓库根目录运行 `pnpm build:icon` 重新生成。
-- 构建与测试命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。
+- `src/icons`、`src/lab`、`src/illustrations` 整个目录是生成源码，不要手改。新增图标或插画按 semi-icons-core 的[「新增图标」](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-icons-core/README.zh-CN.md#新增图标)或[「新增插画」](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-icons-core/README.zh-CN.md#新增插画)操作，在仓库根目录运行 `pnpm build:icon` 重新生成。
+- 构建与测试命令见根目录 [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令)。

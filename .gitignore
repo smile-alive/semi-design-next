@@ -4,6 +4,7 @@ node_modules
 # build output
 dist
 .astro
+packages/semi-*/docs
 
 # test output
 coverage

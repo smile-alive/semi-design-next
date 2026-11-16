@@ -4,6 +4,10 @@
 
 The React icon and illustration components of Semi Design Next, with monochrome icons, color lab icons and illustrations, for React applications and `@fibrae/semi-ui-react`.
 
+## For coding agents
+
+This package ships documentation for coding agents that matches the installed version. Start with `node_modules/@fibrae/semi-icons-react/docs/llms.txt`: it lists the rules for using the library, then one Markdown page per component with props, types, defaults and runnable examples. The same docs are online at https://semi-design-next.pages.dev/en-US/react/llms.txt.
+
 ## Installation
 
 ```shell
@@ -61,7 +65,7 @@ createRoot(container).render(<Empty image={<IllustrationIdle />} darkModeImage={
 | `@fibrae/semi-icons-react/illustrations`          | Illustrations `IllustrationXxx` and `IllustrationXxxDark`                                 |
 | `@fibrae/semi-icons-react/components/create-icon` | `createSvgComponent`, which renders icon or illustration data as a plain `svg`            |
 
-Component docs are in [website/content/basic/icon](../../website/content/basic/icon) and [website/content/show/empty](../../website/content/show/empty).
+Component docs are in [Icon](https://semi-design-next.pages.dev/en-US/react/basic/icon/) and [Empty](https://semi-design-next.pages.dev/en-US/react/show/empty/).
 
 ## Related packages
 
@@ -72,5 +76,5 @@ Component docs are in [website/content/basic/icon](../../website/content/basic/i
 ## Development
 
 - `src/icons`, `src/lab` and `src/illustrations` are generated source, so do not edit them by hand. Each icon module hands one icon's data to `createIcon` (`src/components/create-icon.ts`), which renders it as the `svg` inside `Icon`; each illustration module hands its data to `createSvgComponent` from the same file.
-- To add an icon, add the SVG as described in [Adding icons in semi-icons-core](../shared/semi-icons-core/README.md#adding-icons), run `pnpm build:icon` at the repository root to regenerate this package's components, then open the icon page with `pnpm site:dev` to check it. Illustrations follow [Adding illustrations](../shared/semi-icons-core/README.md#adding-illustrations) the same way.
-- For build and test commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.
+- To add an icon, add the SVG as described in [Adding icons in semi-icons-core](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-icons-core/README.md#adding-icons), run `pnpm build:icon` at the repository root to regenerate this package's components, then open the icon page with `pnpm site:dev` to check it. Illustrations follow [Adding illustrations](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-icons-core/README.md#adding-illustrations) the same way.
+- For build and test commands, see [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令) at the repository root.

@@ -4,13 +4,17 @@
 
 The Solid component library of Semi Design Next, for Solid 1.9.17+ applications. It is a community fork of [Semi Design](https://github.com/DouyinFE/semi-design), unaffiliated with ByteDance and the Semi Design team, and shares the logic and styles of one foundation with the UI packages of other frameworks.
 
+## For coding agents
+
+This package ships documentation for coding agents that matches the installed version. Start with `node_modules/@fibrae/semi-ui-solid/docs/llms.txt`: it lists the rules for using the library, then one Markdown page per component with props, types, defaults and runnable examples. The same docs are online at https://semi-design-next.pages.dev/en-US/solid/llms.txt.
+
 ## Installation
 
 ```sh
 pnpm add solid-js @fibrae/semi-ui-solid @fibrae/semi-icons-solid
 ```
 
-Peer dependency: `solid-js` ^1.9.17. For browser, module format, Node.js and build plugin requirements, see the [requirements in Getting Started](../../website/content/start/getting-started/index.en-US.mdx#requirements).
+Peer dependency: `solid-js` ^1.9.17. For browser, module format, Node.js and build plugin requirements, see the [requirements in Getting Started](https://semi-design-next.pages.dev/en-US/solid/start/getting-started/#requirements).
 
 ## Usage
 
@@ -58,7 +62,7 @@ import { en_US } from '@fibrae/semi-ui-solid/locale';
 </LocaleProvider>;
 ```
 
-For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
+For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 
@@ -71,7 +75,7 @@ Components render on the server with `renderToString` and others from `solid-js/
 
 ### Documentation
 
-Component docs are in [website/content](../../website/content). To get started, read [Getting Started](../../website/content/start/getting-started/index.en-US.mdx).
+Component docs are in [the documentation site](https://semi-design-next.pages.dev/en-US/solid/start/overview/). To get started, read [Quick Start](https://semi-design-next.pages.dev/en-US/solid/start/getting-started/).
 
 ## Related packages
 
@@ -83,4 +87,4 @@ Component docs are in [website/content](../../website/content). To get started, 
 
 `pnpm --filter @fibrae/semi-ui-solid build` runs `vp pack` in two passes: the TS and TSX under `src` compile file by file to DOM ESM with type declarations, then `.jsx` is emitted with `jsx: preserve` for the `solid` condition. It also produces component CSS and the full `styles.css` and `tailwind.css`.
 
-For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root. For how to write components, see [components](../../.agents/references/solid/components.md). For changes relative to upstream, see [release-notes](../../docs/release-notes.md).
+For general commands, see [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令) at the repository root. For how to write components, see [components](https://github.com/smile-alive/semi-design-next/blob/release/.agents/references/solid/components.md). For changes relative to upstream, see [release-notes](https://github.com/smile-alive/semi-design-next/blob/release/docs/release-notes.md).

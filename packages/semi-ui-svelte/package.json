@@ -110,7 +110,8 @@
         }
     },
     "files": [
-        "dist"
+        "dist",
+        "docs"
     ],
     "sideEffects": [
         "*.scss",

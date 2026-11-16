@@ -4,13 +4,17 @@
 
 The Vue component library of Semi Design Next, for Vue 3.5+ applications. It is a community fork of [Semi Design](https://github.com/DouyinFE/semi-design), unaffiliated with ByteDance and the Semi Design team, and shares the logic and styles of one foundation with the UI packages of other frameworks.
 
+## For coding agents
+
+This package ships documentation for coding agents that matches the installed version. Start with `node_modules/@fibrae/semi-ui-vue/docs/llms.txt`: it lists the rules for using the library, then one Markdown page per component with props, types, defaults and runnable examples. The same docs are online at https://semi-design-next.pages.dev/en-US/vue/llms.txt.
+
 ## Installation
 
 ```sh
 pnpm add vue @fibrae/semi-ui-vue @fibrae/semi-icons-vue
 ```
 
-Peer dependency: `vue` ^3.5.0. For browser, module format, Node.js and build plugin requirements, see the [requirements in Getting Started](../../website/content/start/getting-started/index.en-US.mdx#requirements).
+Peer dependency: `vue` ^3.5.0. For browser, module format, Node.js and build plugin requirements, see the [requirements in Getting Started](https://semi-design-next.pages.dev/en-US/vue/start/getting-started/#requirements).
 
 ## Usage
 
@@ -60,7 +64,7 @@ The default locale is `zh_CN`. The built-in packs `zh_CN` and `en_US` come from 
 </template>
 ```
 
-For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
+For any other language, pass your own pack typed `LocaleInput`: `code` is required, and every text it leaves out falls back to `en_US`. For the structure of a locale pack, see [@fibrae/semi-foundation](https://github.com/smile-alive/semi-design-next/blob/release/packages/shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 
@@ -72,7 +76,7 @@ Components render with `createSSRApp` and `renderToString`, and the browser hydr
 
 ### Documentation
 
-Component docs are in [website/content](../../website/content). To get started, read [Getting Started](../../website/content/start/getting-started/index.en-US.mdx).
+Component docs are in [the documentation site](https://semi-design-next.pages.dev/en-US/vue/start/overview/). To get started, read [Quick Start](https://semi-design-next.pages.dev/en-US/vue/start/getting-started/).
 
 ## Related packages
 
@@ -84,4 +88,4 @@ Component docs are in [website/content](../../website/content). To get started, 
 
 `pnpm --filter @fibrae/semi-ui-vue build` runs `vp pack`: the TS and `.vue` files under `src` emit ESM and type declarations (including those for `.vue`) file by file into `dist`, along with component CSS and the full `styles.css` and `tailwind.css`. During the build, `tsconfig` keeps `jsx: preserve` for `vue-tsc`, and the bundling stage sets the automatic runtime separately, so a `CONFIGURATION_FIELD_CONFLICT` warning appears and is expected.
 
-For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root. For how to write components, see [components](../../.agents/references/vue/components.md). For changes relative to upstream, see [release-notes](../../docs/release-notes.md).
+For general commands, see [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令) at the repository root. For how to write components, see [components](https://github.com/smile-alive/semi-design-next/blob/release/.agents/references/vue/components.md). For changes relative to upstream, see [release-notes](https://github.com/smile-alive/semi-design-next/blob/release/docs/release-notes.md).

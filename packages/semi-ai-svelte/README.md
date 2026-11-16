@@ -4,6 +4,10 @@
 
 The Svelte AI components of Semi Design Next: `AIChatInput`, `AIChatDialogue`, `Chat` and `Sidebar`, for Svelte 5.57+ applications. The components build on `@fibrae/semi-ui-svelte`, take their logic from `@fibrae/semi-ai-foundation`, and behave the same as the AI packages of other frameworks.
 
+## For coding agents
+
+This package ships documentation for coding agents that matches the installed version. Start with `node_modules/@fibrae/semi-ai-svelte/docs/llms.txt`: it lists the rules for using the library, then one Markdown page per component with props, types, defaults and runnable examples. The same docs are online at https://semi-design-next.pages.dev/en-US/svelte/llms.txt.
+
 ## Installation
 
 ```sh
@@ -23,16 +27,16 @@ Peer dependency: `svelte` ^5.57.0. `@fibrae/semi-ui-svelte` is a dependency of t
 ```
 
 - Styles load with the components, with no manual import. To use the full stylesheet, turn on `omitCss` in `@fibrae/semi-vite-plugin`; otherwise the style imports inside the components are bundled a second time. Then import `@fibrae/semi-ui-svelte/styles.css` first and `@fibrae/semi-ai-svelte/styles.css` second. The latter holds only the AI component styles.
-- The package ships `.svelte` source and `.d.ts` files, compiled for the application's target by `@sveltejs/vite-plugin-svelte`, as described in [@fibrae/semi-ui-svelte](../semi-ui-svelte/README.md#entry-points). `@fibrae/semi-ai-svelte/<directory>/<file>` deep-imports any source file.
+- The package ships `.svelte` source and `.d.ts` files, compiled for the application's target by `@sveltejs/vite-plugin-svelte`, as described in [@fibrae/semi-ui-svelte](https://github.com/smile-alive/semi-design-next/blob/release/packages/semi-ui-svelte/README.md#entry-points). `@fibrae/semi-ai-svelte/<directory>/<file>` deep-imports any source file.
 - Global defaults go through `semiGlobal` and can be set by component name.
 
-Component docs and examples are in [website/content](../../website/content):
+Component docs and examples are in [the documentation site](https://semi-design-next.pages.dev/en-US/svelte/start/overview/):
 
-- [AIChatInput](../../website/content/ai/ai-chat-input)
-- [AIChatDialogue](../../website/content/ai/ai-chat-dialogue)
-- [Sidebar](../../website/content/ai/sidebar)
-- [Chat](../../website/content/plus/chat)
-- [AI components overview](../../website/content/ai/ai-component)
+- [AIChatInput](https://semi-design-next.pages.dev/en-US/svelte/ai/ai-chat-input/)
+- [AIChatDialogue](https://semi-design-next.pages.dev/en-US/svelte/ai/ai-chat-dialogue/)
+- [Sidebar](https://semi-design-next.pages.dev/en-US/svelte/ai/sidebar/)
+- [Chat](https://semi-design-next.pages.dev/en-US/svelte/plus/chat/)
+- [AI components overview](https://semi-design-next.pages.dev/en-US/svelte/ai/ai-component/)
 
 ## Related packages
 
@@ -42,4 +46,4 @@ Component docs and examples are in [website/content](../../website/content):
 
 ## Development
 
-`pnpm --filter @fibrae/semi-ai-svelte build` runs `scripts/svelte-package.ts --bundles ai` and produces `dist` (`.svelte` files as they are, `.ts` compiled to `.js` and `.d.ts`, and the full `styles.css`). For tests, lint and type checks, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.
+`pnpm --filter @fibrae/semi-ai-svelte build` runs `scripts/svelte-package.ts --bundles ai` and produces `dist` (`.svelte` files as they are, `.ts` compiled to `.js` and `.d.ts`, and the full `styles.css`). For tests, lint and type checks, see [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令) at the repository root.

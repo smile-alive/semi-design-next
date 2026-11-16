@@ -24,7 +24,8 @@
         "build": "vp pack"
     },
     "files": [
-        "dist"
+        "dist",
+        "docs"
     ],
     "dependencies": {
         "@fibrae/semi-ai-foundation": "workspace:*",

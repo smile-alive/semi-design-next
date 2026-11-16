@@ -20,13 +20,13 @@ In a new checkout, first run `pnpm exec astro sync` under `website` to generate 
 
 ## Directories
 
-| Path              | Contents                                                                                                                       |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `content/`        | Doc pages, organized as `<category>/<page>/index.<locale>.mdx`, with `zh-CN` and `en-US` as locales                            |
-| `src/`            | Pages, layouts, components and styles. `content.config.ts` validates frontmatter, and `lib/docs.ts` defines the category order |
-| `plugins/`        | Markdown pipeline plugins: `remark-demo`, `framework-mdx`, `rehype-anchor-ids` and `rehype-table-container`                    |
-| `scripts/`        | Page checks, API table generation, MDX table checks, React Compiler checks and layout comparison                               |
-| `astro.config.ts` | i18n, the Markdown pipeline, framework and `mdx` integrations, and aliases that read each UI package's source directly         |
+| Path              | Contents                                                                                                                                                                            |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `content/`        | Doc pages, organized as `<category>/<page>/index.<locale>.mdx`, with `zh-CN` and `en-US` as locales                                                                                 |
+| `src/`            | Pages, layouts, components and styles. `content.config.ts` validates frontmatter, and `lib/categories.ts` defines the category order                                                |
+| `plugins/`        | Markdown pipeline plugins: `remark-demo`, `framework-mdx`, `rehype-anchor-ids` and `rehype-table-container`, plus `agent-docs`, which writes the agent docs when the build finishes |
+| `scripts/`        | Page checks, API table generation, MDX table checks, React Compiler checks, layout comparison, and agent docs and declaration JSDoc generation                                      |
+| `astro.config.ts` | i18n, the Markdown pipeline, framework and `mdx` integrations, and aliases that read each UI package's source directly                                                              |
 
 Page paths are `/{locale}/{framework}/{category}/{page}`, where the framework is the framework name in the package name (such as `react`). A page generates routes only for the frameworks that have demos.
 

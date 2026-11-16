@@ -4,6 +4,10 @@
 
 Semi Design Next 的 Svelte AI 组件库，包含 `AIChatInput`、`AIChatDialogue`、`Chat` 和 `Sidebar`，面向 Svelte 5.57+ 应用。组件基于 `@fibrae/semi-ui-svelte`，逻辑来自 `@fibrae/semi-ai-foundation`，与其他框架的 AI 包行为对齐。
 
+## 给编码 agent
+
+本包附带与安装版本一致的 agent 文档。从 `node_modules/@fibrae/semi-ai-svelte/docs/llms.txt` 读起：先是使用规则，然后每个组件一页 Markdown，列出属性、类型、默认值和可运行示例。线上版本见 https://semi-design-next.pages.dev/en-US/svelte/llms.txt。
+
 ## 安装
 
 ```sh
@@ -23,16 +27,16 @@ peer 依赖：`svelte` ^5.57.0。`@fibrae/semi-ui-svelte` 是本包的依赖。
 ```
 
 - 样式随组件加载，不需要手动引入。使用整包样式时，开启 `@fibrae/semi-vite-plugin` 的 `omitCss`，否则组件自带的样式导入会被再打包一份；此时先引入 `@fibrae/semi-ui-svelte/styles.css`，再引入 `@fibrae/semi-ai-svelte/styles.css`，后者只含 AI 组件样式。
-- 包里发布的是 `.svelte` 源码与 `.d.ts`，由 `@sveltejs/vite-plugin-svelte` 按应用目标编译，说明见 [@fibrae/semi-ui-svelte](../semi-ui-svelte/README.zh-CN.md#入口)。`@fibrae/semi-ai-svelte/<目录>/<文件>` 可以深度导入任一源文件。
+- 包里发布的是 `.svelte` 源码与 `.d.ts`，由 `@sveltejs/vite-plugin-svelte` 按应用目标编译，说明见 [@fibrae/semi-ui-svelte](https://github.com/smile-alive/semi-design-next/blob/release/packages/semi-ui-svelte/README.zh-CN.md#入口)。`@fibrae/semi-ai-svelte/<目录>/<文件>` 可以深度导入任一源文件。
 - 全局默认值经 `semiGlobal` 配置，可以按组件名设置。
 
-组件文档与示例见 [website/content](../../website/content)：
+组件文档与示例见 [文档站](https://semi-design-next.pages.dev/zh-CN/svelte/start/overview/)：
 
-- [AIChatInput](../../website/content/ai/ai-chat-input)
-- [AIChatDialogue](../../website/content/ai/ai-chat-dialogue)
-- [Sidebar](../../website/content/ai/sidebar)
-- [Chat](../../website/content/plus/chat)
-- [AI 组件概览](../../website/content/ai/ai-component)
+- [AIChatInput](https://semi-design-next.pages.dev/zh-CN/svelte/ai/ai-chat-input/)
+- [AIChatDialogue](https://semi-design-next.pages.dev/zh-CN/svelte/ai/ai-chat-dialogue/)
+- [Sidebar](https://semi-design-next.pages.dev/zh-CN/svelte/ai/sidebar/)
+- [Chat](https://semi-design-next.pages.dev/zh-CN/svelte/plus/chat/)
+- [AI 组件概览](https://semi-design-next.pages.dev/zh-CN/svelte/ai/ai-component/)
 
 ## 与其他包的关系
 
@@ -42,4 +46,4 @@ peer 依赖：`svelte` ^5.57.0。`@fibrae/semi-ui-svelte` 是本包的依赖。
 
 ## 开发
 
-`pnpm --filter @fibrae/semi-ai-svelte build` 执行 `scripts/svelte-package.ts --bundles ai`，产出 `dist`（`.svelte` 原样、`.ts` 编译为 `.js` 与 `.d.ts`、整包 `styles.css`）。其余测试、lint、类型检查命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。
+`pnpm --filter @fibrae/semi-ai-svelte build` 执行 `scripts/svelte-package.ts --bundles ai`，产出 `dist`（`.svelte` 原样、`.ts` 编译为 `.js` 与 `.d.ts`、整包 `styles.css`）。其余测试、lint、类型检查命令见根目录 [CONTRIBUTING.md](https://github.com/smile-alive/semi-design-next/blob/release/CONTRIBUTING.md#常用命令)。
