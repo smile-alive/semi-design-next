@@ -46,7 +46,7 @@ import {
     withField,
 } from '..';
 import type { SimpleValueType } from '../../cascader';
-import type { BasicSelectValue } from '../../select';
+import type { OptionProps } from '../../select';
 import type { TreeNodeData } from '../../tree/interface';
 
 type PropsOf<C> = C extends Component<infer P> ? P : never;
@@ -181,8 +181,10 @@ describe('字段 Props 类型', () => {
     it('FormSelect、FormTreeSelect、FormCascader 的行内 onChange 按 multiple 与 onChangeWithObject 推断', () => {
         const elements = () => (
             <>
-                <FormSelect field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<BasicSelectValue | undefined>()} />
-                <FormSelect multiple field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<BasicSelectValue[]>()} />
+                <FormSelect field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | number | undefined>()} />
+                <FormSelect multiple field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<(string | number)[]>()} />
+                <FormSelect field="a" optionList={[{ value: 'x' }, { value: 'y' }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<'x' | 'y' | undefined>()} />
+                <FormSelect multiple field="a" optionList={[{ value: 'x' }]} onChangeWithObject onChange={(v) => expectTypeOf(v).toEqualTypeOf<OptionProps<'x'>[]>()} />
                 <FormTreeSelect field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | number | undefined>()} />
                 <FormTreeSelect multiple field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<(string | number)[]>()} />
                 <FormTreeSelect multiple field="a" onChange={(nodes) => expectTypeOf(nodes).toEqualTypeOf<TreeNodeData[]>()} onChangeWithObject />

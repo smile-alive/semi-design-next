@@ -254,7 +254,7 @@ export const ssrCases: SsrCase[] = [
     // A template SFC compiles the option slots the way applications write them; JSX slots passed to SelectOption are read outside the render function
     { name: 'select/基本', covers: ['Select', 'SelectOption', 'SelectOptGroup'], render: () => <SelectGroups {...{ defaultValue: 'a-1' }} /> },
     { name: 'select/optionList', covers: ['Select'], render: () => <Select optionList={options} multiple defaultValue={['a']} filter /> },
-    { name: 'select/changeWithObject 简写', covers: ['Select'], render: () => <Select optionList={options} defaultValue="a" changeWithObject /> },
+    { name: 'select/changeWithObject 简写', covers: ['Select'], render: () => <Select optionList={options} defaultValue={options[0]} changeWithObject /> },
     { name: 'tag-input/基本', covers: ['TagInput'], render: () => <TagInput defaultValue={['a', 'b']} /> },
     { name: 'tag-input/draggable', covers: ['TagInput'], render: () => <TagInput defaultValue={['a', 'b']} draggable /> },
     { name: 'time-picker/基本', covers: ['TimePicker'], render: () => <TimePicker timeZone={8} defaultValue="10:00:00" /> },
@@ -514,4 +514,23 @@ export const ssrCases: SsrCase[] = [
 
 // Exports that are not components, hooks of the form API and plain objects. Toast and Notification are imperative
 // APIs that mount into the document, covered by imperative.ssr.test.ts
-export const nonComponentExports = new Set(['BaseFoundation', 'semiGlobal', 'semiGlobalKey', 'Toast', 'Notification', 'useConfig', 'useLocale', 'defaultResponsiveMap', 'ToastFactory', 'useForm', 'useFieldApi', 'useFieldState', 'useFormApi', 'useFormState', 'semiRenderers', 'blankRow']);
+export const nonComponentExports = new Set([
+    'BaseFoundation',
+    'semiGlobal',
+    'semiGlobalKey',
+    'Toast',
+    'Notification',
+    'useConfig',
+    'useLocale',
+    'defaultResponsiveMap',
+    'ToastFactory',
+    'useForm',
+    'useFieldApi',
+    'useFieldState',
+    'useFormApi',
+    'useFormState',
+    'semiRenderers',
+    'blankRow',
+    'controlProps',
+    'singleItemName',
+]);

@@ -227,7 +227,7 @@ export default function Pagination(rawProps: PaginationProps) {
                     <StepButton disabled={disabledState().nextDisabled || local.disabled} kind="next" label={text().next} text={local.nextText} onClick={foundation.goNext} />
                     <Show when={view().sizeChangerShown}>
                         <li class={`${prefixCls}-switch`}>
-                            <Select<number, false>
+                            <Select<number, false, false>
                                 classNames={{ dropdown: `${prefixCls}-select-dropdown` }}
                                 aria-label={text().pageSizeSelector}
                                 disabled={local.disabled}

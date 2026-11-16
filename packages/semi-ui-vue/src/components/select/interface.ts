@@ -1,20 +1,27 @@
 import type { ClassValue, StyleValue, VNode } from 'vue';
 import type { SelectPart } from '@fibrae/semi-foundation/components/select/constants';
+import type { SelectRawValue } from '@fibrae/semi-foundation/components/select/option-foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { InputProps, ValidateStatus } from '../input/interface';
 import type { PopoverProps } from '../popover/interface';
 import type { TagCloseEvent } from '../tag/interface';
 import type { Position, TooltipProps } from '../tooltip/interface';
 
-export type BasicSelectValue = string | number | Record<string, any>;
+export type { SelectRawValue };
 
-type IsDefaultSelectGeneric<T> = [T] extends [BasicSelectValue] ? ([BasicSelectValue] extends [T] ? true : false) : false;
-
-export type SelectValue<T = BasicSelectValue> = IsDefaultSelectGeneric<T> extends true ? BasicSelectValue | any[] | undefined : T | T[] | undefined;
+type WidenRaw<V> = V extends string ? string : V extends number ? number : V extends boolean ? boolean : V;
+type Picked<V extends SelectRawValue, WithObject> = WithObject extends unknown ? (true extends WithObject ? SelectOptionProps<V> : V) : never;
 
 // `true extends Multiple` rather than `Multiple extends true`: the outer conditional distributes, so a `boolean`
-// multiple gives `T[] | T | undefined`
-export type SelectChangeValue<T, Multiple> = Multiple extends unknown ? (true extends Multiple ? T[] : T | undefined) : never;
+// multiple gives `Picked[] | Picked | undefined`
+/** What `change` carries: the option value, or the option record with `changeWithObject`; an array with `multiple` */
+export type SelectChangeValue<V extends SelectRawValue, Multiple, WithObject> = Multiple extends unknown ? (true extends Multiple ? Picked<V, WithObject>[] : Picked<V, WithObject> | undefined) : never;
+
+/**
+ * What `modelValue` and `defaultValue` take. A literal V is widened to its primitive: V is inferred from an inline
+ * `optionList` as a literal union, and a state typed `string` must still fit options `'a' | 'b'`
+ */
+export type SelectValue<V extends SelectRawValue = string | number, Multiple = undefined, WithObject = undefined> = SelectChangeValue<WidenRaw<V>, Multiple, WithObject>;
 
 export type SelectSize = Size;
 
@@ -24,15 +31,15 @@ export interface SelectVirtualize {
     width?: string | number;
 }
 
-export interface SelectOptionBaseProps {
-    value?: string | number;
+export interface SelectOptionBaseProps<V extends SelectRawValue = SelectRawValue> {
+    value?: V;
     /** Text of the option; content with markup goes in the default slot */
     label?: string | number;
     disabled?: boolean;
     showTick?: boolean;
 }
 
-export interface SelectOptionProps extends SelectOptionBaseProps {
+export interface SelectOptionProps<V extends SelectRawValue = SelectRawValue> extends SelectOptionBaseProps<V> {
     class?: unknown;
     style?: StyleValue;
     [key: string]: any;
@@ -49,13 +56,14 @@ export type SelectInputProps = Omit<InputProps, 'modelValue' | 'defaultValue'> &
     [key: string]: unknown;
 };
 
-export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | undefined = undefined> {
-    modelValue?: SelectValue<T>;
-    defaultValue?: SelectValue<T>;
+/** `V` is the option value type, inferred from `optionList`; `Multiple` follows `multiple`, `WithObject` follows `changeWithObject` */
+export interface SelectProps<V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined> {
+    modelValue?: SelectValue<V, Multiple, WithObject>;
+    defaultValue?: SelectValue<V, Multiple, WithObject>;
     multiple?: Multiple;
     /** Takes precedence over the default slot when not empty */
-    optionList?: SelectOptionProps[];
-    filter?: boolean | ((inputValue: string, option: SelectOptionProps) => boolean);
+    optionList?: readonly SelectOptionProps<V>[];
+    filter?: boolean | ((inputValue: string, option: SelectOptionProps<V>) => boolean);
     remote?: boolean;
     allowCreate?: boolean;
     autoClearSearchValue?: boolean;
@@ -64,7 +72,7 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     clickToHide?: boolean;
     defaultActiveFirstOption?: boolean;
     /** `change` reports option records instead of values; named without the `on` prefix, which Vue reads as a listener */
-    changeWithObject?: boolean;
+    changeWithObject?: WithObject;
     max?: number;
     maxTagCount?: number;
     maxHeight?: string | number;
@@ -98,15 +106,15 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     id?: string;
 }
 
-export interface SelectEmits<T = BasicSelectValue, Multiple extends boolean | undefined = undefined> {
-    'update:modelValue': [value: SelectChangeValue<T, Multiple>];
-    change: [value: SelectChangeValue<T, Multiple>];
+export interface SelectEmits<V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined> {
+    'update:modelValue': [value: SelectChangeValue<V, Multiple, WithObject>];
+    change: [value: SelectChangeValue<V, Multiple, WithObject>];
     dropdownVisibleChange: [visible: boolean];
     /** No event when called through the handle's `search` or the trigger slot's `onSearch` */
     search: [value: string, event?: Event];
-    select: [value: string | number, option: SelectOptionProps];
-    deselect: [value: string | number, option: SelectOptionProps];
-    exceed: [option: SelectOptionProps];
+    select: [value: V, option: SelectOptionProps<V>];
+    deselect: [value: V, option: SelectOptionProps<V>];
+    exceed: [option: SelectOptionProps<V>];
     create: [option: SelectOptionProps];
     clear: [];
     focus: [event: FocusEvent];
@@ -116,10 +124,10 @@ export interface SelectEmits<T = BasicSelectValue, Multiple extends boolean | un
     listScroll: [event: Event];
 }
 
-export interface SelectOptionItemSlotProps {
+export interface SelectOptionItemSlotProps<V extends SelectRawValue = SelectRawValue> {
     /** Put it on the role="option" element: the combobox's aria-activedescendant points at it */
     id: string;
-    value?: string | number;
+    value?: V;
     label?: string | number;
     selected: boolean;
     focused: boolean;

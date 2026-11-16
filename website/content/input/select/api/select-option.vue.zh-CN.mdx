@@ -1,3 +1,5 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
 | 属性         | 说明                                                                                                                                           | 类型               | 默认值      |
@@ -11,14 +13,14 @@
 | selected     | 供 Select 内部使用，表示选项被选中，使用方不需要设置。                                                                                         | `boolean`          | `undefined` |
 | semiOptionId | 供 Select 内部使用，选项行的 id，使用方不需要设置。                                                                                            | `string`           | `undefined` |
 | showTick     | 选中时是否显示 √ 图标。                                                                                                                        | `boolean`          | `undefined` |
-| value        | 选项的值，用来识别选项，每个选项都应声明。                                                                                                     | `string \| number` | `undefined` |
+| value        | 选项的值，用来识别选项，每个选项都应声明。                                                                                                     | `SelectRawValue`   | `undefined` |
 
 **Events**
 
-| 事件       | 说明                                                                                                         | 回调参数                                         |
-| ---------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
-| mouseenter | 供 Select 内部使用，指针进入选项行时触发，用来移动高亮。                                                     | `[event: MouseEvent]`                            |
-| select     | 供 Select 内部使用，点击未禁用的选项行时触发，载荷为选项记录与点击事件。使用方请监听 Select 的 select 事件。 | `[option: SelectOptionProps, event: MouseEvent]` |
+| 事件       | 说明                                                                                                         | 回调参数                                                                                               |
+| ---------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| mouseenter | 供 Select 内部使用，指针进入选项行时触发，用来移动高亮。                                                     | `[event: MouseEvent]`                                                                                  |
+| select     | 供 Select 内部使用，点击未禁用的选项行时触发，载荷为选项记录与点击事件。使用方请监听 Select 的 select 事件。 | <ApiType detail={"[option: SelectOptionProps\u003cSelectRawValue>, event: MouseEvent]"}>Type</ApiType> |
 
 **Slots**
 

@@ -6,4 +6,4 @@ export default Object.assign(Select, { Option, OptGroup });
 export { OptionView } from './option';
 export type { OptionProps, OptionViewProps } from './option';
 export type { OptionGroupProps } from './option-group';
-export type { BasicSelectValue, OptionRenderProps, RenderMultipleSelectedItemFn, RenderSelectedItemFn, RenderSingleSelectedItemFn, SelectChangeValue, SelectedItemProps, SelectElement, SelectHandle, SelectInputProps, SelectProps, SelectSize, SelectValue, TriggerRenderProps, VirtualizeProps } from './select';
+export type { OptionRenderProps, RenderMultipleSelectedItemFn, RenderSelectedItemFn, RenderSingleSelectedItemFn, SelectChangeValue, SelectedItemProps, SelectElement, SelectHandle, SelectInputProps, SelectProps, SelectRawValue, SelectSize, SelectValue, TriggerRenderProps, VirtualizeProps } from './select';

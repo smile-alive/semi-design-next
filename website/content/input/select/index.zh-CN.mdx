@@ -1077,14 +1077,16 @@ Select 经 `bind:this` 取得组件实例，调用下列方法：
 
 <Framework only="vue">
 
-`Select` 是泛型组件，有两个泛型参数：`T` 是选项 value 的类型（设置 `changeWithObject` 时是 option 对象的类型），`Multiple` 是 `multiple` 属性的类型。单选时 `change` 与 `update:modelValue` 的载荷为 `T | undefined`，多选时为 `T[]`；`multiple` 是 `boolean` 变量时为 `T | T[] | undefined`。`select`、`deselect` 的载荷是选项的原始 value（`string | number`），不随 `T` 变化。两个参数通常由 `modelValue` 与 `multiple` 推断；全局默认值不能设置 `multiple`，因为给它一个默认值会破坏这一推断。
+`Select` 是泛型组件，有三个泛型参数：`V` 是选项 value 的类型（`string`、`number`、`boolean` 或它们的字面量联合），`Multiple` 跟随 `multiple`，`WithObject` 跟随 `changeWithObject`。单选时 `change` 与 `update:modelValue` 的载荷为 `V | undefined`，多选时为 `V[]`，`multiple` 是 `boolean` 变量时为 `V | V[] | undefined`；设置 `changeWithObject` 后换成选项对象 `SelectOptionProps<V>`。`select`、`deselect` 的载荷总是选项的原始 value `V`。
+
+`V` 优先从 `optionList` 推断：内联写的选项推断为字面量联合，存进变量的列表推断为 `string` 等基础类型。选项写在默认插槽里时，`V` 由 `modelValue` 推断。`modelValue` 与 `defaultValue` 按 `V` 的基础类型检查，类型为 `string` 的 ref 也能配字面量选项。开启 `allowCreate` 时新建的值不在选项里，需要把 `optionList` 存进变量，让 `V` 推断为 `string`。全局默认值不能设置 `multiple` 与 `changeWithObject`，因为给它们默认值会破坏推断。
 
 ```vue
 <script setup lang="ts">
     import { ref } from 'vue';
     import { Select } from '@fibrae/semi-ui-vue';
 
-    // 由 modelValue 推断 T 为 string
+    // 由 modelValue 推断 V 为 string
     const value = ref<string | undefined>();
     // 多选时 modelValue 为 string[]
     const values = ref<string[]>([]);
@@ -1106,12 +1108,32 @@ Select 经 `bind:this` 取得组件实例，调用下列方法：
 
 <Framework only="react">
 
-`Select` 有两个泛型参数：`T` 是选项 value 的类型（设置 `onChangeWithObject` 时是 option 对象的类型），`Multiple` 是 `multiple` 属性的类型。单选时 `onChange` 的入参为 `T | undefined`，多选时为 `T[]`；`multiple` 是 `boolean` 变量时为 `T | T[] | undefined`。`onSelect`、`onDeselect` 的入参是选项的原始 value（`string | number`），不随 `T` 变化。两个参数通常由 `value` 与 `multiple` 推断；多选时显式写 `T` 需要同时写 `Multiple`。
+`Select` 有三个泛型参数：`V` 是选项 value 的类型（`string`、`number`、`boolean` 或它们的字面量联合），`Multiple` 跟随 `multiple`，`WithObject` 跟随 `onChangeWithObject`。单选时 `onChange` 的入参为 `V | undefined`，多选时为 `V[]`，`multiple` 是 `boolean` 变量时为 `V | V[] | undefined`；开启 `onChangeWithObject` 后换成选项对象 `OptionProps<V>`。`onSelect`、`onDeselect` 的入参总是选项的原始 value `V`。
+
+`V` 优先从 `optionList` 推断：内联写的选项推断为字面量联合，存进变量的列表推断为 `string` 等基础类型。选项写在子元素里时，`V` 由 `value` 推断，`value` 写成字面量时 `V` 也是该字面量。`value` 与 `defaultValue` 按 `V` 的基础类型检查，类型为 `string` 的状态也能配字面量选项。开启 `allowCreate` 时新建的值不在选项里，需要显式写 `<Select<string>>`；多选时显式写 `V` 需要同时写 `Multiple`。
 
 ```jsx
 import { Select } from '@fibrae/semi-ui-react';
 
-// 由 value 推断 T 为 string，value 为 string | undefined
+// 内联选项推断 V 为 'draft' | 'published'
+<Select
+    optionList={[
+        { label: '草稿', value: 'draft' },
+        { label: '已发布', value: 'published' },
+    ]}
+    onChange={(value) => setStatus(value)}
+/>
+
+// 布尔选项推断 V 为 boolean
+<Select
+    optionList={[
+        { label: '是', value: true },
+        { label: '否', value: false },
+    ]}
+    onChange={(value) => setEnabled(value)}
+/>
+
+// 子元素选项由 value 推断 V 为 string，value 为 string | undefined
 <Select
     value={selectedValue}
     onChange={(value) => setSelectedValue(value)}
@@ -1141,12 +1163,23 @@ import { Select } from '@fibrae/semi-ui-react';
 
 <Framework only="solid">
 
-`Select` 有两个泛型参数：`T` 是选项 value 的类型（设置 `onChangeWithObject` 时是 option 对象的类型），`Multiple` 是 `multiple` 属性的类型。单选时 `onChange` 的入参为 `T | undefined`，多选时为 `T[]`；`multiple` 是 `boolean` 变量时为 `T | T[] | undefined`。`onSelect`、`onDeselect` 的入参是选项的原始 value（`string | number`），不随 `T` 变化。两个参数通常由 `value` 与 `multiple` 推断；多选时显式写 `T` 需要同时写 `Multiple`。
+`Select` 有三个泛型参数：`V` 是选项 value 的类型（`string`、`number`、`boolean` 或它们的字面量联合），`Multiple` 跟随 `multiple`，`WithObject` 跟随 `onChangeWithObject`。单选时 `onChange` 的入参为 `V | undefined`，多选时为 `V[]`，`multiple` 是 `boolean` 变量时为 `V | V[] | undefined`；开启 `onChangeWithObject` 后换成选项对象 `OptionProps<V>`。`onSelect`、`onDeselect` 的入参总是选项的原始 value `V`。
+
+`V` 优先从 `optionList` 推断：内联写的选项推断为字面量联合，存进变量的列表推断为 `string` 等基础类型。选项写在子元素里时，`V` 由 `value` 推断，`value` 写成字面量时 `V` 也是该字面量。`value` 与 `defaultValue` 按 `V` 的基础类型检查，类型为 `string` 的状态也能配字面量选项。开启 `allowCreate` 时新建的值不在选项里，需要显式写 `<Select<string>>`；多选时显式写 `V` 需要同时写 `Multiple`。
 
 ```jsx
 import { Select } from '@fibrae/semi-ui-solid';
 
-// 由 value 推断 T 为 string，value 为 string | undefined
+// 内联选项推断 V 为 'draft' | 'published'
+<Select
+    optionList={[
+        { label: '草稿', value: 'draft' },
+        { label: '已发布', value: 'published' },
+    ]}
+    onChange={(value) => setStatus(value)}
+/>
+
+// 子元素选项由 value 推断 V 为 string，value 为 string | undefined
 <Select value={selectedValue()} onChange={(value) => setSelectedValue(value)}>
     <Select.Option value="option1">选项 1</Select.Option>
     <Select.Option value="option2">选项 2</Select.Option>

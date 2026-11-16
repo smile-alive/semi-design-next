@@ -29,7 +29,7 @@
         })
     );
 
-    const handleSelectFormat = (format: string | number) => {
+    const handleSelectFormat = (format: string | number | boolean) => {
         foundation.handleFormatChange(format as ColorFormat);
     };
 </script>

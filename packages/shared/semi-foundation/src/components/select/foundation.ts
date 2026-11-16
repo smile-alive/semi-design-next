@@ -2,7 +2,7 @@ import { isEqual } from 'es-toolkit';
 import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { crossesFocusBoundary, getEnabledStepIndex, getListTargetIndex, handlePrevent, isBrowserChord, isInnerControlActivation, isInnerControlKey, isTextEditor, Typeahead, centerInScroller, getOptionId, revealOption, EventEmitter, ENTER_KEY, isComposing, containsWithPopups, warning } from '../../utils/index';
 import { cssClasses, strings } from './constants';
-import type { BasicOptionProps, OptionRecord } from './option-foundation';
+import type { BasicOptionProps, OptionRecord, SelectRawValue } from './option-foundation';
 
 export interface SelectBaseProps {
     allowCreate?: boolean;
@@ -73,7 +73,7 @@ export interface SelectAdapter<P extends SelectBaseProps = SelectBaseProps, S ex
     scrollVirtualTo(index: number, align?: 'center'): void;
 }
 
-type LabelValue = string | number;
+type LabelValue = SelectRawValue;
 type PropValue = LabelValue | Record<string, any>;
 export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProps, S extends SelectBaseState = SelectBaseState, LE = unknown> extends BaseFoundation<SelectAdapter<P, S, LE>, P, S> {
     // isFocus cannot tell whether onBlur is owed: a Tab into the trigger leaves it unset (clicked style)

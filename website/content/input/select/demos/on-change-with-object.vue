@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { Select, TextArea } from '@fibrae/semi-ui-vue';
+    import { Select, TextArea, type SelectOptionProps } from '@fibrae/semi-ui-vue';
 
     interface Item {
         value: string;
@@ -14,17 +14,15 @@
         { value: 'editing', label: '剪辑', type: 3 },
         { value: 'news', label: '资讯', type: 4 },
     ];
-    const cbValue = ref<Item>();
-    const multipleCbValue = ref<Item[]>();
-    // Select infers its value type from the value, not from optionList, so an empty typed default gives change Item[]
-    const noItems: Item[] = [];
+    const cbValue = ref<SelectOptionProps<string>>();
+    const multipleCbValue = ref<SelectOptionProps<string>[]>();
 
-    const onChange = (value?: Item) => {
+    const onChange = (value?: SelectOptionProps<string>) => {
         cbValue.value = value;
         console.log(value);
     };
 
-    const onMultipleChange = (value: Item[]) => {
+    const onMultipleChange = (value: SelectOptionProps<string>[]) => {
         multipleCbValue.value = value;
         console.log(value);
     };
@@ -38,7 +36,7 @@
             <TextArea aria-labelledby="select-on-change-with-object-single" autosize :modelValue="JSON.stringify(cbValue)" :rows="2" style="width: 320px; margin-bottom: 48px" />
         </div>
         <div>
-            <Select aria-label="多选" changeWithObject :defaultValue="noItems" multiple :optionList="list" placeholder="多选" style="width: 320px" @change="onMultipleChange" />
+            <Select aria-label="多选" changeWithObject multiple :optionList="list" placeholder="多选" style="width: 320px" @change="onMultipleChange" />
             <h4 id="select-on-change-with-object-multiple">onChange回调:</h4>
             <TextArea aria-labelledby="select-on-change-with-object-multiple" autosize :modelValue="JSON.stringify(multipleCbValue)" style="width: 320px" />
         </div>

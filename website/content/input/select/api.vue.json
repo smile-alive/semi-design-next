@@ -15,8 +15,8 @@
                 "en-US": "Whether multiple options can be selected. It decides the payload type of change and update:modelValue: an array in multiple mode, a single value or undefined otherwise. The global defaults cannot set it."
             },
             "optionList": {
-                "zh-CN": "以数组形式传入选项，每项须带 value 与 label（label 为字符串或数字），其余字段随选项记录一起回传。数组非空时优先于默认插槽；不支持分组。",
-                "en-US": "Options as an array. Each item needs value and label (a string or number); other fields travel with the option record. A non-empty array takes precedence over the default slot; groups are not supported."
+                "zh-CN": "以数组形式传入选项，每项须带 value 与 label（label 为字符串或数字），其余字段随选项记录一起回传。value 可以是字符串、数字或布尔值，泛型参数 V 由它推断。数组非空时优先于默认插槽；不支持分组。",
+                "en-US": "Options as an array. Each item needs value and label (a string or number); other fields travel with the option record. value is a string, number or boolean, and the generic parameter V is inferred from it. A non-empty array takes precedence over the default slot; groups are not supported."
             },
             "filter": {
                 "zh-CN": "是否可搜索。传入 true 时开启搜索，默认策略为选项 label（含所在分组的标题）包含输入值；传入函数时接收输入值与选项，返回 true 表示命中。",

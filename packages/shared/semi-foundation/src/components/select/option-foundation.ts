@@ -1,6 +1,8 @@
+export type SelectRawValue = string | number | boolean;
+
 export interface BasicOptionProps {
     [x: string]: any;
-    value?: string | number;
+    value?: SelectRawValue;
     label?: string | number | unknown;
     children?: unknown;
     disabled?: boolean;

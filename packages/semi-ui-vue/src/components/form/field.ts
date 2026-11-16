@@ -10,7 +10,7 @@ import InputNumber from '../input-number';
 import PinCode from '../pincode';
 import Radio, { type RadioGroupEmits, type RadioGroupProps, type RadioGroupSlots, type RadioValue, RadioGroup } from '../radio';
 import Rating from '../rating';
-import type { BasicSelectValue, SelectEmits, SelectHandle, SelectOptGroup, SelectOption, SelectProps, SelectSlots } from '../select';
+import type { SelectEmits, SelectHandle, SelectOptGroup, SelectOption, SelectProps, SelectRawValue, SelectSlots } from '../select';
 import SelectOptGroupComponent from '../select/option-group.vue';
 import SelectOptionComponent from '../select/option.vue';
 import Select from '../select/select.vue';
@@ -41,9 +41,12 @@ type GenericFieldNode<P, S, H> = VNode & {
     __ctx?: GenericFieldContext<S> & { props: P; expose: (exposed: FieldHandle<H>) => void };
 };
 
-export type FormSelectProps<T = BasicSelectValue, Multiple extends boolean | undefined = undefined> = FieldProps<CallSiteProps<SelectProps<T, Multiple>, SelectEmits<T, Multiple>>>;
+export type FormSelectProps<V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined> = FieldProps<CallSiteProps<SelectProps<V, Multiple, WithObject>, SelectEmits<V, Multiple, WithObject>>>;
 
-type FormSelectComponent = <T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(props: FormSelectProps<T, Multiple>, ctx?: GenericFieldContext<SelectSlots>) => GenericFieldNode<FormSelectProps<T, Multiple>, SelectSlots, SelectHandle>;
+type FormSelectComponent = <V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(
+    props: FormSelectProps<V, Multiple, WithObject>,
+    ctx?: GenericFieldContext<SelectSlots>
+) => GenericFieldNode<FormSelectProps<V, Multiple, WithObject>, SelectSlots, SelectHandle>;
 
 type FormTreeSelectProps<T, Multiple extends boolean | undefined> = FieldProps<CallSiteProps<TreeSelectProps<T, Multiple>, TreeSelectEmits<T, Multiple>>>;
 

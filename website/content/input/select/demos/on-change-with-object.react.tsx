@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Select, TextArea } from '@fibrae/semi-ui-react';
+import { Select, TextArea, type SelectOptionProps } from '@fibrae/semi-ui-react';
 
 interface Item {
     value: string;
@@ -15,15 +15,15 @@ const list: Item[] = [
 ];
 
 export default function SelectDemo() {
-    const [cbValue, setCbValue] = useState<Item>();
-    const [multipleCbValue, setMultipleCbValue] = useState<Item[]>();
+    const [cbValue, setCbValue] = useState<SelectOptionProps<string>>();
+    const [multipleCbValue, setMultipleCbValue] = useState<SelectOptionProps<string>[]>();
 
-    const onChange = (value?: Item) => {
+    const onChange = (value?: SelectOptionProps<string>) => {
         setCbValue(value);
         console.log(value);
     };
 
-    const onMultipleChange = (value: Item[]) => {
+    const onMultipleChange = (value: SelectOptionProps<string>[]) => {
         setMultipleCbValue(value);
         console.log(value);
     };

@@ -1,5 +1,5 @@
 import { createSignal } from 'solid-js';
-import { Select, TextArea } from '@fibrae/semi-ui-solid';
+import { Select, TextArea, type SelectOptionProps } from '@fibrae/semi-ui-solid';
 
 interface Item {
     value: string;
@@ -15,15 +15,15 @@ const list: Item[] = [
 ];
 
 export default function SelectDemo() {
-    const [cbValue, setCbValue] = createSignal<Item>();
-    const [multipleCbValue, setMultipleCbValue] = createSignal<Item[]>();
+    const [cbValue, setCbValue] = createSignal<SelectOptionProps<string>>();
+    const [multipleCbValue, setMultipleCbValue] = createSignal<SelectOptionProps<string>[]>();
 
-    const onChange = (value?: Item) => {
+    const onChange = (value?: SelectOptionProps<string>) => {
         setCbValue(value);
         console.log(value);
     };
 
-    const onMultipleChange = (value: Item[]) => {
+    const onMultipleChange = (value: SelectOptionProps<string>[]) => {
         setMultipleCbValue(value);
         console.log(value);
     };

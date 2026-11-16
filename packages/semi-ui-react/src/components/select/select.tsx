@@ -6,7 +6,7 @@ import { type ValidateStatus, FocusTrapHandle } from '@fibrae/semi-foundation/ba
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { cssClasses, strings, numbers, type SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import SelectFoundation, { type SelectAdapter } from '@fibrae/semi-foundation/components/select/foundation';
-import { type OptionRecord, getOptionRuns, optionListToRecords } from '@fibrae/semi-foundation/components/select/option-foundation';
+import { type OptionRecord, type SelectRawValue, getOptionRuns, optionListToRecords } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
 import { getOptionId, isTextEditor, joinIds, stopButtonActivationKeys, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/select/select.scss';
@@ -46,26 +46,30 @@ type ExcludeInputType = {
     onChange?: InputProps['onChange'];
 };
 
-type OnChangeValueType = string | number | Record<string, any>;
-
 /** A collected option; one read from a Select.OptGroup carries that group's props and key */
 type OptionRow = OptionRecord<OptionProps, OptionGroupProps & { key?: React.Key }>;
 
-export type BasicSelectValue = string | number | Record<string, any>;
+export type { SelectRawValue };
 
-type IsDefaultSelectGeneric<T> = [T] extends [BasicSelectValue] ? ([BasicSelectValue] extends [T] ? true : false) : false;
+type WidenRaw<V> = V extends string ? string : V extends number ? number : V extends boolean ? boolean : V;
+type Picked<V extends SelectRawValue, WithObject> = WithObject extends unknown ? (true extends WithObject ? OptionProps<V> : V) : never;
+
+/** What `onChange` receives: the option value, or the option with `onChangeWithObject`; an array with `multiple` */
+export type SelectChangeValue<V extends SelectRawValue, Multiple, WithObject> = ByMultiple<Multiple, Picked<V, WithObject> | undefined, Picked<V, WithObject>[]>;
 
 /**
- * Without a generic parameter: `string | number | any[] | Record | undefined`; with `T`: `T | T[] | undefined`.
+ * What `value` and `defaultValue` take. A literal V is widened to its primitive: V is inferred from an inline
+ * `optionList` as a literal union, and `value` is a weaker inference site that cannot widen it, so without this a
+ * state typed `string` would not fit options `'a' | 'b'`
  */
-export type SelectValue<T = BasicSelectValue> = IsDefaultSelectGeneric<T> extends true ? BasicSelectValue | any[] | undefined : T | T[] | undefined;
+export type SelectValue<V extends SelectRawValue = string | number, Multiple = undefined, WithObject = undefined> = SelectChangeValue<WidenRaw<V>, Multiple, WithObject>;
 
-export interface OptionRenderProps {
+export interface OptionRenderProps<V extends SelectRawValue = SelectRawValue> {
     /** Put it on the role="option" element: the trigger's aria-activedescendant points at it */
     id?: string;
     key?: any;
     label?: React.ReactNode;
-    value?: string | number;
+    value?: V;
     style?: React.CSSProperties;
     className?: string;
     selected?: boolean;
@@ -127,12 +131,12 @@ export type RenderMultipleSelectedItemFn = (
 
 export type RenderSelectedItemFn = RenderSingleSelectedItemFn | RenderMultipleSelectedItemFn;
 
-type SelectChangeValue<T, Multiple> = ByMultiple<Multiple, T | undefined, T[]>;
-
 /**
- * `T` is the option value type, or the option object with `onChangeWithObject`; `Multiple` follows the `multiple` prop
+ * `V` is the option value type, inferred from `optionList`; `Multiple` follows `multiple`, `WithObject` follows
+ * `onChangeWithObject`
  */
-export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | undefined = undefined> extends ElementProps<'div', 'prefix' | 'defaultValue' | 'onChange' | 'onSelect'>, Pick<TooltipProps, 'spacing' | 'motion' | 'autoAdjustOverflow' | 'stopPropagation'> {
+export interface SelectProps<V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>
+    extends ElementProps<'div', 'prefix' | 'defaultValue' | 'onChange' | 'onSelect'>, Pick<TooltipProps, 'spacing' | 'motion' | 'autoAdjustOverflow' | 'stopPropagation'> {
     /** Accessible name of the combobox: the search input while it is in the trigger, otherwise the trigger */
     'aria-label'?: React.AriaAttributes['aria-label'];
     id?: string;
@@ -141,12 +145,12 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     arrowIcon?: React.ReactNode;
     borderless?: boolean;
     clearIcon?: React.ReactNode;
-    defaultValue?: SelectValue<T>;
-    value?: SelectValue<T>;
+    defaultValue?: SelectValue<V, Multiple, WithObject>;
+    value?: SelectValue<V, Multiple, WithObject>;
     placeholder?: React.ReactNode;
-    onChange?: (value: SelectChangeValue<T, Multiple>) => void;
+    onChange?: (value: SelectChangeValue<V, Multiple, WithObject>) => void;
     multiple?: Multiple;
-    filter?: boolean | ((inputValue: string, option: OptionProps) => boolean);
+    filter?: boolean | ((inputValue: string, option: OptionProps<V>) => boolean);
     max?: number;
     maxTagCount?: number;
     maxHeight?: string | number;
@@ -169,13 +173,13 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     innerTopSlot?: React.ReactNode;
     outerBottomSlot?: React.ReactNode;
     innerBottomSlot?: React.ReactNode;
-    optionList?: OptionProps[];
+    optionList?: readonly OptionProps<V>[];
     dropdownMatchSelectWidth?: boolean;
     loading?: boolean;
     defaultOpen?: boolean;
     validateStatus?: ValidateStatus;
     defaultActiveFirstOption?: boolean;
-    onChangeWithObject?: boolean;
+    onChangeWithObject?: WithObject;
     suffix?: React.ReactNode;
     searchPosition?: 'trigger' | 'dropdown';
     searchPlaceholder?: string;
@@ -187,15 +191,15 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     showArrow?: boolean;
     renderSelectedItem?: ByMultiple<Multiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>;
     renderCreateItem?: (inputValue: OptionProps['value'], focus: boolean, style?: React.CSSProperties) => React.ReactNode;
-    renderOptionItem?: (props: OptionRenderProps) => React.ReactNode;
+    renderOptionItem?: (props: OptionRenderProps<V>) => React.ReactNode;
     onMouseEnter?: (e: React.MouseEvent) => any;
     onMouseLeave?: (e: React.MouseEvent) => any;
     clickToHide?: boolean;
-    onExceed?: (option: OptionProps) => void;
+    onExceed?: (option: OptionProps<V>) => void;
     onCreate?: (option: OptionProps) => void;
     remote?: boolean;
-    onDeselect?: (value: OptionProps['value'], option: Record<string, any>) => void;
-    onSelect?: (value: OptionProps['value'], option: Record<string, any>) => void;
+    onDeselect?: (value: V, option: OptionProps<V>) => void;
+    onSelect?: (value: V, option: OptionProps<V>) => void;
     allowCreate?: boolean;
     triggerRender?: (props: TriggerRenderProps) => React.ReactNode;
     onClear?: () => void;
@@ -211,8 +215,9 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     ref?: React.Ref<SelectHandle>;
 }
 
-interface SelectBodyProps<T> extends Omit<SelectProps<T, boolean>, 'onChange'> {
-    onChange?: Bivariant<[value: SelectChangeValue<T, boolean>]>;
+/** The implementation handles every option value alike; the generic parameters only type what callers see */
+interface SelectBodyProps extends Omit<SelectProps<SelectRawValue, boolean, boolean>, 'onChange'> {
+    onChange?: Bivariant<[value: SelectChangeValue<SelectRawValue, boolean, boolean>]>;
 }
 
 export interface SelectState {
@@ -252,19 +257,18 @@ const defaultProps = {
     restTagsPopoverProps: {},
     expandRestTagsOnClick: false,
     ellipsisTrigger: false,
-} satisfies Partial<SelectBodyProps<any>>;
+} satisfies Partial<SelectBodyProps>;
 
 function defaultRenderMultipleItem(optionNode: OptionProps) {
     return { isRenderInTag: true, content: optionNode.label };
 }
 
-function collectOptions({ optionList, children }: Pick<SelectBodyProps<unknown>, 'optionList' | 'children'>) {
+function collectOptions({ optionList, children }: Pick<SelectBodyProps, 'optionList' | 'children'>) {
     return optionListToRecords(optionList) ?? getOptionsFromGroup(children);
 }
 
-function Select<T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(rawProps: SelectProps<T, Multiple>) {
-    const bodyProps: SelectBodyProps<T> = rawProps;
-    const props = useDefaultProps('Select', withInputGroup(bodyProps, useInputGroupInScope()), defaultProps);
+function Select(rawProps: SelectBodyProps) {
+    const props = useDefaultProps('Select', withInputGroup(rawProps, useInputGroupInScope()), defaultProps);
 
     const {
         'aria-label': ariaLabel,
@@ -365,10 +369,10 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const selectOptionListID = useId();
     const generatedId = useId();
     const selectionTextId = useId();
-    const prevInputsRef = useRef<{ children: ReactNode[]; optionList: OptionProps[] }>(null);
+    const prevInputsRef = useRef<{ children: ReactNode[]; optionList: readonly OptionProps[] }>(null);
     let inner: React.ReactNode;
 
-    const [foundation, state] = useFoundation<SelectFoundation<SelectBodyProps<T>, SelectState, React.UIEvent<HTMLDivElement>>, SelectAdapter<SelectBodyProps<T>, SelectState, React.UIEvent<HTMLDivElement>>, SelectBodyProps<T>, SelectState>(
+    const [foundation, state] = useFoundation<SelectFoundation<SelectBodyProps, SelectState, React.UIEvent<HTMLDivElement>>, SelectAdapter<SelectBodyProps, SelectState, React.UIEvent<HTMLDivElement>>, SelectBodyProps, SelectState>(
         SelectFoundation,
         props,
         () => {
@@ -379,10 +383,10 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             focusInput: () => inputRef.current?.focus({ preventScroll: base.getProp('preventScroll') }),
             focusDropdownInput: () => dropdownInputRef.current?.focus({ preventScroll: base.getProp('preventScroll') }),
             notifyMaxLimit: (option) => base.getProps().onExceed?.(option as OptionProps),
-            notifyDeselect: (value, option) => base.getProps().onDeselect?.(value, option),
+            notifyDeselect: (value, option) => base.getProps().onDeselect?.(value, option as OptionProps),
             getOptionsFromChildren: () => collectOptions(base.getProps()),
-            notifyChange: (value: OnChangeValueType | OnChangeValueType[]) => base.getProps().onChange?.(value as T | T[]),
-            notifySelect: (value, option) => base.getProps().onSelect?.(value, option),
+            notifyChange: (value) => base.getProps().onChange?.(value as SelectChangeValue<SelectRawValue, boolean, boolean>),
+            notifySelect: (value, option) => base.getProps().onSelect?.(value, option as OptionProps),
             notifyDropdownVisibleChange: (visible) => base.getProps().onDropdownVisibleChange?.(visible),
             notifySearch: (input, event) => base.getProps().onSearch?.(input, event),
             notifyCreate: (input) => base.getProps().onCreate?.(input as OptionProps),
@@ -980,4 +984,4 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     );
 }
 
-export default Select;
+export default Select as <V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(props: SelectProps<V, Multiple, WithObject>) => React.ReactNode;

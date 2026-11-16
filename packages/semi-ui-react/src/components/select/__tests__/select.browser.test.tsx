@@ -7,6 +7,7 @@ import { Button, Select } from '@fibrae/semi-ui-react';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
 import { getElement, defined } from '@test/utils/react';
 import type { OptionRenderProps, SelectProps } from '../index';
+import type { OptionProps } from '../option';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-select`;
 const options = [
@@ -275,8 +276,7 @@ describe('Select', () => {
     it('修复 PR-2139', async () => {
         // A value outside optionList must re-render when its other keys change
         function Demo() {
-            type Item = { label: string; value: string; otherProps: string };
-            const [value, setValue] = useState<Item | Item[]>([{ label: 'AA-Label', value: 'AA', otherProps: 'AA-OtherProps' }]);
+            const [value, setValue] = useState<OptionProps<string>[]>([{ label: 'AA-Label', value: 'AA', otherProps: 'AA-OtherProps' }]);
             return (
                 <>
                     <Select
@@ -308,7 +308,7 @@ describe('Select', () => {
 
     it('受控模式，reactNode 中的相同 label 文本', async () => {
         function Demo() {
-            const [value, setValue] = useState<string | string[]>();
+            const [value, setValue] = useState<string>();
             return (
                 <Select style={{ width: 180 }} data-cy="singleControl" value={value} onChange={setValue}>
                     <Select.OptGroup label="Asia">
@@ -793,7 +793,7 @@ describe('Select 鼠标与键盘混用', () => {
 describe('Select 加载更多', () => {
     const page = (start: number) => Array.from({ length: 20 }, (_, i) => ({ value: start + i, label: `option ${start + i}` }));
 
-    function LoadMore({ fromSlot, ...props }: SelectProps & { fromSlot?: boolean }) {
+    function LoadMore({ fromSlot, ...props }: SelectProps<number> & { fromSlot?: boolean }) {
         const [list, setList] = useState(() => page(0));
         const loadMore = () => setList((prev) => (prev.length < 40 ? [...prev, ...page(prev.length)] : prev));
         return <Select {...props} style={{ width: 200 }} innerBottomSlot={fromSlot ? <Button onClick={loadMore}>load more</Button> : undefined} maxHeight={120} motion={false} optionList={list} onListScroll={fromSlot ? undefined : loadMore} />;

@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { mockResizeObserver, getElement } from '@test/utils/solid';
-import Select, { type OptionRenderProps, type RenderMultipleSelectedItemFn, type RenderSingleSelectedItemFn, type SelectElement, type SelectProps, type TriggerRenderProps } from '..';
+import Select, { type OptionProps, type OptionRenderProps, type RenderMultipleSelectedItemFn, type RenderSingleSelectedItemFn, type SelectElement, type SelectProps, type TriggerRenderProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
 import { InputGroup } from '../../input';
@@ -30,7 +30,7 @@ function getOption(list: Props[] = defaultList) {
 
 // the popup layer (a Tooltip) animates; turned off so tests need not wait
 function renderSelect(initial: Props = {}) {
-    const [props, setProps] = createSignal(initial as SelectProps<unknown>);
+    const [props, setProps] = createSignal(initial as SelectProps);
     const options = () => (props().optionList || 'children' in props() ? (props().children as JSX.Element) : getOption());
     const result = render(() => (
         // a spread call is a function source, so keys added by a later rerender stay reactive
@@ -38,7 +38,7 @@ function renderSelect(initial: Props = {}) {
             {options()}
         </Select>
     ));
-    return { ...result, rerender: (next: Props) => setProps(next as SelectProps<unknown>) };
+    return { ...result, rerender: (next: Props) => setProps(next as SelectProps) };
 }
 
 const getTrigger = () => screen.getByRole('combobox');
@@ -395,6 +395,21 @@ describe('Select', () => {
         expect(onChange).toHaveBeenCalledWith(0);
     });
 
+    it('option.value 为布尔值', async () => {
+        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
+        renderSelect({
+            optionList: [
+                { label: '是', value: true },
+                { label: '否', value: false },
+            ],
+            defaultOpen: true,
+            onChange,
+        });
+        await userEvent.click(getOptions()[1]);
+        expect(onChange).toHaveBeenCalledWith(false);
+        expect(getSelectionText()).toHaveTextContent(/^否$/);
+    });
+
     it('renderSelectedItem，single', () => {
         const renderSelectedItem = vi.fn<RenderSingleSelectedItemFn>((option) => `${option.value}-${String(option.label)}`);
         renderSelect({ renderSelectedItem, defaultValue: 'abc' });
@@ -737,7 +752,7 @@ describe('Select', () => {
 
     it('整体替换 props 时保留触发器且不重复调用 ref', () => {
         const ref = vi.fn<(node: SelectElement) => void>();
-        const [props, setProps] = createSignal<SelectProps<unknown>>({ optionList: defaultList, placeholder: 'a', ref });
+        const [props, setProps] = createSignal<SelectProps>({ optionList: defaultList, placeholder: 'a', ref });
         render(() => <Select {...props()} />);
         const trigger = getTrigger();
         trigger.focus();
@@ -2031,7 +2046,7 @@ describe('Select 状态同步与键盘', () => {
 
     describe('combobox 语义', () => {
         it('combobox 由 aria-label 或 aria-labelledby 命名，否则回退到语言包', () => {
-            const [props, setProps] = createSignal<SelectProps<unknown>>({ defaultValue: 'a' });
+            const [props, setProps] = createSignal<SelectProps>({ defaultValue: 'a' });
             const [label, setLabel] = createSignal(false);
             render(() => (
                 <>
@@ -3371,15 +3386,37 @@ describe('ref 上的 SelectHandle 方法', () => {
 });
 
 describe('Select 类型', () => {
-    type Item = { value: string; label: string };
-    type OnChangeArg<P extends { onChange?: (value: never) => void }> = Parameters<NonNullable<P['onChange']>>[0];
+    type OnChangeArg<P extends SelectProps<any, any, any>> = Parameters<NonNullable<P['onChange']>>[0];
 
-    it('onChange 的参数随 multiple 收窄', () => {
+    it('onChange 的参数随 multiple 与 onChangeWithObject 收窄', () => {
         expectTypeOf<OnChangeArg<SelectProps<string>>>().toEqualTypeOf<string | undefined>();
         expectTypeOf<OnChangeArg<SelectProps<string, true>>>().toEqualTypeOf<string[]>();
         expectTypeOf<OnChangeArg<SelectProps<string, boolean>>>().toEqualTypeOf<string | string[] | undefined>();
-        expectTypeOf<OnChangeArg<SelectProps<Item>>>().toEqualTypeOf<Item | undefined>();
-        expectTypeOf<OnChangeArg<SelectProps<Item, true>>>().toEqualTypeOf<Item[]>();
+        expectTypeOf<OnChangeArg<SelectProps<string, undefined, true>>>().toEqualTypeOf<OptionProps<string> | undefined>();
+        expectTypeOf<OnChangeArg<SelectProps<string, true, true>>>().toEqualTypeOf<OptionProps<string>[]>();
+        expectTypeOf<OnChangeArg<SelectProps<string, undefined, boolean>>>().toEqualTypeOf<string | OptionProps<string> | undefined>();
+    });
+
+    it('JSX 中由 optionList、multiple 与 onChangeWithObject 推断 onChange 的参数', () => {
+        const flag = Math.random() > 0.5;
+        const state = String(flag);
+        const options = [
+            { value: 'a', label: 'A' },
+            { value: 'b', label: 'B' },
+        ];
+        // the elements are only created, never rendered, so the callbacks never run
+        const single = <Select optionList={options} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | undefined>()} />;
+        const literal = <Select optionList={[{ value: 'a' }, { value: 'b' }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<'a' | 'b' | undefined>()} />;
+        const boolean = <Select optionList={[{ value: true }, { value: false }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<boolean | undefined>()} />;
+        const multiple = <Select multiple optionList={options} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string[]>()} />;
+        const singleObject = <Select optionList={options} onChangeWithObject onChange={(v) => expectTypeOf(v).toEqualTypeOf<OptionProps<string> | undefined>()} />;
+        const multipleObject = <Select multiple optionList={options} onChangeWithObject onChange={(v) => expectTypeOf(v).toEqualTypeOf<OptionProps<string>[]>()} />;
+        const dynamic = <Select multiple={flag} optionList={options} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | string[] | undefined>()} />;
+        // V is inferred from value as well: a string state types the callback as string, also with children options
+        const children = <Select value={state} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | undefined>()} />;
+        // a state typed string fits literal options
+        const controlled = <Select value={state} onChange={(v) => expectTypeOf(v).toEqualTypeOf<'a' | undefined>()} optionList={[{ value: 'a' }]} />;
+        expect([single, literal, boolean, multiple, singleObject, multipleObject, dynamic, children, controlled]).toHaveLength(9);
     });
 
     it('optionList 接受 interface 声明的选项', () => {
@@ -3392,9 +3429,10 @@ describe('Select 类型', () => {
     });
 
     it('onSelect 与 onDeselect 的 value 是选项的原始 value', () => {
-        type RawValue = string | number | undefined;
-        expectTypeOf<Parameters<NonNullable<SelectProps<string, true>['onSelect']>>[0]>().toEqualTypeOf<RawValue>();
-        expectTypeOf<Parameters<NonNullable<SelectProps<Item, true>['onDeselect']>>[0]>().toEqualTypeOf<RawValue>();
+        expectTypeOf<Parameters<NonNullable<SelectProps<string, true>['onSelect']>>[0]>().toEqualTypeOf<string>();
+        expectTypeOf<Parameters<NonNullable<SelectProps<string, true>['onDeselect']>>[0]>().toEqualTypeOf<string>();
+        expectTypeOf<Parameters<NonNullable<SelectProps<string, true, true>['onSelect']>>[0]>().toEqualTypeOf<string>();
+        expectTypeOf<Parameters<NonNullable<SelectProps<string, true, true>['onDeselect']>>[0]>().toEqualTypeOf<string>();
     });
 
     it('onBlur 在点击外部时收到原生 MouseEvent', () => {

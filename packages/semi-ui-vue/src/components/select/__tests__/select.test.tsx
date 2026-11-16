@@ -465,6 +465,21 @@ describe('Select', async () => {
         expect(onChange).toHaveBeenCalledWith(0);
     });
 
+    it('选项的 value 为布尔值', async () => {
+        const onChange = vi.fn<(value: unknown) => void>();
+        await renderSelect({
+            optionList: [
+                { label: '是', value: true },
+                { label: '否', value: false },
+            ],
+            defaultOpen: true,
+            onChange,
+        });
+        await click(getOptions()[1]);
+        expect(onChange).toHaveBeenCalledWith(false);
+        expect(getSelectionText()).toHaveTextContent(/^否$/);
+    });
+
     it('#selectedItem，单选', async () => {
         const selectedItem = vi.fn<(scope: Record<string, unknown>) => string>(({ option }) => `${(option as SelectOptionProps).value}-${(option as SelectOptionProps).label}`);
         await renderSelect({ defaultValue: 'abc' }, { selectedItem });
@@ -3169,7 +3184,7 @@ describe('Select', async () => {
                 trigger: ({ value, onRemove }) => (
                     <div class="custom-trigger">
                         {(value as SelectOptionProps[]).map((item) => (
-                            <button key={item.value} type="button" onClick={() => (onRemove as (option: SelectOptionProps) => void)(item)}>
+                            <button key={`${item.value}`} type="button" onClick={() => (onRemove as (option: SelectOptionProps) => void)(item)}>
                                 {String(item.label)}
                             </button>
                         ))}

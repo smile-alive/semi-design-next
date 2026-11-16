@@ -40,13 +40,13 @@ import ApiType from '#/components/ApiType.astro';
 | onChangeWithObject | `onChange` 与 `value` 是否使用选项对象而不是选项的值。 | `boolean` | `false` |
 | onClear | 点击清除按钮时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onCreate | 创建选项时的回调。 | <ApiType detail={"(option: SelectOptionProps) => void"}>Type</ApiType> | - |
-| onDeselect | 多选时取消选中某个选项的回调。 | <ApiType detail={"(value: string \u007c number, option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onDeselect | 多选时取消选中某个选项的回调。 | <ApiType detail={"(value: string \u007c number \u007c boolean, option: SelectOptionProps) => void"}>Type</ApiType> | - |
 | onDropdownVisibleChange | 下拉列表展开或收起时的回调。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | onExceed | 选中数量超过 `max` 时的回调。 | <ApiType detail={"(option: SelectOptionProps) => void"}>Type</ApiType> | - |
 | onFocus | 焦点进入 Select 时触发一次。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
 | onListScroll | 下拉列表滚动时的回调。 | <ApiType detail={"(event: Event) => void"}>Type</ApiType> | - |
 | onSearch | 搜索关键字变化时的回调；经 `search()` 或 `trigger` snippet 的 `onSearch` 触发时没有事件参数。 | <ApiType detail={"(value: string, event?: Event) => void"}>Type</ApiType> | - |
-| onSelect | 选中某个选项时的回调。 | <ApiType detail={"(value: string \u007c number, option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onSelect | 选中某个选项时的回调。 | <ApiType detail={"(value: string \u007c number \u007c boolean, option: SelectOptionProps) => void"}>Type</ApiType> | - |
 | optionItem | 替换整个选项行，snippet，参数含 `id`、`value`、`label`、`selected`、`focused`、`disabled`、`inputValue`、`class`、`style`、`onclick`、`onmouseenter` 以及条目上的其他字段。`id` 要与 `role="option"` 一起写在选项元素上。 | <ApiType detail={"Snippet\u003c[SelectOptionItemSnippetProps]>"}>Type</ApiType> | - |
 | optionLabel | 只替换选项行里的文字，snippet，参数为 `{ option }`。选中图标、行的 `role="option"`、状态与键盘行为不变；`label` 仍用于搜索与可访问名称，内容里不高亮搜索关键字。 | <ApiType detail={"Snippet\u003c[SelectOptionLabelSnippetProps]>"}>Type</ApiType> | - |
 | optionList | 选项数据，条目含 `value`、`label`、`disabled`、`showTick`、`class`、`style` 以及可选的 `group: { key, label }`，其他字段随选项记录回传。同一分组的条目必须相邻。 | `SelectOptionProps[]` | - |

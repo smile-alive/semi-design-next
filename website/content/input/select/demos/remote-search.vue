@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { debounce } from 'es-toolkit';
-    import { Select } from '@fibrae/semi-ui-vue';
+    import { Select, type SelectOptionProps } from '@fibrae/semi-ui-vue';
 
     interface Item {
         value: string;
@@ -23,7 +23,7 @@
         { value: 'editing', label: '剪辑', type: 3 },
         { value: 'news', label: '资讯', type: 4 },
     ]);
-    const value = ref<Item[]>([]);
+    const value = ref<SelectOptionProps<string>[]>([]);
 
     const handleSearch = debounce((inputValue: string) => {
         loading.value = true;

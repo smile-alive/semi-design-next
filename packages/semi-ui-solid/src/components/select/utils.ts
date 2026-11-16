@@ -54,7 +54,7 @@ function readOption(props: OptionProps, index: number, key: string, group?: Grou
  * The options of a Select: a non-empty `optionList`, otherwise the `Select.Option` and `Select.OptGroup` tokens among
  * the resolved children. Called from a memo, so the result tracks every option prop it reads.
  */
-export function readOptions(nodes: unknown[], optionList?: OptionProps[]) {
+export function readOptions(nodes: unknown[], optionList?: readonly OptionProps[]) {
     const fromList = optionListToRecords(optionList);
     if (fromList) {
         return fromList as OptionRecord[];

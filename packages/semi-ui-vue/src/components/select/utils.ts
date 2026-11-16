@@ -43,7 +43,7 @@ function readOption(node: VNode, key: string, index: number, group?: GroupRecord
 }
 
 /** Called while the Select renders or from a computed it reads, so the result tracks what the slot content reads. */
-export function readOptions(nodes: VNode[], optionList?: SelectOptionProps[]) {
+export function readOptions(nodes: VNode[], optionList?: readonly SelectOptionProps[]) {
     const fromList = optionListToRecords(optionList);
     if (fromList) {
         return fromList as OptionRecord[];

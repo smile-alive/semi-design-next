@@ -8,7 +8,7 @@ import type { InputChangeEvent, InputHandle } from '@fibrae/semi-ui-react/input'
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { mockResizeObserver } from '@test/utils/react';
-import type { OptionRenderProps, RenderMultipleSelectedItemFn, RenderSingleSelectedItemFn, SelectHandle, SelectProps, TriggerRenderProps } from '../index';
+import type { OptionProps, OptionRenderProps, RenderMultipleSelectedItemFn, RenderSingleSelectedItemFn, SelectHandle, SelectProps, TriggerRenderProps } from '../index';
 
 const Option = Select.Option;
 const prefixCls = `${BASE_CLASS_PREFIX}-select`;
@@ -381,6 +381,21 @@ describe('Select', () => {
         expect(getOptionTexts()).toEqual(['semi']);
         await userEvent.click(getOptions()[0]);
         expect(onChange).toHaveBeenCalledWith(0);
+    });
+
+    it('option.value 为布尔值', async () => {
+        const onChange = vi.fn<NonNullable<SelectProps['onChange']>>();
+        renderSelect({
+            optionList: [
+                { label: '是', value: true },
+                { label: '否', value: false },
+            ],
+            defaultOpen: true,
+            onChange,
+        });
+        await userEvent.click(getOptionByText('否'));
+        expect(onChange).toHaveBeenCalledWith(false);
+        expect(getSelectionText()).toHaveTextContent(/^否$/);
     });
 
     it('renderSelectedItem，single', () => {
@@ -1231,7 +1246,7 @@ describe('Select', () => {
 
     it('selectAll 配合 onChangeWithObject', () => {
         const ref = createRef<SelectHandle>();
-        const onChange = vi.fn<NonNullable<SelectProps<{ value: string }, true>['onChange']>>();
+        const onChange = vi.fn<NonNullable<SelectProps<string, true, true>['onChange']>>();
         renderSelect({ ref, multiple: true, onChangeWithObject: true, optionList: defaultList, onChange });
         act(() => ref.current.selectAll());
         expect(onChange).toHaveBeenCalledTimes(1);
@@ -3924,24 +3939,22 @@ describe('Select 回调参数与禁用、键盘细节', () => {
 });
 
 describe('Select 类型', () => {
-    type Item = { value: string; label: string };
-    type OnChangeArg<P extends SelectProps<any, any>> = Parameters<NonNullable<P['onChange']>>[0];
+    type OnChangeArg<P extends SelectProps<any, any, any>> = Parameters<NonNullable<P['onChange']>>[0];
 
-    it('onChange 的参数随 multiple 收窄', () => {
+    it('onChange 的参数随 multiple 与 onChangeWithObject 收窄', () => {
         expectTypeOf<OnChangeArg<SelectProps<string>>>().toEqualTypeOf<string | undefined>();
         expectTypeOf<OnChangeArg<SelectProps<string, true>>>().toEqualTypeOf<string[]>();
         expectTypeOf<OnChangeArg<SelectProps<string, boolean>>>().toEqualTypeOf<string | string[] | undefined>();
-        expectTypeOf<OnChangeArg<SelectProps<Item>>>().toEqualTypeOf<Item | undefined>();
-        expectTypeOf<OnChangeArg<SelectProps<Item, true>>>().toEqualTypeOf<Item[]>();
+        expectTypeOf<OnChangeArg<SelectProps<string, undefined, true>>>().toEqualTypeOf<OptionProps<string> | undefined>();
+        expectTypeOf<OnChangeArg<SelectProps<string, true, true>>>().toEqualTypeOf<OptionProps<string>[]>();
+        expectTypeOf<OnChangeArg<SelectProps<string, undefined, boolean>>>().toEqualTypeOf<string | OptionProps<string> | undefined>();
     });
 
     it('onSelect 与 onDeselect 的 value 是选项的原始 value，onChangeWithObject 时也不是对象', () => {
-        type RawValue = string | number | undefined;
-        expectTypeOf<Parameters<NonNullable<SelectProps<string, true>['onSelect']>>[0]>().toEqualTypeOf<RawValue>();
-        expectTypeOf<Parameters<NonNullable<SelectProps<string, true>['onDeselect']>>[0]>().toEqualTypeOf<RawValue>();
-        expectTypeOf<Parameters<NonNullable<SelectProps<Item, true>['onSelect']>>[0]>().toEqualTypeOf<RawValue>();
-        expectTypeOf<Parameters<NonNullable<SelectProps<Item, true>['onDeselect']>>[0]>().toEqualTypeOf<RawValue>();
-        expectTypeOf<Parameters<NonNullable<SelectProps<Item>['onSelect']>>[0]>().not.toExtend<Item>();
+        expectTypeOf<Parameters<NonNullable<SelectProps<string, true>['onSelect']>>[0]>().toEqualTypeOf<string>();
+        expectTypeOf<Parameters<NonNullable<SelectProps<string, true>['onDeselect']>>[0]>().toEqualTypeOf<string>();
+        expectTypeOf<Parameters<NonNullable<SelectProps<string, true, true>['onSelect']>>[0]>().toEqualTypeOf<string>();
+        expectTypeOf<Parameters<NonNullable<SelectProps<string, true, true>['onDeselect']>>[0]>().toEqualTypeOf<string>();
     });
 
     it('onSearch 的 event 可选，覆盖输入、按键、点击与点击外部', () => {
@@ -4008,14 +4021,25 @@ describe('Select 类型', () => {
         expect(messages.some((message) => message.includes('OptionGroup'))).toBe(false);
     });
 
-    it('JSX 中由 multiple 与 value 推断 onChange 的参数', () => {
+    it('JSX 中由 optionList、multiple 与 onChangeWithObject 推断 onChange 的参数', () => {
         const flag = Math.random() > 0.5;
+        const state = String(flag);
+        const options = [
+            { value: 'a', label: 'A' },
+            { value: 'b', label: 'B' },
+        ];
         // the elements are only created, never rendered, so the callbacks never run
-        const single = <Select value="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | undefined>()} />;
-        const multiple = <Select multiple value={['a']} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string[]>()} />;
-        const singleObject = <Select value={{ value: 'a', label: 'A' }} onChange={(v) => expectTypeOf(v).toEqualTypeOf<Item | undefined>()} onChangeWithObject />;
-        const multipleObject = <Select multiple value={[{ value: 'a', label: 'A' }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<Item[]>()} onChangeWithObject />;
-        const dynamic = <Select multiple={flag} value={['a']} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | string[] | undefined>()} />;
-        expect([single, multiple, singleObject, multipleObject, dynamic]).toHaveLength(5);
+        const single = <Select optionList={options} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | undefined>()} />;
+        const literal = <Select optionList={[{ value: 'a' }, { value: 'b' }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<'a' | 'b' | undefined>()} />;
+        const boolean = <Select optionList={[{ value: true }, { value: false }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<boolean | undefined>()} />;
+        const multiple = <Select multiple optionList={options} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string[]>()} />;
+        const singleObject = <Select optionList={options} onChange={(v) => expectTypeOf(v).toEqualTypeOf<OptionProps<string> | undefined>()} onChangeWithObject />;
+        const multipleObject = <Select multiple optionList={options} onChange={(v) => expectTypeOf(v).toEqualTypeOf<OptionProps<string>[]>()} onChangeWithObject />;
+        const dynamic = <Select multiple={flag} optionList={options} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | string[] | undefined>()} />;
+        // with children options V comes from value
+        const children = <Select value={state} onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | undefined>()} />;
+        // a state typed string fits literal options
+        const controlled = <Select value={state} optionList={[{ value: 'a' }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<'a' | undefined>()} />;
+        expect([single, literal, boolean, multiple, singleObject, multipleObject, dynamic, children, controlled]).toHaveLength(9);
     });
 });

@@ -1068,14 +1068,16 @@ Get the component instance of Select through `bind:this` and call the methods be
 
 <Framework only="vue">
 
-`Select` is a generic component with two generic parameters: `T`, the type of an option's value (the option object when `changeWithObject` is set), and `Multiple`, the type of the `multiple` prop. The payload of `change` and `update:modelValue` is `T | undefined` in single mode and `T[]` in multiple mode; when `multiple` is a `boolean` variable it is `T | T[] | undefined`. The payload of `select` and `deselect` is the option's raw value (`string | number`), whatever `T` is. Both parameters are usually inferred from `modelValue` and `multiple`; the global defaults cannot set `multiple`, because giving it a default would break that inference.
+`Select` is a generic component with three generic parameters: `V`, the type of an option's value (`string`, `number`, `boolean` or a literal union of them); `Multiple`, which follows `multiple`; and `WithObject`, which follows `changeWithObject`. The payload of `change` and `update:modelValue` is `V | undefined` in single mode and `V[]` in multiple mode, `V | V[] | undefined` when `multiple` is a `boolean` variable, and the option object `SelectOptionProps<V>` in place of `V` with `changeWithObject`. The payload of `select` and `deselect` is always the option's raw value `V`.
+
+`V` is inferred from `optionList` first: inline options give a literal union, a list stored in a variable gives a primitive such as `string`. With options in the default slot, `V` is inferred from `modelValue`. `modelValue` and `defaultValue` are checked against the primitive of `V`, so a ref typed `string` fits literal options. With `allowCreate`, created values are not among the options; store `optionList` in a variable so that `V` is inferred as `string`. The global defaults cannot set `multiple` or `changeWithObject`, because giving them a default would break the inference.
 
 ```vue
 <script setup lang="ts">
     import { ref } from 'vue';
     import { Select } from '@fibrae/semi-ui-vue';
 
-    // T is inferred from modelValue: string
+    // V is inferred from modelValue: string
     const value = ref<string | undefined>();
     // In multiple mode, modelValue is string[]
     const values = ref<string[]>([]);
@@ -1097,12 +1099,32 @@ Get the component instance of Select through `bind:this` and call the methods be
 
 <Framework only="react">
 
-`Select` takes two generic parameters: `T`, the type of an option's value (the option object when `onChangeWithObject` is set), and `Multiple`, the type of the `multiple` prop. `onChange` receives `T | undefined` in single mode and `T[]` in multiple mode; when `multiple` is a `boolean` variable it receives `T | T[] | undefined`. `onSelect` and `onDeselect` receive the option's raw value (`string | number`), whatever `T` is. Both parameters are usually inferred from `value` and `multiple`; when you write `T` explicitly in multiple mode, write `Multiple` too.
+`Select` takes three generic parameters: `V`, the type of an option's value (`string`, `number`, `boolean` or a literal union of them); `Multiple`, which follows `multiple`; and `WithObject`, which follows `onChangeWithObject`. `onChange` receives `V | undefined` in single mode and `V[]` in multiple mode, `V | V[] | undefined` when `multiple` is a `boolean` variable, and the option object `OptionProps<V>` in place of `V` with `onChangeWithObject`. `onSelect` and `onDeselect` always receive the option's raw value `V`.
+
+`V` is inferred from `optionList` first: inline options give a literal union, a list stored in a variable gives a primitive such as `string`. With options as children, `V` is inferred from `value`, and a literal `value` makes `V` that literal. `value` and `defaultValue` are checked against the primitive of `V`, so a state typed `string` fits literal options. With `allowCreate`, created values are not among the options; write `<Select<string>>` explicitly. When you write `V` explicitly in multiple mode, write `Multiple` too.
 
 ```jsx
 import { Select } from '@fibrae/semi-ui-react';
 
-// T is inferred from value: string; value is string | undefined
+// Inline options: V is 'draft' | 'published'
+<Select
+    optionList={[
+        { label: 'Draft', value: 'draft' },
+        { label: 'Published', value: 'published' },
+    ]}
+    onChange={(value) => setStatus(value)}
+/>
+
+// Boolean options: V is boolean
+<Select
+    optionList={[
+        { label: 'Yes', value: true },
+        { label: 'No', value: false },
+    ]}
+    onChange={(value) => setEnabled(value)}
+/>
+
+// Options as children: V is inferred from value, string; value is string | undefined
 <Select
     value={selectedValue}
     onChange={(value) => setSelectedValue(value)}
@@ -1132,12 +1154,23 @@ import { Select } from '@fibrae/semi-ui-react';
 
 <Framework only="solid">
 
-`Select` takes two generic parameters: `T`, the type of an option's value (the option object when `onChangeWithObject` is set), and `Multiple`, the type of the `multiple` prop. `onChange` receives `T | undefined` in single mode and `T[]` in multiple mode; when `multiple` is a `boolean` variable it receives `T | T[] | undefined`. `onSelect` and `onDeselect` receive the option's raw value (`string | number`), whatever `T` is. Both parameters are usually inferred from `value` and `multiple`; when you write `T` explicitly in multiple mode, write `Multiple` too.
+`Select` takes three generic parameters: `V`, the type of an option's value (`string`, `number`, `boolean` or a literal union of them); `Multiple`, which follows `multiple`; and `WithObject`, which follows `onChangeWithObject`. `onChange` receives `V | undefined` in single mode and `V[]` in multiple mode, `V | V[] | undefined` when `multiple` is a `boolean` variable, and the option object `OptionProps<V>` in place of `V` with `onChangeWithObject`. `onSelect` and `onDeselect` always receive the option's raw value `V`.
+
+`V` is inferred from `optionList` first: inline options give a literal union, a list stored in a variable gives a primitive such as `string`. With options as children, `V` is inferred from `value`, and a literal `value` makes `V` that literal. `value` and `defaultValue` are checked against the primitive of `V`, so a state typed `string` fits literal options. With `allowCreate`, created values are not among the options; write `<Select<string>>` explicitly. When you write `V` explicitly in multiple mode, write `Multiple` too.
 
 ```jsx
 import { Select } from '@fibrae/semi-ui-solid';
 
-// T is inferred from value: string; value is string | undefined
+// Inline options: V is 'draft' | 'published'
+<Select
+    optionList={[
+        { label: 'Draft', value: 'draft' },
+        { label: 'Published', value: 'published' },
+    ]}
+    onChange={(value) => setStatus(value)}
+/>
+
+// Options as children: V is inferred from value, string; value is string | undefined
 <Select value={selectedValue()} onChange={(value) => setSelectedValue(value)}>
     <Select.Option value="option1">Option 1</Select.Option>
     <Select.Option value="option2">Option 2</Select.Option>

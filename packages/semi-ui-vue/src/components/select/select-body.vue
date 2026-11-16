@@ -1,11 +1,11 @@
-<script setup lang="ts" generic="T = BasicSelectValue, Multiple extends boolean | undefined = undefined">
+<script setup lang="ts">
     import { computed, isRef, mergeProps, shallowRef, useAttrs, useId, useTemplateRef, watch, type ShallowRef, type StyleValue } from 'vue';
     import { isEqualWith, omit } from 'es-toolkit';
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
     import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
-    import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
+    import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord, type SelectRawValue } from '@fibrae/semi-foundation/components/select/option-foundation';
     import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { getOptionId, isTextEditor, joinIds, toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/select/select.scss';
@@ -25,7 +25,7 @@
     import Tag, { TagGroup, type TagCloseEvent } from '../tag';
     import { TypographyText } from '../typography';
     import { provideOptionPrefixContext } from './context';
-    import type { BasicSelectValue, SelectChangeValue, SelectCreateItemSlotProps, SelectEmits, SelectHandle, SelectOptionItemSlotProps, SelectOptionProps, SelectProps, SelectSelectedItemSlotProps, SelectSlots, SelectTriggerSlotProps } from './interface';
+    import type { SelectChangeValue, SelectCreateItemSlotProps, SelectEmits, SelectHandle, SelectOptionItemSlotProps, SelectOptionProps, SelectProps, SelectSelectedItemSlotProps, SelectSlots, SelectTriggerSlotProps } from './interface';
     import SelectOptGroup from './option-group.vue';
     import SelectOption from './option.vue';
     import { slotsByValue, type GroupRecord, type OptionRecord } from './utils';
@@ -61,8 +61,9 @@
 
     // Only select.vue renders this component and passes every prop already resolved, so none is absent: no Boolean
     // casting applies, and Required restores the narrowing its defaults give
-    const props = defineProps<SelectProps<T, Multiple> & Required<Pick<SelectProps<T, Multiple>, DefaultedKey>> & { optionRecords: OptionRecord[] } & /* @vue-ignore */ ElementProps<'div', keyof SelectProps<T, Multiple> | EmitHandlers<SelectEmits<T, Multiple>>>>();
-    const emit = defineEmits<SelectEmits<T, Multiple>>();
+    // The implementation handles every option value alike; select.vue's generics only type what callers see
+    const props = defineProps<SelectProps<SelectRawValue, boolean, boolean> & Required<Pick<SelectProps<SelectRawValue, boolean, boolean>, DefaultedKey>> & { optionRecords: OptionRecord[] } & /* @vue-ignore */ ElementProps<'div', keyof SelectProps | EmitHandlers<SelectEmits>>>();
+    const emit = defineEmits<SelectEmits<SelectRawValue, boolean, boolean>>();
     const slots = defineSlots<SelectSlots>();
     const attrs = useAttrs();
 
@@ -100,7 +101,7 @@
             notifyDeselect: (value, option) => emit('deselect', value!, option as SelectOptionProps),
             getOptionsFromChildren: () => props.optionRecords as BaseOptionRecord[],
             notifyChange: (value) => {
-                const payload = value as SelectChangeValue<T, Multiple>;
+                const payload = value as SelectChangeValue<SelectRawValue, boolean, boolean>;
                 emit('update:modelValue', payload);
                 emit('change', payload);
             },
@@ -494,7 +495,7 @@
                     >
                         <template v-if="selectedItems.length">
                             <template v-if="tagFold.expanded">
-                                <template v-for="(item, index) in selectedItems" :key="item.value">
+                                <template v-for="(item, index) in selectedItems" :key="`${item.value}`">
                                     <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
                                     <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
                                         <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
@@ -514,7 +515,7 @@
                                         </Tag>
                                     </template>
                                     <template #overflow="{ items }">
-                                        <template v-for="item in items.slice(0, 1)" :key="item.value">
+                                        <template v-for="item in items.slice(0, 1)" :key="`${item.value}`">
                                             <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, collapsedTags().indexOf(item))" />
                                             <Tag v-else :closable="!selectedItemProps(item, 0).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
                                                 <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, collapsedTags().indexOf(item))" />
@@ -540,7 +541,7 @@
                                     <Tag :class="`${prefix}-content-wrapper-collapse-tag`" :closable="false" color="grey" :size="tagSize()" :style="{ marginRight: 0, flexShrink: 0 }">+{{ state.overflowItemCount }}</Tag>
                                     <template #content>
                                         <Space :spacing="2" :style="{ maxWidth: '400px' }" wrap>
-                                            <template v-for="(item, index) in selectedItems.slice(selectedItems.length - state.overflowItemCount)" :key="item.value">
+                                            <template v-for="(item, index) in selectedItems.slice(selectedItems.length - state.overflowItemCount)" :key="`${item.value}`">
                                                 <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
                                                 <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
                                                     <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
@@ -559,11 +560,11 @@
                                 :restCount="tagFold.restCount"
                                 :showPopover="props.showRestTagsPopover"
                                 :size="tagSize()"
-                                :tagList="groupTags().map((item) => ({ tagKey: item.value }))"
+                                :tagList="groupTags().map((item) => ({ tagKey: item.value === undefined ? undefined : `${item.value}` }))"
                                 @plusNMouseEnter="foundation.updateIsFullTags"
                             >
                                 <template #tag="{ index }">
-                                    <template v-for="item in [selectedItems[index]]" :key="item.value">
+                                    <template v-for="item in [selectedItems[index]]" :key="`${item.value}`">
                                         <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
                                         <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :tabindex="-1" @close="removeTag(item, $event)">
                                             <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />

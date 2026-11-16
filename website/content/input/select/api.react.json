@@ -143,8 +143,8 @@
                 "en-US": "Callback when the Select loses focus. When a click outside closes the open dropdown, the argument is that mousedown's native event."
             },
             "onChange": {
-                "zh-CN": "值变化时的回调。单选时入参为 `T | undefined`，多选时为 `T[]`；`onChangeWithObject` 为 `true` 时入参为选项对象。",
-                "en-US": "Callback when the value changes. The argument is `T | undefined` in single mode and `T[]` in multiple mode, or the option object when `onChangeWithObject` is `true`."
+                "zh-CN": "值变化时的回调。单选时入参为 `V | undefined`，多选时为 `V[]`；`onChangeWithObject` 为 `true` 时入参为选项对象 `OptionProps<V>`。",
+                "en-US": "Callback when the value changes. The argument is `V | undefined` in single mode and `V[]` in multiple mode, or the option object `OptionProps<V>` when `onChangeWithObject` is `true`."
             },
             "onChangeWithObject": {
                 "zh-CN": "是否将选项的其他属性随 `onChange` 回传。设为 `true` 后，`onChange` 的入参为 `{ value, label, ...rest }` 形式的对象，`value` 与 `defaultValue` 也应为带有 `value`、`label` 键的对象。",
@@ -195,8 +195,8 @@
                 "en-US": "Callback when an option is selected. The first argument is always the original option value, even with `onChangeWithObject`, and the second is the option object."
             },
             "optionList": {
-                "zh-CN": "以数组形式传入选项，每个对象须包含 `value` 与 `label`，其他属性也会随选项回传。",
-                "en-US": "Options as an array. Each item needs `value` and `label`; its other properties are passed back with the option."
+                "zh-CN": "以数组形式传入选项，每个对象须包含 `value` 与 `label`，其他属性也会随选项回传。`value` 可以是字符串、数字或布尔值，泛型参数 `V` 由它推断。",
+                "en-US": "Options as an array. Each item needs `value` and `label`; its other properties are passed back with the option. `value` is a string, number or boolean, and the generic parameter `V` is inferred from it."
             },
             "outerBottomSlot": {
                 "zh-CN": "渲染在下拉弹出层底部、与选项列表平级的自定义内容，无论选项列表是否滚动都会展示。",

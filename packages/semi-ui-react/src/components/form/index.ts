@@ -9,7 +9,7 @@ export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDa
 export { default as SchemaField } from './schema-form/schema-field';
 export { default as SchemaForm } from './schema-form/schema-form';
 export { semiRenderers } from './schema-form/semi-renderers';
-export { blankRow } from '@fibrae/semi-foundation/components/form/json-schema';
+export { blankRow, controlProps, singleItemName } from '@fibrae/semi-foundation/components/form/json-schema';
 
 export { useFormApi, useFormState, useFieldApi, useFieldState, useForm } from './hooks';
 
