@@ -4,7 +4,8 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, Cascader } from '@fibrae/semi-ui-react';
-import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
+import { sleep } from '@test/utils/react';
 import type { CascaderData, CascaderProps, Value } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-cascader`;
@@ -167,7 +168,7 @@ describe('cascader', () => {
         await tabTo(trigger);
         const button = screen.getByRole('button', { name: '清空已选值' });
         expect(button).toBeVisible();
-        await userEvent.keyboard('{Tab}');
+        await tab();
         expect(button).toHaveFocus();
         expectThemeFocusRing(button);
         await userEvent.keyboard('{Enter}');
@@ -525,7 +526,7 @@ describe('cascader', () => {
         const option = () => document.getElementById(input.getAttribute('aria-activedescendant'));
         await waitFor(() => expect(option()).toMatchTextContent('区 99'));
         expect(option().getBoundingClientRect().bottom).toBeLessThanOrEqual(listbox.getBoundingClientRect().bottom);
-        await userEvent.keyboard('{Tab}');
+        await tab();
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
         await waitFor(() => expect(listbox).not.toBeInTheDocument());
     });
@@ -601,9 +602,9 @@ describe.each([
     };
     const getClear = () => document.querySelector(`.${prefixCls}-clearbtn`);
     const tabToClearAndBack = async () => {
-        await userEvent.keyboard('{Tab}');
+        await tab();
         expect(getClear()).toHaveFocus();
-        await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+        await tab({ shift: true });
         expect(screen.getByRole('combobox')).toHaveFocus();
     };
 
@@ -753,5 +754,40 @@ describe('Cascader 前缀', () => {
         });
         expect(sizes).toHaveLength(2);
         expect(sizes[1]).toEqual(sizes[0]);
+    });
+});
+
+describe('Cascader 悬停展开的指针宽限', () => {
+    const aimTree = [
+        { label: '北方', value: 'north', children: ['北一', '北二', '北三', '北四'].map((label) => ({ label, value: label })) },
+        { label: '南方', value: 'south', children: [{ label: '南一', value: 'south-1' }] },
+    ];
+    const shown = (label: string) => getPopover()?.textContent.includes(label);
+
+    const openNorth = async () => {
+        render(<Cascader style={{ width: 300 }} motion={false} showNext="hover" treeData={aimTree} />);
+        await userEvent.click(getTrigger());
+        await userEvent.hover(await getOption('北方'));
+        await waitFor(() => expect(shown('北一')).toBe(true));
+        const south = await getOption('南方');
+        const { width, height } = south.getBoundingClientRect();
+        await userEvent.hover(south, { position: { x: width / 2, y: height / 2 } });
+    };
+
+    it('指针斜着穿过同列选项进入已展开的下一列时，下一列保持不变', async () => {
+        await openNorth();
+        // within the 300ms grace
+        await sleep(150);
+        await userEvent.hover(await getOption('北三'));
+        // nothing should switch: past the grace
+        await sleep(350);
+        expect(shown('北一')).toBe(true);
+        expect(shown('南一')).toBe(false);
+    });
+
+    it('指针停在同列选项上超过宽限期时，切换到该选项的下一列', async () => {
+        await openNorth();
+        await waitFor(() => expect(shown('南一')).toBe(true));
+        expect(shown('北一')).toBe(false);
     });
 });

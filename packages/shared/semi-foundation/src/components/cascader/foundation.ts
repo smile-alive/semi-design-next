@@ -1,12 +1,11 @@
 import { isEqual } from 'es-toolkit';
 import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { getListTargetIndex, isBrowserChord, isInnerControlActivation, isTextEditor, Typeahead, isEnterPress, isObject, ESC_KEY, trackPointerGrace, type GracePoint, type Size } from '../../utils/index';
 import { calcCheckedStatus, calcRelatedCheckedKeys } from '../tree/shared';
 import { findAncestorKeys, calcCheckedKeys, calcDisabledKeys, normalizeKeyList, normalizedArr } from '../tree/tree-util';
 import { strings } from './constants';
 import { type KeyMapProps, filter, getColumns, convertDataToEntities, calcMergeType, getKeyByValuePath, getKeysByValuePath, getKeyByPos, getValueOrKey } from './util';
-
 export type { KeyMapProps };
-import { getListTargetIndex, isBrowserChord, isInnerControlActivation, isTextEditor, Typeahead, isEnterPress, isObject, ESC_KEY, type Size } from '../../utils/index';
 
 export interface BasicData {
     data: BasicCascaderData;
@@ -197,6 +196,8 @@ export interface CascaderAdapter<E = unknown, LE = unknown> extends DefaultAdapt
     notifyOnExceed: (data: BasicEntity[]) => void;
     /** `index` is the option's place in its column or in the search results */
     scrollToOption: (key: string, index: number) => void;
+    /** Viewport rect of the option column at `index`, 0 for the top level; null while it is not rendered */
+    getColumnRect: (index: number) => DOMRect | null;
 }
 
 // Render and foundation derive the same multiple-mode values; entries are never mutated, so instances sharing a
@@ -227,6 +228,9 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     static readonly #missingEntities = new WeakSet<BasicEntity>();
     // whether onBlur is owed for the focus now inside the component
     #blurPending = false;
+    // the pointer grace toward the open next column (utils/pointer-grace), and the option of the column it left that
+    // was hovered last, with its element
+    #hoverGrace: { level: number; cancel: () => void; pending: { item: BasicEntity; element: Element | null } } | null = null;
     readonly #typeahead = new Typeahead();
     // by content: an inline treeData or value is a new array on every parent render, and each change resets the search
     static override readonly propKeys = ['treeData', 'keyMaps', 'value'] as const satisfies readonly (keyof BasicCascaderProps)[];
@@ -584,6 +588,41 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 this.focus();
             }
         });
+    }
+
+    /**
+     * An option hovered while another option of its column has the next column open: a pointer heading for that column
+     * switches nothing, and the option hovered last switches once the grace fails with the pointer still on it.
+     * Returns whether a grace started.
+     */
+    #startHoverGrace(exit: GracePoint, pending: { item: BasicEntity; element: Element | null }) {
+        const { level, key } = pending.item;
+        const active = [...this.getState('activeKeys')][level];
+        const column = active && active !== key ? this.adapter.getColumnRect(level + 1) : null;
+        if (!column || typeof exit.x !== 'number') {
+            return false;
+        }
+        const from = { left: exit.x, right: exit.x, top: exit.y, bottom: exit.y };
+        const cancel = trackPointerGrace(exit, from, column, (reached, last) => this.#finishHoverGrace(reached, last));
+        if (!cancel) {
+            return false;
+        }
+        this.#hoverGrace = { level, cancel, pending };
+        return true;
+    }
+
+    #finishHoverGrace(reached: boolean, last: GracePoint) {
+        const { item, element } = this.#hoverGrace.pending;
+        this.#hoverGrace = null;
+        const rect = element?.isConnected ? element.getBoundingClientRect() : null;
+        if (!reached && rect && this.getState('isOpen') && last.x >= rect.left && last.x <= rect.right && last.y >= rect.top && last.y <= rect.bottom) {
+            this.#handleShowNextByHover(item);
+        }
+    }
+
+    #cancelHoverGrace() {
+        this.#hoverGrace?.cancel();
+        this.#hoverGrace = null;
     }
 
     #handleShowNextByHover(item: BasicEntity) {
@@ -1013,6 +1052,10 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return path;
     }
 
+    override destroy() {
+        this.#cancelHoverGrace();
+    }
+
     override getStates(): BasicCascaderInnerData {
         const state = super.getStates();
         if (!this.getProp('multiple')) {
@@ -1209,15 +1252,26 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         if (isDisabled) {
             return;
         }
+        this.#cancelHoverGrace();
         this.#handleSingleSelect(e, item);
     };
 
-    handleItemHover = (_e: unknown, item: BasicEntity) => {
+    /** `e` is the option's mouseenter; its element is read while the event is dispatched */
+    handleItemHover = (e: Pick<MouseEvent, 'clientX' | 'clientY' | 'currentTarget'>, item: BasicEntity) => {
         const isDisabled = this.#isDisabled();
         if (isDisabled) {
             return;
         }
-        this.#handleShowNextByHover(item);
+        const pending = { item, element: e.currentTarget instanceof Element ? e.currentTarget : null };
+        if (this.#hoverGrace?.level === item.level) {
+            this.#hoverGrace.pending = pending;
+            return;
+        }
+        // an option of another column: the pointer reached the next column or went back
+        this.#cancelHoverGrace();
+        if (!this.#startHoverGrace({ x: e.clientX, y: e.clientY }, pending)) {
+            this.#handleShowNextByHover(item);
+        }
     };
 
     onItemCheckboxClick = (item: BasicEntity | BasicData) => {

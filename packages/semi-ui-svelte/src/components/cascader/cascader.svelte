@@ -248,6 +248,7 @@
                     contentEl?.querySelector(`#${CSS.escape(optionId(key))}`)?.scrollIntoView({ block: 'nearest' });
                 }
             },
+            getColumnRect: (index) => contentEl?.querySelectorAll(`.${cssClasses.PREFIX_OPTION}-list`)[index]?.getBoundingClientRect() ?? null,
         })
     );
 

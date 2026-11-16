@@ -88,7 +88,7 @@ export function ssrTestFiles(id: string) {
 }
 
 // Components with a fallback path for browsers below the latest Chrome (D15); on Firefox and Safari that path is the main one
-const compatComponents = '{audio-player,checkbox,collapsible,dropdown,input,json-viewer,modal,navigation,notification,popconfirm,popover,scroll-list,select,side-sheet,slider,table,tabs,tag-input,toast,tooltip,video-player}';
+const compatComponents = '{audio-player,cascader,checkbox,collapsible,dropdown,input,json-viewer,modal,navigation,notification,popconfirm,popover,scroll-list,select,side-sheet,slider,table,tabs,tag-input,toast,tooltip,video-player}';
 
 /** Firefox and WebKit copies of a framework's browser project, limited to the components above; a factory, since plugin instances keep per-project state */
 export function compatBrowserProjects(id: string, browserProject: () => TestProjectInlineConfiguration): TestProjectInlineConfiguration[] {

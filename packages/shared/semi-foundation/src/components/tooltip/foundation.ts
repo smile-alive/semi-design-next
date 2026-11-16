@@ -1,6 +1,6 @@
 import type { FocusableElement } from 'tabbable';
 import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, PopupLifecycle, ReleaseHolder } from '../../base/index';
-import { isEventInside, openLayer, popupTriggerSelector, type ArrayElement, warning } from '../../utils/index';
+import { isEventInside, openLayer, popupTriggerSelector, trackPointerGrace, type ArrayElement, warning } from '../../utils/index';
 import { adjustPosition } from './adjust-position';
 import { numbers, strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
 
@@ -117,6 +117,10 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     // the first does not flash open only to be closed by the second.
     static #exclusiveOpen = new Set<Tooltip<any>>();
     static #exclusiveWaiting = new Set<Tooltip<any>>();
+    // One pointer, so one pointer grace at a time (utils/pointer-grace): the open hover popup the pointer heads for
+    // after leaving its trigger, and the unrelated hover triggers entered on the way, which open if it fails while the
+    // pointer still rests on them. This replaces Radix's re-activation on pointermove: mouseenter fires only once.
+    static #grace: { owner: Tooltip<any>; cancel: () => void; pending: Set<Tooltip<any>> } | null = null;
     #timer: ReturnType<typeof setTimeout>;
     #mounted: boolean;
     #isClickToHide = false;
@@ -191,6 +195,22 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         const viewport = readViewport();
         const layouts = batch.map((tooltip) => tooltip.#measure(viewport));
         batch.forEach((tooltip, i) => tooltip.#apply(layouts[i]));
+    }
+
+    /** Ends the running grace: a pointer that reached the popup leaves it open, otherwise the leave goes through */
+    static #finishGrace(reached: boolean) {
+        const grace = Tooltip.#grace;
+        if (!grace) {
+            return;
+        }
+        Tooltip.#grace = null;
+        grace.cancel();
+        if (!reached) {
+            grace.owner.delayHide();
+            for (const tooltip of grace.pending) {
+                tooltip.delayShow();
+            }
+        }
     }
 
     // The host answers the trigger and popup checks separately: a press in a portaled popup reaches its logical ancestors differently in each framework.
@@ -414,12 +434,15 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
             case 'hover':
                 triggerEventSet[eventNames.mouseEnter] = () => {
                     this.#isClickToHide = false;
-                    if (this.getProp('condition') !== false) {
+                    if (this.getProp('condition') !== false && !this.#deferToGrace()) {
                         this.delayShow();
                     }
                 };
-                triggerEventSet[eventNames.mouseLeave] = () => {
-                    this.delayHide();
+                triggerEventSet[eventNames.mouseLeave] = (event?: MouseEvent) => {
+                    Tooltip.#grace?.pending.delete(this);
+                    if (!this.#startGrace(event)) {
+                        this.delayHide();
+                    }
                 };
                 // a11y: also open on keyboard focus; a click or a script focusing the trigger after a pointer
                 // interaction is not focus-visible
@@ -437,7 +460,19 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
                     }
                 };
 
-                portalEventSet = { ...triggerEventSet };
+                portalEventSet = {
+                    ...triggerEventSet,
+                    // the popup's own enter and leave take no part in the pointer grace
+                    [eventNames.mouseEnter]: () => {
+                        this.#isClickToHide = false;
+                        if (this.getProp('condition') !== false) {
+                            this.delayShow();
+                        }
+                    },
+                    [eventNames.mouseLeave]: () => {
+                        this.delayHide();
+                    },
+                };
                 if (this.getProp('clickToHide')) {
                     portalEventSet[eventNames.click] = () => {
                         this.#isClickToHide = true;
@@ -526,10 +561,58 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         event.preventDefault();
     }
 
+    // every show, hide and destroy passes here, so none leaves this popup's grace running
     #clearDelayTimer() {
         clearTimeout(this.#timer);
         this.#timer = null;
         Tooltip.#exclusiveWaiting.delete(this);
+        this.#dropGrace(false);
+    }
+
+    /** Ends this popup's grace without hiding it; the triggers entered meanwhile open only if `resume` */
+    #dropGrace(resume: boolean) {
+        const grace = Tooltip.#grace;
+        if (grace?.owner !== this) {
+            return;
+        }
+        Tooltip.#grace = null;
+        grace.cancel();
+        if (resume) {
+            for (const tooltip of grace.pending) {
+                tooltip.delayShow();
+            }
+        }
+    }
+
+    /**
+     * On the trigger's mouseleave of an open, placed popup: a pointer heading for the popup keeps it open instead of
+     * starting the leave delay. Returns whether a grace started.
+     */
+    #startGrace(event?: MouseEvent) {
+        const popup = this.adapter.getPortalContainer();
+        const triggerRect = this.adapter.getTriggerRect();
+        // a touch tap elsewhere sends a compat mouseleave with no pointer to follow
+        if (!this.#open || !this.#applied || !popup || !triggerRect?.width || !triggerRect.height || typeof event?.clientX !== 'number' || !matchMedia('(hover: hover)').matches) {
+            return false;
+        }
+        Tooltip.#finishGrace(false);
+        const cancel = trackPointerGrace({ x: event.clientX, y: event.clientY }, triggerRect, popup.getBoundingClientRect(), (reached) => Tooltip.#finishGrace(reached));
+        if (!cancel) {
+            return false;
+        }
+        this.#clearDelayTimer();
+        Tooltip.#grace = { owner: this, cancel, pending: new Set() };
+        return true;
+    }
+
+    /** A closed hover trigger entered during an unrelated popup's grace waits for it; returns whether it waits */
+    #deferToGrace() {
+        const grace = Tooltip.#grace;
+        if (!grace || this.#open || grace.owner === this || this.#isNestedIn(grace.owner) || grace.owner.#isNestedIn(this)) {
+            return false;
+        }
+        grace.pending.add(this);
+        return true;
     }
 
     #isExclusive() {
@@ -931,6 +1014,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         this.#mounted = false;
         this.#requestedVisible = undefined;
         Tooltip.#exclusiveOpen.delete(this);
+        Tooltip.#grace?.pending.delete(this);
         this.#endTracking();
         this.#unwatchClickOutside();
         this.#clearDelayTimer();
@@ -1058,6 +1142,8 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     }
 
     hide = () => {
+        // closed by other means (Escape, a press, an owner) while the pointer rests on a waiting trigger
+        this.#dropGrace(true);
         if (this.#mounted && this.getState('isInsert') && this.#requestFromOwner(false)) {
             this.#clearDelayTimer();
             return;

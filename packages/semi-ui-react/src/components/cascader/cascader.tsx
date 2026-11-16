@@ -315,6 +315,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                         optionContainerEl.current?.querySelector(`#${CSS.escape(optionId(key))}`)?.scrollIntoView({ block: 'nearest' });
                     }
                 },
+                getColumnRect: (index) => optionContainerEl.current?.querySelectorAll(`.${cssClasses.PREFIX_OPTION}-list`)[index]?.getBoundingClientRect() ?? null,
             };
         }
     );

@@ -598,3 +598,85 @@ describe('Dropdown 键盘操作（浏览器）', () => {
         expect(button).toHaveAttribute('aria-expanded', 'false');
     });
 });
+
+function SiblingSubmenus() {
+    return (
+        <Dropdown
+            motion={false}
+            render={
+                <Dropdown.Menu>
+                    <Dropdown
+                        motion={false}
+                        position="rightTop"
+                        render={
+                            <Dropdown.Menu>
+                                <Dropdown.Item>First one</Dropdown.Item>
+                                <Dropdown.Item>First two</Dropdown.Item>
+                                <Dropdown.Item>First three</Dropdown.Item>
+                            </Dropdown.Menu>
+                        }
+                    >
+                        <Dropdown.Item>First</Dropdown.Item>
+                    </Dropdown>
+                    <Dropdown
+                        motion={false}
+                        position="rightTop"
+                        render={
+                            <Dropdown.Menu>
+                                <Dropdown.Item>Second one</Dropdown.Item>
+                            </Dropdown.Menu>
+                        }
+                    >
+                        <Dropdown.Item>Second</Dropdown.Item>
+                    </Dropdown>
+                </Dropdown.Menu>
+            }
+            trigger="click"
+        >
+            <button>aim</button>
+        </Dropdown>
+    );
+}
+
+describe('Dropdown 悬停子菜单的指针宽限（浏览器）', () => {
+    const submenuItem = (name: string) => screen.queryByText(`${name} one`, { selector: '[role="menuitem"]' });
+
+    const openFirst = async () => {
+        render(<SiblingSubmenus />);
+        await userEvent.click(screen.getByRole('button', { name: 'aim' }));
+        await userEvent.hover(item('First'));
+        await waitFor(() => expect(submenuItem('First')).not.toBeNull());
+        const second = item('Second');
+        await userEvent.hover(second, { position: { x: second.offsetWidth / 2, y: second.offsetHeight / 2 } });
+    };
+
+    it.each(['First one', 'First three'])('指针斜着穿过兄弟项进入已打开的子菜单（%s）时，子菜单保持打开，兄弟项的子菜单不打开', async (target) => {
+        await openFirst();
+        // past the sibling's 50ms enter delay and the 100ms leave delay, within the 300ms grace
+        await sleep(150);
+        await userEvent.hover(item(target));
+        // nothing should open or close: longer than both delays
+        await sleep(200);
+        expect(submenuItem('First')).not.toBeNull();
+        expect(submenuItem('Second')).toBeNull();
+    });
+
+    it('指针停在兄弟项上超过宽限期时，切换到兄弟项的子菜单', async () => {
+        await openFirst();
+        await waitFor(() => expect(submenuItem('Second')).not.toBeNull());
+        await waitFor(() => expect(submenuItem('First')).toBeNull());
+    });
+
+    it('指针从触发器直接移入子菜单、再退回父菜单的兄弟项时不建立宽限，按原有延迟切换', async () => {
+        render(<SiblingSubmenus />);
+        await userEvent.click(screen.getByRole('button', { name: 'aim' }));
+        await userEvent.hover(item('First'));
+        await waitFor(() => expect(submenuItem('First')).not.toBeNull());
+        await userEvent.hover(item('First one'));
+        await userEvent.hover(item('Second'));
+        // past the 50ms enter and 100ms leave delays, within the 300ms a grace would hold
+        await sleep(200);
+        expect(submenuItem('Second')).not.toBeNull();
+        expect(submenuItem('First')).toBeNull();
+    });
+});
