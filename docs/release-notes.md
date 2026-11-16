@@ -255,6 +255,8 @@
 - 行为变化：出场动画期间重新打开时，这次出场作废并立即调用一次 `afterClose`，每次显示都有自己的 `afterClose`（Modal、SideSheet 仍把它算作同一次显示）。在外部元素的 mousedown 处理中打开受控的 `trigger="custom"` 弹层时，同一次按下不再算点击外部。React、Solid 中 `trigger="custom"` 的弹层，在触发器内渲染的 Portal 里按下不算点击外部（Solid 只在 `onMouseDown` 经 `getTriggerProps` 传入时）。Popover 的箭头 svg 带 `aria-hidden="true"`。
 - 行为变化：Select、AutoComplete、Cascader、TreeSelect 与 AIChatDialogue 的「更多」菜单打开时的点击外部改由弹层判断。React、Vue、Svelte 的 mousedown 监听从 `document` 移到 `window`（Solid 原本就在 `window`），在 `document` 上被 `stopPropagation()` 拦下的按下不再关闭下拉；TreeSelect 聚焦但未打开时的失焦判断仍监听 `document`。
 - 行为变化：Select、TreeSelect、Cascader、AutoComplete 的下拉打开而焦点不在组件内时，按 Esc 也关闭下拉（原来 Esc 被弹层认领后没有任何反应）；Select 在 `loading` 时仍不响应。
+- 行为变化：hover、focus 触发的提示（`role="tooltip"`，含 hover 触发的 Popover）同一时间只显示一组：一个打开时关闭其他已打开的，几个在延迟内先后请求显示时只显示最后一个，嵌套在其触发器或弹层中的除外（参照 Radix Tooltip、React Aria）；Dropdown 等其他 role 的弹层不参与。hover 触发的弹层（含 Dropdown）只在触发器 `:focus-visible` 时随聚焦打开，点击或鼠标关闭 Modal 后由脚本还回的焦点不再打开。
+- React：指针从触发器直接移入紧挨着的 hover 弹层（含 Dropdown 菜单）时，弹层不再在 `mouseLeaveDelay` 后关闭（弹层的 React `onMouseEnter` 先于触发器的原生 `mouseleave` 执行）。
 - 行为变化：hover 触发的弹层在隐藏后重新显示时，若指针与焦点都已离开触发器与弹层则关闭；隐藏期间受控 `visible` 变为 false 或 `condition` 变为 false，重新显示时关闭。React 的 `<Activity>` 隐藏不再误发 `afterClose`；Svelte 无出场动画的关闭，`afterClose` 推迟一个微任务。
 - Vue：内容用 `#content="{ initialFocusRef }"`，触发器用默认插槽，可见性用 `visible`、`update:visible`、`visibleChange`；`class`、`style` 落在弹层，其他未声明属性丢弃；可访问名称键为 `ariaLabel`、`ariaLabelledby`，另有 `ariaDescribedby`（React、Solid 写作 `aria-describedby`）。
 - Solid：触发器写成函数 children `(getTriggerProps) => JSX`，把 `getTriggerProps(own)` 的结果展开到触发元素上；要与注入值合并的 `ref`、`tabIndex`、`aria-*`、`data-popupid` 作为 `own` 传入，写在展开之后会整体覆盖。退出描述写 `getTriggerProps({ 'aria-describedby': null })`，后代经 `useTooltipDescription()` 取弹层 id。

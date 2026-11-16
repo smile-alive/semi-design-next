@@ -145,6 +145,9 @@
         get returnFocusOnClose() {
             return returnFocusOnClose;
         },
+        get role() {
+            return role;
+        },
         get showArrow() {
             return showArrow;
         },

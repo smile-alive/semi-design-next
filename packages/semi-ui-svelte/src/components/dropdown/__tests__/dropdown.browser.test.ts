@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { tab } from '@test/utils/browser';
+import { tab, tabTo } from '@test/utils/browser';
 import DisabledButton from './disabled-button.svelte';
 import DropdownCase from './dropdown-case.svelte';
 import NestedCase from './nested-case.svelte';
@@ -76,7 +76,7 @@ describe('Svelte Dropdown 键盘操作（浏览器）', () => {
 
     it('hover 触发且延迟为 0 时，ArrowDown 把焦点从触发器移入菜单，Escape 关闭弹层并把焦点还给触发器，不重新打开', async () => {
         const { button } = setup({ trigger: 'hover' });
-        button().focus();
+        await tabTo(button());
         await waitFor(() => expect(button()).toHaveAttribute('aria-expanded', 'true'));
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(item('Alpha')).toHaveFocus());
@@ -299,7 +299,7 @@ describe('Svelte Dropdown 子菜单键盘操作（浏览器）', () => {
 
     it('通过聚焦触发器打开的悬停菜单，在焦点进入悬停子菜单期间保持打开', async () => {
         const { button } = setupNested({ outerTrigger: 'hover' });
-        button().focus();
+        await tabTo(button());
         await waitFor(() => expect(button()).toHaveAttribute('aria-expanded', 'true'));
         await userEvent.keyboard('{ArrowDown}');
         expect(item('Alpha')).toHaveFocus();

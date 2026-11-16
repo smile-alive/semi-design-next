@@ -82,6 +82,8 @@ export interface TooltipBaseProps {
     position?: Position;
     preventScroll?: boolean;
     returnFocusOnClose?: boolean;
+    /** The popup's role; undefined means the host's default, 'tooltip' */
+    role?: string;
     showArrow?: unknown;
     spacing?: number | { x: number; y: number };
     trigger?: ArrayElement<typeof strings.TRIGGER_SET>;
@@ -108,6 +110,13 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     static #tracking = new Set<Tooltip<any>>();
     static #pending = new Set<Tooltip<any>>();
     static #frame = 0;
+    // One hover or focus tooltip chain open at a time (Radix Tooltip, React Aria): focus handed back to one trigger
+    // while the pointer rests on another would otherwise show both. A tooltip nested in another's trigger or popup
+    // keeps that one open. Menus and dialogs built on this foundation keep their own nesting, so only role="tooltip"
+    // popups take part. A delayed show cancels the others still waiting, so when both requests land within the delay
+    // the first does not flash open only to be closed by the second.
+    static #exclusiveOpen = new Set<Tooltip<any>>();
+    static #exclusiveWaiting = new Set<Tooltip<any>>();
     #timer: ReturnType<typeof setTimeout>;
     #mounted: boolean;
     #isClickToHide = false;
@@ -412,10 +421,12 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
                 triggerEventSet[eventNames.mouseLeave] = () => {
                     this.delayHide();
                 };
-                // a11y: also open on keyboard focus
-                triggerEventSet[eventNames.focus] = () => {
+                // a11y: also open on keyboard focus; a click or a script focusing the trigger after a pointer
+                // interaction is not focus-visible
+                triggerEventSet[eventNames.focus] = (event?: FocusEvent) => {
                     const { disableFocusListener } = this.getProps();
-                    if (this.getProp('condition') !== false && !disableFocusListener) {
+                    const target = event?.target as Element | undefined;
+                    if (this.getProp('condition') !== false && !disableFocusListener && target?.matches?.(':focus-visible') !== false) {
                         this.delayShow();
                     }
                 };
@@ -518,6 +529,20 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     #clearDelayTimer() {
         clearTimeout(this.#timer);
         this.#timer = null;
+        Tooltip.#exclusiveWaiting.delete(this);
+    }
+
+    #isExclusive() {
+        const { trigger, role } = this.getProps();
+        return (trigger === 'hover' || trigger === 'focus') && (role ?? 'tooltip') === 'tooltip';
+    }
+
+    /** Whether this trigger sits in the other tooltip's trigger or popup, which then stays open */
+    #isNestedIn(other: Tooltip<any>) {
+        const node: Node | null = this.adapter.getTriggerElement() ?? this.adapter.getTriggerNode();
+        const container = other.adapter.getPortalContainer();
+        const otherTrigger = other.adapter.getTriggerElement() ?? other.adapter.getTriggerNode();
+        return Boolean(node && ((container && isInside(node, container)) || (otherTrigger && isInside(node, otherTrigger))));
     }
 
     /** Under a controlled `visible` that differs, a trigger only asks the owner (D-1); returns whether it asked */
@@ -905,6 +930,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
         this.#mounted = false;
         this.#requestedVisible = undefined;
+        Tooltip.#exclusiveOpen.delete(this);
         this.#endTracking();
         this.#unwatchClickOutside();
         this.#clearDelayTimer();
@@ -967,6 +993,15 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         this.#clearDelayTimer();
 
         if (mouseEnterDelay > 0) {
+            // an open popup calls this again to stay open while the pointer or focus is inside it
+            if (!this.#open && this.#isExclusive()) {
+                for (const other of Tooltip.#exclusiveWaiting) {
+                    if (!this.#isNestedIn(other) && !other.#isNestedIn(this)) {
+                        other.#clearDelayTimer();
+                    }
+                }
+                Tooltip.#exclusiveWaiting.add(this);
+            }
             this.#timer = setTimeout(() => {
                 this.show();
                 this.#clearDelayTimer();
@@ -990,6 +1025,14 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
         this.#lifecycle.show();
         this.#clearDelayTimer();
+        if (this.#isExclusive()) {
+            for (const other of Tooltip.#exclusiveOpen) {
+                if (!this.#isNestedIn(other)) {
+                    other.hide();
+                }
+            }
+            Tooltip.#exclusiveOpen.add(this);
+        }
         this.setState({ isInsert: true, transitionState: 'enter', visible: true, ...this.adapter.insertPortal() });
         this.#watchClickOutside();
     }
@@ -1021,6 +1064,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
         const wasOpen = this.#open;
         this.#open = false;
+        Tooltip.#exclusiveOpen.delete(this);
         this.#clearDelayTimer();
         if (!this.#mounted) {
             return;
