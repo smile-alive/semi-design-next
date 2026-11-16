@@ -1,5 +1,26 @@
 # @fibrae/semi-foundation
 
+## 0.9.0
+
+### Minor Changes
+
+- 82c9852: Select 的选项 value 支持布尔值，泛型改为按选项值推断（含破坏性类型变化）；Form 导出 `controlProps`、`singleItemName`。
+
+    - 破坏性（类型）：React、Vue、Solid 的 `Select`、`SelectProps`、`FormSelect`、`FormSelectProps` 的泛型改为 `<V, Multiple, WithObject>`。`V` 是选项 value 的类型（`string | number | boolean`），优先从 `optionList` 推断，内联选项推断为字面量联合；`WithObject` 跟随 `onChangeWithObject`（Vue 为 `changeWithObject`），对象模式下 `onChange` 收到 `OptionProps<V>`。原来的 `SelectProps<Item>` 改为 `SelectProps<string, undefined, true>`；删除 `BasicSelectValue`，新增导出 `SelectRawValue`、`SelectChangeValue`。
+    - 选项 value 可以是 `true`、`false`，`onChange`、`onSelect` 收到原始布尔值。
+    - Vue：`changeWithObject` 不再读全局默认值。
+    - Form：导出 `controlProps(node)`（`semiRenderers` 交给叶子控件的约束）与 `singleItemName(node, locale)`（单值数组行的名称），自写的 SchemaField 渲染器可以直接复用。
+
+### Patch Changes
+
+- 36ec5f1: Form 标签的 `tooltip` 问号图标调整：
+
+    - 与标签文字的中线对齐，不再低 2px；顶部与左侧标签位置都已修正，不带 tooltip 的标签间距不变。
+    - 默认尺寸由 16px 改为 14px，与标签文字同大。主题变量 `$width-form_label_tooltip-icon` 现在真正控制图标尺寸（默认值改为 `$font-size-regular`），此前被图标自身的默认尺寸覆盖。
+
+- 4f80c8f: Radio 传 `aria-invalid="false"` 时不再把 `aria-errormessage` 并进 `aria-describedby`。
+- @fibrae/semi-json-viewer-core@0.9.0
+
 ## 0.8.0
 
 ### Minor Changes
