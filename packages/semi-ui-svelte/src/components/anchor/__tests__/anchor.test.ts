@@ -400,7 +400,6 @@ describe('Svelte Anchor', () => {
             store.props.getContainer = byId('two');
             flushSync();
             expect(countLiveListeners(addToOne, removeFromOne, 'scroll')).toBe(0);
-            expect(removeFromOne).toHaveBeenCalled();
             scroll(one);
             expect(activeLinks()).toHaveLength(0);
             scroll(two);

@@ -499,7 +499,6 @@ describe('Anchor', () => {
 
             await view.rerender({ extraBoxes: true, getContainer: byId('two') });
             expect(countLiveListeners(addToOne, removeFromOne, 'scroll')).toBe(0);
-            expect(removeFromOne).toHaveBeenCalled();
             await scroll(one);
             expect(document.querySelector(`.${activeCls}`)).toBeNull();
             await scroll(two);

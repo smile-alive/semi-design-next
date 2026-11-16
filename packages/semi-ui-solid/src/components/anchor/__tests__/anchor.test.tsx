@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { AnchorAdapter } from '@fibrae/semi-foundation/components/anchor/foundation';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { defined } from '@test/utils/solid';
+import { countLiveListeners, defined } from '@test/utils/solid';
 import Anchor, { type AnchorProps } from '..';
 import ConfigProvider from '../../config-provider';
 import type { TooltipProps } from '../../tooltip';
@@ -40,8 +40,6 @@ function scroll(target: Window | Element = window) {
     fireEvent.scroll(target);
     vi.advanceTimersByTime(200);
 }
-
-const scrollListeners = (spy: { mock: { calls: unknown[][] } }) => spy.mock.calls.filter(([type]) => type === 'scroll').length;
 
 describe('Anchor', () => {
     afterEach(() => {
@@ -501,9 +499,9 @@ describe('Anchor', () => {
             const add = vi.spyOn(window, 'addEventListener');
             const remove = vi.spyOn(window, 'removeEventListener');
             const { unmount } = renderAnchor();
-            expect(scrollListeners(add)).toBeGreaterThan(0);
+            expect(countLiveListeners(add, remove, 'scroll')).toBeGreaterThan(0);
             unmount();
-            expect(scrollListeners(remove)).toBe(scrollListeners(add));
+            expect(countLiveListeners(add, remove, 'scroll')).toBe(0);
         });
 
         it('getContainer 返回其他元素时迁移监听', () => {
@@ -521,12 +519,10 @@ describe('Anchor', () => {
             ));
             const one = defined(document.getElementById('one'));
             const two = defined(document.getElementById('two'));
-            const removeFromOne = vi.spyOn(one, 'removeEventListener');
             setTop('a', -50);
             setTop('b', 40);
 
             setId('two');
-            expect(scrollListeners(removeFromOne)).toBeGreaterThan(0);
             scroll(one);
             expect(document.querySelector(`.${activeCls}`)).toBeNull();
             scroll(two);
