@@ -8,7 +8,8 @@ on:
     push:
         branches: [release]
 
-# Push runs queue instead of cancelling, so a deploy or release never stops halfway
+# A running push run is never cancelled, so a deploy or release never stops halfway; a newer push still replaces a
+# pending one, which is why gate diffs a push from the last passing run rather than from `before`
 concurrency:
     group: ci-${{ github.ref }}
     cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -21,6 +22,10 @@ jobs:
     gate:
         runs-on: ubuntu-latest
         timeout-minutes: 5
+        permissions:
+            contents: read
+            # `gh run list` finds the last passing push run
+            actions: read
         outputs:
             lint: ${{ steps.scope.outputs.lint }}
             build: ${{ steps.scope.outputs.build }}
@@ -34,14 +39,19 @@ jobs:
             - id: scope
               env:
                   GH_TOKEN: ${{ github.token }}
-                  BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+                  BASE: ${{ github.event.pull_request.base.sha }}
               run: |
                   all='react vue solid svelte common'
                   full() {
                       printf '%s\n' "lint=full" "build=true" "typecheck=full" "tests=$all" "changed=" >> "$GITHUB_OUTPUT"
                   }
-                  # A new branch has no `before`; after a force push `before` is no ancestor and the diff means nothing
-                  if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+                  # Diffing from `before` would skip a push whose pending run was replaced, and let a green run cover a
+                  # red one before it
+                  if [ "$GITHUB_EVENT_NAME" = push ]; then
+                      BASE=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "$GITHUB_WORKFLOW" --branch "$GITHUB_REF_NAME" --event push --status success --limit 1 --json headSha --jq '.[0].headSha // empty')
+                  fi
+                  # No passing run yet; after a force push the last passing commit is no ancestor and the diff means nothing
+                  if [ -z "$BASE" ]; then
                       full
                       exit 0
                   fi
