@@ -34,7 +34,7 @@ $color-form_label_optional-text-default: var(--semi-color-tertiary); // 表单�
 $color-form_label_extra-text-default: var(--semi-color-tertiary); // 表单项标签图标颜色
 $color-form_label_tooltip-icon-default: var(--semi-color-tertiary); // 表单项标签提示图标颜色
 $spacing-form_label_tooltip-marginLeft: $spacing-extra-tight; // 表单项标签与提示图标的间距
-$width-form_label_tooltip-icon: $width-icon-small; // 表单项标签提示图标大小
+$width-form_label_tooltip-icon: $font-size-regular; // 表单项标签提示图标大小，与标签文字同大
 $color-form_requiredMark-text-default: var(--semi-color-danger); // 必填标记颜色
 $font-form_requiredMark-fontWeight: $font-weight-bold; // 表单必填标识字重
 

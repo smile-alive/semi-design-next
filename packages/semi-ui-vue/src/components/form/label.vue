@@ -49,7 +49,7 @@
                 <slot name="tooltip">{{ props.tooltip }}</slot>
             </template>
             <button :aria-label="locale.locale.labelTooltip" :class="`${prefix}-tooltip`" type="button">
-                <IconHelpCircle />
+                <IconHelpCircle size="inherit" />
             </button>
         </Tooltip>
     </div>

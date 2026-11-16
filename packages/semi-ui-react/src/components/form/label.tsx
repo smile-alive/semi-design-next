@@ -81,7 +81,7 @@ function Label({ children, required = false, text, disabled, name, width, align 
             {labelElement}
             <Tooltip content={tooltip}>
                 <button type="button" className={`${prefixCls}-field-label-tooltip`} aria-label={locale.labelTooltip}>
-                    <IconHelpCircle />
+                    <IconHelpCircle size="inherit" />
                 </button>
             </Tooltip>
         </div>
