@@ -218,6 +218,7 @@
                     content.value?.querySelector(`#${CSS.escape(optionId(key))}`)?.scrollIntoView({ block: 'nearest' });
                 }
             },
+            getColumnRect: (index): DOMRect | null => content.value?.querySelectorAll(`.${cssClasses.PREFIX_OPTION}-list`)[index]?.getBoundingClientRect() ?? null,
         }),
         {
             props: {

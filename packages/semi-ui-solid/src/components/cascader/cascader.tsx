@@ -345,6 +345,7 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
                     optionContainer?.querySelector(`#${CSS.escape(optionId(key))}`)?.scrollIntoView({ block: 'nearest' });
                 }
             },
+            getColumnRect: (index) => optionContainer?.querySelectorAll(`.${cssClasses.PREFIX_OPTION}-list`)[index]?.getBoundingClientRect() ?? null,
         })
     );
 

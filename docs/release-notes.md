@@ -257,6 +257,7 @@
 - 行为变化：Select、TreeSelect、Cascader、AutoComplete 的下拉打开而焦点不在组件内时，按 Esc 也关闭下拉（原来 Esc 被弹层认领后没有任何反应）；Select 在 `loading` 时仍不响应。
 - 行为变化：hover、focus 触发的提示（`role="tooltip"`，含 hover 触发的 Popover）同一时间只显示一组：一个打开时关闭其他已打开的，几个在延迟内先后请求显示时只显示最后一个，嵌套在其触发器或弹层中的除外（参照 Radix Tooltip、React Aria）；Dropdown 等其他 role 的弹层不参与。hover 触发的弹层（含 Dropdown）只在触发器 `:focus-visible` 时随聚焦打开，点击或鼠标关闭 Modal 后由脚本还回的焦点不再打开。
 - React：指针从触发器直接移入紧挨着的 hover 弹层（含 Dropdown 菜单）时，弹层不再在 `mouseLeaveDelay` 后关闭（弹层的 React `onMouseEnter` 先于触发器的原生 `mouseleave` 执行）。
+- 行为变化：hover 触发的弹层（含 Popover、Dropdown 及其子菜单、Navigation 弹出的子菜单）有指针宽限：鼠标离开触发器后，只要朝弹层一侧移动、且在离开点与弹层近侧两角围成的三角区内，弹层就保持打开，途中经过的其他 hover 触发器也不打开，最长 300ms（参照 Radix Menu）。离开三角区、反向移动或超时后，照常按 `mouseLeaveDelay` 关闭，指针此时停留的触发器再按 `mouseEnterDelay` 打开。默认开启，没有开关；只在主指针可悬停（`(hover: hover)`）时生效，键盘焦点打开的弹层不受影响。
 - 行为变化：hover 触发的弹层在隐藏后重新显示时，若指针与焦点都已离开触发器与弹层则关闭；隐藏期间受控 `visible` 变为 false 或 `condition` 变为 false，重新显示时关闭。React 的 `<Activity>` 隐藏不再误发 `afterClose`；Svelte 无出场动画的关闭，`afterClose` 推迟一个微任务。
 - Vue：内容用 `#content="{ initialFocusRef }"`，触发器用默认插槽，可见性用 `visible`、`update:visible`、`visibleChange`；`class`、`style` 落在弹层，其他未声明属性丢弃；可访问名称键为 `ariaLabel`、`ariaLabelledby`，另有 `ariaDescribedby`（React、Solid 写作 `aria-describedby`）。
 - Solid：触发器写成函数 children `(getTriggerProps) => JSX`，把 `getTriggerProps(own)` 的结果展开到触发元素上；要与注入值合并的 `ref`、`tabIndex`、`aria-*`、`data-popupid` 作为 `own` 传入，写在展开之后会整体覆盖。退出描述写 `getTriggerProps({ 'aria-describedby': null })`，后代经 `useTooltipDescription()` 取弹层 id。
@@ -468,6 +469,7 @@
 - 破坏性：受控 `openKeys`、`selectedKeys` 为 `null` 按空数组处理；`mode="horizontal"` 忽略 `isCollapsed`、`defaultIsCollapsed`。React：Fragment 里的 Item、Sub 作为导航项渲染，不再套 `li.semi-navigation-list-extra`；`renderWrapper` 返回非 li 内容时需把 `itemElement` 放进返回值。
 - 破坏性（类型）：删除 Nav 的 `multiple`、`onDeselect` 与 Nav.Sub 的 `isCollapsed`、`isOpen`、`maxHeight`（原来声明而不生效）；Nav.Item、Nav.Sub 的 `indent` 收窄为 `boolean`。
 - 折叠或水平模式的弹层中，嵌套 Sub 的外层 li 为 `role="none"`，只有标题是 `menuitem`，不再两层 `menuitem` 嵌套。
+- 行为变化：折叠或水平模式下弹出的子菜单，鼠标斜着移向已打开的子菜单时，途经其他 Sub 不再关闭它或打开别的子菜单（指针宽限，见 Tooltip、Popover 一节）。
 - 展开侧边栏时文字的淡入改为 keyframes 动画 `semi-navigation-text-fade-in`，Firefox、Safari 上同样淡入。
 - Vue：受控值用 `v-model:selectedKeys`、`v-model:openKeys`、`v-model:isCollapsed`；`onClick`、`onSelect`、`onOpenChange`、`onCollapseChange` 改为 `click`、`select`、`openChange`、`collapseChange` 事件；`renderWrapper` 改为 `#wrapper`，`items` 中的节点与 header、footer 内容改为 `#icon`、`#text`、`#header`、`#footer` 等插槽；收集 itemKey 时只读直接子项与 Nav.Sub 的默认插槽，包装 Nav.Sub 的组件只算一项，其中的子项不参与默认选中的祖先展开（React 会）。
 - Solid：Nav.Item、Nav.Sub、Nav.Header、Nav.Footer 写在 Nav 外不渲染，包装它们的组件也算子项。`renderWrapper` 对每项只调用一次，`itemElement` 只能放在一处；`items` 换成新数组时所有项重新挂载，持有焦点的项失焦。
@@ -520,6 +522,7 @@
 ### Dropdown
 
 - 破坏性：删除 `contentClassName`、`wrapperClassName`，改用 `classNames`、`styles` 的 `content`（菜单容器）、`wrapper`（文本或多节点触发器外的 span）键。
+- 行为变化：hover 菜单与嵌套子菜单，鼠标斜着移向已打开的子菜单时，途经兄弟项不再关闭它或打开兄弟项的子菜单（指针宽限，见 Tooltip、Popover 一节）。
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`margin`、`rePosKey`；Dropdown.Divider 渲染为 `li role="separator"`，Dropdown.Title 为 `li role="presentation"`，Props 元素类型改为 `ElementProps<'li'>`；`menu` 数组项类型不再含 `children`；删除 `DropdownItemProps.selected`（用 `active`）与内部 `hover` 属性。
 - 受控 `visible` 时只上报请求：触发与内部关闭只发出 `onVisibleChange(true/false)`，使用方自行改变 `visible` 不上报，需由使用方回写才开合。`showTick` 时菜单项角色变为 `menuitemcheckbox`，按 `menuitem` 查询的测试需调整；新增 `selectionMode?: 'single' | 'multiple'`（`menuitemradio`、`menuitemcheckbox`）。
 - 键盘按 APG menu：Enter、空格触发菜单项，方向键循环，Home、End，右键开左键关子菜单，Esc 只关当前层，菜单内 Tab 关闭全部菜单。只有原生 button、带 href 的 a、Semi Button、Dropdown.Item 等交互元素作触发器才带 `aria-haspopup`、`aria-expanded`；菜单项上的 `onKeyPress` 不再收到 Enter，改用 `onKeyDown`。
@@ -607,6 +610,7 @@
 - 行为变化：`filterLeafOnly={false}` 时，受控单选在搜索结果中选中分支后保持选中，与非受控一致（原来受控的 `value` 回写分支路径时被清空）。
 - 行为变化：`topSlot`、`bottomSlot` 带输入框时，焦点在触发器上按 ArrowUp、ArrowDown 不再把焦点送进输入框，方向键只在选项里移动，四个框架一致（原来 Vue、Solid、Svelte 会送进去）。
 - 行为变化：焦点在 `topSlot`、`bottomSlot` 的输入框里时按 Esc，关闭下拉后焦点回到触发器（原来落到 `body`）；焦点在触发器上时不变。
+- 行为变化：`showNext="hover"` 时有指针宽限：鼠标从已展开的选项斜着移向下一列、途经同列其他选项时不切换；在其他选项上停留超过 300ms，或离开三角区、反向移动时，才切换到指针所在的选项（规则同 Tooltip、Popover 一节）。foundation 的 `handleItemHover(e, item)` 要求 `e` 带 `clientX`、`clientY`、`currentTarget`，`CascaderAdapter` 新增 `getColumnRect(index)`。
 - 破坏性（类型）：`Entity` 删除 `_notExist`。treeData 中没有的选中值仍以占位实体保存在 `keyEntities` 中，由 foundation 内部标记，`displayRender`、`onExceed` 收到的实体不再带该字段。
 - 选项角色由 `menuitem` 改为 `treeitem`（搜索结果为 `listbox` + `option`），按 `menuitem` 查询的测试需调整；键盘按 APG combobox，焦点留在触发器或搜索框，选项 id 不再是 `cascaderItem-${key}`。清除按钮改为带名称的原生 `button`；ref 改为 `CascaderHandle { open, close, focus, blur, search }`，`ref.focus()`、`ref.blur()` 真正移动 DOM 焦点。
 - Vue：`v-model` 受控；回调改为事件 `change`、`select`、`search`、`focus`、`blur`、`keydown`、`dropdownVisibleChange`、`clear`、`exceed`、`load`、`listScroll`，`focus`、`blur` 按上条语义触发，参数可能是 `FocusEvent`；`displayRender`、`filterRender`、`triggerRender` 改为 `#display`、`#tag`、`#filterItem`、`#trigger`，节点属性（`arrowIcon`、`clearIcon`、`prefix`、`suffix` 等）只用插槽；`multiple` 默认 `undefined`，不能经全局默认值设置；不提供 `Trigger` 组件。

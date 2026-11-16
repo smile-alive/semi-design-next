@@ -25,6 +25,7 @@ export * from './layer';
 export * from './media';
 export * from './object';
 export * from './pointer';
+export * from './pointer-grace';
 export * from './scroll-lock';
 export { default as shallowEqualObjects } from './shallow-equal-objects';
 export * from './supports';

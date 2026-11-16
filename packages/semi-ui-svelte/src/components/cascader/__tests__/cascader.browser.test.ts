@@ -3,9 +3,9 @@ import { render, screen, waitFor, within } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { clickOutside, tabTo } from '@test/utils/browser';
+import { clickOutside, tab, tabTo } from '@test/utils/browser';
 import { getElement } from '@test/utils/dom/common';
-import { defined } from '@test/utils/function';
+import { defined, sleep } from '@test/utils/function';
 import type { CascaderChangeValue, CascaderData, CascaderProps, CascaderValue } from '..';
 import CascaderCase from './cascader-case.svelte';
 
@@ -171,7 +171,7 @@ describe('Svelte Cascader 浏览器：虚拟搜索列表', () => {
             const option = () => defined(document.getElementById(input.getAttribute('aria-activedescendant') ?? ''));
             await waitFor(() => expect(option()).toHaveTextContent('城市 / 区 99'));
             expect(option().getBoundingClientRect().bottom).toBeLessThanOrEqual(listbox.getBoundingClientRect().bottom);
-            await userEvent.keyboard('{Tab}');
+            await tab();
             expect(after).toHaveFocus();
             await waitFor(() => expect(listbox).not.toBeInTheDocument());
         } finally {
@@ -291,9 +291,9 @@ describe.each([
     const getClear = () => document.querySelector('.semi-cascader-clearbtn');
 
     const tabToClearAndBack = async (combobox: HTMLElement) => {
-        await userEvent.keyboard('{Tab}');
+        await tab();
         expect(getClear()).toHaveFocus();
-        await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+        await tab({ shift: true });
         expect(combobox).toHaveFocus();
     };
 
@@ -317,9 +317,9 @@ describe.each([
             await userEvent.click(combobox);
             await waitFor(() => expect(screen.getByRole('tree')).toBeInTheDocument());
             const active = document.activeElement as HTMLElement;
-            await userEvent.keyboard('{Tab}');
+            await tab();
             expect(getClear()).toHaveFocus();
-            await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+            await tab({ shift: true });
             expect(document.activeElement).toBe(active);
             expect(screen.getByRole('tree')).toBeInTheDocument();
             expect(onFocus).toHaveBeenCalledTimes(1);
@@ -479,5 +479,40 @@ describe('Svelte Cascader 浏览器：focus 与 blur', () => {
         } finally {
             cleanup();
         }
+    });
+});
+
+describe('Svelte Cascader 悬停展开的指针宽限', () => {
+    const aimTree: CascaderData[] = [
+        { label: '北方', value: 'north', children: ['北一', '北二', '北三', '北四'].map((label) => ({ label, value: label })) },
+        { label: '南方', value: 'south', children: [{ label: '南一', value: 'south-1' }] },
+    ];
+    const shown = (label: string) => document.body.textContent.includes(label);
+    const getOption = (label: string) => defined(screen.getByText(label).closest<HTMLElement>('.semi-cascader-option'));
+
+    const openNorth = async () => {
+        const { combobox } = setup({ style: 'width: 300px', showNext: 'hover' }, { data: aimTree });
+        await userEvent.click(combobox);
+        await userEvent.hover(getOption('北方'));
+        await waitFor(() => expect(shown('北一')).toBe(true));
+        const south = getOption('南方');
+        await userEvent.hover(south, { position: { x: south.offsetWidth / 2, y: south.offsetHeight / 2 } });
+    };
+
+    it('指针斜着穿过同列选项进入已展开的下一列时，下一列保持不变', async () => {
+        await openNorth();
+        // within the 300ms grace
+        await sleep(150);
+        await userEvent.hover(getOption('北三'));
+        // nothing should switch: past the grace
+        await sleep(350);
+        expect(shown('北一')).toBe(true);
+        expect(shown('南一')).toBe(false);
+    });
+
+    it('指针停在同列选项上超过宽限期时，切换到该选项的下一列', async () => {
+        await openNorth();
+        await waitFor(() => expect(shown('南一')).toBe(true));
+        expect(shown('北一')).toBe(false);
     });
 });
