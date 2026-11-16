@@ -134,6 +134,24 @@ describe('Svelte Select 打开与选择', () => {
         expect(store.log).toEqual(['change {"value":"abc","label":"Abc"}']);
         expect(getSelectionText()).toBe('Abc');
     });
+
+    it('选项的 value 为布尔值', async () => {
+        const onChange = vi.fn<(value: SelectValue) => void>();
+        setup(
+            { onChange },
+            {
+                optionList: [
+                    { label: '是', value: true },
+                    { label: '否', value: false },
+                ],
+            }
+        );
+        await keyDown('ArrowDown');
+        await keyDown('ArrowDown');
+        await keyDown('Enter');
+        expect(onChange).toHaveBeenCalledWith(false);
+        expect(getSelectionText()).toBe('否');
+    });
 });
 
 describe('Svelte Select 受控值的四种写法', () => {
@@ -205,7 +223,7 @@ describe('Svelte Select 受控值的四种写法', () => {
 
 describe('Svelte Select 多选', () => {
     it('多选连续选择，列表保持打开，标签可关闭', async () => {
-        const onDeselect = vi.fn<(value: string | number, option: SelectOptionProps) => void>();
+        const onDeselect = vi.fn<(value: string | number | boolean, option: SelectOptionProps) => void>();
         const { store } = setup({ multiple: true, onDeselect }, { mode: 'bind', value: [] });
         await keyDown('ArrowDown');
         await keyDown('Enter');
@@ -519,7 +537,7 @@ describe('Svelte Select 分组与 optionLabel', () => {
     });
 
     it('回调里的选项不带内部的 _parentGroup，保留 group', async () => {
-        const onSelect = vi.fn<(value: string | number, option: SelectOptionProps) => void>();
+        const onSelect = vi.fn<(value: string | number | boolean, option: SelectOptionProps) => void>();
         setup({ onSelect }, { optionList: groupedList });
         await clickTrigger();
         await fireEvent.click(screen.getByRole('option', { name: 'Carrot' }));

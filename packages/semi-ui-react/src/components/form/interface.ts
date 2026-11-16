@@ -3,7 +3,7 @@ import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-neede
 import type { BaseFormApi as FormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldValidator, FormState, AllErrors, FieldPath, FieldValidateTriggerType, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { CheckboxProps } from '../checkbox/index';
 import type { RadioProps } from '../radio/index';
-import type { BasicSelectValue, SelectProps } from '../select/index';
+import type { SelectProps, SelectRawValue } from '../select/index';
 import type useForm from './hooks/use-form';
 import type { LabelProps } from './label';
 
@@ -79,7 +79,7 @@ export type FieldProps<P> = Omit<P & CommonFieldProps, keyof CommonexcludeType |
     ExclusiveFieldValidation &
     // the field injects `onChange`; a caller's own handler is still accepted
     { [K in Extract<keyof P, 'onChange'>]?: WithLatestValues<P[K]> } & React.RefAttributes<any>;
-export type FormSelectProps<T = BasicSelectValue, Multiple extends boolean | undefined = boolean> = FieldProps<SelectProps<T, Multiple>>;
+export type FormSelectProps<V extends SelectRawValue = string | number, Multiple extends boolean | undefined = boolean, WithObject extends boolean | undefined = boolean> = FieldProps<SelectProps<V, Multiple, WithObject>>;
 // A Checkbox or Radio without `field` is the bare control, as inside its group, so its handler gets only the event
 type OptionalLatestValues<F> = F extends (e: infer E) => infer R ? (e: E, padding?: undefined, latestValues?: Record<string, any>) => R : F;
 export type FormCheckboxProps = Omit<CommonFieldProps & CheckboxProps, keyof RadioCheckboxExcludeProps | 'onChange'> & RCIncludeType & ExclusiveFieldValidation & { onChange?: OptionalLatestValues<CheckboxProps['onChange']> };

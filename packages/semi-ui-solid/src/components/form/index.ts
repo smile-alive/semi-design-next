@@ -8,7 +8,7 @@ export { default as FormInputGroup } from './input-group';
 export { default as SchemaField } from './schema-form/schema-field';
 export { default as SchemaForm } from './schema-form/schema-form';
 export { semiRenderers } from './schema-form/semi-renderers';
-export { blankRow } from '@fibrae/semi-foundation/components/form/json-schema';
+export { blankRow, controlProps, singleItemName } from '@fibrae/semi-foundation/components/form/json-schema';
 export { default as withField } from './with-field';
 export { useFieldApi, useFieldState, useForm, useFormApi, useFormState } from './primitives';
 export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormPinCode, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTransfer, FormTreeSelect, FormUpload } from './field';

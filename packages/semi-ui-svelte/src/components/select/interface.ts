@@ -7,7 +7,7 @@ import type { PopoverProps } from '../popover/index.js';
 import type { TagCloseEvent } from '../tag/index.js';
 import type { Position } from '../tooltip/index.js';
 
-export type BasicSelectValue = string | number | Record<string, any>;
+export type BasicSelectValue = string | number | boolean | Record<string, any>;
 
 export type SelectValue = BasicSelectValue | BasicSelectValue[] | undefined;
 
@@ -26,7 +26,7 @@ export interface SelectOptionGroup {
 }
 
 export interface SelectOptionProps {
-    value?: string | number;
+    value?: string | number | boolean;
     label?: string | number;
     disabled?: boolean;
     showTick?: boolean;
@@ -44,7 +44,7 @@ export type SelectInputProps = Omit<InputProps, 'value'>;
 export interface SelectOptionItemSnippetProps {
     /** Put it on the role="option" element: the combobox's aria-activedescendant points at it */
     id: string;
-    value?: string | number;
+    value?: string | number | boolean;
     label?: string | number;
     selected: boolean;
     focused: boolean;
@@ -143,8 +143,8 @@ export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Native
     onDropdownVisibleChange?: (visible: boolean) => void;
     /** No event when called through `search()` or the trigger snippet's `onSearch` */
     onSearch?: (value: string, event?: Event) => void;
-    onSelect?: (value: string | number, option: SelectOptionProps) => void;
-    onDeselect?: (value: string | number, option: SelectOptionProps) => void;
+    onSelect?: (value: string | number | boolean, option: SelectOptionProps) => void;
+    onDeselect?: (value: string | number | boolean, option: SelectOptionProps) => void;
     onExceed?: (option: SelectOptionProps) => void;
     onCreate?: (option: SelectOptionProps) => void;
     onClear?: () => void;

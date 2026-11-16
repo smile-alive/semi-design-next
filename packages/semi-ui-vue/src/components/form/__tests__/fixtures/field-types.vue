@@ -3,7 +3,7 @@
     import { expectTypeOf } from 'vite-plus/test';
     import AutoComplete from '@fibrae/semi-ui-vue/auto-complete/index';
     import type { CascaderSimpleValue } from '@fibrae/semi-ui-vue/cascader/index';
-    import type { BasicSelectValue, SelectHandle } from '@fibrae/semi-ui-vue/select/index';
+    import type { SelectHandle } from '@fibrae/semi-ui-vue/select/index';
     import type { TreeNodeData } from '@fibrae/semi-ui-vue/tree/interface';
     import { FormAutoComplete, FormCascader, FormCheckbox, FormSelect, FormTreeSelect, FormUpload, withField } from '../..';
     import type { FieldHandle } from '../../interface';
@@ -23,7 +23,7 @@
         field="a"
         @change="
             (value, latest) => {
-                expectTypeOf(value).toEqualTypeOf<BasicSelectValue | undefined>();
+                expectTypeOf(value).toEqualTypeOf<string | number | undefined>();
                 expectTypeOf(latest).toEqualTypeOf<Record<string, any>>();
             }
         "
@@ -33,7 +33,8 @@
         </FormSelect.OptGroup>
         <template #prefix>p</template>
     </FormSelect>
-    <FormSelect field="a" multiple @change="expectTypeOf($event).toEqualTypeOf<BasicSelectValue[]>()" />
+    <FormSelect field="a" multiple @change="expectTypeOf($event).toEqualTypeOf<(string | number)[]>()" />
+    <FormSelect field="a" :optionList="[{ value: true }, { value: false }]" @change="expectTypeOf($event).toEqualTypeOf<boolean | undefined>()" />
     <!-- @vue-expect-error the Form owns the value -->
     <FormSelect v-model="text" field="a" />
     <!-- @vue-expect-error the Form owns the value -->

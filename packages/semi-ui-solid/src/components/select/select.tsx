@@ -5,7 +5,7 @@ import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
 import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { cssClasses, numbers, strings, type SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
-import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
+import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord, type SelectRawValue } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
 import { getOptionId, isTextEditor, joinIds, stopButtonActivationKeys, toCssLength, getDataAttr, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/select/select.scss';
@@ -32,25 +32,30 @@ import { type GroupRecord, type OptionRecord, readOptions, slotsByValue } from '
 
 const prefix = cssClasses.PREFIX;
 
-export type BasicSelectValue = string | number | Record<string, unknown>;
-
-type IsDefaultSelectGeneric<T> = [T] extends [BasicSelectValue] ? ([BasicSelectValue] extends [T] ? true : false) : false;
-
-/** Without a generic parameter: `string | number | unknown[] | Record | undefined`; with `T`: `T | T[] | undefined` */
-export type SelectValue<T = BasicSelectValue> = IsDefaultSelectGeneric<T> extends true ? BasicSelectValue | unknown[] | undefined : T | T[] | undefined;
+export type { SelectRawValue };
 
 type ByMultiple<Multiple, Single, Many> = Multiple extends unknown ? (true extends Multiple ? Many : Single) : never;
 
-export type SelectChangeValue<T, Multiple> = ByMultiple<Multiple, T | undefined, T[]>;
+type WidenRaw<V> = V extends string ? string : V extends number ? number : V extends boolean ? boolean : V;
+type Picked<V extends SelectRawValue, WithObject> = WithObject extends unknown ? (true extends WithObject ? OptionProps<V> : V) : never;
+
+/** What `onChange` receives: the option value, or the option with `onChangeWithObject`; an array with `multiple` */
+export type SelectChangeValue<V extends SelectRawValue, Multiple, WithObject> = ByMultiple<Multiple, Picked<V, WithObject> | undefined, Picked<V, WithObject>[]>;
+
+/**
+ * What `value` and `defaultValue` take. A literal V is widened to its primitive: V is inferred from an inline
+ * `optionList` as a literal union, and a state typed `string` must still fit options `'a' | 'b'`
+ */
+export type SelectValue<V extends SelectRawValue = string | number, Multiple = undefined, WithObject = undefined> = SelectChangeValue<WidenRaw<V>, Multiple, WithObject>;
 
 export type SelectSize = Size;
 
 /** What `renderOptionItem` receives; spread `id` on the role="option" element, which aria-activedescendant points at */
-export interface OptionRenderProps {
+export interface OptionRenderProps<V extends SelectRawValue = SelectRawValue> {
     [key: string]: unknown;
     id: string;
     label?: string | number;
-    value?: string | number;
+    value?: V;
     style?: JSX.CSSProperties | string;
     class: string;
     selected: boolean;
@@ -112,9 +117,10 @@ export interface SelectHandle {
 export type SelectElement = HTMLDivElement & SelectHandle;
 
 /**
- * `T` is the option value type, or the option object with `onChangeWithObject`; `Multiple` follows the `multiple` prop
+ * `V` is the option value type, inferred from `optionList`; `Multiple` follows `multiple`, `WithObject` follows
+ * `onChangeWithObject`
  */
-export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | undefined = undefined>
+export interface SelectProps<V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>
     extends ElementProps<'div', 'prefix' | 'placeholder' | 'defaultValue' | 'value' | 'onChange' | 'onSelect' | 'onFocus' | 'onBlur' | 'ref'>, Pick<TooltipProps, 'spacing' | 'motion' | 'autoAdjustOverflow' | 'stopPropagation'> {
     /** Accessible name of the combobox: the search input while it is in the trigger, otherwise the trigger */
     'aria-label'?: string;
@@ -125,12 +131,12 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     arrowIcon?: JSX.Element;
     borderless?: boolean;
     clearIcon?: JSX.Element;
-    defaultValue?: SelectValue<T>;
-    value?: SelectValue<T>;
+    defaultValue?: SelectValue<V, Multiple, WithObject>;
+    value?: SelectValue<V, Multiple, WithObject>;
     placeholder?: JSX.Element;
-    onChange?: (value: SelectChangeValue<T, Multiple>) => void;
+    onChange?: (value: SelectChangeValue<V, Multiple, WithObject>) => void;
     multiple?: Multiple;
-    filter?: boolean | ((inputValue: string, option: OptionProps) => boolean);
+    filter?: boolean | ((inputValue: string, option: OptionProps<V>) => boolean);
     max?: number;
     maxTagCount?: number;
     maxHeight?: string | number;
@@ -152,13 +158,13 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     innerTopSlot?: JSX.Element;
     outerBottomSlot?: JSX.Element;
     innerBottomSlot?: JSX.Element;
-    optionList?: OptionProps[];
+    optionList?: readonly OptionProps<V>[];
     dropdownMatchSelectWidth?: boolean;
     loading?: boolean;
     defaultOpen?: boolean;
     validateStatus?: ValidateStatus;
     defaultActiveFirstOption?: boolean;
-    onChangeWithObject?: boolean;
+    onChangeWithObject?: WithObject;
     suffix?: JSX.Element;
     searchPosition?: 'trigger' | 'dropdown';
     searchPlaceholder?: string;
@@ -171,13 +177,13 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     showArrow?: boolean;
     renderSelectedItem?: ByMultiple<Multiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>;
     renderCreateItem?: (inputValue: OptionProps['value'], focus: boolean, style?: JSX.CSSProperties) => JSX.Element;
-    renderOptionItem?: (props: OptionRenderProps) => JSX.Element;
+    renderOptionItem?: (props: OptionRenderProps<V>) => JSX.Element;
     clickToHide?: boolean;
-    onExceed?: (option: OptionProps) => void;
+    onExceed?: (option: OptionProps<V>) => void;
     onCreate?: (option: OptionProps) => void;
     remote?: boolean;
-    onDeselect?: (value: OptionProps['value'], option: OptionProps) => void;
-    onSelect?: (value: OptionProps['value'], option: OptionProps) => void;
+    onDeselect?: (value: V, option: OptionProps<V>) => void;
+    onSelect?: (value: V, option: OptionProps<V>) => void;
     allowCreate?: boolean;
     triggerRender?: (props: TriggerRenderProps) => JSX.Element;
     onClear?: () => void;
@@ -200,7 +206,7 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
 }
 
 // The body serves every `multiple` mode, so it reads the callbacks through one wide type
-interface SelectBodyProps extends Omit<SelectProps<unknown, boolean>, 'onChange' | 'renderSelectedItem'> {
+interface SelectBodyProps extends Omit<SelectProps<SelectRawValue, boolean, boolean>, 'onChange' | 'renderSelectedItem'> {
     onChange?: (value: unknown) => void;
     renderSelectedItem?: RenderSelectedItemFn;
 }
@@ -259,7 +265,7 @@ function renderCreate(render: RenderCreateItem, value: OptionProps['value'], foc
     return untrack(() => render(value, focus, style));
 }
 
-export default function Select<T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(rawProps: SelectProps<T, Multiple>) {
+export default function Select<V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(rawProps: SelectProps<V, Multiple, WithObject>) {
     return <InputGroupBoundary>{(inGroup) => <SelectControl {...(rawProps as SelectBodyProps)} inGroup={inGroup} />}</InputGroupBoundary>;
 }
 
@@ -397,10 +403,10 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             focusInput: () => triggerInput?.focus({ preventScroll: props.preventScroll }),
             focusDropdownInput: () => dropdownInput?.focus({ preventScroll: props.preventScroll }),
             notifyMaxLimit: (option) => props.onExceed?.(option as OptionProps),
-            notifyDeselect: (value, option) => props.onDeselect?.(value, option as OptionProps),
+            notifyDeselect: (value, option) => props.onDeselect?.(value as SelectRawValue, option as OptionProps),
             getOptionsFromChildren: () => records() as BaseOptionRecord[],
             notifyChange: (value) => props.onChange?.(value),
-            notifySelect: (value, option) => props.onSelect?.(value, option as OptionProps),
+            notifySelect: (value, option) => props.onSelect?.(value as SelectRawValue, option as OptionProps),
             notifyDropdownVisibleChange: (visible) => props.onDropdownVisibleChange?.(visible),
             notifySearch: (inputValue, event) => props.onSearch?.(inputValue, event),
             notifyCreate: (option) => props.onCreate?.(option as OptionProps),
@@ -794,7 +800,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     const groupTagList = () =>
         selectedItems()
             .slice(0, tagFold().shownCount)
-            .map((option) => ({ tagKey: option.value }));
+            .map((option) => ({ tagKey: `${option.value}` }));
 
     // the group list is a prefix of the selection, so a tag's index is its option's
     const renderGroupTag = (_tag: TagGroupItem, index: number) => <SelectedTag option={selectedItems()[index]} index={index} inTagGroup />;
@@ -811,7 +817,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         return (
             <div class={`${prefix}-content-wrapper-collapse`}>
                 <OverflowList
-                    itemKey={(item) => (item as OptionProps).value!}
+                    itemKey={(item) => `${(item as OptionProps).value}`}
                     items={items()}
                     overflowRenderer={(overflowItems: OverflowItem[]) => {
                         const first = overflowItems[0] as OptionProps | undefined;

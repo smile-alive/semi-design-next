@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RadioGroup, Select } from '@fibrae/semi-ui-react';
+import { RadioGroup, Select, type SelectOptionProps } from '@fibrae/semi-ui-react';
 
 interface Item {
     value: string;
@@ -38,7 +38,7 @@ const categoryOptions = [
 
 export default function SelectDemo() {
     const [key, setKey] = useState('component');
-    const [value, setValue] = useState<Item | undefined>({ value: 'faq', label: '常见问题' });
+    const [value, setValue] = useState<SelectOptionProps<string> | undefined>({ value: 'faq', label: '常见问题' });
 
     // The radio group switches with arrow keys, so categories need no tabpanel association
     const outerTopSlotNode = (

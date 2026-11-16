@@ -11,7 +11,7 @@ import PinCode from '../pincode/index';
 import { Radio } from '../radio/index';
 import RadioGroup from '../radio/radio-group';
 import Rating from '../rating/index';
-import type { BasicSelectValue } from '../select/index';
+import type { SelectRawValue } from '../select/index';
 import SelectOption from '../select/option';
 import SelectOptGroup from '../select/option-group';
 import Select from '../select/select';
@@ -32,7 +32,7 @@ export const FormInputNumber = /* @__PURE__ */ withField(InputNumber);
 export const FormTextArea = /* @__PURE__ */ withTopLabelField(TextArea);
 
 // `withField` fixes generic type parameters to their constraints; these signatures restore the inference
-type FormSelectComponent = <T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(props: FormSelectProps<T, Multiple>) => React.ReactElement;
+type FormSelectComponent = <V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(props: FormSelectProps<V, Multiple, WithObject>) => React.ReactElement;
 type FormTreeSelectComponent = <T extends TreeSelectNodeValue = TreeSelectNodeValue, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(props: FieldProps<TreeSelectProps<T, Multiple, WithObject>>) => React.ReactElement;
 type FormCascaderComponent = <Multiple extends boolean | undefined = undefined>(props: FieldProps<CascaderProps<Multiple>>) => React.ReactElement;
 

@@ -550,7 +550,7 @@
             {/if}
         </div>
     {:else}
-        <TagGroup maxTagCount={tagFold.limit} onPlusNMouseEnter={foundation.updateIsFullTags} popoverProps={showRestTagsPopover ? restTagsPopoverProps : undefined} restCount={tagFold.restCount} showPopover={showRestTagsPopover} size={tagSize} tagList={groupTags.map((item) => ({ tagKey: item.value }))}>
+        <TagGroup maxTagCount={tagFold.limit} onPlusNMouseEnter={foundation.updateIsFullTags} popoverProps={showRestTagsPopover ? restTagsPopoverProps : undefined} restCount={tagFold.restCount} showPopover={showRestTagsPopover} size={tagSize} tagList={groupTags.map((item) => ({ tagKey: `${item.value}` }))}>
             {#snippet tag({ index }: { index: number })}
                 {@render tagItem(selectedItems[index], index, true)}
             {/snippet}

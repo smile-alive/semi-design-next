@@ -139,8 +139,8 @@
                 "en-US": "Called as focus leaves the Select; when a click outside closes the dropdown, the argument is the native mousedown event of that click."
             },
             "onChange": {
-                "zh-CN": "选中值变化时的回调，单选时参数为 T 或 undefined，多选时为 T[]。",
-                "en-US": "Called when the selected value changes; the argument is T or undefined in single mode and T[] in multiple mode."
+                "zh-CN": "选中值变化时的回调，单选时参数为 V 或 undefined，多选时为 V[]；设置 onChangeWithObject 时为选项对象 `OptionProps<V>`。",
+                "en-US": "Called when the selected value changes; the argument is V or undefined in single mode and V[] in multiple mode, or the option object `OptionProps<V>` with onChangeWithObject."
             },
             "onChangeWithObject": {
                 "zh-CN": "是否将选项对象作为值：设为 true 时，onChange 的参数以及 value、defaultValue 使用选项对象 `{ value, label, ...rest }`，对象须含 value 与 label。",
@@ -183,8 +183,8 @@
                 "en-US": "Called when an option is selected; value is always the original value of the option, also with onChangeWithObject."
             },
             "optionList": {
-                "zh-CN": "以数组形式传入选项，每项须带 value 与 label，其余字段随选项一起回传。数组非空时优先于 children；不支持分组。",
-                "en-US": "Options as an array. Each item needs value and label; other fields travel with the option. A non-empty array takes precedence over children; groups are not supported."
+                "zh-CN": "以数组形式传入选项，每项须带 value 与 label，其余字段随选项一起回传。value 可以是字符串、数字或布尔值，泛型参数 V 由它推断。数组非空时优先于 children；不支持分组。",
+                "en-US": "Options as an array. Each item needs value and label; other fields travel with the option. value is a string, number or boolean, and the generic parameter V is inferred from it. A non-empty array takes precedence over children; groups are not supported."
             },
             "outerBottomSlot": {
                 "zh-CN": "渲染在下拉列表底部、与 optionList 平级的内容，始终展现。",

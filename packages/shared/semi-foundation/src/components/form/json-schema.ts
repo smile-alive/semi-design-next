@@ -239,7 +239,7 @@ export function arrayState(node: SchemaFieldNode, count: number) {
 }
 
 /** The props semiRenderers gives the Form control of a leaf node, by kind */
-export function controlProps(node: SchemaFieldNode): Record<string, unknown> {
+export function controlProps(node: SchemaFieldNode) {
     switch (node.kind) {
         case 'input':
             return { maxLength: node.maxLength };

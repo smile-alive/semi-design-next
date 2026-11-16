@@ -1,7 +1,6 @@
 import type React from 'react';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import type { SimpleValueType } from '../../cascader/index';
-import type { BasicSelectValue } from '../../select/index';
 import type { TreeNodeData } from '../../tree/interface';
 import type { ArrayFieldProps } from '../array-field';
 import {
@@ -95,8 +94,10 @@ describe('Field Props 类型', () => {
         // JSX infers the mode from the `multiple` and `onChangeWithObject` attributes, as on the bare components
         const elements = (
             <>
-                <FormSelect field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<BasicSelectValue | undefined>()} />
-                <FormSelect multiple field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<BasicSelectValue[]>()} />
+                <FormSelect field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<string | number | undefined>()} />
+                <FormSelect multiple field="a" onChange={(v) => expectTypeOf(v).toEqualTypeOf<(string | number)[]>()} />
+                <FormSelect field="a" optionList={[{ value: true }, { value: false }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<boolean | undefined>()} />
+                <FormSelect field="a" optionList={[{ value: 'x' }, { value: 'y' }]} onChange={(v) => expectTypeOf(v).toEqualTypeOf<'x' | 'y' | undefined>()} />
                 <FormTreeSelect
                     field="a"
                     onChange={(v, node) => {

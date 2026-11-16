@@ -1,6 +1,7 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
+import type { SelectRawValue } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { getDataAttr } from '@fibrae/semi-foundation/utils';
 import { IconTick } from '@fibrae/semi-icons-solid';
 import { createToken } from '../../base/index';
@@ -9,10 +10,10 @@ import Highlight from '../highlight';
 export const OPTION = 'Select.Option';
 
 /** An option of `optionList`, or the props of `Select.Option`; other fields are kept on the option and passed back in callbacks */
-export interface OptionProps {
+export interface OptionProps<V extends SelectRawValue = SelectRawValue> {
     // `any`, not `unknown`: only an index signature of `any` also accepts interface-typed options
     [key: string]: any;
-    value?: string | number;
+    value?: V;
     /** Text of the option, searched and highlighted; without it the option is searched by `value` */
     label?: string | number;
     /** Content of the row and of the selection in place of `label`, for markup; only `Select.Option` takes it */

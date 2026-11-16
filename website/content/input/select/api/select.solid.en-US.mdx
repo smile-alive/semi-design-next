@@ -17,13 +17,13 @@ import ApiType from '#/components/ApiType.astro';
 | clickToHide | Whether clicking the Select collapses the dropdown while it is open. | `boolean` | - |
 | defaultActiveFirstOption | With no value selected, whether opening the dropdown highlights the first enabled option (Enter selects it). With a value selected, the first selected option is always highlighted. | `boolean` | `true` |
 | defaultOpen | Whether the dropdown is open initially. | `boolean` | `false` |
-| defaultValue | The initially selected value, read on mount only; an array in multiple mode. With onChangeWithObject it is the option object, which must contain value and label. | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | - |
+| defaultValue | The initially selected value, read on mount only; an array in multiple mode. With onChangeWithObject it is the option object, which must contain value and label. | <ApiType detail={"SelectValue\u003cV, Multiple, WithObject>"}>Type</ApiType> | - |
 | disabled | Whether the Select is disabled. Falls back to the InputGroup it is in. | `boolean` | - |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown popup equals the Select. | `boolean` | `true` |
 | ellipsisTrigger | In multiple mode with maxTagCount set, whether the content of the last tag is truncated when the width is not enough. It has some performance cost and is not recommended in large forms. | `boolean` | `false` |
 | emptyContent | Content shown when there are no options; null shows no empty state in the dropdown. | `JSX.Element` | - |
 | expandRestTagsOnClick | In multiple mode with maxTagCount set, whether all tags are shown while the dropdown is open. | `boolean` | `false` |
-| filter | Whether the Select is searchable. true turns search on with the default strategy, which matches options whose label (or group title) contains the input; a function receives the input value and the option and returns true for a match. | <ApiType detail={"boolean \u007c ((inputValue: string, option: OptionProps) => boolean)"}>Type</ApiType> | `false` |
+| filter | Whether the Select is searchable. true turns search on with the default strategy, which matches options whose label (or group title) contains the input; a function receives the input value and the option and returns true for a match. | <ApiType detail={"boolean \u007c ((inputValue: string, option: OptionProps\u003cV>) => boolean)"}>Type</ApiType> | `false` |
 | id | The id of the trigger, from which the option ids derive. Generated when not set. | `string` | - |
 | innerBottomSlot | Content rendered at the bottom of the dropdown, inside the option list; it appears when the list is scrolled to the bottom. | `JSX.Element` | - |
 | innerTopSlot | Content rendered at the top of the dropdown, inside the option list; it appears when the list is scrolled to the top. | `JSX.Element` | - |
@@ -37,18 +37,18 @@ import ApiType from '#/components/ApiType.astro';
 | motion | Whether the popup uses animation. | `boolean` | `true` |
 | multiple | Whether multiple options can be selected. It decides the type of the onChange argument: an array in multiple mode, a single value or undefined otherwise. | `Multiple` | `false` |
 | onBlur | Called as focus leaves the Select; when a click outside closes the dropdown, the argument is the native mousedown event of that click. | <ApiType detail={"(e: FocusEvent \u007c MouseEvent) => void"}>Type</ApiType> | - |
-| onChange | Called when the selected value changes; the argument is T or undefined in single mode and T[] in multiple mode. | <ApiType detail={"(value: SelectChangeValue\u003cT, Multiple>) => void"}>Type</ApiType> | - |
-| onChangeWithObject | Whether the option object is the value: when true, the onChange argument, value and defaultValue use the option object `{ value, label, ...rest }`, which must contain value and label. | `boolean` | `false` |
+| onChange | Called when the selected value changes; the argument is V or undefined in single mode and V[] in multiple mode, or the option object `OptionProps<V>` with onChangeWithObject. | <ApiType detail={"(value: SelectChangeValue\u003cV, Multiple, WithObject>) => void"}>Type</ApiType> | - |
+| onChangeWithObject | Whether the option object is the value: when true, the onChange argument, value and defaultValue use the option object `{ value, label, ...rest }`, which must contain value and label. | `WithObject` | `false` |
 | onClear | Called when the clear button is clicked. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onCreate | Called when an item is created with allowCreate on. | <ApiType detail={"(option: OptionProps) => void"}>Type</ApiType> | - |
-| onDeselect | Called when an option is deselected, in multiple mode only; value is always the original value of the option. | <ApiType detail={"(value: OptionProps['value'], option: OptionProps) => void"}>Type</ApiType> | - |
+| onDeselect | Called when an option is deselected, in multiple mode only; value is always the original value of the option. | <ApiType detail={"(value: V, option: OptionProps\u003cV>) => void"}>Type</ApiType> | - |
 | onDropdownVisibleChange | Called when the dropdown opens or closes. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
-| onExceed | Called when selecting would exceed max, in multiple mode only. | <ApiType detail={"(option: OptionProps) => void"}>Type</ApiType> | - |
+| onExceed | Called when selecting would exceed max, in multiple mode only. | <ApiType detail={"(option: OptionProps\u003cV>) => void"}>Type</ApiType> | - |
 | onFocus | Called as focus enters the Select from outside. | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | - |
 | onListScroll | Called when the option list scrolls, including the scrolling of the virtual list. | <ApiType detail={"(e: Event) => void"}>Type</ApiType> | - |
 | onSearch | Called when the search keyword changes. The second argument is the event that changed it: the native MouseEvent when the search is cleared after a click outside closes the dropdown, the passed event when called through the search method of the ref, and none when onSearch is called from triggerRender. | <ApiType detail={"(value: string, event?: InputChangeEvent \u007c KeyboardEvent \u007c MouseEvent) => void"}>Type</ApiType> | - |
-| onSelect | Called when an option is selected; value is always the original value of the option, also with onChangeWithObject. | <ApiType detail={"(value: OptionProps['value'], option: OptionProps) => void"}>Type</ApiType> | - |
-| optionList | Options as an array. Each item needs value and label; other fields travel with the option. A non-empty array takes precedence over children; groups are not supported. | `OptionProps[]` | - |
+| onSelect | Called when an option is selected; value is always the original value of the option, also with onChangeWithObject. | <ApiType detail={"(value: V, option: OptionProps\u003cV>) => void"}>Type</ApiType> | - |
+| optionList | Options as an array. Each item needs value and label; other fields travel with the option. value is a string, number or boolean, and the generic parameter V is inferred from it. A non-empty array takes precedence over children; groups are not supported. | <ApiType detail={"readonly OptionProps\u003cV>[]"}>Type</ApiType> | - |
 | outerBottomSlot | Content rendered at the bottom of the dropdown, beside the option list; it is always shown. | `JSX.Element` | - |
 | outerTopSlot | Content rendered at the top of the dropdown, beside the option list; it is always shown. | `JSX.Element` | - |
 | placeholder | Placeholder shown when nothing is selected. | `JSX.Element` | `""` |
@@ -58,7 +58,7 @@ import ApiType from '#/components/ApiType.astro';
 | ref | Receives the trigger element, which carries the methods under Methods below; its `focus()` focuses the combobox (the search input while it is in the trigger) without opening the dropdown. | <ApiType detail={"Ref\u003cSelectElement>"}>Type</ApiType> | - |
 | remote | Whether search is remote. When on, typing does not filter locally; update optionList from onSearch instead. | `boolean` | `false` |
 | renderCreateItem | Customizes how the create item renders with allowCreate on; its arguments are the input value, whether it is focused and the row style. With virtualize, the style must be applied to the custom element. When not set, the create text of the locale pack is shown before the input. | <ApiType detail={"(inputValue: OptionProps['value'], focus: boolean, style?: JSX.CSSProperties) => JSX.Element"}>Type</ApiType> | - |
-| renderOptionItem | Fully customizes how the options in the dropdown render. Its argument holds id, label, value, selected, focused, disabled, inputValue, class, style, onClick and onMouseEnter. Put id on the outermost element together with role and aria-selected, and use class, style and onMouseEnter there too. | <ApiType detail={"(props: OptionRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| renderOptionItem | Fully customizes how the options in the dropdown render. Its argument holds id, label, value, selected, focused, disabled, inputValue, class, style, onClick and onMouseEnter. Put id on the outermost element together with role and aria-selected, and use class, style and onMouseEnter there too. | <ApiType detail={"(props: OptionRenderProps\u003cV>) => JSX.Element"}>Type</ApiType> | - |
 | renderSelectedItem | Customizes how the selected items render in the Select. In single mode it returns the content; in multiple mode the second argument holds index, disabled and onClose, and it returns `{ isRenderInTag, content }`, wrapping the content in a Tag when isRenderInTag is true. | <ApiType detail={"ByMultiple\u003cMultiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>"}>Type</ApiType> | - |
 | restTagsPopoverProps | Props of the Popover that shows the remaining tags, such as position and trigger. | `PopoverProps` | - |
 | searchPlaceholder | Placeholder of the search input when it is in the dropdown (searchPosition is dropdown). | `string` | - |
@@ -73,7 +73,7 @@ import ApiType from '#/components/ApiType.astro';
 | suffix | Suffix of the Select. Text or an icon gets side spacing automatically; a custom element has none. | `JSX.Element` | - |
 | triggerRender | Customizes how the trigger renders. Its argument holds value, inputValue, onSearch, onClear, onRemove, disabled, placeholder and componentProps. | <ApiType detail={"(props: TriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
 | validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `ValidateStatus` | - |
-| value | The selected value, an array in multiple mode. Passing it makes the Select controlled, used with onChange. With onChangeWithObject it is the option object, which must contain value and label. | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | - |
+| value | The selected value, an array in multiple mode. Passing it makes the Select controlled, used with onChange. With onChangeWithObject it is the option object, which must contain value and label. | <ApiType detail={"SelectValue\u003cV, Multiple, WithObject>"}>Type</ApiType> | - |
 | virtualize | Turns on list virtualization to optimize performance with many options. itemSize is the height of each row and is required; height defaults to 270 and width to 100%. | `VirtualizeProps` | - |
 
 **Methods**

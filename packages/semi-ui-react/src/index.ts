@@ -136,7 +136,8 @@ export type {
     SelectProps,
     SelectHandle,
     SelectValue,
-    BasicSelectValue,
+    SelectChangeValue,
+    SelectRawValue,
     SelectSize,
     OptionRenderProps as SelectOptionRenderProps,
     TriggerRenderProps as SelectTriggerRenderProps,
@@ -381,6 +382,8 @@ export {
     SchemaForm,
     semiRenderers,
     blankRow,
+    controlProps,
+    singleItemName,
 } from './components/form';
 export type {
     BaseFormProps as FormProps,

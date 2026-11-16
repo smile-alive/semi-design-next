@@ -40,13 +40,13 @@ import ApiType from '#/components/ApiType.astro';
 | onChangeWithObject | Whether `onChange` and `value` carry option objects instead of option values. | `boolean` | `false` |
 | onClear | Called when the clear button is clicked. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onCreate | Called when an option is created. | <ApiType detail={"(option: SelectOptionProps) => void"}>Type</ApiType> | - |
-| onDeselect | Called when an option is deselected in multiple mode. | <ApiType detail={"(value: string \u007c number, option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onDeselect | Called when an option is deselected in multiple mode. | <ApiType detail={"(value: string \u007c number \u007c boolean, option: SelectOptionProps) => void"}>Type</ApiType> | - |
 | onDropdownVisibleChange | Called when the dropdown list opens or closes. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | onExceed | Called when the selection would exceed `max`. | <ApiType detail={"(option: SelectOptionProps) => void"}>Type</ApiType> | - |
 | onFocus | Called once when the focus enters the Select. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
 | onListScroll | Called when the dropdown list scrolls. | <ApiType detail={"(event: Event) => void"}>Type</ApiType> | - |
 | onSearch | Called when the search keyword changes; there is no event when it comes from `search()` or the `onSearch` of the `trigger` snippet. | <ApiType detail={"(value: string, event?: Event) => void"}>Type</ApiType> | - |
-| onSelect | Called when an option is selected. | <ApiType detail={"(value: string \u007c number, option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onSelect | Called when an option is selected. | <ApiType detail={"(value: string \u007c number \u007c boolean, option: SelectOptionProps) => void"}>Type</ApiType> | - |
 | optionItem | Replaces a whole option row, a snippet. Its parameter has `id`, `value`, `label`, `selected`, `focused`, `disabled`, `inputValue`, `class`, `style`, `onclick`, `onmouseenter` and the other fields of the entry. Put `id` on the element with `role="option"`. | <ApiType detail={"Snippet\u003c[SelectOptionItemSnippetProps]>"}>Type</ApiType> | - |
 | optionLabel | Replaces only the text inside an option row, a snippet with `{ option }`. The tick icon, the `role="option"` of the row, its states and keyboard behavior stay; `label` still serves search and the accessible name, and the search keyword is not highlighted in the content. | <ApiType detail={"Snippet\u003c[SelectOptionLabelSnippetProps]>"}>Type</ApiType> | - |
 | optionList | The option data. An entry has `value`, `label`, `disabled`, `showTick`, `class`, `style` and an optional `group: { key, label }`; other fields travel with the option record. Entries of one group must be adjacent. | `SelectOptionProps[]` | - |

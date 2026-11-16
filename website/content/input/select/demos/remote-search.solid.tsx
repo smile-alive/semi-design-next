@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
 import { debounce } from 'es-toolkit';
-import { Select } from '@fibrae/semi-ui-solid';
+import { Select, type SelectOptionProps } from '@fibrae/semi-ui-solid';
 
 interface Item {
     value: string;
@@ -23,7 +23,7 @@ function mockSearch(inputValue: string): Item[] {
 export default function SelectDemo() {
     const [loading, setLoading] = createSignal(false);
     const [list, setList] = createSignal(initialList);
-    const [value, setValue] = createSignal<Item[]>([]);
+    const [value, setValue] = createSignal<SelectOptionProps<string>[]>([]);
 
     const handleSearch = debounce((inputValue: string) => {
         setLoading(true);

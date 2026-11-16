@@ -21,7 +21,7 @@
     <Select ref="select" :motion="false" v-bind="$attrs">
         <slot v-if="$slots.default" />
         <template v-else>
-            <SelectOption v-for="item in props.list" :key="item.value" v-bind="item" />
+            <SelectOption v-for="item in props.list" :key="`${item.value}`" v-bind="item" />
         </template>
         <template v-for="name in forwarded" :key="name" #[name]="scope">
             <slot :name="name" v-bind="scope ?? {}" />

@@ -1,8 +1,9 @@
-<script setup lang="ts" generic="T = BasicSelectValue, Multiple extends boolean | undefined = undefined">
+<script setup lang="ts" generic="V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined">
     import { useTemplateRef } from 'vue';
     import { numbers } from '@fibrae/semi-foundation/components/select/constants';
+    import type { SelectRawValue } from '@fibrae/semi-foundation/components/select/option-foundation';
     import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault } from '../../base/index';
-    import type { BasicSelectValue, SelectCreateItemSlotProps, SelectEmits, SelectHandle, SelectOptionItemSlotProps, SelectProps, SelectSelectedItemSlotProps, SelectSlots, SelectTriggerSlotProps } from './interface';
+    import type { SelectCreateItemSlotProps, SelectEmits, SelectHandle, SelectOptionItemSlotProps, SelectProps, SelectSelectedItemSlotProps, SelectSlots, SelectTriggerSlotProps } from './interface';
     import SelectBody from './select-body.vue';
     import { readOptions } from './utils';
 
@@ -14,7 +15,7 @@
      * created during setup and needs the options for the first render (SSR runs no mounted hook), but Vue warns when a
      * slot passed with h() or JSX is called outside render; reading them here keeps every slot call inside a render.
      */
-    const props = withDefaults(defineProps<SelectProps<T, Multiple> & /* @vue-ignore */ ElementProps<'div', keyof SelectProps<T, Multiple> | EmitHandlers<SelectEmits<T, Multiple>>>>(), {
+    const props = withDefaults(defineProps<SelectProps<V, Multiple, WithObject> & /* @vue-ignore */ ElementProps<'div', keyof SelectProps<V, Multiple, WithObject> | EmitHandlers<SelectEmits<V, Multiple, WithObject>>>>(), {
         modelValue: undefined,
         defaultValue: semiGlobalDefault('Select', 'defaultValue'),
         // a default other than undefined would break the inference of Multiple, so the global config cannot set it
@@ -28,7 +29,8 @@
         defaultOpen: () => semiDefault('Select', 'defaultOpen', false),
         clickToHide: () => semiDefault('Select', 'clickToHide', false),
         defaultActiveFirstOption: () => semiDefault('Select', 'defaultActiveFirstOption', true),
-        changeWithObject: () => semiDefault('Select', 'changeWithObject', false),
+        // a default other than undefined would break the inference of WithObject, so the global config cannot set it
+        changeWithObject: undefined,
         max: semiGlobalDefault('Select', 'max'),
         maxTagCount: semiGlobalDefault('Select', 'maxTagCount'),
         maxHeight: () => semiDefault('Select', 'maxHeight', numbers.LIST_HEIGHT),
@@ -63,14 +65,19 @@
         id: undefined,
     });
 
-    const emit = defineEmits<SelectEmits<T, Multiple>>();
+    const emit = defineEmits<SelectEmits<V, Multiple, WithObject>>();
     const slots = defineSlots<SelectSlots>();
 
     const body = useTemplateRef('body');
 
-    // The generic Multiple has no runtime type, so Vue does not cast a valueless `multiple` to true: it arrives as ''.
-    // Asserted back to the props type: a spread object no longer lets SelectBody infer T and Multiple
-    const bodyProps = () => ({ ...props, multiple: (props.multiple as unknown) === '' || Boolean(props.multiple) }) as typeof props;
+    // SelectBody emits the raw value types; the generics only type what callers see
+    const forward = emit as (event: string, ...args: unknown[]) => void;
+
+    // The generics Multiple and WithObject have no runtime type, so Vue does not cast a valueless `multiple` or
+    // `change-with-object` to true: it arrives as ''. SelectBody is not generic, hence the assertion
+    const flag = (value: unknown) => value === '' || Boolean(value);
+
+    const bodyProps = () => ({ ...props, multiple: flag(props.multiple), changeWithObject: flag(props.changeWithObject) }) as unknown as InstanceType<typeof SelectBody>['$props'];
 
     const optionRecords = () => readOptions(slots.default?.() ?? [], props.optionList);
 
@@ -94,18 +101,18 @@
         v-bind="bodyProps()"
         :optionRecords="optionRecords()"
         @blur="(...args) => emit('blur', ...args)"
-        @change="(...args) => emit('change', ...args)"
+        @change="(...args) => forward('change', ...args)"
         @clear="(...args) => emit('clear', ...args)"
         @create="(...args) => emit('create', ...args)"
-        @deselect="(...args) => emit('deselect', ...args)"
+        @deselect="(...args) => forward('deselect', ...args)"
         @dropdownVisibleChange="(...args) => emit('dropdownVisibleChange', ...args)"
-        @exceed="(...args) => emit('exceed', ...args)"
+        @exceed="(...args) => forward('exceed', ...args)"
         @focus="(...args) => emit('focus', ...args)"
         @keydown="(...args) => emit('keydown', ...args)"
         @listScroll="(...args) => emit('listScroll', ...args)"
         @search="(...args) => emit('search', ...args)"
-        @select="(...args) => emit('select', ...args)"
-        @update:modelValue="(...args) => emit('update:modelValue', ...args)"
+        @select="(...args) => forward('select', ...args)"
+        @update:modelValue="(...args) => forward('update:modelValue', ...args)"
     >
         <template v-for="name in passedSlots()" #[name]="scope">
             <slot :name="name" v-bind="scope as ForwardedScope" />

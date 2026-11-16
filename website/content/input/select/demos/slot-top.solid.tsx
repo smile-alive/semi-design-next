@@ -1,5 +1,5 @@
 import { createSignal } from 'solid-js';
-import { RadioGroup, Select } from '@fibrae/semi-ui-solid';
+import { RadioGroup, Select, type SelectOptionProps } from '@fibrae/semi-ui-solid';
 
 interface Item {
     value: string;
@@ -34,7 +34,7 @@ const categoryOptions = [
 
 export default function SelectDemo() {
     const [key, setKey] = createSignal('component');
-    const [value, setValue] = createSignal<Item | undefined>({ value: 'faq', label: '常见问题' });
+    const [value, setValue] = createSignal<SelectOptionProps<string> | undefined>({ value: 'faq', label: '常见问题' });
 
     // The radio group switches with arrow keys, so categories need no tabpanel association
     return (

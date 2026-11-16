@@ -65,7 +65,7 @@ export {
     semiRenderers,
     useForm,
 };
-export { blankRow } from '@fibrae/semi-foundation/components/form/json-schema';
+export { blankRow, controlProps, singleItemName } from '@fibrae/semi-foundation/components/form/json-schema';
 export { useFieldApi, useFieldState, useFormApi, useFormState } from './hooks/index.js';
 export type {
     ArrayFieldItem,

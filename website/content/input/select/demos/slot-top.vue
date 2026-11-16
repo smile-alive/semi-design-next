@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { RadioGroup, Select, type RadioChangeEvent } from '@fibrae/semi-ui-vue';
+    import { RadioGroup, Select, type RadioChangeEvent, type SelectOptionProps } from '@fibrae/semi-ui-vue';
 
     interface Item {
         value: string;
@@ -37,7 +37,7 @@
     };
 
     const key = ref('component');
-    const value = ref<Item | undefined>({ value: 'faq', label: '常见问题' });
+    const value = ref<SelectOptionProps<string> | undefined>({ value: 'faq', label: '常见问题' });
     const changeCategory = (event: RadioChangeEvent) => {
         key.value = String(event.target.value);
     };

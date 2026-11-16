@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { debounce } from 'es-toolkit';
-import { Select } from '@fibrae/semi-ui-react';
+import { Select, type SelectOptionProps } from '@fibrae/semi-ui-react';
 
 interface Item {
     value: string;
@@ -25,9 +25,9 @@ const initialList: Item[] = [
 export default function SelectDemo() {
     const [loading, setLoading] = useState(false);
     const [list, setList] = useState(initialList);
-    const [value, setValue] = useState<Item[]>([]);
+    const [value, setValue] = useState<SelectOptionProps<string>[]>([]);
 
-    const handleMultipleChange = (newValue: Item[]) => {
+    const handleMultipleChange = (newValue: SelectOptionProps<string>[]) => {
         setValue(newValue);
     };
 

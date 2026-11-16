@@ -8,7 +8,7 @@ import InputNumber from '../input-number';
 import PinCode from '../pincode';
 import Radio, { type RadioProps, RadioGroup } from '../radio';
 import Rating from '../rating';
-import type { BasicSelectValue, SelectProps } from '../select';
+import type { SelectProps, SelectRawValue } from '../select';
 import SelectOption from '../select/option';
 import SelectOptGroup from '../select/option-group';
 import Select from '../select/select';
@@ -23,8 +23,8 @@ import type { FieldProps, OptionalFieldProps } from './interface';
 import withField, { withTopLabelField } from './with-field';
 
 // `withField` fixes generic type parameters to their constraints; these signatures restore the inference
-export type FormSelectProps<T = BasicSelectValue, Multiple extends boolean | undefined = undefined> = FieldProps<SelectProps<T, Multiple>>;
-type FormSelectComponent = <T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(props: FormSelectProps<T, Multiple>) => JSX.Element;
+export type FormSelectProps<V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined> = FieldProps<SelectProps<V, Multiple, WithObject>>;
+type FormSelectComponent = <V extends SelectRawValue = string | number, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(props: FormSelectProps<V, Multiple, WithObject>) => JSX.Element;
 type FormTreeSelectComponent = <T extends TreeSelectNodeValue = TreeSelectNodeValue, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(props: FieldProps<TreeSelectProps<T, Multiple, WithObject>>) => JSX.Element;
 type FormCascaderComponent = <Multiple extends boolean | undefined = undefined>(props: FieldProps<CascaderProps<Multiple>>) => JSX.Element;
 type FormAutoCompleteComponent = <T extends AutoCompleteItems = AutoCompleteItems>(props: FieldProps<AutoCompleteProps<T>>) => JSX.Element;

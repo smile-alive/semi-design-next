@@ -456,6 +456,8 @@ export {
     SchemaForm,
     semiRenderers,
     blankRow,
+    controlProps,
+    singleItemName,
     withField,
     useForm,
     useFieldApi,
