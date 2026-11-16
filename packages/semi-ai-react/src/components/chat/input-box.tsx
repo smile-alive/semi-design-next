@@ -112,7 +112,7 @@ function InputBox(props: InputBoxProps) {
     );
 
     const nodes = (
-        <div className={clsx(PREFIX_INPUT_BOX, { [className]: className })} style={style}>
+        <div className={clsx(PREFIX_INPUT_BOX, className)} style={style}>
             <div className={`${PREFIX_INPUT_BOX}-inner`} onClick={onClick}>
                 {showClearContext && clearNode}
                 <div className={`${PREFIX_INPUT_BOX}-container`}>
@@ -124,7 +124,7 @@ function InputBox(props: InputBoxProps) {
         </div>
     );
 
-    if (renderInputArea && typeof renderInputArea === 'function') {
+    if (typeof renderInputArea === 'function') {
         return renderInputArea({
             defaultNode: nodes,
             onClear: onClearContext,

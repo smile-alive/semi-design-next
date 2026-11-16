@@ -52,7 +52,7 @@ function Badge(rawProps: BadgeProps) {
         {
             [`${prefixCls}-${type}`]: !custom,
             [`${prefixCls}-${theme}`]: !custom,
-            [`${prefixCls}-${badgePosition}`]: Boolean(badgePosition) && Boolean(children),
+            [`${prefixCls}-${badgePosition}`]: badgePosition && children,
             [`${prefixCls}-block`]: !children,
             [`${prefixCls}-dot`]: dot,
             [`${prefixCls}-count`]: !dot && !custom && showBadge,

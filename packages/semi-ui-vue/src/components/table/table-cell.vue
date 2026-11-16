@@ -113,7 +113,7 @@
                         [`${prefixCls}-cell-fixed-right`]: isFixedRight,
                         [`${prefixCls}-cell-fixed-right-first`]: isFixedRightFirst,
                         [`${prefixCls}-cell-last`]: props.columnsToEnd != null && (colSpan ?? 1) >= props.columnsToEnd,
-                        [`${prefixCls}-row-cell-ellipsis`]: Boolean(column.ellipsis),
+                        [`${prefixCls}-row-cell-ellipsis`]: column.ellipsis,
                     },
                 ],
                 // a role="none" table no longer gives colspan and rowspan their table meaning

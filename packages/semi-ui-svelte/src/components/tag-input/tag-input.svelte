@@ -319,8 +319,8 @@
             [`${prefixCls}-warning`]: validateStatus === 'warning',
             [`${prefixCls}-small`]: size === 'small',
             [`${prefixCls}-large`]: size === 'large',
-            [`${prefixCls}-with-prefix`]: Boolean(prefix || insetLabel),
-            [`${prefixCls}-with-suffix`]: Boolean(suffix),
+            [`${prefixCls}-with-prefix`]: prefix || insetLabel,
+            [`${prefixCls}-with-suffix`]: suffix,
         },
     ]}
     role="group"
@@ -331,7 +331,7 @@
     {#if prefix || insetLabel}
         <div
             {@attach trackPrefix}
-            class={[`${prefixCls}-prefix`, { [`${prefixCls}-inset-label`]: Boolean(insetLabel), [`${prefixCls}-prefix-text`]: prefixKind === 'text', [`${prefixCls}-prefix-icon`]: prefixKind === 'icon' }]}
+            class={[`${prefixCls}-prefix`, { [`${prefixCls}-inset-label`]: insetLabel, [`${prefixCls}-prefix-text`]: prefixKind === 'text', [`${prefixCls}-prefix-icon`]: prefixKind === 'icon' }]}
             id={prefixId}
             x-semi-prop="prefix"
             onclick={foundation.handleClickPrefixOrSuffix}

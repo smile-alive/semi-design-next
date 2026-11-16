@@ -256,7 +256,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         const { scientificNotation } = this.getProps();
         if (typeof scientificNotation === 'object' && scientificNotation !== null) {
             const t = scientificNotation.threshold;
-            return typeof t === 'number' && Number.isFinite(t) && t >= 1 ? t : 15;
+            return Number.isFinite(t) && t >= 1 ? t : 15;
         }
         return 15;
     }
@@ -659,7 +659,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         // APG Spinbutton: Home and End jump to the bounds that exist; without one they keep moving the caret.
         // Shift extends the text selection instead.
         const bound = event.shiftKey ? null : key === 'Home' ? this.getProp('min') : key === 'End' ? this.getProp('max') : null;
-        const jumpsToBound = typeof bound === 'number' && Number.isFinite(bound);
+        const jumpsToBound = Number.isFinite(bound);
 
         if ((key === 'ArrowUp' || key === 'ArrowDown') && !this.#canStep(key === 'ArrowUp' ? 1 : -1)) {
             event.preventDefault();

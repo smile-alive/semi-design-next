@@ -185,7 +185,7 @@
             style={props.inputStyle}
         />
     </div>
-    <span class={[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: Boolean(rangeParts.start || rangeParts.end) && !props.disabled }]} onclick={(event) => focusRange(event, 'rangeStart')}>
+    <span class={[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: (rangeParts.start || rangeParts.end) && !props.disabled }]} onclick={(event) => focusRange(event, 'rangeStart')}>
         {#if props.rangeSeparatorNode}
             {@render props.rangeSeparatorNode()}
         {:else}

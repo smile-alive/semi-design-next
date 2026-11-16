@@ -37,7 +37,7 @@ function ErrorMessage(props: ErrorMessageProps) {
     const cls = clsx(
         {
             [prefix + '-field-error-message']: failed,
-            [prefix + '-field-help-text']: Boolean(helpText),
+            [prefix + '-field-help-text']: helpText,
         },
         className
     );

@@ -90,7 +90,7 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
                     className={clsx({
                         [`${prefix}-item-sel`]: selected && !isWheel,
                         [cssClasses.SELECTED]: isWheel && key === state.highlightedKey,
-                        [`${prefix}-item-disabled`]: Boolean(item.disabled),
+                        [`${prefix}-item-disabled`]: item.disabled,
                     })}
                     aria-disabled={item.disabled}
                     aria-hidden={copy ? true : undefined}

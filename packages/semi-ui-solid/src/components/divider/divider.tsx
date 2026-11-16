@@ -53,7 +53,7 @@ export default function Divider(rawProps: DividerProps) {
             class={clsx(prefixCls, local.class, {
                 [`${prefixCls}-horizontal`]: local.layout === 'horizontal',
                 [`${prefixCls}-vertical`]: local.layout === 'vertical',
-                [`${prefixCls}-dashed`]: Boolean(local.dashed),
+                [`${prefixCls}-dashed`]: local.dashed,
                 [`${prefixCls}-with-text`]: hasText(),
                 [`${prefixCls}-with-text-${local.align}`]: hasText(),
             })}

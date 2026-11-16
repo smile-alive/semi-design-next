@@ -26,7 +26,6 @@
     import { getTableContext } from '../context.js';
     import type { ColumnProps, TableVirtualizedScrollArgs } from '../interface.js';
     import TableHeader from '../table-header/table-header.svelte';
-    import { joinStyles } from '../utils.js';
     import BaseRow from './base-row.svelte';
     import ExpandedRow from './expanded-row.svelte';
     import SectionRow from './section-row.svelte';
@@ -247,7 +246,7 @@
                 {#if includeHeader}
                     <!-- a hidden header stays for its column widths; inert keeps its controls out of the Tab order and the a11y tree; rendered in the list's scroller above the rows, so the browser moves it with them in the same frame -->
                     <div {@attach observeResize(() => (listHeaderHeight = listHeader?.offsetHeight ?? 0))} bind:this={listHeader} class="{table.prefixCls}-list-header" inert={!table.showHeader}>
-                        <svelte:element this={table.components.header.outer} class={[table.prefixCls, `${table.prefixCls}-fixed`]} role="none" style={joinStyles(table.scroll?.x != null && `width: ${toCssLength(table.scroll.x)}`, minWidth !== undefined && `min-width: ${toCssLength(minWidth)}`)}>
+                        <svelte:element this={table.components.header.outer} class={[table.prefixCls, `${table.prefixCls}-fixed`]} role="none" style:min-width={toCssLength(minWidth)} style:width={toCssLength(table.scroll?.x)}>
                             <ColGroup {columns} prefixCls={table.prefixCls} />
                             <TableHeader {columns} hidden={!table.showHeader} />
                         </svelte:element>
@@ -287,7 +286,8 @@
             {@attach observeResize(measureOverflow)}
             class={[table.prefixCls, { [`${table.prefixCls}-fixed`]: table.tableLayout === 'fixed' }]}
             role={table.splitTable ? 'none' : 'table'}
-            style={joinStyles(table.scroll?.x != null && `width: ${toCssLength(table.scroll.x)}`, minWidth !== undefined && `min-width: ${toCssLength(minWidth)}`)}
+            style:min-width={toCssLength(minWidth)}
+            style:width={toCssLength(table.scroll?.x)}
         >
             <ColGroup col={table.components.body.colgroup.col} {columns} prefixCls={table.prefixCls} wrapper={table.components.body.colgroup.wrapper} />
             <!-- without a header the fixed columns still need its measured widths for their offsets -->

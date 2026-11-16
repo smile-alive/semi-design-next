@@ -600,8 +600,8 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                       [`${prefix}-error`]: props.validateStatus === 'error',
                       [`${prefix}-warning`]: props.validateStatus === 'warning',
                       [`${prefix}-no-arrow`]: !local.showArrow,
-                      [`${prefix}-with-prefix`]: Boolean(labelKind()),
-                      [`${prefix}-with-suffix`]: Boolean(suffixKind()),
+                      [`${prefix}-with-prefix`]: labelKind(),
+                      [`${prefix}-with-suffix`]: suffixKind(),
                   });
         },
         get style() {
@@ -852,7 +852,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         return (
             <div
                 class={clsx(`${prefix}-content-wrapper`, {
-                    [`${prefix}-content-wrapper-one-line`]: Boolean(local.maxTagCount) && !state().isOpen,
+                    [`${prefix}-content-wrapper-one-line`]: local.maxTagCount && !state().isOpen,
                     [`${prefix}-content-wrapper-empty`]: !selectedItems().length,
                 })}
             >
@@ -904,7 +904,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                     id={selectionTextId}
                     class={clsx(`${prefix}-selection-text`, {
                         [`${prefix}-selection-placeholder`]: !shown(),
-                        [`${prefix}-selection-text-hide`]: Boolean(state().inputValue) && searching(),
+                        [`${prefix}-selection-text-hide`]: state().inputValue && searching(),
                         [`${prefix}-selection-text-inactive`]: !state().inputValue && searching(),
                     })}
                     x-semi-prop="placeholder"
@@ -924,7 +924,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                 <div
                     id={prefixId()}
                     class={clsx(`${prefix}-prefix`, {
-                        [`${prefix}-inset-label`]: Boolean(insetLabelKind()),
+                        [`${prefix}-inset-label`]: insetLabelKind(),
                         [`${prefix}-prefix-text`]: labelKind() === 'text',
                         [`${prefix}-prefix-icon`]: labelKind() === 'icon',
                     })}

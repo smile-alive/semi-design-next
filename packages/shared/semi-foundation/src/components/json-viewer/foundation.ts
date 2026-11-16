@@ -62,9 +62,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
             }
             this.#lastObservedSize = { width, height };
             this.#resetMeasuredHeights ||= rewrap;
-            if (this.#resizeRafId !== null) {
-                cancelAnimationFrame(this.#resizeRafId);
-            }
+            cancelAnimationFrame(this.#resizeRafId);
             this.#resizeRafId = requestAnimationFrame(() => {
                 this.#resizeRafId = null;
                 // wrapped line heights were measured at the old width

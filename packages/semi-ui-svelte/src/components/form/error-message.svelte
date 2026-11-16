@@ -17,7 +17,7 @@
 </script>
 
 {#if rendered}
-    <div {...rest} class={[rest.class, { [`${prefix}-field-error-message`]: failed, [`${prefix}-field-help-text`]: Boolean(helpText) }]}>
+    <div {...rest} class={[rest.class, { [`${prefix}-field-error-message`]: failed, [`${prefix}-field-help-text`]: helpText }]}>
         {#if showValidateIcon}
             {#if isInInputGroup || validateStatus === 'error'}
                 <IconAlertCircle class={iconClass} />

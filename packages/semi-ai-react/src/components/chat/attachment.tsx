@@ -51,7 +51,7 @@ function Attachment({ attachment, onClear, showClear = true, className }: Attach
     const { locale } = useLocale('Chat');
 
     return (
-        <div className={clsx(PREFIX_ATTACHMENT, { [className]: className })}>
+        <div className={clsx(PREFIX_ATTACHMENT, className)}>
             {attachment.map((item) => {
                 const mime = item.fileInstance?.type;
                 return (

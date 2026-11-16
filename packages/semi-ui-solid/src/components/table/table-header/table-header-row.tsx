@@ -224,13 +224,13 @@ function HeaderCellView(props: { cell: HeaderCell; cellIndex: number; rowIndex: 
             ? [isFixedRight(column()), isFixedLeft(column()), isFirstFixedRight(props.slicedColumns, column()), isLastLeftFixed(props.slicedColumns, column())]
             : [isFixedLeft(column()), isFixedRight(column()), isLastLeftFixed(props.slicedColumns, column()), isFirstFixedRight(props.slicedColumns, column())];
         return clsx(`${prefixCls()}-row-head`, table.props.classNames?.header, column().class, custom().class, {
-            [`${prefixCls()}-align-${align}`]: Boolean(align),
+            [`${prefixCls()}-align-${align}`]: align,
             [`${prefixCls()}-cell-fixed-left`]: fixedLeft,
             [`${prefixCls()}-cell-fixed-left-last`]: fixedLeftLast,
             [`${prefixCls()}-cell-fixed-right`]: fixedRight,
             [`${prefixCls()}-cell-fixed-right-first`]: fixedRightFirst,
-            [`${prefixCls()}-cell-last`]: Boolean(props.cell.last),
-            [`${prefixCls()}-row-head-ellipsis`]: Boolean(column().ellipsis),
+            [`${prefixCls()}-cell-last`]: props.cell.last,
+            [`${prefixCls()}-row-head-ellipsis`]: column().ellipsis,
             [`${prefixCls()}-row-head-clickSort`]: clickToSort(),
         });
     };

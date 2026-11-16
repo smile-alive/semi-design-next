@@ -378,7 +378,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         const className = clsx(state.colorScheme, propClassName, {
             [`${prefixCls}-wrapper`]: true,
             [`${prefixCls}-wrapper-show`]: visible,
-            [`${prefixCls}-with-arrow`]: Boolean(showArrow),
+            [`${prefixCls}-with-arrow`]: showArrow,
             [`${prefixCls}-point-at-center`]: pointAtCenter,
             [`${prefixCls}-no-motion`]: !motion,
         });

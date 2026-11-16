@@ -117,7 +117,7 @@ export default function TableCell(props: TableCellProps) {
             [`${prefixCls()}-cell-fixed-right`]: isFixedRight,
             [`${prefixCls()}-cell-fixed-right-first`]: isFixedRightFirst,
             [`${prefixCls()}-cell-last`]: props.columnsToEnd != null && (colSpan() ?? 1) >= props.columnsToEnd,
-            [`${prefixCls()}-row-cell-ellipsis`]: Boolean(column().ellipsis),
+            [`${prefixCls()}-row-cell-ellipsis`]: column().ellipsis,
         });
     };
 

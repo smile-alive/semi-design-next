@@ -13,35 +13,31 @@ export interface ChatInputMessage {
 export default function chatInputToMessage({ references, attachments, inputContents, setup }: MessageContent): ChatInputMessage {
     let inputs: any[] = [];
 
-    if (attachments?.length) {
-        attachments.forEach((item: any) => {
-            const { name, url } = item;
-            if (isImageFile(name, item.fileInstance?.type)) {
-                inputs.push({
-                    ...item,
-                    type: 'input_image',
-                    image_url: url,
-                    detail: 'auto',
-                });
-            } else {
-                inputs.push({
-                    ...item,
-                    type: 'input_file',
-                    file_url: url,
-                    filename: name,
-                });
-            }
-        });
-    }
-
-    if (inputContents?.length) {
-        inputContents.forEach((item: any) => {
+    attachments?.forEach((item: any) => {
+        const { name, url } = item;
+        if (isImageFile(name, item.fileInstance?.type)) {
             inputs.push({
-                type: 'input_text',
-                text: item.text,
+                ...item,
+                type: 'input_image',
+                image_url: url,
+                detail: 'auto',
             });
+        } else {
+            inputs.push({
+                ...item,
+                type: 'input_file',
+                file_url: url,
+                filename: name,
+            });
+        }
+    });
+
+    inputContents?.forEach((item: any) => {
+        inputs.push({
+            type: 'input_text',
+            text: item.text,
         });
-    }
+    });
 
     return {
         role: 'user',

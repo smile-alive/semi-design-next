@@ -14,13 +14,13 @@ export class Emitter<Events extends Record<string, any>> {
         if (!this.listeners[event]) {
             this.listeners[event] = [];
         }
-        this.listeners[event]?.push(listener);
+        this.listeners[event].push(listener);
     }
 
     off<K extends keyof Events>(event: K, listener: EventHandler<Events[K]>) {
         if (!this.listeners[event]) return;
 
-        this.listeners[event] = this.listeners[event]?.filter((l) => l !== listener);
+        this.listeners[event] = this.listeners[event].filter((l) => l !== listener);
     }
 
     dispose() {

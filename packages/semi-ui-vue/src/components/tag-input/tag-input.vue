@@ -190,8 +190,8 @@
             [`${prefix}-warning`]: props.validateStatus === 'warning',
             [`${prefix}-small`]: looks.size === 'small',
             [`${prefix}-large`]: looks.size === 'large',
-            [`${prefix}-with-prefix`]: Boolean(k.prefix || k.insetLabel),
-            [`${prefix}-with-suffix`]: Boolean(k.suffix),
+            [`${prefix}-with-prefix`]: k.prefix || k.insetLabel,
+            [`${prefix}-with-suffix`]: k.suffix,
         },
     ];
 
@@ -266,7 +266,7 @@
             <div
                 v-if="k.prefix || k.insetLabel"
                 :id="prefixId()"
-                :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: Boolean(k.insetLabel), [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon' }]"
+                :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: k.insetLabel, [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon' }]"
                 x-semi-prop="prefix"
                 @click="foundation.handleClickPrefixOrSuffix"
                 @mousedown.prevent

@@ -230,8 +230,8 @@
                       [`${prefix}-error`]: props.validateStatus === 'error',
                       [`${prefix}-warning`]: props.validateStatus === 'warning',
                       [`${prefix}-no-arrow`]: !props.showArrow,
-                      [`${prefix}-with-prefix`]: Boolean(k.prefix || k.insetLabel),
-                      [`${prefix}-with-suffix`]: Boolean(k.suffix),
+                      [`${prefix}-with-prefix`]: k.prefix || k.insetLabel,
+                      [`${prefix}-with-suffix`]: k.suffix,
                   },
               ];
 
@@ -359,7 +359,7 @@
             `${prefix}-selection-text`,
             {
                 [`${prefix}-selection-placeholder`]: !shown,
-                [`${prefix}-selection-text-hide`]: Boolean(state.value.inputValue) && searching,
+                [`${prefix}-selection-text-hide`]: state.value.inputValue && searching,
                 [`${prefix}-selection-text-inactive`]: !state.value.inputValue && searching,
             },
         ];
@@ -472,7 +472,7 @@
                     :class="[
                         `${prefix}-prefix`,
                         {
-                            [`${prefix}-inset-label`]: Boolean(k.insetLabel),
+                            [`${prefix}-inset-label`]: k.insetLabel,
                             [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text',
                             [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon',
                         },

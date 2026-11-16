@@ -218,7 +218,7 @@
                 {
                     [`${prefix}-textarea-disabled`]: looks.disabled,
                     [`${prefix}-textarea-readonly`]: props.readonly,
-                    [`${prefix}-textarea-autosize`]: Boolean(props.autosize),
+                    [`${prefix}-textarea-autosize`]: props.autosize,
                     [`${prefix}-textarea-showClear`]: props.showClear,
                 },
                 props.classNames?.textarea,
@@ -266,7 +266,7 @@
                 [`${prefix}-textarea-borderless`]: props.borderless,
                 [`${prefix}-textarea-wrapper-disabled`]: looks.disabled,
                 [`${prefix}-textarea-wrapper-readonly`]: props.readonly,
-                [`${prefix}-textarea-wrapper-${props.validateStatus}`]: Boolean(props.validateStatus),
+                [`${prefix}-textarea-wrapper-${props.validateStatus}`]: props.validateStatus,
                 [`${prefix}-textarea-wrapper-focus`]: state.isFocus,
                 [`${prefix}-textarea-wrapper-withLineNumber`]: props.showLineNumber,
                 [`${prefix}-textarea-wrapper-resizeX`]: isResizable(['horizontal', 'both', 'inline']),

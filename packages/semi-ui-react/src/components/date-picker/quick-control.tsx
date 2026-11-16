@@ -22,10 +22,6 @@ export interface QuickControlProps {
 const noPresets: PresetsType = [];
 
 export default function QuickControl({ presets = noPresets, onPresetClick = noop, type, presetPosition = 'bottom', insetInput, locale }: QuickControlProps) {
-    if (!presets.length) {
-        return null;
-    }
-
     const isTypeRange = type === 'dateRange' || type === 'dateTimeRange';
     const isPanelTopAndBottom = presetPosition === 'top' || presetPosition === 'bottom';
     const isTopAndBottomRange = isPanelTopAndBottom && isTypeRange;

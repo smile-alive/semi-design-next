@@ -444,8 +444,8 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                 [`${prefixCls}-warning`]: props.validateStatus === 'warning',
                 [`${prefixCls}-small`]: local.size === 'small',
                 [`${prefixCls}-large`]: local.size === 'large',
-                [`${prefixCls}-with-prefix`]: Boolean(labelKind()),
-                [`${prefixCls}-with-suffix`]: Boolean(suffixKind()),
+                [`${prefixCls}-with-prefix`]: labelKind(),
+                [`${prefixCls}-with-suffix`]: suffixKind(),
             })}
             style={local.style}
             aria-disabled={local.disabled || undefined}
@@ -480,7 +480,7 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                 <div
                     id={labelId()}
                     class={clsx(`${prefixCls}-prefix`, {
-                        [`${prefixCls}-inset-label`]: Boolean(insetLabelKind()),
+                        [`${prefixCls}-inset-label`]: insetLabelKind(),
                         [`${prefixCls}-prefix-text`]: labelKind() === 'text',
                         [`${prefixCls}-prefix-icon`]: labelKind() === 'icon',
                     })}

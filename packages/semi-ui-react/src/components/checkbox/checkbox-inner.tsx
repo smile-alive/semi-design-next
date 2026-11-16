@@ -53,7 +53,7 @@ export default function CheckboxInner({
 
     const wrapper = clsx({
         [`${prefix}-inner`]: true,
-        [`${prefix}-inner-checked`]: Boolean(checked),
+        [`${prefix}-inner-checked`]: checked,
         [`${prefix}-inner-pureCardType`]: isPureCardType,
     });
 

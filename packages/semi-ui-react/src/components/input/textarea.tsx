@@ -285,7 +285,7 @@ export default function TextArea(rawProps: TextAreaProps) {
         [`${prefixCls}-textarea-borderless`]: borderless,
         [`${prefixCls}-textarea-wrapper-disabled`]: disabled,
         [`${prefixCls}-textarea-wrapper-readonly`]: readonly,
-        [`${prefixCls}-textarea-wrapper-${validateStatus}`]: Boolean(validateStatus),
+        [`${prefixCls}-textarea-wrapper-${validateStatus}`]: validateStatus,
         [`${prefixCls}-textarea-wrapper-focus`]: state.isFocus,
         [`${prefixCls}-textarea-wrapper-withLineNumber`]: showLineNumber,
         [`${prefixCls}-textarea-wrapper-resizeX`]: isResizableX,
@@ -297,7 +297,7 @@ export default function TextArea(rawProps: TextAreaProps) {
         {
             [`${prefixCls}-textarea-disabled`]: disabled,
             [`${prefixCls}-textarea-readonly`]: readonly,
-            [`${prefixCls}-textarea-autosize`]: Boolean(autosize),
+            [`${prefixCls}-textarea-autosize`]: autosize,
             [`${prefixCls}-textarea-showClear`]: showClear,
         },
         classNames?.textarea

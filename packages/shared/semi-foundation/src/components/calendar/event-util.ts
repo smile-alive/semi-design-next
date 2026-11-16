@@ -186,7 +186,7 @@ export function parseRangeAllDayEvent(event: EventObject[], startDate: Date, ran
             let dateLength;
             const j = differenceInCalendarDays(startDate, rangeStart);
             let i = 0;
-            while (Boolean(parsed[i]) && Boolean(parsed[i][j])) {
+            while (parsed[i] && parsed[i][j]) {
                 i++;
             }
 

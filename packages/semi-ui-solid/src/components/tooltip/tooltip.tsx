@@ -581,8 +581,8 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                             aria-describedby={props.role === 'dialog' ? props['aria-describedby'] : undefined}
                             class={clsx(state().colorScheme, props.class, `${props.prefixCls}-wrapper`, {
                                 [`${props.prefixCls}-wrapper-show`]: state().visible,
-                                [`${props.prefixCls}-with-arrow`]: Boolean(arrowChild()),
-                                [`${props.prefixCls}-point-at-center`]: Boolean(arrowChild()) && props.arrowPointAtCenter,
+                                [`${props.prefixCls}-with-arrow`]: arrowChild(),
+                                [`${props.prefixCls}-point-at-center`]: arrowChild() && props.arrowPointAtCenter,
                                 [`${props.prefixCls}-no-motion`]: !props.motion,
                             })}
                             style={props.style}

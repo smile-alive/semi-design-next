@@ -22,7 +22,7 @@
         :class="[
             `${table.view.value.prefixCls}-header`,
             {
-                [`${table.view.value.prefixCls}-header-sticky`]: Boolean(table.view.value.sticky),
+                [`${table.view.value.prefixCls}-header-sticky`]: table.view.value.sticky,
                 [`${table.view.value.prefixCls}-header-hidden`]: !table.view.value.showHeader,
             },
         ]"

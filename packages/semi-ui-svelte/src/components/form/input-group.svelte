@@ -49,8 +49,8 @@
         // the group's own aria-labelledby and aria-describedby are added to each field's references rather than set on the group
         get aria() {
             return {
-                labelledby: joinIds(ariaLabelledby ?? undefined, hasLabel && labelId),
-                describedby: joinIds(ariaDescribedby ?? undefined, Boolean(extraText) && ids.extraText),
+                labelledby: joinIds(ariaLabelledby, hasLabel && labelId),
+                describedby: joinIds(ariaDescribedby, extraText && ids.extraText),
                 errormessage: ids.errorMessage,
             };
         },

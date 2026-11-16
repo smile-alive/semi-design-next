@@ -385,7 +385,7 @@
                         [`${prefixCls}-${strings.SIZE_MIDDLE}`]: props.size === strings.SIZE_MIDDLE,
                         [`${prefixCls}-virtualized`]: virtualized,
                         [`${prefixCls}-bordered`]: props.bordered,
-                        [`${prefixCls}-fixed-header`]: Boolean(props.scroll?.y),
+                        [`${prefixCls}-fixed-header`]: props.scroll?.y,
                     }"
                 >
                     <TablePagination v-if="mergedPagination && (paginationPosition === 'top' || paginationPosition === 'both')" :formatPageText="formatPageText" :pagination="mergedPagination" />

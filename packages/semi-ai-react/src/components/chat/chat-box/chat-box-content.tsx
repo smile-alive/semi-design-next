@@ -54,7 +54,7 @@ export default function ChatBoxContent({ message = {}, customRenderFunc, role: r
         }
     }, [status, content, role, escapeHtml, markdownComponents, markdownRenderProps]);
 
-    if (customRenderFunc && typeof customRenderFunc === 'function') {
+    if (typeof customRenderFunc === 'function') {
         return customRenderFunc({
             message,
             role: roleInfo,

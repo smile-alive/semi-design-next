@@ -400,9 +400,9 @@ export default function NormalTable(props: TableProps) {
                         class={clsx({
                             [`${prefixCls}-${strings.SIZE_SMALL}`]: local.size === strings.SIZE_SMALL,
                             [`${prefixCls}-${strings.SIZE_MIDDLE}`]: local.size === strings.SIZE_MIDDLE,
-                            [`${prefixCls}-bordered`]: Boolean(local.bordered),
+                            [`${prefixCls}-bordered`]: local.bordered,
                             [`${prefixCls}-virtualized`]: isVirtualized(),
-                            [`${prefixCls}-fixed-header`]: Boolean(local.scroll?.y),
+                            [`${prefixCls}-fixed-header`]: local.scroll?.y,
                         })}
                     >
                         <Show when={['top', 'both'].includes(paginationPosition())}>{tablePagination()}</Show>

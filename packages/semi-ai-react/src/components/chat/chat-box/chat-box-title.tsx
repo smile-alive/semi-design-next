@@ -13,7 +13,7 @@ interface ChatBoxTitleProps {
 function ChatBoxTitle({ role, message, customRenderFunc }: ChatBoxTitleProps) {
     const title = <span className={`${PREFIX_CHAT_BOX}-title`}>{role?.name}</span>;
 
-    if (customRenderFunc && typeof customRenderFunc === 'function') {
+    if (typeof customRenderFunc === 'function') {
         return customRenderFunc({
             role,
             message,

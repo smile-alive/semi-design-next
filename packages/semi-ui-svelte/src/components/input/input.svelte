@@ -238,14 +238,14 @@
         `${prefixCls}-wrapper`,
         attrs.root.class,
         {
-            [`${prefixCls}-wrapper__with-prefix`]: Boolean(prefix || insetLabel),
-            [`${prefixCls}-wrapper__with-suffix`]: Boolean(suffix),
+            [`${prefixCls}-wrapper__with-prefix`]: prefix || insetLabel,
+            [`${prefixCls}-wrapper__with-suffix`]: suffix,
             [`${prefixCls}-wrapper__with-suffix-hidden`]: allowClear && hideSuffix,
             [`${prefixCls}-wrapper__with-suffix-icon`]: suffixKind === 'icon',
-            [`${prefixCls}-wrapper__with-append`]: Boolean(addonBefore),
-            [`${prefixCls}-wrapper__with-prepend`]: Boolean(addonAfter),
-            [`${prefixCls}-wrapper__with-append-only`]: Boolean(addonBefore && !addonAfter),
-            [`${prefixCls}-wrapper__with-prepend-only`]: Boolean(!addonBefore && addonAfter),
+            [`${prefixCls}-wrapper__with-append`]: addonBefore,
+            [`${prefixCls}-wrapper__with-prepend`]: addonAfter,
+            [`${prefixCls}-wrapper__with-append-only`]: addonBefore && !addonAfter,
+            [`${prefixCls}-wrapper__with-prepend-only`]: !addonBefore && addonAfter,
             [`${prefixCls}-wrapper-readonly`]: readonly,
             [`${prefixCls}-wrapper-disabled`]: isDisabled,
             [`${prefixCls}-wrapper-warning`]: validateStatus === 'warning',
@@ -254,7 +254,7 @@
             [`${prefixCls}-wrapper-clearable`]: showClear,
             [`${prefixCls}-wrapper-modebtn`]: mode === 'password',
             [`${prefixCls}-wrapper-hidden`]: type === 'hidden',
-            [`${prefixCls}-wrapper-${shownSize}`]: Boolean(shownSize),
+            [`${prefixCls}-wrapper-${shownSize}`]: shownSize,
             [`${prefixCls}-borderless`]: borderless,
         },
     ]}
@@ -283,7 +283,7 @@
             class={[
                 `${prefixCls}-prefix`,
                 {
-                    [`${prefixCls}-inset-label`]: Boolean(insetLabel),
+                    [`${prefixCls}-inset-label`]: insetLabel,
                     [`${prefixCls}-prefix-text`]: prefixKind === 'text',
                     [`${prefixCls}-prefix-icon`]: prefixKind === 'icon',
                 },
@@ -308,7 +308,7 @@
         class={[
             prefixCls,
             {
-                [`${prefixCls}-${shownSize}`]: Boolean(shownSize),
+                [`${prefixCls}-${shownSize}`]: shownSize,
                 [`${prefixCls}-disabled`]: isDisabled,
                 [`${prefixCls}-sibling-clearbtn`]: allowClear,
                 [`${prefixCls}-sibling-modebtn`]: mode === 'password',

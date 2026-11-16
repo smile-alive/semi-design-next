@@ -75,9 +75,9 @@ export default function FillStep({ ref, role, className = '', title, description
             className={clsx(
                 {
                     [prefixCls]: true,
-                    [`${prefixCls}-${status}`]: Boolean(status),
-                    [`${prefixCls}-${status}-hover`]: Boolean(status) && (onChange || onClick),
-                    [`${prefixCls}-${status}-active`]: Boolean(status) && (onChange || onClick),
+                    [`${prefixCls}-${status}`]: status,
+                    [`${prefixCls}-${status}-hover`]: status && (onChange || onClick),
+                    [`${prefixCls}-${status}-active`]: status && (onChange || onClick),
                     [`${prefixCls}-clickable`]: onChange || onClick,
                 },
                 className

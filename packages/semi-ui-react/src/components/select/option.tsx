@@ -30,13 +30,16 @@ function Option(props: OptionProps): React.ReactNode {
 
     const { locale } = useLocale('Select');
 
-    const optionClassName = clsx(prefixCls, {
-        [`${prefixCls}-disabled`]: disabled,
-        [`${prefixCls}-selected`]: selected,
-        [`${prefixCls}-focused`]: focused,
-        [`${prefixCls}-empty`]: empty,
-        [className]: className,
-    });
+    const optionClassName = clsx(
+        prefixCls,
+        {
+            [`${prefixCls}-disabled`]: disabled,
+            [`${prefixCls}-selected`]: selected,
+            [`${prefixCls}-focused`]: focused,
+            [`${prefixCls}-empty`]: empty,
+        },
+        className
+    );
 
     const onClick = (event: React.MouseEvent) => {
         if (!disabled) {

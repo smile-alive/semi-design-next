@@ -176,7 +176,7 @@
         {
             [`${prefix}-disabled`]: view.disabled,
             [`${prefix}-checked`]: view.checked,
-            [`${prefix}-${displayMode}`]: Boolean(displayMode),
+            [`${prefix}-${displayMode}`]: displayMode,
             [`${prefix}-buttonRadioComponent`]: !view.inGroup && view.isButtonRadio,
             [`${prefix}-buttonRadioGroup`]: view.isButtonRadio,
             [`${prefix}-buttonRadioGroup-${view.buttonSize}`]: view.isButtonRadio && view.buttonSize,

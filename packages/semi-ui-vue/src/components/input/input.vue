@@ -160,14 +160,14 @@
         return [
             wrapper,
             {
-                [`${wrapper}__with-prefix`]: Boolean(k.prefix || k.insetLabel),
-                [`${wrapper}__with-suffix`]: Boolean(k.suffix),
+                [`${wrapper}__with-prefix`]: k.prefix || k.insetLabel,
+                [`${wrapper}__with-suffix`]: k.suffix,
                 [`${wrapper}__with-suffix-hidden`]: allowClear.value && props.hideSuffix,
                 [`${wrapper}__with-suffix-icon`]: k.suffix === 'icon',
-                [`${wrapper}__with-append`]: Boolean(k.addonBefore),
-                [`${wrapper}__with-prepend`]: Boolean(k.addonAfter),
-                [`${wrapper}__with-append-only`]: Boolean(k.addonBefore && !k.addonAfter),
-                [`${wrapper}__with-prepend-only`]: Boolean(!k.addonBefore && k.addonAfter),
+                [`${wrapper}__with-append`]: k.addonBefore,
+                [`${wrapper}__with-prepend`]: k.addonAfter,
+                [`${wrapper}__with-append-only`]: k.addonBefore && !k.addonAfter,
+                [`${wrapper}__with-prepend-only`]: !k.addonBefore && k.addonAfter,
                 [`${wrapper}-readonly`]: props.readonly,
                 [`${wrapper}-disabled`]: looks.disabled,
                 [`${wrapper}-warning`]: props.validateStatus === 'warning',
@@ -176,7 +176,7 @@
                 [`${wrapper}-clearable`]: props.showClear,
                 [`${wrapper}-modebtn`]: props.mode === 'password',
                 [`${wrapper}-hidden`]: props.type === 'hidden',
-                [`${wrapper}-${looks.size}`]: Boolean(looks.size),
+                [`${wrapper}-${looks.size}`]: looks.size,
                 [`${prefix}-borderless`]: props.borderless,
             },
         ];
@@ -233,7 +233,7 @@
                 :class="[
                     `${prefix}-prefix`,
                     {
-                        [`${prefix}-inset-label`]: Boolean(k.insetLabel),
+                        [`${prefix}-inset-label`]: k.insetLabel,
                         [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text',
                         [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon',
                     },
@@ -255,7 +255,7 @@
             :class="[
                 prefix,
                 {
-                    [`${prefix}-${looks.size}`]: Boolean(looks.size),
+                    [`${prefix}-${looks.size}`]: looks.size,
                     [`${prefix}-disabled`]: looks.disabled,
                     [`${prefix}-sibling-clearbtn`]: allowClear,
                     [`${prefix}-sibling-modebtn`]: props.mode === 'password',

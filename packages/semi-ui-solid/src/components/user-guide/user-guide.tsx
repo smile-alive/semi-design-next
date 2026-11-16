@@ -253,7 +253,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
             <Popover
                 ref={(instance) => (popover = instance)}
                 class={clsx(`${prefixCls}-popover`, local.class, step()!.class)}
-                style={mergeStyles({ padding: '0', ...(isPrimaryTheme() ? { 'background-color': 'var(--semi-color-primary)' } : {}) }, local.style)}
+                style={mergeStyles({ padding: '0', 'background-color': isPrimaryTheme() ? 'var(--semi-color-primary)' : undefined }, local.style)}
                 aria-labelledby={hasContent(title()) ? titleId : undefined}
                 content={content}
                 position={step()!.position || local.position}

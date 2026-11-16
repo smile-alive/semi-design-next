@@ -67,7 +67,7 @@ function Card(rawProps: CardProps) {
     return (
         <div role={namedRole(rest)} {...rest} ref={ref} className={cardCls} style={style} aria-busy={loading}>
             {(hasContent(header) || hasContent(headerExtraContent) || hasContent(title)) && (
-                <div className={clsx(`${prefixcls}-header`, { [`${prefixcls}-header-bordered`]: Boolean(headerLine) }, classNames?.header)} style={styles?.header}>
+                <div className={clsx(`${prefixcls}-header`, { [`${prefixcls}-header-bordered`]: headerLine }, classNames?.header)} style={styles?.header}>
                     {hasContent(header) ? (
                         header
                     ) : (

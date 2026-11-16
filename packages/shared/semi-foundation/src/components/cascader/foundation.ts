@@ -954,7 +954,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     static getRenderData(props: BasicCascaderProps, state: BasicCascaderInnerData): Array<BasicEntity | BasicData> {
         const { keyEntities, isSearching } = state;
-        if (isSearching && Boolean(props.filterTreeNode)) {
+        if (isSearching && props.filterTreeNode) {
             return CascaderFoundation.#getFilteredData(props, state);
         }
         return Object.values(keyEntities)

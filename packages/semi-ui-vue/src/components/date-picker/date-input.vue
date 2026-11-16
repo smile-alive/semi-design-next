@@ -172,7 +172,7 @@
                 @focus="focusRange($event, 'rangeStart')"
             />
         </div>
-        <span :class="[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: Boolean(rangeParts.start || rangeParts.end) && !props.disabled }]" @click="focusRange($event, 'rangeStart')">
+        <span :class="[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: (rangeParts.start || rangeParts.end) && !props.disabled }]" @click="focusRange($event, 'rangeStart')">
             <slot name="rangeSeparator">{{ props.rangeSeparator }}</slot>
         </span>
         <div :class="[inputClass, `${prefix}-range-input-wrapper-end`, `${prefix}-range-input-wrapper`, { [`${prefix}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeEnd' && !props.disabled, [`${prefix}-borderless`]: props.borderless }]" @click="focusRange($event, 'rangeEnd')">

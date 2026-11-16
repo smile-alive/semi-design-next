@@ -34,7 +34,7 @@ function ChatBoxAvatar({ role, customRenderFunc, continueSend, message }: ChatBo
         );
     }, [role, continueSend]);
 
-    if (customRenderFunc && typeof customRenderFunc === 'function') {
+    if (typeof customRenderFunc === 'function') {
         return customRenderFunc({
             role,
             defaultAvatar: node,
