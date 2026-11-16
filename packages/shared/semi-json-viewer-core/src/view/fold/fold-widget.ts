@@ -14,12 +14,42 @@ export class FoldWidget {
     }
 
     #attachEventListeners() {
-        this.#view.lineScrollDom.addEventListener('mouseover', (e) => {
-            this.#handleLineNumberHover(e);
-        });
-        this.#view.lineScrollDom.addEventListener('mouseleave', () => {
-            this.#handleLineNumberContainerLeave();
-        });
+        const { signal } = this.#view;
+        this.#view.lineScrollDom.addEventListener(
+            'mouseover',
+            (e) => {
+                this.#handleLineNumberHover(e);
+            },
+            { signal }
+        );
+        this.#view.lineScrollDom.addEventListener(
+            'mouseleave',
+            () => {
+                this.#handleLineNumberContainerLeave();
+            },
+            { signal }
+        );
+        // delegated: the icons are recreated on every hover, and a listener on each would stay referenced by the
+        // view's signal until dispose
+        this.#view.lineScrollDom.addEventListener(
+            'mousedown',
+            (e) => {
+                const icon = (e.target as Element).closest?.(`.${this.#view.prefixCls}-folding-icon`);
+                if (icon instanceof HTMLElement) {
+                    this.#handleFoldingIconMouseDown(e, Number(icon.dataset.lineNumber));
+                }
+            },
+            { signal }
+        );
+    }
+
+    #handleFoldingIconMouseDown(e: MouseEvent, lineNumber: number) {
+        e.preventDefault(); // keep the click from changing the text selection
+        e.stopPropagation();
+        this.#foldingModel.toggleFoldingRange(lineNumber);
+        this.#view.scalingCellSizeAndPositionManager.resetCell(0);
+        this.#view.layout();
+        this.#isMouseOver = false;
     }
 
     #handleLineNumberHover(_e: MouseEvent) {
@@ -65,6 +95,7 @@ export class FoldWidget {
         const foldingIconClass = `${this.#view.prefixCls}-folding-icon`;
 
         const foldingIcon = elt('span', foldingIconClass);
+        foldingIcon.dataset.lineNumber = String(lineNumber);
         const isCollapsed = this.#foldingModel.isCollapsed(lineNumber);
         foldingIcon.appendChild(this.#createFoldSvg(isCollapsed));
         setStyles(foldingIcon, {
@@ -79,15 +110,6 @@ export class FoldWidget {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-        });
-
-        foldingIcon.addEventListener('mousedown', (e) => {
-            e.preventDefault(); // keep the click from changing the text selection
-            e.stopPropagation();
-            this.#foldingModel.toggleFoldingRange(lineNumber);
-            this.#view.scalingCellSizeAndPositionManager.resetCell(0);
-            this.#view.layout();
-            this.#isMouseOver = false;
         });
 
         return foldingIcon;
