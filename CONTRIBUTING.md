@@ -189,7 +189,7 @@ Chromium、Firefox、WebKit 三个浏览器的完整测试每天定时运行，�
 所有 `@fibrae/*` 包发布到 npm 公共 registry，共用一个版本号，由 [changesets](.changeset/README.md) 管理。
 
 1. 改动发布包的行为或公开 API 时，在功能 PR 里运行 `pnpm changeset` 添加变更说明；没有 changeset 的改动不会发版。
-2. `release` 上有 changeset 时，Release 工作流在每次 CI 通过后开出或更新「chore: 发布新版本」PR（分支 `changeset-release/release`），汇总版本号与各包 CHANGELOG。这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」。
+2. `release` 上有 changeset 时，Release 工作流在每次推送后立即开出或更新「chore: 发布新版本」PR（分支 `changeset-release/release`），汇总版本号与各包 CHANGELOG。这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」。
 3. 要发版时，把版本 PR rebase 合入 `release`。它的 CI 通过后，Release 工作流用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release，然后把 `main` fast-forward 到这个 commit 并部署正式站。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
 4. 版本 PR 合入到发布完成之间几分钟内合入的功能 PR 会一起发出去；要精确控制发版内容，等 Release 工作流结束再合。
 
