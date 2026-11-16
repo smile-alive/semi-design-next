@@ -1,5 +1,14 @@
 # @fibrae/semi-ai-foundation
 
+## 0.9.0
+
+### Patch Changes
+
+- Updated dependencies [36ec5f1]
+- Updated dependencies [4f80c8f]
+- Updated dependencies [82c9852]
+    - @fibrae/semi-foundation@0.9.0
+
 ## 0.8.0
 
 ### Patch Changes
