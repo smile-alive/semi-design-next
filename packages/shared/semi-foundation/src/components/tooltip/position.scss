@@ -29,8 +29,11 @@
         animation: #{$module}-zoom-in $animation_duration-tooltip_out $animation_function-tooltip_out;
     }
 
-    // closing renders the popup without the show class; forwards holds it invisible until hidePopover()
+    // closing renders the popup without the show class; forwards holds it invisible until hidePopover(). A closing
+    // popup takes no pointer: it is transparent from halfway, and a hover there would reopen it, only for the reopened
+    // popup to close again as neither its trigger nor focus holds it (Ant Design's leave motion does the same)
     &:popover-open:not(.#{$module}-wrapper-show) {
+        pointer-events: none;
         animation: #{$module}-zoom-out $animation_duration-tooltip_out $animation_function-tooltip_out forwards;
     }
 
