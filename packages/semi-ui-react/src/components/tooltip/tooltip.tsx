@@ -315,37 +315,34 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         TooltipFoundation,
         props,
         () => TooltipFoundation.getInitialState(),
-        (base) => {
-            const adapter: Omit<TooltipAdapter<TooltipProps>, keyof typeof base> = {
-                insertPortal: () => ({ portalTarget: runtime.getPortalTarget(), colorScheme: runtime.getColorScheme() }),
-                removePortal: () => setContentShown(false),
-                notifyAfterOpen: () => base.getProps().afterOpen?.(),
-                notifyAfterClose: () => base.getProps().afterClose?.(),
-                notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
-                isEventInTrigger: (e) => runtime.isInTrigger(e.composedPath()[0] as Node),
-                // a nested popup is portaled outside this DOM, but onMouseDownCapture marks the press first
-                getNestedPopups: () => [],
-                batch: (fn) => fn(),
-                notifyClickOutSide: (e) => base.getProps().onClickOutSide?.(e),
-                getPortalContainer: () => runtime.container,
-                getTriggerNode: () => runtime.trigger,
-                isTriggerHovered: () => runtime.isTriggerHovered(),
-                getTriggerRect: () => runtime.getTriggerRect(),
-                getTriggerElement: () => runtime.getTriggerElement(),
-                observeTrigger: (observer) => runtime.trigger?.observeUsing(observer),
-                unobserveTrigger: (observer) => runtime.trigger?.unobserveUsing(observer),
-                setInitialFocus: () => {
-                    const focusRefNode = runtime.initialFocus.current;
-                    if (focusRefNode && 'focus' in focusRefNode) {
-                        focusRefNode.focus({ preventScroll: base.getProps().preventScroll });
-                    }
-                },
-                notifyOpen: () => base.getProps().onOpen?.(),
-                notifyEscKeydown: (event) => base.getProps().onEscKeyDown?.(event),
-                getPopupId: () => popupIdOf(base.getProps().wrapperId, generatedId),
-            };
-            return adapter;
-        },
+        (base) => ({
+            insertPortal: () => ({ portalTarget: runtime.getPortalTarget(), colorScheme: runtime.getColorScheme() }),
+            removePortal: () => setContentShown(false),
+            notifyAfterOpen: () => base.getProps().afterOpen?.(),
+            notifyAfterClose: () => base.getProps().afterClose?.(),
+            notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
+            isEventInTrigger: (e) => runtime.isInTrigger(e.composedPath()[0] as Node),
+            // a nested popup is portaled outside this DOM, but onMouseDownCapture marks the press first
+            getNestedPopups: () => [],
+            batch: (fn) => fn(),
+            notifyClickOutSide: (e) => base.getProps().onClickOutSide?.(e),
+            getPortalContainer: () => runtime.container,
+            getTriggerNode: () => runtime.trigger,
+            isTriggerHovered: () => runtime.isTriggerHovered(),
+            getTriggerRect: () => runtime.getTriggerRect(),
+            getTriggerElement: () => runtime.getTriggerElement(),
+            observeTrigger: (observer) => runtime.trigger?.observeUsing(observer),
+            unobserveTrigger: (observer) => runtime.trigger?.unobserveUsing(observer),
+            setInitialFocus: () => {
+                const focusRefNode = runtime.initialFocus.current;
+                if (focusRefNode && 'focus' in focusRefNode) {
+                    focusRefNode.focus({ preventScroll: base.getProps().preventScroll });
+                }
+            },
+            notifyOpen: () => base.getProps().onOpen?.(),
+            notifyEscKeydown: (event) => base.getProps().onEscKeyDown?.(event),
+            getPopupId: () => popupIdOf(base.getProps().wrapperId, generatedId),
+        }),
         context
     );
 
@@ -469,7 +466,22 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         if (!frag) {
             return undefined;
         }
-        const listeners = Object.entries(state.triggerEventSet).filter(([name]) => name !== TRIGGER_EVENT_NAMES.keydown) as [string, EventListener][];
+        const listeners = Object.entries(state.triggerEventSet)
+            .filter(([name]) => name !== TRIGGER_EVENT_NAMES.keydown)
+            .map(([name, handler]: [string, EventListener]) => {
+                if (name !== TRIGGER_EVENT_NAMES.mouseLeave) {
+                    return [name, handler];
+                }
+                // React fires the popup's onMouseEnter from the trigger's mouseout, before this native mouseleave, so
+                // a pointer moving straight into an adjacent popup must not hide it here; the popup's own leave does
+                const leave: EventListener = (e) => {
+                    const to = (e as MouseEvent).relatedTarget;
+                    if (!(to instanceof Node && runtime.container?.contains(to))) {
+                        handler(e);
+                    }
+                };
+                return [name, leave];
+            }) as [string, EventListener][];
         for (const [name, handler] of listeners) {
             frag.addEventListener(name, handler);
         }

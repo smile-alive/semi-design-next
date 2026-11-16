@@ -98,7 +98,7 @@ describe('Tooltip 浏览器', () => {
             props: { trigger, motion: false },
             slots: { default: () => <button>trigger</button>, content: () => <input aria-label="inside" /> },
         });
-        screen.getByRole('button').focus();
+        await tabTo(screen.getByRole('button'));
         const input = await screen.findByRole('textbox');
         input.focus();
         await new Promise((resolve) => setTimeout(resolve, 150));

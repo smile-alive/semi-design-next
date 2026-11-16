@@ -316,7 +316,7 @@ describe('Tooltip 触发事件（浏览器）', () => {
                 <Button>keyboard focus me</Button>
             </Tooltip>
         );
-        screen.getByRole('button', { name: 'keyboard focus me' }).focus();
+        await tabTo(screen.getByRole('button', { name: 'keyboard focus me' }));
         await expectShown('keyboard tip');
         await new Promise((resolve) => setTimeout(resolve, 300));
         expect(shown()).toHaveTextContent('keyboard tip');
@@ -343,7 +343,7 @@ describe('Tooltip 触发事件（浏览器）', () => {
                 <Button>arrow down from me</Button>
             </Tooltip>
         );
-        screen.getByRole('button', { name: 'arrow down from me' }).focus();
+        await tabTo(screen.getByRole('button', { name: 'arrow down from me' }));
         // what ArrowDown does; positioning waits at least 32ms for a stable size, so this lands before it
         (await screen.findByRole('button', { name: 'inside popup' })).focus();
         await expectShown('inside popup');
