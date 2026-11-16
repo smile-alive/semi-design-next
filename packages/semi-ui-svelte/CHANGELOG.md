@@ -1,5 +1,27 @@
 # @fibrae/semi-ui-svelte
 
+## 0.9.1
+
+### Patch Changes
+
+- 1eeeff1: hover 弹层与 Cascader 的悬停展开加入指针宽限。
+
+    - Tooltip、Popover、Dropdown（含嵌套子菜单）、Navigation 弹出的子菜单：鼠标离开触发器后朝弹层一侧移动、且在离开点与弹层近侧两角围成的三角区内时，弹层保持打开，途经的其他 hover 触发器不打开，最长 300ms；离开三角区、反向移动或超时后照常按 `mouseLeaveDelay` 关闭，指针停留的触发器再打开。
+    - Cascader `showNext="hover"`：鼠标斜着移向已展开的下一列、途经同列其他选项时不切换，停留超过 300ms 或离开三角区后才切换到指针所在的选项。
+
+- c4f3117: Tooltip 不再同时显示多个提示。
+
+    - hover、focus 触发的提示（`role="tooltip"`）同一时间只显示一组：一个打开时关闭其他已打开的，几个在延迟内先后请求显示时只显示最后一个，嵌套在其触发器或弹层中的除外。例如鼠标停在相邻按钮上时按 Esc 关闭 Modal，焦点还回的按钮与指针下的按钮不再各显示一个提示。
+    - hover 触发的弹层只在触发器 `:focus-visible` 时随聚焦打开，鼠标点击关闭 Modal 后还回的焦点不再弹出提示。
+    - React：指针从触发器直接移入紧挨着的 hover 弹层（含 Dropdown 菜单）时，弹层不再偶发自动关闭。
+    - Form 标签的提示按钮改用描边问号图标，视觉上比实心图标轻，颜色与对比度不变。
+
+- Updated dependencies [1eeeff1]
+- Updated dependencies [f1ee9e6]
+- Updated dependencies [c4f3117]
+    - @fibrae/semi-foundation@0.9.1
+    - @fibrae/semi-icons-svelte@0.9.1
+
 ## 0.9.0
 
 ### Minor Changes
