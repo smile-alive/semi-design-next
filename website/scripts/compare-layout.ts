@@ -10,6 +10,7 @@ import { parseArgs } from 'node:util';
 import { sumBy } from 'es-toolkit';
 import { chromium, type Browser } from 'playwright';
 import { mapConcurrent } from '../../scripts/lib/pool.ts';
+import { progress } from '../../scripts/lib/progress.ts';
 import { settle } from './lib/browser.ts';
 
 type Item = Record<string, string | number>;
@@ -29,15 +30,17 @@ const directions = mode === 'both' ? ['ltr', 'rtl'] : [mode];
 
 const browser = await chromium.launch();
 const jobs = paths.flatMap((path) => directions.map((direction) => ({ path, direction })));
+const bar = progress('Comparing layouts', jobs.length);
 const report = await mapConcurrent(
     jobs,
-    async ({ path, direction }) => {
+    bar.track(async ({ path, direction }: (typeof jobs)[number]) => {
         const rtl = direction === 'rtl';
         const [base, cand] = await Promise.all([load(browser, baselineUrl + path, rtl), load(browser, candidateUrl + path, rtl)]);
         return { path, mode: direction, elements: sumBy(Object.values(base), (list) => list.length), diffs: compare(base, cand) };
-    },
+    }),
     CONCURRENCY
 );
+bar.done();
 await browser.close();
 
 console.log(

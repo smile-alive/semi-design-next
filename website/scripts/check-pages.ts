@@ -10,6 +10,7 @@ import { chromium, type Browser, type Page } from 'playwright';
 import { readJson } from '../../scripts/lib/json.ts';
 import { website } from '../../scripts/lib/paths.ts';
 import { mapConcurrent } from '../../scripts/lib/pool.ts';
+import { progress } from '../../scripts/lib/progress.ts';
 import { additionsOverReact, knownRules } from './lib/a11y-baseline.ts';
 import { settle } from './lib/browser.ts';
 
@@ -59,7 +60,13 @@ const pages = fs
     .toSorted();
 
 const browser = await chromium.launch();
-const results = await mapConcurrent(pages, (url) => checkPage(browser, url), CONCURRENCY);
+const bar = progress('Checking pages', pages.length);
+const results = await mapConcurrent(
+    pages,
+    bar.track((url: string) => checkPage(browser, url)),
+    CONCURRENCY
+);
+bar.done();
 await browser.close();
 
 const violations = Object.fromEntries(results.flatMap((result) => result.violations));

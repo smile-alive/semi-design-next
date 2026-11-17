@@ -14,6 +14,7 @@ import { build, type Rolldown } from 'vite';
 import { readJson } from './lib/json.ts';
 import { root, website } from './lib/paths.ts';
 import { mapConcurrent } from './lib/pool.ts';
+import { progress } from './lib/progress.ts';
 
 const budgetFile = path.join(root, 'size-budget.json');
 const entryId = '\0size-entry';
@@ -74,7 +75,9 @@ async function measure(name: string) {
 
 // CSS is part of what an app ships for the export; lazy chunks are not (they load on demand).
 async function measureBudgetSizes(exportNames: string[]) {
-    const measured = await mapConcurrent(exportNames, measure);
+    const bar = progress('Measuring exports', exportNames.length);
+    const measured = await mapConcurrent(exportNames, bar.track(measure));
+    bar.done();
     return Object.fromEntries(exportNames.map((name, index) => [name, measured[index].js + measured[index].css]));
 }
 
