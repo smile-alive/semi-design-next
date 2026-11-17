@@ -9,6 +9,7 @@ import ts from 'typescript';
 import { frameworks } from '../lint/index.ts';
 import { website } from './lib/paths.ts';
 import { mapConcurrent } from './lib/pool.ts';
+import { progress } from './lib/progress.ts';
 
 const readConfig = (config: string) => ts.readConfigFile(config, (file) => ts.sys.readFile(file)).config;
 // a container config (no files, only references) has nothing to check; the projects it lists are matched on their own
@@ -62,10 +63,14 @@ async function check(config: string) {
     child.stderr.on('data', append);
     const [status] = await once(child, 'close');
     if (status !== 0) failed.add(config);
-    console.log(`${status === 0 ? 'PASS' : 'FAIL'} ${tool} ${config} ${seconds(start)}${output.trim() ? `\n${output.trimEnd()}` : ''}`);
+    return `${status === 0 ? 'PASS' : 'FAIL'} ${tool} ${config} ${seconds(start)}${output.trim() ? `\n${output.trimEnd()}` : ''}`;
 }
 
-await mapConcurrent(configs, check);
+// Printed after the bar is gone, in config order
+const bar = progress('Type-checking', configs.length);
+const reports = await mapConcurrent(configs, bar.track(check));
+bar.done();
+console.log(reports.join('\n'));
 
 const passed = configs.filter((config) => !failed.has(config)).length;
 console.log(`\n${passed} PASS, ${failed.size} FAIL in ${seconds(started)}`);
