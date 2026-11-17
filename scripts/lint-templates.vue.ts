@@ -1,25 +1,17 @@
-// Build, tests and vue-tsc compile templates with prefixIdentifiers, and compiler-core then skips checks that compare
-// raw expressions, such as X_V_IF_SAME_KEY (v-if/else branches sharing a key). Volar compiles without prefixing and
-// reports them in the editor, so lint compiles every template once more the same way.
-import { spawnSync } from 'node:child_process';
+// Compiles every .vue template without identifier prefixing and fails on the errors and tips it reports.
+// Usage: node scripts/lint-templates.vue.ts
+// Output: one `file[:line]: message` per parse error, compile error or tip on stderr, exit code 1 on any.
+// Build, tests and vue-tsc compile with prefixIdentifiers, which makes compiler-core skip checks on raw expressions such
+// as X_V_IF_SAME_KEY (v-if/else branches sharing a key). Volar compiles without prefixing and reports them, so this does too.
 import fs from 'node:fs';
 import { compileTemplate, parse } from 'vue/compiler-sfc';
+import { gitFiles } from './lib/git-files.ts';
 
-const files = spawnSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '--', '*.vue'], { encoding: 'utf8' })
-    .stdout.split('\n')
-    // --cached still lists files deleted in the worktree but not yet staged
-    .filter((file) => file && fs.existsSync(file));
-
-let failed = false;
-
-for (const file of files) {
+function lintFile(file: string) {
     const { descriptor, errors } = parse(fs.readFileSync(file, 'utf8'), { filename: file });
-    for (const error of errors) {
-        console.error(`${file}: ${error.message}`);
-        failed = true;
-    }
+    const messages = errors.map((error) => `${file}: ${error.message}`);
     const { template } = descriptor;
-    if (!template) continue;
+    if (!template) return messages;
 
     const result = compileTemplate({
         source: template.content,
@@ -29,16 +21,17 @@ for (const file of files) {
         // module mode forces prefixing, and cached handlers need it
         compilerOptions: { mode: 'function', prefixIdentifiers: false, hoistStatic: false, cacheHandlers: false, expressionPlugins: ['typescript'] },
     });
-    for (const error of result.errors) {
-        // template.content starts on the line of the <template> tag
+    const compileMessages = result.errors.map((error) => {
+        // error lines are relative to template.content, which starts on the <template> tag's line
         const line = typeof error === 'string' || !error.loc ? template.loc.start.line : template.loc.start.line + error.loc.start.line - 1;
-        console.error(`${file}:${line}: ${typeof error === 'string' ? error : error.message}`);
-        failed = true;
-    }
-    for (const tip of result.tips) {
-        console.error(`${file}: ${tip}`);
-        failed = true;
-    }
+        return `${file}:${line}: ${typeof error === 'string' ? error : error.message}`;
+    });
+    return [...messages, ...compileMessages, ...result.tips.map((tip) => `${file}: ${tip}`)];
 }
 
-if (failed) process.exit(1);
+const messages = gitFiles('*.vue').flatMap(lintFile);
+
+if (messages.length) {
+    console.error(messages.join('\n'));
+    process.exit(1);
+}

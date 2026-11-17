@@ -1,36 +1,50 @@
+// Type-checks every tsconfig project (tsc, or the checker a framework declares), running them in parallel.
+// Usage: node scripts/typecheck.ts [source|vitest]
+// Output: one PASS/FAIL line per project with its compiler output, then a summary; exit code 1 on a failing project or a vitest tsconfig missing from tsconfig.json references.
 import { spawn, spawnSync } from 'node:child_process';
+import { once } from 'node:events';
 import { globSync } from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import ts from 'typescript';
 import { frameworks } from '../lint/index.ts';
+import { website } from './lib/paths.ts';
+import { mapConcurrent } from './lib/pool.ts';
 
-// a container config (no files, only references) has nothing to check itself; the projects it lists are matched on their own
-const isContainer = (config: string) => ts.readConfigFile(config, (file) => ts.sys.readFile(file)).config.files?.length === 0;
+const readConfig = (config: string) => ts.readConfigFile(config, (file) => ts.sys.readFile(file)).config;
+// a container config (no files, only references) has nothing to check; the projects it lists are matched on their own
+const isContainer = (config: string) => readConfig(config).files?.length === 0;
+const sorted = (pattern: string) => globSync(pattern).toSorted();
+
 const source = [
     'tsconfig.node.json',
     ...globSync(['packages/*/tsconfig{,.lib}.json', 'packages/*/*/tsconfig.json'])
         .filter((config) => !isContainer(config))
         .toSorted(),
-    ...globSync('website/tsconfig*.json').toSorted(),
+    ...sorted('website/tsconfig*.json'),
 ];
-const vitest = [...globSync('vitest/tsconfig*.json').toSorted(), ...globSync('vitest/*/tsconfig*.json').toSorted()];
+const vitest = [...sorted('vitest/tsconfig*.json'), ...sorted('vitest/*/tsconfig*.json')];
+
 // CI checks the two parts in parallel jobs; together they cover every config, so a new one cannot fall outside both
 const part = process.argv[2];
 if (part !== undefined && part !== 'source' && part !== 'vitest') throw new Error(`Unknown part "${part}", expected source or vitest`);
 const configs = part === 'source' ? source : part === 'vitest' ? vitest : [...source, ...vitest];
-const failed: string[] = [];
+
+const failed = new Set<string>();
+
 // A vitest config missing from the root references is not type-checked by the editor or by `tsc -b`
-const referenced = new Set<string>(ts.readConfigFile('tsconfig.json', (file) => ts.sys.readFile(file)).config.references.map((reference: { path: string }) => path.normalize(reference.path)));
-for (const config of part === 'source' ? [] : globSync('vitest/**/tsconfig*.json')) {
-    if (referenced.has(config)) continue;
-    console.error(`${config} is missing from tsconfig.json references`);
-    failed.push(config);
+if (part !== 'source') {
+    const referenced = new Set<string>(readConfig('tsconfig.json').references.map((reference: { path: string }) => path.normalize(reference.path)));
+    for (const config of globSync('vitest/**/tsconfig*.json').filter((config) => !referenced.has(config))) {
+        console.error(`${config} is missing from tsconfig.json references`);
+        failed.add(config);
+    }
 }
+
 // website/tsconfig.json includes Astro's generated .astro/types.d.ts, which a fresh checkout does not have yet
-const sync = spawnSync('pnpm', ['exec', 'astro', 'sync'], { cwd: 'website', stdio: 'inherit' });
+const sync = spawnSync('pnpm', ['exec', 'astro', 'sync'], { cwd: website, stdio: 'inherit' });
 if (sync.error) throw sync.error;
 if (sync.status !== 0) process.exit(sync.status ?? 1);
+
 const started = performance.now();
 const seconds = (since: number) => `${((performance.now() - since) / 1000).toFixed(1)}s`;
 
@@ -41,27 +55,21 @@ async function check(config: string) {
     const args = tool === 'svelte-check' ? ['--tsconfig', config, '--fail-on-warnings'] : ['-p', config, '--noEmit'];
     const start = performance.now();
     const child = spawn(tool, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    // stdout and stderr share one buffer so the output keeps the order the tool wrote it in
     let output = '';
-    child.stdout.on('data', (chunk) => (output += chunk));
-    child.stderr.on('data', (chunk) => (output += chunk));
-    const status = await new Promise<number | null>((resolve, reject) => {
-        child.once('error', reject);
-        child.once('close', resolve);
-    });
-    if (status !== 0) failed.push(config);
+    const append = (chunk: Buffer) => (output += chunk);
+    child.stdout.on('data', append);
+    child.stderr.on('data', append);
+    const [status] = await once(child, 'close');
+    if (status !== 0) failed.add(config);
     console.log(`${status === 0 ? 'PASS' : 'FAIL'} ${tool} ${config} ${seconds(start)}${output.trim() ? `\n${output.trimEnd()}` : ''}`);
 }
 
-const queue = [...configs];
-const worker = async () => {
-    for (let config = queue.shift(); config; config = queue.shift()) {
-        await check(config);
-    }
-};
-await Promise.all(Array.from({ length: Math.min(os.availableParallelism(), queue.length) }, worker));
+await mapConcurrent(configs, check);
 
-console.log(`\n${configs.length - failed.length} PASS, ${failed.length} FAIL in ${seconds(started)}`);
-if (failed.length) {
-    console.error(failed.map((config) => `FAIL ${config}`).join('\n'));
+const passed = configs.filter((config) => !failed.has(config)).length;
+console.log(`\n${passed} PASS, ${failed.size} FAIL in ${seconds(started)}`);
+if (failed.size) {
+    console.error([...failed].map((config) => `FAIL ${config}`).join('\n'));
     process.exit(1);
 }

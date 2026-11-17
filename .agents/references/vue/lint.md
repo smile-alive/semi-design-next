@@ -13,4 +13,4 @@
 - `lint-private` 检查 `.vue` 中的 private 关键字，图标点击的 TSX 检查不覆盖模板。模板依赖 vuejs-accessibility，缺少的非交互 role/tabindex 规则由浏览器 axe 用例覆盖。
 - `lint/vue/component-order.ts` 登记 Vue 的语句顺序调用表，`pnpm lint:component-order` 读取它；`pnpm lint:vue` 跑模板 ESLint 与 `scripts/lint-templates.vue.ts`，随 `pnpm lint` 运行。
 - 构建、测试和 `vue-tsc` 都以 `prefixIdentifiers` 编译模板，compiler-core 在这种模式下跳过比较原始表达式的检查（如 v-if/else 分支的重复 `key`），编辑器里的 Volar 不加前缀，会报这些错。`scripts/lint-templates.vue.ts` 按 Volar 的方式不加前缀再编译一遍全部模板，任何编译错误或警告都算失败。
-- 验证改动的 `.vue` 时同时运行 `vp lint --deny-warnings <路径>` 与 `pnpm exec eslint <路径> --max-warnings 0`，再运行相应 `vue-tsc`。提交 hook 按 oxlint -> ESLint -> oxfmt 顺序修复。
+- 验证改动的 `.vue` 时同时运行 `pnpm lint:code <路径>` 与 `pnpm exec eslint <路径> --max-warnings 0`，再运行相应 `vue-tsc`。提交 hook 按 oxlint -> ESLint -> oxfmt 顺序修复。

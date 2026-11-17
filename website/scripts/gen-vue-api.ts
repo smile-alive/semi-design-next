@@ -1,8 +1,11 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+// Generates the Vue API tables (api/<component>.vue.<locale>.mdx) from vue-component-meta and api.vue.json descriptions.
+// Usage: node scripts/gen-vue-api.ts [--check] [<category>/<page>...]   (run in website/; without pages, every page)
+// Output: one MDX fragment per component and locale, exit code 1 on --check when a fragment is stale or missing
+import { dirname, resolve } from 'node:path';
 import ts from 'typescript';
 import { createCheckerByJson, type ComponentMeta, type ExposeMeta, TypeMeta } from 'vue-component-meta';
-import { apiFiles, apiType, type Description, type Locale, locales, renderTable, root, runCli, website, writeFragments } from './api-table.ts';
+import { apiFragments, apiType, byName, type Description, type Locale, readApiEntries, renderTable, root, runCli, writeFragments } from './lib/api-table.ts';
+import { exportedSymbol, findTsConfig, readTsConfig } from './lib/ts-api.ts';
 
 type Group = 'props' | 'events' | 'slots' | 'exposed';
 export interface ApiDescription {
@@ -48,22 +51,26 @@ export function renderApi(meta: VueApi, description: ApiDescription, locale: Loc
                         if (group === 'props') cells.push(apiType(defaultValue(member)));
                         return { name: member.name, cells };
                     })
-                    .toSorted((a, b) => a.name.localeCompare(b.name, 'en'));
+                    .toSorted(byName);
                 return renderTable(group, titles[index], headings[locale][index], rows, description[group], locale);
             })
             .join('\n\n') + '\n'
     );
 }
 
+const checkers = new Map<string, ReturnType<typeof createCheckerByJson>>();
+
+// One checker per tsconfig serves every component under it, as one program per tsconfig does for the other frameworks
+function checkerOf(config: string) {
+    return checkers.getOrInsertComputed(config, () => {
+        const json = readTsConfig(config);
+        // Same reason as programOptions in lib/ts-api.ts: union order would otherwise follow unrelated source files
+        return createCheckerByJson(dirname(config), { ...json, compilerOptions: { ...json.compilerOptions, stableTypeOrdering: true } }, { schema: false });
+    });
+}
+
 export function extractApi(source: string): VueApi {
-    if (!existsSync(source)) throw new Error(`组件源文件不存在：${source}`);
-    const config = ts.findConfigFile(dirname(source), existsSync);
-    if (!config) throw new Error(`组件缺少 tsconfig.json：${source}`);
-    const parsed = ts.readConfigFile(config, (path) => ts.sys.readFile(path));
-    if (parsed.error) throw new Error(ts.flattenDiagnosticMessageText(parsed.error.messageText, '\n'));
-    // Without stableTypeOrdering the checker orders union members (and the members of a union of shapes) by when it
-    // created each type, so an unrelated source file could reorder a table.
-    const checker = createCheckerByJson(dirname(config), { ...parsed.config, compilerOptions: { ...parsed.config.compilerOptions, stableTypeOrdering: true } }, { schema: false });
+    const checker = checkerOf(findTsConfig(source));
     const meta = checker.getComponentMeta(source);
     const { props, events, slots } = meta;
     const program = checker.getProgram();
@@ -75,8 +82,7 @@ export function extractApi(source: string): VueApi {
 function functionExposed(program: ts.Program, source: string, props: ComponentMeta['props']) {
     const checker = program.getTypeChecker();
     const file = program.getSourceFile(source);
-    const module = file && checker.getSymbolAtLocation(file);
-    const component = module && checker.getExportsOfModule(module).find((symbol) => symbol.name === 'default');
+    const component = file && exportedSymbol(checker, file, 'default');
     if (!component) throw new Error(`组件缺少默认导出：${source}`);
     const expose = checker.getTypeOfSymbol(component).getCallSignatures()[0]?.parameters[2];
     const exposed = expose && checker.getNonNullableType(checker.getTypeOfSymbol(expose)).getCallSignatures()[0]?.parameters[0];
@@ -99,22 +105,15 @@ export function ownProps(meta: Pick<ComponentMeta, 'props'>) {
     return meta.props.filter((prop) => !prop.global && !prop.getDeclarations().every((declaration) => declaration.file.includes('/@vue/runtime-dom/') || declaration.file.includes('/base/element-props.')));
 }
 
-export function generateApis(check: boolean, pages: string[]) {
-    const fragments: { path: string; body: string }[] = [];
-    for (const file of apiFiles('vue', pages)) {
-        const json = join(website, file);
-        const components = JSON.parse(readFileSync(json, 'utf8')) as Record<string, ApiDescription>;
-        for (const [name, description] of Object.entries(components)) {
-            if (!/^[a-z][a-z0-9-]*$/.test(name) || typeof description.source !== 'string') throw new Error(`无效组件配置：${json} ${name}`);
-            const meta = extractApi(resolve(root, description.source));
-            for (const locale of locales) {
-                fragments.push({ path: join(dirname(json), 'api', `${name}.vue.${locale}.mdx`), body: renderApi(meta, description, locale) });
-            }
-        }
-    }
-    writeFragments(fragments, check, 'Vue');
+export async function generateApis(check: boolean, pages: string[]) {
+    const entries = readApiEntries<ApiDescription>('vue', pages);
+    const fragments = entries.flatMap((entry) => {
+        const meta = extractApi(resolve(root, entry.description.source));
+        return apiFragments(entry, 'vue', (locale) => renderApi(meta, entry.description, locale));
+    });
+    await writeFragments(fragments, check, 'Vue');
 }
 
 if (import.meta.main) {
-    runCli(generateApis);
+    await runCli(generateApis);
 }

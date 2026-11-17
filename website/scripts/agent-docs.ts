@@ -1,6 +1,9 @@
-import fs, { globSync } from 'node:fs';
+// Generates the Markdown docs for coding agents: a docs/ folder per npm package, plus the files the site serves.
+// Usage: node website/scripts/agent-docs.ts
+// Output: one "<package>: <n> files" line per package under packages/*/docs, exit code 1 when a doc source is missing or a page fails to convert
+// Imported by the astro config through website/plugins/agent-docs.ts: do not import typescript, directly or indirectly.
+import fs, { existsSync, globSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { parseFrontmatter } from '@astrojs/markdown-remark';
 import { parseExpressionAt } from 'acorn';
 import type { Parent, Root, RootContent } from 'mdast';
@@ -10,6 +13,8 @@ import remarkMdx from 'remark-mdx';
 import remarkParse from 'remark-parse';
 import remarkStringify from 'remark-stringify';
 import { unified } from 'unified';
+import { readJson } from '../../scripts/lib/json.ts';
+import { root } from '../../scripts/lib/paths.ts';
 import { filterFrameworks } from '../plugins/remark-demo.ts';
 import { translate } from '../src/i18n/index.ts';
 import { categories } from '../src/lib/categories.ts';
@@ -17,6 +22,7 @@ import { availableFrameworks, frameworkDemo, frameworkLabels, frameworks, type F
 import { parseThemeTokens } from '../src/lib/theme-tokens.ts';
 
 export type Pkg = 'ui' | 'ai' | 'icons';
+const allPkgs: Pkg[] = ['ui', 'ai', 'icons'];
 
 export interface AgentPage {
     category: string;
@@ -30,7 +36,6 @@ export interface AgentPage {
 /** Turns a doc page reference into a link; `anchor` keeps its leading `#` */
 export type Linker = (category: string, page: string, anchor: string) => string;
 
-const root = path.resolve(import.meta.dirname, '../..');
 const contentDir = path.join(root, 'website/content');
 const locale = 'en-US';
 export const site = 'https://semi-design-next.pages.dev';
@@ -44,13 +49,14 @@ const printer = unified().use(remarkStringify, { bullet: '-', fences: true, list
 export const packageName = (pkg: Pkg, framework: Framework) => `@fibrae/semi-${pkg}-${framework}`;
 export const pageUrl = (framework: Framework, category: string, page: string) => `${site}/${locale}/${framework}/${category}/${page}/`;
 
-function readJson(file: string): Record<string, { source?: string; props?: Record<string, unknown> }> | undefined {
-    return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : undefined;
+function readApiEntries(dir: string, framework: Framework) {
+    const file = path.join(dir, `api.${framework}.json`);
+    return existsSync(file) ? readJson<Record<string, { source?: string }>>(file) : {};
 }
 
 // A page belongs to the package its API tables document; API-less pages in the ai category (the overview) go with AI
 function pagePackage(dir: string, category: string, framework: Framework): Pkg {
-    const sources = Object.values(readJson(path.join(dir, `api.${framework}.json`)) ?? {}).map((entry) => entry.source ?? '');
+    const sources = Object.values(readApiEntries(dir, framework)).map((entry) => entry.source ?? '');
     if (sources.some((source) => source.includes('/semi-ai-'))) return 'ai';
     if (sources.some((source) => source.includes('/semi-icons-'))) return 'icons';
     return !sources.length && category === 'ai' ? 'ai' : 'ui';
@@ -61,7 +67,7 @@ export function agentPages(framework: Framework): AgentPage[] {
         const [category, page] = file.split('/');
         const dir = path.join(contentDir, category, page);
         const { frontmatter } = parseFrontmatter(fs.readFileSync(path.join(contentDir, file), 'utf8'));
-        const demos = fs.existsSync(path.join(dir, 'demos')) ? fs.readdirSync(path.join(dir, 'demos')) : [];
+        const demos = existsSync(path.join(dir, 'demos')) ? fs.readdirSync(path.join(dir, 'demos')) : [];
         return {
             category,
             page,
@@ -74,7 +80,7 @@ export function agentPages(framework: Framework): AgentPage[] {
     });
     return pages
         .filter((page) => page.frameworks.includes(framework))
-        .sort((a, b) => categories.indexOf(a.category as never) - categories.indexOf(b.category as never) || a.order - b.order)
+        .toSorted((a, b) => categories.indexOf(a.category as never) - categories.indexOf(b.category as never) || a.order - b.order)
         .map(({ order: _order, ...page }) => page);
 }
 
@@ -190,13 +196,12 @@ function documentTree(file: string, context: Context): Root {
     const { content } = parseFrontmatter(fs.readFileSync(file, 'utf8'));
     const tree = parser.parse(content);
     filterFrameworks(tree, context.framework, file);
-    const imports = new Map<string, string>();
-    for (const node of tree.children) {
-        if (node.type !== 'mdxjsEsm') continue;
-        for (const [, local, source] of node.value.matchAll(/import\s+(\w+)\s+from\s+'(\.\/api\/[^']+\.mdx)'/g)) {
-            imports.set(local, path.join(path.dirname(file), source));
-        }
-    }
+    const imports = new Map(
+        tree.children
+            .filter((node) => node.type === 'mdxjsEsm')
+            .flatMap((node) => [...node.value.matchAll(/import\s+(\w+)\s+from\s+'(\.\/api\/[^']+\.mdx)'/g)])
+            .map(([, local, source]): [string, string] => [local, path.join(path.dirname(file), source)])
+    );
     convertChildren(tree, { ...context, file, imports });
     return tree;
 }
@@ -244,7 +249,7 @@ export function pageMarkdown(page: AgentPage, framework: Framework, link: Linker
     const webUrl = pageUrl(framework, page.category, page.page);
     const tree = documentTree(file, { file, framework, imports: new Map(), link, webUrl });
     const intro = [`# ${page.title}`, `> ${page.brief}`, `Package: \`${packageName(page.pkg, framework)}\`. Web page: ${webUrl}`];
-    const names = new Set([page.title, ...Object.keys(readJson(path.join(dir, `api.${framework}.json`)) ?? {}).map(pascal)]);
+    const names = new Set([page.title, ...Object.keys(readApiEntries(dir, framework)).map(pascal)]);
     const changes = releaseNotes.sections
         .filter((section) => section.names.some((name) => names.has(name)))
         .map((section) => forFramework(section.body, framework).trim())
@@ -294,7 +299,7 @@ function commonRules(framework: Framework) {
 }
 
 function version(pkg: Pkg, framework: Framework) {
-    return JSON.parse(fs.readFileSync(path.join(root, 'packages', `semi-${pkg}-${framework}`, 'package.json'), 'utf8')).version as string;
+    return readJson<{ version: string }>(path.join(root, 'packages', `semi-${pkg}-${framework}`, 'package.json')).version;
 }
 
 const pkgSummary: Record<Pkg, string> = {
@@ -314,7 +319,8 @@ function pageList(pages: AgentPage[], link: Linker) {
 /** The llms.txt index; `docsOf` tells where another package's index lives for the reader */
 export function indexMarkdown(framework: Framework, pkgs: Pkg[], pages: AgentPage[], link: Linker, docsOf: (pkg: Pkg) => string, extra: string[] = []) {
     const own = pkgs.map((pkg) => `\`${packageName(pkg, framework)}\` ${version(pkg, framework)}`).join(', ');
-    const others = (['ui', 'ai', 'icons'] as const).filter((pkg) => !pkgs.includes(pkg));
+    const others = allPkgs.filter((pkg) => !pkgs.includes(pkg));
+    const related = others.length ? ['## Related packages', others.map((pkg) => `- \`${packageName(pkg, framework)}\`, ${pkgSummary[pkg]}: ${docsOf(pkg)}`).join('\n')] : [];
     return (
         [
             `# Semi Design Next for ${frameworkLabels[framework]}`,
@@ -323,7 +329,7 @@ export function indexMarkdown(framework: Framework, pkgs: Pkg[], pages: AgentPag
             commonRules(framework)
                 .map((rule) => `- ${rule}`)
                 .join('\n'),
-            ...(others.length ? ['## Related packages', others.map((pkg) => `- \`${packageName(pkg, framework)}\`, ${pkgSummary[pkg]}: ${docsOf(pkg)}`).join('\n')] : []),
+            ...related,
             ...extra,
             ...pageList(pages, link),
         ].join('\n\n') + '\n'
@@ -355,19 +361,16 @@ export function changesMarkdown(framework: Framework) {
 
 const docsFile = (category: string, page: string) => `${category}/${page}.md`;
 
-/** Files of one package's docs/ folder, keyed by path relative to it */
+/** Keyed by path relative to the package's docs/ folder */
 export function packageDocs(framework: Framework, pkg: Pkg) {
     const all = agentPages(framework);
     const pages = all.filter((page) => page.pkg === pkg);
-    const files = new Map<string, string>();
-    for (const page of pages) {
-        const link: Linker = (category, target, anchor) => {
-            const found = all.find((item) => item.category === category && item.page === target);
-            if (found?.pkg === pkg) return `../${docsFile(category, target)}${anchor}`;
-            return `${pageUrl(framework, category, target)}${anchor}`;
-        };
-        files.set(docsFile(page.category, page.page), pageMarkdown(page, framework, link));
-    }
+    const link: Linker = (category, target, anchor) => {
+        const found = all.find((item) => item.category === category && item.page === target);
+        if (found?.pkg === pkg) return `../${docsFile(category, target)}${anchor}`;
+        return `${pageUrl(framework, category, target)}${anchor}`;
+    };
+    const files = new Map(pages.map((page): [string, string] => [docsFile(page.category, page.page), pageMarkdown(page, framework, link)]));
     const extra: string[] = [];
     if (pkg === 'ui') {
         files.set('changes-from-semi.md', changesMarkdown(framework));
@@ -385,41 +388,38 @@ export function packageDocs(framework: Framework, pkg: Pkg) {
     return files;
 }
 
-/** Files the site serves, keyed by URL path without the leading slash */
+/** Keyed by URL path without the leading slash */
 export function siteDocs() {
-    const files = new Map<string, string>();
-    const roots: string[] = [];
-    for (const framework of frameworks) {
-        const pages = agentPages(framework);
-        const base = `${locale}/${framework}`;
-        const link: Linker = (category, page, anchor) => {
-            const found = pages.some((item) => item.category === category && item.page === page);
-            return found ? `${site}/${base}/${docsFile(category, page)}${anchor}` : `${pageUrl(framework, category, page)}${anchor}`;
-        };
-        for (const page of pages) files.set(`${base}/${docsFile(page.category, page.page)}`, pageMarkdown(page, framework, link));
-        files.set(`${base}/changes-from-semi.md`, changesMarkdown(framework));
-        files.set(`${base}/icon-names.md`, iconNamesMarkdown(framework));
-        const extra = ['## Reference', `- [Changes from Semi Design](${site}/${base}/changes-from-semi.md): breaking and behavior changes that apply to every component`, `- [Icon and illustration names](${site}/${base}/icon-names.md): every exported icon and illustration`];
-        files.set(
-            `${base}/llms.txt`,
-            indexMarkdown(framework, ['ui', 'ai', 'icons'], pages, link, () => '', extra)
-        );
-        roots.push(`- [${frameworkLabels[framework]}](${site}/${base}/llms.txt): \`${packageName('ui', framework)}\`, \`${packageName('ai', framework)}\`, \`${packageName('icons', framework)}\``);
-    }
-    files.set(
-        'llms.txt',
-        [
-            '# Semi Design Next',
-            '> A component library for React, Vue, Solid and Svelte, forked from Semi Design without upstream compatibility. Pick your framework; its index lists the rules and a Markdown page per component. The installed npm packages carry the same docs for their version under `node_modules/<package>/docs/llms.txt`.',
-            roots.join('\n'),
-        ].join('\n\n') + '\n'
-    );
-    return files;
+    const perFramework = frameworks.map((framework) => frameworkSiteDocs(framework));
+    const rootIndex = [
+        '# Semi Design Next',
+        '> A component library for React, Vue, Solid and Svelte, forked from Semi Design without upstream compatibility. Pick your framework; its index lists the rules and a Markdown page per component. The installed npm packages carry the same docs for their version under `node_modules/<package>/docs/llms.txt`.',
+        perFramework.map((item) => item.rootEntry).join('\n'),
+    ].join('\n\n');
+    return new Map([...perFramework.flatMap((item) => [...item.files]), ['llms.txt', `${rootIndex}\n`]]);
+}
+
+function frameworkSiteDocs(framework: Framework) {
+    const pages = agentPages(framework);
+    const base = `${locale}/${framework}`;
+    const link: Linker = (category, page, anchor) => {
+        const found = pages.some((item) => item.category === category && item.page === page);
+        return found ? `${site}/${base}/${docsFile(category, page)}${anchor}` : `${pageUrl(framework, category, page)}${anchor}`;
+    };
+    const extra = ['## Reference', `- [Changes from Semi Design](${site}/${base}/changes-from-semi.md): breaking and behavior changes that apply to every component`, `- [Icon and illustration names](${site}/${base}/icon-names.md): every exported icon and illustration`];
+    const files = new Map<string, string>([
+        ...pages.map((page): [string, string] => [`${base}/${docsFile(page.category, page.page)}`, pageMarkdown(page, framework, link)]),
+        [`${base}/changes-from-semi.md`, changesMarkdown(framework)],
+        [`${base}/icon-names.md`, iconNamesMarkdown(framework)],
+        [`${base}/llms.txt`, indexMarkdown(framework, allPkgs, pages, link, () => '', extra)],
+    ]);
+    const rootEntry = `- [${frameworkLabels[framework]}](${site}/${base}/llms.txt): ${allPkgs.map((pkg) => `\`${packageName(pkg, framework)}\``).join(', ')}`;
+    return { files, rootEntry };
 }
 
 function writePackageDocs() {
     for (const framework of frameworks) {
-        for (const pkg of ['ui', 'ai', 'icons'] as const) {
+        for (const pkg of allPkgs) {
             const out = path.join(root, 'packages', `semi-${pkg}-${framework}`, 'docs');
             // docs/ is build output listed in .gitignore, so stale pages are removed with it
             fs.rmSync(out, { recursive: true, force: true });
@@ -433,4 +433,4 @@ function writePackageDocs() {
     }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) writePackageDocs();
+if (import.meta.main) writePackageDocs();

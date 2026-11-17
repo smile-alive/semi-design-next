@@ -1,9 +1,12 @@
+// Generates the icon, lab icon and illustration data modules in src/ from the SVGs in svgs/.
+// Usage: node scripts/build-icon.ts (run from semi-icons-core, or through `pnpm build:icon`)
+// Output: one line with the generated counts; src/icons, src/lab and src/illustrations are replaced wholesale.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { basename, extname, resolve } from 'node:path';
 import { kebabCase, pascalCase } from 'es-toolkit';
 import type { PluginConfig } from 'svgo';
-import { svgToIconData } from '../../../../scripts/svg-to-icon-data.ts';
+import { svgToIconData } from '../../../../scripts/lib/svg-to-icon-data.ts';
 
 const svgsDir = resolve(import.meta.dirname, '../svgs');
 const srcDir = resolve(import.meta.dirname, '../src');
@@ -61,7 +64,13 @@ const outDirs = {
     lab: resolve(srcDir, 'lab'),
     illustrations: resolve(srcDir, 'illustrations'),
 };
-const count = build(resolve(svgsDir, 'icons'), outDirs.icons, '../types', iconName, (name) => [convertColors, ...(keepPathData.test(name) ? [] : [convertPathData]), ...cleanup, removeDimensions, prefixIds]);
+function iconPlugins(name: string) {
+    const plugins = [convertColors];
+    if (!keepPathData.test(name)) plugins.push(convertPathData);
+    return [...plugins, ...cleanup, removeDimensions, prefixIds];
+}
+
+const count = build(resolve(svgsDir, 'icons'), outDirs.icons, '../types', iconName, iconPlugins);
 const labCount = build(resolve(svgsDir, 'lab'), outDirs.lab, '../types', iconName, () => [convertPathData, ...cleanup, removeDimensions, prefixIds]);
 const illustrationCount = build(resolve(svgsDir, 'illustrations'), outDirs.illustrations, '../types', illustrationName, () => [convertPathData, ...cleanup, prefixIds]);
 const rootDir = resolve(import.meta.dirname, '../../../..');

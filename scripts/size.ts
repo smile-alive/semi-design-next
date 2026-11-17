@@ -1,36 +1,37 @@
+// Checks the consumer bundle size of every runtime export of semi-ui-react against size-budget.json.
+// Usage: node scripts/size.ts [--update | <ExportName>...]
+// Output: one line per violation or the summary line, exit code 1 on an export over budget, without a budget, or in the budget but no longer exported.
 // shortcut: React only, add the other frameworks when a framework-specific regression slips through.
-// Consumer bundle size of single semi-ui-react exports against the built workspace `dist` (run `pnpm build` first):
-// each export is built alone with React external, no tarballs.
-// Usage: node scripts/size.ts            check every runtime export against size-budget.json
-//        node scripts/size.ts --update   rewrite size-budget.json from the current sizes
-//        node scripts/size.ts Button Spin   print the size breakdown of single exports
-import { readFileSync, writeFileSync } from 'node:fs';
-import { availableParallelism } from 'node:os';
-import { fileURLToPath } from 'node:url';
+// Each export is built alone against the built workspace `dist` (run `pnpm build` first) with React external.
+//   (no argument)        check every runtime export against size-budget.json
+//   --update             rewrite size-budget.json from the current sizes
+//   Button Spin          print the size breakdown of single exports
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { gzipSync } from 'node:zlib';
 import { build, type Rolldown } from 'vite';
+import { readJson } from './lib/json.ts';
+import { root, website } from './lib/paths.ts';
+import { mapConcurrent } from './lib/pool.ts';
 
-const root = fileURLToPath(new URL('../website', import.meta.url));
-const budgetFile = fileURLToPath(new URL('../size-budget.json', import.meta.url));
+const budgetFile = path.join(root, 'size-budget.json');
 const entryId = '\0size-entry';
-// Absorbs gzip and dependency-patch noise; a real regression is far larger.
+// Absorbs gzip and dependency-patch noise; a real regression is far larger
 const tolerance = 0.03;
 
-function gzip(texts: string[]) {
-    return gzipSync(texts.join(''), { level: 9 }).length;
-}
+const gzip = (texts: string[]) => gzipSync(texts.join(''), { level: 9 }).length;
 
-async function bundle(source: string) {
+async function bundle(entrySource: string) {
     const result = (await build({
-        root,
+        root: website,
         configFile: false,
         logLevel: 'silent',
         plugins: [
             {
                 name: 'size-entry',
                 resolveId: (id) => (id === 'size-entry' ? entryId : null),
-                load: (id) => (id === entryId ? source : null),
+                load: (id) => (id === entryId ? entrySource : null),
             },
         ],
         build: {
@@ -58,30 +59,35 @@ async function runtimeExports() {
 async function measure(name: string) {
     const output = await bundle(`export { ${name} } from '@fibrae/semi-ui-react';`);
     const chunks = output.filter((item) => item.type === 'chunk');
-    // `imports` also lists the external react, hence the chunk check
+    const chunkByName = new Map(chunks.map((chunk) => [chunk.fileName, chunk]));
     const initial = new Set([chunks.find((chunk) => chunk.isEntry)!.fileName]);
+    // `imports` also lists the external react, hence the chunkByName check; the Set grows while it is iterated
     for (const file of initial) {
-        for (const dep of chunks.find((chunk) => chunk.fileName === file)!.imports) {
-            if (chunks.some((chunk) => chunk.fileName === dep)) initial.add(dep);
+        for (const dep of chunkByName.get(file)!.imports) {
+            if (chunkByName.has(dep)) initial.add(dep);
         }
     }
-    const pick = (lazy: boolean) => chunks.filter((chunk) => initial.has(chunk.fileName) !== lazy).map((chunk) => chunk.code);
+    const codeOf = (lazy: boolean) => chunks.filter((chunk) => initial.has(chunk.fileName) !== lazy).map((chunk) => chunk.code);
     const css = output.filter((item) => item.type === 'asset' && item.fileName.endsWith('.css')).map((item) => String((item as Rolldown.OutputAsset).source));
-    return { js: gzip(pick(false)), lazy: gzip(pick(true)), css: gzip(css) };
+    return { js: gzip(codeOf(false)), lazy: gzip(codeOf(true)), css: gzip(css) };
 }
 
-async function mapConcurrent<T, R>(items: T[], run: (item: T) => Promise<R>) {
-    const results: R[] = [];
-    let next = 0;
-    await Promise.all(
-        Array.from({ length: availableParallelism() }, async () => {
-            while (next < items.length) {
-                const index = next++;
-                results[index] = await run(items[index]);
-            }
-        })
-    );
-    return results;
+// CSS is part of what an app ships for the export; lazy chunks are not (they load on demand).
+async function measureBudgetSizes(exportNames: string[]) {
+    const measured = await mapConcurrent(exportNames, measure);
+    return Object.fromEntries(exportNames.map((name, index) => [name, measured[index].js + measured[index].css]));
+}
+
+function budgetViolations(sizes: Record<string, number>, budget: Record<string, number>) {
+    const overBudget = Object.entries(sizes).flatMap(([name, size]) => {
+        if (!(name in budget)) return [`${name}: exported but has no budget (run pnpm size --update)`];
+        if (size <= budget[name] * (1 + tolerance)) return [];
+        return [`${name}: ${size} B > budget ${budget[name]} B (+${size - budget[name]} B, tolerance ${tolerance * 100}%)`];
+    });
+    const stale = Object.keys(budget)
+        .filter((name) => !(name in sizes))
+        .map((name) => `${name}: in budget but no longer exported (run pnpm size --update)`);
+    return [...overBudget, ...stale];
 }
 
 const { values: flags, positionals: names } = parseArgs({ options: { update: { type: 'boolean', default: false } }, allowPositionals: true });
@@ -93,26 +99,14 @@ if (names.length) {
     }
 } else {
     const exportNames = await runtimeExports();
-    // CSS is part of what an app ships for the export; lazy chunks are not (they load on demand).
-    const measured = await mapConcurrent(exportNames, measure);
-    const sizes: Record<string, number> = Object.fromEntries(exportNames.map((name, index) => [name, measured[index].js + measured[index].css]));
+    const sizes = await measureBudgetSizes(exportNames);
     if (flags.update) {
         writeFileSync(budgetFile, `${JSON.stringify(sizes, null, 4)}\n`);
         console.log(`size-budget.json: ${exportNames.length} entries`);
     } else {
-        const budget: Record<string, number> = JSON.parse(readFileSync(budgetFile, 'utf8'));
-        const failures: string[] = [];
-        for (const name of exportNames) {
-            if (!(name in budget)) failures.push(`${name}: exported but has no budget (run pnpm size --update)`);
-            else if (sizes[name] > budget[name] * (1 + tolerance)) {
-                failures.push(`${name}: ${sizes[name]} B > budget ${budget[name]} B (+${sizes[name] - budget[name]} B, tolerance ${tolerance * 100}%)`);
-            }
-        }
-        for (const name of Object.keys(budget)) {
-            if (!exportNames.includes(name)) failures.push(`${name}: in budget but no longer exported (run pnpm size --update)`);
-        }
-        if (failures.length) {
-            console.error(failures.join('\n'));
+        const violations = budgetViolations(sizes, readJson(budgetFile));
+        if (violations.length) {
+            console.error(violations.join('\n'));
             process.exit(1);
         }
         console.log(`size: ${exportNames.length} entries within budget`);

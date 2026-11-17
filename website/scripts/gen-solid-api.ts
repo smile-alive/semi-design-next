@@ -1,10 +1,11 @@
-import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+// Generates the Solid API tables (api/<component>.solid.<locale>.mdx) from component types and api.solid.json descriptions.
+// Usage: node scripts/gen-solid-api.ts [--check] [<category>/<page>...]   (run in website/; without pages, every page)
+// Output: one MDX fragment per component and locale, exit code 1 on --check when a fragment is stale or missing
 import ts from 'typescript';
-import { runCli } from './api-table.ts';
-import { type ComponentApi, type Framework, extractApis as extract, generateApis as generate, moduleVariables, unwrap } from './ts-api.ts';
+import { runCli } from './lib/api-table.ts';
+import { type ComponentApi, type Framework, extractApis as extract, generateApis as generate, isCallTo, moduleVariable, moduleVariables, unwrap } from './lib/ts-api.ts';
 
-export { renderApi, type ApiDescription } from './ts-api.ts';
+export { renderApi, type ApiDescription } from './lib/ts-api.ts';
 export type SolidApi = ComponentApi;
 
 const solid: Framework = {
@@ -15,12 +16,12 @@ const solid: Framework = {
     // literal.
     defaults(checker, file, component, name) {
         const declarations = moduleVariables(file);
-        const defaultProps = declarations.find((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text === 'defaultProps');
+        const defaultProps = moduleVariable(file, 'defaultProps');
         if (name === 'default' && defaultProps) return defaultProps.initializer;
         let found: ts.Expression | undefined;
         const visit = (node: ts.Node) => {
             if (found) return;
-            if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'mergeProps' && node.arguments[0]) {
+            if (isCallTo(node, 'mergeProps') && node.arguments[0]) {
                 const argument = unwrap(node.arguments[0]);
                 const symbol = checker.getSymbolAtLocation(argument);
                 found = ts.isObjectLiteralExpression(argument) ? argument : declarations.find((declaration) => declaration === symbol?.valueDeclaration)?.initializer;
@@ -38,6 +39,6 @@ export const extractApis = (sources: string[]) => extract(solid, sources);
 
 export const generateApis = (check: boolean, pages: string[]) => generate(solid, 'solid', 'Solid', check, pages);
 
-if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
-    runCli(generateApis);
+if (import.meta.main) {
+    await runCli(generateApis);
 }

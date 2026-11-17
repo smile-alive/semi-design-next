@@ -10,7 +10,7 @@
         "lint:rules": "pnpm run lint:scopes && pnpm run lint:private && pnpm run lint:layers && pnpm run lint:class-order && pnpm run lint:component-order && pnpm run lint:scss-variables && pnpm run lint:click-outside",
         "lint:code": "vp lint --deny-warnings",
         "lint:docs": "pnpm --filter semi-website lint:mdx",
-        "lint:react": "node website/scripts/compiler-check.ts",
+        "lint:react": "node website/scripts/lint-compiler.react.ts",
         "lint:vue": "eslint '**/*.vue' --max-warnings 0 && node scripts/lint-templates.vue.ts",
         "lint:svelte": "eslint '**/*.svelte' --max-warnings 0 && pnpm --filter './packages/semi-*-svelte' --no-bail exec svelte-check --tsconfig tsconfig.lib.json --fail-on-warnings",
         "lint:scopes": "node scripts/lint-scopes.ts",
