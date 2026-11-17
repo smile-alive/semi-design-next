@@ -71,6 +71,17 @@ jobs:
                   publish-script: pnpm changeset publish
                   pr-title: 'chore: 发布新版本'
                   commit-message: 'chore: 发布新版本'
+                  # `fixed` gives every package the same version, so one v<version> tag and release replace one per package
+                  create-github-releases: false
+                  push-git-tags: false
+            - if: steps.changesets.outputs.published == 'true'
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  PUBLISHED: ${{ steps.changesets.outputs.published-packages }}
+              run: |
+                  version=$(jq -r '.[0].version' <<< "$PUBLISHED")
+                  node scripts/release-notes.ts "$version" > "$RUNNER_TEMP/notes.md"
+                  gh release create "v$version" --target "$(git rev-parse HEAD)" --title "v$version" --notes-file "$RUNNER_TEMP/notes.md"
             # main is a fast-forward pointer to the last published commit; the SHA already carries release's check runs
             - if: steps.changesets.outputs.published == 'true'
               run: git push origin HEAD:main
