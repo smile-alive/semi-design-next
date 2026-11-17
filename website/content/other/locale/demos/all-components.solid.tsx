@@ -89,7 +89,7 @@ function I18nComponent() {
     return (
         <>
             <h5>Pagination</h5>
-            <Pagination total={100} showTotal showSizeChanger style={style} showQuickJumper />
+            <Pagination aria-label="Standalone pagination" total={100} showTotal showSizeChanger style={style} showQuickJumper />
             <h5>Modal</h5>
 
             <div style={style}>

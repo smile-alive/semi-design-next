@@ -76,7 +76,7 @@
             {#key localeCode}
                 <div>
                     <h5>Pagination</h5>
-                    <Pagination showQuickJumper showSizeChanger showTotal style="margin: 10px" total={100} />
+                    <Pagination aria-label="Standalone pagination" showQuickJumper showSizeChanger showTotal style="margin: 10px" total={100} />
                     <h5>Modal</h5>
                     <div style="margin: 10px">
                         <Button onclick={() => (modalVisible = true)}>Show Modal</Button>

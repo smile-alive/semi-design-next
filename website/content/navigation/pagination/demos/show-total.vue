@@ -4,7 +4,7 @@
 
 <template>
     <div>
-        <Pagination showTotal style="margin-block-end: 12px" :total="80" />
-        <Pagination showTotal style="margin-block-end: 12px" :total="200" />
+        <Pagination aria-label="Pagination of 80 items" showTotal style="margin-block-end: 12px" :total="80" />
+        <Pagination aria-label="Pagination of 200 items" showTotal style="margin-block-end: 12px" :total="200" />
     </div>
 </template>
