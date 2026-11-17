@@ -148,7 +148,7 @@ jobs:
               run: pnpm lint
 
     # The tests' configs re-check the component source and take about half the CPU time, so they get their own job;
-    # gate's `website` scope only needs `astro check`, which the source part runs
+    # gate's `website` scope only needs `astro check` and the API table check, which the source part runs
     types:
         name: typecheck (${{ matrix.part }})
         needs: [gate, build]
@@ -172,6 +172,9 @@ jobs:
               run: pnpm exec node scripts/typecheck.ts ${{ matrix.part }}
             - if: matrix.part == 'source'
               run: pnpm --filter semi-website check
+            # The API tables print the packages' types, so they go stale when a component's props change
+            - if: matrix.part == 'source'
+              run: pnpm --filter semi-website gen:api:check
 
     # main's ruleset requires a check named `typecheck`; a job that only `needs` types would skip on a red part, and a
     # skipped job passes the ruleset
