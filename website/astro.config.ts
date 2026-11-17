@@ -7,6 +7,7 @@ import sitemap from '@astrojs/sitemap';
 import solid from '@astrojs/solid-js';
 import svelte from '@astrojs/svelte';
 import vue from '@astrojs/vue';
+import { warningFilter } from '../lint/svelte/compiler-warnings.ts';
 import { semiCssLayer, semiInlineJsonWorker, semiScssOptions, semiSourceAliases } from '../vite.semi.ts';
 import agentDocs from './plugins/agent-docs.ts';
 import frameworkMdx from './plugins/framework-mdx.ts';
@@ -46,7 +47,16 @@ export default defineConfig({
     // Compiling demos and semi-ui-react source (via semiSourceAliases) matches what consumers get with the compiler on.
     // exclude feeds compiler and Fast Refresh alike: Vue and Solid package .tsx also resolve to source; neither handles their JSX.
     // Svelte package .ts resolve to source too, and the compiler would rewrite their `use*` functions into React hooks.
-    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons)-(vue|svelte)\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), svelte(), mdx(), agentDocs(), sitemap({ filter: (page) => !redirectPage.test(new URL(page).pathname) })],
+    integrations: [
+        react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons)-(vue|svelte)\//, ...solidFiles] }),
+        vue({ appEntrypoint: '/src/lib/vue.app.ts' }),
+        solid({ include: solidFiles }),
+        // The root svelte.config.js is out of reach from website/, so its warning filter is passed here
+        svelte({ configFile: false, compilerOptions: { warningFilter } }),
+        mdx(),
+        agentDocs(),
+        sitemap({ filter: (page) => !redirectPage.test(new URL(page).pathname) }),
+    ],
     vite: {
         plugins: [frameworkMdx(), semiInlineJsonWorker],
         build: {
