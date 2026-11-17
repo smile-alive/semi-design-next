@@ -1,7 +1,12 @@
-import { execFileSync } from 'node:child_process';
 import { existsSync, globSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { dirname, join, relative } from 'node:path';
+import { parseArgs } from 'node:util';
 import ts from 'typescript';
+import { formatSource } from '../../../scripts/lib/format.ts';
+import { readJson } from '../../../scripts/lib/json.ts';
+import { root, website } from '../../../scripts/lib/paths.ts';
+
+export { root, website };
 
 export type Locale = 'zh-CN' | 'en-US';
 export type Description = Record<Locale, string>;
@@ -9,10 +14,16 @@ export interface ApiRow {
     name: string;
     cells: string[];
 }
+/** One component of an `api.<framework>.json`: `json` is the file it was read from */
+export interface ApiEntry<D> {
+    json: string;
+    name: string;
+    description: D;
+}
 
-export const website = resolve(import.meta.dirname, '..');
-export const root = resolve(website, '..');
 export const locales: Locale[] = ['zh-CN', 'en-US'];
+
+export const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name, 'en');
 
 function cell(value: string) {
     return value.replaceAll('|', '\\|').replaceAll('\n', ' ');
@@ -61,15 +72,13 @@ export function renderTable(group: string, title: string, columns: string[], row
     return [`**${title}**`, '', `| ${columns.join(' | ')} |`, `| ${columns.map(() => '---').join(' | ')} |`, ...lines, ...empty].join('\n');
 }
 
-export function writeFragments(fragments: { path: string; body: string }[], check: boolean, label: string) {
-    const outputs = fragments.map(({ path, body }) => ({
-        path,
-        content: execFileSync(join(root, 'node_modules/.bin/vp'), ['fmt', '--threads=1', `--stdin-filepath=${path}`], {
-            cwd: root,
-            input: (body.includes('<ApiType ') ? `import ApiType from '#/components/ApiType.astro';\n\n` : '') + body,
-            encoding: 'utf8',
-        }),
-    }));
+export async function writeFragments(fragments: { path: string; body: string }[], check: boolean, label: string) {
+    const outputs = await Promise.all(
+        fragments.map(async ({ path, body }) => ({
+            path,
+            content: await formatSource(path, (body.includes('<ApiType ') ? `import ApiType from '#/components/ApiType.astro';\n\n` : '') + body),
+        }))
+    );
     for (const output of outputs) {
         if (check) {
             if (!existsSync(output.path) || readFileSync(output.path, 'utf8') !== output.content) throw new Error(`${label} API 片段已过时：${relative(root, output.path)}`);
@@ -81,16 +90,31 @@ export function writeFragments(fragments: { path: string; body: string }[], chec
     console.log(`PASS ${label} API ${check ? '检查' : '生成'}：${outputs.length} 个片段`);
 }
 
-/** `[--check] [<分类>/<页面>...]`: without pages, every page */
-export function runCli(generate: (check: boolean, pages: string[]) => void) {
-    const args = process.argv.slice(2);
-    const pages = args.filter((arg) => arg !== '--check');
+/** `[--check] [<category>/<page>...]`: without pages, every page */
+export async function runCli(generate: (check: boolean, pages: string[]) => Promise<void>) {
+    const { values, positionals: pages } = parseArgs({ allowPositionals: true, options: { check: { type: 'boolean' } } });
     for (const page of pages) {
         if (!/^[a-z0-9-]+\/[a-z0-9-]+$/.test(page)) throw new Error(`未知参数：${page}`);
     }
-    generate(args.includes('--check'), pages);
+    await generate(values.check ?? false, pages);
 }
 
 export function apiFiles(framework: string, pages: string[]) {
     return globSync(pages.length ? pages.map((page) => `content/${page}/api.${framework}.json`) : `content/**/api.${framework}.json`, { cwd: website }).toSorted();
+}
+
+/** Every component listed in the framework's `api.<framework>.json` files; `sourceSuffix` is the extension its source must have */
+export function readApiEntries<D extends { source: string }>(framework: string, pages: string[], sourceSuffix = ''): ApiEntry<D>[] {
+    return apiFiles(framework, pages).flatMap((file) => {
+        const json = join(website, file);
+        return Object.entries(readJson<Record<string, D>>(json)).map(([name, description]) => {
+            if (!/^[a-z][a-z0-9-]*$/.test(name) || typeof description.source !== 'string' || !description.source.endsWith(sourceSuffix)) throw new Error(`无效组件配置：${json} ${name}`);
+            return { json, name, description };
+        });
+    });
+}
+
+/** The `api/<component>.<framework>.<locale>.mdx` fragments of one entry */
+export function apiFragments<D>({ json, name }: ApiEntry<D>, framework: string, render: (locale: Locale) => string) {
+    return locales.map((locale) => ({ path: join(dirname(json), 'api', `${name}.${framework}.${locale}.mdx`), body: render(locale) }));
 }

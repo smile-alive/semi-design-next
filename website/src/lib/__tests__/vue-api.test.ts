@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
-import { apiType } from '#scripts/api-table.ts';
 import { extractApi, ownProps, renderApi, type ApiDescription } from '#scripts/gen-vue-api.ts';
+import { apiType } from '#scripts/lib/api-table.ts';
 import { describe, expect, it } from 'vite-plus/test';
 import type { ComponentMeta } from 'vue-component-meta';
 

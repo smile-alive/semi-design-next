@@ -1,11 +1,13 @@
+// Generates the Svelte API tables (api/<component>.svelte.<locale>.mdx) from component types and api.svelte.json descriptions.
+// Usage: node scripts/gen-svelte-api.ts [--check] [<category>/<page>...]   (run in website/; without pages, every page)
+// Output: one MDX fragment per component and locale, exit code 1 on --check when a fragment is stale or missing
 import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { resolve } from 'node:path';
 import ts from 'typescript';
-import { apiFiles, locales, root, runCli, website, writeFragments } from './api-table.ts';
-import { type ApiDescription, type ApiMember, type ComponentApi, type Framework, members, moduleVariables, readDefault, renderApi, unwrap } from './ts-api.ts';
+import { apiFragments, byName, readApiEntries, root, runCli, writeFragments } from './lib/api-table.ts';
+import { type ApiDescription, type ApiMember, type ComponentApi, type Framework, findTsConfig, isCallTo, members, moduleVariables, programOptions, readDefault, renderApi, unwrap } from './lib/ts-api.ts';
 
-export { renderApi, type ApiDescription } from './ts-api.ts';
+export { renderApi, type ApiDescription } from './lib/ts-api.ts';
 export type SvelteApi = ComponentApi;
 
 // Native attributes come from svelte/elements and native element members from the DOM lib. Svelte components have no
@@ -36,16 +38,12 @@ function readScript(path: string): Script {
     return { instance: head.length, code: head + instance[0][2] };
 }
 
-function isCall(node: ts.Expression, name: string): node is ts.CallExpression {
-    return ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === name;
-}
-
 function extract(checker: ts.TypeChecker, file: ts.SourceFile, script: Script, path: string): ComponentApi {
     const variables = moduleVariables(file);
-    const props = variables.find((declaration) => declaration.initializer && isCall(unwrap(declaration.initializer), '$props'));
+    const props = variables.find((declaration) => declaration.initializer && isCallTo(unwrap(declaration.initializer), '$props'));
     if (!props?.type) throw new Error(`组件需要带类型标注的 $props() 声明，如 let { ... }: XxxProps = $props() 或 const props: XxxProps = $props()：${path}`);
     // useDefaultProps returns the reader that wraps each fallback: `size = defaults('size', 'default')`
-    const reader = variables.find((declaration) => declaration.initializer && isCall(unwrap(declaration.initializer), 'useDefaultProps'));
+    const reader = variables.find((declaration) => declaration.initializer && isCallTo(unwrap(declaration.initializer), 'useDefaultProps'));
     const readerName = reader && ts.isIdentifier(reader.name) ? reader.name.text : undefined;
     const defaults = new Map<string, string>();
     const destructured: string[] = [];
@@ -64,8 +62,8 @@ function extract(checker: ts.TypeChecker, file: ts.SourceFile, script: Script, p
         if (!ts.isIdentifier(key) && !ts.isStringLiteral(key)) throw new Error(`无法读取的 prop：${path} ${element.getText()}`);
         destructured.push(key.text);
         let value = element.initializer && unwrap(element.initializer);
-        if (value && readerName && isCall(value, readerName)) value = value.arguments[1];
-        else if (value && isCall(value, '$bindable')) value = value.arguments[0];
+        if (value && readerName && isCallTo(value, readerName)) value = value.arguments[1];
+        else if (value && isCallTo(value, '$bindable')) value = value.arguments[0];
         const text = value && readDefault(checker, unwrap(value));
         if (text !== undefined) defaults.set(key.text, text);
     }
@@ -90,43 +88,32 @@ function extract(checker: ts.TypeChecker, file: ts.SourceFile, script: Script, p
             const returns = statement.type ? statement.type.getText() : signature ? checker.typeToString(signature.getReturnType()) : 'void';
             return [{ name: statement.name.text, type: `(${statement.parameters.map((parameter) => parameter.getText()).join(', ')}) => ${returns}`, optional: false }];
         })
-        .toSorted((a, b) => a.name.localeCompare(b.name, 'en'));
-    return { props: [...own, ...taken].toSorted((a, b) => a.name.localeCompare(b.name, 'en')), methods };
+        .toSorted(byName);
+    return { props: [...own, ...taken].toSorted(byName), methods };
 }
 
 export function extractApis(sources: string[]): ComponentApi[] {
     const targets = sources.map((path) => {
-        if (!existsSync(path)) throw new Error(`组件源文件不存在：${path}`);
-        const config = ts.findConfigFile(dirname(path), existsSync);
-        if (!config) throw new Error(`组件缺少 tsconfig.json：${path}`);
+        const config = findTsConfig(path);
         const virtual = `${path}.__api.ts`;
         if (existsSync(virtual)) throw new Error(`与提取用的虚拟文件重名：${virtual}`);
         return { path, config, virtual, script: readScript(path) };
     });
-    // One program per tsconfig, as in ts-api: types print from their declarations, so sharing a checker keeps the output stable
     const programs = new Map<string, ts.Program>();
-    const programOf = (config: string) => {
-        const cached = programs.get(config);
-        if (cached) return cached;
-        const parsed = ts.readConfigFile(config, (path) => ts.sys.readFile(path));
-        if (parsed.error) throw new Error(ts.flattenDiagnosticMessageText(parsed.error.messageText, '\n'));
-        const { options } = ts.parseJsonConfigFileContent(parsed.config, ts.sys, dirname(config));
-        // The foundation's sources let a fallback such as `cssClasses.PREFIX` print as its value
-        const paths = Object.fromEntries(['semi-foundation', 'semi-ai-foundation'].map((name) => [`@fibrae/${name}/*`, [join(root, 'packages/shared', name, 'src', '*')]]));
-        const merged = { ...options, paths: { ...options.paths, ...paths }, stableTypeOrdering: true };
-        const codes = new Map(targets.filter((target) => target.config === config).map((target) => [target.virtual, target.script.code]));
-        const host = ts.createCompilerHost(merged);
-        const getSourceFile = host.getSourceFile.bind(host);
-        host.getSourceFile = (name, language, ...rest) => {
-            const code = codes.get(name);
-            return code === undefined ? getSourceFile(name, language, ...rest) : ts.createSourceFile(name, code, language, true);
-        };
-        host.fileExists = (name) => codes.has(name) || ts.sys.fileExists(name);
-        host.readFile = (name) => codes.get(name) ?? ts.sys.readFile(name);
-        const program = ts.createProgram({ rootNames: [...codes.keys()], options: merged, host });
-        programs.set(config, program);
-        return program;
-    };
+    const programOf = (config: string) =>
+        programs.getOrInsertComputed(config, () => {
+            const options = programOptions(config);
+            const codes = new Map(targets.filter((target) => target.config === config).map((target) => [target.virtual, target.script.code]));
+            const host = ts.createCompilerHost(options);
+            const getSourceFile = host.getSourceFile.bind(host);
+            host.getSourceFile = (name, language, ...rest) => {
+                const code = codes.get(name);
+                return code === undefined ? getSourceFile(name, language, ...rest) : ts.createSourceFile(name, code, language, true);
+            };
+            host.fileExists = (name) => codes.has(name) || ts.sys.fileExists(name);
+            host.readFile = (name) => codes.get(name) ?? ts.sys.readFile(name);
+            return ts.createProgram({ rootNames: [...codes.keys()], options, host });
+        });
     return targets.map(({ path, config, virtual, script }) => {
         const program = programOf(config);
         const file = program.getSourceFile(virtual);
@@ -135,19 +122,13 @@ export function extractApis(sources: string[]): ComponentApi[] {
     });
 }
 
-export function generateApis(check: boolean, pages: string[]) {
-    const entries = apiFiles('svelte', pages).flatMap((file) => {
-        const json = join(website, file);
-        return Object.entries(JSON.parse(readFileSync(json, 'utf8')) as Record<string, ApiDescription>).map(([name, description]) => {
-            if (!/^[a-z][a-z0-9-]*$/.test(name) || typeof description.source !== 'string' || !description.source.endsWith('.svelte')) throw new Error(`无效组件配置：${json} ${name}`);
-            return { json, name, description };
-        });
-    });
+export async function generateApis(check: boolean, pages: string[]) {
+    const entries = readApiEntries<ApiDescription>('svelte', pages, '.svelte');
     const apis = extractApis(entries.map((entry) => resolve(root, entry.description.source)));
-    const fragments = entries.flatMap((entry, index) => locales.map((locale) => ({ path: join(dirname(entry.json), 'api', `${entry.name}.svelte.${locale}.mdx`), body: renderApi(apis[index], entry.description, locale) })));
-    writeFragments(fragments, check, 'Svelte');
+    const fragments = entries.flatMap((entry, index) => apiFragments(entry, 'svelte', (locale) => renderApi(apis[index], entry.description, locale)));
+    await writeFragments(fragments, check, 'Svelte');
 }
 
-if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
-    runCli(generateApis);
+if (import.meta.main) {
+    await runCli(generateApis);
 }

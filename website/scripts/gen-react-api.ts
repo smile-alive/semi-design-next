@@ -1,10 +1,11 @@
-import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+// Generates the React API tables (api/<component>.react.<locale>.mdx) from component types and api.react.json descriptions.
+// Usage: node scripts/gen-react-api.ts [--check] [<category>/<page>...]   (run in website/; without pages, every page)
+// Output: one MDX fragment per component and locale, exit code 1 on --check when a fragment is stale or missing
 import ts from 'typescript';
-import { runCli } from './api-table.ts';
-import { type Framework, extractApis as extract, generateApis as generate, moduleVariables, unwrap, valueDeclaration } from './ts-api.ts';
+import { runCli } from './lib/api-table.ts';
+import { type Framework, extractApis as extract, generateApis as generate, isCallTo, moduleVariable, unwrap, valueDeclaration } from './lib/ts-api.ts';
 
-export { renderApi, type ApiDescription, type ComponentApi as ReactApi } from './ts-api.ts';
+export { renderApi, type ApiDescription, type ComponentApi as ReactApi } from './lib/ts-api.ts';
 
 const wrappers = new Set(['memo', 'forwardRef']);
 
@@ -50,7 +51,7 @@ const react: Framework = {
         const visit = (node: ts.Node) => {
             if (found) return;
             if (ts.isVariableDeclaration(node) && node.initializer && mentionsOwn(node.initializer)) bind(node.name);
-            if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'useDefaultProps') {
+            if (isCallTo(node, 'useDefaultProps')) {
                 const [, props, defaults] = node.arguments;
                 if (props && defaults && mentionsOwn(props)) found = defaults;
             }
@@ -60,7 +61,7 @@ const react: Framework = {
         if (fn?.parameters[0]) bind(fn.parameters[0].name);
         if (fn?.body) visit(fn.body);
         const parameter = fn?.parameters[0]?.name;
-        return found ?? (parameter && ts.isObjectBindingPattern(parameter) ? parameter : moduleVariables(file).find((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text === 'defaultProps')?.initializer);
+        return found ?? (parameter && ts.isObjectBindingPattern(parameter) ? parameter : moduleVariable(file, 'defaultProps')?.initializer);
     },
     // Ref<T> is a callback taking T, an object holding T, or null; the callback names T
     refTarget(checker, refType) {
@@ -74,6 +75,6 @@ export const extractApis = (sources: string[]) => extract(react, sources);
 
 export const generateApis = (check: boolean, pages: string[]) => generate(react, 'react', 'React', check, pages);
 
-if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
-    runCli(generateApis);
+if (import.meta.main) {
+    await runCli(generateApis);
 }

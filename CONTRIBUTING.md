@@ -56,7 +56,7 @@ pnpm site:dev
 | [`packages/plugins/semi-scss-compile`](packages/plugins/semi-scss-compile/README.zh-CN.md) | 把 Semi SCSS 编译为 CSS 的工具；子路径 `/core` 是各构建插件共用的 `semi:` Sass importer 与编译管线 |
 | [`packages/plugins/semi-vite`](packages/plugins/semi-vite/README.zh-CN.md)、[`semi-webpack`](packages/plugins/semi-webpack/README.zh-CN.md)、[`semi-rspack`](packages/plugins/semi-rspack/README.zh-CN.md)、[`semi-next`](packages/plugins/semi-next/README.zh-CN.md) | 类名前缀替换、`@layer semi` 开关与 `omitCss` 的构建插件 |
 | [`packages/plugins/semi-nuxt`](packages/plugins/semi-nuxt/README.zh-CN.md) | Nuxt 4 模块 `@fibrae/semi-nuxt`，把 semi-vite 插件注册进 Nuxt 的 Vite 构建，并在应用未设置时关闭 `features.inlineStyles` |
-| `scripts/svg-to-icon-data.ts` | 图标与插画共用的 SVG 转数据脚本，各框架的图标与插画组件都由这份数据生成 |
+| `scripts/lib/svg-to-icon-data.ts` | 图标与插画共用的 SVG 转数据脚本，各框架的图标与插画组件都由这份数据生成 |
 | `vitest/` | 测试项目注册与 setup（`vitest/<框架>/` 放该框架的 setup、tsconfig 与工具）、测试工具（`@test/utils/<框架>` 与框架无关的模块）与打包产物测试 `vitest/packed` |
 | `.agents/references/<框架>/` | 各框架的组件、测试、lint 与 website 写法，框架无关的写法见 `.agents/references/` 下的共享文件 |
 | [`website/`](website/README.zh-CN.md) | Astro 文档站，正文在 `website/content/<分类>/<页面>/index.<语言>.mdx` |

@@ -1,7 +1,8 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import ts from 'typescript';
-import { apiFiles, apiType, type Description, type Locale, locales, renderTable, root, website, writeFragments } from './api-table.ts';
+import { root } from '../../../scripts/lib/paths.ts';
+import { apiFragments, apiType, byName, type Description, type Locale, readApiEntries, renderTable, writeFragments } from './api-table.ts';
 
 export interface ApiDescription {
     /** Repo-relative component file; `<file>#<Name>` reads the named export `Name` instead of the default export */
@@ -48,6 +49,45 @@ export function unwrap(expression: ts.Expression) {
 
 export function moduleVariables(file: ts.SourceFile) {
     return file.statements.filter(ts.isVariableStatement).flatMap((statement) => [...statement.declarationList.declarations]);
+}
+
+export function moduleVariable(file: ts.SourceFile, name: string) {
+    return moduleVariables(file).find((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text === name);
+}
+
+/** A call of the plain function `name`, not a method */
+export function isCallTo(node: ts.Node, name: string): node is ts.CallExpression {
+    return ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === name;
+}
+
+export function findTsConfig(path: string) {
+    if (!existsSync(path)) throw new Error(`组件源文件不存在：${path}`);
+    const config = ts.findConfigFile(dirname(path), existsSync);
+    if (!config) throw new Error(`组件缺少 tsconfig.json：${path}`);
+    return config;
+}
+
+export function readTsConfig(config: string) {
+    const { config: json, error } = ts.readConfigFile(config, (path) => ts.sys.readFile(path));
+    if (error) throw new Error(ts.flattenDiagnosticMessageText(error.messageText, '\n'));
+    return json;
+}
+
+/** One program per tsconfig: types print from their declarations, so a shared checker keeps the output stable */
+export function programOptions(config: string): ts.CompilerOptions {
+    const { options } = ts.parseJsonConfigFileContent(readTsConfig(config), ts.sys, dirname(config));
+    // A foundation's built declarations keep the types of its constants but not their values; its sources let a
+    // default such as `cssClasses.PREFIX` print as the value.
+    const paths = Object.fromEntries(['semi-foundation', 'semi-ai-foundation'].map((name) => [`@fibrae/${name}/*`, [join(root, 'packages/shared', name, 'src', '*')]]));
+    // Without stableTypeOrdering union members follow the order types were created, so an unrelated file could reorder a table
+    return { ...options, paths: { ...options.paths, ...paths }, stableTypeOrdering: true };
+}
+
+/** A module's export by name, with an alias followed to the symbol it re-exports */
+export function exportedSymbol(checker: ts.TypeChecker, file: ts.SourceFile, name: string) {
+    const module = checker.getSymbolAtLocation(file);
+    const exported = module && checker.getExportsOfModule(module).find((symbol) => symbol.name === name);
+    return exported && (exported.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(exported) : exported);
 }
 
 type Constant = string | number | boolean | null | Constant[];
@@ -189,10 +229,10 @@ export function members(framework: Framework, checker: ts.TypeChecker, type: ts.
     // component declares itself; the rest is documented on that component's page.
     const shapes = type.isUnion() ? type.types : [type];
     const directory = dirname(location.getSourceFile().fileName);
-    const named = new Map<string, ts.Symbol[]>();
-    for (const shape of shapes) {
-        for (const symbol of checker.getPropertiesOfType(shape)) named.set(symbol.name, [...(named.get(symbol.name) ?? []), symbol]);
-    }
+    const named = Map.groupBy(
+        shapes.flatMap((shape) => checker.getPropertiesOfType(shape)),
+        (symbol) => symbol.name
+    );
     const own = (symbol: ts.Symbol) => (symbol.declarations ?? []).some((declaration) => dirname(declaration.getSourceFile().fileName) === directory);
     // `x-semi-*` attributes are markers the documentation site reads, not API
     return [...named]
@@ -205,7 +245,7 @@ export function members(framework: Framework, checker: ts.TypeChecker, type: ts.
             optional: symbols.length < shapes.length || symbols.some((symbol) => (symbol.flags & ts.SymbolFlags.Optional) !== 0),
             default: defaults.get(name),
         }))
-        .toSorted((a, b) => a.name.localeCompare(b.name, 'en'));
+        .toSorted(byName);
 }
 
 // A default built from literals prints as its value (a declaration file has no initializers, but a literal type still
@@ -253,52 +293,36 @@ function readDefaults(checker: ts.TypeChecker, file: ts.SourceFile, initializer?
     return defaults;
 }
 
+function componentApi(framework: Framework, program: ts.Program, path: string, name: string): ComponentApi {
+    const checker = program.getTypeChecker();
+    const file = program.getSourceFile(path);
+    const component = file && exportedSymbol(checker, file, name);
+    if (!file || !component) throw new Error(`组件源文件没有导出 ${name}：${path}`);
+    const [signature] = checker.getTypeOfSymbolAtLocation(component, file).getCallSignatures();
+    if (!signature) throw new Error(`导出 ${name} 不是组件：${path}`);
+    const [parameter] = signature.getParameters();
+    if (!parameter) return { props: [], methods: [] };
+    const propsType = checker.getTypeOfSymbolAtLocation(parameter, file);
+    const ref = propsType.getProperty('ref');
+    const target = ref && framework.refTarget(checker, checker.getNonNullableType(checker.getTypeOfSymbolAtLocation(ref, file)));
+    const defaults = readDefaults(checker, file, framework.defaults(checker, file, component, name));
+    return { props: members(framework, checker, propsType, file, defaults), methods: target ? members(framework, checker, target, file) : [] };
+}
+
 export function extractApis(framework: Framework, sources: string[]): ComponentApi[] {
     const targets = sources.map((source) => {
         const [path, name = 'default'] = source.split('#');
-        return { path, name };
+        return { path, name, config: findTsConfig(path) };
     });
-    const configs = targets.map(({ path }) => {
-        if (!existsSync(path)) throw new Error(`组件源文件不存在：${path}`);
-        const config = ts.findConfigFile(dirname(path), existsSync);
-        if (!config) throw new Error(`组件缺少 tsconfig.json：${path}`);
-        return config;
-    });
-    // One program per tsconfig: types print from their declarations, so sharing a checker keeps the output stable.
     const programs = new Map<string, ts.Program>();
-    const programOf = (config: string) => {
-        const cached = programs.get(config);
-        if (cached) return cached;
-        const parsed = ts.readConfigFile(config, (path) => ts.sys.readFile(path));
-        if (parsed.error) throw new Error(ts.flattenDiagnosticMessageText(parsed.error.messageText, '\n'));
-        const { options } = ts.parseJsonConfigFileContent(parsed.config, ts.sys, dirname(config));
-        // A foundation's built declarations keep the types of its constants but not their values; its sources let a
-        // default such as `cssClasses.PREFIX` print as the value.
-        const paths = Object.fromEntries(['semi-foundation', 'semi-ai-foundation'].map((name) => [`@fibrae/${name}/*`, [join(root, 'packages/shared', name, 'src', '*')]]));
-        // Without stableTypeOrdering the checker orders union members (and the members of a union of shapes) by when it
-        // created each type, so an unrelated source file could reorder a table.
-        const program = ts.createProgram({ rootNames: targets.filter((_, index) => configs[index] === config).map(({ path }) => path), options: { ...options, paths: { ...options.paths, ...paths }, stableTypeOrdering: true } });
-        programs.set(config, program);
-        return program;
-    };
-    return targets.map(({ path, name }, index) => {
-        const program = programOf(configs[index]);
-        const checker = program.getTypeChecker();
-        const file = program.getSourceFile(path);
-        const module = file && checker.getSymbolAtLocation(file);
-        const exported = module && checker.getExportsOfModule(module).find((symbol) => symbol.escapedName === name);
-        if (!file || !exported) throw new Error(`组件源文件没有导出 ${name}：${path}`);
-        const component = exported.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(exported) : exported;
-        const [signature] = checker.getTypeOfSymbolAtLocation(component, file).getCallSignatures();
-        if (!signature) throw new Error(`导出 ${name} 不是组件：${path}`);
-        const [parameter] = signature.getParameters();
-        if (!parameter) return { props: [], methods: [] };
-        const propsType = checker.getTypeOfSymbolAtLocation(parameter, file);
-        const ref = propsType.getProperty('ref');
-        const target = ref && framework.refTarget(checker, checker.getNonNullableType(checker.getTypeOfSymbolAtLocation(ref, file)));
-        const defaults = readDefaults(checker, file, framework.defaults(checker, file, component, name));
-        return { props: members(framework, checker, propsType, file, defaults), methods: target ? members(framework, checker, target, file) : [] };
-    });
+    const programOf = (config: string) =>
+        programs.getOrInsertComputed(config, () =>
+            ts.createProgram({
+                rootNames: targets.filter((target) => target.config === config).map((target) => target.path),
+                options: programOptions(config),
+            })
+        );
+    return targets.map(({ path, name, config }) => componentApi(framework, programOf(config), path, name));
 }
 
 export function renderApi(api: ComponentApi, description: ApiDescription, locale: Locale) {
@@ -312,18 +336,12 @@ export function renderApi(api: ComponentApi, description: ApiDescription, locale
     return tables.join('\n\n') + '\n';
 }
 
-export function generateApis(framework: Framework, id: string, label: string, check: boolean, pages: string[]) {
-    const entries = apiFiles(id, pages).flatMap((file) => {
-        const json = join(website, file);
-        return Object.entries(JSON.parse(readFileSync(json, 'utf8')) as Record<string, ApiDescription>).map(([name, description]) => {
-            if (!/^[a-z][a-z0-9-]*$/.test(name) || typeof description.source !== 'string') throw new Error(`无效组件配置：${json} ${name}`);
-            return { json, name, description };
-        });
-    });
+export async function generateApis(framework: Framework, id: string, label: string, check: boolean, pages: string[]) {
+    const entries = readApiEntries<ApiDescription>(id, pages);
     const apis = extractApis(
         framework,
         entries.map((entry) => resolve(root, entry.description.source))
     );
-    const fragments = entries.flatMap((entry, index) => locales.map((locale) => ({ path: join(dirname(entry.json), 'api', `${entry.name}.${id}.${locale}.mdx`), body: renderApi(apis[index], entry.description, locale) })));
-    writeFragments(fragments, check, label);
+    const fragments = entries.flatMap((entry, index) => apiFragments(entry, id, (locale) => renderApi(apis[index], entry.description, locale)));
+    await writeFragments(fragments, check, label);
 }

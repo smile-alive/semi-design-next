@@ -1,4 +1,4 @@
-import { additionsOverReact, knownRules } from '#scripts/a11y-baseline.ts';
+import { additionsOverReact, knownRules } from '#scripts/lib/a11y-baseline.ts';
 import { describe, expect, it } from 'vite-plus/test';
 import { frameworkHref } from '../framework-links';
 import { availableFrameworks, validateFrameworkLocales } from '../frameworks';

@@ -279,7 +279,7 @@ Toast、Notification、Modal 的静态方法在服务端抛出说明性错误，
 
 **API 表**（2026-10-24）
 
-API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生成双语片段 `api/<组件>.<框架>.<语言>.mdx`；缺说明或说明过时时 `check:full` 报错。Vue 用 vue-component-meta，其余框架用 TS compiler API（`website/scripts/ts-api.ts`）。表格不设版本列：本仓库不跟上游发版。细则见各框架的 `website.md`。
+API 表从组件类型生成，说明写在各页的 `api.<框架>.json`，生成双语片段 `api/<组件>.<框架>.<语言>.mdx`；缺说明或说明过时时 `check:full` 报错。Vue 用 vue-component-meta，其余框架用 TS compiler API（`website/scripts/lib/ts-api.ts`）。表格不设版本列：本仓库不跟上游发版。细则见各框架的 `website.md`。
 
 **Agent 文档**（2026-11-16）
 

@@ -1,12 +1,12 @@
 import path from 'node:path';
-import { compileError, tableErrors } from '#scripts/lint-mdx-tables.ts';
+import { compileError, tableErrors } from '#scripts/lint-mdx.ts';
 import { describe, expect, it } from 'vite-plus/test';
 
 const frontmatter = ['---', 'title: 示例', 'brief: 带 { 花括号与 <尖括号 的简介', '---', ''];
 // A page with React and Vue demos, so remark-demo resolves demos next to it and the Vue build runs too
 const page = path.resolve(import.meta.dirname, '../../../content/basic/icon/index.zh-CN.mdx');
 
-describe('lint-mdx-tables', () => {
+describe('lint-mdx', () => {
     it('表格行的单元格比表头多时报错', () => {
         const source = ['| 属性 | 类型 |', '| --- | --- |', '| type | string | number |'].join('\n');
         expect(tableErrors(source)).toEqual(['3: expected 2 cells (header), found 3']);

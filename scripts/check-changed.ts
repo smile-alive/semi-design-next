@@ -1,13 +1,14 @@
-// Checks what differs from the merge base with release, plus uncommitted and untracked files. CI's gate job picks jobs
-// by the same kind of file classification, see .github/workflows/ci.yml.
+// Runs lint, format and test checks on files changed since the merge base with release, plus uncommitted and untracked ones.
 // Usage: node scripts/check-changed.ts
+// Output: each command with its own output; exits with the first failing command's code.
+// CI's gate job classifies files the same way, see .github/workflows/ci.yml.
 import { spawnSync } from 'node:child_process';
-import fs from 'node:fs';
 import path from 'node:path';
 import { frameworks } from '../lint/index.ts';
+import { readJson } from './lib/json.ts';
+import { root } from './lib/paths.ts';
 
-const root = path.resolve(import.meta.dirname, '..');
-const scripts: Record<string, string> = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).scripts;
+const scripts: Record<string, string> = readJson(path.join(root, 'package.json')).scripts;
 
 function git(...args: string[]) {
     const { status, stdout, stderr } = spawnSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 });
@@ -39,7 +40,6 @@ if (code.length) run('vp', 'lint', '--deny-warnings', '--no-error-on-unmatched-p
 if (styles.length) run('stylelint', '--max-warnings', '0', '--allow-empty-input', ...styles);
 if (changed.some((file) => file.startsWith('website/content/'))) run('pnpm', 'run', 'lint:docs');
 
-// A framework's own lint script, when it has one, covers its templates and compiler checks
 for (const { name, files } of frameworks) {
     const script = `lint:${name.toLowerCase()}`;
     if (script in scripts && changed.some((file) => files.some((glob) => path.matchesGlob(file, glob)))) run('pnpm', 'run', script);

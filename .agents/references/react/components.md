@@ -5,7 +5,7 @@ semi-ui-react 的 React 19 函数组件写法。组件内语句顺序、foundati
 ## 硬性规则
 
 - 对外导出的 React 顶层组件调用 `useDefaultProps`（F7），名称用组件导出名，并在 `packages/semi-ui-react/src/utils/semi-global.ts` 的 `overrideDefaultProps` 类型中补上组件名。
-- React 组件和 hook 要能通过 `compiler-check.ts`（`pnpm lint:react`）。
+- React 组件和 hook 要能通过 `lint-compiler.react.ts`（`pnpm lint:react`）。
 - render 中不写副作用，定时器等放到事件处理或 `useDidUpdate` 里。
 - state 只读：`useState` 返回的对象、数组、Map 不就地修改（`state.x = ...`、`map.set(...)`），要变就用 setter 传新值；不触发重渲染的可变值放进 `useRef`。唯一例外是 React Compiler 一节的 `useState(() => new Runtime())`。
 
@@ -17,7 +17,7 @@ semi-ui-react 的 React 19 函数组件写法。组件内语句顺序、foundati
 
 ## JSX 属性顺序
 
-- `perfectionist/sort-jsx-props` 检查属性顺序，依次为：`key`/`ref`、`id`/`name`、元素类型（`as`、`type` 等）、类名、样式、`data-*`、无障碍属性、表单状态、其余属性、节点属性（`render*`、`*Render`、`icon` 等）、`children` 一类、`on*` 与 `handle*` 回调。组内按字母，展开运算符两侧分开排序。分组以 `lint/react/index.ts` 为准，`vp lint --fix` 可自动修正。
+- `perfectionist/sort-jsx-props` 检查属性顺序，依次为：`key`/`ref`、`id`/`name`、元素类型（`as`、`type` 等）、类名、样式、`data-*`、无障碍属性、表单状态、其余属性、节点属性（`render*`、`*Render`、`icon` 等）、`children` 一类、`on*` 与 `handle*` 回调。组内按字母，展开运算符两侧分开排序。分组以 `lint/react/index.ts` 为准，`pnpm lint:code --fix` 可自动修正。
 
 ## 有 foundation
 
@@ -81,8 +81,8 @@ export default function Spin(rawProps: SpinProps) {
 
 ## React Compiler
 
-- 库构建不经过 Compiler（C1），`website/scripts/compiler-check.ts` 只保证使用方开启 Compiler 时能编译。需要稳定引用的值（合并后的 ref 回调、传给子组件的回调、context 值）照常用 `useMemo`、`useCallback`，不交给 Compiler 记忆化。
-- 组件和 hook 内不写以下代码，Compiler 遇到后会整个放弃编译该函数，构建和测试都发现不了，`react/todo` lint 规则能查出这类语法，`pnpm lint:react`（`compiler-check.ts`，在 `pnpm lint` 中运行）还能查出 hook 落在 memo cache 分支等问题：
+- 库构建不经过 Compiler（C1），`website/scripts/lint-compiler.react.ts` 只保证使用方开启 Compiler 时能编译。需要稳定引用的值（合并后的 ref 回调、传给子组件的回调、context 值）照常用 `useMemo`、`useCallback`，不交给 Compiler 记忆化。
+- 组件和 hook 内不写以下代码，Compiler 遇到后会整个放弃编译该函数，构建和测试都发现不了，`react/todo` lint 规则能查出这类语法，`pnpm lint:react`（`lint-compiler.react.ts`，在 `pnpm lint` 中运行）还能查出 hook 落在 memo cache 分支等问题：
     - `||=`、`&&=`、`??=`，写成 `a = a || b`（React 文件关闭了全仓的 `logical-assignment-operators`）；
     - 参数解构默认值里的 JSX，如 `{ icon = <IconChevronDown /> }`，改为在函数体内判断 `=== undefined`；
     - 对象字面量里的 getter。
