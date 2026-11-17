@@ -147,24 +147,50 @@ jobs:
             - if: needs.gate.outputs.lint == 'full'
               run: pnpm lint
 
-    typecheck:
+    # The tests' configs re-check the component source and take about half the CPU time, so they get their own job;
+    # gate's `website` scope only needs `astro check`, which the source part runs
+    types:
+        name: typecheck (${{ matrix.part }})
         needs: [gate, build]
         if: needs.gate.outputs.typecheck != ''
         runs-on: ubuntu-latest
         timeout-minutes: 30
+        strategy:
+            fail-fast: false
+            matrix:
+                part: [source, vitest]
+        env:
+            PICKED: ${{ needs.gate.outputs.typecheck == 'full' || matrix.part == 'source' }}
         steps:
-            - uses: actions/checkout@v5
-            - uses: ./.github/actions/setup
+            - if: env.PICKED == 'true'
+              uses: actions/checkout@v5
+            - if: env.PICKED == 'true'
+              uses: ./.github/actions/setup
               with:
                   dist: required
             - if: needs.gate.outputs.typecheck == 'full'
-              run: pnpm typecheck
-            - if: needs.gate.outputs.typecheck == 'website'
+              run: pnpm exec node scripts/typecheck.ts ${{ matrix.part }}
+            - if: matrix.part == 'source'
               run: pnpm --filter semi-website check
 
+    # main's ruleset requires a check named `typecheck`; a job that only `needs` types would skip on a red part, and a
+    # skipped job passes the ruleset
+    typecheck:
+        needs: [gate, types]
+        if: ${{ !cancelled() && needs.gate.outputs.typecheck != '' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - env:
+                  RESULT: ${{ needs.types.result }}
+              run: |
+                  echo "types: $RESULT"
+                  [ "$RESULT" = success ]
+
     # A job-level `if` cannot read `matrix`, so a leg that gate did not pick skips its steps instead. Three shards keep
-    # one run at 17 concurrent jobs, under the account's limit of 20
+    # one run at 18 concurrent jobs with lint and both types parts, under the account's limit of 20
     shard:
+        name: test (${{ matrix.project }}) ${{ matrix.shard }}/3
         needs: [gate, build]
         if: needs.gate.outputs.tests != ''
         runs-on: ubuntu-latest
@@ -207,6 +233,6 @@ jobs:
                   GH_TOKEN: ${{ github.token }}
                   PROJECT: ${{ matrix.project }}
               run: |
-                  conclusions=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --jq '.jobs[] | select(.name | startswith("shard (" + env.PROJECT + ",")) | .conclusion')
+                  conclusions=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --jq '.jobs[] | select(.name | startswith("test (" + env.PROJECT + ") ")) | .conclusion')
                   echo "$conclusions"
                   [ -n "$conclusions" ] && ! grep -vqx success <<< "$conclusions"

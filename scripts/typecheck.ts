@@ -7,19 +7,22 @@ import { frameworks } from '../lint/index.ts';
 
 // a container config (no files, only references) has nothing to check itself; the projects it lists are matched on their own
 const isContainer = (config: string) => ts.readConfigFile(config, (file) => ts.sys.readFile(file)).config.files?.length === 0;
-const configs = [
+const source = [
     'tsconfig.node.json',
     ...globSync(['packages/*/tsconfig{,.lib}.json', 'packages/*/*/tsconfig.json'])
         .filter((config) => !isContainer(config))
         .toSorted(),
     ...globSync('website/tsconfig*.json').toSorted(),
-    ...globSync('vitest/tsconfig*.json').toSorted(),
-    ...globSync('vitest/*/tsconfig*.json').toSorted(),
 ];
+const vitest = [...globSync('vitest/tsconfig*.json').toSorted(), ...globSync('vitest/*/tsconfig*.json').toSorted()];
+// CI checks the two parts in parallel jobs; together they cover every config, so a new one cannot fall outside both
+const part = process.argv[2];
+if (part !== undefined && part !== 'source' && part !== 'vitest') throw new Error(`Unknown part "${part}", expected source or vitest`);
+const configs = part === 'source' ? source : part === 'vitest' ? vitest : [...source, ...vitest];
 const failed: string[] = [];
 // A vitest config missing from the root references is not type-checked by the editor or by `tsc -b`
 const referenced = new Set<string>(ts.readConfigFile('tsconfig.json', (file) => ts.sys.readFile(file)).config.references.map((reference: { path: string }) => path.normalize(reference.path)));
-for (const config of globSync('vitest/**/tsconfig*.json')) {
+for (const config of part === 'source' ? [] : globSync('vitest/**/tsconfig*.json')) {
     if (referenced.has(config)) continue;
     console.error(`${config} is missing from tsconfig.json references`);
     failed.push(config);
