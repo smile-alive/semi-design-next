@@ -1,5 +1,11 @@
 # @fibrae/semi-foundation
 
+## 0.10.0
+
+### Patch Changes
+
+- @fibrae/semi-json-viewer-core@0.10.0
+
 ## 0.9.1
 
 ### Patch Changes
