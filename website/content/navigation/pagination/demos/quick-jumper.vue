@@ -4,7 +4,7 @@
 
 <template>
     <div>
-        <Pagination showQuickJumper style="margin-block-end: 12px" :total="80" />
-        <Pagination showQuickJumper :total="300" />
+        <Pagination aria-label="Pagination of 80 items" showQuickJumper style="margin-block-end: 12px" :total="80" />
+        <Pagination aria-label="Pagination of 300 items" showQuickJumper :total="300" />
     </div>
 </template>

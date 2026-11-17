@@ -15,8 +15,8 @@ type Mode = 'light' | 'dark';
 const globalTokens: Record<Mode, Token[]> = global;
 
 const messages = {
-    'zh-CN': { variable: '变量', defaultValue: '默认值', usage: '用法', WIP: '暂无' },
-    'en-US': { variable: 'variable', defaultValue: 'defaultValue', usage: 'usage', WIP: 'WIP' },
+    'zh-CN': { variable: '变量', defaultValue: '默认值', usage: '用法', WIP: '暂无', pagination: (first: string) => `${first} 等变量分页` },
+    'en-US': { variable: 'variable', defaultValue: 'defaultValue', usage: 'usage', WIP: 'WIP', pagination: (first: string) => `Pagination of ${first} tokens` },
 };
 
 const trimDollar = (text: string) => text.replace(/^\$+|\$+$/g, '');
@@ -76,7 +76,8 @@ function TokenTable({ tokenList, locale, mode = 'light' }: { tokenList: Token[];
             render: (text) => <div>{text || t.WIP}</div>,
         },
     ];
-    return <Table key={mode} columns={columns} dataSource={tokenList} />;
+    // The page holds many token tables, each a pagination landmark that needs its own name
+    return <Table key={mode} columns={columns} dataSource={tokenList} pagination={{ 'aria-label': t.pagination(tokenList[0]?.key ?? '') }} />;
 }
 
 function GlobalTokenTab({ reg, locale }: { reg: RegExp; locale: Locale }) {
