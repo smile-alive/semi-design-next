@@ -12,10 +12,7 @@
         <IconBriefStroked :class="`${PREFIX_ATTACHMENT}-file-icon`" size="extra-large" />
         <div :class="`${PREFIX_ATTACHMENT}-file-info`">
             <span :class="`${PREFIX_ATTACHMENT}-file-title`">{{ props.name }}</span>
-            <span :class="`${PREFIX_ATTACHMENT}-file-metadata`">
-                <span :class="`${PREFIX_ATTACHMENT}-file-type`">{{ props.type }}</span
-                >{{ props.type ? ' · ' : '' }}{{ props.size }}</span
-            >
+            <span :class="`${PREFIX_ATTACHMENT}-file-metadata`"> <span :class="`${PREFIX_ATTACHMENT}-file-type`">{{ props.type }}</span>{{ props.type ? ' · ' : '' }}{{ props.size }}</span>
         </div>
     </a>
 </template>

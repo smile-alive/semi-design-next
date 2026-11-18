@@ -20,9 +20,7 @@
     <div>
         <Typography.Numeral component="div" :parser="parserTCH">
             Semi Design 重视我们的用户，加入并助力我们不断完善
-            <p v-for="item in infos" :key="item.min">
-                {{ item.type }}：<b style="color: var(--semi-violet-5)">{{ item.min }}</b>
-            </p>
+            <p v-for="item in infos" :key="item.min">{{ item.type }}：<b style="color: var(--semi-violet-5)">{{ item.min }}</b></p>
         </Typography.Numeral>
         <br />
         <Typography.Numeral :link="{ href: 'https://semi-design-next.pages.dev/', target: '_blank' }" :parser="parserTCH"> 共计 {{ 1e5 }} 条数据，前往官网 &gt;&gt; </Typography.Numeral>

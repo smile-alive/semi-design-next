@@ -665,10 +665,7 @@
                                 </div>
                                 <slot v-else-if="!option.create && $slots.optionItem" name="optionItem" v-bind="optionItemProps(option, index, rowStyle)" />
                                 <SelectOption v-else v-bind="optionRowProps(option, index, rowStyle)" @mouseenter="foundation.handleOptionMouseEnter(index)" @select="(_, event) => handleSelect(option, index, event)">
-                                    <template v-if="option.create">
-                                        <span :class="`${prefix}-create-tips`">{{ locale.locale.createText }}</span
-                                        >{{ option.data.value }}
-                                    </template>
+                                    <template v-if="option.create"> <span :class="`${prefix}-create-tips`">{{ locale.locale.createText }}</span>{{ option.data.value }} </template>
                                     <component :is="option.slot" v-else-if="option.slot" />
                                     <template v-else>{{ option.data.label }}</template>
                                 </SelectOption>
@@ -688,10 +685,7 @@
                                 </div>
                                 <slot v-else-if="!option.create && $slots.optionItem" name="optionItem" v-bind="optionItemProps(option, index)" />
                                 <SelectOption v-else v-bind="optionRowProps(option, index)" @mouseenter="foundation.handleOptionMouseEnter(index)" @select="(_, event) => handleSelect(option, index, event)">
-                                    <template v-if="option.create">
-                                        <span :class="`${prefix}-create-tips`">{{ locale.locale.createText }}</span
-                                        >{{ option.data.value }}
-                                    </template>
+                                    <template v-if="option.create"> <span :class="`${prefix}-create-tips`">{{ locale.locale.createText }}</span>{{ option.data.value }} </template>
                                     <component :is="option.slot" v-else-if="option.slot" />
                                     <template v-else>{{ option.data.label }}</template>
                                 </SelectOption>

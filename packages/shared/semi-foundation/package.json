@@ -44,7 +44,7 @@
         "remark-rehype": "^11.1.0",
         "scroll-into-view-if-needed": "catalog:",
         "shiki": "catalog:",
-        "tabbable": "^6.5.1",
+        "tabbable": "^6.5.2",
         "unified": "catalog:"
     },
     "keywords": [],

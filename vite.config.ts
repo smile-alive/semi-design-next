@@ -36,7 +36,7 @@ export default defineConfig({
         },
         projects: testProjects,
     },
-    // package.json pins oxlint/oxfmt: vite-plus 1.0 bundles oxfmt 0.70, which strips JSDoc trailing spaces 0.72 keeps
+    // package.json pins oxlint/oxfmt to the exact versions vite-plus depends on, so one copy of each is installed; bump them together
     lint: lintConfig,
     fmt: {
         proseWrap: 'never',

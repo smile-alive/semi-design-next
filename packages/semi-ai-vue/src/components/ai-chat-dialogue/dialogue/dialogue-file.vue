@@ -57,9 +57,7 @@
             >
                 {{ props.file.filename }}
             </span>
-            <span :class="`${PREFIX_CONTENT}-file-metadata`">
-                <span :class="`${PREFIX_CONTENT}-file-type`">{{ realType }}</span> {{ props.file.size }}
-            </span>
+            <span :class="`${PREFIX_CONTENT}-file-metadata`"> <span :class="`${PREFIX_CONTENT}-file-type`">{{ realType }}</span> {{ props.file.size }} </span>
         </div>
         <!-- shortcut: role="button" div, as a native button cannot nest in <a>; move it beside the link on rework -->
         <div v-if="showReference" :aria-label="locale.locale.reference" :class="`${PREFIX_CONTENT}-icon-reference`" role="button" tabindex="0" @click="onReference" @keydown="onReferenceKeydown">

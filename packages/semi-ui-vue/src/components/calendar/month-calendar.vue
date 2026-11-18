@@ -189,10 +189,7 @@
                                 >
                                     <slot :date="day.date" name="dateDisplay">
                                         <span :class="`${prefixCls}-date`">
-                                            <template v-if="day.dayString === '1'">
-                                                {{ day.month }}<span :class="`${cssClasses.PREFIX}-today-date`">&nbsp;{{ day.dayString }}</span
-                                                >{{ i18n.locale.datestring }}
-                                            </template>
+                                            <template v-if="day.dayString === '1'"> {{ day.month }}<span :class="`${cssClasses.PREFIX}-today-date`">&nbsp;{{ day.dayString }}</span>{{ i18n.locale.datestring }} </template>
                                             <span v-else :class="`${cssClasses.PREFIX}-today-date`">{{ day.dayString }}</span>
                                         </span>
                                     </slot>

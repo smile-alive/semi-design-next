@@ -24,6 +24,11 @@ tester.run('builtin-own-line', builtinOwnLine, {
         sfc('<div>{{ a }}<slot /></div>'),
         sfc('<p>Hello <slot /> world</p>'),
         sfc('<Paragraph> ab<template v-if="done">!</template>{{ rest }} </Paragraph>'),
+        // Content with text or an interpolation is an inline run the formatter joins, even around an element with content of its own
+        sfc('<Comp>{{ a }}<template #x>{{ b }}</template></Comp>'),
+        sfc('<div>', '    <div class="counter">{{ count }}<template v-if="max">/{{ max }}</template></div>', '</div>'),
+        sfc('<div>', '    <template v-if="first"> {{ month }}<span class="date">&nbsp;{{ day }}</span>{{ suffix }} </template>', '</div>'),
+        sfc('<div>', '    <template v-if="create"> <span class="tips">{{ text }}</span>{{ value }} </template>', '</div>'),
         // Opening the template would leave text against its tags, where the formatter hangs the brackets instead
         sfc('<Carousel>', '    <template #rightArrow>Forward <i /></template>', '</Carousel>'),
         sfc('<component :is="p">before <component :is="img" /> after</component>'),
@@ -79,11 +84,6 @@ tester.run('builtin-own-line', builtinOwnLine, {
             code: sfc('<Comp><template #a><template v-if="x">A</template></template></Comp>'),
             output: sfc('<Comp>', '<template #a>', '<template v-if="x">A</template>', '</template>', '</Comp>'),
             errors: errors('template', 'template'),
-        },
-        {
-            code: sfc('<Comp>{{ a }}<template #x>{{ b }}</template></Comp>'),
-            output: sfc('<Comp>', '{{ a }}<template #x>{{ b }}</template>', '</Comp>'),
-            errors: errors('template'),
         },
         {
             code: sfc('<Comp><template #a><IconA /><span>x</span></template></Comp>'),

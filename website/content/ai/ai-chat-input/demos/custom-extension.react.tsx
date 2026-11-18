@@ -427,16 +427,7 @@ export default function AIChatInputDemo() {
                         <div className="item" key={key || index}>
                             <span className="item-icon">
                                 {icon && React.cloneElement(icon, { className: 'item-left item-icon' })}
-                                <button
-                                    type="button"
-                                    className="item-icon-delete"
-                                    aria-label="删除"
-                                    onClick={() => {
-                                        if (ref.current && ref.current.deleteContent) {
-                                            ref.current.deleteContent(item);
-                                        }
-                                    }}
-                                >
+                                <button type="button" className="item-icon-delete" aria-label="删除" onClick={() => ref.current?.deleteContent(item)}>
                                     <IconClose size="small" />
                                 </button>
                             </span>
@@ -481,16 +472,7 @@ export default function AIChatInputDemo() {
                         <div className="item" key={uid}>
                             <span className="item-icon">
                                 {isImage ? <img className="item-image item-left" src={item.url} alt={item.name} /> : <IconUpload size="small" className="item-left item-icon" />}
-                                <button
-                                    type="button"
-                                    className="item-icon-delete"
-                                    aria-label="删除"
-                                    onClick={() => {
-                                        if (ref.current && ref.current.deleteUploadFile) {
-                                            ref.current.deleteUploadFile(item);
-                                        }
-                                    }}
-                                >
+                                <button type="button" className="item-icon-delete" aria-label="删除" onClick={() => ref.current?.deleteUploadFile(item)}>
                                     <IconClose size="small" />
                                 </button>
                             </span>

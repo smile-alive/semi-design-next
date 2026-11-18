@@ -42,6 +42,11 @@ export const vueExemptions: VueExemption[] = [
         off: [],
         templateOff: ['vuejs-accessibility/click-events-have-key-events', 'vuejs-accessibility/no-static-element-interactions'],
     },
+    // A plain DOM ancestor's keydown listener is the behavior under test: Escape must reach it past the trigger.
+    {
+        files: ['packages/semi-ui-vue/src/components/tooltip/__tests__/tooltip.test.tsx'],
+        off: ['jsx-a11y/no-static-element-interactions'],
+    },
     // The autofocus behavior itself is under test.
     {
         files: ['packages/semi-ui-vue/src/components/checkbox/__tests__/fixtures/late.vue', 'packages/semi-ui-vue/src/components/radio/__tests__/fixtures/late.vue', 'packages/semi-ui-vue/src/components/switch/__tests__/fixtures/late.vue'],

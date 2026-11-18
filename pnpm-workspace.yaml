@@ -14,7 +14,7 @@ overrides:
 catalogMode: prefer
 
 catalog:
-    '@astrojs/svelte': ^9.1.4
+    '@astrojs/svelte': ^9.1.6
     '@changesets/cli': ^3.0.3
     # 0.x minors may break the API: patches only, a minor upgrade is a deliberate change
     '@dnd-kit/abstract': ~0.5.3
@@ -37,52 +37,53 @@ catalog:
     '@testing-library/svelte': ^5.4.2
     # The @tiptap packages peer on each other's exact version, so the whole family is listed here and moves together;
     # patches only, so a newer @tiptap/vue-3 cannot resolve ahead of the locked core
-    '@tiptap/core': ~3.33.1
-    '@tiptap/extension-blockquote': ~3.33.1
-    '@tiptap/extension-bold': ~3.33.1
-    '@tiptap/extension-code': ~3.33.1
-    '@tiptap/extension-code-block': ~3.33.1
-    '@tiptap/extension-document': ~3.33.1
-    '@tiptap/extension-hard-break': ~3.33.1
-    '@tiptap/extension-heading': ~3.33.1
-    '@tiptap/extension-horizontal-rule': ~3.33.1
-    '@tiptap/extension-image': ~3.33.1
-    '@tiptap/extension-italic': ~3.33.1
-    '@tiptap/extension-link': ~3.33.1
-    '@tiptap/extension-list': ~3.33.1
-    '@tiptap/extension-mention': ~3.33.1
-    '@tiptap/extension-paragraph': ~3.33.1
-    '@tiptap/extension-strike': ~3.33.1
-    '@tiptap/extension-text': ~3.33.1
-    '@tiptap/extension-text-align': ~3.33.1
-    '@tiptap/extension-text-style': ~3.33.1
-    '@tiptap/extensions': ~3.33.1
-    '@tiptap/pm': ~3.33.1
-    '@tiptap/react': ~3.33.1
-    '@tiptap/vue-3': ~3.33.1
+    '@tiptap/core': ~3.34.0
+    '@tiptap/extension-blockquote': ~3.34.0
+    '@tiptap/extension-bold': ~3.34.0
+    '@tiptap/extension-code': ~3.34.0
+    '@tiptap/extension-code-block': ~3.34.0
+    '@tiptap/extension-document': ~3.34.0
+    '@tiptap/extension-hard-break': ~3.34.0
+    '@tiptap/extension-heading': ~3.34.0
+    '@tiptap/extension-horizontal-rule': ~3.34.0
+    '@tiptap/extension-image': ~3.34.0
+    '@tiptap/extension-italic': ~3.34.0
+    '@tiptap/extension-link': ~3.34.0
+    '@tiptap/extension-list': ~3.34.0
+    '@tiptap/extension-mention': ~3.34.0
+    '@tiptap/extension-paragraph': ~3.34.0
+    '@tiptap/extension-strike': ~3.34.0
+    '@tiptap/extension-text': ~3.34.0
+    '@tiptap/extension-text-align': ~3.34.0
+    '@tiptap/extension-text-style': ~3.34.0
+    '@tiptap/extensions': ~3.34.0
+    '@tiptap/pm': ~3.34.0
+    '@tiptap/react': ~3.34.0
+    '@tiptap/vue-3': ~3.34.0
     '@types/react': ^19.3.0
     '@types/react-dom': ^19.3.0
-    '@vitejs/plugin-vue': ^6.0.10
+    '@vitejs/plugin-vue': ^6.0.11
     clsx: ^2.1.1
     css-loader: ^7.1.5
     date-fns: ^4.4.0
     es-toolkit: ^1.53.2
     eslint-plugin-svelte: ^3.24.1
-    jsdom: ^31.0.0
-    motion-v: ^2.11.1
+    jsdom: ^31.0.1
+    motion-v: ^2.12.0
     nuxt: ^4.6.4
-    playwright: 1.65.0
+    playwright: 1.65.1
     react: ^19.3.1
     react-dom: ^19.3.1
     remark-gfm: 4.0.1
-    remark-mdx: 3.0.1
+    remark-mdx: 3.1.1
     remark-parse: 11.0.0
     remark-stringify: 11.0.0
-    sass: ^1.108.1
+    sass: ^1.108.2
     # Vite compiles SCSS with sass-embedded when installed (vite-plus-core pulls it in as a peer) and the plugins with
     # sass, so both stay on the same release
-    sass-embedded: ^1.108.1
-    scroll-into-view-if-needed: ^3.1.0
+    sass-embedded: ^1.108.2
+    # 3.2.0 shipped ES2020 syntax and a Node 26 engines field; 3.2.1 reverted both
+    scroll-into-view-if-needed: ^3.2.1
     shiki: ^4.6.0
     solid-js: ^1.9.18
     svelte: ^5.57.3
@@ -92,7 +93,7 @@ catalog:
     unified: ^11.0.5
     # 3.x compiles for Solid 2; the packages stay on Solid 1.x until X15
     unplugin-solid: ^2.0.0
-    vite: npm:@voidzero-dev/vite-plus-core@1.5.1
+    vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
     vue: ^3.5.45
     vue-tsc: ^3.3.14
     webpack: ^5.112.2
@@ -124,65 +125,4 @@ allowBuilds:
     '@parcel/watcher': false
 
 minimumReleaseAgeExclude:
-    - '@astrojs/vue@7.1.4'
-    - framer-motion@14.12.0
-    - motion-dom@14.12.0
-    - '@astrojs/svelte@9.1.4'
-    - svelte-eslint-parser@1.10.1
-    - '@astrojs/internal-helpers@0.13.2'
-    - '@astrojs/markdown-remark@7.3.7'
-    - '@astrojs/markdown-satteri@0.4.8'
-    - '@astrojs/mdx@8.1.4'
-    - '@astrojs/react-renderer@0.1.1'
-    - '@astrojs/react@7.1.7'
-    - '@astrojs/runtime@0.1.0'
-    - '@astrojs/solid-js-renderer@0.1.0'
-    - '@astrojs/solid-js@7.1.4'
-    - '@astrojs/svelte-renderer@0.1.0'
-    - '@astrojs/vite-plugin-astro@0.1.1'
-    - '@astrojs/vue-renderer@0.1.0'
-    - '@rspack/binding-darwin-arm64@2.3.2'
-    - '@rspack/binding-darwin-x64@2.3.2'
-    - '@rspack/binding-linux-arm64-gnu@2.3.2'
-    - '@rspack/binding-linux-arm64-musl@2.3.2'
-    - '@rspack/binding-linux-ppc64-gnu@2.3.2'
-    - '@rspack/binding-linux-riscv64-gnu@2.3.2'
-    - '@rspack/binding-linux-riscv64-musl@2.3.2'
-    - '@rspack/binding-linux-s390x-gnu@2.3.2'
-    - '@rspack/binding-linux-x64-gnu@2.3.2'
-    - '@rspack/binding-linux-x64-musl@2.3.2'
-    - '@rspack/binding-wasm32-wasi@2.3.2'
-    - '@rspack/binding-win32-arm64-msvc@2.3.2'
-    - '@rspack/binding-win32-ia32-msvc@2.3.2'
-    - '@rspack/binding-win32-x64-msvc@2.3.2'
-    - '@rspack/binding@2.3.2'
-    - '@rspack/core@2.3.2'
-    - '@tiptap/core@3.33.1'
-    - '@tiptap/extension-blockquote@3.33.1'
-    - '@tiptap/extension-bold@3.33.1'
-    - '@tiptap/extension-bubble-menu@3.33.1'
-    - '@tiptap/extension-code-block@3.33.1'
-    - '@tiptap/extension-code@3.33.1'
-    - '@tiptap/extension-document@3.33.1'
-    - '@tiptap/extension-floating-menu@3.33.1'
-    - '@tiptap/extension-hard-break@3.33.1'
-    - '@tiptap/extension-heading@3.33.1'
-    - '@tiptap/extension-horizontal-rule@3.33.1'
-    - '@tiptap/extension-image@3.33.1'
-    - '@tiptap/extension-italic@3.33.1'
-    - '@tiptap/extension-link@3.33.1'
-    - '@tiptap/extension-list@3.33.1'
-    - '@tiptap/extension-mention@3.33.1'
-    - '@tiptap/extension-paragraph@3.33.1'
-    - '@tiptap/extension-strike@3.33.1'
-    - '@tiptap/extension-text-align@3.33.1'
-    - '@tiptap/extension-text-style@3.33.1'
-    - '@tiptap/extension-text@3.33.1'
-    - '@tiptap/extensions@3.33.1'
-    - '@tiptap/pm@3.33.1'
-    - '@tiptap/react@3.33.1'
-    - '@tiptap/suggestion@3.33.1'
-    - '@tiptap/vue-3@3.33.1'
-    - astro@7.4.10
-    - eslint-plugin-vue@10.12.1
-    - motion@14.12.0
+    - stylelint-config-recess-order@7.10.1
