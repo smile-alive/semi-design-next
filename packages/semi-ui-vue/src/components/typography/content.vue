@@ -44,8 +44,7 @@
             <Decorate :tags="linkTags">
                 <span v-if="props.hasEllipsis" @mouseenter="emit('hover')">
                     <NumeralNodes v-if="props.showFull" :format="props.format" :nodes="props.nodes" />
-                    <template v-else>{{ props.ellipsisText }}</template
-                    >{{ props.suffix }}
+                    <template v-else>{{ props.ellipsisText }}</template>{{ props.suffix }}
                 </span>
                 <NumeralNodes v-else :format="props.format" :nodes="props.nodes" />
             </Decorate>

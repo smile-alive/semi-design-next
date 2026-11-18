@@ -100,7 +100,7 @@ export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH"
 | --- | --- |
 | 单元测试 | `vp test run --project <项目> <目录...>`，项目为 `common` 或框架名，`-t "<用例名>"` 只跑指定用例 |
 | 浏览器测试 | `vp test run --project <项目>-browser <目录...>`，项目为 `common` 或框架名 |
-| lint | `pnpm lint:code <路径...>`（即 `vp lint --deny-warnings`；直接敲 `vp lint` 会因根脚本同名多打一行提示），`pnpm lint:scopes`，`pnpm lint:private`，`pnpm lint:layers`（foundation 的导入分层），`pnpm lint:class-order`，`pnpm lint:component-order`，`pnpm lint:scss-variables`，`pnpm lint:click-outside`（自管下拉不重复挂点外部监听），`pnpm lint:style`，`pnpm lint:docs`（文档表格列数与 MDX 编译）；前七项合并为 `pnpm lint:rules`；反复重跑整条 lint 用 `vp run --cache lint`，没变的步骤直接回放结果，`lint:style` 每次都执行（stylelint 加载 TS 配置时会写临时文件）；各框架的专属检查 `pnpm lint:<框架>` 见其 lint.md |
+| lint | `pnpm lint:code <路径...>`（即 `vp lint --deny-warnings`；直接敲 `vp lint` 会因根脚本同名多打一行提示），`pnpm lint:scopes`，`pnpm lint:private`，`pnpm lint:layers`（foundation 的导入分层），`pnpm lint:class-order`，`pnpm lint:component-order`，`pnpm lint:scss-variables`，`pnpm lint:click-outside`（自管下拉不重复挂点外部监听），`pnpm lint:style`，`pnpm lint:docs`（文档表格列数与 MDX 编译）；前七项合并为 `pnpm lint:rules`；反复重跑整条 lint 用 `vp run --cache lint`，没变的步骤直接回放结果；各框架的专属检查 `pnpm lint:<框架>` 见其 lint.md |
 | 格式 | `pnpm format:check` |
 | 类型 | `pnpm build && pnpm typecheck`（框架包和部分测试 tsconfig 读取 foundation 已构建的 dist，foundation 有改动时先 build） |
 | 覆盖率 | `pnpm test:coverage`（全局阈值在 `vitest/index.ts`，包级阈值在所属框架的 `vitest/<框架>/index.ts`；不含 SSR 与 hydration 项目，它们由 `pnpm test:ssr` 另跑；两者已在 `check:full` 中） |

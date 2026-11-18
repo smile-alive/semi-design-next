@@ -8,9 +8,7 @@
     <Numeral :precision="1">
         <template v-for="item in items" :key="item">{{ item }}</template>
         <template v-if="false">0</template>
-        <span
-            >x<b>{{ 3 }}</b></span
-        >
+        <span>x<b>{{ 3 }}</b></span>
     </Numeral>
     <Numeral :precision="1"
         >Stars <b>1</b>

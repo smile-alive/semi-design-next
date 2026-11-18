@@ -96,7 +96,7 @@ pnpm test:coverage           # 先单元后浏览器测试，合并覆盖率低�
 pnpm test:ssr                # SSR 与 hydration 项目（*-ssr、*-hydration-browser），不统计覆盖率
 
 pnpm lint                    # 文件的框架归属、oxlint、stylelint、私有成员、类成员与组件内语句顺序、SCSS 变量、MDX 表格列数与各框架的专属检查，warning 也算失败
-vp run --cache lint          # 反复重跑 lint 时用：每一步按读取的文件缓存，没变的步骤直接回放结果；lint:style 每次都执行（stylelint 加载 TS 配置时会写临时文件）
+vp run --cache lint          # 反复重跑 lint 时用：每一步按读取的文件缓存，没变的步骤直接回放结果
 pnpm lint:scopes             # 按命名列出各区域属于各框架与通用范围的文件数；带文件参数时逐个列出归属
 pnpm lint:react              # 用 React Compiler 编译 semi-ui-react 全部组件与 hook，列出被放弃的函数
 pnpm lint:fix                # 自动修复 lint 问题

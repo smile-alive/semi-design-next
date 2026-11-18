@@ -292,8 +292,6 @@
         <button v-if="allowClear" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="foundation.handleClearClick" @mousedown.prevent>
             <IconClear />
         </button>
-        <div v-if="hasCounter" :id="counterId" :class="[`${prefix}-textarea-counter`, { [`${prefix}-textarea-counter-exceed`]: exceeds }]" @click="foundation.handleCounterClick">
-            {{ count }}<template v-if="props.maxCount">/{{ props.maxCount }}</template>
-        </div>
+        <div v-if="hasCounter" :id="counterId" :class="[`${prefix}-textarea-counter`, { [`${prefix}-textarea-counter-exceed`]: exceeds }]" @click="foundation.handleCounterClick">{{ count }}<template v-if="props.maxCount">/{{ props.maxCount }}</template></div>
     </div>
 </template>

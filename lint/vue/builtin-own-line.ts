@@ -25,7 +25,7 @@ interface TagToken {
 type Child = { kind: 1 | 3 | 5; id: number } | { kind: 2; text: string };
 
 const builtins = new Set(['template', 'slot', 'component', 'transition', 'transitiongroup', 'keepalive', 'teleport', 'suspense']);
-// The formatter checks below mirror oxfmt's Prettier HTML printer at this repo's printWidth, so the rule never reports a layout that `vp fmt` joins back.
+// The formatter checks below mirror oxfmt's Vue template printer at this repo's printWidth, so the rule never reports a layout that `vp fmt` joins back.
 // Known limit: after upgrading oxfmt or changing printWidth, if the rule reports again once lint-staged has run eslint --fix and vp fmt, update these checks for that case and add a test.
 // Elements whose content oxfmt always breaks (Prettier's forceBreakContent and forceBreakChildren, table-cell excluded)
 const brokenByFormatter = new Set(['body', 'script', 'style', 'html', 'head', 'ul', 'ol', 'select', 'table', 'caption', 'colgroup', 'thead', 'tbody', 'tfoot', 'tr']);
@@ -137,9 +137,11 @@ export const builtinOwnLine: Rule.RuleModule = {
             };
 
             const breaks = (from: number, to: number, gaps: Set<number>) => /[\n\r]/.test(source.slice(from, to)) || [...gaps].some((gap) => from <= gap && gap <= to);
-            // oxfmt (Prettier's HTML printer) joins a container's children back onto one line when they fit, unless forceBreakContent holds or two adjacent children are already on separate lines
+            // oxfmt joins a container's children back onto one line when they fit, unless forceBreakContent holds or two adjacent children are already on separate lines
             const keptByFormatter = (container: TemplateElement, gaps: Set<number>) => {
                 if (container === root || brokenByFormatter.has(container.rawName.toLowerCase())) return true;
+                // Content with text or an interpolation is an inline run: oxfmt 0.79 joins it whenever it fits, whatever breaks the source or a nested element has
+                if (container.children.some(({ type, range }) => type === 'VExpressionContainer' || (type === 'VText' && /[^ \n\t\f\r]/.test(source.slice(...range))))) return false;
                 const nodes = nodesOf(container);
                 if (nodes.some((node) => node.type === 'VElement' && nodesOf(node as TemplateElement).length)) return true;
                 const [start, end] = contentOf(container);
