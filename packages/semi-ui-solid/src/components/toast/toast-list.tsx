@@ -6,7 +6,7 @@ import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/to
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/toast/toast.scss';
 import { useCSSAnimation } from '../../internal/index';
-import { useAnnouncer } from '../../primitives/index';
+import { useLiveRegion } from '../../primitives/index';
 import { mergeRefs } from '../../utils/index';
 import { ToastListContext } from './context';
 import Toast, { type ToastProps } from './toast';
@@ -21,7 +21,7 @@ export default function ToastList(props: ToastListProps) {
     let innerWrapper: HTMLDivElement | undefined;
     const fresh = new FreshItems();
 
-    const [announcement, announcer] = useAnnouncer();
+    const [announcement, announcer] = useLiveRegion();
 
     // a list renders one store for its whole life
     const store = untrack(() => props.store);

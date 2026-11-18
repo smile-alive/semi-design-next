@@ -64,6 +64,8 @@ import { HotKeys } from '@fibrae/semi-ui-solid';
 
 当设定快捷键与常用快捷键如`Ctrl/Meta + C`相同时，可以通过设置`preventDefault`控制默认事件是否触发。
 
+只需要监听、不需要显示按键时，可以用规则相同的 [useHotKeys](/zh-CN/react/advanced/hooks#usehotkeys)。
+
 ### 基本用法
 
 基本使用，通过`hotKeys`传入快捷键组合，通过 `onHotKey`（Vue 为 `@hotKey`）绑定快捷键处理函数，作出响应动作。

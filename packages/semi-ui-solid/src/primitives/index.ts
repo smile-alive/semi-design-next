@@ -1,10 +1,14 @@
 // Every primitive, internal ones included; the public subset is the package's primitives entry (src/primitives.ts).
 export { default as useAnnouncer } from './use-announcer';
+export { default as useBreakpoint } from './use-breakpoint';
 export { default as useClickOutside } from './use-click-outside';
+export { default as useControllableState } from './use-controllable-state';
 export { default as useCopied } from './use-copied';
 export { default as useEventListener } from './use-event-listener';
 export { default as useFocusHandover } from './use-focus-handover';
+export { default as useHotKeys } from './use-hot-keys';
 export { default as useIntersectionObserver } from './use-intersection-observer';
+export { default as useLiveRegion } from './use-live-region';
 export { default as useMounted } from './use-mounted';
 export { default as useMutationObserver } from './use-mutation-observer';
 export { default as useNoticeClose } from './use-notice-close';
@@ -12,5 +16,7 @@ export { default as useOverlayResources } from './use-overlay-resources';
 export { default as useRaf } from './use-raf';
 export { default as useRecordFocus } from './use-record-focus';
 export { default as useResizeObserver } from './use-resize-observer';
+export { default as useScrollLock } from './use-scroll-lock';
 export { default as useSpinDelay } from './use-spin-delay';
+export { default as useThemeMode } from './use-theme-mode';
 export { default as useWatch } from './use-watch';

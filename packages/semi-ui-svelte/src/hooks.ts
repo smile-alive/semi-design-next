@@ -1,7 +1,16 @@
 export { default as useLocale } from './components/locale/use-locale.svelte.js';
 export type { LocaleResult } from './components/locale/interface.js';
+export { default as useAnnouncer } from './hooks/use-announcer.js';
+export { default as useBreakpoint } from './hooks/use-breakpoint.svelte.js';
 export { default as useClickOutside } from './hooks/use-click-outside.svelte.js';
 export { default as useCopied } from './hooks/use-copied.svelte.js';
+export { default as useHotKeys } from './hooks/use-hot-keys.svelte.js';
+export type { UseHotKeysOptions } from './hooks/use-hot-keys.svelte.js';
+export { default as useScrollLock } from './hooks/use-scroll-lock.svelte.js';
 export { default as useSpinDelay } from './hooks/use-spin-delay.svelte.js';
+export { default as useThemeMode } from './hooks/use-theme-mode.svelte.js';
 export type { SpinDelayOptions } from '@fibrae/semi-foundation/components/spin/spin-delay';
+export type { Politeness } from '@fibrae/semi-foundation/utils/announcer';
+export type { BreakpointScreens } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
+export type { ThemeMode, ThemePreference } from '@fibrae/semi-foundation/utils/theme-mode';
 export { observeResize } from './components/resize-observer/index.js';

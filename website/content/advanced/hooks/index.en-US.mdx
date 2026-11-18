@@ -1,0 +1,140 @@
+---
+title: Hooks
+brief: Public hooks of each framework package for theme mode, breakpoints, screen reader announcements, page scroll locking, hotkeys and controllable state.
+icon: doc-user-guide
+order: 7
+---
+
+## Import and Signatures
+
+<Framework only="react">
+
+Import from `@fibrae/semi-ui-react/hooks`:
+
+```ts
+useThemeMode(): { mode: ThemeMode; preference: ThemePreference; setMode: (preference: ThemePreference) => void };
+useBreakpoint(): BreakpointScreens;
+useAnnouncer(): (message: string, politeness?: 'polite' | 'assertive') => void;
+useScrollLock(locked: boolean): void;
+useHotKeys(hotKeys: string[], onHotKey: (e: KeyboardEvent) => void, options?: { preventDefault?: boolean; getListenerTarget?: () => HTMLElement }): void;
+useControllableState<T>(options: { value?: T; defaultValue?: T; onChange?: (value: T) => void }): [T, (next: T | ((prev: T) => T)) => void];
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Import from `@fibrae/semi-ui-vue/composables`. Arguments that change are passed as getters, and values come back as readonly `Ref`s:
+
+```ts
+useThemeMode(): { mode: Readonly<Ref<ThemeMode>>; preference: Readonly<Ref<ThemePreference>>; setMode: (preference: ThemePreference) => void };
+useBreakpoint(): Readonly<Ref<BreakpointScreens>>;
+useAnnouncer(): (message: string, politeness?: 'polite' | 'assertive') => void;
+useScrollLock(locked: () => boolean): void;
+useHotKeys(hotKeys: () => string[], onHotKey: (e: KeyboardEvent) => void, options?: () => { preventDefault?: boolean; getListenerTarget?: () => HTMLElement }): void;
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Import from `@fibrae/semi-ui-solid/primitives`. Arguments that change are passed as `Accessor`s, and values come back as `Accessor`s:
+
+```ts
+useThemeMode(): { mode: Accessor<ThemeMode>; preference: Accessor<ThemePreference>; setMode: (preference: ThemePreference) => void };
+useBreakpoint(): Accessor<BreakpointScreens>;
+useAnnouncer(): (message: string, politeness?: 'polite' | 'assertive') => void;
+useScrollLock(locked: Accessor<boolean>): void;
+useHotKeys(hotKeys: Accessor<string[]>, onHotKey: (e: KeyboardEvent) => void, options?: Accessor<{ preventDefault?: boolean; getListenerTarget?: () => HTMLElement }>): void;
+useControllableState<T>(options: { value: Accessor<T | undefined>; defaultValue?: T; onChange?: (value: T) => void }): [Accessor<T>, (next: T | ((prev: T) => T)) => void];
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+Import from `@fibrae/semi-ui-svelte/hooks`. Arguments that change are passed as getters, and the properties of the returned objects are reactive:
+
+```ts
+useThemeMode(): { readonly mode: ThemeMode; readonly preference: ThemePreference; setMode: (preference: ThemePreference) => void };
+useBreakpoint(): { readonly screens: BreakpointScreens };
+useAnnouncer(): (message: string, politeness?: 'polite' | 'assertive') => void;
+useScrollLock(locked: () => boolean): void;
+useHotKeys(hotKeys: () => string[], onHotKey: (e: KeyboardEvent) => void, options?: () => { preventDefault?: boolean; getListenerTarget?: () => HTMLElement }): void;
+```
+
+</Framework>
+
+For showing a loading state only when it lasts, see `useSpinDelay` on the [Spin](/en-US/react/feedback/spin) page.
+
+## useThemeMode
+
+Reads and writes the page's [dark mode](/en-US/react/advanced/dark-mode). `mode` is what the page shows, and `preference` also tells "follow the system" apart. `setMode('dark')` adds `theme-mode="dark"` to the `html` element, `setMode('light')` removes the attribute, and `setMode('system')` applies `prefers-color-scheme` and keeps following it until another mode is set. When other code on the page changes the `theme-mode` attribute directly, every `mode` updates with it. The preference is not persisted: an app that wants to remember it stores it itself and calls `setMode` on startup.
+
+During server rendering and hydration `mode` is `light`; the page's real mode arrives after mount.
+
+<Demo id="theme-mode" />
+
+## useBreakpoint
+
+Returns whether each breakpoint matches the viewport, by the media queries of `defaultResponsiveMap`, whose widths are Grid's: `xs` is at most 575px wide, and `sm`, `md`, `lg`, `xl` and `xxl` are at least 576px, 768px, 992px, 1200px and 1600px wide. ConfigProvider's `responsiveObserve` is not needed. Every breakpoint is `false` during server rendering and the first render, then the real matches arrive after mount.
+
+<Demo id="breakpoint" />
+
+## useAnnouncer
+
+Returns `announce(message, politeness)`, which has screen readers read `message`. Use it for results that do not move focus, such as "Added to cart" or "3 items deleted". Messages go into a hidden live region at the end of `body` that the whole page shares, and messages within 100ms are read together; the region keeps announcing while a modal is open. Messages already sent are still read after the caller unmounts. `assertive` interrupts what is being read, so keep it for errors that need attention at once.
+
+<Demo id="announcer" />
+
+## useScrollLock
+
+Stops the page from scrolling while `locked` is true, without shifting the page sideways when the scrollbar goes away. It shares one count with Modal and SideSheet, so the page scrolls again only once every lock is released.
+
+<Demo id="scroll-lock" />
+
+## useHotKeys
+
+Calls `onHotKey` when the combination is pressed, by the same rule as the [HotKeys](/en-US/react/plus/hot-keys) component: a combination is one common key plus any number of modifiers, the common key is matched by physical position, and the modifiers must match exactly. An invalid combination throws. It listens on `document.body` by default, and `getListenerTarget` picks another element; `preventDefault` keeps the browser's own shortcut for the same keys from running.
+
+<Demo id="hot-keys" />
+
+## useControllableState
+
+<Framework only="react">
+
+Implements the `value` / `defaultValue` / `onChange` pattern of Semi components: when `value` is given the state is controlled, shows `value`, and a change only calls `onChange`; while `value` is `undefined` the hook keeps its own state, starting from `defaultValue`. `setValue` keeps one identity and accepts a value or an updater; setting the current value again does not call `onChange`.
+
+```tsx
+function Counter(props: { value?: number; defaultValue?: number; onChange?: (value: number) => void }) {
+    const [count, setCount] = useControllableState({ value: props.value, defaultValue: props.defaultValue ?? 0, onChange: props.onChange });
+    return <Button onClick={() => setCount((prev) => prev + 1)}>{count}</Button>;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Implements the `value` / `defaultValue` / `onChange` pattern of Semi components: while `value()` is not `undefined` the state is controlled, shows `value()`, and a change only calls `onChange`; otherwise the primitive keeps its own state, starting from `defaultValue`. The setter accepts a value or an updater; setting the current value again does not call `onChange`.
+
+```tsx
+function Counter(props: { value?: number; defaultValue?: number; onChange?: (value: number) => void }) {
+    const [count, setCount] = useControllableState({ value: () => props.value, defaultValue: props.defaultValue ?? 0, onChange: (value) => props.onChange?.(value) });
+    return <Button onClick={() => setCount((prev) => prev + 1)}>{count()}</Button>;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Vue has no such hook; use [defineModel](https://vuejs.org/api/sfc-script-setup.html#definemodel): the component is controlled when the parent binds `v-model`, and keeps its own value otherwise.
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte has no such hook; use [$bindable](https://svelte.dev/docs/svelte/$bindable): a parent's `bind:` keeps both sides in sync, and without it the component uses its own value and fallback.
+
+</Framework>

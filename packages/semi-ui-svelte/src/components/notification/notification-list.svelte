@@ -5,7 +5,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
     import { groupNoticesByPosition, noticePositions } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
     import '@fibrae/semi-foundation/components/notification/notification.scss';
-    import { useAnnouncer, useStoreSnapshot } from '../../hooks/index.js';
+    import { useLiveRegion, useStoreSnapshot } from '../../hooks/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import type { ListedNotice, RegisterNotice } from './context.js';
     import type { NotificationListProps } from './interface.js';
@@ -19,7 +19,7 @@
     const fresh = new FreshItems();
 
     const snapshot = useStoreSnapshot(store);
-    const { text: announcement, announcer } = useAnnouncer();
+    const { text: announcement, announcer } = useLiveRegion();
 
     const view = $derived(snapshot());
     const shownItems = $derived(view.items);

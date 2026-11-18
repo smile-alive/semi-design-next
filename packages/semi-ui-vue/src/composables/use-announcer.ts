@@ -1,14 +1,9 @@
-import { onBeforeUnmount, shallowRef } from 'vue';
-import Announcer from '@fibrae/semi-foundation/utils/announcer';
+import { announce } from '@fibrae/semi-foundation/utils/announcer';
 
+/**
+ * Returns `announce(message, politeness?)`, which has screen readers read `message` through a hidden live region the
+ * whole page shares. Messages still go out after the caller unmounts, e.g. "row deleted".
+ */
 export default function useAnnouncer() {
-    const text = shallowRef('');
-
-    const announcer = new Announcer((value) => {
-        text.value = value;
-    });
-
-    onBeforeUnmount(() => announcer.dispose());
-
-    return { text, announcer };
+    return announce;
 }

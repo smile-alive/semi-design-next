@@ -5,6 +5,21 @@ import type { Breakpoint, BreakpointScreens, OnBreakpointChangeCallback, OnBreak
 
 export const noScreens: BreakpointScreens = { xs: false, sm: false, md: false, lg: false, xl: false, xxl: false };
 
+/** Which media queries of `responsiveMap` match now; a new object on every call */
+export function readScreens(responsiveMap: ResponsiveMap = defaultResponsiveMap): BreakpointScreens {
+    const screens = { ...noScreens };
+    for (const screen of Object.keys(responsiveMap) as Breakpoint[]) {
+        screens[screen] = window.matchMedia(responsiveMap[screen]).matches;
+    }
+    return screens;
+}
+
+/** Calls `onChange` whenever any media query of `responsiveMap` starts or stops matching */
+export function subscribeScreens(onChange: () => void, responsiveMap: ResponsiveMap = defaultResponsiveMap) {
+    const unRegisters = Object.values(responsiveMap).map((query) => registerMediaQuery(query, { match: onChange, unmatch: onChange, callInInit: false }));
+    return () => unRegisters.forEach((unRegister) => unRegister());
+}
+
 export interface ObserveProps {
     responsiveObserve: boolean;
     responsiveMap?: ResponsiveMap;
@@ -61,12 +76,7 @@ export default class BreakpointObserver {
         }
         const responsiveMap = this.#props.responsiveMap || defaultResponsiveMap;
         const keys = Object.keys(responsiveMap) as Breakpoint[];
-        const screens = { ...noScreens };
-        if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
-            for (const screen of keys) {
-                screens[screen] = window.matchMedia(responsiveMap[screen]).matches;
-            }
-        }
+        const screens = typeof window !== 'undefined' && typeof window.matchMedia === 'function' ? readScreens(responsiveMap) : noScreens;
         // unchanged matches keep the screens object, so consumers do not re-render
         if (!isEqual(screens, this.#screens)) {
             this.#screens = screens;

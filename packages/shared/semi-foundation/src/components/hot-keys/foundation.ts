@@ -13,6 +13,36 @@ export interface HotKeysBaseProps {
 
 const sameKeys = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((key, index) => key === b[index]);
 
+// in the order of the modifier flags read from the event below
+const modifierKeys: string[] = [Keys.Meta, Keys.Shift, Keys.Alt, Keys.Control];
+
+/** Throws unless `hotKeys` are known keys made of exactly one common key and any number of modifiers */
+export function assertHotKeys(hotKeys: readonly string[]) {
+    let commonKeyCnt = 0;
+    hotKeys.forEach((key) => {
+        key = key.toLowerCase();
+        if (!Object.values(Keys).some((value) => value === key)) {
+            throw new Error(`${key} is not a valid key`);
+        }
+        if (!modifierKeys.includes(key)) {
+            commonKeyCnt += 1;
+        }
+    });
+    if (commonKeyCnt !== 1) {
+        throw new Error('HotKeys must have one common key and 0/some modifier key');
+    }
+}
+
+/** Whether `event` presses the combination: its common key by physical position, and exactly its modifiers */
+export function matchHotKeys(hotKeys: readonly string[], event: KeyboardEvent) {
+    const keys = hotKeys.map((key) => key.toLowerCase());
+    const pressedModifiers = [event.metaKey, event.shiftKey, event.altKey, event.ctrlKey];
+    if (!modifierKeys.every((modifier, index) => keys.includes(modifier) === pressedModifiers[index])) {
+        return false;
+    }
+    return keys.every((key) => modifierKeys.includes(key) || event.code === keyToCode(key));
+}
+
 export default class HotKeysFoundation<P extends HotKeysBaseProps = HotKeysBaseProps> extends BaseFoundation<HotKeysAdapter<P>, P, object> {
     // unbinding must not re-query `getListenerTarget`, which may return another element by then
     #target: HTMLElement | null = null;
@@ -34,72 +64,25 @@ export default class HotKeysFoundation<P extends HotKeysBaseProps = HotKeysBaseP
         this.#target = null;
     }
 
-    #isValidHotKeys(hotKeys: string[]) {
-        let commonKeyCnt = 0;
-        const modifierKeys: string[] = [Keys.Meta, Keys.Alt, Keys.Shift, Keys.Control];
-
-        hotKeys.forEach((key) => {
-            key = key.toLowerCase();
-            if (!Object.values(Keys).some((value) => value === key)) {
-                throw new Error(`${key} is not a valid key`);
-            }
-            if (!modifierKeys.includes(key)) {
-                commonKeyCnt += 1;
-            }
-        });
-
-        return commonKeyCnt === 1;
-    }
-
     #handleKeyDown = (event: KeyboardEvent) => {
         const { hotKeys, preventDefault } = this.getProps();
-        let allModifier = [false, false, false, false]; // Meta Shift Alt Ctrl
-        let clickedModifier = [event.metaKey, event.shiftKey, event.altKey, event.ctrlKey];
-        const keysPressed = hotKeys?.map((key: KeyboardEvent['key']) => {
-            key = key.toLowerCase();
-            if (key === Keys.Meta) {
-                allModifier[0] = true;
-                return event.metaKey;
-            } else if (key === Keys.Shift) {
-                allModifier[1] = true;
-                return event.shiftKey;
-            } else if (key === Keys.Alt) {
-                allModifier[2] = true;
-                return event.altKey;
-            } else if (key === Keys.Control) {
-                allModifier[3] = true;
-                return event.ctrlKey;
-            }
-            return event.code === keyToCode(key);
-        });
-
-        if (!allModifier.every((value, index) => value === clickedModifier[index])) {
-            return;
-        }
-        if (keysPressed.every(Boolean)) {
+        if (matchHotKeys(hotKeys, event)) {
             if (preventDefault) {
                 event.preventDefault();
             }
             this.adapter.notifyHotKey(event);
-            return;
         }
     };
 
-    #validate() {
-        if (!this.#isValidHotKeys(this.getProps().hotKeys)) {
-            throw new Error('HotKeys must have one common key and 0/some modifier key');
-        }
-    }
-
     override init() {
         // validate before binding: a throw skips destroy and would leak the listener
-        this.#validate();
+        assertHotKeys(this.getProps().hotKeys);
         this.#bind();
     }
 
     /** Applies the same check as mounting, so an invalid combination set later fails just as loudly */
     override handlePropsChange() {
-        this.#validate();
+        assertHotKeys(this.getProps().hotKeys);
         this.handleTargetChange();
     }
 

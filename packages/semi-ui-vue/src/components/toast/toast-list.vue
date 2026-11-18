@@ -7,7 +7,7 @@
     import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/toast/toast.scss';
-    import { useAnnouncer, useStoreSnapshot } from '../../composables/index';
+    import { useLiveRegion, useStoreSnapshot } from '../../composables/index';
     import { provideToastListContext } from './context';
     import ToastItem from './toast.vue';
 
@@ -21,7 +21,7 @@
     const fresh = new FreshItems();
 
     const snapshot = useStoreSnapshot(props.store);
-    const { text: announcement, announcer } = useAnnouncer();
+    const { text: announcement, announcer } = useLiveRegion();
 
     const prefix = cssClasses.PREFIX;
     const paused = computed(() => pointerInside.value || focusInside.value);

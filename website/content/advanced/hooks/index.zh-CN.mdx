@@ -1,0 +1,140 @@
+---
+title: Hooks
+brief: 各框架包公开的 hook：主题模式、断点、屏幕阅读器播报、页面滚动锁、快捷键和受控状态。
+icon: doc-user-guide
+order: 7
+---
+
+## 引入与签名
+
+<Framework only="react">
+
+从 `@fibrae/semi-ui-react/hooks` 引入：
+
+```ts
+useThemeMode(): { mode: ThemeMode; preference: ThemePreference; setMode: (preference: ThemePreference) => void };
+useBreakpoint(): BreakpointScreens;
+useAnnouncer(): (message: string, politeness?: 'polite' | 'assertive') => void;
+useScrollLock(locked: boolean): void;
+useHotKeys(hotKeys: string[], onHotKey: (e: KeyboardEvent) => void, options?: { preventDefault?: boolean; getListenerTarget?: () => HTMLElement }): void;
+useControllableState<T>(options: { value?: T; defaultValue?: T; onChange?: (value: T) => void }): [T, (next: T | ((prev: T) => T)) => void];
+```
+
+</Framework>
+
+<Framework only="vue">
+
+从 `@fibrae/semi-ui-vue/composables` 引入。会变化的参数传 getter，返回值是只读的 `Ref`：
+
+```ts
+useThemeMode(): { mode: Readonly<Ref<ThemeMode>>; preference: Readonly<Ref<ThemePreference>>; setMode: (preference: ThemePreference) => void };
+useBreakpoint(): Readonly<Ref<BreakpointScreens>>;
+useAnnouncer(): (message: string, politeness?: 'polite' | 'assertive') => void;
+useScrollLock(locked: () => boolean): void;
+useHotKeys(hotKeys: () => string[], onHotKey: (e: KeyboardEvent) => void, options?: () => { preventDefault?: boolean; getListenerTarget?: () => HTMLElement }): void;
+```
+
+</Framework>
+
+<Framework only="solid">
+
+从 `@fibrae/semi-ui-solid/primitives` 引入。会变化的参数传 `Accessor`，返回值也是 `Accessor`：
+
+```ts
+useThemeMode(): { mode: Accessor<ThemeMode>; preference: Accessor<ThemePreference>; setMode: (preference: ThemePreference) => void };
+useBreakpoint(): Accessor<BreakpointScreens>;
+useAnnouncer(): (message: string, politeness?: 'polite' | 'assertive') => void;
+useScrollLock(locked: Accessor<boolean>): void;
+useHotKeys(hotKeys: Accessor<string[]>, onHotKey: (e: KeyboardEvent) => void, options?: Accessor<{ preventDefault?: boolean; getListenerTarget?: () => HTMLElement }>): void;
+useControllableState<T>(options: { value: Accessor<T | undefined>; defaultValue?: T; onChange?: (value: T) => void }): [Accessor<T>, (next: T | ((prev: T) => T)) => void];
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+从 `@fibrae/semi-ui-svelte/hooks` 引入。会变化的参数传 getter，返回对象上的属性是响应式的：
+
+```ts
+useThemeMode(): { readonly mode: ThemeMode; readonly preference: ThemePreference; setMode: (preference: ThemePreference) => void };
+useBreakpoint(): { readonly screens: BreakpointScreens };
+useAnnouncer(): (message: string, politeness?: 'polite' | 'assertive') => void;
+useScrollLock(locked: () => boolean): void;
+useHotKeys(hotKeys: () => string[], onHotKey: (e: KeyboardEvent) => void, options?: () => { preventDefault?: boolean; getListenerTarget?: () => HTMLElement }): void;
+```
+
+</Framework>
+
+加载状态的延迟显示见 [Spin](/zh-CN/react/feedback/spin) 的 `useSpinDelay`。
+
+## useThemeMode
+
+读写页面的[暗色模式](/zh-CN/react/advanced/dark-mode)。`mode` 是页面当前显示的模式，`preference` 另外区分出“跟随系统”。`setMode('dark')` 给 `html` 元素加上 `theme-mode="dark"`，`setMode('light')` 移除这个属性，`setMode('system')` 按 `prefers-color-scheme` 设置并持续跟随，直到再设置其他模式。页面其他代码直接改 `theme-mode` 属性时，各处的 `mode` 一起更新。偏好不做持久化，需要记住时由应用自己保存，在启动时调用 `setMode`。
+
+服务端渲染和 hydration 时 `mode` 为 `light`，挂载后换成页面的实际模式。
+
+<Demo id="theme-mode" />
+
+## useBreakpoint
+
+返回各断点是否命中视口，媒体查询即 `defaultResponsiveMap`，断点宽度与 Grid 相同：`xs` 为宽度不超过 575px，`sm`、`md`、`lg`、`xl`、`xxl` 分别为宽度至少 576px、768px、992px、1200px、1600px。不需要开启 ConfigProvider 的 `responsiveObserve`。服务端渲染和首次渲染时全部为 `false`，挂载后换成实际结果。
+
+<Demo id="breakpoint" />
+
+## useAnnouncer
+
+返回 `announce(message, politeness)`，让屏幕阅读器读出 `message`，适合播报没有焦点变化的结果，例如“已加入购物车”“已删除 3 项”。消息写进 `body` 末尾一个整页共用的隐藏 live region，100ms 内的多条消息合并读出；打开模态框时这个区域仍会播报。调用方卸载后已发出的消息照常播报。`assertive` 会打断正在朗读的内容，只用于需要立即处理的错误。
+
+<Demo id="announcer" />
+
+## useScrollLock
+
+`locked` 为真时禁止页面滚动，滚动条消失时页面不横向移动。与 Modal、SideSheet 共用一个计数，所有锁都释放后页面才恢复滚动。
+
+<Demo id="scroll-lock" />
+
+## useHotKeys
+
+按下组合键时调用 `onHotKey`，规则与 [HotKeys](/zh-CN/react/plus/hot-keys) 组件相同：组合由一个普通键和任意个修饰键组成，普通键按物理键位匹配，修饰键必须完全一致。组合不合法时直接抛错。默认监听 `document.body`，`getListenerTarget` 可以换成其他元素；`preventDefault` 阻止浏览器自带的同名快捷键。
+
+<Demo id="hot-keys" />
+
+## useControllableState
+
+<Framework only="react">
+
+实现 Semi 组件那样的 `value` / `defaultValue` / `onChange`：传入 `value` 时受控，显示 `value`，修改只调用 `onChange`；`value` 为 `undefined` 时自己保存状态，初值为 `defaultValue`。`setValue` 的引用不变，接受新值或 updater，新值与当前值相同时不调用 `onChange`。
+
+```tsx
+function Counter(props: { value?: number; defaultValue?: number; onChange?: (value: number) => void }) {
+    const [count, setCount] = useControllableState({ value: props.value, defaultValue: props.defaultValue ?? 0, onChange: props.onChange });
+    return <Button onClick={() => setCount((prev) => prev + 1)}>{count}</Button>;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+实现 Semi 组件那样的 `value` / `defaultValue` / `onChange`：`value()` 不为 `undefined` 时受控，显示 `value()`，修改只调用 `onChange`；否则自己保存状态，初值为 `defaultValue`。setter 接受新值或 updater，新值与当前值相同时不调用 `onChange`。
+
+```tsx
+function Counter(props: { value?: number; defaultValue?: number; onChange?: (value: number) => void }) {
+    const [count, setCount] = useControllableState({ value: () => props.value, defaultValue: props.defaultValue ?? 0, onChange: (value) => props.onChange?.(value) });
+    return <Button onClick={() => setCount((prev) => prev + 1)}>{count()}</Button>;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Vue 不提供这个 hook，用 [defineModel](https://vuejs.org/api/sfc-script-setup.html#definemodel)：父组件绑定 `v-model` 时受控，不绑定时组件自己保存值。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 不提供这个 hook，用 [$bindable](https://svelte.dev/docs/svelte/$bindable)：父组件 `bind:` 时双向同步，不绑定时组件使用自己的值和回退值。
+
+</Framework>

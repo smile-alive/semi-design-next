@@ -4,7 +4,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
     import { groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
     import '@fibrae/semi-foundation/components/notification/notification.scss';
-    import { useAnnouncer, useStoreSnapshot } from '../../composables/index';
+    import { useLiveRegion, useStoreSnapshot } from '../../composables/index';
     import useConfig from '../config-provider/use-config';
     import type { ListedNotice, RegisterNotice } from './context';
     import NoticeList from './notice-list.vue';
@@ -17,7 +17,7 @@
     const fresh = new FreshItems();
 
     const snapshot = useStoreSnapshot(props.store);
-    const { text: announcement, announcer } = useAnnouncer();
+    const { text: announcement, announcer } = useLiveRegion();
 
     const items = computed(() => snapshot.value.items);
     const updatedItems = computed(() => snapshot.value.updatedItems);

@@ -1,7 +1,7 @@
 import { onMount } from 'svelte';
 import Announcer from '@fibrae/semi-foundation/utils/announcer';
 
-export default function useAnnouncer() {
+export default function useLiveRegion() {
     let text = $state('');
 
     const announcer = new Announcer((value) => {
