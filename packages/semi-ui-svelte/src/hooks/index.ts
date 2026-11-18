@@ -1,10 +1,16 @@
 // Every hook, internal ones included; the public subset is the package's hooks entry (src/hooks.ts).
-export { default as useAnnouncer } from './use-announcer.svelte.js';
+export { default as useAnnouncer } from './use-announcer.js';
+export { default as useBreakpoint } from './use-breakpoint.svelte.js';
 export { default as useClickOutside } from './use-click-outside.svelte.js';
 export { default as useCopied } from './use-copied.svelte.js';
+export { default as useHotKeys } from './use-hot-keys.svelte.js';
+export type { UseHotKeysOptions } from './use-hot-keys.svelte.js';
+export { default as useLiveRegion } from './use-live-region.svelte.js';
 export { default as useNoticeClose } from './use-notice-close.js';
 export * from './use-notice-close.js';
 export { default as useOverlayResources } from './use-overlay-resources.svelte.js';
+export { default as useScrollLock } from './use-scroll-lock.svelte.js';
 export { default as useSpinDelay } from './use-spin-delay.svelte.js';
 export { default as useStoreSnapshot } from './use-store-snapshot.svelte.js';
+export { default as useThemeMode } from './use-theme-mode.svelte.js';
 export { default as watch } from './watch.svelte.js';

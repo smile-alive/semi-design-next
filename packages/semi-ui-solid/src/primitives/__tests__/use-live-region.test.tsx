@@ -1,9 +1,9 @@
 import { render } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { ANNOUNCE_DELAY, ANNOUNCE_HOLD } from '@fibrae/semi-foundation/utils/announcer';
-import useAnnouncer from '../use-announcer';
+import useLiveRegion from '../use-live-region';
 
-describe('useAnnouncer', () => {
+describe('useLiveRegion', () => {
     beforeEach(() => {
         vi.useFakeTimers();
     });
@@ -12,9 +12,9 @@ describe('useAnnouncer', () => {
     });
 
     const setup = () => {
-        let handle!: ReturnType<typeof useAnnouncer>;
+        let handle!: ReturnType<typeof useLiveRegion>;
         const view = render(() => {
-            handle = useAnnouncer();
+            handle = useLiveRegion();
             return <output>{handle[0]()}</output>;
         });
         return { view, handle: () => handle };

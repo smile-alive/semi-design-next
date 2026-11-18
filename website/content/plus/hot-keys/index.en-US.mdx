@@ -64,6 +64,8 @@ Keys are matched by physical key position. Symbols that need Shift to type, such
 
 When setting a shortcut that overlaps with common shortcuts like Ctrl/Meta + C, the preventDefault setting can be used to control whether the default event is triggered.
 
+To listen without showing the keys, use [useHotKeys](/en-US/react/advanced/hooks#usehotkeys), which follows the same rules.
+
 ### Basic Usage
 
 Pass in key combinations via `hotKeys` and bind a shortcut handler function using `onHotKey` (`@hotKey` in Vue) to respond to the action.

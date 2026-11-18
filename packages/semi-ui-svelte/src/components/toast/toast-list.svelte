@@ -6,7 +6,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
     import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import '@fibrae/semi-foundation/components/toast/toast.scss';
-    import { useAnnouncer, useStoreSnapshot, watch } from '../../hooks/index.js';
+    import { useLiveRegion, useStoreSnapshot, watch } from '../../hooks/index.js';
     import { setToastListContext } from './context.js';
     import type { ToastItemProps, ToastListProps } from './interface.js';
     import Toast from './toast.svelte';
@@ -22,7 +22,7 @@
     const fresh = new FreshItems();
 
     const snapshot = useStoreSnapshot(store);
-    const { text: announcement, announcer } = useAnnouncer();
+    const { text: announcement, announcer } = useLiveRegion();
 
     const prefix = cssClasses.PREFIX;
     const paused = $derived(pointerInside || focusInside);

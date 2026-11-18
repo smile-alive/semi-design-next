@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import Announcer from '@fibrae/semi-foundation/utils/announcer';
+import { announce } from '@fibrae/semi-foundation/utils/announcer';
 
+/**
+ * Returns `announce(message, politeness?)`, which has screen readers read `message` through a hidden live region the
+ * whole page shares. Messages still go out after the caller unmounts, e.g. "row deleted".
+ */
 export default function useAnnouncer() {
-    const [text, setText] = useState('');
-    const [announcer] = useState(() => new Announcer(setText));
-    useEffect(() => () => announcer.dispose(), [announcer]);
-    return [text, announcer] as const;
+    return announce;
 }

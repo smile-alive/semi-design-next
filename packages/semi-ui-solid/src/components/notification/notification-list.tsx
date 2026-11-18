@@ -6,7 +6,7 @@ import { groupNoticesByPosition, noticePositions, type NotificationListProps } f
 import { pinAnimatedHeight, toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/notification/notification.scss';
 import { useCSSAnimation } from '../../internal/index';
-import { useAnnouncer } from '../../primitives/index';
+import { useLiveRegion } from '../../primitives/index';
 import { mergeRefs } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { NotificationListContext } from './context';
@@ -38,7 +38,7 @@ export default function NotificationList(props: NotificationListProps) {
     const lists = new Map<Position, HTMLDivElement>();
     const fresh = new FreshItems();
 
-    const [announcement, announcer] = useAnnouncer();
+    const [announcement, announcer] = useLiveRegion();
 
     const store = untrack(() => props.store);
 
