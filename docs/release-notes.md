@@ -1129,6 +1129,7 @@
 
 - Spin 的加载指示器由 `div` 改为 `<output>`；加载中被包裹内容带 `inert`（List、Table 的 `loading` 同样），不可聚焦；破坏性：删除 `wrapperClassName`（与根元素的 `className` 重复）和 `childStyle`，改用 `classNames.child`、`styles.child`，落在内容包裹元素上；破坏性（类型）：Skeleton 占位的 `size` 只接受 `extra-extra-small` 到 `extra-large`，`shape` 只接受 `circle`、`square`，`Skeleton.Paragraph` 不再声明 `type`，`GenericProps` 即 `AvatarProps`。Vue：Spin 的 `indicator`、`tip`、Skeleton 的 `placeholder` 改为同名插槽；`Skeleton.Image`、`Title`、`Button` 不接受 `size`、`shape`；类型改名为 `SkeletonBasicProps`、`SkeletonAvatarProps`、`SkeletonParagraphProps`，`GenericProps` 删除。
 - Svelte：Skeleton 的 `placeholder` 是 snippet，内容用 `children`；`Skeleton.Avatar`、`Title`、`Button`、`Image`、`Paragraph` 另有同一引用的具名导出 `SkeletonAvatar` 等。
+- 新增：Spin 的 `minDuration`，加载效果显示后至少保持的毫秒数（默认 `0`）。各框架的 hook 入口新增 `useSpinDelay`（行为同 spin-delay：默认 `delay` 500、`minDuration` 200，初始已在加载时立即显示，`ssr: false` 时每次挂载都等待 `delay`），与 Spin 共用一份逻辑。
 
 ### Space
 

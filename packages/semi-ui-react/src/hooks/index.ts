@@ -13,4 +13,5 @@ export { default as useNoticeListEffects } from './use-notice-list-effects';
 export { default as useOverlayResources } from './use-overlay-resources';
 export { default as useRealUnmount } from './use-real-unmount';
 export { default as useResizeObserver } from './use-resize-observer';
+export { default as useSpinDelay } from './use-spin-delay';
 export { default as useUnwrappedLazy } from './use-unwrapped-lazy';

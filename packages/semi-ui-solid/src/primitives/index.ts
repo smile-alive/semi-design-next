@@ -12,4 +12,5 @@ export { default as useOverlayResources } from './use-overlay-resources';
 export { default as useRaf } from './use-raf';
 export { default as useRecordFocus } from './use-record-focus';
 export { default as useResizeObserver } from './use-resize-observer';
+export { default as useSpinDelay } from './use-spin-delay';
 export { default as useWatch } from './use-watch';

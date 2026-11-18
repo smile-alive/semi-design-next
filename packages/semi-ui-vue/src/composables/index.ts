@@ -16,5 +16,6 @@ export { default as useRaf } from './use-raf';
 export { default as useRecordFocus } from './use-record-focus';
 export { default as useResizeObserver } from './use-resize-observer';
 export { default as useSlotVersion } from './use-slot-version';
+export { default as useSpinDelay } from './use-spin-delay';
 export { default as useStoreSnapshot } from './use-store-snapshot';
 export { default as useTimeout } from './use-timeout';

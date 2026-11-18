@@ -1,7 +1,7 @@
 import { children, createEffect, on, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, type SpinPart } from '@fibrae/semi-foundation/components/spin/constants';
-import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
+import SpinFoundation, { type SpinAdapter, type SpinState, isSpinDelayed } from '@fibrae/semi-foundation/components/spin/foundation';
 import '@fibrae/semi-foundation/components/spin/spin.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { hasContent, mergeRefs } from '../../utils/index';
@@ -17,6 +17,7 @@ export interface SpinProps extends ElementProps<'div'> {
     spinning?: boolean;
     indicator?: JSX.Element;
     delay?: number;
+    minDuration?: number;
     tip?: JSX.Element;
     classNames?: Partial<Record<SpinPart, string>>;
     styles?: Partial<Record<SpinPart, JSX.CSSProperties | string>>;
@@ -29,11 +30,12 @@ const defaultProps = {
     size: 'middle',
     spinning: true,
     delay: 0,
+    minDuration: 0,
 } satisfies Partial<SpinProps>;
 
 export default function Spin(rawProps: SpinProps) {
     const props = useDefaultProps('Spin', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['ref', 'children', 'class', 'classNames', 'styles', 'size', 'spinning', 'indicator', 'delay', 'tip']);
+    const [local, rest] = splitProps(props, ['ref', 'children', 'class', 'classNames', 'styles', 'size', 'spinning', 'indicator', 'delay', 'minDuration', 'tip']);
 
     const locale = useLocale('Spin');
 
@@ -48,7 +50,7 @@ export default function Spin(rawProps: SpinProps) {
 
     const content = children(() => local.children);
 
-    const loading = () => (local.delay ? state().loading : local.spinning);
+    const loading = () => (isSpinDelayed(local) ? state().loading : local.spinning);
 
     const tip = children(() => (loading() ? local.tip : undefined));
     const indicator = children(() => (loading() ? local.indicator : undefined));

@@ -5,5 +5,6 @@ export { default as useCopied } from './use-copied.svelte.js';
 export { default as useNoticeClose } from './use-notice-close.js';
 export * from './use-notice-close.js';
 export { default as useOverlayResources } from './use-overlay-resources.svelte.js';
+export { default as useSpinDelay } from './use-spin-delay.svelte.js';
 export { default as useStoreSnapshot } from './use-store-snapshot.svelte.js';
 export { default as watch } from './watch.svelte.js';

@@ -8,3 +8,5 @@ export { default as useFocusHandover } from './composables/use-focus-handover';
 export { default as useMounted } from './composables/use-mounted';
 export { default as useRecordFocus } from './composables/use-record-focus';
 export { default as useResizeObserver } from './composables/use-resize-observer';
+export { default as useSpinDelay } from './composables/use-spin-delay';
+export type { SpinDelayOptions } from '@fibrae/semi-foundation/components/spin/spin-delay';

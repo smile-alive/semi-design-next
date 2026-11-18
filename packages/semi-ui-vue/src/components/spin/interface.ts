@@ -7,6 +7,7 @@ export interface SpinProps {
     size?: SpinSize;
     spinning?: boolean;
     delay?: number;
+    minDuration?: number;
     classNames?: Partial<Record<SpinPart, ClassValue>>;
     styles?: Partial<Record<SpinPart, StyleValue>>;
 }
