@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, onUpdated, useSlots, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/spin/constants';
-    import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
+    import SpinFoundation, { type SpinAdapter, type SpinState, isSpinDelayed } from '@fibrae/semi-foundation/components/spin/foundation';
     import '@fibrae/semi-foundation/components/spin/spin.scss';
     import { type ElementProps, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
@@ -15,6 +15,7 @@
         size: () => semiDefault('Spin', 'size', 'middle'),
         spinning: () => semiDefault('Spin', 'spinning', true),
         delay: () => semiDefault('Spin', 'delay', 0),
+        minDuration: () => semiDefault('Spin', 'minDuration', 0),
         classNames: semiGlobalDefault('Spin', 'classNames'),
         styles: semiGlobalDefault('Spin', 'styles'),
     });
@@ -33,7 +34,7 @@
         () => ({})
     );
 
-    const loading = computed(() => (props.delay ? state.value.loading : props.spinning));
+    const loading = computed(() => (isSpinDelayed(props) ? state.value.loading : props.spinning));
     const prefixCls = cssClasses.PREFIX;
 
     const isBlocked = () => Boolean(loading.value && slots.default);

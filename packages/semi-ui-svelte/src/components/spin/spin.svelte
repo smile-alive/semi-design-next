@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/spin/constants';
-    import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
+    import SpinFoundation, { type SpinAdapter, type SpinState, isSpinDelayed } from '@fibrae/semi-foundation/components/spin/foundation';
     import '@fibrae/semi-foundation/components/spin/spin.scss';
     import { useDefaultProps, useFoundation } from '../../base/index.js';
     import { watch } from '../../hooks/index.js';
@@ -12,7 +12,19 @@
     type Adapter = SpinAdapter<SpinProps>;
 
     const defaults = useDefaultProps('Spin');
-    let { size = defaults('size', 'middle'), spinning = defaults('spinning', true), delay = defaults('delay', 0), classNames = defaults('classNames'), styles = defaults('styles'), indicator = defaults('indicator'), tip = defaults('tip'), children, ...rest }: SpinProps = $props();
+
+    let {
+        size = defaults('size', 'middle'),
+        spinning = defaults('spinning', true),
+        delay = defaults('delay', 0),
+        minDuration = defaults('minDuration', 0),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
+        indicator = defaults('indicator'),
+        tip = defaults('tip'),
+        children,
+        ...rest
+    }: SpinProps = $props();
 
     const locale = useLocale('Spin');
 
@@ -24,6 +36,9 @@
             get delay() {
                 return delay;
             },
+            get minDuration() {
+                return minDuration;
+            },
             get spinning() {
                 return spinning;
             },
@@ -33,7 +48,7 @@
     );
 
     const prefixCls = cssClasses.PREFIX;
-    const loading = $derived(delay ? states().loading : spinning);
+    const loading = $derived(isSpinDelayed({ delay, minDuration }) ? states().loading : spinning);
     const blocked = $derived(Boolean(loading && children));
 
     watch(

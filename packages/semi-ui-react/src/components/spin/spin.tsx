@@ -2,7 +2,7 @@ import type React from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { type SpinPart, cssClasses as css } from '@fibrae/semi-foundation/components/spin/constants';
-import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
+import SpinFoundation, { type SpinAdapter, type SpinState, isSpinDelayed } from '@fibrae/semi-foundation/components/spin/foundation';
 import '@fibrae/semi-foundation/components/spin/spin.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { useMergedRef } from '../../hooks/index';
@@ -22,6 +22,7 @@ export interface SpinProps extends ElementProps<'div'> {
     spinning?: boolean;
     indicator?: React.ReactNode;
     delay?: number;
+    minDuration?: number;
     tip?: React.ReactNode;
     classNames?: Partial<Record<SpinPart, string>>;
     style?: React.CSSProperties;
@@ -35,11 +36,12 @@ const defaultProps = {
     size: 'middle',
     spinning: true,
     delay: 0,
+    minDuration: 0,
 } satisfies Partial<SpinProps>;
 
 export default function Spin(rawProps: SpinProps) {
     const props = useDefaultProps('Spin', rawProps, defaultProps);
-    const { ref, children, style, className, classNames, styles, size, spinning, indicator, delay, tip, ...rest } = props;
+    const { ref, children, style, className, classNames, styles, size, spinning, indicator, delay, minDuration, tip, ...rest } = props;
 
     const { locale } = useLocale('Spin');
 
@@ -52,7 +54,7 @@ export default function Spin(rawProps: SpinProps) {
         () => ({})
     );
 
-    const loading = delay ? state.loading : spinning;
+    const loading = isSpinDelayed(props) ? state.loading : spinning;
     const blocked = loading && hasContent(children);
     const mergedRef = useMergedRef(ref, rootRef);
 

@@ -118,7 +118,7 @@ Use the `indicator` snippet to customize Spin's indicator style.
 
 ### Delay
 
-Delayed to display Spin.
+Delayed to display Spin. `minDuration` keeps the loading effect for a minimum time once shown, so a load that ends right after it appears does not flash.
 
 <Demo id="delay" />
 
@@ -127,6 +127,38 @@ Delayed to display Spin.
 Use `spinning` to determine if the component is in loading status
 
 <Demo id="controlled" />
+
+### useSpinDelay
+
+`useSpinDelay` turns any loading flag into "show the loading effect or not": it shows only once loading has lasted `delay` (500ms by default), then stays for at least `minDuration` (200ms by default). Pass the result to Spin's `spinning`, or use it to switch a skeleton or any other loading UI. In the demo, the 200ms request shows nothing, and the 800ms one shows the spinner for at least 600ms.
+
+<Framework only="react">
+
+Import it from `@fibrae/semi-ui-react/hooks`. The signature is `useSpinDelay(loading, { delay, minDuration, ssr })` and it returns a `boolean`. `loading` can be `isPending` from `useTransition` or `useActionState`, or `pending` from `useFormStatus`.
+
+</Framework>
+
+<Framework only="vue">
+
+Import it from `@fibrae/semi-ui-vue/composables`. The signature is `useSpinDelay(() => loading, () => ({ delay, minDuration, ssr }))` and it returns a readonly `Ref<boolean>`. With `<Suspense>`, record the loading state in its `@pending` and `@resolve` events and pass that in.
+
+</Framework>
+
+<Framework only="solid">
+
+Import it from `@fibrae/semi-ui-solid/primitives`. The signature is `useSpinDelay(loading, () => ({ delay, minDuration, ssr }))` and it returns an `Accessor<boolean>`. `loading` can be the `pending` accessor from `useTransition` or `() => resource.loading`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Import it from `@fibrae/semi-ui-svelte/hooks`. The signature is `useSpinDelay(() => loading, () => ({ delay, minDuration, ssr }))`, and the returned object's `visible` property tells whether to show.
+
+</Framework>
+
+If loading is already true on the first render, the effect shows at once by default: the server cannot wait for `delay`, and hydration must match its output. Inside a Suspense fallback or an async component's loading component, every mount starts loading, so pass `ssr: false` to wait for `delay` there; the framework unmounts the fallback when loading ends, so `minDuration` has no effect in that case.
+
+<Demo id="use-spin-delay" />
 
 ## API Reference
 

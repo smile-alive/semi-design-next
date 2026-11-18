@@ -14,6 +14,10 @@
                 "zh-CN": "延迟显示加载效果的时间，单位毫秒。",
                 "en-US": "Delay in milliseconds before the loading effect is shown."
             },
+            "minDuration": {
+                "zh-CN": "加载效果显示后至少保持的时间，单位毫秒，避免加载刚显示就结束时闪烁。",
+                "en-US": "Minimum time in milliseconds the loading effect stays once shown, so a load that ends right after it appears does not flash."
+            },
             "indicator": {
                 "zh-CN": "自定义加载指示符，传入 ReactNode。未设置时显示内置加载图标，全局配置的 indicator 可覆盖该图标。",
                 "en-US": "Custom loading indicator, a ReactNode. When not set, the built-in loading icon is shown, which the global indicator config can override."

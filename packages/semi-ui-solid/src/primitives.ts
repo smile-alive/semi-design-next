@@ -8,3 +8,5 @@ export { default as useFocusHandover } from './primitives/use-focus-handover';
 export { default as useMounted } from './primitives/use-mounted';
 export { default as useRecordFocus } from './primitives/use-record-focus';
 export { default as useResizeObserver } from './primitives/use-resize-observer';
+export { default as useSpinDelay } from './primitives/use-spin-delay';
+export type { SpinDelayOptions } from '@fibrae/semi-foundation/components/spin/spin-delay';

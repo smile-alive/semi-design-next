@@ -8,6 +8,7 @@ export interface SpinProps extends HTMLAttributes<HTMLDivElement> {
     size?: SpinSize;
     spinning?: boolean;
     delay?: number;
+    minDuration?: number;
     classNames?: Partial<Record<SpinPart, ClassValue>>;
     styles?: Partial<Record<SpinPart, string>>;
     indicator?: Snippet;

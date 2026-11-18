@@ -119,7 +119,8 @@ import { Spin } from '@fibrae/semi-ui-solid';
 ### 延迟显示
 
 通过 delay 设置延迟显示 `loading` 的效果  
-组件是否处于 `loading` 状态由传入的 `spinning` 值决定，loading 为受控属性
+组件是否处于 `loading` 状态由传入的 `spinning` 值决定，loading 为受控属性  
+`minDuration` 设置加载效果显示后至少保持的时间，避免加载刚显示就结束时闪烁
 
 <Demo id="delay" />
 
@@ -128,6 +129,38 @@ import { Spin } from '@fibrae/semi-ui-solid';
 通过 `spinning` 控制组件是否处于 `loading` 状态
 
 <Demo id="controlled" />
+
+### useSpinDelay
+
+`useSpinDelay` 把任意加载状态转换成"是否显示加载效果"：加载持续超过 `delay`（默认 500ms）才显示，显示后至少保持 `minDuration`（默认 200ms）。结果可以交给 Spin 的 `spinning`，也可以用来切换骨架屏等其他加载 UI。示例中 200ms 的请求不显示加载效果，800ms 的请求显示后至少保持 600ms。
+
+<Framework only="react">
+
+从 `@fibrae/semi-ui-react/hooks` 引入，签名为 `useSpinDelay(loading, { delay, minDuration, ssr })`，返回 `boolean`。`loading` 可以直接用 `useTransition` 的 `isPending`、`useActionState` 的 `isPending` 或 `useFormStatus` 的 `pending`。
+
+</Framework>
+
+<Framework only="vue">
+
+从 `@fibrae/semi-ui-vue/composables` 引入，签名为 `useSpinDelay(() => loading, () => ({ delay, minDuration, ssr }))`，返回只读的 `Ref<boolean>`。`<Suspense>` 可以在 `@pending` 与 `@resolve` 事件里记录加载状态再传入。
+
+</Framework>
+
+<Framework only="solid">
+
+从 `@fibrae/semi-ui-solid/primitives` 引入，签名为 `useSpinDelay(loading, () => ({ delay, minDuration, ssr }))`，返回 `Accessor<boolean>`。`loading` 可以直接用 `useTransition` 返回的 `pending` 或 `() => resource.loading`。
+
+</Framework>
+
+<Framework only="svelte">
+
+从 `@fibrae/semi-ui-svelte/hooks` 引入，签名为 `useSpinDelay(() => loading, () => ({ delay, minDuration, ssr }))`，返回对象的 `visible` 属性即是否显示。
+
+</Framework>
+
+初始渲染时如果已在加载，默认立即显示：服务端无法等待 `delay`，hydration 也要与服务端输出一致。放在 Suspense 的 fallback 或异步组件的 loading 组件里时，组件每次挂载都处于加载中，传 `ssr: false` 才会等待 `delay`；fallback 在加载结束时由框架卸载，`minDuration` 在这里不起作用。
+
+<Demo id="use-spin-delay" />
 
 ## API 参考
 

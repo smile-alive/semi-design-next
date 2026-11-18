@@ -7,3 +7,5 @@ export { default as useEventListener, getBody, getDocument, getWindow } from './
 export { default as useFocusHandover } from './hooks/use-focus-handover';
 export { default as useMergedRef } from './hooks/use-merged-ref';
 export { default as useResizeObserver } from './hooks/use-resize-observer';
+export { default as useSpinDelay } from './hooks/use-spin-delay';
+export type { SpinDelayOptions } from '@fibrae/semi-foundation/components/spin/spin-delay';
