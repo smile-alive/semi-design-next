@@ -1,5 +1,17 @@
 # @fibrae/semi-ai-svelte
 
+## 0.11.0
+
+### Patch Changes
+
+- Updated dependencies [acfdbbb]
+- Updated dependencies [4522a5f]
+- Updated dependencies [6252d87]
+    - @fibrae/semi-foundation@0.11.0
+    - @fibrae/semi-ui-svelte@0.11.0
+    - @fibrae/semi-ai-foundation@0.11.0
+    - @fibrae/semi-icons-svelte@0.11.0
+
 ## 0.10.0
 
 ### Minor Changes

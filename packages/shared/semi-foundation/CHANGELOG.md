@@ -1,5 +1,28 @@
 # @fibrae/semi-foundation
 
+## 0.11.0
+
+### Minor Changes
+
+- acfdbbb: 四个框架的 hook 入口新增公共 hook，用法见文档站的 Hooks 页：
+
+    - `useThemeMode`：读写 `html` 元素的 `theme-mode`，可跟随系统主题。
+    - `useBreakpoint`：按 Grid 断点返回各断点是否命中，不依赖 ConfigProvider 的 `responsiveObserve`。
+    - `useAnnouncer`：经整页共用的隐藏 live region 让屏幕阅读器播报。
+    - `useScrollLock`：锁定页面滚动，与 Modal、SideSheet 共用计数。
+    - `useHotKeys`：监听组合键，规则同 HotKeys 组件。
+    - `useControllableState`（React、Solid）：`value` / `defaultValue` / `onChange` 受控模式。
+
+- 4522a5f: Spin 新增 `minDuration`：加载效果显示后至少保持的毫秒数，避免刚显示就消失的闪烁。
+
+    四个框架的 hook 入口新增 `useSpinDelay`，把任意加载状态转换成“是否显示加载效果”：加载超过 `delay`（默认 500ms）才显示，显示后至少保持 `minDuration`（默认 200ms）。初始渲染时已在加载则立即显示，`ssr: false` 时每次挂载都等待 `delay`。
+
+- 6252d87: 破坏性：`theme-mode` 属性由 `body` 改到 `html` 元素。`useThemeMode` 和 Empty 的 `darkModeImage` 都读写 `html` 上的属性；写在 `body` 上的暗色样式仍生效，但 Empty 不再跟随。在 `<head>` 内用脚本设置 `html` 上的属性，首帧就以暗色绘制，不会闪白。
+
+### Patch Changes
+
+- @fibrae/semi-json-viewer-core@0.11.0
+
 ## 0.10.0
 
 ### Patch Changes
