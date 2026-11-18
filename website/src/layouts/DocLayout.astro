@@ -81,12 +81,12 @@ const seoDescription = locale === 'zh-CN' ? `Semi Design Next ${frameworkLabel}ï
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ThemeScript />
         <ClientRouter />
         <SeoHead title={seoTitle} description={seoDescription} locale={locale} hrefs={localeHrefs} type="article" />
     </head>
     <body>
         <a class="skip-link" href="#main">{t('nav_skip')}</a>
-        <ThemeScript />
         <SiteHeader locale={locale} framework={framework} localeHrefs={localeHrefs} frameworkHrefs={frameworkHrefs} />
         <SideNav locale={locale} framework={framework} groups={navGroups} current={hrefOf(doc)} />
         <main class="site-main" id="main">

@@ -2,11 +2,11 @@ import { Button } from '@fibrae/semi-ui-solid';
 
 export default function DarkModeDemo() {
     const switchMode = () => {
-        const body = document.body;
-        if (body.hasAttribute('theme-mode')) {
-            body.removeAttribute('theme-mode');
+        const root = document.documentElement;
+        if (root.hasAttribute('theme-mode')) {
+            root.removeAttribute('theme-mode');
         } else {
-            body.setAttribute('theme-mode', 'dark');
+            root.setAttribute('theme-mode', 'dark');
         }
     };
 

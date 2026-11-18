@@ -20,11 +20,6 @@ html {
     scroll-padding-top: calc(var(--site-header-height) + var(--semi-spacing-loose));
 }
 
-/* Scrollbars and native controls follow the root color scheme; Semi dark mode is set on body */
-:root:has(> [theme-mode='dark']) {
-    color-scheme: dark;
-}
-
 /* Narrow screens still overflow (654px DatePicker figure, edge popups); clip horizontal scroll */
 body {
     overflow-x: hidden;

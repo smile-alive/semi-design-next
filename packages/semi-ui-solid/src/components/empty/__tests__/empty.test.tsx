@@ -7,7 +7,7 @@ import Empty from '..';
 import type { EmptyProps } from '../empty';
 
 afterEach(() => {
-    document.body.removeAttribute('theme-mode');
+    document.documentElement.removeAttribute('theme-mode');
     semiGlobal.config.overrideDefaultProps = {};
 });
 
@@ -167,24 +167,24 @@ describe('Empty', () => {
 
         const flush = () => new Promise((resolve) => setTimeout(resolve));
 
-        it('body 处于深色模式时显示 darkModeImage，并跟随 theme-mode 变化', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+        it('页面处于深色模式时显示 darkModeImage，并跟随 theme-mode 变化', async () => {
+            document.documentElement.setAttribute('theme-mode', 'dark');
             render(() => <Empty darkModeImage={dark()} image={light()} />);
             expect(screen.getByTestId('dark')).toBeInTheDocument();
             expect(screen.queryByTestId('light')).toBeNull();
 
-            document.body.removeAttribute('theme-mode');
+            document.documentElement.removeAttribute('theme-mode');
             await flush();
             expect(screen.getByTestId('light')).toBeInTheDocument();
             expect(screen.queryByTestId('dark')).toBeNull();
 
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             await flush();
             expect(screen.getByTestId('dark')).toBeInTheDocument();
         });
 
         it('未传 darkModeImage 时深色模式下保留原图', () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             render(() => <Empty image={light()} />);
             expect(screen.getByTestId('light')).toBeInTheDocument();
         });
@@ -192,12 +192,12 @@ describe('Empty', () => {
         it('卸载后停止观察 theme-mode', async () => {
             const { unmount } = render(() => <Empty darkModeImage={dark()} image={light()} />);
             expect(screen.getByTestId('light')).toBeInTheDocument();
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             await flush();
             expect(screen.getByTestId('dark')).toBeInTheDocument();
 
             unmount();
-            document.body.removeAttribute('theme-mode');
+            document.documentElement.removeAttribute('theme-mode');
             await flush();
             expect(screen.queryByTestId('light')).toBeNull();
         });
@@ -206,7 +206,7 @@ describe('Empty', () => {
             const [withDark, setWithDark] = createSignal(false);
             render(() => <Empty darkModeImage={withDark() ? dark() : undefined} image={light()} />);
             setWithDark(true);
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             await flush();
             expect(screen.getByTestId('dark')).toBeInTheDocument();
         });

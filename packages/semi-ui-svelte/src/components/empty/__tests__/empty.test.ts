@@ -19,7 +19,7 @@ function setup(store: Store = { props: {} }) {
 describe('Svelte Empty', () => {
     afterEach(() => {
         semiGlobal.config.overrideDefaultProps = {};
-        document.body.removeAttribute('theme-mode');
+        document.documentElement.removeAttribute('theme-mode');
     });
 
     it('image 与 darkModeImage 的对象形式只接受 { id }', () => {
@@ -156,23 +156,23 @@ describe('Svelte Empty', () => {
     });
 
     describe('深色模式图片', () => {
-        it('body 处于深色模式时显示 darkModeImage，并跟随 theme-mode 变化', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+        it('页面处于深色模式时显示 darkModeImage，并跟随 theme-mode 变化', async () => {
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const { view } = setup({ props: {}, image: true, darkImage: true });
             await waitFor(() => expect(screen.getByTestId('dark')).toBeInTheDocument());
             expect(screen.queryByTestId('light')).toBeNull();
 
-            document.body.removeAttribute('theme-mode');
+            document.documentElement.removeAttribute('theme-mode');
             await waitFor(() => expect(screen.getByTestId('light')).toBeInTheDocument());
             expect(screen.queryByTestId('dark')).toBeNull();
 
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             await waitFor(() => expect(screen.getByTestId('dark')).toBeInTheDocument());
             view.unmount();
         });
 
-        it('未提供 darkModeImage 时深色模式下保留原图，也不观察 body', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+        it('未提供 darkModeImage 时深色模式下保留原图，也不观察 html', async () => {
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const observe = vi.spyOn(MutationObserver.prototype, 'observe');
             setup({ props: {}, image: true });
             await Promise.resolve();
@@ -182,15 +182,15 @@ describe('Svelte Empty', () => {
         });
 
         it('darkModeImage 字符串在深色模式下切换 URL', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const { view } = setup({ props: { image: 'light.png', darkModeImage: 'dark.png' } });
             await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('src', 'dark.png'));
-            document.body.removeAttribute('theme-mode');
+            document.documentElement.removeAttribute('theme-mode');
             await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('src', 'light.png'));
         });
 
         it('深色模式下 darkModeImage snippet 优先于 image 字符串', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const { view } = setup({ props: { image: 'light.png' }, darkImage: true });
             await waitFor(() => expect(screen.getByTestId('dark')).toBeInTheDocument());
             expect(view.container.querySelector('img')).toBeNull();
@@ -199,12 +199,12 @@ describe('Svelte Empty', () => {
         it('挂载后才提供 darkModeImage 时跟随 theme-mode', async () => {
             const { store } = setup({ props: {}, image: true });
             store.darkImage = true;
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             await waitFor(() => expect(screen.getByTestId('dark')).toBeInTheDocument());
         });
 
         it('卸载后不再响应 theme-mode', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const disconnect = vi.spyOn(MutationObserver.prototype, 'disconnect');
             const { view } = setup({ props: {}, image: true, darkImage: true });
             await waitFor(() => expect(screen.getByTestId('dark')).toBeInTheDocument());

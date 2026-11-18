@@ -23,8 +23,8 @@
                 "en-US": "Placeholder image URL, or an in-page SVG sprite symbol as `{ id }`. An empty string counts as no image. Use the image slot for other content."
             },
             "darkModeImage": {
-                "zh-CN": "暗色模式下的占位图，跟随 document.body 的 theme-mode 变化；取值同 image。",
-                "en-US": "Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image."
+                "zh-CN": "暗色模式下的占位图，跟随 html 元素的 theme-mode 变化；取值同 image。",
+                "en-US": "Placeholder image in dark mode, following the theme-mode attribute of the html element. Takes the same values as image."
             }
         },
         "events": {},

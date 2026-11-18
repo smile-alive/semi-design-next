@@ -19,14 +19,17 @@ const t = translate(Astro.props.locale);
 </Button>
 
 <script>
-    // body[theme-mode] is the single source: the button and dark-mode demos only change it; sync the button and persist
+    import { getThemeMode, setThemeMode, subscribeThemeMode } from '@fibrae/semi-foundation/utils/theme-mode';
+
+    // html[theme-mode] is the single source: the button and dark-mode demos only change it; sync the button and persist
     const syncThemeToggle = () => {
-        const dark = document.body.getAttribute('theme-mode') === 'dark';
+        const dark = getThemeMode() === 'dark';
         // MoreMenu carries a second toggle for narrow screens
         for (const toggle of document.querySelectorAll('[data-theme-toggle]')) toggle.setAttribute('aria-pressed', String(dark));
         return dark;
     };
-    const themeObserver = new MutationObserver(() => {
+    // <html> survives client navigation, so one subscription covers every page
+    subscribeThemeMode(() => {
         const dark = syncThemeToggle();
         try {
             localStorage.setItem('semi-theme', dark ? 'dark' : 'light');
@@ -38,24 +41,17 @@ const t = translate(Astro.props.locale);
     // The header is replaced on every navigation, so clicks delegate to document
     document.addEventListener('click', (event) => {
         if (!(event.target as Element).closest('[data-theme-toggle]')) return;
-        if (document.body.getAttribute('theme-mode') === 'dark') {
-            document.body.removeAttribute('theme-mode');
-        } else {
-            document.body.setAttribute('theme-mode', 'dark');
-        }
+        setThemeMode(getThemeMode() === 'dark' ? 'light' : 'dark');
     });
 
-    // body is swapped wholesale; carry dark mode over before paint (DocLayout's inline theme script will not rerun)
+    // the swap copies the new page's <html> attributes over the current ones; carry dark mode over before paint (the
+    // inline theme script in <head> does not rerun)
     document.addEventListener('astro:before-swap', (event) => {
-        const mode = document.body.getAttribute('theme-mode');
-        if (mode) event.newDocument.body.setAttribute('theme-mode', mode);
+        const mode = document.documentElement.getAttribute('theme-mode');
+        if (mode) event.newDocument.documentElement.setAttribute('theme-mode', mode);
     });
 
-    document.addEventListener('astro:page-load', () => {
-        syncThemeToggle();
-        themeObserver.disconnect();
-        themeObserver.observe(document.body, { attributeFilter: ['theme-mode'] });
-    });
+    document.addEventListener('astro:page-load', syncThemeToggle);
 </script>
 
 <style>
