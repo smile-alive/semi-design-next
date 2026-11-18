@@ -146,7 +146,7 @@ Other native attributes (such as `id` and `aria-*`) land on the root `div` eleme
 
 <EmptyVueApi />
 
-`class`, `style` and native attributes are passed through attrs to the root element. `title` is a component prop and does not land on the root element as an HTML attribute. In dark mode every Empty observes `theme-mode` on `document.body` after mount; server render and hydration use the light image.
+`class`, `style` and native attributes are passed through attrs to the root element. `title` is a component prop and does not land on the root element as an HTML attribute. In dark mode every Empty observes `theme-mode` on the `html` element after mount; server render and hydration use the light image.
 
 </Framework>
 
@@ -162,7 +162,7 @@ Other native attributes (such as `id` and `aria-*`) land on the root `div` eleme
 
 <EmptySvelteApi />
 
-`class`, `style` and native attributes land on the root `div` element. `title`, `description`, `image`, `darkModeImage`, `classNames`, `styles` and `layout` are component props and do not land on the root element. In dark mode, only an Empty given a `darkModeImage` observes the `theme-mode` of `document.body` after mount; server rendering and hydration use the light image.
+`class`, `style` and native attributes land on the root `div` element. `title`, `description`, `image`, `darkModeImage`, `classNames`, `styles` and `layout` are component props and do not land on the root element. In dark mode, only an Empty given a `darkModeImage` observes the `theme-mode` of the `html` element after mount; server rendering and hydration use the light image.
 
 </Framework>
 

@@ -33,20 +33,24 @@ body {
 
 ## How to switch
 
-To use Dark Mode, you could simply add `[theme-mode='dark']` to `body` in any way you prefer. The attribute works on any ancestor element. The variables are declared on `:root` and declared again on the element carrying `theme-mode='dark'`, so read them on `body` or a descendant to get the dark values. Here is a quick idea:
+To use Dark Mode, add `[theme-mode='dark']` to the `html` element in any way you prefer. The variables are declared on `:root` and declared again on the element carrying `theme-mode='dark'`. Semi's `useThemeMode` and Empty's `darkModeImage` both read and write this attribute on `html`. The styles also work with the attribute on another ancestor, but the dark values then apply only to that element and its descendants. Here is a quick idea:
 
 ```js
-const body = document.body;
-if (body.hasAttribute('theme-mode')) {
-    body.removeAttribute('theme-mode');
+const root = document.documentElement;
+if (root.hasAttribute('theme-mode')) {
+    root.removeAttribute('theme-mode');
 } else {
-    body.setAttribute('theme-mode', 'dark');
+    root.setAttribute('theme-mode', 'dark');
 }
 ```
+
+To remember the user's choice, put an inline script in `<head>` that reads the stored value and sets the attribute: `body` does not exist yet but `html` can already be written, so the first paint is dark and does not flash light.
 
 For instance:
 
 <Demo id="switch-mode" />
+
+To read and write the current mode from a component, use [useThemeMode](/en-US/react/advanced/hooks#usethememode).
 
 ## Customize the colors of both modes
 
@@ -66,29 +70,7 @@ With partial light/dark mode, the `.semi-always-light` and `.semi-always-dark` e
 
 ## Keep Consistency with System Theme
 
-If you want the mode of the site to change with the system setting, you may find this property [Prefers-color-scheme ](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) helpful. To change system setting in macOS, go to System Preferences -> General -> Appearance
-
-You could add a listener for this property using js. Here is another example:
-
-```js
-const mql = window.matchMedia('(prefers-color-scheme: dark)');
-
-function matchMode(e) {
-    const body = document.body;
-    if (e.matches) {
-        if (!body.hasAttribute('theme-mode')) {
-            body.setAttribute('theme-mode', 'dark');
-        }
-    } else {
-        if (body.hasAttribute('theme-mode')) {
-            body.removeAttribute('theme-mode');
-        }
-    }
-}
-
-matchMode(mql);
-mql.addEventListener('change', matchMode);
-```
+Call `setMode('system')` from [useThemeMode](/en-US/react/advanced/hooks#usethememode): the page takes its mode from the system's [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) and follows it when the system theme changes, until another mode is set. On macOS the system theme is set in System Settings -> Appearance.
 
 ## Block Dark/Light Mode
 

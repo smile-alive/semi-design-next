@@ -150,29 +150,29 @@ describe('Empty', () => {
 
     describe('深色模式图片', () => {
         afterEach(() => {
-            document.body.removeAttribute('theme-mode');
+            document.documentElement.removeAttribute('theme-mode');
         });
 
-        it('body 处于深色模式时显示 darkModeImage，并跟随 theme-mode 变化', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+        it('页面处于深色模式时显示 darkModeImage，并跟随 theme-mode 变化', async () => {
+            document.documentElement.setAttribute('theme-mode', 'dark');
             render(<Empty darkModeImage={<i data-testid="dark" />} image={<i data-testid="light" />} />);
             expect(screen.getByTestId('dark')).toBeInTheDocument();
             expect(screen.queryByTestId('light')).toBeNull();
 
             await act(async () => {
-                document.body.removeAttribute('theme-mode');
+                document.documentElement.removeAttribute('theme-mode');
             });
             expect(screen.getByTestId('light')).toBeInTheDocument();
             expect(screen.queryByTestId('dark')).toBeNull();
 
             await act(async () => {
-                document.body.setAttribute('theme-mode', 'dark');
+                document.documentElement.setAttribute('theme-mode', 'dark');
             });
             expect(screen.getByTestId('dark')).toBeInTheDocument();
         });
 
         it('未传 darkModeImage 时深色模式下保留原图', () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             render(<Empty image={<i data-testid="light" />} />);
             expect(screen.getByTestId('light')).toBeInTheDocument();
         });
@@ -185,13 +185,13 @@ describe('Empty', () => {
             );
             expect(screen.getByTestId('light')).toBeInTheDocument();
             await act(async () => {
-                document.body.setAttribute('theme-mode', 'dark');
+                document.documentElement.setAttribute('theme-mode', 'dark');
             });
             expect(screen.getByTestId('dark')).toBeInTheDocument();
 
             unmount();
             await act(async () => {
-                document.body.removeAttribute('theme-mode');
+                document.documentElement.removeAttribute('theme-mode');
             });
         });
 
@@ -199,7 +199,7 @@ describe('Empty', () => {
             const { rerender } = render(<Empty image={<i data-testid="light" />} />);
             rerender(<Empty darkModeImage={<i data-testid="dark" />} image={<i data-testid="light" />} />);
             await act(async () => {
-                document.body.setAttribute('theme-mode', 'dark');
+                document.documentElement.setAttribute('theme-mode', 'dark');
             });
             // the class version only observed body when darkModeImage was there at mount
             expect(screen.getByTestId('dark')).toBeInTheDocument();

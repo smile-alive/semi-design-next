@@ -224,7 +224,7 @@ describe('Empty', () => {
 
     describe('深色模式图片', () => {
         afterEach(() => {
-            document.body.removeAttribute('theme-mode');
+            document.documentElement.removeAttribute('theme-mode');
         });
 
         const waitMode = async () => {
@@ -232,38 +232,38 @@ describe('Empty', () => {
             await nextTick();
         };
 
-        it('body 处于深色模式时显示 darkModeImage，并跟随 theme-mode 变化', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+        it('页面处于深色模式时显示 darkModeImage，并跟随 theme-mode 变化', async () => {
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const view = render(DarkToggle, { props: { withDark: true } });
             await waitMode();
             expect(view.getByTestId('dark')).toBeInTheDocument();
             expect(view.queryByTestId('light')).toBeNull();
 
-            document.body.removeAttribute('theme-mode');
+            document.documentElement.removeAttribute('theme-mode');
             await vi.waitFor(() => expect(view.getByTestId('light')).toBeInTheDocument());
             expect(view.queryByTestId('dark')).toBeNull();
 
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             await vi.waitFor(() => expect(view.getByTestId('dark')).toBeInTheDocument());
         });
 
         it('未提供 darkModeImage 时深色模式下保留原图', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const view = render(DarkToggle);
             await waitMode();
             expect(view.getByTestId('light')).toBeInTheDocument();
         });
 
         it('darkModeImage 字符串属性在深色模式下切换 URL', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const view = render(Empty, { props: { image: 'light.png', darkModeImage: 'dark.png' } });
             await vi.waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('src', 'dark.png'));
-            document.body.removeAttribute('theme-mode');
+            document.documentElement.removeAttribute('theme-mode');
             await vi.waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('src', 'light.png'));
         });
 
         it('深色模式下 #darkModeImage 插槽优先于 darkModeImage 属性', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const view = render(Empty, {
                 props: { image: 'light.png', darkModeImage: 'dark.png' },
                 slots: { darkModeImage: () => <i data-testid="dark-slot" /> },
@@ -276,7 +276,7 @@ describe('Empty', () => {
         it('挂载后才提供 darkModeImage 时跟随 theme-mode', async () => {
             const view = render(DarkToggle);
             await view.rerender({ withDark: true });
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             await vi.waitFor(() => expect(view.getByTestId('dark')).toBeInTheDocument());
         });
 
@@ -291,7 +291,7 @@ describe('Empty', () => {
         });
 
         it('服务端渲染与水合首帧输出亮色图，水合无告警，随后切到深色', async () => {
-            document.body.setAttribute('theme-mode', 'dark');
+            document.documentElement.setAttribute('theme-mode', 'dark');
             const html = await renderToString(createSSRApp(DarkToggle, { withDark: true }));
             expect(html).toContain('data-testid="light"');
             expect(html).not.toContain('data-testid="dark"');

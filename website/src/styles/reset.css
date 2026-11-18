@@ -18,7 +18,7 @@
         scrollbar-color: rgba(46, 50, 56, 0.13) transparent;
     }
 
-    :root:has(> [theme-mode='dark']) {
+    :root[theme-mode='dark'] {
         scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
     }
 

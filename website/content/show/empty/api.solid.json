@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-solid/src/components/empty/empty.tsx",
         "props": {
             "darkModeImage": {
-                "zh-CN": "暗色模式下的占位图，跟随 document.body 的 theme-mode 属性变化；取值同 image。",
-                "en-US": "Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image."
+                "zh-CN": "暗色模式下的占位图，跟随 html 元素的 theme-mode 属性变化；取值同 image。",
+                "en-US": "Placeholder image in dark mode, following the theme-mode attribute of the html element. Takes the same values as image."
             },
             "description": {
                 "zh-CN": "描述内容，显示在标题下方。",

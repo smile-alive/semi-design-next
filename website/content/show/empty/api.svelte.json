@@ -4,8 +4,8 @@
         "props": {
             "children": { "zh-CN": "描述下方的操作区。", "en-US": "Actions below the description." },
             "darkModeImage": {
-                "zh-CN": "暗色模式下的占位图，跟随 document.body 的 theme-mode 变化；取值同 image。",
-                "en-US": "Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image."
+                "zh-CN": "暗色模式下的占位图，跟随 html 元素的 theme-mode 变化；取值同 image。",
+                "en-US": "Placeholder image in dark mode, following the theme-mode attribute of the html element. Takes the same values as image."
             },
             "classNames": {
                 "zh-CN": "内部各部位的类名，键为 image，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",

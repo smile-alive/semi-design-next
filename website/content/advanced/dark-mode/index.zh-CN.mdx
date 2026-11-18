@@ -36,20 +36,24 @@ body {
 
 ## 如何切换
 
-Semi 暗色模式的切换是通过给 `body` 添加属性 `[theme-mode='dark']` 来实现的（亮色色盘声明在 `:root` 上，暗色色盘在带该属性的元素上重新声明）。属性加在任意祖先元素上都可以生效。暗色值只在带属性的元素及其后代上，读取 `--semi-*` 变量时请在 `body` 或其后代上读取。你可以使用任何你喜欢的方式来进行切换。比如：
+Semi 暗色模式的切换是通过给 `html` 元素添加属性 `[theme-mode='dark']` 来实现的（亮色色盘声明在 `:root` 上，暗色色盘在带该属性的元素上重新声明）。Semi 自带的 `useThemeMode` 与 Empty 的 `darkModeImage` 都读写 `html` 上的这个属性。属性加在其他祖先元素上样式同样生效，但暗色值只在带属性的元素及其后代上。你可以使用任何你喜欢的方式来进行切换。比如：
 
 ```js
-const body = document.body;
-if (body.hasAttribute('theme-mode')) {
-    body.removeAttribute('theme-mode');
+const root = document.documentElement;
+if (root.hasAttribute('theme-mode')) {
+    root.removeAttribute('theme-mode');
 } else {
-    body.setAttribute('theme-mode', 'dark');
+    root.setAttribute('theme-mode', 'dark');
 }
 ```
+
+需要记住用户选择时，在 `<head>` 里放一段内联脚本读取保存的值并设置属性：此时 `body` 还不存在，`html` 已经可以写入，首屏直接以暗色绘制，不会闪白。
 
 这里也有一个🌰：
 
 <Demo id="switch-mode" />
+
+在组件里读写当前模式，可以用 [useThemeMode](/zh-CN/react/advanced/hooks#usethememode)。
 
 ## 定制两种模式的颜色
 
@@ -69,31 +73,7 @@ if (body.hasAttribute('theme-mode')) {
 
 ## 和系统主题保持一致
 
-如果你希望页面的亮色/暗色模式能自动和系统主题保持一致，可以参考 [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) 属性。
-
-macOS 下的系统主题可以通过 `系统偏好设置 -> 通用 -> 外观` 来配置。
-
-你可以通过 JS 的方式监听该属性的变化，这里也有一个🌰：
-
-```js
-const mql = window.matchMedia('(prefers-color-scheme: dark)');
-
-function matchMode(e) {
-    const body = document.body;
-    if (e.matches) {
-        if (!body.hasAttribute('theme-mode')) {
-            body.setAttribute('theme-mode', 'dark');
-        }
-    } else {
-        if (body.hasAttribute('theme-mode')) {
-            body.removeAttribute('theme-mode');
-        }
-    }
-}
-
-matchMode(mql);
-mql.addEventListener('change', matchMode);
-```
+调用 [useThemeMode](/zh-CN/react/advanced/hooks#usethememode) 返回的 `setMode('system')`，页面按系统的 [prefers-color-scheme](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/prefers-color-scheme) 切换模式，并在系统主题变化时跟着切换，直到再设置其他模式。macOS 的系统主题在 `系统设置 -> 外观` 中配置。
 
 ## 局部暗色/亮色模式
 

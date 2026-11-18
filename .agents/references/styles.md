@@ -43,7 +43,7 @@
 | 浅色 token                                                                                      | `:root, :root .{prefix}-always-light`；`color-scheme: light` 只设在 `.{prefix}-always-light` 上，根元素保持 `normal`（根的 color-scheme 决定画布与视口滚动条，留给页面的 meta） |
 | 暗色 token                                                                                      | `[theme-mode='dark'], :root .{prefix}-always-dark`，同时声明 `color-scheme: dark`                                                                                               |
 | 两种模式公式相同、含 `var()` 的 token（如 `--semi-color-primary: var(--semi-blue-5)`、AI 渐变） | 只写一次，选择器为浅色与暗色两组的并集：`var()` 在声明它的元素上解析，每个切换调色板的元素都要重新声明                                                                          |
-| `theme-mode` 属性                                                                               | 写在 `body`（或任意祖先）上                                                                                                                                                     |
+| `theme-mode` 属性                                                                               | 写在 `html` 上（`useThemeMode`、Empty 读写这里；样式在任意祖先上都生效）                                                                                                        |
 
 `semi-scss-compile` 的 `compileTailwindTheme` 编译 `semi:theme/global` 与 `semi:theme/animation`，扫描全部 `--semi-*` 声明生成 `@theme inline` 映射（值写 `var(--semi-*)`，随覆盖和子树解析）：
 

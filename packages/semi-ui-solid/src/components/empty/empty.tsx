@@ -1,10 +1,10 @@
-import { children, createSignal, Match, Show, splitProps, Switch, type JSX } from 'solid-js';
+import { children, Match, Show, splitProps, Switch, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, type EmptyPart, type strings } from '@fibrae/semi-foundation/components/empty/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/empty/empty.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
-import { useMutationObserver } from '../../primitives/index';
+import { useThemeMode } from '../../primitives/index';
 import { hasContent, isMarkup } from '../../utils/index';
 import Typography from '../typography';
 
@@ -22,7 +22,7 @@ export interface EmptyProps extends ElementProps<'div', 'title'> {
     title?: JSX.Element;
     description?: JSX.Element;
     image?: JSX.Element | SVGNode;
-    /** Replaces `image` while `theme-mode="dark"` is set on `document.body` */
+    /** Replaces `image` while `theme-mode="dark"` is set on `<html>` */
     darkModeImage?: JSX.Element | SVGNode;
 }
 
@@ -33,14 +33,12 @@ function isSVGNode(image: unknown): image is SVGNode {
 
 const defaultProps = { layout: 'vertical' } satisfies Partial<EmptyProps>;
 
-const readThemeMode = () => document.body.getAttribute('theme-mode');
-
 export default function Empty(rawProps: EmptyProps) {
     const props = useDefaultProps('Empty', rawProps, defaultProps);
     const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'darkModeImage', 'description', 'image', 'layout', 'style', 'styles', 'title']);
 
-    // the server has no body to read; the observer reads the mode once it starts, after mount
-    const [mode, setMode] = createSignal<string | null>(null);
+    // every instance observes: a darkModeImage that appears later cannot be told apart without building it first
+    const { mode } = useThemeMode();
 
     // each prop is read once: reading a JSX prop builds its nodes again
     const image = children(() => {
@@ -66,13 +64,6 @@ export default function Empty(rawProps: EmptyProps) {
         const value: unknown = image();
         return isSVGNode(value) ? value.id : undefined;
     };
-
-    // Every instance observes: a darkModeImage that appears later cannot be told apart without building it first
-    useMutationObserver(
-        () => document.body,
-        () => setMode(readThemeMode()),
-        { attributeFilter: ['theme-mode'] }
-    );
 
     return (
         <div {...rest} class={clsx(local.class, prefixCls, { [`${prefixCls}-${local.layout}`]: local.layout })} style={local.style}>

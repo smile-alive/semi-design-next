@@ -52,12 +52,12 @@ const samples = [
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ThemeScript />
         <ClientRouter />
         <SeoHead title={l.title} description={l.description} locale={locale} hrefs={localeHrefs} type="website" />
     </head>
     <body>
         <a class="skip-link" href="#main">{t('nav_skip')}</a>
-        <ThemeScript />
         <SiteHeader locale={locale} framework="react" localeHrefs={localeHrefs} frameworkHrefs={frameworkHrefs} sideNav={false} />
         <main class="landing" id="main">
             <section class="hero">

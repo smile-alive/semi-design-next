@@ -112,7 +112,8 @@
 - 破坏性：删除 Web Component 构建工具链：semi-webpack、semi-rspack 删除 `webComponentPath`、`semiWebComponentLoader`、`semiCssModuleLoader`，`semi-theme-shared` 删除 `injectWebComponentStyles`、`cssToModule`。组件可在 open ShadowRoot 内使用（F13），样式由应用加入 ShadowRoot。
 - 破坏性：删除 `$z-popover`、`$z-dropdown`、`$z-tooltip` 等变量与 `--semi-z-popover`、`--semi-z-dropdown`、`--semi-z-tooltip` 等 CSS 变量：弹层在 top layer，z-index 不起作用（D5）。
 - base 层名由 `base` 改为 `semi-base`。与 Tailwind 同用时须先声明 `@layer theme, base, semi, components, utilities;` 并保持 `cssLayer` 为 `true`；新增 `@fibrae/semi-ui-react/tailwind.css`（Vue、Solid、Svelte 的 UI 包同名）映射 token，圆角工具类由 `rounded-semi-border-radius-*` 改为 `rounded-semi-*`。
-- 破坏性：token 落点由 `body` 改为 `:root`（暗色为 `[theme-mode='dark']`），`theme-mode` 仍写在 `body` 上；`:root` 上的未分层覆盖现在对浅色生效。
+- 破坏性：token 落点由 `body` 改为 `:root`（暗色为 `[theme-mode='dark']`）；`:root` 上的未分层覆盖现在对浅色生效。
+- 破坏性：`theme-mode` 属性由 `body` 改到 `html` 元素，`useThemeMode`、Empty 的 `darkModeImage` 都读写 `html` 上的属性；写在 `body` 上的样式仍生效，但 Empty 不再跟随（`<head>` 内的脚本可以在首帧前设置 `html` 上的属性，避免闪白）。
 - 破坏性：调色板 token 改为完整颜色（`--semi-blue-5: 0, 100, 250` 改为 `#0064fa`）；`rgba(var(--semi-x), a)` 须改为 `color-mix(in srgb, var(--semi-x) A%, transparent)`，不透明时直接写 `var(--semi-x)`；`color-mix` 与 token 自身的透明度相乘，调色板 token 配成半透明时结果会更淡。
 - 改名：`--semi-transform-rotate-none` 改为 `--semi-transform_rotate-none`；重复声明的 `--semi-color-ai-background-top-hover`（激活态）改为 `--semi-color-ai-background-top-active`。暗色主题块设 `color-scheme: dark`。
 - 新增 `--semi-spacing-*`、`--semi-font-size-*`、`--semi-line-height-*`、`--semi-font-weight-*`、`--semi-z-*` 等尺寸类 CSS 变量与 `--semi-shadow-knob`；字号、字重、字体栈等在 `:root` 覆盖即运行时生效，间距、控件高度、描边宽度的变量只影响 Tailwind 原子类。
@@ -1155,8 +1156,8 @@
 ### Empty
 
 - 破坏性：删除 `imageStyle`，改用 `classNames.image`、`styles.image`，落在占位图容器上。
-- 破坏性（类型）：`image`、`darkModeImage` 的对象形式只接受 `{ id: string }`；`image` 传空字符串视为无图片；插画 `alt` 为空，标题渲染为 `div`。Vue：`title`、`description`、`image`、`darkModeImage` 用同名插槽，默认插槽是底部操作区；暗色模式挂载后观察 `document.body` 的 `theme-mode`。
-- Solid：暗色模式同 Vue，每个实例挂载后观察 `document.body` 的 `theme-mode`，挂载后再传入的 `darkModeImage` 也随之切换。
+- 破坏性（类型）：`image`、`darkModeImage` 的对象形式只接受 `{ id: string }`；`image` 传空字符串视为无图片；插画 `alt` 为空，标题渲染为 `div`。Vue：`title`、`description`、`image`、`darkModeImage` 用同名插槽，默认插槽是底部操作区；暗色模式挂载后观察 `html` 元素的 `theme-mode`。
+- Solid：暗色模式同 Vue，每个实例挂载后观察 `html` 元素的 `theme-mode`，挂载后再传入的 `darkModeImage` 也随之切换。
 - Svelte：`title`、`image`、`darkModeImage` 是 `string | Snippet`（`image` 还可以是 `{ id }`），`description` 与 `children`（底部操作区）是 snippet；`styles` 的值只接受字符串；传了 snippet 就渲染，不过滤渲染为空的 snippet；只有传了 `darkModeImage` 的实例才在挂载后观察 `document.body` 的 `theme-mode`。
 
 ### Feedback

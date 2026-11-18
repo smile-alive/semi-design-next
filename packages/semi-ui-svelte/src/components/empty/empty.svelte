@@ -1,5 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
+    import { getThemeMode, subscribeThemeMode, type ThemeMode } from '@fibrae/semi-foundation/utils/theme-mode';
     import '@fibrae/semi-foundation/components/empty/empty.scss';
     import { useDefaultProps } from '../../base/index.js';
     import { TypographyTitle } from '../typography/index.js';
@@ -8,8 +9,8 @@
     const defaults = useDefaultProps('Empty');
     const { layout = defaults('layout', 'vertical'), classNames = defaults('classNames'), styles = defaults('styles'), title = defaults('title'), image = defaults('image'), darkModeImage = defaults('darkModeImage'), description, children, ...rest }: EmptyProps = $props();
 
-    // Read after mount only: server render and hydration see null, so the markup matches
-    let themeMode = $state<string | null>(null);
+    // Read after mount only: server render and hydration see light, so the markup matches
+    let themeMode = $state<ThemeMode>('light');
 
     const prefixCls = cssClasses.PREFIX;
     const shown = $derived(themeMode === 'dark' && darkModeImage ? darkModeImage : image);
@@ -23,12 +24,10 @@
     $effect(() => {
         if (!darkModeImage) return;
         const sync = () => {
-            themeMode = document.body.getAttribute('theme-mode');
+            themeMode = getThemeMode();
         };
         sync();
-        const observer = new MutationObserver(sync);
-        observer.observe(document.body, { attributes: true, attributeFilter: ['theme-mode'] });
-        return () => observer.disconnect();
+        return subscribeThemeMode(sync);
     });
 </script>
 

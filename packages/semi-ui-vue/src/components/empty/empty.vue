@@ -3,10 +3,10 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
     import '@fibrae/semi-foundation/components/empty/empty.scss';
     import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { useThemeMode } from '../../composables/index';
     import { slotNodes, type KeyedNode } from '../../utils/index';
     import { TypographyTitle } from '../typography';
     import type { EmptyProps, EmptySlots } from './interface';
-    import useThemeMode from './use-theme-mode';
 
     const props = withDefaults(defineProps<EmptyProps & /* @vue-ignore */ ElementProps<'div', keyof EmptyProps>>(), {
         layout: () => semiDefault('Empty', 'layout', 'vertical'),
@@ -19,7 +19,8 @@
 
     const slots = defineSlots<EmptySlots>();
 
-    const themeMode = useThemeMode();
+    // slots are not reactive, so a darkModeImage slot appearing later cannot start observing: every instance observes
+    const { mode: themeMode } = useThemeMode();
 
     const prefixCls = cssClasses.PREFIX;
 

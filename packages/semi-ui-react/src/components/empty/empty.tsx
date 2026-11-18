@@ -3,6 +3,7 @@ import { useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 import { type EmptyPart, type strings, cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
+import { getThemeMode, subscribeThemeMode } from '@fibrae/semi-foundation/utils/theme-mode';
 import '@fibrae/semi-foundation/components/empty/empty.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
 import { hasContent } from '../../utils/index';
@@ -33,16 +34,6 @@ export interface EmptyProps extends ElementProps<'div', 'title'> {
 // a React element keeps its props under props, so only the sprite object has an own id
 function isSVGNode(image: EmptyProps['image']): image is SVGNode {
     return typeof image === 'object' && image !== null && 'id' in image;
-}
-
-function subscribeThemeMode(onChange: () => void) {
-    const observer = new MutationObserver(onChange);
-    observer.observe(document.body, { attributeFilter: ['theme-mode'] });
-    return () => observer.disconnect();
-}
-
-function getThemeMode() {
-    return document.body.getAttribute('theme-mode');
 }
 
 function subscribeNone() {

@@ -142,7 +142,7 @@
 }
 
 // Not on :root: only the root's color-scheme reaches the canvas and viewport scrollbars, and `normal` there keeps the
-// page's own choice (meta color-scheme) when theme-mode sits on body
+// page's own choice (meta color-scheme) in light mode
 :root .#{$prefix}-always-light {
     color-scheme: light;
 }
