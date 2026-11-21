@@ -15,7 +15,7 @@
     const prefixCls = stepsClasses.ITEM;
     const statusIcons = { error: IconAlertCircle, finish: IconTickCircle, warning: IconAlertTriangle };
     const basicIconSize = { small: 'large', default: 'extra-large' } as const;
-    const attrs = $derived(omit(item, ['status', 'title', 'description', 'icon', 'onClick']));
+    const attrs = $derived(omit(item, ['status', 'title', 'description', 'icon', 'onClick', 'classNames', 'styles']));
 
     // `false` still counts as custom: it keeps the icon area but leaves it empty
     const customIcon = $derived(item.icon !== undefined);
@@ -30,8 +30,8 @@
     const plainDescription = $derived(String(item.description ?? ''));
     const hasTitle = $derived(Boolean(steps.title) || plainTitle !== '');
     const hasDescription = $derived(Boolean(steps.description) || plainDescription !== '');
-    const titleText = $derived(steps.title ? undefined : plainTitle || undefined);
-    const descriptionText = $derived(steps.description ? undefined : plainDescription || undefined);
+
+    const joinStyle = (...styles: Array<string | null | undefined>) => styles.filter(Boolean).join('; ') || undefined;
 
     const handleClick = (event: MouseEvent) => {
         item.onClick?.(event);
@@ -58,49 +58,14 @@
     {#if steps.description}{@render steps.description(snippetProps)}{:else}{item.description}{/if}
 {/snippet}
 
-{#if steps.type === 'fill'}
+{#if steps.type === 'basic'}
     <div
         {...attrs}
         aria-current={state.active ? 'step' : undefined}
         class={[
             prefixCls,
             `${prefixCls}-${status}`,
-            attrs.class,
-            {
-                [`${prefixCls}-${status}-hover`]: clickable,
-                [`${prefixCls}-${status}-active`]: clickable,
-                [`${prefixCls}-clickable`]: clickable,
-                [`${stepsClasses.PREFIX}-next-error`]: state.nextError,
-            },
-        ]}
-        {role}
-        tabindex={clickable ? 0 : undefined}
-        onclick={handleClick}
-        onkeydown={handleKeydown}
-    >
-        <div class={[`${prefixCls}-left`, customIcon ? `${prefixCls}-icon` : `${prefixCls}-plain`, { [`${prefixCls}-icon-process`]: !customIcon && status === 'process', [`${prefixCls}-hover`]: clickable }]}>
-            {#if customIcon}
-                {#if item.icon}{@render item.icon()}{/if}
-            {:else if StatusIcon}
-                <StatusIcon size="extra-large" />
-            {:else}
-                {stepNumber + 1}
-            {/if}
-        </div>
-        <div class={`${prefixCls}-content`}>
-            <div class={`${prefixCls}-title`} title={titleText}>
-                <span class={`${prefixCls}-title-text`}>{@render titleContent()}</span>
-            </div>
-            <div class={`${prefixCls}-description`} title={descriptionText}>{@render descriptionContent()}</div>
-        </div>
-    </div>
-{:else if steps.type === 'basic'}
-    <div
-        {...attrs}
-        aria-current={state.active ? 'step' : undefined}
-        class={[
-            prefixCls,
-            `${prefixCls}-${status}`,
+            steps.classNames?.item,
             attrs.class,
             {
                 [`${prefixCls}-active`]: state.active,
@@ -112,13 +77,14 @@
             },
         ]}
         {role}
+        style={joinStyle(steps.styles?.item, attrs.style)}
         tabindex={clickable ? 0 : undefined}
         onclick={handleClick}
         onkeydown={handleKeydown}
     >
         <div class={`${prefixCls}-container`}>
             <div class={`${prefixCls}-left`}>
-                <span class={[`${prefixCls}-icon`, { [`${prefixCls}-custom-icon`]: customIcon, [`${prefixCls}-icon-process`]: !customIcon && status === 'process' }]}>
+                <span class={[`${prefixCls}-icon`, { [`${prefixCls}-custom-icon`]: customIcon, [`${prefixCls}-icon-process`]: !customIcon && status === 'process' }, steps.classNames?.itemIcon, item.classNames?.icon]} style={joinStyle(steps.styles?.itemIcon, item.styles?.icon)}>
                     {#if customIcon}
                         {#if item.icon}{@render item.icon()}{/if}
                     {:else if StatusIcon}
@@ -128,24 +94,26 @@
                     {/if}
                 </span>
             </div>
-            <div class={`${prefixCls}-content`}>
-                <div class={`${prefixCls}-title`}>
+            <div class={[`${prefixCls}-content`, steps.classNames?.itemContent, item.classNames?.content]} style={joinStyle(steps.styles?.itemContent, item.styles?.content)}>
+                <div class={[`${prefixCls}-title`, steps.classNames?.itemTitle, item.classNames?.title]} style={joinStyle(steps.styles?.itemTitle, item.styles?.title)}>
                     <div class={[`${prefixCls}-title-text`, { [`${prefixCls}-title-text-empty`]: !hasTitle }]}>{@render titleContent()}</div>
                 </div>
                 {#if hasDescription}
-                    <div class={`${prefixCls}-description`}>{@render descriptionContent()}</div>
+                    <div class={[`${prefixCls}-description`, steps.classNames?.itemDescription, item.classNames?.description]} style={joinStyle(steps.styles?.itemDescription, item.styles?.description)}>
+                        {@render descriptionContent()}
+                    </div>
                 {/if}
             </div>
         </div>
     </div>
 {:else if steps.type === 'nav'}
-    <div {...attrs} aria-current={state.active ? 'step' : undefined} class={[prefixCls, attrs.class, { [`${prefixCls}-active`]: state.active }]} {role} tabindex={clickable ? 0 : undefined} onclick={handleClick} onkeydown={handleKeydown}>
+    <div {...attrs} aria-current={state.active ? 'step' : undefined} class={[prefixCls, steps.classNames?.item, attrs.class, { [`${prefixCls}-active`]: state.active }]} {role} style={joinStyle(steps.styles?.item, attrs.style)} tabindex={clickable ? 0 : undefined} onclick={handleClick} onkeydown={handleKeydown}>
         <div class={`${prefixCls}-container`}>
-            <div class={`${prefixCls}-content`}>
-                <div class={`${prefixCls}-title`}>{@render titleContent()}</div>
+            <div class={[`${prefixCls}-content`, steps.classNames?.itemContent, item.classNames?.content]} style={joinStyle(steps.styles?.itemContent, item.styles?.content)}>
+                <div class={[`${prefixCls}-title`, steps.classNames?.itemTitle, item.classNames?.title]} style={joinStyle(steps.styles?.itemTitle, item.styles?.title)}>{@render titleContent()}</div>
             </div>
             {#if index !== total - 1}
-                <div class={`${prefixCls}-icon`}>
+                <div class={[`${prefixCls}-icon`, steps.classNames?.itemIcon, item.classNames?.icon]} style={joinStyle(steps.styles?.itemIcon, item.styles?.icon)}>
                     <IconChevronRight size="small" />
                 </div>
             {/if}

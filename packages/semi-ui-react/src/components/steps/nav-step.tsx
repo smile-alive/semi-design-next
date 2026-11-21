@@ -1,14 +1,17 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
+import { stepsClasses as css, type StepPart } from '@fibrae/semi-foundation/components/steps/constants';
 import { IconChevronRight } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/index';
+import { useStepsContext } from './context';
 import { useStepItem } from './use-step-item';
 
 export interface NavStepProps extends ElementProps<'div', 'title' | 'onChange' | 'children'> {
     title?: React.ReactNode;
     className?: string;
+    classNames?: Partial<Record<StepPart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<StepPart, React.CSSProperties>>;
     index?: number;
     active?: boolean;
     total?: number;
@@ -23,7 +26,9 @@ export interface NavStepProps extends ElementProps<'div', 'title' | 'onChange' |
 
 const prefixCls = css.ITEM;
 
-export default function NavStep({ ref, role, className = '', title, style, active = false, index, total, onClick, onKeyDown, onChange, ...rest }: NavStepProps) {
+export default function NavStep({ ref, role, className = '', classNames, title, style, styles, active = false, index, total, onClick, onKeyDown, onChange, ...rest }: NavStepProps) {
+    const { classNames: stepsClassNames, styles: stepsStyles } = useStepsContext('Steps.Step');
+
     const item = useStepItem({ role, onChange, onClick, onKeyDown }, rest);
 
     const classString = clsx(
@@ -31,17 +36,20 @@ export default function NavStep({ ref, role, className = '', title, style, activ
         {
             [`${prefixCls}-active`]: active,
         },
+        stepsClassNames?.item,
         className
     );
 
     return (
-        <div {...rest} ref={ref} className={classString} style={style} aria-current={active ? 'step' : undefined} role={item.role} tabIndex={item.tabIndex} onClick={item.onClick} onKeyDown={item.onKeyDown}>
+        <div {...rest} ref={ref} className={classString} style={{ ...stepsStyles?.item, ...style }} aria-current={active ? 'step' : undefined} role={item.role} tabIndex={item.tabIndex} onClick={item.onClick} onKeyDown={item.onKeyDown}>
             <div className={`${prefixCls}-container`}>
-                <div className={`${prefixCls}-content`}>
-                    <div className={`${prefixCls}-title`}>{title}</div>
+                <div className={clsx(`${prefixCls}-content`, stepsClassNames?.itemContent, classNames?.content)} style={{ ...stepsStyles?.itemContent, ...styles?.content }}>
+                    <div className={clsx(`${prefixCls}-title`, stepsClassNames?.itemTitle, classNames?.title)} style={{ ...stepsStyles?.itemTitle, ...styles?.title }}>
+                        {title}
+                    </div>
                 </div>
                 {index !== total - 1 && (
-                    <div className={`${prefixCls}-icon`}>
+                    <div className={clsx(`${prefixCls}-icon`, stepsClassNames?.itemIcon, classNames?.icon)} style={{ ...stepsStyles?.itemIcon, ...styles?.icon }}>
                         <IconChevronRight size="small" />
                     </div>
                 )}

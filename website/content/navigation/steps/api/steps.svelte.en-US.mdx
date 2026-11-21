@@ -4,8 +4,9 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by item, itemIcon, itemContent, itemTitle and itemDescription; values take anything class takes (string, array or object) and merge with the built-in classes. Keys apply to every step: item is the step's root element, itemIcon is the leading status icon or number in the basic type and the trailing arrow in the nav type, and itemDescription is rendered by the basic type only. | <ApiType detail={"Partial\u003cRecord\u003cStepsPart, ClassValue>>"}>Type</ApiType> | - |
 | current | Current step, counting from 0; a `dataSource` item can override the state with status. Not bindable: update it yourself in `onChange`. | `number` | `0` |
-| dataSource | Step data. Each item is a `StepData`: `status` (own status of the step; when omitted it follows current and status), `title`, `description` (not rendered by the nav type), `icon` (snippet for a custom icon of that step; `false` shows no icon; the status icon is used when omitted; not rendered by the nav type) and `onClick` (setting it makes that step clickable). Other attributes land on the step's root element. | `StepData[]` | `[]` |
+| dataSource | Step data. Each item is a `StepData`: `status` (own status of the step; when omitted it follows current and status), `title`, `description` (not rendered by the nav type), `icon` (snippet for a custom icon of that step; `false` shows no icon; the status icon is used when omitted; not rendered by the nav type) `onClick` (setting it makes that step clickable), and `classNames` and `styles` (class names and style strings of the inner parts of that step, keyed by `icon`, `content`, `title` and `description`, written like the props of Steps with the same names and appended after the built-in classes and the `item*` classes of Steps; `icon` is the leading status icon or number in the basic type and the trailing arrow in the nav type, and `description` is rendered by the basic type only). Other attributes land on the step's root element. | `StepData[]` | `[]` |
 | description | Snippet for the description of each step, with `{ item, index }`; defaults to `item.description`. Not rendered by the nav type. | <ApiType detail={"Snippet\u003c[StepSnippetProps]>"}>Type</ApiType> | - |
 | direction | Direction: horizontal or vertical. | `StepsDirection` | `"horizontal"` |
 | hasLine | Whether the basic type shows connecting lines. | `boolean` | `true` |
@@ -13,5 +14,6 @@ import ApiType from '#/components/ApiType.astro';
 | onChange | Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. Passing it makes every step clickable. | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
 | size | Size of the basic and nav types: default or small. | `StepsSize` | `"default"` |
 | status | State of the current step: wait, process, finish, error or warning. | `StepStatus` | `"process"` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cStepsPart, string>>"}>Type</ApiType> | - |
 | title | Snippet for the title of each step, with `{ item, index }`; defaults to `item.title`. | <ApiType detail={"Snippet\u003c[StepSnippetProps]>"}>Type</ApiType> | - |
-| type | Steps type: fill, basic or nav. | `StepsType` | `"fill"` |
+| type | Steps type: basic or nav, defaults to basic. | `StepsType` | `"basic"` |

@@ -6,19 +6,17 @@ import { namedRole, warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/steps/steps.scss';
 import { isToken, type Token, useDefaultProps } from '../../base/index';
 import { hasContent } from '../../utils/index';
-import { Col, Row } from '../grid';
 import BasicStep from './basic-step';
-import FillStep from './fill-step';
-import type { BasicStepsProps, StepProps, StepsProps } from './interface';
+import type { BasicStepsProps, StepProps, StepsOwnPartProps, StepsProps } from './interface';
 import NavStep from './nav-step';
 import { STEP } from './step';
 
-interface AllStepsProps extends BasicStepsProps {
-    type?: 'fill' | 'basic' | 'nav';
+interface AllStepsProps extends BasicStepsProps, StepsOwnPartProps {
+    type?: 'basic' | 'nav';
 }
 
 const defaultProps = {
-    type: 'fill',
+    type: 'basic',
     size: 'default',
     current: 0,
     initial: 0,
@@ -33,7 +31,7 @@ const isStep = (node: unknown): node is Token<StepProps> => isToken<StepProps>(n
 
 export default function Steps(rawProps: StepsProps) {
     const props = useDefaultProps('Steps', rawProps as AllStepsProps, defaultProps);
-    const [local, rest] = splitProps(props, ['children', 'class', 'current', 'direction', 'hasLine', 'initial', 'onChange', 'size', 'status', 'type']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'current', 'direction', 'hasLine', 'initial', 'onChange', 'size', 'status', 'styles', 'type']);
 
     const resolved = children(() => local.children);
 
@@ -47,12 +45,10 @@ export default function Steps(rawProps: StepsProps) {
         const { direction, size } = local;
         const sized = { [`${prefixCls}-${size}`]: size !== 'default' };
         switch (local.type) {
-            case 'basic':
-                return clsx(local.class, `${prefixCls}-basic`, `${prefixCls}-${direction}`, sized, { [`${prefixCls}-hasline`]: local.hasLine });
             case 'nav':
                 return clsx(local.class, `${prefixCls}-nav`, sized);
             default:
-                return clsx(local.class, prefixCls, `${prefixCls}-${direction}`);
+                return clsx(local.class, `${prefixCls}-basic`, `${prefixCls}-${direction}`, sized, { [`${prefixCls}-hasline`]: local.hasLine });
         }
     };
 
@@ -96,26 +92,11 @@ export default function Steps(rawProps: StepsProps) {
             get onChange() {
                 return item.onChange();
             },
-        });
-    };
-
-    const fillProps = (token: Token<StepProps>, index: () => number) => {
-        const item = createItem(token, index);
-        return mergeProps(token.props, {
-            get stepNumber() {
-                return item.number();
+            get stepsClassNames() {
+                return local.classNames;
             },
-            get status() {
-                return item.state().status;
-            },
-            get active() {
-                return item.state().active;
-            },
-            get class() {
-                return item.nextErrorClass();
-            },
-            get onChange() {
-                return item.onChange();
+            get stepsStyles() {
+                return local.styles;
             },
         });
     };
@@ -135,31 +116,20 @@ export default function Steps(rawProps: StepsProps) {
             get onChange() {
                 return item.onChange();
             },
+            get stepsClassNames() {
+                return local.classNames;
+            },
+            get stepsStyles() {
+                return local.styles;
+            },
         });
     };
-
-    const colStyle = () => (local.direction === 'vertical' ? undefined : { width: `${100 / steps().length}%` });
 
     createEffect(() => warning(steps().length !== nodes().length, '[Semi Steps] Only Steps.Step is rendered as a child of Steps; other children are ignored.'));
 
     return (
         <div {...rest} class={rootClass()} role={namedRole(props)}>
-            <Switch
-                fallback={
-                    <Row justify="start">
-                        <For each={steps()}>
-                            {(token, index) => (
-                                <Col style={colStyle()}>
-                                    <FillStep {...fillProps(token, index)} />
-                                </Col>
-                            )}
-                        </For>
-                    </Row>
-                }
-            >
-                <Match when={local.type === 'basic'}>
-                    <For each={steps()}>{(token, index) => <BasicStep {...basicProps(token, index)} />}</For>
-                </Match>
+            <Switch fallback={<For each={steps()}>{(token, index) => <BasicStep {...basicProps(token, index)} />}</For>}>
                 <Match when={local.type === 'nav'}>
                     <For each={steps()}>{(token, index) => <NavStep {...navProps(token, index)} />}</For>
                 </Match>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-    import { computed, Text, type VNode } from 'vue';
+    import { computed } from 'vue';
     import { focusableSelector, stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
     import { getStepState } from '@fibrae/semi-foundation/components/steps/utils';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
     import { IconAlertCircle, IconAlertTriangle, IconChevronRight, IconTickCircle } from '@fibrae/semi-icons-vue';
     import type { ElementProps } from '../../base/index';
-    import { slotNodes, hasSlotContent } from '../../utils/index';
+    import { hasSlotContent } from '../../utils/index';
     import { useStepItemContext, useStepsContext } from './context';
     import type { StepProps, StepSlots } from './interface';
     import { useStepItem } from './use-step-item';
@@ -48,61 +48,12 @@
         if (view.value && (event.target as Element).closest(focusableSelector) === event.currentTarget) steps?.change(view.value.stepNumber);
     };
 
-    const slotString = (slot?: () => VNode[]) => {
-        const nodes = slotNodes(slot?.() ?? []);
-        return nodes.length === 1 && nodes[0][0].type === Text ? String(nodes[0][0].children) : undefined;
-    };
-
     const showIcon = () => !slots.icon || hasSlotContent(slots.icon);
 </script>
 
 <template>
     <div
-        v-if="view?.type === 'fill'"
-        :aria-current="view.active ? 'step' : undefined"
-        :class="[
-            prefixCls,
-            `${prefixCls}-${view.status}`,
-            {
-                [`${prefixCls}-${view.status}-hover`]: item.clickable(),
-                [`${prefixCls}-${view.status}-active`]: item.clickable(),
-                [`${prefixCls}-clickable`]: item.clickable(),
-                [`${stepsClasses.PREFIX}-next-error`]: view.nextError,
-            },
-        ]"
-        :role="item.role()"
-        :tabindex="item.tabindex()"
-        @click="change"
-        @keydown="item.onKeydown($event)"
-    >
-        <div
-            v-if="showIcon()"
-            :class="[
-                `${prefixCls}-left`,
-                $slots.icon ? `${prefixCls}-icon` : `${prefixCls}-plain`,
-                {
-                    [`${prefixCls}-icon-process`]: !$slots.icon && view.status === 'process',
-                    [`${prefixCls}-hover`]: item.clickable(),
-                },
-            ]"
-        >
-            <slot v-if="$slots.icon" name="icon" />
-            <component :is="view.statusIcon" v-else-if="view.statusIcon" size="extra-large" />
-            <template v-else>{{ view.label }}</template>
-        </div>
-        <div :class="`${prefixCls}-content`">
-            <div :class="`${prefixCls}-title`" :title="slotString($slots.title)">
-                <span :class="`${prefixCls}-title-text`">
-                    <slot name="title" />
-                </span>
-            </div>
-            <div :class="`${prefixCls}-description`" :title="slotString($slots.description)">
-                <slot name="description" />
-            </div>
-        </div>
-    </div>
-    <div
-        v-else-if="view?.type === 'basic'"
+        v-if="view?.type === 'basic'"
         :aria-current="view.active ? 'step' : undefined"
         :class="[
             prefixCls,
@@ -115,8 +66,10 @@
                 [`${prefixCls}-${view.status}-hover`]: item.clickable(),
                 [`${stepsClasses.PREFIX}-next-error`]: view.nextError,
             },
+            view.classNames?.item,
         ]"
         :role="item.role()"
+        :style="view.styles?.item"
         :tabindex="item.tabindex()"
         @click="change"
         @keydown="item.onKeydown($event)"
@@ -131,33 +84,36 @@
                             [`${prefixCls}-custom-icon`]: $slots.icon,
                             [`${prefixCls}-icon-process`]: !$slots.icon && view.status === 'process',
                         },
+                        view.classNames?.itemIcon,
+                        props.classNames?.icon,
                     ]"
+                    :style="[view.styles?.itemIcon, props.styles?.icon]"
                 >
                     <slot v-if="$slots.icon" name="icon" />
                     <component :is="view.statusIcon" v-else-if="view.statusIcon" :size="basicIconSize[view.size]" />
                     <span v-else :class="`${prefixCls}-number-icon`">{{ view.label }}</span>
                 </span>
             </div>
-            <div :class="`${prefixCls}-content`">
-                <div :class="`${prefixCls}-title`">
+            <div :class="[`${prefixCls}-content`, view.classNames?.itemContent, props.classNames?.content]" :style="[view.styles?.itemContent, props.styles?.content]">
+                <div :class="[`${prefixCls}-title`, view.classNames?.itemTitle, props.classNames?.title]" :style="[view.styles?.itemTitle, props.styles?.title]">
                     <div :class="[`${prefixCls}-title-text`, { [`${prefixCls}-title-text-empty`]: !hasSlotContent($slots.title) }]">
                         <slot name="title" />
                     </div>
                 </div>
-                <div v-if="hasSlotContent($slots.description)" :class="`${prefixCls}-description`">
+                <div v-if="hasSlotContent($slots.description)" :class="[`${prefixCls}-description`, view.classNames?.itemDescription, props.classNames?.description]" :style="[view.styles?.itemDescription, props.styles?.description]">
                     <slot name="description" />
                 </div>
             </div>
         </div>
     </div>
-    <div v-else-if="view?.type === 'nav'" :aria-current="view.active ? 'step' : undefined" :class="[prefixCls, { [`${prefixCls}-active`]: view.active }]" :role="item.role()" :tabindex="item.tabindex()" @click="change" @keydown="item.onKeydown($event)">
+    <div v-else-if="view?.type === 'nav'" :aria-current="view.active ? 'step' : undefined" :class="[prefixCls, { [`${prefixCls}-active`]: view.active }, view.classNames?.item]" :role="item.role()" :style="view.styles?.item" :tabindex="item.tabindex()" @click="change" @keydown="item.onKeydown($event)">
         <div :class="`${prefixCls}-container`">
-            <div :class="`${prefixCls}-content`">
-                <div :class="`${prefixCls}-title`">
+            <div :class="[`${prefixCls}-content`, view.classNames?.itemContent, props.classNames?.content]" :style="[view.styles?.itemContent, props.styles?.content]">
+                <div :class="[`${prefixCls}-title`, view.classNames?.itemTitle, props.classNames?.title]" :style="[view.styles?.itemTitle, props.styles?.title]">
                     <slot name="title" />
                 </div>
             </div>
-            <div v-if="view.index !== view.total - 1" :class="`${prefixCls}-icon`">
+            <div v-if="view.index !== view.total - 1" :class="[`${prefixCls}-icon`, view.classNames?.itemIcon, props.classNames?.icon]" :style="[view.styles?.itemIcon, props.styles?.icon]">
                 <IconChevronRight size="small" />
             </div>
         </div>

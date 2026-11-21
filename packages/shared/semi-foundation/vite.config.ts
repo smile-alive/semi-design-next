@@ -24,7 +24,6 @@ export default defineConfig({
                     'button/split-button-group.scss',
                     'select/option.scss',
                     'steps/bacis-steps.scss',
-                    'steps/fill-steps.scss',
                     'steps/nav-steps.scss',
                     'table/operation-panel.scss',
                     'tooltip/arrow.scss',

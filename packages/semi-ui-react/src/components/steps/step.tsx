@@ -1,8 +1,8 @@
 import type React from 'react';
+import type { StepPart } from '@fibrae/semi-foundation/components/steps/constants';
 import type { ElementProps } from '../../base/index';
 import BasicStep from './basic-step';
 import { useStepsContext } from './context';
-import FillStep from './fill-step';
 import NavStep from './nav-step';
 import type { Status } from './types';
 
@@ -12,7 +12,9 @@ export interface StepProps extends ElementProps<'div', 'title' | 'onChange' | 'c
     status?: Status;
     title?: React.ReactNode;
     className?: string;
+    classNames?: Partial<Record<StepPart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<StepPart, React.CSSProperties>>;
     onClick?: React.MouseEventHandler<HTMLDivElement>;
     /** Attached to the step item div */
     ref?: React.Ref<HTMLDivElement>;
@@ -22,8 +24,6 @@ export default function Step(props: StepProps) {
     const { type } = useStepsContext('Steps.Step');
 
     switch (type) {
-        case 'fill':
-            return <FillStep {...props} />;
         case 'basic':
             return <BasicStep {...props} />;
         case 'nav': {

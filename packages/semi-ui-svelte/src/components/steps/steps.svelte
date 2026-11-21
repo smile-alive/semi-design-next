@@ -3,7 +3,6 @@
     import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
     import { useDefaultProps } from '../../base/index.js';
-    import { Col, Row } from '../grid/index.js';
     import { setStepsContext } from './context.js';
     import type { StepsProps } from './interface.js';
     import Step from './step.svelte';
@@ -11,7 +10,7 @@
     const defaults = useDefaultProps('Steps');
 
     let {
-        type = defaults('type', 'fill'),
+        type = defaults('type', 'basic'),
         current = defaults('current', 0),
         initial = defaults('initial', 0),
         direction = defaults('direction', 'horizontal'),
@@ -19,6 +18,8 @@
         size = defaults('size', 'default'),
         hasLine = defaults('hasLine', true),
         dataSource = defaults('dataSource', []),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         onChange = defaults('onChange'),
         title,
         description,
@@ -30,12 +31,10 @@
     const rootClass = $derived.by(() => {
         const sized = { [`${prefixCls}-${size}`]: size !== 'default' };
         switch (type) {
-            case 'basic':
-                return [`${prefixCls}-basic`, `${prefixCls}-${direction}`, sized, { [`${prefixCls}-hasline`]: hasLine }];
             case 'nav':
                 return [`${prefixCls}-nav`, sized];
             default:
-                return [prefixCls, `${prefixCls}-${direction}`];
+                return [`${prefixCls}-basic`, `${prefixCls}-${direction}`, sized, { [`${prefixCls}-hasline`]: hasLine }];
         }
     });
 
@@ -55,6 +54,12 @@
         get status() {
             return status;
         },
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
         get clickable() {
             return Boolean(onChange);
         },
@@ -73,17 +78,7 @@
 </script>
 
 <div {...rest} class={[rootClass, rest.class]} role={namedRole(rest)}>
-    {#if type === 'fill'}
-        <Row justify="start">
-            {#each dataSource as item, index (index)}
-                <Col style={direction === 'vertical' ? undefined : `width: ${100 / dataSource.length}%`}>
-                    <Step {index} {item} total={dataSource.length} />
-                </Col>
-            {/each}
-        </Row>
-    {:else}
-        {#each dataSource as item, index (index)}
-            <Step {index} {item} total={dataSource.length} />
-        {/each}
-    {/if}
+    {#each dataSource as item, index (index)}
+        <Step {index} {item} total={dataSource.length} />
+    {/each}
 </div>

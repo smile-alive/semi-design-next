@@ -2,17 +2,19 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property         | Description                                                                                                                                                                                                            | Type                                                           | Default        |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | -------------- |
-| current          | Current step, counting from 0; a child Step can override the state with status.                                                                                                                                        | `number`                                                       | `0`            |
-| direction        | Direction: horizontal or vertical.                                                                                                                                                                                     | `StepsDirection`                                               | `"horizontal"` |
-| hasLine          | Whether the basic type shows connecting lines.                                                                                                                                                                         | `boolean`                                                      | `true`         |
-| initial          | Starting index, counting from 0.                                                                                                                                                                                       | `number`                                                       | `0`            |
-| onChange         | Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. It is a function prop, bound with @change as usual; passing it makes every Step clickable. | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined`    |
-| onUpdate:current | Update function bound by v-model:current, behaving like onChange.                                                                                                                                                      | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined`    |
-| size             | Size of the basic and nav types: default or small.                                                                                                                                                                     | `StepsSize`                                                    | `"default"`    |
-| status           | State of the current step: wait, process, finish, error or warning.                                                                                                                                                    | `StepStatus`                                                   | `"process"`    |
-| type             | Steps type: fill, basic or nav.                                                                                                                                                                                        | `StepsType`                                                    | `"fill"`       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by item, itemIcon, itemContent, itemTitle and itemDescription; values take any class binding and merge with the built-in classes. Keys apply to every step: item is the step's root element, itemIcon is the leading status icon or number in the basic type and the trailing arrow in the nav type, and itemDescription is rendered by the basic type only. | <ApiType detail={"Partial\u003cRecord\u003cStepsPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Steps", "classNames")` |
+| current | Current step, counting from 0; a child Step can override the state with status. | `number` | `0` |
+| direction | Direction: horizontal or vertical. | `StepsDirection` | `"horizontal"` |
+| hasLine | Whether the basic type shows connecting lines. | `boolean` | `true` |
+| initial | Starting index, counting from 0. | `number` | `0` |
+| onChange | Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. It is a function prop, bound with @change as usual; passing it makes every Step clickable. | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined` |
+| onUpdate:current | Update function bound by v-model:current, behaving like onChange. | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined` |
+| size | Size of the basic and nav types: default or small. | `StepsSize` | `"default"` |
+| status | State of the current step: wait, process, finish, error or warning. | `StepStatus` | `"process"` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cStepsPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Steps", "styles")` |
+| type | Steps type: basic or nav, defaults to basic. | `StepsType` | `"basic"` |
 
 **Events**
 

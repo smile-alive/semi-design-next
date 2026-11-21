@@ -4,8 +4,9 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 item、itemIcon、itemContent、itemTitle、itemDescription，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。键作用到每个步骤：item 是步骤的根元素，itemIcon 在 basic 类型是前置的状态图标或序号、在 nav 类型是尾部的箭头，itemDescription 仅 basic 类型渲染。 | <ApiType detail={"Partial\u003cRecord\u003cStepsPart, ClassValue>>"}>Type</ApiType> | - |
 | current | 当前步骤，从 0 开始计数；`dataSource` 项可用 status 覆盖状态。不可绑定，更新由使用方在 `onChange` 里写。 | `number` | `0` |
-| dataSource | 步骤数据，每项为 `StepData`：`status`（该步骤自己的状态，缺省时随 current 与 status 自动决定）、`title`、`description`（nav 类型不渲染）、`icon`（该步骤自定义图标的 snippet，`false` 不显示图标，缺省用状态图标；nav 类型不渲染）、`onClick`（设置后该步骤可点击），其余属性落在步骤根元素上。 | `StepData[]` | `[]` |
+| dataSource | 步骤数据，每项为 `StepData`：`status`（该步骤自己的状态，缺省时随 current 与 status 自动决定）、`title`、`description`（nav 类型不渲染）、`icon`（该步骤自定义图标的 snippet，`false` 不显示图标，缺省用状态图标；nav 类型不渲染）、`onClick`（设置后该步骤可点击）、`classNames` 与 `styles`（该步骤内部各部位的类名与样式字符串，键为 `icon`、`content`、`title`、`description`，写法同 Steps 的同名属性，追加在组件自带的类名与 Steps 的 `item*` 之后；`icon` 在 basic 类型是前置的状态图标或序号、在 nav 类型是尾部的箭头，`description` 仅 basic 类型渲染），其余属性落在步骤根元素上。 | `StepData[]` | `[]` |
 | description | 每个步骤详情描述的 snippet，参数 `{ item, index }`；缺省时显示 `item.description`。nav 类型不渲染。 | <ApiType detail={"Snippet\u003c[StepSnippetProps]>"}>Type</ApiType> | - |
 | direction | 步骤条方向，可选 horizontal、vertical。 | `StepsDirection` | `"horizontal"` |
 | hasLine | basic 类型是否显示连接线。 | `boolean` | `true` |
@@ -13,5 +14,6 @@ import ApiType from '#/components/ApiType.astro';
 | onChange | 点击或键盘选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有步骤变为可点击。 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
 | size | basic 与 nav 类型的尺寸，可选 default、small。 | `StepsSize` | `"default"` |
 | status | 当前步骤的状态，可选 wait、process、finish、error、warning。 | `StepStatus` | `"process"` |
+| styles | 内部各部位的样式字符串，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cStepsPart, string>>"}>Type</ApiType> | - |
 | title | 每个步骤标题的 snippet，参数 `{ item, index }`；缺省时显示 `item.title`。 | <ApiType detail={"Snippet\u003c[StepSnippetProps]>"}>Type</ApiType> | - |
-| type | 步骤条类型，可选 fill、basic、nav。 | `StepsType` | `"fill"` |
+| type | 步骤条类型，可选 basic、nav，未设置时为 basic。 | `StepsType` | `"basic"` |

@@ -3,21 +3,22 @@
     import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
     import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
-    import { type ElementProps, semiDefault, readSemiDefault, useSemiGlobal } from '../../base/index';
+    import { type ElementProps, semiDefault, semiGlobalDefault, readSemiDefault, useSemiGlobal } from '../../base/index';
     import { slotNodes } from '../../utils/index';
-    import { Col, Row } from '../grid';
     import { provideStepsContext } from './context';
     import type { StepsProps, StepsSlots } from './interface';
     import StepProvider from './step-provider.vue';
 
     const props = withDefaults(defineProps<StepsProps & /* @vue-ignore */ ElementProps<'div', keyof StepsProps>>(), {
-        type: () => semiDefault('Steps', 'type', 'fill'),
+        type: () => semiDefault('Steps', 'type', 'basic'),
         current: () => semiDefault('Steps', 'current', 0),
         initial: () => semiDefault('Steps', 'initial', 0),
         direction: () => semiDefault('Steps', 'direction', 'horizontal'),
         status: () => semiDefault('Steps', 'status', 'process'),
         size: () => semiDefault('Steps', 'size', 'default'),
         hasLine: () => semiDefault('Steps', 'hasLine', true),
+        classNames: semiGlobalDefault('Steps', 'classNames'),
+        styles: semiGlobalDefault('Steps', 'styles'),
         onChange: undefined,
         'onUpdate:current': undefined,
     });
@@ -33,12 +34,10 @@
         const prefixCls = stepsClasses.PREFIX;
         const sized = { [`${prefixCls}-${props.size}`]: props.size !== 'default' };
         switch (props.type) {
-            case 'basic':
-                return [`${prefixCls}-basic`, `${prefixCls}-${props.direction}`, sized, { [`${prefixCls}-hasline`]: props.hasLine }];
             case 'nav':
                 return [`${prefixCls}-nav`, sized];
             default:
-                return [prefixCls, `${prefixCls}-${props.direction}`];
+                return [`${prefixCls}-basic`, `${prefixCls}-${props.direction}`, sized, { [`${prefixCls}-hasline`]: props.hasLine }];
         }
     });
 
@@ -49,6 +48,8 @@
             current: props.current,
             initial: props.initial,
             status: props.status,
+            classNames: props.classNames,
+            styles: props.styles,
             clickable: Boolean(onChange.value || onUpdateCurrent.value),
         })),
         change(stepNumber) {
@@ -66,18 +67,9 @@
 <template>
     <div :class="rootClass" :role="namedRole($attrs)">
         <template v-for="(nodes, group) in [stepNodes()]" :key="group">
-            <Row v-if="props.type === 'fill'" justify="start">
-                <Col v-for="([node, key], index) in nodes" :key="key" :style="props.direction === 'vertical' ? undefined : { width: `${100 / nodes.length}%` }">
-                    <StepProvider :index="index" :total="nodes.length">
-                        <component :is="node" />
-                    </StepProvider>
-                </Col>
-            </Row>
-            <template v-else>
-                <StepProvider v-for="([node, key], index) in nodes" :key="key" :index="index" :total="nodes.length">
-                    <component :is="node" />
-                </StepProvider>
-            </template>
+            <StepProvider v-for="([node, key], index) in nodes" :key="key" :index="index" :total="nodes.length">
+                <component :is="node" />
+            </StepProvider>
         </template>
     </div>
 </template>

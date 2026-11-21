@@ -23,7 +23,7 @@ import StepsSvelteApi from './api/steps.svelte.zh-CN.mdx';
 import { Steps } from '@fibrae/semi-ui-react';
 ```
 
-Steps 把每个子元素按顺序当作一个步骤位置（文本除外），fill 的列宽按它计数。自行封装的 Step 组件把属性透传给 Steps.Step 即可正常编号，不需要声明静态属性；原生元素只占序号、原样渲染。
+Steps 把每个子元素按顺序当作一个步骤位置（文本除外）。自行封装的 Step 组件把属性透传给 Steps.Step 即可正常编号，不需要声明静态属性；原生元素只占序号、原样渲染。
 
 </Framework>
 
@@ -61,15 +61,9 @@ Svelte 没有 `Steps.Step`：步骤写成 `dataSource`（`StepData[]`）里的�
 
 </Framework>
 
-### 默认步骤条（旧版）
+### 基础步骤条
 
-建议使用简易版 steps（新版），旧版后续会逐渐 deprecate
-
-<Demo id="default" />
-
-### 简单步骤条（新版）
-
-通过设置 type="basic" 显示为简洁风格步骤条
+默认类型为 `basic`，也可以显式设置 type="basic"
 
 <Demo id="basic" />
 
@@ -104,8 +98,6 @@ Svelte 没有 `Steps.Step`：步骤写成 `dataSource`（`StepData[]`）里的�
 ### 竖直方向的步骤条
 
 通过设置 `direction`，使用竖直方向的步骤条
-
-<Demo id="vertical" />
 
 <Demo id="vertical-basic" />
 
@@ -177,7 +169,7 @@ Svelte 没有 `Steps.Step`：步骤写成 `dataSource`（`StepData[]`）里的�
 
 ### ARIA
 
-- Steps、Step 组件支持传入 `aria-label` 或 `aria-labelledby`。Steps 根元素与不可点击的 Step 本身没有语义角色，传入名称时带 `role="group"`，名称因此能进入可访问名称；没有名称时不加 `role`。fill、basic、nav 三种类型一致
+- Steps、Step 组件支持传入 `aria-label` 或 `aria-labelledby`。Steps 根元素与不可点击的 Step 本身没有语义角色，传入名称时带 `role="group"`，名称因此能进入可访问名称；没有名称时不加 `role`。basic、nav 两种类型一致
 - 当前步骤带有 `aria-current="step"`，其余步骤不带该属性
 - Steps 监听步骤切换或 Step 绑定点击回调后，步骤可通过 Tab 聚焦，`role` 默认为 `button`（优先于 `group`，显式传入的 `role` 优先于二者）；焦点在步骤上时按 `Enter` 或空格与鼠标点击一致，同时触发 Step 的点击回调与 Steps 的切换回调；不可点击的步骤不可聚焦
 - 点击来自步骤内其他可聚焦元素（`input`、`button`、链接等）时只触发 Step 的点击回调，不触发 Steps 的切换回调。可点击的步骤本身是 `role="button"`，title、description 中放可聚焦控件会形成嵌套交互元素，此时不要让步骤可点击

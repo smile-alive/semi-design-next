@@ -11,13 +11,17 @@
                 "en-US": "Steps, usually `Steps.Step`. Each React element takes one step position; text and empty values are not counted. Native elements render as they are and receive no step props."
             },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`itemIcon`、`itemContent`、`itemTitle`、`itemDescription`，与组件自带的类名合并。键作用到每个步骤：`item` 是步骤的根元素，`itemIcon` 在 `basic` 类型是前置的状态图标或序号、在 `nav` 类型是尾部的箭头，`itemDescription` 仅 `basic` 类型渲染。",
+                "en-US": "Class names of the inner parts, keyed by `item`, `itemIcon`, `itemContent`, `itemTitle` and `itemDescription`; merged with the built-in classes. Keys apply to every step: `item` is the step's root element, `itemIcon` is the leading status icon or number in the `basic` type and the trailing arrow in the `nav` type, and `itemDescription` is rendered by the `basic` type only."
+            },
             "current": {
                 "zh-CN": "当前步骤，从 0 开始计数，未设置时为 `0`。子 Step 可用 `status` 覆盖自己的状态。",
                 "en-US": "Current step, counting from 0; defaults to `0`. A child Step can override its own state with `status`."
             },
             "direction": {
-                "zh-CN": "步骤条方向，可选 `horizontal` 或 `vertical`，未设置时为 `horizontal`。用于 `fill` 与 `basic` 类型，`nav` 类型忽略。",
-                "en-US": "Direction of the steps: `horizontal` or `vertical`, defaults to `horizontal`. Applies to the `fill` and `basic` types; ignored by `nav`."
+                "zh-CN": "步骤条方向，可选 `horizontal` 或 `vertical`，未设置时为 `horizontal`。用于 `basic` 类型，`nav` 类型忽略。",
+                "en-US": "Direction of the steps: `horizontal` or `vertical`, defaults to `horizontal`. Applies to the `basic` type; ignored by `nav`."
             },
             "hasLine": {
                 "zh-CN": "是否显示步骤间的连接线，未设置时为 `true`。仅用于 `basic` 类型。",
@@ -37,13 +41,14 @@
                 "en-US": "Size: `small` or `default`, defaults to `default`. Applies to the `basic` and `nav` types."
             },
             "status": {
-                "zh-CN": "当前步骤的状态，可选 `wait`、`process`、`finish`、`error` 或 `warning`，未设置时为 `process`。用于 `fill` 与 `basic` 类型。",
-                "en-US": "Status of the current step: `wait`, `process`, `finish`, `error` or `warning`, defaults to `process`. Applies to the `fill` and `basic` types."
+                "zh-CN": "当前步骤的状态，可选 `wait`、`process`、`finish`、`error` 或 `warning`，未设置时为 `process`。用于 `basic` 类型。",
+                "en-US": "Status of the current step: `wait`, `process`, `finish`, `error` or `warning`, defaults to `process`. Applies to the `basic` type."
             },
             "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "type": {
-                "zh-CN": "步骤条类型，可选 `fill`、`basic` 或 `nav`。",
-                "en-US": "Steps type: `fill`, `basic` or `nav`."
+                "zh-CN": "步骤条类型，可选 `basic` 或 `nav`，未设置时为 `basic`。",
+                "en-US": "Steps type: `basic` or `nav`, defaults to `basic`."
             }
         }
     },
@@ -51,6 +56,10 @@
         "source": "packages/semi-ui-react/src/components/steps/step.tsx",
         "props": {
             "className": { "zh-CN": "步骤项（根元素）的类名。", "en-US": "Class name of the step item (root element)." },
+            "classNames": {
+                "zh-CN": "该步骤内部各部位的类名，键为 `icon`、`content`、`title`、`description`，追加在组件自带的类名与 Steps 的 `item*` 类名之后。`icon` 在 `basic` 类型是前置的状态图标或序号、在 `nav` 类型是尾部的箭头，`description` 仅 `basic` 类型渲染。",
+                "en-US": "Class names of the inner parts of this step, keyed by `icon`, `content`, `title` and `description`; appended after the built-in classes and the `item*` classes of Steps. `icon` is the leading status icon or number in the `basic` type and the trailing arrow in the `nav` type, and `description` is rendered by the `basic` type only."
+            },
             "description": {
                 "zh-CN": "步骤的详情描述。`nav` 类型不渲染。",
                 "en-US": "Description of the step. Not rendered by the `nav` type."
@@ -69,6 +78,7 @@
                 "en-US": "Own status of the step: `wait`, `process`, `finish`, `error` or `warning`. When omitted it follows `current` and `status` of Steps. Not applied by the `nav` type."
             },
             "style": { "zh-CN": "步骤项（根元素）的样式。", "en-US": "Style of the step item (root element)." },
+            "styles": { "zh-CN": "该步骤内部各部位的内联样式，键同 `classNames`，后于 Steps 的 `item*` 样式写入。", "en-US": "Inline styles of the inner parts of this step, keyed like `classNames`; written after the `item*` styles of Steps." },
             "title": { "zh-CN": "步骤标题。", "en-US": "Step title." }
         }
     }

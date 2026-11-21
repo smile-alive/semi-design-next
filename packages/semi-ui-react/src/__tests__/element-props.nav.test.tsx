@@ -69,7 +69,7 @@ const cases: [string, () => ReactElement, string][] = [
         'navigation-sub-wrap',
     ],
     ['Pagination', () => <Pagination id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'page-wrapper'],
-    ['Steps', () => <Steps id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'steps'],
+    ['Steps', () => <Steps id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'steps-basic'],
     [
         'Steps.Step',
         () => (

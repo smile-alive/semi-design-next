@@ -13,7 +13,7 @@ import StepsDemo from './steps-demo.svelte';
 const ITEM = stepsClasses.ITEM;
 const PREFIX = stepsClasses.PREFIX;
 const statuses: StepStatus[] = ['wait', 'error', 'finish', 'process', 'warning'];
-const types = ['fill', 'basic', 'nav'] as const;
+const types = ['basic', 'nav'] as const;
 
 const getItems = (container: Element) => container.querySelectorAll<HTMLElement>(`.${ITEM}`);
 const bare = (count: number, own: Array<Partial<StepData>> = []): StepData[] => Array.from({ length: count }, (_, index) => own[index] ?? {});
@@ -24,8 +24,8 @@ afterEach(() => {
 });
 
 describe('Steps 基线', () => {
-    it.each(['fill', 'basic'] as const)('%s 根据 current 推导 wait、process、finish 状态', (type) => {
-        const { container } = renderSteps({ type, current: 1 });
+    it('basic 根据 current 推导 wait、process、finish 状态', () => {
+        const { container } = renderSteps({ type: 'basic', current: 1 });
         const items = getItems(container);
         expect(items).toHaveLength(3);
         expect(items[0]).toHaveClass(`${ITEM}-finish`);
@@ -33,8 +33,8 @@ describe('Steps 基线', () => {
         expect(items[2]).toHaveClass(`${ITEM}-wait`);
     });
 
-    it.each(['fill', 'basic'] as const)('%s 的 error 状态将前一步标记为 next-error', (type) => {
-        const { container } = renderSteps({ type, current: 1, status: 'error' });
+    it('basic 的 error 状态将前一步标记为 next-error', () => {
+        const { container } = renderSteps({ type: 'basic', current: 1, status: 'error' });
         const items = getItems(container);
         expect(items[1]).toHaveClass(`${ITEM}-error`);
         expect(items[0]).toHaveClass(`${PREFIX}-next-error`);
@@ -63,10 +63,10 @@ describe('Steps 基线', () => {
         expect(second.querySelector(`.${ITEM}-description`)).toHaveTextContent('b');
     });
 
-    it.each(['basic', 'fill'] as const)('%s 逐项设置 icon：snippet 自定义、false 无图标、未设用内置图标', (type) => {
-        const { container } = renderSteps({ type, current: 2, snippets: ['icon'] });
+    it('basic 逐项设置 icon：snippet 自定义、false 无图标、未设用内置图标', () => {
+        const { container } = renderSteps({ type: 'basic', current: 2, snippets: ['icon'] });
         const [first, second, third] = getItems(container);
-        const custom = type === 'basic' ? `.${ITEM}-custom-icon` : `.${ITEM}-icon`;
+        const custom = `.${ITEM}-custom-icon`;
         expect(first.querySelector('.own-icon')).not.toBeNull();
         expect(first.querySelector('.semi-icon-tick_circle')).toBeNull();
         expect(first.querySelector(custom)).not.toBeNull();
@@ -85,26 +85,9 @@ describe('Steps 基线', () => {
         expect(items[1].querySelector(`.${ITEM}-description .own-description`)).toHaveTextContent('b!');
     });
 
-    it('fill 渲染步骤序号、纯文本标题的 title 属性，并使用等宽列', () => {
-        const { container } = renderSteps({ type: 'fill', current: 1 });
-        const items = getItems(container);
-        expect(items[1].querySelector(`.${ITEM}-left`)).toHaveTextContent('2');
-        expect(items[1].querySelector(`.${ITEM}-icon-process`)).not.toBeNull();
-        expect(items[0].querySelector(`.${ITEM}-title`)).toHaveAttribute('title', 'A');
-        expect(items[0].querySelector(`.${ITEM}-description`)).toHaveAttribute('title', 'a');
-        expect(items[0].parentElement?.style.width).toBe('33.3333%');
-    });
-
-    it('fill 的 snippet 标题不输出 title 属性', () => {
-        const { container } = renderSteps({ type: 'fill', snippets: ['title'] });
-        expect(getItems(container)[0].querySelector(`.${ITEM}-title`)).not.toHaveAttribute('title');
-        expect(getItems(container)[0].querySelector(`.${ITEM}-title`)).toHaveTextContent('0:A');
-    });
-
-    it('fill 垂直列没有宽度', () => {
-        const { container } = renderSteps({ type: 'fill', direction: 'vertical' });
+    it('basic 垂直方向带 vertical 类名', () => {
+        const { container } = renderSteps({ type: 'basic', direction: 'vertical' });
         expect(container.firstChild).toHaveClass(`${PREFIX}-vertical`);
-        expect(getItems(container)[0].parentElement?.style.width).toBe('');
     });
 
     it('nav 标记当前步骤为 active，并省略最后一步后的箭头', () => {
@@ -140,14 +123,14 @@ describe('Steps 基线', () => {
         expect(onChange).toHaveBeenCalledTimes(2);
     });
 
-    it.each(['fill', 'basic'] as const)('%s 仅在有 onChange 或步骤自己的 onClick 时标记步骤可点击', (type) => {
-        const plain = renderSteps({ type });
+    it('basic 仅在有 onChange 或步骤自己的 onClick 时标记步骤可点击', () => {
+        const plain = renderSteps({ type: 'basic' });
         expect(getItems(plain.container)[0]).not.toHaveClass(`${ITEM}-clickable`);
         plain.unmount();
-        const withChange = renderSteps({ type, onChange: () => {} });
+        const withChange = renderSteps({ type: 'basic', onChange: () => {} });
         expect(getItems(withChange.container)[0]).toHaveClass(`${ITEM}-clickable`);
         withChange.unmount();
-        const withClick = renderSteps({ type, dataSource: bare(3, [{ onClick: () => {} }]) });
+        const withClick = renderSteps({ type: 'basic', dataSource: bare(3, [{ onClick: () => {} }]) });
         expect(getItems(withClick.container)[0]).toHaveClass(`${ITEM}-clickable`);
         expect(getItems(withClick.container)[1]).not.toHaveClass(`${ITEM}-clickable`);
     });
@@ -331,15 +314,13 @@ describe('Steps', () => {
         const basic = renderSteps({ type: 'basic', current: 1 });
         expect(basic.container.firstChild).toHaveClass(`${PREFIX}-basic`);
         basic.unmount();
-        const fill = renderSteps({ type: 'fill', current: 1 });
-        expect(fill.container.firstChild).toHaveClass(PREFIX);
-        expect(fill.container.firstChild).not.toHaveClass(`${PREFIX}-basic`);
-        expect(fill.container.firstChild).not.toHaveClass(`${PREFIX}-nav`);
+        const byDefault = renderSteps({ current: 1 });
+        expect(byDefault.container.firstChild).toHaveClass(`${PREFIX}-basic`);
     });
 
     it('Steps 带自定义 class 和 style', () => {
         const { container } = renderSteps({ class: 'test', style: 'color: red' });
-        const steps = container.querySelector(`.${PREFIX}.test`);
+        const steps = container.querySelector(`.${PREFIX}-basic.test`);
         expect(steps).not.toBeNull();
         expect(steps).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
@@ -372,16 +353,16 @@ describe('Steps', () => {
         expect(onChange).toHaveBeenCalledWith(2);
     });
 
-    it.each(['fill', 'basic'] as const)('%s next-error 使用偏移后的步骤', (type) => {
-        const { container } = renderSteps({ type, initial: 1, current: 2, status: 'error' });
+    it('basic next-error 使用偏移后的步骤', () => {
+        const { container } = renderSteps({ type: 'basic', initial: 1, current: 2, status: 'error' });
         const items = getItems(container);
         expect(items[1]).toHaveClass(`${ITEM}-error`);
         expect(items[0]).toHaveClass(`${PREFIX}-next-error`);
         expect(items[1]).not.toHaveClass(`${PREFIX}-next-error`);
     });
 
-    it.each(['fill', 'basic'] as const)('%s next-error 保留步骤已有的 class', (type) => {
-        const { container } = renderSteps({ type, current: 1, status: 'error', dataSource: bare(3, [{ class: 'mine' }]) });
+    it('basic next-error 保留步骤已有的 class', () => {
+        const { container } = renderSteps({ type: 'basic', current: 1, status: 'error', dataSource: bare(3, [{ class: 'mine' }]) });
         expect(getItems(container)[0]).toHaveClass('mine', `${PREFIX}-next-error`);
     });
 
@@ -391,15 +372,13 @@ describe('Steps', () => {
         expect(getItems(container)[1]).not.toHaveClass(`${ITEM}-active`);
     });
 
-    it('dataSource 变化时增减步骤，列宽随数量更新', () => {
+    it('dataSource 变化时增减步骤', () => {
         const store = createStore({ dataSource: bare(2) });
-        const view = renderSteps({ type: 'fill', store });
+        const view = renderSteps({ type: 'basic', store });
         expect(getItems(view.container)).toHaveLength(2);
-        expect(getItems(view.container)[0].parentElement?.style.width).toBe('50%');
         store.dataSource = bare(4);
         flushSync();
         expect(getItems(view.container)).toHaveLength(4);
-        expect(getItems(view.container)[0].parentElement?.style.width).toBe('25%');
     });
 
     it('没有 dataSource 时只渲染根元素', () => {
@@ -448,5 +427,48 @@ describe('Steps', () => {
         store.current = 2;
         flushSync();
         expect(getItems(view.container)[2]).toHaveAttribute('aria-current', 'step');
+    });
+});
+
+describe('Steps 部位', () => {
+    // nav renders no description and puts the arrow icon on every step but the last
+    const selectors = { item: ITEM, itemIcon: `${ITEM}-icon`, itemContent: `${ITEM}-content`, itemTitle: `${ITEM}-title`, itemDescription: `${ITEM}-description` };
+    const parts = Object.keys(selectors) as Array<keyof typeof selectors>;
+    const stepSelectors = { icon: `${ITEM}-icon`, content: `${ITEM}-content`, title: `${ITEM}-title`, description: `${ITEM}-description` };
+    const stepParts = Object.keys(stepSelectors) as Array<keyof typeof stepSelectors>;
+
+    it.each(types)('%s 的 classNames 与 styles 按部位落到对应元素', (type) => {
+        const { container } = renderSteps({ type, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) });
+        const item = getItems(container)[0];
+        for (const part of parts) {
+            if (type === 'nav' && part === 'itemDescription') continue;
+            const el = part === 'item' ? item : item.querySelector(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+        expect(getItems(container)[1]).toHaveClass('my-item');
+    });
+
+    it.each(types)('%s 的 Step 自己的 classNames 与 styles 落到对应元素，且在 Steps 的 item* 之后', (type) => {
+        const { container } = renderSteps({
+            type,
+            classNames: { item: 'p-item', itemIcon: 'p-icon', itemContent: 'p-content', itemTitle: 'p-title', itemDescription: 'p-description' },
+            styles: { itemTitle: 'order: 1; color: rgb(1, 2, 3)', itemContent: 'order: 1' },
+            dataSource: bare(2, [
+                { title: 'A', description: 'a', class: 'own-item', classNames: Object.fromEntries(stepParts.map((p) => [p, `own-${p}`])), styles: { title: 'order: 2', content: 'order: 2' } },
+                { title: 'B', description: 'b' },
+            ]),
+        });
+        const [first, second] = getItems(container);
+        expect(first.className).toMatch(/p-item .*own-item/);
+        for (const part of stepParts) {
+            if (type === 'nav' && part === 'description') continue;
+            const el = first.querySelector(`.${stepSelectors[part]}`);
+            expect(el!.className).toMatch(new RegExp(`p-${part} own-${part}`));
+        }
+        expect(first.querySelector(`.${ITEM}-title`)).toHaveStyle({ order: '2', color: 'rgb(1, 2, 3)' });
+        expect(first.querySelector(`.${ITEM}-content`)).toHaveStyle({ order: '2' });
+        expect(second.querySelector(`.${ITEM}-title`)).toHaveStyle({ order: '1' });
+        expect(second.querySelector(`.${ITEM}-title`)!.className).not.toContain('own-');
     });
 });

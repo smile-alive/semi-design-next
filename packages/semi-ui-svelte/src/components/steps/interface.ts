@@ -1,15 +1,18 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { StepPart, StepsPart } from '@fibrae/semi-foundation/components/steps/constants';
 import type { StepStatus } from '@fibrae/semi-foundation/components/steps/utils';
 
 export type { StepStatus };
 export type StepsSize = 'default' | 'small';
 export type StepsDirection = 'horizontal' | 'vertical';
-export type StepsType = 'fill' | 'basic' | 'nav';
+export type StepsType = 'basic' | 'nav';
 
 /** One step of `dataSource`; nodes for its title and description come from the Steps snippets. Other attributes land on the step's root. */
 export interface StepData extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'onclick'> {
     status?: StepStatus;
+    classNames?: Partial<Record<StepPart, ClassValue>>;
+    styles?: Partial<Record<StepPart, string>>;
     title?: string | number;
     /** Not rendered by the nav type */
     description?: string | number;
@@ -25,8 +28,8 @@ export interface StepSnippetProps {
 }
 
 /**
- * One interface for the three types: `size` applies to basic and nav, `hasLine` to basic, `status` and
- * `direction` to fill and basic; the others ignore them.
+ * One interface for the two types: `size` applies to basic and nav, `hasLine`, `status` and `direction` to basic;
+ * nav ignores them.
  */
 export interface StepsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
     type?: StepsType;
@@ -37,6 +40,8 @@ export interface StepsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
     size?: StepsSize;
     hasLine?: boolean;
     dataSource?: StepData[];
+    classNames?: Partial<Record<StepsPart, ClassValue>>;
+    styles?: Partial<Record<StepsPart, string>>;
     /** Not bindable: whether it is set decides if the steps are buttons, and Svelte cannot tell a `bind:` from a plain prop */
     onChange?: (current: number) => void;
     title?: Snippet<[StepSnippetProps]>;

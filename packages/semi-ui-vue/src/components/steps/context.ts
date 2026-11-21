@@ -1,4 +1,5 @@
-import type { ComputedRef } from 'vue';
+import type { ClassValue, ComputedRef, StyleValue } from 'vue';
+import type { StepsPart } from '@fibrae/semi-foundation/components/steps/constants';
 import { createContext } from '../../base/index';
 import type { StepStatus, StepsSize, StepsType } from './interface';
 
@@ -8,6 +9,8 @@ export interface StepsView {
     current: number;
     initial: number;
     status: StepStatus;
+    classNames?: Partial<Record<StepsPart, ClassValue>>;
+    styles?: Partial<Record<StepsPart, StyleValue>>;
     /** True when the parent bound onChange or onUpdate:current, which makes every step clickable */
     clickable: boolean;
 }
