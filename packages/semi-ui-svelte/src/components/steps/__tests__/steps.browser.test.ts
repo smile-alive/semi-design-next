@@ -6,7 +6,7 @@ import { getElement } from '@test/utils/dom/common';
 import { Steps } from '../index';
 
 describe('Steps（浏览器）', () => {
-    it.each(['basic', 'fill', 'nav'] as const)('可点击的 %s 步骤显示主题焦点环', async (type) => {
+    it.each(['basic', 'nav'] as const)('可点击的 %s 步骤显示主题焦点环', async (type) => {
         // the theme is not loaded here: give the focus token a value so the ring color is not invalid at computed time
         document.documentElement.style.setProperty('--semi-color-primary-light-active', 'rgb(1, 2, 3)');
         const { container } = render(Steps, {

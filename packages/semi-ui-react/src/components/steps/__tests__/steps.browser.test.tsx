@@ -5,7 +5,7 @@ import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import Steps from '../index';
 
 describe('Steps（浏览器）', () => {
-    it.each(['basic', 'fill', 'nav'] as const)('可点击的 %s 步骤显示主题焦点环', async (type) => {
+    it.each(['basic', 'nav'] as const)('可点击的 %s 步骤显示主题焦点环', async (type) => {
         const { container } = render(
             // no theme loaded: give the focus token a value so the ring color is valid
             <div style={{ '--semi-color-primary-light-active': 'rgb(1, 2, 3)' }}>

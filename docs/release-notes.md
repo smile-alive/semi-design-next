@@ -380,9 +380,11 @@
 
 ### Steps
 
-- 破坏性：Steps 把每个有效子元素按顺序当作一个步骤位置（Fragment 展开后编号，文本不占位），fill 列宽与 nav 的 `total` 按它计数，原生元素只占序号、不注入步骤属性；`StepProps`、`BasicStepProps`、`FillStepProps`、`NavStepProps` 不再含 `children`（类型）。可点击（设了 `onChange` 或 `onClick`）的 Step 带 `role="button"`。
+- 破坏性：删除旧版 `type="fill"`，默认类型改为 `basic`。
+- 新增 `classNames`、`styles` 部位：Steps 为 `item`、`itemIcon`、`itemContent`、`itemTitle`、`itemDescription`，作用到每个步骤；`Steps.Step` 为 `icon`、`content`、`title`、`description`，只作用于该步骤（Svelte 在 `dataSource` 每项上设置）。
+- 破坏性：Steps 把每个有效子元素按顺序当作一个步骤位置（Fragment 展开后编号，文本不占位），nav 的 `total` 按它计数，原生元素只占序号、不注入步骤属性；`StepProps`、`BasicStepProps`、`NavStepProps` 不再含 `children`（类型）。可点击（设了 `onChange` 或 `onClick`）的 Step 带 `role="button"`。
 - Vue：`onChange` 与 `onUpdate:current` 都是函数属性，支持 `v-model:current`，传入任一个时所有 Step 可点击，不支持 `@change.once`；Step 的 `title`、`description`、`icon` 改为插槽，不再有 `elementType`，包装 Step 的组件无需透传属性。
-- Solid：只有 `Steps.Step`（包括只渲染 Step 的包装组件）占步骤位置，原生元素与文本不占序号、不计入 fill 列宽与 nav 的 `total`，被丢弃并在开发期告警；放在 Steps 外的 Step 单独写时不渲染，在数组中显示为 "[object Object]"。
+- Solid：只有 `Steps.Step`（包括只渲染 Step 的包装组件）占步骤位置，原生元素与文本不占序号、不计入 nav 的 `total`，被丢弃并在开发期告警；放在 Steps 外的 Step 单独写时不渲染，在数组中显示为 "[object Object]"。
 - Svelte 破坏性：没有 `Steps.Step`，步骤改为 `dataSource: StepData[]`（`status`、`title`、`description`、`onClick`，其余属性落在步骤根元素上），内容用 Steps 的 `title`、`description` snippet，参数 `{ item, index }`；自定义图标逐项设置：`StepData.icon?: Snippet | false`，设了 snippet 的步骤用自定义图标，`false` 时该步骤图标区为空，未设的步骤用内置状态图标，没有组件级 `icon` snippet。
 - Svelte：`current` 不可绑定，回调 `onChange(current)`；设了 `onChange` 才让所有步骤可点击，数据项带 `onClick` 的那一步也可点击；更新 `current` 由使用方在 `onChange` 里写。
 - 破坏性（深路径导入）：React 的 `steps/basic-step` 不再导出内部常量 `stepSizeMapIconSize`。

@@ -1,8 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                                                  | Type         | Default     |
-| -------- | ---------------------------------------------------------------------------- | ------------ | ----------- |
-| status   | Own status of the step; when omitted it follows current and status of Steps. | `StepStatus` | `undefined` |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts of this step, keyed by icon, content, title and description; values take any class binding and are appended after the built-in classes and the item\* classes of Steps. icon is the leading status icon or number in the basic type and the trailing arrow in the nav type, and description is rendered by the basic type only. | <ApiType detail={"Partial\u003cRecord\u003cStepPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| status | Own status of the step; when omitted it follows current and status of Steps. | `StepStatus` | `undefined` |
+| styles | Inline styles of the inner parts of this step, keyed like classNames; written after the item\* styles of Steps. | <ApiType detail={"Partial\u003cRecord\u003cStepPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

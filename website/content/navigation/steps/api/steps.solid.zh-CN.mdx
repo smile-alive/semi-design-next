@@ -2,13 +2,15 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性      | 说明                                                                                                                     | 类型                                                         | 默认值         |
-| --------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ | -------------- |
-| current   | 当前步骤，从 0 开始计数；子 Step 可用 status 覆盖状态。                                                                  | `number`                                                     | `0`            |
-| direction | 步骤条方向，可选 horizontal、vertical；用于 basic 与 fill 类型。                                                         | `Direction`                                                  | `"horizontal"` |
-| hasLine   | 是否显示步骤间的连接线；仅用于 basic 类型。                                                                              | `boolean`                                                    | `true`         |
-| initial   | 起始序号，从 0 开始计数。                                                                                                | `number`                                                     | `0`            |
-| onChange  | 点击或按 Enter、空格选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有 Step 变为可点击。 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | -              |
-| size      | 尺寸，可选 small、default；用于 basic 与 nav 类型。                                                                      | `Size`                                                       | `"default"`    |
-| status    | 当前步骤的状态，可选 wait、process、finish、error、warning；用于 basic 与 fill 类型。                                    | `Status`                                                     | `"process"`    |
-| type      | 步骤条类型，可选 fill、basic、nav。                                                                                      | `'basic' \| 'fill' \| 'nav'`                                 | `"fill"`       |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 item、itemIcon、itemContent、itemTitle、itemDescription，与组件自带的类名合并。键作用到每个步骤：item 是步骤的根元素，itemIcon 在 basic 类型是前置的状态图标或序号、在 nav 类型是尾部的箭头，itemDescription 仅 basic 类型渲染。 | <ApiType detail={"Partial\u003cRecord\u003cStepsPart, string>>"}>Type</ApiType> | - |
+| current | 当前步骤，从 0 开始计数；子 Step 可用 status 覆盖状态。 | `number` | `0` |
+| direction | 步骤条方向，可选 horizontal、vertical；用于 basic 类型。 | `Direction` | `"horizontal"` |
+| hasLine | 是否显示步骤间的连接线；仅用于 basic 类型。 | `boolean` | `true` |
+| initial | 起始序号，从 0 开始计数。 | `number` | `0` |
+| onChange | 点击或按 Enter、空格选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有 Step 变为可点击。 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
+| size | 尺寸，可选 small、default；用于 basic 与 nav 类型。 | `Size` | `"default"` |
+| status | 当前步骤的状态，可选 wait、process、finish、error、warning；用于 basic 类型。 | `Status` | `"process"` |
+| styles | 内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。 | <ApiType detail={"Partial\u003cRecord\u003cStepsPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
+| type | 步骤条类型，可选 basic、nav，未设置时为 basic。 | `'basic' \| 'nav'` | `"basic"` |

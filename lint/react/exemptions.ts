@@ -344,7 +344,7 @@ export const reactExemptions: Exemption[] = [
     },
     // The role is the consumer's or else "button", computed at render; the rule cannot resolve it
     {
-        files: ['packages/semi-ui-react/src/components/steps/basic-step.tsx', 'packages/semi-ui-react/src/components/steps/fill-step.tsx', 'packages/semi-ui-react/src/components/steps/nav-step.tsx'],
+        files: ['packages/semi-ui-react/src/components/steps/basic-step.tsx', 'packages/semi-ui-react/src/components/steps/nav-step.tsx'],
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     // Table elements are replaceable `components` and become divs when virtualized, so they state their roles

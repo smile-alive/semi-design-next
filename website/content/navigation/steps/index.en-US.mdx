@@ -23,7 +23,7 @@ import StepsSvelteApi from './api/steps.svelte.en-US.mdx';
 import { Steps } from '@fibrae/semi-ui-react';
 ```
 
-Steps treats every child element as one step position in order (text is skipped), and fill columns count them all. A component that wraps Step only needs to pass its props on to Steps.Step to be numbered; a native element takes a position and renders as is.
+Steps treats every child element as one step position in order (text is skipped). A component that wraps Step only needs to pass its props on to Steps.Step to be numbered; a native element takes a position and renders as is.
 
 </Framework>
 
@@ -61,15 +61,9 @@ Svelte has no `Steps.Step`: steps are data items in `dataSource` (`StepData[]`),
 
 </Framework>
 
-### Default step bar(Deprecated)
+### Basic Steps
 
-It is recommended to use the simple version of steps, which will be gradually deprecated later
-
-<Demo id="default" />
-
-### Basic Steps(Recommended)
-
-Set type=`"basic"` to display a simple style step bar
+The default type is `basic`; you can also set type=`"basic"` explicitly
 
 <Demo id="basic" />
 
@@ -104,8 +98,6 @@ Use with content and buttons to represent the processing progress of a process
 ### Steps bar in vertical direction
 
 Show steps in vertical direction by setting direction
-
-<Demo id="vertical" />
 
 <Demo id="vertical-basic" />
 
@@ -177,7 +169,7 @@ Listen for step changes with `onChange`. The callback receives a number, equal t
 
 ### ARIA
 
-- Steps and Step components support `aria-label` or `aria-labelledby`. The Steps root and a Step that is not clickable have no semantic role of their own, so when a name is passed they get `role="group"` and the name reaches the accessible name; without a name no `role` is added. The fill, basic and nav types behave the same
+- Steps and Step components support `aria-label` or `aria-labelledby`. The Steps root and a Step that is not clickable have no semantic role of their own, so when a name is passed they get `role="group"` and the name reaches the accessible name; without a name no `role` is added. The basic and nav types behave the same
 - The current step has `aria-current="step"`; other steps do not
 - When Steps listens for step changes or a Step has a click handler, steps are focusable with Tab and their `role` defaults to `button` (taking precedence over `group`; an explicit `role` wins over both). `Enter` or Space on a focused step acts like a mouse click and runs both the Step's click handler and the change callback of Steps; steps that are not clickable are not focusable
 - A click that comes from another focusable element inside the step (`input`, `button`, a link, and so on) runs only the Step's click handler, not the change callback of Steps. A clickable step is itself `role="button"`, so a focusable control in the title or description is a nested interactive element; do not make such a step clickable

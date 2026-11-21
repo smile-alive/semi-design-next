@@ -1,4 +1,5 @@
 import type { JSX } from 'solid-js';
+import type { StepPart, StepsPart } from '@fibrae/semi-foundation/components/steps/constants';
 import type { StepStatus } from '@fibrae/semi-foundation/components/steps/utils';
 import type { ElementProps } from '../../base/index';
 
@@ -6,14 +7,24 @@ export type Status = StepStatus;
 export type Size = 'default' | 'small';
 export type Direction = 'horizontal' | 'vertical';
 
+type Style = JSX.CSSProperties | string;
+
 export interface StepProps extends ElementProps<'div', 'title' | 'onChange' | 'children'> {
+    classNames?: Partial<Record<StepPart, string>>;
     description?: JSX.Element;
     icon?: JSX.Element;
     status?: Status;
+    styles?: Partial<Record<StepPart, Style>>;
     title?: JSX.Element;
 }
 
-export interface BasicStepProps extends StepProps {
+/** Set by Steps from its own `classNames` and `styles` */
+interface StepsPartProps {
+    stepsClassNames?: Partial<Record<StepsPart, string>>;
+    stepsStyles?: Partial<Record<StepsPart, Style>>;
+}
+
+export interface BasicStepProps extends StepProps, StepsPartProps {
     active?: boolean;
     stepNumber?: string;
     size?: Size;
@@ -21,13 +32,7 @@ export interface BasicStepProps extends StepProps {
     onChange?: () => void;
 }
 
-export interface FillStepProps extends StepProps {
-    stepNumber?: string;
-    active?: boolean;
-    onChange?: () => void;
-}
-
-export interface NavStepProps extends StepProps {
+export interface NavStepProps extends StepProps, StepsPartProps {
     index?: number;
     active?: boolean;
     total?: number;
@@ -44,14 +49,6 @@ export interface BasicStepsProps extends ElementProps<'div', 'onChange'> {
     onChange?: (current: number) => void;
 }
 
-export interface FillStepsProps extends ElementProps<'div', 'onChange'> {
-    current?: number;
-    direction?: Direction;
-    initial?: number;
-    status?: Status;
-    onChange?: (current: number) => void;
-}
-
 export interface NavStepsProps extends ElementProps<'div', 'onChange'> {
     current?: number;
     initial?: number;
@@ -59,13 +56,15 @@ export interface NavStepsProps extends ElementProps<'div', 'onChange'> {
     onChange?: (current: number) => void;
 }
 
-export interface FillStepsAllProps extends FillStepsProps {
-    type?: 'fill';
+export interface StepsOwnPartProps {
+    classNames?: Partial<Record<StepsPart, string>>;
+    styles?: Partial<Record<StepsPart, Style>>;
 }
-export interface BasicStepsAllProps extends BasicStepsProps {
+
+export interface BasicStepsAllProps extends BasicStepsProps, StepsOwnPartProps {
     type?: 'basic';
 }
-export interface NavStepsAllProps extends NavStepsProps {
+export interface NavStepsAllProps extends NavStepsProps, StepsOwnPartProps {
     type?: 'nav';
 }
-export type StepsProps = FillStepsAllProps | BasicStepsAllProps | NavStepsAllProps;
+export type StepsProps = BasicStepsAllProps | NavStepsAllProps;

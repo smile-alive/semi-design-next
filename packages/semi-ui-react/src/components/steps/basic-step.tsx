@@ -1,8 +1,9 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
+import { stepsClasses as css, type StepPart } from '@fibrae/semi-foundation/components/steps/constants';
 import { IconTickCircle, IconAlertCircle, IconAlertTriangle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/index';
+import { useStepsContext } from './context';
 import type { Size, Status } from './types';
 import { useStepItem } from './use-step-item';
 
@@ -12,7 +13,9 @@ export interface BasicStepProps extends ElementProps<'div', 'title' | 'onChange'
     status?: Status;
     title?: React.ReactNode;
     className?: string;
+    classNames?: Partial<Record<StepPart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<StepPart, React.CSSProperties>>;
     active?: boolean;
     stepNumber?: string;
     size?: Size;
@@ -34,7 +37,9 @@ const stepSizeMapIconSize = {
 const prefixCls = css.ITEM;
 
 export default function BasicStep(props: BasicStepProps) {
-    const { ref, role, className = '', size, title, description, status = 'wait', style, active = false, done = false, icon, stepNumber, onClick, onChange, onKeyDown, ...rest } = props;
+    const { ref, role, className = '', classNames, size, title, description, status = 'wait', style, styles, active = false, done = false, icon, stepNumber, onClick, onChange, onKeyDown, ...rest } = props;
+
+    const { classNames: stepsClassNames, styles: stepsStyles } = useStepsContext('Steps.Step');
 
     const item = useStepItem({ role, onChange, onClick, onKeyDown }, rest);
 
@@ -48,6 +53,7 @@ export default function BasicStep(props: BasicStepProps) {
             [`${prefixCls}-clickable`]: onChange || onClick,
             [`${prefixCls}-${status}-hover`]: onChange || props.onClick,
         },
+        stepsClassNames?.item,
         className
     );
 
@@ -83,24 +89,36 @@ export default function BasicStep(props: BasicStepProps) {
                     break;
             }
         }
-        const cls = clsx({
-            [`${prefixCls}-icon`]: true,
-            [`${prefixCls}-custom-icon`]: icon !== undefined,
-            [`${prefixCls}-icon-process`]: progress,
-        });
+        const cls = clsx(
+            {
+                [`${prefixCls}-icon`]: true,
+                [`${prefixCls}-custom-icon`]: icon !== undefined,
+                [`${prefixCls}-icon-process`]: progress,
+            },
+            stepsClassNames?.itemIcon,
+            classNames?.icon
+        );
 
-        return inner ? <span className={cls}>{inner}</span> : null;
+        return inner ? (
+            <span className={cls} style={{ ...stepsStyles?.itemIcon, ...styles?.icon }}>
+                {inner}
+            </span>
+        ) : null;
     };
 
     return (
-        <div {...rest} ref={ref} className={classString} style={style} aria-current={active ? 'step' : undefined} role={item.role} tabIndex={item.tabIndex} onClick={item.onClick} onKeyDown={item.onKeyDown}>
+        <div {...rest} ref={ref} className={classString} style={{ ...stepsStyles?.item, ...style }} aria-current={active ? 'step' : undefined} role={item.role} tabIndex={item.tabIndex} onClick={item.onClick} onKeyDown={item.onKeyDown}>
             <div className={`${prefixCls}-container`}>
                 <div className={`${prefixCls}-left`}>{renderIcon()}</div>
-                <div className={`${prefixCls}-content`}>
-                    <div className={`${prefixCls}-title`}>
+                <div className={clsx(`${prefixCls}-content`, stepsClassNames?.itemContent, classNames?.content)} style={{ ...stepsStyles?.itemContent, ...styles?.content }}>
+                    <div className={clsx(`${prefixCls}-title`, stepsClassNames?.itemTitle, classNames?.title)} style={{ ...stepsStyles?.itemTitle, ...styles?.title }}>
                         <div className={titleTextClass}>{title}</div>
                     </div>
-                    {description && <div className={`${prefixCls}-description`}>{description}</div>}
+                    {description && (
+                        <div className={clsx(`${prefixCls}-description`, stepsClassNames?.itemDescription, classNames?.description)} style={{ ...stepsStyles?.itemDescription, ...styles?.description }}>
+                            {description}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

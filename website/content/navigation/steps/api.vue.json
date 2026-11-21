@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-vue/src/components/steps/steps.vue",
         "props": {
             "type": {
-                "zh-CN": "步骤条类型，可选 fill、basic、nav。",
-                "en-US": "Steps type: fill, basic or nav."
+                "zh-CN": "步骤条类型，可选 basic、nav，未设置时为 basic。",
+                "en-US": "Steps type: basic or nav, defaults to basic."
             },
             "current": {
                 "zh-CN": "当前步骤，从 0 开始计数；子 Step 可用 status 覆盖状态。",
@@ -34,7 +34,12 @@
             "onUpdate:current": {
                 "zh-CN": "v-model:current 绑定的更新函数，行为与 onChange 一致。",
                 "en-US": "Update function bound by v-model:current, behaving like onChange."
-            }
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 item、itemIcon、itemContent、itemTitle、itemDescription，值的写法同 class，与组件自带的类名合并。键作用到每个步骤：item 是步骤的根元素，itemIcon 在 basic 类型是前置的状态图标或序号、在 nav 类型是尾部的箭头，itemDescription 仅 basic 类型渲染。",
+                "en-US": "Class names of the inner parts, keyed by item, itemIcon, itemContent, itemTitle and itemDescription; values take any class binding and merge with the built-in classes. Keys apply to every step: item is the step's root element, itemIcon is the leading status icon or number in the basic type and the trailing arrow in the nav type, and itemDescription is rendered by the basic type only."
+            },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 classNames。", "en-US": "Inline styles of the inner parts, keyed like classNames." }
         },
         "events": {},
         "slots": {
@@ -51,6 +56,14 @@
             "status": {
                 "zh-CN": "该步骤自己的状态；缺省时随 Steps 的 current 与 status 自动决定。",
                 "en-US": "Own status of the step; when omitted it follows current and status of Steps."
+            },
+            "classNames": {
+                "zh-CN": "该步骤内部各部位的类名，键为 icon、content、title、description，值的写法同 class，追加在组件自带的类名与 Steps 的 item* 类名之后。icon 在 basic 类型是前置的状态图标或序号、在 nav 类型是尾部的箭头，description 仅 basic 类型渲染。",
+                "en-US": "Class names of the inner parts of this step, keyed by icon, content, title and description; values take any class binding and are appended after the built-in classes and the item* classes of Steps. icon is the leading status icon or number in the basic type and the trailing arrow in the nav type, and description is rendered by the basic type only."
+            },
+            "styles": {
+                "zh-CN": "该步骤内部各部位的内联样式，键同 classNames，后于 Steps 的 item* 样式写入。",
+                "en-US": "Inline styles of the inner parts of this step, keyed like classNames; written after the item* styles of Steps."
             }
         },
         "events": {},

@@ -39,7 +39,7 @@ export const solidExemptions: Exemption[] = [
     },
     // The role is the consumer's or else "button", computed at render; the rule cannot resolve it
     {
-        files: ['packages/semi-ui-solid/src/components/steps/basic-step.tsx', 'packages/semi-ui-solid/src/components/steps/fill-step.tsx', 'packages/semi-ui-solid/src/components/steps/nav-step.tsx'],
+        files: ['packages/semi-ui-solid/src/components/steps/basic-step.tsx', 'packages/semi-ui-solid/src/components/steps/nav-step.tsx'],
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     // role="heading" div because host pages style h3 outside Semi's layers, role="region" div that must not be a

@@ -1,8 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性   | 说明                                                             | 类型         | 默认值      |
-| ------ | ---------------------------------------------------------------- | ------------ | ----------- |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 该步骤内部各部位的类名，键为 icon、content、title、description，值的写法同 class，追加在组件自带的类名与 Steps 的 item\* 类名之后。icon 在 basic 类型是前置的状态图标或序号、在 nav 类型是尾部的箭头，description 仅 basic 类型渲染。 | <ApiType detail={"Partial\u003cRecord\u003cStepPart, ClassValue>>"}>Type</ApiType> | `undefined` |
 | status | 该步骤自己的状态；缺省时随 Steps 的 current 与 status 自动决定。 | `StepStatus` | `undefined` |
+| styles | 该步骤内部各部位的内联样式，键同 classNames，后于 Steps 的 item\* 样式写入。 | <ApiType detail={"Partial\u003cRecord\u003cStepPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-solid/src/components/steps/steps.tsx",
         "props": {
             "type": {
-                "zh-CN": "步骤条类型，可选 fill、basic、nav。",
-                "en-US": "Steps type: fill, basic or nav."
+                "zh-CN": "步骤条类型，可选 basic、nav，未设置时为 basic。",
+                "en-US": "Steps type: basic or nav, defaults to basic."
             },
             "current": {
                 "zh-CN": "当前步骤，从 0 开始计数；子 Step 可用 status 覆盖状态。",
@@ -12,12 +12,12 @@
             },
             "initial": { "zh-CN": "起始序号，从 0 开始计数。", "en-US": "Starting index, counting from 0." },
             "direction": {
-                "zh-CN": "步骤条方向，可选 horizontal、vertical；用于 basic 与 fill 类型。",
-                "en-US": "Direction of the steps, horizontal or vertical; applies to the basic and fill types."
+                "zh-CN": "步骤条方向，可选 horizontal、vertical；用于 basic 类型。",
+                "en-US": "Direction of the steps, horizontal or vertical; applies to the basic type."
             },
             "status": {
-                "zh-CN": "当前步骤的状态，可选 wait、process、finish、error、warning；用于 basic 与 fill 类型。",
-                "en-US": "Status of the current step: wait, process, finish, error or warning; applies to the basic and fill types."
+                "zh-CN": "当前步骤的状态，可选 wait、process、finish、error、warning；用于 basic 类型。",
+                "en-US": "Status of the current step: wait, process, finish, error or warning; applies to the basic type."
             },
             "size": {
                 "zh-CN": "尺寸，可选 small、default；用于 basic 与 nav 类型。",
@@ -30,6 +30,14 @@
             "onChange": {
                 "zh-CN": "点击或按 Enter、空格选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有 Step 变为可点击。",
                 "en-US": "Called when a step is selected by click or by Enter or Space, with its number (initial plus index); not called for the current step. Passing it makes every Step clickable."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 item、itemIcon、itemContent、itemTitle、itemDescription，与组件自带的类名合并。键作用到每个步骤：item 是步骤的根元素，itemIcon 在 basic 类型是前置的状态图标或序号、在 nav 类型是尾部的箭头，itemDescription 仅 basic 类型渲染。",
+                "en-US": "Class names of the inner parts, keyed by item, itemIcon, itemContent, itemTitle and itemDescription; merged with the built-in classes. Keys apply to every step: item is the step's root element, itemIcon is the leading status icon or number in the basic type and the trailing arrow in the nav type, and itemDescription is rendered by the basic type only."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
             }
         }
     },
@@ -48,6 +56,14 @@
             "icon": {
                 "zh-CN": "自定义图标，提供后替换状态图标，内容为空则不显示图标；nav 类型不渲染。",
                 "en-US": "Custom icon that replaces the status icon; empty content shows no icon. Not rendered by the nav type."
+            },
+            "classNames": {
+                "zh-CN": "该步骤内部各部位的类名，键为 icon、content、title、description，追加在组件自带的类名与 Steps 的 item* 类名之后。icon 在 basic 类型是前置的状态图标或序号、在 nav 类型是尾部的箭头，description 仅 basic 类型渲染。",
+                "en-US": "Class names of the inner parts of this step, keyed by icon, content, title and description; appended after the built-in classes and the item* classes of Steps. icon is the leading status icon or number in the basic type and the trailing arrow in the nav type, and description is rendered by the basic type only."
+            },
+            "styles": {
+                "zh-CN": "该步骤内部各部位的内联样式，键同 classNames，后于 Steps 的 item* 样式写入；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts of this step, keyed like classNames; written after the item* styles of Steps. Style objects use kebab-case CSS property names, and style strings work too."
             }
         }
     }

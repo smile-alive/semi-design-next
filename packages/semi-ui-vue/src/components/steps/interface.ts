@@ -1,14 +1,15 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { StepPart, StepsPart } from '@fibrae/semi-foundation/components/steps/constants';
 import type { StepStatus } from '@fibrae/semi-foundation/components/steps/utils';
 
 export type { StepStatus };
 export type StepsSize = 'default' | 'small';
 export type StepsDirection = 'horizontal' | 'vertical';
-export type StepsType = 'fill' | 'basic' | 'nav';
+export type StepsType = 'basic' | 'nav';
 
 /**
- * One interface for the three types: `size` applies to basic and nav, `hasLine` to basic, `status` and
- * `direction` to fill and basic; the others ignore them.
+ * One interface for the two types: `size` applies to basic and nav, `hasLine`, `status` and `direction` to basic;
+ * nav ignores them.
  */
 export interface StepsProps {
     type?: StepsType;
@@ -18,6 +19,8 @@ export interface StepsProps {
     status?: StepStatus;
     size?: StepsSize;
     hasLine?: boolean;
+    classNames?: Partial<Record<StepsPart, ClassValue>>;
+    styles?: Partial<Record<StepsPart, StyleValue>>;
     /**
      * A function prop rather than an emit: whether a listener is bound decides if the steps are buttons, and a
      * component cannot see the listeners of its declared emits.
@@ -34,6 +37,8 @@ export interface StepsSlots {
 export interface StepProps {
     /** Own status; when omitted it follows the parent's current and status */
     status?: StepStatus;
+    classNames?: Partial<Record<StepPart, ClassValue>>;
+    styles?: Partial<Record<StepPart, StyleValue>>;
 }
 
 export interface StepSlots {
