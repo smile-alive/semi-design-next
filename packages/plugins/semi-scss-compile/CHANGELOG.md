@@ -1,5 +1,15 @@
 # @fibrae/semi-scss-compile
 
+## 0.12.0
+
+### Patch Changes
+
+- Updated dependencies [054f85c]
+- Updated dependencies [42da4aa]
+- Updated dependencies [b00b90d]
+    - @fibrae/semi-foundation@0.12.0
+    - @fibrae/semi-icons-core@0.12.0
+
 ## 0.11.0
 
 ### Patch Changes
